@@ -98,25 +98,17 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
 
         beforeEach(() => {
             stubCalculateSizesOfItems = stub(MeasurerUtils, 'calculateSizesOfItems');
-            stubCalculateSizesOfItems.callsFake((itemsHtml: string[], measurerBlockClass: string, itemClass: string) => {
-                if (itemsHtml.indexOf('icon-SwipeMenu')) {
-                    return {
-                        blockSize: 0,
-                        itemsSizes: [ 25 ]
-                    };
-                } else if (itemsHtml.length > 1) {
-                    return {
-                        blockSize: 0,
-                        itemsSizes: itemsHtml.map((item) => 25)
-                    };
-                }
-            });
+            stubCalculateSizesOfItems.callsFake((itemsHtml: string[], measurerBlockClass: string, itemClass: string) => ({
+                blockSize: 0,
+                itemsSizes: itemsHtml.map((item) => 25)
+            }));
         });
 
         afterEach(() => {
             stubCalculateSizesOfItems.restore();
         });
 
+        // Если кол-во записей > 3, то показываем максимум 3 (если они влезли) и добавляем кнопку "ещё"
         it('should add menu, when more than 3 itemActions are in \'showed\' array', () => {
             const result = {
                 itemActionsSize: 'm',
@@ -148,6 +140,96 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                 ),
                 result
             );
+        });
+
+        // Если кол-во записей > 3 и видимые записи не влезли в контейнер, показываем столько, сколько влезло
+        it('should show only item actions that are smaller than container by their summarized width when total > 3', () => {
+            const showed = [...actions];
+            showed.splice(-1, 1, {
+                id: null,
+                icon: 'icon-SwipeMenu',
+                title: rk('Ещё'),
+                _isMenu: true,
+                showType: 2
+            });
+            const result = {
+                itemActionsSize: 'm',
+                itemActions: {
+                    all: actions.concat({
+                        id: 4,
+                        icon: 'icon-DK'
+                    }),
+                    showed
+                },
+                paddingSize: 'm'
+            };
+            assert.deepInclude(horizontalMeasurer.getSwipeConfig(
+                actions.concat({
+                    id: 4,
+                    icon: 'icon-DK'
+                }),
+                75,
+                20,
+                'right'
+            ), result);
+        });
+
+        // Если кол-во записей <= 3 и видимые записи не влезли в контейнер, показываем столько, сколько влезло
+        it('should show only item actions that are smaller than container by their summarized width when total <= 3', () => {
+            stubCalculateSizesOfItems.callsFake((itemsHtml: string[], measurerBlockClass: string, itemClass: string) => ({
+                blockSize: 0,
+                itemsSizes: itemsHtml.map((item, index) => 25 + index)
+            }));
+
+            const lessActions = [...actions];
+            lessActions.splice(-1, 1);
+
+            const showed = [...lessActions];
+            showed.splice(-1, 1, {
+                id: null,
+                icon: 'icon-SwipeMenu',
+                title: rk('Ещё'),
+                _isMenu: true,
+                showType: 2
+            });
+
+            const result = {
+                itemActionsSize: 'm',
+                itemActions: {
+                    all: lessActions,
+                    showed
+                },
+                paddingSize: 'm'
+            };
+            const config = horizontalMeasurer.getSwipeConfig(
+                lessActions,
+                50,
+                20,
+                'right'
+            );
+            assert.deepInclude(config, result);
+        });
+
+        // Если кол-во записей <= 3 и видимые записи влезли в контейнер, не показываем кнопку "Ещё"
+        it('should not show menu button when item actions are smaller than container by their summarized width and total <= 3', () => {
+            const lessActions = [...actions];
+            lessActions.splice(-1, 1);
+
+            const result = {
+                itemActionsSize: 'm',
+                itemActions: {
+                    all: lessActions,
+                    showed: lessActions
+                },
+                paddingSize: 'm'
+            };
+            const config = horizontalMeasurer.getSwipeConfig(
+                lessActions,
+                50,
+                20,
+                'right'
+            );
+            assert.deepInclude(config, result);
         });
 
         it('small row without title, itemActionsSize should be m', () => {

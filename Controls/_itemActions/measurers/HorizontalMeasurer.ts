@@ -154,23 +154,26 @@ class HorizontalMeasurer implements IMeasurer {
        menuButtonVisibility: 'visible'|'adaptive',
        rowWidth: number,
        templateConfig: ISwipeActionTemplateConfig): IItemAction[] {
-      const moreButtonSize = this._calculateActionSize(moreButton, templateConfig);
 
       // По стандарту, показываем не более трёх опций в свайпе.
       // Кроме всего прочего, это позволит не производить слишком много вычислений с DOM
       const itemActions = actions.slice(0, MAX_ACTIONS_COUNT);
       const itemActionsSizes = this._calculateActionsSizes(itemActions, templateConfig);
       let maxWidth = rowWidth - itemActionsSizes.blockSize;
+      let moreButtonSize = 0;
       let visibleActions = [];
 
-      // Если видимость кнопки "ещё" не visible, то сначала считаем без учёта её ширины,
-      // Иначе иногда даже в случае, если кнопки все уместились у нас будет добавляться меню
-      if (menuButtonVisibility !== 'visible') {
+      // Если всего было передано лишь 3 опции или меньше, и видимость кнопки "ещё" не "visible",
+      // то сначала считаем без учёта её ширины, иначе расчёт будет некорректным и даже
+      // в случае, когда все опции записи должны бы по своей ширине уместиться в контейнер им может добавляться
+      // кнопка "ещё"
+      if (menuButtonVisibility !== 'visible' && itemActions.length === actions.length) {
          visibleActions = this._fillVisibleActions(itemActions, itemActionsSizes.itemsSizes, maxWidth);
       }
 
-      // Если кнопка "ещё" всё-таки нужна, то считаем ещё раз, учитывая её ширину
-      if (menuButtonVisibility === 'visible' || visibleActions.length < actions.length) {
+      // Если кнопка "ещё" всё-таки нужна, то считаем, учитывая её ширину
+      if (menuButtonVisibility === 'visible' || visibleActions.length < itemActions.length) {
+         moreButtonSize = this._calculateActionSize(moreButton, templateConfig);
          maxWidth -= moreButtonSize;
          visibleActions = this._fillVisibleActions(itemActions, itemActionsSizes.itemsSizes, maxWidth);
       }

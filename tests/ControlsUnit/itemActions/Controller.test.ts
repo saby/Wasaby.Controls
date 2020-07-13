@@ -470,19 +470,10 @@ describe('Controls/_itemActions/Controller', () => {
 
         beforeEach(() => {
             stubCalculateSizesOfItems = stub(MeasurerUtils, 'calculateSizesOfItems');
-            stubCalculateSizesOfItems.callsFake((itemsHtml: string[], measurerClass: string, itemClass: string) => {
-                if (itemsHtml.indexOf('icon-SwipeMenu')) {
-                    return {
-                        blockSize: 0,
-                        itemsSizes: [ 25 ]
-                    };
-                } else if (itemsHtml.length > 1) {
-                    return {
-                        blockSize: 0,
-                        itemsSizes: itemsHtml.map((item) => 25)
-                    };
-                }
-            });
+            stubCalculateSizesOfItems.callsFake((itemsHtml: string[], measurerBlockClass: string, itemClass: string) => ({
+                blockSize: 0,
+                itemsSizes: itemsHtml.map((item) => 25)
+            }));
         });
 
         afterEach(() => {
