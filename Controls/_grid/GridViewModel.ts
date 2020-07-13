@@ -1080,12 +1080,13 @@ var
             }
         },
 
-        setHasMoreData: function(hasMore: boolean) {
-            this._model.setHasMoreData(hasMore);
-            this._nextModelVersion(true);
+        setHasMoreData(hasMoreData: boolean): boolean {
+            if (this._model.setHasMoreData(hasMoreData)) {
+                return this._nextModelVersion(true);
+            }
         },
 
-        getHasMoreData: function() {
+        getHasMoreData(): boolean {
           return this._model.getHasMoreData();
         },
 

@@ -64,25 +64,12 @@ var _private = {
     displayFilterGroups: function(item, index, displayItem) {
         return item === constView.hiddenGroup || !item.get || !this.collapsedGroups[displayItem.getOwner().getGroup()(item, index, displayItem)];
     },
-    prepareCollapsedGroupsByArray: function(collapsedGroups) {
-        var
-            result = {};
+    prepareCollapsedGroupsByArray(collapsedGroups: Grouping.TArrayGroupId): {} {
+        const result = {};
         if (collapsedGroups) {
-            collapsedGroups.forEach(function(group) {
+            collapsedGroups.forEach((group) => {
                 result[group] = true;
             });
-        }
-        return result;
-    },
-    prepareCollapsedGroupsByObject: function(collapsedGroups) {
-        var
-            result = [];
-        if (collapsedGroups) {
-            for (var group in collapsedGroups) {
-                if (collapsedGroups.hasOwnProperty(group)) {
-                    result.push(group);
-                }
-            }
         }
         return result;
     },
@@ -107,8 +94,6 @@ var ItemsViewModel = BaseViewModel.extend({
     _collapsedGroups: null,
     _prefixItemVersion: null,
     _updateIndexesCallback: null,
-    _hasMoreData: false,
-    _metaResults: null,
 
     constructor: function(cfg) {
         this._prefixItemVersion = 0;
@@ -116,7 +101,6 @@ var ItemsViewModel = BaseViewModel.extend({
         ItemsViewModel.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
         this._onMetaDataChanged = this._onMetaDataChanged.bind(this);
-        this._collapsedGroups = _private.prepareCollapsedGroupsByArray(cfg.collapsedGroups);
         this._options.groupingKeyCallback = cfg.groupingKeyCallback || cfg.groupMethod;
         if (cfg.items) {
             if (cfg.itemsReadyCallback) {
@@ -130,8 +114,11 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
-    getMetaResults() {
-        return this._metaResults;
+    getMetaResults(): {} {
+        const display = this.getDisplay();
+        if (display) {
+            return display.getMetaResults();
+        }
     },
 
     _prepareDisplay: function(items, cfg) {
@@ -303,7 +290,7 @@ var ItemsViewModel = BaseViewModel.extend({
             if (this._isGroup(itemData.item)) {
                 itemData.isGroup = true;
                 itemData.isHiddenGroup = itemData.item === constView.hiddenGroup;
-                itemData.isGroupExpanded = !this._collapsedGroups[itemData.item];
+                itemData.isGroupExpanded = this.isGroupExpanded(itemData.item);
                 itemData.metaData = this._items.getMetaData();
             }
         }
@@ -314,39 +301,45 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     getCollapsedGroups(): Grouping.TArrayGroupId {
-        return _private.prepareCollapsedGroupsByObject(this._collapsedGroups);
+        const display = this.getDisplay();
+        if (display) {
+            return display.getCollapsedGroups();
+        }
     },
 
     setCollapsedGroups(collapsedGroups: Grouping.TArrayGroupId): void {
-        this._options.collapsedGroups = collapsedGroups;
-        this._collapsedGroups = {};
-
-        for (let i = 0; i < collapsedGroups.length; i++) {
-            this._collapsedGroups[collapsedGroups[i]] = true;
+        const display = this.getDisplay();
+        if (display) {
+            display.setCollapsedGroups(collapsedGroups);
+            this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+            this._nextModelVersion();
         }
-        this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-        this._nextModelVersion();
     },
 
     isGroupExpanded(groupId: Grouping.TGroupId): boolean {
-        return typeof this._collapsedGroups[groupId] === 'undefined';
+        const collapsedGroups = this.getCollapsedGroups();
+        return collapsedGroups ? collapsedGroups.indexOf(groupId) === -1 : true;
     },
 
     toggleGroup(groupId: Grouping.TGroupId, state: boolean): void {
         if (typeof state === 'undefined') {
             state = !this.isGroupExpanded(groupId);
         }
+        const collapsedGroups = this.getCollapsedGroups() || [];
+        const newCollapsedGroups = [...collapsedGroups];
         if (state) {
-            delete this._collapsedGroups[groupId];
+            const index = newCollapsedGroups.indexOf(groupId, 0);
+            if (index > -1) {
+                newCollapsedGroups.splice(index, 1);
+            }
         } else {
-            this._collapsedGroups[groupId] = true;
+            newCollapsedGroups.push(groupId);
         }
-        this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-        this._nextModelVersion();
+        this.setCollapsedGroups(newCollapsedGroups);
         this._notify('onGroupsExpandChange', {
             group: groupId,
             changeType: state ? 'expand' : 'collapse',
-            collapsedGroups: _private.prepareCollapsedGroupsByObject(this._collapsedGroups)
+            collapsedGroups: newCollapsedGroups
         });
     },
 
@@ -355,9 +348,9 @@ var ItemsViewModel = BaseViewModel.extend({
         this.nextModelVersion();
     },
 
-    prepareDisplayFilterData: function() {
+    prepareDisplayFilterData(): {} {
         return {
-            collapsedGroups: this._collapsedGroups
+            collapsedGroups: _private.prepareCollapsedGroupsByArray(this.getCollapsedGroups())
         };
     },
 
@@ -467,7 +460,10 @@ var ItemsViewModel = BaseViewModel.extend({
         const shouldUpdate = !!metaData && !isEqual(metaData, {}) && typeof metaData.results !== 'undefined';
         if (shouldUpdate) {
             this._updateSubscriptionOnMetaChange(this._items, items, true);
-            this._metaResults =  metaData && metaData.results;
+            const display = this.getDisplay();
+            if (display) {
+                display.setMetaResults(metaData && metaData.results);
+            }
         }
         return shouldUpdate;
     },
@@ -665,17 +661,34 @@ var ItemsViewModel = BaseViewModel.extend({
         this._onCollectionChangeFnc = null;
     },
 
-    setHasMoreData: function(value: boolean) {
-        this._hasMoreData = value;
+    setHasMoreData(hasMoreData: boolean): boolean {
+        const display = this.getDisplay();
+        if (display) {
+            return this._display.setHasMoreData(hasMoreData);
+        }
     },
 
-    getHasMoreData: function() {
-        return this._hasMoreData;
+    getHasMoreData(): boolean {
+        const display = this.getDisplay();
+        if (display) {
+            return this._display.getHasMoreData();
+        }
+    },
+
+    getTheme(): string|undefined {
+        const display = this.getDisplay();
+        if (display) {
+            return display.getTheme();
+        }
     },
 
     setTheme(theme: string): void {
-        this._options.theme = theme;
-        this.resetCachedItemData();
+        const display = this.getDisplay();
+        if (display) {
+            if (display.setTheme(theme)) {
+                this.resetCachedItemData();
+            }
+        }
     }
 });
 

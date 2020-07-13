@@ -91,6 +91,8 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     leftSpacing?: string;
     rightSpacing?: string;
     rowSpacing?: string;
+    theme?: string;
+    collapsedGroups?: TArrayGroupKey;
     searchValue?: string;
     editingConfig?: any;
     unique?: boolean;
@@ -108,6 +110,9 @@ export interface IViewIterator {
     isItemAtIndexHidden: Function;
     setIndices: Function;
 }
+
+export type TGroupKey = string|number;
+export type TArrayGroupKey = TGroupKey[];
 
 export interface IItemActionsTemplateConfig {
     toolbarVisibility?: boolean;
@@ -576,6 +581,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$rightSpacing: string;
 
+    protected _$theme: string;
+
     protected _$rowSpacing: string;
 
     protected _$searchValue: string;
@@ -585,6 +592,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$virtualScrolling: boolean;
 
     protected _$hasMoreData: boolean;
+
+    protected _$metaResults: {};
+
+    protected _$collapsedGroups: TArrayGroupKey;
 
     protected _$compatibleReset: boolean;
 
@@ -724,6 +735,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (!this._$group && (options as any).groupingKeyCallback) {
             this._$group = (options as any).groupingKeyCallback;
         }
+
+        this._$theme = options.theme;
+
+        this._$collapsedGroups = options.collapsedGroups;
 
         if (!this._$collection) {
             throw new Error(`${this._moduleName}: source collection is empty`);
@@ -2184,6 +2199,19 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
+    getTheme(): string {
+        return this._$theme;
+    }
+
+    setTheme(theme: string): boolean {
+        if (this._$theme !== theme) {
+            this._$theme = theme;
+            this._nextVersion();
+            return true;
+        }
+        return false;
+    }
+
     getRowSpacing(): string {
         return this._$rowSpacing;
     }
@@ -2250,6 +2278,22 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setHasMoreData(hasMoreData: boolean): void {
         this._$hasMoreData = hasMoreData;
+    }
+
+    setMetaResults(metaResults: {}): void {
+        this._$metaResults = metaResults;
+    }
+
+    getMetaResults(): {} {
+        return this._$metaResults;
+    }
+
+    getCollapsedGroups(): TArrayGroupKey {
+        return this._$collapsedGroups;
+    }
+
+    setCollapsedGroups(collapsedGroups: TArrayGroupKey): void {
+        this._$collapsedGroups = collapsedGroups;
     }
 
     setCompatibleReset(compatible: boolean): void {
