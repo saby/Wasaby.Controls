@@ -2771,7 +2771,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
-            this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
+            this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}), {
                 items,
                 supportVirtualScroll: !!this._needScrollCalculation
             }));
