@@ -265,7 +265,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
         // Если открывают не через инстанс опенера (инстанс сейчас сам показываем индикатор, т.к. грузит зависимости)
         // И если опционально показ индикатора не отключен, то на момент построения окна покажем индикатор
-        if (!cfg._events && cfg.showIndicator !== false) {
+        if (!cfg.id && !cfg._events && cfg.showIndicator !== false) {
             BaseOpenerUtil.showIndicator(cfg);
         }
 
@@ -424,6 +424,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             showIndicator: true,
             closePopupBeforeUnmount: true
         };
+    }
+
+    // TODO Compatible
+    static isNewEnvironment(): boolean {
+        return isNewEnvironment();
     }
 
     // TODO Compatible
