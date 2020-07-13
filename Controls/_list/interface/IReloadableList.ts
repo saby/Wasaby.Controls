@@ -18,7 +18,7 @@
  * @function
  * @name Controls/_list/interface/IReloadableList#reload
  * @param {Boolean} [keepScroll=false] Сохранить ли позицию скролла после перезагрузки.
- * @param {SourceConfig} [sourceConfig] Конфигурация навигации источника данных (например размер и номер страницы для постраничной навигации), 
+ * @param {SourceConfig} [sourceConfig=undefined] Конфигурация навигации источника данных (например размер и номер страницы для постраничной навигации), 
  * которую можно передать при вызове reload, чтобы перезагрузка произошла с этими параметрами. 
  * По умолчанию, перезагрузка происходит с параметрами, переданными в опции {@link Controls/_interface/INavigation#navigation navigation}.
  * @example
