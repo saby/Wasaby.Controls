@@ -43,7 +43,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             baseControl._afterMount();
             baseControl.scrollMoveSyncHandler();
-            assert.isFalse(!!baseControl._inertialScrolling);
+            assert.isTrue(!!baseControl._inertialScrolling);
         });
     });
 });
