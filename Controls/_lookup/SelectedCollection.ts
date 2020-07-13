@@ -50,7 +50,7 @@ interface ISelectedCollectionChildren {
 
 class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _template: TemplateFunction = template;
-   protected _visibleItems: unknown[] = 0;
+   protected _visibleItems: Model[] = null;
    protected _notifyHandler: (event: SyntheticEvent, eventName: string) => void = tmplNotify;
    protected _getItemMaxWidth: Function = selectedCollectionUtils.getItemMaxWidth;
    protected _getItemOrder: Function = selectedCollectionUtils.getItemOrder;
@@ -153,11 +153,17 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       });
    }
 
-   private _getVisibleItems(items: RecordSet, maxVisibleItems: number): unknown[]  {
-      const itemsInArray: unknown[] = chain.factory(items).value();
-      const indexFirstVisibleItem: number = Math.max(maxVisibleItems ? items.getCount() - maxVisibleItems : 0, 0);
+   private _getVisibleItems(items: RecordSet, maxVisibleItems: number): Model[]  {
+      const startIndex = Math.max(maxVisibleItems ? items.getCount() - maxVisibleItems : 0, 0);
+      const resultItems = [];
 
-      return itemsInArray.slice(indexFirstVisibleItem);
+      items.each((item, index) => {
+         if (index >= startIndex) {
+            resultItems.push(item);
+         }
+      });
+
+      return resultItems;
    }
 
    private _getCounterWidth(itemsCount: number, readOnly: boolean, itemsLayout: String): number {
