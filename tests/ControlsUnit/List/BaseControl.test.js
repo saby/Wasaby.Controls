@@ -1795,7 +1795,7 @@ define([
       it('_private.setMarkedKey', () => {
          const baseControl = {
             _markerController: {
-               setMarkedKey: (key) => {
+               calculateMarkedKey: (key) => {
                   assert.equal(key, 2);
                   return key;
                }
@@ -1807,7 +1807,7 @@ define([
          };
 
          const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');
-         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'setMarkedKey');
+         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'calculateMarkedKey');
 
          lists.BaseControl._private.setMarkedKey({}, 2);
          assert.isFalse(setMarkedKeySpy.called);
@@ -6607,8 +6607,7 @@ define([
 
                   baseControl._items.getCount = () => 1;
                   baseControl._markerController = {
-                     setMarkedKey: function () {
-                     }
+                     calculateMarkedKey: () => undefined
                   };
 
                baseControl._notify = (eName, args) => {
@@ -6642,7 +6641,7 @@ define([
                   baseControl._items.getCount = () => 1;
                   baseControl._mouseDownItemKey = 1;
                   baseControl._markerController = {
-                     setMarkedKey: function (key) {
+                     calculateMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
                      }
@@ -6679,7 +6678,7 @@ define([
                   const event = {};
                   baseControl._mouseDownItemKey = 1;
                   baseControl._markerController = {
-                     setMarkedKey: function (key) {
+                     calculateMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
                      },
@@ -6709,7 +6708,7 @@ define([
                   baseControlOptions.editingConfig = {};
                   await mountBaseControl(baseControl, baseControlOptions);
                   baseControl._markerController = {
-                     setMarkedKey: function (key) {
+                     calculateMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
                      }

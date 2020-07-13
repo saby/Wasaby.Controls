@@ -478,13 +478,13 @@ const _private = {
 
     setMarkedKey(self, key: string | number): void {
         if (self._markerController) {
-            const newMarkedKey = self._markerController.setMarkedKey(key);
+            const newMarkedKey = self._markerController.calculateMarkedKey(key);
             if (newMarkedKey !== self._markedKey) {
                 self._markedKey = newMarkedKey;
                 self._notify('markedKeyChanged', [self._markedKey]);
             }
             if (!self._options.hasOwnProperty('markedKey')) {
-                self._markerController?.updateModel();
+                self._markerController.setMarkedKey();
             }
         }
     },
@@ -505,7 +505,7 @@ const _private = {
                 self._notify('markedKeyChanged', [self._markedKey]);
             }
             if (!self._options.hasOwnProperty('markedKey')) {
-                self._markerController.updateModel();
+                self._markerController.setMarkedKey();
             }
             _private.scrollToItem(self, self._markedKey);
         }
@@ -527,7 +527,7 @@ const _private = {
                 self._notify('markedKeyChanged', [self._markedKey]);
             }
             if (!self._options.hasOwnProperty('markedKey')) {
-                self._markerController.updateModel();
+                self._markerController.setMarkedKey();
             }
             _private.scrollToItem(self, self._markedKey);
         }
@@ -1161,7 +1161,7 @@ const _private = {
                 self._notify('markedKeyChanged', [self._markedKey]);
             }
             if (!self._options.hasOwnProperty('markedKey')) {
-                self._markerController.updateModel();
+                self._markerController.setMarkedKey();
             }
             self._setMarkerAfterScroll = false;
         }
@@ -1987,7 +1987,7 @@ const _private = {
                        self._notify('markedKeyChanged', [self._markedKey]);
                    }
                    if (!self._options.hasOwnProperty('markedKey')) {
-                       self._markerController.updateModel();
+                       self._markerController.setMarkedKey();
                    }
                }
                break;
@@ -2001,7 +2001,7 @@ const _private = {
             markerVisibility: options.markerVisibility,
             markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
         });
-   },
+    },
 
     updateMarkerController(self: any, options: any): void {
         const newMarkedKey = self._markerController.update({
@@ -2881,7 +2881,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._markerController) {
             _private.updateMarkerController(this, newOptions);
-            this._markerController.updateModel();
+            this._markerController.setMarkedKey();
         } else {
             if (newOptions.markerVisibility !== 'hidden') {
                 this._markerController = _private.createMarkerController(self, newOptions);

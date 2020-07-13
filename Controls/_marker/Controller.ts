@@ -3,6 +3,11 @@ import { IMarkerModel, IOptions, TKey, TVisibility, Visibility } from './interfa
 import { CollectionItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 
+/**
+ * @class Controls/_marker/Controller
+ * @author Панихин К.А.
+ * @private
+ */
 export class Controller {
    private _model: IMarkerModel;
    private _markerVisibility: TVisibility;
@@ -12,10 +17,10 @@ export class Controller {
    constructor(options: IOptions) {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-      this.setMarkedKey(options.markedKey);
+      this.calculateMarkedKey(options.markedKey);
 
       if (this._markedKey !== null) {
-         this.updateModel();
+         this.setMarkedKey();
       }
    }
 
@@ -27,14 +32,14 @@ export class Controller {
    update(options: IOptions): TKey {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-      this.setMarkedKey(options.markedKey);
+      this.calculateMarkedKey(options.markedKey);
       return this._markedKey;
    }
 
    /**
     * Обновить маркер в модели
     */
-   updateModel(): void {
+   setMarkedKey(): void {
       if (this._prevMarkedKey !== this._markedKey) {
          this._model.setMarkedKey(this._prevMarkedKey, false);
          this._model.setMarkedKey(this._markedKey, true);
@@ -48,7 +53,7 @@ export class Controller {
     * @param key ключ элемента, на который ставится маркер
     * @return {string|number} новый ключ маркера
     */
-   setMarkedKey(key: TKey): TKey {
+   calculateMarkedKey(key: TKey): TKey {
       if ((key === undefined || key === null) && this._markerVisibility !== Visibility.Visible) {
          this._markedKey = key;
          return this._markedKey;
@@ -113,7 +118,7 @@ export class Controller {
       }
 
       const nextKey = this._getKey(nextItem);
-      this.setMarkedKey(nextKey);
+      this.calculateMarkedKey(nextKey);
       return nextKey;
    }
 
@@ -128,7 +133,7 @@ export class Controller {
       }
 
       const prevKey = this._getKey(prevItem);
-      this.setMarkedKey(prevKey);
+      this.calculateMarkedKey(prevKey);
       return prevKey;
    }
 
@@ -148,11 +153,11 @@ export class Controller {
       const prevItem = this._model.getPrevByIndex(removedItemsIndex);
 
       if (nextItem) {
-         this.setMarkedKey(this._getKey(nextItem));
+         this.calculateMarkedKey(this._getKey(nextItem));
       } else if (prevItem) {
-         this.setMarkedKey(this._getKey(prevItem));
+         this.calculateMarkedKey(this._getKey(prevItem));
       } else {
-         this.setMarkedKey(null);
+         this.calculateMarkedKey(null);
       }
 
       return this._markedKey;
@@ -171,9 +176,9 @@ export class Controller {
       const item = this._model.getValidItemForMarker(firstItemIndex);
       if (item) {
          const itemKey = this._getKey(item);
-         this.setMarkedKey(itemKey);
+         this.calculateMarkedKey(itemKey);
       } else {
-         this.setMarkedKey(null);
+         this.calculateMarkedKey(null);
       }
 
       return this._markedKey;

@@ -13,7 +13,7 @@ import {
 import clone = require('Core/core-clone');
 
 /**
- * @class Controls/_multiselector/SelectionController
+ * @class Controls/_multiselection/Controller
  * @author Авраменко А.С.
  * @private
  */
