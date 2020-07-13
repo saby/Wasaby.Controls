@@ -61,7 +61,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
     protected _sendResult(event: SyntheticEvent<MouseEvent>,
                           action: string,
-                          data: any,
+                          data: unknown,
                           nativeEvent: SyntheticEvent<MouseEvent>): false {
         this._notify('sendResult', [action, data, nativeEvent], {bubbling: true});
 

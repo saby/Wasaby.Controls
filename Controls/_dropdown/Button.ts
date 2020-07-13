@@ -11,9 +11,11 @@ import {IGroupedOptions} from 'Controls/dropdown';
 import {IIconOptions, IHeightOptions, IIconSizeOptions, IIconStyleOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
+import {IStickyPopupOptions} from 'Controls/popup';
 import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {RecordSet} from 'Types/collection';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
+import * as Merge from 'Core/core-merge';
 
 interface IButtonOptions extends IBaseDropdownOptions, IGroupedOptions, IIconOptions, IHeightOptions,
          IIconSizeOptions, IIconStyleOptions, IMenuControlOptions, IMenuPopupOptions {
@@ -156,6 +158,18 @@ export default class Button extends BaseDropdown {
       };
    }
 
+   _getMenuPopupConfig(): IStickyPopupOptions {
+      return {
+         eventHandlers: {
+            onOpen: this._onOpen.bind(this),
+            onClose: this._onClose.bind(this),
+            onResult: (action, data, nativeEvent) => {
+               this._onResult(action, data, nativeEvent);
+            }
+         }
+      };
+   }
+
    _onItemClickHandler(result, nativeEvent) {
       //onMenuItemActivate will deleted by task https://online.sbis.ru/opendoc.html?guid=6175f8b3-4166-497e-aa51-1fdbcf496944
       const onMenuItemActivateResult = this._notify('onMenuItemActivate', [result[0], nativeEvent]);
@@ -176,21 +190,14 @@ export default class Button extends BaseDropdown {
       if (!isLeftMouseButton(event)) {
          return;
       }
-      const config = {
-         eventHandlers: {
-            onOpen: this._onOpen.bind(this),
-            onClose: this._onClose.bind(this),
-            onResult: (action, data, nativeEvent) => {
-               this._onResult(action, data, nativeEvent);
-            }
-         }
-      };
-      this._controller.setMenuPopupTarget(this._container.children[0]);
-      this.openMenu(config);
+      this.openMenu();
    }
 
-   openMenu(popupOptions?: IMenuPopupOptions): void {
-      this._controller.openMenu(popupOptions).then((result) => {
+   openMenu(popupOptions?: IStickyPopupOptions): void {
+      const config = this._getMenuPopupConfig();
+      this._controller.setMenuPopupTarget(this._container.children[0]);
+
+      this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
          if (typeof result === 'string') {
             this._popupId = result;
          } else if (result) {
