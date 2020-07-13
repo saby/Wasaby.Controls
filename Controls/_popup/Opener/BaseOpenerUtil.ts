@@ -3,6 +3,9 @@ import {parse as parserLib, load} from 'Core/library';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
+import {goUpByControlTree} from 'UI/Focus';
+import {IndicatorUtil} from 'Controls/LoadingIndicator';
+import rk = require('i18n!Controls');
 
 interface IModuleInfo {
     parsedModule: {
@@ -87,6 +90,37 @@ export default {
         } else {
             this.getManager().then(callback);
         }
+    },
+
+    showIndicator(cfg): void {
+        const hideFunction = () => {
+            IndicatorUtil.hide(id);
+        };
+        const indicatorConfig = this.getIndicatorConfig(null, cfg);
+        const id: string = IndicatorUtil.show(indicatorConfig);
+        cfg._events = {
+            onOpen: hideFunction,
+            onClose: hideFunction
+        };
+    },
+
+    getIndicatorConfig(id: string, cfg) {
+        const findParentPopupId = () => {
+            const parentControls: Control[] = goUpByControlTree(cfg.opener?._container);
+            for (let i = 0; i < parentControls.length; i++) {
+                if (parentControls[i]._moduleName === 'Controls/_popup/Manager/Popup') {
+                    return parentControls[i]._options.id;
+                }
+            }
+            return false;
+        };
+        const popupId = findParentPopupId();
+        return {
+            id,
+            message: rk('Загрузка'),
+            delay: 2000,
+            popupId
+        };
     },
 
     // TODO Compatible
