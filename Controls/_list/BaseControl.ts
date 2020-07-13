@@ -416,7 +416,7 @@ const _private = {
         if (self._markerController) {
             self._markedKey = self._markerController.restoreMarker();
         } else {
-            if (options.markerVisibility !== 'hidden') {
+            if (options.markedKey) {
                 self._markerController = _private.createMarkerController(self, options);
             }
         }
@@ -1433,7 +1433,7 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        const menuConfig = self._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
+        const menuConfig = self._getItemActionController().prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
         }
@@ -1457,7 +1457,7 @@ const _private = {
             self._itemActionsMenuId = popupId;
             // Нельзя устанавливать activeItem раньше, иначе при автокликах
             // робот будет открывать меню раньше, чем оно закрылось
-            self._itemActionsController.setActiveItem(item);
+            self._getItemActionController().setActiveItem(item);
             RegisterUtil(self, 'scroll', self._scrollHandler.bind(self));
         });
     },
@@ -1471,7 +1471,7 @@ const _private = {
     closeActionsMenu(self: any, currentPopup?: any): void {
         if (self._itemActionsMenuId) {
             _private.closePopup(self, currentPopup ? currentPopup.id : null);
-            self._itemActionsController.deactivateSwipe();
+            self._getItemActionController().deactivateSwipe();
             self._listViewModel.setActiveItem(null);
         }
     },
@@ -2074,9 +2074,6 @@ const _private = {
         if (!options.itemActions && !options.itemActionsProperty && !editingConfig?.toolbarVisibility) {
             return;
         }
-        if (!self._itemActionsController) {
-            self._itemActionsController = new ItemActionsController();
-        }
 
         const editingItemData = self._listViewModel.getEditingItemData && self._listViewModel.getEditingItemData();
         const isActionsAssigned = self._listViewModel.isActionsAssigned();
@@ -2093,7 +2090,7 @@ const _private = {
             };
         }
         // Гарантированно инициализируем шаблоны, если это ещё не произошло
-        const itemActionsChangeResult = self._itemActionsController.update({
+        const itemActionsChangeResult = self._getItemActionController().update({
             editingItem: editingItemData,
             collection: self._listViewModel,
             itemActions: options.itemActions,
@@ -2137,7 +2134,7 @@ const _private = {
      */
     closeSwipe(self): void {
         if (self._listViewModel.isActionsAssigned()) {
-            self._itemActionsController.deactivateSwipe();
+            self._getItemActionController().deactivateSwipe();
         }
     },
 
@@ -2505,8 +2502,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.updatePagingData(self, hasMoreData);
                     }
 
-                    if (newOptions.markerVisibility !== 'hidden') {
-                        self._markerController = _private.createMarkerController(self, newOptions);
+                    if (newOptions.markedKey) {
+                        this._getMarkerController(newOptions);
                     }
 
                     if (newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
@@ -2585,6 +2582,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         });
 
+    },
+
+    _getMarkerController(options: Object = null): MarkerController {
+        if (!this._markerController) {
+            this._markerController = _private.createMarkerController(this, options);
+        }
+        return this._markerController;
+    },
+
+    _getItemActionController(): ItemActionsController {
+        if (!this._itemActionsController) {
+            this._itemActionsController = new ItemActionsController();
+        }
+
+        return this._itemActionsController;
     },
 
     scrollMoveSyncHandler(params: unknown): void {
@@ -2842,8 +2854,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._markerController) {
             _private.updateMarkerController(this, newOptions);
         } else {
-            if (newOptions.markerVisibility !== 'hidden') {
-                this._markerController = _private.createMarkerController(self, newOptions);
+            if (newOptions.markedKey) {
+                this._getMarkerController(newOptions);
             }
         }
 
@@ -3368,7 +3380,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
             if (action && !action['parent@']) {
-                const item = this._itemActionsController.getActiveItem();
+                const item = this._getItemActionController().getActiveItem();
                 _private.handleItemActionClick(this, action, clickEvent, item, true);
             }
         }
@@ -3657,11 +3669,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             _private.setMarkedKey(this, key);
-            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);
+            this._getItemActionController().activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             if (item.isSwiped()) {
-                this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+                this._getItemActionController().setSwipeAnimation(ANIMATION_STATE.CLOSE);
                 this._listViewModel.nextVersion();
             } else {
                 // After the right swipe the item should get selected.
@@ -3676,7 +3688,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 // Animation should be played only if checkboxes are visible.
                 if (this._options.multiSelectVisibility !== 'hidden') {
-                    this._itemActionsController.activateRightSwipe(item.getContents().getKey());
+                    this._getItemActionController().activateRightSwipe(item.getContents().getKey());
                 }
                 _private.setMarkedKey(this, key);
             }
@@ -3693,12 +3705,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      */
     _onActionsSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'itemActionsSwipeClose') {
-            const item = this._itemActionsController.getSwipeItem();
+            const item = this._getItemActionController().getSwipeItem();
             if (item) {
                 if (!this._options.itemActions) {
                     this._notify('itemSwipe', [item, e]);
                 }
-                this._itemActionsController.deactivateSwipe();
+                this._getItemActionController().deactivateSwipe();
             }
         }
     },
@@ -3710,7 +3722,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      */
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'rightSwipe') {
-            this._itemActionsController.deactivateSwipe();
+            this._getItemActionController().deactivateSwipe();
         }
     },
 
