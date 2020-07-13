@@ -26,15 +26,20 @@ class HorizontalMeasurer implements IMeasurer {
       const actualActions: IItemAction[] = MeasurerUtils.getActualActions(actions);
       let visibleActions: IItemAction[] = [];
       const actionTemplateConfig = this._getActionTemplateConfig(rowHeight, actionCaptionPosition);
-      const moreButton = HorizontalMeasurer._getMoreButton();
+      const menuButton = HorizontalMeasurer._getMoreButton();
 
       if (actualActions.length) {
-         visibleActions =
-             HorizontalMeasurer._calculateVisibleActions(actualActions, moreButton, rowWidth, actionTemplateConfig);
+         visibleActions = HorizontalMeasurer._calculateVisibleActions(
+             actualActions,
+             menuButton,
+             menuButtonVisibility,
+             rowWidth,
+             actionTemplateConfig
+         );
       }
 
       if (menuButtonVisibility === 'visible' || visibleActions.length < actualActions.length) {
-         visibleActions.push(moreButton);
+         visibleActions.push(menuButton);
       }
 
       return {
@@ -136,15 +141,17 @@ class HorizontalMeasurer implements IMeasurer {
    }
 
    /**
-    * Вычисляет на основе горизонтальных размеров видимые опции свайпа
+    * Запрашивает горизонтальные размеры и возвращает на их основе массив видимых опций свайпа
     * @param actions все опции свайпа
     * @param moreButton опция "Ещё"
+    * @param menuButtonVisibility Видимость кнопки ещё
     * @param rowWidth ширина контейнера для отображения опций свайпа
     * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
     */
    private static _calculateVisibleActions(
        actions: IItemAction[],
        moreButton: IItemAction,
+       menuButtonVisibility: 'visible'|'adaptive',
        rowWidth: number,
        templateConfig: ISwipeActionTemplateConfig): IItemAction[] {
       const moreButtonSize = this._calculateActionSize(moreButton, templateConfig);
@@ -153,11 +160,37 @@ class HorizontalMeasurer implements IMeasurer {
       // Кроме всего прочего, это позволит не производить слишком много вычислений с DOM
       const itemActions = actions.slice(0, MAX_ACTIONS_COUNT);
       const itemActionsSizes = this._calculateActionsSizes(itemActions, templateConfig);
-      let maxWidth = rowWidth - moreButtonSize - itemActionsSizes.blockSize;
+      let maxWidth = rowWidth - itemActionsSizes.blockSize;
+      let visibleActions = [];
+
+      // Если видимость кнопки "ещё" не visible, то сначала считаем без учёта её ширины,
+      // Иначе иногда даже в случае, если кнопки все уместились у нас будет добавляться меню
+      if (menuButtonVisibility !== 'visible') {
+         visibleActions = this._fillVisibleActions(itemActions, itemActionsSizes.itemsSizes, maxWidth);
+      }
+
+      // Если кнопка "ещё" всё-таки нужна, то считаем ещё раз, учитывая её ширину
+      if (menuButtonVisibility === 'visible' || visibleActions.length < actions.length) {
+         maxWidth -= moreButtonSize;
+         visibleActions = this._fillVisibleActions(itemActions, itemActionsSizes.itemsSizes, maxWidth);
+      }
+      return visibleActions;
+   }
+
+   /**
+    * Вычисляет на основе горизонтальных размеров видимые опции свайпа
+    * @param itemActions
+    * @param itemActionsSizes
+    * @param maxWidth
+    * @private
+    */
+   private static _fillVisibleActions(itemActions: IItemAction[], itemActionsSizes: number[], maxWidth: number)
+       : IItemAction[] {
       const visibleActions: IItemAction[] = [];
+      let currentWidth: number = maxWidth;
       itemActions.every((action, index) => {
-         maxWidth -= itemActionsSizes.itemsSizes[index];
-         if (maxWidth < 0) {
+         currentWidth -= itemActionsSizes[index];
+         if (currentWidth < 0) {
             return false;
          }
          visibleActions.push(action);
