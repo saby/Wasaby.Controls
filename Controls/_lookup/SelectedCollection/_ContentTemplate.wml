@@ -3,6 +3,6 @@
             controls-SelectedCollection__item__caption-style-{{style}}_theme-{{_options.theme}}
             controls-SelectedCollection__item__caption-size-{{size}}_theme-{{_options.theme}}
             {{clickable ? 'controls-SelectedCollection__item__caption-clickable'}}"
-     title="{{item.get(displayProperty || 'title')}}">
-    {{item.get(displayProperty || 'title')}}
+     title="{{caption || item.get(displayProperty || 'title')}}">
+    {{caption || item.get(displayProperty || 'title')}}
 </div>
