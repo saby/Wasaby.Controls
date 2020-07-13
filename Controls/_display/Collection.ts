@@ -2170,16 +2170,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    getValidItemForMarker(index: number): S {
+    getValidItemForMarker(index: number): T {
         const item = this.getItemBySourceIndex(index);
 
-        // TODO неправильная логика у getPRev и getNext для этого места
-        const prevValidItem = this.getPrevious(item);
         const nextValidItem = this.getNext(item);
-        if (nextValidItem !== undefined) {
-            return nextValidItem.getContents();
-        } else if (prevValidItem !== undefined) {
-            return prevValidItem.getContents();
+        const prevValidItem = this.getPrevious(item);
+        if (nextValidItem) {
+            return nextValidItem;
+        } else if (prevValidItem) {
+            return prevValidItem;
         } else {
             return null;
         }

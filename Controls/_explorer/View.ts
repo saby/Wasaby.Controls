@@ -364,7 +364,7 @@ var
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
     * @mixes Controls/_interface/INavigation
-    * @mixes Controls/_interface/IFilter
+    * @mixes Controls/_interface/IFilterChanged
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/IHierarchy
@@ -397,7 +397,7 @@ var
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
     * @mixes Controls/_interface/INavigation
-    * @mixes Controls/_interface/IFilter
+    * @mixes Controls/_interface/IFilterChanged
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/ISorting
@@ -441,8 +441,8 @@ var
     */
 
    /**
-    * @name Controls/_explorer/View#displayMode
-    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
+    * @name Controls/_explorer/View#breadcrumbsDisplayMode
+    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#breadcrumbsDisplayMode}
     */
 
     var Explorer = Control.extend({
@@ -485,6 +485,11 @@ var
                markedKey: null
             }
          };
+
+         // TODO: для 20.5100. в 20.6000 можно удалить
+         if (cfg.displayMode) {
+            Logger.error(`${this._moduleName}: Для задания многоуровневых хлебных крошек вместо displayMode используйте опцию breadcrumbsDisplayMode`, this);
+         }
 
          this._dragControlId = randomId();
          this._navigation = cfg.navigation;
