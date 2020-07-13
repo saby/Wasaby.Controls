@@ -232,6 +232,35 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             assert.deepInclude(config, result);
         });
 
+        // Если menuButtonVisibility===visible, то показываем кнопку "Ещё"
+        it('should show menu button when menuButtonVisibility===visible', () => {
+            const lessActions = [...actions];
+            lessActions.splice(-1, 1);
+
+            const result = {
+                itemActionsSize: 'm',
+                itemActions: {
+                    all: lessActions,
+                    showed: lessActions.concat({
+                        id: null,
+                        icon: 'icon-SwipeMenu',
+                        title: rk('Ещё'),
+                        _isMenu: true,
+                        showType: 2
+                    })
+                },
+                paddingSize: 'm'
+            };
+            const config = horizontalMeasurer.getSwipeConfig(
+                lessActions,
+                75,
+                20,
+                'right',
+                'visible'
+            );
+            assert.deepInclude(config, result);
+        });
+
         it('small row without title, itemActionsSize should be m', () => {
             const result = {
                 itemActionsSize: 'm',
