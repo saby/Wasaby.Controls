@@ -250,9 +250,9 @@ var BaseLookupView = Control.extend({
         this.activate();
     },
 
-    _itemClick: function (event, item) {
+    _itemClick: function (event, item, nativeEvent) {
         this.closeSuggest();
-        this._notify('itemClick', [item]);
+        this._notify('itemClick', [item, nativeEvent]);
     },
 
     _keyDown: function (event, keyboardEvent) {
