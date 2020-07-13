@@ -297,7 +297,7 @@ describe('Controls/_multiselection/Controller', () => {
          }
       };
       const removedItem = {
-               getKey: () => 1
+         getKey: () => 1
       };
       const result = controller.handleRemoveItems([removedItem]);
       assert.deepEqual(result, expectedResult);
@@ -311,5 +311,27 @@ describe('Controls/_multiselection/Controller', () => {
 
       result = controller.toggleItem(3);
       assert.equal(result.selectedCount, 3);
+   });
+
+   it('setSelectedKeys', () => {
+      controller.toggleItem(1);
+      const result = controller.setSelectedKeys();
+
+      const expectedResult = {
+         isAllSelected: false,
+         selectedCount: 1,
+         selectedKeysDiff: {
+            keys: [1],
+            added: [],
+            removed: []
+         }, excludedKeysDiff: {
+            keys: [],
+            added: [],
+            removed: []
+         }
+      };
+
+      assert.isTrue(model.getItemBySourceKey(1).isSelected());
+      assert.deepEqual(result, expectedResult);
    });
 });

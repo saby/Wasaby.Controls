@@ -422,7 +422,7 @@ const _private = {
         }
 
         if (self._selectionController) {
-            self._selectionController.updateModel();
+            self._selectionController.setSelectedKeys();
         } else {
             if (options.selectedKeys && options.selectedKeys.length > 0) {
                 self._selectionController = _private.createSelectionController(self, options);
@@ -2844,7 +2844,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
             if (selectionChanged || this._modelRecreated) {
                 // handleSelectionControllerResult чтобы отправить информацию для ПМО
-                const result = this._selectionController.updateModel();
+                const result = this._selectionController.setSelectedKeys();
                 _private.handleSelectionControllerResult(this, result);
             }
         } else {
