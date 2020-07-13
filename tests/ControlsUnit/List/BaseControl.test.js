@@ -1243,7 +1243,8 @@ define([
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
                update() {},
-               restoreMarker() {}
+               restoreMarker() {},
+               getMarkedKey() {}
             };
          };
          baseControl.saveOptions(cfg);
@@ -1313,7 +1314,8 @@ define([
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
                update() {},
-               restoreMarker() {}
+               restoreMarker() {},
+               getMarkedKey() {}
             };
          };
 
@@ -1365,7 +1367,8 @@ define([
          };
          let instance,
             preventDefaultCalled = false,
-            activateCalled = false;
+            activateCalled = false,
+            notifySpy;
          const event = {
             preventDefault() { preventDefaultCalled = true; }
          };
@@ -1387,20 +1390,22 @@ define([
 
             preventDefaultCalled = false;
             activateCalled = false;
+
+            notifySpy = sinon.spy(instance, '_notify');
          });
 
          it ('moveMarkerToNext', () => {
             lists.BaseControl._private.moveMarkerToNext(instance, event);
             assert.isTrue(activateCalled);
             assert.isTrue(preventDefaultCalled);
-            assert.equal(instance._markedKey, 3);
+            assert.isTrue(notifySpy.withArgs('markedKeyChanged', [3]).called);
          });
 
          it ('moveMarkerToPrev', () => {
             lists.BaseControl._private.moveMarkerToPrevious(instance, event);
             assert.isTrue(activateCalled);
             assert.isTrue(preventDefaultCalled);
-            assert.equal(instance._markedKey, 1);
+            assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
          });
       });
 
@@ -1689,10 +1694,10 @@ define([
          const notifySpy = sinon.spy(baseControl, '_notify');
 
          lists.BaseControl._private.updateMarkerController(baseControl, cfg);
-         assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+         assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
 
          lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 2 });
-         assert.isTrue(notifySpy.withArgs('markedKeyChanged', [2]).called);
+         assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
 
          notifySpy.resetHistory();
          baseControl._listViewModel.setItems(new collection.RecordSet({
@@ -1700,7 +1705,7 @@ define([
             keyProperty: 'id'
          }));
          lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
-         assert.isFalse(notifySpy.withArgs('markedKeyChanged').called);
+         assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
       });
 
       describe('_private.createSelectionController', function() {
@@ -1798,7 +1803,8 @@ define([
                calculateMarkedKey: (key) => {
                   assert.equal(key, 2);
                   return key;
-               }
+               },
+               getMarkedKey: () => 2
             },
             _notify: () => null,
             _options: {
@@ -1816,7 +1822,7 @@ define([
          lists.BaseControl._private.setMarkedKey(baseControl, 2);
          assert.isFalse(scrollToItemSpy.called);
          assert.isFalse(setMarkedKeySpy.withArgs(baseControl, 2).called);
-         assert.equal(baseControl._markedKey, 2);
+         assert.equal(baseControl._markerController.getMarkedKey(), 2);
       });
 
       it('loadToDirection up', async function() {
@@ -3156,7 +3162,6 @@ define([
                viewName: 'Controls/List/ListView',
                source: lnSource,
                keyProperty: 'id',
-               markedKey: 1,
                markerVisibility: 'visible',
                viewModelConstructor: lists.ListViewModel
             },
@@ -3180,25 +3185,19 @@ define([
          lnBaseControl._beforeMount(lnCfg);
 
          setTimeout(function() {
-            assert.equal(lnBaseControl.getViewModel()
-               .getMarkedKey(), 1, 'Invalid initial value of markedKey.');
-            lnBaseControl.reload();
-            setTimeout(function() {
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 1, 'Invalid value of markedKey after reload.');
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after reload.');
 
-               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.down));
-               assert.equal(lnBaseControl._markedKey, 2, 'Invalid value of markedKey after press "down".');
+            lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.down));
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
 
-               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.space));
-               assert.equal(lnBaseControl._markedKey, 3, 'Invalid value of markedKey after press "space".');
+            lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.space));
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
 
-               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.up));
-               assert.equal(lnBaseControl._markedKey, 2, 'Invalid value of markedKey after press "up".');
+            lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.up));
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');
 
-               assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
-               done();
-            }, 1);
+            assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
+            done();
          }, 1);
       });
 
@@ -6607,7 +6606,8 @@ define([
 
                   baseControl._items.getCount = () => 1;
                   baseControl._markerController = {
-                     calculateMarkedKey: () => undefined
+                     calculateMarkedKey: () => undefined,
+                     getMarkedKey: () => undefined
                   };
 
                baseControl._notify = (eName, args) => {
@@ -6644,7 +6644,8 @@ define([
                      calculateMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
-                     }
+                     },
+                     getMarkedKey: () => 1
                   };
 
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
@@ -6682,7 +6683,8 @@ define([
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
                      },
-                     restoreMarker() {}
+                     restoreMarker() {},
+                     getMarkedKey: () => undefined
                   };
 
                   baseControl._scrollController = {
@@ -6711,7 +6713,8 @@ define([
                      calculateMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
-                     }
+                     },
+                     getMarkedKey: () => undefined
                   };
 
                baseControl._mouseDownItemKey = 1;

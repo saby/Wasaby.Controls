@@ -146,6 +146,9 @@ describe('Controls/marker/Controller', () => {
          let result = controller.calculateMarkedKey(3);
          assert.equal(result, 3);
 
+         controller.setMarkedKey(result);
+         assert.isTrue(model.getItemBySourceKey(3).isMarked());
+
          // markedKey не должен сброситсья, если список пустой
          model.setItems(new RecordSet({
             rawData: [],

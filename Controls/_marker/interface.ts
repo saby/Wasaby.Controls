@@ -7,6 +7,7 @@ export type TKey = string|number;
 
 export interface IMarkerModel extends IBaseCollection<CollectionItem<Model>> {
    setMarkedKey(key: TKey, status: boolean): void;
+   getMarkedKey(): TKey;
    getFirstItem(): Model;
    getCount(): number;
    getValidItemForMarker(index: number): CollectionItem<Model>;

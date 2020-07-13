@@ -414,7 +414,9 @@ const _private = {
 
     restoreModelState(self: any, options: any): void {
         if (self._markerController) {
-            self._markedKey = self._markerController.restoreMarker();
+            // TODO marker нужен иногда нотифай
+            const newMarkedKey = self._markerController.restoreMarker();
+            _private.notifyAndSetMarker(self, newMarkedKey);
         } else {
             if (options.markerVisibility !== 'hidden') {
                 self._markerController = _private.createMarkerController(self, options);
@@ -476,67 +478,6 @@ const _private = {
         return self._scrollController?.scrollToItem(key, toBottom, force);
     },
 
-    setMarkedKey(self, key: string | number): void {
-        if (self._markerController) {
-            const newMarkedKey = self._markerController.calculateMarkedKey(key);
-            if (newMarkedKey !== self._markedKey) {
-                self._markedKey = newMarkedKey;
-                self._notify('markedKeyChanged', [self._markedKey]);
-            }
-            if (!self._options.hasOwnProperty('markedKey')) {
-                self._markerController.setMarkedKey();
-            }
-        }
-    },
-    moveMarkerToNext(self, event) {
-        if (self._markerController) {
-            // activate list when marker is moving. It let us press enter and open current row
-            // must check mounted to avoid fails on unit tests
-            if (self._mounted) {
-                self.activate();
-            }
-
-            // чтобы предотвратить нативный подскролл
-            // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
-            event.preventDefault();
-            const newMarkedKey = self._markerController.moveMarkerToNext();
-            if (newMarkedKey !== self._markedKey) {
-                self._markedKey = newMarkedKey;
-                self._notify('markedKeyChanged', [self._markedKey]);
-            }
-            if (!self._options.hasOwnProperty('markedKey')) {
-                self._markerController.setMarkedKey();
-            }
-            _private.scrollToItem(self, self._markedKey);
-        }
-    },
-    moveMarkerToPrevious(self, event) {
-        if (self._markerController) {
-            // activate list when marker is moving. It let us press enter and open current row
-            // must check mounted to avoid fails on unit tests
-            if (self._mounted) {
-                self.activate();
-            }
-
-            // чтобы предотвратить нативный подскролл
-            // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
-            event.preventDefault();
-            const newMarkedKey = self._markerController.moveMarkerToPrev();
-            if (newMarkedKey !== self._markedKey) {
-                self._markedKey = newMarkedKey;
-                self._notify('markedKeyChanged', [self._markedKey]);
-            }
-            if (!self._options.hasOwnProperty('markedKey')) {
-                self._markerController.setMarkedKey();
-            }
-            _private.scrollToItem(self, self._markedKey);
-        }
-    },
-    setMarkerAfterScroll(self, event) {
-        if (self._options.moveMarkerOnScrollPaging !== false) {
-            self._setMarkerAfterScroll = true;
-        }
-    },
     keyDownHome(self, event) {
         _private.setMarkerAfterScroll(self, event);
     },
@@ -1148,29 +1089,6 @@ const _private = {
     handleListScroll(self, params) {
 
     },
-
-    setMarkerAfterScrolling(self, scrollTop) {
-        // TODO вручную обрабатывать pagedown и делать stop propagation
-        if (self._markerController) {
-            const itemsContainer = self._children.listView.getItemsContainer();
-            const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
-            const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
-            const newMarkedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
-            if (newMarkedKey !== self._markedKey) {
-                self._markedKey = newMarkedKey;
-                self._notify('markedKeyChanged', [self._markedKey]);
-            }
-            if (!self._options.hasOwnProperty('markedKey')) {
-                self._markerController.setMarkedKey();
-            }
-            self._setMarkerAfterScroll = false;
-        }
-    },
-
-    // TODO KINGO: Задержка нужна, чтобы расчет видимой записи производился после фиксации заголовка
-    delayedSetMarkerAfterScrolling: debounce((self, scrollTop) => {
-        _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
-    }, SET_MARKER_AFTER_SCROLL_DELAY),
 
     getTopOffsetForItemsContainer(self, itemsContainer) {
         let offsetTop = uDimension(itemsContainer.children[0], true).top;
@@ -1968,8 +1886,6 @@ const _private = {
 
     // endregion
 
-    // region Marker
-
     onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
       // подписываемся на рекордсет, чтобы следить какие элементы будут удалены
       // при подписке на модель событие remove летит еще и при скрытии элементов
@@ -1982,24 +1898,20 @@ const _private = {
                }
                if (removedItemsIndex !== undefined && self._markerController) {
                    const newMarkedKey = self._markerController.handleRemoveItems(removedItemsIndex);
-                   if (newMarkedKey !== self._markedKey) {
-                       self._markedKey = newMarkedKey;
-                       self._notify('markedKeyChanged', [self._markedKey]);
-                   }
-                   if (!self._options.hasOwnProperty('markedKey')) {
-                       self._markerController.setMarkedKey();
-                   }
+                   _private.notifyAndSetMarker(self, newMarkedKey);
                }
                break;
        }
        this.handleSelectionControllerResult(self, selectionControllerResult);
    },
 
+    // region Marker
+
     createMarkerController(self: any, options: any): MarkerController {
         return new MarkerController({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
+            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : undefined
         });
     },
 
@@ -2007,11 +1919,81 @@ const _private = {
         const newMarkedKey = self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
+            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markerController.getMarkedKey()
         });
-        if (newMarkedKey !== self._markedKey) {
-            self._markedKey = newMarkedKey;
-            self._notify('markedKeyChanged', [self._markedKey]);
+        self._markerController.setMarkedKey(newMarkedKey);
+    },
+
+    setMarkedKey(self: any, key: string | number): void {
+        if (self._markerController) {
+            const newMarkedKey = self._markerController.calculateMarkedKey(key);
+            _private.notifyAndSetMarker(self, newMarkedKey);
+        }
+    },
+
+    moveMarkerToNext(self: any, event): void {
+        if (self._markerController) {
+            // activate list when marker is moving. It let us press enter and open current row
+            // must check mounted to avoid fails on unit tests
+            if (self._mounted) {
+                self.activate();
+            }
+
+            // чтобы предотвратить нативный подскролл
+            // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
+            event.preventDefault();
+            const newMarkedKey = self._markerController.moveMarkerToNext();
+            _private.notifyAndSetMarker(self, newMarkedKey);
+            _private.scrollToItem(self, newMarkedKey);
+        }
+    },
+
+    moveMarkerToPrevious(self: any, event): void {
+        if (self._markerController) {
+            // activate list when marker is moving. It let us press enter and open current row
+            // must check mounted to avoid fails on unit tests
+            if (self._mounted) {
+                self.activate();
+            }
+
+            // чтобы предотвратить нативный подскролл
+            // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
+            event.preventDefault();
+            const newMarkedKey = self._markerController.moveMarkerToPrev();
+            _private.notifyAndSetMarker(self, newMarkedKey);
+            _private.scrollToItem(self, newMarkedKey);
+        }
+    },
+
+    setMarkerAfterScroll(self, event) {
+        if (self._options.moveMarkerOnScrollPaging !== false) {
+            self._setMarkerAfterScroll = true;
+        }
+    },
+
+    setMarkerAfterScrolling(self, scrollTop) {
+        // TODO вручную обрабатывать pagedown и делать stop propagation
+        if (self._markerController) {
+            const itemsContainer = self._children.listView.getItemsContainer();
+            const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
+            const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
+            const newMarkedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
+            _private.notifyAndSetMarker(self, newMarkedKey);
+            self._setMarkerAfterScroll = false;
+        }
+    },
+
+    // TODO KINGO: Задержка нужна, чтобы расчет видимой записи производился после фиксации заголовка
+    delayedSetMarkerAfterScrolling: debounce((self, scrollTop) => {
+        _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
+    }, SET_MARKER_AFTER_SCROLL_DELAY),
+
+    notifyAndSetMarker(self: any, newMarkedKey: string|number): void {
+        if (newMarkedKey !== self._markerController.getMarkedKey()) {
+            self._notify('markedKeyChanged', [newMarkedKey]);
+        }
+        if (!self._options.hasOwnProperty('markedKey')) {
+            self._markerController.setMarkedKey(newMarkedKey);
         }
     },
 
@@ -2447,7 +2429,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _swipeTemplate: swipeTemplate,
 
     _markerController: null,
-    _markedKey: null,
 
     _dndListController: null,
     _dragEntity: undefined,
@@ -2881,7 +2862,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._markerController) {
             _private.updateMarkerController(this, newOptions);
-            this._markerController.setMarkedKey();
         } else {
             if (newOptions.markerVisibility !== 'hidden') {
                 this._markerController = _private.createMarkerController(self, newOptions);
