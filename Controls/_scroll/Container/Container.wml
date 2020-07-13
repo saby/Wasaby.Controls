@@ -3,7 +3,7 @@
         <ws:partial template="{{_baseTemplate}}"
                     _options="{{_options}}"
                     attr:style="{{_scrollbars.scrollContainerStyles}}"
-                    attr:class="controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-{{_options.theme}}
+                    attr:class="controls-BlockLayout__blockGroup_theme-{{_options.theme}} controls-BlockLayout__blockGroup_theme-{{_options.theme}}
                             {{_scrollbars.scrollContainerClasses}}"
                     on:intersectionObserverRegister="_intersectionObserverRegisterHandler()"
                     on:intersectionObserverUnregister="_intersectionObserverUnregisterHandler()"
