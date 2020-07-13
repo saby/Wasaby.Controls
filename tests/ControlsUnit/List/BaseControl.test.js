@@ -6501,7 +6501,8 @@ define([
                      moveMarkerToPrev() {},
                      handleRemoveItems() {},
                      update() {},
-                     restoreMarker() {}
+                     restoreMarker() {},
+                     getMarkedKey() {}
                   };
                });
                await mountBaseControl(_baseControl, baseControlOptions);
