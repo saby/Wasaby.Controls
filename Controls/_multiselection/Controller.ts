@@ -83,13 +83,25 @@ export class Controller {
 
    /**
     * Проставляет выбранные элементы в модели
-    * @return {ISelectionControllerResult}
+    * @remark Не уведомляет о изменениях в модели
     */
-   setSelectedKeys(): ISelectionControllerResult {
+   restoreSelection(): void {
       // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
       this._strategy.setItems(this._model.getCollection());
-      this._updateModel(this._selection);
-      return this._getResult(this._selection, this._selection);
+      this._updateModel(this._selection, true);
+   }
+
+   /**
+    * Проставляет выбранные элементы в модели
+    * @return {ISelectionControllerResult}
+    */
+   setSelectedKeys(selectedKeys: TKey[], excludedKeys: TKey[]): ISelectionControllerResult {
+      const selection = {
+         selected: selectedKeys,
+         excluded: excludedKeys
+      };
+      this._updateModel(selection);
+      return this._getResult(selection, selection);
    }
 
    /**

@@ -315,7 +315,7 @@ describe('Controls/_multiselection/Controller', () => {
 
    it('setSelectedKeys', () => {
       controller.toggleItem(1);
-      const result = controller.setSelectedKeys();
+      const result = controller.setSelectedKeys([1], []);
 
       const expectedResult = {
          isAllSelected: false,
