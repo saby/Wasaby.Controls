@@ -269,7 +269,7 @@ export class Controller {
                 },
                 className: `controls-ItemActions__popup__list_theme-${this._theme}`,
                 nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
-            }
+            };
         }
         return menuConfig;
     }
@@ -488,7 +488,8 @@ export class Controller {
             actionsContainerWidth,
             actionsContainerHeight,
             actionsTemplateConfig.actionCaptionPosition,
-            menuButtonVisibility
+            menuButtonVisibility,
+            this._theme
         );
 
         if (
@@ -502,7 +503,8 @@ export class Controller {
                 actionsContainerWidth,
                 actionsContainerHeight,
                 actionsTemplateConfig.actionCaptionPosition,
-                menuButtonVisibility
+                menuButtonVisibility,
+                this._theme
             );
         }
         this._collection.setActionsTemplateConfig(actionsTemplateConfig);
@@ -619,7 +621,7 @@ export class Controller {
                 return action;
             });
         }
-        return actions
+        return actions;
     }
 
     /**
@@ -686,7 +688,8 @@ export class Controller {
         actionsContainerWidth: number,
         actionsContainerHeight: number,
         actionCaptionPosition: TActionCaptionPosition,
-        menuButtonVisibility?: TMenuButtonVisibility
+        menuButtonVisibility: TMenuButtonVisibility,
+        theme: string
     ): ISwipeConfig {
         const measurer = actionAlignment === 'vertical' ? verticalMeasurer : horizontalMeasurer;
         const config: ISwipeConfig = measurer.getSwipeConfig(
@@ -694,7 +697,8 @@ export class Controller {
             actionsContainerWidth,
             actionsContainerHeight,
             actionCaptionPosition,
-            menuButtonVisibility
+            menuButtonVisibility,
+            theme
         );
         config.needTitle = measurer.needTitle;
         config.needIcon = measurer.needIcon;
@@ -714,7 +718,7 @@ export class Controller {
         if (!icon || icon.includes(this._resolveItemActionClass(theme))) {
             return icon;
         }
-        return `${icon} ${this._resolveItemActionClass(theme)}`
+        return `${icon} ${this._resolveItemActionClass(theme)}`;
     }
 
     private static _resolveItemActionClass(theme: string): string {

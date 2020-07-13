@@ -82,7 +82,8 @@ export const verticalMeasurer: IMeasurer = {
       rowWidth: number,
       rowHeight: number,
       actionCaptionPosition: TActionCaptionPosition,
-      menuButtonVisibility: 'visible'|'adaptive'
+      menuButtonVisibility: 'visible'|'adaptive',
+      theme: string
    ): ISwipeConfig {
       let columnsCount = 1;
       let itemActions = MeasurerUtils.getActualActions(actions);

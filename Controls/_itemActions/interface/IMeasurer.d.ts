@@ -7,7 +7,8 @@ export interface IMeasurer {
       rowWidth: number,
       rowHeight: number,
       actionCaptionPosition: TActionCaptionPosition,
-      menuButtonVisibility?: 'visible'|'adaptive'
+      menuButtonVisibility: 'visible'|'adaptive',
+      theme: string
    ): ISwipeConfig;
    needIcon(action: IItemAction, actionCaptionPosition: TActionCaptionPosition, hasActionWithIcon?: boolean): boolean;
    needTitle(action: IItemAction, actionCaptionPosition: TActionCaptionPosition): boolean;

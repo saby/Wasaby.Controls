@@ -21,11 +21,12 @@ class HorizontalMeasurer implements IMeasurer {
       rowWidth: number,
       rowHeight: number,
       actionCaptionPosition: ActionCaptionPosition,
-      menuButtonVisibility?: 'visible'|'adaptive'
+      menuButtonVisibility: 'visible'|'adaptive',
+      theme: string
    ): ISwipeConfig {
       const actualActions: IItemAction[] = MeasurerUtils.getActualActions(actions);
       let visibleActions: IItemAction[] = [];
-      const actionTemplateConfig = this._getActionTemplateConfig(rowHeight, actionCaptionPosition);
+      const actionTemplateConfig = this._getActionTemplateConfig(rowHeight, actionCaptionPosition, theme);
       const menuButton = HorizontalMeasurer._getMoreButton();
 
       if (actualActions.length) {
@@ -70,11 +71,13 @@ class HorizontalMeasurer implements IMeasurer {
     * Возвращает конфиг для шаблона swipeAction, необходимый для измерения ширины опций записи
     * @param rowHeight
     * @param actionCaptionPosition
+    * @param theme
     * @private
     */
    private _getActionTemplateConfig(
        rowHeight: number,
-       actionCaptionPosition: ActionCaptionPosition
+       actionCaptionPosition: ActionCaptionPosition,
+       theme: string
    ): ISwipeActionTemplateConfig {
       return {
          itemActionsSize: HorizontalMeasurer._getItemActionsSize(rowHeight, actionCaptionPosition),
@@ -83,8 +86,7 @@ class HorizontalMeasurer implements IMeasurer {
          needTitle: this.needTitle,
          actionCaptionPosition,
          actionAlignment: 'horizontal',
-         theme: 'default', // todo,
-         hasActionWithIcon: false // todo
+         theme
       };
    }
 
@@ -130,6 +132,11 @@ class HorizontalMeasurer implements IMeasurer {
       itemsSizes: number[];
       blockSize: number;
    } {
+
+      // Если в доступных для показа опциях есть те, у которых есть иконки, ставим соответствующий параметр в конфиг
+      if (itemActions.some((action: IItemAction) => !!action.icon)) {
+         templateConfig.hasActionWithIcon = true;
+      }
       const itemsHtml = itemActions.map((action) => SwipeActionTemplate({
          ...templateConfig,
          action
