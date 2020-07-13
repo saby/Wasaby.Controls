@@ -1,0 +1,11 @@
+<div class="controlsDemo__wrapper">
+    <Controls.treeGrid:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            columns="{{_columns}}"
+            parentProperty="parent"
+            nodeProperty="type"
+            itemActions="{{_itemActions}}"
+            itemActionsPosition="custom"
+            name="gridView"/>
+</div>
