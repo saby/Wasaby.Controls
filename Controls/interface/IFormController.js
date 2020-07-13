@@ -110,6 +110,32 @@ define('Controls/interface/IFormController', [
     */
 
    /**
+    * @name Controls/interface/IFormController#initializingWay
+    * @cfg {String} Устанавливает способ инициализации данных диалога редактирования.
+    * @variant 'local' Верстка контрола строится по записи, переданной в опцию {@link Controls/interface/IFormController#record}, запроса на БЛ нет.
+    * @variant 'read' Перед построением верстки выполняется метод "Прочитать" по ключу, переданному в опцию {@link Controls/interface/IFormController#key}. Построение <b>откладывается</b> до ответа БЛ.
+    * @variant 'create' Перед построением верстки выполняется метод "Создать", построение <b>откладывается</b> до ответа БЛ.
+    * @variant 'delayedRead' Верстка контрола строится по записи, переданной в опцию {@link Controls/interface/IFormController#record}, параллельно выполняется метод "Прочитать" по ключу,
+    * переданному в опции {@link Controls/interface/IFormController#key}.
+    * Построение вертки контрола <b>не откладывается.</b>
+    * @variant 'delayedCreate' Верстка контрола строится по записи, переданной в опцию
+    * {@link Controls/interface/IFormController#record}, параллельно выполняется метод "Создать".
+    * <b>Построение вертки контрола не откладывается.</b>
+    * @example
+    * <pre>
+    *    <Controls.form:Controller initializingWay={{_myInitializingWay}}”>
+    *        ...
+    *    </Controls.form:Controller>
+    * </pre>
+    * <pre>
+    *    import {INITIALIZING_WAY} from 'Controls/form';
+    *    _beforeMount() {
+    *       this._myInitializingWay = INITIALIZING_WAY.CREATE;
+    *    }
+    * </pre>
+    */
+
+   /**
     * @typedef {Object} updateConfig
     * @description Параметр сохранения
     * @property {Object} additionalData Дополнительные данные, которые будут обрабатываться при синхронизации записи с реестром
