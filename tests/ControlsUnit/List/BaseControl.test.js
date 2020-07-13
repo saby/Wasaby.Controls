@@ -5902,9 +5902,11 @@ define([
       it('_beforeUnmount', function() {
          let instance = new lists.BaseControl();
          instance._needPagingTimeout = setTimeout(() => {}, 100);
+         instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
 
          instance._beforeUnmount();
          assert.isNull(instance._needPagingTimeout);
+         assert.isNull(instance._portionedSearch);
       });
 
 
