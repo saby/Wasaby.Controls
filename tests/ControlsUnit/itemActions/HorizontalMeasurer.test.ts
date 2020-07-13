@@ -1,8 +1,11 @@
 import { assert } from 'chai';
+import { stub, SinonStub } from 'sinon';
+
 import * as rk from 'i18n!ControlsUnit';
 
 import { IItemAction } from 'Controls/_itemActions/interface/IItemActions';
 import { horizontalMeasurer } from 'Controls/_itemActions/measurers/HorizontalMeasurer';
+import {MeasurerUtils} from 'Controls/_itemActions/measurers/MeasurerUtils';
 
 describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
     it('needIcon', () => {
@@ -91,7 +94,30 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             }
         ];
 
-        it('more than 3 actions, should add menu', () => {
+        let stubCalculateSizesOfItems: SinonStub;
+
+        beforeEach(() => {
+            stubCalculateSizesOfItems = stub(MeasurerUtils, 'calculateSizesOfItems');
+            stubCalculateSizesOfItems.callsFake((itemsHtml: string[], measurerBlockClass: string, itemClass: string) => {
+                if (itemsHtml.indexOf('icon-SwipeMenu')) {
+                    return {
+                        blockSize: 0,
+                        itemsSizes: [ 25 ]
+                    };
+                } else if (itemsHtml.length > 1) {
+                    return {
+                        blockSize: 0,
+                        itemsSizes: itemsHtml.map((item) => 25)
+                    };
+                }
+            });
+        });
+
+        afterEach(() => {
+            stubCalculateSizesOfItems.restore();
+        });
+
+        it('should add menu, when more than 3 itemActions are in \'showed\' array', () => {
             const result = {
                 itemActionsSize: 'm',
                 itemActions: {
@@ -99,7 +125,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                         id: 4,
                         icon: 'icon-DK'
                     }),
-                    showed: actions.slice(0, 3).concat({
+                    showed: actions.concat({
                         id: null,
                         icon: 'icon-SwipeMenu',
                         title: rk('Ещё'),
@@ -116,7 +142,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                         id: 4,
                         icon: 'icon-DK'
                     }),
-                    150,
+                    100,
                     20,
                     'right'
                 ),
@@ -135,7 +161,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 150, 20, 'none'),
+                horizontalMeasurer.getSwipeConfig(actions, 100, 20, 'none'),
                 result
             );
         });
@@ -151,7 +177,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 150,39, 'none'),
+                horizontalMeasurer.getSwipeConfig(actions, 100,39, 'none'),
                 result
             );
         });
@@ -167,7 +193,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 150, 20, 'bottom'),
+                horizontalMeasurer.getSwipeConfig(actions, 100, 20, 'bottom'),
                 result
             );
         });
@@ -183,7 +209,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 150, 59, 'bottom'),
+                horizontalMeasurer.getSwipeConfig(actions, 100, 59, 'bottom'),
                 result
             );
         });
@@ -241,7 +267,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             ];
             assert.deepEqual(
                 result,
-                horizontalMeasurer.getSwipeConfig(otherActions, 150, 59, 'none').itemActions.showed
+                horizontalMeasurer.getSwipeConfig(otherActions, 100, 59, 'none').itemActions.showed
             );
         });
     });
