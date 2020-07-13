@@ -1,5 +1,5 @@
 import {Input} from 'Controls/lookup';
-import {ok} from 'assert';
+import {ok, deepStrictEqual} from 'assert';
 import {createSandbox} from 'sinon';
 import {RecordSet} from 'Types/collection';
 import {Stack} from 'Controls/popup';
@@ -25,7 +25,10 @@ function getData(): object[] {
 function getSource(): Memory {
     return new Memory({
         keyProperty: 'id',
-        data: getData()
+        data: getData(),
+        filter: (item, where) => {
+            return where.id && where.id.indexOf(item.get('id')) !== -1;
+        }
     });
 }
 
@@ -83,6 +86,15 @@ describe('lookup', () => {
             const lookup = new Input(options);
 
             ok(lookup._beforeMount(options) === undefined);
+        });
+
+        it('selectedKeys is not empty (selectedKeys: [0, 1])', async () => {
+            const options = getLookupOptions();
+            options.selectedKeys = [0, 1];
+            const lookup = new Input(options);
+            await lookup._beforeMount(options);
+
+            ok(lookup._lookupController.getItems().getCount() === 2);
         });
 
     });
