@@ -113,18 +113,36 @@ define(
          });
 
          it('_handleMouseDown', () => {
-            let actualOptions = null;
+            let isOpened = false;
             let ddl = getDropdown(config);
-            ddl._controller = { setMenuPopupTarget: () => {} };
-            ddl.openMenu = (config) => { actualOptions = config; };
+            ddl.openMenu = () => { isOpened = true; };
 
             const event = { nativeEvent: { button: 2 } };
             ddl._handleMouseDown(event);
-            assert.equal(actualOptions, null);
+            assert.isFalse(isOpened);
 
             event.nativeEvent.button = 0;
             ddl._handleMouseDown(event);
+            assert.isTrue(isOpened);
+         });
+
+         it('openMenu', () => {
+            let actualOptions = null;
+            let target;
+            let ddl = getDropdown(config);
+            ddl._controller = {
+               setMenuPopupTarget: () => { target = 'test'; },
+               openMenu: (popupConfig) => { actualOptions = popupConfig; return Promise.resolve(); }
+            };
+
+            ddl.openMenu();
             assert.isOk(actualOptions.templateOptions);
+            assert.equal(target, 'test');
+
+            ddl.openMenu({ newOptionsPopup: 'test2', templateOptions: { customTemplateOption: 'test2' } });
+            assert.isOk(actualOptions.templateOptions.selectorDialogResult);
+            assert.equal(actualOptions.templateOptions.customTemplateOption, 'test2');
+            assert.equal(actualOptions.newOptionsPopup, 'test2');
          });
 
          it('_dataLoadCallback', () => {

@@ -18,7 +18,7 @@ import {resetFilter} from 'Controls/_filter/resetFilterUtils';
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления filterPopup</a>
- * 
+ *
  * @class Controls/_filter/Button
  * @extends Core/Control
  * @mixes Controls/interface/IFilterButton
@@ -150,7 +150,10 @@ var _private = {
             items: self._options.items,
             historyId: self._options.historyId
          },
-         fittingMode: 'fixed',
+         fittingMode: {
+            horizontal: 'overflow',
+            vertical: 'adaptive'
+         },
          template: 'Controls/filterPopup:_FilterPanelWrapper',
          target: self._children.panelTarget
       };
