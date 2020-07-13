@@ -92,7 +92,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
      */
     protected _isMobilePlatform: boolean = detection.isMobilePlatform;
     protected _isMobileAndroid: boolean = detection.isMobileAndroid;
-    protected _isSafari13: boolean = StickyHeader._isSafari13();
     protected _isIOSChrome: boolean = StickyHeader._isIOSChrome();
     protected _isMobileIOS: boolean = detection.isMobileIOS;
 
@@ -136,10 +135,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._backgroundStyle = this._options.backgroundVisible !== false ? this._options.backgroundStyle : BACKGROUND_STYLE.TRANSPARENT;
     }
 
-    protected _afterUpdate(): void {
-        this.updateBottomShadowStyle();
-    }
-
     protected _beforePaintOnMount(): void {
         RegisterUtil(this, 'updateFixed', this._updateFixed.bind(this));
 
@@ -174,7 +169,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         RegisterUtil(this, 'listScroll', this._onScrollStateChanged);
 
         this._initObserver();
-        this.updateBottomShadowStyle();
     }
 
     protected _beforeUnmount(): void {
@@ -274,9 +268,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _resizeHandler(): void {
         if (this._needUpdateObserver) {
             this._initObserver();
-        }
-        if (this._isSafari13 || this._isIOSChrome) {
-            this.updateBottomShadowStyle();
         }
     }
 
@@ -489,28 +480,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             }
         }
 
-        // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
-        const container: HTMLElement = this._getNormalizedContainer();
-        if ((this._isSafari13 || this._isIOSChrome) && position === POSITION.bottom) {
-            return 'top: ' + (coord + (container ? container.offsetHeight : 0)) + 'px;';
-        }
-
         return position + ': -' + coord + 'px;';
-    }
-
-    updateBottomShadowStyle(): void {
-        if (this._isSafari13 || this._isIOSChrome) {
-            const container: HTMLElement = this._getNormalizedContainer();
-            // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
-            // There's no container at first building of template.
-            if (container) {
-                const offsetWidth = container.offsetWidth;
-                let offsetHeight = container.offsetHeight;
-                this._bottomShadowStyle =
-                     `bottom: unset; right: unset; top:${offsetHeight}px; width:${offsetWidth}px;`;
-                this._topShadowStyle = `right: unset; width:${offsetWidth}px;`;
-            }
-        }
     }
 
     protected _updateFixed(ids: number[]): void {
@@ -573,10 +543,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     static _theme: string[] = ['Controls/scroll', 'Controls/Classes'];
-
-    static _isSafari13(): boolean {
-        return detection.safariVersion >= 13;
-    }
 
     static _isIOSChrome(): boolean {
         return detection.isMobileIOS && detection.chrome;

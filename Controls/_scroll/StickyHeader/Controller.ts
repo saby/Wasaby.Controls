@@ -253,21 +253,10 @@ class Component extends Control {
         // Игнорируем все собятия ресайза до _afterMount.
         // В любом случае в _afterMount мы попробуем рассчитать положение заголовков.
         if (this._stickyControllerMounted) {
-            // Отдельно вызываем пересчет стилей для сафари13, т.к стили "bottom" и "right" не работают
-            // в стики элементах на ios 13
-            if (detection.safariVersion >= 13) {
-                this._updateBottomShadowStyle();
-            }
             if (!isSimpleHeaders) {
                 this._registerDelayed();
                 this._updateTopBottom();
             }
-        }
-    }
-
-    private _updateBottomShadowStyle(): void {
-        for (const id in this._headers) {
-            this._headers[id].inst.updateBottomShadowStyle();
         }
     }
 
