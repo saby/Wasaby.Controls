@@ -1,4 +1,5 @@
 import {assert} from 'chai';
+import {stub} from 'sinon';
 import {Model, Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -12,6 +13,7 @@ import {
     TActionDisplayMode,
     TItemActionShowType
 } from 'Controls/_itemActions/interface/IItemActions';
+import {MeasurerUtils} from 'Controls/_itemActions/measurers/MeasurerUtils';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
 const itemActions: IItemAction[] = [
@@ -464,8 +466,17 @@ describe('Controls/_itemActions/Controller', () => {
 
     // T2. Активация и деактивация Swipe происходит корректно
     describe('activateSwipe(), deactivateSwipe() and getSwipeItem() ', () => {
-        // T2.1. В коллекции происходит набор конфигурации для Swipe, если позиция itemActions не outside. itemActions сортируются по showType.
+
+        // T2.1. В коллекции происходит набор конфигурации для Swipe, если позиция itemActions не outside.
+        // itemActions сортируются по showType.
         it('should collect swiped item actions sorted by showType when position !== "outside"', () => {
+
+            // Расчёты в MeasurerUtils.calculateSizesOfItems проверяются в HorizontalMeasurer.test.ts
+            const stubCalculateSizesOfItems = stub(MeasurerUtils, 'calculateSizesOfItems');
+            stubCalculateSizesOfItems.callsFake((element: any) => ({
+                blockSize: 10,
+                itemsSizes: [ 25, 25, 25 ]
+            }));
             itemActionsController.update(initializeControllerOptions({
                 collection,
                 itemActions,
@@ -476,6 +487,8 @@ describe('Controls/_itemActions/Controller', () => {
             const config = collection.getSwipeConfig();
             assert.exists(config, 'Swipe activation should make configuration for inside positioned actions');
             assert.equal(config.itemActions.showed[0].title, 'Profile', 'First item should be \'message\'');
+
+            stubCalculateSizesOfItems.restore();
         });
 
         // T2.2. В коллекции не происходит набор конфигурации для Swipe, если позиция itemActions outside
@@ -536,21 +549,6 @@ describe('Controls/_itemActions/Controller', () => {
             const config = collection.getSwipeConfig();
             assert.exists(config, 'Swipe activation should make configuration');
             assert.isTrue(config.itemActions.showed[config.itemActions.showed.length -1]._isMenu, 'menu button was not added');
-        });
-
-        // T2.3.2. кнопка "Ещё" в горизонтальном свайпе не будет показана, если записей меньше 4
-        // (этот тест работает до тех пор, пока мы не сделаем расчёт горизонтальных опций от их ширины, см. horizontalMeasurer)
-        it('should add menu button for horizontal swipe when contextMenu.headerTemplate is passed', () => {
-            itemActionsController.update(initializeControllerOptions({
-                collection,
-                itemActions: horizontalOnlyItemActions,
-                theme: 'default',
-                actionAlignment: 'horizontal'
-            }));
-            itemActionsController.activateSwipe(3, 150, 50);
-            const config = collection.getSwipeConfig();
-            assert.exists(config, 'Swipe activation should make configuration');
-            assert.notExists(config.itemActions.showed[config.itemActions.showed.length -1]._isMenu, 'menu button was added');
         });
 
         // T2.3. В зависимости от actionAlignment, для получения конфигурации используется правильный measurer
@@ -680,11 +678,19 @@ describe('Controls/_itemActions/Controller', () => {
                 editArrowAction,
                 editArrowVisibilityCallback
             }));
+
+            // Расчёты в MeasurerUtils.calculateSizesOfItems проверяются в HorizontalMeasurer.test.ts
+            const stubCalculateSizesOfItems = stub(MeasurerUtils, 'calculateSizesOfItems');
+            stubCalculateSizesOfItems.callsFake((element: any) => ({
+                blockSize: 10,
+                itemsSizes: [ 25, 25, 25, 25 ]
+            }));
             itemActionsController.activateSwipe(1, 150, 50);
             const config = collection.getSwipeConfig();
             assert.exists(config, 'Swipe activation should make configuration');
-            assert.isTrue(recordWithCorrectType, 'editArrowVisibilityCallback should be called with Model type argument');
+            assert.isTrue(recordWithCorrectType, 'The argument of editArrowVisibilityCallback isn\'t Model');
             assert.equal(config.itemActions.showed[0].id, 'view', 'First action should be \'editArrow\'');
+            stubCalculateSizesOfItems.restore();
         });
 
         // T2.11 При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
@@ -744,6 +750,13 @@ describe('Controls/_itemActions/Controller', () => {
                 showType: TItemActionShowType.TOOLBAR
             });
             itemActionsController.update(initializeControllerOptions(controllerConfig));
+
+            // Расчёты в MeasurerUtils.calculateSizesOfItems проверяются в HorizontalMeasurer.test.ts
+            const stubCalculateSizesOfItems = stub(MeasurerUtils, 'calculateSizesOfItems');
+            stubCalculateSizesOfItems.callsFake((element: any) => ({
+                blockSize: 10,
+                itemsSizes: [ 25, 25, 25 ]
+            }));
             itemActionsController.activateSwipe(1, 150, 50);
             const config = collection.getSwipeConfig();
             assert.exists(config, 'Swipe activation should make configuration after swipe activation');
@@ -753,6 +766,7 @@ describe('Controls/_itemActions/Controller', () => {
             itemActionsController.update(initializeControllerOptions(controllerConfig));
             const config = collection.getSwipeConfig();
             assert.equal(config.itemActions.showed[1].title, 'Super puper', 'First action should be \'Super puper\'');
+            stubCalculateSizesOfItems.restore();
         });
     });
 
