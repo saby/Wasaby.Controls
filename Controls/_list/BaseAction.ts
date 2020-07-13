@@ -4,10 +4,7 @@ import {Confirmation} from 'Controls/popup';
 import {ISelectionObject} from 'Controls/interface';
 
 /**
- * Контрол, на основе которого можно создавать другие action'ы.
- * 
- * @remark
- * Посредством метода validate реализует валидацию. Не подходит для самостоятельного использования.
+ * Базовый класс action'a, на основе которого создаются другие action'ы. Не подходит для самостоятельного использования.
  *
  * @class Controls/_list/BaseAction
  * @extends Core/Control
@@ -18,7 +15,11 @@ import {ISelectionObject} from 'Controls/interface';
 
 export default Control.extend({
     /**
-     * Запускает валидацию.
+     * Производит проверку переданных параметров. Если массив значений пуст, возвращает false и выводит окно с текстом, иначе возвращает true.
+     * 
+     * @remark
+     * При необходимости метод нужно вызывать вручную из наследника.
+     * 
      * @function
      * @name Controls/_list/BaseAction#validate
      */
