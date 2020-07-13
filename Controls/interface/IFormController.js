@@ -120,7 +120,7 @@ define('Controls/interface/IFormController', [
     * Построение вертки контрола <b>не откладывается.</b>
     * @variant 'delayedCreate' Верстка контрола строится по записи, переданной в опцию
     * {@link Controls/interface/IFormController#record}, параллельно выполняется метод "Создать".
-    * <b>Построение вертки контрола не откладывается.</b>
+    * Построение вертки контрола <b>не откладывается.</b>
     * @example
     * <pre>
     *    <Controls.form:Controller initializingWay={{_myInitializingWay}}”>
