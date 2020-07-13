@@ -20,11 +20,10 @@ export default abstract class BaseLookup extends Control {
         this._lookupController = new LookupController(options);
 
         if (receivedState && !isEmpty(receivedState)) {
-            this._items = receivedState;
-            this._lookupController.setItems(receivedState);
+            this._setItems(receivedState);
         } else if (options.selectedKeys.length) {
             return this._lookupController.loadItems().then((items) => {
-                this._items = items;
+                this._setItems(items);
                 return items;
             });
         } else {
@@ -109,6 +108,11 @@ export default abstract class BaseLookup extends Control {
     private _afterItemsChanged(): void {
         this._items = this._lookupController.getItems();
         this._notifyChanges();
+    }
+
+    private _setItems(items: SelectedItems): void {
+        this._items = items;
+        this._lookupController.setItems(items);
     }
 
     private _notifyChanges(): void {
