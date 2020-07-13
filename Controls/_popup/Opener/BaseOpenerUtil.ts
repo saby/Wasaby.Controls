@@ -104,7 +104,7 @@ export default {
         };
     },
 
-    getIndicatorConfig(id: string, cfg) {
+    getIndicatorConfig(id: string, cfg = {}) {
         const findParentPopupId = () => {
             const parentControls: Control[] = goUpByControlTree(cfg.opener?._container);
             for (let i = 0; i < parentControls.length; i++) {
@@ -115,12 +115,15 @@ export default {
             return false;
         };
         const popupId = findParentPopupId();
-        return {
+        const config = {
             id,
             message: rk('Загрузка'),
-            delay: 2000,
-            popupId
+            delay: 2000
         };
+        if (popupId) {
+            config.popupId = popupId;
+        }
+        return config;
     },
 
     // TODO Compatible

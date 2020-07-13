@@ -432,4 +432,5 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 }
 
+BaseOpener.util = BaseOpenerUtil; // for tests
 export default BaseOpener;
