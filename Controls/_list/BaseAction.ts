@@ -1,10 +1,10 @@
-import Control = require('Core/Control');
 import rk = require('i18n!Controls');
 import {Confirmation} from 'Controls/popup';
 import {ISelectionObject} from 'Controls/interface';
+import {Control, IControlOptions} from 'UI/Base';
 
-export default Control.extend({
-   validate(items: Array|ISelectionObject): boolean {
+export default class BaseAction extends Control<IControlOptions> {
+   validate(items: unknown[]|ISelectionObject): boolean {
       let resultValidate: boolean = true;
 
       if (items instanceof Array && !items.length || items.selected && !items.selected.length) {
@@ -17,4 +17,4 @@ export default Control.extend({
 
       return resultValidate;
    }
-});
+}
