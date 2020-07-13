@@ -536,7 +536,7 @@ function updateFilterHistory(cfg) {
        *
        * @class Controls/_filter/Controller
        * @extends Core/Control
-       * @mixes Controls/_interface/IFilter
+       * @mixes Controls/_interface/IFilterChanged
        * @mixes Controls/_filter/IPrefetch
        * @control
        * @public
@@ -551,7 +551,7 @@ function updateFilterHistory(cfg) {
        *
        * @class Controls/_filter/Controller
        * @extends Core/Control
-       * @mixes Controls/_interface/IFilter
+       * @mixes Controls/_interface/IFilterChanged
        * @control
        * @public
        * @author Герасимов А.М.

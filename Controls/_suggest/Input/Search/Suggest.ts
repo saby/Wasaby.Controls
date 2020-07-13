@@ -10,7 +10,7 @@ import 'Controls/search';
 
 /**
  * Строка поиска с автодополнением, позволяет пользователю вводить однострочный текст.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FSuggest%2FSearchInput">демо-пример</a>
@@ -21,7 +21,7 @@ import 'Controls/search';
  * @extends Controls/_input/Text
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
@@ -39,7 +39,7 @@ import 'Controls/search';
  * @extends Controls/_input/Text
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG

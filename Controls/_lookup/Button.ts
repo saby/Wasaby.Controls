@@ -31,7 +31,7 @@ import rk = require('i18n!Controls');
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/_interface/ISelectorDialog
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IFontColorStyle
@@ -52,7 +52,7 @@ import rk = require('i18n!Controls');
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/_interface/ITextValue
  * @mixes Controls/interface/ISelectorDialog
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISource
  * @control

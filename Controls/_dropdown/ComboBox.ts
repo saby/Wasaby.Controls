@@ -35,7 +35,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @extends Core/Control
  * @implements Controls/_interface/ISource
  * @implements Controls/interface/IItemTemplate
- * @implements Controls/_interface/IFilter
+ * @implements Controls/_interface/IFilterChanged
  * @implements Controls/_interface/ISingleSelectable
  * @implements Controls/interface/IDropdownEmptyText
  * @implements Controls/interface/IInputPlaceholder
@@ -56,7 +56,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @extends Core/Control
  * @implements Controls/_interface/ISource
  * @implements Controls/interface/IItemTemplate
- * @implements Controls/_interface/IFilter
+ * @implements Controls/_interface/IFilterChanged
  * @implements Controls/_interface/ISingleSelectable
  * @implements Controls/interface/IDropdownEmptyText
  * @implements Controls/_input/interface/IBase
