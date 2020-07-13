@@ -3257,7 +3257,7 @@ define([
             isAllSelected: () => true,
             clearSelection: () => null,
             toggleItem: () => null,
-            updateModel: () => null
+            setSelectedKeys: () => null
          };
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
