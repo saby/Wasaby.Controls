@@ -33,16 +33,16 @@ define([
    }
 
    describe('Validate/Container', () => {
-      validateMod.Container.prototype._callInfoBox = () => {};
-      var validCtrl = new validateMod.Container();
-      validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
-      it('valueChangedNotify', () => {
-         validCtrl._valueChangedHandler(null, 'test');
-         assert.deepEqual(calls, [{
-            name: 'notify',
-            arguments: ['valueChanged', ['test']]
-         }]);
-      });
+       var stubP;
+       var calls = [];
+       var validCtrl = new validateMod.Container();
+       validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
+       beforeEach(function() {
+           stubP = sinon.stub(validCtrl, '_callInfoBox').callsFake(() => undefined);
+       });
+       afterEach(function() {
+           stubP.restore();
+       });
       it('closeInfoBox', () => {
          validCtrl._isOpened = false;
          validCtrl._validationResult = 'error';
@@ -55,6 +55,7 @@ define([
       });
       it('cleanValid', () => {
          var validCtrl = new validateMod.Container();
+         validCtrl._callInfoBox = () => {};
          validCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(validCtrl._validationResult, null);
          validCtrl._validationResult = 'Error';
@@ -64,6 +65,7 @@ define([
       });
       it('setValidResult', () => {
          var validCtrl = new validateMod.Container();
+         validCtrl._callInfoBox = () => {};
          var validConfig = {
             hideInfoBox: true,
          };
