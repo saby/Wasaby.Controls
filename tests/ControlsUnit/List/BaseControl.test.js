@@ -6494,17 +6494,6 @@ define([
                   markedKey: null
                };
                const _baseControl = new lists.BaseControl(baseControlOptions);
-               sandbox.replace(lists.BaseControl._private, 'createMarkerController', () => {
-                  return {
-                     setMarkedKey() { },
-                     moveMarkerToNext() {},
-                     moveMarkerToPrev() {},
-                     handleRemoveItems() {},
-                     update() {},
-                     restoreMarker() {},
-                     getMarkedKey() {}
-                  };
-               });
                await mountBaseControl(_baseControl, baseControlOptions);
                baseControl = _baseControl;
             });
@@ -6606,10 +6595,6 @@ define([
                   const itemData = {item: {}};
 
                   baseControl._items.getCount = () => 1;
-                  baseControl._markerController = {
-                     calculateMarkedKey: () => undefined,
-                     getMarkedKey: () => undefined
-                  };
 
                baseControl._notify = (eName, args) => {
                   if (eName === 'itemMouseUp') {
