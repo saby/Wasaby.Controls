@@ -33,16 +33,9 @@ define([
    }
 
    describe('Validate/Container', () => {
-      var stubP;
-      var calls = [];
+      validateMod.Container.prototype._callInfoBox = () => {};
       var validCtrl = new validateMod.Container();
       validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
-      beforeEach(function() {
-         stubP = sinon.stub(validCtrl, '_callInfoBox').callsFake(() => undefined);
-      });
-      afterEach(function() {
-         stubP.restore();
-      });
       it('valueChangedNotify', () => {
          validCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(calls, [{
