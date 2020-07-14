@@ -11,8 +11,6 @@ define([
       it('initializingWay', (done) => {
          let FC = new form.Controller();
 
-         let baseReadRecordBeforeMount = form.Controller._readRecordBeforeMount;
-         let baseCreateRecordBeforeMount = form.Controller._createRecordBeforeMount;
          let cfg = {
             record: new entity.Record(),
          };
@@ -85,8 +83,6 @@ define([
          });
 
          Promise.all([p1, p2, p3, p4]).then(() => {
-            form.Controller._readRecordBeforeMount = baseReadRecordBeforeMount;
-            form.Controller._createRecordBeforeMount = baseCreateRecordBeforeMount;
             FC.destroy();
             done();
          });
@@ -280,6 +276,30 @@ define([
          assert.equal(createCalled, true);
          assert.equal(FC._isNewRecord, true);
 
+         FC.destroy();
+      });
+
+      it('calcInitializingWay', () => {
+         let FC = new form.Controller();
+         const options = {};
+         let initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'create');
+
+         options.key = 123;
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'read');
+
+         options.record = 123;
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'delayedRead');
+
+         delete options.key;
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'local');
+
+         options.initializingWay = 'test';
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'test');
          FC.destroy();
       });
 

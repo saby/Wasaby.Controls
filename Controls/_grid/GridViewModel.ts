@@ -172,19 +172,48 @@ var
             return classLists;
         },
 
+        getHeaderCellPadding(side: 'left' | 'right', params: {
+            isMultiHeader: boolean,
+            columns: unknown[],
+            headerColumns: unknown[],
+            columnIndex: number
+        }): string {
+            let result = '';
+            if (params.isMultiHeader) {
+                if (side === 'left') {
+
+                    // startColumn - индекс в спецификации CSS Grid, начинается с 1
+                    let headerCellIndex = params.headerColumns[params.columnIndex].startColumn - 1;
+                    result = params.columns && params.columns[headerCellIndex].cellPadding && params.columns[headerCellIndex].cellPadding.left
+                } else {
+
+                    // startColumn - индекс в спецификации CSS Grid, начинается с 1. Уменьшаем еще на 1, т.к. индекс конца колонки фактически -
+                    // начальный индекс следующей. Границы нужно брать с колонки, которая является последней под текущей ячейкой шапки.
+                    // Шапка    0 - 2 3  |  Первая ячейка шапки определена как {..., startColumn: 1, endColumn: 4}.
+                    // Колонки  0 1 2 3  |  Правый отступ для нее берется с колоки с индексом 2.
+                    let headerCellIndex = params.headerColumns[params.columnIndex].endColumn - 2;
+                    result = params.columns && params.columns[headerCellIndex].cellPadding && params.columns[headerCellIndex].cellPadding.right
+                }
+            } else {
+                const { cellPadding } = (params.columns && params.columns[params.columnIndex]) || {};
+                result = (cellPadding && cellPadding[side]) || '';
+            }
+            return !!result ? `_${result}` : '';
+        },
+
         getPaddingHeaderCellClasses: function(params, theme) {
             let preparedClasses = '';
-            const { multiSelectVisibility, columnIndex, columns,
+            const { multiSelectVisibility, columnIndex, headerColumns,
                 rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn }, isMultiHeader } = params;
             if (params.cell.isActionCell) {
                 return preparedClasses;
             }
-            const { cellPadding } = columns[columnIndex];
+
             const actionCellOffset = params.hasActionCell ? 1 : 0;
             const maxEndColumn = params.maxEndColumn - actionCellOffset;
-            const columnsLengthExcludedActionCell = columns.length - actionCellOffset;
+            const columnsLengthExcludedActionCell = headerColumns.length - actionCellOffset;
 
-            const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side]}` : '';
+            const getCellPadding = (side) => _private.getHeaderCellPadding(side, params);
             if (rowIndex === 0) {
                 if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
                     preparedClasses += ` controls-Grid__cell_spacingLeft${getCellPadding('left')}_theme-${theme}`;
@@ -951,7 +980,8 @@ var
             } else {
                 cellClasses += _private.getPaddingHeaderCellClasses({
                     style: this._options.style,
-                    columns: this._headerRows[rowIndex],
+                    headerColumns: this._headerRows[rowIndex],
+                    columns: this._columns,
                     columnIndex: columnIndex,
                     multiSelectVisibility: hasMultiSelect,
                     itemPadding: this._model.getItemPadding(),

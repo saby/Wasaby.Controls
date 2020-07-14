@@ -138,7 +138,7 @@ export default class _Controller implements IDropdownController {
       if (!this._items) {
          deps.push(this._getloadItemsPromise().then(() => this._loadItemsTemplates(this._options)));
       } else {
-         deps.push(this._loadItemsTemplates(this, this._options));
+         deps.push(this._loadItemsTemplates(this._options));
       }
 
       return Promise.all(deps);

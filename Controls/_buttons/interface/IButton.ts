@@ -62,6 +62,9 @@ export interface IButton {
  * @cfg {Enum} Стиль отображения кнопки.
  * @variant primary
  * @variant secondary
+ * @variant success
+ * @variant danger
+ * @variant unaccented
  * @default secondary
  * @remark
  * Стиль может влиять на цвет фона или цвет границы для различных значений режима отображения (viewMode).

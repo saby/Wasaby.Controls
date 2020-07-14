@@ -11,7 +11,8 @@ import {ISingleSelectableOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {RecordSet} from 'Types/collection';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
-import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
+import {IStickyPopupOptions} from 'Controls/popup';
+import * as Merge from 'Core/core-merge';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
    placeholder?: string;
@@ -34,7 +35,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @extends Core/Control
  * @implements Controls/_interface/ISource
  * @implements Controls/interface/IItemTemplate
- * @implements Controls/_interface/IFilter
+ * @implements Controls/_interface/IFilterChanged
  * @implements Controls/_interface/ISingleSelectable
  * @implements Controls/interface/IDropdownEmptyText
  * @implements Controls/interface/IInputPlaceholder
@@ -55,7 +56,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @extends Core/Control
  * @implements Controls/_interface/ISource
  * @implements Controls/interface/IItemTemplate
- * @implements Controls/_interface/IFilter
+ * @implements Controls/_interface/IFilterChanged
  * @implements Controls/_interface/ISingleSelectable
  * @implements Controls/interface/IDropdownEmptyText
  * @implements Controls/_input/interface/IBase
@@ -137,6 +138,22 @@ class ComboBox extends BaseDropdown {
       };
    }
 
+   _getMenuPopupConfig(): IStickyPopupOptions {
+      if (!this._width) {
+         this._width = this._getContainerNode(this._container).offsetWidth;
+      }
+      return {
+         templateOptions: {
+            width: this._width
+         },
+         eventHandlers: {
+            onOpen: this._onOpen.bind(this),
+            onClose: this._onClose.bind(this),
+            onResult: this._onResult.bind(this)
+         }
+      };
+   }
+
    _selectedItemsChangedHandler(selectedItems): void {
       const key = getPropValue(selectedItems[0], this._options.keyProperty);
       this._setText(selectedItems);
@@ -162,26 +179,15 @@ class ComboBox extends BaseDropdown {
       if (this._popupId) {
          this._controller.closeMenu();
       } else {
-         if (!this._width) {
-            this._width = this._getContainerNode(this._container).offsetWidth;
-         }
-         const config = {
-            templateOptions: {
-               width: this._width
-            },
-            eventHandlers: {
-               onOpen: this._onOpen.bind(this),
-               onClose: this._onClose.bind(this),
-               onResult: this._onResult.bind(this)
-            }
-         };
-         this._controller.setMenuPopupTarget(this._container);
-         this.openMenu(config);
+         this.openMenu();
       }
    }
 
-   openMenu(popupOptions?: IMenuPopupOptions): void {
-      this._controller.openMenu(popupOptions).then((result) => {
+   openMenu(popupOptions?: IStickyPopupOptions): void {
+      const config = this._getMenuPopupConfig();
+      this._controller.setMenuPopupTarget(this._container);
+
+      this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
          if (typeof result === 'string') {
             this._popupId = result;
          } else if (result) {
