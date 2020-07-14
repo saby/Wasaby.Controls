@@ -549,12 +549,12 @@ var ItemsViewModel = BaseViewModel.extend({
             }
             this._updateSubscriptionOnMetaChange(this._items, items);
             this._items = items;
-            this._updateResults(this._items);
             if (this._display) {
                 this._display.unsubscribe('onCollectionChange', this._onCollectionChangeFnc);
                 this._display.destroy();
             }
             this._display = this._prepareDisplay(this._items, cfg);
+            this._updateResults(this._items);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
             this.setIndexes(0, this.getCount());
             this._nextModelVersion();
