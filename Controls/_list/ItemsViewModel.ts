@@ -315,6 +315,7 @@ var ItemsViewModel = BaseViewModel.extend({
         if (display) {
             return display.getCollapsedGroups();
         } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
             return this._options.collapsedGroups;
         }
     },
@@ -326,6 +327,7 @@ var ItemsViewModel = BaseViewModel.extend({
             this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
             this._nextModelVersion();
         } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
             this._options.collapsedGroups = collapsedGroups;
         }
     },
@@ -377,6 +379,7 @@ var ItemsViewModel = BaseViewModel.extend({
         if (display) {
             display.setGroupProperty(groupProperty);
         } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
             this._options.groupProperty = groupProperty;
         }
     },
@@ -386,6 +389,7 @@ var ItemsViewModel = BaseViewModel.extend({
         if (display) {
             return display.getGroupProperty();
         } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
             return this._options.groupProperty;
         }
     },
@@ -550,6 +554,8 @@ var ItemsViewModel = BaseViewModel.extend({
         }
         return true;
     },
+
+    // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
     setItems(items, cfg): void {
         if (_private.isEqualItems(this._items, items)) {
             this._items.setMetaData(items.getMetaData());
@@ -582,6 +588,7 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
+    // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
     getItems: function() {
         return this._items;
     },
@@ -699,6 +706,7 @@ var ItemsViewModel = BaseViewModel.extend({
         if (display) {
             return display.getTheme();
         } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
             return this._options.theme;
         }
     },
@@ -710,6 +718,7 @@ var ItemsViewModel = BaseViewModel.extend({
                 this.resetCachedItemData();
             }
         } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
             this._options.theme = theme;
         }
     }

@@ -324,6 +324,7 @@ const _private = {
                     if (self._items) {
                        self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
                     }
+                    // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
                         // instead of assigning items
