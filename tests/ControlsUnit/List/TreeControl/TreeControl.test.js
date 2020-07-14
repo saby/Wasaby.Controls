@@ -761,6 +761,7 @@ define([
          treeViewModel._model._display = {
             setFilter: () => undefined,
             getCollapsedGroups: () => undefined,
+            unsubscribe: () => {},
             getKeyProperty: () => 'id',
             setRoot: (root) => {
                treeViewModel._model._root = root;
@@ -847,6 +848,7 @@ define([
             setRoot: (root) => {
                treeViewModel._model._root = root;
             },
+            getCollapsedGroups: () => undefined,
             getRoot: () => treeViewModel._model._root,
             getExpandedItems: () => [1, 2],
             getItems: () => items
@@ -1067,6 +1069,7 @@ define([
                   }
                };
             },
+            unsubscribe: () => {},
             getChildren: function() {
                return {
                   getCount() {
