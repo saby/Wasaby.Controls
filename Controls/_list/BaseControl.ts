@@ -335,7 +335,7 @@ const _private = {
                         listModel.setCompatibleReset(false);
                         self._items = listModel.getCollection();
                     } else {
-                        listModel.setItems(list);
+                        listModel.setItems(list, cfg);
                         self._items = listModel.getItems();
 
                         // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
@@ -2758,13 +2758,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         _private.updateNavigation(this);
 
-        if (
-            !newOptions.useNewModel &&
-            (
-                newOptions.groupMethod !== this._options.groupMethod ||
-                newOptions.viewModelConstructor !== this._viewModelConstructor
-            )
-        ) {
+        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
             if (this._editInPlace && this._listViewModel.getEditingItemData()) {
                 this._editInPlace.cancelEdit();
             }
@@ -2787,10 +2781,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._dndListController) {
             this._dndListController.update(this._listViewModel, newOptions.canStartDragNDrop);
-        }
-
-        if (newOptions.groupMethod !== this._options.groupMethod) {
-            _private.reload(this, newOptions);
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {

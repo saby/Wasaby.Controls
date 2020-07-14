@@ -93,6 +93,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     rowSpacing?: string;
     theme?: string;
     collapsedGroups?: TArrayGroupKey;
+    groupProperty?: string;
     searchValue?: string;
     editingConfig?: any;
     unique?: boolean;
@@ -597,6 +598,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$collapsedGroups: TArrayGroupKey;
 
+    protected _$groupProperty: string;
+
     protected _$compatibleReset: boolean;
 
     protected _$itemActionsProperty: string;
@@ -739,6 +742,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$theme = options.theme;
 
         this._$collapsedGroups = options.collapsedGroups;
+
+        this._$groupProperty = options.groupProperty;
 
         if (!this._$collection) {
             throw new Error(`${this._moduleName}: source collection is empty`);
@@ -1570,6 +1575,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return true;
     }
 
+    setGroupProperty(groupProperty: string): void {
+        this._$groupProperty = groupProperty;
+    }
+
+    getGroupProperty(): string {
+        return this._$groupProperty;
+    }
+
     /**
      * Возвращает метод группировки элементов проекции
      * @return {Function}
@@ -1957,11 +1970,20 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     /**
-     * Возвращает Название свойства элемента коллекции, содержащего его уникальный идентификатор.
+     * Возвращает название свойства элемента коллекции, содержащего его уникальный идентификатор.
      * @return {String}
      */
     getKeyProperty(): string {
         return this._$keyProperty;
+    }
+
+    /**
+     * Устанавливает название свойства элемента коллекции, содержащего его уникальный идентификатор.
+     * @return {String}
+     */
+    setKeyProperty(keyProperty: string): void {
+        this._$keyProperty = keyProperty;
+        this.nextVersion();
     }
 
     /**

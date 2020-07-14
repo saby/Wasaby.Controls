@@ -6,9 +6,6 @@ var ItemsUtil = {
     getDefaultDisplayFlat: function(items, cfg, filter) {
         var projCfg = {};
         projCfg.keyProperty = cfg.keyProperty;
-        if (cfg.groupMethod) {
-            projCfg.group = cfg.groupMethod;
-        }
         if (cfg.groupingKeyCallback) {
             projCfg.group = cfg.groupingKeyCallback;
         }

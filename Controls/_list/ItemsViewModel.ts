@@ -44,9 +44,6 @@ var _private = {
             this.rightPadding = true;
             Logger.warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
         }
-        if (cfg.groupMethod) {
-            Logger.warn('IGrouped: Option "groupMethod" is deprecated and removed in 20.2000. Use option "groupProperty".', self);
-        }
         if (cfg.groupingKeyCallback) {
             Logger.warn('IGrouped: Option "groupingKeyCallback" is deprecated and removed in 20.2000. Use option "groupProperty".', self);
         }
@@ -91,7 +88,6 @@ var ItemsViewModel = BaseViewModel.extend({
     _itemDataCache: null,
     _curIndex: 0,
     _onCollectionChangeFnc: null,
-    _collapsedGroups: null,
     _prefixItemVersion: null,
     _updateIndexesCallback: null,
 
@@ -101,7 +97,6 @@ var ItemsViewModel = BaseViewModel.extend({
         ItemsViewModel.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
         this._onMetaDataChanged = this._onMetaDataChanged.bind(this);
-        this._options.groupingKeyCallback = cfg.groupingKeyCallback || cfg.groupMethod;
         if (cfg.items) {
             if (cfg.itemsReadyCallback) {
                 cfg.itemsReadyCallback(cfg.items);
@@ -200,7 +195,17 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     setKeyProperty(keyProperty: string): void {
-        this._options.keyProperty = keyProperty;
+        const display = this.getDisplay();
+        if (display) {
+            display.setKeyProperty(keyProperty);
+        }
+    },
+
+    getKeyProperty(): string {
+        const display = this.getDisplay();
+        if (display) {
+            return display.getKeyProperty();
+        }
     },
 
     _nextModelVersion(
@@ -252,6 +257,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
     getItemDataByItem: function(dispItem) {
         const cacheKey = this._getDisplayItemCacheKey(dispItem);
+        const display = this.getDisplay();
 
         if (this.isCachedItemData(cacheKey)) {
             return this.getCachedItemData(cacheKey);
@@ -262,7 +268,7 @@ var ItemsViewModel = BaseViewModel.extend({
             itemData = {
                 getPropValue: ItemsUtil.getPropertyValue,
                 style: this._options.style,
-                keyProperty: this._options.keyProperty,
+                keyProperty: this.getKeyProperty(),
                 displayProperty: this._options.displayProperty,
                 index: this._display.getIndex(dispItem),
                 item: dispItem.getContents(),
@@ -281,12 +287,12 @@ var ItemsViewModel = BaseViewModel.extend({
         // The key of breadcrumbs row is the key of the last item in the crumbs.
         if (dispItem.getContents() instanceof Array) {
             let breadCrumbs = dispItem.getContents();
-            itemData.key = ItemsUtil.getPropertyValue(breadCrumbs[breadCrumbs.length-1], this._options.keyProperty);
+            itemData.key = ItemsUtil.getPropertyValue(breadCrumbs[breadCrumbs.length - 1], this.getKeyProperty());
         } else {
-            itemData.key = ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty);
+            itemData.key = ItemsUtil.getPropertyValue(dispItem.getContents(), this.getKeyProperty());
         }
 
-        if (this._options.groupingKeyCallback || this._options.groupProperty) {
+        if (display.getGroup()) {
             if (this._isGroup(itemData.item)) {
                 itemData.isGroup = true;
                 itemData.isHiddenGroup = itemData.item === constView.hiddenGroup;
@@ -359,21 +365,17 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     setGroupProperty(groupProperty: string): void {
-        this._options.groupProperty = groupProperty;
+        const display = this.getDisplay();
+        if (display) {
+            display.setGroupProperty(groupProperty);
+        }
     },
 
     getGroupProperty(): string {
-        return this._options.groupProperty;
-    },
-
-    setGroupMethod: function(groupMethod) {
-        this._options.groupMethod = groupMethod;
-        this._nextModelVersion();
-    },
-
-    setGroupingKeyCallback: function(groupingKeyCallback) {
-        this._options.groupingKeyCallback = groupingKeyCallback;
-        this._nextModelVersion();
+        const display = this.getDisplay();
+        if (display) {
+            return display.getGroupProperty();
+        }
     },
 
     getNext: function() {
@@ -382,7 +384,7 @@ var ItemsViewModel = BaseViewModel.extend({
             dispItem = this._display.at(itemIndex);
         return {
             getPropValue: ItemsUtil.getPropertyValue,
-            keyProperty: this._options.keyProperty,
+            keyProperty: this.getKeyProperty(),
             displayProperty: this._options.displayProperty,
             index: itemIndex,
             item: dispItem.getContents(),
@@ -478,7 +480,7 @@ var ItemsViewModel = BaseViewModel.extend({
         return itemKey;
     },
     _getDisplayItemCacheKey: function(dispItem) {
-        const key = ItemsUtil.getDisplayItemKey(dispItem, this._options.keyProperty);
+        const key = ItemsUtil.getDisplayItemKey(dispItem, this.getKeyProperty());
         return this._convertItemKeyToCacheKey(key);
     },
     isCachedItemData: function(itemKey) {
@@ -524,15 +526,19 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     isAllGroupsCollapsed(): boolean {
-        for (let i = 0; i < this._display.getItems().length; i++) {
-            if (!this._collapsedGroups[this._display.getGroupByIndex(i)]) {
-                return false;
+        const display = this.getDisplay();
+        if (display) {
+            const collapsedGroups = display.getCollapsedGroups();
+            for (let i = 0; i < this._display.getItems().length; i++) {
+                if (collapsedGroups.indexOf(this._display.getGroupByIndex(i)) === -1) {
+                    return false;
+                }
             }
+            return true;
         }
-
-        return true;
+        return false;
     },
-    setItems: function(items) {
+    setItems(items, cfg): void {
         if (_private.isEqualItems(this._items, items)) {
             this._items.setMetaData(items.getMetaData());
             this._items.assign(items);
@@ -548,7 +554,7 @@ var ItemsViewModel = BaseViewModel.extend({
                 this._display.unsubscribe('onCollectionChange', this._onCollectionChangeFnc);
                 this._display.destroy();
             }
-            this._display = this._prepareDisplay(this._items, this._options);
+            this._display = this._prepareDisplay(this._items, cfg);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
             this.setIndexes(0, this.getCount());
             this._nextModelVersion();

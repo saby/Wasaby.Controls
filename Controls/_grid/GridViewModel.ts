@@ -674,7 +674,7 @@ var
 
         _updateLastItemKey(): void {
             if (this.getItems()) {
-                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this.getKeyProperty());
             }
         },
 
@@ -683,7 +683,11 @@ var
         },
 
         setKeyProperty(keyProperty: string): void {
-            this._options.keyProperty = keyProperty;
+            this._model.setKeyProperty(keyProperty);
+        },
+
+        getKeyProperty(): string {
+            return this._model.getKeyProperty();
         },
 
         isGroupExpanded(groupId: Grouping.TGroupId): boolean {
@@ -1712,8 +1716,8 @@ var
             this._model.updateIndexes(startIndex, stopIndex);
         },
 
-        setItems: function(items) {
-            this._model.setItems(items);
+        setItems(items, cfg): void {
+            this._model.setItems(items, cfg);
             this._updateLastItemKey();
         },
 
@@ -2094,18 +2098,6 @@ var
                 });
             }
             return '';
-        },
-
-        _getItemGroup: function(item): boolean {
-            const groupingKeyCallback = this._options.groupingKeyCallback;
-            if (groupingKeyCallback) {
-                return groupingKeyCallback(item);
-            }
-            const groupProperty = this._options.groupProperty;
-            if (groupProperty) {
-                return item.get(groupProperty);
-            }
-            return null;
         },
 
         markItemReloaded: function(key) {

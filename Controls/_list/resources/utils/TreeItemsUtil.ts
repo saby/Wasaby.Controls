@@ -48,10 +48,6 @@ var
               },
               root, rootAsNode;
 
-           if (cfg.groupMethod) {
-              displayProperties.group = cfg.groupMethod;
-           }
-
            if (cfg.groupingKeyCallback) {
               displayProperties.group = cfg.groupingKeyCallback;
            }
