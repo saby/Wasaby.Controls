@@ -7,35 +7,34 @@ var
     DEFAULT_ITEM_WIDTH = 250,
     DEFAULT_ITEM_HEIGHT = 200,
     ITEM_COMPRESSION_COEFFICIENT = 0.7;
-
 const TILE_SIZES = {
     s: {
-        horizontal: {
-            width: 210,
+        top: {
+            width: 220,
             imageHeight: 180
         },
-        vertical: {
-            width: 390,
+        side: {
+            width: 400,
             imageWidth: 300
         }
     },
     m: {
-        horizontal: {
-            width: 310,
+        top: {
+            width: 320,
             imageHeight: 240
         },
-        vertical: {
-            width: 390,
+        side: {
+            width: 400,
             imageWidth: 160
         }
     },
     l: {
-        horizontal: {
+        top: {
             width: 420,
             imageHeight: 320
         },
-        vertical: {
-            width: 640,
+        side: {
+            width: 650,
             imageWidth: 300
         }
     }
@@ -72,12 +71,9 @@ var TileViewModel = ListViewModel.extend({
 
     getTileSizes(tileSize: string, imagePosition: string = 'top', imageViewMode: string = 'rectangle'): object {
         const sizeParams = object.clone(TILE_SIZES[tileSize]);
-        const tileSizes = sizeParams[imagePosition === 'top' ? 'horizontal' : 'vertical'];
-        if (imagePosition === 'top') {
-            tileSizes.imageWidth = null;
-            if (imageViewMode !== 'rectangle') {
-                tileSizes.imageHeight = null;
-            }
+        const tileSizes = sizeParams[imagePosition === 'top' ? 'top' : 'side'];
+        if (imageViewMode !== 'rectangle') {
+            tileSizes.imageHeight = tileSizes.imageWidth;
         }
         return tileSizes;
     },
