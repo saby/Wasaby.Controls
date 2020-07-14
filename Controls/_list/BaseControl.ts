@@ -2452,7 +2452,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
-            let viewModelConfig = cClone(newOptions);
+            let viewModelConfig = {...newOptions};
             if (collapsedGroups) {
                 viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
             }
@@ -2775,7 +2775,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
-            this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
+            this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
                 items,
                 supportVirtualScroll: !!this._needScrollCalculation
             }));
