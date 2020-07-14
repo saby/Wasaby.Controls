@@ -1110,9 +1110,11 @@ var
             }
         },
 
-        setHasMoreData: function(hasMore: boolean) {
+        setHasMoreData: function (hasMore: boolean, silent: boolean = false) {
             this._model.setHasMoreData(hasMore);
-            this._nextModelVersion(true);
+            if (!silent) {
+                this._nextModelVersion(true);
+            }
         },
 
         getHasMoreData: function() {

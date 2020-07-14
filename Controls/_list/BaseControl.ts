@@ -1806,9 +1806,9 @@ const _private = {
         }
         return height;
     },
-    setHasMoreData(model, hasMoreData: boolean): boolean {
+    setHasMoreData(model, hasMoreData: boolean, silent: boolean = false): boolean {
         if (model) {
-            model.setHasMoreData(hasMoreData);
+            model.setHasMoreData(hasMoreData, silent);
         }
     },
     jumpToEnd(self): void {
@@ -2489,7 +2489,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
-                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                     if (newOptions.useNewModel) {
                         self._items = self._listViewModel.getCollection();
@@ -2548,7 +2548,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                             newOptions.viewModelConstructor
                         );
 
-                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                         if (newOptions.itemsReadyCallback) {
                             newOptions.itemsReadyCallback(self._listViewModel.getCollection());
