@@ -16,6 +16,9 @@ interface IValidateResult {
 
 class ControllerClass {
     _validates: ValidateContainer[] = [];
+    private _submitPromise: Promise<IValidateResult | Error>;
+    private _submitResolve: (res: IValidateResult) => void = null;
+    private _submitReject: (res: Error) => void = null;
 
     addValidator(control: ValidateContainer): void {
         this._validates.push(control);
@@ -25,6 +28,42 @@ class ControllerClass {
         this._validates = this._validates.filter((validate) => {
             return validate !== control;
         });
+    }
+
+    deferSubmit(): Promise<IValidateResult | Error> {
+        /**
+         * Если метод будет вызван во время цикла синхронизации, то дочерние контролы
+         * будут иметь старые опции, а работать должны с новыми. Поэтому откладываем действия до завершения цикла синхронизации.
+         * Примеры возникающих ошибок:
+         * https://online.sbis.ru/opendoc.html?guid=801ee6cf-7ba0-489d-b69c-60a89f976cec
+         * https://online.sbis.ru/doc/6603463e-30fa-47b6-ba06-93b08bdc1590
+         * У поля ввода установлена опция trim = 'true', при завершении редактирования будет обработано значение с пробелами,
+         * т.к. последовательно произойдет измененние значения поля ввода -> завершение редактирования -> вызов submit -> обновление значения в поле ввода.
+         */
+        if (!this._submitPromise) {
+            this._submitPromise = new Promise((resolve, reject) => {
+                this._submitResolve = resolve;
+                this._submitReject = reject;
+            });
+        }
+        return this._submitPromise;
+    }
+
+    resolveSubmit(): void {
+        if (this._submitPromise) {
+            const submitResolve = this._submitResolve;
+            const submitReject = this._submitReject;
+            this._submitResolve = null;
+            this._submitReject = null;
+            this._submitPromise = null;
+            this.submit()
+                .then((result: IValidateResult) => {
+                    submitResolve(result);
+                })
+                .catch((error: Error) => {
+                    submitReject(error);
+                });
+        }
     }
 
     submit(): Promise<IValidateResult | Error> {
