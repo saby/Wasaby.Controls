@@ -33,7 +33,7 @@ import {TKey} from 'Controls/_menu/interface/IMenuControl';
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_menu/interface/IMenuControl
  * @demo Controls-demo/Menu/Control/Source/Index
  * @control

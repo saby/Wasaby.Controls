@@ -8,14 +8,14 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
 /**
  * Поле ввода с автодополнением и возможностью выбора значений из справочника.
  * Выбранные значения отображаются в виде текста с кнопкой удаления внутри поля ввода.
- * 
+ *
  * @remark
  * Поддерживает автовысоту в зависимости от выбранных значений {@link multiLine}, а также одиночный и множественный выбор (см. {@link multiSelect}).
- * 
+ *
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/directory/lookup/">руководство разработчика</a>
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FLookup%2FIndex">переменные тем оформления</a>
- * 
+ *
  *
  * @class Controls/_lookup/Lookup
  * @extends Core/Control
@@ -25,7 +25,7 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ITextValue
@@ -61,7 +61,7 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ITextValue

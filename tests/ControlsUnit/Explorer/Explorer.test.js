@@ -824,9 +824,10 @@ define([
 
             explorer._restoredMarkedKeys = {
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
-               itemId: {parent: null, markedKey: null}
+               itemId: {parent: null, cursorPosition: '1', markedKey: null}
             };
 
             explorer._onBreadCrumbsClick({}, {
@@ -837,16 +838,18 @@ define([
 
             assert.deepEqual({
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
             }, explorer._restoredMarkedKeys);
 
             explorer._restoredMarkedKeys = {
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
-               itemId: {parent: null, markedKey: 'itemId1'},
-               itemId1: {parent: 'itemId', markedKey: null}
+               itemId: {parent: null, cursorPosition: '1', markedKey: 'itemId1'},
+               itemId1: {parent: 'itemId', cursorPosition: '2', markedKey: null}
             };
             explorer._root = 'itemId1';
 
@@ -858,9 +861,10 @@ define([
 
             assert.deepEqual({
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
-               itemId: {parent: null, markedKey: 'itemId1'},
+               itemId: {parent: null, markedKey: 'itemId1', cursorPosition: '1'},
             }, explorer._restoredMarkedKeys);
 
             assert.isTrue(isNotified);

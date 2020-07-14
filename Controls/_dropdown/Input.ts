@@ -48,7 +48,7 @@ let getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/Input/interface/IValidation
  * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/_interface/IIconSize
@@ -73,7 +73,7 @@ let getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/Input/interface/IValidation
  * @mixes Controls/_interface/IMultiSelectable

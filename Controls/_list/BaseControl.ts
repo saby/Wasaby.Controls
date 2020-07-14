@@ -689,7 +689,7 @@ const _private = {
                     self._scrollController.startBatchAdding(direction);
                 }
 
-                self._inertialScrolling.callAfterScrollStopped(() => {
+                self._getInertialScrolling().callAfterScrollStopped(() => {
                     loadCallback(addedItems, countCurrentItems);
                 });
 
@@ -1807,9 +1807,9 @@ const _private = {
         }
         return height;
     },
-    setHasMoreData(model, hasMoreData: boolean): boolean {
+    setHasMoreData(model, hasMoreData: boolean, silent: boolean = false): boolean {
         if (model) {
-            model.setHasMoreData(hasMoreData);
+            model.setHasMoreData(hasMoreData, silent);
         }
     },
     jumpToEnd(self): void {
@@ -2293,7 +2293,7 @@ const _private = {
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_interface/INavigation
- @mixes Controls/_interface/IFilter
+ @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
@@ -2434,9 +2434,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      */
     _beforeMount(newOptions, context, receivedState: IReceivedState = {}) {
         const self = this;
-
-        this._inertialScrolling = new InertialScrolling();
-
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
@@ -2493,7 +2490,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
-                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                     if (newOptions.useNewModel) {
                         self._items = self._listViewModel.getCollection();
@@ -2552,7 +2549,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                             newOptions.viewModelConstructor
                         );
 
-                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                         if (newOptions.itemsReadyCallback) {
                             newOptions.itemsReadyCallback(self._listViewModel.getCollection());
@@ -2588,11 +2585,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     },
 
+    _getInertialScrolling(): InertialScrolling {
+        if (!this._inertialScrolling) {
+            this._inertialScrolling = new InertialScrolling();
+        }
+        return this._inertialScrolling;
+    },
+
     scrollMoveSyncHandler(params: unknown): void {
         _private.handleListScrollSync(this, params);
 
         if (detection.isMobileIOS) {
-            this._inertialScrolling.scrollStarted();
+            this._getInertialScrolling().scrollStarted();
         }
     },
 

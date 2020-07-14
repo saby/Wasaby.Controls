@@ -30,7 +30,7 @@ define('Controls/interface/IItemTemplate', [
     *
     * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать прикладной шаблон. Также в опцию itemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/list:ItemTemplate.
     *
-    * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ руководстве разработчика}.
+    * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-template/ руководстве разработчика}.
     * @example
     * <pre class="brush: html">
     * <Controls.list:View>
@@ -45,7 +45,7 @@ define('Controls/interface/IItemTemplate', [
     * </pre>
     * @see Controls/interface/IItemTemplate#itemTemplateProperty
     * @see Controls/list:ItemTemplate
-    */
+    */workspaseWidth
 
    /*
     * @name Controls/interface/IItemTemplate#itemTemplate
