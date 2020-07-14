@@ -19,8 +19,8 @@ interface IMoverDialogTemplate extends IControlOptions {
  * Шаблон диалогового окна, используемый в списках при перемещении элементов для выбора целевой папки.
  *
  * @remark
- * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">демо-пример</a>
+ * Полезные ссылки: 
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FtreeGrid%2FMover%2FExtended%2FExtendedMoverDialog">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover-remover/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_moveDialog.less">переменные тем оформления</a>
  *

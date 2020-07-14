@@ -376,17 +376,22 @@ define(
          });
 
          it('loadDependencies, loadItemsTemplates', async() => {
+            let actualOptions;
             const controller = getDropdownController(config);
-            let stub = sandbox.stub(controller, '_loadItemsTemplates');
+
+            sandbox.replace(controller, '_loadItemsTemplates', (options) => {
+               actualOptions = options;
+               return Promise.resolve(true);
+            });
 
             // items not loaded, loadItemsTemplates was called
             await controller.loadDependencies();
-            sinon.assert.calledOnce(stub);
-            stub.restore();
+            assert.isOk(actualOptions);
 
             // items already loaded, loadItemsTemplates was called
+            actualOptions = null;
             await controller.loadDependencies();
-            sinon.assert.calledOnce(stub);
+            assert.isOk(actualOptions);
          });
 
          it('check empty item update', () => {
