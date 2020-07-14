@@ -2868,6 +2868,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.reset();
         }
 
+        if (this._portionedSearch) {
+            this._portionedSearch.destroy();
+            this._portionedSearch = null;
+        }
+
         // для связи с контроллером ПМО
         this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
 
