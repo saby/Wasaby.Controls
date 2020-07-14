@@ -679,6 +679,8 @@ class Manager extends Control<IManagerOptions> {
                     pendingsFinishedCallback && pendingsFinishedCallback();
                 }, (e) => {
                     item.removePending = null;
+                    // Change popupState from 'destroyed' to 'created' after cancelFinishPending
+                    item.popupState = item.controller.POPUP_STATE_CREATED;
                     if (e.canceled !== true) {
                         Logger.error('Controls/_popup/Manager/Container: Не получилось завершить пендинги: ' +
                             '(name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')',
