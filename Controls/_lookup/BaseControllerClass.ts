@@ -215,8 +215,8 @@ export default class LookupBaseControllerClass {
 
     private _getHistoryService(): Promise<unknown> {
         if (!this._historyServiceLoad) {
-            this._historyServiceLoad =  mStubs.require(['Controls/suggestPopup'], (loadedModules) => {
-                return loadedModules.LoadService({historyId: this._options.historyId});
+            this._historyServiceLoad =  mStubs.require(['Controls/suggestPopup']).then(([{LoadService}]) => {
+                return LoadService({historyId: this._options.historyId});
             });
         }
         return this._historyServiceLoad;
