@@ -7,7 +7,6 @@ import {Logger} from 'UI/Utils';
 import ToSourceModel = require('Controls/Utils/ToSourceModel');
 import {isEqual} from 'Types/object';
 import {object} from 'Types/util';
-import * as mStubs from 'Core/moduleStubs';
 
 type Key = string|number|null;
 export type SelectedItems = RecordSet|List<Model>;
