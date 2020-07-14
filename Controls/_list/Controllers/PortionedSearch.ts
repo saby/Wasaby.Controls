@@ -66,6 +66,10 @@ export default class PortionedSearch<PortionedSearchOptions> {
         }
     }
 
+    destroy(): void {
+        this._clearTimer();
+    }
+
     private _startTimer(): void {
         this._searchTimer = setTimeout(() => {
             this._stopSearch();
