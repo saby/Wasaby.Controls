@@ -126,7 +126,7 @@ define(
             data._beforeMount({source: newSource, idProperty: 'id'}, {}, sourceData);
 
             assert.deepEqual(data._items, sourceData);
-            assert.isTrue(!!data._dataController._prefetchSource);
+            assert.isTrue(!!data._prefetchSource);
 
             resetCallback();
          });
@@ -146,9 +146,9 @@ define(
             let resetCallback = setNewEnvironmentValue(true);
 
             data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, sourceData);
-            assert.isTrue(data._dataController._prefetchSource.getOriginal() === memory);
-            assert.isTrue(data._dataController._prefetchSource !== prefetchSource);
-            assert.equal(data._dataController._prefetchSource._$data.query, sourceData);
+            assert.isTrue(data._prefetchSource.getOriginal() === memory);
+            assert.isTrue(data._prefetchSource !== prefetchSource);
+            assert.equal(data._prefetchSource._$data.query, sourceData);
 
             resetCallback();
          });
@@ -167,9 +167,9 @@ define(
             let data = getDataWithConfig({source: prefetchSource, keyProperty: 'id'});
 
             await data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, sourceData);
-            assert.isTrue(data._dataController._prefetchSource.getOriginal() === memory);
-            assert.isTrue(data._dataController._prefetchSource !== prefetchSource);
-            assert.equal(data._dataController._prefetchSource._$data.query, sourceData);
+            assert.isTrue(data._prefetchSource.getOriginal() === memory);
+            assert.isTrue(data._prefetchSource !== prefetchSource);
+            assert.equal(data._prefetchSource._$data.query, sourceData);
          });
 
          it('_beforeMount without source', () => {
@@ -255,8 +255,8 @@ define(
 
             //new source received in _beforeUpdate
             data._beforeUpdate({source: source}).addCallback(function() {
-               assert.isTrue(data._dataController._options.source === source);
-               assert.isTrue(!!data._dataController._prefetchSource);
+               assert.isTrue(data._sourceController._options.source === source);
+               assert.isTrue(!!data._prefetchSource);
                done();
             });
          });
@@ -347,8 +347,8 @@ define(
             var data = getDataWithConfig(config);
 
             data._beforeMount(config).then(function() {
-               assert.isTrue(!!data._dataController._prefetchSource);
-               assert.equal(data._dataController._options.source, source);
+               assert.isTrue(!!data._prefetchSource);
+               assert.equal(data._sourceController._options.source, source);
                assert.isTrue(dataLoadErrbackCalled);
                done();
             });

@@ -70,7 +70,7 @@ import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatorTe
 import ContinueSearchTemplate = require('wml!Controls/_list/resources/ContinueSearchTemplate');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
-import DataContainer = require('Controls/_list/Data');
+import {default as DataContainer} from 'Controls/_list/Data';
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import _swipeActionTemplate = require('wml!Controls/_list/Swipe/resources/SwipeAction');
 import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
