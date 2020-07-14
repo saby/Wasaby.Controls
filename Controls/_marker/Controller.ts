@@ -28,13 +28,15 @@ export class Controller {
     * @param options
     * @return {number|string} Ключ маркера
     */
-   update(options: IOptions): TKey {
+   update(options: IOptions): void {
       if (this._model !== options.model) {
          this._model = options.model;
          this._markedKey = null;
       }
       this._markerVisibility = options.markerVisibility;
-      return this.calculateMarkedKey(options.markedKey);
+
+      const markedKey = this.calculateMarkedKey(options.markedKey);
+      this.setMarkedKey(markedKey);
    }
 
    /**

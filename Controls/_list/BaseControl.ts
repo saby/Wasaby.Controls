@@ -1916,12 +1916,11 @@ const _private = {
     },
 
     updateMarkerController(self: any, options: any): void {
-        const newMarkedKey = self._markerController.update({
+        self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
             markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markerController.getMarkedKey()
         });
-        self._markerController.setMarkedKey(newMarkedKey);
     },
 
     setMarkedKey(self: any, key: string | number): void {
