@@ -221,6 +221,10 @@ class FormController extends Control<IFormController, IReceivedState> {
         if (initializingWay !== INITIALIZING_WAY.LOCAL) {
             let recordPromise;
             if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.DELAYED_READ) {
+                const hasKey: boolean = options.key !== undefined && options.key !== null;
+                if (!hasKey) {
+                    this._throwInitializingWayException(initializingWay, 'key');
+                }
                 recordPromise = this._readRecordBeforeMount(options);
             } else {
                 recordPromise = this._createRecordBeforeMount(options);
@@ -228,6 +232,8 @@ class FormController extends Control<IFormController, IReceivedState> {
             if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.CREATE) {
                 return recordPromise;
             }
+        } else if (!record) {
+            this._throwInitializingWayException(initializingWay, 'record');
         }
     }
 
@@ -297,6 +303,11 @@ class FormController extends Control<IFormController, IReceivedState> {
                 this._isNewRecord = newOptions.isNewRecord;
             }
         }
+    }
+
+    private _throwInitializingWayException(initializingWay: INITIALIZING_WAY, requiredOptionName: string): void {
+        throw new Error(`${this._moduleName}: Опция initializingWay установлена в значение ${initializingWay}.
+        Для корректной работы требуется передать опцию ${requiredOptionName}, либо изменить значение initializingWay`);
     }
 
     private _calcInitializingWay(options: IFormController): string {
