@@ -352,10 +352,93 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             });
          });
 
+         it('getHeaderCellPadding', () => {
+            assert.equal('', gridMod.GridViewModel._private.getHeaderCellPadding('left', {
+               isMultiHeader: false,
+               columnIndex: 1,
+               columns: [
+                  {},
+                  {}
+               ],
+               headerColumns: [
+                  {},
+                  {}
+               ]
+            }));
+            assert.equal('', gridMod.GridViewModel._private.getHeaderCellPadding('right', {
+               isMultiHeader: false,
+               columnIndex: 0,
+               columns: [
+                  {},
+                  {}
+               ],
+               headerColumns: [
+                  {},
+                  {}
+               ]
+            }));
+
+            assert.equal('_s', gridMod.GridViewModel._private.getHeaderCellPadding('left', {
+               isMultiHeader: false,
+               columnIndex: 1,
+               columns: [
+                  {
+                  },
+                  {
+                     cellPadding: {
+                        left: 's'
+                     }
+                  }
+               ],
+               headerColumns: [
+                  {},
+                  {}
+               ]
+            }));
+            assert.equal('_s', gridMod.GridViewModel._private.getHeaderCellPadding('right', {
+               isMultiHeader: false,
+               columnIndex: 0,
+               columns: [
+                  {
+                     cellPadding: {
+                        right: 's'
+                     }
+                  },
+                  {}
+               ],
+               headerColumns: [
+                  {},
+                  {}
+               ]
+            }));
+
+            assert.equal('_s', gridMod.GridViewModel._private.getHeaderCellPadding('right', {
+               isMultiHeader: true,
+               columnIndex: 0,
+               columns: [
+                  {},
+                  {},
+                  {
+                     cellPadding: {
+                        right: 's'
+                     }
+                  },
+                  {}
+               ],
+               headerColumns: [
+                  {
+                     startColumn: 1,
+                     endColumn: 4
+                  },
+                  {}
+               ]
+            }));
+         });
+
          it('getPaddingCellClasses', function() {
             var
                paramsWithoutMultiselect = {
-                  columns: gridColumns,
+                  headerColumns: gridColumns,
                   multiSelectVisibility: false,
                   itemPadding: {
                      left: 'XL',
@@ -367,7 +450,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   style: 'default'
                },
                paramsWithMultiselect = {
-                  columns: [{}].concat(gridColumns),
+                  headerColumns: [{}].concat(gridColumns),
                   multiSelectVisibility: true,
                   itemPadding: {
                      left: 'XL',
@@ -441,7 +524,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             //------ with actionCell ----
             var paramsWithActionCell = {
-                  columns: headerWitchActionCell,
+                  headerColumns: headerWitchActionCell,
                   multiSelectVisibility: false,
                   itemPadding: {
                      left: 'XL',
@@ -492,7 +575,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             columnsWithMultiSelect[1].isBreadCrumbs = true;
 
             const paramsWithMultiselect = {
-               columns: columnsWithMultiSelect,
+               headerColumns: columnsWithMultiSelect,
                multiSelectVisibility: true,
                isBreadCrumbs: true,
                isTableLayout: true,
@@ -547,7 +630,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
             ]
             const paramsForFirstRow = {
-               columns: headerRows[0],
+               headerColumns: headerRows[0],
                multiSelectVisibility: false,
                maxEndColumn: 5,
                isMultiHeader: true,
@@ -574,7 +657,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
 
             const paramsForSecondRow = {
-               columns: headerRows[1],
+               headerColumns: headerRows[1],
                multiSelectVisibility: false,
                maxEndColumn: 5,
                style: 'default',

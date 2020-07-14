@@ -226,7 +226,6 @@ export class ColumnScroll {
         if (detection.safari) {
             this._fixSafariBug();
         }
-        this._drawTransform(0, isFullGridSupport);
 
         const newContentSize = this._contentContainer.scrollWidth;
         const newContainerSize = isFullGridSupport ? this._contentContainer.offsetWidth : this._scrollContainer.offsetWidth;
@@ -322,7 +321,12 @@ export class ColumnScroll {
         if (!stickyCellContainer) {
             return 0;
         }
-        const stickyCellOffsetLeft = stickyCellContainer.getBoundingClientRect().left - this._contentContainer.getBoundingClientRect().left;
+        // Необходимо получить отступ контейнера таблицы слева. Именно видимой части контейнера, т.к. по факту он может
+        // быть смещен вправо/влево из-зи прокрутки. Поэтому, при определении отступа, необходимо учесть значение горизонтальной
+        // прокрутки таблицы и скомпенсировать ее.
+        const contentContainerOffsetLeft = this._contentContainer.getBoundingClientRect().left + this._scrollPosition;
+
+        const stickyCellOffsetLeft = stickyCellContainer.getBoundingClientRect().left - contentContainerOffsetLeft;
         return stickyCellOffsetLeft + stickyCellContainer.offsetWidth;
     }
 

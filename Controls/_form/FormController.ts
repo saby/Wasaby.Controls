@@ -26,6 +26,7 @@ interface IFormController extends IControlOptions {
     errorController?: dataSourceError.Controller;
     source?: Memory;
     confirmationShowingCallback?: Function;
+    initializingWay?: string;
 
     //удалить при переходе на новые опции
     dataSource?: Memory;
@@ -74,6 +75,14 @@ interface IConfigInMounting {
 
 interface IUpdateConfig {
     additionalData: IAdditionalData;
+}
+
+export const enum INITIALIZING_WAY {
+    LOCAL = 'local',
+    READ = 'read',
+    CREATE = 'create',
+    DELAYED_READ = 'delayedRead',
+    DELAYED_CREATE = 'delayedCreate'
 }
 
 /**
@@ -202,21 +211,29 @@ class FormController extends Control<IFormController, IReceivedState> {
         if (receivedError) {
             return this._showError(receivedError);
         }
-        const record = receivedData || options.record;
+        const record = receivedData || options.record || null;
 
-        // use record
-        if (record && this._checkRecordType(record)) {
-            this._setRecord(record);
-            this._isNewRecord = !!options.isNewRecord;
+        this._isNewRecord = !!options.isNewRecord;
+        this._setRecord(record);
 
-            // If there is a key - read the record. Not waiting for answer BL
-            if (options.key !== undefined && options.key !== null) {
-                this._readRecordBeforeMount(options);
+        const initializingWay = this._calcInitializingWay(options);
+
+        if (initializingWay !== INITIALIZING_WAY.LOCAL) {
+            let recordPromise;
+            if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.DELAYED_READ) {
+                const hasKey: boolean = options.key !== undefined && options.key !== null;
+                if (!hasKey) {
+                    this._throwInitializingWayException(initializingWay, 'key');
+                }
+                recordPromise = this._readRecordBeforeMount(options);
+            } else {
+                recordPromise = this._createRecordBeforeMount(options);
             }
-        } else if (options.key !== undefined && options.key !== null) {
-            return this._readRecordBeforeMount(options);
-        } else {
-            return this._createRecordBeforeMount(options);
+            if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.CREATE) {
+                return recordPromise;
+            }
+        } else if (!record) {
+            this._throwInitializingWayException(initializingWay, 'record');
         }
     }
 
@@ -286,6 +303,28 @@ class FormController extends Control<IFormController, IReceivedState> {
                 this._isNewRecord = newOptions.isNewRecord;
             }
         }
+    }
+
+    private _throwInitializingWayException(initializingWay: INITIALIZING_WAY, requiredOptionName: string): void {
+        throw new Error(`${this._moduleName}: Опция initializingWay установлена в значение ${initializingWay}.
+        Для корректной работы требуется передать опцию ${requiredOptionName}, либо изменить значение initializingWay`);
+    }
+
+    private _calcInitializingWay(options: IFormController): string {
+        if (options.initializingWay) {
+            return options.initializingWay;
+        }
+        const hasKey: boolean = options.key !== undefined && options.key !== null;
+        if (options.record) {
+            if (hasKey) {
+                return INITIALIZING_WAY.DELAYED_READ;
+            }
+            return INITIALIZING_WAY.LOCAL;
+        }
+        if (hasKey) {
+            return INITIALIZING_WAY.READ;
+        }
+        return INITIALIZING_WAY.CREATE;
     }
 
     private _confirmRecordChangeHandler(onYesAnswer: Function, onNoAnswer?: Function): Promise<Boolean> | undefined {

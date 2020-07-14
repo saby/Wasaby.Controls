@@ -25,5 +25,5 @@ export {default as PrimaryAction} from './_form/PrimaryAction';
 export {
     Crud
 };
-export {default as Controller} from './_form/FormController';
+export {default as Controller, INITIALIZING_WAY} from './_form/FormController';
 export {default as CrudController} from './_form/CrudController';
