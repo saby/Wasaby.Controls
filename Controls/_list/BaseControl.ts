@@ -14,7 +14,7 @@ import {isEqual} from 'Types/object';
 import {ICrud, Memory} from 'Types/source';
 import {debounce} from 'Types/function';
 import {create as diCreate} from 'Types/di';
-import {Model, Record, relation} from 'Types/entity';
+import {Model, relation} from 'Types/entity';
 import {IHashMap} from 'Types/declarations';
 
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -414,9 +414,7 @@ const _private = {
 
     restoreModelState(self: any, options: any): void {
         if (self._markerController) {
-            // TODO marker нужен иногда нотифай
-            const newMarkedKey = self._markerController.restoreMarker();
-            _private.notifyAndSetMarker(self, newMarkedKey);
+            self._markerController.restoreMarker();
         } else {
             if (options.markerVisibility !== 'hidden') {
                 self._markerController = _private.createMarkerController(self, options);
@@ -1916,11 +1914,14 @@ const _private = {
     },
 
     updateMarkerController(self: any, options: any): void {
-        self._markerController.update({
+        const newMarkedKey = self._markerController.update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
             markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markerController.getMarkedKey()
         });
+        if (newMarkedKey !== options.markedKey) {
+            self._notify('markedKeyChanged', [newMarkedKey]);
+        }
     },
 
     setMarkedKey(self: any, key: string | number): void {

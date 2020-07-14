@@ -2,7 +2,6 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
-import { spy } from 'sinon';
 import { MarkerController } from 'Controls/marker';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
@@ -169,17 +168,6 @@ describe('Controls/marker/Controller', () => {
          result = controller.update({model, markerVisibility: 'onactivated', markedKey: 3});
          assert.equal(result, 1);
       });
-   });
-
-   describe('restoreMarker', () => {
-      it('markerVisibility = onactivated', () => {
-         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 1});
-         model.setItems(items);
-
-         controller.restoreMarker();
-
-         assert.isTrue(model.getItemBySourceKey(1).isMarked());
-      });
 
       it('markerVisibility = visible and not exists item with marked key', () => {
          controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 1});
@@ -191,7 +179,7 @@ describe('Controls/marker/Controller', () => {
             keyProperty: 'id'
          }));
 
-         const result = controller.restoreMarker();
+         const result = controller.calculateMarkedKey(1);
          assert.equal(result, 2);
       });
 
@@ -205,8 +193,19 @@ describe('Controls/marker/Controller', () => {
             keyProperty: 'id'
          }));
 
-         const result = controller.restoreMarker();
+         const result = controller.calculateMarkedKey(1);
          assert.equal(result, 2);
+      });
+   });
+
+   describe('restoreMarker', () => {
+      it('markerVisibility = onactivated', () => {
+         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 1});
+         model.setItems(items);
+
+         controller.restoreMarker();
+
+         assert.isTrue(model.getItemBySourceKey(1).isMarked());
       });
    });
 
