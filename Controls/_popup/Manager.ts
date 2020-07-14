@@ -549,7 +549,7 @@ class Manager extends Control<IManagerOptions> {
     }
 
     private _callEvents(options: IPopupOptions = {}, event: string, args: unknown[] = []): boolean {
-        if (options._events) {
+        if (options._events && options._events[event]) {
             options._events[event](event, args);
         }
         if (options.eventHandlers && typeof options.eventHandlers[event] === 'function') {
