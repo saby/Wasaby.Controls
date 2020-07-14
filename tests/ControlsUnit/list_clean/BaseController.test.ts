@@ -33,7 +33,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl = undefined;
         });
 
-        it('CollapsedGroup undefined', () => {
+        it('CollapsedGroup empty', () => {
             baseControl._beforeMount(baseControlCfg);
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             baseControl._afterMount();
