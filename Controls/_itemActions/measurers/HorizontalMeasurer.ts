@@ -1,5 +1,6 @@
 import rk = require('i18n!Controls');
 import { ISwipeConfig } from 'Controls/display';
+import { DOMUtil } from 'Controls/Utils/DOMUtil';
 
 import { IMeasurer } from '../interface/IMeasurer';
 import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemActions';
@@ -27,20 +28,15 @@ class HorizontalMeasurer implements IMeasurer {
       const actualActions: IItemAction[] = MeasurerUtils.getActualActions(actions);
       let visibleActions: IItemAction[] = [];
       const actionTemplateConfig = this._getActionTemplateConfig(rowHeight, actionCaptionPosition, theme);
-      const menuButton = HorizontalMeasurer._getMoreButton();
 
       if (actualActions.length) {
          visibleActions = HorizontalMeasurer._calculateVisibleActions(
              actualActions,
-             menuButton,
              menuButtonVisibility,
              rowWidth,
-             actionTemplateConfig
+             actionTemplateConfig,
+             theme
          );
-      }
-
-      if (menuButtonVisibility === 'visible' || visibleActions.length < actualActions.length) {
-         visibleActions.push(menuButton);
       }
 
       return {
@@ -104,7 +100,7 @@ class HorizontalMeasurer implements IMeasurer {
     * Возвращает кнопку Ещё
     * @private
     */
-   private static _getMoreButton(): IItemAction {
+   private static _getMenuItemAction(): IItemAction {
       return {
          id: null,
          icon: 'icon-SwipeMenu',
@@ -120,7 +116,7 @@ class HorizontalMeasurer implements IMeasurer {
     * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
     */
    private static _calculateActionSize(itemAction: IItemAction, templateConfig: ISwipeActionTemplateConfig): number {
-      return this._calculateActionsSizes([itemAction], templateConfig).itemsSizes[0];
+      return this._calculateActionsSizes([itemAction], templateConfig)[0];
    }
 
    /**
@@ -128,10 +124,8 @@ class HorizontalMeasurer implements IMeasurer {
     * @param itemActions видимые по свайпу опции записи
     * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
     */
-   private static _calculateActionsSizes(itemActions: IItemAction[], templateConfig: ISwipeActionTemplateConfig): {
-      itemsSizes: number[];
-      blockSize: number;
-   } {
+   private static _calculateActionsSizes(itemActions: IItemAction[],
+                                         templateConfig: ISwipeActionTemplateConfig): number[] {
 
       // Если в доступных для показа опциях есть те, у которых есть иконки, ставим соответствующий параметр в конфиг
       if (itemActions.some((action: IItemAction) => !!action.icon)) {
@@ -141,33 +135,32 @@ class HorizontalMeasurer implements IMeasurer {
          ...templateConfig,
          action
       }));
-      return MeasurerUtils.calculateSizesOfItems(
-          itemsHtml,
-          'controls-Swipe_horizontal_theme-default',
-          'controls-Swipe__action');
+      return DOMUtil.getElementsWidth(itemsHtml, 'controls-Swipe__action', true);
    }
 
    /**
     * Запрашивает горизонтальные размеры и возвращает на их основе массив видимых опций свайпа
     * @param actions все опции свайпа
-    * @param moreButton опция "Ещё"
     * @param menuButtonVisibility Видимость кнопки ещё
     * @param rowWidth ширина контейнера для отображения опций свайпа
     * @param templateConfig настройки шаблона для виртуальной отрисовки ItemAction
+    * @param theme
     */
    private static _calculateVisibleActions(
        actions: IItemAction[],
-       moreButton: IItemAction,
        menuButtonVisibility: 'visible'|'adaptive',
        rowWidth: number,
-       templateConfig: ISwipeActionTemplateConfig): IItemAction[] {
+       templateConfig: ISwipeActionTemplateConfig,
+       theme: string): IItemAction[] {
 
       // По стандарту, показываем не более трёх опций в свайпе.
       // Кроме всего прочего, это позволит не производить слишком много вычислений с DOM
       const itemActions = actions.slice(0, MAX_ACTIONS_COUNT);
+      const itemActionsContainerWidth = DOMUtil.getBlockWidth('', `controls-Swipe_horizontal_theme-${theme}`, true);
       const itemActionsSizes = this._calculateActionsSizes(itemActions, templateConfig);
-      let maxWidth = rowWidth - itemActionsSizes.blockSize;
-      let moreButtonSize = 0;
+      let availableWidth = rowWidth - itemActionsContainerWidth;
+      let menuItemAction: IItemAction;
+      let menuActionSize = 0;
       let visibleActions = [];
 
       // Если всего было передано лишь 3 опции или меньше, и видимость кнопки "ещё" не "visible",
@@ -175,15 +168,18 @@ class HorizontalMeasurer implements IMeasurer {
       // в случае, когда все опции записи должны бы по своей ширине уместиться в контейнер им может добавляться
       // кнопка "ещё"
       if (menuButtonVisibility !== 'visible' && itemActions.length === actions.length) {
-         visibleActions = this._fillVisibleActions(itemActions, itemActionsSizes.itemsSizes, maxWidth);
+         visibleActions = this._fillVisibleActions(itemActions, itemActionsSizes, availableWidth);
       }
 
       // Если кнопка "ещё" всё-таки нужна, то считаем, учитывая её ширину
       if (menuButtonVisibility === 'visible' || visibleActions.length < itemActions.length) {
-         moreButtonSize = this._calculateActionSize(moreButton, templateConfig);
-         maxWidth -= moreButtonSize;
-         visibleActions = this._fillVisibleActions(itemActions, itemActionsSizes.itemsSizes, maxWidth);
+         menuItemAction = HorizontalMeasurer._getMenuItemAction();
+         menuActionSize = this._calculateActionSize(menuItemAction, templateConfig);
+         availableWidth -= menuActionSize;
+         visibleActions = this._fillVisibleActions(itemActions, itemActionsSizes, availableWidth);
+         visibleActions.push(menuItemAction);
       }
+
       return visibleActions;
    }
 

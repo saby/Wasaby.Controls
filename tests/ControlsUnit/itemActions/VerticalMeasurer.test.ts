@@ -147,7 +147,7 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                 };
 
                 assert.deepOwnInclude(
-                    verticalMeasurer.getSwipeConfig(actions, 150, 20, 'none'),
+                    verticalMeasurer.getSwipeConfig(actions, 150, 20, 'none', 'adaptive', 'default'),
                     result
                 );
             });
@@ -164,7 +164,7 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                 };
 
                 assert.deepOwnInclude(
-                    verticalMeasurer.getSwipeConfig(actions, 150, 97, 'none'),
+                    verticalMeasurer.getSwipeConfig(actions, 150, 97, 'none', 'adaptive', 'default'),
                     result
                 );
             });
@@ -181,7 +181,7 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                 };
 
                 assert.deepOwnInclude(
-                    verticalMeasurer.getSwipeConfig(actions, 150, 150, 'none'),
+                    verticalMeasurer.getSwipeConfig(actions, 150, 150, 'none', 'adaptive', 'default'),
                     result
                 );
             });
@@ -208,7 +208,7 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                 };
 
                 assert.deepOwnInclude(
-                    verticalMeasurer.getSwipeConfig(actions, 150, 20, 'right'),
+                    verticalMeasurer.getSwipeConfig(actions, 150, 20, 'right', 'adaptive', 'default'),
                     result
                 );
             });
@@ -225,7 +225,7 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                 };
 
                 assert.deepOwnInclude(
-                    verticalMeasurer.getSwipeConfig(actions, 150, 120, 'right'),
+                    verticalMeasurer.getSwipeConfig(actions, 150, 120, 'right', 'adaptive', 'default'),
                     result
                 );
             });
@@ -242,7 +242,7 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                 };
 
                 assert.deepOwnInclude(
-                    verticalMeasurer.getSwipeConfig(actions, 150, 150, 'right'),
+                    verticalMeasurer.getSwipeConfig(actions, 150, 150, 'right', 'adaptive', 'default'),
                     result
                 );
             });
@@ -278,7 +278,7 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                     twoColumns: true
                 };
                 assert.deepOwnInclude(
-                    verticalMeasurer.getSwipeConfig(fourActions, 150, 93, 'bottom'),
+                    verticalMeasurer.getSwipeConfig(fourActions, 150, 93, 'bottom', 'adaptive', 'default'),
                     result
                 );
 
@@ -336,7 +336,7 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                     twoColumns: true
                 };
                 assert.deepOwnInclude(
-                    verticalMeasurer.getSwipeConfig(fiveActions, 150, 93, 'bottom'),
+                    verticalMeasurer.getSwipeConfig(fiveActions, 150, 93, 'bottom', 'adaptive', 'default'),
                     result
                 );
 
@@ -390,7 +390,7 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                     twoColumns: false
                 };
                 assert.deepOwnInclude(
-                    verticalMeasurer.getSwipeConfig(fourActions, 150, 250, 'bottom', 'visible'),
+                    verticalMeasurer.getSwipeConfig(fourActions, 150, 250, 'bottom', 'visible', 'default'),
                     result
                 );
 
@@ -415,7 +415,7 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                 };
 
                 assert.deepOwnInclude(
-                    verticalMeasurer.getSwipeConfig(actions, 150, 20, 'bottom'),
+                    verticalMeasurer.getSwipeConfig(actions, 150, 20, 'bottom', 'adaptive', 'default'),
                     result
                 );
             });
@@ -520,7 +520,13 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                         showType: 2
                     }];
                 assert.deepEqual(
-                    verticalMeasurer.getSwipeConfig(otherActions, 150, 130, 'none').itemActions.showed,
+                    verticalMeasurer.getSwipeConfig(
+                        otherActions,
+                        150,
+                        130,
+                        'none',
+                        'adaptive',
+                        'default').itemActions.showed,
                     result
                 );
             });

@@ -5,7 +5,7 @@ import * as rk from 'i18n!ControlsUnit';
 
 import { IItemAction } from 'Controls/_itemActions/interface/IItemActions';
 import { horizontalMeasurer } from 'Controls/_itemActions/measurers/HorizontalMeasurer';
-import {MeasurerUtils} from 'Controls/_itemActions/measurers/MeasurerUtils';
+import { DOMUtil } from 'Controls/Utils/DOMUtil';
 
 describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
     it('needIcon', () => {
@@ -16,6 +16,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isTrue(
             horizontalMeasurer.needIcon(
                 {
+                    id: 123,
                     icon: '123'
                 },
                 'none',
@@ -25,6 +26,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isTrue(
             horizontalMeasurer.needIcon(
                 {
+                    id: 123,
                     icon: '123'
                 },
                 'none',
@@ -37,6 +39,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isFalse(
             horizontalMeasurer.needTitle(
                 {
+                    id: 123,
                     icon: 'icon-Message'
                 },
                 'none'
@@ -45,6 +48,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isFalse(
             horizontalMeasurer.needTitle(
                 {
+                    id: 123,
                     icon: 'icon-Message'
                 },
                 'right'
@@ -55,6 +59,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isTrue(
             horizontalMeasurer.needTitle(
                 {
+                    id: 123,
                     title: '123'
                 },
                 'none'
@@ -63,6 +68,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isTrue(
             horizontalMeasurer.needTitle(
                 {
+                    id: 123,
                     title: '123'
                 },
                 'right'
@@ -71,6 +77,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isTrue(
             horizontalMeasurer.needTitle(
                 {
+                    id: 123,
                     title: '123'
                 },
                 'bottom'
@@ -94,18 +101,21 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             }
         ];
 
-        let stubCalculateSizesOfItems: SinonStub;
+        let stubGetElementsWidth: SinonStub;
+        let stubGetBlockWidth: SinonStub;
 
         beforeEach(() => {
-            stubCalculateSizesOfItems = stub(MeasurerUtils, 'calculateSizesOfItems');
-            stubCalculateSizesOfItems.callsFake((itemsHtml: string[], measurerBlockClass: string, itemClass: string) => ({
-                blockSize: 0,
-                itemsSizes: itemsHtml.map((item) => 25)
-            }));
+            stubGetElementsWidth = stub(DOMUtil, 'getElementsWidth');
+            stubGetElementsWidth.callsFake((itemsHtml: string[], itemClass: string, considerMargins?: boolean) => (
+                itemsHtml.map((item) => 25)
+            ));
+            stubGetBlockWidth = stub(DOMUtil, 'getBlockWidth');
+            stubGetBlockWidth.callsFake((content: string, blockClass: string, considerMargins?: boolean) => 0);
         });
 
         afterEach(() => {
-            stubCalculateSizesOfItems.restore();
+            stubGetElementsWidth.restore();
+            stubGetBlockWidth.restore();
         });
 
         // Если кол-во записей > 3, то показываем максимум 3 (если они влезли) и добавляем кнопку "ещё"
@@ -136,7 +146,9 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                     }),
                     100,
                     20,
-                    'right'
+                    'right',
+                    'adaptive',
+                    'default'
                 ),
                 result
             );
@@ -170,16 +182,17 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                 }),
                 75,
                 20,
-                'right'
+                'right',
+                'adaptive',
+                'default'
             ), result);
         });
 
         // Если кол-во записей <= 3 и видимые записи не влезли в контейнер, показываем столько, сколько влезло
         it('should show only item actions that are smaller than container by their summarized width when total <= 3', () => {
-            stubCalculateSizesOfItems.callsFake((itemsHtml: string[], measurerBlockClass: string, itemClass: string) => ({
-                blockSize: 0,
-                itemsSizes: itemsHtml.map((item, index) => 25 + index)
-            }));
+            stubGetElementsWidth.callsFake((itemsHtml: string[], itemClass: string, considerMargins?: boolean) => (
+                itemsHtml.map((item, index) => 25 + index)
+            ));
 
             const lessActions = [...actions];
             lessActions.splice(-1, 1);
@@ -205,7 +218,9 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                 lessActions,
                 50,
                 20,
-                'right'
+                'right',
+                'adaptive',
+                'default'
             );
             assert.deepInclude(config, result);
         });
@@ -227,7 +242,9 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                 lessActions,
                 50,
                 20,
-                'right'
+                'right',
+                'adaptive',
+                'default'
             );
             assert.deepInclude(config, result);
         });
@@ -256,7 +273,8 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                 75,
                 20,
                 'right',
-                'visible'
+                'visible',
+                'default'
             );
             assert.deepInclude(config, result);
         });
@@ -272,7 +290,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 100, 20, 'none'),
+                horizontalMeasurer.getSwipeConfig(actions, 100, 20, 'none', 'adaptive', 'default'),
                 result
             );
         });
@@ -288,7 +306,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 100,39, 'none'),
+                horizontalMeasurer.getSwipeConfig(actions, 100, 39, 'none', 'adaptive', 'default'),
                 result
             );
         });
@@ -304,7 +322,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 100, 20, 'bottom'),
+                horizontalMeasurer.getSwipeConfig(actions, 100, 20, 'bottom', 'adaptive', 'default'),
                 result
             );
         });
@@ -320,7 +338,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 100, 59, 'bottom'),
+                horizontalMeasurer.getSwipeConfig(actions, 100, 59, 'bottom', 'adaptive', 'default'),
                 result
             );
         });
@@ -378,7 +396,13 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             ];
             assert.deepEqual(
                 result,
-                horizontalMeasurer.getSwipeConfig(otherActions, 100, 59, 'none').itemActions.showed
+                horizontalMeasurer.getSwipeConfig(
+                    otherActions,
+                    100,
+                    59,
+                    'none',
+                    'adaptive',
+                    'default').itemActions.showed
             );
         });
     });
