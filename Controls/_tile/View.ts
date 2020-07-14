@@ -13,7 +13,7 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list/tile/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_tile.less">переменные тем оформления tile</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
- * 
+ *
  *
  * @class Controls/_tile/View
  * @extends Controls/list:View
@@ -23,7 +23,7 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * @mixes Controls/interface/IContentTemplate
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/_interface/IHierarchy
@@ -52,7 +52,7 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/_interface/ISorting

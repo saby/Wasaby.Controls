@@ -2,13 +2,20 @@ import {default as Lookup} from 'Controls/_lookup/Lookup';
 import {ILookupBaseControllerOptions} from 'Controls/_lookup/BaseControllerClass';
 import {assert} from 'chai';
 import {Memory} from 'Types/source';
+import {Model} from 'Types/entity';
+import {stub} from 'sinon';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
-async function getBaseLookup(options: ILookupBaseControllerOptions): Promise<Lookup> {
-    const lookup = new Lookup(options);
+async function getBaseLookup(options?: ILookupBaseControllerOptions): Promise<Lookup> {
+    const lookupOptions = options || {
+        source: getSource(),
+        selectedKeys: []
+    };
+    const lookup = new Lookup(lookupOptions);
     // tslint:disable-next-line:ban-ts-ignore
     // @ts-ignore
-    await lookup._beforeMount(options);
-    lookup.saveOptions(options);
+    await lookup._beforeMount(lookupOptions);
+    lookup.saveOptions(lookupOptions);
     return lookup;
 }
 
@@ -39,11 +46,7 @@ describe('Controls/lookup:Input', () => {
     describe('_beforeMount', () => {
 
         it('with source and without selectedKeys', async () => {
-            const options = {
-                source: getSource(),
-                selectedKeys: []
-            };
-            const lookup = await getBaseLookup(options as unknown as ILookupBaseControllerOptions);
+            const lookup = await getBaseLookup();
             assert.deepStrictEqual(lookup._items.getCount(), 0);
         });
 
@@ -54,6 +57,20 @@ describe('Controls/lookup:Input', () => {
             };
             const lookup = await getBaseLookup(options as unknown as ILookupBaseControllerOptions);
             assert.deepStrictEqual(lookup._items.getCount(), 0);
+        });
+
+    });
+
+    describe('handlers', () => {
+
+        it('addItemHandler', async () => {
+            const lookup = await getBaseLookup();
+            const notifyStub = stub(lookup, '_notify');
+            lookup._addItemHandler({} as unknown as SyntheticEvent, new Model());
+
+            assert.deepStrictEqual(lookup._items.getCount(), 1);
+            assert.ok(notifyStub.withArgs('choose').calledOnce);
+            notifyStub.restore();
         });
 
     });

@@ -752,8 +752,6 @@ let
                _private._updateScrollbar(this);
             }
             this._updateStickyHeaderContext();
-
-            this._forceUpdate();
          }
       },
 
