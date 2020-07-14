@@ -3,7 +3,7 @@ import {showType} from 'Controls/Utils/Toolbar';
 import getWidthUtil = require('Controls/Utils/getWidth');
 import { Logger } from 'UI/Utils';
 import {Record} from 'Types/entity';
-
+import {DOMUtil} from 'Controls/Utils/DOMUtil';
 
    var MENU_WIDTH = 0;
 
@@ -26,17 +26,15 @@ import {Record} from 'Types/entity';
       },
 
       getItemsSizes: function(items, visibleKeys, theme, itemTemplate, itemTemplateProperty) {
-         const measurer = document.createElement('div');
-         const itemsSizes = [];
-         let itemsMark = '';
+         const itemsMark = [];
          let item;
          let buttonTemplateOptions;
 
-         visibleKeys.forEach(function(key) {
+         visibleKeys.forEach((key) => {
             item = items.getRecordById(key);
             buttonTemplateOptions = _private.getButtonTemplateOptionsForItem(item, itemTemplateProperty);
 
-            itemsMark += toolbars.ItemTemplate({
+            itemsMark.push(toolbars.ItemTemplate({
                item,
                size: 'm',
                itemsSpacing: 'medium',
@@ -44,22 +42,10 @@ import {Record} from 'Types/entity';
                buttonTemplate: toolbars.getButtonTemplate(),
                buttonTemplateOptions,
                contentTemplate: _private.getContentTemplate(item, itemTemplate, itemTemplateProperty)
-            });
+            }));
          });
 
-         measurer.innerHTML = itemsMark;
-
-         measurer.classList.add('controls-UtilsOperationsPanel__measurer');
-         document.body.appendChild(measurer);
-         [].forEach.call(measurer.getElementsByClassName('controls-Toolbar__item'), function(item) {
-            var
-               styles = window.getComputedStyle(item),
-               padding = parseFloat(styles.marginLeft) + parseFloat(styles.marginRight);
-            itemsSizes.push(item.clientWidth + padding);
-         });
-         document.body.removeChild(measurer);
-
-         return itemsSizes;
+         return DOMUtil.getElementsWidth(itemsMark, 'controls-Toolbar__item', true);
       },
 
       getButtonTemplateOptionsForItem(item: Record, itemTemplateProperty?: string): object {
