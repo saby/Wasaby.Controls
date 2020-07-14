@@ -29,7 +29,10 @@ export class Controller {
     * @return {number|string} Ключ маркера
     */
    update(options: IOptions): TKey {
-      this._model = options.model;
+      if (this._model !== options.model) {
+         this._model = options.model;
+         this.restoreMarker();
+      }
       this._markerVisibility = options.markerVisibility;
 
       const markedKey = this.calculateMarkedKey(options.markedKey);
@@ -96,15 +99,9 @@ export class Controller {
 
    /**
     * Проставляет заново маркер в модели
-    * @remark
-    *  Если markerVisibility='visible' или ='onactivated' и маркер уже был проставлен и элемента с marked key не существует,
-    *  то маркер поставим на первый элемент
     */
    restoreMarker(): void {
-      const item = this._model.getItemBySourceKey(this._markedKey);
-      if (item) {
-         item.setMarked(true, true);
-      }
+      this._model.setMarkedKey(this._markedKey, true);
    }
 
    /**

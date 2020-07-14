@@ -2905,7 +2905,7 @@ define([
          await baseControl.reload(false, {});
 
          item = baseControl._listViewModel.getItemBySourceKey(1);
-         assert.isTrue(item.isMarked());
+         assert.equal(baseControl._listViewModel.getMarkedKey(), 1);
          assert.isTrue(item.isSelected());
       });
 
