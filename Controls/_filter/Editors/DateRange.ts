@@ -81,8 +81,8 @@ class DateRangeEditor extends Control<IControlOptions> {
 /**
  * @name Controls/_filter/Editors/DateRange#editorMode
  * @cfg {String} Режим отображения редактора.
- * @variant Selector В качестве редактора используется {@link Controls/dateRange:Selector}.
- * @variant Lite В качестве редактора используется {@link Controls/dateRange:LiteSelector}.
+ * @variant Selector В качестве редактора используется {@link Controls/dateRange:RangeSelector}.
+ * @variant Lite В качестве редактора используется {@link Controls/dateRange:RangeShortSelector}.
  * @default Lite
  */
 export default DateRangeEditor;
@@ -98,4 +98,3 @@ export default DateRangeEditor;
  * @cfg {Array<Date>} Массив из двух значений - дата "от" и дата "до", которые применятся при сбросе.
  * @see value
  */
-
