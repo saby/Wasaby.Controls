@@ -549,7 +549,7 @@ class Manager extends Control<IManagerOptions> {
     }
 
     private _callEvents(options: IPopupOptions = {}, event: string, args: unknown[] = []): boolean {
-        if (options._events) {
+        if (options._events && options._events[event]) {
             options._events[event](event, args);
         }
         if (options.eventHandlers && typeof options.eventHandlers[event] === 'function') {
@@ -679,6 +679,8 @@ class Manager extends Control<IManagerOptions> {
                     pendingsFinishedCallback && pendingsFinishedCallback();
                 }, (e) => {
                     item.removePending = null;
+                    // Change popupState from 'destroyed' to 'created' after cancelFinishPending
+                    item.popupState = item.controller.POPUP_STATE_CREATED;
                     if (e.canceled !== true) {
                         Logger.error('Controls/_popup/Manager/Container: Не получилось завершить пендинги: ' +
                             '(name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')',

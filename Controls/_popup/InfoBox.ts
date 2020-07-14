@@ -7,6 +7,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor} from 'Types/entity';
 import * as getZIndex from 'Controls/Utils/getZIndex';
 import template = require('wml!Controls/_popup/InfoBox/InfoBox');
+import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 
 /**
  * Контрол, отображающий всплывающую подсказку относительно указанного элемента.
@@ -39,7 +40,7 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
     readonly '[Controls/_popup/interface/IInfoBox]': boolean;
 
     _template: TemplateFunction = template;
-    _isNewEnvironment: Function = InfoBoxOpener.isNewEnvironment;
+    _isNewEnvironment: Function = isNewEnvironment;
     _openId: number;
     _waitTimer: number;
     _closeId: number;
