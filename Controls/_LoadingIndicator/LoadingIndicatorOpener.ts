@@ -1,10 +1,7 @@
 import ILoadingIndicator, {ILoadingIndicatorOptions} from './interface/ILoadingIndicator';
 
 export default {
-    getIndicator(): ILoadingIndicator {
-        return this.mainIndicator;
-    },
-    setIndicator(indicator: ILoadingIndicator): void {
+    _setIndicator(indicator: ILoadingIndicator): void {
         this.mainIndicator = indicator;
     },
     show(config: ILoadingIndicatorOptions = {}, waitPromise?: Promise<unknown>): string {

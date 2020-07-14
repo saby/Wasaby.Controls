@@ -3,7 +3,7 @@ import tmpl = require('wml!Controls/_LoadingIndicator/LoadingIndicator');
 import randomId = require('Core/helpers/Number/randomId');
 import {List} from 'Types/collection';
 import ILoadingIndicator, {ILoadingIndicatorOptions} from 'Controls/_LoadingIndicator/interface/ILoadingIndicator';
-import LoadingIndicatorUtil from 'Controls/_LoadingIndicator/LoadingIndicatorUtil';
+import LoadingIndicatorOpener from 'Controls/_LoadingIndicator/LoadingIndicatorOpener';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 
@@ -104,7 +104,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
 
     protected _afterMount(cfg: ILoadingIndicatorOptions): void {
         if (cfg.mainIndicator) {
-            LoadingIndicatorUtil.setIndicator(this);
+            LoadingIndicatorOpener._setIndicator(this);
         }
 
         // TODO Откатить DOM-решение или доказать невозмодность другого в задаче по ссылке ниже.
@@ -520,5 +520,5 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     static _theme: string[] = ['Controls/_LoadingIndicator/LoadingIndicator'];
 }
 
-export {default as IndicatorUtil} from 'Controls/_LoadingIndicator/LoadingIndicatorUtil';
+export {default as IndicatorOpener} from 'Controls/_LoadingIndicator/LoadingIndicatorOpener';
 export default LoadingIndicator;
