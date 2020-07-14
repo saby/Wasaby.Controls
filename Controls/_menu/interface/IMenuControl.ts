@@ -98,7 +98,7 @@ export default interface IMenuControl {
  *          source="{{_source}}">
  *       <ws:nodeFooterTemplate>
  *          <div class="ControlsDemo-InputDropdown-footerTpl">
- *             <Controls.buttons:Button caption="+ New template" size="l" viewMode="link" on:click="_clickHandler(itemData.key)"/>
+ *             <Controls.buttons:Button caption="+ New template" fontSize="l" viewMode="link" on:click="_clickHandler(itemData.key)"/>
  *          </div>
  *       </ws:nodeFooterTemplate>
  *    </Controls.menu:Control>
