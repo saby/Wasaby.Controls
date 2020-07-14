@@ -752,6 +752,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggestComponent._beforeUpdate({suggestState: true, value: '', validationStatus: 'invalid'});
          assert.isTrue(suggestComponent._loading);
 
+         suggestComponent._options.value = '';
+         suggestComponent._searchValue = '';
+         suggestComponent._beforeUpdate({suggestState: false, value: null});
+         assert.equal(suggestComponent._searchValue, '');
+
          sandbox.restore();
       });
 
