@@ -193,7 +193,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
      * @param {Overlay} [config.overlay=default] Настройки оверлея индикатора.
      * @param {Number} [config.delay=2000] Задержка перед началом показа индикатора.
      * @param {Promise} [waitPromise] Promise, к которому привязывается отображение индикатора. Индикатор скроется после завершения Promise.
-     * @return {Number} Возвращает id индикатора загрузки. Используется в методе {@link hide} для закрытия индикатора.
+     * @returns {String} Возвращает id индикатора загрузки. Используется в методе {@link hide} для закрытия индикатора.
      * @see hide
      */
     show(config: ILoadingIndicatorOptions, waitPromise: Promise<any>): string {
