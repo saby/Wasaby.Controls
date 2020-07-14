@@ -1352,6 +1352,7 @@ define([
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
             markerVisibility: 'visible',
+            markedKey: 1,
             selectedKeys: [1],
             excludedKeys: [],
             markedKey: 2,
@@ -1679,7 +1680,8 @@ define([
                source: lnSource,
                keyProperty: 'id',
                viewModelConstructor: lists.ListViewModel,
-               markerVisibility: 'visible'
+               markerVisibility: 'visible',
+               markedKey: 1
             },
             baseControl = new lists.BaseControl(cfg);
 
@@ -1803,7 +1805,8 @@ define([
                source: lnSource,
                keyProperty: 'id',
                viewModelConstructor: lists.ListViewModel,
-               markerVisibility: 'visible'
+               markerVisibility: 'visible',
+               markedKey: 1
             },
             baseControl = new lists.BaseControl(cfg);
 
@@ -5811,6 +5814,7 @@ define([
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
             markerVisibility: 'visible',
+            markedKey: 1,
             selectedKeys: [1],
             excludedKeys: [],
             source: new sourceLib.Memory({
@@ -5878,7 +5882,8 @@ define([
             const createMarkerControllerSpy = sinon.spy(lists.BaseControl._private, 'createMarkerController');
             await instance._beforeUpdate({
                ...cfg,
-               markerVisibility: 'visible'
+               markerVisibility: 'visible',
+               markedKey: 1
             });
             assert.isNotNull(instance._markerController);
             assert.isTrue(createMarkerControllerSpy.calledOnce);

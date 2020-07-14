@@ -198,7 +198,7 @@ const _private = {
 
     getMarkerController(self, options: Object = null): MarkerController {
         if (!this.hasMarkerController(self)) {
-            self._markerController = this.createMarkerController(self, options);
+            self._markerController = this.createMarkerController(self, options ? options : self._options);
         }
         return self._markerController;
     },
@@ -435,7 +435,7 @@ const _private = {
         if (this.hasMarkerController(self)) {
             self._markedKey = this.getMarkerController(self).restoreMarker();
         } else {
-            if (options.markerVisibility !== 'hidden') {
+            if (options.markerVisibility !== 'hidden' && options.markedKey) {
                 this.getMarkerController(self, options);
             }
         }
@@ -2521,7 +2521,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.updatePagingData(self, hasMoreData);
                     }
 
-                    if (newOptions.markerVisibility !== 'hidden') {
+                    if (newOptions.markerVisibility !== 'hidden' && newOptions.markedKey) {
                         _private.getMarkerController(self, newOptions);
                     }
 
@@ -2858,7 +2858,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasMarkerController(this)) {
             _private.updateMarkerController(this, newOptions);
         } else {
-            if (newOptions.markerVisibility !== 'hidden') {
+            if (newOptions.markerVisibility !== 'hidden' && newOptions.markedKey) {
                 _private.getMarkerController(this, newOptions);
             }
         }
