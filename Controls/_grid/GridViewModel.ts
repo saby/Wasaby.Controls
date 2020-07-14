@@ -672,6 +672,10 @@ var
             this._model.setTheme(theme);
         },
 
+        getTheme(): string {
+            return this._model.getTheme();
+        },
+
         _updateLastItemKey(): void {
             if (this.getItems()) {
                 this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this.getKeyProperty());

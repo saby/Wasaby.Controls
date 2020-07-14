@@ -198,6 +198,8 @@ var ItemsViewModel = BaseViewModel.extend({
         const display = this.getDisplay();
         if (display) {
             display.setKeyProperty(keyProperty);
+        } else {
+            this._options.keyProperty = keyProperty;
         }
     },
 
@@ -205,6 +207,8 @@ var ItemsViewModel = BaseViewModel.extend({
         const display = this.getDisplay();
         if (display) {
             return display.getKeyProperty();
+        } else {
+            return this._options.keyProperty;
         }
     },
 
@@ -310,6 +314,8 @@ var ItemsViewModel = BaseViewModel.extend({
         const display = this.getDisplay();
         if (display) {
             return display.getCollapsedGroups();
+        } else {
+            return this._options.collapsedGroups;
         }
     },
 
@@ -319,6 +325,8 @@ var ItemsViewModel = BaseViewModel.extend({
             display.setCollapsedGroups(collapsedGroups);
             this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
             this._nextModelVersion();
+        } else {
+            this._options.collapsedGroups = collapsedGroups;
         }
     },
 
@@ -368,6 +376,8 @@ var ItemsViewModel = BaseViewModel.extend({
         const display = this.getDisplay();
         if (display) {
             display.setGroupProperty(groupProperty);
+        } else {
+            this._options.groupProperty = groupProperty;
         }
     },
 
@@ -375,6 +385,8 @@ var ItemsViewModel = BaseViewModel.extend({
         const display = this.getDisplay();
         if (display) {
             return display.getGroupProperty();
+        } else {
+            return this._options.groupProperty;
         }
     },
 
@@ -526,17 +538,17 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     isAllGroupsCollapsed(): boolean {
+        const collapsedGroups = this.getCollapsedGroups();
         const display = this.getDisplay();
-        if (display) {
-            const collapsedGroups = display.getCollapsedGroups();
-            for (let i = 0; i < this._display.getItems().length; i++) {
-                if (collapsedGroups.indexOf(this._display.getGroupByIndex(i)) === -1) {
-                    return false;
-                }
-            }
-            return true;
+        if (!collapsedGroups || !display) {
+            return false;
         }
-        return false;
+        for (let i = 0; i < display.getItems().length; i++) {
+            if (collapsedGroups.indexOf(display.getGroupByIndex(i)) === -1) {
+                return false;
+            }
+        }
+        return true;
     },
     setItems(items, cfg): void {
         if (_private.isEqualItems(this._items, items)) {
@@ -549,13 +561,14 @@ var ItemsViewModel = BaseViewModel.extend({
             }
             this._updateSubscriptionOnMetaChange(this._items, items);
             this._items = items;
-            if (this._display) {
-                this._display.unsubscribe('onCollectionChange', this._onCollectionChangeFnc);
-                this._display.destroy();
-            }
+            const oldDisplay = this._display;
             this._display = this._prepareDisplay(this._items, cfg);
             this._updateResults(this._items);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
+            if (oldDisplay) {
+                oldDisplay.unsubscribe('onCollectionChange', this._onCollectionChangeFnc);
+                oldDisplay.destroy();
+            }
             this.setIndexes(0, this.getCount());
             this._nextModelVersion();
 
@@ -685,6 +698,8 @@ var ItemsViewModel = BaseViewModel.extend({
         const display = this.getDisplay();
         if (display) {
             return display.getTheme();
+        } else {
+            return this._options.theme;
         }
     },
 
@@ -694,6 +709,8 @@ var ItemsViewModel = BaseViewModel.extend({
             if (display.setTheme(theme)) {
                 this.resetCachedItemData();
             }
+        } else {
+            this._options.theme = theme;
         }
     }
 });

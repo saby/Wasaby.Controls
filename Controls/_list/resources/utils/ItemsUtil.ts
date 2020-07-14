@@ -20,6 +20,9 @@ var ItemsUtil = {
         projCfg.unique = true;
         projCfg.filter = filter;
         projCfg.compatibleReset = true;
+        projCfg.collapsedGroups = cfg.collapsedGroups;
+        projCfg.groupProperty = cfg.groupProperty;
+        projCfg.theme = cfg.theme;
         return displayLib.Abstract.getDefaultDisplay(items, projCfg);
     },
 

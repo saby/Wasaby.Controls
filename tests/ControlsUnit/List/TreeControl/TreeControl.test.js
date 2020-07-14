@@ -267,7 +267,7 @@ define([
          model.setItems(new collection.RecordSet({
             rawData: rawData,
             keyProperty: 'key'
-         }));
+         }), cfg);
          model.setMarkedKey(1);
          treeGrid.TreeControl._private.expandMarkedItem(treeControl);
          model.setMarkedKey(2);
@@ -666,6 +666,8 @@ define([
          treeViewModel._model._display = {
             setFilter: () => {},
             destroy: () => {},
+            getCollapsedGroups: () => undefined,
+            getKeyProperty: () => 'id',
             setRoot: (root) => {
                treeViewModel._model._root = root;
             },
@@ -758,6 +760,8 @@ define([
 
          treeViewModel._model._display = {
             setFilter: () => undefined,
+            getCollapsedGroups: () => undefined,
+            getKeyProperty: () => 'id',
             setRoot: (root) => {
                treeViewModel._model._root = root;
             },
@@ -1078,7 +1082,9 @@ define([
             },
             getItemBySourceItem: function () {
                return null;
-            }
+            },
+            getCollapsedGroups: () => undefined,
+            getKeyProperty: () => 'id'
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
 
@@ -1571,7 +1577,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: rawData,
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          treeControl._children = {
             baseControl: {
@@ -1632,7 +1638,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: rawData,
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          treeControl._children = {
             baseControl: {
@@ -1689,7 +1695,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
-         }));
+         }), cfg);
          var treeControl = new treeGrid.TreeControl(cfg);
          treeControl.saveOptions(cfg);
          treeControl._children = {
@@ -1753,7 +1759,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: data,
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          treeControl = new treeGrid.TreeControl(cfg);
          treeControl.saveOptions(cfg);
@@ -1872,7 +1878,7 @@ define([
            treeGridViewModel.setItems(new collection.RecordSet({
                rawData: data,
                idProperty: 'id'
-           }));
+           }), cfg);
 
            treeControl = new treeGrid.TreeControl(cfg);
            treeControl.saveOptions(cfg);
@@ -1945,7 +1951,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: data,
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          treeControl = new treeGrid.TreeControl(cfg);
          treeControl.saveOptions(cfg);
@@ -2045,7 +2051,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          assert.deepEqual(treeGrid.TreeControl._private.getReloadableNodes(treeGridViewModel, 0, 'id', 'Раздел@'), [1]);
       });
@@ -2112,7 +2118,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
-         }));
+         }), cfg);
          treeGridViewModel.setExpandedItems([null]);
 
          var filter = {};
@@ -2162,7 +2168,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          treeGrid.TreeControl._private.applyReloadedNodes(treeGridViewModel, 0, 'id', 'Раздел@', newItems);
 
@@ -2187,7 +2193,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
-         }));
+         }), cfg);
          var nodes = [];
          var lists = [];
 
