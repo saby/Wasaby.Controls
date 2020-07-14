@@ -1,5 +1,5 @@
 <div class="ControlsDemo-wrapper">
-    <div>
+    <div class="controlsDemo_fixedWidth300">
         <div class="ControlsDemo-options_block">
             <h3>Options</h3>
             <div class="ControlsDemo-options_wrapper">
