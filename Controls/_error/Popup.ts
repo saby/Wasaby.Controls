@@ -122,6 +122,8 @@ export default class Popup implements IPopupHelper {
      * Стили, которые нужны для нормального отображения диалогов.
      */
     private static readonly POPUP_THEMES: string[] = [
+        'SbisEnvUI/parking',
+        'SbisEnvUI/heading',
         'Controls/popup',
         'Controls/popupConfirmation',
         'Controls/buttons',
