@@ -851,6 +851,7 @@ define([
             },
             getCollapsedGroups: () => undefined,
             getKeyProperty: () => 'id',
+            unsubscribe: () => {},
             destroy: () => {},
             getRoot: () => treeViewModel._model._root,
             getExpandedItems: () => [1, 2],
