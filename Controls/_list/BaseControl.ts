@@ -2505,7 +2505,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.updatePagingData(self, hasMoreData);
                     }
 
-                    if (newOptions.markerVisibility !== 'hidden' && newOptions.markedKey) {
+                    if ((newOptions.markerVisibility === 'visible' ||
+                            (newOptions.markerVisibility === 'onactivated' && newOptions.markedKey)
+                        )) {
                         _private.getMarkerController(self, newOptions);
                     }
 
@@ -2839,7 +2841,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasMarkerController(this)) {
             _private.updateMarkerController(this, newOptions);
         } else {
-            if (newOptions.markerVisibility !== 'hidden') {
+            if (newOptions.markerVisibility === 'visible' ||
+                (newOptions.markerVisibility === 'onactivated' && newOptions.markedKey)
+            ) {
                 _private.getMarkerController(this, newOptions);
             }
         }
