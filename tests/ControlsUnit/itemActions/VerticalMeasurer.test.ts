@@ -436,7 +436,9 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                         actions,
                         150,
                         170,
-                        'bottom'
+                        'bottom',
+                        'adaptive',
+                        'default'
                     ),
                     result
                 );
@@ -458,7 +460,9 @@ describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
                         actions,
                         150,
                         200,
-                        'bottom'
+                        'bottom',
+                        'adaptive',
+                        'default'
                     ),
                     result
                 );
