@@ -2,8 +2,8 @@
    <ws:partial template="wml!Controls/_listTemplates/DefaultImageTemplate"
                class="{{_options.imageViewMode !== 'rectangle' ? 'controls-listTemplates__tileItemTemplate-image-spacing_theme-' + _options.theme }}"
                src="{{_options.itemData.item[_options.imageProperty]}}"
-               width="{{_options.itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).imageWidth}}"
-               height="{{_options.itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).imageHeight}}"
+               width="{{_options.itemData.getTileSizes && _options.itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).imageWidth}}"
+               height="{{_options.itemData.getTileSizes && _options.itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).imageHeight}}"
                compressionCoefficient="{{_options.imageCompressionCoefficient || 1}}"
                viewMode="{{_options.imageViewMode}}"
                position="{{_options.imagePosition}}"
@@ -33,7 +33,7 @@
       </ws:if>
       <div class="controls-listTemplates__tileItemTemplate__itemContent_theme-{{_options.theme}}">
          <ws:if data="{{_options.captionTemplate}}">
-            <div class="controls-listTemplates__tiItemTemplate-caption_theme-{{_options.theme}}">
+            <div class="controls-listTemplates__tileItemTemplate-caption_theme-{{_options.theme}}">
                <ws:partial template="{{_options.captionTemplate}}"
                            itemData="{{_options.itemData}}"/>
             </div>
@@ -50,7 +50,7 @@
 <ws:partial template="Controls/tile:TileItemTemplate"
             border="{{false}}"
             staticHeight="{{true}}"
-            width="{{itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).width}}"
+            width="{{itemData.getTileSizes && itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).width}}"
             height="auto"
             attr:class="controls-listTemplates__tileItemTemplate__item"
             shadowVisibility="hidden"
