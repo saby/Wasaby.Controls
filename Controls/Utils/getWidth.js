@@ -23,7 +23,7 @@ define('Controls/Utils/getWidth', [
 
          //Откладываем удаление элемента, чтобы не пересчитвывать лишний раз DOM и быстрее отобразить страницу
          setTimeout(function() {
-            document.body.removeChild(measurer);
+            document && document.body.removeChild(measurer);
          });
          return width;
       }
