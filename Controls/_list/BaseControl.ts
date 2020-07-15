@@ -1277,7 +1277,7 @@ const _private = {
         return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
 
-    onListChange(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+    onListChange(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
         const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
@@ -1304,20 +1304,13 @@ const _private = {
             if (self._selectionController) {
                let result;
 
-               switch (action) {
-                  case IObservable.ACTION_RESET:
-                     result = self._selectionController.handleReset(newItems, self._prevRootId, self._prevRootId !== self._options.root);
-                     break;
-                  case IObservable.ACTION_ADD:
-                     result = self._selectionController.handleAddItems(newItems);
-                     break;
-               }
-
                if (self._listViewModel.getCount() === 0 && self._selectionController.isAllSelected()) {
                    result = self._selectionController.clearSelection();
+               } else if (action === IObservable.ACTION_ADD) {
+                   result = self._selectionController.handleAddItems(newItems);
                }
 
-               self.handleSelectionControllerResult(result);
+               _private.handleSelectionControllerResult(self, result);
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
@@ -1833,7 +1826,7 @@ const _private = {
     // region Multiselection
 
     createSelectionController(self: any, options: any): SelectionController {
-        if (!self._listViewModel || !self._items) {
+        if (!self._listViewModel || !self._listViewModel.getCollection()) {
             return null;
         }
 
@@ -1848,18 +1841,13 @@ const _private = {
     },
 
     updateSelectionController(self: any, newOptions: any): void {
-        const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
-           || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
-        const result = self._selectionController.update({
+        self._selectionController.update({
            model: self._listViewModel,
            selectedKeys: newOptions.selectedKeys,
            excludedKeys: newOptions.excludedKeys,
            strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
         });
-
-        // Если опции не изменились, то значит прикладник отменил выбор и не нужно ему нотифаить об изменении
-        _private.handleSelectionControllerResult(self, result, !selectionChanged);
-   },
+    },
 
     createSelectionStrategy(options: any, items: RecordSet): ISelectionStrategy {
       const strategyOptions = this.getSelectionStrategyOptions(options, items);
@@ -1913,24 +1901,22 @@ const _private = {
           break;
       }
 
-      this.handleSelectionControllerResult(result);
+      _private.handleSelectionControllerResult(this, result);
    },
 
-    handleSelectionControllerResult(self: any, result: ISelectionControllerResult, silent: boolean = false): void {
+    handleSelectionControllerResult(self: any, result: ISelectionControllerResult): void {
       if (!result) {
          return;
       }
 
-      if (!silent) {
-          const selectedDiff = result.selectedKeysDiff;
-          if (selectedDiff.added.length || selectedDiff.removed.length) {
-              self._notify('selectedKeysChanged', [selectedDiff.keys, selectedDiff.added, selectedDiff.removed]);
-          }
+      const selectedDiff = result.selectedKeysDiff;
+      if (selectedDiff.added.length || selectedDiff.removed.length) {
+          self._notify('selectedKeysChanged', [selectedDiff.keys, selectedDiff.added, selectedDiff.removed]);
+      }
 
-          const excludedDiff = result.excludedKeysDiff;
-          if (excludedDiff.added.length || excludedDiff.removed.length) {
-              self._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
-          }
+      const excludedDiff = result.excludedKeysDiff;
+      if (excludedDiff.added.length || excludedDiff.removed.length) {
+          self._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
       }
 
       // для связи с контроллером ПМО
@@ -1954,7 +1940,7 @@ const _private = {
                }
                break;
        }
-       this.handleSelectionControllerResult(self, selectionControllerResult);
+       _private.handleSelectionControllerResult(self, selectionControllerResult);
    },
 
     createMarkerController(self: any, options: any): MarkerController {
@@ -2848,6 +2834,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.handleSelectionControllerResult(this, result);
             }
             _private.updateSelectionController(this, newOptions);
+
+            const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
+               || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
+            if (selectionChanged || this._modelRecreated) {
+                // handleSelectionControllerResult чтобы отправить информацию для ПМО
+                const result = this._selectionController.setSelectedKeys(
+                   newOptions.selectedKeys,
+                   newOptions.excludedKeys
+                );
+                _private.handleSelectionControllerResult(this, result);
+            }
         } else {
             // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
             if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
@@ -3721,10 +3718,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
         }
         return diCreate(modelName, {...modelConfig, collection: items});
-    },
-
-    handleSelectionControllerResult(result: ISelectionControllerResult): void {
-        _private.handleSelectionControllerResult(this, result);
     },
 
     _onEditingRowKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent): void {
