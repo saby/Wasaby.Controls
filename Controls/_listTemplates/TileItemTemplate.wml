@@ -33,7 +33,7 @@
       </ws:if>
       <div class="controls-listTemplates__tileItemTemplate__itemContent_theme-{{_options.theme}}">
          <ws:if data="{{_options.captionTemplate}}">
-            <div class="controls-listTemplates__tiItemTemplate-caption_theme-{{_options.theme}}">
+            <div class="controls-listTemplates__tileItemTemplate-caption_theme-{{_options.theme}}">
                <ws:partial template="{{_options.captionTemplate}}"
                            itemData="{{_options.itemData}}"/>
             </div>
