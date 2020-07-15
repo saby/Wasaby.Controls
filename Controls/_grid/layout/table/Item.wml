@@ -54,7 +54,8 @@
     <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
         <div attr:class="{{itemData.getMarkerClasses()}}"></div>
     </ws:if>
-    <ws:partial template="columnContent"/>
+    <ws:partial template="columnContent"
+                attr:class="{{ itemData.shouldHighlightRow(marker) ? itemData.getSelectedClasses() }}"/>
 </ws:template>
 
 <ws:template name="tableTD">
