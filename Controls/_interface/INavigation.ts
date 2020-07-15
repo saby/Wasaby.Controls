@@ -165,7 +165,7 @@ export type TNavigationTotalInfo = 'basic' | 'extended';
  * В настоящий момент поддерживается навигация только в прямом направлении: от первой страницы до последней.
  * @property {TNavigationTotalInfo} [totalInfo=basic] Режим отображения информационной подписи.
  * @property {Number} maxCountValue Количество записей, когда необходимо прекратить загрузку в режиме навигации maxCount.
- * О режиме навигации maxCount вы можете посмотреть {@link Controls/_interface/INavigation/Navigation.typedef здесь}.
+ * О режиме навигации maxCount вы можете посмотреть {@link Controls/_interface/INavigation/TNavigationView.typedef здесь}.
  * @property {Boolean} [showEndButton=false] Видимость кнопки перехода в конец списка.
  * Когда параметр принимает значение true, кнопка отображается.
  */
