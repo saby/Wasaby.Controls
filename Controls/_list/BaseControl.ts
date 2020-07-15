@@ -1483,9 +1483,17 @@ const _private = {
      */
     closeActionsMenu(self: any, currentPopup?: any): void {
         if (self._itemActionsMenuId) {
-            _private.closePopup(self, currentPopup ? currentPopup.id : null);
-            this.getItemActionsController(self).deactivateSwipe();
-            self._listViewModel.setActiveItem(null);
+            const itemActionsMenuId = self._itemActionsMenuId;
+            _private.closePopup(self, currentPopup ? currentPopup.id : itemActionsMenuId);
+            // При быстром клике правой кнопкой обработчик закрытия меню и setActiveItem(null)
+            // вызывается позже, чем устанавливается новый activeItem. в результате, при попытке
+            // взаимодействия с опциями записи, может возникать ошибка, т.к. activeItem уже null.
+            // Для обхода проблемы ставим условие, что занулять ItemAction нужно только тогда, когда
+            // закрываем самое последнее открытое меню.
+            if (!currentPopup || itemActionsMenuId === currentPopup.id) {
+                self._listViewModel.setActiveItem(null);
+                this.getItemActionsController(self).deactivateSwipe();
+            }
         }
     },
 
@@ -2043,7 +2051,7 @@ const _private = {
             useNewModel: options.useNewModel,
             forceInitVirtualScroll: options?.navigation?.view === 'infinity',
             callbacks: {
-            triggerOffsetChanged: self.triggerOffsetChangedHandler.bind(self),
+                triggerOffsetChanged: self.triggerOffsetChangedHandler.bind(self),
                 changeIndicatorState: self.changeIndicatorStateHandler.bind(self),
                 triggerVisibilityChanged: self.triggerVisibilityChangedHandler.bind(self),
                 updateShadowMode: self.updateShadowModeHandler.bind(self),
@@ -2054,11 +2062,11 @@ const _private = {
                 loadMore: self.loadMore.bind(self),
                 scrollMove: self.scrollMoveHandler.bind(self),
                 scrollPositionChanged: self.scrollMoveSyncHandler.bind(self)
-        },
-        notify: (name, args, params) => {
-            return self._notify(name, args, params);
-        }
-    });
+            },
+            notify: (name, args, params) => {
+                return self._notify(name, args, params);
+            }
+        });
     },
 
     /**
