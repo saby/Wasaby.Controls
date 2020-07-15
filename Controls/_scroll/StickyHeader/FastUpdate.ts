@@ -78,10 +78,8 @@ class FastUpdate {
     protected _resetPosition(stickyHeader: object): void {
         stickyHeader.top = stickyHeader.container.style.top;
         stickyHeader.bottom = stickyHeader.container.style.bottom;
-        stickyHeader.container.style.top = '0px';
-        stickyHeader.container.style.left = '0px';
-        stickyHeader.container.style.right = '0px';
-        stickyHeader.container.style.bottom = '0px';
+        stickyHeader.container.style.top = '';
+        stickyHeader.container.style.bottom = '';
     }
 
     protected _restoreSticky() {
@@ -95,8 +93,6 @@ class FastUpdate {
     protected _restorePosition(stickyHeader: object): void {
         stickyHeader.container.style.top = stickyHeader.top;
         stickyHeader.container.style.bottom = stickyHeader.bottom;
-        stickyHeader.container.style.left = '';
-        stickyHeader.container.style.right = '';
     }
 
 }
