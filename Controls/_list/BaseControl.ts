@@ -1470,9 +1470,17 @@ const _private = {
      */
     closeActionsMenu(self: any, currentPopup?: any): void {
         if (self._itemActionsMenuId) {
-            _private.closePopup(self, currentPopup ? currentPopup.id : null);
-            self._itemActionsController.deactivateSwipe();
-            self._listViewModel.setActiveItem(null);
+            const itemActionsMenuId = self._itemActionsMenuId;
+            _private.closePopup(self, currentPopup ? currentPopup.id : itemActionsMenuId);
+            // При быстром клике правой кнопкой обработчик закрытия меню и setActiveItem(null)
+            // вызывается позже, чем устанавливается новый activeItem. в результате, при попытке
+            // взаимодействия с опциями записи, может возникать ошибка, т.к. activeItem уже null.
+            // Для обхода проблемы ставим условие, что занулять ItemAction нужно только тогда, когда
+            // закрываем самое последнее открытое меню.
+            if (!currentPopup || itemActionsMenuId === currentPopup.id) {
+                self._listViewModel.setActiveItem(null);
+                self._itemActionsController.deactivateSwipe();
+            }
         }
     },
 
