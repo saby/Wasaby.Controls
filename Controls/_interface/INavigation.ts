@@ -165,7 +165,7 @@ export type TNavigationTotalInfo = 'basic' | 'extended';
  * В настоящий момент поддерживается навигация только в прямом направлении: от первой страницы до последней.
  * @property {TNavigationTotalInfo} [totalInfo=basic] Режим отображения информационной подписи.
  * @property {Number} maxCountValue Количество записей, когда необходимо прекратить загрузку в режиме навигации maxCount.
- * О режиме навигации maxCount вы можете посмотреть {@link Controls/_interface/INavigation/TNavigationView.typedef здесь}.
+ * О режиме навигации maxCount вы можете посмотреть {@link Controls/_interface/INavigation/INavigationOptionValue.typedef здесь}.
  * @property {Boolean} [showEndButton=false] Видимость кнопки перехода в конец списка.
  * Когда параметр принимает значение true, кнопка отображается.
  */
@@ -184,8 +184,8 @@ export interface INavigationViewConfig {
  * Подробнее об источниках данных читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/data-sources/ здесь}.
  * @property {TNavigationSource} source Алгоритм, с которым работает источник данных. Варианты значений: 'position' | 'page'
  * @property {TNavigationView} view Режим визуального отображения навигации. Варианты значений: 'infinity' | 'pages' | 'demand' | 'maxCount'
- * @property {INavigationSourceConfig} sourceConfig Конфигурация алгоритма, с которым работает источник данных. см. ({@link Controls/_interface/INavigation/INavigationSourceConfig.typedef INavigationSourceConfig}
- * @property {INavigationViewConfig} viewConfig Конфигурация визуального отображения навигации. см. ({@link Controls/_interface/INavigation/INavigationViewConfig.typedef INavigationViewConfig}
+ * @property {INavigationSourceConfig} sourceConfig Конфигурация алгоритма, с которым работает источник данных ( см. {@link Controls/_interface/INavigation/INavigationSourceConfig.typedef INavigationSourceConfig}).
+ * @property {INavigationViewConfig} viewConfig Конфигурация визуального отображения навигации ( см. {@link Controls/_interface/INavigation/INavigationViewConfig.typedef INavigationViewConfig}).
  */
 
 /*
