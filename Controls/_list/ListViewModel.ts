@@ -58,7 +58,7 @@ var _private = {
         if (markedKey === null) {
             return;
         }
-        return self.getItemById(markedKey, self._options.keyProperty);
+        return self.getItemById(markedKey, self.getKeyProperty());
     },
 
     isMarked(self: {_markedKey: number | string}, current: {key: number | string}): boolean {
@@ -267,7 +267,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     _isSupportStickyItem(): boolean {
-        return this._options.stickyHeader && (this._options.groupingKeyCallback || this._options.groupProperty) ||
+        const display = this.getDisplay();
+        return (this._options.stickyHeader && display && display.getGroup()) ||
             this._isSupportStickyMarkedItem();
     },
 
@@ -548,7 +549,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return this._stopIndex;
     },
 
-    setItems: function(items) {
+    setItems(items, cfg): void {
         ListViewModel.superclass.setItems.apply(this, arguments);
         this._nextModelVersion();
     },
@@ -637,7 +638,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     // New Model compatibility
     getItemBySourceKey(key: number | string): Model {
-        return this.getItemById(key, this._options.keyProperty);
+        return this.getItemById(key, this.getKeyProperty());
     },
 
     // New Model compatibility

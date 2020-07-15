@@ -4383,14 +4383,14 @@ define([
             };
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._listViewModel.setItems(rs);
+            instance._listViewModel.setItems(rs, cfg);
             instance._items = rs;
             instance._children = {scrollController: { scrollToItem: () => null }};
             isRightSwipeActivated = false;
             instance._itemActionsController = {
                activateRightSwipe: () => {
                   isRightSwipeActivated = true;
-         }
+               }
             };
          }
 
