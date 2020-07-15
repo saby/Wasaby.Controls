@@ -6216,6 +6216,16 @@ define([
             baseControl.__needShowEmptyTemplate = () => caseData[2];
             assert.equal(baseControl._shouldShowLoadingIndicator(caseData[0]), caseData[3], getErrorMsg(index, caseData));
          });
+
+         baseControl._loadingIndicatorState = 'all';
+         baseControl.__needShowEmptyTemplate = () => false;
+         baseControl._children = {
+            listView: {
+               isColumnScrollVisible: () => true
+            }
+         };
+         assert.equal(baseControl._shouldShowLoadingIndicator('beforeEmptyTemplate'), true);
+         assert.equal(baseControl._shouldShowLoadingIndicator('inFooter'), false);
       });
 
       describe('navigation', function() {

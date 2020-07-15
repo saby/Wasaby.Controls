@@ -3676,14 +3676,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate.
         // Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала.
         // В таком случае выводим индикатор над списком.
+        // FIXME: https://online.sbis.ru/opendoc.html?guid=886c7f51-d327-4efa-b998-7cf94f5467cb
+        // не должно быть завязки на горизонтальный скролл.
         if (position === 'beforeEmptyTemplate') {
             return this._loadingIndicatorState === 'up' || (
-                this._loadingIndicatorState === 'all' && this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel)
+                this._loadingIndicatorState === 'all' && (
+                    this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) ||
+                    !!this._children.listView && !!this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible()
+                )
             );
         } else if (position === 'afterList') {
             return this._loadingIndicatorState === 'down';
         } else if (position === 'inFooter') {
-            return this._loadingIndicatorState === 'all' && !this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel);
+            return this._loadingIndicatorState === 'all' &&
+                !this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) &&
+                !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
         }
         return false;
     }
