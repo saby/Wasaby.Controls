@@ -191,7 +191,6 @@ var ListView = BaseControl.extend(
 
         _afterMount: function() {
             this._notify('itemsContainerReady', [this.getItemsContainer.bind(this)]);
-            // TODO marker перепроверить это место
             // корректное значение _listModel.markedKey устанавливается в BaseControl после получения данных
             // методом BaseControl.reload() и событие 'onMarkedKeyChanged' модели ListViewModel
             // вызывается до того, как в ListView._beforeMount() на него делается подписка
