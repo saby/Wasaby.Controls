@@ -1,0 +1,28 @@
+<style>
+   .disconnect-template {
+      background-color: #fff;
+      box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.35);
+      border: 1px solid #ccc;
+      border-top: 3px solid #d04d4d;
+      padding: 32px;
+      position: relative;
+      transform: translate(-50%, -50%);
+   }
+
+   .disconnect-template__close-button {
+      color: #ccc;
+      cursor: pointer;
+      font-family: 'cbuc-icons24', serif;
+      font-size: 24px;
+      position: absolute;
+      right: 0;
+      top: 0;
+   }
+</style>
+<div class="disconnect-template">
+   <div class="disconnect-template__close-button" on:click="_close()"></div>
+   <div>{{ message }}</div>
+   <ws:if data="{{ details }}">
+      <div style="padding-top: 8px;">{{ details }}</div>
+   </ws:if>
+</div>
