@@ -497,7 +497,7 @@ const _private = {
     },
 
     setMarkedKey(self, key: string | number): void {
-        if (this.hasMarkerController(self) || self._options.markerVisibility !== 'hidden') {
+        if (this.hasMarkerController(self) || (self._options && self._options.markerVisibility !== 'hidden')) {
             self._markedKey = this.getMarkerController(self).setMarkedKey(key);
         }
     },
