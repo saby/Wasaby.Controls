@@ -5,6 +5,7 @@ import {Model} from 'Types/entity';
 import {deepStrictEqual, ok} from 'assert';
 import {stub} from 'sinon';
 import {error} from 'Controls/dataSource';
+import {Service} from 'Controls/history';
 
 function getData(): object[] {
     return [
@@ -50,8 +51,9 @@ function getControllerOptions(): object {
     };
 }
 
-function getLookupControllerWithEmptySelectedKeys(): BaseControllerClass {
-    const options = getControllerOptions();
+function getLookupControllerWithEmptySelectedKeys(additionalConfig?: object): BaseControllerClass {
+    let options = getControllerOptions();
+    options = {...options, ...additionalConfig};
     return new BaseControllerClass(options as ILookupBaseControllerOptions);
 }
 
@@ -148,5 +150,15 @@ describe('Controls/_lookup/BaseControllerClass', () => {
                 resolve();
             });
         });
+    });
+
+    it('setItemsAndSaveToHistory', async () => {
+        const controller = getLookupControllerWithEmptySelectedKeys({
+            historyId: 'TEST_HISTORY_ID'
+        });
+        const historyService = await controller.setItemsAndSaveToHistory(getRecordSet());
+
+        ok(historyService instanceof Service);
+        deepStrictEqual(controller.getSelectedKeys(), [0, 1, 2]);
     });
 });
