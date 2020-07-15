@@ -384,4 +384,5 @@ export default ValidateContainer;
  * @name Controls/_validate/Container#errorTemplate
  * @cfg {Function} Пользовательский шаблон для отображения содержимого окна с ошибкой.
  * @remark Шаблон принимает опцию errors (string[]), содержащую массив сообщений с ошибками.
+ * @demo Controls-demo/Validate/ErrorTemplate/Index
  */
