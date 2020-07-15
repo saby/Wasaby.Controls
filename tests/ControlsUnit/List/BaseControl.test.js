@@ -4654,6 +4654,86 @@ define([
             assert.equal(activeItem, null);
          });
 
+         // Должен сбрасывать activeItem Только после того, как мы закрыли последнее меню.
+         describe ('Multiple clicks to open context menu', () => {
+            let fakeEvent;
+            let fakeEvent2;
+            let fakeEvent3;
+            let popupIds;
+            let openPopupStub;
+            let closePopupStub;
+            let _onItemActionsMenuCloseSpy;
+            let localInstance;
+
+            before(async () => {
+               localInstance = instance;
+               fakeEvent = initFakeEvent();
+               fakeEvent2 = initFakeEvent();
+               fakeEvent3 = initFakeEvent();
+               popupIds = [];
+               openPopupStub = sinon.stub(popup.Sticky, 'openPopup');
+               closePopupStub = sinon.stub(popup.Sticky, 'closePopup');
+               _onItemActionsMenuCloseSpy = sinon.spy(localInstance, '_onItemActionsMenuClose');
+
+               openPopupStub.callsFake((config) => {
+                  const popupId = `popup-id-${popupIds.length}`;
+                  popupIds.push(popupId);
+                  return Promise.resolve(popupId);
+               });
+               closePopupStub.callsFake((popupId) => {
+                  const index = popupIds.indexOf(popupId);
+                  if (index !== -1) {
+                     popupIds.splice(index, 1);
+
+                     // В реальности callback вызывается асинхронно,
+                     // Но нам главное, чтобы activeItem обнулялся только после закрытия самого последнего меню,
+                     // поэтому это не играет роли.
+                     localInstance._onItemActionsMenuClose({id: popupId});
+                  }
+               });
+
+               // имитируем клик правой кнопкой мыши несколько раз подряд.
+               await Promise.all([
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent, item, false),
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent2, item, false),
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent3, item, false)
+               ]);
+            });
+
+            after(() => {
+               openPopupStub.restore();
+               closePopupStub.restore();
+            });
+
+            // Ожидаем, что произошла попытка открыть три popup и закрыть 2 из них
+            it('should open 3 popups and close 2', () => {
+               sinon.assert.callCount(openPopupStub, 3);
+               sinon.assert.callCount(_onItemActionsMenuCloseSpy, 2);
+            });
+
+            // Проверяем activeItem, он не должен быть null
+            // проверяем текущий _itemActionsMenuId. Он жолжен быть равен последнему popupId
+            it('active item and _itemActionsMenuId should not be null until last menu is closed', () => {
+               assert.exists(localInstance._itemActionsController.getActiveItem(),
+                  'active item should not be null until last menu will closed');
+               assert.equal(localInstance._itemActionsMenuId, popupIds[popupIds.length - 1],
+                  '_itemActionsMenuId should not be null until last menu will closed');
+            });
+
+            it('active item and _itemActionsMenuId should be null after closing last menu', () => {
+               // Пытаемся закрыть самый последний popup
+               localInstance._onItemActionsMenuClose({id: popupIds[popupIds.length - 1]});
+
+               // Проверяем activeItem, он должен быть null
+               assert.notExists(localInstance._itemActionsController.getActiveItem(),
+                  'active item should be null after closing last menu');
+
+               // проверяем текущий _itemActionsMenuId. Он должен быть null
+               assert.notExists(localInstance._itemActionsMenuId,
+                  '_itemActionsMenuId should be null after closing last menu');
+            });
+         });
+
          // Необходимо закрывать popup с указанным id
          it('should close popup with specified id', () => {
             instance._itemActionsMenuId = 'fake';
