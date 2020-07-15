@@ -73,7 +73,8 @@ class Component extends Control {
     hasShadowVisible(position: POSITION): boolean {
         const fixedHeaders = this._fixedHeadersStack[position];
         for (const id of fixedHeaders) {
-            if (this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
+            // TODO: https://online.sbis.ru/opendoc.html?guid=cc01c11d-7849-4c0c-950b-03af5fac417b
+            if (this._headers[id] && this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
                 return true;
             }
         }

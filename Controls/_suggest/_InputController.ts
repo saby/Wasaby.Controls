@@ -155,7 +155,7 @@ var _private = {
    },
 
    prepareValue: function(self, value) {
-      return self._options.trim ? value.trim() : value;
+      return self._options.trim && value ? value.trim() : value;
    },
 
    shouldShowSuggest: function(self, searchResult) {

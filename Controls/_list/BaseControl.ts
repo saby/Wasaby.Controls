@@ -1288,7 +1288,7 @@ const _private = {
         if (changesType === 'collectionChanged' || newModelChanged) {
             // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
             if (self._options.navigation && self._options.navigation.source) {
-                const stateChanged = self._sourceController.setState(self._listViewModel);
+                const stateChanged = self._sourceController.setState(self._listViewModel, self._options.root);
 
                 if (stateChanged) {
                     _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -2874,6 +2874,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._scrollController) {
             this._scrollController.reset();
+        }
+
+        if (this._portionedSearch) {
+            this._portionedSearch.destroy();
+            this._portionedSearch = null;
         }
 
         // для связи с контроллером ПМО
