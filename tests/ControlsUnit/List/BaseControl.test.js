@@ -6105,19 +6105,26 @@ define([
 
          /*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*/
          const testCases = [
-            ['beforeList', 'up', true,    true],
-            ['beforeList', 'up', false,   true],
-            ['beforeList', 'down', true,  false],
-            ['beforeList', 'down', false, false],
-            ['beforeList', 'all', true,   true],
-            ['beforeList', 'all', false,  true],
+            ['beforeEmptyTemplate', 'up', true,    true],
+            ['beforeEmptyTemplate', 'up', false,   true],
+            ['beforeEmptyTemplate', 'down', true,  false],
+            ['beforeEmptyTemplate', 'down', false, false],
+            ['beforeEmptyTemplate', 'all', true,   true],
+            ['beforeEmptyTemplate', 'all', false,  false],
 
             ['afterList', 'up', true,     false],
             ['afterList', 'up', false,    false],
             ['afterList', 'down', true,   true],
             ['afterList', 'down', false,  true],
             ['afterList', 'all', true,    false],
-            ['afterList', 'all', false,   false]
+            ['afterList', 'all', false,   false],
+
+            ['inFooter', 'up', true,      false],
+            ['inFooter', 'up', false,     false],
+            ['inFooter', 'down', true,    false],
+            ['inFooter', 'down', false,   false],
+            ['inFooter', 'all', true,     false],
+            ['inFooter', 'all', false,    true]
          ];
 
          const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
@@ -6129,6 +6136,16 @@ define([
             baseControl.__needShowEmptyTemplate = () => caseData[2];
             assert.equal(baseControl._shouldShowLoadingIndicator(caseData[0]), caseData[3], getErrorMsg(index, caseData));
          });
+
+         baseControl._loadingIndicatorState = 'all';
+         baseControl.__needShowEmptyTemplate = () => false;
+         baseControl._children = {
+            listView: {
+               isColumnScrollVisible: () => true
+            }
+         };
+         assert.equal(baseControl._shouldShowLoadingIndicator('beforeEmptyTemplate'), true);
+         assert.equal(baseControl._shouldShowLoadingIndicator('inFooter'), false);
       });
 
       describe('navigation', function() {
