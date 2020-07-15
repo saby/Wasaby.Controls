@@ -1619,8 +1619,12 @@ var
                         gridCellStyles: '',
                         tableCellStyles: '',
                         getItemActionPositionClasses: current.getItemActionPositionClasses,
-                        getItemActionClasses: current.getItemActionClasses
-                    };
+                        getItemActionClasses: current.getItemActionClasses,
+                        isEditingState: current.isEditingState,
+                        isSwiped: current.isSwiped,
+                        getActions: current.getActions,
+                        getContents: current.getContents
+                };
                 currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme, backgroundColorStyle);
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**

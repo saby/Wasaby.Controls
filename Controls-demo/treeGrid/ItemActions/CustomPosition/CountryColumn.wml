@@ -1,7 +1,9 @@
 <ws:partial
         template="Controls/grid:ColumnTemplate"
+        editArrowTemplate="{{editArrowTemplate}}"
+        itemActionsTemplate="{{itemActionsTemplate}}"
         itemData="{{itemData}}">
     <ws:contentTemplate>
-        <ws:partial template="{{contentTemplate.itemActionsTemplate}}" />
+        <ws:partial itemData="{{contentTemplate.itemData}}" template="{{contentTemplate.itemActionsTemplate}}" />
     </ws:contentTemplate>
 </ws:partial>

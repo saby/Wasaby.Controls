@@ -305,9 +305,10 @@
    }
 
    .controls-BaseControl_showActions_delayed .controls-Grid__row:hover {
-      > .controls-Grid__row-cell,
       > .controls-itemActionsV__container,
-      > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper {
+      > .controls-Grid__row-cell,
+      > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper,
+      > .controls-Grid__row-cell .controls-Grid__row-cell__content {
          > .controls-itemActionsV {
             transition: opacity 500ms step-end;
          }
@@ -317,9 +318,10 @@
    .controls-BaseControl_showActions_visible .controls-Grid .controls-Grid__row,
    .controls-BaseControl_showActions_onhover .controls-Grid__row:hover,
    .controls-BaseControl_showActions_delayed .controls-Grid__row:hover {
-      > .controls-Grid__row-cell,
       > .controls-itemActionsV__container,
-      > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper {
+      > .controls-Grid__row-cell,
+      > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper,
+      > .controls-Grid__row-cell .controls-Grid__row-cell__content {
          > .controls-itemActionsV {
             opacity: 1;
             visibility: visible;
