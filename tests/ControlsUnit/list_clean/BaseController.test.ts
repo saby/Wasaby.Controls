@@ -42,6 +42,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._afterUpdate(baseControlCfg);
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             cfgClone.groupHistoryId = GROUP_HISTORY_ID_NAME;
+            cfgClone.collapsedGroups = [];
             baseControl._beforeUpdate(cfgClone);
             assert.isTrue(!!baseControl._listViewModel.getCollapsedGroups());
         });

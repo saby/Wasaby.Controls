@@ -2583,7 +2583,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
        if (result) {
            return result.addCallback(callback);
        } else {
-           return callback(null);
+           return callback(undefined);
        }
    },
 
