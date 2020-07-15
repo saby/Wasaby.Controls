@@ -1,5 +1,5 @@
 /**
- * Библиотека, которая реализует <a href='/doc/platform/developmentapl/interface-development/controls/toolbar/'>набор команд</a> в виде кнопок и выпадающего меню с дополнительными командами.
+ * Библиотека, которая реализует <a href='/doc/platform/developmentapl/interface-development/controls/buttons-switches/toolbar/'>набор команд</a> в виде кнопок и выпадающего меню с дополнительными командами.
  * @library Controls/toolbars
  * @includes View Controls/_toolbars/View
  * @includes BoxView Controls/_toolbars/BoxView
@@ -31,11 +31,11 @@
  */
 /**
  * @name Controls/toolbars:ItemTemplate#itemsSpacing
- * @cfg {String} Значение опции тулбара {@link Controls/toolbar:View#itemsSpacing}.
+ * @cfg {String} Значение опции тулбара {@link Controls/toolbars:View#itemsSpacing}.
  */
 /**
  * @name Controls/toolbars:ItemTemplate#theme
- * @cfg {String} Значение опции тулбара {@link Controls/toolbar:View#theme}.
+ * @cfg {String} Значение опции тулбара {@link Controls/toolbars:View#theme}.
  */
 
 import ItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
