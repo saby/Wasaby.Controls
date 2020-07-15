@@ -93,9 +93,11 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _intersectionObserverController: Observer;
 
     _beforeMount(options: IContainerOptions, context, receivedState) {
-        super._beforeMount(...arguments);
         this._shadows = new ShadowsModel(options);
         this._scrollbars = new ScrollbarsModel(options, receivedState);
+
+        super._beforeMount(...arguments);
+
         if (!receivedState) {
             return Promise.resolve(this._scrollbars.serializeState());
         }
@@ -118,8 +120,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         if (isUpdated) {
             this._shadows.updateScrollState(this._state);
             this._scrollbars.updateScrollState(this._state);
+            this._scrollCssClass = this._getScrollContainerCssClass(this._options);
         }
         return isUpdated;
+    }
+
+    protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
+        return this._scrollbars.getScrollContainerClasses();
     }
 
     private _adjustContentMarginsForBlockRender(): void {

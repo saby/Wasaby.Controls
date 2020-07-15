@@ -1,4 +1,4 @@
-<div class="controls-Scroll-ContainerBase"
+<div class="controls-Scroll-ContainerBase {{_scrollCssClass}}"
      name="scrollContainer"
      on:scroll="_scrollHandler()">
     <div class="controls-containerBase_contentObserver" name="content">
