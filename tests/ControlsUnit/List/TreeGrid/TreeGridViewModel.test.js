@@ -60,7 +60,9 @@ define(['Controls/treeGrid',
       });
       it('setExpandedItems', function() {
          treeGridViewModel._model._display = {
-            setFilter: function() {}
+            setFilter: function() {},
+            getCollapsedGroups: () => undefined,
+            getKeyProperty: () => 'id'
          };
          treeGridViewModel.setExpandedItems([]);
          assert.deepEqual([], treeGridViewModel._model._expandedItems);

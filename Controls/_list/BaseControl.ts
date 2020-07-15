@@ -340,22 +340,23 @@ const _private = {
                             self._groupingLoader.resetLoadedGroups(listModel);
                         }
 
-                        if (self._items) {
-                            self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
-                        }
-                        if (self._options.useNewModel) {
-                            // TODO restore marker + maybe should recreate the model completely
-                            // instead of assigning items
-                            // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
-                            const modelCollection = listModel.getCollection();
-                            listModel.setCompatibleReset(true);
-                            modelCollection.setMetaData(list.getMetaData());
-                            modelCollection.assign(list);
-                            listModel.setCompatibleReset(false);
-                            self._items = listModel.getCollection();
-                        } else {
-                            listModel.setItems(list);
-                            self._items = listModel.getItems();
+                    if (self._items) {
+                       self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
+                    }
+                    // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
+                    if (self._options.useNewModel) {
+                        // TODO restore marker + maybe should recreate the model completely
+                        // instead of assigning items
+                        // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
+                        const modelCollection = listModel.getCollection();
+                        listModel.setCompatibleReset(true);
+                        modelCollection.setMetaData(list.getMetaData());
+                        modelCollection.assign(list);
+                        listModel.setCompatibleReset(false);
+                        self._items = listModel.getCollection();
+                    } else {
+                        listModel.setItems(list, cfg);
+                        self._items = listModel.getItems();
 
                             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
                             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
@@ -707,7 +708,7 @@ const _private = {
                     self._scrollController.startBatchAdding(direction);
                 }
 
-                self._inertialScrolling.callAfterScrollStopped(() => {
+                self._getInertialScrolling().callAfterScrollStopped(() => {
                     loadCallback(addedItems, countCurrentItems);
                 });
 
@@ -1307,7 +1308,7 @@ const _private = {
         if (changesType === 'collectionChanged' || newModelChanged) {
             // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
             if (self._options.navigation && self._options.navigation.source) {
-                const stateChanged = self._sourceController.setState(self._listViewModel);
+                const stateChanged = self._sourceController.setState(self._listViewModel, self._options.root);
 
                 if (stateChanged) {
                     _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -1783,11 +1784,11 @@ const _private = {
             .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
             .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}_theme-${theme}`)
             .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${theme}`,
-                !hasItems && loadingIndicatorState === 'down')
+                 !hasItems && loadingIndicatorState === 'down')
             .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${theme}`,
-                loadingIndicatorState === 'down' && hasPaging && hasItems)
+                 loadingIndicatorState === 'down' && hasPaging && hasItems)
             .add(`controls-BaseControl__loadingIndicator_style-portionedSearch_theme-${theme}`,
-                isPortionedSearchInProgress)
+                          isPortionedSearchInProgress)
             .compile();
     },
     updateIndicatorContainerHeight(self, viewRect: DOMRect, viewPortRect: DOMRect): void {
@@ -1825,9 +1826,9 @@ const _private = {
         }
         return height;
     },
-    setHasMoreData(model, hasMoreData: boolean): boolean {
+    setHasMoreData(model, hasMoreData: boolean, silent: boolean = false): boolean {
         if (model) {
-            model.setHasMoreData(hasMoreData);
+            model.setHasMoreData(hasMoreData, silent);
         }
     },
     jumpToEnd(self): void {
@@ -1867,12 +1868,12 @@ const _private = {
 
     updateSelectionController(self: any, newOptions: any): void {
         const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
-            || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
+           || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
         const result = self._selectionController.update({
-            model: self._listViewModel,
-            selectedKeys: newOptions.selectedKeys,
-            excludedKeys: newOptions.excludedKeys,
-            strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
+           model: self._listViewModel,
+           selectedKeys: newOptions.selectedKeys,
+           excludedKeys: newOptions.excludedKeys,
+           strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
         });
 
         // Если опции не изменились, то значит прикладник отменил выбор и не нужно ему нотифаить об изменении
@@ -2449,9 +2450,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      */
     _beforeMount(newOptions, context, receivedState: IReceivedState = {}) {
         const self = this;
-
-        this._inertialScrolling = new InertialScrolling();
-
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
@@ -2471,7 +2469,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
-            let viewModelConfig = cClone(newOptions);
+            let viewModelConfig = {...newOptions};
             if (collapsedGroups) {
                 viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
             }
@@ -2508,7 +2506,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
-                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                     if (newOptions.useNewModel) {
                         self._items = self._listViewModel.getCollection();
@@ -2567,7 +2565,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                             newOptions.viewModelConstructor
                         );
 
-                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                         if (newOptions.itemsReadyCallback) {
                             newOptions.itemsReadyCallback(self._listViewModel.getCollection());
@@ -2603,11 +2601,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     },
 
+    _getInertialScrolling(): InertialScrolling {
+        if (!this._inertialScrolling) {
+            this._inertialScrolling = new InertialScrolling();
+        }
+        return this._inertialScrolling;
+    },
+
     scrollMoveSyncHandler(params: unknown): void {
         _private.handleListScrollSync(this, params);
 
         if (detection.isMobileIOS) {
-            this._inertialScrolling.scrollStarted();
+            this._getInertialScrolling().scrollStarted();
         }
     },
 
@@ -2774,20 +2779,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         _private.updateNavigation(this);
 
-        if (
-            !newOptions.useNewModel &&
-            (
-                newOptions.groupMethod !== this._options.groupMethod ||
-                newOptions.viewModelConstructor !== this._viewModelConstructor
-            )
-        ) {
+        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
             if (this._editInPlace && this._listViewModel.getEditingItemData()) {
                 this._editInPlace.cancelEdit();
             }
             this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
-            this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
+            this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
                 items,
                 supportVirtualScroll: !!this._needScrollCalculation
             }));
@@ -2803,10 +2802,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._dndListController) {
             this._dndListController.update(this._listViewModel, newOptions.canStartDragNDrop);
-        }
-
-        if (newOptions.groupMethod !== this._options.groupMethod) {
-            _private.reload(this, newOptions);
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
@@ -3041,6 +3036,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._scrollController) {
             this._scrollController.reset();
+        }
+
+        if (this._portionedSearch) {
+            this._portionedSearch.destroy();
+            this._portionedSearch = null;
         }
 
         // для связи с контроллером ПМО

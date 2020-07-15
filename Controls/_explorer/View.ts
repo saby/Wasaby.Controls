@@ -75,9 +75,11 @@ var
             if (self._restoredMarkedKeys[root]) {
                if (self._restoredMarkedKeys[root].parent === undefined) {
                   const markedKey = self._restoredMarkedKeys[root].markedKey;
+                  const cursorPosition = self._restoredMarkedKeys[root].cursorPosition;
                   self._restoredMarkedKeys = {
                      [root]: {
-                        markedKey: markedKey
+                        markedKey: markedKey,
+                        cursorPosition: cursorPosition
                      }
                   };
                   return;
