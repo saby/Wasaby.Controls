@@ -546,6 +546,9 @@ var
                 return false;
             }
         },
+        isColumnScrollVisible(): boolean {
+          return this._isColumnScrollVisible();
+        },
 
         _isDragScrollingEnabled(options): boolean {
             const hasOption = typeof options.dragScrolling === 'boolean';
