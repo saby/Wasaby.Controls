@@ -112,14 +112,14 @@ define('Controls/interface/IFormController', [
    /**
     * @name Controls/interface/IFormController#initializingWay
     * @cfg {String} Устанавливает способ инициализации данных диалога редактирования.
-    * @variant 'local' Верстка контрола строится по записи, переданной в опцию {@link Controls/interface/IFormController#record}, запроса на БЛ нет.
-    * @variant 'read' Перед построением верстки выполняется метод "Прочитать" по ключу, переданному в опцию {@link Controls/interface/IFormController#key}. Построение <b>откладывается</b> до ответа БЛ.
+    * @variant 'local' Верстка контрола строится по записи, переданной в опцию {@link Controls/interface/IFormController#record record}, запроса на БЛ нет.
+    * @variant 'read' Перед построением верстки выполняется метод "Прочитать" по ключу, переданному в опцию {@link Controls/interface/IFormController#key key}. Построение <b>откладывается</b> до ответа БЛ.
     * @variant 'create' Перед построением верстки выполняется метод "Создать", построение <b>откладывается</b> до ответа БЛ.
-    * @variant 'delayedRead' Верстка контрола строится по записи, переданной в опцию {@link Controls/interface/IFormController#record}, параллельно выполняется метод "Прочитать" по ключу,
-    * переданному в опции {@link Controls/interface/IFormController#key}.
+    * @variant 'delayedRead' Верстка контрола строится по записи, переданной в опцию {@link Controls/interface/IFormController#record record}, параллельно выполняется метод "Прочитать" по ключу,
+    * переданному в опции {@link Controls/interface/IFormController#key key}.
     * Построение вертки контрола <b>не откладывается.</b>
     * @variant 'delayedCreate' Верстка контрола строится по записи, переданной в опцию
-    * {@link Controls/interface/IFormController#record}, параллельно выполняется метод "Создать".
+    * {@link Controls/interface/IFormController#record record}, параллельно выполняется метод "Создать".
     * Построение вертки контрола <b>не откладывается.</b>
     * @example
     * <pre>
