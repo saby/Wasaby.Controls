@@ -2421,8 +2421,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _beforeMount(newOptions, context, receivedState: IReceivedState = {}) {
         const self = this;
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
-        const receivedError = receivedState.errorConfig;
-        const receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
         _private.checkRequiredOptions(newOptions);
@@ -2577,15 +2575,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
    _prepareGroups(newOptions, callback: Function) {
-      const result = new Deferred();
-      if (newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId) {
-         groupUtil.restoreCollapsedGroups(newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId).addCallback(function (collapsedGroupsFromStore) {
-            result.callback(collapsedGroupsFromStore || newOptions.collapsedGroups);
-         });
-      } else {
-         result.callback(newOptions.collapsedGroups);
-      }
-      return result.addCallback(callback);
+       let result = null;
+       if (newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId) {
+           result = new Deferred();
+           groupUtil.restoreCollapsedGroups(newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId).addCallback(function (collapsedGroupsFromStore) {
+               result.callback(collapsedGroupsFromStore || newOptions.collapsedGroups);
+           });
+       } else if (newOptions.collapsedGroups) {
+           result = new Deferred();
+           result.callback(newOptions.collapsedGroups);
+       }
+       if (result) {
+           return result.addCallback(callback);
+       } else {
+           return callback(null);
+       }
    },
 
     _getInertialScrolling(): InertialScrolling {
@@ -2885,15 +2889,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
-                this._prepareGroups(newOptions, (collapsedGroups) => {
+                return this._prepareGroups(newOptions, (collapsedGroups) => {
                     self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                    return _private.reload(self, newOptions).addCallback(() => {
+                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
+                        _private.updateInitializedItemActions(this, newOptions);
+                    });
+                });
+            } else {
+                // return result here is for unit tests
+                return _private.reload(self, newOptions).addCallback(() => {
+                    this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
+                    _private.updateInitializedItemActions(this, newOptions);
                 });
             }
-            // return result here is for unit tests
-            return _private.reload(self, newOptions).addCallback(() => {
-                this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
-                _private.updateInitializedItemActions(this, newOptions);
-            });
         } else {
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
