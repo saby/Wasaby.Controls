@@ -66,8 +66,8 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
          Store.unsubscribe(this._expandedCallbackId);
       }
    }
-   protected _mouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
-      if (isLeftMouseButton(event)) {
+   protected _handleMouseDown(event: SyntheticEvent<MouseEvent>): void {
+      if (!isLeftMouseButton(event)) {
          return;
       }
       if (!this._options.readOnly) {
@@ -77,7 +77,8 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
          }
       }
    }
-   protected _mouseEnterHandler(): void {
+   protected _handleClick(): void {}
+   protected _handleMouseEnter(): void {
       if (!this._options.readOnly) {
          if (!this._dependenciesTimer) {
             this._dependenciesTimer = new DependencyTimer();
@@ -85,7 +86,7 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
          this._dependenciesTimer.start(this._loadDependencies);
       }
    }
-   protected _mouseLeaveHandler(): void {
+   protected _handleMouseLeave(): void {
       this._dependenciesTimer?.stop();
    }
    private _loadDependencies(): Promise<unknown> {
