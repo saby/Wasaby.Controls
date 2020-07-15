@@ -2849,9 +2849,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasMarkerController(this)) {
             _private.updateMarkerController(this, newOptions);
         } else {
-            if (newOptions.markerVisibility === 'visible' ||
-                (newOptions.markerVisibility === 'onactivated' && newOptions.markedKey)
-            ) {
+            if (newOptions.markerVisibility !== 'hidden') {
                 _private.getMarkerController(this, newOptions);
             }
         }
