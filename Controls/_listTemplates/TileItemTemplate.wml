@@ -50,7 +50,7 @@
 <ws:partial template="Controls/tile:TileItemTemplate"
             border="{{false}}"
             staticHeight="{{true}}"
-            width="{{itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).width}}"
+            width="{{itemData.getTileSizes && itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).width}}"
             height="auto"
             attr:class="controls-listTemplates__tileItemTemplate__item"
             shadowVisibility="hidden"
