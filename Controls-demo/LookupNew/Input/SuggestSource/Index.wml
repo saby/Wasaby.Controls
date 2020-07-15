@@ -4,7 +4,8 @@
         <Controls.lookup:Input
                 bind:selectedKeys="_selectedKeys"
                 searchParam="title"
-                suggestSource="{{_source}}"
+                source="{{_source}}"
+                suggestSource="{{_suggestSource}}"
                 keyProperty="id">
         </Controls.lookup:Input>
     </div>

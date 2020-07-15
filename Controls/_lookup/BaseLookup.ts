@@ -22,11 +22,7 @@ export default abstract class BaseLookup extends Control {
         context: object,
         receivedState: LookupReceivedState
     ): Promise<LookupReceivedState> | void {
-        const lookupControllerOptions: ILookupBaseControllerOptions = {
-            ...options, ...{source: this._options.suggestSource || this._options.source}
-        };
-
-        this._lookupController = new LookupController(lookupControllerOptions);
+        this._lookupController = new LookupController(options);
 
         if (receivedState && !isEmpty(receivedState)) {
             this._items = receivedState;

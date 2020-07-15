@@ -179,10 +179,9 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
 
 /**
  * @name Controls/_lookup/Lookup#suggestSource
- * @cfg {Types/source:ICrudPlus} Устанавливает дополнительный исчтоник поля ввода для всплывающего окна.
- * @default source
+ * @cfg {Types/source:ICrudPlus} Устанавливает источник для автодополнения.
  * @remark
- * Если опция не указана, то вместо нее передается значение опции {@link Controls/_lookup/Lookup#source}.
+ * Если опция не указана, то вместо нее автоматически передается значение опции {@link Controls/_lookup/Lookup#source}.
  *
  * @example
  * WML:
