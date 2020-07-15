@@ -390,6 +390,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (isLeftMouseButton(event)) {
             return;
         }
+        this._showMenu(event);
+    }
+
+    protected _showMenu(event: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
             if (!this._isLoadMenuItems) {
                 this._setMenuItems();
