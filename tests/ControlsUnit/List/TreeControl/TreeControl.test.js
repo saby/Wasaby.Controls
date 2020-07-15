@@ -881,7 +881,7 @@ define([
          assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
       });
 
-      describe('List nafigation', function() {
+      describe('List navigation', function() {
          var stubScrollToItem;
 
          before(function() {
