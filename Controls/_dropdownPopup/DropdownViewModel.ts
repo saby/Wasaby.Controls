@@ -114,7 +114,6 @@ var _private = {
             this._itemsModel = new ItemsViewModel({
                groupProperty: cfg.groupProperty,
                groupingKeyCallback: cfg.groupingKeyCallback,
-               groupMethod: cfg.groupMethod,
                groupTemplate: cfg.groupTemplate,
                items: cfg.items,
                keyProperty: cfg.keyProperty,
@@ -171,9 +170,9 @@ var _private = {
             return filter;
          },
 
-         setItems: function(options) {
+         setItems(options): void {
             this._options.items = options.items;
-            this._itemsModel.setItems(options.items);
+            this._itemsModel.setItems(options.items, options);
          },
 
          setRootKey: function(key) {

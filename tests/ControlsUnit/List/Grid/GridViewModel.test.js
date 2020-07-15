@@ -1508,7 +1508,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             imitateTemplate = function() {};
          it('setTheme', function() {
             gridViewModel.setTheme('themeName');
-            assert.equal(gridViewModel._options.theme, 'themeName');
+            assert.equal(gridViewModel.getTheme(), 'themeName');
             gridViewModel.setTheme('default');
             assert.equal(gridViewModel._options.theme, 'default');
          });

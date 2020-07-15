@@ -701,9 +701,13 @@ var
             this._model.setTheme(theme);
         },
 
+        getTheme(): string {
+            return this._model.getTheme();
+        },
+
         _updateLastItemKey(): void {
             if (this.getItems()) {
-                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this.getKeyProperty());
             }
         },
 
@@ -712,7 +716,11 @@ var
         },
 
         setKeyProperty(keyProperty: string): void {
-            this._options.keyProperty = keyProperty;
+            this._model.setKeyProperty(keyProperty);
+        },
+
+        getKeyProperty(): string {
+            return this._model.getKeyProperty();
         },
 
         isGroupExpanded(groupId: Grouping.TGroupId): boolean {
@@ -1110,14 +1118,15 @@ var
             }
         },
 
-        setHasMoreData: function (hasMore: boolean, silent: boolean = false) {
-            this._model.setHasMoreData(hasMore);
-            if (!silent) {
-                this._nextModelVersion(true);
+        setHasMoreData(hasMoreData: boolean, silent: boolean = false): boolean {
+            if (this._model.setHasMoreData(hasMoreData)) {
+                if (!silent) {
+                    this._nextModelVersion(true);
+                }
             }
         },
 
-        getHasMoreData: function() {
+        getHasMoreData(): boolean {
           return this._model.getHasMoreData();
         },
 
@@ -1743,8 +1752,8 @@ var
             this._model.updateIndexes(startIndex, stopIndex);
         },
 
-        setItems: function(items) {
-            this._model.setItems(items);
+        setItems(items, cfg): void {
+            this._model.setItems(items, cfg);
             this._updateLastItemKey();
         },
 
@@ -2125,18 +2134,6 @@ var
                 });
             }
             return '';
-        },
-
-        _getItemGroup: function(item): boolean {
-            const groupingKeyCallback = this._options.groupingKeyCallback;
-            if (groupingKeyCallback) {
-                return groupingKeyCallback(item);
-            }
-            const groupProperty = this._options.groupProperty;
-            if (groupProperty) {
-                return item.get(groupProperty);
-            }
-            return null;
         },
 
         markItemReloaded: function(key) {

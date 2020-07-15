@@ -277,7 +277,7 @@ const _private = {
             parentId = editingItem.get(listViewModel._options.parentProperty);
             parentIndex = listViewModel.getIndexBySourceItem(
                 // @ts-ignore
-                listViewModel.getItemById(parentId, listViewModel._options.keyProperty).getContents()
+                listViewModel.getItemById(parentId, listViewModel.getKeyProperty()).getContents()
             );
             // @ts-ignore
             count = parentIndex + listViewModel.getChildren(parentId).length + 1;
@@ -306,7 +306,7 @@ const _private = {
             parentId = editingItem.get(listViewModel._options.parentProperty);
             parentIndex = listViewModel.getIndexBySourceItem(
                 // @ts-ignore
-                listViewModel.getItemById(parentId, listViewModel._options.keyProperty
+                listViewModel.getItemById(parentId, listViewModel.getKeyProperty()
             ).getContents());
             count = parentIndex + 1;
         } else {
@@ -339,8 +339,8 @@ const _private = {
             originalItem = listViewModel.getItemBySourceKey(editingItem.get(listViewModel.getKeyProperty()));
         } else {
             originalItem = listViewModel.getItemById(
-                editingItem.get(listViewModel._options.keyProperty),
-                listViewModel._options.keyProperty
+                editingItem.get(listViewModel.getKeyProperty()),
+                listViewModel.getKeyProperty()
             );
         }
 
@@ -351,16 +351,16 @@ const _private = {
             parentIndex = listViewModel.getIndexByKey(
                 listViewModel.getItemById(
                     parentId,
-                    listViewModel._options.keyProperty
+                    listViewModel.getKeyProperty()
                 ).getContents().getKey()
             );
             index = parentIndex + (
                 defaultIndex !== undefined ? defaultIndex : listViewModel.getDisplayChildrenCount(parentId)
             ) + 1;
-        } else if (listViewModel._options.groupingKeyCallback || groupProperty) {
+        } else if (listViewModel.getDisplay().getGroup()) {
             const groupId = groupProperty ?
                 editingItem.get(groupProperty) :
-                listViewModel._options.groupingKeyCallback(editingItem);
+                listViewModel.getDisplay().getGroup()(editingItem);
             const isAddInTop = self._options.editingConfig && self._options.editingConfig.addPosition === 'top';
             index = _private.getItemIndexWithGrouping(listViewModel.getDisplay(), groupId, isAddInTop);
         }
@@ -503,8 +503,8 @@ export default class EditInPlace {
                         ).getContents();
                     } else {
                         this._originalItem = listViewModel.getItemById(
-                            this._editingItem.get(listViewModel._options.keyProperty),
-                            listViewModel._options.keyProperty
+                            this._editingItem.get(listViewModel.getKeyProperty()),
+                            listViewModel.getKeyProperty()
                         ).getContents();
                     }
                 }
@@ -805,8 +805,8 @@ export default class EditInPlace {
             );
         } else  {
             editingItemProjection = listViewModel.getItemById(
-                this._editingItem.get(listViewModel._options.keyProperty),
-                listViewModel._options.keyProperty
+                this._editingItem.get(listViewModel.getKeyProperty()),
+                listViewModel.getKeyProperty()
             );
         }
 
