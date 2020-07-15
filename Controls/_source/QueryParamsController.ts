@@ -78,7 +78,7 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     setState(model: Collection<Record>, root?: Key): boolean {
-        return this.getController(root).setState(model);
+        return this.getController(root).setState(model, root);
     }
 
     updateQueryProperties(

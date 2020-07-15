@@ -361,6 +361,11 @@
       visibility: visible;
       opacity: 1;
    }
+
+   /** При редактировании по месту, переопределяем фон содержимого ячейки */
+   .controls-Grid__row-cell__content {
+      background-color: @item_editing_background-color_list;
+   }
 }
 
 .controls-Grid__row-additional_ladderWrapper {
@@ -710,8 +715,9 @@
 }
 
 .ws-is-hover {
-   .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName},
-   .controls-Grid__row_masterClassic_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
+   
+   .controls-Grid__row_highlightOnHover_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName},
+   .controls-Grid__row_highlightOnHover_masterClassic_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
       background-color: @master_item_hover_background-color_list;
    }
    .controls-Grid__row_highlightOnHover_master_theme-@{themeName}:hover .controls-background-master_theme-@{themeName},

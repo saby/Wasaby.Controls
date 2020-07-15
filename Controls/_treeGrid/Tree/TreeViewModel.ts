@@ -514,7 +514,7 @@ var
         prepareDisplayFilterData: function() {
             var
                 data = TreeViewModel.superclass.prepareDisplayFilterData.apply(this, arguments);
-            data.keyProperty = this._options.keyProperty;
+            data.keyProperty = this.getKeyProperty();
             data.expandedItems = this._expandedItems;
             data.collapsedItems = this._collapsedItems;
             data.isExpandAll = _private.isExpandAll;
@@ -549,7 +549,7 @@ var
             this._nextModelVersion();
         },
 
-        setItems: function() {
+        setItems(): void {
             TreeViewModel.superclass.setItems.apply(this, arguments);
             if (_private.getExpanderVisibility(this._options) === 'hasChildren') {
                 _private.determinePresenceChildItem(this);
@@ -629,14 +629,13 @@ var
             this._prevDragTargetPosition = null;
             this._nextModelVersion(true);
         },
-
         setDragEntity: function(entity) {
             var item;
 
             if (entity) {
                 //Collapse all the nodes that we move.
                 entity.getItems().forEach(function(id) {
-                    item = this.getItemById(id, this._options.keyProperty);
+                    item = this.getItemById(id, this.getKeyProperty());
 
                     //Not all of the moved items can be in the current recordSet
                     if (item) {

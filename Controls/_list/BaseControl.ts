@@ -324,6 +324,7 @@ const _private = {
                     if (self._items) {
                        self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
                     }
+                    // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
                     if (self._options.useNewModel) {
                         // TODO restore marker + maybe should recreate the model completely
                         // instead of assigning items
@@ -335,7 +336,7 @@ const _private = {
                         listModel.setCompatibleReset(false);
                         self._items = listModel.getCollection();
                     } else {
-                        listModel.setItems(list);
+                        listModel.setItems(list, cfg);
                         self._items = listModel.getItems();
 
                         // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
@@ -688,7 +689,7 @@ const _private = {
                     self._scrollController.startBatchAdding(direction);
                 }
 
-                self._inertialScrolling.callAfterScrollStopped(() => {
+                self._getInertialScrolling().callAfterScrollStopped(() => {
                     loadCallback(addedItems, countCurrentItems);
                 });
 
@@ -1276,7 +1277,7 @@ const _private = {
         return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
 
-    onListChange(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+    onListChange(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
         const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
@@ -1288,7 +1289,7 @@ const _private = {
         if (changesType === 'collectionChanged' || newModelChanged) {
             // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
             if (self._options.navigation && self._options.navigation.source) {
-                const stateChanged = self._sourceController.setState(self._listViewModel);
+                const stateChanged = self._sourceController.setState(self._listViewModel, self._options.root);
 
                 if (stateChanged) {
                     _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -1303,20 +1304,13 @@ const _private = {
             if (self._selectionController) {
                let result;
 
-               switch (action) {
-                  case IObservable.ACTION_RESET:
-                     result = self._selectionController.handleReset(newItems, self._prevRootId, self._prevRootId !== self._options.root);
-                     break;
-                  case IObservable.ACTION_ADD:
-                     result = self._selectionController.handleAddItems(newItems);
-                     break;
-               }
-
                if (self._listViewModel.getCount() === 0 && self._selectionController.isAllSelected()) {
                    result = self._selectionController.clearSelection();
+               } else if (action === IObservable.ACTION_ADD) {
+                   result = self._selectionController.handleAddItems(newItems);
                }
 
-               self.handleSelectionControllerResult(result);
+               _private.handleSelectionControllerResult(self, result);
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
@@ -1806,9 +1800,9 @@ const _private = {
         }
         return height;
     },
-    setHasMoreData(model, hasMoreData: boolean): boolean {
+    setHasMoreData(model, hasMoreData: boolean, silent: boolean = false): boolean {
         if (model) {
-            model.setHasMoreData(hasMoreData);
+            model.setHasMoreData(hasMoreData, silent);
         }
     },
     jumpToEnd(self): void {
@@ -1832,7 +1826,7 @@ const _private = {
     // region Multiselection
 
     createSelectionController(self: any, options: any): SelectionController {
-        if (!self._listViewModel || !self._items) {
+        if (!self._listViewModel || !self._listViewModel.getCollection()) {
             return null;
         }
 
@@ -1847,18 +1841,13 @@ const _private = {
     },
 
     updateSelectionController(self: any, newOptions: any): void {
-        const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
-           || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
-        const result = self._selectionController.update({
+        self._selectionController.update({
            model: self._listViewModel,
            selectedKeys: newOptions.selectedKeys,
            excludedKeys: newOptions.excludedKeys,
            strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
         });
-
-        // Если опции не изменились, то значит прикладник отменил выбор и не нужно ему нотифаить об изменении
-        _private.handleSelectionControllerResult(self, result, !selectionChanged);
-   },
+    },
 
     createSelectionStrategy(options: any, items: RecordSet): ISelectionStrategy {
       const strategyOptions = this.getSelectionStrategyOptions(options, items);
@@ -1912,24 +1901,22 @@ const _private = {
           break;
       }
 
-      this.handleSelectionControllerResult(result);
+      _private.handleSelectionControllerResult(this, result);
    },
 
-    handleSelectionControllerResult(self: any, result: ISelectionControllerResult, silent: boolean = false): void {
+    handleSelectionControllerResult(self: any, result: ISelectionControllerResult): void {
       if (!result) {
          return;
       }
 
-      if (!silent) {
-          const selectedDiff = result.selectedKeysDiff;
-          if (selectedDiff.added.length || selectedDiff.removed.length) {
-              self._notify('selectedKeysChanged', [selectedDiff.keys, selectedDiff.added, selectedDiff.removed]);
-          }
+      const selectedDiff = result.selectedKeysDiff;
+      if (selectedDiff.added.length || selectedDiff.removed.length) {
+          self._notify('selectedKeysChanged', [selectedDiff.keys, selectedDiff.added, selectedDiff.removed]);
+      }
 
-          const excludedDiff = result.excludedKeysDiff;
-          if (excludedDiff.added.length || excludedDiff.removed.length) {
-              self._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
-          }
+      const excludedDiff = result.excludedKeysDiff;
+      if (excludedDiff.added.length || excludedDiff.removed.length) {
+          self._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
       }
 
       // для связи с контроллером ПМО
@@ -1953,7 +1940,7 @@ const _private = {
                }
                break;
        }
-       this.handleSelectionControllerResult(self, selectionControllerResult);
+       _private.handleSelectionControllerResult(self, selectionControllerResult);
    },
 
     createMarkerController(self: any, options: any): MarkerController {
@@ -2433,9 +2420,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      */
     _beforeMount(newOptions, context, receivedState: IReceivedState = {}) {
         const self = this;
-
-        this._inertialScrolling = new InertialScrolling();
-
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
@@ -2455,7 +2439,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
-            let viewModelConfig = cClone(newOptions);
+            let viewModelConfig = {...newOptions};
             if (collapsedGroups) {
                 viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
             }
@@ -2492,7 +2476,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
                     self._sourceController.calculateState(receivedData);
-                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                     if (newOptions.useNewModel) {
                         self._items = self._listViewModel.getCollection();
@@ -2551,7 +2535,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                             newOptions.viewModelConstructor
                         );
 
-                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                         if (newOptions.itemsReadyCallback) {
                             newOptions.itemsReadyCallback(self._listViewModel.getCollection());
@@ -2587,11 +2571,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     },
 
+    _getInertialScrolling(): InertialScrolling {
+        if (!this._inertialScrolling) {
+            this._inertialScrolling = new InertialScrolling();
+        }
+        return this._inertialScrolling;
+    },
+
     scrollMoveSyncHandler(params: unknown): void {
         _private.handleListScrollSync(this, params);
 
         if (detection.isMobileIOS) {
-            this._inertialScrolling.scrollStarted();
+            this._getInertialScrolling().scrollStarted();
         }
     },
 
@@ -2758,20 +2749,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         _private.updateNavigation(this);
 
-        if (
-            !newOptions.useNewModel &&
-            (
-                newOptions.groupMethod !== this._options.groupMethod ||
-                newOptions.viewModelConstructor !== this._viewModelConstructor
-            )
-        ) {
+        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
             if (this._editInPlace && this._listViewModel.getEditingItemData()) {
                 this._editInPlace.cancelEdit();
             }
             this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
-            this._listViewModel = new newOptions.viewModelConstructor(cMerge(cClone(newOptions), {
+            this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
                 items,
                 supportVirtualScroll: !!this._needScrollCalculation
             }));
@@ -2787,10 +2772,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._dndListController) {
             this._dndListController.update(this._listViewModel, newOptions.canStartDragNDrop);
-        }
-
-        if (newOptions.groupMethod !== this._options.groupMethod) {
-            _private.reload(this, newOptions);
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
@@ -2853,6 +2834,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.handleSelectionControllerResult(this, result);
             }
             _private.updateSelectionController(this, newOptions);
+
+            const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
+               || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
+            if (selectionChanged || this._modelRecreated) {
+                // handleSelectionControllerResult чтобы отправить информацию для ПМО
+                const result = this._selectionController.setSelectedKeys(
+                   newOptions.selectedKeys,
+                   newOptions.excludedKeys
+                );
+                _private.handleSelectionControllerResult(this, result);
+            }
         } else {
             // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
             if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
@@ -3025,6 +3017,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._scrollController) {
             this._scrollController.reset();
+        }
+
+        if (this._portionedSearch) {
+            this._portionedSearch.destroy();
+            this._portionedSearch = null;
         }
 
         // для связи с контроллером ПМО
@@ -3721,10 +3718,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
         }
         return diCreate(modelName, {...modelConfig, collection: items});
-    },
-
-    handleSelectionControllerResult(result: ISelectionControllerResult): void {
-        _private.handleSelectionControllerResult(this, result);
     },
 
     _onEditingRowKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent): void {
