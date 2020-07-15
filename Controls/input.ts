@@ -96,6 +96,7 @@ export {default as AdapterMask} from 'Controls/_input/Adapter/Mask';
 export {default as isMaskFormatValid} from 'Controls/_input/Mask/isFormatValid';
 export {Formatter as MaskFormatter, FormatBuilder as MaskFormatBuilder} from 'Controls/decorator';
 export {default as IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility, getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes} from './_input/interface/IBorderVisibility';
+export * from './_input/ActualAPI';
 
 /**
  * ПРИВАТНЫЕ МОДУЛИ.
