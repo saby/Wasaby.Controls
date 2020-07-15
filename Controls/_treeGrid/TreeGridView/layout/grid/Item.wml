@@ -197,6 +197,7 @@
       </ws:else>
    </ws:if>
    <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{backgroundStyle}}"
+                                 mode="{{stickyMode}}"
                                  attr:class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
                                    {{ currentColumn.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}
                                    {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
@@ -224,14 +225,25 @@
          <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
             {{itemData.resetColumnIndex();}}
             <ws:if data="{{itemData.hasMultiSelect}}">
-               <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{className}}"/>
+               <ws:partial template="stickyCell"
+                           stickyMode="stackable"
+                           currentColumn="{{itemData.getCurrentColumn()}}"
+                           attr:class="{{className}}"/>
                {{itemData.goToNextColumn();}}
             </ws:if>
-            <ws:partial template="stickyCell" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}" attr:class="{{className}}"/>
+            <ws:partial template="stickyCell"
+                        stickyMode="stackable"
+                        currentColumn="{{itemData.getCurrentColumn()}}"
+                        colspanCurrentNode="{{true}}"
+                        attr:class="{{className}}"/>
          </ws:if>
          <ws:else>
             <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-               <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{className}}"/>
+               <ws:partial template="stickyCell"
+                           stickyMode="stackable"
+                           attr:key="{{itemData.getCurrentColumnKey()}}"
+                           currentColumn="{{itemData.getCurrentColumn()}}"
+                           attr:class="{{className}}"/>
             </ws:for>
          </ws:else>
       </div>
