@@ -4,6 +4,7 @@ import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IFontColorStyle, IFontColorStyleOptions, IFontSize, IFontSizeOptions} from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import {constants} from 'Env/Env';
+import {titleSize, titleStyle} from './_ActualAPI';
 
 export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITooltipOptions, IFontColorStyleOptions, IFontSizeOptions {
 
@@ -54,8 +55,6 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
     * @mixes Controls/_heading/Heading/HeadingStyles
     */
 
-const mapFontSize = {s: 'm', m: 'l', l: '3xl', xl: '4xl'};
-const mapFontColorStyle = {info: 'label', primary: 'primary', secondary: 'secondary'};
 class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFontColorStyle, IFontSize {
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = headingTemplate;
@@ -63,28 +62,8 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFo
    protected _fontColorStyle: string;
 
    private _prepareOptions(options: IHeadingOptions): void {
-      if (options.size) {
-         if (constants.isBrowserPlatform) {
-            // TODO: будет удалено в версию после 5100
-            Logger.error('Controls.heading.Title: Используется устаревшая опция size. ' +
-                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
-         }
-         this._fontSize = mapFontSize[options.size];
-      } else {
-         this._fontSize = options.fontSize;
-      }
-      if (options.style) {
-         if (constants.isBrowserPlatform) {
-            // TODO: будет удалено в версию после 5100
-            Logger.error('Controls.heading.Title: Используется устаревшая опция style. ' +
-                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontColorStyle.');
-         }
-         this._fontColorStyle = mapFontColorStyle[options.style];
-      } else {
-         this._fontColorStyle = options.fontColorStyle;
-      }
+      this._fontSize = titleSize(options.size, options.fontSize);
+      this._fontColorStyle = titleStyle(options.style, options.fontColorStyle);
    }
 
    protected _beforeMount(options: IHeadingOptions): void {
