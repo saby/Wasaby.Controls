@@ -2751,7 +2751,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const resetPaging = this._pagingNavigation && filterChanged;
         const recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         const sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
-        const groupMethodChanged = newOptions.groupMethod !== this._options.groupMethod;
         const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         this._prevRootId = this._options.root;
@@ -2885,7 +2884,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             });
         }
 
-        if (filterChanged || recreateSource || sortingChanged || groupMethodChanged) {
+        if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
