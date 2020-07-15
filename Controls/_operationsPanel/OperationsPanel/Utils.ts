@@ -3,7 +3,7 @@ import {showType} from 'Controls/Utils/Toolbar';
 import getWidthUtil = require('Controls/Utils/getWidth');
 import { Logger } from 'UI/Utils';
 import {Record} from 'Types/entity';
-import {DOMUtil} from 'Controls/Utils/DOMUtil';
+import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
    var MENU_WIDTH = 0;
 

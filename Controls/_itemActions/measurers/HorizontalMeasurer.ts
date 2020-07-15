@@ -1,6 +1,6 @@
 import rk = require('i18n!Controls');
 import { ISwipeConfig } from 'Controls/display';
-import { DOMUtil } from 'Controls/Utils/DOMUtil';
+import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
 import { IMeasurer } from '../interface/IMeasurer';
 import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemActions';
@@ -157,7 +157,7 @@ class HorizontalMeasurer implements IMeasurer {
       // По стандарту, показываем не более трёх опций в свайпе.
       // Кроме всего прочего, это позволит не производить слишком много вычислений с DOM
       const itemActions = actions.slice(0, MAX_ACTIONS_COUNT);
-      const itemActionsContainerWidth = DOMUtil.getBlockWidth('', `controls-Swipe_horizontal_theme-${theme}`, true);
+      const itemActionsContainerWidth = DOMUtil.getWidthForCssClass(`controls-Swipe_horizontal_theme-${theme}`);
       const itemActionsSizes = this._calculateActionsSizes(itemActions, templateConfig);
       let availableWidth = rowWidth - itemActionsContainerWidth;
       let menuItemAction: IItemAction;

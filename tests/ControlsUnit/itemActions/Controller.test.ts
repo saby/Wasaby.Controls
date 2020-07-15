@@ -14,7 +14,7 @@ import {
     TActionDisplayMode,
     TItemActionShowType
 } from 'Controls/_itemActions/interface/IItemActions';
-import { DOMUtil } from 'Controls/Utils/DOMUtil';
+import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
 const itemActions: IItemAction[] = [
@@ -512,20 +512,20 @@ describe('Controls/_itemActions/Controller', () => {
     // T2. Активация и деактивация Swipe происходит корректно
     describe('activateSwipe(), deactivateSwipe() and getSwipeItem() ', () => {
         let stubGetElementsWidth: SinonStub;
-        let stubGetBlockWidth: SinonStub;
+        let stubGetWidthForCssClass: SinonStub;
 
         beforeEach(() => {
             stubGetElementsWidth = stub(DOMUtil, 'getElementsWidth');
             stubGetElementsWidth.callsFake((itemsHtml: string[], itemClass: string, considerMargins?: boolean) => (
                 itemsHtml.map((item) => 25)
             ));
-            stubGetBlockWidth = stub(DOMUtil, 'getBlockWidth');
-            stubGetBlockWidth.callsFake((content: string, blockClass: string, considerMargins?: boolean) => 0);
+            stubGetWidthForCssClass = stub(DOMUtil, 'getWidthForCssClass');
+            stubGetWidthForCssClass.callsFake((content: string, blockClass: string, considerMargins?: boolean) => 0);
         });
 
         afterEach(() => {
             stubGetElementsWidth.restore();
-            stubGetBlockWidth.restore();
+            stubGetWidthForCssClass.restore();
         });
 
         // T2.1. В коллекции происходит набор конфигурации для Swipe, если позиция itemActions не outside.

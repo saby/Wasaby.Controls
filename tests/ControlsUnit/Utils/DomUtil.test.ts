@@ -1,6 +1,6 @@
 import {stub} from 'sinon';
 import {assert} from 'chai';
-import {DOMUtil} from 'Controls/Utils/DOMUtil';
+import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
 function ClassList(): void {};
 ClassList.prototype = [];
@@ -59,18 +59,22 @@ describe('Controls/Utils/DOMUtil', () => {
                 },
                 // @ts-ignore
                 classList: new ClassList(),
-                getElementsByClassName: () => [fakeChild, fakeChild]
+                getElementsByClassName: () => [fakeChild, fakeChild],
+                appendChild: (child) => stub(),
+                getBoundingClientRect: () => ({
+                    width: 321,
+                    height: 10,
+                    top: 3,
+                    right: 3,
+                    bottom: 3,
+                    left: 3
+                })
             };
             // @ts-ignore
             createElementStub.withArgs('div').returns(fakeElement);
             appendChildStub = stub(document.body, 'appendChild');
             removeChildStub = stub(document.body, 'removeChild');
             getComputedStyleStub = stub(window, 'getComputedStyle');
-            // @ts-ignore
-            getComputedStyleStub.withArgs(fakeElement).returns({
-                marginLeft: '3px',
-                marginRight: '3px'
-            });
             // @ts-ignore
             getComputedStyleStub.withArgs(fakeChild).returns({
                 marginLeft: '2px',
@@ -104,20 +108,8 @@ describe('Controls/Utils/DOMUtil', () => {
             assert.deepEqual(result, [123, 123]);
         });
 
-        it ('getBlockWidth() should return size considering margins', () => {
-            const result = DOMUtil.getBlockWidth(
-                '',
-                'block-class',
-                true);
-            restoreAll();
-            assert.deepEqual(result, 327);
-        });
-
-        it ('getBlockWidth() should return size not considering margins', () => {
-            const result = DOMUtil.getBlockWidth(
-                '',
-                'block-class',
-                false);
+        it ('getWidthForCssClass() should return size not considering margins', () => {
+            const result = DOMUtil.getWidthForCssClass('block-class');
             restoreAll();
             assert.deepEqual(result, 321);
         });

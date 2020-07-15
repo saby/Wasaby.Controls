@@ -5,7 +5,7 @@ import * as rk from 'i18n!ControlsUnit';
 
 import { IItemAction } from 'Controls/_itemActions/interface/IItemActions';
 import { horizontalMeasurer } from 'Controls/_itemActions/measurers/HorizontalMeasurer';
-import { DOMUtil } from 'Controls/Utils/DOMUtil';
+import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
 describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
     it('needIcon', () => {
@@ -102,20 +102,20 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         ];
 
         let stubGetElementsWidth: SinonStub;
-        let stubGetBlockWidth: SinonStub;
+        let stubGetWidthForCssClass: SinonStub;
 
         beforeEach(() => {
             stubGetElementsWidth = stub(DOMUtil, 'getElementsWidth');
             stubGetElementsWidth.callsFake((itemsHtml: string[], itemClass: string, considerMargins?: boolean) => (
                 itemsHtml.map((item) => 25)
             ));
-            stubGetBlockWidth = stub(DOMUtil, 'getBlockWidth');
-            stubGetBlockWidth.callsFake((content: string, blockClass: string, considerMargins?: boolean) => 0);
+            stubGetWidthForCssClass = stub(DOMUtil, 'getWidthForCssClass');
+            stubGetWidthForCssClass.callsFake((content: string, blockClass: string, considerMargins?: boolean) => 0);
         });
 
         afterEach(() => {
             stubGetElementsWidth.restore();
-            stubGetBlockWidth.restore();
+            stubGetWidthForCssClass.restore();
         });
 
         // Если кол-во записей > 3, то показываем максимум 3 (если они влезли) и добавляем кнопку "ещё"
