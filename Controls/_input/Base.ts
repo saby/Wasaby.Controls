@@ -756,6 +756,12 @@ var Base = Control.extend({
             _private.callChangeHandler(this);
         }
     },
+    _cutHandler: function() {
+        // redefinition
+    },
+    _copyHandler: function() {
+        // redefinition
+    },
     /**
      * Event handler key up in native field.
      * @param {Object} event Event descriptor.
