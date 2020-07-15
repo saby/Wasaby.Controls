@@ -1,6 +1,7 @@
 <ws:template name="imageTemplate">
    <ws:partial template="wml!Controls/_listTemplates/DefaultImageTemplate"
                attr:class="controls-listTemplates_tableCellTemplate-image-theme-{{_options.theme}}"
+               viewMode="{{_options.viewMode}}"
                src="{{_options.itemData.item[_options.imageProperty]}}"/>
 </ws:template>
 
@@ -45,6 +46,7 @@
       <ws:partial
          template="itemContentTpl"
          imageProerty="{{_options.imagePorperty}}"
+         imageViewMode="{{_options.imageViewMode}}"
          scope="{{contentTemplate}}"/>
    </ws:contentTemplate>
 </ws:partial>
