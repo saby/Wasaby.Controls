@@ -262,6 +262,7 @@ define('Controls/interface/ISelectedCollection', [
     * @event Controls/interface/ISelectedCollection#itemClick Происходит при нажатии на элемент коллекции.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {RecordSet} item Элемент выбраной коллекции.
+    * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Дескриптор события мыши.
     *
     * @example
     * В следующем примере создается Controls/lookup:Selector и демонстрируется сценарий использования.
@@ -288,6 +289,7 @@ define('Controls/interface/ISelectedCollection', [
     * @event Controls/interface/ISelectedCollection#itemClick Occurs when clicking on a collection item.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {RecordSet} item Item selected collection.
+    * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
     *
     * @example
     * The following example creates Controls/lookup:Selector and shows how to handle the event.

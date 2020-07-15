@@ -133,7 +133,7 @@ define('Controls/interface/IDropdown', [], function() {
     * WML:
     * <pre>
     *    <Controls.dropdown:Button source="{{_source}}" displayProperty="title" keyProperty="id"
-    *       menuPopupOptions={{_menuPopupOptions}}/>
+    *       menuPopupOptions="{{_menuPopupOptions}}"/>
     * </pre>
     *
     * JS:

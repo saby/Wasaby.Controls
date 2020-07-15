@@ -1,5 +1,6 @@
 // @ts-ignore
 import {SbisService, DataSet, ICrud} from 'Types/source';
+import {RecordSet} from 'Types/collection';
 import {OptionsToPropertyMixin} from 'Types/entity';
 import CoreExtend = require('Core/core-extend');
 import Constants = require('Controls/_history/Constants');
@@ -8,6 +9,7 @@ import coreClone = require('Core/core-clone');
 import DataStorage from './DataStorage';
 import LoadPromisesStorage from './LoadPromisesStorage';
 import {Logger} from 'UI/Utils';
+import {detection} from 'Env/Env';
 
 var STORAGES_USAGE = {};
 
@@ -141,6 +143,14 @@ var _private = {
       if (STORAGES_USAGE[self._historyId] === 0) {
          DataStorage.delete(self._historyId);
       }
+   },
+
+   createRecordSet(data: object): RecordSet {
+      return new RecordSet({
+         rawData: data,
+         keyProperty: 'ObjectId',
+         adapter: 'adapter.sbis'
+      });
    }
 };
 
@@ -314,7 +324,7 @@ var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin], {
       function getHistoryDataSet() {
          return new DataSet({
             rawData: self.getHistory(historyId)
-         })
+         });
       }
 
       if (storageDef) {
@@ -324,7 +334,22 @@ var Service = CoreExtend.extend([ICrud, OptionsToPropertyMixin], {
             resultDef.callback(getHistoryDataSet());
          });
       } else if (!storageDef && !storageData) {
-         resultDef = _private.load(this);
+         /**
+          * В retailOffline нет сервиса истории и его там нельзя вызывать, в таком случае работаем без истории вообще.
+          * FIXME: https://online.sbis.ru/opendoc.html?guid=f0e4521b-873a-4b1a-97fe-2ecbb12409d1
+          */
+         if (detection.retailOffline) {
+            const emptyData = new DataSet({
+               rawData: {
+                  pinned: _private.createRecordSet({}),
+                  frequent: _private.createRecordSet({}),
+                  recent: _private.createRecordSet({})
+               }
+            });
+            resultDef = Deferred.success(emptyData);
+         } else {
+            resultDef = _private.load(this);
+         }
          LoadPromisesStorage.write(historyId, resultDef);
 
          resultDef.addBoth((res) => {

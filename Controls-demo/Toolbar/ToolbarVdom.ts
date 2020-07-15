@@ -257,6 +257,10 @@ class ToolbarVdom extends Control<IControlOptions> {
             parent: null
          }
       ];
+      this._source1 = this._getMemorySource(this._defaultItemsWithoutToolbutton);
+      this._source2 = this._getMemorySource(this._defaultItems);
+      this._source3 = this._getMemorySource(this._flatItems);
+      this._source4 = this._getMemorySource(this._defaultItemsWithoutToolbutton);
    }
 
    private _itemClick(event, item): void {

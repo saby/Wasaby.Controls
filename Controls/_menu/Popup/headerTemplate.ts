@@ -6,7 +6,7 @@ class Header extends Control<IControlOptions> {
 
     static _theme: string[] = ['Controls/menu'];
 
-    static getDefaultOptions() {
+    static getDefaultOptions(): object {
         return {
             iconSize: 'm'
         };

@@ -26,6 +26,8 @@ export interface ILoadingIndicatorOptions extends IControlOptions {
  */
 export default interface ILoadingIndicator {
     readonly '[Controls/_LoadingIndicator/interface/ILoadingIndicator]': boolean;
+    show(config: ILoadingIndicatorOptions, waitPromise: Promise<any>): string;
+    hide(id?: string): void;
 }
 
 /*

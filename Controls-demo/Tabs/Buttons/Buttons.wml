@@ -44,6 +44,14 @@
                 source="{{_source5}}"
         />
     </div>
+    <div class="separator">Ни одной выбранной вкладки</div>
+    <div class="demo-TabButtons ControlsDemo-Tabs__custom">
+        <Controls.tabs:Buttons
+                bind:selectedKey='SelectedKeyNull'
+                keyProperty="id"
+                source="{{_source1}}"
+        />
+    </div>
     <div class="separator">Прикладной контент перед вкладками</div>
     <div class="demo-TabButtons ControlsDemo-Tabs__contentBefore">
         <div class="demo-TabButtons-container controls-Tabs__item-underline_theme-{{_options.theme}}">

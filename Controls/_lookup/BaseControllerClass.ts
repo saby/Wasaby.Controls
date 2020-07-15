@@ -7,7 +7,6 @@ import {Logger} from 'UI/Utils';
 import ToSourceModel = require('Controls/Utils/ToSourceModel');
 import {isEqual} from 'Types/object';
 import {object} from 'Types/util';
-import * as mStubs from 'Core/moduleStubs';
 
 type Key = string|number|null;
 export type SelectedItems = RecordSet|List<Model>;
@@ -215,8 +214,8 @@ export default class LookupBaseControllerClass {
 
     private _getHistoryService(): Promise<unknown> {
         if (!this._historyServiceLoad) {
-            this._historyServiceLoad =  mStubs.require(['Controls/suggestPopup'], (loadedModules) => {
-                return loadedModules.LoadService({historyId: this._options.historyId});
+            this._historyServiceLoad =  import('Controls/suggestPopup').then(({LoadService}) => {
+                return LoadService({historyId: this._options.historyId});
             });
         }
         return this._historyServiceLoad;

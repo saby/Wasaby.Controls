@@ -140,19 +140,20 @@ define(['Controls/lookup', 'Types/entity', 'Types/collection', 'Controls/popup']
             },
             stopPropagation: function() {
                propagationStopped = true;
-            }
+            },
+            nativeEvent: 'nativeEvent'
          };
 
          sandbox.stub(selectedCollection, '_notify');
 
          currentSelector = '.js-controls-SelectedCollection__item__caption';
          selectedCollection._itemClick(event, model);
-         sinon.assert.calledWith(selectedCollection._notify, 'itemClick', [model]);
+         sinon.assert.calledWith(selectedCollection._notify, 'itemClick', [model, event.nativeEvent]);
          assert.isTrue(propagationStopped);
 
          currentSelector = '.js-controls-SelectedCollection__item__cross';
          selectedCollection._itemClick(event, model);
-         sinon.assert.calledWith(selectedCollection._notify, 'crossClick', [model]);
+         sinon.assert.calledWith(selectedCollection._notify, 'crossClick', [model, event.nativeEvent]);
          assert.isTrue(propagationStopped);
 
          sandbox.restore();
