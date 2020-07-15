@@ -436,7 +436,7 @@ const _private = {
         if (this.hasMarkerController(self)) {
             self._markedKey = this.getMarkerController(self).restoreMarker();
         } else {
-            if (options.markerVisibility !== 'hidden' && options.markedKey) {
+            if (options.markerVisibility !== 'hidden') {
                 this.getMarkerController(self, options);
             }
         }
@@ -497,7 +497,7 @@ const _private = {
     },
 
     setMarkedKey(self, key: string | number): void {
-        if (this.hasMarkerController(self) || (self._options && self._options.markerVisibility !== 'hidden')) {
+        if (this.hasMarkerController(self)) {
             self._markedKey = this.getMarkerController(self).setMarkedKey(key);
         }
     },
@@ -2839,7 +2839,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasMarkerController(this)) {
             _private.updateMarkerController(this, newOptions);
         } else {
-            if (newOptions.markerVisibility !== 'hidden' && newOptions.markedKey) {
+            if (newOptions.markerVisibility !== 'hidden') {
                 _private.getMarkerController(this, newOptions);
             }
         }
