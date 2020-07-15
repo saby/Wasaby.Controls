@@ -2,9 +2,9 @@
     <div class="controls-Scroll-Container">
         <ws:partial template="{{_baseTemplate}}"
                     _options="{{_options}}"
+                    _scrollCssClass="{{_scrollCssClass}}"
                     attr:style="{{_scrollbars.scrollContainerStyles}}"
-                    attr:class="controls-BlockLayout__blockGroup_theme-{{_options.theme}} controls-BlockLayout__blockGroup_theme-{{_options.theme}}
-                            {{_scrollbars.scrollContainerClasses}}"
+                    attr:class="controls-BlockLayout__blockGroup_theme-{{_options.theme}} controls-BlockLayout__blockGroup_theme-{{_options.theme}}"
                     on:intersectionObserverRegister="_intersectionObserverRegisterHandler()"
                     on:intersectionObserverUnregister="_intersectionObserverUnregisterHandler()"
                     on:keydown="_keydownHandler()"/>
