@@ -6,9 +6,6 @@ var ItemsUtil = {
     getDefaultDisplayFlat: function(items, cfg, filter) {
         var projCfg = {};
         projCfg.keyProperty = cfg.keyProperty;
-        if (cfg.groupMethod) {
-            projCfg.group = cfg.groupMethod;
-        }
         if (cfg.groupingKeyCallback) {
             projCfg.group = cfg.groupingKeyCallback;
         }
@@ -23,6 +20,9 @@ var ItemsUtil = {
         projCfg.unique = true;
         projCfg.filter = filter;
         projCfg.compatibleReset = true;
+        projCfg.collapsedGroups = cfg.collapsedGroups;
+        projCfg.groupProperty = cfg.groupProperty;
+        projCfg.theme = cfg.theme;
         return displayLib.Abstract.getDefaultDisplay(items, projCfg);
     },
 

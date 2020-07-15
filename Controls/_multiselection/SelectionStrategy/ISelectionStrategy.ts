@@ -60,9 +60,9 @@ export default interface ISelectionStrategy {
     *
     * @param selection текущее состояние выбранных ключей
     * @param limit ограничивает максимальное число выбранных элементов
-    * @return {Map<boolean|null, Array<CollectionItem<Model>>>} мапа, в которой для каждого состояния хранится соответствующий список элементов
+    * @return {Map<boolean|null, Model[]>} мапа, в которой для каждого состояния хранится соответствующий список элементов
     */
-   getSelectionForModel(selection: ISelection, limit?: number): Map<boolean|null, Array<CollectionItem<Model>>>;
+   getSelectionForModel(selection: ISelection, limit?: number): Map<boolean|null, Model[]>;
 
    /**
     * Получить количество выбранных элементов

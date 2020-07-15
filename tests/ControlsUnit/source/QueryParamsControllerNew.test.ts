@@ -125,6 +125,9 @@ describe('Controls/_source/QueryParamsController', () => {
          it('setState with singleNavigation', () => {
             queryParamsWithPageController.setState(modelMockWithMultiNavigation);
             strictEqual(queryParamsWithPageController.getAllDataCount(), true);
+
+            queryParamsWithPageController.setState(modelMockWithMultiNavigation, 2);
+            strictEqual(queryParamsWithPageController.getAllDataCount(2), false);
          });
 
       });
