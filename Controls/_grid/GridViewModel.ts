@@ -1601,6 +1601,7 @@ var
                 const backgroundStyle = current.backgroundStyle || current.style || 'default';
                 const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
                 const theme = self._options.theme;
+                const style = current.style || 'default';
 
                 result += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
