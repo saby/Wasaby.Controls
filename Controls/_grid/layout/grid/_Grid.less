@@ -213,6 +213,8 @@
 }
 
 // Хак для новой версии хрома (84 dev), заведён issue в поддержке хрома. В IE ломает вёрстку в автотестах
+// https://online.sbis.ru/opendoc.html?guid=2f994b36-59aa-49ba-8c49-d1a6c4e9084f
+// https://bugs.chromium.org/p/chromium/issues/detail?id=1103592
 .ws-is-chrome {
    .controls-Grid__row-cell__content,
    .controls-Grid__row-cell_colspaned {
@@ -713,7 +715,7 @@
 }
 
 .ws-is-hover {
-   
+
    .controls-Grid__row_highlightOnHover_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName},
    .controls-Grid__row_highlightOnHover_masterClassic_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
       background-color: @master_item_hover_background-color_list;
