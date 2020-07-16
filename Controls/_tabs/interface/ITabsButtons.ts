@@ -12,6 +12,8 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
     leftTemplateProperty?: string;
     rightTemplateProperty?: string;
     tabSpaceTemplate?: TemplateFunction;
+    itemRightTemplate?: TemplateFunction;
+    itemLeftTemplate?: TemplateFunction;
 }
 
 /**
