@@ -387,7 +387,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     protected _mouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
-        if (isLeftMouseButton(event)) {
+        if (!isLeftMouseButton(event)) {
             return;
         }
         this._showMenu(event);
@@ -411,7 +411,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             if (!this._dependenciesTimer) {
                 this._dependenciesTimer = new DependencyTimer();
             }
-            this._dependenciesTimer.start(this._loadDependencies);
+            this._dependenciesTimer.start(this._loadDependencies.bind(this));
         }
     }
     protected _mouseLeaveHandler(): void {
