@@ -131,15 +131,15 @@ export function cssStyleGeneration(options: IButtonControlOptions, hasMsg: boole
  * @example
  * Кнопка в режиме отображения 'linkButton'.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="linkButton" size="xl"/>
+ *    <Controls.buttons:Button caption="Send document" buttonStyle="primary" viewMode="linkButton" fontSize="3xl"/>
  * </pre>
  * Кнопка в режиме отображения 'toolButton'.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="danger" viewMode="toolButton"/>
+ *    <Controls.buttons:Button caption="Send document" buttonStyle="danger" viewMode="toolButton"/>
  * </pre>
  * Кнопка в режиме отображения 'button'.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="success" viewMode="button"/>
+ *    <Controls.buttons:Button caption="Send document" buttonStyle="success" viewMode="button"/>
  * </pre>
  * @see Size
  */
@@ -154,15 +154,15 @@ export function cssStyleGeneration(options: IButtonControlOptions, hasMsg: boole
  * @example
  * Button with 'link' viewMode.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.buttons:Button caption="Send document" buttonStyle="primary" viewMode="link" fontSize="3xl"/>
  * </pre>
  * Button with 'toolButton' viewMode.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="danger" viewMode="toolButton"/>
+ *    <Controls.buttons:Button caption="Send document" buttonStyle="danger" viewMode="toolButton"/>
  * </pre>
  * Button with 'button' viewMode.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="success" viewMode="button"/>
+ *    <Controls.buttons:Button caption="Send document" buttonStyle="success" viewMode="button"/>
  * </pre>
  * @see Size
  */
