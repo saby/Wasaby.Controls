@@ -1277,6 +1277,22 @@ const _private = {
         return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
 
+    /**
+     * Закрывает меню опций записи у активной записи, если она есть
+     * @param self
+     * @param items
+     */
+    closeItemActionsMenuForActiveItem(self: typeof BaseControl, items: Array<CollectionItem<Model>>): void {
+        const activeItem = self._itemActionsController.getActiveItem();
+        if (activeItem && items && items.find((item) => {
+            const itemContents = _private.getPlainItemContents(item);
+            const activeItemContents = _private.getPlainItemContents(item);
+            return itemContents?.getKey() === activeItemContents?.getKey();
+        })) {
+            _private.closeActionsMenu(self);
+        }
+    },
+
     onListChange(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
@@ -1296,13 +1312,7 @@ const _private = {
                 }
             }
             if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
-                const itemWithShownMenu = self._itemActionsController.getActiveItem();
-                if (itemWithShownMenu &&
-                    removedItems.find((item) => (
-                        item.getContents().getKey() === itemWithShownMenu.getContents().getKey()
-                    ))) {
-                    _private.closeActionsMenu(self);
-                }
+                _private.closeItemActionsMenuForActiveItem(self, removedItems);
             }
 
             if (self._selectionController) {
