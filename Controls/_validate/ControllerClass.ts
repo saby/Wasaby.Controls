@@ -1,10 +1,6 @@
 import {Logger} from 'UI/Utils';
 import {default as ValidateContainer, IValidateConfig} from 'Controls/_validate/Container';
-
-interface IValidateResult {
-    [key: number]: boolean;
-    hasErrors?: boolean;
-}
+import IValidateResult from 'Controls/_validate/interfaces/IValidateResult';
 
 /**
  * Класс, регулирующий валидацию формы.
