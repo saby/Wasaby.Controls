@@ -44,7 +44,7 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
    protected _clearButtonVisible = null;
 
    protected _defaultFontColorStyle: string = 'link';
-   protected _defaultFontSize: string = 'l';
+   protected _defaultFontSize: string;
 
    constructor(options: ILinkViewControlOptions) {
       super(arguments);
@@ -55,6 +55,7 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
    }
 
    _beforeMount(options: ILinkViewControlOptions): void {
+      this._defaultFontSize = options.viewMode === 'selector'? 'l' : 'm';
       this._rangeModel.update(options);
       this._updateCaption(options);
       this._updateStyles({}, options);
