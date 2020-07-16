@@ -624,14 +624,14 @@ define([
             assert.isUndefined(item.isDragging);
 
             lvm.setDraggedItems(dragItemData, dragEntity);
-            lvm._markedKey = 2;
+            lvm.setMarkedKey(2, true);
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.isTrue(item.isDragging);
             assert.isTrue(item.isVisible);
             assert.isTrue(item.isStickedMasterItem);
             assert.isFalse(item.hasMultiSelect);
 
-            lvm._markedKey = 3;
+            lvm.setMarkedKey(3, true);
             item = lvm.getItemDataByItem(lvm.getItemById('3', 'id'));
             assert.isUndefined(item.isDragging);
             assert.isTrue(item.isStickedMasterItem);

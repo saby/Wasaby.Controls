@@ -151,7 +151,7 @@ describe('Controls/list_clean/ListViewModel', () => {
                 { start: 0, current: 0 },
                 { start: 0, current: 0 }
             ]);
-            listViewModel.setMarkedKey(2);
+            listViewModel.setMarkedKey(2, true);
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
                 { start: 0, current: 0 },
@@ -174,7 +174,7 @@ describe('Controls/list_clean/ListViewModel', () => {
                 { start: 2, current: 2 },
                 { start: 4, current: 4 }
             ]);
-            listViewModel.setMarkedKey(2);
+            listViewModel.setMarkedKey(2, true);
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
                 { start: 2, current: 1 },
@@ -195,7 +195,7 @@ describe('Controls/list_clean/ListViewModel', () => {
                 { start: 0, current: 0 },
                 { start: 0, current: 0 }
             ]);
-            listViewModel.setMarkedKey(2);
+            listViewModel.setMarkedKey(2, true);
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
                 { start: 0, current: 0 },
@@ -218,7 +218,7 @@ describe('Controls/list_clean/ListViewModel', () => {
                 { start: 2, current: 2 },
                 { start: 4, current: 4 }
             ]);
-            listViewModel.setMarkedKey(2);
+            listViewModel.setMarkedKey(2, true);
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
                 { start: 2, current: 1 },
@@ -242,7 +242,7 @@ describe('Controls/list_clean/ListViewModel', () => {
                 { start: 2, current: 2 },
                 { start: 4, current: 4 }
             ]);
-            listViewModel.setMarkedKey(2);
+            listViewModel.setMarkedKey(2, true);
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
                 { start: 2, current: 2 },
@@ -266,7 +266,7 @@ describe('Controls/list_clean/ListViewModel', () => {
                 { start: 2, current: 2 },
                 { start: 4, current: 4 }
             ]);
-            listViewModel.setMarkedKey(2);
+            listViewModel.setMarkedKey(2, true);
             checkCase(listViewModel, [
                 { start: 0, current: 0 },
                 { start: 2, current: 2 },
