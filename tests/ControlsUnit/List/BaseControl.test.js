@@ -4544,6 +4544,25 @@ define([
             assert.isFalse(fakeEvent.propagating);
          });
 
+         // Пытаемся показать контекстное меню, если был инициализирован itemActionsController
+         it('should not display context menu when itemActionsController is not initialized', () => {
+            const spyOpenItemActionsMenu = sinon.spy(lists.BaseControl._private, 'openItemActionsMenu');
+            const fakeEvent = initFakeEvent();
+            instance._onItemContextMenu(null, item, fakeEvent);
+            sinon.assert.calledOnce(spyOpenItemActionsMenu);
+            spyOpenItemActionsMenu.restore();
+         });
+
+         // Не показываем наше контекстное меню, если не был инициализирован itemActionsController
+         it('should not display context menu when itemActionsController is not initialized', () => {
+            const spyOpenItemActionsMenu = sinon.spy(lists.BaseControl._private, 'openItemActionsMenu');
+            const fakeEvent = initFakeEvent();
+            instance._itemActionsController = undefined;
+            instance._onItemContextMenu(null, item, fakeEvent);
+            sinon.assert.notCalled(spyOpenItemActionsMenu);
+            spyOpenItemActionsMenu.restore();
+         });
+
          // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
          it('should correctly work with breadcrumbs', async () => {
             const fakeEvent = initFakeEvent();

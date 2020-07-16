@@ -6,7 +6,7 @@
    controls-StickyHeader_position" style="{{_getStyle() + (_options.style || '')}}">
    <!--We use visibility style instead of "if" statement to prevent jumps when scrolling on iPad-->
    <ws:if data="{{_isShadowVisible('top') || _isMobileIOS}}">
-      <div class="controls-Scroll__shadow{{_isSafari13 || _isIOSChrome? '-safari13'}} controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal
+      <div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal
                   {{ !_isShadowVisible('top') && _isMobileIOS ? ' ws-invisible' }}"
             style="{{_topShadowStyle}}"></div>
    </ws:if>
@@ -22,7 +22,7 @@
    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom" style="{{_getObserverStyle('bottom')}}"></div>
    <!--We use visibility style insted of "if" statement to prevent jumps when scrolling on iPad-->
    <ws:if data="{{_isShadowVisible('bottom') || _isMobileIOS}}">
-      <div class="controls-Scroll__shadow{{_isSafari13 || _isIOSChrome? '-safari13'}} controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal
+      <div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal
                   {{ !_isShadowVisible('bottom') && _isMobileIOS ? ' ws-invisible' }}"
           style="{{_bottomShadowStyle}}"
           name="shadowBottom"></div>
