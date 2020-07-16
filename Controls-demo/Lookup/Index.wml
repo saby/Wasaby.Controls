@@ -197,7 +197,6 @@
                    source="{{_eqiupmentSource}}"
                    searchParam="title"
                    keyProperty="id"
-                   multiSelect="{{true}}"
                    maxVisibleItems="3"
                    navigation="{{_navigation}}"
                    selectorTemplate="{{_selectorTemplateEqiupment}}"

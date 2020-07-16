@@ -125,9 +125,10 @@
    </ws:if>
    <!-- сюда попадаем только в случае застиканной записи в мастер или мастер классик, константа стиля находится в itemData.style -->
    <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{itemData.style + '_sticked'}}"
-                          attr:class="{{currentColumn.classList.base}}
-                           {{ itemData.shouldHighlightRow(marker) ? itemData.getSelectedClasses() }}
-                           {{currentColumn.classList.columnScroll}}
+                                 mode="{{stickyMode}}"
+                                 attr:class="{{currentColumn.classList.base}}
+                                      {{ itemData.shouldHighlightRow(marker) ? itemData.getSelectedClasses() }}
+                                      {{currentColumn.classList.columnScroll}}
                                       {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
                                       {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
                                       {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + _options.theme}}
@@ -151,7 +152,10 @@
          <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
          {{itemData.resetColumnIndex()}}
          <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
-            <ws:partial template="stickyCell" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}" attr:class="{{className}}"/>
+            <ws:partial template="stickyCell"
+                        stickyMode="stackable"
+                        attr:key="{{itemData.getCurrentColumnKey()}}"
+                        currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}" attr:class="{{className}}"/>
          </ws:for>
       </div>
    </Controls.scroll:Group>

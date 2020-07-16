@@ -33,10 +33,11 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     // private _edgeObservers: IntersectionObserver[] = [];
 
     private _scrollLockedPosition: number = null;
+    protected _scrollCssClass: string;
 
     protected _tmplNotify: tmplNotify;
 
-    _beforeMount(): void {
+    _beforeMount(options: IContainerBaseOptions): void {
         this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
         this._resizeObserverSupported = typeof window !== 'undefined' && window.ResizeObserver;
         this._registrars.scrollStateChanged = new RegisterClass({register: 'scrollStateChanged'});
@@ -44,6 +45,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._registrars.viewportResize = new RegisterClass({register: 'viewportResize'});
         this._registrars.scrollResize = new RegisterClass({register: 'scrollResize'});
         this._registrars.scrollMove = new RegisterClass({register: 'scrollMove'});
+        this._scrollCssClass = this._getScrollContainerCssClass(options);
     }
 
     _afterMount(): void {
@@ -56,6 +58,12 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             this._lockScrollPositionUntilKeyboardShown = this._lockScrollPositionUntilKeyboardShown.bind(this);
             Bus.globalChannel().subscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
          }
+    }
+
+    _beforeUpdate(options: IContainerBaseOptions) {
+        if (options.scrollMode !== this._options.scrollMode) {
+            this._scrollCssClass = this._getScrollContainerCssClass(options);
+        }
     }
 
     _beforeUnmount(): void {
@@ -263,6 +271,12 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 this.setScrollTop(currentScrollTop + clientHeight);
             }
         }
+    }
+
+    protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
+        return options.scrollMode === SCROLL_MODE.VERTICAL ?
+                   'controls-Scroll-ContainerBase__scroll_vertical' :
+                   'controls-Scroll-ContainerBase__scroll_verticalHorizontal'
     }
 
     static _theme: string[] = ['Controls/scroll'];

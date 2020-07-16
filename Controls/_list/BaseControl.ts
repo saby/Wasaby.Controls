@@ -1464,9 +1464,17 @@ const _private = {
      */
     closeActionsMenu(self: any, currentPopup?: any): void {
         if (self._itemActionsMenuId) {
-            _private.closePopup(self, currentPopup ? currentPopup.id : null);
-            self._itemActionsController.deactivateSwipe();
-            self._listViewModel.setActiveItem(null);
+            const itemActionsMenuId = self._itemActionsMenuId;
+            _private.closePopup(self, currentPopup ? currentPopup.id : itemActionsMenuId);
+            // При быстром клике правой кнопкой обработчик закрытия меню и setActiveItem(null)
+            // вызывается позже, чем устанавливается новый activeItem. в результате, при попытке
+            // взаимодействия с опциями записи, может возникать ошибка, т.к. activeItem уже null.
+            // Для обхода проблемы ставим условие, что занулять ItemAction нужно только тогда, когда
+            // закрываем самое последнее открытое меню.
+            if (!currentPopup || itemActionsMenuId === currentPopup.id) {
+                self._listViewModel.setActiveItem(null);
+                self._itemActionsController.deactivateSwipe();
+            }
         }
     },
 
@@ -1518,19 +1526,6 @@ const _private = {
         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
             groupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
         }
-    },
-
-    prepareCollapsedGroups(config) {
-        const
-            result = new Deferred();
-        if (config.historyIdCollapsedGroups || config.groupHistoryId) {
-            groupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
-                result.callback(collapsedGroupsFromStore || config.collapsedGroups);
-            });
-        } else {
-            result.callback(config.collapsedGroups);
-        }
-        return result;
     },
 
     getSortingOnChange(currentSorting, propName) {
@@ -2421,8 +2416,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _beforeMount(newOptions, context, receivedState: IReceivedState = {}) {
         const self = this;
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
-        const receivedError = receivedState.errorConfig;
-        const receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
         _private.checkRequiredOptions(newOptions);
@@ -2438,7 +2431,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.createEditInPlace(self, newOptions);
         }
 
-        return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
+        return this._prepareGroups(newOptions, (collapsedGroups) => {
+            return this._prepareItemsOnMount(self, newOptions, receivedState, collapsedGroups);
+        });
+    },
+
+    _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
+        const receivedError = receivedState.errorConfig;
+        const receivedData = receivedState.data;
             let viewModelConfig = {...newOptions};
             if (collapsedGroups) {
                 viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
@@ -2564,12 +2564,28 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         return getState(result);
                     }
                 });
-            } else  {
+            } else {
                 _private.createScrollController(self, newOptions);
             }
-        });
-
     },
+
+   _prepareGroups(newOptions, callback: Function) {
+       let result = null;
+       if (newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId) {
+           result = new Deferred();
+           groupUtil.restoreCollapsedGroups(newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId).addCallback(function (collapsedGroupsFromStore) {
+               result.callback(collapsedGroupsFromStore || newOptions.collapsedGroups);
+           });
+       } else if (newOptions.collapsedGroups) {
+           result = new Deferred();
+           result.callback(newOptions.collapsedGroups);
+       }
+       if (result) {
+           return result.addCallback(callback);
+       } else {
+           return callback(undefined);
+       }
+   },
 
     _getInertialScrolling(): InertialScrolling {
         if (!this._inertialScrolling) {
@@ -2871,12 +2887,27 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
-
-            // return result here is for unit tests
-            return _private.reload(self, newOptions).addCallback(() => {
-                this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
-                _private.updateInitializedItemActions(this, newOptions);
-            });
+            if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
+                return this._prepareGroups(newOptions, (collapsedGroups) => {
+                    self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                    return _private.reload(self, newOptions).addCallback(() => {
+                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
+                        _private.updateInitializedItemActions(this, newOptions);
+                    });
+                });
+            } else {
+                // return result here is for unit tests
+                return _private.reload(self, newOptions).addCallback(() => {
+                    this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
+                    _private.updateInitializedItemActions(this, newOptions);
+                });
+            }
+        } else {
+            if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
+                this._prepareGroups(newOptions, (collapsedGroups) => {
+                    self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                });
+            }
         }
         // Если поменялись ItemActions, то закрываем свайп
         if (newOptions.itemActions !== this._options.itemActions) {
@@ -3776,14 +3807,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate.
         // Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала.
         // В таком случае выводим индикатор над списком.
+        // FIXME: https://online.sbis.ru/opendoc.html?guid=886c7f51-d327-4efa-b998-7cf94f5467cb
+        // не должно быть завязки на горизонтальный скролл.
         if (position === 'beforeEmptyTemplate') {
             return this._loadingIndicatorState === 'up' || (
-                this._loadingIndicatorState === 'all' && this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel)
+                this._loadingIndicatorState === 'all' && (
+                    this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) ||
+                    !!this._children.listView && !!this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible()
+                )
             );
         } else if (position === 'afterList') {
             return this._loadingIndicatorState === 'down';
         } else if (position === 'inFooter') {
-            return this._loadingIndicatorState === 'all' && !this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel);
+            return this._loadingIndicatorState === 'all' &&
+                !this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) &&
+                !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
         }
         return false;
     },
