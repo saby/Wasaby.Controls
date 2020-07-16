@@ -4654,6 +4654,31 @@ define([
             assert.equal(activeItem, null);
          });
 
+         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто удалён из списка
+         // Код должен работать согласно https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
+         it('should close context menu if its owner was removed', function() {
+            instance._itemActionsMenuId = 'popup-id-0';
+            instance._itemActionsController.setActiveItem(item);
+            instance.getViewModel()
+               ._notify(
+                  'onListChange',
+                  'collectionChanged',
+                  collection.IObservable.ACTION_REMOVE,
+                  null,
+                  null,
+                  [{
+                     getContents: () => {
+                        return {
+                           getKey: () => 2
+                        };
+                     }
+                  }],
+                  null);
+
+            assert.isNull(instance._itemActionsMenuId);
+            assert.isNull(instance._itemActionsController.getActiveItem());
+         });
+
          // Должен сбрасывать activeItem Только после того, как мы закрыли последнее меню.
          describe ('Multiple clicks to open context menu', () => {
             let fakeEvent;

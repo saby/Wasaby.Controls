@@ -1296,7 +1296,11 @@ const _private = {
                 }
             }
             if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
-                if (removedItems.find((item) => item.getContents().getId() === self._itemWithShownMenu.getId())) {
+                const itemWithShownMenu = self._itemActionsController.getActiveItem();
+                if (itemWithShownMenu &&
+                    removedItems.find((item) => (
+                        item.getContents().getKey() === itemWithShownMenu.getContents().getKey()
+                    ))) {
                     _private.closeActionsMenu(self);
                 }
             }
