@@ -49,6 +49,9 @@
                         itemData="{{itemData}}"
                         highlightOnHover="{{highlightOnHover}}"/>
         </ws:else>
+        <ws:else data="{{itemData.columnScroll && itemData.itemActionsPosition === 'custom'}}">
+            <div></div>
+        </ws:else>
     </ws:if>
 </ws:template>
 <ws:if data="{{itemData.isStickedMasterItem}}">
