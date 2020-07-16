@@ -440,6 +440,7 @@ export interface IEditingOptions {
     notify?: any;
     forceUpdate?: Function;
     listView?: any;
+    updateMarkedKey: Function;
     updateItemActions: Function;
     isDestroyed: Function;
     theme: String;
@@ -847,6 +848,8 @@ export default class EditInPlace {
 
             listViewModel._setEditingItemData(this._editingItemData, useNewModel);
         }
+
+        this._options.updateMarkedKey(item.getKey());
 
         listViewModel.subscribe('onCollectionChange', this._updateIndex);
     }
