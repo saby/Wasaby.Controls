@@ -38,6 +38,7 @@
       <ws:else>
          <ws:partial template="{{currentColumn.template}}"
                      editArrowTemplate="{{editArrowTemplate}}"
+                     itemActionsTemplate="{{itemActionsTemplate}}"
                      ladderWrapper="{{currentColumn.ladderWrapper}}"
                      stickyProperty="{{stickyProperty}}"
                      attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}

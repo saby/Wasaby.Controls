@@ -3,6 +3,7 @@
             name="view"
             scope="{{_options}}"
             items="{{_items}}"
+            source="{{_options.suggestSource || _options.source}}"
             on:showSelector="_showSelectorHandler()"
             on:addItem="_addItemHandler()"
             on:removeItem="_removeItemHandler()"
