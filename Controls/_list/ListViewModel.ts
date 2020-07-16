@@ -61,15 +61,6 @@ var _private = {
         return self.getItemById(markedKey, self.getKeyProperty());
     },
 
-    isMarked(self: {_markedKey: number | string}, current: {key: number | string}): boolean {
-        const markedItem = _private.getItemByMarkedKey(self, self._markedKey);
-        if (markedItem) {
-            const item = markedItem.getContents ? markedItem.getContents() : markedItem;
-            return item.getId ? item.getId() === current.key : false;
-        }
-        return false;
-    },
-
     getMultiSelectClassList: function (current): string {
         let
             checkboxOnHover = current.multiSelectVisibility === 'onhover',
@@ -202,8 +193,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.itemActions = {};
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
-        // TODO USE itemsModelCurrent.isSelected()
-        itemsModelCurrent._isSelected = _private.isMarked(this, itemsModelCurrent);
+        itemsModelCurrent._isSelected = itemsModelCurrent.dispItem.isMarked();
         itemsModelCurrent.multiSelectStatus = itemsModelCurrent.isSelected();
         itemsModelCurrent.searchValue = this._options.searchValue;
         itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
@@ -223,8 +213,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
-            const canDrawMarker = marker !== false && itemsModelCurrent.markerVisibility !== 'hidden' && !self._editingItemData;
-            return canDrawMarker && _private.isMarked(self, itemsModelCurrent);
+            return marker !== false && !itemsModelCurrent.dispItem.isEditing() && itemsModelCurrent.dispItem.isMarked();
         };
 
         itemsModelCurrent.getMarkerClasses = (): string => {
