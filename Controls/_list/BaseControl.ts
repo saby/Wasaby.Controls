@@ -3450,8 +3450,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // При редактировании по месту маркер появляется только если в списке больше одной записи.
         // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-        const canBeMarked = result !== false && (!this._options.editingConfig
-           || (this._options.editingConfig && this._items.getCount() > 1));
+        const canBeMarked = result !== false
+           && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
 
         if (canBeMarked) {
             this.setMarkedKey(key);

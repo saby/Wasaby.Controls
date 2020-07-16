@@ -721,8 +721,8 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
         // Это событие занотифаили на mouseUp
         e.stopPropagation();
     },
-    _itemMouseDown(event: SyntheticEvent, itemData: any, clickEvent: SyntheticEvent): void {
-        this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
+    _itemMouseDown(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent): void {
+        this._mouseDownItemKey = item.getKey();
     },
     _itemMouseUp(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent, columnIndex?: number): boolean {
         if (this._mouseDownItemKey !== item.getKey()) {

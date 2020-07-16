@@ -607,8 +607,8 @@ var
          // but is not called, because the template has no reactive properties.
          this._forceUpdate();
       },
-      _itemMouseDown(event, itemData, clickEvent): void {
-         this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
+      _itemMouseDown(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent): void {
+         this._mouseDownItemKey = item.getKey();
       },
       _itemMouseUp(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent, columnIndex?: number): boolean {
          if (this._mouseDownItemKey !== item.getKey()) {
