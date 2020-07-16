@@ -618,7 +618,6 @@ var
         _columns: [],
         _curColumnIndex: 0,
 
-        _lastItemKey: undefined,
         _headerRows: [],
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
@@ -672,7 +671,6 @@ var
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
             this._onCollectionChangeFn = function(event, action) {
-                this._updateLastItemKey();
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
@@ -691,7 +689,6 @@ var
                 this._isMultiHeader = this.isMultiHeader(this._options.header);
             }
             this._setHeader(this._options.header);
-            this._updateLastItemKey();
         },
         _isSupportLadder(ladderProperties: []): boolean {
             return isSupportLadder(ladderProperties);
@@ -705,11 +702,11 @@ var
             return this._model.getTheme();
         },
 
-        _updateLastItemKey(): void {
+        /*_updateLastItemKey(): void {
             if (this.getItems()) {
                 this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this.getKeyProperty());
             }
-        },
+        },*/
 
         _updateIndexesCallback(): void {
             this._ladder = _private.prepareLadder(this);
@@ -1754,7 +1751,6 @@ var
 
         setItems(items, cfg): void {
             this._model.setItems(items, cfg);
-            this._updateLastItemKey();
         },
 
         setItemTemplateProperty: function(itemTemplateProperty) {
@@ -1831,13 +1827,13 @@ var
         _calcItemVersion(item, key, index): string {
             let version: string = this._model._calcItemVersion(item, key) + (item.getId ? item.getId() : '');
 
-            if (this._lastItemKey === key) {
-                version = 'LAST_ITEM_' + version;
+            // if (this._lastItemKey === key) {
+            version = 'LAST_ITEM_' + version;
 
-                if (this._options.rowSeparatorSize) {
-                    version = 'WITH_SEPARATOR_' + `${this._model.getHasMoreData()}_` + version;
-                }
+            if (this._options.rowSeparatorSize) {
+                version = 'WITH_SEPARATOR_' + `${this._model.getHasMoreData()}_` + version;
             }
+            // }
 
             version += _private.calcLadderVersion(this._ladder, index);
 
