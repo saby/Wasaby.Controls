@@ -7,6 +7,7 @@ import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
 import {IScrollbarsOptions} from './Interface/IScrollbars';
 import ScrollbarModel from './ScrollbarModel';
 import {IScrollState} from '../Utils/ScrollState';
+import {SCROLL_MODE} from './Type';
 
 interface ISerializeState {
     overflowHidden: boolean,
@@ -103,7 +104,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         return this._scrollContainerStyles;
     }
 
-    get scrollContainerClasses() {
+    getScrollContainerClasses(): string {
         let css = '';
         if (this._useNativeScrollbar) {
             css += ' controls-Scroll__content_auto'
@@ -112,9 +113,9 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             if (this._overflowHidden || this._scrollContainerStyles === undefined) {
                 css += ' controls-Scroll__content_hidden';
             } else {
-                css += this._options.scrollMode === SCROLL_DIRECTION.VERTICAL ?
-                   ' controls-Scroll__scroll_vertical' :
-                   ' controls-Scroll__scroll_verticalHorizontal';
+                css += this._options.scrollMode === SCROLL_MODE.VERTICAL ?
+                   ' controls-Scroll-ContainerBase__scroll_vertical' :
+                   ' controls-Scroll-ContainerBase__scroll_verticalHorizontal';
             }
         }
         return css;

@@ -2,6 +2,45 @@ import {IBackOptions} from './Back';
 import {Logger} from 'UI/Utils';
 import {constants} from 'Env/Env';
 
+export function titleSize(size: 's' | 'm' | 'l' | 'xl', fontSize: string): string {
+    if (size) {
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.heading.Title: Используется устаревшая опция size. ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
+        }
+        const fontSizesTable ={
+            s: 'm',
+            m: 'l',
+            l: '3xl',
+            xl: '4xl'
+        };
+        return fontSizesTable[size];
+    } else {
+        return fontSize;
+    }
+}
+
+export function titleStyle(style: 'primary' | 'secondary' | 'info', fontColorStyle: string): string {
+    if (style) {
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.heading.Title: Используется устаревшая опция style. ' +
+                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
+                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontColorStyle.');
+        }
+        const fontStylesTable = {
+            info: 'label',
+            primary: 'primary',
+            secondary: 'secondary'
+        };
+        return fontStylesTable[style];
+    } else {
+       return fontColorStyle;
+    }
+}
+
 export function counterSize(size: 's' | 'm' | 'l', fontSize: string): string {
     if (fontSize) {
         return fontSize;
