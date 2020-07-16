@@ -177,6 +177,24 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
  * If the value is not specified, the comment field will not be displayed.
  */
 
+/**
+ * @name Controls/_lookup/Lookup#suggestSource
+ * @cfg {Types/source:ICrudPlus} Устанавливает источник для автодополнения.
+ * @remark
+ * Если опция не указана, то вместо нее автоматически передается значение опции {@link Controls/_lookup/Lookup#source}.
+ *
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       suggestSource="{{_source}}"
+ *       keyProperty="id"
+ *       searchParam="title"
+ *       multiSelect="{{true}}">
+ *    </Controls.lookup:Input>
+ * </pre>
+ */
+
 export default class Lookup extends BaseLookup {
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = tmplNotify;
