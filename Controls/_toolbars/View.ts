@@ -29,7 +29,6 @@ import {IGrouped, IGroupedOptions} from 'Controls/dropdown';
 
 import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
-import * as ActualAPI from 'Controls/_toolbars/ActualAPI';
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -129,7 +128,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _menuOptions: object = null;
     protected _isLoadMenuItems: boolean = false;
     protected _buttonTemplate: TemplateFunction = getButtonTemplate();
-    protected _actualItems: TItems = null;
 
     protected _template: TemplateFunction = template;
 
@@ -259,21 +257,39 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         });
     }
 
+    private _setDefailtOptions(items: RecordSet<Record>): RecordSet<Record> {
+        items.each((item) => {
+            const viewModeValue = item.get('viewMode') ;
+            let captionValue = '';
+            if (viewModeValue && viewModeValue !== 'toolButton') {
+                captionValue = item.get('caption');
+            } else if (item.get('title') && !viewModeValue) {
+                captionValue = item.get('title');
+            }
+
+            item.set('iconStyle', item.get('iconStyle') || 'secondary');
+            item.set('viewMode', viewModeValue || 'link');
+            item.set('caption', captionValue);
+
+            if (item.get('icon') && item.get('icon').split(' ').length === 1) {
+                item.set('iconSize', 'm');
+            }
+        });
+
+        return items;
+    }
+
+
     private _setMenuItems(): void {
-        const menuItems = Toolbar._calcMenuItems(this._actualItems);
+        const menuItems = Toolbar._calcMenuItems(this._items);
         this._menuItems = menuItems;
         this._menuSource = this._createPrefetchProxy(this._originalSource, menuItems);
     }
 
     private _setStateByItems(items: TItems, source: ICrudPlus): void {
         this._fullItemsList = items;
-        /**
-         * TODO: Можно удалить после выполнения https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be
-         */
-        this._actualItems = ActualAPI.items(items);
-        this._items = this._actualItems;
-        this._source = this._createPrefetchProxy(source, this._actualItems);
-        this._needShowMenu = needShowMenu(this._actualItems);
+        this._items = this._setDefailtOptions(items);
+        this._needShowMenu = needShowMenu(this._items);
     }
 
     private _needChangeState(newOptions: IToolbarOptions): boolean {
