@@ -101,8 +101,6 @@ var BaseLookupView = Control.extend({
     },
 
     _beforeUpdate: function (newOptions) {
-        UnregisterUtil(this, 'controlResize');
-
         const currentOptions = this._options;
         let isNeedUpdate = !isEqual(newOptions.selectedKeys, this._options.selectedKeys);
         const valueChanged = currentOptions.value !== newOptions.value;
@@ -144,6 +142,10 @@ var BaseLookupView = Control.extend({
                 }
             }
         }
+    },
+
+    _beforeUnmount: function(): void {
+        UnregisterUtil(this, 'controlResize');
     },
 
     _changeValueHandler: function (event, value) {
