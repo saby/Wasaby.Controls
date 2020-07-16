@@ -8,6 +8,7 @@ import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Ut
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
+import {Collection as ItemsCollection} from 'Controls/display';
 
 var
    MAX_VISIBLE_ITEMS = 20,
@@ -176,8 +177,17 @@ var _private = {
          return collectionConfig;
       },
 
-   getLastSelectedItems: function(items, itemsCount) {
-      return chain.factory(items).last(itemsCount).value();
+   getLastSelectedItems: function(items: ItemsCollection<unknown>, itemsCount) {
+      const selectedKeys = [];
+      const count = items.getCount();
+
+      items.each((item, index) => {
+         if (index >= (count - itemsCount) && index < count) {
+            selectedKeys.push(item);
+         }
+      });
+
+      return selectedKeys;
    },
 
    isShowCounter: function(multiLine, itemsCount, maxVisibleItems) {
