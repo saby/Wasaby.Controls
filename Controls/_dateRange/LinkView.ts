@@ -78,6 +78,7 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
           this._options.captionFormatter !== options.captionFormatter) {
          this._updateCaption(options);
       }
+      this._defaultFontSize = options.viewMode === 'selector'? 'l' : 'm';
       this._updateStyles(this._options, options);
       this._updateClearButton(options);
    }
