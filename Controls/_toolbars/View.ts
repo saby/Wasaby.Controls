@@ -177,7 +177,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _getMenuConfigByItem(item: TItem): IStickyPopupOptions {
         const options = this._options;
-        let source = this._source;
+        let source = this._originalSource;
         const root = item.get(options.keyProperty);
 
         // Если запись для выпадающего списка еще не были загружены, то отдаем оригинальный источник вместо prefetchProxy
