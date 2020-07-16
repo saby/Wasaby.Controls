@@ -256,7 +256,7 @@ export default class CollectionItem<T> extends mixin<
     }
 
     setMarked(marked: boolean, silent?: boolean): void {
-        if (this._$marked === marked || this.isEditing()) {
+        if (this._$marked === marked) {
             return;
         }
         this._$marked = marked;
@@ -310,7 +310,6 @@ export default class CollectionItem<T> extends mixin<
         if (this._$editing === editing && this._$editingContents === editingContents) {
             return;
         }
-        this.setMarked(false, true);
         this._$editing = editing;
         this._setEditingContents(editingContents);
         this._nextVersion();

@@ -213,7 +213,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
-            return marker !== false && itemsModelCurrent.dispItem.isMarked();
+            return marker !== false && !itemsModelCurrent.dispItem.isEditing() && itemsModelCurrent.dispItem.isMarked();
         };
 
         itemsModelCurrent.getMarkerClasses = (): string => {

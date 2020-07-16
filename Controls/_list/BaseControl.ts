@@ -1990,6 +1990,9 @@ const _private = {
                 forceUpdate: () => {
                     self._forceUpdate();
                 },
+                updateMarkedKey: (key: string|number) => {
+                    self.setMarkedKey(key);
+                },
                 updateItemActions: () => {
                     /*
                     * TODO: KINGO
