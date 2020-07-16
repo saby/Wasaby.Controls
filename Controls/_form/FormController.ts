@@ -9,7 +9,7 @@ import {error as dataSourceError} from 'Controls/dataSource';
 import {IContainerConstructor} from 'Controls/_dataSource/error';
 import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
-import {ControllerClass, Container as ValidateContainer} from 'Controls/validate';
+import {ControllerClass, Container as ValidateContainer, IValidateResult} from 'Controls/validate';
 import {IFormOperation} from 'Controls/interface';
 import {Confirmation} from 'Controls/popup';
 import CrudController from 'Controls/_form/CrudController';
@@ -61,11 +61,6 @@ interface IDataValid {
     data: {
         validationErrors: undefined | Array<string>
     };
-}
-
-interface IValidateResult {
-    [key: number]: boolean;
-    hasErrors?: boolean;
 }
 
 interface IConfigInMounting {
