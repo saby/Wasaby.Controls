@@ -115,7 +115,7 @@ var _private = {
             itemsModelCurrent.dispItem.hasVisibleActions !== undefined ? itemsModelCurrent.dispItem.hasVisibleActions() : false
         );
         itemsModelCurrent.shouldDisplayActions = (): boolean => (
-            itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing
+            itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing()
         );
         itemsModelCurrent.hasActionWithIcon = (): boolean => (
             itemsModelCurrent.dispItem.hasActionWithIcon !== undefined ? itemsModelCurrent.dispItem.hasActionWithIcon() : false
@@ -130,14 +130,12 @@ var _private = {
             }
         };
         itemsModelCurrent.setEditing = (editing: boolean): void => {
-            itemsModelCurrent.isEditing = editing;
             if (itemsModelCurrent.dispItem.setEditing !== undefined) {
                 itemsModelCurrent.dispItem.setEditing(editing, itemsModelCurrent.item, true);
             }
         };
-        itemsModelCurrent.isEditingState = () => (
-            itemsModelCurrent.isEditing
-        );
+        itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent.dispItem.isEditing();
+        itemsModelCurrent.isMarked = (): boolean => itemsModelCurrent.dispItem.isMarked();
         itemsModelCurrent.getItemActionClasses = (itemActionsPosition: string, theme?: string): string => (
             itemsModelCurrent.dispItem.getItemActionClasses ?
                 itemsModelCurrent.dispItem.getItemActionClasses(itemActionsPosition, theme) : ''
@@ -212,10 +210,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.virtualScrollConfig = this._isSupportVirtualScroll();
         }
 
-        itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
-            return marker !== false && !itemsModelCurrent.dispItem.isEditing() && itemsModelCurrent.dispItem.isMarked();
-        };
-
         itemsModelCurrent.getMarkerClasses = (): string => {
             const style = this._options.style || 'default';
             return `controls-ListView__itemV_marker
@@ -228,9 +222,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
         }
 
-        // isEditing напрямую используется в Engine, поэтому просто так его убирать нельзя
         if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
-            itemsModelCurrent.isEditing = true;
             itemsModelCurrent.item = this._editingItemData.item;
         }
 

@@ -784,21 +784,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(data.multiSelectClassList, '');
          });
 
-         it('shouldDrawMarker', function() {
-            const gridViewModel = new gridMod.GridViewModel(cfg);
-            gridViewModel.setMarkedKey(123, true);
-            assert.equal(gridViewModel.getMarkedKey(), 123);
-            const firstItem = gridViewModel._model.getDisplay().at(0);
-            let itemData = gridViewModel.getItemDataByItem(firstItem);
-
-            assert.equal(itemData.shouldDrawMarker(undefined, 0), true);
-            assert.equal(itemData.shouldDrawMarker(undefined, 1), false);
-            assert.equal(itemData.shouldDrawMarker(true, 0), true);
-            assert.equal(itemData.shouldDrawMarker(true, 1), false);
-            assert.equal(itemData.shouldDrawMarker(false, 0), false);
-            assert.equal(itemData.shouldDrawMarker(false, 1), false);
-         });
-
          it('getMultiSelectClassList onhover selected', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'onhover';

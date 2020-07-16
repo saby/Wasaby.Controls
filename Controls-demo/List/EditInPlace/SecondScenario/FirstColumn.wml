@@ -1,7 +1,7 @@
 <ws:partial template="Controls/grid:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_L" itemData="{{itemData}}">
    <ws:contentTemplate>
       <div class="controls-EditingTemplateText__editorWrapper controls-EditingTemplateText__editorWrapper_align_{{itemData.column.align ? itemData.column.align : 'left'}}">
-         <ws:if data="{{itemData.isEditing}}">
+         <ws:if data="{{itemData.isEditing()}}">
             <Controls.lookup:Input attr:class="controls-EditingTemplateText__editor"
                                    bind:value="itemData.item.comment"
                                    searchParam="title"
