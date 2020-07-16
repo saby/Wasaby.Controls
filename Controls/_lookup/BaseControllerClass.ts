@@ -102,7 +102,7 @@ export default class LookupBaseControllerClass {
             selectedKeys.push(item.get(this._options.keyProperty));
         });
 
-        this._setItems(clone(items));
+        this._setItems(items);
         this._setSelectedKeys(selectedKeys);
     }
 
