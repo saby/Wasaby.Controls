@@ -9,6 +9,7 @@ import {constants} from 'Env/Env';
 import {List} from 'Types/collection';
 import {Logger} from 'UI/Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 
 const KEY_CODE_F2 = 113;
 
@@ -90,6 +91,8 @@ var BaseLookupView = Control.extend({
     },
 
     _afterMount: function () {
+        RegisterUtil(this, 'controlResize', this._resize.bind(this));
+
         _private.initializeContainers(this);
 
         if (!this._isEmpty(this._options)) {
@@ -139,6 +142,10 @@ var BaseLookupView = Control.extend({
                 }
             }
         }
+    },
+
+    _beforeUnmount: function(): void {
+        UnregisterUtil(this, 'controlResize');
     },
 
     _changeValueHandler: function (event, value) {

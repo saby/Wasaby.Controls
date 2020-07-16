@@ -169,8 +169,8 @@ const ActualApi = {
             if (hasMsg && constants.isBrowserPlatform) {
                // TODO: будет удалено в версию после 5100
                Logger.error('Button: Используется устаревшая опция transparent". ' +
-                   'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию contrastBackground.');
+                   `нужно использовать contrastBackground="${!options.transparent}" ` +
+                   'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
             }
             return !options.transparent;
          } else {
@@ -187,8 +187,8 @@ const ActualApi = {
          if (optionStyle && hasMsg && constants.isBrowserPlatform) {
             // TODO: будет удалено в версию после 5100
             Logger.error('Button: Используется устаревшая опция style". ' +
-               'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-               'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию buttonStyle.');
+                `нужно использовать buttonStyle="${optionStyle}" ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
          }
          if (calcStyle) {
             return calcStyle;
@@ -257,34 +257,35 @@ const ActualApi = {
          return options.fontSize;
       } else {
          if (typeof(options.size) !== 'undefined') {
-            if (hasMsg && constants.isBrowserPlatform) {
-               // TODO: будет удалено в версию после 5100
-               Logger.error('Button: Используется устаревшая опция size". ' +
-                   'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
-            }
+            let result;
             if (options.viewMode === 'button') {
                // кнопки l размера имеют шрифт xl в теме
                if (options.size === 'l') {
-                  return 'xl';
+                  result = 'xl';
                } else {
-                  return 'm';
+                  result = 'm';
                }
             } else if (options.viewMode === 'link'){
                // для ссылок все сложнее
                switch (options.size) {
                   case 's':
-                     return 'xs';
+                     result = 'xs';
+                     break;
                   case 'l':
-                     return 'l';
+                     result = 'l';
+                     break;
                   case 'xl':
-                     return '3xl';
-                  default:
-                     return 'm';
+                     result = '3xl';
+                     break;
                }
-            } else {
-               return 'm';
             }
+            if (hasMsg && constants.isBrowserPlatform) {
+               // TODO: будет удалено в версию после 5100
+               Logger.error('Button: Используется устаревшая опция size". ' +
+                   `нужно использовать buttonStyle="${result}" ` +
+                   'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+            }
+            return result || 'm';
          } else {
             return 'm'
          }
@@ -314,34 +315,29 @@ const ActualApi = {
       } else {
          let height = 'default';
          if (viewMode === 'button') {
-            if (hasMsg && optionSize && constants.isBrowserPlatform) {
-               // TODO: будет удалено в версию после 5100
-               Logger.error('Button: Используется устаревшая опция size". ' +
-                   'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию inlineHeight.');
-            }
             switch (optionSize) {
                case 's': height = 'default'; break;
                case 'm': height = 'm'; break;
                case 'l': height = '2xl'; break;
                default: height = 'default';
             }
-            return height;
          } else if (viewMode === 'toolButton' || viewMode === 'pushButton' || viewMode === 'functionalButton') {
-            if (hasMsg && optionSize && constants.isBrowserPlatform) {
-               // TODO: будет удалено в версию после 5100
-               Logger.error('Button: Используется устаревшая опция size". ' +
-                   'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                   'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию inlineHeight.');
-            }
             switch (optionSize) {
                case 's': height = 'default'; break;
                case 'm': height = 'l'; break;
                case 'l': height = 'xl'; break;
                default: height = 'l';
             }
-            return height;
+         } else {
+            height = undefined;
          }
+         if (hasMsg && optionSize && constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Button: Используется устаревшая опция size". ' +
+                `нужно использовать inlineHeight="${height}" ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+         }
+         return height;
       }
    },
 

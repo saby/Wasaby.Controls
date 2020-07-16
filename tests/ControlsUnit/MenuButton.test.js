@@ -205,12 +205,12 @@ define(
             menu._beforeMount(config);
 
             menu._handleMouseEnter();
-            assert.isOk(menu._loadDependenciesTimer);
+            assert.isOk(menu._dependenciesTimer);
 
-            menu._loadDependenciesTimer = null;
+            menu._dependenciesTimer = null;
             menu._options.readOnly = true;
             menu._handleMouseEnter();
-            assert.isNull(menu._loadDependenciesTimer);
+            assert.isNull(menu._dependenciesTimer);
          });
 
          it('_handleClick', () => {

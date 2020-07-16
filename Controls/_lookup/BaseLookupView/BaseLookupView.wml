@@ -94,5 +94,4 @@
          </ws:if>
       </ws:rightFieldWrapper>
    </Controls._lookup.BaseLookupView.InputRender>
-   <Controls.event:Listener event="controlResize" on:controlResize="_resize()"/>
 </Controls.suggest:_InputController>
