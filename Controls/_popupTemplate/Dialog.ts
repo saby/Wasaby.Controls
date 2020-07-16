@@ -19,7 +19,7 @@ interface IDragObject {
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/dialog/#template">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
- * 
+ *
  * @class Controls/_popupTemplate/Dialog
  * @extends Core/Control
  * @control
@@ -28,7 +28,7 @@ interface IDragObject {
  * @author Красильников А.С.
  * @implements Controls/_popupTemplate/interface/IPopupTemplate
  * @implements Controls/_popupTemplate/interface/IPopupTemplateBase
- * @demo Controls-demo/Popup/Templates/DialogTemplatePG
+ * @demo Controls-demo/PopupTemplate/Dialog/Index
  */
 
 /**

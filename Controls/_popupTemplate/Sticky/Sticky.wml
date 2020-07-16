@@ -1,4 +1,6 @@
-<div class="controls-StickyTemplate controls-StickyTemplate_theme_{{_options.theme}}" ws-tab-cycling="true">
+<div class="controls-StickyTemplate controls-StickyTemplate_theme_{{_options.theme}}
+            {{_options.shadowVisible ? 'controls-StickyTemplate-shadow_theme_' + _options.theme}}"
+     ws-tab-cycling="true">
     <ws:if data="{{_options.headingCaption || _options.headerContentTemplate}}">
         <ws:partial template="Controls/_popupTemplate/Sticky/resources/Header"
                     scope="{{_options}}"
