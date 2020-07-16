@@ -79,7 +79,7 @@ var BaseLookupView = Control.extend({
             this._maxVisibleItems = 1;
         } else if (options.multiLine) {
             this._maxVisibleItems = options.maxVisibleItems;
-        } else if (options.multiSelect && itemsCount > 1) {
+        } else if (options.multiSelect && itemsCount > 1 && !options.readOnly) {
             this._maxVisibleItems = 0;
         } else {
             this._maxVisibleItems = options.items.getCount();
