@@ -702,12 +702,6 @@ var
             return this._model.getTheme();
         },
 
-        /*_updateLastItemKey(): void {
-            if (this.getItems()) {
-                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this.getKeyProperty());
-            }
-        },*/
-
         _updateIndexesCallback(): void {
             this._ladder = _private.prepareLadder(this);
         },
@@ -1514,7 +1508,7 @@ var
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
             current.getSeparatorForColumn = _private.getSeparatorForColumn;
             current.isLastItem = (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
-                                 (this.getCount() - 1 === this.getIndex(dispItem));
+                                 (this.getCount() - 1 === current.index);
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
