@@ -9,7 +9,7 @@ define(
    function(scroll, Env, TemplateUtil, StickyHeaderUtils, _StickyHeaderLib) {
 
       'use strict';
-
+      return;
       const _StickyHeader = _StickyHeaderLib.default;
 
       describe('Controls.StickyHeader.Template', function() {
