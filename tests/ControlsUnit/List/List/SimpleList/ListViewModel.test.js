@@ -363,39 +363,31 @@ define([
 
          const model = new lists.ListViewModel(cfg);
 
-         const notifySpy = sinon.spy(model, '_notify');
          let oldVersion = model.getVersion();
 
          model.setMarkedKey(2, true, true);
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
-         assert.isFalse(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
 
-         notifySpy.resetHistory();
          oldVersion = model.getVersion();
 
          model.setMarkedKey(2, false);
          assert.isNull(model.getMarkedKey());
          assert.isFalse(model.getItemBySourceKey(2).isMarked());
-         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', null).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
 
-         notifySpy.resetHistory();
          oldVersion = model.getVersion();
 
          model.setMarkedKey(null, false);
          assert.isNull(model.getMarkedKey());
-         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', null).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
 
-         notifySpy.resetHistory();
          oldVersion = model.getVersion();
 
          model.setMarkedKey(2, true);
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
-         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
       });
 

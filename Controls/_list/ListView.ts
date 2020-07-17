@@ -91,7 +91,6 @@ var ListView = BaseControl.extend(
                   this._pendingRedraw = true;
                }
             };
-            this._onMarkedKeyChangedHandlerFnc = this._onMarkedKeyChangedHandler.bind(this);
         },
 
         _doAfterReload(callback): void {
@@ -126,7 +125,6 @@ var ListView = BaseControl.extend(
             if (newOptions.listModel) {
                 this._listModel = newOptions.listModel;
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
-                this._listModel.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandlerFnc);
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
@@ -134,7 +132,6 @@ var ListView = BaseControl.extend(
         _beforeUnmount: function() {
             if (this._listModel) {
                 this._listModel.unsubscribe('onListChange', this._onListChangeFnc);
-                this._listModel.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandlerFnc);
             }
         },
 
@@ -255,10 +252,6 @@ var ListView = BaseControl.extend(
         },
 
         _onItemWheel: function(event) {
-        },
-
-        _onMarkedKeyChangedHandler: function(event, key) {
-            this._notify('markedKeyChanged', [key]);
         },
 
         setHoveredItem: function (item) {
