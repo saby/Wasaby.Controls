@@ -329,7 +329,7 @@ var
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
             }
 
-            if (current.dispItem.isMarked()) {
+            if (current.dispItem.isMarked() && current.markerVisibility !== 'hidden') {
                 style = current.style || 'default';
                 classLists.selected = `controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
