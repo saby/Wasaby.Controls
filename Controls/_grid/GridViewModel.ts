@@ -1504,6 +1504,7 @@ var
                 columns: this._options.columns
             });
 
+            current.showEditArrow = this._options.showEditArrow;
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
