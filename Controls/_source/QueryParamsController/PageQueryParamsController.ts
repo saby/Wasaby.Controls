@@ -101,12 +101,15 @@ class PageQueryParamsController implements IQueryParamsController {
 
         let more = items.getMetaData().more;
         if (more instanceof RecordSet) {
-            const moreRecord = root !== undefined ?
-                more.at(more.getIndexByValue('id', root)) :
-                more.at(0);
+            let moreRecordIndex = root !== undefined ? more.getIndexByValue('id', root) : 0;
+
             // при мультинавигации первой записью идёт корень,
             // setState вызывается только для навигации в корне
-            more = moreRecord.get('nav_result');
+            if (moreRecordIndex === -1) {
+                moreRecordIndex = 0;
+            }
+
+            more = more.at(moreRecordIndex).get('nav_result');
         }
         const stateChanged = this.getAllDataCount() !== more;
 

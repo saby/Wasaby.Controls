@@ -2,7 +2,6 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
-import { spy } from 'sinon';
 import { MarkerController } from 'Controls/marker';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
@@ -30,27 +29,23 @@ describe('Controls/marker/Controller', () => {
       it('not pass markedKey', () => {
          controller = new MarkerController({ model, markerVisibility: 'visible', markedKey: undefined });
          assert.equal(controller._markedKey, 1);
-         assert.equal(model.getMarkedKey(), 1);
       });
 
       it('pass markedKey', () => {
-         controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 1});
+         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 1});
          assert.equal(controller._markedKey, 1);
-         assert.equal(controller._markerVisibility, 'visible');
-         assert.equal(model.getMarkedKey(), 1);
+         assert.equal(controller._markerVisibility, 'onactivated');
       });
    });
 
    describe('update', () => {
       it('change marked key', () => {
          const result = controller.update({model, markedKey: 2});
-         assert.equal(model.getMarkedKey(), 2);
          assert.equal(result, 2);
       });
 
       it('pass null if markedKey was set', () => {
-         let result = controller.setMarkedKey(1);
-         assert.equal(model.getMarkedKey(), 1);
+         let result = controller.calculateMarkedKey(1);
          assert.equal(result, 1);
 
          result =  controller.update({
@@ -59,7 +54,6 @@ describe('Controls/marker/Controller', () => {
             markedKey: null
          });
          assert.equal(result, 1);
-         assert.equal(model.getMarkedKey(), 1);
       });
 
       it('pass null if markedKey was not set', () => {
@@ -69,17 +63,14 @@ describe('Controls/marker/Controller', () => {
             markedKey: null
          });
          assert.equal(result, 1);
-         assert.equal(model.getMarkedKey(), 1);
       });
 
       it('marker was reset in model', () => {
-         let result = controller.setMarkedKey(2);
+         let result = controller.calculateMarkedKey(2);
          assert.equal(result, 2);
-         assert.equal(model.getMarkedKey(), 2);
 
          // сбрасываем маркер в модели
          model.setMarkedKey(2, false);
-         assert.isNull(model.getMarkedKey());
 
          result = controller.update({
             model,
@@ -87,88 +78,75 @@ describe('Controls/marker/Controller', () => {
             markedKey: 2
          });
          assert.equal(result, 2);
-         assert.equal(model.getMarkedKey(), 2);
       });
 
       it('pass key by not exists item', () => {
-         controller.setMarkedKey(2);
-         const notifySpy = spy(model, '_notify');
+         controller.calculateMarkedKey(2);
          const result = controller.update({
             model,
             markerVisibility: 'visible',
             markedKey: 5
          });
          assert.equal(result, 1);
-         assert.equal(model.getMarkedKey(), 1);
-         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', 1).called);
       });
    });
 
-   describe('setMarkedKey', () => {
+   describe('calculateMarkedKey', () => {
       it('same key', () => {
          controller._markedKey = 2;
-         const result = controller.setMarkedKey(2);
+         const result = controller.calculateMarkedKey(2);
          assert.equal(result, 2);
       });
 
       it('same key which not exists in model', () => {
          controller._markedKey = 4;
-         const result = controller.setMarkedKey(4);
+         const result = controller.calculateMarkedKey(4);
          assert.equal(result, 1);
       });
 
       it('null', () => {
          controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
 
-         const result = controller.setMarkedKey(null);
-         assert.equal(result, 1);
-         assert.equal(model.getMarkedKey(), 1);
+         const result = controller.calculateMarkedKey(null);
+         assert.strictEqual(result, 1);
       });
 
       it('undefined', () => {
          controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 2});
 
-         let result = controller.setMarkedKey(undefined);
+         const result = controller.calculateMarkedKey(undefined);
          assert.strictEqual(result, undefined);
-         assert.strictEqual(model.getMarkedKey(), null);
-
-         const setMarkedKeySpy = spy(model, 'setMarkedKey');
-         result = controller.setMarkedKey(undefined);
-         assert.strictEqual(result, undefined);
-         assert.strictEqual(model.getMarkedKey(), null);
-         assert.isFalse(setMarkedKeySpy.called);
       });
 
       it('change key', () => {
          controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 1});
 
-         const result = controller.setMarkedKey(2);
+         const result = controller.calculateMarkedKey(2);
          assert.equal(result, 2);
-         assert.equal(model.getMarkedKey(), 2);
       });
 
       it('not exist item by key', () => {
          controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
 
-         const result = controller.setMarkedKey(4);
+         const result = controller.calculateMarkedKey(4);
          assert.equal(result, 1);
-         assert.equal(model.getMarkedKey(), 1);
       });
 
       it('not exists item and onActivated visibility', () => {
          controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: undefined});
 
-         const result = controller.setMarkedKey(4);
-         assert.equal(result, undefined);
-         assert.equal(model.getMarkedKey(), undefined);
+         const result = controller.calculateMarkedKey(4);
+         assert.equal(result, null);
       });
 
       it('onactivated', () => {
          controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: undefined});
 
-         let result = controller.setMarkedKey(3);
+         let result = controller.calculateMarkedKey(3);
          assert.equal(result, 3);
-         assert.equal(model.getMarkedKey(), 3);
+
+         controller.setMarkedKey(result);
+         assert.isTrue(model.getItemBySourceKey(3).isMarked());
 
          // markedKey не должен сброситсья, если список пустой
          model.setItems(new RecordSet({
@@ -178,7 +156,6 @@ describe('Controls/marker/Controller', () => {
 
          result = controller.update({model, markerVisibility: 'onactivated', markedKey: 3});
          assert.equal(result, 3);
-         assert.equal(model.getMarkedKey(), 3);
 
          model.setItems(new RecordSet({
             rawData: [
@@ -190,21 +167,6 @@ describe('Controls/marker/Controller', () => {
 
          result = controller.update({model, markerVisibility: 'onactivated', markedKey: 3});
          assert.equal(result, 1);
-         assert.equal(model.getMarkedKey(), 1);
-      });
-   });
-
-   describe('restoreMarker', () => {
-      it('markerVisibility = onactivated', () => {
-         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 1});
-         model.setItems(items);
-
-         const notifyLaterSpy = spy(model, '_notifyLater');
-
-         controller.restoreMarker();
-
-         assert.isFalse(notifyLaterSpy.called, 'restoreMarker не должен уведомлять о простановке маркера');
-         assert.isTrue(model.getItemBySourceKey(1).isMarked());
       });
 
       it('markerVisibility = visible and not exists item with marked key', () => {
@@ -217,16 +179,12 @@ describe('Controls/marker/Controller', () => {
             keyProperty: 'id'
          }));
 
-         const notifyLaterSpy = spy(model, '_notifyLater');
-
-         controller.restoreMarker();
-
-         assert.isFalse(notifyLaterSpy.called);
-         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+         const result = controller.calculateMarkedKey(1);
+         assert.equal(result, 2);
       });
 
       it('markerVisibility = onactivated and not exists item with marked key', () => {
-         controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 1});
+         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 1});
          model.setItems(new RecordSet({
             rawData: [
                {id: 2},
@@ -235,12 +193,19 @@ describe('Controls/marker/Controller', () => {
             keyProperty: 'id'
          }));
 
-         const notifyLaterSpy = spy(model, '_notifyLater');
+         const result = controller.calculateMarkedKey(1);
+         assert.equal(result, 2);
+      });
+   });
+
+   describe('restoreMarker', () => {
+      it('markerVisibility = onactivated', () => {
+         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 1});
+         model.setItems(items);
 
          controller.restoreMarker();
 
-         assert.isFalse(notifyLaterSpy.called);
-         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+         assert.isTrue(model.getItemBySourceKey(1).isMarked());
       });
    });
 
@@ -249,7 +214,6 @@ describe('Controls/marker/Controller', () => {
 
       const result = controller.moveMarkerToNext();
       assert.equal(result, 3);
-      assert.equal(model.getMarkedKey(), 3);
    });
 
    it('move marker prev', () => {
@@ -257,7 +221,6 @@ describe('Controls/marker/Controller', () => {
 
       const result = controller.moveMarkerToPrev();
       assert.equal(result, 1);
-      assert.equal(model.getMarkedKey(), 1);
    });
 
    describe('setMarkerOnFirstVisibleItem', () => {
@@ -271,38 +234,32 @@ describe('Controls/marker/Controller', () => {
       it('offset 0', () => {
          const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 0);
          assert.equal(result, 1);
-         assert.equal(model.getMarkedKey(), 1);
       });
 
       it('offset 1', () => {
          const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 1);
          assert.equal(result, 2);
-         assert.equal(model.getMarkedKey(), 2);
       });
 
       it('offset 29', () => {
          const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 29);
          assert.equal(result, 2);
-         assert.equal(model.getMarkedKey(), 2);
       });
 
       it ('offset 30', () => {
          const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 30);
          assert.equal(result, 2);
-         assert.equal(model.getMarkedKey(), 2);
       });
 
       it ('offset 31', () => {
          const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 31);
          assert.equal(result, 3);
-         assert.equal(model.getMarkedKey(), 3);
       });
 
       it ('offset 31 and start index 2', () => {
          model.getStartIndex = () => 2;
          const result = controller.setMarkerOnFirstVisibleItem(htmlItems, 31);
          assert.equal(result, 3);
-         assert.equal(model.getMarkedKey(), 3);
       });
    });
 
@@ -320,7 +277,6 @@ describe('Controls/marker/Controller', () => {
 
          const result = controller.handleRemoveItems(0);
          assert.equal(result, 2);
-         assert.equal(model.getMarkedKey(), 2);
       });
 
       it('exists next item', () => {
@@ -336,7 +292,6 @@ describe('Controls/marker/Controller', () => {
 
          const result = controller.handleRemoveItems(1);
          assert.equal(result, 3);
-         assert.equal(model.getMarkedKey(), 3);
       });
 
       it('exists prev item, but not next', () => {
@@ -352,7 +307,6 @@ describe('Controls/marker/Controller', () => {
 
          const result = controller.handleRemoveItems(2);
          assert.equal(result, 2);
-         assert.equal(model.getMarkedKey(), 2);
       });
 
       it('not exists next and prev', () => {
@@ -364,8 +318,7 @@ describe('Controls/marker/Controller', () => {
          }));
 
          const result = controller.handleRemoveItems(0);
-         assert.equal(result, undefined);
-         assert.equal(model.getMarkedKey(), undefined);
+         assert.equal(result, null);
       });
    });
 
@@ -403,16 +356,16 @@ describe('Controls/marker/Controller', () => {
       });
 
       controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
-      assert.equal(model.getMarkedKey(), 2);
+      assert.equal(controller._markedKey, 2);
 
-      controller.moveMarkerToNext();
-      assert.equal(model.getMarkedKey(), 4);
+      let result = controller.moveMarkerToNext();
+      assert.equal(result, 4);
 
-      controller.moveMarkerToPrev();
-      assert.equal(model.getMarkedKey(), 2);
+      result = controller.moveMarkerToPrev();
+      assert.equal(result, 2);
 
-      controller.setMarkedKey(4);
-      assert.equal(model.getMarkedKey(), 4);
+      result = controller.calculateMarkedKey(4);
+      assert.equal(result, 4);
 
       model.setItems(new RecordSet({
          rawData: [{
@@ -428,7 +381,7 @@ describe('Controls/marker/Controller', () => {
          }],
          keyProperty: 'id'
       }));
-      controller.handleRemoveItems(2);
-      assert.equal(model.getMarkedKey(), 2);
+      result = controller.handleRemoveItems(2);
+      assert.equal(result, 2);
    });
 });
