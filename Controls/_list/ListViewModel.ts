@@ -61,13 +61,13 @@ var _private = {
         return self.getItemById(markedKey, self.getKeyProperty());
     },
 
-    getMultiSelectClassList: function (current, checkboxOnHover: boolean): string {
-        let
-            isSelected = current.multiSelectStatus !== false && current.multiSelectStatus !== undefined; // так как null - это тоже выбрано
+    getMultiSelectClassList(current, checkboxOnHover: boolean): string {
+        const isSelected = current.isSelected();
+        const checkboxVisible = isSelected !== false && isSelected !== undefined; // так как null - это тоже выбрано
 
         return CssClassList.add('js-controls-ListView__checkbox')
                            .add('js-controls-ListView__notEditable')
-                           .add('controls-ListView__checkbox-onhover', checkboxOnHover && !isSelected)
+                           .add('controls-ListView__checkbox-onhover', checkboxOnHover && !checkboxVisible)
                            .compile();
     },
 
@@ -120,7 +120,7 @@ var _private = {
             itemsModelCurrent.dispItem.hasActionWithIcon !== undefined ? itemsModelCurrent.dispItem.hasActionWithIcon() : false
         );
         itemsModelCurrent.isSelected = (): boolean => (
-            itemsModelCurrent.dispItem.isSelected !== undefined ? itemsModelCurrent.dispItem.isSelected() : itemsModelCurrent._isSelected
+            itemsModelCurrent.dispItem.isSelected()
         );
         itemsModelCurrent.setSelected = (selected: boolean|null, silent?: boolean): void => {
             itemsModelCurrent._isSelected = true;
@@ -193,7 +193,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
         itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         itemsModelCurrent._isSelected = itemsModelCurrent.dispItem.isMarked();
-        itemsModelCurrent.multiSelectStatus = itemsModelCurrent.isSelected();
         itemsModelCurrent.searchValue = this._options.searchValue;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;

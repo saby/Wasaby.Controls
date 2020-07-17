@@ -678,7 +678,7 @@ define([
 
          it('getMultiSelectClassList', () => {
             const current = {
-               multiSelectStatus: false
+               isSelected: () => false
             };
 
             assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, false),
@@ -687,15 +687,15 @@ define([
             assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
                'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
 
-            current.multiSelectStatus = true;
+            current.isSelected = () => true;
             assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
                'js-controls-ListView__checkbox js-controls-ListView__notEditable');
 
-            current.multiSelectStatus = null;
+            current.isSelected = () => null;
             assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
                'js-controls-ListView__checkbox js-controls-ListView__notEditable');
 
-            current.multiSelectStatus = undefined;
+            current.isSelected = () => undefined;
             assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
                'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
          });

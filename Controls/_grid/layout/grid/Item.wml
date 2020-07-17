@@ -23,7 +23,7 @@
 <ws:template name="columnContent">
    <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
       <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
-         <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"/>
+         <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"/>
       </ws:partial>
    </ws:if>
    <ws:else>

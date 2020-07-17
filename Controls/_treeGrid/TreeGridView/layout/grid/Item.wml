@@ -83,7 +83,7 @@
       <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
          <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
                              checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"
-                             multiSelectStatus="{{itemData.multiSelectStatus}}"
+                             multiSelectStatus="{{itemData.isSelected()}}"
                              key="{{itemData.key}}" />
       </ws:partial>
    </ws:if>

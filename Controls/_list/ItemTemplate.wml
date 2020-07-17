@@ -16,7 +16,7 @@
 <ws:template name="itemContentTpl">
     <ws:if data="{{itemData.hasMultiSelect}}">
        <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}} controls-ListView__checkbox_theme-{{_options.theme}}">
-          <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" checkboxReadOnly="{{ itemData.isAdd || checkboxReadOnly }}"/>
+          <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" checkboxReadOnly="{{ itemData.isAdd || checkboxReadOnly }}"/>
        </ws:partial>
     </ws:if>
 
