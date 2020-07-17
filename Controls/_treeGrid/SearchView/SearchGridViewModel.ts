@@ -12,12 +12,7 @@ var SearchGridViewModel = TreeGridViewModel.extend({
         }
         return SearchGridViewModel.superclass._calcRowIndex.apply(this, arguments);
     },
-    getActionsItem(item) {
-        if (!!item.forEach) {
-            return item[item.length - 1];
-        }
-        return item;
-    },
+
     _isSupportLadder: function() {
         return false;
     },
