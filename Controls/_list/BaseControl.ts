@@ -3434,9 +3434,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 typeof this._options.dragScrolling === 'boolean' ? this._options.dragScrolling : !this._options.itemsDragNDrop
             );
         }
-        if (this._unprocessedDragEnteredItem) {
-            this._unprocessedDragEnteredItem = null;
-        }
         if (!hasDragScrolling) {
             _private.startDragNDrop(this, domEvent, itemData);
         } else {
@@ -3514,10 +3511,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
-        if (this._dndListController) {
-            this._unprocessedDragEnteredItem = itemData;
-            this._processItemMouseEnterWithDragNDrop(itemData);
-        }
+        this._processItemMouseEnterWithDragNDrop(itemData);
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
@@ -3534,7 +3528,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
-            this._unprocessedDragEnteredItem = null;
             if (this._dndListController instanceof DndTreeController && this._dndListController.isDragging()) {
                 this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
         }
@@ -3907,13 +3900,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._dndListController.startDrag(draggedKey, dragObject.entity);
 
-        // Cобытие mouseEnter на записи может сработать до dragStart.
-        // И тогда перемещение при наведении не будет обработано.
-        // В таком случае обрабатываем наведение на запись сейчас.
-        //TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=0a8fe37b-f8d8-425d-b4da-ed3e578bdd84
-        if (this._unprocessedDragEnteredItem) {
-            this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
-        }
     },
 
     _dragLeave(): void {
@@ -3950,7 +3936,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     this._dndListController.setDragPosition(dragPosition);
                 }
             }
-            this._unprocessedDragEnteredItem = null;
         }
     },
 
