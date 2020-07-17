@@ -51,6 +51,7 @@ export {default as _EditDialog} from 'Controls/_filterPopup/History/_EditDialog'
 export {default as Link} from 'Controls/_filterPopup/Panel/Link';
 export {default as Text} from 'Controls/_filterPopup/Panel/Text';
 export {default as Dropdown} from 'Controls/_filterPopup/Panel/Dropdown';
+export {default as AdditionalParamsRender} from 'Controls/_filterPopup/Panel/AdditionalParams/Render';
 
 export {
    Panel,

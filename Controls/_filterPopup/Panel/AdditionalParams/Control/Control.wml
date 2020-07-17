@@ -1,0 +1,9 @@
+<div class="controls-AdditionalParams">
+   <ws:partial template="{{_options.render}}"
+               source="{{_visibleItems}}"
+               itemTemplateProperty="{{_options.itemTemplateProperty}}"
+               columnProperty="column"
+               groupProperty="{{_options.groupProperty}}"
+               on:propertyChanged="_updateItem()"
+               on:arrowClick="_arrowClick()"/>
+</div>

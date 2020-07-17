@@ -1,9 +1,12 @@
-import Control = require('Core/Control');
-import Utils = require('Types/util');
-import {isEqual} from 'Types/object';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {object} from 'Types/util';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Collection, CollectionItem, GroupItem} from 'Controls/display';
 import Clone = require('Core/core-clone');
-import template = require('wml!Controls/_filterPopup/Panel/AdditionalParams/AdditionalParams');
-import chain = require('Types/chain');
+import * as template from 'wml!Controls/_filterPopup/Panel/AdditionalParams/Control/Control';
+import {factory} from 'Types/chain';
+import {ICloneable} from 'Types/entity';
+import {IEnumerable} from 'Types/collection';
 
 /**
  * Control "Additional params". Used in the filter panel.
@@ -14,135 +17,62 @@ import chain = require('Types/chain');
  * @author Герасимов А.М.
  */
 
-   var MAX_NUMBER_ITEMS_COLUMN = 5;
+const MAX_NUMBER_ITEMS_COLUMN = 5;
+type IFilterItem = Record<string, any>;
+type IFilterItemsCollection = ICloneable & IEnumerable<IFilterItem, string> | IFilterItem[];
+interface IAdditionalParamsOptions extends IControlOptions {
+    items: IFilterItemsCollection;
+    groupProperty: string;
+}
 
-   var _private = {
+export default class AdditionalParams extends Control<IAdditionalParamsOptions> {
+    protected _template: TemplateFunction = template;
+    protected _items: IFilterItemsCollection = [];
+    protected _collection: Collection<IFilterItem> = null;
+    protected _columns: IAdditionalColumns = null;
+    protected _arrowVisible: boolean = false;
+    protected _isMaxHeight: boolean = false;
 
-      cloneItems: function(items) {
-         if (items['[Types/_entity/CloneableMixin]']) {
-            return items.clone();
-         }
-         return Clone(items);
-      },
-
-    setItems: function(self, items) {
-        self.items = items;
-    },
-
-    itemsChanged(self): void {
-        self._notify('itemsChanged', [self.items]);
-    },
-
-    getVisibleItemsCount: function(items) {
-        var count = 0;
-        chain.factory(items).each(function(item) {
-            if (Utils.object.getPropertyValue(item, 'visibility') !== undefined) {
-               count++;
-            }
-         });
-         return count;
-      },
-
-      getColumnsByItems: function(items) {
-         var countItemsColumn = _private.getVisibleItemsCount(items) / 2;
-         var columns = {
-            leftColumn: [],
-            rightColumn: []
-         };
-         chain.factory(items).each(function(item, index) {
-            if (Utils.object.getPropertyValue(item, 'visibility') !== undefined) {
-               if (columns.leftColumn.length < countItemsColumn) {
-                  columns.leftColumn.push(index);
-               } else {
-                  columns.rightColumn.push(index);
-               }
-            }
-         });
-         return columns;
-      },
-
-      needShowArrow: function(items, countItems) {
-         var countLeftItems = 0, countRightItems = 0;
-         chain.factory(items).each(function(item, index) {
-            if (Utils.object.getPropertyValue(item, 'visibility') === false) {
-               if (countItems.leftColumn.indexOf(index) !== -1) {
-                  countLeftItems++;
-               } else {
-                  countRightItems++;
-               }
-            }
-         });
-         if (countLeftItems > MAX_NUMBER_ITEMS_COLUMN || countRightItems > MAX_NUMBER_ITEMS_COLUMN) {
-            return true;
-         }
-         return false;
-      },
-
-      onResize: function(self) {
-         self._arrowVisible = _private.needShowArrow(self.items, self._columns);
-
-         if (!self._arrowVisible) {
-            self._isMaxHeight = true;
-         }
-         self._forceUpdate();
-      }
-   };
-
-   var AdditionalParams = Control.extend({
-      _template: template,
-      _isMaxHeight: true,
-      _arrowVisible: false,
-      _columns: null,
-
-      _beforeMount: function(options) {
-         this.items = _private.cloneItems(options.items);
-         this._columns = _private.getColumnsByItems(options.items);
-      },
-
-      _afterMount: function() {
-         _private.onResize(this);
-      },
-
-      _beforeUpdate: function(newOptions) {
-         if (!isEqual(this._options.items, newOptions.items)) {
-            this.items = _private.cloneItems(newOptions.items);
-            this._columns = _private.getColumnsByItems(newOptions.items);
-            _private.onResize(this);
-         }
-      },
-
-      _isItemVisible: function(item) {
-         return Utils.object.getPropertyValue(item, 'visibility') === undefined ||
-            Utils.object.getPropertyValue(item, 'visibility');
-      },
-
-     _textValueChangedHandler: function(event, index, textValue) {
-         this._updateItem(index, 'textValue', textValue);
-     },
-
-     _valueChangedHandler: function(event, index, value) {
-         this._updateItem(index, 'value', value);
-     },
-
-     _visibilityChangedHandler: function(event, index) {
-         this._updateItem(index, 'visibility', true);
-     },
-
-     _updateItem: function(index, field, value) {
-         const items = _private.cloneItems(this.items);
-         items[index][field] = value;
-         items[index].visibility = true;
-         _private.setItems(this, items);
-         _private.itemsChanged(this);
-     },
-
-    _clickSeparatorHandler: function() {
-        this._isMaxHeight = !this._isMaxHeight;
+    private _itemsChanged(items: IFilterItemsCollection): void {
+        this._notify('itemsChanged', [items]);
     }
 
-   });
+    private _needShowArrow({leftColumn, rightColumn}: IAdditionalColumns): boolean {
+        return leftColumn > MAX_NUMBER_ITEMS_COLUMN || rightColumn > MAX_NUMBER_ITEMS_COLUMN;
+    }
 
-   AdditionalParams._theme = ['Controls/filterPopup'];
-   AdditionalParams._private = _private;
+    private _updateItem(index: number, field: string, value: any): void {
+        const items = this._cloneItems(this._options.items);
+        items[index][field] = value;
+        items[index].visibility = true;
+        this._itemsChanged(items);
+    }
 
-   export = AdditionalParams;
+    private _clickSeparatorHandler(): void {
+        this._isMaxHeight = true;
+    }
+
+    private _onResize(): void {
+        this._arrowVisible = this._needShowArrow(this._columns);
+    }
+
+    protected _beforeMount(options: IAdditionalParamsOptions): void {
+        this._items = this._cloneItems(options.items);
+        this._columns = this._calculateColumns(this._items);
+        this._arrowVisible = this._needShowArrow(this._columns);
+    }
+
+    protected _beforeUpdate(options: IAdditionalParamsOptions): void {
+        if (this._options.items !== options.items) {
+            this._items = this._cloneItems(options.items);
+            this._columns = this._calculateColumns(this._items);
+            this._arrowVisible = this._needShowArrow(this._columns);
+        }
+    }
+
+    protected _itemChanged(event: SyntheticEvent<Event>, index: number, property: string, value: any): void {
+        this._updateItem(index, property, value);
+    }
+
+    static _theme: string[] = ['Controls/filterPopup'];
+}

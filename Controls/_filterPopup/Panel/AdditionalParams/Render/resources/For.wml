@@ -1,0 +1,8 @@
+<ws:for data="index, item in _options.collection.getViewIterator()">
+   <ws:if data="{{(_options.isGroup(item) && _options.collection.getNext().getContents() || item.getContents())[_options.columnProperty] === _options.column}}" >
+      <ws:partial template="{{item.getItemTemplate(_options.itemTemplate, _options.groupTemplate)}}"
+                  itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                  item="{{item.getContents()}}"
+                  collectionItem="{{item}}"/>
+   </ws:if>
+</ws:for>
