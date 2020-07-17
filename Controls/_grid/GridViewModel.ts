@@ -1507,6 +1507,8 @@ var
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
+            // todo remove multiSelectVisibility by task:
+            // https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
             current.multiSelectVisibility = this._options.multiSelectVisibility;
             current.getColspanForColumnScroll = () => _private.getColspanForColumnScroll(self);
             current.getColspanFor = (elementName: string) => self.getColspanFor.apply(self, [elementName]);
