@@ -8,7 +8,7 @@ import selectedCollectionUtils = require('Controls/_lookup/SelectedCollection/Ut
 import ContentTemplate = require('wml!Controls/_lookup/SelectedCollection/_ContentTemplate');
 import CrossTemplate = require('wml!Controls/_lookup/SelectedCollection/_CrossTemplate');
 import CounterTemplate = require('wml!Controls/_lookup/SelectedCollection/CounterTemplate');
-import {RecordSet} from "Types/collection";
+import {RecordSet} from 'Types/collection';
 
 var
    MAX_VISIBLE_ITEMS = 20,
