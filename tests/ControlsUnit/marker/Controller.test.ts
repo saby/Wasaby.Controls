@@ -198,15 +198,21 @@ describe('Controls/marker/Controller', () => {
       });
    });
 
-   describe('restoreMarker', () => {
-      it('markerVisibility = onactivated', () => {
-         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 1});
-         model.setItems(items);
+   it('restoreMarker', () => {
+      controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 1});
+      assert.isTrue(model.getItemBySourceKey(1).isMarked());
+      model.setItems(new RecordSet({
+         rawData: [
+            {id: 1},
+            {id: 2},
+            {id: 3}
+         ],
+         keyProperty: 'id'
+      }));
 
-         controller.restoreMarker();
-
-         assert.isTrue(model.getItemBySourceKey(1).isMarked());
-      });
+      assert.isFalse(model.getItemBySourceKey(1).isMarked());
+      controller.restoreMarker();
+      assert.isTrue(model.getItemBySourceKey(1).isMarked());
    });
 
    it('move marker next', () => {
