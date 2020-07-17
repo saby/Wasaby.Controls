@@ -197,7 +197,7 @@ const _private = {
     },
 
     getMarkerController(self, options: Object = null): MarkerController {
-        if (!this.hasMarkerController(self)) {
+        if (!_private.hasMarkerController(self)) {
             self._markerController = this.createMarkerController(self, options ? options : self._options);
         }
         return self._markerController;
@@ -433,11 +433,11 @@ const _private = {
     },
 
     restoreModelState(self: any, options: any): void {
-        if (this.hasMarkerController(self)) {
-            self._markedKey = this.getMarkerController(self).restoreMarker();
+        if (_private.hasMarkerController(self)) {
+            self._markedKey = _private.getMarkerController(self).restoreMarker();
         } else {
             if (options.markerVisibility !== 'hidden') {
-                this.getMarkerController(self, options);
+                _private.getMarkerController(self, options);
             }
         }
 
@@ -497,12 +497,12 @@ const _private = {
     },
 
     setMarkedKey(self, key: string | number): void {
-        if (this.hasMarkerController(self)) {
-            self._markedKey = this.getMarkerController(self).setMarkedKey(key);
+        if (_private.hasMarkerController(self)) {
+            self._markedKey = _private.getMarkerController(self).setMarkedKey(key);
         }
     },
     moveMarkerToNext(self, event) {
-        if (this.hasMarkerController(self)) {
+        if (_private.hasMarkerController(self)) {
             // activate list when marker is moving. It let us press enter and open current row
             // must check mounted to avoid fails on unit tests
             if (self._mounted) {
@@ -512,12 +512,12 @@ const _private = {
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
-            self._markedKey = this.getMarkerController(self).moveMarkerToNext();
+            self._markedKey = _private.getMarkerController(self).moveMarkerToNext();
             _private.scrollToItem(self, self._markedKey);
         }
     },
     moveMarkerToPrevious(self, event) {
-        if (this.hasMarkerController(self)) {
+        if (_private.hasMarkerController(self)) {
             // activate list when marker is moving. It let us press enter and open current row
             // must check mounted to avoid fails on unit tests
             if (self._mounted) {
@@ -527,7 +527,7 @@ const _private = {
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
-            self._markedKey = this.getMarkerController(self).moveMarkerToPrev();
+            self._markedKey = _private.getMarkerController(self).moveMarkerToPrev();
             _private.scrollToItem(self, self._markedKey);
         }
     },
@@ -1148,11 +1148,11 @@ const _private = {
 
     setMarkerAfterScrolling(self, scrollTop) {
         // TODO вручную обрабатывать pagedown и делать stop propagation
-        if (this.hasMarkerController(self)) {
+        if (_private.hasMarkerController(self)) {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
-            self._markedKey = this.getMarkerController(self).setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
+            self._markedKey = _private.getMarkerController(self).setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
             self._setMarkerAfterScroll = false;
         }
     },
@@ -1446,7 +1446,7 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        const menuConfig = this.getItemActionsController(self).prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
+        const menuConfig = _private.getItemActionsController(self).prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
         }
@@ -1470,7 +1470,7 @@ const _private = {
             self._itemActionsMenuId = popupId;
             // Нельзя устанавливать activeItem раньше, иначе при автокликах
             // робот будет открывать меню раньше, чем оно закрылось
-            this.getItemActionsController(self).setActiveItem(item);
+            _private.getItemActionsController(self).setActiveItem(item);
             RegisterUtil(self, 'scroll', self._scrollHandler.bind(self));
         });
     },
@@ -1492,7 +1492,7 @@ const _private = {
             // закрываем самое последнее открытое меню.
             if (!currentPopup || itemActionsMenuId === currentPopup.id) {
                 self._listViewModel.setActiveItem(null);
-                this.getItemActionsController(self).deactivateSwipe();
+                _private.getItemActionsController(self).deactivateSwipe();
             }
         }
     },
@@ -1984,7 +1984,7 @@ const _private = {
             || self._options.markerVisibility !== options.markerVisibility;
 
         // если маркер не поменялся в опциях, то не нужно нотифаить
-        self._markedKey = this.getMarkerController(self).update({
+        self._markedKey = _private.getMarkerController(self).update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
             markedKey: optionsHasMarkedKey ? options.markedKey : self._markedKey
@@ -2104,7 +2104,7 @@ const _private = {
             };
         }
         // Гарантированно инициализируем шаблоны, если это ещё не произошло
-        const itemActionsChangeResult = this.getItemActionsController(self).update({
+        const itemActionsChangeResult = _private.getItemActionsController(self).update({
                 editingItem: editingItemData,
                 collection: self._listViewModel,
                 itemActions: options.itemActions,
@@ -2148,7 +2148,7 @@ const _private = {
      */
     closeSwipe(self): void {
         if (self._listViewModel.isActionsAssigned()) {
-            this.getItemActionsController(self).deactivateSwipe();
+            _private.getItemActionsController(self).deactivateSwipe();
         }
     },
 
