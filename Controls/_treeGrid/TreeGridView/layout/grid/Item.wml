@@ -17,9 +17,6 @@
                   highlightOnHover="{{highlightOnHover}}"
                   theme="{{_options.theme}}"/>
    </ws:else>
-   <ws:else data="{{itemData.columnScroll && itemData.itemActionsPosition === 'custom'}}">
-      <div></div>
-   </ws:else>
 </ws:template>
 
 <ws:template name="colspanCell">

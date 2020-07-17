@@ -1101,6 +1101,9 @@ var
             headerColumn.cellStyles = cellStyles;
             headerColumn.cellClasses = cellClasses;
             headerColumn.cellContentClasses = cellContentClasses;
+            if (this._options.itemActionsPosition) {
+                headerColumn.itemActionsPosition = itemActionsPosition;
+            }
 
             return headerColumn;
         },
@@ -2108,7 +2111,10 @@ var
                 // к колонкам была добавлена "прилипающая" колонка?
                 const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
                 // к колонкам была добавлена колонка "Действий"?
-                const offsetForActionCell: number = +(this._shouldAddActionsCell());
+                let offsetForActionCell: number = 0;
+                if (this._options.itemActionsPosition !== 'custom') {
+                    offsetForActionCell = +(this._shouldAddActionsCell());
+                }
                 // В случае, если у нас приходит после поиска пустой массив колонок,
                 // пытаемся установить значение по длине массива заголовков, а если и он пуст,
                 // то необходимо установить columnsCount в 1, иначе весь дальнейший расчёт

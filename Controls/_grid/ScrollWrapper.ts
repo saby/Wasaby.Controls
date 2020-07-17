@@ -68,7 +68,7 @@ export default class HorizontalScrollWrapper extends Control<IControlOptions> {
         if (listModel.shouldAddStickyLadderCell()) {
             offset += 1;
         }
-        if (listModel._shouldAddActionsCell()) {
+        if (listModel._shouldAddActionsCell() && listModel._options.itemActionsPosition !== 'custom') {
             lastCellOffset += 1;
         }
         const stickyColumnsCount = listModel.getStickyColumnsCount();

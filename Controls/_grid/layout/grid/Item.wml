@@ -19,9 +19,6 @@
                   attr:key="{{itemData.getCurrentColumnKey()}}__actions"
                   theme="{{_options.theme}}"/>
    </ws:else>
-   <ws:else data="{{itemData.columnScroll && itemData.itemActionsPosition === 'custom'}}">
-      <div></div>
-   </ws:else>
 </ws:template>
 <ws:template name="columnContent">
    <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
