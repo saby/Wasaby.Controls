@@ -29,7 +29,7 @@
 </ws:template>
 
 <ws:template name="cell">
-    <ws:if data="{{headerColumn.itemActionsPosition !== 'custom'}}">
+    <ws:if data="{{(headerColumn.itemActionsPosition ? headerColumn.itemActionsPosition : '') !== 'custom'}}">
       <div attr:class="{{headerColumn.cellClasses}}"
            attr:style="{{headerColumn.cellStyles}}{{headerColumn.style}}">
          <ws:partial template="cellContent"/>
