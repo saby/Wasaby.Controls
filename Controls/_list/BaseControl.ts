@@ -50,7 +50,7 @@ import {ISwipeEvent} from 'Controls/listRender';
 
 import {IEditingOptions, EditInPlace} from '../editInPlace';
 
-import {default as ScrollController} from './ScrollController';
+import {default as ScrollController, IScrollParams} from './ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
@@ -110,6 +110,7 @@ const LOAD_TRIGGER_OFFSET = 100;
 const INDICATOR_DELAY = 2000;
 const INITIAL_PAGES_COUNT = 1;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
+const TRIGGER_VISIBILITY_DELAY = 101;
 const LIMIT_DRAG_SELECTION = 100;
 const PORTIONED_LOAD_META_FIELD = 'iterative';
 const MIN_SCROLL_PAGING_SHOW_PROPORTION = 2;
@@ -119,6 +120,14 @@ const IE_MOUSEMOVE_FIX_DELAY = 50;
 const DRAGGING_OFFSET = 10;
 
 const ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR = 'js-controls-SwipeControl__actionsContainer';
+
+const SCROLL_TRIGGERS = [
+    "topVirtualScrollTrigger",
+    "bottomVirtualScrollTrigger",
+    "topLoadTrigger",
+    "bottomLoadTrigger",
+    "scrollObserver"
+];
 
 interface IAnimationEvent extends Event {
     animationName: string;
@@ -257,6 +266,7 @@ const _private = {
                 collection: self.getViewModel(),
                 ...self._options
             });
+            self.updateTriggerOffset();
         }
     },
 
@@ -629,7 +639,7 @@ const _private = {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
             if (self._isMounted && self._scrollController) {
-                self._scrollController.stopBatchAdding();
+                self.stopBatchAdding();
             }
 
             _private.prepareFooter(self, self._options.navigation, self._sourceController);
@@ -686,7 +696,7 @@ const _private = {
                 const countCurrentItems = self._listViewModel.getCount();
 
                 if (self._isMounted && self._scrollController) {
-                    self._scrollController.startBatchAdding(direction);
+                    self.startBatchAdding(direction);
                 }
 
                 self._getInertialScrolling().callAfterScrollStopped(() => {
@@ -1300,6 +1310,29 @@ const _private = {
                     _private.closeActionsMenu(self);
                 }
             }
+            if (self._scrollController) {
+                
+                if (action || newModelChanged) {
+                    if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
+                        if (this._addItemsDirection) {
+                            this._addItems.push(...newItems);
+                            this._addItemsIndex = newItemsIndex;
+                        } else {
+                            self._scrollController.addItems(newItemsIndex, newItems);
+                        }
+                            
+                    }
+                    if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
+                        // When move items call removeHandler with "forceShift" param.
+                        // https://online.sbis.ru/opendoc.html?guid=4e6981f5-27e1-44e5-832e-2a080a89d6a7
+                        self._scrollController.removeItems(removedItemsIndex, removedItems, action === IObservable.ACTION_MOVE);
+                    }
+                    if (action === IObservable.ACTION_RESET) {
+                        self._scrollController.resetItems();
+                    }
+                    self._scrollController.setIndicesAfterCollectionChange();
+                }
+            }
 
             if (self._selectionController) {
                let result;
@@ -1325,7 +1358,15 @@ const _private = {
         ) {
             self._itemsChanged = true;
             _private.updateInitializedItemActions(self, self._options);
-            }
+        }
+        if (changesType === 'indexesChanged') {
+            let start = self._listViewModel.getStartIndex();
+            let stop = self._listViewModel.getStopIndex();
+            self.updateShadowModeHandler({
+                up: start > 0,
+                down: stop < self._listViewModel.getCount()
+            });
+        }
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
             self._forceUpdate();
@@ -2023,19 +2064,6 @@ const _private = {
             activeElement: options.activeElement,
             useNewModel: options.useNewModel,
             forceInitVirtualScroll: options?.navigation?.view === 'infinity',
-            callbacks: {
-                triggerOffsetChanged: self.triggerOffsetChangedHandler.bind(self),
-                changeIndicatorState: self.changeIndicatorStateHandler.bind(self),
-                triggerVisibilityChanged: self.triggerVisibilityChangedHandler.bind(self),
-                updateShadowMode: self.updateShadowModeHandler.bind(self),
-                scrollResize: self.scrollResizeHandler.bind(self),
-                viewportResize: self.viewportResizeHandler.bind(self),
-                cantScroll: self.cantScrollHandler.bind(self),
-                canScroll: self.canScrollHandler.bind(self),
-                loadMore: self.loadMore.bind(self),
-                scrollMove: self.scrollMoveHandler.bind(self),
-                scrollPositionChanged: self.scrollMoveSyncHandler.bind(self)
-            },
             notify: (name, args, params) => {
                 return self._notify(name, args, params);
             }
@@ -2603,6 +2631,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), viewportRect);
         this._viewPortSize = viewportHeight;
         this._viewPortRect = viewportRect;
+        this.updateTriggerOffset();
     },
 
     scrollResizeHandler(params: object): void {
@@ -2662,14 +2691,28 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
         }
     },
-
-    _viewResize(): void {
+    applyTriggerOffset(top: number, bottom: number): void {
+        this._children.topVirtualScrollTrigger?.style.top = `${top}px`;
+        this._children.bottomVirtualScrollTrigger?.style.bottom = `${bottom}px`;
+        
+    },
+    updateTriggerOffset(): void {
         if (this._scrollController) {
+            const {top, bottom} = this._scrollController.getTriggerOffset(this._viewSize, this._viewPortSize);
+            this.applyTriggerOffset(top, bottom);
+            this._loadOffsetTop = top;
+            this._loadOffsetBottom = bottom;
+        }
+    },
+    _viewResize(): void {
+        const container = this._container[0] || this._container;
+        this._viewSize = container.clientHeight;
+
+        if (this._scrollController) {
+            this.updateTriggerOffset();
             this._scrollController.viewResize(this._container);
         }
 
-        const container = this._container[0] || this._container;
-        this._viewSize = container.clientHeight;
         if (_private.needScrollPaging(this._options.navigation)) {
             const scrollParams = {
                 scrollHeight: this._viewSize,
@@ -2694,13 +2737,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._isMounted = true;
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
+        if (this._needScrollCalculation) {
+            this._registerObserver();
+        }
         if (this._options.itemsDragNDrop) {
             container.addEventListener('dragstart', this._nativeDragStart);
         }
         this._loadedItems = null;
 
         if (this._scrollController) {
-            this._scrollController.afterMount(container, this._children);
+            this._scrollController.afterMount(container);
         }
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
@@ -2866,6 +2912,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 collection: this.getViewModel(),
                 ...newOptions
             });
+            this.updateTriggerOffset();
+            const indicatorState = this._scrollController.getIndicatorState();
+            if (indicatorState) {
+                this._indicatorTimeout = setTimeout(() => {
+                    this.changeIndicatorStateHandler(true, indicatorState);
+                }, INDICATOR_DELAY);
+            }
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -2985,7 +3038,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._checkLoadToDirectionTimeout) {
             clearTimeout(this._checkLoadToDirectionTimeout);
         }
-
+        if (this._checkTriggerVisibilityTimeout) {
+            clearTimeout(this._checkTriggerVisibilityTimeout);
+        }
         if (this._needPagingTimeout) {
             clearTimeout(this._needPagingTimeout);
             this._needPagingTimeout = null;
@@ -3074,7 +3129,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
             if (this._scrollController) {
-                this._scrollController.checkTriggerVisibilityWithTimeout();
+                this.checkTriggerVisibilityWithTimeout();
             }
         }
 
@@ -3099,11 +3154,43 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // её по ошибке: https://online.sbis.ru/opendoc.html?guid=cd0ba66a-115c-44d1-9384-0c81675d5b08
                 correctingHeight = 33;
             }
-            this._scrollController.afterRender(correctingHeight);
+            const indicatorState = this._scrollController.getIndicatorState();
+            if (indicatorState) {
+                this.changeIndicatorStateHandler(false, indicatorState);
+                this._indicatorState = null;
+                clearTimeout(this._indicatorTimeout);
+            }
+            let needCheckTriggers = this._scrollController.afterRender(correctingHeight);
+            if (needCheckTriggers) {
+                this.checkTriggerVisibilityWithTimeout();
+            }
         }
         this._actualPagingVisible = this._pagingVisible;
 
         this._scrollToFirstItemIfNeed();
+    },
+
+    checkTriggerVisibilityWithTimeout(): void {
+        if (this._checkTriggerVisibilityTimeout) {
+            clearTimeout(this._checkTriggerVisibilityTimeout);
+        }
+        this._checkTriggerVisibilityTimeout = setTimeout(() => {
+            this._scrollController.doAfterRender(() => {
+                this.checkTriggerVisibility();
+            });
+            this._checkTriggerVisibilityTimeout = null;
+        }, TRIGGER_VISIBILITY_DELAY);
+    },
+
+    checkTriggerVisibility(): void {
+        if (this._scrollController.isTriggerVisible('up')) {
+            if (this._scrollController.recalcToDirection('up'))
+                this.loadMore('up');
+        }
+        if (this._scrollController.isTriggerVisible('down')) {
+            if (this._scrollController.recalcToDirection('down'))
+                this.loadMore('down');
+        }
     },
 
     _scrollToFirstItemIfNeed(): void {
@@ -3160,10 +3247,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._editInPlace.prepareHtmlInput();
         }
 
-        if (this._scrollController) {
-            this._scrollController.setTriggers(this._children)
-            this._scrollController.registerObserver();
-        }
     },
 
     __onPagingArrowClick(e, arrow) {
@@ -3765,12 +3848,81 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.closeSwipe(this);
         }
     },
+    
+    startBatchAdding(direction: IDirection): void {
+        this._addItemsDirection = direction;
+    },
 
-    _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: any): void {
-        if (this._scrollController) {
-            this._scrollController.observeScroll(eventName, params);
+    stopBatchAdding(): void {
+        const direction = this._addItemsDirection;
+        this._addItemsDirection = null;
+
+        // при 0 записей не надо тревожить виртуальный скролл, т.к. 0 записей не вызывает перестройку DOM
+        // в итоге ScrollContainer, который реагирует на afterRender beforeRender начинает восстанавливать скролл не
+        // по отрисовке записей а по другой перерисовке списка, например появлению пэйджинга
+        if (this._addItems && this._addItems.length) {
+            this._scrollController.addItems(this._addItemsIndex, this._addItems, direction);
+        }
+
+        this._addItems = [];
+        this._addItemsIndex = null;
+    },
+
+    _registerObserver(): void {
+        let triggers = {};
+        SCROLL_TRIGGERS.forEach(name => {
+            triggers[name] = this._children[name];
+        });
+        if (!this._observerRegistered && triggers['scrollObserver']) {
+            // @ts-ignore
+            this._children.scrollObserver.startRegister(triggers);
+            this._observerRegistered = true;
         }
     },
+
+    _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
+        switch (eventName) {
+            case 'virtualPageBottomStart':
+                if (this._scrollController.triggerVisibilityChanged('down', true, params)) {
+                    this.loadMore('down');
+                };
+                break;
+            case 'virtualPageTopStart':
+                if (this._scrollController.triggerVisibilityChanged('up', true, params)) {
+                    this.loadMore('up');
+                }
+                break;
+            case 'virtualPageBottomStop':
+                this._scrollController.triggerVisibilityChanged('down', false, params);
+                break;
+            case 'virtualPageTopStop':
+                this._scrollController.triggerVisibilityChanged('up', false, params);
+                break;
+            case 'scrollMoveSync':
+                this._scrollController.scrollPositionChanged(params);
+                this.scrollMoveSyncHandler(params.scrollTop);
+                break;
+            case 'viewportResize':
+                this._scrollController.viewportResize(params.clientHeight);
+                this.viewportResizeHandler(params.clientHeight, params.rect);
+                break;
+            case 'virtualScrollMove':
+                this._scrollController.scrollBarPositionChanged(params);
+                break;
+            case 'canScroll':
+                this.canScrollHandler(params);
+                break;
+            case 'scrollResize':
+                this.scrollResizeHandler(params);
+                break;
+            case 'scrollMove':
+                this.scrollMoveHandler(params);
+                break;
+            case 'cantScroll':
+                this.cantScrollHandler(params);
+                break;
+        }
+    }
 
     _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter'): boolean {
         // Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate.
