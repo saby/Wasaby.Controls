@@ -1290,31 +1290,6 @@ var
             }
         },
 
-        setLeftSpacing: function(leftSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setLeftSpacing(leftSpacing);
-        },
-
-        setRightSpacing: function(rightSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRightSpacing(rightSpacing);
-        },
-
-        setLeftPadding: function(leftPadding) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setLeftPadding(leftPadding);
-        },
-
-        setRightPadding: function(rightPadding) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRightPadding(rightPadding);
-        },
-
-        setRowSpacing: function(rowSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRowSpacing(rowSpacing);
-        },
-
         isAllGroupsCollapsed(): boolean {
             return this._model.isAllGroupsCollapsed();
         },
@@ -1406,10 +1381,6 @@ var
 
         setItemPadding: function(itemPadding) {
             this._model.setItemPadding(itemPadding);
-        },
-
-        getSwipeItem: function() {
-            return this._model.getSwipeItem();
         },
 
         getCollapsedGroups(): Grouping.TArrayGroupId {
@@ -1504,6 +1475,7 @@ var
                 columns: this._options.columns
             });
 
+            current.showEditArrow = this._options.showEditArrow;
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;

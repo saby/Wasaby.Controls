@@ -1068,7 +1068,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
-                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'setSelectedItems', 'getCurrentIndex',
+                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
                   'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];
