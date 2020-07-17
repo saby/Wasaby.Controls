@@ -20,7 +20,7 @@
        </ws:partial>
     </ws:if>
 
-   <ws:if data="{{marker !== false && !itemData.isEditing() && itemData.isMarked()}}">
+   <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked()}}">
       <div class="{{itemData.getMarkerClasses()}}"></div>
    </ws:if>
 

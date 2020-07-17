@@ -84,7 +84,7 @@
    </ws:if>
 </ws:template>
 <ws:template name="columnContentWrapper">
-   <ws:if data="{{marker !== false && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0}}">
+   <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0}}">
       <div attr:class="{{itemData.getMarkerClasses()}}"></div>
    </ws:if>
    <ws:partial template="columnContent"
