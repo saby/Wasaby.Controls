@@ -127,6 +127,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _parentProperty: string = null;
     protected _menuOptions: object = null;
     protected _isLoadMenuItems: boolean = false;
+    protected _sourcePrefetchProxy: ICrudPlus;
     protected _buttonTemplate: TemplateFunction = getButtonTemplate();
 
     protected _template: TemplateFunction = template;
@@ -177,7 +178,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _getMenuConfigByItem(item: TItem): IStickyPopupOptions {
         const options = this._options;
-        let source = this._originalSource;
+        if (!this._sourcePrefetchProxy) {
+            this._sourcePrefetchProxy = this._createPrefetchProxy(this._originalSource, this._items);
+        }
+        let source = this._sourcePrefetchProxy;
         const root = item.get(options.keyProperty);
 
         // Если запись для выпадающего списка еще не были загружены, то отдаем оригинальный источник вместо prefetchProxy
