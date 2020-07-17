@@ -38,9 +38,11 @@ var
            this._notify('itemClick', [item, e], {bubbling: true});
            this._itemClickNotifiedByPathClick = true;
         },
-        getDefaultOptions() {
+        getDefaultOptions(): {} {
             return {
-                leftPadding: 'S'
+                itemPadding: {
+                    left: 'S'
+                }
             };
         }
     });

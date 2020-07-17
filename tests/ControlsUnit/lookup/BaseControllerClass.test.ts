@@ -1,5 +1,5 @@
 import {default as BaseControllerClass, ILookupBaseControllerOptions} from 'Controls/_lookup/BaseControllerClass';
-import {Memory} from 'Types/source';
+import {Memory, SbisService} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {deepStrictEqual, ok} from 'assert';
@@ -64,6 +64,17 @@ function getLookupControllerWithSelectedKeys(additionalConfig?: object): BaseCon
     return new BaseControllerClass(options as ILookupBaseControllerOptions);
 }
 
+class CustomModel extends Model {
+    protected _moduleName: string = 'customModel';
+    protected _$properties = {
+        isCustom: {
+            get(): boolean {
+                return true;
+            }
+        }
+    };
+}
+
 describe('Controls/_lookup/BaseControllerClass', () => {
 
     describe('loadItems', () => {
@@ -119,6 +130,21 @@ describe('Controls/_lookup/BaseControllerClass', () => {
 
         deepStrictEqual(controller.getItems().getCount(), 1);
         deepStrictEqual(controller.getItems().at(0).get('title'), 'Sasha');
+    });
+
+    it('addItem source model is preparing', () => {
+        const controller = getLookupControllerWithEmptySelectedKeys({
+            source: new SbisService({
+                model: CustomModel
+            })
+        });
+        const item = new Model({
+            rawData: getData()[0],
+            keyProperty: 'id'
+        });
+        controller.addItem(item);
+
+        ok(controller.getItems().at(0) instanceof CustomModel);
     });
 
     it('removeItem', () => {

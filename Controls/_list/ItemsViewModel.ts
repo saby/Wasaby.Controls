@@ -27,23 +27,7 @@ var _private = {
             action === collection.IObservable.ACTION_MOVE
         );
     },
-    checkDeprecated: function(cfg) {
-        if (cfg.leftSpacing && !this.leftSpacing) {
-            this.leftSpacing = true;
-            Logger.warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
-        }
-        if (cfg.leftPadding && !this.leftPadding) {
-            this.leftPadding = true;
-            Logger.warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
-        }
-        if (cfg.rightSpacing && !this.rightSpacing) {
-            this.rightSpacing = true;
-            Logger.warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
-        }
-        if (cfg.rightPadding && !this.rightPadding) {
-            this.rightPadding = true;
-            Logger.warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
-        }
+    checkDeprecated(cfg): void {
         if (cfg.groupingKeyCallback) {
             Logger.warn('IGrouped: Option "groupingKeyCallback" is deprecated and removed in 20.2000. Use option "groupProperty".', self);
         }
@@ -276,14 +260,10 @@ var ItemsViewModel = BaseViewModel.extend({
                 displayProperty: this._options.displayProperty,
                 index: this._display.getIndex(dispItem),
                 item: dispItem.getContents(),
-                dispItem: dispItem,
+                dispItem,
                 theme: this._options.theme,
-
-                //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-                leftSpacing: this._options.leftSpacing || this._options.leftPadding,
-                rightSpacing: this._options.rightSpacing || this._options.rightPadding,
                 _preferVersionAPI: true,
-                getVersion: function() {
+                getVersion(): string {
                     return self._calcItemVersion(itemData.item, itemData.key);
                 }
             };
