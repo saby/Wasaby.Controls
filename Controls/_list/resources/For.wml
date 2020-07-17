@@ -1,4 +1,4 @@
-<ws:template name="ITEM_OUTPUT_BASE_TEMPLATE">
+<ws:template name="ITEM_OUTPUT">
    <ws:partial
            template="wml!Controls/_list/ItemTemplateWrapper"
 
@@ -27,24 +27,24 @@
    />
 </ws:template>
 
-<!-- 2 For -> itemTemplate -> itemOutputLocalTemplate -->
-<ws:template name="itemOutputLocalTemplate">
-   <ws:if data="{{currentItem.beforeItemTemplate}}">
-      <ws:partial template="{{currentItem.beforeItemTemplate}}"
-                  scope="{{currentItem.beforeItemTemplateOptions}}"
-                  itemTemplate="{{itemTemplate}}"
-                  listModel="{{listModel}}"/>
-   </ws:if>
+<ws:template name="ITEM_OUTPUT_WRAPPER">
+   <ws:partial if="{{currentItem.beforeItemTemplate}}"
+               template="{{currentItem.beforeItemTemplate}}"
+               scope="{{currentItem.beforeItemTemplateOptions}}"
+               itemTemplate="{{itemTemplate}}"
+               listModel="{{listModel}}"/>
 
-
+   <!-- Группа -->
    <ws:if data="{{currentItem.isGroup}}">
 
+      <!-- Добавление в пустую скрытую группу -->
       <ws:if data="{{ editingItemData && isAdd && currentItem.index === 0 && editingItemData.index === 0}}">
-         <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
+         <ws:partial template="ITEM_OUTPUT"
                      itemData="{{editingItemData}}"
                      attr:key="{{editingItemData.key}}"/>
       </ws:if>
 
+      <!-- Шаблон элемента -->
       <ws:partial
               template="{{groupTemplate}}"
               itemData="{{currentItem}}"
@@ -53,75 +53,68 @@
               on:click="_onGroupClick(currentItem.dispItem)"/>
       {{listModel.goToNext();}}
    </ws:if>
+
+   <!-- Запись -->
    <ws:else>
 
-
+      <!-- Показываются элементы виртуальной страницы, стикнутая группа и элемент мастер-списка -->
       <ws:if data="{{listModel.isShouldBeDrawnItem(currentItem)}}">
+
          <!-- Перетаскивается запись в позицию перед текущей -->
          <ws:if data="{{currentItem.dragTargetPosition === 'before'}}">
             <ws:partial
-                    template="ITEM_OUTPUT_BASE_TEMPLATE"
+                    template="ITEM_OUTPUT"
                     attr:key="{{ currentItem.draggingItemData.key + '__dragged' }}"
                     itemData="{{currentItem.draggingItemData}}"/>
          </ws:if>
 
          <!-- Добавление записи перед текущей -->
          <ws:if data="{{editingItemData && isAdd && currentItem.index === editingItemData.index && editingItemData.addPosition === 'top'}}">
-            <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
+            <ws:partial template="ITEM_OUTPUT"
                         itemData="{{editingItemData}}"
                         attr:key="{{ editingItemData.key }}_addingBefore"/>
          </ws:if>
 
          <!-- Текущая запись. Скрыта, если она перетаскивается. -->
          <ws:if data="{{currentItem.isVisible !== false}}">
-            <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
+            <ws:partial template="ITEM_OUTPUT"
                         itemData="{{currentItem}}"
                         attr:key="{{ currentItem.key }}"/>
          </ws:if>
 
          <!-- Добавление записи после текущей -->
          <ws:if data="{{editingItemData && isAdd && currentItem.index === editingItemData.index - 1 && editingItemData.addPosition !== 'top'}}">
-            <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
+            <ws:partial template="ITEM_OUTPUT"
                         itemData="{{editingItemData}}"
                         attr:key="{{editingItemData.key}}_addingAfter"/>
          </ws:if>
 
          <!-- Перетаскивается запись в позицию после текущей -->
          <ws:if data="{{currentItem.dragTargetPosition === 'after'}}">
-            <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
+            <ws:partial template="ITEM_OUTPUT"
                         itemData="{{currentItem.draggingItemData}}"
                         attr:key="{{currentItem.draggingItemData.key + '__dragged'}}"/>
          </ws:if>
       </ws:if>
       {{listModel.goToNext()}}
-
-
    </ws:else>
 
-
-   <ws:if data="{{currentItem.afterItemTemplate}}">
-      <ws:partial template="{{currentItem.afterItemTemplate}}"
-                  scope="{{currentItem.afterItemTemplateOptions}}"
-                  itemTemplate="{{itemTemplate}}"
-                  listModel="{{listModel}}"/>
-   </ws:if>
-
-</ws:template>
-
-
-<!-- 1 For -> itemTemplate -->
-<ws:template name="itemTemplate">
-
-
+   <ws:partial if="{{currentItem.afterItemTemplate}}"
+               template="{{currentItem.afterItemTemplate}}"
+               scope="{{currentItem.afterItemTemplateOptions}}"
+               itemTemplate="{{itemTemplate}}"
+               listModel="{{listModel}}"/>
 </ws:template>
 
 
 <ws:for data="listModel.reset(); listModel.isEnd();">
-   <ws:partial template="itemTemplate" currentItem="{{listModel.getCurrent()}}"/>
+   <ws:partial template="ITEM_OUTPUT_WRAPPER" currentItem="{{listModel.getCurrent()}}"/>
 </ws:for>
 
-<ws:if data="{{listModel.getCount() === 0 && editingItemData && isAdd}}">
-   <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
-               itemData="{{editingItemData}}"
-               attr:key="{{editingItemData.key}}"/>
+<ws:if data="{{ listModel.getCount() === 0 && editingItemData && isAdd }}">
+   <ws:partial template="ITEM_OUTPUT"
+               itemData="{{ editingItemData }}"
+               attr:key="{{ editingItemData.key }}"/>
 </ws:if>
+
+<!-- For.wml/For -> ITEM_OUTPUT_WRAPPER (1) -> ITEM_OUTPUT (2) -> Controls/_list/ItemTemplateWrapper.wml (3) -->

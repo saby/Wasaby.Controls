@@ -80,14 +80,12 @@ var _private = {
 
     // New Model compatibility
     addNewModelCompatibilityForItem(itemsModelCurrent: any): void {
-        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}, silent: boolean = true): void => {
-            itemsModelCurrent.itemActions = actions;
-            if (itemsModelCurrent.dispItem.setActions) {
-                itemsModelCurrent.dispItem.setActions(actions, silent);
-            }
+        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]},
+                                        silent: boolean = true): void => {
+            itemsModelCurrent.dispItem.setActions(actions, silent);
         };
         itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => (
-            itemsModelCurrent.dispItem.getActions ? itemsModelCurrent.dispItem.getActions() : itemsModelCurrent.itemActions
+            itemsModelCurrent.dispItem.getActions()
         );
         itemsModelCurrent.setActive = (state: boolean, silent?: boolean): void => {
             if (itemsModelCurrent.dispItem.setActive !== undefined) {
@@ -115,7 +113,7 @@ var _private = {
             itemsModelCurrent.dispItem.hasVisibleActions !== undefined ? itemsModelCurrent.dispItem.hasVisibleActions() : false
         );
         itemsModelCurrent.shouldDisplayActions = (): boolean => (
-            itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing
+            itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing()
         );
         itemsModelCurrent.hasActionWithIcon = (): boolean => (
             itemsModelCurrent.dispItem.hasActionWithIcon !== undefined ? itemsModelCurrent.dispItem.hasActionWithIcon() : false
@@ -130,14 +128,12 @@ var _private = {
             }
         };
         itemsModelCurrent.setEditing = (editing: boolean): void => {
-            itemsModelCurrent.isEditing = editing;
             if (itemsModelCurrent.dispItem.setEditing !== undefined) {
                 itemsModelCurrent.dispItem.setEditing(editing, itemsModelCurrent.item, true);
             }
         };
-        itemsModelCurrent.isEditingState = () => (
-            itemsModelCurrent.isEditing
-        );
+        itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent.dispItem.isEditing();
+        itemsModelCurrent.isMarked = (): boolean => itemsModelCurrent.dispItem.isMarked();
         itemsModelCurrent.getItemActionClasses = (itemActionsPosition: string, theme?: string): string => (
             itemsModelCurrent.dispItem.getItemActionClasses ?
                 itemsModelCurrent.dispItem.getItemActionClasses(itemActionsPosition, theme) : ''
@@ -190,9 +186,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         // New Model compatibility
         _private.addNewModelCompatibilityForItem(itemsModelCurrent);
 
-        itemsModelCurrent.itemActions = {};
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
-        itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         itemsModelCurrent._isSelected = itemsModelCurrent.dispItem.isMarked();
         itemsModelCurrent.multiSelectStatus = itemsModelCurrent.isSelected();
         itemsModelCurrent.searchValue = this._options.searchValue;
@@ -211,10 +205,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.virtualScrollConfig = this._isSupportVirtualScroll();
         }
 
-        itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
-            return marker !== false && !itemsModelCurrent.dispItem.isEditing() && itemsModelCurrent.dispItem.isMarked();
-        };
-
         itemsModelCurrent.getMarkerClasses = (): string => {
             const style = this._options.style || 'default';
             return `controls-ListView__itemV_marker
@@ -227,9 +217,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
         }
 
-        // isEditing напрямую используется в Engine, поэтому просто так его убирать нельзя
         if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
-            itemsModelCurrent.isEditing = true;
             itemsModelCurrent.item = this._editingItemData.item;
         }
 
@@ -333,9 +321,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
      * Проставить маркер
      * @param key ключ элемента, в котором задается состояние marked
      * @param status значение marked
-     * @param silent уведомлять ли о событии. Если false, то не будет перерисована модель и не стрельнет событие onMarkedKeyChanged
      */
-    setMarkedKey(key: number|string, status: boolean, silent: boolean = false): void {
+    setMarkedKey(key: number|string, status: boolean): void {
         // status - для совместимости с новой моделью, чтобы сбросить маркер нужно передать false
         if (this._markedKey === key && status !== false) {
             return;
@@ -358,9 +345,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
-        if (!silent) {
-            this._notify('onMarkedKeyChanged', this._markedKey);
-        }
     },
 
     setMarkerVisibility: function(markerVisibility) {
@@ -426,10 +410,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
     getSelectionStatus: function(key) {
         return this.getItemBySourceKey(key)?.isSelected();
-    },
-
-    getSwipeItem: function() {
-        return this._swipeItem.actionsItem;
     },
 
     getActiveItem: function() {
@@ -618,10 +598,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     _prepareDisplayItemForAdd: function(item) {
         return ItemsUtil.getDefaultDisplayItem(this._display, item);
-    },
-
-    getActionsItem: function(item) {
-      return item;
     },
 
     // New Model compatibility

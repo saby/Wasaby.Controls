@@ -309,13 +309,13 @@ var
                 classLists.base += ' controls-Grid__cell_fit';
             }
 
-            if (current.isEditing) {
+            if (current.isEditing()) {
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
                 classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;
             }
 
-            if (current.columnScroll && !current.isEditing) {
+            if (current.columnScroll && !current.isEditing()) {
                 classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
             }
 
@@ -335,7 +335,7 @@ var
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
                 // нужно его принудительно установить как фон таблицы
-                if (!isFullGridSupport && !current.isEditing) {
+                if (!isFullGridSupport && !current.isEditing()) {
                     classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
                 }
 
@@ -665,9 +665,6 @@ var
                 this._nextVersion();
                 this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
             }.bind(this);
-            this._onMarkedKeyChangedFn = function(event, key) {
-                this._notify('onMarkedKeyChanged', key);
-            }.bind(this);
             this._onGroupsExpandChangeFn = function(event, changes) {
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
@@ -679,7 +676,6 @@ var
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
             this._model.setUpdateIndexesCallback(this._updateIndexesCallback.bind(this));
             this._model.subscribe('onListChange', this._onListChangeFn);
-            this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             const separatorSizes = _private.getSeparatorSizes(this._options);
@@ -1383,10 +1379,6 @@ var
             this._model.setItemPadding(itemPadding);
         },
 
-        getSwipeItem: function() {
-            return this._model.getSwipeItem();
-        },
-
         getCollapsedGroups(): Grouping.TArrayGroupId {
             return this._model.getCollapsedGroups();
         },
@@ -1499,10 +1491,6 @@ var
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
             );
 
-            const superShouldDrawMarker = current.shouldDrawMarker;
-            current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
-                return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
-            };
             const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}
             controls-GridView__itemV_marker-${style}_theme-${self._options.theme}
@@ -1637,7 +1625,6 @@ var
                         tableCellStyles: '',
                         getItemActionPositionClasses: current.getItemActionPositionClasses,
                         getItemActionClasses: current.getItemActionClasses,
-                        isEditingState: current.isEditingState,
                         isSwiped: current.isSwiped,
                         getActions: current.getActions,
                         getContents: current.getContents
@@ -2126,7 +2113,6 @@ var
 
         destroy: function() {
             this._model.unsubscribe('onListChange', this._onListChangeFn);
-            this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.unsubscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
             this._model.destroy();

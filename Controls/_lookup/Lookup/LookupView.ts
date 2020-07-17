@@ -216,11 +216,6 @@ var LookupView = BaseLookupView.extend({
       this._listOfDependentOptions = LIST_OF_DEPENDENT_OPTIONS;
    },
 
-   _afterMount: function() {
-      LookupView.superclass._afterMount.apply(this, arguments);
-      _private.initializeConstants(this);
-   },
-
    _isNeedCalculatingSizes: function(options) {
       // not calculating sizes in a single choice or with records no more than 1 in read mode, because calculations will be on css styles
       return !this._isEmpty(options) && (options.multiSelect || options.comment) && (!options.readOnly || options.items.getCount() > 1);
@@ -241,6 +236,7 @@ var LookupView = BaseLookupView.extend({
          isShowCounter = _private.isShowCounter(multiLineState, itemsCount, maxVisibleItems);
 
       if (this._isNeedCalculatingSizes(newOptions)) {
+         _private.initializeConstants(this);
          // in mode read only and single line, counter does not affect the collection
          if (isShowCounter && (!newOptions.readOnly || newOptions.multiLine)) {
             counterWidth = _private.getCounterWidth(itemsCount, newOptions.theme, newOptions.fontSize);
