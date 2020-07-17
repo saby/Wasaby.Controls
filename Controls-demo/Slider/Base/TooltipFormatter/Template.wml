@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell" style="margin-top: 50px;">
         <Controls.slider:Base
                 maxValue="{{100}}"
                 minValue="{{0}}"

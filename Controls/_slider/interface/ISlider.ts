@@ -173,7 +173,6 @@ export interface ISlider {
  * @name Controls/_slider/interface/ISlider#minValue
  * @cfg {Number} Устанавливает минимальное значение слайдера.
  * @remark Должно быть меньше, чем {@link maxValue}.
- * @demo Controls-demo/Slider/Base/Base/Index
  * @example
  * Слайдер с границей:
  * <pre class="brush:html">
@@ -186,7 +185,6 @@ export interface ISlider {
  * @name Controls/_slider/interface/ISlider#minValue
  * @cfg {Number} sets the minimum value of slider
  * @remark must be less than maxValue
- * @demo Controls-demo/Slider/Base/Base/Index
  * @example
  * Slider with border
  * <pre class="brush:html">
@@ -199,7 +197,6 @@ export interface ISlider {
  * @name Controls/_slider/interface/ISlider#maxValue
  * @cfg {Number} Устанавливает максимальное значение слайдера.
  * @remark Должно быть больше, чем {@link minValue}.
- * @demo Controls-demo/Slider/Base/Base/Index
  * @example
  * Слайдер с границей:
  * <pre class="brush:html">
@@ -212,7 +209,6 @@ export interface ISlider {
  * @name Controls/_slider/interface/ISlider#maxValue
  * @cfg {Number} sets the maximum value of slider
  * @remark must be greater than minValue
- * @demo Controls-demo/Slider/Base/Base/Index
  * @example
  * Slider with border
  * <pre class="brush:html">
