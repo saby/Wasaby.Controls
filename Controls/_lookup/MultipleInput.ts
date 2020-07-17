@@ -87,7 +87,8 @@ export default class MultipleInput extends BaseLookup {
         return {
             ...BaseLookup.getDefaultOptions(),
             ...{
-                itemTemplate
+                itemTemplate,
+                multiSelect: true
             }
         };
     }

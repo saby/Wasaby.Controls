@@ -12,7 +12,7 @@
  * Constants
  * <ul>
  *    <li>
- *       view.hiddenGroup - Constant for determining item in the hiddenGroup in the {@link Controls/interface/IGrouped#groupProperty groupProperty}
+ *       view.hiddenGroup - Constant for determining item in the hiddenGroup in the {@link Controls/interface/IGroupedList#groupProperty groupProperty}
  *    </li>
  *    <li>
  *       editing.CANCEL - Constant that can be returned in {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit} to cancel editing

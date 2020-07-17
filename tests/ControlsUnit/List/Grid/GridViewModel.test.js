@@ -167,7 +167,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             getContents: () => [],
             isEditing: () => false,
             setEditing: (v) => {},
-            isSelected: () => false
+            isSelected: () => false,
+            isMarked: () => false
          };
 
          it('calcItemColumnVersion', function() {
@@ -698,7 +699,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                       'controls-Grid__row-checkboxCell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default '
                };
 
-            gridViewModel.setMarkedKey(123);
+            gridViewModel.setMarkedKey(123, true);
             assert.equal(gridViewModel.getMarkedKey(), 123);
 
             current = gridViewModel.getCurrent();
@@ -785,7 +786,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('shouldDrawMarker', function() {
             const gridViewModel = new gridMod.GridViewModel(cfg);
-            gridViewModel.setMarkedKey(123);
+            gridViewModel.setMarkedKey(123, true);
             assert.equal(gridViewModel.getMarkedKey(), 123);
             const firstItem = gridViewModel._model.getDisplay().at(0);
             let itemData = gridViewModel.getItemDataByItem(firstItem);
@@ -845,7 +846,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell__last controls-Grid__row-cell__last-default_theme-default'
                ];
 
-            gridViewModel.setMarkedKey(123);
+            gridViewModel.setMarkedKey(123, true);
             assert.equal(gridViewModel.getMarkedKey(), 123);
 
             current = gridViewModel.getCurrent();
@@ -896,7 +897,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          var
             gridViewModel = new gridMod.GridViewModel(cfg),
             current;
-         gridViewModel.setMarkedKey(123);
+         gridViewModel.setMarkedKey(123, true);
          assert.equal(gridViewModel.getMarkedKey(), 123);
 
          current = gridViewModel.getCurrent();
@@ -1071,7 +1072,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
-                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'setSelectedItems', 'getCurrentIndex',
+                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
                   'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];

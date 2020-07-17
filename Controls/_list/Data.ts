@@ -42,16 +42,15 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
       /**
        * @name Controls/_list/Data#root
        * @cfg {Number|String} Идентификатор корневого узла. 
-       * Он отправляеться в фильтре. 
+       * Он отправляется в фильтре. 
        * Значение берется из опции {@link Controls/_interface/IHierarchy#parentProperty parentProperty}.
        * @example
-       * <pre>
-       *    <Controls.list:DataContainer
-       *       keyProperty="id"
-       *       filter="{{_filter}}"
-       *       source="{{_source}}" 
-       *       root="Сотрудники"
-       *    />
+       * <pre class="brush: js; highlight: [5]">
+       * <Controls.list:DataContainer
+       *     keyProperty="id"
+       *     filter="{{_filter}}"
+       *     source="{{_source}}" 
+       *     root="Сотрудники"/>
        * </pre>
        */
 

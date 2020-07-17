@@ -2,11 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Controller');
 import ValidateContainer from 'Controls/_validate/Container';
 import ControllerClass from 'Controls/_validate/ControllerClass';
-
-interface IValidateResult {
-    [key: number]: boolean;
-    hasErrors?: boolean;
-}
+import IValidateResult from 'Controls/_validate/interfaces/IValidateResult';
 
 /**
  * Контрол, регулирующий валидацию формы.

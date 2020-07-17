@@ -438,6 +438,11 @@ var Base = Control.extend({
     _type: 'text',
 
     /**
+     * Значение атрибута inputmode в нативном поле ввода.
+     */
+    _inputMode: 'text',
+
+    /**
      * @type {String} Value of the name attribute in the native field.
      * @protected
      */
@@ -688,6 +693,7 @@ var Base = Control.extend({
             scope: {
                 controlName: CONTROL_NAME,
                 autoComplete: this._autoComplete,
+                inputMode: this._inputMode,
                 calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
                 isFieldFocused: _private.isFieldFocused.bind(_private, this)
             }
@@ -755,6 +761,12 @@ var Base = Control.extend({
         if (keyCode === Env.constants.key.enter && this._isTriggeredChangeEventByEnterKey()) {
             _private.callChangeHandler(this);
         }
+    },
+    _cutHandler: function() {
+        // redefinition
+    },
+    _copyHandler: function() {
+        // redefinition
     },
     /**
      * Event handler key up in native field.

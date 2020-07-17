@@ -440,6 +440,7 @@ export interface IEditingOptions {
     notify?: any;
     forceUpdate?: Function;
     listView?: any;
+    updateMarkedKey: Function;
     updateItemActions: Function;
     isDestroyed: Function;
     theme: String;
@@ -848,6 +849,8 @@ export default class EditInPlace {
             listViewModel._setEditingItemData(this._editingItemData, useNewModel);
         }
 
+        this._options.updateMarkedKey(item.getKey());
+
         listViewModel.subscribe('onCollectionChange', this._updateIndex);
     }
 
@@ -890,12 +893,19 @@ export default class EditInPlace {
     }
 
     _showIndicator(): void {
-        this._loadingIndicatorId = this._notify('showIndicator', [{}], {bubbling: true});
+        // Редактирование по месту использует глобальный индикатор загрузки.
+        // Если какая либо операция вызвала индикатор и до его закрытия произошла еще одна операция
+        // нуждающаяся в индикаторе, не нужно скрывать прошлый и показывать новый, т.к. будет моргание индикатора.
+        if (!this._loadingIndicatorId) {
+            this._loadingIndicatorId = this._notify('showIndicator', [{}], {bubbling: true});
+        }
     }
 
     _hideIndicator(): void {
-        this._notify('hideIndicator', [this._loadingIndicatorId], {bubbling: true});
-        this._loadingIndicatorId = null;
+        if (this._loadingIndicatorId) {
+            this._notify('hideIndicator', [this._loadingIndicatorId], {bubbling: true});
+            this._loadingIndicatorId = null;
+        }
     }
 
     reset(): void {

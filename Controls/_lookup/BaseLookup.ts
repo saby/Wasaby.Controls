@@ -5,15 +5,20 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor, Model} from 'Types/entity';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
+import {ICrudPlus} from 'Types/source';
 
 type LookupReceivedState = RecordSet|null;
+
+export interface ILookupOptions extends ILookupBaseControllerOptions {
+    suggestSource?: ICrudPlus;
+}
 
 export default abstract class BaseLookup extends Control {
     protected _lookupController: LookupController;
     protected _items: SelectedItems;
 
     protected _beforeMount(
-        options: ILookupBaseControllerOptions,
+        options: ILookupOptions,
         context: object,
         receivedState: LookupReceivedState
     ): Promise<LookupReceivedState> | void {
@@ -31,7 +36,7 @@ export default abstract class BaseLookup extends Control {
         }
     }
 
-    protected _beforeUpdate(newOptions: ILookupBaseControllerOptions): void {
+    protected _beforeUpdate(newOptions: ILookupOptions): void {
         const updateResult = this._lookupController.update(newOptions);
         const updateResultCallback = () => {
             this._afterItemsChanged();

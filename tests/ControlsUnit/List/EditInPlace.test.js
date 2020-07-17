@@ -142,6 +142,7 @@ define([
             notify: () => undefined,
             forceUpdate: () => undefined,
             source: source,
+            updateMarkedKey: () => undefined,
             updateItemActions: () => undefined,
             multiSelectVisibility: false,
             notify: () => undefined,
@@ -894,6 +895,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHiden = true;
                   }
@@ -930,6 +932,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHiden = true;
                   }
@@ -968,6 +971,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHidden = true;
                   }
@@ -2246,6 +2250,32 @@ define([
             assert.equal(eip._formController, formController);
          });
       });
+
+      it('multi call showIndicator. Should be shown only one indicator', () => {
+         const globalIndicatorId = 123;
+         let showCount = 0;
+         let hideCount = 0;
+
+         eip._notify = (eName, args) => {
+            if (eName === 'showIndicator') {
+               showCount++;
+               return globalIndicatorId;
+            } else if (eName === 'hideIndicator') {
+               hideCount++;
+               assert.equal(args[0], globalIndicatorId);
+            }
+         };
+
+         eip._showIndicator();
+         eip._showIndicator();
+
+         eip._hideIndicator();
+         eip._hideIndicator();
+
+         assert.equal(1, showCount);
+         assert.equal(1, hideCount);
+      });
+
 
    });
 

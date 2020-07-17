@@ -15,11 +15,12 @@ export default class Dialog extends Base {
     _opener = DialogOpener;
 
     /**
-     * Метод для открытия диалоговых окон
-     * @function Controls/_popup/PopupHelper/Dialog#open
+     * Метод для открытия диалоговых окон.
+     * @name Controls/_popup/PopupHelper/Dialog#open
+     * @function
      * @param {PopupOptions} config Конфигурация диалогового окна
      * @example
-     * <pre>
+     * <pre class="brush: js">
      *    import {DialogOpener} from 'Controls/popup';
      *    ...
      *    this._dialog = new DialogOpener();
@@ -34,10 +35,11 @@ export default class Dialog extends Base {
      */
 
     /**
-     * Метод для закрытия диалогового окна
-     * @function Controls/_popup/PopupHelper/Dialog#close
+     * Метод для закрытия диалогового окна.
+     * @name Controls/_popup/PopupHelper/Dialog#close
+     * @function
      * @example
-     * <pre>
+     * <pre class="brush: js">
      *    import {DialogOpener} from 'Controls/popup';
      *    ...
      *    this._dialog = new DialogOpener();

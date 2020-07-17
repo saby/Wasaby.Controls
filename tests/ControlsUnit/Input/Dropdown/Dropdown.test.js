@@ -361,6 +361,15 @@ define(
             assert.deepEqual(newItems, ddl._controller._items.getRawData());
             assert.isOk(ddl._controller._menuSource);
          });
+
+         it('controller options', function() {
+            const ddl = getDropdown(config);
+            const result = ddl._getControllerOptions({
+               nodeFooterTemplate: 'testNodeFooterTemplate'
+            });
+
+            assert.equal(result.nodeFooterTemplate, 'testNodeFooterTemplate');
+         });
       });
    }
 );

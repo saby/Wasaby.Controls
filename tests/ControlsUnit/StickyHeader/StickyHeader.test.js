@@ -109,21 +109,21 @@ define([
          });
       });
 
-      describe('_onScrollStateChanged', function() {
+      describe('_onScrollStateChangedOld', function() {
          it('canScroll', function () {
             const component = createComponent(StickyHeader, {});
             sinon.stub(component, '_forceUpdate');
             component._model = {
                fixedPosition: 'top'
             };
-            component._onScrollStateChanged('canScroll');
+            component._onScrollStateChangedOld('canScroll');
             assert.isTrue(component._canScroll);
             sinon.assert.called(component._forceUpdate);
          });
 
          it('cantScroll', function () {
             const component = createComponent(StickyHeader, {});
-            component._onScrollStateChanged('cantScroll');
+            component._onScrollStateChangedOld('cantScroll');
             assert.isFalse(component._canScroll);
          });
       });
@@ -227,18 +227,6 @@ define([
             assert.include(style, 'top: 7px;');
             assert.include(style, 'margin-top: -3px;');
             assert.include(style, 'padding-top:4px;');
-         });
-
-         it('should return correct shadow styles for iOS.', function() {
-            const component = createComponent(StickyHeader, {});
-            component._isSafari13 = true;
-            sandbox.stub(component, '_getNormalizedContainer').returns({
-               offsetWidth: 10,
-               offsetHeight: 10
-            });
-            component.updateBottomShadowStyle();
-            assert.equal(component._bottomShadowStyle, 'bottom: unset; right: unset; top:10px; width:10px;');
-            assert.equal(component._topShadowStyle, 'right: unset; width:10px;');
          });
 
          it('should return correct styles for container with border on mobile platforms.', function() {
@@ -369,14 +357,14 @@ define([
          });
       });
 
-      describe('_updateFixed', function() {
+      describe('updateFixed', function() {
          it('should turn on a shadow and generate force update if the corresponding identifier is passed.', function() {
             const component = createComponent(StickyHeader, {});
             component._isFixed = false;
             component._canScroll = true;
             component._model = { fixedPosition: false };
             sinon.stub(component, '_forceUpdate');
-            component._updateFixed([component._index]);
+            component.updateFixed([component._index]);
             assert.isTrue(component._isFixed);
             sinon.assert.called(component._forceUpdate);
             sinon.restore();
@@ -387,7 +375,7 @@ define([
             component._canScroll = true;
             component._model = { fixedPosition: false };
             sinon.stub(component, '_forceUpdate');
-            component._updateFixed(['someId']);
+            component.updateFixed(['someId']);
             assert.isFalse(component._isFixed);
             sinon.assert.called(component._forceUpdate);
             sinon.restore();
@@ -396,7 +384,7 @@ define([
             const component = createComponent(StickyHeader, {});
             component._isFixed = true;
             sinon.stub(component, '_forceUpdate');
-            component._updateFixed([component._index]);
+            component.updateFixed([component._index]);
             assert.isTrue(component._isFixed);
             sinon.assert.notCalled(component._forceUpdate);
             sinon.restore();
