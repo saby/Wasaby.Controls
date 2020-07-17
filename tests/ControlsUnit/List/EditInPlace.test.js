@@ -1810,7 +1810,7 @@ define([
                   clientX: 10,
                   clientY: 20
                },
-               type: 'click'
+               type: 'mouseup'
             });
             assert.equal(eip._clickItemInfo.item, newItem);
             assert.equal(eip._clickItemInfo.clientX, 10);
@@ -1843,7 +1843,7 @@ define([
                   clientX: 10,
                   clientY: 20
                },
-               type: 'click'
+               type: 'mouseup'
             });
             assert.equal(null, eip._clickItemInfo);
             assert.isTrue(clickPropagationStopped);
@@ -1869,7 +1869,7 @@ define([
                   clientX: 0,
                   clientY: 0
                },
-               type: 'click'
+               type: 'mouseup'
             });
          });
 
@@ -1894,7 +1894,7 @@ define([
                   clientX: 0,
                   clientY: 0
                },
-               type: 'click'
+               type: 'mouseup'
             });
          });
 
@@ -1926,7 +1926,7 @@ define([
                   clientX: 0,
                   clientY: 0
                },
-               type: 'click'
+               type: 'mouseup'
             });
          });
 
@@ -1951,7 +1951,7 @@ define([
                   clientX: 0,
                   clientY: 0
                },
-               type: 'click'
+               type: 'mouseup'
             });
          });
       });

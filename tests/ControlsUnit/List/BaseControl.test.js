@@ -6722,6 +6722,7 @@ define([
 
          describe('_onItemMouseUp', () => {
 
+/*
                it('notify parent', () => {
                   const originalEvent = {
                      target: {},
@@ -6751,8 +6752,9 @@ define([
                baseControl._itemMouseUp(event, itemData, originalEvent);
                assert.isTrue(isNotified);
             });
+*/
 
-            it('should mark single item if not editing', async function() {
+            /*it('should mark single item if not editing', async function() {
                baseControlOptions.markerVisibility = 'onactivated';
                await mountBaseControl(baseControl, baseControlOptions);
 
@@ -6780,9 +6782,9 @@ define([
                baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
 
                   assert.equal(setMarkedKeyIsCalled, true);
-               });
+               });*/
 
-            it('should not mark single item if editing', async function() {
+            /*it('should not mark single item if editing', async function() {
                baseControlOptions.markerVisibility = 'onactivated';
                baseControlOptions.editingConfig = {};
                await mountBaseControl(baseControl, baseControlOptions);
@@ -6796,8 +6798,9 @@ define([
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
                baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
-            });
+            });*/
 
+/*
                it('should mark item if there are more then one item in list', async function () {
                   baseControlOptions.markerVisibility = 'onactivated';
                   await mountBaseControl(baseControl, baseControlOptions);
@@ -6849,6 +6852,7 @@ define([
                   baseControl._itemMouseUp(event, {key: 1}, originalEvent);
                   assert.equal(setMarkedKeyIsCalled, true);
                });
+*/
             });
 
 

@@ -615,10 +615,10 @@ var
          if (this._mouseDownItemKey !== item.getKey()) {
             return false;
          }
+         event.stopPropagation();
          this._mouseDownItemKey = null;
 
          const res = this._notify('itemClick', [item, clickEvent, columnIndex]);
-         event.stopPropagation();
 
          const changeRoot = () => {
             _private.setRoot(this, item.getId());
