@@ -266,21 +266,27 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         });
     }
 
-    private _setDefailtOptions(items: RecordSet<Record>): RecordSet<Record> {
+    private _setDefaultOptions(items: RecordSet<Record>): RecordSet<Record> {
         items.each((item) => {
-            const viewModeValue = item.get('viewMode') ;
+            const iconValue = item.get('icon') || item.get('buttonIcon');
+            const iconStyleValue = item.get('iconStyle') || item.get('buttonIconStyle') || 'secondary';
+            const viewModeValue = item.get('viewMode') || item.get('buttonViewMode');
             let captionValue = '';
+            const readOnlyValue = item.get('buttonReadOnly') || item.get('readOnly');
+
             if (viewModeValue && viewModeValue !== 'toolButton') {
-                captionValue = item.get('caption');
+                captionValue = item.get('caption') || item.get('buttonCaption')
             } else if (item.get('title') && !viewModeValue) {
                 captionValue = item.get('title');
             }
 
-            item.set('iconStyle', item.get('iconStyle') || 'secondary');
+            item.set('icon', iconValue);
+            item.set('iconStyle', iconStyleValue);
             item.set('viewMode', viewModeValue || 'link');
             item.set('caption', captionValue);
+            item.set('readOnly', readOnlyValue);
 
-            if (item.get('icon') && item.get('icon').split(' ').length === 1) {
+            if (iconValue && iconValue.split(' ').length === 1) {
                 item.set('iconSize', 'm');
             }
         });
@@ -297,7 +303,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _setStateByItems(items: TItems, source: ICrudPlus): void {
         this._fullItemsList = items;
-        this._items = this._setDefailtOptions(items);
+        this._items = this._setDefaultOptions(items);
         this._needShowMenu = needShowMenu(this._items);
     }
 

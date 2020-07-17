@@ -312,7 +312,6 @@ define(
                         closeButtonVisibility: false
                      }
                   };
-               let instance = new toolbars.View();
                assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
 
                testSelf._items = { getIndexByValue: () => { return -1; } }; // для элемента не найдены записи в списке
