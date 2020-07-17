@@ -4725,6 +4725,66 @@ define([
             assert.equal(activeItem, null);
          });
 
+         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто удалён из списка
+         // Код должен работать согласно https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
+         it('should close context menu if its owner was removed', function() {
+            instance._itemActionsMenuId = 'popup-id-0';
+            instance._itemActionsController.setActiveItem(item);
+            instance.getViewModel()
+               ._notify(
+                  'onListChange',
+                  'collectionChanged',
+                  collection.IObservable.ACTION_REMOVE,
+                  null,
+                  null,
+                  [{
+                     getContents: () => {
+                        return {
+                           getKey: () => 2
+                        };
+                     }
+                  }],
+                  null);
+
+            assert.isNull(instance._itemActionsMenuId);
+            assert.isNull(instance._itemActionsController.getActiveItem());
+         });
+
+         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто удалён из списка.
+         // Даже если это breadCrumbsItem
+         // Код должен работать согласно https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
+         it('should close context menu if its owner was removed even if it was breadcrumbsItem', function() {
+            instance._itemActionsMenuId = 'popup-id-0';
+            const itemAt1 = instance._listViewModel.at(1);
+            const breadcrumbItem = {
+               '[Controls/_display/BreadcrumbsItem]': true,
+               _$active: false,
+               getContents: () => ['fake', 'fake', 'fake', itemAt1.getContents() ],
+               setActive: function() {
+                  this._$active = true;
+               },
+               getActions: () => ({
+                  all: [{
+                     id: 2,
+                     showType: 0
+                  }]
+               })
+            };
+            instance._itemActionsController.setActiveItem(breadcrumbItem);
+            instance.getViewModel()
+               ._notify(
+                  'onListChange',
+                  'collectionChanged',
+                  collection.IObservable.ACTION_REMOVE,
+                  null,
+                  null,
+                  [breadcrumbItem],
+                  null);
+
+            assert.isNull(instance._itemActionsMenuId);
+            assert.isNull(instance._itemActionsController.getActiveItem());
+         });
+
          // Должен сбрасывать activeItem Только после того, как мы закрыли последнее меню.
          describe ('Multiple clicks to open context menu', () => {
             let fakeEvent;
