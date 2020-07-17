@@ -665,9 +665,6 @@ var
                 this._nextVersion();
                 this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
             }.bind(this);
-            this._onMarkedKeyChangedFn = function(event, key) {
-                this._notify('onMarkedKeyChanged', key);
-            }.bind(this);
             this._onGroupsExpandChangeFn = function(event, changes) {
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
@@ -679,7 +676,6 @@ var
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
             this._model.setUpdateIndexesCallback(this._updateIndexesCallback.bind(this));
             this._model.subscribe('onListChange', this._onListChangeFn);
-            this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             const separatorSizes = _private.getSeparatorSizes(this._options);
@@ -1293,31 +1289,6 @@ var
             }
         },
 
-        setLeftSpacing: function(leftSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setLeftSpacing(leftSpacing);
-        },
-
-        setRightSpacing: function(rightSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRightSpacing(rightSpacing);
-        },
-
-        setLeftPadding: function(leftPadding) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setLeftPadding(leftPadding);
-        },
-
-        setRightPadding: function(rightPadding) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRightPadding(rightPadding);
-        },
-
-        setRowSpacing: function(rowSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRowSpacing(rowSpacing);
-        },
-
         isAllGroupsCollapsed(): boolean {
             return this._model.isAllGroupsCollapsed();
         },
@@ -1409,10 +1380,6 @@ var
 
         setItemPadding: function(itemPadding) {
             this._model.setItemPadding(itemPadding);
-        },
-
-        getSwipeItem: function() {
-            return this._model.getSwipeItem();
         },
 
         getCollapsedGroups(): Grouping.TArrayGroupId {
@@ -1507,6 +1474,7 @@ var
                 columns: this._options.columns
             });
 
+            current.showEditArrow = this._options.showEditArrow;
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
@@ -2156,7 +2124,6 @@ var
 
         destroy: function() {
             this._model.unsubscribe('onListChange', this._onListChangeFn);
-            this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.unsubscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
             this._model.destroy();

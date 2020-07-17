@@ -1243,7 +1243,8 @@ define([
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
                update() {},
-               restoreMarker() {}
+               restoreMarker() {},
+               getMarkedKey() {}
             };
          };
          baseControl.saveOptions(cfg);
@@ -1313,7 +1314,8 @@ define([
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
                update() {},
-               restoreMarker() {}
+               restoreMarker() {},
+               getMarkedKey() {}
             };
          };
 
@@ -1365,7 +1367,8 @@ define([
          };
          let instance,
             preventDefaultCalled = false,
-            activateCalled = false;
+            activateCalled = false,
+            notifySpy;
          const event = {
             preventDefault() { preventDefaultCalled = true; }
          };
@@ -1387,20 +1390,22 @@ define([
 
             preventDefaultCalled = false;
             activateCalled = false;
+
+            notifySpy = sinon.spy(instance, '_notify');
          });
 
          it ('moveMarkerToNext', () => {
             lists.BaseControl._private.moveMarkerToNext(instance, event);
             assert.isTrue(activateCalled);
             assert.isTrue(preventDefaultCalled);
-            assert.equal(instance._listViewModel.getMarkedKey(), 3);
+            assert.isTrue(notifySpy.withArgs('markedKeyChanged', [3]).called);
          });
 
          it ('moveMarkerToPrev', () => {
             lists.BaseControl._private.moveMarkerToPrevious(instance, event);
             assert.isTrue(activateCalled);
             assert.isTrue(preventDefaultCalled);
-            assert.equal(instance._listViewModel.getMarkedKey(), 1);
+            assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
          });
       });
 
@@ -1678,13 +1683,13 @@ define([
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
 
-         const notifySpy = sinon.spy(baseControl._listViewModel, '_notify');
+         const notifySpy = sinon.spy(baseControl, '_notify');
 
          lists.BaseControl._private.updateMarkerController(baseControl, cfg);
-         assert.isFalse(notifySpy.called);
+         assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
 
          lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 2 });
-         assert.isTrue(notifySpy.called);
+         assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
 
          notifySpy.resetHistory();
          baseControl._listViewModel.setItems(new collection.RecordSet({
@@ -1692,7 +1697,7 @@ define([
             keyProperty: 'id'
          }));
          lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
-         assert.isTrue(notifySpy.called);
+         assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
       });
 
       describe('_private.createSelectionController', function() {
@@ -1780,53 +1785,23 @@ define([
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [6, true], {bubbling: true}).called);
       });
 
-      it('_private.updateMarkerController', async function() {
-         const
-            lnSource = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: data
-            }),
-            cfg = {
-               viewName: 'Controls/List/ListView',
-               source: lnSource,
-               keyProperty: 'id',
-               viewModelConstructor: lists.ListViewModel,
-               markerVisibility: 'visible'
-            },
-            baseControl = new lists.BaseControl(cfg);
-
-         baseControl.saveOptions(cfg);
-         await baseControl._beforeMount(cfg);
-
-         const notifySpy = sinon.spy(baseControl._listViewModel, '_notify');
-
-         lists.BaseControl._private.updateMarkerController(baseControl, cfg);
-         assert.isFalse(notifySpy.called);
-
-         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 2 });
-         assert.isTrue(notifySpy.called);
-
-         notifySpy.resetHistory();
-         baseControl._listViewModel.setItems(new collection.RecordSet({
-            rawData: data,
-            keyProperty: 'id'
-         }));
-         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
-         assert.isTrue(notifySpy.called);
-      });
-
       it('_private.setMarkedKey', () => {
          const baseControl = {
             _markerController: {
-               setMarkedKey: (key) => {
+               calculateMarkedKey: (key) => {
                   assert.equal(key, 2);
                   return key;
-               }
+               },
+               getMarkedKey: () => 2
+            },
+            _notify: () => null,
+            _options: {
+               hasOwnProperty: () => true
             }
          };
 
          const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');
-         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'setMarkedKey');
+         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'calculateMarkedKey');
 
          lists.BaseControl._private.setMarkedKey({}, 2);
          assert.isFalse(setMarkedKeySpy.called);
@@ -1835,7 +1810,7 @@ define([
          lists.BaseControl._private.setMarkedKey(baseControl, 2);
          assert.isFalse(scrollToItemSpy.called);
          assert.isFalse(setMarkedKeySpy.withArgs(baseControl, 2).called);
-         assert.equal(baseControl._markedKey, 2);
+         assert.equal(baseControl._markerController.getMarkedKey(), 2);
       });
 
       it('loadToDirection up', async function() {
@@ -2918,7 +2893,7 @@ define([
          await baseControl.reload(false, {});
 
          item = baseControl._listViewModel.getItemBySourceKey(1);
-         assert.isTrue(item.isMarked());
+         assert.equal(baseControl._listViewModel.getMarkedKey(), 1);
          assert.isTrue(item.isSelected());
       });
 
@@ -3143,8 +3118,7 @@ define([
 
       it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
-         lists.BaseControl._private.scrollToItem = function() {
-         };
+         lists.BaseControl._private.scrollToItem = () => null;
 
          var
             stopImmediateCalled = false,
@@ -3175,7 +3149,6 @@ define([
                viewName: 'Controls/List/ListView',
                source: lnSource,
                keyProperty: 'id',
-               markedKey: 1,
                markerVisibility: 'visible',
                viewModelConstructor: lists.ListViewModel,
                selectedKeys: [],
@@ -3203,38 +3176,19 @@ define([
          lnBaseControl._beforeMount(lnCfg);
 
          setTimeout(function() {
-            assert.equal(lnBaseControl.getViewModel()
-               .getMarkedKey(), 1, 'Invalid initial value of markedKey.');
-            lnBaseControl.reload();
-            setTimeout(function() {
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 1, 'Invalid value of markedKey after reload.');
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after reload.');
 
-               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.down));
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
+            lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.down));
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
 
-               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.space));
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
+            lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.space));
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
 
-               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.up));
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');
+            lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.up));
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');
 
-               assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
-
-               // reload with new source (first item with id "firstItem")
-               lnBaseControl._beforeUpdate(lnCfg2);
-
-               setTimeout(function() {
-                  lnBaseControl._afterUpdate({});
-                  // TODO хз почему после beforeUpdate новые опции не записываются в _options
-                  /*assert.equal(lnBaseControl.getViewModel()
-                     .getMarkedKey(), 'firstItem', 'Invalid value of markedKey after set new source.');*/
-                  done();
-               }, 1);
-            }, 1);
+            assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
+            done();
          }, 1);
       });
 
@@ -4544,6 +4498,25 @@ define([
             assert.isFalse(fakeEvent.propagating);
          });
 
+         // Пытаемся показать контекстное меню, если был инициализирован itemActionsController
+         it('should not display context menu when itemActionsController is not initialized', () => {
+            const spyOpenItemActionsMenu = sinon.spy(lists.BaseControl._private, 'openItemActionsMenu');
+            const fakeEvent = initFakeEvent();
+            instance._onItemContextMenu(null, item, fakeEvent);
+            sinon.assert.calledOnce(spyOpenItemActionsMenu);
+            spyOpenItemActionsMenu.restore();
+         });
+
+         // Не показываем наше контекстное меню, если не был инициализирован itemActionsController
+         it('should not display context menu when itemActionsController is not initialized', () => {
+            const spyOpenItemActionsMenu = sinon.spy(lists.BaseControl._private, 'openItemActionsMenu');
+            const fakeEvent = initFakeEvent();
+            instance._itemActionsController = undefined;
+            instance._onItemContextMenu(null, item, fakeEvent);
+            sinon.assert.notCalled(spyOpenItemActionsMenu);
+            spyOpenItemActionsMenu.restore();
+         });
+
          // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
          it('should correctly work with breadcrumbs', async () => {
             const fakeEvent = initFakeEvent();
@@ -4652,6 +4625,66 @@ define([
                    done();
                 });
             assert.equal(activeItem, null);
+         });
+
+         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто удалён из списка
+         // Код должен работать согласно https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
+         it('should close context menu if its owner was removed', function() {
+            instance._itemActionsMenuId = 'popup-id-0';
+            instance._itemActionsController.setActiveItem(item);
+            instance.getViewModel()
+               ._notify(
+                  'onListChange',
+                  'collectionChanged',
+                  collection.IObservable.ACTION_REMOVE,
+                  null,
+                  null,
+                  [{
+                     getContents: () => {
+                        return {
+                           getKey: () => 2
+                        };
+                     }
+                  }],
+                  null);
+
+            assert.isNull(instance._itemActionsMenuId);
+            assert.isNull(instance._itemActionsController.getActiveItem());
+         });
+
+         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто удалён из списка.
+         // Даже если это breadCrumbsItem
+         // Код должен работать согласно https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
+         it('should close context menu if its owner was removed even if it was breadcrumbsItem', function() {
+            instance._itemActionsMenuId = 'popup-id-0';
+            const itemAt1 = instance._listViewModel.at(1);
+            const breadcrumbItem = {
+               '[Controls/_display/BreadcrumbsItem]': true,
+               _$active: false,
+               getContents: () => ['fake', 'fake', 'fake', itemAt1.getContents() ],
+               setActive: function() {
+                  this._$active = true;
+               },
+               getActions: () => ({
+                  all: [{
+                     id: 2,
+                     showType: 0
+                  }]
+               })
+            };
+            instance._itemActionsController.setActiveItem(breadcrumbItem);
+            instance.getViewModel()
+               ._notify(
+                  'onListChange',
+                  'collectionChanged',
+                  collection.IObservable.ACTION_REMOVE,
+                  null,
+                  null,
+                  [breadcrumbItem],
+                  null);
+
+            assert.isNull(instance._itemActionsMenuId);
+            assert.isNull(instance._itemActionsController.getActiveItem());
          });
 
          // Должен сбрасывать activeItem Только после того, как мы закрыли последнее меню.
@@ -6604,16 +6637,6 @@ define([
                   markedKey: null
                };
                const _baseControl = new lists.BaseControl(baseControlOptions);
-               sandbox.replace(lists.BaseControl._private, 'createMarkerController', () => {
-                  return {
-                     setMarkedKey() { },
-                     moveMarkerToNext() {},
-                     moveMarkerToPrev() {},
-                     handleRemoveItems() {},
-                     update() {},
-                     restoreMarker() {}
-                  };
-               });
                await mountBaseControl(_baseControl, baseControlOptions);
                baseControl = _baseControl;
             });
@@ -6715,10 +6738,6 @@ define([
                   const itemData = {item: {}};
 
                   baseControl._items.getCount = () => 1;
-                  baseControl._markerController = {
-                     setMarkedKey: function () {
-                     }
-                  };
 
                baseControl._notify = (eName, args) => {
                   if (eName === 'itemMouseUp') {
@@ -6751,10 +6770,11 @@ define([
                   baseControl._items.getCount = () => 1;
                   baseControl._mouseDownItemKey = 1;
                   baseControl._markerController = {
-                     setMarkedKey: function (key) {
+                     calculateMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
-                     }
+                     },
+                     getMarkedKey: () => 1
                   };
 
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
@@ -6788,11 +6808,12 @@ define([
                   const event = {};
                   baseControl._mouseDownItemKey = 1;
                   baseControl._markerController = {
-                     setMarkedKey: function (key) {
+                     calculateMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
                      },
-                     restoreMarker() {}
+                     restoreMarker() {},
+                     getMarkedKey: () => undefined
                   };
 
                   baseControl._scrollController = {
@@ -6818,10 +6839,11 @@ define([
                   baseControlOptions.editingConfig = {};
                   await mountBaseControl(baseControl, baseControlOptions);
                   baseControl._markerController = {
-                     setMarkedKey: function (key) {
+                     calculateMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
-                     }
+                     },
+                     getMarkedKey: () => undefined
                   };
 
                baseControl._mouseDownItemKey = 1;

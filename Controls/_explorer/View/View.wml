@@ -17,7 +17,6 @@
                                     name="treeControl"
                                     viewName="{{_viewName}}"
                                     viewModelConstructor="{{_viewModelConstructor}}"
-                                    leftPadding="{{_leftPadding}}"
                                     actionAlignment="{{ _viewMode === 'tile' ? 'vertical' : _options.actionAlignment }}"
                                     actionCaptionPosition="{{ _viewMode === 'tile' ? 'none' : _options.actionCaptionPosition }}"
                                     itemTemplate="{{_viewMode==='tile' ? _options.tileItemTemplate : _options.itemTemplate}}"

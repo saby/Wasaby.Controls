@@ -49,7 +49,11 @@ const maxPercentValue = 100;
  * @example
  * Слайдер с первым ползунком, установленном в положение 40:
  * <pre class="brush:html">
- *   <Controls.slider:Base startValue="{{40}}"/>
+ *   <Controls.slider:Base bind:startValue="_startValue"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._startValue = 40;
  * </pre>
  * @see endValue
  */
@@ -61,7 +65,11 @@ const maxPercentValue = 100;
  * @example
  * Slider with the first point placed at position 40;
  * <pre class="brush:html">
- *   <Controls.slider:Base startValue="{{40}}"/>
+ *   <Controls.slider:Base bind:startValue="_startValue"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._startValue = 40;
  * </pre>
  * @see endValue
  */
@@ -73,7 +81,11 @@ const maxPercentValue = 100;
  * @example
  * Слайдер со вторым ползунком, установленном в положение 40;
  * <pre class="brush:html">
- *   <Controls.slider:Base endValue="{{40}}"/>
+ *   <Controls.slider:Base bind:endValue="_endValue"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._endValue = 40;
  * </pre>
  * @see startValue
  */
@@ -85,7 +97,11 @@ const maxPercentValue = 100;
  * @example
  * Slider with the second point placed at position 40;
  * <pre class="brush:html">
- *   <Controls.slider:Base endValue="{{40}}"/>
+ *   <Controls.slider:Base bind:endValue="_endValue"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._endValue = 40;
  * </pre>
  * @see startValue
  */

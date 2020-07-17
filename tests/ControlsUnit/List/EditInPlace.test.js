@@ -142,6 +142,7 @@ define([
             notify: () => undefined,
             forceUpdate: () => undefined,
             source: source,
+            updateMarkedKey: () => undefined,
             updateItemActions: () => undefined,
             multiSelectVisibility: false,
             notify: () => undefined,

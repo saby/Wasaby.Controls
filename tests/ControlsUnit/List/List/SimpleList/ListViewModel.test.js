@@ -363,39 +363,31 @@ define([
 
          const model = new lists.ListViewModel(cfg);
 
-         const notifySpy = sinon.spy(model, '_notify');
          let oldVersion = model.getVersion();
 
          model.setMarkedKey(2, true, true);
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
-         assert.isFalse(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
 
-         notifySpy.resetHistory();
          oldVersion = model.getVersion();
 
          model.setMarkedKey(2, false);
          assert.isNull(model.getMarkedKey());
          assert.isFalse(model.getItemBySourceKey(2).isMarked());
-         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', null).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
 
-         notifySpy.resetHistory();
          oldVersion = model.getVersion();
 
          model.setMarkedKey(null, false);
          assert.isNull(model.getMarkedKey());
-         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', null).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
 
-         notifySpy.resetHistory();
          oldVersion = model.getVersion();
 
          model.setMarkedKey(2, true);
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
-         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
       });
 
@@ -624,14 +616,14 @@ define([
             assert.isUndefined(item.isDragging);
 
             lvm.setDraggedItems(dragItemData, dragEntity);
-            lvm._markedKey = 2;
+            lvm.setMarkedKey(2, true);
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.isTrue(item.isDragging);
             assert.isTrue(item.isVisible);
             assert.isTrue(item.isStickedMasterItem);
             assert.isFalse(item.hasMultiSelect);
 
-            lvm._markedKey = 3;
+            lvm.setMarkedKey(3, true);
             item = lvm.getItemDataByItem(lvm.getItemById('3', 'id'));
             assert.isUndefined(item.isDragging);
             assert.isTrue(item.isStickedMasterItem);
