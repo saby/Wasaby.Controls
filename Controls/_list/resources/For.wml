@@ -1,44 +1,77 @@
-<ws:template name="itemOutputLocalTemplate">
+<ws:template name="ITEM_OUTPUT_BASE_TEMPLATE">
    <ws:partial
-      template="{{itemOutputWrapper}}"
-      itemOutputWrapper="{{itemOutputWrapper}}"
-      listModel="{{listModel}}"
-      itemActionsClass="{{itemActionsClass}}"
-      itemActionsTemplate="{{itemActionsTemplate}}"
-      swipeTemplate="{{swipeTemplate}}"
-      multiSelectTpl="{{multiSelectTpl}}"
-      editArrowTemplate="{{editArrowTemplate}}"
-      editingItemData="{{editingItemData}}"
-      isAdd="{{isAdd}}"
-      itemTemplate="{{itemTemplate}}"
-      itemActionsPosition="{{itemActionsPosition}}"
-      backgroundStyle="{{backgroundStyle}}"
-      isColumnScrollVisible="{{isColumnScrollVisible}}"
-      tagTemplate="{{tagTemplate}}"/>
-</ws:template>
-
-<ws:template name="addItem">
-   <ws:partial
-           on:click="_onItemClick(editingItemData.dispItem)"
-           itemTemplate="{{itemTemplate}}"
            template="wml!Controls/_list/ItemTemplateWrapper"
+
+           itemData="{{itemData}}"
+           itemTemplate="{{(itemData.item.get && itemData.item.get(itemData.itemTemplateProperty)) || itemTemplate}}"
+
            itemActionsTemplate="{{itemActionsTemplate}}"
+           itemActionsClass="{{itemActionsClass}}"
            swipeTemplate="{{swipeTemplate}}"
+           editArrowTemplate="{{editArrowTemplate}}"
            multiSelectTpl="{{multiSelectTpl}}"
-           itemData="{{editingItemData}}"
-           actionsType="{{itemActionsPosition}}"
+
+           backgroundStyle="{{backgroundStyle}}"
            isColumnScrollVisible="{{isColumnScrollVisible}}"
-           tagTemplate="{{tagTemplate}}"/>
+           tagTemplate="{{tagTemplate}}"
+
+           on:click="_onItemClick(itemData.dispItem)"
+           on:contextmenu="_onItemContextMenu(itemData)"
+           on:swipe="_onItemSwipe(itemData)"
+           on:mousedown="_onItemMouseDown(itemData)"
+           on:mouseup="_onItemMouseUp(itemData)"
+           on:mouseenter="_onItemMouseEnter(itemData)"
+           on:mouseleave="_onItemMouseLeave(itemData)"
+           on:mousemove="_onItemMouseMove(itemData)"
+           on:wheel="_onItemWheel(itemData)"
+   />
 </ws:template>
 
-<ws:template name="itemsListTemplate">
+<!-- 2 For -> itemTemplate -> itemOutputLocalTemplate -->
+<ws:template name="itemOutputLocalTemplate">
+
    <ws:if data="{{listModel.isShouldBeDrawnItem(currentItem)}}">
-      <ws:partial template="itemOutputLocalTemplate" attr:key="{{currentItem.key}}"/>
+      <!-- Перетаскивается запись в позицию перед текущей -->
+      <ws:if data="{{currentItem.dragTargetPosition === 'before'}}">
+         <ws:partial
+                 template="ITEM_OUTPUT_BASE_TEMPLATE"
+                 attr:key="{{ currentItem.draggingItemData.key + '__dragged' }}"
+                 itemData="{{currentItem.draggingItemData}}"/>
+      </ws:if>
+
+      <!-- Добавление записи перед текущей -->
+      <ws:if data="{{editingItemData && isAdd && currentItem.index === editingItemData.index && editingItemData.addPosition === 'top'}}">
+         <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
+                     itemData="{{editingItemData}}"
+                     attr:key="{{ editingItemData.key }}_addingBefore"/>
+      </ws:if>
+
+      <!-- Текущая запись. Скрыта, если она перетаскивается. -->
+      <ws:if data="{{currentItem.isVisible !== false}}">
+         <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
+                     itemData="{{currentItem}}"
+                     attr:key="{{ currentItem.key }}"/>
+      </ws:if>
+
+      <!-- Добавление записи после текущей -->
+      <ws:if data="{{editingItemData && isAdd && currentItem.index === editingItemData.index - 1 && editingItemData.addPosition !== 'top'}}">
+         <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
+                     itemData="{{editingItemData}}"
+                     attr:key="{{editingItemData.key}}_addingAfter"/>
+      </ws:if>
+
+      <!-- Перетаскивается запись в позицию после текущей -->
+      <ws:if data="{{currentItem.dragTargetPosition === 'after'}}">
+         <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
+                     itemData="{{currentItem.draggingItemData}}"
+                     attr:key="{{currentItem.draggingItemData.key + '__dragged'}}"/>
+      </ws:if>
    </ws:if>
-   <ws:else>
-      {{listModel.goToNext()}}
-   </ws:else>
+   {{listModel.goToNext()}}
+
 </ws:template>
+
+
 
 <ws:template name="groupOutputLocalTemplate">
    <ws:partial
@@ -49,11 +82,14 @@
    {{listModel.goToNext();}}
    <ws:if data="{{currentGroup.isGroupExpanded}}">
       <ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup;">
-         <ws:partial template="itemsListTemplate" currentItem="{{listModel.getCurrent()}}" />
+         <ws:partial template="itemOutputLocalTemplate" attr:key="{{currentItem.key}}"/>
       </ws:for>
    </ws:if>
 </ws:template>
 
+
+
+<!-- 1 For -> itemTemplate -->
 <ws:template name="itemTemplate">
    <ws:if data="{{currentItem.beforeItemTemplate}}">
       <ws:partial template="{{currentItem.beforeItemTemplate}}"
@@ -61,16 +97,22 @@
                   itemTemplate="{{itemTemplate}}"
                   listModel="{{listModel}}"/>
    </ws:if>
+
    <ws:if data="{{currentItem.isGroup}}">
+
       <ws:if data="{{ editingItemData && isAdd && currentItem.index === 0 && editingItemData.index === 0}}">
-         <ws:partial template="addItem" currentItem="{{currentItem}}"/>
+         <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
+                     itemData="{{editingItemData}}"
+                     attr:key="{{editingItemData.key}}"/>
       </ws:if>
-      <ws:partial template="groupOutputLocalTemplate" currentGroup="{{currentItem}}"
+      <ws:partial template="groupOutputLocalTemplate"
+                  currentGroup="{{currentItem}}"
                   attr:key="{{currentItem.key}}"/>
    </ws:if>
    <ws:else>
       <ws:partial template="itemOutputLocalTemplate" attr:key="{{currentItem.key}}"/>
    </ws:else>
+
    <ws:if data="{{currentItem.afterItemTemplate}}">
       <ws:partial template="{{currentItem.afterItemTemplate}}"
                   scope="{{currentItem.afterItemTemplateOptions}}"
@@ -79,10 +121,15 @@
    </ws:if>
 </ws:template>
 
+
+
+
 <ws:for data="listModel.reset(); listModel.isEnd();">
    <ws:partial template="itemTemplate" currentItem="{{listModel.getCurrent()}}"/>
 </ws:for>
 
 <ws:if data="{{listModel.getCount() === 0 && editingItemData && isAdd}}">
-   <ws:partial template="addItem" currentItem="{{currentItem}}"/>
+   <ws:partial template="ITEM_OUTPUT_BASE_TEMPLATE"
+               itemData="{{editingItemData}}"
+               attr:key="{{editingItemData.key}}"/>
 </ws:if>
