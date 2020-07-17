@@ -826,7 +826,7 @@ export default class EditInPlace {
             displayLib.EditInPlaceController.beginEdit(listViewModel, item.getId(), item);
         } else {
             this._editingItemData = listViewModel.getItemDataByItem(editingItemProjection);
-            this._editingItemData.isEditing = true;
+            editingItemProjection.setEditing(true, item, true);
             // TODO Make sure all of this is available in the new model
             if (this._isAdd && _private.hasParentInItems(this._editingItem, listViewModel)) {
                 this._editingItemData.level = listViewModel.getItemById(
