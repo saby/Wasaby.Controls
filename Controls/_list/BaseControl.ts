@@ -3294,9 +3294,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             e.stopPropagation();
             return;
         }
-        if (this._editInPlace) {
-            this._editInPlace.beginEditByClick(e, item, originalEvent);
-        }
     },
 
     beginEdit(options) {
@@ -3449,15 +3446,25 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
         // событие mouseDown и блок над которым произошло событие mouseUp - это разные блоки.
         // Например, записи в мастере или запись в списке с dragScrolling'ом.
-        // При таких сценариях нельзя устанавливать маркер по событию itemClick, т.к. оно не произойдет (itemClick = mouseDown + mouseUp на одном блоке).
+        // При таких сценариях нельзя устанавливать маркер по событию itemClick,
+        // т.к. оно не произойдет (itemClick = mouseDown + mouseUp на одном блоке).
         // Также, нельзя устанавливать маркер по mouseDown, блок сменится раньше и клик по записи не выстрелет.
-
         if (this._mouseDownItemKey !== item.getKey()) {
             return;
         }
         this._mouseDownItemKey = null;
+        e.stopPropagation();
 
-        const result = this._notify('itemMouseUp', [item, domEvent.nativeEvent]);
+        let beginEdit = false;
+        if (this._editInPlace) {
+            beginEdit = this._editInPlace.beginEditByClick(e, item, domEvent);
+        }
+
+        // По клику на чекбокс ставится только маркер, поэтому если нажали на чекбокс, то не нотифаем событие
+        const clickOnCheckbox = !!domEvent.target.closest('.js-controls-ListView__checkbox');
+        const result = clickOnCheckbox || beginEdit
+           ? undefined
+           : this._notify('itemMouseUp', [item, domEvent.nativeEvent]);
 
         // При редактировании по месту маркер появляется только если в списке больше одной записи.
         // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
