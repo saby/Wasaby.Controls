@@ -5,7 +5,7 @@
                               on:mouseenter="_handleMouseEnter()"
                               on:mouseleave="_handleMouseLeave()"
                               on:keydown="_handleKeyDown()"
-                              attr:class="controls-Dropdown_theme_{{_options.theme}} {{_options.validationStatus === 'invalid' ? 'controls-Dropdown-validationStatus_invalid_theme_' + _options.theme}}">
+                              attr:class="controls-Dropdown_theme_{{_options.theme}} {{_options.validationStatus !== 'valid' ? 'controls-Dropdown-validationStatus_invalid_theme_' + _options.theme}}">
     <ws:content>
         <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
                     item="{{_item}}"
