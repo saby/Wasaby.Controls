@@ -1383,10 +1383,6 @@ var
             this._model.setItemPadding(itemPadding);
         },
 
-        getSwipeItem: function() {
-            return this._model.getSwipeItem();
-        },
-
         getCollapsedGroups(): Grouping.TArrayGroupId {
             return this._model.getCollapsedGroups();
         },

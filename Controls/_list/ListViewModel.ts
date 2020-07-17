@@ -80,14 +80,12 @@ var _private = {
 
     // New Model compatibility
     addNewModelCompatibilityForItem(itemsModelCurrent: any): void {
-        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}, silent: boolean = true): void => {
-            itemsModelCurrent.itemActions = actions;
-            if (itemsModelCurrent.dispItem.setActions) {
-                itemsModelCurrent.dispItem.setActions(actions, silent);
-            }
+        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]},
+                                        silent: boolean = true): void => {
+            itemsModelCurrent.dispItem.setActions(actions, silent);
         };
         itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => (
-            itemsModelCurrent.dispItem.getActions ? itemsModelCurrent.dispItem.getActions() : itemsModelCurrent.itemActions
+            itemsModelCurrent.dispItem.getActions()
         );
         itemsModelCurrent.setActive = (state: boolean, silent?: boolean): void => {
             if (itemsModelCurrent.dispItem.setActive !== undefined) {
@@ -190,9 +188,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         // New Model compatibility
         _private.addNewModelCompatibilityForItem(itemsModelCurrent);
 
-        itemsModelCurrent.itemActions = {};
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
-        itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         itemsModelCurrent._isSelected = itemsModelCurrent.dispItem.isMarked();
         itemsModelCurrent.multiSelectStatus = itemsModelCurrent.isSelected();
         itemsModelCurrent.searchValue = this._options.searchValue;
@@ -428,10 +424,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return this.getItemBySourceKey(key)?.isSelected();
     },
 
-    getSwipeItem: function() {
-        return this._swipeItem.actionsItem;
-    },
-
     getActiveItem: function() {
         return this._activeItem;
     },
@@ -618,10 +610,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     _prepareDisplayItemForAdd: function(item) {
         return ItemsUtil.getDefaultDisplayItem(this._display, item);
-    },
-
-    getActionsItem: function(item) {
-      return item;
     },
 
     // New Model compatibility
