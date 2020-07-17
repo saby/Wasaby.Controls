@@ -174,6 +174,7 @@ define([
                getIndexByKey: function() {
 
                },
+               getRoot: function() {},
                getCount:function(){
                   return 2;
                },
@@ -363,6 +364,9 @@ define([
                   var result = Deferred.success([]);
                   expandSorting = sorting;
                   return result
+               },
+               hasMoreData: function () {
+                  return false;
                }
             }
          };
@@ -529,6 +533,9 @@ define([
                load: function() {
                   loadedDataFromServer = true;
                   return Deferred.success([]);
+               },
+               hasMoreData: function () {
+                  return false;
                }
             };
          };
@@ -587,6 +594,7 @@ define([
                resetExpandedItems: function() {
 
                },
+               getRoot: function() {},
                getItems: function() {
                   return {
                      at: function () {}
@@ -679,7 +687,8 @@ define([
                };
             },
             subscribe: () => {},
-            unsubscribe: () => {}
+            unsubscribe: () => {},
+            getCount: () => 2
          };
 
          // Need to know that list notifies when he has been changed after setting new root by treeControl._afterUpdate
@@ -767,7 +776,8 @@ define([
             setRoot: (root) => {
                treeViewModel._model._root = root;
             },
-            getRoot: () => treeViewModel._model._root
+            getRoot: () => treeViewModel._model._root,
+            getCount: () => 1
          };
 
          treeControl._needResetExpandedItems = true;
@@ -855,7 +865,8 @@ define([
             destroy: () => {},
             getRoot: () => treeViewModel._model._root,
             getExpandedItems: () => [1, 2],
-            getItems: () => items
+            getItems: () => items,
+            getCount: () => 2
          };
          treeControl._deepReload = true;
 
@@ -1092,7 +1103,10 @@ define([
                return null;
             },
             getCollapsedGroups: () => undefined,
-            getKeyProperty: () => 'id'
+            getKeyProperty: () => 'id',
+            getCount() {
+               return null;
+            }
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
 
