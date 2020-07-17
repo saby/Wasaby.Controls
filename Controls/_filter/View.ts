@@ -10,7 +10,7 @@ import {isEqual} from 'Types/object';
 import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
-import {detection} from 'Env/Env';
+import {detection, IoC} from 'Env/Env';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {factory as CollectionFactory, RecordSet} from 'Types/collection';
@@ -20,6 +20,7 @@ import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {DependencyTimer} from "Utils/FastOpen";
 
 /**
  * Контрол "Объединенный фильтр". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
@@ -630,6 +631,17 @@ var _private = {
             }
         });
         return needReload;
+    },
+
+    _loadDependencies: function(): Promise<unknown> {
+        try {
+            if (!this._loadOperationsPanelPromise) {
+                this._loadOperationsPanelPromise = import('Controls/filterPopup');
+            }
+            return this._loadOperationsPanelPromise;
+        } catch (e) {
+            IoC.resolve('ILogger').error('_filter:View', e);
+        }
     }
 };
 
@@ -641,6 +653,7 @@ var Filter = Control.extend({
     _idOpenSelector: null,
     _dateRangeItem: null,
     _hasResetValues: true,
+    _dependenciesTimer: null,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};
@@ -659,6 +672,15 @@ var Filter = Control.extend({
         }
         this._hasSelectorTemplate = _private.hasSelectorTemplate(this._source);
         return resultDef;
+    },
+
+    _mouseEnterHandler: function(event: SyntheticEvent<MouseEvent>) {
+        if (!this._options.readOnly) {
+            if (!this._dependenciesTimer) {
+                this._dependenciesTimer = new DependencyTimer();
+            }
+            this._dependenciesTimer.start(_private._loadDependencies.bind(this));
+        }
     },
 
     _beforeUpdate: function(newOptions) {
