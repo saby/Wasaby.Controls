@@ -11,7 +11,7 @@ interface IMoneyOptions extends INumberLengthOptions {
 
 /**
  * Поле ввода денег.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
@@ -170,6 +170,8 @@ interface IMoneyOptions extends INumberLengthOptions {
 
 class Money extends Base implements INumberLength {
     _options: IMoneyOptions;
+    protected _inputMode = 'decimal';
+
     readonly '[Controls/_input/interface/INumberLength]' = true;
 
     protected _initProperties(options: IMoneyOptions): void {
