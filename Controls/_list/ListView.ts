@@ -15,22 +15,6 @@ const DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
 
 var _private = {
     checkDeprecated: function(cfg, self) {
-        // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-        if (cfg.leftSpacing !== undefined) {
-            Logger.warn('IList: Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".', self);
-        }
-        if (cfg.leftPadding !== undefined) {
-            Logger.warn('IList: Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".', self);
-        }
-        if (cfg.rightSpacing !== undefined) {
-            Logger.warn('IList: Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".', self);
-        }
-        if (cfg.rightPadding !== undefined) {
-            Logger.warn('IList: Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".', self);
-        }
-        if (cfg.rowSpacing !== undefined) {
-            Logger.warn('IList: Option "rowSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.top and itemPadding.bottom".', self);
-        }
         if (cfg.contextMenuEnabled !== undefined) {
             Logger.warn('IList: Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".', self);
         }
@@ -92,12 +76,17 @@ var ListView = BaseControl.extend(
         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
             this._debouncedSetHoveredItem = cDebounce(_private.setHoveredItem, DEBOUNCE_HOVERED_ITEM_CHANGED);
-            this._onListChangeFnc = (event, changesType) => {
+            this._onListChangeFnc = (event, changesType, action, newItems) => {
                // todo refactor by task https://online.sbis.ru/opendoc.html?guid=80fbcf1f-5804-4234-b635-a3c1fc8ccc73
+               // Из новой коллекции нотифается collectionChanged, в котором тип изменений указан в newItems.properties
+               const itemChangesType = newItems ? newItems.properties : null;
                if (changesType !== 'hoveredItemChanged' &&
                   changesType !== 'activeItemChanged' &&
                   changesType !== 'markedKeyChanged' &&
                   changesType !== 'itemActionsUpdated' &&
+                  itemChangesType !== 'marked' &&
+                  itemChangesType !== 'hovered' &&
+                  itemChangesType !== 'active' &&
                   !this._pendingRedraw) {
                   this._pendingRedraw = true;
                }
@@ -162,23 +151,6 @@ var ListView = BaseControl.extend(
             }
             if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
                 this._listModel.setItemPadding(newOptions.itemPadding);
-            }
-
-            // TODO https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            if (this._options.leftSpacing !== newOptions.leftSpacing) {
-                this._listModel.setLeftSpacing(newOptions.leftSpacing);
-            }
-            if (this._options.leftPadding !== newOptions.leftPadding) {
-                this._listModel.setLeftPadding(newOptions.leftPadding);
-            }
-            if (this._options.rightSpacing !== newOptions.rightSpacing) {
-                this._listModel.setRightSpacing(newOptions.rightSpacing);
-            }
-            if (this._options.rightPadding !== newOptions.rightPadding) {
-                this._listModel.setRightPadding(newOptions.rightPadding);
-            }
-            if (this._options.rowSpacing !== newOptions.rowSpacing) {
-                this._listModel.setRowSpacing(newOptions.rowSpacing);
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },

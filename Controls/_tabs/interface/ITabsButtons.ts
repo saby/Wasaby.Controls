@@ -12,6 +12,8 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
     leftTemplateProperty?: string;
     rightTemplateProperty?: string;
     tabSpaceTemplate?: TemplateFunction;
+    itemRightTemplate?: TemplateFunction;
+    itemLeftTemplate?: TemplateFunction;
 }
 
 /**
@@ -391,5 +393,43 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  *                     {id: 4, title: 'Will not seem', caption: 'I not agree',  myTemplate: 'wml!.../myTemplate'}
  *              ]
  *    })
+ * </pre>
+ */
+
+/**
+ * @name Controls/_tabs/interface/ITabsButtons#itemRightTemplate
+ * Шаблон элемента, находящегося справа от основного содержимого.
+ * @remark
+ * Базовый шаблон itemRightTemplate поддерживает следующие параметры:
+ * - item {Model} — Запись текущей вкладки
+ * - selected {Boolean} — Выбрана ли вкладка, на которой располагается шаблон
+ * @example
+ * <pre>
+ *    <Controls.tabs:Buttons bind:selectedKey='_mySelectedKey' keyProperty="id" source="{{_mySource}}">
+ *     <ws:itemRightTemplate>
+ *          <ws:if data="{{_counter}}">
+ *              <ws:partial template="{{ _myRightTpl }}" item="{{itemRightTemplate.item}}" counter="{{_counter}}" />
+ *          </ws:if>
+ *    </ws:itemRightTemplate>
+ *     </Controls.tabs:Buttons>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_tabs/interface/ITabsButtons#itemLeftTemplate
+ * Шаблон элемента, находящегося слева от основного содержимого.
+ * @remark
+ * Базовый шаблон itemLeftTemplate поддерживает следующие параметры:
+ * - item {Model} — Запись текущей вкладки
+ * - selected {Boolean} — Выбрана ли вкладка, на которой располагается шаблон
+ * @example
+ * <pre>
+ *    <Controls.tabs:Buttons bind:selectedKey='_mySelectedKey' keyProperty="id" source="{{_mySource}}">
+ *     <ws:itemLeftTemplate>
+ *          <ws:if data="{{_counter}}">
+ *              <ws:partial template="{{ _myRightTpl }}" item="{{itemLeftTemplate.item}}" counter="{{_counter}}" />
+ *          </ws:if>
+ *    </ws:itemRightTemplate>
+ *     </Controls.tabs:Buttons>
  * </pre>
  */

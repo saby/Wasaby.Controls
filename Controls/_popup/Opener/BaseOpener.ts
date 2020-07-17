@@ -427,11 +427,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     // TODO Compatible
-    static isNewEnvironment(): boolean {
-        return isNewEnvironment();
-    }
-
-    // TODO Compatible
     static getManager(): Promise<void> {
         return BaseOpenerUtil.getManager();
     }

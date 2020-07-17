@@ -32,6 +32,10 @@ define([
 
          options = {items: getItems(5), readOnly: true, multiSelect: true};
          lookup._beforeMount(options);
+         assert.equal(lookup._maxVisibleItems, 5);
+
+         options = {items: getItems(5), readOnly: false, multiSelect: true};
+         lookup._beforeMount(options);
          assert.equal(lookup._maxVisibleItems, 0);
 
          options = {items: getItems(5), readOnly: true};

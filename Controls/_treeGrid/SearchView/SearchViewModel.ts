@@ -21,12 +21,6 @@ var
          }
          return filter;
       },
-      getActionsItem(item) {
-          if (!!item.forEach) {
-              return item[item.length - 1];
-          }
-          return item;
-      },
       setHoveredItem(item) {
          let actualItem = item;
          if (item && isBreadCrumbsItem(item)) {
@@ -50,7 +44,6 @@ var
 
          // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
          data.breadCrumbs = !!data.item.forEach;
-         data.actionsItem = this.getActionsItem(data.item);
          data.searchBreadCrumbsItemTemplate = this._options.searchBreadCrumbsItemTemplate || 'Controls/treeGrid:SearchBreadCrumbsItemTemplate';
          data.searchBreadCrumbsItemContent = "Controls/breadcrumbs:ItemTemplate";
          data.breadcrumbsItemClickCallback = this._breadcrumbsItemClickCallback;
