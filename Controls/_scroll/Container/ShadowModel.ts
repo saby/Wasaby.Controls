@@ -2,7 +2,7 @@ import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
 import {POSITION} from './Type';
 import {SHADOW_VISIBILITY, IShadowsOptions} from './Interface/IShadows';
-import {canScrollByState, EDGE_POSITION, SCROLL_DIRECTION} from '../Utils/Scroll';
+import {canScrollByState, SCROLL_POSITION, SCROLL_DIRECTION} from '../Utils/Scroll';
 import {IScrollState} from '../Utils/ScrollState';
 
 const SHADOW_ENABLE_MAP = {
@@ -30,6 +30,11 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
     private _type: SHADOW_TYPE;
     private _isEnabled: boolean = true;
     private _isVisible: boolean = false;
+    private _isStickyFixed: boolean = false;
+    private _scrollState: IScrollState = {
+        canVerticalScroll: false,
+        canHorizontalScroll: false
+    };
 
     private _visibilityByInnerComponents: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
 
@@ -71,32 +76,42 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
     }
 
     updateScrollState(scrollState: IScrollState): void {
-        const position: EDGE_POSITION = scrollState[`${this._direction}Position`];
+        const position: SCROLL_POSITION = scrollState[`${this._direction}Position`];
 
-        const isEnabled: boolean = this._getShadowEnable(this._canScrollByScrollState(scrollState));
-        if (isEnabled !== this._isEnabled) {
-            this._isEnabled = isEnabled;
-            this._nextVersion();
-        }
+        this._scrollState = scrollState;
+        this._updateEnabled();
 
-        const isVisible: boolean = isEnabled && ((this._type === SHADOW_TYPE.BEFORE && position !== EDGE_POSITION.START) ||
-            (this._type === SHADOW_TYPE.AFTER && position !== EDGE_POSITION.END));
+        const isVisible: boolean = this._isEnabled && ((this._type === SHADOW_TYPE.BEFORE && position !== SCROLL_POSITION.START) ||
+            (this._type === SHADOW_TYPE.AFTER && position !== SCROLL_POSITION.END));
 
         if (isVisible !== this._isVisible) {
             this._isVisible = isVisible;
             this._nextVersion();
         }
-
-
     }
 
-    private _canScrollByScrollState(state: IScrollState): boolean {
-        return state[`can${upperDirection[this._direction]}Scroll`]
+    _updateEnabled() {
+        const isEnabled: boolean = this._getShadowEnable();
+        if (isEnabled !== this._isEnabled) {
+            this._isEnabled = isEnabled;
+            this._nextVersion();
+        }
     }
 
-    private _getShadowEnable(canScroll: boolean): boolean {
-        return this._options[`${this._position}ShadowVisibility`] === SHADOW_VISIBILITY.VISIBLE ||
-            (this._isShadowEnable() && canScroll)
+    setStickyFixed(isFixed: boolean) {
+        if (this._isStickyFixed !== isFixed) {
+            this._isStickyFixed = isFixed;
+            this._updateEnabled();
+        }
+    }
+
+    private _canScrollByScrollState(): boolean {
+        return this._scrollState[`can${upperDirection[this._direction]}Scroll`]
+    }
+
+    private _getShadowEnable(): boolean {
+        return (this._options[`${this._position}ShadowVisibility`] === SHADOW_VISIBILITY.VISIBLE ||
+            (this._isShadowEnable() && this._canScrollByScrollState())) && !this._isStickyFixed;
     }
 
     /**

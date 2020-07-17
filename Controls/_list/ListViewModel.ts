@@ -80,14 +80,12 @@ var _private = {
 
     // New Model compatibility
     addNewModelCompatibilityForItem(itemsModelCurrent: any): void {
-        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]}, silent: boolean = true): void => {
-            itemsModelCurrent.itemActions = actions;
-            if (itemsModelCurrent.dispItem.setActions) {
-                itemsModelCurrent.dispItem.setActions(actions, silent);
-            }
+        itemsModelCurrent.setActions = (actions: {showed: IItemAction[], all: IItemAction[]},
+                                        silent: boolean = true): void => {
+            itemsModelCurrent.dispItem.setActions(actions, silent);
         };
         itemsModelCurrent.getActions = (): {showed: IItemAction[], all: IItemAction[]} => (
-            itemsModelCurrent.dispItem.getActions ? itemsModelCurrent.dispItem.getActions() : itemsModelCurrent.itemActions
+            itemsModelCurrent.dispItem.getActions()
         );
         itemsModelCurrent.setActive = (state: boolean, silent?: boolean): void => {
             if (itemsModelCurrent.dispItem.setActive !== undefined) {
@@ -190,9 +188,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         // New Model compatibility
         _private.addNewModelCompatibilityForItem(itemsModelCurrent);
 
-        itemsModelCurrent.itemActions = {};
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
-        itemsModelCurrent.actionsItem = this.getActionsItem(itemsModelCurrent.item);
         itemsModelCurrent._isSelected = itemsModelCurrent.dispItem.isMarked();
         itemsModelCurrent.multiSelectStatus = itemsModelCurrent.isSelected();
         itemsModelCurrent.searchValue = this._options.searchValue;
@@ -333,9 +329,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
      * Проставить маркер
      * @param key ключ элемента, в котором задается состояние marked
      * @param status значение marked
-     * @param silent уведомлять ли о событии. Если false, то не будет перерисована модель и не стрельнет событие onMarkedKeyChanged
      */
-    setMarkedKey(key: number|string, status: boolean, silent: boolean = false): void {
+    setMarkedKey(key: number|string, status: boolean): void {
         // status - для совместимости с новой моделью, чтобы сбросить маркер нужно передать false
         if (this._markedKey === key && status !== false) {
             return;
@@ -358,9 +353,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
-        if (!silent) {
-            this._notify('onMarkedKeyChanged', this._markedKey);
-        }
     },
 
     setMarkerVisibility: function(markerVisibility) {
@@ -426,10 +418,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
     getSelectionStatus: function(key) {
         return this.getItemBySourceKey(key)?.isSelected();
-    },
-
-    getSwipeItem: function() {
-        return this._swipeItem.actionsItem;
     },
 
     getActiveItem: function() {
@@ -618,10 +606,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     _prepareDisplayItemForAdd: function(item) {
         return ItemsUtil.getDefaultDisplayItem(this._display, item);
-    },
-
-    getActionsItem: function(item) {
-      return item;
     },
 
     // New Model compatibility
