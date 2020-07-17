@@ -37,6 +37,15 @@ export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMix
         }
     }
 
+    setStickyFixed(topFixed: boolean, bottomFixed: boolean): void {
+        if (this._models.top) {
+            this._models.top.setStickyFixed(topFixed)
+        }
+        if (this._models.bottom) {
+            this._models.bottom.setStickyFixed(topFixed)
+        }
+    }
+
     get top(): ShadowModel {
         return this._models.top;
     }

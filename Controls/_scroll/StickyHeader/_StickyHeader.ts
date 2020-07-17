@@ -20,6 +20,8 @@ import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
+import {IScrollState} from '../Utils/ScrollState'
+import {SCROLL_POSITION} from '../Utils/Scroll';
 
 export const enum SHADOW_VISIBILITY {
     visible = 'visible',
@@ -110,6 +112,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _cachedStyles: CSSStyleDeclaration = null;
     private _cssClassName: string = null;
     private _canScroll: boolean = false;
+    private _scrollState: IScrollState = {
+        canVerticalScroll: false
+    };
     private _negativeScrollTop: boolean = false;
     private _lastFixedPosition: string = '';
 
@@ -136,8 +141,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     protected _beforePaintOnMount(): void {
-        RegisterUtil(this, 'updateFixed', this._updateFixed.bind(this));
-
         this._notify('stickyRegister', [{
             id: this._index,
             inst: this,
@@ -152,7 +155,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
         // отказаться от closest.
-        this._scroll = this._container.closest('.controls-Scroll');
+        this._scroll = this._container.closest('.controls-Scroll, .controls-Scroll-Container');
         if (!this._scroll) {
             Logger.warn('Controls.scroll:StickyHeader: Используются фиксация заголовков вне Controls.scroll:Container. Либо используйте Controls.scroll:Container, либо уберите, либо отключите фиксацию заголовков в контролах в которых она включена.', this);
             return;
@@ -166,14 +169,19 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         // Переделать на новые события
         // https://online.sbis.ru/opendoc.html?guid=ca70827b-ee39-4d20-bf8c-32b10d286682
-        RegisterUtil(this, 'listScroll', this._onScrollStateChanged);
+        RegisterUtil(this, 'listScroll', this._onScrollStateChangedOld);
+
+        RegisterUtil(this, 'scrollStateChanged', this._onScrollStateChanged);
+
+        RegisterUtil(this, 'controlResize', this._resizeHandler);
 
         this._initObserver();
     }
 
     protected _beforeUnmount(): void {
-        UnregisterUtil(this, 'updateFixed');
         UnregisterUtil(this, 'listScroll');
+        UnregisterUtil(this, 'controlResize');
+        UnregisterUtil(this, 'scrollStateChanged');
         if (this._model) {
             //Let the listeners know that the element is no longer fixed before the unmount.
             this._fixationStateChangeHandler('', this._model.fixedPosition);
@@ -252,7 +260,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._options.shadowVisibility;
     }
 
-    protected _onScrollStateChanged(eventType: string, scrollState): void {
+    protected _onScrollStateChangedOld(eventType: string, scrollState): void {
         if (eventType === 'canScroll') {
             this._canScroll = true;
             if (this._model.fixedPosition !== this._lastFixedPosition) {
@@ -262,6 +270,26 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._canScroll = false;
         } else if (eventType === 'scrollMoveSync') {
             this._negativeScrollTop = scrollState.scrollTop < 0;
+        }
+    }
+
+    protected _onScrollStateChanged(scrollState: IScrollState): void {
+        let changed: boolean = false;
+        if (scrollState.canVerticalScroll !== this._scrollState.canVerticalScroll &&
+                this._model.fixedPosition !== this._lastFixedPosition) {
+            this._forceUpdate();
+        }
+        this._canScroll = scrollState.canVerticalScroll;
+        this._negativeScrollTop = scrollState.scrollTop < 0;
+
+        if (this._scrollState.verticalPosition !== scrollState.verticalPosition) {
+            changed = true;
+        }
+
+        this._scrollState = scrollState;
+
+        if (changed) {
+            this._forceUpdate();
         }
     }
 
@@ -483,7 +511,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return position + ': -' + coord + 'px;';
     }
 
-    protected _updateFixed(ids: number[]): void {
+    protected updateFixed(ids: number[]): void {
         const isFixed: boolean = ids.indexOf(this._index) !== -1;
         if (this._isFixed !== isFixed) {
             if (!this._model) {
@@ -511,8 +539,18 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
 
-        return !!((this._context.stickyHeader?.shadowPosition &&
-            this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
+        let shadowEnabled: boolean = false;
+
+        if (this._scrollState.verticalPosition &&
+            (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
+            shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END)) {
+            shadowEnabled = true;
+        }
+
+        let oldShadowEnabled: boolean = this._context.stickyHeader?.shadowPosition &&
+            this._context.stickyHeader?.shadowPosition?.indexOf(fixedPosition) !== -1;
+
+        return !!((shadowEnabled || oldShadowEnabled) &&
             ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isFixed)) &&
             this._options.shadowVisibility === SHADOW_VISIBILITY.visible &&
             (this._options.mode === MODE.stackable || this._isFixed));
