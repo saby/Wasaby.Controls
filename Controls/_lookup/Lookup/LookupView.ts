@@ -177,15 +177,14 @@ var _private = {
          return collectionConfig;
       },
 
-   getLastSelectedItems: function(items: RecordSet, itemsCount) {
+   getLastSelectedItems: function(items: RecordSet, maxVisibleItems: number) {
       const selectedKeys = [];
       const count = items.getCount();
+      const startIndex = (count - maxVisibleItems) < 0 ? 0 : (count - maxVisibleItems);
 
-      items.each((item, index) => {
-         if (index >= (count - itemsCount) && index < count) {
-            selectedKeys.push(item);
-         }
-      });
+      for(let i = startIndex; i < count; i++) {
+         selectedKeys.push(items.at(i));
+      }
 
       return selectedKeys;
    },
