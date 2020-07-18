@@ -819,6 +819,7 @@ export default class EditInPlace {
             } else {
                 editingItemProjection = listViewModel._prepareDisplayItemForAdd(item);
             }
+            editingItemProjection.setEditing(true);
         }
 
         listViewModel.setEditing(true);
