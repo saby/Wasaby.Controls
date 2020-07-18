@@ -608,6 +608,30 @@ var
                     classLists.columnContent += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
                 }
             }
+        },
+        setRowClassesGettersOnItemData(self, itemData): void {
+            const style = itemData.style || 'default';
+            const theme = itemData.theme || 'default';
+
+            itemData._staticRowClassses = `controls-Grid__row controls-Grid__row_${style}_theme-${theme} `;
+
+            if (itemData.isLastItem) {
+                itemData._staticRowClassses += 'controls-Grid__row_last ';
+            }
+
+            itemData.getRowClasses = (tmplParams: {
+                highlightOnHover?: boolean;
+                clickable?: boolean;
+                cursor?: 'default' | 'pointer';
+            }) => {
+                let classes = `${itemData.calcCursorClasses(tmplParams.clickable, tmplParams.cursor).trim()} `;
+
+                if (tmplParams.highlightOnHover !== false && !itemData.isEditing()) {
+                    classes += `controls-Grid__row_highlightOnHover_${style}_theme-${theme} `;
+                }
+
+                return `${itemData._staticRowClassses} ${classes.trim()}`;
+            }
         }
     },
 
@@ -1470,6 +1494,8 @@ var
                 stickyColumn: this._options.stickyColumn,
                 columns: this._options.columns
             });
+
+            _private.setRowClassesGettersOnItemData(this, current);
 
             current.showEditArrow = this._options.showEditArrow;
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
