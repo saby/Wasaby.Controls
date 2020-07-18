@@ -1,16 +1,13 @@
 <ws:template name="ITEM_OUTPUT">
    <ws:partial
-           template="wml!Controls/_list/ItemTemplateWrapper"
-
+           template="{{ (itemData.item.get && itemData.item.get(itemData.itemTemplateProperty)) || itemTemplate }}"
            itemData="{{itemData}}"
-           itemTemplate="{{(itemData.item.get && itemData.item.get(itemData.itemTemplateProperty)) || itemTemplate}}"
 
            itemActionsTemplate="{{itemActionsTemplate}}"
            itemActionsClass="{{itemActionsClass}}"
            swipeTemplate="{{swipeTemplate}}"
            editArrowTemplate="{{editArrowTemplate}}"
            multiSelectTpl="{{multiSelectTpl}}"
-
            backgroundStyle="{{backgroundStyle}}"
            isColumnScrollVisible="{{isColumnScrollVisible}}"
            tagTemplate="{{tagTemplate}}"
@@ -38,10 +35,12 @@
    <ws:if data="{{currentItem.isGroup}}">
 
       <!-- Добавление в пустую скрытую группу -->
-      <ws:if data="{{ editingItemData && isAdd && currentItem.index === 0 && editingItemData.index === 0}}">
-         <ws:partial template="ITEM_OUTPUT"
-                     itemData="{{editingItemData}}"
-                     attr:key="{{editingItemData.key}}"/>
+      <ws:if data="{{ editingItemData && isAdd && currentItem.index === 0 && editingItemData.index === 0 }}">
+         <Controls._list.EditInPlace.EditingRow columnScroll="{{ editingItemData.columnScroll }}" on:deactivated="_onRowDeactivated()">
+            <ws:partial template="ITEM_OUTPUT"
+                        itemData="{{editingItemData}}"
+                        attr:key="{{editingItemData.key}}"/>
+         </Controls._list.EditInPlace.EditingRow>
       </ws:if>
 
       <!-- Шаблон элемента -->
@@ -69,24 +68,37 @@
          </ws:if>
 
          <!-- Добавление записи перед текущей -->
-         <ws:if data="{{editingItemData && isAdd && currentItem.index === editingItemData.index && editingItemData.addPosition === 'top'}}">
-            <ws:partial template="ITEM_OUTPUT"
-                        itemData="{{editingItemData}}"
-                        attr:key="{{ editingItemData.key }}_addingBefore"/>
+         <ws:if data="{{ editingItemData && isAdd && currentItem.index === editingItemData.index && editingItemData.addPosition === 'top' }}">
+            <Controls._list.EditInPlace.EditingRow columnScroll="{{ editingItemData.columnScroll }}" on:deactivated="_onRowDeactivated()">
+               <ws:partial template="ITEM_OUTPUT"
+                           itemData="{{editingItemData}}"
+                           attr:key="{{ editingItemData.key }}_addingBefore"/>
+            </Controls._list.EditInPlace.EditingRow>
          </ws:if>
 
          <!-- Текущая запись. Скрыта, если она перетаскивается. -->
          <ws:if data="{{currentItem.isVisible !== false}}">
-            <ws:partial template="ITEM_OUTPUT"
-                        itemData="{{currentItem}}"
-                        attr:key="{{ currentItem.key }}"/>
+            <ws:if data="{{ currentItem.isEditing() }}">
+               <Controls._list.EditInPlace.EditingRow columnScroll="{{ currentItem.columnScroll }}" on:deactivated="_onRowDeactivated()">
+                  <ws:partial template="ITEM_OUTPUT"
+                              itemData="{{ currentItem }}"
+                              attr:key="{{ currentItem.key }}"/>
+               </Controls._list.EditInPlace.EditingRow>
+            </ws:if>
+            <ws:else>
+               <ws:partial template="ITEM_OUTPUT"
+                           itemData="{{currentItem}}"
+                           attr:key="{{ currentItem.key }}"/>
+            </ws:else>
          </ws:if>
 
          <!-- Добавление записи после текущей -->
          <ws:if data="{{editingItemData && isAdd && currentItem.index === editingItemData.index - 1 && editingItemData.addPosition !== 'top'}}">
-            <ws:partial template="ITEM_OUTPUT"
-                        itemData="{{editingItemData}}"
-                        attr:key="{{editingItemData.key}}_addingAfter"/>
+            <Controls._list.EditInPlace.EditingRow columnScroll="{{ editingItemData.columnScroll }}" on:deactivated="_onRowDeactivated()">
+               <ws:partial template="ITEM_OUTPUT"
+                           itemData="{{editingItemData}}"
+                           attr:key="{{editingItemData.key}}_addingAfter"/>
+            </Controls._list.EditInPlace.EditingRow>
          </ws:if>
 
          <!-- Перетаскивается запись в позицию после текущей -->
@@ -112,9 +124,11 @@
 </ws:for>
 
 <ws:if data="{{ listModel.getCount() === 0 && editingItemData && isAdd }}">
-   <ws:partial template="ITEM_OUTPUT"
-               itemData="{{ editingItemData }}"
-               attr:key="{{ editingItemData.key }}"/>
+   <Controls._list.EditInPlace.EditingRow columnScroll="{{ editingItemData.columnScroll }}" on:deactivated="_onRowDeactivated()">
+      <ws:partial template="ITEM_OUTPUT"
+                  itemData="{{ editingItemData }}"
+                  attr:key="{{ editingItemData.key }}"/>
+   </Controls._list.EditInPlace.EditingRow>
 </ws:if>
 
-<!-- For.wml/For -> ITEM_OUTPUT_WRAPPER (1) -> ITEM_OUTPUT (2) -> Controls/_list/ItemTemplateWrapper.wml (3) -->
+<!-- For.wml/For -> ITEM_OUTPUT_WRAPPER (1) -> ITEM_OUTPUT (2) -> Controls/_list/ItemTemplate.wml (3) -->
