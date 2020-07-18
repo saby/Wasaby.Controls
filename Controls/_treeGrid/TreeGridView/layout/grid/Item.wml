@@ -246,3 +246,7 @@
       </ws:else>
    </div>
 </ws:else>
+
+<ws:if data="{{itemData.nodeFooters.length > 0}}">
+   <ws:partial template="wml!Controls/_treeGrid/TreeGridView/layout/common/NodeFooterChooser" useNewNodeFooters="{{ itemData.useNewNodeFooters }}" nodeFooters="{{itemData.nodeFooters}}"/>
+</ws:if>
