@@ -1495,8 +1495,6 @@ var
                 columns: this._options.columns
             });
 
-            _private.setRowClassesGettersOnItemData(this, current);
-
             current.showEditArrow = this._options.showEditArrow;
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
@@ -1625,6 +1623,8 @@ var
                 return self._columnsVersion + '_' +
                     (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
             };
+
+            _private.setRowClassesGettersOnItemData(this, current);
 
             current.getCurrentColumn = function(backgroundColorStyle) {
                 const currentColumn: any = {
