@@ -7,9 +7,7 @@ import {Logger} from 'UI/Utils';
 import ListViewTpl = require('wml!Controls/_list/ListView/ListView');
 import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
-import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
 import {isEqual} from "Types/object";
-import 'wml!Controls/_list/resources/ItemOutput';
 
 const DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
 
@@ -68,7 +66,6 @@ var ListView = BaseControl.extend(
         _template: ListViewTpl,
         _groupTemplate: GroupTemplate,
         _defaultItemTemplate: defaultItemTemplate,
-        _itemOutputWrapper: ItemOutputWrapper,
         _pendingRedraw: false,
         _reloadInProgress: false,
         _callbackAfterReload: null,
@@ -76,17 +73,21 @@ var ListView = BaseControl.extend(
         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
             this._debouncedSetHoveredItem = cDebounce(_private.setHoveredItem, DEBOUNCE_HOVERED_ITEM_CHANGED);
-            this._onListChangeFnc = (event, changesType) => {
+            this._onListChangeFnc = (event, changesType, action, newItems) => {
                // todo refactor by task https://online.sbis.ru/opendoc.html?guid=80fbcf1f-5804-4234-b635-a3c1fc8ccc73
+               // Из новой коллекции нотифается collectionChanged, в котором тип изменений указан в newItems.properties
+               const itemChangesType = newItems ? newItems.properties : null;
                if (changesType !== 'hoveredItemChanged' &&
                   changesType !== 'activeItemChanged' &&
                   changesType !== 'markedKeyChanged' &&
                   changesType !== 'itemActionsUpdated' &&
+                  itemChangesType !== 'marked' &&
+                  itemChangesType !== 'hovered' &&
+                  itemChangesType !== 'active' &&
                   !this._pendingRedraw) {
                   this._pendingRedraw = true;
                }
             };
-            this._onMarkedKeyChangedHandlerFnc = this._onMarkedKeyChangedHandler.bind(this);
         },
 
         _doAfterReload(callback): void {
@@ -121,7 +122,6 @@ var ListView = BaseControl.extend(
             if (newOptions.listModel) {
                 this._listModel = newOptions.listModel;
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
-                this._listModel.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandlerFnc);
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
@@ -129,7 +129,6 @@ var ListView = BaseControl.extend(
         _beforeUnmount: function() {
             if (this._listModel) {
                 this._listModel.unsubscribe('onListChange', this._onListChangeFnc);
-                this._listModel.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandlerFnc);
             }
         },
 
@@ -250,10 +249,6 @@ var ListView = BaseControl.extend(
         },
 
         _onItemWheel: function(event) {
-        },
-
-        _onMarkedKeyChangedHandler: function(event, key) {
-            this._notify('markedKeyChanged', [key]);
         },
 
         setHoveredItem: function (item) {

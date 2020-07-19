@@ -531,8 +531,8 @@ export class Controller {
     private _getActionsContainer(item: IItemActionsItem): IItemActionsContainer {
         let showed;
         const actions = this._collectActionsForItem(item);
-        if (this._collection.isEditing() && ((typeof item.isEditing === 'function') && !item.isEditing() || !item.isEditing)) {
-            showed = []
+        if (this._collection.isEditing() && !item.isEditing()) {
+            showed = [];
         } else if (actions.length > 1) {
             showed = actions.filter((action) =>
                     !action.parent &&

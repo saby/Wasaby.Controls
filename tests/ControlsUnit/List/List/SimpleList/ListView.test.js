@@ -213,6 +213,10 @@ define([
          listView._listModel._notify('onListChange', 'hoveredItemChanged');
          listView._listModel._notify('onListChange', 'activeItemChanged');
          listView._listModel._notify('onListChange', 'markedKeyChanged');
+         listView._listModel._notify('onListChange', 'itemActionsUpdated');
+         listView._listModel._notify('onListChange', 'collectionChanged', 'ch', { properties: 'marked' });
+         listView._listModel._notify('onListChange', 'collectionChanged', 'ch', { properties: 'hovered' });
+         listView._listModel._notify('onListChange', 'collectionChanged', 'ch', { properties: 'active' });
          listView._beforeUpdate(cfg);
          listView._afterUpdate();
          assert.isTrue(stubControlResize.notCalled);

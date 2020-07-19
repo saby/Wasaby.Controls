@@ -14,7 +14,7 @@
 /**
  * Перезагружает данные из источника данных.
  * При перезагрузке в фильтр уходит список развернутых узлов (с целью восстановить пользователю структуру, которая была до перезагрузки).
- * Принимает опционально {@link Controls/_interface/INavigation/INavigationSourceConfig.typedef конфигурация источника данных}, если нужно перезагрузить список с навигацией, отличной от указанной в опциях контрола.
+ * Принимает опционально конфигурацию источника данных для: {@link Controls/_interface/INavigation/IBasePositionSourceConfig.typedef навигации по курсору }, {@link Controls/_interface/INavigation/IBasePageSourceConfig.typedef постраничной навигации }, если нужно перезагрузить список с навигацией, отличной от указанной в опциях контрола.
  * @function
  * @name Controls/_list/interface/IReloadableList#reload
  * @param {Boolean} [keepScroll=false] Сохранить ли позицию скролла после перезагрузки.

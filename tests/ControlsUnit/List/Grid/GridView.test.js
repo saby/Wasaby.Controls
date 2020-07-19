@@ -708,7 +708,7 @@ define(['Controls/grid'], function(gridMod) {
             });
          });
 
-         it('update column scroll shadow classes should not leads to forceUpdate (const classes object)', () => {
+        /* it('update column scroll shadow classes should not leads to forceUpdate (const classes object)', () => {
             gridView.saveOptions(cfg);
             gridView._afterMount();
 
@@ -735,7 +735,7 @@ define(['Controls/grid'], function(gridMod) {
             );
 
             assert.equal(oldClasses, newClasses);
-         });
+         });*/
 
          it('update column scroll shadow styles should not leads to forceUpdate (const styles object)', () => {
             gridView.saveOptions(cfg);
