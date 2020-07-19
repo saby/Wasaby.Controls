@@ -37,7 +37,7 @@
 
 <Controls.form:PrimaryAction on:triggered="_applyFilter()">
     <Controls.popupTemplate:Dialog headingCaption="{{_options.headingCaption}}"
-                                                    headingStyle="{{_options.headingStyle}}"
+                                                    headingFontColorStyle="{{_options.headingStyle}}"
                                                     attr:class="controls-PanelFilter
                                                     controls-FilterPanel__{{_options.orientation}}_theme-{{_options.theme}}
                                                     {{_hasHistory ? 'controls-FilterPanel__' + _options.orientation + '_withHistory'}}">
