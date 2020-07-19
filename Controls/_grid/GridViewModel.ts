@@ -1626,6 +1626,29 @@ var
 
             _private.setRowClassesGettersOnItemData(this, current);
 
+            current.setColspan = (newColspan) => {
+                const hasOld = current.colspanStorage instanceof Array;
+                const hasNew = newColspan instanceof Array;
+
+                // Не было и нет. Не заполняем, не тратим время.
+                if (!hasOld && !hasNew) {
+                    return;
+                }
+
+                // Было и нестало. Просто удаляем.
+                if (!hasNew) {
+                    current.colspanStorage = undefined;
+                    return;
+                }
+
+                // multiSelectVisibility не учитывается.
+                current.colspanStorage = GridLayoutUtil.buildColspanStorage({
+                    currentColspanStorage: current.colspanStorage,
+                    colspan: newColspan,
+                    columnsLength: self._options.columns.length
+                });
+            };
+
             current.getCurrentColumn = function(backgroundColorStyle) {
                 const currentColumn: any = {
                         item: current.item,
@@ -2204,17 +2227,10 @@ var
 
             if (column.compatibleWidth) {
                 resultWidth = column.compatibleWidth;
-            } else if (!column.width) {
-                resultWidth = 'auto';
+            } else if (GridLayoutUtil.isCompatibleWidth(column.width)) {
+                resultWidth = column.width;
             } else {
-                if (
-                    column.width.match(GridLayoutUtil.RegExps.pxValue) ||
-                    column.width.match(GridLayoutUtil.RegExps.percentValue)
-                ) {
-                    resultWidth = column.width;
-                } else {
-                    resultWidth = 'auto';
-                }
+                resultWidth = 'auto';
             }
             return resultWidth;
         },
