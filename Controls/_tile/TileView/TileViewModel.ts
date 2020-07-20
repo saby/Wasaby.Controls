@@ -84,7 +84,6 @@ var TileViewModel = ListViewModel.extend({
 
     getTileItemData: function () {
         const resultData =  {
-            displayProperty: this._options.displayProperty,
             tileMode: this._tileMode,
             itemsHeight: this._itemsHeight,
             imageProperty: this._options.imageProperty,
