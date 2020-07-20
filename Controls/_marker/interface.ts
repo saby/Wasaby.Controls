@@ -19,8 +19,9 @@ export interface IMarkerModel extends IBaseCollection<CollectionItem<Model>> {
    getNextByIndex(index: number): CollectionItem<Model>;
    getPrevByIndex(index: number): CollectionItem<Model>;
 
-   nextVersion();
    getItemBySourceKey(key: TKey): CollectionItem<Model>;
+
+   getIndexBySourceIndex(sourceIndex: number): number;
 }
 
 export interface IOptions {

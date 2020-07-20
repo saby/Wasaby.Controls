@@ -367,35 +367,56 @@ describe('Controls/marker/Controller', () => {
          assert.equal(result, undefined);
          assert.equal(model.getMarkedKey(), undefined);
       });
+
+      it('index in projection is different', () => {
+         const items = new RecordSet({
+            rawData: [
+               {id: 1, group: '1'},
+               {id: 2, group: '1'},
+               {id: 3, group: '2'}
+            ],
+            keyProperty: 'id'
+         });
+         const model = new ListViewModel({ items, groupProperty: 'group' });
+         const controller = new MarkerController({ model, markerVisibility: 'visible', markedKey: 2 });
+
+         items.removeAt(1);
+         assert.isUndefined(model.getItemBySourceKey(2));
+
+         const result = controller.handleRemoveItems(1);
+         assert.equal(result, 3);
+      });
    });
 
    it('should work with breadcrumbs', () => {
+      items = new RecordSet({
+         rawData: [{
+            id: 1,
+            parent: null,
+            nodeType: true,
+            title: 'test_node'
+         }, {
+            id: 2,
+            parent: 1,
+            nodeType: null,
+            title: 'test_leaf'
+         },
+         {
+            id: 3,
+            parent: null,
+            nodeType: true,
+            title: 'test_node'
+         }, {
+            id: 4,
+            parent: 3,
+            nodeType: null,
+            title: 'test_leaf'
+         }],
+         keyProperty: 'id'
+      });
+
       model = new SearchGridViewModel({
-         items: new RecordSet({
-            rawData: [{
-               id: 1,
-               parent: null,
-               nodeType: true,
-               title: 'test_node'
-            }, {
-               id: 2,
-               parent: 1,
-               nodeType: null,
-               title: 'test_leaf'
-            },
-            {
-               id: 3,
-               parent: null,
-               nodeType: true,
-               title: 'test_node'
-            }, {
-               id: 4,
-               parent: 3,
-               nodeType: null,
-               title: 'test_leaf'
-            }],
-            keyProperty: 'id'
-         }),
+         items,
          keyProperty: 'id',
          parentProperty: 'parent',
          nodeProperty: 'nodeType',
@@ -414,20 +435,9 @@ describe('Controls/marker/Controller', () => {
       controller.setMarkedKey(4);
       assert.equal(model.getMarkedKey(), 4);
 
-      model.setItems(new RecordSet({
-         rawData: [{
-            id: 1,
-            parent: null,
-            nodeType: true,
-            title: 'test_node'
-         }, {
-            id: 2,
-            parent: 1,
-            nodeType: null,
-            title: 'test_leaf'
-         }],
-         keyProperty: 'id'
-      }));
+      items.removeAt(2);
+      items.removeAt(2);
+
       controller.handleRemoveItems(2);
       assert.equal(model.getMarkedKey(), 2);
    });
