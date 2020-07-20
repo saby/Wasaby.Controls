@@ -359,7 +359,7 @@ define([
          let expandSorting;
          let originalCreateSourceController = treeGrid.TreeControl._private.createSourceController;
          const items = new collection.RecordSet({
-            rawData: getHierarchyData(),
+            rawData: [],
             keyProperty: 'id'
          });
          const model = treeControl._children.baseControl.getViewModel();
@@ -367,7 +367,10 @@ define([
          treeGrid.TreeControl._private.createSourceController = function() {
             return {
                load: function(filter, sorting) {
-                  var result = Deferred.success([]);
+                  var result = Deferred.success(new collection.RecordSet({
+                     rawData: getHierarchyData(),
+                     keyProperty: 'id'
+                  }));
                   expandSorting = sorting;
                   return result
                },
