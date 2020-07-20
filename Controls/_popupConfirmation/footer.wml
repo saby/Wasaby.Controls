@@ -2,7 +2,7 @@
    <ws:if data="{{_options.type === 'ok'}}">
       <div class="controls-ConfirmationDialog__button-standard_theme-{{_options.theme}}">
          <Controls.buttons:Button
-            ws-autofocus="{{true}}"
+            attr:ws-autofocus="{{true}}"
             buttonStyle="primary"
             inlineHeight="confirmation"
             fontSize="confirmation"
