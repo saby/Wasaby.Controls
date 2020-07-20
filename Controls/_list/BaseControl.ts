@@ -3498,7 +3498,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Также, нельзя устанавливать маркер по mouseDown, блок сменится раньше и клик по записи не выстрелет.
         e.stopPropagation();
         const key = item instanceof Array ? undefined : item.getKey();
-        if (this._mouseDownItemKey !== key || this._dndListController.isDragging()) {
+        if (this._mouseDownItemKey !== key || this._dndListController && this._dndListController.isDragging()) {
             return;
         }
         this._mouseDownItemKey = null;
