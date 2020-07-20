@@ -3737,9 +3737,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            if (item.isSwiped()) {
+            const swipedItem = this._itemActionsController.getSwipeItem();
+            if (swipedItem) {
                 this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
                 this._listViewModel.nextVersion();
+
+                // Для сценария, когда свайпнули одну запись и потом свайпнули вправо другую запись
+                if (swipedItem !== item) {
+                    _private.setMarkedKey(this, key);
+                }
             } else {
                 // After the right swipe the item should get selected.
                 if (!this._selectionController && _private.isItemsSelectionAllowed(this._options)) {
