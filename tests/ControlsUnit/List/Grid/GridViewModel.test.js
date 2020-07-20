@@ -2688,17 +2688,23 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('getHeaderZIndex with or without columnScroll', function() {
             const params = {
-               multiSelectVisibility: false,
+               multiSelectVisibility: 'hidden',
                stickyColumnsCount: 1,
                columnIndex: 0,
                rowIndex: 0,
                isMultiHeader: false,
-               columnScroll: true
+               columnScroll: true,
+               isColumnScrollVisible: true
             }
-            // first fixed coll with columnScroll
+            // fixed coll with columnScroll
             assert.equal(4, gridMod.GridViewModel._private.getHeaderZIndex(params));
-            // first fit coll withoutColumnScroll
-            assert.equal(3, gridMod.GridViewModel._private.getHeaderZIndex({...params, columnScroll: false}));
+            // sticky coll with columnScroll
+            assert.equal(3, gridMod.GridViewModel._private.getHeaderZIndex({...params, columnIndex: 1}));
+
+            // fixed coll withoutColumnScroll
+            assert.equal(4, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false}));
+            // sticky fit coll withoutColumnScroll
+            assert.equal(4, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false, columnIndex: 1}));
          })
 
          it('updates prefix version with ladder only on add and remove', () => {

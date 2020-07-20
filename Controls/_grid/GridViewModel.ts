@@ -274,7 +274,12 @@ var
 
 
         getHeaderZIndex: function(params) {
-           return _private.isFixedCell(params) && params.columnScroll ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+            if (params.isColumnScrollVisible) {
+                return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+            } else {
+                // Пока в таблице нет горизонтального скролла, шапка ен может быть проскролена по горизонтали.
+                return FIXED_HEADER_ZINDEX;
+            }
         },
 
         getColumnScrollCellClasses(params, theme): string {
@@ -971,7 +976,7 @@ var
                   isMultiHeader: this._isMultiHeader,
                   multiSelectVisibility: this._options.multiSelectVisibility,
                   stickyColumnsCount: this._options.stickyColumnsCount,
-                  columnScroll: this._options.columnScroll
+                  isColumnScrollVisible: this._options.columnScroll && this._options.columnScrollVisibility,
                });
             }
 
@@ -1213,7 +1218,7 @@ var
                     columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount,
-                    columnScroll: this._options.columnScroll
+                    isColumnScrollVisible: this._options.columnScroll && this._options.columnScrollVisibility
                 });
             }
 
@@ -1731,6 +1736,13 @@ var
         setColumnScroll(columnScroll: boolean): void {
             this._options.columnScroll = columnScroll;
             this._nextModelVersion();
+        },
+
+        setColumnScrollVisibility(columnScrollVisibility: boolean) {
+            if (!!this._options.columnScrollVisibility !== columnScrollVisibility) {
+                this._options.columnScrollVisibility = columnScrollVisibility;
+                this._headerModel.nextVersion();
+            }
         },
 
         setLadderProperties: function(ladderProperties) {
