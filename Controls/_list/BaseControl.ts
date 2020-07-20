@@ -2243,8 +2243,6 @@ const _private = {
 
                     self._registerMouseMove();
                     self._registerMouseUp();
-
-                    self.setMarkedKey(key);
                 }
             });
         }
@@ -3518,11 +3516,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Если началось редактирование по месту, то маркер ставить не нужно.
         // Если маркер поставить, то сперва отрисуется маркер, а потом он скроется при отрисовке редактирования по месту
         if (this._editInPlace) {
-            this._editInPlace.beginEditByClick(e, item, domEvent)?.then((editableItem: Model) => {
-                if (!editableItem && canBeMarked) {
-                    this.setMarkedKey(key);
-                }
-            });
+            const promise = this._editInPlace.beginEditByClick(e, item, domEvent);
+            if (promise) {
+                promise.then((editableItem: Model) => {
+                    if (!editableItem && canBeMarked) {
+                        this.setMarkedKey(key);
+                    }
+                });
+            } else if (canBeMarked) {
+                this.setMarkedKey(key);
+            }
         } else if (canBeMarked) {
             this.setMarkedKey(key);
         }
@@ -4035,6 +4038,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
             this._showActions = false;
         }
+
+        this.setMarkedKey(this._draggedKey);
 
         this._insideDragging = false;
         this._documentDragging = false;
