@@ -2243,6 +2243,8 @@ const _private = {
 
                     self._registerMouseMove();
                     self._registerMouseUp();
+
+                    self.setMarkedKey(key);
                 }
             });
         }
@@ -3490,13 +3492,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseUp(e: SyntheticEvent, item: Model, domEvent: SyntheticEvent): void {
+        e.stopPropagation();
+
         // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
         // событие mouseDown и блок над которым произошло событие mouseUp - это разные блоки.
         // Например, записи в мастере или запись в списке с dragScrolling'ом.
         // При таких сценариях нельзя устанавливать маркер по событию itemClick,
         // т.к. оно не произойдет (itemClick = mouseDown + mouseUp на одном блоке).
-        // Также, нельзя устанавливать маркер по mouseDown, блок сменится раньше и клик по записи не выстрелет.
-        e.stopPropagation();
+        // Также, нельзя устанавливать маркер по mouseDown, блок сменится раньше и клик по записи не выстрелет
         const key = item instanceof Array ? undefined : item.getKey();
         if (this._mouseDownItemKey !== key || this._dndListController && this._dndListController.isDragging()) {
             return;
@@ -3515,8 +3518,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Если началось редактирование по месту, то маркер ставить не нужно.
         // Если маркер поставить, то сперва отрисуется маркер, а потом он скроется при отрисовке редактирования по месту
         if (this._editInPlace) {
-            this._editInPlace.beginEditByClick(e, item, domEvent).then((result) => {
-                if (!result && canBeMarked) {
+            this._editInPlace.beginEditByClick(e, item, domEvent)?.then((editableItem: Model) => {
+                if (!editableItem && canBeMarked) {
                     this.setMarkedKey(key);
                 }
             });
@@ -4035,6 +4038,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._insideDragging = false;
         this._documentDragging = false;
+        this._draggedKey = null;
 
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController) {

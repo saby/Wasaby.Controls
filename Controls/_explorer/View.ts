@@ -18,6 +18,7 @@ import {
    INavigationOptionValue as INavigation
 }  from '../_interface/INavigation';
 import { SyntheticEvent } from 'Vdom/Vdom';
+import BreadcrumbsItem from '../_display/BreadcrumbsItem';
 
 var
       HOT_KEYS = {
@@ -611,10 +612,10 @@ var
       _itemMouseDown(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent): void {
          this._mouseDownItemKey = item instanceof Array ? undefined : item.getKey();
       },
-      _itemMouseUp(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent, columnIndex?: number): boolean {
+      _itemMouseUp(event: SyntheticEvent, item: Model, clickEvent: MouseEvent, columnIndex?: number): boolean {
          const key = item instanceof Array ? undefined : item.getKey();
-         if (this._mouseDownItemKey !== key) {
-            return false;
+         if (this._mouseDownItemKey !== key || clickEvent.button === 2) {
+            return true;
          }
          this._mouseDownItemKey = null;
 
@@ -648,10 +649,19 @@ var
 
          return res;
       },
-      _onBreadCrumbsClick: function(event, item) {
-          _private.cleanRestoredKeyObject(this, item.getId());
-          _private.setRoot(this, item.getId());
-          this._isGoingBack = true;
+      _onBreadCrumbsClick(event: SyntheticEvent, item: Model, clickEvent: MouseEvent): void {
+         if (clickEvent && clickEvent.button === 2) {
+            return;
+         }
+
+         const model = this._children.treeControl._children.baseControl.getViewModel();
+         const collectionItem = model.getItemBySourceKey(item.getKey());
+         // collectionItem = undefined => это нажатие на кнопку назад
+         if (collectionItem === undefined || collectionItem instanceof BreadcrumbsItem) {
+            _private.cleanRestoredKeyObject(this, item.getKey());
+            _private.setRoot(this, item.getKey());
+            this._isGoingBack = true;
+         }
       },
       _onExternalKeyDown(event): void {
          this._onExplorerKeyDown(event);
