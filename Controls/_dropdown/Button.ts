@@ -195,7 +195,7 @@ export default class Button extends BaseDropdown {
 
    openMenu(popupOptions?: IStickyPopupOptions): void {
       const config = this._getMenuPopupConfig();
-      this._controller.setMenuPopupTarget(this._container.children[0]);
+      this._controller.setMenuPopupTarget(this._children.content);
 
       this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
          if (typeof result === 'string') {
