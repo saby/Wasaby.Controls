@@ -206,7 +206,7 @@ export class Controller {
      * Устанавливает состояние элемента rightSwiped
      * @param itemKey
      */
-    activateRightSwipe(itemKey: TItemKey) {
+    activateRightSwipe(itemKey: TItemKey): void {
         this.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
         this._setSwipeItem(itemKey);
     }
