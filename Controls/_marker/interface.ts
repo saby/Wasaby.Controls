@@ -1,4 +1,4 @@
-import { CollectionItem, IBaseCollection } from 'Controls/display';
+import { Collection, CollectionItem, IBaseCollection } from 'Controls/display';
 import { Model } from 'Types/entity';
 
 export type TVisibility = 'visible' | 'hidden' | 'onactivated';
@@ -19,8 +19,9 @@ export interface IMarkerModel extends IBaseCollection<CollectionItem<Model>> {
    getNextByIndex(index: number): CollectionItem<Model>;
    getPrevByIndex(index: number): CollectionItem<Model>;
 
-   nextVersion();
    getItemBySourceKey(key: TKey): CollectionItem<Model>;
+
+   getDisplay(): Collection<CollectionItem<Model>>;
 }
 
 export interface IOptions {

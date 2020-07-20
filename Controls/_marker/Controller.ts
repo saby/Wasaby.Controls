@@ -142,7 +142,7 @@ export class Controller {
    /**
     * Обработчк удаления элементов
     * Ставит маркер на следующий элемент, при его отустствии на предыдущий, иначе сбрасывает маркер
-    * @param removedItemsIndex
+    * @param removedItemsIndex Индекс удаленной записи в исходной коллекции (RecordSet)
     */
    handleRemoveItems(removedItemsIndex: number): TKey {
       // Если элемент с текущем маркером не удален, то маркер не нужно менять
@@ -151,8 +151,10 @@ export class Controller {
          return this._markedKey;
       }
 
-      const nextItem = this._model.getNextByIndex(removedItemsIndex);
-      const prevItem = this._model.getPrevByIndex(removedItemsIndex);
+      // Нам приходит индекс в исходной коллекции и его нужно перевести в индекс проекции
+      const indexInProjection = this._model.getDisplay().getIndexBySourceIndex(removedItemsIndex);
+      const nextItem = this._model.getNextByIndex(indexInProjection);
+      const prevItem = this._model.getPrevByIndex(indexInProjection);
 
       if (nextItem) {
          this.setMarkedKey(this._getKey(nextItem));
