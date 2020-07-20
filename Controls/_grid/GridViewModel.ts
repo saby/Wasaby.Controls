@@ -1366,6 +1366,9 @@ var
         getIndexByKey: function() {
             return this._model.getIndexByKey.apply(this._model, arguments);
         },
+        getIndexBySourceIndex(sourceIndex: number): number {
+            return this._model.getIndexBySourceIndex(sourceIndex);
+        },
 
         getSelectionStatus: function() {
             return this._model.getSelectionStatus.apply(this._model, arguments);
