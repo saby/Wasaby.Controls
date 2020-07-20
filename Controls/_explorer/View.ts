@@ -608,10 +608,6 @@ var
          // but is not called, because the template has no reactive properties.
          this._forceUpdate();
       },
-      _itemClick(event: SyntheticEvent): void {
-         // Это событие было занотифаено на mouseUp, поэтому чтобы оно не повторялось здесь останавливаем
-         event.stopPropagation();
-      },
       _itemMouseDown(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent): void {
          this._mouseDownItemKey = item instanceof Array ? undefined : item.getKey();
       },
@@ -620,7 +616,6 @@ var
          if (this._mouseDownItemKey !== key) {
             return false;
          }
-         event.stopPropagation();
          this._mouseDownItemKey = null;
 
          const res = this._notify('itemClick', [item, clickEvent, columnIndex]);
