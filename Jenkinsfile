@@ -1,4 +1,4 @@
-@Library('pipeline@check/status_url') _
+@Library('pipeline') _
 
 def version = '20.5000'
 
