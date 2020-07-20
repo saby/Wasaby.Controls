@@ -3,8 +3,8 @@
         {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + (style ? style : 'default') + '_theme-' + theme }}
         {{itemData.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemData.itemPadding, theme, useNewModel)}}
         {{itemData.getItemActionClasses(itemActionsPosition, theme)}}
-        {{itemData.isEditingState() ? 'controls-itemActionsV_editing_theme-' + theme}}
-        {{itemData.isEditingState() && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
+        {{itemData.isEditing() ? 'controls-itemActionsV_editing_theme-' + theme}}
+        {{itemData.isEditing() && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
         {{itemData.isActive() && actionMenuIsShown ? 'controls-itemActionsV_visible'}}
         {{itemData.isSwiped() ? 'controls-itemActionsV_swiped'}}
         {{itemData.itemActionsColumnScrollDraw ? 'controls-itemActionsV_columnScrollDraw'}}">
@@ -15,7 +15,7 @@
                     getTooltip="{{getTooltip}}"
                     size="{{size}}"
                     showedActions="{{itemData.getActions().showed}}"/>
-            <ws:if data="{{itemData.isEditingState() && toolbarVisibility}}">
+            <ws:if data="{{itemData.isEditing() && toolbarVisibility}}">
                 <Controls.Container.Async templateName="Controls/editableArea:Buttons">
                     <ws:partial template="{{content.resolvedTemplate}}"
                                 attr:class="controls-itemActionsV__wrapper-isEditing_theme-{{theme}}"
