@@ -113,7 +113,7 @@ var _private = {
             itemsModelCurrent.dispItem.hasVisibleActions !== undefined ? itemsModelCurrent.dispItem.hasVisibleActions() : false
         );
         itemsModelCurrent.shouldDisplayActions = (): boolean => (
-            itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing
+            itemsModelCurrent.hasVisibleActions() || itemsModelCurrent.isEditing()
         );
         itemsModelCurrent.hasActionWithIcon = (): boolean => (
             itemsModelCurrent.dispItem.hasActionWithIcon !== undefined ? itemsModelCurrent.dispItem.hasActionWithIcon() : false
@@ -128,14 +128,12 @@ var _private = {
             }
         };
         itemsModelCurrent.setEditing = (editing: boolean): void => {
-            itemsModelCurrent.isEditing = editing;
             if (itemsModelCurrent.dispItem.setEditing !== undefined) {
                 itemsModelCurrent.dispItem.setEditing(editing, itemsModelCurrent.item, true);
             }
         };
-        itemsModelCurrent.isEditingState = () => (
-            itemsModelCurrent.isEditing
-        );
+        itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent.dispItem.isEditing();
+        itemsModelCurrent.isMarked = (): boolean => itemsModelCurrent.dispItem.isMarked();
         itemsModelCurrent.getItemActionClasses = (itemActionsPosition: string, theme?: string): string => (
             itemsModelCurrent.dispItem.getItemActionClasses ?
                 itemsModelCurrent.dispItem.getItemActionClasses(itemActionsPosition, theme) : ''
@@ -198,7 +196,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.isStickedMasterItem = itemsModelCurrent._isSelected && this._isSupportStickyMarkedItem();
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
-        itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
+        itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden' && !itemsModelCurrent.dispItem.isEditing();
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         itemsModelCurrent.backgroundStyle = this._options.backgroundStyle || this._options.style;
@@ -206,10 +204,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
             itemsModelCurrent.virtualScrollConfig = this._isSupportVirtualScroll();
         }
-
-        itemsModelCurrent.shouldDrawMarker = (marker: boolean) => {
-            return marker !== false && !itemsModelCurrent.dispItem.isEditing() && itemsModelCurrent.dispItem.isMarked();
-        };
 
         itemsModelCurrent.getMarkerClasses = (): string => {
             const style = this._options.style || 'default';
@@ -223,9 +217,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
         }
 
-        // isEditing напрямую используется в Engine, поэтому просто так его убирать нельзя
         if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
-            itemsModelCurrent.isEditing = true;
             itemsModelCurrent.item = this._editingItemData.item;
         }
 

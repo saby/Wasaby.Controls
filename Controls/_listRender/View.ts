@@ -188,6 +188,7 @@ export default class View extends Control<IViewOptions> {
      * @param e
      * @param item
      * @param swipeEvent
+     * @param swipeContainerWidth
      * @param swipeContainerHeight
      * @private
      */
@@ -195,10 +196,11 @@ export default class View extends Control<IViewOptions> {
         e: SyntheticEvent<null>,
         item: CollectionItem<Model>,
         swipeEvent: SyntheticEvent<ISwipeEvent>,
+        swipeContainerWidth: number,
         swipeContainerHeight: number
     ): void {
         if (swipeEvent.nativeEvent.direction === 'left') {
-            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerHeight);
+            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerWidth, swipeContainerHeight);
         }
         if (swipeEvent.nativeEvent.direction === 'right' && item.isSwiped()) {
             this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
@@ -303,7 +305,7 @@ export default class View extends Control<IViewOptions> {
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         let contents = View._getItemContents(item);
         const itemContainer = this._resolveItemContainer(item, isMenuClick);
-        this._notify('actionClick', [action, contents, itemContainer]);
+        this._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
         if (action.handler) {
             action.handler(contents);
         }

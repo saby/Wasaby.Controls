@@ -6,14 +6,13 @@ import ActualApi from 'Controls/_buttons/ActualApi';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadItems} from 'Controls/_dropdown/Util';
-import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
+import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {IGroupedOptions} from 'Controls/dropdown';
 import {IIconOptions, IHeightOptions, IIconSizeOptions, IIconStyleOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 import {IStickyPopupOptions} from 'Controls/popup';
 import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
-import {RecordSet} from 'Types/collection';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
@@ -100,7 +99,7 @@ export default class Button extends BaseDropdown {
 
    _beforeMount(options: IButtonOptions,
                 context: object,
-                receivedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
+                receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
       this._offsetClassName = cssStyleGeneration(options);
       this._updateState(options);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
@@ -196,7 +195,7 @@ export default class Button extends BaseDropdown {
 
    openMenu(popupOptions?: IStickyPopupOptions): void {
       const config = this._getMenuPopupConfig();
-      this._controller.setMenuPopupTarget(this._container.children[0]);
+      this._controller.setMenuPopupTarget(this._children.content);
 
       this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
          if (typeof result === 'string') {

@@ -1,8 +1,9 @@
 import { assert } from 'chai';
-import { Utils } from 'Controls/_itemActions/Utils';
+import { stub, SinonStub, mock } from 'sinon';
+import { MeasurerUtils } from 'Controls/_itemActions/measurers/MeasurerUtils';
 import { IItemAction } from 'Controls/_itemActions/interface/IItemActions';
 
-describe('Controls/_itemActions/measurers/Utils', () => {
+describe('Controls/_itemActions/measurers/MeasurerUtils', () => {
     it('getActualActions', () => {
         const actions: IItemAction[] = [
             {
@@ -54,7 +55,7 @@ describe('Controls/_itemActions/measurers/Utils', () => {
                 showType: 0
             }
         ];
-        const result = Utils.getActualActions(actions);
+        const result = MeasurerUtils.getActualActions(actions);
         assert.deepEqual(actual, result);
     });
 });

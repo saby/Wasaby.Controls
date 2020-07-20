@@ -511,6 +511,7 @@ define(
             sandbox.replace(popup.Stack, 'closePopup', () => { closed = true; });
 
             menuControl._options.selectorDialogResult = () => {selectCompleted = true};
+            menuControl._options.selectorOpener = 'testSelectorOpener';
 
             menuControl._openSelectorDialog(menuOptions);
 
@@ -521,6 +522,7 @@ define(
             assert.strictEqual(actualOptions.templateOptions.option2, '2');
             assert.isOk(actualOptions.eventHandlers.onResult);
             assert.isTrue(actualOptions.hasOwnProperty('opener'));
+            assert.equal(actualOptions.opener, 'testSelectorOpener');
             assert.isTrue(opened);
 
             actualOptions.eventHandlers.onResult();

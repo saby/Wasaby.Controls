@@ -399,7 +399,6 @@ const _private = {
         *   поэтому рисуем его над первой группой в Controls/_list/resources/For.wml:47
         *
         *   При добавлении в конец индекс будет на один больше последнего элемента списка / группы.
-        *   Controls/_list/resources/ItemOutput.wml:31
         *   TODO: Возможно, стоит всегда выставлять индекс записи рядом с которой выводим добавляемую запись, а,
         *    над или под ней выводить, решать через editingConfig.addPosition
         * */
@@ -819,6 +818,7 @@ export default class EditInPlace {
             } else {
                 editingItemProjection = listViewModel._prepareDisplayItemForAdd(item);
             }
+            editingItemProjection.setEditing(true);
         }
 
         listViewModel.setEditing(true);
@@ -826,7 +826,7 @@ export default class EditInPlace {
             displayLib.EditInPlaceController.beginEdit(listViewModel, item.getId(), item);
         } else {
             this._editingItemData = listViewModel.getItemDataByItem(editingItemProjection);
-            this._editingItemData.isEditing = true;
+            editingItemProjection.setEditing(true, item, true);
             // TODO Make sure all of this is available in the new model
             if (this._isAdd && _private.hasParentInItems(this._editingItem, listViewModel)) {
                 this._editingItemData.level = listViewModel.getItemById(
