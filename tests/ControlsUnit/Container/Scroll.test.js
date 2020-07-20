@@ -695,6 +695,7 @@ define(
             let
                scrollContainer = new scrollMod.Container({}),
                sandbox = sinon.createSandbox();
+            let baseUpdateStates = scrollMod.Container._private.updateStates;
 
             scrollContainer._children = {
                content: {
@@ -709,14 +710,15 @@ define(
                   start: () => null
                }
             };
-            scrollContainer._private.updateStates = () => {};
             scrollContainer._scrollTop = 0;
             scrollContainer._scrollLeft = 0;
 
             it('scrollTop and scrollLeft has not changed. scroll should not fire', function() {
                sandbox.stub(scrollContainer._children.scrollDetect, 'start');
                sandbox.stub(scrollContainer, '_notify');
+               scrollMod.Container._private.updateStates = () => {};
                scrollContainer._scrollHandler({});
+               scrollMod.Container._private.updateStates = baseUpdateStates;
                sinon.assert.notCalled(scrollContainer._notify);
                sinon.assert.notCalled(scrollContainer._children.scrollDetect.start);
                sandbox.restore();
@@ -726,11 +728,13 @@ define(
             },{
                scrollType: 'scrollLeft'
             }].forEach(function(test) {
-               sandbox.stub(scrollContainer._children.scrollDetect, 'start');
-               sandbox.stub(scrollContainer, '_notify');
                it(`${test.scrollType} has changed. scroll should fire`, function() {
+                  sandbox.stub(scrollContainer._children.scrollDetect, 'start');
+                  sandbox.stub(scrollContainer, '_notify');
                   scrollContainer._children.content[test.scrollType] = 10;
+                  scrollMod.Container._private.updateStates = () => {};
                   scrollContainer._scrollHandler({});
+                  scrollMod.Container._private.updateStates = baseUpdateStates;
                   sinon.assert.calledWith(scrollContainer._notify, 'scroll', [10]);
                   sinon.assert.calledWith(scrollContainer._children.scrollDetect.start, sinon.match.any, 10);
                   sandbox.restore();
@@ -807,8 +811,10 @@ define(
                'scroll top should not change because scroll bar is being dragged');
 
             // Dragging stops
-            scrollContainer._private.updateStates = () => {};
+            let baseUpdateStates = scrollMod.Container._private.updateStates;
+            scrollMod.Container._private.updateStates = () => {};
             scrollContainer._draggingChangedHandler({}, false);
+            scrollMod.Container._private.updateStates = baseUpdateStates;
 
             assert.strictEqual(scrollContainer._scrollTop, 50,
                'restored scroll top value should be applied after drag end');
