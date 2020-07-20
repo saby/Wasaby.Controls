@@ -124,10 +124,26 @@ var
             if (this._options.resultsVisibility === 'visible') {
                 return true;
             }
-            var items = this.getDisplay();
+            const items = this.getDisplay();
             if (items) {
-                var rootItems = this._model.getHierarchyRelation().getChildren(items.getRoot().getContents(), this.getItems());
-                return this.getHasMoreData() || rootItems && rootItems.length > 1;
+                const parentProperty = this._options.parentProperty;
+                const parent = items.getRoot().getContents();
+                if (!parentProperty) {
+                    let count = 0;
+                    if (!parent) {
+                        this.getItems().each(() => {
+                            count++;
+                        });
+                    }
+                    return this.getHasMoreData() || count > 1;
+                } else {
+                    let parentId = null;
+                    if ((parent && parent['[Types/_entity/Record]'])) {
+                        parentId = parent.get(parentProperty);
+                    }
+                    this.getItems().getIndicesByValue(parentProperty, parentId);
+                    return this.getHasMoreData() || this.getItems().getIndicesByValue(parentProperty, parentId).length > 1;
+                }
             }
         },
         getItemDataByItem: function(dispItem) {
