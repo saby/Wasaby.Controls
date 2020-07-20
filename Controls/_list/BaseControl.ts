@@ -3488,12 +3488,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // При таких сценариях нельзя устанавливать маркер по событию itemClick,
         // т.к. оно не произойдет (itemClick = mouseDown + mouseUp на одном блоке).
         // Также, нельзя устанавливать маркер по mouseDown, блок сменится раньше и клик по записи не выстрелет.
+        e.stopPropagation();
         const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (this._mouseDownItemKey !== key) {
             return;
         }
         this._mouseDownItemKey = null;
-        e.stopPropagation();
 
         // По клику на чекбокс ставится только маркер, поэтому если нажали на чекбокс, то не нотифаем событие
         const clickOnCheckbox = !!domEvent.target.closest('.js-controls-ListView__checkbox');
