@@ -146,7 +146,7 @@ export class Controller {
       }
 
       // Нам приходит индекс в исходной коллекции и его нужно перевести в индекс проекции
-      const indexInProjection = this._model.getDisplay().getIndexBySourceIndex(removedItemsIndex);
+      const indexInProjection = this._model.getIndexBySourceIndex(removedItemsIndex);
       const nextItem = this._model.getNextByIndex(indexInProjection);
       const prevItem = this._model.getPrevByIndex(indexInProjection);
 
