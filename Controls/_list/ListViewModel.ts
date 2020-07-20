@@ -540,7 +540,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
     getNextItem: function (itemIndex) {
         var nextIndex = itemIndex, nextItem, itemsCount = this._display.getCount();
-        while (nextIndex < itemsCount) {
+        while (nextIndex > -1 && nextIndex < itemsCount) {
             nextItem = this._display.at(nextIndex).getContents();
             if (this.isValidItemForMarkedKey(nextItem)) {
                 return nextItem.getId();
