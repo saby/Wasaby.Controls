@@ -369,6 +369,7 @@ define(
             });
 
             assert.equal(result.nodeFooterTemplate, 'testNodeFooterTemplate');
+            assert.isOk(result.selectorOpener);
          });
       });
    }
