@@ -329,21 +329,21 @@ var
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
             }
 
-            if (current._isSelected && current.markerVisibility !== 'hidden') {
+            if (current.dispItem.isMarked() && current.markerVisibility !== 'hidden') {
                 style = current.style || 'default';
-                classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+                classLists.marked = `controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
                 // нужно его принудительно установить как фон таблицы
-                if (!isFullGridSupport && !current.isEditing()) {
-                    classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
+                if (!isFullGridSupport && !current.isEditing) {
+                    classLists.marked += _private.getBackgroundStyle({backgroundStyle, theme}, true);
                 }
 
                 if (current.columnIndex === 0) {
-                    classLists.base += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
+                    classLists.marked += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
                 }
                 if (current.columnIndex === current.getLastColumnIndex()) {
-                    classLists.base += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${style}_theme-${theme}`;
+                    classLists.marked += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${style}_theme-${theme}`;
                 }
             } else if (current.columnIndex === current.getLastColumnIndex()) {
                 classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
