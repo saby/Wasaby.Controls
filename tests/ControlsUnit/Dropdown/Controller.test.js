@@ -606,7 +606,8 @@ define(
                   hasMoreData: () => {}
                };
             });
-            it ('only popupOptions', () => {
+
+            it('only popupOptions', () => {
                const resultPopupConfig = dropdownController._getPopupOptions();
                assert.deepEqual(resultPopupConfig.fittingMode,  {
                   vertical: 'adaptive',

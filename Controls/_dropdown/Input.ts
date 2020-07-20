@@ -274,6 +274,7 @@ export default class Input extends BaseDropdown {
       const controllerOptions = getDropdownControllerOptions(options);
       return { ...controllerOptions, ...{
             dataLoadCallback: this._dataLoadCallback,
+            selectorOpener: this,
             selectedKeys: options.selectedKeys || [],
             popupClassName: options.popupClassName || (options.showHeader || options.headerTemplate ?
                 'controls-DropdownList__margin-head' : options.multiSelect ?

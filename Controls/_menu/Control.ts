@@ -481,7 +481,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         Merge(templateConfig, selectorTemplate.templateOptions);
 
         return Merge({
-            opener: this,
+            // Т.к само меню закроется после открытия стекового окна,
+            // в опенер нужно положить контрол, который останется на странице.
+            opener: this._options.selectorOpener,
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: options.isCompoundTemplate,
