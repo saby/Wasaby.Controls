@@ -520,6 +520,7 @@ define([
          });
       });
 
+/*
       it('_onBreadCrumbsClick', function() {
          var
             testBreadCrumbs = new collection.RecordSet({
@@ -552,6 +553,7 @@ define([
          instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1));
          assert.equal(instance._root, testBreadCrumbs.at(1).get('id'));
       });
+*/
 
       it('_notifyHandler', function() {
          var
@@ -809,6 +811,7 @@ define([
             assert.equal(root, 'itemId');
          });*/
 
+/*
          it('_onBreadCrumbsClick', function() {
             isNotified = false;
 
@@ -869,6 +872,7 @@ define([
 
             assert.isTrue(isNotified);
          });
+*/
 
          it('_pathCleaner', function() {
             isNotified = false;
