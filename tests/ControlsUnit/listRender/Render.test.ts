@@ -289,13 +289,15 @@ describe('Controls/_listRender/Render', () => {
 
         let itemSwipeFired = false;
         let itemSwipeParameter;
+        let itemSwipeClientWidth;
         let itemSwipeClientHeight;
         let itemSwipeBubbling = false;
         render._notify = (eventName, params, opts) => {
             if (eventName === 'itemSwipe') {
                 itemSwipeFired = true;
                 itemSwipeParameter = params[0];
-                itemSwipeClientHeight = params[2];
+                itemSwipeClientWidth = params[2];
+                itemSwipeClientHeight = params[3];
                 itemSwipeBubbling = !!(opts && opts.bubbling);
             }
         };
@@ -310,6 +312,7 @@ describe('Controls/_listRender/Render', () => {
                     classList: {
                         contains: () => true
                     },
+                    clientWidth: 321,
                     clientHeight: 123
                 })
             }
@@ -322,6 +325,7 @@ describe('Controls/_listRender/Render', () => {
         assert.isTrue(stopPropagationCalled, 'swipe event propagation should have stopped');
         assert.strictEqual(itemSwipeParameter, item);
         assert.isFalse(itemSwipeBubbling, 'itemSwipe should not bubble');
+        assert.strictEqual(itemSwipeClientWidth, 321);
         assert.strictEqual(itemSwipeClientHeight, 123);
     });
 

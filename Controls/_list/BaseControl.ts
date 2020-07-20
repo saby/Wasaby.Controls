@@ -37,7 +37,7 @@ import {
     GroupItem,
     ANIMATION_STATE
 } from 'Controls/display';
-import {Controller as ItemActionsController, IItemAction, TItemActionShowType} from 'Controls/itemActions';
+import {Controller as ItemActionsController, IItemAction, TItemActionShowType, ItemActionsTemplate, SwipeActionsTemplate} from 'Controls/itemActions';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
@@ -71,8 +71,7 @@ import { DndFlatController, DndTreeController } from 'Controls/listDragNDrop';
 
 import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import 'wml!Controls/_list/BaseControl/Footer';
-import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
-import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
+
 import {IList} from "./interface/IList";
 import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 
@@ -2422,10 +2421,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemActionsMenuId: null,
 
     // Шаблон операций с записью
-    _itemActionsTemplate: itemActionsTemplate,
+    _itemActionsTemplate: ItemActionsTemplate,
 
     // Шаблон операций с записью для swipe
-    _swipeTemplate: swipeTemplate,
+    _swipeTemplate: SwipeActionsTemplate,
 
     _markerController: null,
 
@@ -3734,7 +3733,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             _private.setMarkedKey(this, key);
-            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);
+            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainer?.clientWidth, swipeContainer?.clientHeight);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             const swipedItem = this._itemActionsController.getSwipeItem();
