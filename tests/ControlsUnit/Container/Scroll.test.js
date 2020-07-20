@@ -709,6 +709,7 @@ define(
                   start: () => null
                }
             };
+            scrollContainer._private.updateStates = () => {};
             scrollContainer._scrollTop = 0;
             scrollContainer._scrollLeft = 0;
 
@@ -725,12 +726,10 @@ define(
             },{
                scrollType: 'scrollLeft'
             }].forEach(function(test) {
-               scrollContainer._updateStates = () => {};
-               it(`${test.scrollType} has changed. scroll should fire`, function()
-                  sandbox.stub(scrollContainer._children.scrollDetect, 'start');
-                  sandbox.stub(scrollContainer, '_notify');
+               sandbox.stub(scrollContainer._children.scrollDetect, 'start');
+               sandbox.stub(scrollContainer, '_notify');
+               it(`${test.scrollType} has changed. scroll should fire`, function() {
                   scrollContainer._children.content[test.scrollType] = 10;
-                  scrollContainer._updateStates = () => {};
                   scrollContainer._scrollHandler({});
                   sinon.assert.calledWith(scrollContainer._notify, 'scroll', [10]);
                   sinon.assert.calledWith(scrollContainer._children.scrollDetect.start, sinon.match.any, 10);
@@ -808,7 +807,7 @@ define(
                'scroll top should not change because scroll bar is being dragged');
 
             // Dragging stops
-            scrollContainer._updateStates = () => {};
+            scrollContainer._private.updateStates = () => {};
             scrollContainer._draggingChangedHandler({}, false);
 
             assert.strictEqual(scrollContainer._scrollTop, 50,
