@@ -101,7 +101,10 @@ export class Controller {
     * Проставляет заново маркер в модели
     */
    restoreMarker(): void {
-      this._model.setMarkedKey(this._markedKey, true);
+      const item = this._model.getItemBySourceKey(this._markedKey);
+      if (item) {
+         item.setMarked(true);
+      }
    }
 
    /**
