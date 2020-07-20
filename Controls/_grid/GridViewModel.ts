@@ -877,7 +877,8 @@ var
             return shouldAddActionsCell({
                 hasColumnScroll: !!this._options.columnScroll,
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
-                hasColumns: !!this._columns.length
+                hasColumns: !!this._columns.length,
+                itemActionsPosition: this._options.itemActionsPosition
             });
         },
         /**
@@ -1121,6 +1122,7 @@ var
             headerColumn.cellStyles = cellStyles;
             headerColumn.cellClasses = cellClasses;
             headerColumn.cellContentClasses = cellContentClasses;
+            headerColumn.itemActionsPosition = this._options.itemActionsPosition;
 
             return headerColumn;
         },
