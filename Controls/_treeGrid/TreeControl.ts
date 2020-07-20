@@ -716,11 +716,6 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             dndListController.startCountDownForExpandNode(itemData, this._expandNodeOnDrag);
         }
     },
-
-    _onItemClick(e: SyntheticEvent): void {
-        // Это событие занотифаили на mouseUp
-        e.stopPropagation();
-    },
     _itemMouseDown(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent): void {
         this._mouseDownItemKey = item.getKey();
     },
