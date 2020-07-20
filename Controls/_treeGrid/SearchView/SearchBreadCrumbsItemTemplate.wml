@@ -15,7 +15,7 @@
                         attr:class="controls-Grid__breadCrumbs"
                         breadCrumbsItemClickCallback="{{ itemData.breadcrumbsItemClickCallback }}"
                         keyProperty="{{itemData.keyProperty}}"
-                        displayProperty="{{itemData.displayProperty}}">
+                        displayProperty="{{itemData.breadCrumbsDisplayProperty}}">
                 <ws:itemTemplate>
                     <ws:partial template="{{itemData.searchBreadCrumbsItemContent}}">
                         <ws:contentTemplate>

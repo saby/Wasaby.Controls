@@ -203,12 +203,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     protected _itemSwipe(e: SyntheticEvent<null>,
                          item: CollectionItem<Model>,
                          swipeEvent: SyntheticEvent<TouchEvent>,
+                         swipeContainerWidth: number,
                          swipeContainerHeight: number): void {
         const isSwipeLeft = swipeEvent.nativeEvent.direction === 'left';
         const itemKey = item.getContents().getKey();
         if (this._options.itemActions) {
             if (isSwipeLeft) {
-                this._itemActionsController.activateSwipe(itemKey, swipeContainerHeight);
+                this._itemActionsController.activateSwipe(itemKey, swipeContainerWidth, swipeContainerHeight);
             } else {
                 this._itemActionsController.deactivateSwipe();
             }
@@ -480,7 +481,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         Merge(templateConfig, selectorTemplate.templateOptions);
 
         return Merge({
-            opener: this,
+            // Т.к само меню закроется после открытия стекового окна,
+            // в опенер нужно положить контрол, который останется на странице.
+            opener: this._options.selectorOpener,
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: options.isCompoundTemplate,

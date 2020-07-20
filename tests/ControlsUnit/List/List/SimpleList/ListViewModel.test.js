@@ -218,7 +218,6 @@ define([
 
          var cur = iv.getCurrent();
          assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
-         assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(cfg.items.at(0), cur.item, 'Incorrect field set on getCurrent()');
       });
@@ -363,39 +362,31 @@ define([
 
          const model = new lists.ListViewModel(cfg);
 
-         const notifySpy = sinon.spy(model, '_notify');
          let oldVersion = model.getVersion();
 
          model.setMarkedKey(2, true, true);
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
-         assert.isFalse(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
 
-         notifySpy.resetHistory();
          oldVersion = model.getVersion();
 
          model.setMarkedKey(2, false);
          assert.isNull(model.getMarkedKey());
          assert.isFalse(model.getItemBySourceKey(2).isMarked());
-         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', null).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
 
-         notifySpy.resetHistory();
          oldVersion = model.getVersion();
 
          model.setMarkedKey(null, false);
          assert.isNull(model.getMarkedKey());
-         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', null).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
 
-         notifySpy.resetHistory();
          oldVersion = model.getVersion();
 
          model.setMarkedKey(2, true);
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
-         assert.isTrue(notifySpy.withArgs('onMarkedKeyChanged', 2).called);
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
       });
 
@@ -646,6 +637,15 @@ define([
                showed: [1]
             });
             assert.isTrue(!!item.shouldDisplayActions());
+
+            // Проверяем что чекбокс не будет показываться если запись редактируется
+            assert.isFalse(item.hasMultiSelect);
+            lvm.setMultiSelectVisibility('visible');
+            item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
+            assert.isTrue(item.hasMultiSelect);
+            lvm.getItemById('1', 'id').setEditing(true);
+            item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
+            assert.isFalse(item.hasMultiSelect);
          });
 
          it('getMultiSelectClassList hidden', function() {
