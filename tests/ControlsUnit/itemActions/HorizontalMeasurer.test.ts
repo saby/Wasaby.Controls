@@ -1,8 +1,11 @@
 import { assert } from 'chai';
+import { stub, SinonStub } from 'sinon';
+
 import * as rk from 'i18n!ControlsUnit';
 
 import { IItemAction } from 'Controls/_itemActions/interface/IItemActions';
 import { horizontalMeasurer } from 'Controls/_itemActions/measurers/HorizontalMeasurer';
+import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
 describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
     it('needIcon', () => {
@@ -13,6 +16,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isTrue(
             horizontalMeasurer.needIcon(
                 {
+                    id: 123,
                     icon: '123'
                 },
                 'none',
@@ -22,6 +26,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isTrue(
             horizontalMeasurer.needIcon(
                 {
+                    id: 123,
                     icon: '123'
                 },
                 'none',
@@ -34,6 +39,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isFalse(
             horizontalMeasurer.needTitle(
                 {
+                    id: 123,
                     icon: 'icon-Message'
                 },
                 'none'
@@ -42,6 +48,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isFalse(
             horizontalMeasurer.needTitle(
                 {
+                    id: 123,
                     icon: 'icon-Message'
                 },
                 'right'
@@ -52,6 +59,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isTrue(
             horizontalMeasurer.needTitle(
                 {
+                    id: 123,
                     title: '123'
                 },
                 'none'
@@ -60,6 +68,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isTrue(
             horizontalMeasurer.needTitle(
                 {
+                    id: 123,
                     title: '123'
                 },
                 'right'
@@ -68,6 +77,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
         assert.isTrue(
             horizontalMeasurer.needTitle(
                 {
+                    id: 123,
                     title: '123'
                 },
                 'bottom'
@@ -91,7 +101,25 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             }
         ];
 
-        it('more than 3 actions, should add menu', () => {
+        let stubGetElementsWidth: SinonStub;
+        let stubGetWidthForCssClass: SinonStub;
+
+        beforeEach(() => {
+            stubGetElementsWidth = stub(DOMUtil, 'getElementsWidth');
+            stubGetElementsWidth.callsFake((itemsHtml: string[], itemClass: string, considerMargins?: boolean) => (
+                itemsHtml.map((item) => 25)
+            ));
+            stubGetWidthForCssClass = stub(DOMUtil, 'getWidthForCssClass');
+            stubGetWidthForCssClass.callsFake((content: string, blockClass: string, considerMargins?: boolean) => 0);
+        });
+
+        afterEach(() => {
+            stubGetElementsWidth.restore();
+            stubGetWidthForCssClass.restore();
+        });
+
+        // Если кол-во записей > 3, то показываем максимум 3 (если они влезли) и добавляем кнопку "ещё"
+        it('should add menu, when more than 3 itemActions are in \'showed\' array', () => {
             const result = {
                 itemActionsSize: 'm',
                 itemActions: {
@@ -99,7 +127,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                         id: 4,
                         icon: 'icon-DK'
                     }),
-                    showed: actions.slice(0, 3).concat({
+                    showed: actions.concat({
                         id: null,
                         icon: 'icon-SwipeMenu',
                         title: rk('Ещё'),
@@ -116,11 +144,139 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                         id: 4,
                         icon: 'icon-DK'
                     }),
+                    100,
                     20,
-                    'right'
+                    'right',
+                    'adaptive',
+                    'default'
                 ),
                 result
             );
+        });
+
+        // Если кол-во записей > 3 и видимые записи не влезли в контейнер, показываем столько, сколько влезло
+        it('should show only item actions that are smaller than container by their summarized width when total > 3', () => {
+            const showed = [...actions];
+            showed.splice(-1, 1, {
+                id: null,
+                icon: 'icon-SwipeMenu',
+                title: rk('Ещё'),
+                _isMenu: true,
+                showType: 2
+            });
+            const result = {
+                itemActionsSize: 'm',
+                itemActions: {
+                    all: actions.concat({
+                        id: 4,
+                        icon: 'icon-DK'
+                    }),
+                    showed
+                },
+                paddingSize: 'm'
+            };
+            assert.deepInclude(horizontalMeasurer.getSwipeConfig(
+                actions.concat({
+                    id: 4,
+                    icon: 'icon-DK'
+                }),
+                75,
+                20,
+                'right',
+                'adaptive',
+                'default'
+            ), result);
+        });
+
+        // Если кол-во записей <= 3 и видимые записи не влезли в контейнер, показываем столько, сколько влезло
+        it('should show only item actions that are smaller than container by their summarized width when total <= 3', () => {
+            stubGetElementsWidth.callsFake((itemsHtml: string[], itemClass: string, considerMargins?: boolean) => (
+                itemsHtml.map((item, index) => 25 + index)
+            ));
+
+            const lessActions = [...actions];
+            lessActions.splice(-1, 1);
+
+            const showed = [...lessActions];
+            showed.splice(-1, 1, {
+                id: null,
+                icon: 'icon-SwipeMenu',
+                title: rk('Ещё'),
+                _isMenu: true,
+                showType: 2
+            });
+
+            const result = {
+                itemActionsSize: 'm',
+                itemActions: {
+                    all: lessActions,
+                    showed
+                },
+                paddingSize: 'm'
+            };
+            const config = horizontalMeasurer.getSwipeConfig(
+                lessActions,
+                50,
+                20,
+                'right',
+                'adaptive',
+                'default'
+            );
+            assert.deepInclude(config, result);
+        });
+
+        // Если кол-во записей <= 3 и видимые записи влезли в контейнер, не показываем кнопку "Ещё"
+        it('should not show menu button when item actions are smaller than container by their summarized width and total <= 3', () => {
+            const lessActions = [...actions];
+            lessActions.splice(-1, 1);
+
+            const result = {
+                itemActionsSize: 'm',
+                itemActions: {
+                    all: lessActions,
+                    showed: lessActions
+                },
+                paddingSize: 'm'
+            };
+            const config = horizontalMeasurer.getSwipeConfig(
+                lessActions,
+                50,
+                20,
+                'right',
+                'adaptive',
+                'default'
+            );
+            assert.deepInclude(config, result);
+        });
+
+        // Если menuButtonVisibility===visible, то показываем кнопку "Ещё"
+        it('should show menu button when menuButtonVisibility===visible', () => {
+            const lessActions = [...actions];
+            lessActions.splice(-1, 1);
+
+            const result = {
+                itemActionsSize: 'm',
+                itemActions: {
+                    all: lessActions,
+                    showed: lessActions.concat({
+                        id: null,
+                        icon: 'icon-SwipeMenu',
+                        title: rk('Ещё'),
+                        _isMenu: true,
+                        showType: 2
+                    })
+                },
+                paddingSize: 'm'
+            };
+            const config = horizontalMeasurer.getSwipeConfig(
+                lessActions,
+                75,
+                20,
+                'right',
+                'visible',
+                'default'
+            );
+            assert.deepInclude(config, result);
         });
 
         it('small row without title, itemActionsSize should be m', () => {
@@ -134,7 +290,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 20, 'none'),
+                horizontalMeasurer.getSwipeConfig(actions, 100, 20, 'none', 'adaptive', 'default'),
                 result
             );
         });
@@ -150,7 +306,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 39, 'none'),
+                horizontalMeasurer.getSwipeConfig(actions, 100, 39, 'none', 'adaptive', 'default'),
                 result
             );
         });
@@ -166,7 +322,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 20, 'bottom'),
+                horizontalMeasurer.getSwipeConfig(actions, 100, 20, 'bottom', 'adaptive', 'default'),
                 result
             );
         });
@@ -182,7 +338,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             };
 
             assert.deepInclude(
-                horizontalMeasurer.getSwipeConfig(actions, 59, 'bottom'),
+                horizontalMeasurer.getSwipeConfig(actions, 100, 59, 'bottom', 'adaptive', 'default'),
                 result
             );
         });
@@ -240,7 +396,13 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
             ];
             assert.deepEqual(
                 result,
-                horizontalMeasurer.getSwipeConfig(otherActions, 59, 'none').itemActions.showed
+                horizontalMeasurer.getSwipeConfig(
+                    otherActions,
+                    100,
+                    59,
+                    'none',
+                    'adaptive',
+                    'default').itemActions.showed
             );
         });
     });
