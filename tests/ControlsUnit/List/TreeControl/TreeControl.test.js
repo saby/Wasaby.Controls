@@ -383,6 +383,7 @@ define([
          treeGrid.TreeControl._private.toggleExpanded(treeControl, {
             getContents: function() {
                return {
+                  get: () => null,
                   getId: function() {
                      return 1;
                   }
