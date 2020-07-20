@@ -70,7 +70,7 @@
                     controls-Grid__cell_valign_{{currentColumn.column.compatibleValign || 'top'}}
                     {{className || ''}}">
         <div class="{{ currentColumn.classList.relativeCellWrapper }}">
-        <ws:partial template="{{content}}" />
+            <ws:partial template="{{content}}" />
         </div>
     </td>
 </ws:template>

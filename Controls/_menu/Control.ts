@@ -203,12 +203,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     protected _itemSwipe(e: SyntheticEvent<null>,
                          item: CollectionItem<Model>,
                          swipeEvent: SyntheticEvent<TouchEvent>,
+                         swipeContainerWidth: number,
                          swipeContainerHeight: number): void {
         const isSwipeLeft = swipeEvent.nativeEvent.direction === 'left';
         const itemKey = item.getContents().getKey();
         if (this._options.itemActions) {
             if (isSwipeLeft) {
-                this._itemActionsController.activateSwipe(itemKey, swipeContainerHeight);
+                this._itemActionsController.activateSwipe(itemKey, swipeContainerWidth, swipeContainerHeight);
             } else {
                 this._itemActionsController.deactivateSwipe();
             }

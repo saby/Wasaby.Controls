@@ -188,6 +188,7 @@ export default class View extends Control<IViewOptions> {
      * @param e
      * @param item
      * @param swipeEvent
+     * @param swipeContainerWidth
      * @param swipeContainerHeight
      * @private
      */
@@ -195,10 +196,11 @@ export default class View extends Control<IViewOptions> {
         e: SyntheticEvent<null>,
         item: CollectionItem<Model>,
         swipeEvent: SyntheticEvent<ISwipeEvent>,
+        swipeContainerWidth: number,
         swipeContainerHeight: number
     ): void {
         if (swipeEvent.nativeEvent.direction === 'left') {
-            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerHeight);
+            this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerWidth, swipeContainerHeight);
         }
         if (swipeEvent.nativeEvent.direction === 'right' && item.isSwiped()) {
             this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);

@@ -37,7 +37,7 @@ import {
     GroupItem,
     ANIMATION_STATE
 } from 'Controls/display';
-import {Controller as ItemActionsController, IItemAction, TItemActionShowType} from 'Controls/itemActions';
+import {Controller as ItemActionsController, IItemAction, TItemActionShowType, ItemActionsTemplate, SwipeActionsTemplate} from 'Controls/itemActions';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
@@ -71,8 +71,7 @@ import { DndFlatController, DndTreeController } from 'Controls/listDragNDrop';
 
 import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import 'wml!Controls/_list/BaseControl/Footer';
-import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/ItemActionsTemplate';
-import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
+
 import {IList} from "./interface/IList";
 import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 
@@ -1911,7 +1910,7 @@ const _private = {
                }
                if (removedItemsIndex !== undefined && self._markerController) {
                    const newMarkedKey = self._markerController.handleRemoveItems(removedItemsIndex);
-                   _private.notifyAndSetMarker(self, newMarkedKey);
+                   _private.handleMarkerControllerResult(self, newMarkedKey);
                }
                break;
        }
@@ -1942,7 +1941,7 @@ const _private = {
     setMarkedKey(self: any, key: string | number): void {
         if (self._markerController) {
             const newMarkedKey = self._markerController.calculateMarkedKey(key);
-            _private.notifyAndSetMarker(self, newMarkedKey);
+            _private.handleMarkerControllerResult(self, newMarkedKey);
         }
     },
 
@@ -1958,7 +1957,7 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
             const newMarkedKey = self._markerController.moveMarkerToNext();
-            _private.notifyAndSetMarker(self, newMarkedKey);
+            _private.handleMarkerControllerResult(self, newMarkedKey);
             _private.scrollToItem(self, newMarkedKey);
         }
     },
@@ -1975,7 +1974,7 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
             const newMarkedKey = self._markerController.moveMarkerToPrev();
-            _private.notifyAndSetMarker(self, newMarkedKey);
+            _private.handleMarkerControllerResult(self, newMarkedKey);
             _private.scrollToItem(self, newMarkedKey);
         }
     },
@@ -1993,7 +1992,7 @@ const _private = {
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
             const newMarkedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
-            _private.notifyAndSetMarker(self, newMarkedKey);
+            _private.handleMarkerControllerResult(self, newMarkedKey);
             self._setMarkerAfterScroll = false;
         }
     },
@@ -2003,10 +2002,12 @@ const _private = {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
-    notifyAndSetMarker(self: any, newMarkedKey: string|number): void {
+    handleMarkerControllerResult(self: any, newMarkedKey: string|number): void {
         if (newMarkedKey !== self._markerController.getMarkedKey()) {
             self._notify('markedKeyChanged', [newMarkedKey]);
         }
+
+        // Если нам не передают markedKey, то на него не могут повлиять и поэтому сразу изменяем модель
         if (!self._options.hasOwnProperty('markedKey')) {
             self._markerController.setMarkedKey(newMarkedKey);
         }
@@ -2438,10 +2439,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemActionsMenuId: null,
 
     // Шаблон операций с записью
-    _itemActionsTemplate: itemActionsTemplate,
+    _itemActionsTemplate: ItemActionsTemplate,
 
     // Шаблон операций с записью для swipe
-    _swipeTemplate: swipeTemplate,
+    _swipeTemplate: SwipeActionsTemplate,
 
     _markerController: null,
 
@@ -3752,7 +3753,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             _private.setMarkedKey(this, key);
-            _private.getItemActionsController(this).activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);
+            _private.getItemActionsController(this).activateSwipe(item.getContents().getKey(), swipeContainer?.clientWidth, swipeContainer?.clientHeight);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             const swipedItem = _private.getItemActionsController(this).getSwipeItem();
