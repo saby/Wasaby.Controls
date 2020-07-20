@@ -358,8 +358,12 @@ define([
          });
          let expandSorting;
          let originalCreateSourceController = treeGrid.TreeControl._private.createSourceController;
+         const items = new collection.RecordSet({
+            rawData: getHierarchyData(),
+            keyProperty: 'id'
+         });
          const model = treeControl._children.baseControl.getViewModel();
-         model.setItems([], treeControl._children.baseControl._options);
+         model.setItems(items, treeControl._children.baseControl._options);
          treeGrid.TreeControl._private.createSourceController = function() {
             return {
                load: function(filter, sorting) {
