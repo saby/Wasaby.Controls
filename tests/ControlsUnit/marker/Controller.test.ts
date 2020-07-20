@@ -397,7 +397,7 @@ describe('Controls/marker/Controller', () => {
       items.removeAt(2);
       items.removeAt(2);
 
-      controller.handleRemoveItems(2);
-      assert.equal(model.getMarkedKey(), 2);
+      const result = controller.handleRemoveItems(2);
+      assert.equal(result, 2);
    });
 });
