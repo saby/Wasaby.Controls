@@ -5,7 +5,7 @@ import DataContext = require('Core/DataContext');
  * Используется для управления видимостью кнопок постраничной навигации.
  *
  * @example
- * Пример настройки постраничной навигации, когда кнопки не отображаются для внутреннего скролл-контейнера. 
+ * Пример настройки постраничной навигации, когда кнопки не отображаются для внутреннего скролл-контейнера.
  *
  * <pre>
  *    Component = Control.extend({
@@ -26,7 +26,7 @@ import DataContext = require('Core/DataContext');
  * @class Controls/_scroll/Scroll/Context
  * @extends Core/DataContext
  * @control
- * @public
+ * @private
  * @author Красильников А.С.
  * @category Container
  *
@@ -58,7 +58,7 @@ import DataContext = require('Core/DataContext');
  * @class Controls/_scroll/Scroll/Context
  * @extends Core/DataContext
  * @control
- * @public
+ * @private
  * @author Красильников А.С.
  * @category Container
  *
