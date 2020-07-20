@@ -1098,7 +1098,7 @@ var
             headerColumn.cellClasses = cellClasses;
             headerColumn.cellContentClasses = cellContentClasses;
             if (this._options.itemActionsPosition) {
-                headerColumn.itemActionsPosition = itemActionsPosition;
+                headerColumn.itemActionsPosition = this._options.itemActionsPosition;
             }
 
             return headerColumn;
