@@ -6510,6 +6510,23 @@ define([
                assert.equal(lists.BaseControl._private.calcPaging(self, hasMore, pageSize), 1);
             });
 
+            it('_pagingNavigationVisible', () => {
+               let updatePagingData = lists.BaseControl._private.updatePagingData;
+               let self = {
+                  _knownPagesCount: 1,
+                  _currentPageSize: 5,
+                  _currentPage: 1,
+               }
+               updatePagingData(self, 0);
+               assert.equal(self._pagingNavigationVisible, false, 'paging should not be visible');
+               updatePagingData(self, 10);
+               assert.equal(self._pagingNavigationVisible, true, 'paging should be visible');
+               updatePagingData(self, false);
+               assert.equal(self._pagingNavigationVisible, false, 'paging should not be visible');
+               updatePagingData(self, true);
+               assert.equal(self._pagingNavigationVisible, true, 'paging should be visible');
+            });
+
             describe('getPagingLabelData', function() {
                it('getPagingLabelData', function() {
                   let getPagingLabelData = lists.BaseControl._private.getPagingLabelData;
