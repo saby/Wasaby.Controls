@@ -590,6 +590,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         const id = this.getPreviousItem(index);
         return this.getItemBySourceKey(id);
     },
+    // для совместимости с новой моделью
+    getIndexBySourceIndex(sourceIndex: number): number {
+        return this.getDisplay().getIndexBySourceIndex(sourceIndex);
+    },
 
     getValidItemForMarker: function(index) {
         const prevValidItemKey = this.getPreviousItem(index);
