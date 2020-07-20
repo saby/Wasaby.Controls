@@ -232,7 +232,7 @@ var ListView = BaseControl.extend(
         },
 
         _onItemMouseUp(e, itemData) {
-            this._notify('itemMouseUp', [itemData, e]);
+            this._notify('itemMouseUp', [itemData.item, e]);
         },
 
         _onItemMouseEnter: function(event, itemData) {

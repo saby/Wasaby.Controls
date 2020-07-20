@@ -3481,7 +3481,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
     },
 
-    _itemMouseUp(e: SyntheticEvent, itemData: any, domEvent: SyntheticEvent): void {
+    _itemMouseUp(e: SyntheticEvent, item: Model, domEvent: SyntheticEvent): void {
         // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
         // событие mouseDown и блок над которым произошло событие mouseUp - это разные блоки.
         // Например, записи в мастере или запись в списке с dragScrolling'ом.
@@ -3489,7 +3489,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // т.к. оно не произойдет (itemClick = mouseDown + mouseUp на одном блоке).
         // Также, нельзя устанавливать маркер по mouseDown, блок сменится раньше и клик по записи не выстрелет.
         e.stopPropagation();
-        const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
+        const key = item.getKey();
         if (this._mouseDownItemKey !== key) {
             return;
         }
@@ -3497,7 +3497,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // По клику на чекбокс ставится только маркер, поэтому если нажали на чекбокс, то не нотифаем событие
         const clickOnCheckbox = !!domEvent.target.closest('.js-controls-ListView__checkbox');
-        const item = this._options.useNewModel ? itemData.getContents() : itemData.item;
         const result = clickOnCheckbox ? undefined : this._notify('itemMouseUp', [item, domEvent.nativeEvent]);
 
         // При редактировании по месту маркер появляется только если в списке больше одной записи.
