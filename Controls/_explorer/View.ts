@@ -608,11 +608,16 @@ var
          // but is not called, because the template has no reactive properties.
          this._forceUpdate();
       },
+      _itemClick(event: SyntheticEvent): void {
+         // Это событие было занотифаено на mouseUp, поэтому чтобы оно не повторялось здесь останавливаем
+         event.stopPropagation();
+      },
       _itemMouseDown(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent): void {
-         this._mouseDownItemKey = item.getKey();
+         this._mouseDownItemKey = item instanceof Array ? undefined : item.getKey();
       },
       _itemMouseUp(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent, columnIndex?: number): boolean {
-         if (this._mouseDownItemKey !== item.getKey()) {
+         const key = item instanceof Array ? undefined : item.getKey();
+         if (this._mouseDownItemKey !== key) {
             return false;
          }
          event.stopPropagation();
@@ -621,7 +626,7 @@ var
          const res = this._notify('itemClick', [item, clickEvent, columnIndex]);
 
          const changeRoot = () => {
-            _private.setRoot(this, item.getId());
+            _private.setRoot(this, key);
             this._isGoingFront = true;
          };
 

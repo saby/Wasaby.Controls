@@ -2376,6 +2376,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _viewPortSize: null,
     _scrollTop: 0,
     _popupOptions: null,
+    _mouseDownItemKey: null,
 
     // target элемента, на котором было вызвано контекстное меню
     _targetItem: null,
@@ -3485,7 +3486,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // т.к. оно не произойдет (itemClick = mouseDown + mouseUp на одном блоке).
         // Также, нельзя устанавливать маркер по mouseDown, блок сменится раньше и клик по записи не выстрелет.
         e.stopPropagation();
-        const key = item.getKey();
+        const key = item instanceof Array ? undefined : item.getKey();
         if (this._mouseDownItemKey !== key) {
             return;
         }

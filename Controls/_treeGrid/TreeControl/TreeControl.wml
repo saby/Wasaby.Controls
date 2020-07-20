@@ -6,6 +6,7 @@
                            scope="{{_options}}"
                            name="baseControl"
                            on:keyDown="_onTreeViewKeyDown()"
+                           on:itemClick="_itemClick()"
                            on:itemMouseDown="_itemMouseDown()"
                            on:itemMouseUp="_itemMouseUp()"
                            errorController="{{_errorController}}"

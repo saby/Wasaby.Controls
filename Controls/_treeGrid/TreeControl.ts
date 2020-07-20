@@ -716,11 +716,16 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             dndListController.startCountDownForExpandNode(itemData, this._expandNodeOnDrag);
         }
     },
+    _itemClick(event: SyntheticEvent): void {
+        // Это событие было занотифаено на mouseUp, поэтому чтобы оно не повторялось здесь останавливаем
+        event.stopPropagation();
+    },
     _itemMouseDown(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent): void {
-        this._mouseDownItemKey = item.getKey();
+        this._mouseDownItemKey = item instanceof Array ? undefined : item.getKey();
     },
     _itemMouseUp(event: SyntheticEvent, item: Model, clickEvent: SyntheticEvent, columnIndex?: number): boolean {
-        if (this._mouseDownItemKey !== item.getKey()) {
+        const key = item instanceof Array ? undefined : item.getKey();
+        if (this._mouseDownItemKey !== key) {
             return false;
         }
         this._mouseDownItemKey = null;
