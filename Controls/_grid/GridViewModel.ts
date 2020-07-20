@@ -309,13 +309,13 @@ var
                 classLists.base += ' controls-Grid__cell_fit';
             }
 
-            if (current.isEditing) {
+            if (current.isEditing()) {
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
                 classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;
             }
 
-            if (current.columnScroll && !current.isEditing) {
+            if (current.columnScroll && !current.isEditing()) {
                 classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
             }
 
@@ -1491,10 +1491,6 @@ var
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
             );
 
-            const superShouldDrawMarker = current.shouldDrawMarker;
-            current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
-                return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
-            };
             const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}
             controls-GridView__itemV_marker-${style}_theme-${self._options.theme}
@@ -1629,7 +1625,6 @@ var
                         tableCellStyles: '',
                         getItemActionPositionClasses: current.getItemActionPositionClasses,
                         getItemActionClasses: current.getItemActionClasses,
-                        isEditingState: current.isEditingState,
                         isSwiped: current.isSwiped,
                         getActions: current.getActions,
                         getContents: current.getContents

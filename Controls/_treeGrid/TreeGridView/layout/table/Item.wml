@@ -98,7 +98,7 @@
 </ws:template>
 
 <ws:template name="columnContentWrapper">
-   <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
+   <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0}}">
        <div attr:class="{{itemData.getMarkerClasses()}}"></div>
    </ws:if>
    <div if="{{!!itemData.dragTargetNode}}"
@@ -149,7 +149,7 @@
 </ws:template>
 
 <tr class="controls-Grid__row {{itemData.isLastItem ? 'controls-Grid__row_last'}} {{itemData.calcCursorClasses(clickable, cursor)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
-            {{highlightOnHover !== false && !itemData.isEditingState() ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
+            {{highlightOnHover !== false && !itemData.isEditing() ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
        {{itemData.resetColumnIndex();}}
        <ws:if data="{{itemData.hasMultiSelect}}">

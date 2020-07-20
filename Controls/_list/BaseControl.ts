@@ -1366,7 +1366,7 @@ const _private = {
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(item);
         const itemContainer = _private.resolveItemContainer(self, item, isMenuClick);
-        self._notify('actionClick', [action, contents, itemContainer]);
+        self._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
         if (action.handler) {
             action.handler(contents);
         }
@@ -3737,9 +3737,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainer?.clientHeight);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            if (item.isSwiped()) {
+            const swipedItem = this._itemActionsController.getSwipeItem();
+            if (swipedItem) {
                 this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
                 this._listViewModel.nextVersion();
+
+                // Для сценария, когда свайпнули одну запись и потом свайпнули вправо другую запись
+                if (swipedItem !== item) {
+                    _private.setMarkedKey(this, key);
+                }
             } else {
                 // After the right swipe the item should get selected.
                 if (!this._selectionController && _private.isItemsSelectionAllowed(this._options)) {
