@@ -441,7 +441,7 @@ const _private = {
         }
 
         if (self._selectionController) {
-            self._selectionController.restoreSelection();
+            _private._getSelectionController(self).restoreSelection();
         } else {
             if (options.selectedKeys && options.selectedKeys.length > 0) {
                 self._selectionController = _private.createSelectionController(self, options);
