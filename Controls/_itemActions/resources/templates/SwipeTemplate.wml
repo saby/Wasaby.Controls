@@ -13,7 +13,7 @@
 
                     <ws:if data="{{swipeConfig.twoColumns}}">
                         <ws:partial
-                                template="wml!Controls/_list/Swipe/resources/SwipeTwoColumns"
+                                template="wml!Controls/_itemActions/resources/templates/SwipeTwoColumns"
                                 itemData="{{itemData}}"
                                 showedActions="{{swipeConfig.twoColumnsActions}}"
                                 swipeConfig="{{swipeConfig}}"
@@ -21,7 +21,7 @@
                     </ws:if>
                     <ws:else>
                         <ws:partial
-                                template="wml!Controls/_list/Swipe/resources/SwipeFor"
+                                template="wml!Controls/_itemActions/resources/templates/SwipeFor"
                                 itemData="{{itemData}}"
                                 showedActions="{{itemData.getActions().showed}}"
                                 swipeConfig="{{swipeConfig}}"

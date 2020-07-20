@@ -1,0 +1,12 @@
+<ws:partial template="Controls/itemActions:SwipeActionTemplate"
+            actionCaptionPosition="{{actionCaptionPosition}}"
+            actionAlignment="{{actionAlignment}}"
+            theme="{{theme}}"
+            paddingSize="{{paddingSize}}"
+            action="{{action}}"
+            hasActionWithIcon="{{hasActionWithIcon}}"
+            itemActionsSize="{{itemActionsSize}}"
+
+            needIcon="{{needIcon}}"
+            needTitle="{{needTitle}}"
+/>

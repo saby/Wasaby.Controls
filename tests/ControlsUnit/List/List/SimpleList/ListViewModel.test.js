@@ -218,7 +218,6 @@ define([
 
          var cur = iv.getCurrent();
          assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
-         assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(cfg.items.at(0), cur.item, 'Incorrect field set on getCurrent()');
       });
@@ -638,6 +637,15 @@ define([
                showed: [1]
             });
             assert.isTrue(!!item.shouldDisplayActions());
+
+            // Проверяем что чекбокс не будет показываться если запись редактируется
+            assert.isFalse(item.hasMultiSelect);
+            lvm.setMultiSelectVisibility('visible');
+            item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
+            assert.isTrue(item.hasMultiSelect);
+            lvm.getItemById('1', 'id').setEditing(true);
+            item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
+            assert.isFalse(item.hasMultiSelect);
          });
 
          it('getMultiSelectClassList hidden', function() {
