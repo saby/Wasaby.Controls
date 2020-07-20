@@ -206,7 +206,7 @@ export class Controller {
      * Устанавливает состояние элемента rightSwiped
      * @param itemKey
      */
-    activateRightSwipe(itemKey: TItemKey) {
+    activateRightSwipe(itemKey: TItemKey): void {
         this.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
         this._setSwipeItem(itemKey);
     }
@@ -531,8 +531,8 @@ export class Controller {
     private _getActionsContainer(item: IItemActionsItem): IItemActionsContainer {
         let showed;
         const actions = this._collectActionsForItem(item);
-        if (this._collection.isEditing() && ((typeof item.isEditing === 'function') && !item.isEditing() || !item.isEditing)) {
-            showed = []
+        if (this._collection.isEditing() && !item.isEditing()) {
+            showed = [];
         } else if (actions.length > 1) {
             showed = actions.filter((action) =>
                     !action.parent &&

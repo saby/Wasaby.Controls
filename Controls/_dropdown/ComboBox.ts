@@ -5,11 +5,10 @@ import * as Utils from 'Types/util';
 import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
 import * as tmplNotify from 'Controls/Utils/tmplNotify';
 import Controller from 'Controls/_dropdown/_Controller';
-import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
+import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ISingleSelectableOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
-import {RecordSet} from 'Types/collection';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import {IStickyPopupOptions} from 'Controls/popup';
 import * as Merge from 'Core/core-merge';
@@ -94,7 +93,7 @@ class ComboBox extends BaseDropdown {
 
    _beforeMount(options: IComboboxOptions,
                 context: object,
-                receivedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
+                receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._setText = this._setText.bind(this);
