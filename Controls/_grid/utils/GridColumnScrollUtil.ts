@@ -13,7 +13,7 @@ interface IShouldAddActionsCellArgs {
     // PS. Эта опция не учитывает, что в таблицу был передан header.
     hasColumns: boolean;
 
-    // ополнительная колонка нужны, если itemActionsPosition !== custom
+    // Дополнительная колонка нужны, если itemActionsPosition !== custom
     itemActionsPosition?: string;
 }
 
