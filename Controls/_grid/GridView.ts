@@ -63,8 +63,9 @@ var
             if (shouldAddActionsCell({
                 hasColumnScroll: !!self._options.columnScroll,
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
-                hasColumns: !!columns.length
-            }) && self._options.itemActionsPosition !== 'custom') {
+                hasColumns: !!columns.length,
+                itemActionsPosition: self._options.itemActionsPosition
+            })) {
                 columnsWidths = columnsWidths.concat(['0px']);
             }
             if (hasMultiSelect) {

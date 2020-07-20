@@ -853,7 +853,8 @@ var
             return shouldAddActionsCell({
                 hasColumnScroll: !!this._options.columnScroll,
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
-                hasColumns: !!this._columns.length
+                hasColumns: !!this._columns.length,
+                itemActionsPosition: this._options.itemActionsPosition
             });
         },
         /**
@@ -2079,10 +2080,7 @@ var
                 // к колонкам была добавлена "прилипающая" колонка?
                 const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
                 // к колонкам была добавлена колонка "Действий"?
-                let offsetForActionCell: number = 0;
-                if (this._options.itemActionsPosition !== 'custom') {
-                    offsetForActionCell = +(this._shouldAddActionsCell());
-                }
+                const offsetForActionCell = +(this._shouldAddActionsCell());
                 // В случае, если у нас приходит после поиска пустой массив колонок,
                 // пытаемся установить значение по длине массива заголовков, а если и он пуст,
                 // то необходимо установить columnsCount в 1, иначе весь дальнейший расчёт
