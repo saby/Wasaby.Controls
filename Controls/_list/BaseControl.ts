@@ -1687,9 +1687,6 @@ const _private = {
             _private.resetPagingNavigation(self, cfg.navigation);
         }
     },
-    updateNavigation(self) {
-        self._pagingNavigationVisible = self._pagingNavigation;
-    },
     closeEditingIfPageChanged(self, oldNavigation, newNavigation) {
         const oldSourceCfg = oldNavigation && oldNavigation.sourceConfig ? oldNavigation.sourceConfig : {};
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
@@ -2462,7 +2459,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.bindHandlers(this);
 
         _private.initializeNavigation(this, newOptions);
-        _private.updateNavigation(this);
 
         this._loadTriggerVisibility = {};
 
@@ -2802,7 +2798,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
             }
         }
-        _private.updateNavigation(this);
 
         if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
             if (this._editInPlace && this._listViewModel.getEditingItemData()) {
