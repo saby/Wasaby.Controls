@@ -9,7 +9,6 @@ import {
     SerializableMixin
 } from 'Types/entity';
 import {IList} from 'Types/collection';
-import {register} from 'Types/di';
 import {mixin} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
@@ -593,5 +592,3 @@ Object.assign(CollectionItem.prototype, {
     _version: 0,
     _counters: null
 });
-
-register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});

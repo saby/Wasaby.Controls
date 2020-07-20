@@ -1,5 +1,4 @@
 import CollectionItem, {IOptions as IBaseOptions} from './CollectionItem';
-import {register} from 'Types/di';
 import {ColumnsCollection} from '../display';
 
 export interface IOptions<T> extends IBaseOptions<T> {
@@ -47,4 +46,3 @@ Object.assign(ColumnsCollectionItem.prototype, {
     _$column: 1
 });
 
-register('Controls/display:ColumnsCollectionItem', ColumnsCollectionItem, {instantiate: false});
