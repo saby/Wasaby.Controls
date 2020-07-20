@@ -186,28 +186,28 @@
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">демо-пример</a>
  * @remark Перед отрисовкой убедитесь, что {@link Controls/display:Collection Collection} содержит необходимые данные при изменении параметра {@link Controls/_grid/interface/IGridControl#columns columns}. При необходимости вызовите асинхронный метод "reload" перед изменением параметра {@link Controls/_grid/interface/IGridControl#columns columns}.
  * @example
- * <pre>
- * _columns = [
- * {
- *     displayProperty: 'name',
- *     width: '1fr',
- *     align: 'left',
- *     template: _customNameTemplate
- * },
- * {
- *     displayProperty: 'balance',
- *     align: 'right',
- *     width: 'auto',
- *     resutTemplate: '_customResultTemplate',
- *     result: 12340
+ * <pre class="brush: js">
+ * this._columns: null,
+ * _beforeMount: function() {
+ *    this._columns = [
+ *       {
+ *          displayProperty: 'name',
+ *          width: '1fr',
+ *          align: 'left',
+ *          template: _customNameTemplate
+ *       },
+ *       {
+ *          displayProperty: 'balance',
+ *          align: 'right',
+ *          width: 'auto',
+ *          resutTemplate: _customResultTemplate,
+ *          result: 12340
+ *       }
+ *    ];
  * }
- * ];
  * </pre>
- * <pre>
- *  <Controls.grid:View
- *      ...
- *      columns="{{_columns}}">
- *  </Controls.grid:View>
+ * <pre class="brush: html">
+ *  <Controls.grid:View columns="{{_columns}}" />
  * </pre>
  */
 

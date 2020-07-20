@@ -257,7 +257,6 @@ var ItemsViewModel = BaseViewModel.extend({
                 getPropValue: ItemsUtil.getPropertyValue,
                 style: this._options.style,
                 keyProperty: this.getKeyProperty(),
-                displayProperty: this._options.displayProperty,
                 index: this._display.getIndex(dispItem),
                 item: dispItem.getContents(),
                 dispItem,
@@ -381,7 +380,6 @@ var ItemsViewModel = BaseViewModel.extend({
         return {
             getPropValue: ItemsUtil.getPropertyValue,
             keyProperty: this.getKeyProperty(),
-            displayProperty: this._options.displayProperty,
             index: itemIndex,
             item: dispItem.getContents(),
             dispItem: dispItem

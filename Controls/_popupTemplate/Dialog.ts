@@ -83,8 +83,8 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
     static _theme: string[] = ['Controls/popupTemplate'];
     static getDefaultOptions(): IDialogTemplateOptions {
         return {
-            headingStyle: 'secondary',
-            headingSize: '3xl',
+            headingFontColorStyle: 'secondary',
+            headingFontSize: '3xl',
             closeButtonVisibility: true,
             closeButtonViewMode: 'toolButton',
             closeButtonTransparent: true

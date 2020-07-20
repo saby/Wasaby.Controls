@@ -115,7 +115,7 @@ export default class Render extends Control<IRenderOptions> {
             ? itemContainer
             : itemContainer.querySelector('.js-controls-SwipeControl__actionsContainer');
 
-        this._notify('itemSwipe', [item, e, swipeContainer?.clientHeight]);
+        this._notify('itemSwipe', [item, e, swipeContainer?.clientWidth, swipeContainer?.clientHeight]);
     }
 
     protected _onActionsSwipeAnimationEnd(e: SyntheticEvent<null>): void {

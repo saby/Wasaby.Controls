@@ -80,7 +80,7 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
     protected _viewName = viewName;
     protected _viewTemplate: unknown = ListControl;
     protected _viewModelConstructor = null;
-    protected _children: { listControl: unknown };
+    protected _children: { listControl: ListControl };
 
     static _theme = ['Controls/list'];
 
