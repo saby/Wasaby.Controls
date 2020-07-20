@@ -1366,7 +1366,7 @@ const _private = {
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(item);
         const itemContainer = _private.resolveItemContainer(self, item, isMenuClick);
-        self._notify('actionClick', [action, contents, itemContainer]);
+        self._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
         if (action.handler) {
             action.handler(contents);
         }
