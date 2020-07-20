@@ -16,7 +16,8 @@
                attr:class="{{_options.detailPanelTemplateName ? 'controls-FilterView-' + _options.alignment + '__block_theme-' + _options.theme}}"/>
 </ws:template>
 
-<div class="controls-FilterView_theme-{{_options.theme}} controls-FilterView-{{_options.alignment}}">
+<div class="controls-FilterView_theme-{{_options.theme}} controls-FilterView-{{_options.alignment}}"
+   on:mouseenter="_mouseEnterHandler()">
    <div class="controls-FilterView__wrapper_theme-{{_options.theme}}">
       <ws:if data="{{_dateRangeItem}}">
          <ws:partial template="Controls/_filter/Editors/DateRange"
@@ -34,7 +35,7 @@
                         itemName="all_frequent"
                         text="{[Все]}"
                         attr:class="controls-FilterView__frequentFilter"
-                        on:click="_openPanel('all_frequent')"/>
+                        on:mousedown="_openPanel('all_frequent')"/>
          </ws:if>
          <ws:for data="index, item in _source">
             <ws:if data="{{_configs[item.name].items && _configs[item.name].items.getCount() && _displayText[item.name].text !== undefined}}">
@@ -42,14 +43,14 @@
                            text="{{_displayText[item.name].text}}"
                            title="{{_displayText[item.name].title}}"
                            moreText="{{_displayText[item.name].hasMoreText}}"
-                           on:click="_openPanel(item.name)"
+                           on:mousedown="_openPanel(item.name)"
                            name="{{item.name}}"
                            item="{{item}}"
                            itemName="{{item.name}}"
                            attr:class="controls-FilterView__frequentFilter"
                />
                <ws:if data="{{item.hasOwnProperty('resetValue')}}">
-                  <ws:partial template="cross" on:click="_reset(item)" item="{{item}}"/>
+                  <ws:partial template="cross" on:mousedown="_reset(item)" item="{{item}}"/>
                </ws:if>
             </ws:if>
          </ws:for>
@@ -58,10 +59,10 @@
          <ws:partial template="itemTemplate"
                      text="{{_filterText}}"
                      title="{{_filterText}}"
-                     on:click="openDetailPanel()"
+                     on:mousedown="openDetailPanel()"
                      attr:class="controls-FilterView__filterTextLine"/>
          <ws:if data="{{_hasResetValues}}">
-            <ws:partial template="cross" on:click="_resetFilterText()" />
+            <ws:partial template="cross" on:mousedown="_resetFilterText()" />
          </ws:if>
       </ws:if>
    </div>
@@ -71,7 +72,7 @@
                                            controls-FilterView-button-{{_options.alignment}}_theme-{{_options.theme}}
                                            controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}_theme-{{_options.theme}}
                                            icon-FilterBig"
-           on:click="openDetailPanel()">
+           on:mousedown="openDetailPanel()">
       </div>
    </ws:if>
    <Controls.popup:Sticky
