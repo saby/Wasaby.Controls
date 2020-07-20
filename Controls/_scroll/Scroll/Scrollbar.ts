@@ -93,8 +93,9 @@ class Scrollbar extends Control<IScrollBarOptions> {
         }
         this._resizeHandler();
         this._forceUpdate();
+        const position = this._scrollPosition || this._options.position || 0;
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-            this._thumbSize, this._scrollPosition);
+            this._thumbSize, position);
 
         if (!newEnv() && window) {
             window.addEventListener('resize', this._resizeHandler);
@@ -107,16 +108,17 @@ class Scrollbar extends Control<IScrollBarOptions> {
     }
 
     protected _afterUpdate(oldOptions: IScrollBarOptions): void {
-
-        let shouldUpdatePosition = !this._dragging && this._position !== this._scrollPosition;
+        // TODO: Позиция сейчас принимается и через опции и через сеттер. чтобы не было лишних обновлений нужно оставить только сеттер
+        const position = this._scrollPosition || this._options.position || 0;
+        let shouldUpdatePosition = !this._dragging && this._position !== position;
         if (oldOptions.contentSize !== this._options.contentSize) {
             this._setSizes(this._options.contentSize);
             shouldUpdatePosition = true;
         }
         if (shouldUpdatePosition) {
-            this._setPosition(this._scrollPosition);
+            this._setPosition(position);
             this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-                                                                this._thumbSize, this._scrollPosition);
+                                                                this._thumbSize, position);
         }
     }
 
@@ -363,9 +365,10 @@ class Scrollbar extends Control<IScrollBarOptions> {
     }
 
     private _updatePosition(): void {
-        this._setPosition(this._scrollPosition);
+        const position = this._scrollPosition || this._options.position || 0;
+        this._setPosition(position);
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-            this._thumbSize, this._scrollPosition);
+            this._thumbSize, position);
     }
 
     private static _isScrollBarVisible(scrollbar: HTMLElement): boolean {
