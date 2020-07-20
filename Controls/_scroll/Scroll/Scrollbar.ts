@@ -78,6 +78,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
     // Координата точки на ползунке, за которую начинаем тащить
     private _dragPointOffset: number | null = null;
     protected _trackVisible: boolean = false;
+    private _scrollPosition: number = 0;
 
     protected _beforeMount(options: IScrollBarOptions): void {
         //TODO Compatibility на старых страницах нет Register, который скажет controlResize
@@ -93,7 +94,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         this._resizeHandler();
         this._forceUpdate();
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-            this._thumbSize, this._options.position);
+            this._thumbSize, this._scrollPosition);
 
         if (!newEnv() && window) {
             window.addEventListener('resize', this._resizeHandler);
@@ -107,15 +108,15 @@ class Scrollbar extends Control<IScrollBarOptions> {
 
     protected _afterUpdate(oldOptions: IScrollBarOptions): void {
 
-        let shouldUpdatePosition = !this._dragging && this._position !== this._options.position;
+        let shouldUpdatePosition = !this._dragging && this._position !== this._scrollPosition;
         if (oldOptions.contentSize !== this._options.contentSize) {
             this._setSizes(this._options.contentSize);
             shouldUpdatePosition = true;
         }
         if (shouldUpdatePosition) {
-            this._setPosition(this._options.position);
+            this._setPosition(this._scrollPosition);
             this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-                                                                this._thumbSize, this._options.position);
+                                                                this._thumbSize, this._scrollPosition);
         }
     }
 
@@ -207,6 +208,13 @@ class Scrollbar extends Control<IScrollBarOptions> {
                 this._notify('positionChanged', [position]);
             }
             return true;
+        }
+    }
+
+    setScrollPosition(position: number): void {
+        if (this._scrollPosition !== position) {
+            this._scrollPosition = position;
+            this._updatePosition();
         }
     }
 
@@ -351,9 +359,13 @@ class Scrollbar extends Control<IScrollBarOptions> {
      */
     private _resizeHandler(): void {
         this._setSizes(this._options.contentSize);
-        this._setPosition(this._options.position);
+        this._updatePosition();
+    }
+
+    private _updatePosition(): void {
+        this._setPosition(this._scrollPosition);
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-                                                            this._thumbSize, this._options.position);
+            this._thumbSize, this._scrollPosition);
     }
 
     private static _isScrollBarVisible(scrollbar: HTMLElement): boolean {
