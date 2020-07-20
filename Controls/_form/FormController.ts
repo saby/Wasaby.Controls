@@ -9,7 +9,7 @@ import {error as dataSourceError} from 'Controls/dataSource';
 import {IContainerConstructor} from 'Controls/_dataSource/error';
 import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
-import {SyntheticEvent} from 'Vdom/Vdom';
+import {ControllerClass, Container as ValidateContainer, IValidateResult} from 'Controls/validate';
 import {IFormOperation} from 'Controls/interface';
 import {Confirmation} from 'Controls/popup';
 import CrudController from 'Controls/_form/CrudController';
@@ -61,11 +61,6 @@ interface IDataValid {
     data: {
         validationErrors: undefined | Array<string>
     };
-}
-
-interface IValidateResult {
-    [key: number]: boolean;
-    hasErrors?: boolean;
 }
 
 interface IConfigInMounting {
@@ -187,6 +182,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     private _pendingPromise: Promise<any>;
     private __error: dataSourceError.ViewConfig;
     private _crudController: CrudController = null;
+    private _validateController: ControllerClass = new ControllerClass();
 
     protected _beforeMount(options?: IFormController, context?: object, receivedState: IReceivedState = {}): Promise<ICrudResult> | void {
         this.__errorController = options.errorController || new dataSourceError.Controller({});
@@ -350,11 +346,12 @@ class FormController extends Control<IFormController, IReceivedState> {
     protected _afterUpdate(): void {
         if (this._wasCreated || this._wasRead || this._wasDestroyed) {
             // сбрасываем результат валидации, если только произошло создание, чтение или удаление рекорда
-            this._children.validation.setValidationResult(null);
+            this._validateController.setValidationResult(null);
             this._wasCreated = false;
             this._wasRead = false;
             this._wasDestroyed = false;
         }
+        this._validateController.resolveSubmit();
     }
 
     protected _beforeUnmount(): void {
@@ -362,6 +359,8 @@ class FormController extends Control<IFormController, IReceivedState> {
             this._pendingPromise.callback();
             this._pendingPromise = null;
         }
+        this._validateController.destroy();
+        this._validateController = null;
         // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
         // Текущая реализация не подходит, завершать пендинги могут как сверху(при закрытии окна), так и
         // снизу (редактирование закрывает пендинг).
@@ -373,6 +372,14 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
         this._crudController.hideIndicator();
         this._crudController = null;
+    }
+
+    protected _onValidateCreated(e: Event, control: ValidateContainer): void {
+        this._validateController.addValidator(control);
+    }
+
+    protected _onValidateDestroyed(e: Event, control: ValidateContainer): void {
+        this._validateController.removeValidator(control);
     }
 
     private _checkRecordType(record: Model): boolean {
@@ -665,7 +672,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         const updateDef = new Deferred();
 
         // запускаем валидацию
-        const validationDef = this._children.validation.submit();
+        const validationDef = this.validate();
         validationDef.then((results) => {
             if (!results.hasErrors) {
                 // при успешной валидации пытаемся сохранить рекорд
@@ -687,7 +694,7 @@ class FormController extends Control<IFormController, IReceivedState> {
                 });
             } else {
                 // если были ошибки валидации, уведомим о них
-                const validationErrors = this._children.validation.getValidationResult();
+                const validationErrors = this._validateController.getValidationResult();
                 this._notify('validationFailed', [validationErrors], {bubbling: true});
                 updateDef.callback({
                     data: {
@@ -718,7 +725,9 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     validate(): Promise<IValidateResult | Error> {
-        return this._children.validation.submit();
+        // Для чего нужен _forceUpdate см внутри метода deferSubmit
+        this._forceUpdate();
+        return this._validateController.deferSubmit();
     }
 
     /**

@@ -29,12 +29,9 @@ class StackController extends BaseController {
     constructor(): void {
         super();
         if (document) {
-            if (document.body) {
+            const isApplicationInit = !!document.documentElement.controlNodes;
+            if (isApplicationInit) {
                 StackController.calcStackParentCoords();
-            } else {
-                document.addEventListener('DOMContentLoaded', () => {
-                    StackController.calcStackParentCoords();
-                });
             }
             //TODO: https://online.sbis.ru/opendoc.html?guid=38b056ea-33a7-4f3c-84e5-ab52de810925
             window.addEventListener('resize', this._updateStackParentCoords, true);

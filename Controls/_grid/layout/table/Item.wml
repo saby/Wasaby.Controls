@@ -36,6 +36,7 @@
         <ws:else>
             <ws:partial template="{{currentColumn.template}}"
                         editArrowTemplate="{{editArrowTemplate}}"
+                        itemActionsTemplate="{{itemActionsTemplate}}"
                         ladderWrapper="{{currentColumn.ladderWrapper}}"
                         attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                              {{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}"
@@ -51,7 +52,7 @@
 </ws:template>
 
 <ws:template name="columnContentWrapper">
-    <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
+    <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0}}">
         <div attr:class="{{itemData.getMarkerClasses()}}"></div>
     </ws:if>
     <ws:partial template="columnContent"/>
@@ -110,7 +111,7 @@
 </ws:template>
 
 <tr class="controls-Grid__row {{itemData.isLastItem ? 'controls-Grid__row_last'}} {{itemData.calcCursorClasses(clickable, cursor)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
-           {{highlightOnHover !== false && !itemData.isEditingState() ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
+           {{highlightOnHover !== false && !itemData.isEditing() ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
     <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
         <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}"/>
     </ws:for>

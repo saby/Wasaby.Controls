@@ -34,6 +34,7 @@
     <!-- Не нужно ренднрить контент ячейки, если это не ячейка с colspanTemplate-->
     <ws:partial template="{{ renderSeparatedColumnContent !== false ? currentColumn.template : 'Controls/grid:ColumnTemplate' }}"
                 editArrowTemplate="{{editArrowTemplate}}"
+                itemActionsTemplate="{{itemActionsTemplate}}"
                 attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                             {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
                             {{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}"
@@ -97,7 +98,7 @@
 </ws:template>
 
 <ws:template name="columnContentWrapper">
-   <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
+   <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0}}">
        <div attr:class="{{itemData.getMarkerClasses()}}"></div>
    </ws:if>
    <div if="{{!!itemData.dragTargetNode}}"
@@ -148,7 +149,7 @@
 </ws:template>
 
 <tr class="controls-Grid__row {{itemData.isLastItem ? 'controls-Grid__row_last'}} {{itemData.calcCursorClasses(clickable, cursor)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
-            {{highlightOnHover !== false && !itemData.isEditingState() ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
+            {{highlightOnHover !== false && !itemData.isEditing() ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
        {{itemData.resetColumnIndex();}}
        <ws:if data="{{itemData.hasMultiSelect}}">

@@ -309,13 +309,13 @@ var
                 classLists.base += ' controls-Grid__cell_fit';
             }
 
-            if (current.isEditing) {
+            if (current.isEditing()) {
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
                 classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;
             }
 
-            if (current.columnScroll && !current.isEditing) {
+            if (current.columnScroll && !current.isEditing()) {
                 classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
             }
 
@@ -335,7 +335,7 @@ var
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
                 // нужно его принудительно установить как фон таблицы
-                if (!isFullGridSupport && !current.isEditing) {
+                if (!isFullGridSupport && !current.isEditing()) {
                     classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
                 }
 
@@ -665,9 +665,6 @@ var
                 this._nextVersion();
                 this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
             }.bind(this);
-            this._onMarkedKeyChangedFn = function(event, key) {
-                this._notify('onMarkedKeyChanged', key);
-            }.bind(this);
             this._onGroupsExpandChangeFn = function(event, changes) {
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
@@ -679,7 +676,6 @@ var
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
             this._model.setUpdateIndexesCallback(this._updateIndexesCallback.bind(this));
             this._model.subscribe('onListChange', this._onListChangeFn);
-            this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             const separatorSizes = _private.getSeparatorSizes(this._options);
@@ -701,9 +697,13 @@ var
             this._model.setTheme(theme);
         },
 
+        getTheme(): string {
+            return this._model.getTheme();
+        },
+
         _updateLastItemKey(): void {
             if (this.getItems()) {
-                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this.getKeyProperty());
             }
         },
 
@@ -712,7 +712,11 @@ var
         },
 
         setKeyProperty(keyProperty: string): void {
-            this._options.keyProperty = keyProperty;
+            this._model.setKeyProperty(keyProperty);
+        },
+
+        getKeyProperty(): string {
+            return this._model.getKeyProperty();
         },
 
         isGroupExpanded(groupId: Grouping.TGroupId): boolean {
@@ -1110,12 +1114,15 @@ var
             }
         },
 
-        setHasMoreData: function(hasMore: boolean) {
-            this._model.setHasMoreData(hasMore);
-            this._nextModelVersion(true);
+        setHasMoreData(hasMoreData: boolean, silent: boolean = false): boolean {
+            if (this._model.setHasMoreData(hasMoreData)) {
+                if (!silent) {
+                    this._nextModelVersion(true);
+                }
+            }
         },
 
-        getHasMoreData: function() {
+        getHasMoreData(): boolean {
           return this._model.getHasMoreData();
         },
 
@@ -1279,31 +1286,6 @@ var
             }
         },
 
-        setLeftSpacing: function(leftSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setLeftSpacing(leftSpacing);
-        },
-
-        setRightSpacing: function(rightSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRightSpacing(rightSpacing);
-        },
-
-        setLeftPadding: function(leftPadding) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setLeftPadding(leftPadding);
-        },
-
-        setRightPadding: function(rightPadding) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRightPadding(rightPadding);
-        },
-
-        setRowSpacing: function(rowSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRowSpacing(rowSpacing);
-        },
-
         isAllGroupsCollapsed(): boolean {
             return this._model.isAllGroupsCollapsed();
         },
@@ -1395,10 +1377,6 @@ var
 
         setItemPadding: function(itemPadding) {
             this._model.setItemPadding(itemPadding);
-        },
-
-        getSwipeItem: function() {
-            return this._model.getSwipeItem();
         },
 
         getCollapsedGroups(): Grouping.TArrayGroupId {
@@ -1493,6 +1471,7 @@ var
                 columns: this._options.columns
             });
 
+            current.showEditArrow = this._options.showEditArrow;
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
@@ -1512,10 +1491,6 @@ var
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
             );
 
-            const superShouldDrawMarker = current.shouldDrawMarker;
-            current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
-                return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
-            };
             const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}
             controls-GridView__itemV_marker-${style}_theme-${self._options.theme}
@@ -1649,8 +1624,11 @@ var
                         gridCellStyles: '',
                         tableCellStyles: '',
                         getItemActionPositionClasses: current.getItemActionPositionClasses,
-                        getItemActionClasses: current.getItemActionClasses
-                    };
+                        getItemActionClasses: current.getItemActionClasses,
+                        isSwiped: current.isSwiped,
+                        getActions: current.getActions,
+                        getContents: current.getContents
+                };
                 currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme, backgroundColorStyle);
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
@@ -1741,8 +1719,8 @@ var
             this._model.updateIndexes(startIndex, stopIndex);
         },
 
-        setItems: function(items) {
-            this._model.setItems(items);
+        setItems(items, cfg): void {
+            this._model.setItems(items, cfg);
             this._updateLastItemKey();
         },
 
@@ -2125,18 +2103,6 @@ var
             return '';
         },
 
-        _getItemGroup: function(item): boolean {
-            const groupingKeyCallback = this._options.groupingKeyCallback;
-            if (groupingKeyCallback) {
-                return groupingKeyCallback(item);
-            }
-            const groupProperty = this._options.groupProperty;
-            if (groupProperty) {
-                return item.get(groupProperty);
-            }
-            return null;
-        },
-
         markItemReloaded: function(key) {
             this._model.markItemReloaded(key);
         },
@@ -2147,7 +2113,6 @@ var
 
         destroy: function() {
             this._model.unsubscribe('onListChange', this._onListChangeFn);
-            this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.unsubscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
             this._model.destroy();

@@ -8,4 +8,12 @@
                 tooltipVisible="{{false}}"
         />
     </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">tooltipVisible=true</div>
+        <Controls.slider:Base
+                maxValue="{{100}}"
+                minValue="{{0}}"
+                bind:value="_value2"
+        />
+    </div>
 </div>

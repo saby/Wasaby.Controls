@@ -167,7 +167,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             getContents: () => [],
             isEditing: () => false,
             setEditing: (v) => {},
-            isSelected: () => false
+            isSelected: () => false,
+            isMarked: () => false
          };
 
          it('calcItemColumnVersion', function() {
@@ -698,7 +699,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                       'controls-Grid__row-checkboxCell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default '
                };
 
-            gridViewModel.setMarkedKey(123);
+            gridViewModel.setMarkedKey(123, true);
             assert.equal(gridViewModel.getMarkedKey(), 123);
 
             current = gridViewModel.getCurrent();
@@ -783,21 +784,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(data.multiSelectClassList, '');
          });
 
-         it('shouldDrawMarker', function() {
-            const gridViewModel = new gridMod.GridViewModel(cfg);
-            gridViewModel.setMarkedKey(123);
-            assert.equal(gridViewModel.getMarkedKey(), 123);
-            const firstItem = gridViewModel._model.getDisplay().at(0);
-            let itemData = gridViewModel.getItemDataByItem(firstItem);
-
-            assert.equal(itemData.shouldDrawMarker(undefined, 0), true);
-            assert.equal(itemData.shouldDrawMarker(undefined, 1), false);
-            assert.equal(itemData.shouldDrawMarker(true, 0), true);
-            assert.equal(itemData.shouldDrawMarker(true, 1), false);
-            assert.equal(itemData.shouldDrawMarker(false, 0), false);
-            assert.equal(itemData.shouldDrawMarker(false, 1), false);
-         });
-
          it('getMultiSelectClassList onhover selected', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'onhover';
@@ -845,7 +831,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell__last controls-Grid__row-cell__last-default_theme-default'
                ];
 
-            gridViewModel.setMarkedKey(123);
+            gridViewModel.setMarkedKey(123, true);
             assert.equal(gridViewModel.getMarkedKey(), 123);
 
             current = gridViewModel.getCurrent();
@@ -896,7 +882,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          var
             gridViewModel = new gridMod.GridViewModel(cfg),
             current;
-         gridViewModel.setMarkedKey(123);
+         gridViewModel.setMarkedKey(123, true);
          assert.equal(gridViewModel.getMarkedKey(), 123);
 
          current = gridViewModel.getCurrent();
@@ -1071,7 +1057,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
-                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'setSelectedItems', 'getCurrentIndex',
+                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
                   'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];
@@ -1508,7 +1494,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             imitateTemplate = function() {};
          it('setTheme', function() {
             gridViewModel.setTheme('themeName');
-            assert.equal(gridViewModel._options.theme, 'themeName');
+            assert.equal(gridViewModel.getTheme(), 'themeName');
             gridViewModel.setTheme('default');
             assert.equal(gridViewModel._options.theme, 'default');
          });

@@ -5,8 +5,9 @@ import {SCROLL_DIRECTION} from '../Utils/Scroll';
 import ScrollHeightFixUtil = require('Controls/_scroll/Scroll/ScrollHeightFixUtil');
 import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
 import {IScrollbarsOptions} from './Interface/IScrollbars';
-import ScrollbarModel from './ScrollbarModel';
+import ScrollbarModel, {Offsets} from './ScrollbarModel';
 import {IScrollState} from '../Utils/ScrollState';
+import {SCROLL_MODE} from './Type';
 
 interface ISerializeState {
     overflowHidden: boolean,
@@ -91,6 +92,12 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
+    setOffsets(offsets: Offsets): void {
+        for (let scrollbar of Object.keys(this._models)) {
+            this._models[scrollbar].setOffsets(offsets);
+        }
+    }
+
     adjustContentMarginsForBlockRender(marginTop, marginRight): void {
         if (!this._overflowHidden) {
             this._scrollContainerStyles = this._styleHideScrollbar.replace(/-?[1-9]\d*/g, function(found) {
@@ -103,7 +110,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         return this._scrollContainerStyles;
     }
 
-    get scrollContainerClasses() {
+    getScrollContainerClasses(): string {
         let css = '';
         if (this._useNativeScrollbar) {
             css += ' controls-Scroll__content_auto'
@@ -112,9 +119,9 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             if (this._overflowHidden || this._scrollContainerStyles === undefined) {
                 css += ' controls-Scroll__content_hidden';
             } else {
-                css += this._options.scrollMode === SCROLL_DIRECTION.VERTICAL ?
-                   ' controls-Scroll__scroll_vertical' :
-                   ' controls-Scroll__scroll_verticalHorizontal';
+                css += this._options.scrollMode === SCROLL_MODE.VERTICAL ?
+                   ' controls-Scroll-ContainerBase__scroll_vertical' :
+                   ' controls-Scroll-ContainerBase__scroll_verticalHorizontal';
             }
         }
         return css;

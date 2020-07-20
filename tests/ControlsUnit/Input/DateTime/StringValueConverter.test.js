@@ -1,11 +1,15 @@
 define([
    'Core/core-merge',
+   'Env/Env',
+   'Types/entity',
    'Types/formatter',
    'Controls/Utils/DateControlsUtils',
    'Controls/input',
    'Controls/Utils/Date'
 ], function(
    cMerge,
+   env,
+   typesEntity,
    formatter,
    DateControlsUtils,
    input,
@@ -55,6 +59,23 @@ define([
                converter.update(options);
                assert.strictEqual(converter.getStringByValue(test.date), test.dateStr);
             });
+         });
+
+         it(`should return time based on the timezone`, function() {
+            const
+                converter = new input.StringValueConverter(),
+                isServerSide = env.constants.isServerSide,
+                timeZone = typesEntity.DateTime.getClientTimezoneOffset(),
+                sandbox = sinon.createSandbox();
+
+            env.constants.isServerSide = true;
+            sandbox.stub(typesEntity.DateTime, 'getClientTimezoneOffset').returns(timeZone - 120);
+            converter.update({
+               mask: 'HH:mm'
+            });
+            assert.strictEqual(converter.getStringByValue(new typesEntity.DateTime(2020, 0, 1)), '02:00');
+            env.constants.isServerSide = isServerSide;
+            sandbox.restore();
          });
       });
 

@@ -142,6 +142,7 @@ define([
             notify: () => undefined,
             forceUpdate: () => undefined,
             source: source,
+            updateMarkedKey: () => undefined,
             updateItemActions: () => undefined,
             multiSelectVisibility: false,
             notify: () => undefined,
@@ -442,16 +443,23 @@ define([
                source: source
             });
 
+            let updateMarkedKeyCalled = false;
+            eip._options.updateMarkedKey = (key) => {
+               updateMarkedKeyCalled = true;
+            };
+
             eip._options.notify = function(event, args) {
                if (event === 'afterBeginEdit') {
                   assert.equal(eip._editingItem, args[0]);
                   assert.isTrue(args[1]);
-                  done();
                }
             };
 
             eip.beginAdd({
                item: newItem
+            }).then(() => {
+               assert.isTrue(updateMarkedKeyCalled);
+               done()
             });
          });
 
@@ -894,6 +902,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHiden = true;
                   }
@@ -930,6 +939,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHiden = true;
                   }
@@ -968,6 +978,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHidden = true;
                   }
@@ -1044,7 +1055,6 @@ define([
                      if (event === 'afterEndEdit') {
                         assert.equal(editingItem, args[0]);
                         assert.isTrue(args[1]);
-                        assert.equal(listViewModel.getMarkedKey(), 4);
                         assert.isNull(listViewModel.getEditingItemData());
                         done();
                      }
@@ -2246,6 +2256,32 @@ define([
             assert.equal(eip._formController, formController);
          });
       });
+
+      it('multi call showIndicator. Should be shown only one indicator', () => {
+         const globalIndicatorId = 123;
+         let showCount = 0;
+         let hideCount = 0;
+
+         eip._notify = (eName, args) => {
+            if (eName === 'showIndicator') {
+               showCount++;
+               return globalIndicatorId;
+            } else if (eName === 'hideIndicator') {
+               hideCount++;
+               assert.equal(args[0], globalIndicatorId);
+            }
+         };
+
+         eip._showIndicator();
+         eip._showIndicator();
+
+         eip._hideIndicator();
+         eip._hideIndicator();
+
+         assert.equal(1, showCount);
+         assert.equal(1, hideCount);
+      });
+
 
    });
 

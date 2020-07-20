@@ -259,6 +259,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          let suggest = new suggestMod._InputController();
          let isCallShowIndicator = false;
          let isCallHideIndicator = false;
+         let errorFired = false;
 
          suggest._children.indicator = {
             show: () => isCallShowIndicator = true,
@@ -269,6 +270,14 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.isTrue(suggest._loading);
          assert.isTrue(isCallShowIndicator);
          assert.isTrue(isCallHideIndicator);
+
+         suggest._children = {};
+         try {
+            suggest._searchStart();
+         } catch (e) {
+            errorFired = true;
+         }
+         assert.isFalse(errorFired);
       });
 
       it('Suggest::_searchEnd', function() {
@@ -762,6 +771,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggestComponent._loading = true;
          suggestComponent._beforeUpdate({suggestState: true, value: '', validationStatus: 'invalid'});
          assert.isTrue(suggestComponent._loading);
+
+         suggestComponent._options.value = '';
+         suggestComponent._searchValue = '';
+         suggestComponent._beforeUpdate({suggestState: false, value: null});
+         assert.equal(suggestComponent._searchValue, '');
 
          sandbox.restore();
       });

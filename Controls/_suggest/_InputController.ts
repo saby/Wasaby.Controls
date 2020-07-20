@@ -157,7 +157,7 @@ var _private = {
    },
 
    prepareValue: function(self, value) {
-      return self._options.trim ? value.trim() : value;
+      return self._options.trim && value ? value.trim() : value;
    },
 
    shouldShowSuggest: function(self, searchResult) {
@@ -558,8 +558,10 @@ var SuggestLayout = Control.extend({
    _searchStart: function() {
       this._loading = true;
       // Обновим таймер, т.к. могут прерывать поиск новыми запросами
-      this._children.indicator.hide();
-      this._children.indicator.show();
+      if (this._children.indicator) {
+         this._children.indicator.hide();
+         this._children.indicator.show();
+      }
       if (this._options.searchStartCallback) {
          this._options.searchStartCallback();
       }

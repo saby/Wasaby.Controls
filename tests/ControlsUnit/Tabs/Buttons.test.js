@@ -11,7 +11,10 @@ define([
       it('prepareItemOrder', function() {
          var
             expected = '-ms-flex-order:2; order:2';
-         assert.equal(expected, tabsMod.Buttons._private.prepareItemOrder(2), 'wrong order cross-brwoser styles');
+         const tabInstance = new tabsMod.Buttons();
+         tabInstance._itemsOrder = [2];
+         assert.equal(expected, tabInstance._prepareItemOrder(0), 'wrong order cross-brwoser styles');
+         tabInstance.destroy();
       });
       it('initItems', function(done) {
          var
@@ -80,7 +83,7 @@ define([
                keyProperty: 'id'
             });
 
-         tabsMod.Buttons._private.initItems(source, tabInstance).addCallback(function(result) {
+          tabInstance._initItems(source, tabInstance).addCallback(function(result) {
             var itemsOrder = result.itemsOrder;
             assert.equal(1, itemsOrder[0], 'incorrect  left order');
             assert.equal(30, itemsOrder[1], 'incorrect right order');
@@ -146,10 +149,15 @@ define([
                ' controls-Tabs__item_extreme controls-Tabs__item_extreme_theme_default' +
                ' controls-Tabs__item_extreme_last controls-Tabs__item_extreme_last_theme_default' +
                ' controls-Tabs__item_notShrink';
-         assert.equal(expected, tabsMod.Buttons._private.prepareItemClass(item, 1, options, 144), 'wrong order cross-brwoser styles');
-         assert.equal(expected2, tabsMod.Buttons._private.prepareItemClass(item2, 2, options, 144), 'wrong order cross-brwoser styles');
-         assert.equal(expected3, tabsMod.Buttons._private.prepareItemClass(item3, 2, options, 144));
-         assert.equal(expected4, tabsMod.Buttons._private.prepareItemClass(item4, 144, options, 144));
+          const tabInstance = new tabsMod.Buttons();
+          tabInstance.saveOptions(options);
+          tabInstance._lastRightOrder = 144;
+          tabInstance._itemsOrder = [1, 2, 2, 144];
+         assert.equal(expected, tabInstance._prepareItemClass(item, 0), 'wrong order cross-brwoser styles');
+         assert.equal(expected2, tabInstance._prepareItemClass(item2, 1), 'wrong order cross-brwoser styles');
+         assert.equal(expected3, tabInstance._prepareItemClass(item3, 2));
+         assert.equal(expected4, tabInstance._prepareItemClass(item4, 3));
+         tabInstance.destroy();
       });
       it('prepareItemSelected', function() {
          var
@@ -177,8 +185,11 @@ define([
             'controls-Tabs_style_secondary__item_state_selected_theme_default' +
             ' controls-Tabs__item_state_selected controls-Tabs__item_state_selected_theme_default',
             expected2 = 'controls-Tabs__item_state_default controls-Tabs__item_state_default_theme_default';
-         assert.equal(expected, tabsMod.Buttons._private.prepareItemSelected(item, options), 'wrong order cross-brwoser styles');
-         assert.equal(expected2, tabsMod.Buttons._private.prepareItemSelected(item2, options), 'wrong order cross-brwoser styles');
+         const tabs = new tabsMod.Buttons();
+         tabs.saveOptions(options);
+         assert.equal(expected, tabs._prepareItemSelectedClass(item), 'wrong order cross-brwoser styles');
+         assert.equal(expected2, tabs._prepareItemSelectedClass(item2), 'wrong order cross-brwoser styles');
+          tabs.destroy();
       });
 
       it('_beforeMount with received state', function() {
@@ -247,7 +258,8 @@ define([
                {id: 4, 'title': '4_Склад', hierarchy: false}
             ],
          });
-         assert.equal(true, tabs.checkHasFunction(receivedState));
+         const tabInstance = new tabsMod.Buttons();
+         assert.equal(true, tabsMod.Buttons._checkHasFunction(receivedState, tabInstance));
          receivedState.items.destroy();
 
          //Тестируем: receivedState.items - RecordSet и нет функции
@@ -259,7 +271,7 @@ define([
                { id: 4, 'title': '4_Склад', hierarchy: false },
             ],
          });
-         assert.equal(false, tabs.checkHasFunction(receivedState));
+         assert.equal(false, tabsMod.Buttons._checkHasFunction(receivedState, tabInstance));
          receivedState.items.destroy();
 
          //Тестируем: receivedState.items - массив объектов и есть функция
@@ -274,7 +286,7 @@ define([
             {id: 3, 'title': '3_Покупатель', hierarchy: null},
             {id: 4, 'title': '4_Склад', hierarchy: false}
          ];
-         assert.equal(true, tabs.checkHasFunction(receivedState));
+         assert.equal(true, tabsMod.Buttons._checkHasFunction(receivedState, tabInstance));
 
          //Тестируем: receivedState.items - массив объектов и нет функции
          receivedState.items = [
@@ -283,7 +295,8 @@ define([
             { id: 3, 'title': '3_Покупатель', hierarchy: null },
             { id: 4, 'title': '4_Склад', hierarchy: false },
          ];
-         assert.equal(false, tabs.checkHasFunction(receivedState));
+         assert.equal(false, tabsMod.Buttons._checkHasFunction(receivedState, tabInstance));
+        tabInstance.destroy();
       });
       it('_beforeUpdate', function() {
          var tabs = new tabsMod.Buttons(),
@@ -300,19 +313,16 @@ define([
             options = {
                source: source
             },
-            forceUpdateCalled = false,
-            origForceUpdate = tabs._forceUpdate;
+            forceUpdateCalled = false;
          tabs._forceUpdate = function() {
             forceUpdateCalled = true;
+             assert.equal(tabs._items.at(0).get('id') === '1', 'incorrect items _beforeUpdate without received state');
+             assert.equal(tabs._items.at(0).get('title') === 'test1', 'incorrect items _beforeUpdate without received state');
+             assert.equal(forceUpdateCalled, true, 'forceUpdate in _beforeUpdate does not called');
+             tabs.destroy();
+             done();
          };
-         tabs._beforeUpdate(options).addCallback(function() {
-            assert.equal(tabs._items.at(0).get('id') === '1', 'incorrect items _beforeUpdate without received state');
-            assert.equal(tabs._items.at(0).get('title') === 'test1', 'incorrect items _beforeUpdate without received state');
-            assert.equal(forceUpdateCalled, true, 'forceUpdate in _beforeUpdate does not called');
-            tabs._forceUpdate = origForceUpdate;
-            tabs.destroy();
-            done();
-         });
+         tabs._beforeUpdate(options);
       });
       it('_onItemClick', function() {
          var tabs = new tabsMod.Buttons(),
@@ -325,42 +335,6 @@ define([
          tabs._onItemClick(null, 1);
          assert.equal(notifyCorrectCalled, true, 'uncorrect _onItemClick');
          tabs.destroy();
-      });
-      it('_prepareItemClass', function() {
-         var tabs = new tabsMod.Buttons(),
-            originalFunc = tabsMod.Buttons._private.prepareItemClass,
-            prepareItemClassCorrectCalled = false;
-         tabs._options = 'options';
-         tabs._itemsOrder = [
-            'itemsOrder'
-         ];
-         tabs._lastRightOrder = 'lastRightOrder';
-         tabsMod.Buttons._private.prepareItemClass = function(item, itemsOrder, options, lastRightOrder) {
-            if (item === 'item' && itemsOrder === 'itemsOrder' && options === 'options' && lastRightOrder === 'lastRightOrder') {
-               prepareItemClassCorrectCalled = true;
-            }
-         };
-         tabs._prepareItemClass('item', 0);
-         assert.equal(prepareItemClassCorrectCalled, true, 'uncorrect _prepareItemClass');
-         tabs.destroy();
-         tabsMod.Buttons._private.prepareItemClass = originalFunc;
-      });
-      it('_prepareItemOrder', function() {
-         var tabs = new tabsMod.Buttons(),
-            originalFunc = tabsMod.Buttons._private.prepareItemOrder,
-            prepareItemOrderCorrectCalled = false;
-         tabs._itemsOrder = [
-            'itemsOrder'
-         ];
-         tabsMod.Buttons._private.prepareItemOrder = function(itemsOrder) {
-            if (itemsOrder === 'itemsOrder') {
-               prepareItemOrderCorrectCalled = true;
-            }
-         };
-         tabs._prepareItemOrder(0);
-         assert.equal(prepareItemOrderCorrectCalled, true, 'uncorrect _prepareItemOrder');
-         tabs.destroy();
-         tabsMod.Buttons._private.prepareItemClass = originalFunc;
       });
    });
 });

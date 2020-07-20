@@ -95,19 +95,6 @@
    width: @shadow_thickness_scroll;
 }
 
-.controls-Scroll__shadow-safari13 {
-   left: 0;
-   z-index: @z-index_Scroll-contentEnvironment;
-   position: absolute;
-   pointer-events: none;
-   height: @shadow_thickness_scroll;
-   // todo removed by https://online.sbis.ru/opendoc.html?guid=d709421e-3c9f-428e-8f6b-f0012cd62aa9
-   // Внутри зафиксированных заголовков таблицы для абсолютно спозиционированной тени IPAD расчитывает размеры
-   // от ближайшего relative-родителя и получается n-теней шириной с таблицу (где n-количество фиксированных заголовков)
-   // Из-за этого размер таблицы увеличивается на ширину этих n-теней и показывается горизонтальный скролл, а скроллить
-   // на самом деле нечего.
-   right: unset !important; // https://online.sbis.ru/opendoc.html?guid=35eff486-ed1a-44d6-a3fe-207901fb7577
-}
 .controls-Scroll__shadow_top {
    top: 0;
    background: linear-gradient(
@@ -150,6 +137,14 @@
 .controls-Scroll__scroll_vertical {
    overflow-y: scroll;
    overflow-x: hidden;
+}
+
+// Chrome после обновления с 83 до 84 версии по умолчанию стал overflow-anchor: visible, из-за этого происходит
+// браузерный подскролл к низу вновь добавляемого контента.
+// https://online.sbis.ru/opendoc.html?guid=8673c14b-da6e-444b-86d1-d1a997555bfe
+// https://bugs.chromium.org/p/chromium/issues/detail?id=1105785
+.ws-is-chrome .controls-Scroll__scroll_vertical {
+   overflow-anchor: none;
 }
 
 .controls-Scroll__scroll_verticalHorizontal {

@@ -1,10 +1,11 @@
 import {default as BaseControllerClass, ILookupBaseControllerOptions} from 'Controls/_lookup/BaseControllerClass';
-import {Memory} from 'Types/source';
+import {Memory, SbisService} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {deepStrictEqual, ok} from 'assert';
 import {stub} from 'sinon';
 import {error} from 'Controls/dataSource';
+import {Service} from 'Controls/history';
 
 function getData(): object[] {
     return [
@@ -50,8 +51,9 @@ function getControllerOptions(): object {
     };
 }
 
-function getLookupControllerWithEmptySelectedKeys(): BaseControllerClass {
-    const options = getControllerOptions();
+function getLookupControllerWithEmptySelectedKeys(additionalConfig?: object): BaseControllerClass {
+    let options = getControllerOptions();
+    options = {...options, ...additionalConfig};
     return new BaseControllerClass(options as ILookupBaseControllerOptions);
 }
 
@@ -60,6 +62,17 @@ function getLookupControllerWithSelectedKeys(additionalConfig?: object): BaseCon
     options.selectedKeys = [0, 1, 2];
     options = {...options, ...additionalConfig};
     return new BaseControllerClass(options as ILookupBaseControllerOptions);
+}
+
+class CustomModel extends Model {
+    protected _moduleName: string = 'customModel';
+    protected _$properties = {
+        isCustom: {
+            get(): boolean {
+                return true;
+            }
+        }
+    };
 }
 
 describe('Controls/_lookup/BaseControllerClass', () => {
@@ -119,6 +132,21 @@ describe('Controls/_lookup/BaseControllerClass', () => {
         deepStrictEqual(controller.getItems().at(0).get('title'), 'Sasha');
     });
 
+    it('addItem source model is preparing', () => {
+        const controller = getLookupControllerWithEmptySelectedKeys({
+            source: new SbisService({
+                model: CustomModel
+            })
+        });
+        const item = new Model({
+            rawData: getData()[0],
+            keyProperty: 'id'
+        });
+        controller.addItem(item);
+
+        ok(controller.getItems().at(0) instanceof CustomModel);
+    });
+
     it('removeItem', () => {
         const controller = getLookupControllerWithSelectedKeys();
         const item = new Model({
@@ -148,5 +176,15 @@ describe('Controls/_lookup/BaseControllerClass', () => {
                 resolve();
             });
         });
+    });
+
+    it('setItemsAndSaveToHistory', async () => {
+        const controller = getLookupControllerWithEmptySelectedKeys({
+            historyId: 'TEST_HISTORY_ID'
+        });
+        const historyService = await controller.setItemsAndSaveToHistory(getRecordSet());
+
+        ok(historyService instanceof Service);
+        deepStrictEqual(controller.getSelectedKeys(), [0, 1, 2]);
     });
 });

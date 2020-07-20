@@ -6,8 +6,8 @@ export function inlineHeight(size: string, inlineHeight: string): string {
         if (constants.isBrowserPlatform) {
             // TODO: будет удалено в версию после 5100
             Logger.error('Controls.input: Используется устаревшая опция size. ' +
-                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию inlineHeight.');
+                `нужно использовать inlineHeight=${size}" ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
         }
         return size;
     }
@@ -21,8 +21,8 @@ export function fontColorStyle(fontStyle: string, fontColorStyle: string): strin
         if (constants.isBrowserPlatform) {
             // TODO: будет удалено в версию после 5100
             Logger.error('Controls.input: Используется устаревшая опция fontStyle. ' +
-                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontColorStyle.');
+                `нужно использовать fontColorStyle=${fontStyle}" ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
         }
         return fontStyle;
     }
@@ -33,18 +33,17 @@ export function fontColorStyle(fontStyle: string, fontColorStyle: string): strin
 
 export function fontSize(fontStyle: string, fontSize: string): string {
     if (fontStyle) {
+        let result;
+        if (fontStyle === 'primary' || fontStyle === 'secondary') {
+            result = '3xl';
+        }
         if (constants.isBrowserPlatform) {
             // TODO: будет удалено в версию после 5100
             Logger.error('Controls.input: Используется устаревшая опция fontStyle. ' +
-                'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-                'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');
+                `нужно использовать fontSize=${result}" ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
         }
-        switch (fontStyle) {
-            case 'primary':
-            case 'secondary': return '3xl';
-            case 'default':
-            default: return 'm';
-        }
+        return result || 'm';
     }
     if (fontSize) {
         return fontSize;
@@ -65,13 +64,22 @@ export function validationStatus(style: string, validationStatus: string): strin
 
 export function heightLine(size: string, fontSize: string): string {
     if (size) {
+        let result;
         switch (size) {
-            case 's': return 's';
-            case 'l': return 'l';
-            case 'm':
-            case 'default':
-            default: return 'm';
+            case 's':
+                result = 's';
+                break;
+            case 'l':
+                result = 'l';
+                break;
         }
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.input: Используется устаревшая опция size. ' +
+                `нужно использовать fontSize=${result}" ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+        }
+        return result || 'm';
     }
     if (fontSize) {
         return fontSize;
