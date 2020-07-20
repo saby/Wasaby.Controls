@@ -4790,6 +4790,20 @@ define([
             assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
          });
 
+         // Клик по ItemAction в тулбаре должен в событии actionClick передавать nativeEvent
+         it('should pass nativeEvent as param for outgoing event on toolbar action click', () => {
+            const fakeEvent = initFakeEvent();
+            const action = {
+               id: 1,
+               showType: 0
+            };
+            instance._listViewModel.getIndex = (item) => 0;
+            instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
+            assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
+            assert.exists(outgoingEventsMap.actionClick[3], 'Third argument has not been set');
+            assert.exists(outgoingEventsMap.actionClick[3].preventDefault, 'Third argument should be nativeEvent');
+         });
+
          // Необходимо при показе меню ItemActions регистрировать обработчик события скролла
          it('should register scroll handler on display ItemActions menu', (done) => {
             const fakeEvent = initFakeEvent();

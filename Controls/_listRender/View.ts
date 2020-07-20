@@ -303,7 +303,7 @@ export default class View extends Control<IViewOptions> {
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
         let contents = View._getItemContents(item);
         const itemContainer = this._resolveItemContainer(item, isMenuClick);
-        this._notify('actionClick', [action, contents, itemContainer]);
+        this._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
         if (action.handler) {
             action.handler(contents);
         }
