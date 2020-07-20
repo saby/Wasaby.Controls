@@ -5929,7 +5929,10 @@ define([
          let prefetchSource = new sourceLib.PrefetchProxy({
             target: source,
             data: {
-               query: data
+               query: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
             }
          });
          let cfg = {
