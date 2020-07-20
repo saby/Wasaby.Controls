@@ -387,7 +387,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   },
                   {
                      cellPadding: {
-                        left: 's'
+                        left: 'S'
                      }
                   }
                ],
