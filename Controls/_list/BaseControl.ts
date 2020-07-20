@@ -3329,10 +3329,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             e.stopPropagation();
             return;
         }
-
-        if (this._editInPlace) {
-            this._editInPlace.beginEditByClick(e, item, originalEvent);
-        }
     },
 
     beginEdit(options) {
@@ -3504,7 +3500,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const canBeMarked = result !== false
            && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
 
-        if (canBeMarked) {
+        // Если началось редактирование по месту, то маркер ставить не нужно.
+        // Если маркер поставить, то сперва отрисуется маркер, а потом он скроется при отрисовке редактирования по месту
+        if (this._editInPlace) {
+            this._editInPlace.beginEditByClick(e, item, domEvent).then((result) => {
+                if (!result && canBeMarked) {
+                    this.setMarkedKey(key);
+                }
+            });
+        } else if (canBeMarked) {
             this.setMarkedKey(key);
         }
     },
