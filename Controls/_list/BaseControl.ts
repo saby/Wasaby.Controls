@@ -1892,7 +1892,7 @@ const _private = {
                }
                if (removedItemsIndex !== undefined && self._markerController) {
                    const newMarkedKey = self._markerController.handleRemoveItems(removedItemsIndex);
-                   _private.notifyAndSetMarker(self, newMarkedKey);
+                   _private.handleMarkerControllerResult(self, newMarkedKey);
                }
                break;
        }
@@ -1923,7 +1923,7 @@ const _private = {
     setMarkedKey(self: any, key: string | number): void {
         if (self._markerController) {
             const newMarkedKey = self._markerController.calculateMarkedKey(key);
-            _private.notifyAndSetMarker(self, newMarkedKey);
+            _private.handleMarkerControllerResult(self, newMarkedKey);
         }
     },
 
@@ -1939,7 +1939,7 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
             const newMarkedKey = self._markerController.moveMarkerToNext();
-            _private.notifyAndSetMarker(self, newMarkedKey);
+            _private.handleMarkerControllerResult(self, newMarkedKey);
             _private.scrollToItem(self, newMarkedKey);
         }
     },
@@ -1956,7 +1956,7 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
             const newMarkedKey = self._markerController.moveMarkerToPrev();
-            _private.notifyAndSetMarker(self, newMarkedKey);
+            _private.handleMarkerControllerResult(self, newMarkedKey);
             _private.scrollToItem(self, newMarkedKey);
         }
     },
@@ -1974,7 +1974,7 @@ const _private = {
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
             const newMarkedKey = self._markerController.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
-            _private.notifyAndSetMarker(self, newMarkedKey);
+            _private.handleMarkerControllerResult(self, newMarkedKey);
             self._setMarkerAfterScroll = false;
         }
     },
@@ -1984,10 +1984,12 @@ const _private = {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
-    notifyAndSetMarker(self: any, newMarkedKey: string|number): void {
+    handleMarkerControllerResult(self: any, newMarkedKey: string|number): void {
         if (newMarkedKey !== self._markerController.getMarkedKey()) {
             self._notify('markedKeyChanged', [newMarkedKey]);
         }
+
+        // Если нам не передают markedKey, то на него не могут повлиять и поэтому сразу изменяем модель
         if (!self._options.hasOwnProperty('markedKey')) {
             self._markerController.setMarkedKey(newMarkedKey);
         }
