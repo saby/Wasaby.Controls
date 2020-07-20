@@ -13,7 +13,7 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
        * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
        *
        * @class Controls/_list/Data
-       * @mixes Controls/_interface/IFilter
+       * @mixes Controls/_interface/IFilterChanged
        * @mixes Controls/_interface/INavigation
        * @mixes Controls/_interface/IHierarchy
        * @mixes Controls/_interface/ISource
@@ -29,7 +29,7 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
        * Here you can see a <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">demo</a>.
        *
        * @class Controls/_list/Data
-       * @mixes Controls/_interface/IFilter
+       * @mixes Controls/_interface/IFilterChanged
        * @mixes Controls/_interface/INavigation
        * @mixes Controls/_interface/IHierarchy
        * @mixes Controls/_interface/ISource
@@ -41,9 +41,17 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
 
       /**
        * @name Controls/_list/Data#root
-       * @cfg {Number|String} Идентификатор корневого узла.
+       * @cfg {Number|String} Идентификатор корневого узла. 
+       * Значение опции root добавляется в фильтре в поле {@link Controls/_interface/IHierarchy#parentProperty parentProperty}.
+       * @example
+       * <pre class="brush: js; highlight: [5]">
+       * <Controls.list:DataContainer
+       *     keyProperty="id"
+       *     filter="{{_filter}}"
+       *     source="{{_source}}" 
+       *     root="Сотрудники"/>
+       * </pre>
        */
-
 
       /**
        * @event Происходит при изменении корня иерархии.
@@ -80,6 +88,8 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
                   this._dataController.updateContext(this._dataOptionsContext);
                   return items;
                });
+            } else {
+               this._dataController.updateContext(this._dataOptionsContext);
             }
          },
 

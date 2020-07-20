@@ -172,6 +172,17 @@ define(
             assert.equal(data._dataController._prefetchSource._$data.query, sourceData);
          });
 
+         it('_beforeMount without source', () => {
+            const filter = {
+               testField: 'testValue'
+            };
+            const dataOptions = { keyProperty: 'id', filter };
+            const data = getDataWithConfig(dataOptions);
+
+            data._beforeMount(dataOptions);
+            assert.deepEqual(data._dataOptionsContext.filter, filter);
+         });
+
          it('_beforeMount with root and parentProperty', async() => {
             const data = new sourceLib.DataSet();
             let sourceQuery;

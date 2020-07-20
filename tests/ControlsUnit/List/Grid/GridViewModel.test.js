@@ -167,7 +167,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             getContents: () => [],
             isEditing: () => false,
             setEditing: (v) => {},
-            isSelected: () => false
+            isSelected: () => false,
+            isMarked: () => false
          };
 
          it('calcItemColumnVersion', function() {
@@ -188,7 +189,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                _options: {
                   multiSelectVisibility: 'visible'
                }
-            }, 1, 1), '1_1_0');
+            }, 1, 1), '1_1_0_MS');
          });
 
          it('isNeedToHighlight', function() {
@@ -352,10 +353,93 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             });
          });
 
+         it('getHeaderCellPadding', () => {
+            assert.equal('', gridMod.GridViewModel._private.getHeaderCellPadding('left', {
+               isMultiHeader: false,
+               columnIndex: 1,
+               columns: [
+                  {},
+                  {}
+               ],
+               headerColumns: [
+                  {},
+                  {}
+               ]
+            }));
+            assert.equal('', gridMod.GridViewModel._private.getHeaderCellPadding('right', {
+               isMultiHeader: false,
+               columnIndex: 0,
+               columns: [
+                  {},
+                  {}
+               ],
+               headerColumns: [
+                  {},
+                  {}
+               ]
+            }));
+
+            assert.equal('_s', gridMod.GridViewModel._private.getHeaderCellPadding('left', {
+               isMultiHeader: false,
+               columnIndex: 1,
+               columns: [
+                  {
+                  },
+                  {
+                     cellPadding: {
+                        left: 's'
+                     }
+                  }
+               ],
+               headerColumns: [
+                  {},
+                  {}
+               ]
+            }));
+            assert.equal('_s', gridMod.GridViewModel._private.getHeaderCellPadding('right', {
+               isMultiHeader: false,
+               columnIndex: 0,
+               columns: [
+                  {
+                     cellPadding: {
+                        right: 's'
+                     }
+                  },
+                  {}
+               ],
+               headerColumns: [
+                  {},
+                  {}
+               ]
+            }));
+
+            assert.equal('_s', gridMod.GridViewModel._private.getHeaderCellPadding('right', {
+               isMultiHeader: true,
+               columnIndex: 0,
+               columns: [
+                  {},
+                  {},
+                  {
+                     cellPadding: {
+                        right: 's'
+                     }
+                  },
+                  {}
+               ],
+               headerColumns: [
+                  {
+                     startColumn: 1,
+                     endColumn: 4
+                  },
+                  {}
+               ]
+            }));
+         });
+
          it('getPaddingCellClasses', function() {
             var
                paramsWithoutMultiselect = {
-                  columns: gridColumns,
+                  headerColumns: gridColumns,
                   multiSelectVisibility: false,
                   itemPadding: {
                      left: 'XL',
@@ -367,7 +451,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   style: 'default'
                },
                paramsWithMultiselect = {
-                  columns: [{}].concat(gridColumns),
+                  headerColumns: [{}].concat(gridColumns),
                   multiSelectVisibility: true,
                   itemPadding: {
                      left: 'XL',
@@ -441,7 +525,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             //------ with actionCell ----
             var paramsWithActionCell = {
-                  columns: headerWitchActionCell,
+                  headerColumns: headerWitchActionCell,
                   multiSelectVisibility: false,
                   itemPadding: {
                      left: 'XL',
@@ -492,7 +576,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             columnsWithMultiSelect[1].isBreadCrumbs = true;
 
             const paramsWithMultiselect = {
-               columns: columnsWithMultiSelect,
+               headerColumns: columnsWithMultiSelect,
                multiSelectVisibility: true,
                isBreadCrumbs: true,
                isTableLayout: true,
@@ -547,7 +631,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                ' controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default',
             ]
             const paramsForFirstRow = {
-               columns: headerRows[0],
+               headerColumns: headerRows[0],
                multiSelectVisibility: false,
                maxEndColumn: 5,
                isMultiHeader: true,
@@ -574,7 +658,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 'Incorrect value "GridViewModel._private.getPaddingHeaderCellClasses()".');
 
             const paramsForSecondRow = {
-               columns: headerRows[1],
+               headerColumns: headerRows[1],
                multiSelectVisibility: false,
                maxEndColumn: 5,
                style: 'default',
@@ -615,7 +699,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                       'controls-Grid__row-checkboxCell_rowSpacingTop_l_theme-default controls-Grid__row-cell_rowSpacingBottom_l_theme-default '
                };
 
-            gridViewModel.setMarkedKey(123);
+            gridViewModel.setMarkedKey(123, true);
             assert.equal(gridViewModel.getMarkedKey(), 123);
 
             current = gridViewModel.getCurrent();
@@ -700,21 +784,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(data.multiSelectClassList, '');
          });
 
-         it('shouldDrawMarker', function() {
-            const gridViewModel = new gridMod.GridViewModel(cfg);
-            gridViewModel.setMarkedKey(123);
-            assert.equal(gridViewModel.getMarkedKey(), 123);
-            const firstItem = gridViewModel._model.getDisplay().at(0);
-            let itemData = gridViewModel.getItemDataByItem(firstItem);
-
-            assert.equal(itemData.shouldDrawMarker(undefined, 0), true);
-            assert.equal(itemData.shouldDrawMarker(undefined, 1), false);
-            assert.equal(itemData.shouldDrawMarker(true, 0), true);
-            assert.equal(itemData.shouldDrawMarker(true, 1), false);
-            assert.equal(itemData.shouldDrawMarker(false, 0), false);
-            assert.equal(itemData.shouldDrawMarker(false, 1), false);
-         });
-
          it('getMultiSelectClassList onhover selected', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'onhover';
@@ -762,7 +831,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   'controls-Grid__row-cell_rowSpacingBottom_l_theme-default controls-Grid__row-cell__last controls-Grid__row-cell__last-default_theme-default'
                ];
 
-            gridViewModel.setMarkedKey(123);
+            gridViewModel.setMarkedKey(123, true);
             assert.equal(gridViewModel.getMarkedKey(), 123);
 
             current = gridViewModel.getCurrent();
@@ -778,7 +847,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[3]);
 
-            current._isSelected = false;
+            current.dispItem.setMarked(false);
             cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(current, theme).getAll(), expectedResult[4]);
          });
 
@@ -813,14 +882,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          var
             gridViewModel = new gridMod.GridViewModel(cfg),
             current;
-         gridViewModel.setMarkedKey(123);
+         gridViewModel.setMarkedKey(123, true);
          assert.equal(gridViewModel.getMarkedKey(), 123);
 
          current = gridViewModel.getCurrent();
 
          it('configuration', function() {
             assert.equal(cfg.keyProperty, current.keyProperty, 'Incorrect value "current.keyProperty".');
-            assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect value "current.displayProperty".');
             assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
             assert.deepEqual({
@@ -854,10 +922,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                assert.deepEqual(expectedData.item, checkedColumn.item.getRawData(), 'Incorrect value "item" when checking columns.');
                assert.deepEqual(expectedData.item, checkedColumn.dispItem.getContents().getRawData(), 'Incorrect value "dispItem" when checking columns.');
                assert.equal(expectedData.keyProperty, checkedColumn.keyProperty, 'Incorrect value "keyProperty" when checking columns.');
-               assert.equal(expectedData.displayProperty, checkedColumn.displayProperty, 'Incorrect value "displayProperty" when checking columns.');
                assert.equal(expectedData.item[expectedData.keyProperty], checkedColumn.key, 'Incorrect value "getPropValue(item, displayProperty)" when checking columns.');
-               assert.equal(expectedData.item[expectedData.displayProperty],
-                  checkedColumn.getPropValue(checkedColumn.item, expectedData.displayProperty), 'Incorrect value "" when checking columns.');
                assert.equal(expectedData.template, checkedColumn.template, 'Incorrect value "template" when checking columns.');
                cAssert.isClassesEqual(checkedColumn.classList.getAll(), expectedData.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
             }
@@ -988,7 +1053,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
-                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'setSelectedItems', 'getCurrentIndex',
+                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
                   'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
                callStackMethods = [];
@@ -1425,7 +1490,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             imitateTemplate = function() {};
          it('setTheme', function() {
             gridViewModel.setTheme('themeName');
-            assert.equal(gridViewModel._options.theme, 'themeName');
+            assert.equal(gridViewModel.getTheme(), 'themeName');
             gridViewModel.setTheme('default');
             assert.equal(gridViewModel._options.theme, 'default');
          });

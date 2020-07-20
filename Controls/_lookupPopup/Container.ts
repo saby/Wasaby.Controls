@@ -22,6 +22,9 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
    selection: TSelectionRecord;
    root?: string|number|null;
    searchParam?: string;
+   items: RecordSet;
+   parentProperty?: string;
+   nodeProperty?: string;
 }
 /**
  * Контейнер принимает опцию selectedItems от Controls/lookupPopup:Controller и устанавливает опцию selectedKeys для дочернего списка.
@@ -216,30 +219,51 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             return adapter;
          },
 
-         prepareFilter({filter, selection, searchParam, parentProperty, root}: IFilterConfig): object {
+         prepareFilter({
+           filter,
+           selection,
+           searchParam,
+           parentProperty,
+           nodeProperty,
+           root,
+           items
+        }: IFilterConfig): object {
             const selectedKeys = selection.get('marked');
             const currentRoot = root !== undefined ? root : null;
-            filter = Utils.object.clone(filter);
+            const resultFilter = Utils.object.clone(filter);
+            const hasSearchParamInFilter = searchParam && resultFilter[searchParam];
+            let hasSelectedNodes = false;
 
-             // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
-             // TODO KINDO
-             // При отметке всех записей в фильтре проставляется selection в виде:
-             // marked: [null]
-             // excluded: [null]
-             // Если что-то поискать, отметить всё через панель массовых операций, и нажать "Выбрать"
-             // то в фильтр необходимо посылать searchParam и selection, иначе выборка будет включать все записи,
-             // даже которые не попали под фильтрацию при поиске.
-             // Если просто отмечают записи чекбоксами (не через панель массовых операций),
-             // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
+            if (nodeProperty && items) {
+               let selectedItem;
+               selectedKeys.forEach((key) => {
+                  selectedItem = items.getRecordById(key);
+
+                  if (selectedItem && !hasSelectedNodes) {
+                     hasSelectedNodes = selectedItem.get(nodeProperty);
+                  }
+               });
+            }
+
+            // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
+            // TODO KINDO
+            // При отметке всех записей в фильтре проставляется selection в виде:
+            // marked: [null]
+            // excluded: [null]
+            // Если что-то поискать, отметить всё через панель массовых операций, и нажать "Выбрать"
+            // то в фильтр необходимо посылать searchParam и selection, иначе выборка будет включать все записи,
+            // даже которые не попали под фильтрацию при поиске.
+            // Если просто отмечают записи чекбоксами (не через панель массовых операций),
+            // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
              // и запрос с searchParam в фильтре вернёт не все записи, которые есть в selection'e.
-            if (searchParam && ArrayUtil.invertTypeIndexOf(selectedKeys, currentRoot) === -1) {
-               delete filter[searchParam];
+            if (hasSearchParamInFilter && ArrayUtil.invertTypeIndexOf(selectedKeys, currentRoot) === -1 && !hasSelectedNodes) {
+               delete resultFilter[searchParam];
             }
             if (parentProperty) {
-               delete filter[parentProperty];
+               delete resultFilter[parentProperty];
             }
-            filter.selection = selection;
-            return filter;
+            resultFilter.selection = selection;
+            return resultFilter;
          },
 
          prepareResult: function(result, initialSelection, keyProperty, selectCompleteInitiator) {
@@ -438,7 +462,9 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
                selection,
                searchParam: options.searchParam,
                parentProperty: options.parentProperty,
-               root: options.root
+               nodeProperty: options.nodeProperty,
+               root: options.root,
+               items
             });
 
             // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f 

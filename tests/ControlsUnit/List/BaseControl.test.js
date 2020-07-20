@@ -1243,7 +1243,8 @@ define([
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
                update() {},
-               restoreMarker() {}
+               restoreMarker() {},
+               getMarkedKey() {}
             };
          };
          baseControl.saveOptions(cfg);
@@ -1313,7 +1314,8 @@ define([
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
                update() {},
-               restoreMarker() {}
+               restoreMarker() {},
+               getMarkedKey() {}
             };
          };
 
@@ -1352,6 +1354,7 @@ define([
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
             markerVisibility: 'visible',
+            markedKey: 1,
             selectedKeys: [1],
             excludedKeys: [],
             markedKey: 2,
@@ -1365,7 +1368,8 @@ define([
          };
          let instance,
             preventDefaultCalled = false,
-            activateCalled = false;
+            activateCalled = false,
+            notifySpy;
          const event = {
             preventDefault() { preventDefaultCalled = true; }
          };
@@ -1387,20 +1391,22 @@ define([
 
             preventDefaultCalled = false;
             activateCalled = false;
+
+            notifySpy = sinon.spy(instance, '_notify');
          });
 
          it ('moveMarkerToNext', () => {
             lists.BaseControl._private.moveMarkerToNext(instance, event);
             assert.isTrue(activateCalled);
             assert.isTrue(preventDefaultCalled);
-            assert.equal(instance._listViewModel.getMarkedKey(), 3);
+            assert.isTrue(notifySpy.withArgs('markedKeyChanged', [3]).called);
          });
 
          it ('moveMarkerToPrev', () => {
             lists.BaseControl._private.moveMarkerToPrevious(instance, event);
             assert.isTrue(activateCalled);
             assert.isTrue(preventDefaultCalled);
-            assert.equal(instance._listViewModel.getMarkedKey(), 1);
+            assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
          });
       });
 
@@ -1574,18 +1580,20 @@ define([
 
          baseControl._loadingIndicatorState = null;
          sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
-         const handleSelectionControllerResult = sinon.spy(lists.BaseControl._private, 'handleSelectionControllerResult');
+         const notifySpy = sinon.spy(baseControl, '_notify');
          lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.isTrue(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
-         assert.isTrue(handleSelectionControllerResult.withArgs(baseControl, undefined).calledOnce);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).called);
 
          baseControl.getViewModel()._markedKey = 5;
          lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged', [[1], [], []]).called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false]).called);
 
+         notifySpy.resetHistory();
          baseControl._options.multiSelectVisibility = 'hidden';
          lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('listSelectedKeysCountChanged').called);
 
          sandbox.restore();
       });
@@ -1653,19 +1661,9 @@ define([
          await baseControl._beforeMount(lnCfg);
          baseControl._createSelectionController();
 
-         const notifySpy = sinon.spy(baseControl, '_notify');
-
-         await baseControl._beforeUpdate({...lnCfg, selectedKeys: []});
-         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
-         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
-         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged').called);
-
-         notifySpy.resetHistory();
-
-         await baseControl._beforeUpdate({...lnCfg, selectedKeys: []});
-         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
-         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
-         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged').called);
+         assert.isTrue(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
+         baseControl._beforeUpdate({...lnCfg, selectedKeys: []});
+         assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
       });
 
       it('_private.updateMarkerController', async function() {
@@ -1679,20 +1677,21 @@ define([
                source: lnSource,
                keyProperty: 'id',
                viewModelConstructor: lists.ListViewModel,
-               markerVisibility: 'visible'
+               markerVisibility: 'visible',
+               markedKey: 1
             },
             baseControl = new lists.BaseControl(cfg);
 
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
 
-         const notifySpy = sinon.spy(baseControl._listViewModel, '_notify');
+         const notifySpy = sinon.spy(baseControl, '_notify');
 
          lists.BaseControl._private.updateMarkerController(baseControl, cfg);
-         assert.isFalse(notifySpy.called);
+         assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
 
          lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 2 });
-         assert.isTrue(notifySpy.called);
+         assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
 
          notifySpy.resetHistory();
          baseControl._listViewModel.setItems(new collection.RecordSet({
@@ -1700,7 +1699,7 @@ define([
             keyProperty: 'id'
          }));
          lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
-         assert.isTrue(notifySpy.called);
+         assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
       });
 
       describe('_private.createSelectionController', function() {
@@ -1726,16 +1725,12 @@ define([
             await baseControl._beforeMount(lnCfg);
          });
          it('should init SelectionController', () => {
-         controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
-         assert.isNotNull(controller);
+            controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
+            assert.isNotNull(controller);
 
-         baseControl._items = null;
-         controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
-         assert.isNull(controller);
-
-         baseControl._listViewModel = null;
-         controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
-         assert.isNull(controller);
+            baseControl._listViewModel = null;
+            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+            assert.isNull(controller);
          });
 
          it('should init selection controller even when multiselectVisibility===\'null\'', () => {
@@ -1792,53 +1787,23 @@ define([
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [6, true], {bubbling: true}).called);
       });
 
-      it('_private.updateMarkerController', async function() {
-         const
-            lnSource = new sourceLib.Memory({
-               keyProperty: 'id',
-               data: data
-            }),
-            cfg = {
-               viewName: 'Controls/List/ListView',
-               source: lnSource,
-               keyProperty: 'id',
-               viewModelConstructor: lists.ListViewModel,
-               markerVisibility: 'visible'
-            },
-            baseControl = new lists.BaseControl(cfg);
-
-         baseControl.saveOptions(cfg);
-         await baseControl._beforeMount(cfg);
-
-         const notifySpy = sinon.spy(baseControl._listViewModel, '_notify');
-
-         lists.BaseControl._private.updateMarkerController(baseControl, cfg);
-         assert.isFalse(notifySpy.called);
-
-         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 2 });
-         assert.isTrue(notifySpy.called);
-
-         notifySpy.resetHistory();
-         baseControl._listViewModel.setItems(new collection.RecordSet({
-            rawData: data,
-            keyProperty: 'id'
-         }));
-         lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
-         assert.isTrue(notifySpy.called);
-      });
-
       it('_private.setMarkedKey', () => {
          const baseControl = {
             _markerController: {
-               setMarkedKey: (key) => {
+               calculateMarkedKey: (key) => {
                   assert.equal(key, 2);
                   return key;
-               }
+               },
+               getMarkedKey: () => 2
+            },
+            _notify: () => null,
+            _options: {
+               hasOwnProperty: () => true
             }
          };
 
          const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');
-         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'setMarkedKey');
+         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'calculateMarkedKey');
 
          lists.BaseControl._private.setMarkedKey({}, 2);
          assert.isFalse(setMarkedKeySpy.called);
@@ -1847,7 +1812,7 @@ define([
          lists.BaseControl._private.setMarkedKey(baseControl, 2);
          assert.isFalse(scrollToItemSpy.called);
          assert.isFalse(setMarkedKeySpy.withArgs(baseControl, 2).called);
-         assert.equal(baseControl._markedKey, 2);
+         assert.equal(baseControl._markerController.getMarkedKey(), 2);
       });
 
       it('loadToDirection up', async function() {
@@ -2930,7 +2895,7 @@ define([
          await baseControl.reload(false, {});
 
          item = baseControl._listViewModel.getItemBySourceKey(1);
-         assert.isTrue(item.isMarked());
+         assert.equal(baseControl._listViewModel.getMarkedKey(), 1);
          assert.isTrue(item.isSelected());
       });
 
@@ -3155,12 +3120,10 @@ define([
 
       it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
-         lists.BaseControl._private.scrollToItem = function() {
-         };
+         lists.BaseControl._private.scrollToItem = () => null;
 
          var
             stopImmediateCalled = false,
-            preventDefaultCalled = false,
             getParamsKeyDown = function(keyCode) {
                return {
                   stopImmediatePropagation: function() {
@@ -3188,9 +3151,10 @@ define([
                viewName: 'Controls/List/ListView',
                source: lnSource,
                keyProperty: 'id',
-               markedKey: 1,
                markerVisibility: 'visible',
-               viewModelConstructor: lists.ListViewModel
+               viewModelConstructor: lists.ListViewModel,
+               selectedKeys: [],
+               excludedKeys: []
             },
             lnCfg2 = {
                viewName: 'Controls/List/ListView',
@@ -3204,93 +3168,54 @@ define([
                keyProperty: 'id',
                markedKey: 'firstItem',
                markerVisibility: 'visible',
-               viewModelConstructor: lists.ListViewModel
+               viewModelConstructor: lists.ListViewModel,
+               selectedKeys: [],
+               excludedKeys: []
             },
             lnBaseControl = new lists.BaseControl(lnCfg);
-         lnBaseControl._selectionController = {
-            toggleItem: function() {},
-            handleReset: function() {},
-            update: function() {},
-            restoreSelection: () => {}
-         };
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
 
          setTimeout(function() {
-            assert.equal(lnBaseControl.getViewModel()
-               .getMarkedKey(), 1, 'Invalid initial value of markedKey.');
-            lnBaseControl.reload();
-            setTimeout(function() {
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 1, 'Invalid value of markedKey after reload.');
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after reload.');
 
-               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.down));
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
+            lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.down));
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
 
-               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.space));
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
+            lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.space));
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
 
-               lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.up));
-               assert.equal(lnBaseControl.getViewModel()
-                  .getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');
+            lnBaseControl._onViewKeyDown(getParamsKeyDown(Env.constants.key.up));
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');
 
-               assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
-
-               // reload with new source (first item with id "firstItem")
-               lnBaseControl._beforeUpdate(lnCfg2);
-
-               setTimeout(function() {
-                  lnBaseControl._afterUpdate({});
-                  // TODO хз почему после beforeUpdate новые опции не записываются в _options
-                  /*assert.equal(lnBaseControl.getViewModel()
-                     .getMarkedKey(), 'firstItem', 'Invalid value of markedKey after set new source.');*/
-                  done();
-               }, 1);
-            }, 1);
+            assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
+            done();
          }, 1);
       });
 
       it('_onCheckBoxClick', function() {
-         var rs = new collection.RecordSet({
+         const cfg = {
             keyProperty: 'id',
-            rawData: data
-         });
-
-         var source = new sourceLib.Memory({
-            keyProperty: 'id',
-            data: data
-         });
-
-         var cfg = {
-            selectedKeys: [1, 3],
             viewName: 'Controls/List/ListView',
             source: source,
+            viewModelConstructor: lists.ListViewModel,
             viewConfig: {
                keyProperty: 'id'
             },
             viewModelConfig: {
                items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            },
-            viewModelConstructor: lists.ListViewModel,
-            navigation: {
-               source: 'page',
-               sourceConfig: {
-                  pageSize: 6,
-                  page: 0,
-                  hasMore: false
-               },
-               view: 'infinity',
-               viewConfig: {
-                  pagingMode: 'direct'
-               }
+               keyProperty: 'id'
             }
          };
          var ctrl = new lists.BaseControl(cfg);
+         ctrl._selectionController = {
+            isAllSelected: () => true,
+            clearSelection: () => null,
+            toggleItem: () => null,
+            setSelectedKeys: () => null,
+            restoreSelection: () => null
+         };
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl._notify = function(e, args) {
@@ -3298,24 +3223,11 @@ define([
             assert.equal(args[0], 2);
             assert.equal(args[1], 0);
          };
-         ctrl._selectionController = {
-            toggleItem: function(key) {
-                  assert.equal(key, 2);
-            },
-            handleReset: function() {}
-         };
          ctrl._onCheckBoxClick({}, 2, 0);
          ctrl._notify = function(e, args) {
             assert.equal(e, 'checkboxClick');
             assert.equal(args[0], 1);
             assert.equal(args[1], 1);
-         };
-         ctrl._selectionController = {
-            toggleItem: function(key) {
-                  assert.equal(key, 1);
-            },
-            handleReset: function() {},
-            restoreSelection() {}
          };
          ctrl._onCheckBoxClick({}, 1, 1);
       });
@@ -4351,12 +4263,10 @@ define([
          });
       });
 
-      describe('_onItemSwipe animation for rightSwipe with or without multiselectVisibility', function() {
-         let childEvent;
+      describe('_onItemSwipe()', () => {
+         let swipeEvent;
          let itemData;
          let instance;
-         let sandbox;
-         let isRightSwipeActivated;
 
          function initTest(options) {
             const cfg = {
@@ -4364,6 +4274,23 @@ define([
                viewConfig: {
                   idProperty: 'id'
                },
+               itemActions: [
+                  {
+                     id: 1,
+                     showType: 2,
+                     'parent@': true
+                  },
+                  {
+                     id: 2,
+                     showType: 0,
+                     parent: 1
+                  },
+                  {
+                     id: 3,
+                     showType: 0,
+                     parent: 1
+                  }
+               ],
                viewModelConfig: {
                   items: rs,
                   idProperty: 'id'
@@ -4383,81 +4310,118 @@ define([
             };
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._listViewModel.setItems(rs);
+            instance._listViewModel.setItems(rs, cfg);
             instance._items = rs;
             instance._children = {scrollController: { scrollToItem: () => null }};
-            isRightSwipeActivated = false;
-            instance._itemActionsController = {
-               activateRightSwipe: () => {
-                  isRightSwipeActivated = true;
-         }
-            };
+
+            // Пока что необходимо в любом случае проинициализировать ItemActionsController
+            // иначе у нас не будет работать ни swipe() ни rightSwipe()
+            lists.BaseControl._private.updateItemActions(instance, instance._options);
          }
 
-         beforeEach(() => {
-            childEvent = {
+         function initSwipeEvent(direction) {
+            return {
                stopPropagation: () => null,
                target: {
                   closest: () => ({ classList: { contains: () => true }, clientHeight: 10 })
                },
                nativeEvent: {
-                  direction: 'right'
+                  direction: direction
                }
             };
-            itemData = {
-               _isSwiped: false,
-               key: 1,
-               getContents: () => ({ getKey: () => 1 }),
-               multiSelectStatus: false,
-               isRightSwiped() {
-                  return this._isSwiped && instance._listViewModel.getSwipeAnimation() === 'right-swipe';
-               },
-               setSwiped() {
-                  this._isSwiped = true;
-               },
-               isSwiped() {
-                  return this._isSwiped && instance._listViewModel.getSwipeAnimation() !== 'right-swipe';
-               },
-               isSelected: () => false
-            };
-         });
+         }
 
-         it('multiSelectVisibility: visible, should start animation', function() {
-            initTest({multiSelectVisibility: 'visible'});
-            instance._onItemSwipe({}, itemData, childEvent);
-            assert.isTrue(isRightSwipeActivated);
-         });
+         describe('Animation for rightSwipe with or without multiselectVisibility', function() {
+            let spyActivateRightSwipe;
 
-         it('multiSelectVisibility: onhover, should start animation', function() {
-            initTest({multiSelectVisibility: 'onhover'});
-            instance._onItemSwipe({}, itemData, childEvent);
-            assert.isTrue(isRightSwipeActivated);
-         });
+            before(() => {
+               swipeEvent = initSwipeEvent('right')
+            });
 
-         it('multiSelectVisibility: hidden, should not start animation', function() {
-            initTest({multiSelectVisibility: 'hidden'});
-            instance._onItemSwipe({}, itemData, childEvent);
-            assert.isFalse(isRightSwipeActivated);
-         });
+            after(() => {
+               swipeEvent = undefined;
+            });
 
-         it('should not create selection controller when isItemsSelectionAllowed returns false', () => {
-            let isSelectionControllerCreated = false;
-            initTest({multiSelectVisibility: 'hidden'});
-            instance._createSelectionController = () => {
-               isSelectionControllerCreated = true;
-            };
-            instance._onItemSwipe({}, itemData, childEvent);
-            assert.isFalse(isSelectionControllerCreated);
-         });
+            afterEach(() => {
+               spyActivateRightSwipe.restore();
+            });
 
-         it('should create selection controller when isItemsSelectionAllowed returns true', () => {
-            let isSelectionControllerCreated = false;
-            initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
-            instance._createSelectionController = () => {
-               isSelectionControllerCreated = true;
-            };
-            instance._onItemSwipe({}, itemData, childEvent);
-            assert.isTrue(isSelectionControllerCreated);
+            it('multiSelectVisibility: visible, should start animation', function() {
+               initTest({multiSelectVisibility: 'visible'});
+               spyActivateRightSwipe = sinon.spy(instance._itemActionsController, 'activateRightSwipe');
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               sinon.assert.calledOnce(spyActivateRightSwipe);
+            });
+
+            it('multiSelectVisibility: onhover, should start animation', function() {
+               initTest({multiSelectVisibility: 'onhover'});
+               spyActivateRightSwipe = sinon.spy(instance._itemActionsController, 'activateRightSwipe');
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               sinon.assert.calledOnce(spyActivateRightSwipe);
+            });
+
+            it('multiSelectVisibility: hidden, should not start animation', function() {
+               initTest({multiSelectVisibility: 'hidden'});
+               spyActivateRightSwipe = sinon.spy(instance._itemActionsController, 'activateRightSwipe');
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               sinon.assert.notCalled(spyActivateRightSwipe);
+            });
+
+            it('should not create selection controller when isItemsSelectionAllowed returns false', () => {
+               initTest({multiSelectVisibility: 'hidden'});
+               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               sinon.assert.notCalled(stubCreateSelectionController);
+               stubCreateSelectionController.restore();
+            });
+
+            it('should create selection controller when isItemsSelectionAllowed returns true', () => {
+               initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
+               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               sinon.assert.calledOnce(stubCreateSelectionController);
+               stubCreateSelectionController.restore();
+            });
+
+            // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо закрыть свайп
+            it('should close swipe when any record has been swiped right', () => {
+               initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
+               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
+               const spySetSwipeAnimation = sinon.spy(instance._itemActionsController, 'setSwipeAnimation');
+
+               instance._listViewModel.at(0).setSwiped(true, true);
+               instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
+
+               sinon.assert.calledWith(spySetSwipeAnimation, 'close');
+               stubCreateSelectionController.restore();
+               spySetSwipeAnimation.restore();
+            });
+
+            // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо переместить маркер
+            it('should change marker when any other record has been swiped right', () => {
+               initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
+               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
+               const spySetMarkedKey = sinon.spy(lists.BaseControl._private, 'setMarkedKey');
+               instance._listViewModel.at(0).setSwiped(true, true);
+               instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
+
+               sinon.assert.calledOnce(spySetMarkedKey);
+               stubCreateSelectionController.restore();
+               spySetMarkedKey.restore();
+            });
+
+            // Если Активирован свайп на одной записи и свайпнули по той же записи, не надо вызывать установку маркера
+            it('should deactivate swipe when any other record has been swiped right', () => {
+               initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
+               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
+               const spySetMarkedKey = sinon.spy(lists.BaseControl._private, 'setMarkedKey');
+               instance._listViewModel.at(0).setSwiped(true, true);
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+
+               sinon.assert.notCalled(spySetMarkedKey);
+               stubCreateSelectionController.restore();
+               spySetMarkedKey.restore();
+            });
          });
       });
 
@@ -4588,6 +4552,25 @@ define([
             assert.isFalse(fakeEvent.propagating);
          });
 
+         // Пытаемся показать контекстное меню, если был инициализирован itemActionsController
+         it('should not display context menu when itemActionsController is not initialized', () => {
+            const spyOpenItemActionsMenu = sinon.spy(lists.BaseControl._private, 'openItemActionsMenu');
+            const fakeEvent = initFakeEvent();
+            instance._onItemContextMenu(null, item, fakeEvent);
+            sinon.assert.calledOnce(spyOpenItemActionsMenu);
+            spyOpenItemActionsMenu.restore();
+         });
+
+         // Не показываем наше контекстное меню, если не был инициализирован itemActionsController
+         it('should not display context menu when itemActionsController is not initialized', () => {
+            const spyOpenItemActionsMenu = sinon.spy(lists.BaseControl._private, 'openItemActionsMenu');
+            const fakeEvent = initFakeEvent();
+            instance._itemActionsController = undefined;
+            instance._onItemContextMenu(null, item, fakeEvent);
+            sinon.assert.notCalled(spyOpenItemActionsMenu);
+            spyOpenItemActionsMenu.restore();
+         });
+
          // Записи-"хлебные крошки" в getContents возвращают массив. Не должно быть ошибок
          it('should correctly work with breadcrumbs', async () => {
             const fakeEvent = initFakeEvent();
@@ -4698,6 +4681,146 @@ define([
             assert.equal(activeItem, null);
          });
 
+         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто удалён из списка
+         // Код должен работать согласно https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
+         it('should close context menu if its owner was removed', function() {
+            instance._itemActionsMenuId = 'popup-id-0';
+            instance._itemActionsController.setActiveItem(item);
+            instance.getViewModel()
+               ._notify(
+                  'onListChange',
+                  'collectionChanged',
+                  collection.IObservable.ACTION_REMOVE,
+                  null,
+                  null,
+                  [{
+                     getContents: () => {
+                        return {
+                           getKey: () => 2
+                        };
+                     }
+                  }],
+                  null);
+
+            assert.isNull(instance._itemActionsMenuId);
+            assert.isNull(instance._itemActionsController.getActiveItem());
+         });
+
+         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто удалён из списка.
+         // Даже если это breadCrumbsItem
+         // Код должен работать согласно https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
+         it('should close context menu if its owner was removed even if it was breadcrumbsItem', function() {
+            instance._itemActionsMenuId = 'popup-id-0';
+            const itemAt1 = instance._listViewModel.at(1);
+            const breadcrumbItem = {
+               '[Controls/_display/BreadcrumbsItem]': true,
+               _$active: false,
+               getContents: () => ['fake', 'fake', 'fake', itemAt1.getContents() ],
+               setActive: function() {
+                  this._$active = true;
+               },
+               getActions: () => ({
+                  all: [{
+                     id: 2,
+                     showType: 0
+                  }]
+               })
+            };
+            instance._itemActionsController.setActiveItem(breadcrumbItem);
+            instance.getViewModel()
+               ._notify(
+                  'onListChange',
+                  'collectionChanged',
+                  collection.IObservable.ACTION_REMOVE,
+                  null,
+                  null,
+                  [breadcrumbItem],
+                  null);
+
+            assert.isNull(instance._itemActionsMenuId);
+            assert.isNull(instance._itemActionsController.getActiveItem());
+         });
+
+         // Должен сбрасывать activeItem Только после того, как мы закрыли последнее меню.
+         describe ('Multiple clicks to open context menu', () => {
+            let fakeEvent;
+            let fakeEvent2;
+            let fakeEvent3;
+            let popupIds;
+            let openPopupStub;
+            let closePopupStub;
+            let _onItemActionsMenuCloseSpy;
+            let localInstance;
+
+            before(async () => {
+               localInstance = instance;
+               fakeEvent = initFakeEvent();
+               fakeEvent2 = initFakeEvent();
+               fakeEvent3 = initFakeEvent();
+               popupIds = [];
+               openPopupStub = sinon.stub(popup.Sticky, 'openPopup');
+               closePopupStub = sinon.stub(popup.Sticky, 'closePopup');
+               _onItemActionsMenuCloseSpy = sinon.spy(localInstance, '_onItemActionsMenuClose');
+
+               openPopupStub.callsFake((config) => {
+                  const popupId = `popup-id-${popupIds.length}`;
+                  popupIds.push(popupId);
+                  return Promise.resolve(popupId);
+               });
+               closePopupStub.callsFake((popupId) => {
+                  const index = popupIds.indexOf(popupId);
+                  if (index !== -1) {
+                     popupIds.splice(index, 1);
+
+                     // В реальности callback вызывается асинхронно,
+                     // Но нам главное, чтобы activeItem обнулялся только после закрытия самого последнего меню,
+                     // поэтому это не играет роли.
+                     localInstance._onItemActionsMenuClose({id: popupId});
+                  }
+               });
+
+               // имитируем клик правой кнопкой мыши несколько раз подряд.
+               await Promise.all([
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent, item, false),
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent2, item, false),
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent3, item, false)
+               ]);
+            });
+
+            after(() => {
+               openPopupStub.restore();
+               closePopupStub.restore();
+            });
+
+            // Ожидаем, что произошла попытка открыть три popup и закрыть 2 из них
+            it('should open 3 popups and close 2', () => {
+               sinon.assert.callCount(openPopupStub, 3);
+               sinon.assert.callCount(_onItemActionsMenuCloseSpy, 2);
+            });
+
+            // Проверяем activeItem, он не должен быть null
+            // проверяем текущий _itemActionsMenuId. Он жолжен быть равен последнему popupId
+            it('active item and _itemActionsMenuId should not be null until last menu is closed', () => {
+               assert.exists(localInstance._itemActionsController.getActiveItem(),
+                  'active item should not be null until last menu will closed');
+               assert.equal(localInstance._itemActionsMenuId, popupIds[popupIds.length - 1],
+                  '_itemActionsMenuId should not be null until last menu will closed');
+            });
+
+            it('active item and _itemActionsMenuId should be null after closing last menu', () => {
+               // Пытаемся закрыть самый последний popup
+               localInstance._onItemActionsMenuClose({id: popupIds[popupIds.length - 1]});
+
+               // Проверяем activeItem, он должен быть null
+               assert.notExists(localInstance._itemActionsController.getActiveItem(),
+                  'active item should be null after closing last menu');
+
+               // проверяем текущий _itemActionsMenuId. Он должен быть null
+               assert.notExists(localInstance._itemActionsMenuId,
+                  '_itemActionsMenuId should be null after closing last menu');
+            });
+         });
+
          // Необходимо закрывать popup с указанным id
          it('should close popup with specified id', () => {
             instance._itemActionsMenuId = 'fake';
@@ -4719,6 +4842,20 @@ define([
             assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
             assert.exists(outgoingEventsMap.actionClick[2], 'Third argument has not been set');
             assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
+         });
+
+         // Клик по ItemAction в тулбаре должен в событии actionClick передавать nativeEvent
+         it('should pass nativeEvent as param for outgoing event on toolbar action click', () => {
+            const fakeEvent = initFakeEvent();
+            const action = {
+               id: 1,
+               showType: 0
+            };
+            instance._listViewModel.getIndex = (item) => 0;
+            instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
+            assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
+            assert.exists(outgoingEventsMap.actionClick[3], 'Third argument has not been set');
+            assert.exists(outgoingEventsMap.actionClick[3].preventDefault, 'Third argument should be nativeEvent');
          });
 
          // Необходимо при показе меню ItemActions регистрировать обработчик события скролла
@@ -5129,7 +5266,6 @@ define([
 
       it('onListChange call selectionController methods', () => {
          let clearSelectionCalled = false,
-             handleResetCalled = false,
              handleAddItemsCalled = false;
 
          const self = {
@@ -5140,12 +5276,6 @@ define([
             _selectionController: {
                isAllSelected: () => true,
                clearSelection: () => { clearSelectionCalled = true },
-               handleReset: (items, prevRoot, rootChanged) => {
-                  handleResetCalled = true;
-                  assert.equal(items, 'items');
-                  assert.equal(prevRoot, 5);
-                  assert.isFalse(rootChanged);
-               },
                handleAddItems: (items) => {
                   handleAddItemsCalled = true;
                   assert.equal(items, 'items');
@@ -5165,36 +5295,26 @@ define([
 
          lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
          assert.isFalse(clearSelectionCalled);
-         assert.isFalse(handleResetCalled);
          assert.isFalse(handleAddItemsCalled);
 
          self._listViewModel.getCount = () => 0;
          lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
          assert.isTrue(clearSelectionCalled);
-         assert.isFalse(handleResetCalled);
          assert.isFalse(handleAddItemsCalled);
 
          clearSelectionCalled = false;
          self._selectionController.isAllSelected = () => false;
          lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
          assert.isFalse(clearSelectionCalled);
-         assert.isFalse(handleResetCalled);
          assert.isFalse(handleAddItemsCalled);
 
          clearSelectionCalled = false;
          lists.BaseControl._private.onListChange(self, null, '');
          assert.isFalse(clearSelectionCalled);
-         assert.isFalse(handleResetCalled);
-         assert.isFalse(handleAddItemsCalled);
-
-         lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'rs', 'items');
-         assert.isFalse(clearSelectionCalled);
-         assert.isTrue(handleResetCalled);
          assert.isFalse(handleAddItemsCalled);
 
          lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'a', 'items');
          assert.isFalse(clearSelectionCalled);
-         assert.isTrue(handleResetCalled);
          assert.isTrue(handleAddItemsCalled);
 
          sandbox.restore();
@@ -5503,31 +5623,67 @@ define([
                items: [],
                keyProperty: 'id'
             },
-            viewModelConstructor: lists.ListViewModel,
+            viewModelConstructor: treeGrid.TreeViewModel,
             keyProperty: 'id',
-            source: source
+            source: source,
+            selectedKeys: [],
+            excludedKeys: [],
+            parentProperty: 'node'
          };
          let instance = new lists.BaseControl(cfg);
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
 
-         let clearSelectionCalled = false;
-         instance._selectionController = {
-            update() {},
-            clearSelection() { clearSelectionCalled = true; },
-            handleReset() {},
-            isAllSelected() { return false; }
-         };
+         const notifySpy = sinon.spy(instance, '_notify');
 
+         instance._createSelectionController();
          let cfgClone = { ...cfg, root: 'newvalue' };
          instance._beforeUpdate(cfgClone);
-         assert.isFalse(clearSelectionCalled);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
 
-         instance._selectionController.isAllSelected = function() { return true; };
-         cfgClone = { ...cfg, root: 'newvalue1' };
+         cfgClone = { ...cfg, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
          instance._beforeUpdate(cfgClone);
-         assert.isTrue(clearSelectionCalled);
+         instance.saveOptions(cfgClone);
+
+         cfgClone = { ...cfg, root: 'newvalue1', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
+         instance._beforeUpdate(cfgClone);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
+      });
+
+      it('_beforeUpdate with new selectedKeys', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: treeGrid.TreeViewModel,
+            keyProperty: 'id',
+            source: source,
+            selectedKeys: [],
+            excludedKeys: [],
+            parentProperty: 'node'
+         };
+         let instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         const notifySpy = sinon.spy(instance, '_notify');
+
+         instance._createSelectionController();
+         let cfgClone = { ...cfg, selectedKeys: [1] };
+         instance._beforeUpdate(cfgClone);
+
+         // нам ключи пришли в опциях и мы не должны их нотифаить
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false], {bubbling: true}).called);
       });
 
       it('_beforeUpdate with new searchValue', async function() {
@@ -5562,7 +5718,9 @@ define([
 
          cfgClone.searchValue = 'test';
          instance._beforeUpdate(cfgClone);
+         assert.isTrue(instance._listViewModel._options.searchValue !== cfgClone.searchValue);
          instance._afterUpdate({});
+         assert.isTrue(instance._listViewModel._options.searchValue === cfgClone.searchValue);
 
          assert.isTrue(portionSearchReseted);
          portionSearchReseted = false;
@@ -5764,7 +5922,7 @@ define([
                ...cfg,
                source: instance._options.source,
                itemActionsPosition: 'outside',
-      });
+            });
             assert.isTrue(updateItemActionsCalled);
          });
       });
@@ -5773,7 +5931,10 @@ define([
          let prefetchSource = new sourceLib.PrefetchProxy({
             target: source,
             data: {
-               query: data
+               query: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
             }
          });
          let cfg = {
@@ -5805,6 +5966,7 @@ define([
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
             markerVisibility: 'visible',
+            markedKey: 1,
             selectedKeys: [1],
             excludedKeys: [],
             source: new sourceLib.Memory({
@@ -5834,16 +5996,17 @@ define([
       it('_beforeUnmount', function() {
          let instance = new lists.BaseControl();
          instance._needPagingTimeout = setTimeout(() => {}, 100);
+         instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
 
          instance._beforeUnmount();
          assert.isNull(instance._needPagingTimeout);
+         assert.isNull(instance._portionedSearch);
       });
 
 
       describe('beforeUpdate', () => {
          let cfg;
          let instance;
-         let createSelectionControllerSpy;
 
          beforeEach(() => {
             cfg = {
@@ -5872,7 +6035,8 @@ define([
             const createMarkerControllerSpy = sinon.spy(lists.BaseControl._private, 'createMarkerController');
             await instance._beforeUpdate({
                ...cfg,
-               markerVisibility: 'visible'
+               markerVisibility: 'visible',
+               markedKey: 1
             });
             assert.isNotNull(instance._markerController);
             assert.isTrue(createMarkerControllerSpy.calledOnce);
@@ -5880,25 +6044,21 @@ define([
 
          it('should create selection controller', async () => {
             assert.isNull(instance._markerController);
-            createSelectionControllerSpy = sinon.spy(lists.BaseControl._private, 'createSelectionController');
             instance._items = instance._listViewModel.getItems();
             await instance._beforeUpdate({
                ...cfg,
                selectedKeys: [1]
             });
             assert.isNotNull(instance._selectionController);
-            assert.isTrue(createSelectionControllerSpy.calledOnce);
          });
 
          it('not should create selection controller', async () => {
             assert.isNull(instance._markerController);
             await instance._beforeUpdate({
                ...cfg,
-               selectedKeys: [1],
                viewModelConstructor: null
             });
             assert.isNull(instance._selectionController);
-            assert.equal(createSelectionControllerSpy.callCount, 2);
          });
       });
 
@@ -6022,6 +6182,54 @@ define([
           lists.BaseControl._private.updateIndicatorContainerHeight(fakeBaseControl, viewRect, viewPortRect);
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
+
+      it('_shouldShowLoadingIndicator', () => {
+         const baseControl = new lists.BaseControl();
+
+         /*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*/
+         const testCases = [
+            ['beforeEmptyTemplate', 'up', true,    true],
+            ['beforeEmptyTemplate', 'up', false,   true],
+            ['beforeEmptyTemplate', 'down', true,  false],
+            ['beforeEmptyTemplate', 'down', false, false],
+            ['beforeEmptyTemplate', 'all', true,   true],
+            ['beforeEmptyTemplate', 'all', false,  false],
+
+            ['afterList', 'up', true,     false],
+            ['afterList', 'up', false,    false],
+            ['afterList', 'down', true,   true],
+            ['afterList', 'down', false,  true],
+            ['afterList', 'all', true,    false],
+            ['afterList', 'all', false,   false],
+
+            ['inFooter', 'up', true,      false],
+            ['inFooter', 'up', false,     false],
+            ['inFooter', 'down', true,    false],
+            ['inFooter', 'down', false,   false],
+            ['inFooter', 'all', true,     false],
+            ['inFooter', 'all', false,    true]
+         ];
+
+         const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
+             `Wrong return value of _shouldShowLoadingIndicator('${caseData[0]}'). Expected ${caseData[3]}. ` +
+             `Params: { _loadingIndicatorState: ${caseData[1]}, __needShowEmptyTemplate: ${caseData[2]} }.`;
+
+         testCases.forEach((caseData, index) => {
+            baseControl._loadingIndicatorState = caseData[1];
+            baseControl.__needShowEmptyTemplate = () => caseData[2];
+            assert.equal(baseControl._shouldShowLoadingIndicator(caseData[0]), caseData[3], getErrorMsg(index, caseData));
+         });
+
+         baseControl._loadingIndicatorState = 'all';
+         baseControl.__needShowEmptyTemplate = () => false;
+         baseControl._children = {
+            listView: {
+               isColumnScrollVisible: () => true
+            }
+         };
+         assert.equal(baseControl._shouldShowLoadingIndicator('beforeEmptyTemplate'), true);
+         assert.equal(baseControl._shouldShowLoadingIndicator('inFooter'), false);
+      });
 
       describe('navigation', function() {
          it('Navigation demand', async function() {
@@ -6306,6 +6514,23 @@ define([
                assert.equal(lists.BaseControl._private.calcPaging(self, hasMore, pageSize), 1);
             });
 
+            it('_pagingNavigationVisible', () => {
+               let updatePagingData = lists.BaseControl._private.updatePagingData;
+               let self = {
+                  _knownPagesCount: 1,
+                  _currentPageSize: 5,
+                  _currentPage: 1,
+               }
+               updatePagingData(self, 0);
+               assert.equal(self._pagingNavigationVisible, false, 'paging should not be visible');
+               updatePagingData(self, 10);
+               assert.equal(self._pagingNavigationVisible, true, 'paging should be visible');
+               updatePagingData(self, false);
+               assert.equal(self._pagingNavigationVisible, false, 'paging should not be visible');
+               updatePagingData(self, true);
+               assert.equal(self._pagingNavigationVisible, true, 'paging should be visible');
+            });
+
             describe('getPagingLabelData', function() {
                it('getPagingLabelData', function() {
                   let getPagingLabelData = lists.BaseControl._private.getPagingLabelData;
@@ -6502,16 +6727,6 @@ define([
                   markedKey: null
                };
                const _baseControl = new lists.BaseControl(baseControlOptions);
-               sandbox.replace(lists.BaseControl._private, 'createMarkerController', () => {
-                  return {
-                     setMarkedKey() { },
-                     moveMarkerToNext() {},
-                     moveMarkerToPrev() {},
-                     handleRemoveItems() {},
-                     update() {},
-                     restoreMarker() {}
-                  };
-               });
                await mountBaseControl(_baseControl, baseControlOptions);
                baseControl = _baseControl;
             });
@@ -6613,10 +6828,6 @@ define([
                   const itemData = {item: {}};
 
                   baseControl._items.getCount = () => 1;
-                  baseControl._markerController = {
-                     setMarkedKey: function () {
-                     }
-                  };
 
                baseControl._notify = (eName, args) => {
                   if (eName === 'itemMouseUp') {
@@ -6649,10 +6860,11 @@ define([
                   baseControl._items.getCount = () => 1;
                   baseControl._mouseDownItemKey = 1;
                   baseControl._markerController = {
-                     setMarkedKey: function (key) {
+                     calculateMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
-                     }
+                     },
+                     getMarkedKey: () => 1
                   };
 
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
@@ -6686,11 +6898,12 @@ define([
                   const event = {};
                   baseControl._mouseDownItemKey = 1;
                   baseControl._markerController = {
-                     setMarkedKey: function (key) {
+                     calculateMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
                      },
-                     restoreMarker() {}
+                     restoreMarker() {},
+                     getMarkedKey: () => undefined
                   };
 
                   baseControl._scrollController = {
@@ -6716,10 +6929,11 @@ define([
                   baseControlOptions.editingConfig = {};
                   await mountBaseControl(baseControl, baseControlOptions);
                   baseControl._markerController = {
-                     setMarkedKey: function (key) {
+                     calculateMarkedKey: function (key) {
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
-                     }
+                     },
+                     getMarkedKey: () => undefined
                   };
 
                baseControl._mouseDownItemKey = 1;

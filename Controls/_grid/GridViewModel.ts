@@ -94,9 +94,11 @@ interface IHeaderModel {
 var
     _private = {
         calcItemColumnVersion: function(self, itemVersion, columnIndex, index) {
-            let
-                hasMultiselect = self._options.multiSelectVisibility !== 'hidden',
-                version = `${itemVersion}_${self._columnsVersion}_${hasMultiselect ? columnIndex - 1 : columnIndex}`;
+            const hasMultiselect = self._options.multiSelectVisibility !== 'hidden';
+            let version = `${itemVersion}_${self._columnsVersion}_${hasMultiselect ? columnIndex - 1 : columnIndex}`;
+            if (hasMultiselect && columnIndex === 1) {
+                version += '_MS';
+            }
 
             version += _private.calcLadderVersion(self._ladder, index);
 
@@ -170,19 +172,48 @@ var
             return classLists;
         },
 
+        getHeaderCellPadding(side: 'left' | 'right', params: {
+            isMultiHeader: boolean,
+            columns: unknown[],
+            headerColumns: unknown[],
+            columnIndex: number
+        }): string {
+            let result = '';
+            if (params.isMultiHeader) {
+                if (side === 'left') {
+
+                    // startColumn - индекс в спецификации CSS Grid, начинается с 1
+                    let headerCellIndex = params.headerColumns[params.columnIndex].startColumn - 1;
+                    result = params.columns && params.columns[headerCellIndex].cellPadding && params.columns[headerCellIndex].cellPadding.left
+                } else {
+
+                    // startColumn - индекс в спецификации CSS Grid, начинается с 1. Уменьшаем еще на 1, т.к. индекс конца колонки фактически -
+                    // начальный индекс следующей. Границы нужно брать с колонки, которая является последней под текущей ячейкой шапки.
+                    // Шапка    0 - 2 3  |  Первая ячейка шапки определена как {..., startColumn: 1, endColumn: 4}.
+                    // Колонки  0 1 2 3  |  Правый отступ для нее берется с колоки с индексом 2.
+                    let headerCellIndex = params.headerColumns[params.columnIndex].endColumn - 2;
+                    result = params.columns && params.columns[headerCellIndex].cellPadding && params.columns[headerCellIndex].cellPadding.right
+                }
+            } else {
+                const { cellPadding } = (params.columns && params.columns[params.columnIndex]) || {};
+                result = (cellPadding && cellPadding[side]) || '';
+            }
+            return !!result ? `_${result}` : '';
+        },
+
         getPaddingHeaderCellClasses: function(params, theme) {
             let preparedClasses = '';
-            const { multiSelectVisibility, columnIndex, columns,
+            const { multiSelectVisibility, columnIndex, headerColumns,
                 rowIndex, itemPadding, isBreadCrumbs, style, cell: { endColumn }, isMultiHeader } = params;
             if (params.cell.isActionCell) {
                 return preparedClasses;
             }
-            const { cellPadding } = columns[columnIndex];
+
             const actionCellOffset = params.hasActionCell ? 1 : 0;
             const maxEndColumn = params.maxEndColumn - actionCellOffset;
-            const columnsLengthExcludedActionCell = columns.length - actionCellOffset;
+            const columnsLengthExcludedActionCell = headerColumns.length - actionCellOffset;
 
-            const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side]}` : '';
+            const getCellPadding = (side) => _private.getHeaderCellPadding(side, params);
             if (rowIndex === 0) {
                 if (multiSelectVisibility ? columnIndex > 1 : columnIndex > 0) {
                     preparedClasses += ` controls-Grid__cell_spacingLeft${getCellPadding('left')}_theme-${theme}`;
@@ -278,13 +309,13 @@ var
                 classLists.base += ' controls-Grid__cell_fit';
             }
 
-            if (current.isEditing) {
+            if (current.isEditing()) {
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
                 classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;
             }
 
-            if (current.columnScroll && !current.isEditing) {
+            if (current.columnScroll && !current.isEditing()) {
                 classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
             }
 
@@ -298,21 +329,21 @@ var
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
             }
 
-            if (current._isSelected && current.markerVisibility !== 'hidden') {
+            if (current.dispItem.isMarked() && current.markerVisibility !== 'hidden') {
                 style = current.style || 'default';
-                classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+                classLists.marked = `controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
                 // нужно его принудительно установить как фон таблицы
                 if (!isFullGridSupport && !current.isEditing) {
-                    classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
+                    classLists.marked += _private.getBackgroundStyle({backgroundStyle, theme}, true);
                 }
 
                 if (current.columnIndex === 0) {
-                    classLists.base += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
+                    classLists.marked += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
                 }
                 if (current.columnIndex === current.getLastColumnIndex()) {
-                    classLists.base += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${style}_theme-${theme}`;
+                    classLists.marked += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${style}_theme-${theme}`;
                 }
             } else if (current.columnIndex === current.getLastColumnIndex()) {
                 classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
@@ -577,6 +608,30 @@ var
                     classLists.columnContent += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
                 }
             }
+        },
+        setRowClassesGettersOnItemData(self, itemData): void {
+            const style = itemData.style || 'default';
+            const theme = itemData.theme || 'default';
+
+            itemData._staticRowClassses = `controls-Grid__row controls-Grid__row_${style}_theme-${theme} `;
+
+            if (itemData.isLastItem) {
+                itemData._staticRowClassses += 'controls-Grid__row_last ';
+            }
+
+            itemData.getRowClasses = (tmplParams: {
+                highlightOnHover?: boolean;
+                clickable?: boolean;
+                cursor?: 'default' | 'pointer';
+            }) => {
+                let classes = `${itemData.calcCursorClasses(tmplParams.clickable, tmplParams.cursor).trim()} `;
+
+                if (tmplParams.highlightOnHover !== false && !itemData.isEditing()) {
+                    classes += `controls-Grid__row_highlightOnHover_${style}_theme-${theme} `;
+                }
+
+                return `${itemData._staticRowClassses} ${classes.trim()}`;
+            }
         }
     },
 
@@ -634,9 +689,6 @@ var
                 this._nextVersion();
                 this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
             }.bind(this);
-            this._onMarkedKeyChangedFn = function(event, key) {
-                this._notify('onMarkedKeyChanged', key);
-            }.bind(this);
             this._onGroupsExpandChangeFn = function(event, changes) {
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
@@ -648,7 +700,6 @@ var
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
             this._model.setUpdateIndexesCallback(this._updateIndexesCallback.bind(this));
             this._model.subscribe('onListChange', this._onListChangeFn);
-            this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             const separatorSizes = _private.getSeparatorSizes(this._options);
@@ -670,9 +721,13 @@ var
             this._model.setTheme(theme);
         },
 
+        getTheme(): string {
+            return this._model.getTheme();
+        },
+
         _updateLastItemKey(): void {
             if (this.getItems()) {
-                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this.getKeyProperty());
             }
         },
 
@@ -681,7 +736,11 @@ var
         },
 
         setKeyProperty(keyProperty: string): void {
-            this._options.keyProperty = keyProperty;
+            this._model.setKeyProperty(keyProperty);
+        },
+
+        getKeyProperty(): string {
+            return this._model.getKeyProperty();
         },
 
         isGroupExpanded(groupId: Grouping.TGroupId): boolean {
@@ -949,7 +1008,8 @@ var
             } else {
                 cellClasses += _private.getPaddingHeaderCellClasses({
                     style: this._options.style,
-                    columns: this._headerRows[rowIndex],
+                    headerColumns: this._headerRows[rowIndex],
+                    columns: this._columns,
                     columnIndex: columnIndex,
                     multiSelectVisibility: hasMultiSelect,
                     itemPadding: this._model.getItemPadding(),
@@ -1078,12 +1138,15 @@ var
             }
         },
 
-        setHasMoreData: function(hasMore: boolean) {
-            this._model.setHasMoreData(hasMore);
-            this._nextModelVersion(true);
+        setHasMoreData(hasMoreData: boolean, silent: boolean = false): boolean {
+            if (this._model.setHasMoreData(hasMoreData)) {
+                if (!silent) {
+                    this._nextModelVersion(true);
+                }
+            }
         },
 
-        getHasMoreData: function() {
+        getHasMoreData(): boolean {
           return this._model.getHasMoreData();
         },
 
@@ -1247,31 +1310,6 @@ var
             }
         },
 
-        setLeftSpacing: function(leftSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setLeftSpacing(leftSpacing);
-        },
-
-        setRightSpacing: function(rightSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRightSpacing(rightSpacing);
-        },
-
-        setLeftPadding: function(leftPadding) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setLeftPadding(leftPadding);
-        },
-
-        setRightPadding: function(rightPadding) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRightPadding(rightPadding);
-        },
-
-        setRowSpacing: function(rowSpacing) {
-            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            this._model.setRowSpacing(rowSpacing);
-        },
-
         isAllGroupsCollapsed(): boolean {
             return this._model.isAllGroupsCollapsed();
         },
@@ -1363,10 +1401,6 @@ var
 
         setItemPadding: function(itemPadding) {
             this._model.setItemPadding(itemPadding);
-        },
-
-        getSwipeItem: function() {
-            return this._model.getSwipeItem();
         },
 
         getCollapsedGroups(): Grouping.TArrayGroupId {
@@ -1461,6 +1495,7 @@ var
                 columns: this._options.columns
             });
 
+            current.showEditArrow = this._options.showEditArrow;
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
@@ -1480,10 +1515,6 @@ var
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
             );
 
-            const superShouldDrawMarker = current.shouldDrawMarker;
-            current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
-                return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
-            };
             const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}
             controls-GridView__itemV_marker-${style}_theme-${self._options.theme}
@@ -1593,6 +1624,8 @@ var
                     (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
             };
 
+            _private.setRowClassesGettersOnItemData(this, current);
+
             current.getCurrentColumn = function(backgroundColorStyle) {
                 const currentColumn: any = {
                         item: current.item,
@@ -1617,8 +1650,11 @@ var
                         gridCellStyles: '',
                         tableCellStyles: '',
                         getItemActionPositionClasses: current.getItemActionPositionClasses,
-                        getItemActionClasses: current.getItemActionClasses
-                    };
+                        getItemActionClasses: current.getItemActionClasses,
+                        isSwiped: current.isSwiped,
+                        getActions: current.getActions,
+                        getContents: current.getContents
+                };
                 currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme, backgroundColorStyle);
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
@@ -1709,8 +1745,8 @@ var
             this._model.updateIndexes(startIndex, stopIndex);
         },
 
-        setItems: function(items) {
-            this._model.setItems(items);
+        setItems(items, cfg): void {
+            this._model.setItems(items, cfg);
             this._updateLastItemKey();
         },
 
@@ -2093,18 +2129,6 @@ var
             return '';
         },
 
-        _getItemGroup: function(item): boolean {
-            const groupingKeyCallback = this._options.groupingKeyCallback;
-            if (groupingKeyCallback) {
-                return groupingKeyCallback(item);
-            }
-            const groupProperty = this._options.groupProperty;
-            if (groupProperty) {
-                return item.get(groupProperty);
-            }
-            return null;
-        },
-
         markItemReloaded: function(key) {
             this._model.markItemReloaded(key);
         },
@@ -2115,7 +2139,6 @@ var
 
         destroy: function() {
             this._model.unsubscribe('onListChange', this._onListChangeFn);
-            this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.unsubscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
             this._model.destroy();

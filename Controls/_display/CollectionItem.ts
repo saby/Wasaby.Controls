@@ -297,15 +297,6 @@ export default class CollectionItem<T> extends mixin<
         return this._$editing;
     }
 
-    /**
-     * Т.к. не получается быстро избавиться от IsEditing в старых моделях,
-     * называем метод иначе. Когда избавимся от старой модели, этот метод будет не нужен и
-     * можно будет везде использовать isEditing()
-     */
-    isEditingState(): boolean {
-        return this._$editing;
-    }
-
     setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
         if (this._$editing === editing && this._$editingContents === editingContents) {
             return;

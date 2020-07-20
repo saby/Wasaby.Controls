@@ -165,7 +165,7 @@ define(
                   data: items
                })
             };
-            return menu._beforeMount(config, null, itemsRecords.clone()).then(() => {
+            return menu._beforeMount(config, {}, { items: itemsRecords.clone() }).then(() => {
                assert.deepEqual(selectedItems, [null]);
                assert.isTrue(selectedItemsChangeCalled);
             });
@@ -195,7 +195,7 @@ define(
                   data: items
                })
             };
-            return menu._beforeMount(config, null, itemsRecords.clone()).then(() => {
+            return menu._beforeMount(config, null, null).then(() => {
                assert.deepEqual(selectedItems, []);
                assert.isTrue(selectedItemsChangeCalled);
             });
@@ -205,12 +205,12 @@ define(
             menu._beforeMount(config);
 
             menu._handleMouseEnter();
-            assert.isOk(menu._loadDependenciesTimer);
+            assert.isOk(menu._dependenciesTimer);
 
-            menu._loadDependenciesTimer = null;
+            menu._dependenciesTimer = null;
             menu._options.readOnly = true;
             menu._handleMouseEnter();
-            assert.isNull(menu._loadDependenciesTimer);
+            assert.isNull(menu._dependenciesTimer);
          });
 
          it('_handleClick', () => {
@@ -390,6 +390,29 @@ define(
             newOptions.iconSize = 'l';
             menu._beforeUpdate(newOptions);
             assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-large_duplicate_popup');
+         });
+
+         it('_dataLoadCallback', () => {
+            let loadedItems = new collection.RecordSet({ rawData: [] });
+            menu._dataLoadCallback(loadedItems);
+            assert.isFalse(menu._hasItems);
+
+            loadedItems = new collection.RecordSet({ rawData: [{ id: 1 }] });
+            menu._dataLoadCallback(loadedItems);
+            assert.isTrue(menu._hasItems);
+         });
+
+         it('check target', () => {
+            let actualTarget;
+            menu._controller = {
+               openMenu: () => Promise.resolve(),
+               setMenuPopupTarget: (target) => {actualTarget = target;}
+            };
+            menu._children = {
+               content: 'testTarget'
+            };
+            menu.openMenu();
+            assert.equal(actualTarget, 'testTarget');
          });
       });
    }

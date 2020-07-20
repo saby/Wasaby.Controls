@@ -4,20 +4,20 @@ import viewName = require('Controls/_grid/GridView');
 
    /**
     * Контрол «Таблица». Может загружать данные из источника данных.
-    * 
+    *
     * @remark
     * Полезные ссылки:
     * * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid">демо-пример</a>
     * * <a href="/doc/platform/developmentapl/interface-development/controls/list/">руководство разработчика</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_grid.less">переменные тем оформления grid</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a>
-    * 
+    *
     * @class Controls/_grid/Grid
     * @extends Controls/list:View
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/_interface/INavigation
-    * @mixes Controls/_interface/IFilter
+    * @mixes Controls/_interface/IFilterChanged
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_grid/interface/IGridControl
@@ -48,7 +48,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_interface/INavigation
-    * @mixes Controls/_interface/IFilter
+    * @mixes Controls/_interface/IFilterChanged
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/ISorting

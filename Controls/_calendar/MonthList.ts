@@ -135,7 +135,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     protected _afterMount(): void {
-        this._updateScrollAfterViewModification();
+        this._updateScrollAfterViewModification(true);
     }
 
     protected _beforeUpdate(options: IModuleComponentOptions): void {
@@ -168,7 +168,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    protected _afterRender(): void {
+    // Хуки на момент вызова группируются, нужно использовать _beforePaint вместо _afterRender (так же как в списке).
+    protected _beforePaint(): void {
         this._updateScrollAfterViewModification();
     }
 
@@ -379,11 +380,18 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         return date ? formatDate(date, formatDate.FULL_MONTH) : '';
     }
 
-    private _updateScrollAfterViewModification(): void {
+    private _updateScrollAfterViewModification(notResetPositionToScroll: boolean): void {
         if (this._positionToScroll && this._canScroll(this._positionToScroll)) {
             if (this._scrollToDate(this._positionToScroll)) {
-                this._positionToScroll = null;
-                this._lastPositionFromOptions = null;
+                // Список после mount заказывает перерисовку, после которой он добавляет отступ 1px и устанавливает
+                // scrollTop = 1px. Поэтому после MonthList::mount не нужно сбрасывать positionToScroll, ведь в
+                // beforePaint нужен повторный подскролл к отображаемой дате.
+                if (notResetPositionToScroll) {
+                    this._forceUpdate();
+                } else {
+                    this._positionToScroll = null;
+                    this._lastPositionFromOptions = null;
+                }
             }
         }
     }

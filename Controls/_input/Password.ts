@@ -92,6 +92,28 @@ var Password = Base.extend({
         return ViewModel;
     },
 
+    _cutHandler: function(event) {
+        Password.superclass._cutHandler.apply(this, arguments);
+
+        /**
+         * Запрещаем вырезать текст, если пароль скрыт.
+         */
+        if (!this._passwordVisible) {
+            event.preventDefault();
+        }
+    },
+
+    _copyHandler: function(event) {
+        Password.superclass._copyHandler.apply(this, arguments);
+
+        /**
+         * Запрещаем копировать текст, если пароль скрыт.
+         */
+        if (!this._passwordVisible) {
+            event.preventDefault();
+        }
+    },
+
     _initProperties: function (options) {
         Password.superclass._initProperties.apply(this, arguments);
         const CONTROL_NAME: string = 'Password';

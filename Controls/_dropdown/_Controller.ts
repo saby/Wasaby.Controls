@@ -69,13 +69,13 @@ export default class _Controller implements IDropdownController {
       });
    }
 
-   setItems(recievedState: {items?: RecordSet, history?: RecordSet}): RecordSet {
+   setItems(receivedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet> {
       return this._getSourceController(this._options).addCallback((sourceController) => {
-         this._setItems(recievedState.items);
+         this._setItems(receivedState.items);
          sourceController.calculateState(this._items);
 
-         if (recievedState.history) {
-            this._source.setHistory(recievedState.history);
+         if (receivedState.history) {
+            this._source.setHistory(receivedState.history);
             this._setItems(this._source.prepareItems(this._items));
          }
 
@@ -138,7 +138,7 @@ export default class _Controller implements IDropdownController {
       if (!this._items) {
          deps.push(this._getloadItemsPromise().then(() => this._loadItemsTemplates(this._options)));
       } else {
-         deps.push(this._loadItemsTemplates(this, this._options));
+         deps.push(this._loadItemsTemplates(this._options));
       }
 
       return Promise.all(deps);

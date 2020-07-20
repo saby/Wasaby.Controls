@@ -163,7 +163,6 @@
          <Controls.dropdown:Button
                  keyProperty="id"
                  icon="icon-AddButtonNew"
-                 iconStyle="primary"
                  style="primary"
                  viewMode="button"
                  iconSize="m"

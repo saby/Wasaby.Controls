@@ -75,9 +75,11 @@ var
             if (self._restoredMarkedKeys[root]) {
                if (self._restoredMarkedKeys[root].parent === undefined) {
                   const markedKey = self._restoredMarkedKeys[root].markedKey;
+                  const cursorPosition = self._restoredMarkedKeys[root].cursorPosition;
                   self._restoredMarkedKeys = {
                      [root]: {
-                        markedKey: markedKey
+                        markedKey: markedKey,
+                        cursorPosition: cursorPosition
                      }
                   };
                   return;
@@ -364,7 +366,7 @@ var
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
     * @mixes Controls/_interface/INavigation
-    * @mixes Controls/_interface/IFilter
+    * @mixes Controls/_interface/IFilterChanged
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/IHierarchy
@@ -397,7 +399,7 @@ var
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
     * @mixes Controls/_interface/INavigation
-    * @mixes Controls/_interface/IFilter
+    * @mixes Controls/_interface/IFilterChanged
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_interface/ISorting
@@ -441,8 +443,32 @@ var
     */
 
    /**
-    * @name Controls/_explorer/View#displayMode
-    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
+    * @name Controls/_explorer/View#breadcrumbsDisplayMode
+    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#breadcrumbsDisplayMode}
+    */
+
+   /**
+    * @name Controls/_explorer/View#tileItemTemplate
+    * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
+    * @default undefined
+    * @remark
+    * Позволяет установить прикладной шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке прикладного шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
+    *
+    * Также шаблон Controls/tile:ItemTemplate поддерживает {@link Controls/tile:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
+    *
+    * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать прикладной шаблон. Также в опцию tileItemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/tile:ItemTemplate.
+    *
+    * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/explorer/templates/ руководстве разработчика}.
+    * @example
+    * <pre class="brush: html;">
+    * <Controls.explorer:View>
+    *     <ws:tileItemTemplate>
+    *         <ws:partial template="Controls/tile:ItemTemplate" highlightOnHover="{{false}}" />
+    *     </ws:tileItemTemplate>
+    * </Controls.explorer:View>
+    * </pre>
+    * @see itemTemplate
+    * @see itemTemplateProprty
     */
 
     var Explorer = Control.extend({
@@ -485,6 +511,11 @@ var
                markedKey: null
             }
          };
+
+         // TODO: для 20.5100. в 20.6000 можно удалить
+         if (cfg.displayMode) {
+            Logger.error(`${this._moduleName}: Для задания многоуровневых хлебных крошек вместо displayMode используйте опцию breadcrumbsDisplayMode`, this);
+         }
 
          this._dragControlId = randomId();
          this._navigation = cfg.navigation;

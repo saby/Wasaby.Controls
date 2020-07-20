@@ -65,7 +65,8 @@ export interface IQueryParamsController {
         list?: RecordSet  | {[p: string]: unknown},
         direction?: Direction,
         config?: IBaseSourceConfig,
-        root?: string|number
+        root?: string|number,
+        callback?
     ): void;
 
     /**
@@ -115,7 +116,7 @@ export interface IQueryParamsController {
      * @param model
      * TODO Probably Deprecated
      */
-    setState(model: Collection<Record>): boolean;
+    setState(model: Collection<Record>, rootKey: string|number|null): boolean;
 
     /**
      * Устанавливает текущую страницу в контроллере

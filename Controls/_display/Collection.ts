@@ -91,6 +91,9 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     leftSpacing?: string;
     rightSpacing?: string;
     rowSpacing?: string;
+    theme?: string;
+    collapsedGroups?: TArrayGroupKey;
+    groupProperty?: string;
     searchValue?: string;
     editingConfig?: any;
     unique?: boolean;
@@ -108,6 +111,9 @@ export interface IViewIterator {
     isItemAtIndexHidden: Function;
     setIndices: Function;
 }
+
+export type TGroupKey = string|number;
+export type TArrayGroupKey = TGroupKey[];
 
 export interface IItemActionsTemplateConfig {
     toolbarVisibility?: boolean;
@@ -576,6 +582,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$rightSpacing: string;
 
+    protected _$theme: string;
+
     protected _$rowSpacing: string;
 
     protected _$searchValue: string;
@@ -585,6 +593,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$virtualScrolling: boolean;
 
     protected _$hasMoreData: boolean;
+
+    protected _$metaResults: {};
+
+    protected _$collapsedGroups: TArrayGroupKey;
+
+    protected _$groupProperty: string;
 
     protected _$compatibleReset: boolean;
 
@@ -724,6 +738,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (!this._$group && (options as any).groupingKeyCallback) {
             this._$group = (options as any).groupingKeyCallback;
         }
+
+        this._$theme = options.theme;
+
+        this._$collapsedGroups = options.collapsedGroups;
+
+        this._$groupProperty = options.groupProperty;
 
         if (!this._$collection) {
             throw new Error(`${this._moduleName}: source collection is empty`);
@@ -1555,6 +1575,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return true;
     }
 
+    setGroupProperty(groupProperty: string): void {
+        this._$groupProperty = groupProperty;
+    }
+
+    getGroupProperty(): string {
+        return this._$groupProperty;
+    }
+
     /**
      * Возвращает метод группировки элементов проекции
      * @return {Function}
@@ -1942,11 +1970,20 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     /**
-     * Возвращает Название свойства элемента коллекции, содержащего его уникальный идентификатор.
+     * Возвращает название свойства элемента коллекции, содержащего его уникальный идентификатор.
      * @return {String}
      */
     getKeyProperty(): string {
         return this._$keyProperty;
+    }
+
+    /**
+     * Устанавливает название свойства элемента коллекции, содержащего его уникальный идентификатор.
+     * @return {String}
+     */
+    setKeyProperty(keyProperty: string): void {
+        this._$keyProperty = keyProperty;
+        this.nextVersion();
     }
 
     /**
@@ -2054,7 +2091,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      *     display.setSelectedItems([list.at(0), list.at(1)], true) //установит признак двум элементам;
      * </pre>
      */
-    setSelectedItems(items: any[], selected: boolean|null, silent: boolean = false): void {
+    setSelectedItems(items: S[], selected: boolean|null, silent: boolean = false): void {
         const sourceItems = [];
         for (let i = 0, count = items.length; i < count; i++) {
             const item = this.getItemBySourceItem(items[i]);
@@ -2170,19 +2207,31 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    getValidItemForMarker(index: number): S {
+    getValidItemForMarker(index: number): T {
         const item = this.getItemBySourceIndex(index);
 
-        // TODO неправильная логика у getPRev и getNext для этого места
-        const prevValidItem = this.getPrevious(item);
         const nextValidItem = this.getNext(item);
-        if (nextValidItem !== undefined) {
-            return nextValidItem.getContents();
-        } else if (prevValidItem !== undefined) {
-            return prevValidItem.getContents();
+        const prevValidItem = this.getPrevious(item);
+        if (nextValidItem) {
+            return nextValidItem;
+        } else if (prevValidItem) {
+            return prevValidItem;
         } else {
             return null;
         }
+    }
+
+    getTheme(): string {
+        return this._$theme;
+    }
+
+    setTheme(theme: string): boolean {
+        if (this._$theme !== theme) {
+            this._$theme = theme;
+            this._nextVersion();
+            return true;
+        }
+        return false;
     }
 
     getRowSpacing(): string {
@@ -2251,6 +2300,22 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setHasMoreData(hasMoreData: boolean): void {
         this._$hasMoreData = hasMoreData;
+    }
+
+    setMetaResults(metaResults: {}): void {
+        this._$metaResults = metaResults;
+    }
+
+    getMetaResults(): {} {
+        return this._$metaResults;
+    }
+
+    getCollapsedGroups(): TArrayGroupKey {
+        return this._$collapsedGroups;
+    }
+
+    setCollapsedGroups(collapsedGroups: TArrayGroupKey): void {
+        this._$collapsedGroups = collapsedGroups;
     }
 
     setCompatibleReset(compatible: boolean): void {

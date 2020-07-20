@@ -78,14 +78,15 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     setState(model: Collection<Record>, root?: Key): boolean {
-        return this.getController(root).setState(model);
+        return this.getController(root).setState(model, root);
     }
 
     updateQueryProperties(
         list?: RecordSet,
         direction?: Direction,
         config?: IBaseSourceConfig,
-        root?: Key
+        root?: Key,
+        callback?
     ): void {
         const more = list.getMetaData().more;
         let recordSetWithNavigation;
@@ -97,10 +98,10 @@ export default class QueryParamsController implements IQueryParamsController {
                 meta = recordSetWithNavigation.getMetaData();
                 meta.more = nav.get('nav_result');
                 recordSetWithNavigation.setMetaData(meta);
-                this.getController(nav.get('id')).updateQueryProperties(recordSetWithNavigation, direction, config);
+                this.getController(nav.get('id')).updateQueryProperties(recordSetWithNavigation, direction, config, callback);
             });
         } else {
-            this.getController(root).updateQueryProperties(list, direction, config);
+            this.getController(root).updateQueryProperties(list, direction, config, callback);
         }
     }
 

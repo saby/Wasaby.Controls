@@ -11,6 +11,7 @@
  * @includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
  * @includes DateRangeContainer Controls/_validate/DateRange
  * @includes SelectionContainer Controls/_validate/SelectionContainer
+ * @includes IValidateResult Controls/_validate/interfaces/IValidateResult
  * @public
  * @author Красильников А.С.
  */
@@ -26,6 +27,7 @@
  * @includes IsValidDateRange Controls/_validate/Validators/IsValidDateRange
  * @includes DateRangeContainer Controls/_validate/DateRange
  * @includes SelectionContainer Controls/_validate/SelectionContainer
+ * @includes IValidateResult Controls/_validate/interfaces/IValidateResult
  * @public
  * @author Красильников А.С.
  */
@@ -42,6 +44,7 @@ export {default as Container} from 'Controls/_validate/Container';
 export {default as InputContainer} from 'Controls/_validate/InputContainer';
 export {default as DateRangeContainer} from 'Controls/_validate/DateRange';
 export {default as SelectionContainer} from 'Controls/_validate/SelectionContainer';
+export {default as IValidateResult} from 'Controls/_validate/interfaces/IValidateResult';
 
 export {
     isEmail,

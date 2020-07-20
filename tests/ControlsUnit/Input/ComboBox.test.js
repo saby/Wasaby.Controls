@@ -111,6 +111,13 @@ define(
             combobox._beforeUpdate({});
             assert.equal(combobox._width, 250);
          });
+
+         it('dataLoadCallback option', function() {
+            let combobox = getCombobox(config);
+            const result = combobox._getControllerOptions({ dataLoadCallback: 'testDataLoadCallback' });
+
+            assert.equal(result.dataLoadCallback, 'testDataLoadCallback');
+         });
       });
    }
 );

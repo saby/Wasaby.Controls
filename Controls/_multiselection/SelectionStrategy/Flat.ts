@@ -2,7 +2,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
-import { Record } from 'Types/entity';
+import { Model } from 'Types/entity';
 import { IFlatSelectionStrategyOptions} from '../interface';
 import ISelectionStrategy from './ISelectionStrategy';
 import clone = require('Core/core-clone');
@@ -96,7 +96,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
-   getSelectionForModel(selection: ISelection, limit: number|undefined = undefined): Map<boolean|null, Record[]> {
+   getSelectionForModel(selection: ISelection, limit?: number): Map<boolean|null, Model[]> {
       let selectedItemsCount = 0;
       const selectedItems = new Map();
       // IE не поддерживает инициализацию конструктором
@@ -110,7 +110,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
       const isAllSelected: boolean = this._isAllSelected(selection);
       this._items.forEach((item) => {
-         const itemId: TKey = item.getId();
+         const itemId: TKey = item.getKey();
          const selected = (!limit || selectedItemsCount < limit)
             && (selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId));
 
@@ -124,7 +124,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return selectedItems;
    }
 
-   getCount(selection: ISelection, hasMoreData: boolean, limit: number|undefined = undefined): number|null {
+   getCount(selection: ISelection, hasMoreData: boolean, limit?: number): number|null {
       let countItemsSelected: number|null = null;
       const itemsCount = this._items.getCount();
 

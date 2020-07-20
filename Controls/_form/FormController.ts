@@ -9,7 +9,7 @@ import {error as dataSourceError} from 'Controls/dataSource';
 import {IContainerConstructor} from 'Controls/_dataSource/error';
 import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
-import {SyntheticEvent} from 'Vdom/Vdom';
+import {ControllerClass, Container as ValidateContainer, IValidateResult} from 'Controls/validate';
 import {IFormOperation} from 'Controls/interface';
 import {Confirmation} from 'Controls/popup';
 import CrudController from 'Controls/_form/CrudController';
@@ -26,6 +26,7 @@ interface IFormController extends IControlOptions {
     errorController?: dataSourceError.Controller;
     source?: Memory;
     confirmationShowingCallback?: Function;
+    initializingWay?: string;
 
     //удалить при переходе на новые опции
     dataSource?: Memory;
@@ -62,11 +63,6 @@ interface IDataValid {
     };
 }
 
-interface IValidateResult {
-    [key: number]: boolean;
-    hasErrors?: boolean;
-}
-
 interface IConfigInMounting {
     isError: boolean;
     result: Model;
@@ -74,6 +70,14 @@ interface IConfigInMounting {
 
 interface IUpdateConfig {
     additionalData: IAdditionalData;
+}
+
+export const enum INITIALIZING_WAY {
+    LOCAL = 'local',
+    READ = 'read',
+    CREATE = 'create',
+    DELAYED_READ = 'delayedRead',
+    DELAYED_CREATE = 'delayedCreate'
 }
 
 /**
@@ -178,6 +182,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     private _pendingPromise: Promise<any>;
     private __error: dataSourceError.ViewConfig;
     private _crudController: CrudController = null;
+    private _validateController: ControllerClass = new ControllerClass();
 
     protected _beforeMount(options?: IFormController, context?: object, receivedState: IReceivedState = {}): Promise<ICrudResult> | void {
         this.__errorController = options.errorController || new dataSourceError.Controller({});
@@ -202,21 +207,29 @@ class FormController extends Control<IFormController, IReceivedState> {
         if (receivedError) {
             return this._showError(receivedError);
         }
-        const record = receivedData || options.record;
+        const record = receivedData || options.record || null;
 
-        // use record
-        if (record && this._checkRecordType(record)) {
-            this._setRecord(record);
-            this._isNewRecord = !!options.isNewRecord;
+        this._isNewRecord = !!options.isNewRecord;
+        this._setRecord(record);
 
-            // If there is a key - read the record. Not waiting for answer BL
-            if (options.key !== undefined && options.key !== null) {
-                this._readRecordBeforeMount(options);
+        const initializingWay = this._calcInitializingWay(options);
+
+        if (initializingWay !== INITIALIZING_WAY.LOCAL) {
+            let recordPromise;
+            if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.DELAYED_READ) {
+                const hasKey: boolean = options.key !== undefined && options.key !== null;
+                if (!hasKey) {
+                    this._throwInitializingWayException(initializingWay, 'key');
+                }
+                recordPromise = this._readRecordBeforeMount(options);
+            } else {
+                recordPromise = this._createRecordBeforeMount(options);
             }
-        } else if (options.key !== undefined && options.key !== null) {
-            return this._readRecordBeforeMount(options);
-        } else {
-            return this._createRecordBeforeMount(options);
+            if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.CREATE) {
+                return recordPromise;
+            }
+        } else if (!record) {
+            this._throwInitializingWayException(initializingWay, 'record');
         }
     }
 
@@ -288,6 +301,28 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
     }
 
+    private _throwInitializingWayException(initializingWay: INITIALIZING_WAY, requiredOptionName: string): void {
+        throw new Error(`${this._moduleName}: Опция initializingWay установлена в значение ${initializingWay}.
+        Для корректной работы требуется передать опцию ${requiredOptionName}, либо изменить значение initializingWay`);
+    }
+
+    private _calcInitializingWay(options: IFormController): string {
+        if (options.initializingWay) {
+            return options.initializingWay;
+        }
+        const hasKey: boolean = options.key !== undefined && options.key !== null;
+        if (options.record) {
+            if (hasKey) {
+                return INITIALIZING_WAY.DELAYED_READ;
+            }
+            return INITIALIZING_WAY.LOCAL;
+        }
+        if (hasKey) {
+            return INITIALIZING_WAY.READ;
+        }
+        return INITIALIZING_WAY.CREATE;
+    }
+
     private _confirmRecordChangeHandler(onYesAnswer: Function, onNoAnswer?: Function): Promise<Boolean> | undefined {
         if (this._needShowConfirmation()) {
             return this._showConfirmPopup('yesno').then((answer) => {
@@ -311,11 +346,12 @@ class FormController extends Control<IFormController, IReceivedState> {
     protected _afterUpdate(): void {
         if (this._wasCreated || this._wasRead || this._wasDestroyed) {
             // сбрасываем результат валидации, если только произошло создание, чтение или удаление рекорда
-            this._children.validation.setValidationResult(null);
+            this._validateController.setValidationResult(null);
             this._wasCreated = false;
             this._wasRead = false;
             this._wasDestroyed = false;
         }
+        this._validateController.resolveSubmit();
     }
 
     protected _beforeUnmount(): void {
@@ -323,6 +359,8 @@ class FormController extends Control<IFormController, IReceivedState> {
             this._pendingPromise.callback();
             this._pendingPromise = null;
         }
+        this._validateController.destroy();
+        this._validateController = null;
         // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
         // Текущая реализация не подходит, завершать пендинги могут как сверху(при закрытии окна), так и
         // снизу (редактирование закрывает пендинг).
@@ -334,6 +372,14 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
         this._crudController.hideIndicator();
         this._crudController = null;
+    }
+
+    protected _onValidateCreated(e: Event, control: ValidateContainer): void {
+        this._validateController.addValidator(control);
+    }
+
+    protected _onValidateDestroyed(e: Event, control: ValidateContainer): void {
+        this._validateController.removeValidator(control);
     }
 
     private _checkRecordType(record: Model): boolean {
@@ -626,7 +672,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         const updateDef = new Deferred();
 
         // запускаем валидацию
-        const validationDef = this._children.validation.submit();
+        const validationDef = this.validate();
         validationDef.then((results) => {
             if (!results.hasErrors) {
                 // при успешной валидации пытаемся сохранить рекорд
@@ -648,7 +694,7 @@ class FormController extends Control<IFormController, IReceivedState> {
                 });
             } else {
                 // если были ошибки валидации, уведомим о них
-                const validationErrors = this._children.validation.getValidationResult();
+                const validationErrors = this._validateController.getValidationResult();
                 this._notify('validationFailed', [validationErrors], {bubbling: true});
                 updateDef.callback({
                     data: {
@@ -679,7 +725,9 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     validate(): Promise<IValidateResult | Error> {
-        return this._children.validation.submit();
+        // Для чего нужен _forceUpdate см внутри метода deferSubmit
+        this._forceUpdate();
+        return this._validateController.deferSubmit();
     }
 
     /**

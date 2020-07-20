@@ -41,9 +41,7 @@
 </ws:template>
 
 <ws:template name="footerTemplateIf">
-    <ws:if data="{{_loadingIndicatorState === 'all'}}">
-        <ws:partial template="loadingIndicator"/>
-    </ws:if>
+    <ws:partial if="{{ _shouldShowLoadingIndicator('inFooter') }}" template="loadingIndicator"/>
     <ws:if data="{{_options.footerTemplate}}">
         <div class="controls-BaseControl__footer-content_theme-{{_options.theme}}">
             <ws:partial template="{{_options.footerTemplate}}"/>
@@ -81,11 +79,14 @@
 </ws:template>
 <ws:template name="viewTpl">
     <div class="controls-ScrollController">
-        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;"></div>
-        <div name="topLoadTrigger"></div>
+        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{!_isMounted ? 'display: none;'}}"></div>
+        <!-- Скрываем topLoadTrigger через display: none, чтобы он не срабатывал сразу после mount. Отступы ему ещё не установлены и он
+        сработает сразу после инициализации, хотя далеко не факт что это нужно. -->
+        <div name="topLoadTrigger" style="{{!_isMounted ? 'display: none'}}"></div>
         <Controls.validate:Controller name="formController">
             <ws:partial
                     attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
+                    attr:style="{{_attachLoadTopTriggerToNull ? 'padding-top: 1px;'}}"
                     name="{{name}}"
                     template="{{ _options.content }}"
                     scope="{{_options}}"
@@ -179,9 +180,7 @@
 
         <ws:if data="{{_listViewModel}}">
 
-            <ws:if data="{{_loadingIndicatorState=== 'up'}}">
-                <ws:partial template="loadingIndicator"/>
-            </ws:if>
+            <ws:partial if="{{ _shouldShowLoadingIndicator('beforeEmptyTemplate') }}" template="loadingIndicator"/>
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
 
@@ -191,9 +190,7 @@
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>
 
-        <ws:if data="{{_loadingIndicatorState === 'down'}}">
-            <ws:partial template="loadingIndicator"/>
-        </ws:if>
+        <ws:partial if="{{ _shouldShowLoadingIndicator('afterList') }}" template="loadingIndicator"/>
 
         <ws:if data="{{_showContinueSearchButton}}">
             <ws:partial template="{{_options.continueSearchTemplate}}">

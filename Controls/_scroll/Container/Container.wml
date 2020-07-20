@@ -2,11 +2,13 @@
     <div class="controls-Scroll-Container">
         <ws:partial template="{{_baseTemplate}}"
                     _options="{{_options}}"
+                    _scrollCssClass="{{_scrollCssClass}}"
                     attr:style="{{_scrollbars.scrollContainerStyles}}"
-                    attr:class="controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-{{_options.theme}}
-                            {{_scrollbars.scrollContainerClasses}}"
+                    attr:class="controls-BlockLayout__blockGroup_theme-{{_options.theme}} controls-BlockLayout__blockGroup_theme-{{_options.theme}}"
                     on:intersectionObserverRegister="_intersectionObserverRegisterHandler()"
                     on:intersectionObserverUnregister="_intersectionObserverUnregisterHandler()"
+                    on:fixed="_stickyFixedHandler()"
+                    on:stickyRegister="_stickyRegisterHandler()"
                     on:keydown="_keydownHandler()"/>
 
         <ws:if data="{{_shadows.top.isEnabled}}">
@@ -32,7 +34,7 @@
                             {{_scrollbars.horizontal.isVisible ? 'controls-VScrollbar_vertical_offset'}}"
                         on:positionChanged="_positionChangedHandler('vertical')"
                         on:draggingChanged="_draggingChangedHandler('vertical')"
-                        attr:style="{{_scrollbarStyles}}"/>
+                        attr:style="{{_scrollbars.vertical.style}}"/>
             </ws:if>
 
             <ws:if data="{{_scrollbars.horizontal.isVisible}}">
@@ -47,7 +49,7 @@
                             {{_scrollbars.vertical.isVisible ? 'controls-VScrollbar_horizontal_offset'}}"
                         on:positionChanged="_positionChangedHandler('horizontal')"
                         on:draggingChanged="_draggingChangedHandler('horizontal')"
-                        attr:style="{{_scrollbarStyles}}"/>
+                        attr:style="{{_scrollbars.horizontal.style}}"/>
             </ws:if>
         </ws:if>
 

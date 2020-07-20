@@ -94,4 +94,201 @@ describe('Controls/list_clean/ScrollController', () => {
             assert.isTrue(setViewIteratorSpy.called);
         });
     });
+
+    describe('attachLoadTopTriggerToNull', () => {
+        describe('mount', () => {
+            it('attachLoadTopTriggerToNull === true', () => {
+                const collection = new Collection({
+                    collection: items
+                });
+                let topTriggerOffset = null;
+                const controller = new ScrollController({
+                    collection,
+                    virtualScrollConfig: {},
+                    needScrollCalculation: false,
+                    attachLoadTopTriggerToNull: true,
+                    callbacks: {
+                        triggerOffsetChanged: (topOffset) => {
+                            topTriggerOffset = topOffset;
+                        },
+                        updateShadowMode: () => {},
+                        viewportResize: () => {}
+                    }
+                });
+
+                const container = {
+                    getElementsByClassName: () => {
+                        return [{
+                            offsetHeight: 50
+                        }];
+                    }
+                };
+
+                const triggers = {
+                    topVirtualScrollTrigger: {
+                        style: {}
+                    },
+                    bottomVirtualScrollTrigger: {
+                        style: {}
+                    }
+                };
+
+                controller.afterMount(container, triggers);
+                controller.observeScroll('viewportResize', { clientHeight: 150 });
+                assert.strictEqual(topTriggerOffset, 0);
+            });
+            it('attachLoadTopTriggerToNull === false', () => {
+                const collection = new Collection({
+                    collection: items
+                });
+                let topTriggerOffset = null;
+                const controller = new ScrollController({
+                    collection,
+                    virtualScrollConfig: {},
+                    needScrollCalculation: false,
+                    attachLoadTopTriggerToNull: false,
+                    callbacks: {
+                        triggerOffsetChanged: (topOffset) => {
+                            topTriggerOffset = topOffset;
+                        },
+                        updateShadowMode: () => {},
+                        viewportResize: () => {}
+                    }
+                });
+
+                const container = {
+                    getElementsByClassName: () => {
+                        return [{
+                            offsetHeight: 50
+                        }];
+                    }
+                };
+
+                const triggers = {
+                    topVirtualScrollTrigger: {
+                        style: {}
+                    },
+                    bottomVirtualScrollTrigger: {
+                        style: {}
+                    }
+                };
+
+                controller.afterMount(container, triggers);
+                controller.observeScroll('viewportResize', { clientHeight: 150 });
+                assert.strictEqual(topTriggerOffset, 15);
+            });
+        });
+        describe('update', () => {
+            it('attachLoadTopTriggerToNull === true -> false', () => {
+                const collection = new Collection({
+                    collection: items
+                });
+                let topTriggerOffset = null;
+                let options = {
+                    collection,
+                    virtualScrollConfig: {},
+                    needScrollCalculation: false,
+                    attachLoadTopTriggerToNull: true,
+                    callbacks: {
+                        triggerOffsetChanged: (topOffset) => {
+                            topTriggerOffset = topOffset;
+                        },
+                        updateShadowMode: () => {},
+                        viewportResize: () => {}
+                    }
+                };
+                const controller = new ScrollController(options);
+
+                const container = {
+                    getElementsByClassName: () => {
+                        return [{
+                            offsetHeight: 50
+                        }];
+                    }
+                };
+
+                const triggers = {
+                    topVirtualScrollTrigger: {
+                        style: {}
+                    },
+                    bottomVirtualScrollTrigger: {
+                        style: {}
+                    }
+                };
+
+                controller.afterMount(container, triggers);
+                controller.observeScroll('viewportResize', { clientHeight: 150 });
+                options = {
+                    collection,
+                    virtualScrollConfig: {},
+                    needScrollCalculation: false,
+                    attachLoadTopTriggerToNull: false,
+                    callbacks: {
+                        triggerOffsetChanged: (topOffset) => {
+                            topTriggerOffset = topOffset;
+                        },
+                        updateShadowMode: () => {},
+                        viewportResize: () => {}
+                    }
+                };
+                controller.update(options);
+                assert.strictEqual(topTriggerOffset, 15);
+            });
+            it('attachLoadTopTriggerToNull === false -> true', () => {
+                const collection = new Collection({
+                    collection: items
+                });
+                let topTriggerOffset = null;
+                let options = {
+                    collection,
+                    virtualScrollConfig: {},
+                    needScrollCalculation: false,
+                    attachLoadTopTriggerToNull: false,
+                    callbacks: {
+                        triggerOffsetChanged: (topOffset) => {
+                            topTriggerOffset = topOffset;
+                        },
+                        updateShadowMode: () => {},
+                        viewportResize: () => {}
+                    }
+                };
+                const controller = new ScrollController(options);
+
+                const container = {
+                    getElementsByClassName: () => {
+                        return [{
+                            offsetHeight: 50
+                        }];
+                    }
+                };
+
+                const triggers = {
+                    topVirtualScrollTrigger: {
+                        style: {}
+                    },
+                    bottomVirtualScrollTrigger: {
+                        style: {}
+                    }
+                };
+
+                controller.afterMount(container, triggers);
+                controller.observeScroll('viewportResize', { clientHeight: 150 });
+                options = {
+                    collection,
+                    virtualScrollConfig: {},
+                    needScrollCalculation: false,
+                    attachLoadTopTriggerToNull: true,
+                    callbacks: {
+                        triggerOffsetChanged: (topOffset) => {
+                            topTriggerOffset = topOffset;
+                        },
+                        updateShadowMode: () => {},
+                        viewportResize: () => {}
+                    }
+                };
+                controller.update(options);
+                assert.strictEqual(topTriggerOffset, 0);
+            });
+        });
+    });
 });

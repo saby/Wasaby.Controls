@@ -33,10 +33,11 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     // private _edgeObservers: IntersectionObserver[] = [];
 
     private _scrollLockedPosition: number = null;
+    protected _scrollCssClass: string;
 
     protected _tmplNotify: tmplNotify;
 
-    _beforeMount(): void {
+    _beforeMount(options: IContainerBaseOptions): void {
         this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
         this._resizeObserverSupported = typeof window !== 'undefined' && window.ResizeObserver;
         this._registrars.scrollStateChanged = new RegisterClass({register: 'scrollStateChanged'});
@@ -44,6 +45,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._registrars.viewportResize = new RegisterClass({register: 'viewportResize'});
         this._registrars.scrollResize = new RegisterClass({register: 'scrollResize'});
         this._registrars.scrollMove = new RegisterClass({register: 'scrollMove'});
+        this._scrollCssClass = this._getScrollContainerCssClass(options);
     }
 
     _afterMount(): void {
@@ -55,7 +57,13 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         if (detection.isMobileIOS) {
             this._lockScrollPositionUntilKeyboardShown = this._lockScrollPositionUntilKeyboardShown.bind(this);
             Bus.globalChannel().subscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
-         }
+        }
+    }
+
+    _beforeUpdate(options: IContainerBaseOptions) {
+        if (options.scrollMode !== this._options.scrollMode) {
+            this._scrollCssClass = this._getScrollContainerCssClass(options);
+        }
     }
 
     _beforeUnmount(): void {
@@ -123,10 +131,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         if (Object.keys(this._state).length === 0) {
             this._updateState(this._getFullStateFromDOM());
         }
-        this._registrars.scrollStateChanged.startOnceTarget(component, {
-            state: {...this._state},
-            oldState: {...this._oldState}
-        });
+        this._registrars.scrollStateChanged.startOnceTarget(component, {...this._state}, {...this._oldState});
         this._notify('scrollStateChanged', [{...this._state}, {...this._oldState}]);
     }
 
@@ -142,45 +147,42 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         const isStateUpdated = this._updateState(newState);
         if (isStateUpdated) {
             // Новое событие
-            this._sendByRegistrar('scrollStateChanged', {
-                state: {...this._state},
-                oldState: {...this._oldState}
-            });
+            this._sendByRegistrar('scrollStateChanged', [{...this._state}, {...this._oldState}]);
 
             // Старое событие
             if ((this._state.clientHeight !== this._oldState.clientHeight) ||
                 (this._state.scrollHeight !== this._oldState.scrollHeight)) {
-                this._sendByRegistrar('scrollResize', {
+                this._sendByRegistrar('scrollResize', [{
                     scrollHeight: this._state.scrollHeight,
                     clientHeight: this._state.clientHeight
-                });
+                }]);
             }
 
             // Старое событие
             if (this._oldState.clientHeight !== this._state.clientHeight) {
-                this._sendByRegistrar('viewportResize', {
+                this._sendByRegistrar('viewportResize', [{
                     scrollHeight: this._state.scrollHeight,
                     scrollTop: this._state.scrollTop,
                     clientHeight: this._state.clientHeight,
                     rect: this._state.viewPortRect
-                });
+                }]);
             }
 
             // Старое событие
             if (this._oldState.verticalPosition !== this._state.verticalPosition) {
-                this._sendByRegistrar('scrollMove', {
+                this._sendByRegistrar('scrollMove', [{
                     scrollTop: this._state.scrollTop,
                     position: this._state.verticalPosition,
                     clientHeight: this._state.clientHeight,
                     scrollHeight: this._state.scrollHeight
-                });
+                }]);
             }
         }
     }
 
-    _sendByRegistrar(eventType: string, params: object): void {
-        this._registrars[eventType].start(params);
-        this._notify(eventType, [params]);
+    _sendByRegistrar(eventType: string, params: object[]): void {
+        this._registrars[eventType].start(...params);
+        this._notify(eventType, params);
     }
 
     _resizeObserverCallback(entries: any): void {
@@ -263,6 +265,12 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 this.setScrollTop(currentScrollTop + clientHeight);
             }
         }
+    }
+
+    protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
+        return options.scrollMode === SCROLL_MODE.VERTICAL ?
+                   'controls-Scroll-ContainerBase__scroll_vertical' :
+                   'controls-Scroll-ContainerBase__scroll_verticalHorizontal'
     }
 
     static _theme: string[] = ['Controls/scroll'];

@@ -112,6 +112,39 @@ define(
             assert.isFalse(isKeysChanged);
          });
 
+         it('_handleMouseDown', () => {
+            let isOpened = false;
+            let ddl = getDropdown(config);
+            ddl.openMenu = () => { isOpened = true; };
+
+            const event = { nativeEvent: { button: 2 } };
+            ddl._handleMouseDown(event);
+            assert.isFalse(isOpened);
+
+            event.nativeEvent.button = 0;
+            ddl._handleMouseDown(event);
+            assert.isTrue(isOpened);
+         });
+
+         it('openMenu', () => {
+            let actualOptions = null;
+            let target;
+            let ddl = getDropdown(config);
+            ddl._controller = {
+               setMenuPopupTarget: () => { target = 'test'; },
+               openMenu: (popupConfig) => { actualOptions = popupConfig; return Promise.resolve(); }
+            };
+
+            ddl.openMenu();
+            assert.isOk(actualOptions.templateOptions);
+            assert.equal(target, 'test');
+
+            ddl.openMenu({ newOptionsPopup: 'test2', templateOptions: { customTemplateOption: 'test2' } });
+            assert.isOk(actualOptions.templateOptions.selectorDialogResult);
+            assert.equal(actualOptions.templateOptions.customTemplateOption, 'test2');
+            assert.equal(actualOptions.newOptionsPopup, 'test2');
+         });
+
          it('_dataLoadCallback', () => {
             let ddl = getDropdown(config);
             ddl._dataLoadCallback(new collection.RecordSet({
@@ -177,14 +210,14 @@ define(
                      id: '1',
                      title: 'Запись 1'
                   },
-                     {
-                        id: '9',
-                        title: 'Запись 9'
-                     },
-                     {
-                        id: '10',
-                        title: 'Запись 10'
-                     }]
+                  {
+                     id: '9',
+                     title: 'Запись 9'
+                  },
+                  {
+                     id: '10',
+                     title: 'Запись 10'
+                  }]
                });
             ddl._controller._items = curItems;
             ddl._controller._source = config.source;
@@ -192,22 +225,22 @@ define(
                id: '9',
                title: 'Запись 9'
             },
-               {
-                  id: '10',
-                  title: 'Запись 10'
-               },
-               {
-                  id: '1',
-                  title: 'Запись 1'
-               },
-               {
-                  id: '2',
-                  title: 'Запись 2'
-               },
-               {
-                  id: '3',
-                  title: 'Запись 3'
-               }
+            {
+               id: '10',
+               title: 'Запись 10'
+            },
+            {
+               id: '1',
+               title: 'Запись 1'
+            },
+            {
+               id: '2',
+               title: 'Запись 2'
+            },
+            {
+               id: '3',
+               title: 'Запись 3'
+            }
             ];
 
             ddl._selectorTemplateResult('selectorResult', selectedItems);
@@ -245,14 +278,14 @@ define(
                      id: '1',
                      title: 'Запись 1'
                   },
-                     {
-                        id: '9',
-                        title: 'Запись 9'
-                     },
-                     {
-                        id: '10',
-                        title: 'Запись 10'
-                     }]
+                  {
+                     id: '9',
+                     title: 'Запись 9'
+                  },
+                  {
+                     id: '10',
+                     title: 'Запись 10'
+                  }]
                });
             ddl._controller._items = curItems;
             ddl._controller._source = config.source;
@@ -292,41 +325,51 @@ define(
                      id: '1',
                      title: 'Запись 1'
                   },
-                     {
-                        id: '9',
-                        title: 'Запись 9'
-                     },
-                     {
-                        id: '10',
-                        title: 'Запись 10'
-                     }]
+                  {
+                     id: '9',
+                     title: 'Запись 9'
+                  },
+                  {
+                     id: '10',
+                     title: 'Запись 10'
+                  }]
                });
             ddl._controller._items = curItems;
             let newItems = [ {
                id: '9',
                title: 'Запись 9'
             },
-               {
-                  id: '10',
-                  title: 'Запись 10'
-               },
-               {
-                  id: '1',
-                  title: 'Запись 1'
-               },
-               {
-                  id: '2',
-                  title: 'Запись 2'
-               },
-               {
-                  id: '3',
-                  title: 'Запись 3'
-               }
+            {
+               id: '10',
+               title: 'Запись 10'
+            },
+            {
+               id: '1',
+               title: 'Запись 1'
+            },
+            {
+               id: '2',
+               title: 'Запись 2'
+            },
+            {
+               id: '3',
+               title: 'Запись 3'
+            }
             ];
             ddl._controller._source = config.source;
             ddl._selectorResult(selectedItems);
             assert.deepEqual(newItems, ddl._controller._items.getRawData());
             assert.isOk(ddl._controller._menuSource);
+         });
+
+         it('controller options', function() {
+            const ddl = getDropdown(config);
+            const result = ddl._getControllerOptions({
+               nodeFooterTemplate: 'testNodeFooterTemplate'
+            });
+
+            assert.equal(result.nodeFooterTemplate, 'testNodeFooterTemplate');
+            assert.isOk(result.selectorOpener);
          });
       });
    }

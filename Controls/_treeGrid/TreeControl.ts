@@ -574,7 +574,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
                 this._children.baseControl.reload();
             }
         }
-        if (oldOptions.groupMethod !== this._options.groupMethod || oldOptions.viewModelConstructor !== this._options.viewModelConstructor) {
+        if (oldOptions.viewModelConstructor !== this._options.viewModelConstructor) {
             _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
         }
     },

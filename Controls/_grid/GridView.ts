@@ -154,6 +154,7 @@ var
         },
         createColumnScroll(self, options): void {
             self._columnScrollController = new ColumnScroll({
+                needBottomPadding: options._needBottomPadding,
                 stickyColumnsCount: options.stickyColumnsCount,
                 hasMultiSelect: options.multiSelectVisibility !== 'hidden',
                 theme: options.theme,
@@ -544,6 +545,9 @@ var
             } else {
                 return false;
             }
+        },
+        isColumnScrollVisible(): boolean {
+          return this._isColumnScrollVisible();
         },
 
         _isDragScrollingEnabled(options): boolean {

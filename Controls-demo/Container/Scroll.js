@@ -22,8 +22,8 @@ define('Controls-demo/Container/Scroll',
             };
          }
       });
-   
-      ModuleClass._styles = ['Controls-demo/Container/Scroll'];
+
+      ModuleClass._styles = ['Controls-demo/Controls-demo', 'Controls-demo/Container/Scroll'];
 
       return ModuleClass;
 }

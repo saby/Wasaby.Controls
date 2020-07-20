@@ -1,11 +1,45 @@
 import {ListViewModel} from 'Controls/list';
 import cMerge = require('Core/core-merge');
 import {Logger} from 'UI/Utils';
+import {object} from 'Types/util';
 
 var
     DEFAULT_ITEM_WIDTH = 250,
     DEFAULT_ITEM_HEIGHT = 200,
     ITEM_COMPRESSION_COEFFICIENT = 0.7;
+
+const TILE_SIZES = {
+    s: {
+        horizontal: {
+            width: 210,
+            imageHeight: 180
+        },
+        vertical: {
+            width: 390,
+            imageWidth: 300
+        }
+    },
+    m: {
+        horizontal: {
+            width: 310,
+            imageHeight: 240
+        },
+        vertical: {
+            width: 390,
+            imageWidth: 160
+        }
+    },
+    l: {
+        horizontal: {
+            width: 420,
+            imageHeight: 320
+        },
+        vertical: {
+            width: 640,
+            imageWidth: 300
+        }
+    }
+};
 
 var TileViewModel = ListViewModel.extend({
     constructor: function () {
@@ -36,8 +70,21 @@ var TileViewModel = ListViewModel.extend({
         return current;
     },
 
+    getTileSizes(tileSize: string, imagePosition: string = 'top', imageViewMode: string = 'rectangle'): object {
+        const sizeParams = object.clone(TILE_SIZES[tileSize]);
+        const tileSizes = sizeParams[imagePosition === 'top' ? 'horizontal' : 'vertical'];
+        if (imagePosition === 'top') {
+            tileSizes.imageWidth = null;
+            if (imageViewMode !== 'rectangle') {
+                tileSizes.imageHeight = null;
+            }
+        }
+        return tileSizes;
+    },
+
     getTileItemData: function () {
-        return {
+        const resultData =  {
+            displayProperty: this._options.displayProperty,
             tileMode: this._tileMode,
             itemsHeight: this._itemsHeight,
             imageProperty: this._options.imageProperty,
@@ -45,6 +92,10 @@ var TileViewModel = ListViewModel.extend({
             defaultShadowVisibility: 'visible',
             itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT
         };
+        if (this._options.tileSize) {
+            resultData.getTileSizes = this.getTileSizes;
+        }
+        return resultData;
     },
 
     setTileMode: function (tileMode) {

@@ -157,6 +157,9 @@ export class Controller {
 
     private _theme: string;
 
+    // Ширина опций записи для рассчётов свайп-конфига после изменения видимости опций записи
+    private _actionsWidth: number;
+
     // Высота опций записи для рассчётов свайп-конфига после изменения видимости опций записи
     private _actionsHeight: number;
 
@@ -200,15 +203,16 @@ export class Controller {
     /**
      * Активирует Swipe для меню операций с записью
      * @param itemKey Ключ элемента коллекции, для которого выполняется действие
-     * @param actionsContainerHeight высота контейнера для отображения операций с записью
+     * @param actionsContainerWidth ширина контейнера для расчёта видимых опций записи
+     * @param actionsContainerHeight высота контейнера для расчёта видимых опций записи
      */
-    activateSwipe(itemKey: TItemKey, actionsContainerHeight: number): void {
+    activateSwipe(itemKey: TItemKey, actionsContainerWidth: number, actionsContainerHeight: number): void {
         const item = this._collection.getItemBySourceKey(itemKey);
         this.setSwipeAnimation(ANIMATION_STATE.OPEN);
         this._setSwipeItem(itemKey);
         this._collection.setActiveItem(item);
         if (this._itemActionsPosition !== 'outside') {
-            this._updateSwipeConfig(actionsContainerHeight);
+            this._updateSwipeConfig(actionsContainerWidth, actionsContainerHeight);
         }
         this._collection.nextVersion();
     }
@@ -238,7 +242,7 @@ export class Controller {
      * Устанавливает состояние элемента rightSwiped
      * @param itemKey
      */
-    activateRightSwipe(itemKey: TItemKey) {
+    activateRightSwipe(itemKey: TItemKey): void {
         this.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
         this._setSwipeItem(itemKey);
     }
@@ -297,7 +301,7 @@ export class Controller {
                 },
                 className: `controls-ItemActions__popup__list_theme-${this._theme}`,
                 nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
-            }
+            };
         }
         return menuConfig;
     }
@@ -398,7 +402,7 @@ export class Controller {
         if (hasChanges) {
             // Если поменялась видимость ItemActions через VisibilityCallback, то надо обновить конфиг свайпа
             if (this._itemActionsPosition !== 'outside') {
-                this._updateSwipeConfig(this._actionsHeight);
+                this._updateSwipeConfig(this._actionsWidth, this._actionsHeight);
             }
             this._collection.nextVersion();
         }
@@ -492,12 +496,13 @@ export class Controller {
         );
     }
 
-    private _updateSwipeConfig(actionsContainerHeight: number): void {
+    private _updateSwipeConfig(actionsContainerWidth: number, actionsContainerHeight: number): void {
         const item = this.getSwipeItem();
         if (!item) {
             return;
         }
         const menuButtonVisibility = this._getSwipeMenuButtonVisibility(this._contextMenuConfig);
+        this._actionsWidth = actionsContainerWidth;
         this._actionsHeight = actionsContainerHeight;
         let actions = item.getActions().all;
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
@@ -512,9 +517,11 @@ export class Controller {
         let swipeConfig = Controller._calculateSwipeConfig(
             actions,
             actionsTemplateConfig.actionAlignment,
+            actionsContainerWidth,
             actionsContainerHeight,
             actionsTemplateConfig.actionCaptionPosition,
-            menuButtonVisibility
+            menuButtonVisibility,
+            this._theme
         );
 
         if (
@@ -525,9 +532,11 @@ export class Controller {
             swipeConfig = Controller._calculateSwipeConfig(
                 actions,
                 actionsTemplateConfig.actionAlignment,
+                actionsContainerWidth,
                 actionsContainerHeight,
                 actionsTemplateConfig.actionCaptionPosition,
-                menuButtonVisibility
+                menuButtonVisibility,
+                this._theme
             );
         }
         this._collection.setActionsTemplateConfig(actionsTemplateConfig);
@@ -563,8 +572,8 @@ export class Controller {
     private _getActionsContainer(item: IItemActionsItem): IItemActionsContainer {
         let showed;
         const actions = this._collectActionsForItem(item);
-        if (this._collection.isEditing() && ((typeof item.isEditing === 'function') && !item.isEditing() || !item.isEditing)) {
-            showed = []
+        if (this._collection.isEditing() && !item.isEditing()) {
+            showed = [];
         } else if (actions.length > 1) {
             showed = actions.filter((action) =>
                     !action.parent &&
@@ -644,7 +653,7 @@ export class Controller {
                 return action;
             });
         }
-        return actions
+        return actions;
     }
 
     /**
@@ -708,16 +717,20 @@ export class Controller {
     private static _calculateSwipeConfig(
         actions: IItemAction[],
         actionAlignment: string,
+        actionsContainerWidth: number,
         actionsContainerHeight: number,
         actionCaptionPosition: TActionCaptionPosition,
-        menuButtonVisibility?: TMenuButtonVisibility
+        menuButtonVisibility: TMenuButtonVisibility,
+        theme: string
     ): ISwipeConfig {
         const measurer = actionAlignment === 'vertical' ? verticalMeasurer : horizontalMeasurer;
         const config: ISwipeConfig = measurer.getSwipeConfig(
             actions,
+            actionsContainerWidth,
             actionsContainerHeight,
             actionCaptionPosition,
-            menuButtonVisibility
+            menuButtonVisibility,
+            theme
         );
         config.needTitle = measurer.needTitle;
         config.needIcon = measurer.needIcon;
@@ -737,7 +750,7 @@ export class Controller {
         if (!icon || icon.includes(this._resolveItemActionClass(theme))) {
             return icon;
         }
-        return `${icon} ${this._resolveItemActionClass(theme)}`
+        return `${icon} ${this._resolveItemActionClass(theme)}`;
     }
 
     private static _resolveItemActionClass(theme: string): string {
