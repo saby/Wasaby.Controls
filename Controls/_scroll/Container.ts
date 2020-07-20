@@ -581,7 +581,9 @@ let
             this._pagingState = {};
          }
 
-         this._stickyHeaderController = new StickyHeaderController(this);
+         this._stickyHeaderController = new StickyHeaderController(this, {
+             fixedCallback: this._stickyHeaderFixedCallback.bind(this)
+         });
 
          if (receivedState) {
             _private.updateDisplayState(this, receivedState.displayState);
@@ -827,6 +829,10 @@ let
            }
 
            return this._displayState.shadowVisible[position];
+       },
+
+       _stickyHeaderFixedCallback(position: POSITION): void {
+          this._forceUpdate();
        },
 
       _updateShadowMode(event, shadowVisibleObject): void {
