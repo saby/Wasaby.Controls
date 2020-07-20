@@ -1884,7 +1884,7 @@ define([
       });
 */
 
-
+/*
        it('don\'t toggle node by click if handler returns false', async function() {
            const savedMethod = treeGrid.TreeControl._private.createSourceController;
            const data = [
@@ -2012,7 +2012,7 @@ define([
          assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
 
          treeGrid.TreeControl._private.createSourceController = savedMethod;
-      });
+      });*/
 
       /*it('itemClick sends right args', function() {
          let isEventRaised = false;
