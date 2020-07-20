@@ -234,6 +234,20 @@ let
             // его нельзя объявлять на шаблоне ( даже в ветке кода, которая не испольняется). Перевожу на сеттер.
             self._scrollTop = value;
             self._children.scrollBar?.setScrollPosition(value);
+            _private.updateStates(self);
+       },
+
+       updateStates(self): void {
+           const oldDisplayState = self._displayState;
+           const displayState = _private.calcDisplayState(self);
+
+           if (!isEqual(oldDisplayState, displayState)) {
+               self._displayState = displayState;
+               self._stickyHeaderController.setCanScroll(displayState.canScroll);
+               if (oldDisplayState.canScroll !== displayState.canScroll) {
+                   _private._updateScrollbar(self);
+               }
+           }
        },
       /**
        * Возвращает включено ли отображение тени.
@@ -885,19 +899,9 @@ let
          if (this._isHidden()) {
             return;
          }
-         const oldDisplayState = this._displayState;
-         const displayState = _private.calcDisplayState(this);
-
-         if (!isEqual(oldDisplayState, displayState)) {
-            this._displayState = displayState;
-            this._stickyHeaderController.setCanScroll(displayState.canScroll);
-            if (oldDisplayState.canScroll !== displayState.canScroll) {
-               _private._updateScrollbar(this);
-            }
-         }
-
+         _private.updateStates(this);
          _private.calcPagingStateBtn(this);
-         this._stickyHeaderController.resizeHandler()
+         this._stickyHeaderController.resizeHandler();
       },
 
       _scrollHandler: function(ev) {
