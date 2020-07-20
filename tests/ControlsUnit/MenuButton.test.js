@@ -401,6 +401,19 @@ define(
             menu._dataLoadCallback(loadedItems);
             assert.isTrue(menu._hasItems);
          });
+
+         it('check target', () => {
+            let actualTarget;
+            menu._controller = {
+               openMenu: () => Promise.resolve(),
+               setMenuPopupTarget: (target) => {actualTarget = target;}
+            };
+            menu._children = {
+               content: 'testTarget'
+            };
+            menu.openMenu();
+            assert.equal(actualTarget, 'testTarget');
+         });
       });
    }
 );
