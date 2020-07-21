@@ -55,12 +55,15 @@ export interface IMenuOptions {
  */
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions, IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions {
     /**
-     * Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
+     * @name Controls/_toolbars/IToolbarOptions#popupClassName
+     * @cfg {String} Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
+     * @default ''
      */
     popupClassName: string;
     /**
      * @name Controls/_toolbars/IToolbarOptions#itemsSpacing
      * @cfg {String} Размер расстояния между кнопками.
+     * @default medium
      * @remark
      * Размер расстояния задается константой из стандартного набора размеров, который определен для текущей темы оформления.
      */
@@ -117,17 +120,10 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  */
 
 /**
- * @name Controls/_toolbars/View#item
- * @cfg {Controls/_toolbars/IToolbarSource/Item.typedef} Элемент тулбара.
+ * @name Controls/_toolbars/View#theme
+ * @cfg {String} theme Название темы оформления. В зависимости от темы загружаются различные таблицы стилей и применяются различные стили к контролу.
  */
-/**
- * @name Controls/_toolbars/View#buttonTemplate
- * @cfg {UI/Base:TemplateFunction} Шаблон кнопки тулбара.
- */
-/**
- * @name Controls/_toolbars/View#buttonTemplateOptions
- * @cfg {Object} Опции шаблона кнопки.
- */
+
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate,
     IGrouped, IToolbarSource {
     /*
@@ -498,15 +494,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     static getDefaultOptions() {
         return {
-            /**
-             * @name Controls/_toolbars/View#popupClassName
-             * @default ''
-             */
             popupClassName: '',
-            /**
-             * @name Controls/_toolbars/View#itemsSpacing
-             * @default 'medium'
-             */
             itemsSpacing: 'medium',
             iconSize: 'm',
             itemTemplate: defaultItemTemplate
