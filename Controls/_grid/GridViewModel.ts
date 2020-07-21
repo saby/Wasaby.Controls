@@ -1741,7 +1741,7 @@ var
         setColumnScrollVisibility(columnScrollVisibility: boolean) {
             if (!!this._options.columnScrollVisibility !== columnScrollVisibility) {
                 this._options.columnScrollVisibility = columnScrollVisibility;
-                this._headerModel.nextVersion();
+                this._headerModel?.nextVersion();
             }
         },
 
