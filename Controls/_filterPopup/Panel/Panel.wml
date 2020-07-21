@@ -10,6 +10,8 @@
    <ws:if data="{{_hasAdditionalParams}}">
       <Controls._filterPopup.Panel.AdditionalParams.Control
               source="{{_items}}"
+              render="{{_options.additionalPanelTemplate}}"
+              columnProperty="column"
               keyProperty="name"
               groupProperty="{{_options.groupProperty}}"
               itemTemplate="{{_options.additionalTemplate}}"

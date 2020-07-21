@@ -377,6 +377,22 @@ export function getItems(): unknown[] {
     return defaultItems.concat(hierarchyFilters);
 }
 
+export function getItemsWithGroup(property: string) {
+    return defaultItems.map((item, index) => {
+        const defaultItem = object.clone(item);
+        if (index % 2 === 0) {
+            defaultItem[property] = 'firstGroup';
+        } else {
+            defaultItem[property] = 'secondGroup';
+        }
+        defaultItem.column = 'left';
+        if (defaultItem.name === 'payment' || defaultItem.name === 'score') {
+            defaultItem.markFirstItem = true;
+        }
+        return defaultItem;
+    });
+}
+
 export function getItemsWithItemTemplate(): unknown[] {
     return defaultItems.map((item): object => {
         const defaultItem = object.clone(item);

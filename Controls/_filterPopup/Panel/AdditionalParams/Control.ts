@@ -27,6 +27,7 @@ export default class AdditionalParamsControl extends Control<IAdditionalRenderOp
     protected _template: TemplateFunction = template;
     protected _source: TAdditionalSource = null;
     protected _visibleItems: IFilterItem[] = null;
+    protected _additionalItems: IFilterItem[] = null;
     protected _columns: IAdditionalParamsColumns = null;
     protected _arrowVisible: boolean = false;
     protected _arrowExpanded: boolean = false;
@@ -48,19 +49,19 @@ export default class AdditionalParamsControl extends Control<IAdditionalRenderOp
         return columns.left.length > MAX_COLUMN_ITEMS || columns.right.length > MAX_COLUMN_ITEMS;
     }
 
-    private _getColumns(visibleItems: TAdditionalSource): IAdditionalParamsColumns {
-        const countColumnItems = factory(visibleItems).count() / 2;
+    private _getColumns(items: TAdditionalSource): IAdditionalParamsColumns {
+        const countColumnItems = items.length / 2;
         const columns = {
             right: [],
             left: []
         };
 
-        factory(visibleItems).each((item, index) => {
-            if (object.getPropertyValue(item, 'visibility') === false) {
+        factory(items).each((item) => {
+            if (object.getPropertyValue(item, 'visibility') !== undefined) {
                 if (columns.left.length < countColumnItems) {
-                    columns.left.push(index);
+                    columns.left.push(item.name);
                 } else {
-                    columns.right.push(index);
+                    columns.right.push(item.name);
                 }
             }
         });
@@ -68,33 +69,46 @@ export default class AdditionalParamsControl extends Control<IAdditionalRenderOp
         return columns;
     }
 
-    private _prepareColumns(visibleItems: IFilterItem[], columns: IAdditionalParamsColumns): void {
-        columns.right.forEach((index: number): void => {
-            visibleItems[index].column = 'right';
+    private _prepareColumns(items: IFilterItem[], columns: IAdditionalParamsColumns): void {
+        items.forEach((item: IFilterItem): void => {
+            if (columns.left.includes(item.name)) {
+                item.column = 'left';
+            } else {
+                item.column = 'right';
+            }
         });
-        columns.left.forEach((index: number) => {
-            visibleItems[index].column = 'left';
-        });
+    }
+
+    private _getAdditionalItems(items: TAdditionalSource): IFilterItem[] {
+        return factory(items).filter((item: IFilterItem) =>  {
+            return object.getPropertyValue(item, 'visibility') !== undefined;
+        }).value();
     }
 
     protected _beforeMount(options: IAdditionalRenderOptions): void {
         this._source = this._cloneItems(options.source);
-        this._visibleItems = this._getVisibleItems(this._source);
+        this._additionalItems = this._getAdditionalItems(this._source);
         if (!options.groupProperty) {
-            this._columns = this._getColumns(this._visibleItems);
-            this._prepareColumns(this._visibleItems, this._columns);
+            this._columns = this._getColumns(this._additionalItems);
+            this._prepareColumns(this._additionalItems, this._columns);
+            this._visibleItems = this._getVisibleItems(this._additionalItems);
             this._arrowVisible = this._getArrowVisible(this._columns);
+        } else {
+            this._visibleItems = this._getVisibleItems(this._source);
         }
     }
 
     protected _beforeUpdate(options: IAdditionalRenderOptions): void {
         if (this._options.source !== options.source) {
             this._source = this._cloneItems(options.source);
-            this._visibleItems = this._getVisibleItems(this._source);
+            this._additionalItems = this._getAdditionalItems(this._source);
             if (!options.groupProperty) {
-                this._columns = this._getColumns(this._visibleItems);
-                this._prepareColumns(this._visibleItems, this._columns);
+                this._columns = this._getColumns(this._additionalItems);
+                this._prepareColumns(this._additionalItems, this._columns);
+                this._visibleItems = this._getVisibleItems(this._additionalItems);
                 this._arrowVisible = this._getArrowVisible(this._columns);
+            } else {
+                this._visibleItems = this._getVisibleItems(this._source);
             }
         }
     }
@@ -124,7 +138,7 @@ export default class AdditionalParamsControl extends Control<IAdditionalRenderOp
     static _theme: string[] = ['Controls/filterPopup'];
     static getDefaultOptions(): object {
         return {
-            render: 'Controls/filterPopup:AdditionalParamsRender'
+            render: 'Controls/filterPopup:AdditionalPanelTemplate'
         };
     }
 }

@@ -27,9 +27,9 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
         return new Collection({
             keyProperty: options.keyProperty,
             collection: items,
-            group: (item): string => {
+            group: options.groupProperty ? (item): string => {
                 return item[options.groupProperty];
-            }
+            } : null
         });
     }
 

@@ -7,11 +7,11 @@
    margin-left: @extended_content_padding-left_filterPanel - @extended_heading_padding-left_filterPanel;
 }
 
-.controls-AdditionalParams_block-maxHeight {
+.controls-AdditionalParamsRender_block-maxHeight {
    overflow: hidden;
 }
 
-.controls-AdditionalParams_block-maxHeight_theme-@{themeName} {
+.controls-AdditionalParamsRender_block-maxHeight_theme-@{themeName} {
    max-height: @extended_max-height_filterPanel;
 }
 
@@ -47,6 +47,11 @@
    flex-shrink: 0;
 }
 
+.controls-AdditionalParamsRender__items-column {
+   display: flex;
+   flex-direction: column;
+}
+
 .controls-AdditionalParamsRender__items-rightColumn {
    margin-right: auto;
    width: 100%;
@@ -55,4 +60,8 @@
 
 .controls-AdditionalParamsRender__group_theme-@{themeName} {
    height: 40px;
+}
+
+.controls-AdditionalParamsRender-withGroup {
+   margin-top: -40px;
 }

@@ -1,6 +1,0 @@
-<div class="controlsDemo__wrapper">
-   <Controls.filterPopup:AdditionalParamsRender
-      keyProperty="name"
-      itemTemplateProperty="additionalTemplate"
-      source="{{_source}}"/>
-</div>
