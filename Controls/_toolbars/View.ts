@@ -60,13 +60,6 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @default ''
      */
     popupClassName: string;
-    /**
-     * @name Controls/_toolbars/IToolbarOptions#itemsSpacing
-     * @cfg {String} Размер расстояния между кнопками.
-     * @default medium
-     * @remark
-     * Размер расстояния задается константой из стандартного набора размеров, который определен для текущей темы оформления.
-     */
     itemsSpacing: TItemsSpacing;
     /**
      * @name Controls/_toolbars/View#additionalProperty
@@ -117,11 +110,6 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/Base/Index
- */
-
-/**
- * @name Controls/_toolbars/View#theme
- * @cfg {String} theme Название темы оформления. В зависимости от темы загружаются различные таблицы стилей и применяются различные стили к контролу.
  */
 
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate,
