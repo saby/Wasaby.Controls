@@ -13,6 +13,7 @@ import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownCo
 import {IStickyPopupOptions} from 'Controls/popup';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
+import {generateStates} from 'Controls/input';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
    placeholder?: string;
@@ -101,6 +102,7 @@ class ComboBox extends BaseDropdown {
          vertical: 'bottom'
       };
 
+      generateStates(this, options);
       this._controller = new Controller(this._getControllerOptions(options));
       return loadItems(this._controller, receivedState, options.source);
    }
