@@ -204,6 +204,23 @@ import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTempl
  *    </Controls.lookup:Input>
  * </pre>
  */
+
+/**
+ * @name Controls/_lookup/Lookup#items
+ * @cfg {Types/collection:RecordSet} Устанавливает значения без использования источника.
+ *
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       items="{{_items}}"
+ *       keyProperty="id"
+ *       searchParam="title"
+ *       multiSelect="{{true}}">
+ *    </Controls.lookup:Input>
+ * </pre>
+ */
+
 const MAX_VISIBLE_ITEMS = 20;
 let SHOW_SELECTOR_WIDTH = 0;
 let CLEAR_RECORDS_WIDTH = 0;
