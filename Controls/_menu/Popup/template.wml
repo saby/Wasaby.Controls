@@ -22,7 +22,8 @@
               on:headerClick="_headerClick()"
               on:footerClick="_footerClick()">
          <ws:bodyContentTemplate>
-            <div class="{{_options.headerTemplate && _verticalDirection === 'top' ? 'controls-Menu__popup-reverse'}} controls-Menu__popup-content">
+            <div class="{{_options.headerTemplate && _verticalDirection === 'top' ? 'controls-Menu__popup-reverse'}}
+             controls-Menu__popup-content controls-Menu__popup-content_theme-{{_options.theme}}">
                <ws:if data="{{_options.headerTemplate}}">
                   <ws:partial template="{{_options.headerTemplate}}"
                               iconSize="{{_options.iconSize}}"

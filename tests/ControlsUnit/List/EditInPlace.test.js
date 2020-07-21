@@ -142,6 +142,7 @@ define([
             notify: () => undefined,
             forceUpdate: () => undefined,
             source: source,
+            updateMarkedKey: () => undefined,
             updateItemActions: () => undefined,
             multiSelectVisibility: false,
             notify: () => undefined,
@@ -442,16 +443,23 @@ define([
                source: source
             });
 
+            let updateMarkedKeyCalled = false;
+            eip._options.updateMarkedKey = (key) => {
+               updateMarkedKeyCalled = true;
+            };
+
             eip._options.notify = function(event, args) {
                if (event === 'afterBeginEdit') {
                   assert.equal(eip._editingItem, args[0]);
                   assert.isTrue(args[1]);
-                  done();
                }
             };
 
             eip.beginAdd({
                item: newItem
+            }).then(() => {
+               assert.isTrue(updateMarkedKeyCalled);
+               done()
             });
          });
 
@@ -1047,7 +1055,6 @@ define([
                      if (event === 'afterEndEdit') {
                         assert.equal(editingItem, args[0]);
                         assert.isTrue(args[1]);
-                        assert.equal(listViewModel.getMarkedKey(), 4);
                         assert.isNull(listViewModel.getEditingItemData());
                         done();
                      }

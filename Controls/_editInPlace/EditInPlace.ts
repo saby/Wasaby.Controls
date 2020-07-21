@@ -31,6 +31,7 @@ const _private = {
         if (!isAdd) {
             self._originalItem = options.item;
         }
+
         return _private.processBeforeBeginEditResult(self, options, result, isAdd);
     },
 
@@ -40,6 +41,13 @@ const _private = {
         self._setEditingItemData(self._editingItem);
         self._notify('afterBeginEdit', [self._editingItem, isAdd]);
         self._options.updateItemActions();
+
+        // При редактировании по месту маркер появляется только если в списке больше одной записи.
+        // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
+        if (self._options.listViewModel.getCount() > 1) {
+            self._options.updateMarkedKey(self._editingItem.getKey());
+        }
+
         return options;
     },
 
@@ -135,13 +143,6 @@ const _private = {
 
     afterEndEdit(self: EditInPlace, commit: boolean): void {
         const afterEndEditArgs = [self._isAdd ? self._editingItem : self._originalItem, self._isAdd];
-
-        // При редактировании по месту маркер появляется только если в списке больше одной записи.
-        // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-        if (self._isAdd && commit && self._options.listViewModel.getCount() > 1) {
-            // TODO переделать на marker.Controller, когда этот контрол будет переводиться в контроллер
-            self._options.listViewModel.setMarkedKey(self._editingItem.getId());
-        }
         if (self._options.useNewModel) {
             self._options.listViewModel.getCollection().acceptChanges();
         } else {
@@ -398,7 +399,6 @@ const _private = {
         *   поэтому рисуем его над первой группой в Controls/_list/resources/For.wml:47
         *
         *   При добавлении в конец индекс будет на один больше последнего элемента списка / группы.
-        *   Controls/_list/resources/ItemOutput.wml:31
         *   TODO: Возможно, стоит всегда выставлять индекс записи рядом с которой выводим добавляемую запись, а,
         *    над или под ней выводить, решать через editingConfig.addPosition
         * */
@@ -440,6 +440,7 @@ export interface IEditingOptions {
     notify?: any;
     forceUpdate?: Function;
     listView?: any;
+    updateMarkedKey: Function;
     updateItemActions: Function;
     isDestroyed: Function;
     theme: String;
@@ -817,6 +818,7 @@ export default class EditInPlace {
             } else {
                 editingItemProjection = listViewModel._prepareDisplayItemForAdd(item);
             }
+            editingItemProjection.setEditing(true);
         }
 
         listViewModel.setEditing(true);
@@ -824,7 +826,7 @@ export default class EditInPlace {
             displayLib.EditInPlaceController.beginEdit(listViewModel, item.getId(), item);
         } else {
             this._editingItemData = listViewModel.getItemDataByItem(editingItemProjection);
-            this._editingItemData.isEditing = true;
+            editingItemProjection.setEditing(true, item, true);
             // TODO Make sure all of this is available in the new model
             if (this._isAdd && _private.hasParentInItems(this._editingItem, listViewModel)) {
                 this._editingItemData.level = listViewModel.getItemById(

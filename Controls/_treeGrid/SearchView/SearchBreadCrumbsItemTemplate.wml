@@ -8,15 +8,14 @@
             attr:class="{{ itemData.shouldHideColumnSeparator(colspan, isColumnScrollVisible) ? 'controls-Grid__row__searchBreadCrumbs_withoutColumnSeparator' }}"
             attr:key="{{ itemData.key }}__breadcrumbs">
     <ws:colspanTemplate>
-        <!-- Сюда нельзя прокидывать _options.backgroundStyle, т.к. будет неправильный фон у спозиционированных absolute/fixed эл-в -->
         <Controls.Container.Async templateName="Controls/breadcrumbs:Path">
             <ws:partial template="{{ content.resolvedTemplate }}"
                         items="{{colspanTemplate.itemData.item}}"
-                        backgroundStyle="{{_options.style}}"
+                        backgroundStyle="{{_options.backgroundStyle}}"
                         attr:class="controls-Grid__breadCrumbs"
                         breadCrumbsItemClickCallback="{{ itemData.breadcrumbsItemClickCallback }}"
                         keyProperty="{{itemData.keyProperty}}"
-                        displayProperty="{{itemData.displayProperty}}">
+                        displayProperty="{{itemData.breadCrumbsDisplayProperty}}">
                 <ws:itemTemplate>
                     <ws:partial template="{{itemData.searchBreadCrumbsItemContent}}">
                         <ws:contentTemplate>
