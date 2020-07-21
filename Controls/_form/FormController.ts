@@ -190,16 +190,16 @@ class FormController extends Control<IFormController, IReceivedState> {
         this._crudController = new CrudController(this._source, this._notifyHandler.bind(this),
             this.registerPendingNotifier.bind(this), this.indicatorNotifier.bind(this));
         if (options.dataSource) {
-            Logger.warn('FormController: Use option "source" instead of "dataSource"', this);
+            Logger.error('FormController: Use option "source" instead of "dataSource"', this);
         }
         if (options.initValues) {
-            Logger.warn('FormController: Use option "createMetaData" instead of "initValues"', this);
+            Logger.error('FormController: Use option "createMetaData" instead of "initValues"', this);
         }
         if (options.destroyMeta) {
-            Logger.warn('FormController: Use option "destroyMetaData " instead of "destroyMeta"', this);
+            Logger.error('FormController: Use option "destroyMetaData " instead of "destroyMeta"', this);
         }
         if (options.idProperty) {
-            Logger.warn('FormController: Use option "keyProperty " instead of "idProperty"', this);
+            Logger.error('FormController: Use option "keyProperty " instead of "idProperty"', this);
         }
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
