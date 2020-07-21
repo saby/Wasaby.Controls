@@ -269,7 +269,7 @@ export interface IItemAction {
  * @private
  * @author Аверкиев П.А.
  */
-interface IShownItemAction extends IItemAction {
+export interface IShownItemAction extends IItemAction {
     /**
      * Показывать текст операции
      */
