@@ -9,7 +9,6 @@ import {
 } from 'Types/entity';
 import GridCollectionItem from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
-import { register } from 'Types/di';
 
 export interface IColumnConfig {
     template: TemplateFunction|string;
@@ -169,4 +168,3 @@ Object.assign(GridColumn.prototype, {
     _$column: null
 });
 
-register('Controls/display:GridColumn', GridColumn, {instantiate: false});
