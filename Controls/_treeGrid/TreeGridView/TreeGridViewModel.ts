@@ -137,12 +137,12 @@ var
                     }
                     return this.getHasMoreData() || count > 1;
                 } else {
-                    let parentId = null;
+                    let parentId = parent;
                     if ((parent && parent['[Types/_entity/Record]'])) {
                         parentId = parent.get(parentProperty);
                     }
-                    this.getItems().getIndicesByValue(parentProperty, parentId);
-                    return this.getHasMoreData() || this.getItems().getIndicesByValue(parentProperty, parentId).length > 1;
+                    let item = this.getItems().getIndicesByValue(parentProperty, parentId);
+                    return this.getHasMoreData() || item.length > 1;
                 }
             }
         },
