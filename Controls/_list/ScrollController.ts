@@ -8,14 +8,16 @@ import {
     IPlaceholders,
     IRange,
     IDirection,
-    ITriggerState
+    ITriggerState,
+    IContainerHeights,
+    IScrollRestoreParams
 } from './ScrollContainer/interfaces';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {throttle} from 'Types/function';
 import {VirtualScrollHideController, VirtualScrollController} from 'Controls/display';
+import { getElementByKey } from 'Controls/_list/ScrollContainer/GetHeights';
 
-const SCROLLMOVE_DELAY = 150;
 
 export interface IScrollParams {
     clientHeight: number;
@@ -28,7 +30,7 @@ export interface IScrollParams {
 interface ICompatibilityOptions {
     useNewModel: boolean;
 }
-
+type TRecalcToDirectionResult = 'INDICATOR_UP' | 'INDICATOR_DOWN' | 'LOAD_MORE';
 export interface IOptions extends IControlOptions, ICompatibilityOptions {
     virtualScrollConfig: {
         pageSize?: number;
@@ -68,16 +70,15 @@ export default class ScrollController {
             down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
         };
     }
+
     private _container: HTMLElement;
     private _virtualScroll: VirtualScroll;
-    private _itemsContainerGetter: Function;
 
     private _viewHeight: number = 0;
     private _viewportHeight: number = 0;
     private _triggerOffset: number = 0;
     private _lastScrollTop: number = 0;
 
-    private _updateShadowModeAfterMount: Function|null = null;
     private _triggerVisibility: ITriggerState = {up: false, down: false};
 
     private _restoreScrollResolve: Function;
@@ -101,13 +102,7 @@ export default class ScrollController {
     private _callbacks: any;
 
     private _throttledPositionChanged: Function = throttle((params) => {
-        if (this._virtualScroll) {
-            const rangeShiftResult = this._virtualScroll.shiftRangeToScrollPosition(params.scrollTop);
-            this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
-            this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
-                this._options.needScrollCalculation);
-            this.doAfterRender(params.applyScrollTopCallback);
-        }
+        
     }, SCROLLMOVE_DELAY, true);
 
     constructor(options: any) {
@@ -120,20 +115,28 @@ export default class ScrollController {
     }
 
 
-    afterMount(container: HTMLElement, ): void {
+    afterMount(container: HTMLElement): void {
         this._isMounted = true;
         this._setContainer(container);
         if (this._container) {
-            this._viewResize(this._container.offsetHeight, false);
             this._afterRenderHandler();
-            if (this._updateShadowModeAfterMount) {
-                this._updateShadowModeAfterMount();
-                this._updateShadowModeAfterMount = null;
-            }
         }
     }
-
-    update(options: IOptions): void {
+    update(params: Partial<IScrollParams>): void {
+        if (this._virtualScroll) {
+            let newParams: Partial<IContainerHeights> = {trigger: this._triggerOffset};
+            if (params.clientHeight) {
+                newParams.viewport = params.clientHeight;
+                this._viewportHeight = params.clientHeight;
+            }
+            if (params.scrollHeight) {
+                newParams.scroll = params.scrollHeight;
+                this._viewHeight = params.scrollHeight;
+            }
+            this._virtualScroll.applyContainerHeightsData(newParams);
+        }
+    }
+    updateOptions(options: IOptions): void {
         if (options.collection && this._options.collection !== options.collection) {
             if (options.needScrollCalculation) {
                 this._initModelObserving(options);
@@ -152,37 +155,17 @@ export default class ScrollController {
         this._isRendering = true;
     }
 
-    saveScrollPosition(): void {
-        if (this._virtualScroll && this._virtualScroll.isNeedToRestorePosition) {
-            this._notify('saveScrollPosition', [], {bubbling: true});
-        }
+    needToSaveAndRestoreScrollPosition(): boolean {
+        return !!(this._virtualScroll && this._virtualScroll.isNeedToRestorePosition);
     }
 
-    afterRender(correctingHeight: number = 0): boolean {
+    afterRender(): boolean {
         this._isRendering = false;
-        return this._afterRenderHandler(correctingHeight);
+        return this._afterRenderHandler();
     }
 
     reset(): void {
         
-    }
-
-    itemsContainerReady(itemsContainerGetter: Function): void {
-        this._itemsContainerGetter = itemsContainerGetter;
-    }
-
-    viewResize(container: HTMLElement): void {
-        this._setContainer(container);
-        this._viewResize(this._container.offsetHeight);
-        // TODO Совместимость необходимо удалить после переписывания baseControl
-        this._notify('viewResize');
-    }
-
-
-    private __getItemsContainer(): HTMLElement {
-        if (this._itemsContainerGetter) {
-            return this._itemsContainerGetter();
-        }
     }
 
     /**
@@ -193,30 +176,16 @@ export default class ScrollController {
      * @remark Функция подскролливает к записи, если это возможно, в противном случае вызовется перестроение
      * от элемента
      */
-    scrollToItem(key: string | number, toBottom: boolean = true, force: boolean = false): Promise<void> {
+    scrollToItem(key: string | number, toBottom: boolean = true, force: boolean = false, scrollCallback): Promise<void> {
         const index = this._options.collection.getIndexByKey(key);
 
         if (index !== -1) {
             return new Promise((resolve) => {
-                const scrollCallback = () => {
-                    // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
-                    // логического родителя, который отрисовывает все элементы
-                    // https://online.sbis.ru/opendoc.html?guid=942e1a1d-15ee-492e-b763-0a52d091a05e
-                    const itemsContainer = this.__getItemsContainer();
-                    const itemContainer = this._virtualScroll?.getItemContainerByIndex(index, itemsContainer);
-
-                    if (itemContainer) {
-                        this._fakeScroll = true;
-                        this._notify('scrollToElement', [{
-                            itemContainer, toBottom, force
-                        }], {bubbling: true});
-                    }
-
-                    resolve();
-                };
 
                 if (this._virtualScroll && this._virtualScroll.canScrollToItem(index, toBottom, force)) {
-                    scrollCallback();
+                    this._fakeScroll = true;
+                    scrollCallback(index);
+                    resolve();
                 } else if (force) {
                     this._inertialScrolling.callAfterScrollStopped(() => {
                         if (this._virtualScroll && this._virtualScroll.rangeChanged) {
@@ -225,7 +194,7 @@ export default class ScrollController {
                             // Для этого используем _scrollToItemAfterRender.
                             // https://online.sbis.ru/opendoc.html?guid=2a97761f-e25a-4a10-9735-ded67e36e527
                             this.doAfterRender(() => {
-                                this.scrollToItem(key, toBottom, force).then(resolve);
+                                this.scrollToItem(key, toBottom, force, scrollCallback).then(resolve);
                             });
                         } else {
                             this.doAfterRender(() => {
@@ -244,7 +213,11 @@ export default class ScrollController {
 
                                     // Скролл нужно восстанавливать после отрисовки, для этого используем
                                     // _restoreScrollResolve
-                                    this._restoreScrollResolve = scrollCallback;
+                                    this._restoreScrollResolve = () => {
+                                        this._fakeScroll = true;
+                                        scrollCallback(index);
+                                        resolve();
+                                    }
                                 }
                             });
                         }
@@ -270,7 +243,7 @@ export default class ScrollController {
         }
     }
 
-    private _initVirtualScroll(options: IOptions, count?: number): void {
+    private _initVirtualScroll(options: IOptions, count?: number): IPlaceholders {
         const virtualScrollConfig = options.virtualScrollConfig || {};
         if (options.collection && (
             !virtualScrollConfig.pageSize ||
@@ -312,7 +285,6 @@ export default class ScrollController {
                 count === undefined ?  options.collection.getCount() : count,
                 itemsHeights
             );
-            this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
             this._setCollectionIndices(
                 options.collection,
                 rangeShiftResult.range,
@@ -325,6 +297,7 @@ export default class ScrollController {
                     this.scrollToItem(options.activeElement, false, true);
                 };
             }
+            return rangeShiftResult.placeholders;
         }
     }
 
@@ -369,22 +342,14 @@ export default class ScrollController {
      * @param triggerName
      * @param triggerVisible
      */
-    triggerVisibilityChanged(triggerName: IDirection, triggerVisible: boolean, params: IScrollParams): void | 'LOAD_MORE' {
-        if (!this._afterRenderCallbacks) {
-            this.viewportResize(params.clientHeight, false);
-
-            if (triggerVisible) {
-                return this.recalcToDirection(triggerName);
-            }
-        }
-
+    triggerVisibilityChanged(triggerName: IDirection, triggerVisible: boolean): void {
         this._triggerVisibility[triggerName] = triggerVisible;
     }
 
     /**
      * Обработчик на событие скролла
      */
-    scrollPositionChanged(params: IScrollParams): void {
+    scrollPositionChanged(params: IScrollParams): string | number {
         this._lastScrollTop = params.scrollTop;
 
         if (detection.isMobileIOS) {
@@ -393,8 +358,6 @@ export default class ScrollController {
 
         if (this._fakeScroll) {
             this._fakeScroll = false;
-        } else if (this._viewHeight !== this._container.offsetHeight) {
-            this._viewResize(this._container.offsetHeight);
         } else if (!this._restoreScrollResolve && this._virtualScroll && !this._virtualScroll.rangeChanged) {
             const activeIndex = this._virtualScroll.getActiveElementIndex(this._lastScrollTop);
 
@@ -402,7 +365,7 @@ export default class ScrollController {
                 const activeElement = this._options.collection.at(activeIndex).getUid();
 
                 if (activeElement !== this._options.activeElement) {
-                    this._notify('activeElementChanged', [activeElement]);
+                    return activeElement;
                 }
             }
         }
@@ -413,28 +376,14 @@ export default class ScrollController {
      * @param params
      * @private
      */
-    scrollBarPositionChanged(params: IScrollParams): void {
-        this._throttledPositionChanged(params);
-    }
-
-    private _viewResize(viewSize: number, updateItemsHeights: boolean = true): void {
-        this._viewHeight = viewSize;
-        const itemsContainer = this.__getItemsContainer();
-        this._virtualScroll?.resizeView(
-            this._viewHeight,
-            this._triggerOffset,
-            updateItemsHeights ? itemsContainer : undefined
-        );
-    }
-
-    viewportResize(viewportSize: number, updateItemsHeights: boolean = true): void {
-        this._viewportHeight = viewportSize;
-        const itemsContainer = this.__getItemsContainer();
-        this._virtualScroll?.resizeViewport(
-            this._viewportHeight,
-            this._triggerOffset,
-            updateItemsHeights ? itemsContainer : undefined
-        );
+    scrollBarPositionChanged(params: IScrollParams): IPlaceholders {
+        if (this._virtualScroll) {
+            const rangeShiftResult = this._virtualScroll.shiftRangeToScrollPosition(params.scrollTop);
+            this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
+                this._options.needScrollCalculation);
+            this.doAfterRender(params.applyScrollTopCallback);
+            return rangeShiftResult.placeholders;
+        }
     }
 
     /**
@@ -442,7 +391,7 @@ export default class ScrollController {
      * @param direction
      * @private
      */
-    recalcToDirection(direction: IDirection): void | 'LOAD_MORE' {
+    recalcToDirection(direction: IDirection): TRecalcToDirectionResult {
         if (
             !this._virtualScroll ||
             this._virtualScroll &&
@@ -453,37 +402,33 @@ export default class ScrollController {
         ) {
             return 'LOAD_MORE';
         } else {
-            this._inertialScrolling.callAfterScrollStopped(() => {
-                if (this._virtualScroll && !this._virtualScroll.rangeChanged) {
+            if (this._virtualScroll && !this._virtualScroll.rangeChanged) {
+                this._inertialScrolling.callAfterScrollStopped(() => {
                     const rangeShiftResult = this._virtualScroll.shiftRange(direction);
                     this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
                     this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                         this._options.needScrollCalculation);
                     this._indicatorState = direction;
-                }
-            });
+                });
+                return direction === 'up' ? 'INDICATOR_UP' : 'INDICATOR_DOWN';
+            }
         }
     }
     getIndicatorState(): IDirection {
         return this._indicatorState;
     }
-    private _afterRenderHandler(correctingHeight: number = 0): boolean {
-        if (this._virtualScroll && this._virtualScroll.rangeChanged) {
-            this._viewResize(this._container.offsetHeight, false);
-            const itemsContainer = this.__getItemsContainer();
-            this._virtualScroll.updateItemsHeights(itemsContainer);
-        }
-
-        if (this._indicatorState) {
-            this._indicatorState = null;
-        }
+    
+    updateItemsHeights(itemsHeights: IItemsHeights) {
+        this._virtualScroll.updateItemsHeights(itemsHeights);
+    }
+    needSetItemsHeights(): boolean {
+        return !!(this._virtualScroll && this._virtualScroll.rangeChanged);
+    }
+    
+    private _afterRenderHandler(): boolean {
         
         let needCheckTriggers = false;
-        if (this._virtualScroll && this._virtualScroll.isNeedToRestorePosition) {
-            this._restoreScrollPosition(correctingHeight);
-            this._restoreScrollResolve = null;
-            needCheckTriggers = true;
-        } else if (this._restoreScrollResolve) {
+        if (this._restoreScrollResolve) {
             this._restoreScrollResolve();
             this._restoreScrollResolve = null;
 
@@ -518,18 +463,14 @@ export default class ScrollController {
     }
 
     /**
-     * Нотифицирует скролл контейнеру о том, что нужно восстановить скролл
+     * Получает параметры для восстановления скролла
      */
-    private _restoreScrollPosition(correctingHeight: number = 0): void {
-        if (this._virtualScroll) {
-            const {direction, heightDifference} = this._virtualScroll.getParamsToRestoreScroll();
-            this._fakeScroll = true;
-            this._notify('restoreScrollPosition', [heightDifference, direction, correctingHeight], {bubbling: true});
-            this._fakeScroll = false;
-        }
+    getParamsToRestoreScroll(): IScrollRestoreParams {
+        return  this._virtualScroll.getParamsToRestoreScroll();
     }
 
-    setIndicesAfterCollectionChange(){
+    //TODO: Проверить актуальность костыля
+    private setIndicesAfterCollectionChange() {
         
             // TODO Уберется после https://online.sbis.ru/opendoc.html?guid=5ebdec7d-e95e-438d-94f8-079a17b323c6
             // На данный момент индексы в модели проставляются в двух местах: здесь и на уровне модели
@@ -553,7 +494,7 @@ export default class ScrollController {
      * @param direction направление добавления
      * @private
      */
-    addItems(addIndex: number, items: object[], direction?: IDirection): void {
+    addItems(addIndex: number, items: object[], direction?: IDirection): IPlaceholders {
         if (!this._virtualScroll) {
             this._initVirtualScroll(
                 {...this._options, forceInitVirtualScroll: true},
@@ -561,24 +502,19 @@ export default class ScrollController {
             );
         }
         
-        const rangeShiftResult = this._virtualScroll.insertItems(
+        const rangeShiftResult = this._virtualScroll.addItems(
             addIndex,
             items.length,
             this._triggerVisibility,
             direction
         );
-        this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
+        
         this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
             this._options.needScrollCalculation);
-        
+        this.setIndicesAfterCollectionChange();
+        return rangeShiftResult.placeholders;
     }
-    resetItems(): void {
-        this._initVirtualScroll(this._options);
-    }
-    _notify(eventName: string, args?: any[], options?: { bubbling?: boolean }): any {
-        this._options.notify(eventName, args, options);
-    }
-
+    
     /**
      * Обрабатывает удаление элементов из коллекции
      * @param removeIndex
@@ -586,18 +522,32 @@ export default class ScrollController {
      * @param forcedShift
      * @private
      */
-    removeItems(removeIndex: number, items: object[], forcedShift: boolean): void {
+    removeItems(removeIndex: number, items: object[], forcedShift: boolean): IPlaceholders {
         if (this._virtualScroll) {
             const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length, forcedShift);
-            this._notifyPlaceholdersChanged(rangeShiftResult.placeholders);
             this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                 this._options.needScrollCalculation);
+            this.setIndicesAfterCollectionChange();
+            return rangeShiftResult.placeholders;
         }
     }
 
-    private _notifyPlaceholdersChanged(placeholders: IPlaceholders): void {
-        this._placeholders = placeholders;
+    resetItems(): IPlaceholders {
+        let placeholders = this._initVirtualScroll(this._options);
+        this.setIndicesAfterCollectionChange();
+        return placeholders;
+    }
 
+    // TODO см. _notifyPlaceholdersChanged
+    _notify(eventName: string, args?: any[], options?: { bubbling?: boolean }): any {
+        this._options.notify(eventName, args, options);
+    }
+
+    // TODO
+    // Не получается преобразовать вызовы этого метода в вызовы из BaseControl'а методов, возвращающих значения.
+    // Там, где это возможно, заменил на возврат значения placeholders. 
+    // Остались места, где этот метод вызывается в асинхронном порядке.
+    private _notifyPlaceholdersChanged(placeholders: IPlaceholders): void {
         if (this._isMounted) {
             this._notify('updatePlaceholdersSize', [placeholders], {bubbling: true});
         }
@@ -631,8 +581,8 @@ export default class ScrollController {
         }
     }
 
-    
-
+    // TODO: из-за ошибки, что intersectionObserver не всегда вовремя сообщает актуальное состояние, 
+    // приходится самим иногда понимать, виден ли триггер. Для этого нужен container.
     private _setContainer(container: HTMLElement) {
         let scrollContainer = container.getElementsByClassName('controls-ScrollController');
         this._container = <HTMLElement>scrollContainer[0];
