@@ -6861,8 +6861,8 @@ define([
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
             });
 
-            it('not should marker, needSetMarkerCallback return false', async function() {
-               baseControlOptions.needSetMarkerCallback = () => false;
+            it('not should marker, _needSetMarkerCallback return false', async function() {
+               baseControlOptions._needSetMarkerCallback = () => false;
                await mountBaseControl(baseControl, baseControlOptions);
 
                const originalEvent = {target: {}};
