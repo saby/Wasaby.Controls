@@ -2354,6 +2354,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _loadingIndicatorState: null,
     _loadingIndicatorTimer: null,
 
+    _isLoadIndicatorUp: false,
+    _isLoadIndicatorDown: false,
+
     _pagingCfg: null,
     _pagingVisible: false,
     _actualPagingVisible: false,
@@ -2710,10 +2713,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     changeIndicatorStateHandler(state: boolean, indicatorName: 'top' | 'bottom'): void {
+        indicatorName = indicatorName.slice(0, 1).toUpperCase() + indicatorName.slice(1);
         if (state) {
-            this._children[`${indicatorName}LoadingIndicator`].style.display = '';
+            this[`_isLoadIndicator${indicatorName}`] = true;
         } else {
-            this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
+            this[`_isLoadIndicator${indicatorName}`] = false;
         }
     },
 
