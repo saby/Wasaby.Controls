@@ -252,6 +252,28 @@ define([
 
       });
 
+      it('Result from options', function () {
+         var metaData = {
+            results: ['results']
+         };
+         var rs1 = new collection.RecordSet({
+            rawData: data,
+            idProperty: 'id'
+         });
+         rs1.setMetaData(metaData);
+
+         var cfg1 = {
+            items: rs1,
+            keyProperty: 'id',
+            displayProperty: 'title'
+         };
+
+         var iv = new list.ItemsViewModel(cfg1);
+
+         assert.deepEqual(['results'], iv.getMetaResults(), 'Incorrect meta results after constructor');
+
+      });
+
       it('Append', function () {
          var metaData = {
             hasMore: true
