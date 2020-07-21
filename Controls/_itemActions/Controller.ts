@@ -519,7 +519,7 @@ export class Controller {
      * @param actions
      * @private
      */
-    private _addEditArrow(actions: IItemAction[]) {
+    private _addEditArrow(actions: IItemAction[]): void {
         if (!actions.find((action) => action.id === 'view')) {
             actions.unshift(this._fixShownActionOptions(this._editArrowAction));
         }
