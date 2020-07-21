@@ -58,7 +58,7 @@
                     isFullGridSupport="{{ _isFullGridSupport }}"
                     containerSize="{{ _containerSize }}"
                     hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"
-                    hasColumnScroll="{{ _options.columnScroll }}"/>
+                    hasColumnScroll="{{ _isColumnScrollVisible }}"/>
     </ws:if>
 
     <!-- Результаты снизу -->

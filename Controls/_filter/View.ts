@@ -635,8 +635,14 @@ var _private = {
 
     _loadDependencies: function(): Promise<unknown> {
         try {
+            const detailPanelTemplateName = this._options.detailPanelTemplateName;
+
             if (!this._loadOperationsPanelPromise) {
-                this._loadOperationsPanelPromise = import('Controls/filterPopup');
+                this._loadOperationsPanelPromise = Promise.all([
+                   import('Controls/filterPopup'),
+                    (typeof detailPanelTemplateName === 'string') ?
+                       import(detailPanelTemplateName) : null
+                ]);
             }
             return this._loadOperationsPanelPromise;
         } catch (e) {

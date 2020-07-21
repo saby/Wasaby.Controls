@@ -87,8 +87,8 @@ var ItemsViewModel = BaseViewModel.extend({
             }
             this._items = cfg.items;
             this._updateSubscriptionOnMetaChange(null, cfg.items);
-            this._updateResults(this._items);
             this._display = this._prepareDisplay(cfg.items, this._options);
+            this._updateResults(this._items);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
         }
     },
