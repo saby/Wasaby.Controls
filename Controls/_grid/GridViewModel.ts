@@ -140,7 +140,7 @@ var
                 return classLists;
             }
             const arrayLengthOffset = params.hasActionCell ? 2 : 1;
-            const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side]}` : '';
+            const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side].toLowerCase()}` : '';
 
             // Колонки
             if (params.hasMultiSelect ? params.columnIndex > 1 : params.columnIndex > 0) {
@@ -198,7 +198,7 @@ var
                 const { cellPadding } = (params.columns && params.columns[params.columnIndex]) || {};
                 result = (cellPadding && cellPadding[side]) || '';
             }
-            return !!result ? `_${result}` : '';
+            return !!result ? `_${result.toLowerCase()}` : '';
         },
 
         getPaddingHeaderCellClasses: function(params, theme) {
