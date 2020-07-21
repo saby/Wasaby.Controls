@@ -8,6 +8,8 @@ import {
 } from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil';
 import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
 
+import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from 'Controls/_grid/resources/ColumnScroll';
+
 function isLastColumn(
    itemData: object,
    colspan: boolean
@@ -239,9 +241,14 @@ var
                         if (index === self._options.columns.length - 1) {
                             classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
                         }
+
+                        if (self._options.columnScroll && (index < self._options.stickyColumnsCount)) {
+                            classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
+                        }
                     } else {
                         classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
                         classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
+                        classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
                     }
 
                     return classes;
