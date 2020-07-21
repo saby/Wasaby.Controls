@@ -35,10 +35,8 @@ define('Controls-demo/DragNDrop/Grid', [
             title: 'Additional'
          }];
       },
-      _dragStart: function(event, items) {
-         return new ListEntity({
-            items: items
-         });
+      _dragStart: function(event, items, draggedKey) {
+         return draggedKey !== 0;
       },
       _dragEnd: function(event, entity, target, position) {
          this._children.listMover.moveItems(entity.getItems(), target, position);
