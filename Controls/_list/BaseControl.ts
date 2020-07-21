@@ -500,6 +500,9 @@ const _private = {
     },
     keyDownEnd(self, event) {
         _private.setMarkerAfterScroll(self, event);
+        if (self._options.navigation.viewConfig.showEndButton) {
+            _private.scrollToEdge(self, 'down');
+        }
     },
     keyDownPageUp(self, event) {
         _private.setMarkerAfterScroll(self, event);
