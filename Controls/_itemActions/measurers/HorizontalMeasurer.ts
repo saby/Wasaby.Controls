@@ -3,7 +3,7 @@ import { ISwipeConfig } from 'Controls/display';
 import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
 import { IMeasurer } from '../interface/IMeasurer';
-import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemActions';
+import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemAction';
 import { MeasurerUtils } from './MeasurerUtils';
 import { ISwipeActionTemplateConfig } from '../interface/ISwipeActionTemplateConfig';
 

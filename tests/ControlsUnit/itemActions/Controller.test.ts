@@ -6,14 +6,17 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {ANIMATION_STATE, Collection, CollectionItem, ISwipeConfig} from 'Controls/display';
 import {IOptions as ICollectionOptions} from 'Controls/_display/Collection';
 
-import {Controller as ItemActionsController, IItemActionsControllerOptions} from 'Controls/_itemActions/Controller';
 import {
-    IItemAction,
+    Controller as ItemActionsController,
     IItemActionsCollection,
     IItemActionsItem,
+    IControllerOptions
+} from 'Controls/_itemActions/Controller';
+import {
+    IItemAction,
     TActionDisplayMode,
     TItemActionShowType
-} from 'Controls/_itemActions/interface/IItemActions';
+} from 'Controls/_itemActions/interface/IItemAction';
 import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
@@ -195,7 +198,7 @@ describe('Controls/_itemActions/Controller', () => {
         return new Collection<Record>(collectionConfig);
     }
 
-    function initializeControllerOptions(options?: IItemActionsControllerOptions): IItemActionsControllerOptions {
+    function initializeControllerOptions(options?: IControllerOptions): IControllerOptions {
         return {
             collection: options ? options.collection : null,
             itemActions: options ? options.itemActions : null,

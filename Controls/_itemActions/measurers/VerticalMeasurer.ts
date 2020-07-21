@@ -2,7 +2,7 @@ import rk = require('i18n!Controls');
 import { ISwipeConfig  } from 'Controls/display';
 
 import { IMeasurer } from '../interface/IMeasurer';
-import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemActions';
+import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemAction';
 import { MeasurerUtils } from './MeasurerUtils';
 
 const breakpoints: Record<
