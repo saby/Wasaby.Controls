@@ -3,7 +3,7 @@ import { stub, SinonStub } from 'sinon';
 
 import * as rk from 'i18n!ControlsUnit';
 
-import { IItemAction } from 'Controls/_itemActions/interface/IItemActions';
+import { IItemAction } from 'Controls/_itemActions/interface/IItemAction';
 import { horizontalMeasurer } from 'Controls/_itemActions/measurers/HorizontalMeasurer';
 import * as DOMUtil from 'Controls/Utils/DOMUtil';
 

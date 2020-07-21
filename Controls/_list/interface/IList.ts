@@ -225,7 +225,7 @@ export interface IList {
  * @name Controls/_list/interface/IList#itemActions
  * @cfg {Array.<Controls/itemActions:IItemAction>} Конфигурация опций записи.
  * @remark
- * См. {@link Controls/_itemActions/interface/IItemAction IItemAction}
+ * См. {@link Controls/itemActions:IItemAction IItemAction}
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">демо-пример</a>.
  * Для корректной работы опций записи для контрола нужно задать значение в опции {@link Controls/list:View keyProperty}.
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
@@ -239,7 +239,7 @@ export interface IList {
 
 /*ENG
  * @name Controls/_list/interface/IList#itemActions
- * @cfg {Array.<ItemAction>} Array of configuration objects for buttons which will be shown when the user hovers over an item.
+ * @cfg {Array.<Controls/itemActions:IItemAction>} Array of configuration objects for buttons which will be shown when the user hovers over an item.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Example</a>.
  */
 

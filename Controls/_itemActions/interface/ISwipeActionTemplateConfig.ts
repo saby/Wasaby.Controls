@@ -1,4 +1,4 @@
-import {TActionCaptionPosition} from './IItemActions';
+import {TActionCaptionPosition} from './IItemAction';
 
 export interface ISwipeActionTemplateConfig {
     theme: string;

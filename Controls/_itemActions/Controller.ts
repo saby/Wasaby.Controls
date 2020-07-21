@@ -17,7 +17,7 @@ import {
     TActionCaptionPosition,
     TEditArrowVisibilityCallback,
     TActionDisplayMode, TMenuButtonVisibility
-} from './interface/IItemActions';
+} from './interface/IItemAction';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
 import { Utils } from './Utils';
@@ -65,7 +65,12 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
     isEditing(): boolean;
 }
 
-export interface IItemActionsControllerOptions {
+/**
+ * @interface Controls/_itemActions/IControllerOptions
+ * @public
+ * @author Аверкиев П.А.
+ */
+export interface IControllerOptions {
     /**
      * Коллекция элементов, содержащих операции с записью
      */
@@ -140,6 +145,7 @@ export interface IItemActionsControllerOptions {
 /**
  * Контроллер, управляющий состоянием ItemActions в коллекции
  * @class Controls/_itemActions/Controller
+ * @public
  * @author Аверкиев П.А
  */
 export class Controller {
@@ -173,7 +179,7 @@ export class Controller {
      *  необходимо будет вычистить return методов update() и _updateItemActions(). Эти методы будут void
      * @param options
      */
-    update(options: IItemActionsControllerOptions): Array<number | string> {
+    update(options: IControllerOptions): Array<number | string> {
         let result: Array<number | string> = [];
         this._theme = options.theme;
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
@@ -181,7 +187,7 @@ export class Controller {
         this._contextMenuConfig = options.contextMenuConfig;
         this._iconSize = options.iconSize || DEFAULT_ACTION_SIZE;
         this._actionsAlignment = options.actionAlignment || DEFAULT_ACTION_ALIGNMENT;
-        this._itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION
+        this._itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION;
         this._collection = options.collection;
         this._updateActionsTemplateConfig(options);
 
@@ -192,7 +198,8 @@ export class Controller {
         ) {
             this._commonItemActions = options.itemActions;
             this._itemActionsProperty = options.itemActionsProperty;
-            this._itemActionVisibilityCallback = options.visibilityCallback || ((action: IItemAction, item: Model) => true);
+            this._itemActionVisibilityCallback = options.visibilityCallback ||
+                                                 ((action: IItemAction, item: Model) => true);
         }
         if (this._commonItemActions || this._itemActionsProperty) {
             result = this._updateItemActions(options.editingItem);
@@ -275,9 +282,11 @@ export class Controller {
         const templateOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, menuActions);
 
         let menuConfig: IStickyPopupOptions = {
+            // @ts-ignore
             opener,
             template: 'Controls/menu:Popup',
             actionOnScroll: 'close',
+            // @ts-ignore
             target,
             templateOptions,
             className: `controls-MenuButton_link_iconSize-medium_popup theme_${this._theme}`,
@@ -300,6 +309,7 @@ export class Controller {
                     horizontal: 'right'
                 },
                 className: `controls-ItemActions__popup__list_theme-${this._theme}`,
+                // @ts-ignore
                 nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
             };
         }
@@ -313,7 +323,11 @@ export class Controller {
      * @param menuActions
      * @private
      */
-    private _getActionsMenuTemplateConfig(isActionMenu: boolean, parentAction: IItemAction, menuActions: IItemAction[]): IMenuPopupOptions {
+    private _getActionsMenuTemplateConfig(
+        isActionMenu: boolean,
+        parentAction: IItemAction,
+        menuActions: IItemAction[]
+    ): IMenuPopupOptions {
         const source = new Memory({
             data: menuActions,
             keyProperty: 'id'
@@ -333,6 +347,7 @@ export class Controller {
             dropdownClassName: 'controls-itemActionsV__popup',
             ...this._contextMenuConfig,
             root,
+            // @ts-ignore
             showHeader: isActionMenu,
             headConfig,
             iconSize,
@@ -344,7 +359,7 @@ export class Controller {
      * Устанавливает активный Item в коллекции
      * @param item Текущий элемент коллекции
      */
-    setActiveItem(item: IItemActionsItem) {
+    setActiveItem(item: IItemActionsItem): void {
         this._collection.setActiveItem(item);
     }
 
@@ -380,17 +395,17 @@ export class Controller {
     private _updateItemActions(editingItem?: IItemActionsItem): Array<number | string> {
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
-        const assignActionsOnItem = (item) => {
+        const assignActionsOnItem = (item): void => {
             if (!item['[Controls/_display/GroupItem]']) {
                 const contents = Controller._getItemContents(item);
-				const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
+                const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
                 const itemChanged = Controller._setItemActions(item, actionsContainer);
                 hasChanges = hasChanges || itemChanged;
                 if (itemChanged) {
                     changedItemsIds.push(contents.getKey());
                 }
             }
-        }
+        };
         this._collection.setEventRaising(false, true);
         this._collection.each(assignActionsOnItem);
         if (editingItem) {
@@ -468,7 +483,7 @@ export class Controller {
     /**
      * Вычисляет конфигурацию, которая используется в качестве scope у itemActionsTemplate
      */
-    private _updateActionsTemplateConfig(options: IItemActionsControllerOptions): void {
+    private _updateActionsTemplateConfig(options: IControllerOptions): void {
 
         this._collection.setActionsTemplateConfig({
             toolbarVisibility: options.editingToolbarVisible,
@@ -558,7 +573,7 @@ export class Controller {
      * @param contextMenuConfig
      * @private
      */
-    private _getSwipeMenuButtonVisibility(contextMenuConfig): TMenuButtonVisibility {
+    private _getSwipeMenuButtonVisibility(contextMenuConfig: IContextMenuConfig): TMenuButtonVisibility {
         return (contextMenuConfig && (contextMenuConfig.footerTemplate
             || contextMenuConfig.headerTemplate)) ? 'visible' : 'adaptive';
     }
@@ -585,7 +600,7 @@ export class Controller {
             if (this._isMenuButtonRequired(actions)) {
                 showed.push({
                     id: null,
-                    icon: `icon-ExpandDown`,
+                    icon: 'icon-ExpandDown',
                     style: 'secondary',
                     iconStyle: 'secondary',
                     _isMenu: true

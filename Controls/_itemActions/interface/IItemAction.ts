@@ -93,7 +93,7 @@ export type TItemActionHandler = (item: Model) => void;
  */
 /*
  * Interface describing configuration for a button which will be shown when the user hovers over a list item.
- * @interface Controls/_itemActions/interface/IItemActions
+ * @interface Controls/_itemActions/interface/IItemAction
  * @public
  * @author Аверкиев П.А.
  */
@@ -229,7 +229,7 @@ export interface IItemAction {
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#tooltip
-     * @cfg {String}
+     * @cfg {String} tooltip showing on mouse hover
      */
     tooltip?: string;
 
@@ -259,13 +259,13 @@ export interface IItemAction {
 
 /**
  * Расширенный интерфейс IItemAction с полями для использования в шаблоне
- * @interface Controls/_itemActions/interface/IItemAction:IShownItemAction
+ * @interface
  * @private
  * @author Аверкиев П.А.
  */
 /*
  * Extended interface for itemActions to use it inside of template
- * @interface Controls/_itemActions/interface/IItemActions:IShownItemAction
+ * @interface
  * @private
  * @author Аверкиев П.А.
  */

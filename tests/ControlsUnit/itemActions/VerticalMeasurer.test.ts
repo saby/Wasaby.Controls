@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import * as rk from 'i18n!ControlsUnit';
 
 import { verticalMeasurer } from 'Controls/_itemActions/measurers/VerticalMeasurer';
-import { IItemAction } from 'Controls/_itemActions/interface/IItemActions';
+import { IItemAction } from 'Controls/_itemActions/interface/IItemAction';
 
 describe('Controls/_itemActions/measurers/VerticalMeasurer', () => {
     it('needIcon', () => {

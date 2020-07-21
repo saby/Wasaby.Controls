@@ -1,15 +1,19 @@
 /**
  * Библиотека, которая предоставляет операции с записью коллекции
  * @library Controls/itemActions
- * @includes TreeItem Controls/_itemActions/Controller
+ * @includes IItemAction Controls/_itemActions/interface/IItemAction
+ * @includes IContextMenuConfig Controls/_itemActions/interface/IContextMenuConfig
+ * @includes Controller Controls/_itemActions/Controller
  * @public
  * @author Аверкиев П.А.
  */
 
-/**
+/*
  * Library that provides collection item actions
  * @library Controls/itemActions
- * @includes TreeItem Controls/_itemActions/Controller
+ * @includes IItemAction Controls/_itemActions/interface/IItemAction
+ * @includes IContextMenuConfig Controls/_itemActions/interface/IContextMenuConfig
+ * @includes Controller Controls/_itemActions/Controller
  * @public
  * @author Аверкиев П.А.
  */
@@ -21,11 +25,10 @@ export {
     IItemAction,
     TItemActionShowType,
     TItemActionsPosition,
-    // опции, которые используются в IList
     TActionCaptionPosition,
     TActionDisplayMode,
     TIconStyle
-} from './_itemActions/interface/IItemActions';
+} from './_itemActions/interface/IItemAction';
 export {IContextMenuConfig} from './_itemActions/interface/IContextMenuConfig';
 export {IItemActionsItem, IItemActionsCollection, Controller} from './_itemActions/Controller';
 export {Utils} from './_itemActions/Utils';
