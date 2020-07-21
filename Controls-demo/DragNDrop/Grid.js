@@ -36,7 +36,9 @@ define('Controls-demo/DragNDrop/Grid', [
          }];
       },
       _dragStart: function(event, items, draggedKey) {
-         return draggedKey !== 0;
+         return draggedKey === 0 ? false : new ListEntity({
+            items: items
+         });
       },
       _dragEnd: function(event, entity, target, position) {
          this._children.listMover.moveItems(entity.getItems(), target, position);
