@@ -92,7 +92,7 @@ class PageQueryParamsController implements IQueryParamsController {
      * Allows manual set of current controller state using Collection<Record>
      * @param model
      */
-    setState(model: Collection<Record>): boolean {
+    setState(model: Collection<Record>, root?: string|number|null): boolean {
         // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
         const items = model.getItems();
         if (!items.getMetaData) {
@@ -101,9 +101,15 @@ class PageQueryParamsController implements IQueryParamsController {
 
         let more = items.getMetaData().more;
         if (more instanceof RecordSet) {
+            let moreRecordIndex = root !== undefined ? more.getIndexByValue('id', root) : 0;
+
             // при мультинавигации первой записью идёт корень,
             // setState вызывается только для навигации в корне
-            more = more.at(0).get('nav_result');
+            if (moreRecordIndex === -1) {
+                moreRecordIndex = 0;
+            }
+
+            more = more.at(moreRecordIndex).get('nav_result');
         }
         const stateChanged = this.getAllDataCount() !== more;
 

@@ -220,8 +220,6 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
             state: ''
         };
     }
-
-    static _theme: string[] = ['Controls/input', 'Controls/Classes'];
 }
 
 export default Render;

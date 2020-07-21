@@ -9,6 +9,7 @@ import {constants} from 'Env/Env';
 import {List} from 'Types/collection';
 import {Logger} from 'UI/Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 
 const KEY_CODE_F2 = 113;
 
@@ -78,7 +79,7 @@ var BaseLookupView = Control.extend({
             this._maxVisibleItems = 1;
         } else if (options.multiLine) {
             this._maxVisibleItems = options.maxVisibleItems;
-        } else if (options.multiSelect && itemsCount > 1) {
+        } else if (options.multiSelect && itemsCount > 1 && !options.readOnly) {
             this._maxVisibleItems = 0;
         } else {
             this._maxVisibleItems = options.items.getCount();
@@ -90,6 +91,8 @@ var BaseLookupView = Control.extend({
     },
 
     _afterMount: function () {
+        RegisterUtil(this, 'controlResize', this._resize.bind(this));
+
         _private.initializeContainers(this);
 
         if (!this._isEmpty(this._options)) {
@@ -139,6 +142,10 @@ var BaseLookupView = Control.extend({
                 }
             }
         }
+    },
+
+    _beforeUnmount: function(): void {
+        UnregisterUtil(this, 'controlResize');
     },
 
     _changeValueHandler: function (event, value) {
@@ -250,9 +257,9 @@ var BaseLookupView = Control.extend({
         this.activate();
     },
 
-    _itemClick: function (event, item) {
+    _itemClick: function (event, item, nativeEvent) {
         this.closeSuggest();
-        this._notify('itemClick', [item]);
+        this._notify('itemClick', [item, nativeEvent]);
     },
 
     _keyDown: function (event, keyboardEvent) {

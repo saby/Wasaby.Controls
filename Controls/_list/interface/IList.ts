@@ -437,6 +437,7 @@ export interface IList {
  * @param {ItemAction} action Объект с конфигурацией опции записи, по которой выполнили клик.
  * @param {Types/entity:Model} item Экземпляр записи, для которой была отображена опция записи.
  * @param {HTMLElement} itemContainer Контейнер записи, по которой был выполнен клик.
+ * @param {Event} nativeEvent Дескриптор исходного события браузера. Может использоваться для получения информации о том, какие клавиши-модификаторы были использованы при клике (Ctrl etc.)
  * @remark Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
  * @see itemActions
  * @see itemActionsPosition
@@ -452,6 +453,7 @@ export interface IList {
  * @param {ItemAction} action Object with configuration of the clicked action.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item whose action was clicked.
+ * @param {Event} nativeEvent Native browser event
  */
 
 /**
@@ -795,6 +797,7 @@ export interface IList {
  * Если параметр имеет значение true, элемент коллекции будет заменен загруженным элементом.
  * Если параметр имеет значение false (по умолчанию), загруженные элементы будут объединены в элемент коллекции.
  * @param {ReloadType} [reloadType=read] Определяет, как будет загружен элемент.
+ * @return {Promise<RecordSet>} В случае успешной загрузки, Promise вернет список отображаемых дочерних элементов для загруженного узла.
  * @example
  * <pre class="brush: js">
  * _itemUpdated: function(id) {
@@ -992,7 +995,7 @@ export interface IList {
  * @variant listItem
  * @variant stackHeader
  * @default default
- * @remark 
+ * @remark
  * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
  */
 

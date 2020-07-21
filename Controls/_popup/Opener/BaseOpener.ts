@@ -6,9 +6,9 @@ import * as CoreMerge from 'Core/core-merge';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as Deferred from 'Core/Deferred';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
+import * as isVDOMTemplate from 'Controls/Utils/isVDOMTemplate';
 import {Logger} from 'UI/Utils';
-import { DefaultOpenerFinder } from 'UI/Focus';
-import rk = require('i18n!Controls');
+import {DefaultOpenerFinder} from 'UI/Focus';
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
 import { error as dataSourceError } from 'Controls/dataSource';
 
@@ -60,8 +60,8 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
     open(popupOptions: TBaseOpenerOptions, controller: string): Promise<string | undefined> {
         return new Promise(((resolve) => {
-            this._toggleIndicator(true);
             const cfg: TBaseOpenerOptions = this._getConfig(popupOptions);
+            this._toggleIndicator(true, cfg);
             // TODO Compatible: Если Application не успел загрузить совместимость - грузим сами.
             if (cfg.isCompoundTemplate) {
                 BaseOpenerUtil.loadCompatibleLayer(() => {
@@ -222,7 +222,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         }
     }
 
-    private _toggleIndicator(visible: boolean): void {
+    private _toggleIndicator(visible: boolean, cfg: TBaseOpenerOptions): void {
         if (!this._options.showIndicator) {
             return;
         }
@@ -233,19 +233,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 return;
             }
             this._indicatorId = this._notify('showIndicator',
-                [this._getIndicatorConfig()], {bubbling: true}) as string;
+                [BaseOpenerUtil.getIndicatorConfig(this._indicatorId, cfg)], {bubbling: true}) as string;
         } else if (this._indicatorId) {
             this._notify('hideIndicator', [this._indicatorId], {bubbling: true});
             this._indicatorId = null;
         }
-    }
-
-    protected _getIndicatorConfig() {
-        return {
-            id: this._indicatorId,
-            message: rk('Загрузка'),
-            delay: 2000 // by standart
-        };
     }
 
     protected _updatePopup(): void {
@@ -271,7 +263,13 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             Logger.error('Controls/popup: Опция opener не должна задаваться на templateOptions');
         }
 
-        if (!BaseOpener.isNewEnvironment()) {
+        // Если открывают не через инстанс опенера (инстанс сейчас сам показываем индикатор, т.к. грузит зависимости)
+        // И если опционально показ индикатора не отключен, то на момент построения окна покажем индикатор
+        if (!cfg.id && !cfg._events && cfg.showIndicator !== false) {
+            BaseOpenerUtil.showIndicator(cfg);
+        }
+
+        if (!isNewEnvironment()) {
             BaseOpenerUtil.getManagerWithCallback(() => {
                 // при открытии через стат. метод открыватора в верстке нет, нужно взять то что передали в опции
                 // Если topPopup, то zIndex менеджер высчитает сам
@@ -307,7 +305,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                         }
                     }
                 }
-                if (!BaseOpener.isVDOMTemplate(rootTpl)) {
+                if (!isVDOMTemplate(rootTpl)) {
                     requirejs(['Controls/compatiblePopup'], (compatiblePopup) => {
                         compatiblePopup.BaseOpener._prepareConfigForOldTemplate(cfg, rootTpl);
                         BaseOpener._openPopup(cfg, controller, def);
@@ -316,7 +314,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                     BaseOpener._openPopup(cfg, controller, def);
                 }
             });
-        } else if (BaseOpener.isVDOMTemplate(rootTpl) &&
+        } else if (isVDOMTemplate(rootTpl) &&
             !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
             BaseOpenerUtil.getManagerWithCallback(() => {
                 BaseOpener._openPopup(cfg, controller, def);
@@ -412,18 +410,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         return baseCfg;
     }
 
-    static getZIndexUtil() {
-        const deferred = new Deferred();
-        const module = 'Controls/Utils/getZIndex';
-        if (requirejs.defined(module)) {
-            return deferred.callback(requirejs(module));
-        }
-        requirejs([module], (getZIndex) => {
-            return deferred.callback(getZIndex);
-        });
-        return deferred;
-    }
-
     static _openPopup(cfg: IBaseOpenerOptions, controller: Control, def: Promise<string>): void {
         if (!ManagerController.isPopupCreating(cfg.id)) {
             cfg.id = ManagerController.show(cfg, controller);
@@ -440,21 +426,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         };
     }
 
-     // TODO Compatible
-    static isVDOMTemplate(templateClass: Control | TemplateFunction): boolean {
-        return !!(templateClass.prototype && templateClass.prototype._template) ||
-            !!templateClass.stable || !!(templateClass[0] && templateClass[0].func);
-    }
-
-    // TODO Compatible
-    static isNewEnvironment(): boolean {
-        return isNewEnvironment();
-    }
-
     // TODO Compatible
     static getManager(): Promise<void> {
         return BaseOpenerUtil.getManager();
     }
 }
 
+BaseOpener.util = BaseOpenerUtil; // for tests
 export default BaseOpener;

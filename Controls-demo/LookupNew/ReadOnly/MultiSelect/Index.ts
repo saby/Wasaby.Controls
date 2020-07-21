@@ -1,5 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/LookupNew/ReadOnly/MultiSelect/MultiSelect';
+import * as Template from 'wml!Controls-demo/LookupNew/ReadOnly/MultiSelect/MultiSelect';
+
 import {COMPANIES} from 'Controls-demo/LookupNew/resources/DataStorage';
 import {Memory} from 'Types/source';
 

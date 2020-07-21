@@ -118,5 +118,13 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          portionedSearchController.stopSearch();
          assert.isTrue(searchStopped);
       });
+
+      it('destroy', () => {
+         portionedSearchController.startSearch();
+         portionedSearchController.destroy();
+
+         clock.tick(31000);
+         assert.isFalse(searchStopped);
+      });
    });
 });

@@ -11,8 +11,6 @@ define([
       it('initializingWay', (done) => {
          let FC = new form.Controller();
 
-         let baseReadRecordBeforeMount = form.Controller._readRecordBeforeMount;
-         let baseCreateRecordBeforeMount = form.Controller._createRecordBeforeMount;
          let cfg = {
             record: new entity.Record(),
          };
@@ -85,8 +83,6 @@ define([
          });
 
          Promise.all([p1, p2, p3, p4]).then(() => {
-            form.Controller._readRecordBeforeMount = baseReadRecordBeforeMount;
-            form.Controller._createRecordBeforeMount = baseCreateRecordBeforeMount;
             FC.destroy();
             done();
          });
@@ -283,9 +279,36 @@ define([
          FC.destroy();
       });
 
+      it('calcInitializingWay', () => {
+         let FC = new form.Controller();
+         const options = {};
+         let initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'create');
+
+         options.key = 123;
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'read');
+
+         options.record = 123;
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'delayedRead');
+
+         delete options.key;
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'local');
+
+         options.initializingWay = 'test';
+         initializingWay = FC._calcInitializingWay(options);
+         assert.equal(initializingWay, 'test');
+         FC.destroy();
+      });
+
       it('FormController update', (done) => {
          let isUpdatedCalled = false;
          let FC = new form.Controller();
+         FC._forceUpdate = () => {
+            setTimeout(FC._afterUpdate.bind(FC));
+         };
          let validation = {
             submit: () => Promise.resolve(true)
          };
@@ -439,6 +462,9 @@ define([
          FC._processError = () => {};
          FC._crudController = new CrudController.default(dataSource,
              FC._notifyHandler.bind(FC), FC.registerPendingNotifier.bind(FC), FC.indicatorNotifier.bind(FC));
+         FC._forceUpdate = () => {
+            setTimeout(FC._afterUpdate.bind(FC));
+         };
          FC.update(configData).then(() => {
             assert.deepEqual(data, argsCorrectUpdate);
             done();
@@ -454,25 +480,32 @@ define([
                isDestroyCall = true;
             }
          };
-         let FC = new form.Controller();
-         FC.saveOptions({ dataSource });
-         FC._source = dataSource;
-         FC._record = {
-            getId: () => 'id1'
-         };
-         FC._crudController = {
-            hideIndicator () {}
-         };
+         const createFC = () => {
+            let FC = new form.Controller();
+            FC.saveOptions({ dataSource });
+            FC._source = dataSource;
+            FC._record = {
+               getId: () => 'id1'
+            };
+            FC._crudController = {
+               hideIndicator () {}
+            };
+            return FC;
+         }
+         let FC = createFC();
          FC._beforeUnmount();
+         FC.destroy();
+
          assert.equal(isDestroyCall, false);
 
-         FC._isNewRecord = true;
-         FC._crudController = {
+         let FC2 = createFC();
+         FC2._isNewRecord = true;
+         FC2._crudController = {
             hideIndicator () {}
          };
-         FC._beforeUnmount();
+         FC2._beforeUnmount();
          assert.equal(isDestroyCall, true);
-         FC.destroy();
+         FC2.destroy();
       });
 
       it('delete new record', () => {
@@ -599,15 +632,9 @@ define([
          FC.destroy();
       });
 
-       it('update with error', (done) => {
+      it('update with error', (done) => {
          let error = false;
          let FC = new form.Controller();
-         let validation = {
-            submit: () => Promise.reject('error')
-         };
-         let crud = {
-            update: () => Promise.reject()
-         };
          FC._record = {
             getId: () => 'id1',
             isChanged: () => true
@@ -615,9 +642,20 @@ define([
          FC._notify = (event) => {
             return false;
          };
-         FC._children = { crud, validation };
-         FC._processError = () => {};
-         FC.update().catch( () => {
+         FC._validateController = {
+            submit: () => Promise.reject('error'),
+            resolveSubmit: () => Promise.reject('error'),
+            deferSubmit: () => Promise.reject('error'),
+         };
+         FC._crudController = {
+            update: () => Promise.reject()
+         };
+         FC._processError = () => {
+         };
+         FC._forceUpdate = () => {
+            setTimeout(FC._afterUpdate.bind(FC));
+         };
+         FC.update().catch(() => {
             error = true;
             assert.isTrue(error);
             FC.destroy();

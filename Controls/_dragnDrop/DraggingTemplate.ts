@@ -26,7 +26,7 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * @class Controls/_dragnDrop/DraggingTemplate
     * @extends Core/Control
     * @control
-    * @private
+    * @public
     * @author Авраменко А.С.
     * @category DragNDrop
     */

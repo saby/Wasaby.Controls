@@ -8,11 +8,11 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
 
 /**
  * Поле ввода с автодополнением и возможностью выбора значений из справочника.
- * 
+ *
  * @remark
  * Отличается от {@link Controls/_lookup/Lookup поля связи} выводом выбранных значений.
  * Ширина выбранных занчений будет пропорционально распределена по ширине контрола, чтобы все значения поместились.
- * 
+ *
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FLookup%2FIndex">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/directory/lookup/">руководство разработчика</a>
@@ -26,7 +26,7 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/ITextValue
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
@@ -57,7 +57,7 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/ITextValue
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
@@ -87,7 +87,8 @@ export default class MultipleInput extends BaseLookup {
         return {
             ...BaseLookup.getDefaultOptions(),
             ...{
-                itemTemplate
+                itemTemplate,
+                multiSelect: true
             }
         };
     }

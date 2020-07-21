@@ -1,7 +1,7 @@
 import rk = require('i18n!Controls');
 import Controller from 'Controls/_dropdown/_Controller';
 import {ICrudPlus} from 'Types/source';
-import {SyntheticEvent} from 'Vdom/Vdom';
+import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 
 export function prepareEmpty(emptyText) {
    if (emptyText) {
@@ -11,16 +11,12 @@ export function prepareEmpty(emptyText) {
 
 export function loadItems(
     controller: Controller,
-    receivedState: unknown,
+    receivedState: DropdownReceivedState,
     source: ICrudPlus
-): void | Promise<unknown> {
+): void | Promise<DropdownReceivedState> {
    if (receivedState) {
       return controller.setItems(receivedState);
    } else if (source) {
       return controller.loadItems();
    }
-}
-
-export function isLeftMouseButton(event: SyntheticEvent<MouseEvent>): boolean {
-   return event.nativeEvent.button === 0;
 }

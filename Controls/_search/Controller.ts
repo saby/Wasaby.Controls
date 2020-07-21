@@ -15,13 +15,13 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_search.less">переменные тем оформления</a>
- * 
+ *
  *
  * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.
@@ -47,7 +47,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @extends Core/Control
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.

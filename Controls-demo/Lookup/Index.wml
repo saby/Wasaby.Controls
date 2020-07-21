@@ -191,17 +191,16 @@
             </ws:placeholders>
             <ws:content>
                <Controls.lookup:MultipleInput
-                   name="lookupCustomPlaceholder"
-                   bind:value="_valueCustomPlaceholder"
-                   bind:selectedKeys="_selectedKeyCustomPlaceholder"
-                   source="{{_eqiupmentSource}}"
-                   searchParam="title"
-                   keyProperty="id"
-                   multiSelect="{{true}}"
-                   maxVisibleItems="3"
-                   navigation="{{_navigation}}"
-                   selectorTemplate="{{_selectorTemplateEqiupment}}"
-                   on:itemsChanged="_itemsChanged()">
+                       name="lookupCustomPlaceholder"
+                       bind:value="_valueCustomPlaceholder"
+                       bind:selectedKeys="_selectedKeyCustomPlaceholder"
+                       source="{{_eqiupmentSource}}"
+                       searchParam="title"
+                       keyProperty="id"
+                       maxVisibleItems="3"
+                       navigation="{{_navigation}}"
+                       selectorTemplate="{{_selectorTemplateEqiupment}}"
+                       on:itemsChanged="_itemsChanged()">
                   <ws:suggestTemplate templateName="wml!Controls-demo/Lookup/resources/SuggestTemplate"/>
                </Controls.lookup:MultipleInput>
             </ws:content>
@@ -232,17 +231,17 @@
             </ws:placeholders>
             <ws:content>
                <Controls.lookup:MultipleInput
-                   name="lookupCustomPlaceholder2"
-                   bind:value="_valueCustomPlaceholder2"
-                   bind:selectedKeys="_selectedKeyCustomPlaceholder2"
-                   source="{{_source}}"
-                   searchParam="title"
-                   keyProperty="id"
-                   multiSelect="{{true}}"
-                   navigation="{{_navigation}}"
-                   selectorTemplate="{{_selectorTemplateWithTabs}}"
-                   maxVisibleItems="2"
-                   on:selectorCallback="selectorCallback()">
+                       name="lookupCustomPlaceholder2"
+                       bind:value="_valueCustomPlaceholder2"
+                       bind:selectedKeys="_selectedKeyCustomPlaceholder2"
+                       source="{{_source}}"
+                       searchParam="title"
+                       keyProperty="id"
+                       multiSelect="{{true}}"
+                       navigation="{{_navigation}}"
+                       selectorTemplate="{{_selectorTemplateWithTabs}}"
+                       maxVisibleItems="2"
+                       on:selectorCallback="selectorCallback()">
                   <ws:suggestTemplate templateName="wml!Controls-demo/Lookup/resources/SuggestTemplate"/>
                   <ws:itemTemplate>
                      <ws:partial template="Controls/lookup:ItemTemplate"
@@ -257,16 +256,16 @@
       <div class="controlsDemo__mb1 controlsDemo__cell controlsDemo__childWidth400 controlsDemo-Lookup-multiLine">
          <div class="controls-text-label_theme-{{_options.theme}}">Lookup with multi line</div>
          <Controls.lookup:Input
-             bind:value="_valueMultiLine"
-             bind:selectedKeys="_selectedKeysMultiLine"
-             source="{{_source}}"
-             placeholder="Enter company name"
-             searchParam="title"
-             keyProperty="id"
-             multiSelect="{{true}}"
-             navigation="{{_navigation}}"
-             selectorTemplate="{{_selectorTemplate}}"
-             multiLine="{{true}}">
+                 bind:value="_valueMultiLine"
+                 bind:selectedKeys="_selectedKeysMultiLine"
+                 source="{{_source}}"
+                 placeholder="Enter company name"
+                 searchParam="title"
+                 keyProperty="id"
+                 multiSelect="{{true}}"
+                 navigation="{{_navigation}}"
+                 selectorTemplate="{{_selectorTemplate}}"
+                 multiLine="{{true}}">
             <ws:suggestTemplate templateName="wml!Controls-demo/Lookup/resources/SuggestTemplate"/>
             <ws:itemTemplate>
                <ws:partial template="Controls/lookup:ItemTemplate" style="{{_selectedKeyStyle}}"
