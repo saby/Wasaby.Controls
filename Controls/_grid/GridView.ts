@@ -63,7 +63,8 @@ var
             if (shouldAddActionsCell({
                 hasColumnScroll: !!self._options.columnScroll,
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
-                hasColumns: !!columns.length
+                hasColumns: !!columns.length,
+                itemActionsPosition: self._options.itemActionsPosition
             })) {
                 columnsWidths = columnsWidths.concat(['0px']);
             }
@@ -390,6 +391,7 @@ var
 
             if (this._options.columnScroll) {
                 _private.updateColumnScrollByOptions(this, oldOptions, this._options);
+                this._listModel.setColumnScrollVisibility(this._isColumnScrollVisible());
             }
 
             this._columnsHaveBeenChanged = false;

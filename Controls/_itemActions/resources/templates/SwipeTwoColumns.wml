@@ -2,7 +2,7 @@
     <div class="controls-Swipe__action_columns_theme-{{ theme }}">
         <ws:for data="actionIndex, action in column">
             <ws:partial
-                    template="wml!Controls/_list/Swipe/resources/SwipeAction"
+                    template="wml!Controls/_itemActions/resources/templates/SwipeAction"
                     action="{{ action }}"
                     needIcon="{{ swipeConfig.needIcon }}"
                     needTitle="{{ swipeConfig.needTitle }}"

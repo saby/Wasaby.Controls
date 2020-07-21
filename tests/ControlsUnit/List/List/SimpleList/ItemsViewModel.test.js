@@ -135,7 +135,6 @@ define([
 
          var cur = iv.getCurrent();
          assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
-         assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(data[0], cur.item, 'Incorrect field set on getCurrent()');
 
@@ -250,6 +249,28 @@ define([
          iv.setItems(rs4, cfg2);
          assert.equal(4, iv.getVersion(), 'Incorrect version setItems');
          assert.equal(iv._items.getIdProperty(), 'key', 'Incorrect keyProperty');
+
+      });
+
+      it('Result from options', function () {
+         var metaData = {
+            results: ['results']
+         };
+         var rs1 = new collection.RecordSet({
+            rawData: data,
+            idProperty: 'id'
+         });
+         rs1.setMetaData(metaData);
+
+         var cfg1 = {
+            items: rs1,
+            keyProperty: 'id',
+            displayProperty: 'title'
+         };
+
+         var iv = new list.ItemsViewModel(cfg1);
+
+         assert.deepEqual(['results'], iv.getMetaResults(), 'Incorrect meta results after constructor');
 
       });
 

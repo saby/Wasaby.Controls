@@ -101,7 +101,10 @@ export class Controller {
     * Проставляет заново маркер в модели
     */
    restoreMarker(): void {
-      this._model.setMarkedKey(this._markedKey, true);
+      const item = this._model.getItemBySourceKey(this._markedKey);
+      if (item) {
+         item.setMarked(true);
+      }
    }
 
    /**
@@ -133,7 +136,7 @@ export class Controller {
    /**
     * Обработчк удаления элементов
     * Ставит маркер на следующий элемент, при его отустствии на предыдущий, иначе сбрасывает маркер
-    * @param removedItemsIndex
+    * @param removedItemsIndex Индекс удаленной записи в исходной коллекции (RecordSet)
     */
    handleRemoveItems(removedItemsIndex: number): TKey {
       // Если элемент с текущем маркером не удален, то маркер не нужно менять
@@ -142,8 +145,10 @@ export class Controller {
          return this._markedKey;
       }
 
-      const nextItem = this._model.getNextByIndex(removedItemsIndex);
-      const prevItem = this._model.getPrevByIndex(removedItemsIndex);
+      // Нам приходит индекс в исходной коллекции и его нужно перевести в индекс проекции
+      const indexInProjection = this._model.getIndexBySourceIndex(removedItemsIndex);
+      const nextItem = this._model.getNextByIndex(indexInProjection);
+      const prevItem = this._model.getPrevByIndex(indexInProjection);
 
       let newMarkedKey;
       if (nextItem) {

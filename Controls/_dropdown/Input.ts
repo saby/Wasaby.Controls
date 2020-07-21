@@ -7,7 +7,7 @@ import {factory} from 'Types/chain';
 import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
 import {isEqual} from 'Types/object';
 import Controller from 'Controls/_dropdown/_Controller';
-import BaseDropdown from 'Controls/_dropdown/BaseDropdown';
+import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IGroupedOptions} from './interface/IGrouped';
 import {IIconSizeOptions} from 'Controls/interface';
@@ -15,7 +15,6 @@ import IMenuPopup, {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup
 import {IStickyPopupOptions} from 'Controls/popup';
 import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
-import {RecordSet} from 'Types/collection';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
@@ -259,7 +258,7 @@ export default class Input extends BaseDropdown {
 
    _beforeMount(options: IInputOptions,
                 context: object,
-                receivedState: {items?: RecordSet, history?: RecordSet}): void|Promise<void> {
+                receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
       this._prepareDisplayState = this._prepareDisplayState.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._controller = new Controller(this._getControllerOptions(options));
@@ -275,6 +274,7 @@ export default class Input extends BaseDropdown {
       const controllerOptions = getDropdownControllerOptions(options);
       return { ...controllerOptions, ...{
             dataLoadCallback: this._dataLoadCallback,
+            selectorOpener: this,
             selectedKeys: options.selectedKeys || [],
             popupClassName: options.popupClassName || (options.showHeader || options.headerTemplate ?
                 'controls-DropdownList__margin-head' : options.multiSelect ?

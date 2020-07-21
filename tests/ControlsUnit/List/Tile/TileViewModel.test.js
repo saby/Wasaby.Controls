@@ -16,7 +16,8 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(T
                }],
                keyProperty: 'id'
             }),
-            theme: 'default'
+            theme: 'default',
+            displayProperty: 'title'
          });
 
       it('constructor', function() {
@@ -69,7 +70,8 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(T
             imageProperty: 'image',
             defaultItemWidth: 250,
             defaultShadowVisibility: 'visible',
-            itemCompressionCoefficient: 0.7
+            itemCompressionCoefficient: 0.7,
+            displayProperty: 'title'
          });
       });
 

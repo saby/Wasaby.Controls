@@ -31,7 +31,7 @@
                      imageGradientColor="{{_options.imageGradientColor}}"
                      viewMode="{{_options.viewMode}}"/>
       </ws:if>
-      <div class="controls-listTemplates__tileItemTemplate__itemContent_theme-{{_options.theme}}">
+      <div class="controls-listTemplates__tileItemTemplate__itemContent_theme-{{_options.theme}}" style="background-color: {{_options.imageGradientColor}}">
          <ws:if data="{{_options.captionTemplate}}">
             <div class="controls-listTemplates__tileItemTemplate-caption_theme-{{_options.theme}}">
                <ws:partial template="{{_options.captionTemplate}}"
@@ -53,7 +53,7 @@
             width="{{itemData.getTileSizes && itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).width}}"
             height="auto"
             attr:class="controls-listTemplates__tileItemTemplate__item"
-            shadowVisibility="hidden"
+            shadowVisibility="{{_options.shadowVisibility}}"
             imageProperty="{{null}}"
             scope="{{_options}}">
    <ws:contentTemplate>

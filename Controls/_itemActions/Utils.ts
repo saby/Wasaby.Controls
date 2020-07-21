@@ -1,5 +1,4 @@
 import { Logger } from 'UI/Utils';
-import { IItemAction, TItemActionShowType } from './interface/IItemActions';
 
 const deprecatedStyles = {
     error: 'danger',
@@ -18,13 +17,5 @@ export class Utils {
             return deprecatedStyles[style];
         }
         return style;
-    }
-
-    static getActualActions(actions: IItemAction[]): IItemAction[] {
-        const itemActions = actions.filter((action) => !action.parent);
-        itemActions.sort((action1: IItemAction, action2: IItemAction) => (
-            (action2.showType || TItemActionShowType.MENU) - (action1.showType || TItemActionShowType.MENU)
-        ));
-        return itemActions;
     }
 }

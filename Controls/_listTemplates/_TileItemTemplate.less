@@ -7,11 +7,13 @@
 }
 
 .controls-listTemplates__tileItemTemplate__itemContent_theme-@{themeName} {
-   margin: @offset_m;
+   padding: @offset_m;
    display: flex;
    flex-direction: column;
    flex-grow: 1;
    height: 100%;
+   box-sizing: border-box;
+   white-space: normal;
 }
 
 .controls-listTemplates__tileItemTemplate-caption_theme-@{themeName} {
@@ -19,7 +21,7 @@
 }
 
 .controls-listTemplates__tileItemTemplate-image-spacing_theme-@{themeName} {
-   margin: @offset_m;
+   padding: @offset_m;
 }
 
 .controls-listTemplates__tileItemTemplate {

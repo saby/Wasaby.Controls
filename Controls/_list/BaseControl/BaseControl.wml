@@ -87,7 +87,7 @@
              on:validateDestroyed="_onValidateDestroyed()">
             <ws:partial
                     attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
-                    attr:style="{{_attachLoadTopTriggerToNull && _isMounted ? 'padding-top: 1px;'}}"
+                    attr:style="{{_attachLoadTopTriggerToNull ? 'padding-top: 1px;'}}"
                     name="{{name}}"
                     template="{{ _options.content }}"
                     scope="{{_options}}"

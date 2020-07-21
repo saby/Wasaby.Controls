@@ -10,6 +10,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
+            displayProperty: 'title',
             groupingKeyCallback: function(item) {
                return item.get('group');
             },
@@ -211,7 +212,8 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             itemCompressionCoefficient: 0.7,
             itemsHeight: 200,
             defaultShadowVisibility: 'visible',
-            tileMode: 'dynamic'
+            tileMode: 'dynamic',
+            displayProperty: 'title'
          });
       });
       it('isScaled', function() {

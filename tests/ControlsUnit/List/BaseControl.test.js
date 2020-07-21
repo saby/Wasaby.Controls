@@ -1354,6 +1354,7 @@ define([
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
             markerVisibility: 'visible',
+            markedKey: 1,
             selectedKeys: [1],
             excludedKeys: [],
             markedKey: 2,
@@ -1676,7 +1677,8 @@ define([
                source: lnSource,
                keyProperty: 'id',
                viewModelConstructor: lists.ListViewModel,
-               markerVisibility: 'visible'
+               markerVisibility: 'visible',
+               markedKey: 1
             },
             baseControl = new lists.BaseControl(cfg);
 
@@ -1726,13 +1728,16 @@ define([
             controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
             assert.isNotNull(controller);
 
+            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+            assert.isNull(controller);
+
             baseControl._listViewModel = null;
             controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
             assert.isNull(controller);
          });
 
          it('should init selection controller even when multiselectVisibility===\'null\'', () => {
-            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: null });
             assert.isNotNull(controller);
          });
       });
@@ -1750,7 +1755,7 @@ define([
                viewModelConstructor: lists.ListViewModel,
                selectedKeys: [],
                excludedKeys: [],
-               multiSelectVisibility: 'hidden'
+               multiSelectVisibility: 'visible'
             },
             baseControl = new lists.BaseControl(lnCfg);
 
@@ -4261,12 +4266,10 @@ define([
          });
       });
 
-      describe('_onItemSwipe animation for rightSwipe with or without multiselectVisibility', function() {
-         let childEvent;
+      describe('_onItemSwipe()', () => {
+         let swipeEvent;
          let itemData;
          let instance;
-         let sandbox;
-         let isRightSwipeActivated;
 
          function initTest(options) {
             const cfg = {
@@ -4274,6 +4277,23 @@ define([
                viewConfig: {
                   idProperty: 'id'
                },
+               itemActions: [
+                  {
+                     id: 1,
+                     showType: 2,
+                     'parent@': true
+                  },
+                  {
+                     id: 2,
+                     showType: 0,
+                     parent: 1
+                  },
+                  {
+                     id: 3,
+                     showType: 0,
+                     parent: 1
+                  }
+               ],
                viewModelConfig: {
                   items: rs,
                   idProperty: 'id'
@@ -4296,78 +4316,115 @@ define([
             instance._listViewModel.setItems(rs, cfg);
             instance._items = rs;
             instance._children = {scrollController: { scrollToItem: () => null }};
-            isRightSwipeActivated = false;
-            instance._itemActionsController = {
-               activateRightSwipe: () => {
-                  isRightSwipeActivated = true;
-               }
-            };
+
+            // Пока что необходимо в любом случае проинициализировать ItemActionsController
+            // иначе у нас не будет работать ни swipe() ни rightSwipe()
+            lists.BaseControl._private.updateItemActions(instance, instance._options);
          }
 
-         beforeEach(() => {
-            childEvent = {
+         function initSwipeEvent(direction) {
+            return {
                stopPropagation: () => null,
                target: {
                   closest: () => ({ classList: { contains: () => true }, clientHeight: 10 })
                },
                nativeEvent: {
-                  direction: 'right'
+                  direction: direction
                }
             };
-            itemData = {
-               _isSwiped: false,
-               key: 1,
-               getContents: () => ({ getKey: () => 1 }),
-               multiSelectStatus: false,
-               isRightSwiped() {
-                  return this._isSwiped && instance._listViewModel.getSwipeAnimation() === 'right-swipe';
-               },
-               setSwiped() {
-                  this._isSwiped = true;
-               },
-               isSwiped() {
-                  return this._isSwiped && instance._listViewModel.getSwipeAnimation() !== 'right-swipe';
-               },
-               isSelected: () => false
-            };
-         });
+         }
 
-         it('multiSelectVisibility: visible, should start animation', function() {
-            initTest({multiSelectVisibility: 'visible'});
-            instance._onItemSwipe({}, itemData, childEvent);
-            assert.isTrue(isRightSwipeActivated);
-         });
+         describe('Animation for rightSwipe with or without multiselectVisibility', function() {
+            let spyActivateRightSwipe;
 
-         it('multiSelectVisibility: onhover, should start animation', function() {
-            initTest({multiSelectVisibility: 'onhover'});
-            instance._onItemSwipe({}, itemData, childEvent);
-            assert.isTrue(isRightSwipeActivated);
-         });
+            before(() => {
+               swipeEvent = initSwipeEvent('right')
+            });
 
-         it('multiSelectVisibility: hidden, should not start animation', function() {
-            initTest({multiSelectVisibility: 'hidden'});
-            instance._onItemSwipe({}, itemData, childEvent);
-            assert.isFalse(isRightSwipeActivated);
-         });
+            after(() => {
+               swipeEvent = undefined;
+            });
 
-         it('should not create selection controller when isItemsSelectionAllowed returns false', () => {
-            let isSelectionControllerCreated = false;
-            initTest({multiSelectVisibility: 'hidden'});
-            instance._createSelectionController = () => {
-               isSelectionControllerCreated = true;
-            };
-            instance._onItemSwipe({}, itemData, childEvent);
-            assert.isFalse(isSelectionControllerCreated);
-         });
+            afterEach(() => {
+               spyActivateRightSwipe.restore();
+            });
 
-         it('should create selection controller when isItemsSelectionAllowed returns true', () => {
-            let isSelectionControllerCreated = false;
-            initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
-            instance._createSelectionController = () => {
-               isSelectionControllerCreated = true;
-            };
-            instance._onItemSwipe({}, itemData, childEvent);
-            assert.isTrue(isSelectionControllerCreated);
+            it('multiSelectVisibility: visible, should start animation', function() {
+               initTest({multiSelectVisibility: 'visible'});
+               spyActivateRightSwipe = sinon.spy(instance._itemActionsController, 'activateRightSwipe');
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               sinon.assert.calledOnce(spyActivateRightSwipe);
+            });
+
+            it('multiSelectVisibility: onhover, should start animation', function() {
+               initTest({multiSelectVisibility: 'onhover'});
+               spyActivateRightSwipe = sinon.spy(instance._itemActionsController, 'activateRightSwipe');
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               sinon.assert.calledOnce(spyActivateRightSwipe);
+            });
+
+            it('multiSelectVisibility: hidden, should not start animation', function() {
+               initTest({multiSelectVisibility: 'hidden'});
+               spyActivateRightSwipe = sinon.spy(instance._itemActionsController, 'activateRightSwipe');
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               sinon.assert.notCalled(spyActivateRightSwipe);
+            });
+
+            it('should not create selection controller when isItemsSelectionAllowed returns false', () => {
+               initTest({multiSelectVisibility: 'hidden'});
+               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               sinon.assert.notCalled(stubCreateSelectionController);
+               stubCreateSelectionController.restore();
+            });
+
+            it('should create selection controller when isItemsSelectionAllowed returns true', () => {
+               initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
+               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               sinon.assert.calledOnce(stubCreateSelectionController);
+               stubCreateSelectionController.restore();
+            });
+
+            // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо закрыть свайп
+            it('should close swipe when any record has been swiped right', () => {
+               initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
+               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
+               const spySetSwipeAnimation = sinon.spy(instance._itemActionsController, 'setSwipeAnimation');
+
+               instance._listViewModel.at(0).setSwiped(true, true);
+               instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
+
+               sinon.assert.calledWith(spySetSwipeAnimation, 'close');
+               stubCreateSelectionController.restore();
+               spySetSwipeAnimation.restore();
+            });
+
+            // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо переместить маркер
+            it('should change marker when any other record has been swiped right', () => {
+               initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
+               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
+               const spySetMarkedKey = sinon.spy(lists.BaseControl._private, 'setMarkedKey');
+               instance._listViewModel.at(0).setSwiped(true, true);
+               instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
+
+               sinon.assert.calledOnce(spySetMarkedKey);
+               stubCreateSelectionController.restore();
+               spySetMarkedKey.restore();
+            });
+
+            // Если Активирован свайп на одной записи и свайпнули по той же записи, не надо вызывать установку маркера
+            it('should deactivate swipe when any other record has been swiped right', () => {
+               initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
+               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
+               const spySetMarkedKey = sinon.spy(lists.BaseControl._private, 'setMarkedKey');
+               instance._listViewModel.at(0).setSwiped(true, true);
+               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+
+               sinon.assert.notCalled(spySetMarkedKey);
+               stubCreateSelectionController.restore();
+               spySetMarkedKey.restore();
+            });
          });
       });
 
@@ -4788,6 +4845,20 @@ define([
             assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
             assert.exists(outgoingEventsMap.actionClick[2], 'Third argument has not been set');
             assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
+         });
+
+         // Клик по ItemAction в тулбаре должен в событии actionClick передавать nativeEvent
+         it('should pass nativeEvent as param for outgoing event on toolbar action click', () => {
+            const fakeEvent = initFakeEvent();
+            const action = {
+               id: 1,
+               showType: 0
+            };
+            instance._listViewModel.getIndex = (item) => 0;
+            instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
+            assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
+            assert.exists(outgoingEventsMap.actionClick[3], 'Third argument has not been set');
+            assert.exists(outgoingEventsMap.actionClick[3].preventDefault, 'Third argument should be nativeEvent');
          });
 
          // Необходимо при показе меню ItemActions регистрировать обработчик события скролла
@@ -5863,7 +5934,10 @@ define([
          let prefetchSource = new sourceLib.PrefetchProxy({
             target: source,
             data: {
-               query: data
+               query: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: data
+               })
             }
          });
          let cfg = {
@@ -5895,6 +5969,7 @@ define([
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
             markerVisibility: 'visible',
+            markedKey: 1,
             selectedKeys: [1],
             excludedKeys: [],
             source: new sourceLib.Memory({
@@ -5963,7 +6038,8 @@ define([
             const createMarkerControllerSpy = sinon.spy(lists.BaseControl._private, 'createMarkerController');
             await instance._beforeUpdate({
                ...cfg,
-               markerVisibility: 'visible'
+               markerVisibility: 'visible',
+               markedKey: 1
             });
             assert.isNotNull(instance._markerController);
             assert.isTrue(createMarkerControllerSpy.calledOnce);
@@ -6439,6 +6515,23 @@ define([
                   _knownPagesCount: 1
                };
                assert.equal(lists.BaseControl._private.calcPaging(self, hasMore, pageSize), 1);
+            });
+
+            it('_pagingNavigationVisible', () => {
+               let updatePagingData = lists.BaseControl._private.updatePagingData;
+               let self = {
+                  _knownPagesCount: 1,
+                  _currentPageSize: 5,
+                  _currentPage: 1,
+               }
+               updatePagingData(self, 0);
+               assert.equal(self._pagingNavigationVisible, false, 'paging should not be visible');
+               updatePagingData(self, 10);
+               assert.equal(self._pagingNavigationVisible, true, 'paging should be visible');
+               updatePagingData(self, false);
+               assert.equal(self._pagingNavigationVisible, false, 'paging should not be visible');
+               updatePagingData(self, true);
+               assert.equal(self._pagingNavigationVisible, true, 'paging should be visible');
             });
 
             describe('getPagingLabelData', function() {
