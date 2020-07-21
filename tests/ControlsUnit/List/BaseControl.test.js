@@ -6865,7 +6865,7 @@ define([
                baseControlOptions._needSetMarkerCallback = () => false;
                await mountBaseControl(baseControl, baseControlOptions);
 
-               const originalEvent = {target: {}};
+               const originalEvent = {target: { closest: () => false}};
                const event = {};
 
                const notifySpy = sinon.spy(baseControl, '_notify');
