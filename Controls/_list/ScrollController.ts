@@ -14,7 +14,6 @@ import {
 } from './ScrollContainer/interfaces';
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
-import {throttle} from 'Types/function';
 import {VirtualScrollHideController, VirtualScrollController} from 'Controls/display';
 import { getElementByKey } from 'Controls/_list/ScrollContainer/GetHeights';
 
@@ -100,10 +99,6 @@ export default class ScrollController {
     protected _options: any;
 
     private _callbacks: any;
-
-    private _throttledPositionChanged: Function = throttle((params) => {
-        
-    }, SCROLLMOVE_DELAY, true);
 
     constructor(options: any) {
         this._options = {...ScrollController.getDefaultOptions(), ...options};

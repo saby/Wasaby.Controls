@@ -1191,6 +1191,18 @@ const _private = {
         return offsetTop;
     },
 
+    
+    notifyPlaceholdersChanged(self, placeholders): void {
+        if (self._isMounted) {
+            self._notify('updatePlaceholdersSize', [placeholders], {bubbling: true});
+        }
+    },
+
+    throttledScrollBarPositionChanged: throttle((self, params) => {
+        let placeholders = self._scrollController.scrollBarPositionChanged(params);
+        _private.notifyPlaceholdersChanged(self, placeholders);
+    }, SCROLLMOVE_DELAY, true),
+
     handleListScrollSync(self, scrollTop) {
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
@@ -1348,9 +1360,9 @@ const _private = {
                     if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
 
                         // TODO: this._batcher.addItems(newItemsIndex, newItems)
-                        if (this._addItemsDirection) {
-                            this._addItems.push(...newItems);
-                            this._addItemsIndex = newItemsIndex;
+                        if (self._addItemsDirection) {
+                            self._addItems.push(...newItems);
+                            self._addItemsIndex = newItemsIndex;
                         } else {
                             placeholders = self._scrollController.addItems(newItemsIndex, newItems);
                         }
@@ -1365,7 +1377,7 @@ const _private = {
                         placeholders = self._scrollController.resetItems();
                     }
                     if (placeholders) {
-                        this._notifyPlaceholdersChanged(placeholders);
+                        _private.notifyPlaceholdersChanged(self, placeholders);
                     }
                 }
             }
@@ -2723,10 +2735,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     changeIndicatorStateHandler(state: boolean, indicatorName: IDirection): void {
-        if (state) {
-            this._children[`${indicatorName}LoadingIndicator`].style.display = '';
-        } else {
-            this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
+        if (indicatorName) {
+            if (state) {
+                this._children[`${indicatorName}LoadingIndicator`].style.display = '';
+            } else {
+                this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
+            }
         }
     },
     applyTriggerOffset(top: number, bottom: number): void {
@@ -3197,10 +3211,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // её по ошибке: https://online.sbis.ru/opendoc.html?guid=cd0ba66a-115c-44d1-9384-0c81675d5b08
                 correctingHeight = 33;
             }
-            if (this._indicatorState) {
-                this.changeIndicatorStateHandler(false, this._indicatorState);
-                this._indicatorState = null;
+            if (this._indicatorTimeout) {
                 clearTimeout(this._indicatorTimeout);
+                this.changeIndicatorStateHandler(false, 'up');
+                this.changeIndicatorStateHandler(false, 'down');
+                this._indicatorState = null;
             }
             let needCheckTriggers = this._scrollController.afterRender();
             if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
@@ -3225,7 +3240,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._checkTriggerVisibilityTimeout = setTimeout(() => {
             _private.doAfterUpdate(this, () => {
-                this.checkTriggerVisibility();
+                this.checkTriggersVisibility();
             });
             this._checkTriggerVisibilityTimeout = null;
         }, TRIGGER_VISIBILITY_DELAY);
@@ -3233,10 +3248,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     checkTriggersVisibility(): void {
         if (this._scrollController.isTriggerVisible('up')) {
-            this.checkTriggerVisibility('up');
+            this.handleTriggerVisible('up');
         }
         if (this._scrollController.isTriggerVisible('down')) {
-            this.checkTriggerVisibility('down');
+            this.handleTriggerVisible('down');
         }
     },
     handleTriggerVisible(direction: IDirection): void {
@@ -3971,7 +3986,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this.viewportResizeHandler(params.clientHeight, params.rect);
                 break;
             case 'virtualScrollMove':
-                this.throttledScrollBarPositionChanged(params);
+                _private.throttledScrollBarPositionChanged(this, params);
                 break;
             case 'canScroll':
                 this.canScrollHandler(params);
@@ -3987,17 +4002,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
         }
     },
-
-    _notifyPlaceholdersChanged(placeholders): void {
-        if (this._isMounted) {
-            this._notify('updatePlaceholdersSize', [placeholders], {bubbling: true});
-        }
-    },
-
-    throttledScrollBarPositionChanged: throttle((params) => {
-        let placeholders = this._scrollController.scrollBarPositionChanged(params);
-        this._notifyPlaceholdersChanged(placeholders);
-    }, SCROLLMOVE_DELAY, true),
 
     _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter'): boolean {
         // Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate.
