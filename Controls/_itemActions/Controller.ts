@@ -6,6 +6,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
 import {TItemKey, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
 import {
+    IShownItemAction,
     IItemActionsCollection,
     TItemActionVisibilityCallback,
     IItemActionsItem,
@@ -177,6 +178,9 @@ export class Controller {
         this._collection.setActiveItem(item);
         if (this._itemActionsPosition !== 'outside') {
             this._updateSwipeConfig(actionsContainerHeight);
+
+        } else if (this._editArrowAction && this._editArrowVisibilityCallback(item.getContents())) {
+            this._addEditArrow(item.getActions().showed);
         }
         this._collection.nextVersion();
     }
@@ -472,9 +476,7 @@ export class Controller {
         actionsTemplateConfig.actionAlignment = this._actionsAlignment;
 
         if (this._editArrowAction && this._editArrowVisibilityCallback(item.getContents())) {
-            if (!actions.find((action) => action.id === 'view')) {
-                actions = [this._editArrowAction, ...actions];
-            }
+            this._addEditArrow(actions);
         }
 
         let swipeConfig = Controller._calculateSwipeConfig(
@@ -510,6 +512,17 @@ export class Controller {
         }
 
         this._collection.setSwipeConfig(swipeConfig);
+    }
+
+    /**
+     * Добавляет editArrow к переданному массиву actions
+     * @param actions
+     * @private
+     */
+    private _addEditArrow(actions: IItemAction[]) {
+        if (!actions.find((action) => action.id === 'view')) {
+            actions.unshift(this._fixShownActionOptions(this._editArrowAction));
+        }
     }
 
     /**
@@ -591,6 +604,19 @@ export class Controller {
     };
 
     /**
+     * Настройка параметров отображения для опций записи, которые показываются
+     * при наведении на запись или при свайпе и itemActionsPosition === 'outside'
+     * @param action
+     * @private
+     */
+    private _fixShownActionOptions(action: IShownItemAction): IShownItemAction {
+        action.icon = Controller._fixActionIconClass(action.icon, this._theme);
+        action.showIcon = Controller._needShowIcon(action);
+        action.showTitle = Controller._needShowTitle(action);
+        return action;
+    }
+
+    /**
      * Обновляет параметры отображения операций с записью
      * @param actions
      * @private
@@ -605,12 +631,8 @@ export class Controller {
             });
         }
         if (actions.showed && actions.showed.length) {
-            actions.showed = clone(actions.showed).map((action) => {
-                action.icon = Controller._fixActionIconClass(action.icon, this._theme);
-                action.showIcon = Controller._needShowIcon(action);
-                action.showTitle = Controller._needShowTitle(action);
-                return action;
-            });
+            const fixShowOptionsBind = this._fixShownActionOptions.bind(this);
+            actions.showed = clone(actions.showed).map(fixShowOptionsBind);
         }
         return actions
     }

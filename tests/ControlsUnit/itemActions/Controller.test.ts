@@ -661,7 +661,7 @@ describe('Controls/_itemActions/Controller', () => {
         });
 
         // T2.10. При свайпе добавляется editArrow в набор операций, вызывается editArrowVisibilityCallback.
-        it('should call add editArrow for every item action when necessary', () => {
+        it('should add editArrow for every item action when necessary', () => {
             const editArrowAction: IItemAction = {
                 id: 'view',
                 icon: '',
@@ -686,6 +686,28 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isTrue(recordWithCorrectType, 'editArrowVisibilityCallback should be called with Model type argument');
             assert.equal(config.itemActions.showed[0].id, 'view', 'First action should be \'editArrow\'');
         });
+
+        //T2.10.1 При свайпе editArrow добавляется в набор операций также и при itemActionsPosition: 'outside'
+        it('should add editArrow when itemActionsPosition: \'outside\'', () => {
+            const editArrowAction: IItemAction = {
+                id: 'view',
+                icon: '',
+                showType: TItemActionShowType.TOOLBAR,
+            };
+            const editArrowVisibilityCallback = () => true;
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions,
+                theme: 'default',
+                editArrowAction,
+                itemActionsPosition: 'outside',
+                editArrowVisibilityCallback
+            }));
+            itemActionsController.activateSwipe(1, 50);
+            const item = itemActionsController.getSwipeItem();
+            assert.exists(item, 'Swipe activation should set swiped item');
+            assert.equal(item.getActions().showed[0].id, 'view', 'First action should be \'editArrow\'');
+        })
 
         // T2.11 При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
         it('should right-swipe item on activateRightSwipe() method', () => {

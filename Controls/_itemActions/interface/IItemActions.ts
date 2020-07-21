@@ -150,7 +150,7 @@ export interface IItemAction {
 /**
  * Расширенный интерфейс IItemAction с полями для использования в шаблоне
  */
-interface IShownItemAction extends IItemAction {
+export interface IShownItemAction extends IItemAction {
     /**
      * Показывать текст операции
      */
