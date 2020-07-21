@@ -3,7 +3,7 @@ import {Model} from 'Types/entity';
 /**
  * @typedef {String} TItemActionShowType
  * @remark
- * Эта опция не должна влиять на иерархию построения меню для тулбара.
+ * Эта опция не влияет на иерархию построения меню для тулбара.
  * @variant 0 показывать опцию только в дополнительном меню
  * @variant 1 показывать опцию в дополнительном меню и тулбаре
  * @variant 2 показывать опцию только в тулбаре
@@ -37,7 +37,6 @@ export enum TActionDisplayMode {
  * @variant warning
  * @variant danger
  * @variant success
- * TODO duplicated from IList
  */
 export type TIconStyle = 'secondary'|'warning'|'danger'|'success';
 
@@ -58,7 +57,7 @@ export type TActionCaptionPosition = 'right'|'bottom'|'none';
 export type TItemActionsPosition = 'inside'|'outside'|'custom';
 
 /**
- * @cfg {string} TItemActionsSize
+ * @typedef {string} TItemActionsSize
  * Размер иконок опций записи
  * @variant inside Внутри элемента.
  * @variant outside Под элементом.
@@ -66,7 +65,7 @@ export type TItemActionsPosition = 'inside'|'outside'|'custom';
 export type TItemActionsSize = 'm'|'l';
 
 /**
- * @cfg {string} TItemActionsSize
+ * @typedef {string} TItemActionsSize
  * Видимость кнопки "Ещё" в свайпе
  * @variant visible - кнопка видима в любом случае
  * @variant adaptive - Расчёт происходит от количесива элементов в свайпе
@@ -74,75 +73,201 @@ export type TItemActionsSize = 'm'|'l';
 export type TMenuButtonVisibility = 'visible'|'adaptive';
 
 /**
- * Configuration object for a button which will be shown when the user hovers over a list item.
+ * @typedef {Function} TItemActionHandler
+ * Обработчик опции записи. См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler-click/ пример обработчика}.
+ * @param item Corresponding list item.
+ */
+export type TItemActionHandler = (item: Model) => void;
+
+/**
+ * Интерфейс опции записи
+ * @describe
+ * Опции записи могут быть использованы в следующих вариантах:
+ * 1.	Панель опций записи, отображаемая в desktop браузерах
+ * 2.	Панель опций записи, появляющаяся при свайпе по записи влево.
+ * 3.	Всплывающее меню, появляющееся при нажатии на кнопку дополнительных опций записи.
+ * 4.	Всплывающее (контекстное) меню, появляющееся при нажатии правой кнопкой мыши.
+ * @interface Controls/_itemActions/interface/IItemAction
+ * @public
+ * @author Аверкиев П.А.
+ */
+/*
+ * Interface describing configuration for a button which will be shown when the user hovers over a list item.
+ * @interface Controls/_itemActions/interface/IItemActions
+ * @public
+ * @author Аверкиев П.А.
  */
 export interface IItemAction {
     /**
-     * Identifier of the action.
+     * @name Controls/_itemActions/itemActions/interface/IItemAction#id
+     * @cfg {String|Number} Идентификатор опции записи
+     */
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#id
+     * @cfg {String|Number} Identifier of the action.
      */
     id: string | number;
 
     /**
-     * Action's name.
+     * @name Controls/_itemActions/interface/IItemAction#title
+     * @cfg {String} Название опции записи.
+     */
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#title
+     * @cfg {String} Action name.
      */
     title?: string;
 
     /**
-     * Action's icon.
+     * @name Controls/_itemActions/interface/IItemAction#icon
+     * @cfg {String} Имя иконки для опции записи.
+     */
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#icon
+     * @cfg {String} Action's icon.
      */
     icon?: string;
 
     /**
-     * Location of the action.
+     * @name Controls/_itemActions/interface/IItemAction#showType
      * @default MENU
+     * @cfg {Controls/itemActions:TItemActionShowType} Определяет, где будет отображаться элемент.
+     * Доступные значения:
+     * * TItemActionShowType.MENU — элемент отображается только в меню.
+     * * TItemActionShowType.MENU_TOOLBAR — элемент отображается в меню и в тулбаре.
+     * * TItemActionShowType.TOOLBAR — элемент отображается только в тулбаре.
+     */
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#showType
+     * @default MENU
+     * @cfg {Controls/itemActions:TItemActionShowType} Determines where item is displayed.
+     * Values:
+     * * TItemActionShowType.MENU - item is displayed only in the menu
+     * * TItemActionShowType.MENU_TOOLBAR - item is displayed in the menu and toolbar
+     * * TItemActionShowType.TOOLBAR - item is displayed only in the toolbar
      */
     showType?: TItemActionShowType;
 
     /**
-     * Action's style.
+     * @name Controls/_itemActions/interface/IItemAction#style
+     * @cfg {TIconStyle} Значение свойства преобразуется в CSS-класс вида "controls-itemActionsV__action_style_<значение_свойства>".
+     * Доступные значения:
+     * * secondary
+     * * warning
+     * * danger
+     * * success
+     * Он будет установлен для html-контейнера самой опции записи, и свойства класса будут применены как к тексту (см. title), так и к иконке (см. icon).
+     */
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#style
+     * @cfg {TIconStyle} Operation style. (secondary | warning | danger | success).
      */
     style?: TIconStyle;
 
     /**
-     * Style of the action's icon.
+     * @name Controls/_itemActions/interface/IItemAction#iconStyle
+     * @cfg {Controls/itemActions:TIconStyle} [iconStyle=secondary] Стиль иконки.
+     * Каждому значению свойства соответствует стиль, который определяется {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темой оформления} приложения.
+     * Доступные значения:
+     * * secondary
+     * * warning
+     * * danger
+     * * success
+     * @default secondary
+     */
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#iconStyle
+     * @cfg {TIconStyle} Style of the action's icon. (secondary | warning | danger | success).
      * @default secondary
      */
     iconStyle?: TIconStyle;
 
     /**
-     * Action's handler.
-     * @param item Corresponding list item.
+     * @name Controls/_itemActions/interface/IItemAction#handler
+     * @cfg {TItemActionHandler} Обработчик опции записи. См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler-click/ пример обработчика}.
      */
-    handler?: (item: Model) => void;
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#handler
+     * @cfg {TItemActionHandler} item action handler callback
+     */
+    handler?: TItemActionHandler;
 
     /**
-     * Determines whether the action opens menu.
+     * @name Controls/_itemActions/interface/IItemAction#parent@
+     * @cfg {Boolean} Поле, описывающее тип узла (список, узел, скрытый узел).
+     * Подробнее о различиях между типами узлов можно прочитать {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy здесь}.
      */
-    _isMenu?: boolean;
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#parent@
+     * @cfg {Boolean} Field that describes the type of the node (list, node, hidden node).
+     */
+    'parent@'?: boolean;
 
     /**
-     * Flag of parent
+     * @name Controls/_itemActions/interface/IItemAction#displayMode
+     * @cfg {Controls/itemActions:TActionDisplayMode} Режим отображения опции записи.
+     * Доступные значения:
+     * * TActionDisplayMode.TITLE - Показывать только название
+     * * TActionDisplayMode.ICON - Показывать только иконку
+     * * TActionDisplayMode.BOTH - Показывать название и иконку
+     * * TActionDisplayMode.AUTO - если есть иконка, то показывать иконку, иначе заголовок
      */
-    'parent@'?: boolean|null;
-
-    /**
-     * настройка отображения иконки и заголовка
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#displayMode
+     * @cfg {Controls/itemActions:TActionDisplayMode} item action display mode
+     * Available values:
+     * * TActionDisplayMode.TITLE - display title only
+     * * TActionDisplayMode.ICON - display icon only
+     * * TActionDisplayMode.BOTH - display title and icon
+     * * TActionDisplayMode.AUTO - display icon when item action has icon otherwise show title
      */
     displayMode?: TActionDisplayMode;
 
     /**
-     * Значение, которое показано в тултипе при наведении на опцию
+     * @name Controls/_itemActions/interface/IItemAction#tooltip
+     * @cfg {String} Текст подсказки при наведении мыши.
+     */
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#tooltip
+     * @cfg {String}
      */
     tooltip?: string;
 
     /**
-     * Parent action id
+     * @name Controls/_itemActions/interface/IItemAction#parent
+     * @cfg {String|Number} Идентификатор родительской опции записи.
+     * Используется для создания {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/hierarchy/ многоуровневого контекстного меню}.
+     */
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#parent
+     * @cfg {String|Number} Key of the action's parent.
      */
     parent?: string | number;
+
+    /**
+     * @name Controls/_itemActions/interface/IItemAction#_isMenu
+     * @cfg {Boolean}
+     * @private
+     */
+    /*
+     * @name Controls/_itemActions/interface/IItemAction#_isMenu
+     * @cfg {Boolean} Determines whether the action opens menu.
+     * @private
+     */
+    _isMenu?: boolean;
 }
 
 /**
  * Расширенный интерфейс IItemAction с полями для использования в шаблоне
+ * @interface Controls/_itemActions/interface/IItemAction:IShownItemAction
+ * @private
+ * @author Аверкиев П.А.
+ */
+/*
+ * Extended interface for itemActions to use it inside of template
+ * @interface Controls/_itemActions/interface/IItemActions:IShownItemAction
+ * @private
+ * @author Аверкиев П.А.
  */
 interface IShownItemAction extends IItemAction {
     /**
@@ -156,9 +281,20 @@ interface IShownItemAction extends IItemAction {
     showIcon?: boolean;
 }
 
-export type TItemActionVisibilityCallback = (action: IItemAction, item: unknown) => boolean;
+/**
+ * @typedef {Function} TItemActionVisibilityCallback
+ * Функция обратного вызова для определения видимости опций записи.
+ * @param action Item Action to check
+ * @param item Model
+ */
+export type TItemActionVisibilityCallback = (action: IItemAction, item: Model) => boolean;
 
-export type TEditArrowVisibilityCallback = (item: unknown) => boolean;
+/**
+ * @typedef {Function} TItemActionVisibilityCallback
+ * Функция обратного вызова для определения видимости кнопки редактирования в свайпе.
+ * @param item Model
+ */
+export type TEditArrowVisibilityCallback = (item: Model) => boolean;
 
 export interface IItemActionsContainer {
     all: IItemAction[];

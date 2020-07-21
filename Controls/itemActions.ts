@@ -20,7 +20,11 @@ export {
     IItemActionsContainer,
     IItemAction,
     TItemActionShowType,
-    TItemActionsPosition
+    TItemActionsPosition,
+    // опции, которые используются в IList
+    TActionCaptionPosition,
+    TActionDisplayMode,
+    TIconStyle
 } from './_itemActions/interface/IItemActions';
 export {IContextMenuConfig} from './_itemActions/interface/IContextMenuConfig';
 export {IItemActionsItem, IItemActionsCollection, Controller} from './_itemActions/Controller';

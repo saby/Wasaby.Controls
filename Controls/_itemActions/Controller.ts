@@ -75,7 +75,7 @@ export interface IItemActionsControllerOptions {
      */
     itemActions: IItemAction[];
     /**
-     * @param theme Название текущей темы оформления
+     * Название текущей темы оформления
      */
     theme: string;
     /**
@@ -126,15 +126,15 @@ export interface IItemActionsControllerOptions {
     /**
      * Видимость Опция записи, которую необходимо тображать в свайпе, если есть editArrow
      */
-    editArrowVisibilityCallback: TEditArrowVisibilityCallback
+    editArrowVisibilityCallback: TEditArrowVisibilityCallback;
     /**
      * Конфигурация для контекстного меню опции записи.
      */
-    contextMenuConfig: IContextMenuConfig
+    contextMenuConfig: IContextMenuConfig;
     /**
      * Редактируемая запись
      */
-    editingItem?: IItemActionsItem
+    editingItem?: IItemActionsItem;
 }
 
 /**
