@@ -102,7 +102,7 @@ export default class Button extends BaseDropdown {
                 context: object,
                 receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
       this._offsetClassName = cssStyleGeneration(options);
-      if (options.originalOptions) {
+      if (!options.originalOptions) {
          this._updateState(options);
       }
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
