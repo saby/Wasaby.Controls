@@ -1,5 +1,4 @@
-import {GridViewModel} from 'Controls/grid';
-import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
+import {GridViewModel, GridLayoutUtil, COLUMN_SCROLL_JS_SELECTORS} from 'Controls/grid';
 import {
     getBottomPaddingRowIndex,
     getFooterIndex,
@@ -8,7 +7,6 @@ import {
 } from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil';
 import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
 
-import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from 'Controls/_grid/resources/ColumnScroll';
 
 function isLastColumn(
    itemData: object,

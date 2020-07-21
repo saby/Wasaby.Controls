@@ -76,7 +76,6 @@ import _swipeActionTemplate = require('wml!Controls/_list/Swipe/resources/SwipeA
 import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
 import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsTemplate');
 
-import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
 import BaseEditingTemplate = require('wml!Controls/_list/EditInPlace/baseEditingTemplate');
 import MoneyEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/MoneyChooser');
@@ -119,7 +118,6 @@ export {
     _swipeActionTemplate,
     _itemActionsForTemplate,
 
-    GridLayoutUtil,
     EditingTemplate,
     BaseEditingTemplate,
     MoneyEditingTemplate,
