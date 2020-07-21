@@ -83,7 +83,8 @@
         <!-- Скрываем topLoadTrigger через display: none, чтобы он не срабатывал сразу после mount. Отступы ему ещё не установлены и он
         сработает сразу после инициализации, хотя далеко не факт что это нужно. -->
         <div name="topLoadTrigger" style="{{!_isMounted ? 'display: none'}}"></div>
-        <Controls.validate:Controller name="formController">
+        <div on:validateCreated="_onValidateCreated()"
+             on:validateDestroyed="_onValidateDestroyed()">
             <ws:partial
                     attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
                     attr:style="{{_attachLoadTopTriggerToNull && _isMounted ? 'padding-top: 1px;'}}"
@@ -154,7 +155,7 @@
                     <ws:partial template="emptyTemplateIf"/>
                 </ws:emptyTemplate>
             </ws:partial>
-        </Controls.validate:Controller>
+        </div>
         <div name="bottomVirtualScrollTrigger" style="position: relative; bottom: 0;"></div>
         <div name="bottomLoadTrigger"></div>
         <ws:if data="{{_needScrollCalculation}}">

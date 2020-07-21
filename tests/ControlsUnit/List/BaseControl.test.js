@@ -3884,7 +3884,7 @@ define([
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
             const formController = {};
-            ctrl._children.formController = formController;
+            ctrl._validateController = formController;
             ctrl._beforeUpdate(cfg);
             ctrl._afterUpdate(cfg);
             assert.equal(ctrl._editInPlace._formController, formController);

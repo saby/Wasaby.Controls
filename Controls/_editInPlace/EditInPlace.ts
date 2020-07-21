@@ -229,6 +229,9 @@ const _private = {
     },
 
     validate(self: EditInPlace): Promise<any> {
+        if (typeof self._formController.deferSubmit !== 'undefined') {
+            return self._formController.deferSubmit();
+        }
         return self._formController.submit();
     },
 

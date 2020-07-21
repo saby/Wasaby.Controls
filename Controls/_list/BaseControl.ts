@@ -18,6 +18,7 @@ import {Model, relation} from 'Types/entity';
 import {IHashMap} from 'Types/declarations';
 
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {ControllerClass, Container as ValidateContainer} from 'Controls/validate';
 import {Logger} from 'UI/Utils';
 
 import {TouchContextField} from 'Controls/context';
@@ -2436,10 +2437,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _insideDragging: false,
     _endDragNDropTimer: null, // для IE
     _draggedKey: null,
+    _validateController: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
+        this._validateController = new ControllerClass()
         this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._startDragNDropCallback = this._startDragNDropCallback.bind(this);
     },
@@ -2765,7 +2768,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(this._children.formController);
+            this._editInPlace.registerFormOperation(this._validateController);
             this._editInPlace.updateViewModel(this._listViewModel);
         }
 
@@ -3050,6 +3053,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return _private.scrollToItem(this, key, toBottom, force);
     },
 
+    _onValidateCreated(e: Event, control: ValidateContainer): void {
+        this._validateController.addValidator(control);
+    },
+
+    _onValidateDestroyed(e: Event, control: ValidateContainer): void {
+        this._validateController.removeValidator(control);
+    },
+
     _beforeUnmount() {
         if (this._checkLoadToDirectionTimeout) {
             clearTimeout(this._checkLoadToDirectionTimeout);
@@ -3092,6 +3103,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._portionedSearch.destroy();
             this._portionedSearch = null;
         }
+
+        this._validateController.destroy();
+        this._validateController = null;
 
         // для связи с контроллером ПМО
         this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
@@ -3225,12 +3239,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(this._children.formController);
+            this._editInPlace.registerFormOperation(this._validateController);
             this._editInPlace.prepareHtmlInput();
         }
 
         if (this._scrollController) {
-            this._scrollController.setTriggers(this._children)
+            this._scrollController.setTriggers(this._children);
             this._scrollController.registerObserver();
         }
     },
