@@ -647,7 +647,6 @@ var
         _columns: [],
         _curColumnIndex: 0,
 
-        _lastItemKey: undefined,
         _headerRows: [],
         _headerColumns: [],
         _curHeaderColumnIndex: 0,
@@ -698,7 +697,6 @@ var
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
             this._onCollectionChangeFn = function(event, action) {
-                this._updateLastItemKey();
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
@@ -716,7 +714,6 @@ var
                 this._isMultiHeader = this.isMultiHeader(this._options.header);
             }
             this._setHeader(this._options.header);
-            this._updateLastItemKey();
         },
         _isSupportLadder(ladderProperties: []): boolean {
             return isSupportLadder(ladderProperties);
@@ -728,12 +725,6 @@ var
 
         getTheme(): string {
             return this._model.getTheme();
-        },
-
-        _updateLastItemKey(): void {
-            if (this.getItems()) {
-                this._lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this.getKeyProperty());
-            }
         },
 
         _updateIndexesCallback(): void {
@@ -1522,7 +1513,7 @@ var
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
             current.getSeparatorForColumn = _private.getSeparatorForColumn;
             current.isLastItem = (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
-                                 (this.getCount() - 1 === this.getIndex(dispItem));
+                                 (this.getCount() - 1 === current.index);
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
@@ -1767,7 +1758,6 @@ var
 
         setItems(items, cfg): void {
             this._model.setItems(items, cfg);
-            this._updateLastItemKey();
         },
 
         setItemTemplateProperty: function(itemTemplateProperty) {
@@ -1844,7 +1834,7 @@ var
         _calcItemVersion(item, key, index): string {
             let version: string = this._model._calcItemVersion(item, key) + (item.getId ? item.getId() : '');
 
-            if (this._lastItemKey === key) {
+            if (this.getCount() - 1 === index) {
                 version = 'LAST_ITEM_' + version;
 
                 if (this._options.rowSeparatorSize) {
