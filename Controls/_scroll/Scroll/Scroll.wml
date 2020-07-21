@@ -56,7 +56,6 @@
 
    <ws:if data="{{_scrollbarVisibility()}}">
       <Controls._scroll.Scroll.Scrollbar
-         position="{{_scrollTop}}"
          name="scrollBar"
          contentSize="{{_displayState.contentHeight}}"
          attr:class="controls-Scroll__scrollbar {{!_dragging ? 'controls-Scroll__scrollbar_hidden'}}
