@@ -11,7 +11,6 @@ export default class extends Control {
    protected _source: DelaySuggestSource = null;
    protected _navigation: object;
    protected _beforeMount(): void {
-
       this._source = new DelaySuggestSource({
             keyProperty: 'id',
             data: _departmentsDataLong,
