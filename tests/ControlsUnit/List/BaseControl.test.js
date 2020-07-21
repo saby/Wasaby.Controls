@@ -1728,13 +1728,16 @@ define([
             controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
             assert.isNotNull(controller);
 
+            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+            assert.isNull(controller);
+
             baseControl._listViewModel = null;
             controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
             assert.isNull(controller);
          });
 
          it('should init selection controller even when multiselectVisibility===\'null\'', () => {
-            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: null });
             assert.isNotNull(controller);
          });
       });
@@ -1752,7 +1755,7 @@ define([
                viewModelConstructor: lists.ListViewModel,
                selectedKeys: [],
                excludedKeys: [],
-               multiSelectVisibility: 'hidden'
+               multiSelectVisibility: 'visible'
             },
             baseControl = new lists.BaseControl(lnCfg);
 
