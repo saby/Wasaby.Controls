@@ -35,7 +35,6 @@
                     itemActionsClass="{{_options.itemActionsClass}}"
                     groupTemplate="{{_groupTemplate}}"
                     itemActionsPosition="{{_options.itemActionsPosition}}"
-                    itemOutputWrapper="{{_itemOutputWrapper}}"
                     swipeTemplate="{{_options.swipeTemplate}}"
                     backgroundStyle="{{_options.backgroundStyle || _options.style}}"
                     isColumnScrollVisible="{{ _isColumnScrollVisible }}"
@@ -59,7 +58,7 @@
                     isFullGridSupport="{{ _isFullGridSupport }}"
                     containerSize="{{ _containerSize }}"
                     hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"
-                    hasColumnScroll="{{ _options.columnScroll }}"/>
+                    hasColumnScroll="{{ _isColumnScrollVisible }}"/>
     </ws:if>
 
     <!-- Результаты снизу -->

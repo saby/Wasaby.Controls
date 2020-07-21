@@ -52,8 +52,6 @@ export interface IPopupTemplateBaseOptions {
     bodyContentTemplate?: TemplateFunction;
     footerContentTemplate?: TemplateFunction;
     headingCaption?: string;
-    headingStyle?: string;
-    headingSize?: string;
     headingFontSize?: string;
     headingFontColorStyle?: string;
     closeButtonVisibility?: boolean;

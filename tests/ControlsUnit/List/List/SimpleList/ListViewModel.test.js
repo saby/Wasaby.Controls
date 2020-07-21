@@ -218,7 +218,6 @@ define([
 
          var cur = iv.getCurrent();
          assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
-         assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(cfg.items.at(0), cur.item, 'Incorrect field set on getCurrent()');
       });
@@ -638,6 +637,15 @@ define([
                showed: [1]
             });
             assert.isTrue(!!item.shouldDisplayActions());
+
+            // Проверяем что чекбокс не будет показываться если запись редактируется
+            assert.isFalse(item.hasMultiSelect);
+            lvm.setMultiSelectVisibility('visible');
+            item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
+            assert.isTrue(item.hasMultiSelect);
+            lvm.getItemById('1', 'id').setEditing(true);
+            item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
+            assert.isFalse(item.hasMultiSelect);
          });
 
          it('getMultiSelectClassList hidden', function() {
@@ -670,27 +678,25 @@ define([
 
          it('getMultiSelectClassList', () => {
             const current = {
-               multiSelectVisibility: 'visible',
-               multiSelectStatus: false
+               isSelected: () => false
             };
 
-            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, false),
                'js-controls-ListView__checkbox js-controls-ListView__notEditable');
 
-            current.multiSelectVisibility = 'onhover';
-            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
                'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
 
-            current.multiSelectStatus = true;
-            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+            current.isSelected = () => true;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
                'js-controls-ListView__checkbox js-controls-ListView__notEditable');
 
-            current.multiSelectStatus = null;
-            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+            current.isSelected = () => null;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
                'js-controls-ListView__checkbox js-controls-ListView__notEditable');
 
-            current.multiSelectStatus = undefined;
-            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current),
+            current.isSelected = () => undefined;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
                'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
          });
 

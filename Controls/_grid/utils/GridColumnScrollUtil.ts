@@ -12,10 +12,13 @@ interface IShouldAddActionsCellArgs {
     // Всегда, когда нет колонок мы ничего больше не добавляем.
     // PS. Эта опция не учитывает, что в таблицу был передан header.
     hasColumns: boolean;
+
+    // Дополнительная колонка нужны, если itemActionsPosition !== custom
+    itemActionsPosition?: string;
 }
 
 export function shouldAddActionsCell(opts: IShouldAddActionsCellArgs): boolean {
-    return opts.hasColumns && opts.hasColumnScroll && opts.isFullGridSupport;
+    return opts.hasColumns && opts.hasColumnScroll && opts.isFullGridSupport && (opts.itemActionsPosition !== 'custom');
 }
 
 export function shouldDrawColumnScroll(scrollContainer: HTMLDivElement, contentContainer: HTMLDivElement): boolean {

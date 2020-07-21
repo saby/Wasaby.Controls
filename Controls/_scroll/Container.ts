@@ -229,6 +229,26 @@ let
           return shadowPosition;
       },
 
+       _setScrollTop(self, value: number): void {
+            // На айпаде скроллбар не строится. Чтобы изменение св-ва _scrollTop не приводило к _forceUpdate
+            // его нельзя объявлять на шаблоне ( даже в ветке кода, которая не испольняется). Перевожу на сеттер.
+            self._scrollTop = value;
+            self._children.scrollBar?.setScrollPosition(value);
+            _private.updateStates(self);
+       },
+
+       updateStates(self): void {
+           const oldDisplayState = self._displayState;
+           const displayState = _private.calcDisplayState(self);
+
+           if (!isEqual(oldDisplayState, displayState)) {
+               self._displayState = displayState;
+               self._stickyHeaderController.setCanScroll(displayState.canScroll);
+               if (oldDisplayState.canScroll !== displayState.canScroll) {
+                   _private._updateScrollbar(self);
+               }
+           }
+       },
       /**
        * Возвращает включено ли отображение тени.
        * Если отключено, то не рендерим контейнер тени и не рассчитываем его состояние.
@@ -294,7 +314,8 @@ let
 
       setScrollTop: function(self, scrollTop) {
          self._children.scrollWatcher.setScrollTop(scrollTop);
-         self._scrollTop = _private.getScrollTop(self, self._children.content);
+         const value = _private.getScrollTop(self, self._children.content);
+         _private._setScrollTop(self, value);
          _private.notifyScrollEvents(self, scrollTop);
       },
 
@@ -430,7 +451,8 @@ let
       },
 
        _updateScrollbar: function(self): void {
-         if (self._displayState.canScroll) {
+          // Там где нативный скроллбар, стили считать не нужно
+         if (self._displayState.canScroll && self._scrollbarVisibility()) {
             self._displayState.contentHeight = _private.getContentHeight(self);
             self._scrollbarStyles =  'top:' + self._headersHeight.top + 'px; bottom:' + self._headersHeight.bottom + 'px;';
          }
@@ -559,7 +581,9 @@ let
             this._pagingState = {};
          }
 
-         this._stickyHeaderController = new StickyHeaderController(this);
+         this._stickyHeaderController = new StickyHeaderController(this, {
+             fixedCallback: this._stickyHeaderFixedCallback.bind(this)
+         });
 
          if (receivedState) {
             _private.updateDisplayState(this, receivedState.displayState);
@@ -639,7 +663,8 @@ let
           * Для определения heightFix и styleHideScrollbar может требоваться DOM, поэтому проверим
           * смогли ли мы в beforeMount их определить.
           */
-         var needUpdate = false, calculatedOptionValue;
+         let needUpdate = false;
+         let calculatedOptionValue;
 
          if (typeof this._displayState.heightFix === 'undefined') {
             this._displayState.heightFix = ScrollHeightFixUtil.calcHeightFix(this._children.content);
@@ -806,6 +831,10 @@ let
            return this._displayState.shadowVisible[position];
        },
 
+       _stickyHeaderFixedCallback(position: POSITION): void {
+          this._forceUpdate();
+       },
+
       _updateShadowMode(event, shadowVisibleObject): void {
           event.stopImmediatePropagation();
          // _shadowVisibilityByInnerComponents не используется в шаблоне,
@@ -876,19 +905,9 @@ let
          if (this._isHidden()) {
             return;
          }
-         const oldDisplayState = this._displayState;
-         const displayState = _private.calcDisplayState(this);
-
-         if (!isEqual(oldDisplayState, displayState)) {
-            this._displayState = displayState;
-            this._stickyHeaderController.setCanScroll(displayState.canScroll);
-            if (oldDisplayState.canScroll !== displayState.canScroll) {
-               _private._updateScrollbar(this);
-            }
-         }
-
+         _private.updateStates(this);
          _private.calcPagingStateBtn(this);
-         this._stickyHeaderController.resizeHandler()
+         this._stickyHeaderController.resizeHandler();
       },
 
       _scrollHandler: function(ev) {
@@ -905,7 +924,7 @@ let
          } else if (this._scrollTop !== scrollTop || this._scrollLeft !== scrollLeft) {
             if (!this._dragging) {
                 if (this._scrollTop !== scrollTop) {
-                    this._scrollTop = scrollTop;
+                    _private._setScrollTop(this, scrollTop);
                     this._notify('scroll', [this._scrollTop]);
                 }
                 if (this._scrollLeft !== scrollLeft) {
@@ -1064,7 +1083,7 @@ let
             // В случае если запомненная позиция скролла для восстановления не совпадает с
             // текущей, установим ее при окончании перетаскивания
             if (this._scrollTopAfterDragEnd !== this._scrollTop) {
-               this._scrollTop = this._scrollTopAfterDragEnd;
+                _private._setScrollTop(this, this._scrollTopAfterDragEnd);
                _private.notifyScrollEvents(this, this._scrollTop);
             }
             this._scrollTopAfterDragEnd = undefined;

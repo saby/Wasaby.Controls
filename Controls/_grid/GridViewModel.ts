@@ -140,7 +140,7 @@ var
                 return classLists;
             }
             const arrayLengthOffset = params.hasActionCell ? 2 : 1;
-            const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side]}` : '';
+            const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side].toLowerCase()}` : '';
 
             // Колонки
             if (params.hasMultiSelect ? params.columnIndex > 1 : params.columnIndex > 0) {
@@ -198,7 +198,7 @@ var
                 const { cellPadding } = (params.columns && params.columns[params.columnIndex]) || {};
                 result = (cellPadding && cellPadding[side]) || '';
             }
-            return !!result ? `_${result}` : '';
+            return !!result ? `_${result.toLowerCase()}` : '';
         },
 
         getPaddingHeaderCellClasses: function(params, theme) {
@@ -309,13 +309,13 @@ var
                 classLists.base += ' controls-Grid__cell_fit';
             }
 
-            if (current.isEditing) {
+            if (current.isEditing()) {
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
                 classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;
             }
 
-            if (current.columnScroll && !current.isEditing) {
+            if (current.columnScroll && !current.isEditing()) {
                 classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
             }
 
@@ -329,21 +329,21 @@ var
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
             }
 
-            if (current._isSelected && current.markerVisibility !== 'hidden') {
+            if (current.dispItem.isMarked() && current.markerVisibility !== 'hidden') {
                 style = current.style || 'default';
-                classLists.base += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+                classLists.marked = `controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
                 // нужно его принудительно установить как фон таблицы
                 if (!isFullGridSupport && !current.isEditing) {
-                    classLists.base += _private.getBackgroundStyle({backgroundStyle, theme}, true);
+                    classLists.marked += _private.getBackgroundStyle({backgroundStyle, theme}, true);
                 }
 
                 if (current.columnIndex === 0) {
-                    classLists.base += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
+                    classLists.marked += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
                 }
                 if (current.columnIndex === current.getLastColumnIndex()) {
-                    classLists.base += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${style}_theme-${theme}`;
+                    classLists.marked += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${style}_theme-${theme}`;
                 }
             } else if (current.columnIndex === current.getLastColumnIndex()) {
                 classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
@@ -608,6 +608,30 @@ var
                     classLists.columnContent += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
                 }
             }
+        },
+        setRowClassesGettersOnItemData(self, itemData): void {
+            const style = itemData.style || 'default';
+            const theme = itemData.theme || 'default';
+
+            itemData._staticRowClassses = `controls-Grid__row controls-Grid__row_${style}_theme-${theme} `;
+
+            if (itemData.isLastItem) {
+                itemData._staticRowClassses += 'controls-Grid__row_last ';
+            }
+
+            itemData.getRowClasses = (tmplParams: {
+                highlightOnHover?: boolean;
+                clickable?: boolean;
+                cursor?: 'default' | 'pointer';
+            }) => {
+                let classes = `${itemData.calcCursorClasses(tmplParams.clickable, tmplParams.cursor).trim()} `;
+
+                if (tmplParams.highlightOnHover !== false && !itemData.isEditing()) {
+                    classes += `controls-Grid__row_highlightOnHover_${style}_theme-${theme} `;
+                }
+
+                return `${itemData._staticRowClassses} ${classes.trim()}`;
+            }
         }
     },
 
@@ -853,7 +877,8 @@ var
             return shouldAddActionsCell({
                 hasColumnScroll: !!this._options.columnScroll,
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
-                hasColumns: !!this._columns.length
+                hasColumns: !!this._columns.length,
+                itemActionsPosition: this._options.itemActionsPosition
             });
         },
         /**
@@ -1097,6 +1122,7 @@ var
             headerColumn.cellStyles = cellStyles;
             headerColumn.cellClasses = cellClasses;
             headerColumn.cellContentClasses = cellContentClasses;
+            headerColumn.itemActionsPosition = this._options.itemActionsPosition;
 
             return headerColumn;
         },
@@ -1340,6 +1366,9 @@ var
         getIndexByKey: function() {
             return this._model.getIndexByKey.apply(this._model, arguments);
         },
+        getIndexBySourceIndex(sourceIndex: number): number {
+            return this._model.getIndexBySourceIndex(sourceIndex);
+        },
 
         getSelectionStatus: function() {
             return this._model.getSelectionStatus.apply(this._model, arguments);
@@ -1475,6 +1504,9 @@ var
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
+            // todo remove multiSelectVisibility by task:
+            // https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
+            current.multiSelectVisibility = this._options.multiSelectVisibility;
             current.getColspanForColumnScroll = () => _private.getColspanForColumnScroll(self);
             current.getColspanFor = (elementName: string) => self.getColspanFor.apply(self, [elementName]);
             current.stickyColumnsCount = this._options.stickyColumnsCount;
@@ -1491,10 +1523,6 @@ var
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
             );
 
-            const superShouldDrawMarker = current.shouldDrawMarker;
-            current.shouldDrawMarker = (marker?: boolean, columnIndex: number): boolean => {
-                return columnIndex === 0 && superShouldDrawMarker.apply(this, [marker]);
-            };
             const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}
             controls-GridView__itemV_marker-${style}_theme-${self._options.theme}
@@ -1604,6 +1632,8 @@ var
                     (self._options.multiSelectVisibility === 'hidden' ? current.columnIndex : current.columnIndex - 1);
             };
 
+            _private.setRowClassesGettersOnItemData(this, current);
+
             current.getCurrentColumn = function(backgroundColorStyle) {
                 const currentColumn: any = {
                         item: current.item,
@@ -1629,7 +1659,6 @@ var
                         tableCellStyles: '',
                         getItemActionPositionClasses: current.getItemActionPositionClasses,
                         getItemActionClasses: current.getItemActionClasses,
-                        isEditingState: current.isEditingState,
                         isSwiped: current.isSwiped,
                         getActions: current.getActions,
                         getContents: current.getContents

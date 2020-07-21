@@ -49,16 +49,18 @@ define('Controls/interface/IEditableList', [
    /**
     * @typedef {Object} EditingConfig
     * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
-    * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего (уже сущестсвующего) элемента списка автоматически добавляется новый элемент и начинается его редактирование.
+    * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего (уже существующего) элемента списка автоматически добавляется новый элемент и начинается его редактирование.
     * @property {Boolean} [autoAddByApplyButton=false] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
     * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
     * @property {AddPositionOption} [addPosition] Позиция редактирования по месту.
     * @property {Types/entity:Model} [item=undefined] Запись, которая будет запущена на редактирование при первой отрисовке списка.
-    * Такая запись должна присутствовать в {@link Types/source:DataSet}, который получен от источника данных и отрисован контролом.
-    * Когда выполнено это условие, после редактирования такой записи она удачно сохраняется в источнике данных.
+    * 
+    * Запись необязательно должна присутствовать в {@link Types/source:DataSet}, который получен от источника данных.
+    * Если переданная запись присутствует в Types/source:DataSet, то будет запущено ее редактирование, а иначе — запустится добавление этой записи.
+    * После редактирования добавляемая запись сохранится в источнике данных.
     *
-    * Создание записи выполняют по следующему алгоритму:
+    * Создание новой записи выполняют по следующему алгоритму:
     *
     * 1. В хуке <a href="/doc/platform/developmentapl/interface-development/ui-library/control/#phase-before-mount">_beforeMount()</a> опишите {@link Types/source:SbisService источник данных бизнес-логики} (далее SbisService).
     * 2. Из этого источника запросите набор данных (далее DataSet). Полученный DataSet будет передан в контрол для отрисовки.
@@ -69,8 +71,8 @@ define('Controls/interface/IEditableList', [
     *
     * Далее показан пример создания редактируемой записи.
     *
-    * * JavaScript
     * <pre class="brush: js">
+    * // JavaScript
     * _BLsource: null,
     * _editRecord: null,
     * _source: null,
@@ -112,11 +114,12 @@ define('Controls/interface/IEditableList', [
     *    });
     * }
     * </pre>
-    * * WML
-    * <pre>
+    *
+    * <pre class="brush: html; highlight: [2,4]">
+    * <!-- WML -->
     * <Controls.list:DataContainer source="{{_source}}">
     *   <Controls.explorer:View>
-    *       <ws:editingConfig item="{{ _editRecord }}" />
+    *       <ws:editingConfig item="{{_editRecord}}" />
     *   </Controls.explorer:View>
     * </Controls.list:DataContainer>
     * </pre>

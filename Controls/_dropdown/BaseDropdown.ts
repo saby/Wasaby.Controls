@@ -3,9 +3,12 @@ import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import IDropdownController from 'Controls/_dropdown/interface/IDropdownController';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
-import {DependencyTimer} from "Controls/Utils/FastOpen";
+import {DependencyTimer} from 'Controls/Utils/FastOpen';
+import {RecordSet} from 'Types/collection';
 
-export default class BaseDropdown extends Control<IControlOptions> {
+export type DropdownReceivedState = {items?: RecordSet, history?: RecordSet};
+
+export class BaseDropdown extends Control<IControlOptions, DropdownReceivedState> {
     protected _controller: IDropdownController = null;
     protected _popupId: string = null;
     protected _dependenciesTimer: DependencyTimer = null;
@@ -13,7 +16,7 @@ export default class BaseDropdown extends Control<IControlOptions> {
     reload(): void {
         this._controller.reload();
     }
-  
+
     closeMenu(): void {
         this._controller.closeMenu();
     }

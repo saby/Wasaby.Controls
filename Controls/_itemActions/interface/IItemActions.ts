@@ -68,7 +68,7 @@ export type TItemActionsPosition = 'inside'|'outside'|'custom';
  * @variant inside Внутри элемента.
  * @variant outside Под элементом.
  */
-export type TItemActionsSize = 'm'|'s';
+export type TItemActionsSize = 'm'|'l';
 
 /**
  * @cfg {string} TItemActionsSize
