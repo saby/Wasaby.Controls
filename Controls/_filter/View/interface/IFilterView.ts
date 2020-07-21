@@ -21,7 +21,7 @@
  * @property {Boolean} multiSelect Определяет, установлен ли множественный выбор.
  * @property {Controls/_interface/ISelectorDialog} selectorTemplate Шаблон панели выбора элементов.
  * @property {Function|String} itemTemplate Шаблон рендеринга элементов.
- * Подробнее о настройке itemTemplate читайте {@link Controls/_menu/interface/ItemTemplate здесь}.
+ * Подробнее о настройке itemTemplate читайте {@link Controls/_menu/interface/IMenuControl#itemTemplate здесь}.
  * Для задания элемента в качестве заголовка используйте шаблон {@link Controls/filterPopup:SimplePanelEmptyItemTemplate}.
  * @property {String} itemTemplateProperty Имя свойства, содержащего шаблон для рендеринга элементов.
  * Подробнее о настройке itemTemplateProperty читайте {@link Controls/_menu/interface/IMenuControl#itemTemplateProperty здесь}.
@@ -30,7 +30,7 @@
  * Подробнее читайте {@link Controls/_interface/IFilter#filter здесь}.
  * @property {Object} navigation Конфигурация навигации по списку. Настройка навигации источника данных (страницы, смещение, положение) и представления навигации (страницы, бесконечная прокрутка и т. д.).
  * Подробнее читайте {@link Controls/_interface/INavigation#navigation здесь}.
- * @property {String} editorMode Режим отображения редактора. Принимаемые значения см. в документации редактора.
+ * @property {String} editorMode Режим отображения редактора. Принимаемые значения смотритре в документации редактора.
  */
 
 /*
