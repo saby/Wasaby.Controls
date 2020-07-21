@@ -27,7 +27,7 @@ import buttonLib = require('Controls/buttons');
 
    function cssStyleGeneration(options) {
       const currentButtonClass = options.originalOptions ?
-          buttonLib.ActualApi.styleToViewMode(options.style) : options.style;
+          buttonLib.ActualApi.styleToViewMode(options.style) : {};
 
       // для каждого размера вызывающего элемента создаем класс, который выравнивает popup через margin.
       let offsetClassName = 'controls-MenuButton_' + (currentButtonClass.viewMode || options.viewMode);
