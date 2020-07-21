@@ -15,7 +15,8 @@
                         {{_displayState.hasScroll ? 'controls-Scroll__content_possibleScroll'}}
                         {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' :
                          _classTypeScroll}}
-                        {{_overflowScrolling ? 'controls-Scroll__content-overflowScrolling'}}"
+                        {{_overflowScrolling ? 'controls-Scroll__content-overflowScrolling'}}
+                        {{_options.newShadow ? 'controls-Scroll__new-Shadow'}}"
               on:controlResize="_resizeHandler()"
               on:scroll="_scrollHandler()">
             <ws:partial template="{{_options.content}}"
@@ -65,10 +66,10 @@
          on:draggingChanged="_draggingChangedHandler()"
          attr:style="{{_scrollbarStyles}}"/>
    </ws:if>
-   <ws:if data="{{_displayState.shadowEnable.top}}">
+   <ws:if data="{{_displayState.shadowEnable.top && !_options.newShadow}}">
       <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_top {{!_shadowVisible('top') ? ' ws-invisible'}}"></div>
    </ws:if>
-   <ws:if data="{{_displayState.shadowEnable.bottom}}">
+   <ws:if data="{{_displayState.shadowEnable.bottom && !_options.newShadow}}">
       <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_bottom {{!_shadowVisible('bottom') ? ' ws-invisible'}}"></div>
    </ws:if>
    <ws:if data="{{_horizontalScrollbarVisibility()}}">
