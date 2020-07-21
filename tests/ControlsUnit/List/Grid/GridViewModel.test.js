@@ -716,7 +716,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 expected.withoutMarker,
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
          });
-         /*it('should update last item after append items', function () {
+         it('should update last item after append items', function () {
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
                 oldLastIndex = gridViewModel.getCount()- 1,
@@ -746,7 +746,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             newLastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(gridViewModel.getCount()-1));
             assert.isTrue(newLastItem.getVersion().indexOf('LAST_ITEM') !== -1);
 
-         });*/
+         });
 
          it('getItemDataByItem', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
@@ -2191,9 +2191,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(' ' + backgroundStyle, gridMod.GridViewModel._private.getBackgroundStyle({...params, theme}, true));
          });
 
-         /*it('getBottomPaddingStyles', function() {
+         it('getBottomPaddingStyles', function() {
             assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 10; grid-row-end: 11;', gridViewModel.getBottomPaddingStyles());
-         });*/
+         });
 
          it('getColumnAlignGroupStyles', function () {
 

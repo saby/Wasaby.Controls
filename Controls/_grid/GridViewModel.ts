@@ -1819,13 +1819,13 @@ var
         _calcItemVersion(item, key, index): string {
             let version: string = this._model._calcItemVersion(item, key) + (item.getId ? item.getId() : '');
 
-            // if (this._lastItemKey === key) {
-            version = 'LAST_ITEM_' + version;
+            if (this.getCount() - 1 === index) {
+                version = 'LAST_ITEM_' + version;
 
-            if (this._options.rowSeparatorSize) {
-                version = 'WITH_SEPARATOR_' + `${this._model.getHasMoreData()}_` + version;
+                if (this._options.rowSeparatorSize) {
+                    version = 'WITH_SEPARATOR_' + `${this._model.getHasMoreData()}_` + version;
+                }
             }
-            // }
 
             version += _private.calcLadderVersion(this._ladder, index);
 
