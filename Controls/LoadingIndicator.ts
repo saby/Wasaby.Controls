@@ -105,6 +105,11 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     protected _afterMount(cfg: ILoadingIndicatorOptions): void {
         if (cfg.mainIndicator) {
             LoadingIndicatorOpener._setIndicator(this);
+            // Вернул для индикаторов, вызванных из кода
+            requirejs(['Controls/popup'], (popup) => {
+                ManagerController = popup.Controller;
+                ManagerController.setIndicator(this);
+            });
         }
 
         // TODO Откатить DOM-решение или доказать невозмодность другого в задаче по ссылке ниже.
