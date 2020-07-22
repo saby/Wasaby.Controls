@@ -3508,11 +3508,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // TODO изабвиться по задаче https://online.sbis.ru/opendoc.html?guid=f7029014-33b3-4cd6-aefb-8572e42123a2
         // Колбэк передается из explorer.View, чтобы не проставлять маркер перед проваливанием в узел
-        if (
-           this._options._needSetMarkerCallback && !(itemData.item instanceof Array)
-           && !domEvent.target.closest('.js-controls-ListView__checkbox')
-        ) {
-            canBeMarked = canBeMarked && this._options._needSetMarkerCallback(itemData.item);
+        if (this._options._needSetMarkerCallback) {
+            canBeMarked = canBeMarked && this._options._needSetMarkerCallback(itemData.item, domEvent);
         }
 
         if (canBeMarked) {
