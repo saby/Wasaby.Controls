@@ -67,7 +67,7 @@
 
          <ws:if data="{{itemData.stickyProperties[index]}}">
             <ws:if data="{{index === 1}}">
-               <div class="controls-Grid__row-additional_ladderWrapper" style="left: -{{_options.columns[currentColumn.columnIndex].width}}px;">
+               <div class="controls-Grid__row-additional_ladderWrapper" style="left: -{{currentColumn.column.width}};">
                   <ws:partial template="ladderStickyHeader" attr:class="{{itemData.getAdditionalLadderClasses()}}" attr:style="z-index: 1" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
                </div>
             </ws:if>
