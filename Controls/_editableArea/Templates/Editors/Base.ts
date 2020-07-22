@@ -8,7 +8,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
  *
  * @class Controls/_editableArea/Templates/Editors/Base
  * @extends Core/Control
- * @author Авраменко А.С.
+ * @author Красильников А.С.
  * @public
  * @see Controls/_editableArea/Templates/Editors/DateTime
  *
