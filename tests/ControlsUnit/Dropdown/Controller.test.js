@@ -624,6 +624,16 @@ define(
                assert.isTrue(resultPopupConfig.templateOptions.closeButtonVisibility);
                assert.equal(resultPopupConfig.templateOptions.source, 'testSource');
             });
+
+            it('templateOptions', () => {
+               const resultPopupConfig = dropdownController._getPopupOptions({
+                  testPopupOptions: 'testValue'
+               });
+
+               assert.equal(resultPopupConfig.direction, 'top');
+               assert.equal(resultPopupConfig.target, 'testTarget');
+               assert.equal(resultPopupConfig.testPopupOptions, 'testValue');
+            });
          });
 
          it('_beforeUnmount', function() {
