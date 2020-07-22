@@ -19,7 +19,7 @@ import {
     TItemActionShowType,
     TItemActionsPosition,
     IItemActionsItem,
-    IContextMenuConfig
+    IContextMenuConfig, IShownItemAction
 } from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -228,7 +228,7 @@ export default class View extends Control<IViewOptions> {
     protected _onItemActionClick(
         e: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
-        action: IItemAction,
+        action: IShownItemAction,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         if (this._markerController) {
@@ -301,10 +301,16 @@ export default class View extends Control<IViewOptions> {
      * @param isMenuClick
      * @private
      */
-    private _handleItemActionClick(action: IItemAction, clickEvent: SyntheticEvent<MouseEvent>, item: IItemActionsItem, isMenuClick: boolean): void {
-        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
-        let contents = View._getItemContents(item);
-        const itemContainer = this._resolveItemContainer(item, isMenuClick);
+    private _handleItemActionClick(
+        action: IShownItemAction,
+        clickEvent: SyntheticEvent<MouseEvent>,
+        item: IItemActionsItem,
+        isMenuClick: boolean
+    ): void {
+        // TODO нужно заменить на item.getContents() при переписывании моделей.
+        //  item.getContents() должен возвращать Record
+        const contents = View._getItemContents(item);
+        const itemContainer = this._resolveItemContainer(item as CollectionItem<Model>, isMenuClick);
         this._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
         if (action.handler) {
             action.handler(contents);
@@ -317,7 +323,7 @@ export default class View extends Control<IViewOptions> {
      * @param item
      * @param isMenuClick
      */
-    private _resolveItemContainer(item, isMenuClick: boolean): HTMLElement {
+    private _resolveItemContainer(item: CollectionItem<Model>, isMenuClick: boolean): HTMLElement {
         // TODO: self._container может быть не HTMLElement, а jQuery-элементом,
         //  убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
         const container = this._container.get ? this._container.get(0) : this._container;
@@ -376,11 +382,12 @@ export default class View extends Control<IViewOptions> {
      * @param isContextMenu
      */
     private _openItemActionsMenu(
-        action: IItemAction,
+        action: IShownItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, this, isContextMenu);
+        const menuConfig = this._itemActionsController
+            .prepareActionsMenuConfig(item, clickEvent, action, this, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
         }
@@ -419,7 +426,7 @@ export default class View extends Control<IViewOptions> {
      */
     private _closePopup() {
         if (this._itemActionsMenuId) {
-        Sticky.closePopup(this._itemActionsMenuId);
+            Sticky.closePopup(this._itemActionsMenuId);
             this._itemActionsController.setActiveItem(null);
             this._itemActionsController.deactivateSwipe();
             UnregisterUtil(this, 'scroll');

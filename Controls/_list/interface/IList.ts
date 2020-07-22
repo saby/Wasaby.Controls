@@ -225,7 +225,6 @@ export interface IList {
  * @name Controls/_list/interface/IList#itemActions
  * @cfg {Array.<Controls/itemActions:IItemAction>} Конфигурация опций записи.
  * @remark
- * См. {@link Controls/itemActions:IItemAction IItemAction}
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">демо-пример</a>.
  * Для корректной работы опций записи для контрола нужно задать значение в опции {@link Controls/list:View keyProperty}.
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
@@ -245,7 +244,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#itemActionsPosition
- * @cfg {Controls/itemActions:TItemActionsPosition} Позиционирование панели с опциями записи.
+ * @cfg {Controls/_itemActions/interface/IItemAction/TItemActionsPosition.typedef} Позиционирование панели с опциями записи.
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">демо-пример</a>.
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FItemActionsCustom">демо-пример</a>.
@@ -285,7 +284,7 @@ export interface IList {
 
 /*ENG
  * @name Controls/_list/interface/IList#itemActionsPosition
- * @cfg {String} Position of item actions.
+ * @cfg {Controls/_itemActions/interface/IItemAction/TItemActionsPosition.typedef} Position of item actions.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Example</a>.
  * @variant inside Item actions will be positioned inside the item's row.
  * @variant outside Item actions will be positioned under the item's row.
@@ -412,7 +411,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#actionCaptionPosition
- * @cfg {Controls/itemActions:TActionCaptionPosition} Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
+ * @cfg {Controls/_itemActions/interface/IItemAction/TActionCaptionPosition.typedef} Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">демо-пример</a>.
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
@@ -426,7 +425,7 @@ export interface IList {
 
 /*ENG
  * @name Controls/_list/interface/IList#actionCaptionPosition
- * @cfg {String} Determines where the caption of an item action will be displayed on swipe.
+ * @cfg {Controls/_itemActions/interface/IItemAction/TActionCaptionPosition.typedef} Determines where the caption of an item action will be displayed on swipe.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">Example</a>.
  * @variant right Title will be displayed to the right of the action's icon.
  * @variant bottom Title will be displayed under the action's icon.
