@@ -1,5 +1,6 @@
 define([
    'Core/core-merge',
+   'Types/entity',
    'Types/collection',
    'Controls/calendar',
    'Controls/Utils/Date',
@@ -9,6 +10,7 @@ define([
    'wml!Controls/_calendar/MonthList/YearTemplate'
 ], function(
    coreMerge,
+   entity,
    collection,
    calendar,
    DateUtil,
@@ -369,7 +371,7 @@ define([
                }
             }],
             options: {},
-            date: new Date(2020, 0)
+            date: new entity.applied.Date(2020, 0)
          }, {
             title: 'Should generate an event when the element appeared on top and the next one is half visible. viewMode: "month"',
             entries: [{
@@ -384,7 +386,7 @@ define([
                }
             }],
             options: { viewMode: 'month' },
-            date: new Date(2019, 1)
+            date: new entity.applied.Date(2019, 1)
          }, {
             title: 'Should generate an event when the 2 elements appeared on top and the next one is half visible. viewMode: "month"',
             entries: [{
@@ -409,7 +411,7 @@ define([
                }
             }],
             options: { viewMode: 'month' },
-            date: new Date(2019, 2)
+            date: new entity.applied.Date(2019, 2)
          }].forEach(function(test) {
             it(test.title, function() {
                const
