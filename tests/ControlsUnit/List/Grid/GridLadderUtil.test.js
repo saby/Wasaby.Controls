@@ -54,10 +54,9 @@ define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/dis
          }];
          const resultLadder = {
             0: { date: { ladderLength: 1 } },
-            1: { date: { ladderLength: 3 } },
+            1: { date: { ladderLength: 4 } },
             2: { date: { } },
             3: { date: { } },
-            4: { date: { ladderLength: 2 } },
             5: { date: { } },
             6: { date: { ladderLength: 1 } },
             7: { date: { ladderLength: 3 } },
@@ -65,7 +64,7 @@ define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/dis
             9: { date: { } }
          };
          const resultStickyLadder = {
-            0: { 
+            0: {
                photo: {
                   ladderLength: 3,
                   headingStyle: 'grid-row: span 3'
@@ -78,12 +77,6 @@ define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/dis
                photo: {}
             },
             3: {
-               photo: {
-                  ladderLength: 1,
-                  headingStyle: 'grid-row: span 1'
-               }
-            },
-            4: {
                photo: {
                   ladderLength: 4,
                   headingStyle: 'grid-row: span 4'
@@ -111,8 +104,12 @@ define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/dis
                }
             }
          };
+
+         const display = new Display.Collection({ collection: items, keyProperty: 'id' });
+         display.getItemBySourceKey(4).setEditing(true);
+
          const ladder = Util.prepareLadder({
-            display: Display.Abstract.getDefaultDisplay(items, { keyProperty: 'key' }),
+            display,
             columns: columns,
             ladderProperties: ['date'],
             startIndex: 0,
