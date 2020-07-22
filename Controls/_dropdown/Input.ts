@@ -163,7 +163,8 @@ let getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @name Controls/_dropdown/Input#multiSelect
  * @cfg {Boolean} Определяет, установлен ли множественный выбор.
  * @default false
- * @demo Controls-demo/dropdown_new/Input/MultiSelect/Index
+ * @demo Controls-demo/dropdown_new/Input/MultiSelect/Simple/Index
+ * @demo Controls-demo/dropdown_new/Input/MultiSelect/PinnedItems/Index
  * @example
  * Множественный выбор установлен.
  * WML:
