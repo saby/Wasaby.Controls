@@ -1,11 +1,10 @@
 import {TemplateFunction} from 'UI/Base';
-import {GridView} from 'Controls/grid';
+import {GridView, GridLayoutUtil} from 'Controls/grid';
 
 import * as GridItemTemplate from 'wml!Controls/_treeGrid/TreeGridView/layout/grid/Item';
 import * as TableItemTemplate from 'wml!Controls/_treeGrid/TreeGridView/layout/table/Item';
 
 import 'wml!Controls/_treeGrid/TreeGridView/layout/common/NodeFooterChooser';
-import {isFullGridSupport} from '../../_grid/utils/GridLayoutUtil';
 
 var
     TreeGridView = GridView.extend({
@@ -17,7 +16,7 @@ var
             }
         },
         _resolveBaseItemTemplate(): TemplateFunction {
-            return isFullGridSupport() ? GridItemTemplate : TableItemTemplate;
+            return GridLayoutUtil.isFullGridSupport() ? GridItemTemplate : TableItemTemplate;
         },
         _onExpanderClick(e, dispItem): void {
             this._notify('expanderClick', [dispItem], {bubbling: true});
