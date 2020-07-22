@@ -6819,18 +6819,18 @@ define([
 
          describe('_onItemMouseUp', () => {
 
-               it('notify parent', () => {
-                  const originalEvent = {
-                     target: {},
-                     nativeEvent: {}
-                  };
-                  const event = {
-                     stopPropagation: () => {
-                     }
-                  };
-                  const itemData = {item: {}};
+            it('notify parent', () => {
+               const originalEvent = {
+                  target: {},
+                  nativeEvent: {}
+               };
+               const event = {
+                  stopPropagation: () => {
+                  }
+               };
+               const itemData = {item: {}};
 
-                  baseControl._items.getCount = () => 1;
+               baseControl._items.getCount = () => 1;
 
                baseControl._notify = (eName, args) => {
                   if (eName === 'itemMouseUp') {
@@ -6849,32 +6849,39 @@ define([
                baseControlOptions.markerVisibility = 'onactivated';
                await mountBaseControl(baseControl, baseControlOptions);
 
-               baseControl._scrollController = {
-                  scrollToItem(key) {
-                     assert.equal(key, 1);
-                  },
-                  reset: () => undefined
-               }
+               const originalEvent = {target: {}};
+               const event = {};
 
-                  const originalEvent = {target: {}};
-                  const event = {};
-                  let setMarkedKeyIsCalled = false;
+               const notifySpy = sinon.spy(baseControl, '_notify');
 
-                  baseControl._items.getCount = () => 1;
-                  baseControl._mouseDownItemKey = 1;
-                  baseControl._markerController = {
-                     calculateMarkedKey: function (key) {
-                        assert.equal(key, 1);
-                        setMarkedKeyIsCalled = true;
-                     },
-                     getMarkedKey: () => 1
-                  };
+               baseControl._items.getCount = () => 1;
+               baseControl._mouseDownItemKey = 1;
 
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
                baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
 
-                  assert.equal(setMarkedKeyIsCalled, true);
-               });
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+            });
+
+            it('not should marker, _needSetMarkerCallback return false', async function() {
+               baseControlOptions._needSetMarkerCallback = () => false;
+               await mountBaseControl(baseControl, baseControlOptions);
+
+               const originalEvent = {target: { closest: () => false}};
+               const event = {};
+
+               const notifySpy = sinon.spy(baseControl, '_notify');
+
+               baseControl._items.getCount = () => 1;
+               baseControl._mouseDownItemKey = 1;
+
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
+
+               assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+            });
 
             it('should not mark single item if editing', async function() {
                baseControlOptions.markerVisibility = 'onactivated';
