@@ -6,7 +6,6 @@ define(
       'wml!ControlsUnit/Container/resources/Content'
    ],
    function(Env, scrollMod, utils, Content) {
-
       'use strict';
 
       describe('Controls.Container.Scroll', function() {
