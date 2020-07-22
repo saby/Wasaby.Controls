@@ -7,6 +7,7 @@ import {Logger} from 'UI/Utils';
 import ToSourceModel = require('Controls/Utils/ToSourceModel');
 import {isEqual} from 'Types/object';
 import {object} from 'Types/util';
+import { constants } from 'Env/Constants';
 
 type Key = string|number|null;
 export type SelectedItems = RecordSet|List<Model>;
@@ -80,7 +81,9 @@ export default class LookupBaseControllerClass {
 
         return this._getSourceController().load(filter).then(
             (items) => {
-                LookupBaseControllerClass.checkLoadedItems(items, this._selectedKeys, keyProperty);
+                if (constants.isProduction) {
+                    LookupBaseControllerClass.checkLoadedItems(items, this._selectedKeys, keyProperty);
+                }
 
                 if (options.dataLoadCallback) {
                     options.dataLoadCallback(items);
