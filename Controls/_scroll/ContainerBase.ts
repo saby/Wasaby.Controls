@@ -209,7 +209,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             scrollTop: this._children.scrollContainer.scrollTop,
             scrollLeft: this._children.scrollContainer.scrollLeft,
             clientHeight: this._children.scrollContainer.clientHeight,
-            scrollHeight: this._children.content.scrollHeight,
+            scrollHeight: this._children.scrollContainer.scrollHeight, // В observer берем со scrollContainer, иначе значения будут отличаться
             clientWidth: this._children.scrollContainer.clientWidth,
             scrollWidth: this._children.content.scrollWidth
         };
