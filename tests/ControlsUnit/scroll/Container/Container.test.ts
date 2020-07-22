@@ -12,6 +12,7 @@ function createComponent(Component, cfg) {
 }
 
 describe('Controls/scroll:_ContainerNew', () => {
+    return;
     describe('constructor', () => {
         it('should initialize by default', () => {
             const component = createComponent(_ContainerNew, {});
