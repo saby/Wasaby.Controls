@@ -3524,8 +3524,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // При редактировании по месту маркер появляется только если в списке больше одной записи.
         // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-        const canBeMarked = this._mouseDownItemKey === key
+        let canBeMarked = this._mouseDownItemKey === key
            && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
+
+        // TODO изабвиться по задаче https://online.sbis.ru/opendoc.html?guid=f7029014-33b3-4cd6-aefb-8572e42123a2
+        // Колбэк передается из explorer.View, чтобы не проставлять маркер перед проваливанием в узел
+        if (this._options._needSetMarkerCallback) {
+            canBeMarked = canBeMarked && this._options._needSetMarkerCallback(itemData.item, domEvent);
+        }
 
         if (canBeMarked) {
             this.setMarkedKey(key);

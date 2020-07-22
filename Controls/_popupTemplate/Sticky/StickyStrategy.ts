@@ -126,17 +126,17 @@ interface IPosition {
             }
          }
          const viewportOffset: number = _private.getVisualViewport()[isHorizontal ? 'offsetLeft' : 'offsetTop'];
-         const viewportPage: number = _private.getVisualViewport()[isHorizontal ? 'pageLeft' : 'pageTop'];
+         // const viewportPage: number = _private.getVisualViewport()[isHorizontal ? 'pageLeft' : 'pageTop'];
 
          // viewportOffset и viewportPage показали одинаковое значение при показе клавиатуры, соответсвтенно по сути
          // размер с клавой учитывался 2 раза. Использую 1 значение, на всякий случай беру максимальное. теоретически
          // можно оптимизировать.
-         const viewportSpacing = Math.max(viewportOffset, viewportPage);
+         // const viewportSpacing = Math.max(viewportOffset, viewportPage);
 
          const positionValue: number = position[isHorizontal ? 'left' : 'top'];
          const popupSize: number = popupCfg.sizes[isHorizontal ? 'width' : 'height'];
          const windowSize: number = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
-         let overflow = positionValue + taskBarKeyboardIosHeight + popupSize - windowSize - viewportSpacing;
+         let overflow = positionValue + taskBarKeyboardIosHeight + popupSize - windowSize - viewportOffset;
          if (_private.isIOS12()) {
             overflow -= targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
          }
