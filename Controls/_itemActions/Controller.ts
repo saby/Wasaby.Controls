@@ -17,7 +17,8 @@ import {
     TItemActionsPosition,
     TActionCaptionPosition,
     TEditArrowVisibilityCallback,
-    TActionDisplayMode, TMenuButtonVisibility
+    TActionDisplayMode,
+    TMenuButtonVisibility
 } from './interface/IItemAction';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
@@ -269,7 +270,7 @@ export class Controller {
     prepareActionsMenuConfig(
         item: IItemActionsItem,
         clickEvent: SyntheticEvent<MouseEvent>,
-        parentAction: IItemAction,
+        parentAction: IShownItemAction,
         opener: Element | Control<object, unknown>,
         isContextMenu: boolean
     ): IStickyPopupOptions {
@@ -438,7 +439,7 @@ export class Controller {
      * @param parentAction
      * @private
      */
-    private _getMenuActions(item: IItemActionsItem, parentAction: IItemAction): IItemAction[] {
+    private _getMenuActions(item: IItemActionsItem, parentAction: IShownItemAction): IItemAction[] {
         const actions = item.getActions();
         const allActions = actions && actions.all;
         if (allActions) {
@@ -523,7 +524,7 @@ export class Controller {
         const menuButtonVisibility = this._getSwipeMenuButtonVisibility(this._contextMenuConfig);
         this._actionsWidth = actionsContainerWidth;
         this._actionsHeight = actionsContainerHeight;
-        let actions = item.getActions().all;
+        const actions = item.getActions().all;
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
         actionsTemplateConfig.actionAlignment = this._actionsAlignment;
 
@@ -624,7 +625,7 @@ export class Controller {
         }
         return {
             all: actions,
-            showed: showed
+            showed
         };
     }
 
@@ -643,21 +644,6 @@ export class Controller {
                     action.showType === TItemActionShowType.MENU_TOOLBAR)
         );
     }
-
-    /**
-     * Возвращает contents записи.
-     * Если запись - breadcrumbs, то берётся последняя Model из списка contents
-     * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
-     *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-     * @param item
-     */
-    private static _getItemContents(item: IItemActionsItem): Model {
-        let contents = item?.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]']) {
-            contents = contents[(contents as any).length - 1];
-        }
-        return contents;
-    };
 
     /**
      * Настройка параметров отображения для опций записи, которые показываются
@@ -691,6 +677,21 @@ export class Controller {
             actions.showed = clone(actions.showed).map(fixShowOptionsBind);
         }
         return actions;
+    }
+
+    /**
+     * Возвращает contents записи.
+     * Если запись - breadcrumbs, то берётся последняя Model из списка contents
+     * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+     *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+     * @param item
+     */
+    private static _getItemContents(item: IItemActionsItem): Model {
+        let contents = item?.getContents();
+        if (item['[Controls/_display/BreadcrumbsItem]']) {
+            contents = contents[(contents as any).length - 1];
+        }
+        return contents;
     }
 
     /**
