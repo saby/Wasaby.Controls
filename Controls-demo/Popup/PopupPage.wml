@@ -1,146 +1,850 @@
 <div class="popup-page">
-   <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog">
-      <ws:templateOptions type="dialog"/>
-   </Controls.popup:Dialog>
-   <Controls.popup:Dialog name="modalDialog" modal="{{true}}" template="Controls-demo/Popup/TestDialog" zIndex="1000">
-      <ws:templateOptions type="dialog"/>
-   </Controls.popup:Dialog>
-   <Controls.popup:Sticky name="sticky"
-                          actionOnScroll="close"
-                                 onResult="{{_onResult}}"
-                                 template="Controls-demo/Popup/TestDialog"
-                                 autoHide="{{true}}"
-   >
-         <ws:direction vertical="bottom" horizontal="left"/>
-         <ws:targetPoint vertical="bottom" horizontal="left"/>
-   </Controls.popup:Sticky>
-   <Controls.popup:Notification name="notification" template="Controls-demo/Popup/TestDialog">
-      <ws:templateOptions type="notification" fromNotification="{{true}}"/>
-   </Controls.popup:Notification>
-   <Controls.popup:Stack name="stack" template="Controls-demo/Popup/TestStack" closeOnOutsideClick="{{true}}">
-      <ws:templateOptions type="stack"/>
-   </Controls.popup:Stack>
-
-   <Controls.popup:Stack name="stack2" template="Controls-demo/Popup/TestStack" closeOnOutsideClick="{{true}}">
-      <ws:templateOptions type="stack"/>
-   </Controls.popup:Stack>
-
-   <Controls.popup:Stack name="executingStack" template="Controls-demo/Popup/TestExecutingStack" closeOnOutsideClick="{{false}}" minWidth="500" maxWidth="700">
-   </Controls.popup:Stack>
-   <Controls.popup:Stack name="executingIndicatorStack" template="Controls-demo/Popup/TestExecutingStack" closeOnOutsideClick="{{false}}" minWidth="500" maxWidth="700">
-      <ws:templateOptions delay="{{3000}}"/>
-   </Controls.popup:Stack>
-
-   <Controls.popup:Stack name="notifyStack"
-                                on:close="_notifyCloseHandler()"
-                                on:open="_notifyOpenHandler()"
-                                on:result="_notifyResultHandler()"
-                                template="Controls-demo/Popup/NotifyStack"
-                                closeOnOutsideClick="{{true}}">
-   </Controls.popup:Stack>
-
-   <Controls.popup:Stack name="maximizedStack" template="Controls-demo/Popup/TestMaximizedStack" closeOnOutsideClick="{{true}}" propStorageId="123">
-      <ws:templateOptions type="stack"/>
-   </Controls.popup:Stack>
-
-   <Controls.popup:Stack name="ignoreActivationStack" template="Controls-demo/Popup/TestIgnoreActivationStack" closeOnOutsideClick="{{true}}">
-   </Controls.popup:Stack>
-
-   <Controls.popup:Stack name="openOldTemplate" template="Controls-demo/Popup/TestFormController/TestFormController" closeOnOutsideClick="{{true}}">
-      <ws:templateOptions type="stack"/>
-   </Controls.popup:Stack>
-
-   <Controls.popup:Stack name="openStackWithPending" template="Controls-demo/Popup/PopupWithPending" closeOnOutsideClick="{{true}}">
-      <ws:templateOptions type="stack"/>
-   </Controls.popup:Stack>
-
-   <Controls.popup:Stack name="childStack" template="Controls-demo/Popup/TestStack" closeOnOutsideClick="{{true}}">
-      <ws:templateOptions type="stack" />
-   </Controls.popup:Stack>
-
-   <Controls.popup:Stack name="openStackWithFormController" template="Controls-demo/FormController/FormController" closeOnOutsideClick="{{true}}">
-      <ws:templateOptions type="stack"/>
-   </Controls.popup:Stack>
-   <div>
-      <Controls.buttons:Button name="dialogButton" caption="dialog" on:click="openDialog()" attr:class="ControlsDemo-PopupPage__dialogButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="modalDialogButton" caption="modal dialog" on:click="openModalDialog()" attr:class="ControlsDemo-PopupPage__modalDialogButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="stickyButton" caption="sticky" on:click="openSticky()" attr:class="ControlsDemo-PopupPage__stickyButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="notificationButton" caption="notification" on:click="openNotification()" attr:class="ControlsDemo-PopupPage__notificationButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="stackButton" caption="stack" on:click="openStack()" attr:class="ControlsDemo-PopupPage__stackButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="openStackWithTemplateSizes" caption="openStackWithTemplateSizes" on:click="openStackWithTemplateSizes()" attr:class="ControlsDemo-PopupPage__stackWithTemplateSizesButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="stackExecutingButton" caption="openExecutingPopup" on:click="openExecutingPopup()" attr:class="ControlsDemo-PopupPage__openExecutingPopupButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="maxButton" caption="maximizedStack" on:click="openMaximizedStack()" attr:class="ControlsDemo-PopupPage__maximizedStackButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="notifyButton" caption="notifyStack" on:click="openNotifyStack()" attr:class="ControlsDemo-PopupPage__notifyStackButton"/>
-      <span class="ControlsDemo-PopupPage__notifyStackText">{{ _notifyStackText }}</span>
-   </div>
-   <div>
-      <Controls.buttons:Button name="childButton" caption="childStack" on:click="openChildStack()" attr:class="ControlsDemo-PopupPage__childStackButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="stackIgnoreButton" caption="ignoreActivationStack" on:click="openIgnoreActivationStack()" attr:class="ControlsDemo-PopupPage__stackIgnoreButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="stackIndicatorButton" caption="openIndicatorPopup" on:click="openIndicatorPopup()" attr:class="ControlsDemo-PopupPage__openIndicatorPopupButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="stackButton2" caption="open old template" on:click="openOldTemplate()" attr:class="ControlsDemo-PopupPage__stackOldTemplateButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="stackButton3" caption="open stack with Controls-demo/Popup/PopupWithPending" on:click="openStackWithPending()" attr:class="ControlsDemo-PopupPage__withPendingButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="stackButton4" caption="open stack with Controls-demo/FormController/FormController" on:click="openStackWithFormController()" attr:class="ControlsDemo-PopupPage__withFCButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="helperButton1" caption="open InfoBox by popupHelper" on:click="openInfoBoxByHelper()" attr:class="ControlsDemo-PopupPage__helperInfoBoxButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="helperButton2" caption="open Notification by popupHelper" on:click="openNotificationByHelper()" attr:class="ControlsDemo-PopupPage__helperNotificationButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="helperButton3" caption="open Confirmation by popupHelper" on:click="openConfirmationByHelper()" attr:class="ControlsDemo-PopupPage__helperConfirmationButton"/>
-      <ws:if data="{{_helperConfirmationResult !== undefined}}">
-         <span style="margin-left: 10px;">Пользователь выбрал {{_helperConfirmationResult ? 'да' : 'нет'}}</span>
-      </ws:if>
-   </div>
-   <div>
-      <Controls.buttons:Button name="helperButton4" caption="open Sticky by popupHelper" on:click="openStickyByHelper()" attr:class="ControlsDemo-PopupPage__helperStickyButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="helperButton5" caption="open Stack by popupHelper" on:click="openStackByHelper()" attr:class="ControlsDemo-PopupPage__helperStackButton"/>
-   </div>
-   <div>
-      <Controls.buttons:Button name="helperButton6" caption="open Dialog by popupHelper" on:click="openDialogByHelper()" attr:class="ControlsDemo-PopupPage__helperDialogButton"/>
-   </div>
-   <Controls.scroll:Container attr:class="ControlsDemo-PopupPage__external-scroll-container">
-      <Controls.scroll:Container attr:class="ControlsDemo-PopupPage__internal-scroll-container" name="scrollContainer">
-         <Controls.buttons:Button name="stickyInScrollButton" caption="stickyInScroll" on:click="openStickyInScroll()" attr:class="ControlsDemo-PopupPage__stickyButton"/>
-         <Controls.popup:Sticky name="stickyInScroll"
-                                onResult="{{_onResult}}"
-                                actionOnScroll="close"
-                                template="Controls-demo/Popup/TestDialog"
-         >
-            <ws:direction vertical="bottom" horizontal="left"/>
-         </Controls.popup:Sticky>
-      </Controls.scroll:Container>
-   </Controls.scroll:Container>
-   <div style="margin-top: 10px;">
-      <Controls.input:Text placeholder="for focusing" attr:class="ControlsDemo-PopupPage__forFocusing"/>
-   </div>
+    <div class="controls-Scroll ws-flexbox ws-flex-column noticeCenter-Panel__scroll ws-flex-shrink-1 noticeCenter-Panel_background"
+         tabindex="0" style="height: 400px">
+        <span name="content"
+              class="controls-Scroll__content controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-Scroll__scroll_vertical"
+              tabindex="0" style="">
+            <div class="noticeCenter-Panel__scrollContent controls-Scroll__userContent" tabindex="0">
+                <div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position"
+                     style="z-index: 3; background-color: rgb(248, 248, 248); top: 0px;" key="categorysticky_65"
+                     tabindex="0">
+                    <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop"
+                         style="top: -3px;"></div>
+                    <div class="noticeCenter-CategoryHeader ws-flexbox ws-justify-content-between ws-align-items-baseline controls-StickyHeader__content"
+                         tabindex="0">
+                        <div class="noticeCenter-CategoryHeader__info ws-flexbox">
+                            <div title="Консультации"
+                                 class="noticeCenter-CategoryHeader__title ws-align-self-baseline ws-ellipsis">
+                                консультации
+                            </div>
+                            <div class="noticeCenter-CategoryHeader__counter ws-align-self-baseline ws-flex-shrink-0">
+                                1
+                            </div>
+                        </div>
+                        <span title="Прочитано все"
+                              class="noticeCenter-CategoryHeader__readLink ws-align-self-baseline ws-flex-shrink-0 ws-ellipsis">
+                            Прочитано все
+                        </span>
+                    </div>
+                    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom"
+                         style="bottom: -3px;"></div>
+                </div>
+                <div class="noticeCenterBase-List noticeCenter-CategoryList noticeCenter-Panel__categoryMargin_bottom"
+                     key="categorykey_65" tabindex="0">
+                    <div class="noticeCenter-CategoryList__noTouchContent" tabindex="0">
+                        <div class="noticeCenterBase-Notice noticeCenterBase-Notice_hover noticeCenterBase-Notice_padding noticeCenterBase-Notice_background noticeCenterBase-Notice_action noticeCenter-NoticeWeb noticeCenterBase-Notice__overflow_hidden"
+                             key="noticekey_dc029125-01f8-4279-a263-8a8f809e1f7e" tabindex="0">
+                            <div class="ws-flexbox" style="">
+                                <div class="noticeCenter-NoticeIconPerson noticeCenter-NoticeIconPerson_size_medium noticeCenter-NoticeIcon noticeCenter-NoticeIcon_size_medium noticeCenterBase-Notice__icon ws-flex-shrink-0"
+                                     tabindex="0">
+                                    <div class="noticeCenter-NoticeIconPerson__activityIndicator">
+                                        <span title="Не был активен"
+                                              class="activity__ActivityMarker icon-16 activity__ActivityMarker-withBorder icon-disabled icon-PhoneGetManually Activity-VDOM-Status__Indicator activity__ActivityMarker__person07b8203b-816e-4ae3-aeeb-0ca9cce69954 Activity-VDOM-Status__Indicator"
+                                              tabindex="0">
+                                            <div class="activity__ActivityMarker__image"></div>
+                                        </span>
+                                    </div>
+                                    <div class="controls-PopupPreviewer" tabindex="0">
+                                        <div class="noticeCenterBase-NoticeIconBase ws-flexbox ws-justify-content-center controls-roundedCorner_size_m noticeCenterBase-NoticeIconBase_size_medium"
+                                             tabindex="0">
+                                            <img src="/previewer/c/32/fs-public/person_avatar_files/efe8a84f-2ba1-4eff-84f7-a3e15095837a"
+                                                 srcset="/previewer/c/40/fs-public/person_avatar_files/efe8a84f-2ba1-4eff-84f7-a3e15095837a 1.25x, /previewer/c/48/fs-public/person_avatar_files/efe8a84f-2ba1-4eff-84f7-a3e15095837a 1.5x, /previewer/c/64/fs-public/person_avatar_files/efe8a84f-2ba1-4eff-84f7-a3e15095837a 2x"
+                                                 class="noticeCenterBase-NoticeIconBase__img ws-align-self-center ws-flex-shrink-0 noticeCenterBase-NoticeIconBase__img_size_fit controls-roundedCorner_size_m"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="noticeCenterBase-Notice__body noticeCenterBase-Notice__overflow_hidden ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__body_min_height noticeCenterBase-Notice__body_margin_bottom">
+                                    <div class="noticeCenterBase-Notice__heading ws-flexbox ws-justify-content-end"
+                                         tabindex="0">
+                                        <div title="Новая консультация в очереди"
+                                             class="noticeCenterBase-NoticeHeader noticeCenterBase-NoticeHeader_size_large noticeCenterBase-NoticeHeader_normal noticeCenterBase-NoticeHeader_dark noticeCenterBase-NoticeHeader_oneLine noticeCenterBase-Notice__shading ws-align-self-baseline ws-flex-grow-1 ws-flex-shrink-1"
+                                             tabindex="0">Новая консультация в очереди
+                                        </div>
+                                        <div class="noticeCenterBase-Notice__actionWrapper">
+                                            <div class="ws-flexbox ws-align-items-center noticeCenterBase-Notice__actionContainer"
+                                                 style="min-width: 16px;" tabindex="0">
+                                                <div title="Прочитано"
+                                                     class="noticeCenter-ReadButton icon-ShowBig controls-icon_size-s_theme-default controls-icon_style-secondary_theme-default action-hover ws-flex-shrink-0"
+                                                     tabindex="0"></div>
+                                            </div>
+                                        </div>
+                                        <div title="16 июл 2020 18:51:29"
+                                             class="noticeCenterBase-NoticeDate noticeCenterBase-NoticeDate_date noticeCenterBase-Notice__date ws-align-self-baseline ws-flex-shrink-0"
+                                             tabindex="0">16 июл
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox noticeCenterBase-Notice__overflow_hidden" tabindex="0">
+                                        <div class="ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__overflow_hidden">
+                                            <invisible class="noticeCenterBase-Notice__shading"
+                                                       tabindex="0"></invisible>
+                                            <div title="+"
+                                                 class="noticeCenterBase-NoticeText noticeCenterBase-NoticeText_default noticeCenterBase-Notice__text noticeCenterBase-Notice__shading"
+                                                 tabindex="0">+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox ws-justify-content-end" tabindex="0">
+                                        <invisible tabindex="0"></invisible>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <invisible
+                        class="noticeCenter-Panel__categoryMargin_bottom noticeCenter-Panel__categoryMargin_bottom__dots"
+                        tabindex="0"></invisible>
+                <div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position"
+                     style="z-index: 3; background-color: rgb(248, 248, 248); top: 0px;" key="categorysticky_3"
+                     tabindex="0">
+                    <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop"
+                         style="top: -3px;"></div>
+                    <div class="noticeCenter-CategoryHeader ws-flexbox ws-justify-content-between ws-align-items-baseline controls-StickyHeader__content"
+                         tabindex="0">
+                        <div class="noticeCenter-CategoryHeader__info ws-flexbox">
+                            <div title="Сообщения"
+                                 class="noticeCenter-CategoryHeader__title ws-align-self-baseline ws-ellipsis">сообщения
+                            </div>
+                            <div class="noticeCenter-CategoryHeader__counter ws-align-self-baseline ws-flex-shrink-0">
+                                4
+                            </div>
+                        </div>
+                        <span title="Прочитано все"
+                              class="noticeCenter-CategoryHeader__readLink ws-align-self-baseline ws-flex-shrink-0 ws-ellipsis">
+                            Прочитано все
+                        </span>
+                    </div>
+                    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom"
+                         style="bottom: -3px;"></div>
+                    <div class="controls-Scroll__shadow controls-StickyHeader__shadow-bottom controls-Scroll__shadow_horizontal"
+                         name="shadowBottom" style=""></div>
+                </div>
+                <div class="noticeCenterBase-List noticeCenter-CategoryList noticeCenter-Panel__categoryMargin_bottom"
+                     key="categorykey_3" tabindex="0">
+                    <div class="noticeCenter-CategoryList__noTouchContent" tabindex="0">
+                        <div class="noticeCenterBase-Notice noticeCenterBase-Notice_hover noticeCenterBase-Notice_padding noticeCenterBase-Notice_background noticeCenterBase-Notice_action noticeCenter-NoticeWeb noticeCenterBase-Notice__overflow_hidden"
+                             key="noticekey_8ce37cdb-3be1-467b-a91e-a91af8ab8434" tabindex="0">
+                            <div class="ws-flexbox" style="">
+                                <div class="noticeCenterBase-NoticeIconBase ws-flexbox ws-justify-content-center controls-roundedCorner_size_m noticeCenterBase-NoticeIconBase_size_medium noticeCenter-NoticeIcon noticeCenter-NoticeIcon_size_medium noticeCenterBase-Notice__icon ws-flex-shrink-0"
+                                     tabindex="0">
+                                    <img src="/previewer/c/32/fs-public/person_avatar_files/076f9f5c-8777-4dbe-b67d-aa09e709c847"
+                                         srcset="/previewer/c/40/fs-public/person_avatar_files/076f9f5c-8777-4dbe-b67d-aa09e709c847 1.25x, /previewer/c/48/fs-public/person_avatar_files/076f9f5c-8777-4dbe-b67d-aa09e709c847 1.5x, /previewer/c/64/fs-public/person_avatar_files/076f9f5c-8777-4dbe-b67d-aa09e709c847 2x"
+                                         class="noticeCenterBase-NoticeIconBase__img ws-align-self-center ws-flex-shrink-0 noticeCenterBase-NoticeIconBase__img_size_fit controls-roundedCorner_size_m"/>
+                                </div>
+                                <div class="noticeCenterBase-Notice__body noticeCenterBase-Notice__overflow_hidden ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__body_min_height noticeCenterBase-Notice__body_margin_bottom">
+                                    <div class="noticeCenterBase-Notice__heading ws-flexbox ws-justify-content-end"
+                                         tabindex="0">
+                                        <div title="Сервисное сообщение"
+                                             class="noticeCenterBase-NoticeHeader noticeCenterBase-NoticeHeader_size_large noticeCenterBase-NoticeHeader_normal noticeCenterBase-NoticeHeader_dark noticeCenterBase-NoticeHeader_oneLine noticeCenterBase-Notice__shading ws-align-self-baseline ws-flex-grow-1 ws-flex-shrink-1"
+                                             tabindex="0">Сервисное сообщение
+                                        </div>
+                                        <div class="noticeCenterBase-Notice__actionWrapper">
+                                            <div class="ws-flexbox ws-align-items-center noticeCenterBase-Notice__actionContainer"
+                                                 style="min-width: 40px;" tabindex="0">
+                                                <div title="Прочитано"
+                                                     class="noticeCenter-ReadButton icon-ShowBig controls-icon_size-s_theme-default controls-icon_style-secondary_theme-default action-hover ws-flex-shrink-0"
+                                                     tabindex="0"></div>
+                                                <div class="noticeCenter-NoticeOptions ws-flexbox ws-align-items-center ws-flex-shrink-0"
+                                                     tabindex="0">
+                                                    <span title="Удалить"
+                                                          class="noticeCenter-NoticeOption controls-icon_size-s_theme-default icon-Erase icon-error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div title="20 июл 2020 01:02:16"
+                                             class="noticeCenterBase-NoticeDate noticeCenterBase-NoticeDate_date noticeCenterBase-Notice__date ws-align-self-baseline ws-flex-shrink-0"
+                                             tabindex="0">20 июл
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox noticeCenterBase-Notice__overflow_hidden" tabindex="0">
+                                        <div class="ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__overflow_hidden">
+                                            <invisible class="noticeCenterBase-Notice__shading"
+                                                       tabindex="0"></invisible>
+                                            <div title="Группа123
+NewNewNewOldNewNewNewOl
+Группа 25072016
+ляляля
+ер
+"
+                                                 class="noticeCenterBase-NoticeTextJSON ws-basic-style noticeCenterBase-Notice__shading noticeCenterBase-NoticeTextJSON_lineMaxCount_2"
+                                                 tabindex="0">
+                                                <div class="richEditor_richContentRender richEditor_richContentRender_fontSize-m richEditor_richContentRender_theme-default richEditor_richContentRender_readOnly noticeCenterBase-NoticeTextJSON__viewer"
+                                                     tabindex="0">
+                                                    <div>
+                                                        <p>
+                                                            <a href="https://pre-test-n.sbis.ru/41431a6c-e4df-4c28-8bcc-27bcb49b1555"
+                                                               target="_blank" tabindex="-1">Группа123
+                                                            </a>
+                                                        </p>
+                                                        <p>
+                                                            <a href="https://pre-test-n.sbis.ru/82881faa-1e65-4fa7-9046-b4c44432c993"
+                                                               target="_blank" tabindex="-1">NewNewNewOldNewNewNewOl
+                                                            </a>
+                                                        </p>
+                                                        <p>
+                                                            <a href="https://pre-test-n.sbis.ru/33b19f7c-1a56-4458-8a73-2ae5cf78de43"
+                                                               target="_blank" tabindex="-1">Группа 25072016
+                                                            </a>
+                                                        </p>
+                                                        <p>
+                                                            <a href="https://pre-test-n.sbis.ru/acd2a059-861a-49ab-96bb-19c662d60501"
+                                                               target="_blank" tabindex="-1">ляляля
+                                                            </a>
+                                                        </p>
+                                                        <p>
+                                                            <a href="https://pre-test-n.sbis.ru/9e0d9f7d-27c6-4945-8e7c-415078490488"
+                                                               target="_blank" tabindex="-1">ер
+                                                            </a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <a title="+16 сообщений"
+                                               class="controls-BaseButton controls-Button_link controls-Button_link_theme-default controls-Button_hoverIcon controls-Button_clickable controls-Button_link_style-secondary_theme-default controls-Button_bg-same_theme-default controls-fontsize-xs_theme-default noticeCenterBase-NoticeMoreLink noticeCenterBase-Notice__shading"
+                                               tabindex="0">
+                                                <span class="controls-BaseButton__wrapper controls-Button_link__wrapper-fontsize-xs_theme-default controls-Button__wrapper_viewMode-link">
+                                                    <span class="controls-BaseButton__text controls-text-link_theme-default controls-Button__text-link_viewMode-link_theme-default controls-Button__text_viewMode-link_theme-default">
+                                                        +16 сообщений
+                                                    </span>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox ws-justify-content-end" tabindex="0">
+                                        <invisible tabindex="0"></invisible>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="noticeCenter-CategoryList__noTouchContent" tabindex="0">
+                        <div class="noticeCenterBase-Notice noticeCenterBase-Notice_hover noticeCenterBase-Notice_padding noticeCenterBase-Notice_background noticeCenterBase-Notice_action noticeCenter-NoticeWeb noticeCenterBase-Notice__overflow_hidden"
+                             key="noticekey_45162287-e516-43d1-9382-9f17a00fe4ca" tabindex="0">
+                            <div class="ws-flexbox" style="">
+                                <div class="noticeCenter-NoticeIconPerson noticeCenter-NoticeIconPerson_size_medium noticeCenter-NoticeIcon noticeCenter-NoticeIcon_size_medium noticeCenterBase-Notice__icon ws-flex-shrink-0"
+                                     tabindex="0">
+                                    <div class="noticeCenter-NoticeIconPerson__activityIndicator">
+                                        <span title="Был 21.07 в 13:12"
+                                              class="activity__ActivityMarker icon-16 activity__ActivityMarker-withBorder icon-disabled icon-PhoneGetManually Activity-VDOM-Status__Indicator activity__ActivityMarker__persone4ee60a7-43d4-417a-aca2-21985f349a09 Activity-VDOM-Status__Indicator"
+                                              tabindex="0">
+                                            <div class="activity__ActivityMarker__image"></div>
+                                        </span>
+                                    </div>
+                                    <div class="controls-PopupPreviewer" tabindex="0">
+                                        <div class="noticeCenterBase-NoticeIconBase ws-flexbox ws-justify-content-center controls-roundedCorner_size_m noticeCenterBase-NoticeIconBase_size_medium"
+                                             tabindex="0">
+                                            <img src="/previewer/c/32/fs-public/person_avatar_files/067ec861-204a-4c7b-a7f0-1f63f5c65cde"
+                                                 srcset="/previewer/c/40/fs-public/person_avatar_files/067ec861-204a-4c7b-a7f0-1f63f5c65cde 1.25x, /previewer/c/48/fs-public/person_avatar_files/067ec861-204a-4c7b-a7f0-1f63f5c65cde 1.5x, /previewer/c/64/fs-public/person_avatar_files/067ec861-204a-4c7b-a7f0-1f63f5c65cde 2x"
+                                                 class="noticeCenterBase-NoticeIconBase__img ws-align-self-center ws-flex-shrink-0 noticeCenterBase-NoticeIconBase__img_size_fit controls-roundedCorner_size_m"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="noticeCenterBase-Notice__body noticeCenterBase-Notice__overflow_hidden ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__body_min_height noticeCenterBase-Notice__body_margin_bottom">
+                                    <div class="noticeCenterBase-Notice__heading ws-flexbox ws-justify-content-end"
+                                         tabindex="0">
+                                        <div title="Епанчин Иван"
+                                             class="noticeCenterBase-NoticeHeader noticeCenterBase-NoticeHeader_size_large noticeCenterBase-NoticeHeader_normal noticeCenterBase-NoticeHeader_dark noticeCenterBase-NoticeHeader_oneLine noticeCenterBase-Notice__shading ws-align-self-baseline ws-flex-grow-1 ws-flex-shrink-1"
+                                             tabindex="0">Епанчин Иван
+                                        </div>
+                                        <div class="noticeCenterBase-Notice__actionWrapper">
+                                            <div class="ws-flexbox ws-align-items-center noticeCenterBase-Notice__actionContainer"
+                                                 style="min-width: 40px;" tabindex="0">
+                                                <div title="Прочитано"
+                                                     class="noticeCenter-ReadButton icon-ShowBig controls-icon_size-s_theme-default controls-icon_style-secondary_theme-default action-hover ws-flex-shrink-0"
+                                                     tabindex="0"></div>
+                                                <div class="noticeCenter-NoticeOptions ws-flexbox ws-align-items-center ws-flex-shrink-0"
+                                                     tabindex="0">
+                                                    <span title="Удалить"
+                                                          class="noticeCenter-NoticeOption controls-icon_size-s_theme-default icon-Erase icon-error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div title="14 июл 2020 16:41:57"
+                                             class="noticeCenterBase-NoticeDate noticeCenterBase-NoticeDate_date noticeCenterBase-Notice__date ws-align-self-baseline ws-flex-shrink-0"
+                                             tabindex="0">14 июл
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox noticeCenterBase-Notice__overflow_hidden" tabindex="0">
+                                        <div class="ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__overflow_hidden">
+                                            <div class="noticeCenterBase-NoticeDocLink noticeCenterBase-Notice__shading"
+                                                 tabindex="0">
+                                                <a title="Новость &quot;Новость для комментов 2&quot; от 14.07.2020"
+                                                   class="controls-BaseButton controls-Button_link controls-Button_link_theme-default controls-Button_hoverIcon controls-Button_clickable controls-Button_link_style-info_theme-default controls-Button_bg-same_theme-default controls-fontsize-m_theme-default"
+                                                   target="_blank" tabindex="0">
+                                                    <span class="controls-BaseButton__wrapper controls-Button_link__wrapper-fontsize-m_theme-default controls-Button__wrapper_viewMode-link">
+                                                        <span class="controls-BaseButton__text controls-text-unaccented_theme-default controls-Button__text-unaccented_viewMode-link_theme-default controls-Button__text_viewMode-link_theme-default">
+                                                            Новость "Новость для комментов 2" от 14.07.2020
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <div title="333
+"
+                                                 class="noticeCenterBase-NoticeTextJSON ws-basic-style noticeCenterBase-Notice__shading noticeCenterBase-NoticeTextJSON_lineMaxCount_2"
+                                                 tabindex="0">
+                                                <div class="richEditor_richContentRender richEditor_richContentRender_fontSize-m richEditor_richContentRender_theme-default richEditor_richContentRender_readOnly noticeCenterBase-NoticeTextJSON__viewer"
+                                                     tabindex="0">
+                                                    <p>333</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox ws-justify-content-end" tabindex="0">
+                                        <invisible tabindex="0"></invisible>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="noticeCenter-CategoryList__noTouchContent" tabindex="0">
+                        <div class="noticeCenterBase-Notice noticeCenterBase-Notice_hover noticeCenterBase-Notice_padding noticeCenterBase-Notice_background noticeCenterBase-Notice_action noticeCenter-NoticeWeb noticeCenterBase-Notice__overflow_hidden"
+                             key="noticekey_ed23d803-0889-46b3-974f-1fd2cd27e80d" tabindex="0">
+                            <div class="ws-flexbox" style="">
+                                <div class="noticeCenter-NoticeIconPerson noticeCenter-NoticeIconPerson_size_medium noticeCenter-NoticeIcon noticeCenter-NoticeIcon_size_medium noticeCenterBase-Notice__icon ws-flex-shrink-0"
+                                     tabindex="0">
+                                    <div class="noticeCenter-NoticeIconPerson__activityIndicator">
+                                        <span title="Работаю"
+                                              class="activity__ActivityMarker icon-16 activity__ActivityMarker-withBorder icon-hover icon-PhoneGetAutomatically Activity-VDOM-Status__Indicator activity__ActivityMarker__person7d097efb-4743-45ee-87f2-171de134ce7d Activity-VDOM-Status__Indicator"
+                                              tabindex="0">
+                                            <div class="activity__ActivityMarker__image on-line-marker-at-work"></div>
+                                        </span>
+                                    </div>
+                                    <div class="controls-PopupPreviewer" tabindex="0">
+                                        <div class="noticeCenterBase-NoticeIconBase ws-flexbox ws-justify-content-center controls-roundedCorner_size_m noticeCenterBase-NoticeIconBase_size_medium"
+                                             tabindex="0">
+                                            <img src="/previewer/c/32/fs-public/person_avatar_files/7feb843e-a5bf-49f6-aa23-c43320b3cc9b"
+                                                 srcset="/previewer/c/40/fs-public/person_avatar_files/7feb843e-a5bf-49f6-aa23-c43320b3cc9b 1.25x, /previewer/c/48/fs-public/person_avatar_files/7feb843e-a5bf-49f6-aa23-c43320b3cc9b 1.5x, /previewer/c/64/fs-public/person_avatar_files/7feb843e-a5bf-49f6-aa23-c43320b3cc9b 2x"
+                                                 class="noticeCenterBase-NoticeIconBase__img ws-align-self-center ws-flex-shrink-0 noticeCenterBase-NoticeIconBase__img_size_fit controls-roundedCorner_size_m"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="noticeCenterBase-Notice__body noticeCenterBase-Notice__overflow_hidden ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__body_min_height noticeCenterBase-Notice__body_margin_bottom">
+                                    <div class="noticeCenterBase-Notice__heading ws-flexbox ws-justify-content-end"
+                                         tabindex="0">
+                                        <div title="Администратор Службы"
+                                             class="noticeCenterBase-NoticeHeader noticeCenterBase-NoticeHeader_size_large noticeCenterBase-NoticeHeader_normal noticeCenterBase-NoticeHeader_dark noticeCenterBase-NoticeHeader_oneLine noticeCenterBase-Notice__shading ws-align-self-baseline ws-flex-grow-1 ws-flex-shrink-1"
+                                             tabindex="0">Администратор Службы
+                                        </div>
+                                        <div class="noticeCenterBase-Notice__actionWrapper">
+                                            <div class="ws-flexbox ws-align-items-center noticeCenterBase-Notice__actionContainer"
+                                                 style="min-width: 40px;" tabindex="0">
+                                                <div title="Прочитано"
+                                                     class="noticeCenter-ReadButton icon-ShowBig controls-icon_size-s_theme-default controls-icon_style-secondary_theme-default action-hover ws-flex-shrink-0"
+                                                     tabindex="0"></div>
+                                                <div class="noticeCenter-NoticeOptions ws-flexbox ws-align-items-center ws-flex-shrink-0"
+                                                     tabindex="0">
+                                                    <span title="Удалить"
+                                                          class="noticeCenter-NoticeOption controls-icon_size-s_theme-default icon-Erase icon-error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div title="14 июл 2020 13:36:16"
+                                             class="noticeCenterBase-NoticeDate noticeCenterBase-NoticeDate_date noticeCenterBase-Notice__date ws-align-self-baseline ws-flex-shrink-0"
+                                             tabindex="0">14 июл
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox noticeCenterBase-Notice__overflow_hidden" tabindex="0">
+                                        <div class="ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__overflow_hidden">
+                                            <invisible class="noticeCenterBase-Notice__shading"
+                                                       tabindex="0"></invisible>
+                                            <div title="Сми
+я
+"
+                                                 class="noticeCenterBase-NoticeTextJSON ws-basic-style noticeCenterBase-Notice__shading noticeCenterBase-NoticeTextJSON_lineMaxCount_2"
+                                                 tabindex="0">
+                                                <div class="richEditor_richContentRender richEditor_richContentRender_fontSize-m richEditor_richContentRender_theme-default richEditor_richContentRender_readOnly noticeCenterBase-NoticeTextJSON__viewer"
+                                                     tabindex="0">
+                                                    <div data-msg-depth="0" data-msg-level="0"
+                                                         class="contacts-Blockquote msg-blockquote msg-blockquote_depth_0 msg-blockquote_level_0 richEditor_Base-RichEditor__noneditable"
+                                                         style="margin-bottom: 0px;">
+                                                        <blockquote data-msg-date="2020-05-19 09:46:19.000+05"
+                                                                    data-msg-id="cfa4820a-a68d-4795-888f-417f6fe12f47"
+                                                                    data-msg-minimized="true"
+                                                                    data-msg-sender="8cab8a51-da51-40fd-bef3-6f090edbdeaa"
+                                                                    data-msg-theme="ed23d803-0889-46b3-974f-1fd2cd27e80d">
+                                                            <p tabindex="0"
+                                                               style="max-height: 18px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-bottom: 0px;">
+                                                                Сми
+                                                            </p>
+                                                        </blockquote>
+                                                    </div>
+                                                    <p>я</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox ws-justify-content-end" tabindex="0">
+                                        <invisible tabindex="0"></invisible>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="noticeCenter-CategoryList__noTouchContent" tabindex="0">
+                        <div class="noticeCenterBase-Notice noticeCenterBase-Notice_hover noticeCenterBase-Notice_padding noticeCenterBase-Notice_background noticeCenterBase-Notice_action noticeCenter-NoticeWeb noticeCenterBase-Notice__overflow_hidden"
+                             key="noticekey_229a075c-9f32-4cca-bdbb-6193b727e7c0" tabindex="0">
+                            <div class="ws-flexbox" style="">
+                                <div class="noticeCenter-NoticeIconPerson noticeCenter-NoticeIconPerson_size_medium noticeCenter-NoticeIcon noticeCenter-NoticeIcon_size_medium noticeCenterBase-Notice__icon ws-flex-shrink-0"
+                                     tabindex="0">
+                                    <div class="noticeCenter-NoticeIconPerson__activityIndicator">
+                                        <span title="Был 21.07 в 14:14"
+                                              class="activity__ActivityMarker icon-16 activity__ActivityMarker-withBorder icon-disabled icon-PhoneGetManually Activity-VDOM-Status__Indicator activity__ActivityMarker__person74e89543-b91c-42a5-8d3e-26f5b11b8924 Activity-VDOM-Status__Indicator"
+                                              tabindex="0">
+                                            <div class="activity__ActivityMarker__image"></div>
+                                        </span>
+                                    </div>
+                                    <div class="controls-PopupPreviewer" tabindex="0">
+                                        <div class="noticeCenterBase-NoticeIconBase ws-flexbox ws-justify-content-center controls-roundedCorner_size_m noticeCenterBase-NoticeIconBase_size_medium"
+                                             tabindex="0">
+                                            <img src="/previewer/c/32/fs-public/person_avatar_files/a0852087-81b6-4f8c-8ebf-abb5ee0a93db"
+                                                 srcset="/previewer/c/40/fs-public/person_avatar_files/a0852087-81b6-4f8c-8ebf-abb5ee0a93db 1.25x, /previewer/c/48/fs-public/person_avatar_files/a0852087-81b6-4f8c-8ebf-abb5ee0a93db 1.5x, /previewer/c/64/fs-public/person_avatar_files/a0852087-81b6-4f8c-8ebf-abb5ee0a93db 2x"
+                                                 class="noticeCenterBase-NoticeIconBase__img ws-align-self-center ws-flex-shrink-0 noticeCenterBase-NoticeIconBase__img_size_fit controls-roundedCorner_size_m"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="noticeCenterBase-Notice__body noticeCenterBase-Notice__overflow_hidden ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__body_min_height noticeCenterBase-Notice__body_margin_bottom">
+                                    <div class="noticeCenterBase-Notice__heading ws-flexbox ws-justify-content-end"
+                                         tabindex="0">
+                                        <div title="Гипервизор Соцсеть"
+                                             class="noticeCenterBase-NoticeHeader noticeCenterBase-NoticeHeader_size_large noticeCenterBase-NoticeHeader_normal noticeCenterBase-NoticeHeader_dark noticeCenterBase-NoticeHeader_oneLine noticeCenterBase-Notice__shading ws-align-self-baseline ws-flex-grow-1 ws-flex-shrink-1"
+                                             tabindex="0">Гипервизор Соцсеть
+                                        </div>
+                                        <div class="noticeCenterBase-Notice__actionWrapper">
+                                            <div class="ws-flexbox ws-align-items-center noticeCenterBase-Notice__actionContainer"
+                                                 style="min-width: 40px;" tabindex="0">
+                                                <div title="Прочитано"
+                                                     class="noticeCenter-ReadButton icon-ShowBig controls-icon_size-s_theme-default controls-icon_style-secondary_theme-default action-hover ws-flex-shrink-0"
+                                                     tabindex="0"></div>
+                                                <div class="noticeCenter-NoticeOptions ws-flexbox ws-align-items-center ws-flex-shrink-0"
+                                                     tabindex="0">
+                                                    <span title="Удалить"
+                                                          class="noticeCenter-NoticeOption controls-icon_size-s_theme-default icon-Erase icon-error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div title="14 июл 2020 12:38:14"
+                                             class="noticeCenterBase-NoticeDate noticeCenterBase-NoticeDate_date noticeCenterBase-Notice__date ws-align-self-baseline ws-flex-shrink-0"
+                                             tabindex="0">14 июл
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox noticeCenterBase-Notice__overflow_hidden" tabindex="0">
+                                        <div class="ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__overflow_hidden">
+                                            <div class="noticeCenterBase-NoticeDocLink noticeCenterBase-Notice__shading"
+                                                 tabindex="0">
+                                                <a title="хорошее предложение"
+                                                   class="controls-BaseButton controls-Button_link controls-Button_link_theme-default controls-Button_hoverIcon controls-Button_clickable controls-Button_link_style-info_theme-default controls-Button_bg-same_theme-default controls-fontsize-m_theme-default"
+                                                   target="_blank" tabindex="0">
+                                                    <span class="controls-BaseButton__wrapper controls-Button_link__wrapper-fontsize-m_theme-default controls-Button__wrapper_viewMode-link">
+                                                        <span class="controls-BaseButton__text controls-text-unaccented_theme-default controls-Button__text-unaccented_viewMode-link_theme-default controls-Button__text_viewMode-link_theme-default">
+                                                            хорошее предложение
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <div title="Предложение принято
+"
+                                                 class="noticeCenterBase-NoticeTextJSON ws-basic-style noticeCenterBase-Notice__shading noticeCenterBase-NoticeTextJSON_lineMaxCount_2"
+                                                 tabindex="0">
+                                                <div class="richEditor_richContentRender richEditor_richContentRender_fontSize-m richEditor_richContentRender_theme-default richEditor_richContentRender_readOnly noticeCenterBase-NoticeTextJSON__viewer"
+                                                     tabindex="0">
+                                                    <div>
+                                                        <p style="color: rgb(0, 0, 0); white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
+                                                            <span style="font-weight: inherit; font-style: inherit; font-size: inherit; line-height: inherit;">
+                                                                Предложение принято
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox ws-justify-content-end" tabindex="0">
+                                        <invisible tabindex="0"></invisible>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <invisible
+                        class="noticeCenter-Panel__categoryMargin_bottom noticeCenter-Panel__categoryMargin_bottom__dots"
+                        tabindex="0"></invisible>
+                <div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position"
+                     style="background-color: rgb(248, 248, 248); top: 0px;" key="categorysticky_77" tabindex="0">
+                    <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop"
+                         style="top: -3px;"></div>
+                    <div class="noticeCenter-CategoryHeader ws-flexbox ws-justify-content-between ws-align-items-baseline controls-StickyHeader__content"
+                         tabindex="0">
+                        <div class="noticeCenter-CategoryHeader__info ws-flexbox">
+                            <div title="Чаты"
+                                 class="noticeCenter-CategoryHeader__title ws-align-self-baseline ws-ellipsis">чаты
+                            </div>
+                            <div class="noticeCenter-CategoryHeader__counter ws-align-self-baseline ws-flex-shrink-0">
+                                1
+                            </div>
+                        </div>
+                        <span title="Прочитано все"
+                              class="noticeCenter-CategoryHeader__readLink ws-align-self-baseline ws-flex-shrink-0 ws-ellipsis">
+                            Прочитано все
+                        </span>
+                    </div>
+                    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom"
+                         style="bottom: -3px;"></div>
+                </div>
+                <div class="noticeCenterBase-List noticeCenter-CategoryList noticeCenter-Panel__categoryMargin_bottom"
+                     key="categorykey_77" tabindex="0">
+                    <div class="noticeCenter-CategoryList__noTouchContent" tabindex="0">
+                        <div class="noticeCenterBase-Notice noticeCenterBase-Notice_hover noticeCenterBase-Notice_padding noticeCenterBase-Notice_background noticeCenterBase-Notice_action noticeCenter-NoticeWeb noticeCenterBase-Notice__overflow_hidden"
+                             key="noticekey_f8442512-d9b2-4759-9656-72d091fa67b1" tabindex="0">
+                            <div class="ws-flexbox" style="">
+                                <div class="controls-PopupPreviewer noticeCenter-NoticeIcon noticeCenter-NoticeIcon_size_medium noticeCenterBase-Notice__icon ws-flex-shrink-0"
+                                     tabindex="0">
+                                    <div class="noticeCenterBase-NoticeIconBase ws-flexbox ws-justify-content-center controls-roundedCorner_size_m noticeCenterBase-NoticeIconBase_size_medium"
+                                         tabindex="0">
+                                        <img src="/previewer/r/32/service/?id=0&amp;method=ProfileService.PhotoById&amp;protocol=6&amp;args=eyJJZCI6ImRlZmF1bHRfcHJvamVjdC5wbmcifQ%3D%3D"
+                                             srcset="/previewer/r/40/service/?id=0&amp;method=ProfileService.PhotoById&amp;protocol=6&amp;args=eyJJZCI6ImRlZmF1bHRfcHJvamVjdC5wbmcifQ%3D%3D 1.25x, /previewer/r/48/service/?id=0&amp;method=ProfileService.PhotoById&amp;protocol=6&amp;args=eyJJZCI6ImRlZmF1bHRfcHJvamVjdC5wbmcifQ%3D%3D 1.5x, /previewer/r/64/service/?id=0&amp;method=ProfileService.PhotoById&amp;protocol=6&amp;args=eyJJZCI6ImRlZmF1bHRfcHJvamVjdC5wbmcifQ%3D%3D 2x"
+                                             class="noticeCenterBase-NoticeIconBase__img ws-align-self-center ws-flex-shrink-0 noticeCenterBase-NoticeIconBase__img_size_fit controls-roundedCorner_size_m"/>
+                                    </div>
+                                </div>
+                                <div class="noticeCenterBase-Notice__body noticeCenterBase-Notice__overflow_hidden ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__body_min_height noticeCenterBase-Notice__body_margin_bottom">
+                                    <div class="noticeCenterBase-Notice__heading ws-flexbox ws-justify-content-end"
+                                         tabindex="0">
+                                        <div title="ПРОЕКТ ДЛЯ &quot;ПОДСЧЕТА&quot; ЗАТРАТ (Копия)"
+                                             class="noticeCenterBase-NoticeHeader noticeCenterBase-NoticeHeader_size_large noticeCenterBase-NoticeHeader_normal noticeCenterBase-NoticeHeader_dark noticeCenterBase-NoticeHeader_oneLine noticeCenterBase-Notice__shading ws-align-self-baseline ws-flex-grow-1 ws-flex-shrink-1"
+                                             tabindex="0">ПРОЕКТ ДЛЯ "ПОДСЧЕТА" ЗАТРАТ (Копия)
+                                        </div>
+                                        <div class="noticeCenterBase-Notice__actionWrapper">
+                                            <div class="ws-flexbox ws-align-items-center noticeCenterBase-Notice__actionContainer"
+                                                 style="min-width: 40px;" tabindex="0">
+                                                <div title="Прочитано"
+                                                     class="noticeCenter-ReadButton icon-ShowBig controls-icon_size-s_theme-default controls-icon_style-secondary_theme-default action-hover ws-flex-shrink-0"
+                                                     tabindex="0"></div>
+                                                <div class="noticeCenter-NoticeOptions ws-flexbox ws-align-items-center ws-flex-shrink-0"
+                                                     tabindex="0">
+                                                    <span title="Удалить"
+                                                          class="noticeCenter-NoticeOption controls-icon_size-s_theme-default icon-Erase icon-error"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div title="23 июн 2020 14:12:39"
+                                             class="noticeCenterBase-NoticeDate noticeCenterBase-NoticeDate_date noticeCenterBase-Notice__date ws-align-self-baseline ws-flex-shrink-0"
+                                             tabindex="0">23 июн
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox noticeCenterBase-Notice__overflow_hidden" tabindex="0">
+                                        <div class="ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__overflow_hidden">
+                                            <invisible class="noticeCenterBase-Notice__shading"
+                                                       tabindex="0"></invisible>
+                                            <div title="Столичный Кекс добавил 1 материал
+"
+                                                 class="noticeCenterBase-NoticeTextJSON ws-basic-style noticeCenterBase-Notice__shading noticeCenterBase-NoticeTextJSON_lineMaxCount_2"
+                                                 tabindex="0">
+                                                <div class="richEditor_richContentRender richEditor_richContentRender_fontSize-m richEditor_richContentRender_theme-default richEditor_richContentRender_readOnly noticeCenterBase-NoticeTextJSON__viewer"
+                                                     tabindex="0">
+                                                    <div style="color: rgb(153, 153, 153);">
+                                                        <p>Столичный Кекс добавил 1 материал</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="noticeCenterBase-NoticeAttachLinks ws-flexbox ws-align-items-center noticeCenterBase-Notice__shading noticeCenterBase-Notice__nowrap"
+                                                 tabindex="0">
+                                                <img src="//pre-test-cdn.sbis.ru/cdn/NoticeCDN/img/1.0.0/Attachment.svg"
+                                                     class="noticeCenterBase-NoticeAttachLinks__icon ws-flex-shrink-0"/>
+                                                <a title="Этап: этап ДЛЯ &quot;ПОДСЧЕТА&quot; ЗАТРАТ этап, PRE-HOME 2.url"
+                                                   class="controls-BaseButton controls-Button_link controls-Button_link_theme-default controls-Button_hoverIcon controls-Button_clickable controls-Button_link_style-info_theme-default controls-Button_bg-same_theme-default controls-fontsize-m_theme-default noticeCenterBase-NoticeAttachLinks__file ws-flex-shrink-0"
+                                                   tabindex="0">
+                                                    <span class="controls-BaseButton__wrapper controls-Button_link__wrapper-fontsize-m_theme-default controls-Button__wrapper_viewMode-link">
+                                                        <span class="controls-BaseButton__text controls-text-unaccented_theme-default controls-Button__text-unaccented_viewMode-link_theme-default controls-Button__text_viewMode-link_theme-default">
+                                                            Этап: этап ДЛЯ "ПОДСЧЕТА" ЗАТРАТ этап, PRE-HOME 2.url
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <a title="+2 сообщения"
+                                               class="controls-BaseButton controls-Button_link controls-Button_link_theme-default controls-Button_hoverIcon controls-Button_clickable controls-Button_link_style-secondary_theme-default controls-Button_bg-same_theme-default controls-fontsize-xs_theme-default noticeCenterBase-NoticeMoreLink noticeCenterBase-Notice__shading"
+                                               tabindex="0">
+                                                <span class="controls-BaseButton__wrapper controls-Button_link__wrapper-fontsize-xs_theme-default controls-Button__wrapper_viewMode-link">
+                                                    <span class="controls-BaseButton__text controls-text-link_theme-default controls-Button__text-link_viewMode-link_theme-default controls-Button__text_viewMode-link_theme-default">
+                                                        +2 сообщения
+                                                    </span>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox ws-justify-content-end" tabindex="0">
+                                        <invisible tabindex="0"></invisible>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <invisible
+                        class="noticeCenter-Panel__categoryMargin_bottom noticeCenter-Panel__categoryMargin_bottom__dots"
+                        tabindex="0"></invisible>
+                <div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position"
+                     style="background-color: rgb(248, 248, 248); top: 0px;" key="categorysticky_31" tabindex="0">
+                    <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop"
+                         style="top: -3px;"></div>
+                    <div class="noticeCenter-CategoryHeader ws-flexbox ws-justify-content-between ws-align-items-baseline controls-StickyHeader__content"
+                         tabindex="0">
+                        <div class="noticeCenter-CategoryHeader__info ws-flexbox">
+                            <div title="Обсуждения"
+                                 class="noticeCenter-CategoryHeader__title ws-align-self-baseline ws-ellipsis">
+                                обсуждения
+                            </div>
+                            <div class="noticeCenter-CategoryHeader__counter ws-align-self-baseline ws-flex-shrink-0">
+                                1
+                            </div>
+                        </div>
+                        <span title="Прочитано все"
+                              class="noticeCenter-CategoryHeader__readLink ws-align-self-baseline ws-flex-shrink-0 ws-ellipsis">
+                            Прочитано все
+                        </span>
+                    </div>
+                    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom"
+                         style="bottom: -3px;"></div>
+                </div>
+                <div class="noticeCenterBase-List noticeCenter-CategoryList noticeCenter-Panel__categoryMargin_bottom"
+                     key="categorykey_31" tabindex="0">
+                    <div class="noticeCenter-CategoryList__noTouchContent" tabindex="0">
+                        <div class="noticeCenterBase-Notice noticeCenterBase-Notice_hover noticeCenterBase-Notice_padding noticeCenterBase-Notice_background noticeCenterBase-Notice_action noticeCenter-NoticeWeb noticeCenterBase-Notice__overflow_hidden"
+                             key="noticekey_93588d75-bffb-4d3b-9333-600d32b66859" tabindex="0">
+                            <div class="ws-flexbox" style="">
+                                <div class="controls-PopupPreviewer noticeCenter-NoticeIcon noticeCenter-NoticeIcon_size_medium noticeCenterBase-Notice__icon ws-flex-shrink-0"
+                                     tabindex="0">
+                                    <div class="noticeCenterBase-NoticeIconBase ws-flexbox ws-justify-content-center controls-roundedCorner_size_m noticeCenterBase-NoticeIconBase_size_medium"
+                                         tabindex="0">
+                                        <img src="/previewer/r/32/service/?id=0&amp;method=%D0%A1%D0%B5%D1%80%D0%B2%D0%B8%D1%81%D0%9F%D1%80%D0%BE%D1%84%D0%B8%D0%BB%D0%B5%D0%B9.%D0%A4%D0%BE%D1%82%D0%BE%D0%9F%D0%BE%D0%98%D0%B4&amp;protocol=6&amp;args=eyLQmNC0IjoiNzA2Mzc1M2ItZTM0My00YTVjLWIxMjctMzg2MzUxMTRmNDM2In0%3D"
+                                             srcset="/previewer/r/40/service/?id=0&amp;method=%D0%A1%D0%B5%D1%80%D0%B2%D0%B8%D1%81%D0%9F%D1%80%D0%BE%D1%84%D0%B8%D0%BB%D0%B5%D0%B9.%D0%A4%D0%BE%D1%82%D0%BE%D0%9F%D0%BE%D0%98%D0%B4&amp;protocol=6&amp;args=eyLQmNC0IjoiNzA2Mzc1M2ItZTM0My00YTVjLWIxMjctMzg2MzUxMTRmNDM2In0%3D 1.25x, /previewer/r/48/service/?id=0&amp;method=%D0%A1%D0%B5%D1%80%D0%B2%D0%B8%D1%81%D0%9F%D1%80%D0%BE%D1%84%D0%B8%D0%BB%D0%B5%D0%B9.%D0%A4%D0%BE%D1%82%D0%BE%D0%9F%D0%BE%D0%98%D0%B4&amp;protocol=6&amp;args=eyLQmNC0IjoiNzA2Mzc1M2ItZTM0My00YTVjLWIxMjctMzg2MzUxMTRmNDM2In0%3D 1.5x, /previewer/r/64/service/?id=0&amp;method=%D0%A1%D0%B5%D1%80%D0%B2%D0%B8%D1%81%D0%9F%D1%80%D0%BE%D1%84%D0%B8%D0%BB%D0%B5%D0%B9.%D0%A4%D0%BE%D1%82%D0%BE%D0%9F%D0%BE%D0%98%D0%B4&amp;protocol=6&amp;args=eyLQmNC0IjoiNzA2Mzc1M2ItZTM0My00YTVjLWIxMjctMzg2MzUxMTRmNDM2In0%3D 2x"
+                                             class="noticeCenterBase-NoticeIconBase__img ws-align-self-center ws-flex-shrink-0 noticeCenterBase-NoticeIconBase__img_size_fit controls-roundedCorner_size_m"/>
+                                    </div>
+                                </div>
+                                <div class="noticeCenterBase-Notice__body noticeCenterBase-Notice__overflow_hidden ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__body_min_height noticeCenterBase-Notice__body_margin_bottom">
+                                    <div class="noticeCenterBase-Notice__heading ws-flexbox ws-justify-content-end"
+                                         tabindex="0">
+                                        <div title="хорошее предложение"
+                                             class="noticeCenterBase-NoticeHeader noticeCenterBase-NoticeHeader_size_large noticeCenterBase-NoticeHeader_normal noticeCenterBase-NoticeHeader_dark noticeCenterBase-NoticeHeader_oneLine noticeCenterBase-Notice__shading ws-align-self-baseline ws-flex-grow-1 ws-flex-shrink-1"
+                                             tabindex="0">хорошее предложение
+                                        </div>
+                                        <div class="noticeCenterBase-Notice__actionWrapper">
+                                            <div class="ws-flexbox ws-align-items-center noticeCenterBase-Notice__actionContainer"
+                                                 style="min-width: 16px;" tabindex="0">
+                                                <div title="Прочитано"
+                                                     class="noticeCenter-ReadButton icon-ShowBig controls-icon_size-s_theme-default controls-icon_style-secondary_theme-default action-hover ws-flex-shrink-0"
+                                                     tabindex="0"></div>
+                                            </div>
+                                        </div>
+                                        <div title="16 июл 2020 07:03:17"
+                                             class="noticeCenterBase-NoticeDate noticeCenterBase-NoticeDate_date noticeCenterBase-Notice__date ws-align-self-baseline ws-flex-shrink-0"
+                                             tabindex="0">16 июл
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox noticeCenterBase-Notice__overflow_hidden" tabindex="0">
+                                        <div class="ws-flex-grow-1 ws-flex-shrink-1 noticeCenterBase-Notice__overflow_hidden">
+                                            <div title="Крышов Карлосон"
+                                                 class="noticeCenterBase-NoticeDetails noticeCenterBase-Notice__shading noticeCenterBase-Notice__nowrap"
+                                                 tabindex="0">Крышов Карлосон
+                                            </div>
+                                            <invisible class="noticeCenterBase-Notice__shading"
+                                                       tabindex="0"></invisible>
+                                            <div title=",kz
+"
+                                                 class="noticeCenterBase-NoticeTextJSON ws-basic-style noticeCenterBase-Notice__shading noticeCenterBase-NoticeTextJSON_lineMaxCount_2"
+                                                 tabindex="0">
+                                                <div class="richEditor_richContentRender richEditor_richContentRender_fontSize-m richEditor_richContentRender_theme-default richEditor_richContentRender_readOnly noticeCenterBase-NoticeTextJSON__viewer"
+                                                     tabindex="0">
+                                                    <p>,kz</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ws-flexbox ws-justify-content-end" tabindex="0">
+                                        <invisible tabindex="0"></invisible>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <invisible
+                        class="noticeCenter-Panel__categoryMargin_bottom noticeCenter-Panel__categoryMargin_bottom__dots"
+                        tabindex="0"></invisible>
+                <div class="EventRibbon-Category__group EventRibbon-Category__group-withHover"
+                     key="categorykey_20347451" tabindex="0">
+                    <div class="EventRibbon-Category__group-title ws-flexbox ws-justify-content-between ws-align-items-baseline">
+                        <div class="EventRibbon-Category__group-name ws-ellipsis">помощник</div>
+                        <div class="EventRibbon-Category__group-period ws-ellipsis ws-flex-shrink-0">Июнь
+                            <a class="controls-BaseButton controls-Button_link controls-Button_link_theme-default controls-Button_hoverIcon controls-Button_clickable controls-Button_link_style-secondary_theme-default controls-Button_bg-same_theme-default controls-fontsize-m_theme-default EventRibbon-Category__group-detailsButton"
+                               tabindex="0">
+                                <span class="controls-BaseButton__wrapper controls-Button_link__wrapper-fontsize-m_theme-default controls-Button__wrapper_viewMode-link">
+                                    <i class="controls-Button__icon controls-BaseButton__icon controls-icon icon-MenuAk controls-icon_size-s_theme-default controls-icon_style-secondary_theme-default"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="EventRibbon-Category__group-body ws-flexbox EventRibbon-Category__group-padding">
+                        <div class="EventRibbon-ShortList-Item ws-flexbox ws-flex-shrink-0" tabindex="0">
+                            <div class="ws-flex-shrink-0 EventRibbon-ShortList-Item__cnt EventRibbon-ShortList-Item__cnt_rating">
+                                <div class="ws-flexbox"></div>
+                                <div class="ws-flex-shrink-0 person-Photo__view person-Photo__view_click-on EventRibbon-ShortList-Item__photo-cnt ws-flex-shrink-0"
+                                     style="width: 72px; height: 72px;" tabindex="0">
+                                    <div class="controls-PopupPreviewer person-Photo__image" tabindex="0">
+                                        <svg width="72" height="72" viewBox="0 0 72 72"
+                                             class="person-Photo__image person-Photo__image_rounded-large" tabindex="0">
+                                            <g class="">
+                                                <rect width="100%" height="100%"
+                                                      class="person-Photo__defaultPhoto_background_theme-default"></rect>
+                                                <g class="person-Photo__defaultPhoto_theme-default" tabindex="0">
+                                                    <path transform="scale(72)"
+                                                          d="M 0.773 0.747 C 0.826 0.767 0.877 0.792 0.925 0.821 C 0.963 0.845 0.994 0.892 0.994 0.909 L 1 1 L 0.607 1 L 0.501 0.8 L 0.607 0.75 L 0.501 0.7 L 0.395 0.75 L 0.501 0.8 L 0.395 1 L 0 1 L 0.008 0.909 C 0.008 0.892 0.039 0.845 0.077 0.821 C 0.125 0.792 0.176 0.767 0.229 0.747 C 0.292 0.722 0.336 0.697 0.36 0.671 C 0.384 0.646 0.396 0.61 0.396 0.566 C 0.396 0.538 0.389 0.521 0.374 0.514 C 0.36 0.507 0.349 0.479 0.34 0.43 C 0.336 0.409 0.328 0.4 0.316 0.402 C 0.304 0.404 0.296 0.382 0.292 0.335 C 0.291 0.318 0.298 0.301 0.311 0.288 C 0.304 0.245 0.299 0.212 0.297 0.191 C 0.297 0.173 0.299 0.156 0.302 0.139 C 0.308 0.116 0.318 0.095 0.332 0.076 C 0.348 0.054 0.37 0.035 0.395 0.022 C 0.422 0.007 0.457 0 0.501 0 C 0.545 0 0.58 0.007 0.607 0.022 C 0.632 0.035 0.653 0.053 0.67 0.075 C 0.684 0.095 0.694 0.116 0.699 0.139 C 0.703 0.156 0.705 0.173 0.704 0.191 C 0.702 0.212 0.698 0.245 0.691 0.288 C 0.703 0.301 0.71 0.318 0.709 0.335 C 0.706 0.382 0.698 0.404 0.686 0.402 C 0.673 0.4 0.666 0.409 0.662 0.43 C 0.654 0.479 0.643 0.507 0.628 0.514 C 0.614 0.521 0.607 0.538 0.607 0.566 C 0.607 0.611 0.619 0.646 0.643 0.671 C 0.667 0.697 0.71 0.722 0.773 0.747 Z"
+                                                          class=""></path>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="EventRibbon-ShortList-Item__initials">Менеджер
+                                    <br/>
+                                    ДляПроверки
+                                </div>
+                            </div>
+                        </div>
+                        <div class="EventRibbon-ShortList-Item ws-flexbox ws-flex-shrink-0" tabindex="0">
+                            <div class="ws-flex-shrink-0 EventRibbon-ShortList-Item__cnt EventRibbon-ShortList-Item__cnt_rating">
+                                <div class="ws-flexbox"></div>
+                                <div class="ws-flex-shrink-0 person-Photo__view person-Photo__view_click-on EventRibbon-ShortList-Item__photo-cnt ws-flex-shrink-0"
+                                     style="width: 72px; height: 72px;" tabindex="0">
+                                    <div class="controls-PopupPreviewer person-Photo__image" tabindex="0">
+                                        <svg width="72" height="72" viewBox="0 0 72 72"
+                                             class="person-Photo__image person-Photo__image_rounded-large" tabindex="0">
+                                            <g class="">
+                                                <image xlink:href="/previewer/72/fs-auth/person_avatar_files/23103e6c-32c3-4504-9aa4-7cb4a389e181"
+                                                       width="100%" height="100%" x="0" y="0" class=""></image>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="EventRibbon-ShortList-Item__initials">Менеджерова
+                                    <br/>
+                                    Юлия
+                                </div>
+                            </div>
+                        </div>
+                        <div class="EventRibbon-ShortList-Item ws-flexbox ws-flex-shrink-0" tabindex="0">
+                            <div class="ws-flex-shrink-0 EventRibbon-ShortList-Item__cnt EventRibbon-ShortList-Item__cnt_rating">
+                                <div class="ws-flexbox"></div>
+                                <div class="ws-flex-shrink-0 person-Photo__view person-Photo__view_click-on EventRibbon-ShortList-Item__photo-cnt ws-flex-shrink-0"
+                                     style="width: 72px; height: 72px;" tabindex="0">
+                                    <div class="controls-PopupPreviewer person-Photo__image" tabindex="0">
+                                        <svg width="72" height="72" viewBox="0 0 72 72"
+                                             class="person-Photo__image person-Photo__image_rounded-large" tabindex="0">
+                                            <g class="">
+                                                <image xlink:href="/previewer/72/fs-auth/person_avatar_files/59059fb6-3212-4459-8149-353e07c0d755"
+                                                       width="100%" height="100%" x="0" y="0" class=""></image>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="EventRibbon-ShortList-Item__initials">Бровкина
+                                    <br/>
+                                    Кристина
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <invisible
+                        class="noticeCenter-Panel__categoryMargin_bottom noticeCenter-Panel__categoryMargin_bottom__dots"
+                        tabindex="0"></invisible>
+                <div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position"
+                     style="background-color: rgb(248, 248, 248); top: 0px;" key="categorysticky_198608" tabindex="0">
+                    <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop"
+                         style="top: -3px;"></div>
+                    <div class="noticeCenter-CategoryHeader ws-flexbox ws-justify-content-between ws-align-items-baseline controls-StickyHeader__content"
+                         tabindex="0">
+                        <div class="noticeCenter-CategoryHeader__info ws-flexbox">
+                            <div title="Юбилей работы в компании"
+                                 class="noticeCenter-CategoryHeader__title ws-align-self-baseline ws-ellipsis">юбилей
+                                работы в компании
+                            </div>
+                            <div class="noticeCenter-CategoryHeader__counter ws-align-self-baseline ws-flex-shrink-0">
+                                182
+                            </div>
+                        </div>
+                    </div>
+                    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom"
+                         style="bottom: -3px;"></div>
+                </div>
+                <div class="EventRibbon-Category__group" key="categorykey_198608" tabindex="0">
+                    <div class="EventRibbon-Category__group-body ws-flexbox">
+                        <div class="EventRibbon-ShortList-Item ws-flexbox ws-flex-grow-1 ws-ellipsis" tabindex="0">
+                            <div class="EventRibbon-ShortList-Item__cnt-overWidth ws-flex-shrink-1 EventRibbon-ShortList-Item__cnt-withHover EventRibbon-ShortList-Item__big-cnt">
+                                <div class="ws-flexbox">
+                                    <div class="EventRibbon-ShortList-Item__addInfo ws-align-self-center ws-flex-grow-1 ws-ellipsis">
+                                        31 июля
+                                    </div>
+                                    <div class="ws-flexbox">
+                                        <div title="Прочитано"
+                                             class="icon-ShowBig controls-icon_size-s_theme-default controls-icon_style-secondary_theme-default action-hover ws-flex-shrink-0 EventRibbon-ShortList-Item__hide"></div>
+                                        <div class="ws-flexbox ws-flex-grow-1 ws-justify-content-end EventRibbon-ShortList-Item__congratulation"
+                                             tabindex="0">
+                                            <a title="Подготовить поздравление"
+                                               class="controls-BaseButton controls-Button_link controls-Button_link_theme-default controls-Button_hoverIcon controls-Button_clickable controls-Button_link_style-secondary_theme-default controls-Button_bg-same_theme-default controls-fontsize-m_theme-default"
+                                               tabindex="0">
+                                                <span class="controls-BaseButton__wrapper controls-Button_link__wrapper-fontsize-m_theme-default controls-Button__wrapper_viewMode-link">
+                                                    <span class="controls-BaseButton__text controls-text-link_theme-default controls-Button__text-link_viewMode-link_theme-default controls-Button__text_viewMode-link_theme-default">
+                                                        Подготовить поздравление
+                                                    </span>
+                                                </span>
+                                            </a>
+                                            <div class="EventRibbon-ShortList-Item-Congratulation__icon EventRibbon-ShortList-Item-Congratulation__icon5"></div>
+                                            <div tabindex="0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ws-flex-shrink-0 person-Photo__view person-Photo__view_click-on EventRibbon-ShortList-Item__photo-cnt ws-flex-shrink-0"
+                                     style="width: 72px; height: 72px;" tabindex="0">
+                                    <div class="controls-PopupPreviewer person-Photo__image" tabindex="0">
+                                        <svg width="72" height="72" viewBox="0 0 72 72"
+                                             class="person-Photo__image person-Photo__image_rounded-large" tabindex="0">
+                                            <g class="">
+                                                <rect width="100%" height="100%"
+                                                      class="person-Photo__defaultPhoto_background_theme-default"></rect>
+                                                <g class="person-Photo__defaultPhoto_theme-default" tabindex="0">
+                                                    <path transform="scale(72)"
+                                                          d="M 0.773 0.747 C 0.826 0.767 0.877 0.792 0.925 0.821 C 0.963 0.845 0.994 0.892 0.994 0.909 L 1 1 L 0.607 1 L 0.501 0.8 L 0.607 0.75 L 0.501 0.7 L 0.395 0.75 L 0.501 0.8 L 0.395 1 L 0 1 L 0.008 0.909 C 0.008 0.892 0.039 0.845 0.077 0.821 C 0.125 0.792 0.176 0.767 0.229 0.747 C 0.292 0.722 0.336 0.697 0.36 0.671 C 0.384 0.646 0.396 0.61 0.396 0.566 C 0.396 0.538 0.389 0.521 0.374 0.514 C 0.36 0.507 0.349 0.479 0.34 0.43 C 0.336 0.409 0.328 0.4 0.316 0.402 C 0.304 0.404 0.296 0.382 0.292 0.335 C 0.291 0.318 0.298 0.301 0.311 0.288 C 0.304 0.245 0.299 0.212 0.297 0.191 C 0.297 0.173 0.299 0.156 0.302 0.139 C 0.308 0.116 0.318 0.095 0.332 0.076 C 0.348 0.054 0.37 0.035 0.395 0.022 C 0.422 0.007 0.457 0 0.501 0 C 0.545 0 0.58 0.007 0.607 0.022 C 0.632 0.035 0.653 0.053 0.67 0.075 C 0.684 0.095 0.694 0.116 0.699 0.139 C 0.703 0.156 0.705 0.173 0.704 0.191 C 0.702 0.212 0.698 0.245 0.691 0.288 C 0.703 0.301 0.71 0.318 0.709 0.335 C 0.706 0.382 0.698 0.404 0.686 0.402 C 0.673 0.4 0.666 0.409 0.662 0.43 C 0.654 0.479 0.643 0.507 0.628 0.514 C 0.614 0.521 0.607 0.538 0.607 0.566 C 0.607 0.611 0.619 0.646 0.643 0.671 C 0.667 0.697 0.71 0.722 0.773 0.747 Z"
+                                                          class=""></path>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="EventRibbon-ShortList-Item__big-initials ws-inline-flexbox ws-flex-column">
+                                    <div title="<ScRiPt>alert(&quot;ЯД СотрФ&quot;) </ScRiPt> <ScRiPt>alert(&quot;СотрИ&quot;) </ScRiPt>"
+                                         class="ws-ellipsis">&lt;ScRiPt&gt;alert("ЯД СотрФ") &lt;/ScRiPt&gt; &lt;ScRiPt&gt;alert("СотрИ")
+                                        &lt;/ScRiPt&gt;
+                                    </div>
+                                    <div title="Сотрудники в корне теперь здесь"
+                                         class="EventRibbon-ShortList-Item__big-department ws-ellipsis">Сотрудники в
+                                        корне теперь здесь
+                                    </div>
+                                    <div title="Администрация"
+                                         class="EventRibbon-ShortList-Item__big-department ws-ellipsis">Администрация
+                                    </div>
+                                </div>
+                                <div class="EventRibbon-ShortList-Item__shadow"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <invisible
+                        class="noticeCenter-Panel__categoryMargin_bottom noticeCenter-Panel__categoryMargin_bottom__dots"
+                        tabindex="0"></invisible>
+            </div>
+        </span>
+        <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_top ws-invisible"></div>
+        <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_bottom"></div>
+        <div tabindex="0"></div>
+    </div>
 </div>
