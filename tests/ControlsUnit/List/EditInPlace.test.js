@@ -152,6 +152,9 @@ define([
 
          });
          eip._formController = {
+             deferSubmit: function () {
+                 return this.submit();
+             },
             submit: function() {
                return Promise.resolve();
             },
@@ -239,6 +242,9 @@ define([
                listViewModel: listViewModel
             });
             eip._formController = {
+               deferSubmit: function () {
+                   return this.submit();
+               },
                submit: function () {
                   validateCalled = true;
                   return Deferred.success();
@@ -2179,6 +2185,9 @@ define([
          eip._formController = {
             setValidationResult: function() {
                setValidationResultCalled = true;
+            },
+            deferSubmit: function () {
+                return this.submit();
             },
             submit: function() {
                return Deferred.success();

@@ -3075,11 +3075,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onValidateCreated(e: Event, control: ValidateContainer): void {
-        this._editInPlace._formController.addValidator(control);
+        this._validateController.addValidator(control);
     },
 
     _onValidateDestroyed(e: Event, control: ValidateContainer): void {
-        this._editInPlace._formController.removeValidator(control);
+        this._validateController.removeValidator(control);
     },
 
     _beforeUnmount() {
@@ -3262,9 +3262,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._validateController);
             this._editInPlace.prepareHtmlInput();
-            if (typeof this._validateController.resolveSubmit !== 'undefined') {
-                this._validateController.resolveSubmit();
-            }
+            this._validateController.resolveSubmit();
         }
 
         if (this._scrollController) {

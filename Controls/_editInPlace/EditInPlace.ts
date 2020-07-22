@@ -230,11 +230,8 @@ const _private = {
     },
 
     validate(self: EditInPlace): Promise<any> {
-        if (typeof self._formController.deferSubmit !== 'undefined') {
-            self._forceUpdate();
-            return self._formController.deferSubmit();
-        }
-        return self._formController.submit();
+        self._forceUpdate();
+        return self._formController.deferSubmit();
     },
 
     hasParentInItems(item: Model, listViewModel: any): boolean|void {
