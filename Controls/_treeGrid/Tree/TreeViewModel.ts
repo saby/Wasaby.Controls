@@ -295,7 +295,7 @@ var
                     dispItem: params.dispItem,
                     level: params.dispItem.getLevel(),
                     getExpanderPaddingClasses: _private.getExpanderPaddingClasses,
-                    multiSelectVisibility: current.multiSelectVisibility,
+                    multiSelectVisibility: self._options.multiSelectVisibility,
                     template: params.template,
                     hasMoreStorage: !!params.hasMoreStorage,
                     getExpanderSize: (tplExpanderSize) => tplExpanderSize || self._options.expanderSize

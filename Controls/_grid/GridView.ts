@@ -25,7 +25,7 @@ import * as DefaultItemTpl from 'wml!Controls/_grid/ItemTemplateResolver';
 import * as GridItemTemplate from 'wml!Controls/_grid/layout/grid/Item';
 import * as TableItemTemplate from 'wml!Controls/_grid/layout/table/Item';
 
-import * as ColumnTpl from 'wml!Controls/_grid/Column';
+import * as ColumnTpl from 'wml!Controls/_grid/layout/common/ColumnContent';
 import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
 
 import {Logger} from 'UI/Utils';
