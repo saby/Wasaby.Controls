@@ -10,6 +10,11 @@
             on:register="_registerIt()"
             on:unregister="_unRegisterIt()"
 
+            on:scrollToElement="_scrollToElement()"
+            on:saveScrollPosition="_saveScrollPosition()"
+            on:restoreScrollPosition="_restoreScrollPosition()"
+            on:updatePlaceholdersSize="_updatePlaceholdersSize()"
+
             on:itemMouseDown="_tmplNotify('itemMouseDown')"
             on:rootChanged="_tmplNotify('rootChanged')"
             on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
