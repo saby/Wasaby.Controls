@@ -67,7 +67,7 @@
 
          <ws:if data="{{itemData.stickyProperties[index]}}">
             <ws:if data="{{index === 1}}">
-               <div class="controls-Grid__row-additional_ladderWrapper" style="left: -125px;">
+               <div class="controls-Grid__row-additional_ladderWrapper" style="left: -{{_options.columns[currentColumn.columnIndex].width}}px;">
                   <ws:partial template="ladderStickyHeader" attr:class="{{itemData.getAdditionalLadderClasses()}}" attr:style="z-index: 1" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
                </div>
             </ws:if>
@@ -84,7 +84,7 @@
       <div attr:class="{{itemData.getMarkerClasses()}}"></div>
    </ws:if>
    <ws:partial template="columnContent"
-               attr:class="{{currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
+               attr:class="{{currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-Grid__row-cell__content_hiddenForLadder_theme-' + _options.theme}}
                            {{itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}"/>
 </ws:template>
 
