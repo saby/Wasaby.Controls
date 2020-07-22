@@ -2463,7 +2463,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
-        this._validateController = new ControllerClass()
+        this._validateController = new ControllerClass();
         this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._startDragNDropCallback = this._startDragNDropCallback.bind(this);
     },
@@ -3075,11 +3075,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onValidateCreated(e: Event, control: ValidateContainer): void {
-        this._validateController.addValidator(control);
+        this._editInPlace._formController.addValidator(control);
     },
 
     _onValidateDestroyed(e: Event, control: ValidateContainer): void {
-        this._validateController.removeValidator(control);
+        this._editInPlace._formController.removeValidator(control);
     },
 
     _beforeUnmount() {
@@ -3262,6 +3262,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._validateController);
             this._editInPlace.prepareHtmlInput();
+            if (typeof this._validateController.resolveSubmit !== 'undefined') {
+                this._validateController.resolveSubmit();
+            }
         }
 
         if (this._scrollController) {

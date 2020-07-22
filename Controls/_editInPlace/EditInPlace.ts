@@ -231,6 +231,7 @@ const _private = {
 
     validate(self: EditInPlace): Promise<any> {
         if (typeof self._formController.deferSubmit !== 'undefined') {
+            self._forceUpdate();
             return self._formController.deferSubmit();
         }
         return self._formController.submit();
@@ -926,7 +927,7 @@ export default class EditInPlace {
          * Ideally, validation should take value through options and reset automagically.
          * TODO: https://online.sbis.ru/opendoc.html?guid=951f6762-8e37-4182-a7fc-3104a35ce27a
          */
-        this._formController.setValidationResult();
+        this._formController.setValidationResult(null);
     }
 
     _forceUpdate(): void {
