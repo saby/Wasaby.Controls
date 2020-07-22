@@ -24,7 +24,7 @@
          {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).top}}
          {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).bottom}}
          {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).right}}
-         {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
+         {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-Grid__row-cell__content_hiddenForLadder_theme-' + _options.theme}}
          {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}">
         <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
     </div>
@@ -40,7 +40,7 @@
                 attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                             {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
                             {{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}
-                            {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
+                            {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-Grid__row-cell__content_hiddenForLadder_theme-' + _options.theme}}
                             {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}"
                 ladderWrapper="{{currentColumn.ladderWrapper}}"
                 expanderTemplate="{{itemData.expanderTemplate}}"
@@ -135,7 +135,7 @@
 
          <ws:if data="{{itemData.stickyProperties[index]}}">
             <ws:if data="{{index === 1}}">
-               <div class="controls-Grid__row-additional_ladderWrapper" style="left: -125px;">
+               <div class="controls-Grid__row-additional_ladderWrapper" style="left: -{{currentColumn.column.width}};">
                   <ws:partial template="STICKY_LADDER_HEADER_CONTENT" attr:class="{{itemData.getAdditionalLadderClasses()}}" attr:style="z-index: 1" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
                </div>
             </ws:if>

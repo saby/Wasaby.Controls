@@ -37,7 +37,7 @@
 
          <ws:if data="{{itemData.stickyProperties[index]}}">
             <ws:if data="{{index === 1}}">
-               <div class="controls-Grid__row-additional_ladderWrapper" style="left: -125px;">
+               <div class="controls-Grid__row-additional_ladderWrapper" style="left: -{{currentColumn.column.width}};">
                   <ws:partial template="STICKY_LADDER_HEADER_CONTENT" attr:class="{{itemData.getAdditionalLadderClasses()}}" attr:style="z-index: 1" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
                </div>
             </ws:if>
@@ -66,7 +66,7 @@
       <ws:if data="{{colspan}}">
          <div class="controls-Grid__row-cell_colspaned
                      {{ currentColumn.getColspanedPaddingClassList(currentColumn, colspan).getAll() }}
-                     {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
+                     {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-Grid__row-cell__content_hiddenForLadder_theme-' + _options.theme}}
                      {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}">
             <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
          </div>
@@ -78,7 +78,7 @@
                      ladderWrapper="{{currentColumn.ladderWrapper}}"
                      stickyProperty="{{stickyProperty}}"
                      attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
-                                 {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
+                                 {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder  controls-Grid__row-cell__content_hiddenForLadder_theme-' + _options.theme}}
                                  {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}
                                  {{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}
                                  {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}"

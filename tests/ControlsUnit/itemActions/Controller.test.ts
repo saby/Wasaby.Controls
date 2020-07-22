@@ -610,7 +610,7 @@ describe('Controls/_itemActions/Controller', () => {
             itemActionsController.activateSwipe(3, 100, 50);
             const config = collection.getSwipeConfig();
             assert.exists(config, 'Swipe activation should make configuration');
-            assert.isTrue(config.itemActions.showed[config.itemActions.showed.length -1]._isMenu, 'menu button was not added');
+            assert.isTrue(config.itemActions.showed[config.itemActions.showed.length - 1]._isMenu, 'menu button was not added');
         });
 
         // T2.3. В зависимости от actionAlignment, для получения конфигурации используется правильный measurer
@@ -1229,7 +1229,7 @@ describe('Controls/_itemActions/Controller', () => {
                 ];
                 const parentAction = {
                     id: null,
-                    icon: `icon-ExpandDown`,
+                    icon: 'icon-ExpandDown',
                     style: 'secondary',
                     iconStyle: 'secondary',
                     _isMenu: true
