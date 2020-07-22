@@ -8,6 +8,7 @@
     <!-- записи (шаблона ITEM_OUTPUT), но тогда таких мест получится 6, либо здесь, внутри ITEM_OUTPUT. -->
 
     <ws:if data="{{ wrapEditingRow }}">
+        <!-- Во время редактирования строки View не должна слушать событие click и mouseDown -->
         <Controls._list.EditInPlace.EditingRow columnScroll="{{ itemData.columnScroll }}" on:deactivated="_onRowDeactivated()">
             <ws:partial
                     template="{{ (itemData.item.get && itemData.item.get(itemData.itemTemplateProperty)) || itemTemplate }}"
@@ -22,10 +23,8 @@
                     isColumnScrollVisible="{{ isColumnScrollVisible }}"
                     tagTemplate="{{ tagTemplate }}"
 
-                    on:click="_onItemClick(itemData.dispItem)"
                     on:contextmenu="_onItemContextMenu(itemData)"
                     on:swipe="_onItemSwipe(itemData)"
-                    on:mousedown="_onItemMouseDown(itemData)"
                     on:mouseup="_onItemMouseUp(itemData)"
                     on:mouseenter="_onItemMouseEnter(itemData)"
                     on:mouseleave="_onItemMouseLeave(itemData)"
