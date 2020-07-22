@@ -3,7 +3,7 @@ import Base from './Base';
 /**
  * @class Controls/_editableArea/Templates/Editors/DateTime
  * @public
- * @author Авраменко А.С.
+ * @author Красильников А.С.
  */
 
 class DateTime extends Base {
