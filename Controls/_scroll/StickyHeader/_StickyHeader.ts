@@ -440,6 +440,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         if (this._options.position.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
             style += 'top: ' + (top - (fixedPosition ? offset : 0)) + 'px;';
+            if (detection.isMobileIOS) {
+                style += 'z-index: ' + this._options.fixedZIndex + ';';
+                return style;
+            }
         }
 
         if (this._options.position.indexOf(POSITION.bottom) !== -1 && this._stickyHeadersHeight.bottom !== null) {
@@ -463,6 +467,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                     style += 'min-height:' + this._minHeight + 'px;';
                 }
                 // Increase border or padding by offset.
+
                 // If the padding or border is already set by the style attribute, then don't change it.
                 if (this._reverseOffsetStyle === null) {
                     const borderWidth: number = parseInt(styles['border-' + fixedPosition + '-width'], 10);
