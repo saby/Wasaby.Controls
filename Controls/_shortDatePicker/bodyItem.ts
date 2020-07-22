@@ -92,14 +92,6 @@ const Component = BaseControl.extend({
         this._forceUpdate();
     },
 
-    _onYearMouseEnter: function (event, year) {
-        this._yearHovered = year;
-    },
-
-    _onYearMouseLeave: function () {
-        this._yearHovered = null;
-    },
-
     _onHeaderClick: function () {
         this._notify('close', [], {bubbling: true});
     },

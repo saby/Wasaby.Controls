@@ -6,7 +6,6 @@ import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './Expandable
 import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
 import {mixin} from 'Types/util';
-import {register} from 'Types/di';
 
 export interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
@@ -231,5 +230,3 @@ Object.assign(TreeItem.prototype, {
     _$childrenProperty: '',
     _instancePrefix: 'tree-item-'
 });
-
-register('Controls/display:TreeItem', TreeItem, {instantiate: false});

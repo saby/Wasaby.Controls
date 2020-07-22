@@ -485,6 +485,9 @@ var
                 classes.add(COLUMN_SCROLL_JS_SELECTORS.CONTENT);
                 classes.add(DRAG_SCROLL_JS_SELECTORS.CONTENT, this._isDragScrollingVisible(options));
             }
+            if (this._listModel.isSupportLadder(this._options.ladderProperties)) {
+                classes.add('controls-Grid_support-ladder')
+            }
             return classes.compile();
         },
 
