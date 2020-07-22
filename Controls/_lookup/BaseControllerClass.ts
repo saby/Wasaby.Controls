@@ -81,7 +81,7 @@ export default class LookupBaseControllerClass {
 
         return this._getSourceController().load(filter).then(
             (items) => {
-                if (constants.isProduction) {
+                if (!constants.isProduction) {
                     LookupBaseControllerClass.checkLoadedItems(items, this._selectedKeys, keyProperty);
                 }
 
