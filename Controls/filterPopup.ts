@@ -29,6 +29,7 @@
  * @includes Text Controls/_filterPopup/Panel/Text
  * @includes Lookup Controls/_filterPopup/Panel/Lookup
  * @includes HierarchyLookup Controls/_filterPopup/Panel/HierarchyLookup
+ * @includes AdditionalPanelTemplate Controls/_filterPopup/Panel/AdditionalParams/Render
  * @public
  * @author Крайнов Д.О.
  */

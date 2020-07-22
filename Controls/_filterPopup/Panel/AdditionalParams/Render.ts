@@ -4,25 +4,45 @@ import Clone = require('Core/core-clone');
 import * as template from 'wml!Controls/_filterPopup/Panel/AdditionalParams/Render/Render';
 import * as itemTemplate from 'wml!Controls/_filterPopup/Panel/AdditionalParams/Render/resources/ItemTemplate';
 import * as groupTemplate from 'wml!Controls/_filterPopup/Panel/AdditionalParams/Render/resources/GroupTemplate';
-import {ICloneable} from 'Types/entity';
-import {IEnumerable} from 'Types/collection';
+import {IFilterItem} from 'Controls/filter';
 
-type TAdditionalItem = Record<string, any>;
-type TAdditionalSource = ICloneable & IEnumerable<TAdditionalItem, string>;
 interface IAdditionalRenderOptions extends IControlOptions {
     columnProperty: string;
     groupProperty: string;
     keyProperty: string;
-    source: TAdditionalSource;
+    source: IFilterItem[];
 }
+
+/**
+ * @class Controls/_filterPopup/Panel/AdditionalParams/Render
+ * @extends UI/Base:Control
+ * @control
+ * @public
+ * @author Михайлов С.Е
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/AdditionalParams/Render#source
+ * @cfg {Array<Controls/_filter/View/interface/IFilterView/FilterItem.typedef>} Коллекция элементов для отображения.
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/AdditionalParams/Render#keyProperty
+ * @cfg {string} Имя свойства, содержащего идентификатор элемента коллекции
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/AdditionalParams/Render#groupProperty
+ * @cfg {string} Имя свойства, содержащего идентификатор группы элемента списка.
+ */
 
 export default class AdditionalParamsRender extends Control<IAdditionalRenderOptions> {
     protected _template: TemplateFunction = template;
-    protected _collection: Collection<TAdditionalItem> =  null;
+    protected _collection: Collection<IFilterItem> =  null;
     protected _itemTemplate: TemplateFunction = itemTemplate;
     protected _groupTemplate: TemplateFunction = groupTemplate;
 
-    private _getCollection(options: IAdditionalRenderOptions): Collection<TAdditionalItem> {
+    private _getCollection(options: IAdditionalRenderOptions): Collection<IFilterItem> {
         const items = Clone(options.source);
         return new Collection({
             keyProperty: options.keyProperty,
