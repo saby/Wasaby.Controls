@@ -265,7 +265,7 @@ export class Controller {
     prepareActionsMenuConfig(
         item: IItemActionsItem,
         clickEvent: SyntheticEvent<MouseEvent>,
-        parentAction: IItemAction,
+        parentAction: IShownItemAction,
         opener: Element | Control<object, unknown>,
         isContextMenu: boolean
     ): IStickyPopupOptions {

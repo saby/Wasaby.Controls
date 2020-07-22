@@ -243,18 +243,6 @@ export interface IItemAction {
      * @cfg {String|Number} Key of the action's parent.
      */
     parent?: string | number;
-
-    /**
-     * @name Controls/_itemActions/interface/IItemAction#_isMenu
-     * @cfg {Boolean}
-     * @private
-     */
-    /*
-     * @name Controls/_itemActions/interface/IItemAction#_isMenu
-     * @cfg {Boolean} Determines whether the action opens menu.
-     * @private
-     */
-    _isMenu?: boolean;
 }
 
 /**
@@ -279,10 +267,16 @@ interface IShownItemAction extends IItemAction {
      * Показывать иконку операции
      */
     showIcon?: boolean;
+
+    /**
+     * Определяет, что опция является меню
+     */
+    _isMenu?: boolean;
 }
 
 /**
  * @typedef {Function} TItemActionVisibilityCallback
+ * @description
  * Функция обратного вызова для определения видимости опций записи.
  * @param action Item Action to check
  * @param item Model
@@ -291,6 +285,7 @@ export type TItemActionVisibilityCallback = (action: IItemAction, item: Model) =
 
 /**
  * @typedef {Function} TItemActionVisibilityCallback
+ * @description
  * Функция обратного вызова для определения видимости кнопки редактирования в свайпе.
  * @param item Model
  */
