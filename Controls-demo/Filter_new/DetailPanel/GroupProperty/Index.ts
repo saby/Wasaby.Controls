@@ -20,7 +20,7 @@ export default class extends Control {
     }
 
     protected _beforeMount(): Promise<any> {
-        this._items = getItemsWithGroup('myGroup');
+        this._items = getItemsWithGroup();
         return this._resolveTemplates(this._items);
     }
 

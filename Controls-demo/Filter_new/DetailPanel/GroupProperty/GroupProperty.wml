@@ -1,11 +1,11 @@
 <div class="controlsDemo__wrapper">
    <div class="control-demo__FilterDetailPanel__wrapper">
       <Controls.filterPopup:DetailPanel
-         attr:class="controls-FilterPanel__width-l"
+         attr:class="controls-FilterPanel__width-xl"
          bind:items="_items"
          itemTemplateProperty="itemTemplate"
          additionalTemplateProperty="additionalTemplate"
-         groupProperty="myGroup"
+         groupProperty="group"
          orientation="horizontal">
       </Controls.filterPopup:DetailPanel>
    </div>

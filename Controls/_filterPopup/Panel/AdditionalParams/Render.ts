@@ -37,8 +37,18 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
         this._collection = this._getCollection(options);
     }
 
-    protected _isGroup(item: CollectionItem<IFilterItem>): boolean {
-        return item instanceof GroupItem;
+    protected _isCurrentColumn(
+        item: CollectionItem<IFilterItem>,
+        collection: Collection<IFilterItem>,
+        columnProperty: string,
+        currentColumn: string): boolean {
+        let column;
+        if (item instanceof GroupItem) {
+            column = collection.getNext(item).getContents()[columnProperty];
+        } else {
+            column = item.getContents()[columnProperty];
+        }
+        return column === currentColumn;
     }
 
     protected _beforeUpdate(options: IAdditionalRenderOptions): void {

@@ -11,11 +11,7 @@ export default class extends Control {
     protected _resourceRoot: string = constants.resourceRoot;
 
     protected _beforeMount(): void {
-        this._source = getItems().map((el) => {
-            el.column = 'left';
-            el.group = 'myGroup';
-            return el;
-        });
+        this._source = getItems();
     }
     protected _itemsChangedHandler(event: SyntheticEvent, items: unknown[]): void {
         this._source = object.clone(items);
