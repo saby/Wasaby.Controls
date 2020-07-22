@@ -1,7 +1,7 @@
 <div class="controls-Scroll-ContainerBase {{_scrollCssClass}}"
-     name="scrollContainer"
+     name="content"
      on:scroll="_scrollHandler()">
-    <div class="controls-containerBase_contentObserver" name="content">
+    <div class="controls-containerBase_contentObserver" name="userContent">
         <ws:partial
             attr:class="controls-containerBase_userContent"
             template="{{_options.content}}"
@@ -9,6 +9,11 @@
             on:controlResize="_resizeHandler()"
             on:register="_registerIt()"
             on:unregister="_unRegisterIt()"
+
+            on:scrollToElement="_scrollToElement()"
+            on:saveScrollPosition="_saveScrollPosition()"
+            on:restoreScrollPosition="_restoreScrollPosition()"
+            on:updatePlaceholdersSize="_updatePlaceholdersSize()"
 
             on:itemMouseDown="_tmplNotify('itemMouseDown')"
             on:rootChanged="_tmplNotify('rootChanged')"
