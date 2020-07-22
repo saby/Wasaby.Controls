@@ -38,7 +38,6 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
         itemHeightProperty?: string;
         viewportHeight?: number;
     };
-    attachLoadTopTriggerToNull: boolean;
     needScrollCalculation: boolean;
     collection: Collection<Record>;
     activeElement: string | number;
@@ -56,21 +55,6 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
  */
 export default class ScrollController {
 
-    // В браузерах кроме хрома иногда возникает ситуация, что смена видимости триггера срабатывает с задержкой
-    // вследствие чего получаем ошибку в вычислениях нового range и вообше делаем по сути
-    // лишние пересчеты, например: https://online.sbis.ru/opendoc.html?guid=ea354034-fd77-4461-a368-1a8019fcb0d4
-    // TODO: этот код должен быть убран после
-    // https://online.sbis.ru/opendoc.html?guid=702070d4-b401-4fa6-b457-47287e44e0f4
-    private get _calculatedTriggerVisibility(): ITriggerState {
-        const topTriggerOffset =
-            this._getTopTriggerOffset(this._triggerOffset, this._options.attachLoadTopTriggerToNull);
-        return {
-            up: topTriggerOffset >= this._lastScrollTop - this._container.offsetTop,
-            down: this._lastScrollTop + this._viewportHeight >= this._viewHeight - this._triggerOffset
-        };
-    }
-
-    private _container: HTMLElement;
     private _virtualScroll: VirtualScroll;
 
     private _viewHeight: number = 0;
@@ -98,26 +82,22 @@ export default class ScrollController {
 
     protected _options: any;
 
-    private _callbacks: any;
-
     constructor(options: any) {
         this._options = {...ScrollController.getDefaultOptions(), ...options};
         if (options.needScrollCalculation) {
-            this._initModelObserving(options);
+            if (options.useNewModel) {
+                ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
+            }
         }
         this._initVirtualScroll(options);
-        this._callbacks = options.callbacks;
     }
 
 
     afterMount(container: HTMLElement): void {
         this._isMounted = true;
-        this._setContainer(container);
-        if (this._container) {
-            this._afterRenderHandler();
-        }
+        this._afterRenderHandler();
     }
-    update(params: Partial<IScrollParams>): void {
+    updateScrollParams(params: Partial<IScrollParams>):  {top: number, bottom: number} {
         if (this._virtualScroll) {
             let newParams: Partial<IContainerHeights> = {trigger: this._triggerOffset};
             if (params.clientHeight) {
@@ -129,12 +109,15 @@ export default class ScrollController {
                 this._viewHeight = params.scrollHeight;
             }
             this._virtualScroll.applyContainerHeightsData(newParams);
+            return this.getTriggerOffset(this._viewHeight, this._viewportHeight);
         }
     }
-    updateOptions(options: IOptions): void {
+    update(options: IOptions, params: Partial<IScrollParams>):  {top: number, bottom: number} {
         if (options.collection && this._options.collection !== options.collection) {
             if (options.needScrollCalculation) {
-                this._initModelObserving(options);
+                if (options.useNewModel) {
+                    ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
+                }
             }
             this._initVirtualScroll(options);
             this._options.collection = options.collection;
@@ -144,10 +127,9 @@ export default class ScrollController {
         if (options.activeElement) {
             this._options.activeElement = options.activeElement;
         }
-        if (this._options.attachLoadTopTriggerToNull !== options.attachLoadTopTriggerToNull) {
-            this._options.attachLoadTopTriggerToNull = options.attachLoadTopTriggerToNull;
-        }
+        
         this._isRendering = true;
+        return this.updateScrollParams(params);
     }
 
     needToSaveAndRestoreScrollPosition(): boolean {
@@ -223,18 +205,6 @@ export default class ScrollController {
             });
         } else {
             return Promise.resolve();
-        }
-    }
-
-    isTriggerVisible(direction: IDirection): boolean {
-        return !this._afterRenderCallbacks && !this._container.closest('.ws-hidden') && this._calculatedTriggerVisibility[direction];
-    }
-    private _initModelObserving(options: IOptions): void {
-        if (options.collection) {
-           
-            if (options.useNewModel) {
-                ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
-            }
         }
     }
 
@@ -333,11 +303,11 @@ export default class ScrollController {
     }
 
     /**
-     * Обработчик на событие смены видимости триггера
+     * ЗАпоминает состояние видимости триггера
      * @param triggerName
      * @param triggerVisible
      */
-    triggerVisibilityChanged(triggerName: IDirection, triggerVisible: boolean): void {
+    setTriggerVisibility(triggerName: IDirection, triggerVisible: boolean): void {
         this._triggerVisibility[triggerName] = triggerVisible;
     }
 
@@ -548,17 +518,11 @@ export default class ScrollController {
         }
     }
 
-    private _getTopTriggerOffset(triggerOffset: number, attachLoadTopTriggerToNull: boolean): number {
-        return attachLoadTopTriggerToNull ? 0 : triggerOffset;
-    }
-
     getTriggerOffset(scrollHeight: number, viewportHeight: number): {top: number, bottom: number} {
         this._triggerOffset =
             (scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *
             this._options._triggerPositionCoefficient;
-        const topTriggerOffset =
-            this._getTopTriggerOffset(this._triggerOffset, this._options.attachLoadTopTriggerToNull);
-        return {top: topTriggerOffset, bottom: this._triggerOffset};
+        return {top: this._triggerOffset, bottom: this._triggerOffset};
     }
 
     private static _setCollectionIterator(collection: Collection<Record>, mode: 'remove' | 'hide'): void {
@@ -574,13 +538,6 @@ export default class ScrollController {
                 );
                 break;
         }
-    }
-
-    // TODO: из-за ошибки, что intersectionObserver не всегда вовремя сообщает актуальное состояние, 
-    // приходится самим иногда понимать, виден ли триггер. Для этого нужен container.
-    private _setContainer(container: HTMLElement) {
-        let scrollContainer = container.getElementsByClassName('controls-ScrollController');
-        this._container = <HTMLElement>scrollContainer[0];
     }
 
     static getDefaultOptions(): Partial<IOptions> {

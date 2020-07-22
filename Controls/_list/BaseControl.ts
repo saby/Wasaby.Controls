@@ -262,13 +262,12 @@ const _private = {
             self._attachLoadTopTriggerToNull = false;
         }
         if (self._scrollController) {
-            self._scrollController.updateOptions({
-                attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
+            const {top, bottom} = self._scrollController.update({
                 forceInitVirtualScroll: isInfinityNavigation,
                 collection: self.getViewModel(),
                 ...self._options
             });
-            self.updateTriggerOffset();
+            self.applyTriggerOffset(top, bottom);
         }
     },
 
@@ -789,7 +788,7 @@ const _private = {
             let triggerVisibilityDown;
 
             const scrollParams = {
-                clientHeight: self._viewPortSize,
+                clientHeight: self._viewportSize,
                 scrollHeight: self._viewSize,
                 scrollTop: self._scrollTop
             };
@@ -968,6 +967,9 @@ const _private = {
     },
 
     calcTriggerVisibility(self, scrollParams, triggerOffset, direction: 'up' | 'down'): boolean {
+        if (this._container.closest('.ws-hidden')) {
+            return false;
+        }
         if (direction === 'up') {
             return scrollParams.scrollTop < triggerOffset * 1.3;
         } else {
@@ -981,10 +983,10 @@ const _private = {
     calcViewSize(viewSize: number, pagingVisible: boolean): number {
         return viewSize - (pagingVisible ? PAGING_PADDING : 0);
     },
-    needShowPagingByScrollSize(self, viewSize: number, viewPortSize: number): boolean {
+    needShowPagingByScrollSize(self, viewSize: number, viewportSize: number): boolean {
         let result = self._pagingVisible;
 
-        const proportion = (_private.calcViewSize(viewSize, result) / viewPortSize);
+        const proportion = (_private.calcViewSize(viewSize, result) / viewportSize);
 
         // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
         if (!result) {
@@ -1008,7 +1010,7 @@ const _private = {
             };
             const scrollParams = {
                 scrollTop: self._scrollTop,
-                clientHeight: self._viewPortSize,
+                clientHeight: self._viewportSize,
                 scrollHeight: self._viewSize
             };
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
@@ -1025,7 +1027,7 @@ const _private = {
                 visbilityTriggerUp = _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetTop, 'up');
             }
 
-            if (!visbilityTriggerDown && self._viewSize && self._viewPortSize) {
+            if (!visbilityTriggerDown && self._viewSize && self._viewportSize) {
                 visbilityTriggerDown = _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetBottom, 'down');
             }
 
@@ -1051,7 +1053,7 @@ const _private = {
         // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
         self._isScrollShown = true;
 
-        self._viewPortRect = params.viewPortRect;
+        self._viewportRect = params.viewportRect;
 
         if (_private.needScrollPaging(self._options.navigation)) {
                 const scrollParams = {
@@ -1214,7 +1216,7 @@ const _private = {
             const scrollParams = {
                 scrollTop: self._scrollTop,
                 scrollHeight: self._viewSize,
-                clientHeight: self._viewPortSize
+                clientHeight: self._viewportSize
             };
             _private.updateScrollPagingButtons(self, scrollParams);
         }
@@ -1330,7 +1332,8 @@ const _private = {
         return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
 
-    onListChange(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
+    // TODO: упорядочить проверки и переписать на switch
+    onCollectionChanged(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
         const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
@@ -1436,7 +1439,7 @@ const _private = {
     initListViewModelHandler(self, model, useNewModel: boolean) {
         if (useNewModel) {
             model.subscribe('onCollectionChange', (...args: any[]) => {
-                _private.onListChange.apply(
+                _private.onCollectionChanged.apply(
                     null,
                     [
                         self,
@@ -1447,7 +1450,7 @@ const _private = {
                 );
             });
         } else {
-            model.subscribe('onListChange', _private.onListChange.bind(null, self));
+            model.subscribe('onListChange', _private.onCollectionChanged.bind(null, self));
         }
 
         model.subscribe('onGroupsExpandChange', function(event, changes) {
@@ -1854,12 +1857,12 @@ const _private = {
                           isPortionedSearchInProgress)
             .compile();
     },
-    updateIndicatorContainerHeight(self, viewRect: DOMRect, viewPortRect: DOMRect): void {
+    updateIndicatorContainerHeight(self, viewRect: DOMRect, viewportRect: DOMRect): void {
         let top;
         let bottom;
-        if (self._isScrollShown || (self._needScrollCalculation && viewRect && viewPortRect)) {
-            top = Math.max(viewRect.y, viewPortRect.y);
-            bottom = Math.min(viewRect.y + viewRect.height, viewPortRect.y + viewPortRect.height);
+        if (self._isScrollShown || (self._needScrollCalculation && viewRect && viewportRect)) {
+            top = Math.max(viewRect.y, viewportRect.y);
+            bottom = Math.min(viewRect.y + viewRect.height, viewportRect.y + viewportRect.height);
         } else {
             top = viewRect.top;
             bottom = viewRect.bottom;
@@ -1877,8 +1880,8 @@ const _private = {
         /* Получаем расстояние от начала скроллконтейнера, до начала списка, т.к.список может лежать не в "личном" контейнере. */
         if (self._isMounted) {
             const viewRect = (self._container[0] || self._container).getBoundingClientRect();
-            if (self._isScrollShown || (self._needScrollCalculation && viewRect && self._viewPortRect)) {
-                height = viewRect.y + self._scrollTop - self._viewPortRect.top;
+            if (self._isScrollShown || (self._needScrollCalculation && viewRect && self._viewportRect)) {
+                height = viewRect.y + self._scrollTop - self._viewportRect.top;
             }
         }
         if (view && view.getHeaderHeight) {
@@ -2104,7 +2107,6 @@ const _private = {
 
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
-            attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
             virtualScrollConfig: options.virtualScrollConfig || {},
             needScrollCalculation: self._needScrollCalculation,
             scrollObserver: self._children.scrollObserver,
@@ -2415,7 +2417,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _loadOffsetBottom: LOAD_TRIGGER_OFFSET,
     _loadingIndicatorContainerOffsetTop: 0,
     _viewSize: null,
-    _viewPortSize: null,
+    _viewportSize: null,
     _scrollTop: 0,
     _popupOptions: null,
 
@@ -2674,14 +2676,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.onScrollHide(this);
     },
 
-    viewportResizeHandler(viewportHeight: number, viewportRect: number): void {
+    viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect): void {
         const container = this._container[0] || this._container;
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), viewportRect);
-        const itemsHeights = getItemsHeightsData(this._getItemsContainer());
-        this._scrollController.updateItemsHeights(itemsHeights);
-        this._viewPortSize = viewportHeight;
-        this._viewPortRect = viewportRect;
-        this.updateTriggerOffset();
+        this._viewportSize = viewportHeight;
+        this._viewportRect = viewportRect;
+        if (this._scrollController) {
+            this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            const {top, bottom} = this._scrollController.updateScrollParams({clientHeight: this._viewportSize});
+            this.applyTriggerOffset(top, bottom);
+
+        }
     },
 
     scrollResizeHandler(params: object): void {
@@ -2724,16 +2729,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
         if (_private.needScrollPaging(this._options.navigation)) {
-            this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewPortSize);
+            this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewportSize);
+        }
+        this._scrollController.setTriggerVisibility(direction, state);
+        if (state) {
+            this.handleTriggerVisible(direction);
         }
     },
 
-    triggerOffsetChangedHandler(top: number, bottom: number): void {
-        this._loadOffsetTop = top;
-        this._loadOffsetBottom = bottom;
-
-    },
-
+    // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
     changeIndicatorStateHandler(state: boolean, indicatorName: IDirection): void {
         if (indicatorName) {
             if (state) {
@@ -2744,39 +2748,34 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
     applyTriggerOffset(top: number, bottom: number): void {
-        this._children.topVirtualScrollTrigger?.style.top = `${top}px`;
-        this._children.bottomVirtualScrollTrigger?.style.bottom = `${bottom}px`;
+        this._loadOffsetTop = this._attachLoadTopTriggerToNull ? 0 : top;
+        this._loadOffsetBottom = bottom;
         
-    },
-    updateTriggerOffset(): void {
-        if (this._scrollController) {
-            const {top, bottom} = this._scrollController.getTriggerOffset(this._viewSize, this._viewPortSize);
-            this.applyTriggerOffset(top, bottom);
-            this._loadOffsetTop = top;
-            this._loadOffsetBottom = bottom;
-        }
+        // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
+        this._children.topVirtualScrollTrigger?.style.top = `${this._loadOffsetTop}px`;
+        this._children.bottomVirtualScrollTrigger?.style.bottom = `${this._loadOffsetBottom}px`;
     },
     _viewResize(): void {
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
 
         if (this._scrollController) {
-            this.updateTriggerOffset();
             const itemsHeights = getItemsHeightsData(this._getItemsContainer());
             this._scrollController.updateItemsHeights(itemsHeights);
-            this._scrollController.update({scrollHeight: this._viewSize});
+            const {top, bottom} = this._scrollController.updateScrollParams({scrollHeight: this._viewSize, clientHeight: this._viewportSize});
+            this.applyTriggerOffset(top, bottom);
         }
 
         if (_private.needScrollPaging(this._options.navigation)) {
             const scrollParams = {
                 scrollHeight: this._viewSize,
-                clientHeight: this._viewPortSize,
+                clientHeight: this._viewportSize,
                 scrollTop: this._scrollTop
             };
 
             _private.updateScrollPagingButtons(this, scrollParams);
         }
-        _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
+        _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewportRect);
     },
 
     getViewModel() {
@@ -2800,10 +2799,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadedItems = null;
 
         if (this._scrollController) {
-            
-            // TODO: из-за ошибки, что intersectionObserver не всегда вовремя сообщает актуальное состояние, 
-            // приходится самим иногда понимать, виден ли триггер. Для этого нужен container.
-            this._scrollController.afterMount(container);
+            this._scrollController.afterMount();
         }
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
@@ -2963,19 +2959,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._scrollController) {
-            this._scrollController.updateOptions({
-                attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
+            const {top, bottom} = this._scrollController.update({
                 forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
                 collection: this.getViewModel(),
                 ...newOptions
-            });
-            this.updateTriggerOffset();
-            const indicatorState = this._scrollController.getIndicatorState();
-            if (indicatorState) {
-                this._indicatorTimeout = setTimeout(() => {
-                    this.changeIndicatorStateHandler(true, indicatorState);
-                }, INDICATOR_DELAY);
-            }
+            }, {scrollHeight: this._viewSize, clientHeight: this._viewportSize});
+            this.applyTriggerOffset(top, bottom);
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -3247,10 +3236,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     checkTriggersVisibility(): void {
-        if (this._scrollController.isTriggerVisible('up')) {
+        const scrollParams = {
+            clientHeight: this._viewportSize,
+            scrollHeight: this._viewSize,
+            scrollTop: this._scrollTop
+        };
+        const triggerUp = _private.calcTriggerVisibility(this, scrollParams, this._loadOffsetBottom, 'up');
+        const triggerDown = _private.calcTriggerVisibility(this, scrollParams, this._loadOffsetTop, 'down');
+        this._scrollController.setTriggerVisibility('up', triggerUp);
+        this._scrollController.setTriggerVisibility('down', triggerDown);
+        if (triggerUp) {
             this.handleTriggerVisible('up');
         }
-        if (this._scrollController.isTriggerVisible('down')) {
+        if (triggerDown) {
             this.handleTriggerVisible('down');
         }
     },
@@ -3961,18 +3959,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
         switch (eventName) {
             case 'virtualPageBottomStart':
-                this.handleTriggerVisible('down');
-                this._scrollController.triggerVisibilityChanged('down', true, params);
+                this.triggerVisibilityChangedHandler('down', true);
                 break;
             case 'virtualPageTopStart':
-                this.handleTriggerVisible('up');
-                this._scrollController.triggerVisibilityChanged('up', true, params);
+                this.triggerVisibilityChangedHandler('up', true);
                 break;
             case 'virtualPageBottomStop':
-                this._scrollController.triggerVisibilityChanged('down', false, params);
+                this.triggerVisibilityChangedHandler('down', false);
                 break;
             case 'virtualPageTopStop':
-                this._scrollController.triggerVisibilityChanged('up', false, params);
+                this.triggerVisibilityChangedHandler('up', false);
                 break;
             case 'scrollMoveSync':
                 let activeElement = this._scrollController.scrollPositionChanged(params);
@@ -3982,7 +3978,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this.scrollMoveSyncHandler(params.scrollTop);
                 break;
             case 'viewportResize':
-                this._scrollController.update(params);
                 this.viewportResizeHandler(params.clientHeight, params.rect);
                 break;
             case 'virtualScrollMove':
