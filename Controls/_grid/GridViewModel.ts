@@ -467,7 +467,7 @@ var
         },
 
         prepareLadder(self) {
-            if (!self._isSupportLadder(self._options.ladderProperties)) {
+            if (!self.isSupportLadder(self._options.ladderProperties)) {
                 return {};
             }
             if (!self._ladder || self._options.stickyColumn) {
@@ -715,7 +715,7 @@ var
             }
             this._setHeader(this._options.header);
         },
-        _isSupportLadder(ladderProperties: []): boolean {
+        isSupportLadder(ladderProperties: []): boolean {
             return isSupportLadder(ladderProperties);
         },
 
@@ -1671,7 +1671,7 @@ var
                 };
                 currentColumn.column = current.columns[current.columnIndex];
                 currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
-                if (self._isSupportLadder(self._options.ladderProperties)) {
+                if (self.isSupportLadder(self._options.ladderProperties)) {
                     currentColumn.ladder = self._ladder.ladder[current.index];
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
