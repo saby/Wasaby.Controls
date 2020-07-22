@@ -11,7 +11,7 @@ import * as ContentTemplate from 'wml!Controls/_lookup/SelectedCollection/_Conte
 import * as CrossTemplate from 'wml!Controls/_lookup/SelectedCollection/_CrossTemplate';
 import * as CounterTemplate from 'wml!Controls/_lookup/SelectedCollection/CounterTemplate';
 import {default as BaseLookup} from './BaseLookup';
-import * as itemTemplate from "wml!*";
+import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTemplate';
 
 /**
  * Поле ввода с автодополнением и возможностью выбора значений из справочника.
@@ -218,7 +218,7 @@ export default class Lookup extends BaseLookupInput {
    protected _inputWidth: number;
    protected _availableWidthCollection: number;
    protected _counterWidth: number;
-   protected _fieldWrapperMinHeight: number;
+   protected _fieldWrapperMinHeight: number = null;
 
    showSelector(popupOptions?: IStackPopupOptions): void {
       this.closeSuggest();
@@ -487,11 +487,8 @@ export default class Lookup extends BaseLookupInput {
          const templateOptions = {
             theme: this._options.theme
          };
-         const fieldWrapperStyles = getComputedStyle(this._getFieldWrapper());
          SHOW_SELECTOR_WIDTH = getWidth(this._showSelectorTemplate(templateOptions));
          CLEAR_RECORDS_WIDTH = getWidth(this._clearRecordsTemplate(templateOptions));
-         LEFT_OFFSET_COUNTER = parseInt(fieldWrapperStyles.paddingLeft, 10) +
-                               parseInt(fieldWrapperStyles.borderLeftWidth, 10);
       }
    }
 
@@ -512,7 +509,8 @@ export default class Lookup extends BaseLookupInput {
          ...{
             displayProperty: 'title',
             multiSelect: false,
-            maxVisibleItems: 7
+            maxVisibleItems: 7,
+            itemTemplate
          }
       };
    }

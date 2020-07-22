@@ -11,10 +11,10 @@ import {Model} from 'Types/entity';
 import {constants} from 'Env/Env';
 import {ITextOptions, IValueOptions, IBaseOptions} from 'Controls/input';
 import {IFontSizeOptions} from 'Controls/interface';
-import {IInfoBoxOptions} from 'Controls/popup';
 import {isEqual} from 'Types/object';
 import * as tmplNotify from 'Controls/Utils/tmplNotify';
 import {ICrudPlus} from 'Types/source';
+import {IHashMap} from 'Types/declarations';
 
 const KEY_CODE_F2 = 113;
 
@@ -35,6 +35,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     protected _clearRecordsTemplate: TemplateFunction = clearRecordsTemplate;
     protected _showSelectorTemplate: TemplateFunction = showSelectorTemplate;
     protected _notifyHandler: Function = tmplNotify;
+    protected _itemTemplateClasses: string;
     private _fieldWrapper: HTMLElement;
     private _fieldWrapperWidth: number = null;
     private _inputValue: string;
@@ -190,12 +191,20 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         return !options.readOnly && this._isInputVisible(options);
     }
 
-    private _openInfoBox(event: SyntheticEvent, config: IInfoBoxOptions): void {
-        // @ts-ignore
+    private _openInfoBox(event: SyntheticEvent, config: IHashMap<unknown>): void {
         config.width = this._getContainer().offsetWidth;
+        config.offset = {
+            horizontal: -this._getOffsetForInfobox()
+        };
         this.closeSuggest();
         this._infoboxOpened = true;
         this._notify('openInfoBox', [config]);
+    }
+
+    private _getOffsetForInfobox(): number {
+        const fieldWrapperStyles = getComputedStyle(this._getFieldWrapper());
+        return parseInt(fieldWrapperStyles.paddingLeft, 10) +
+               parseInt(fieldWrapperStyles.borderLeftWidth, 10);
     }
 
     private _closeInfoBox(): void {
@@ -291,7 +300,15 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     private _getPlaceholder(options: ILookupInputOptions): string | TemplateFunction {
-        return options.placeholder;
+        let placeholder;
+
+        if (!options.multiSelect && !this._isEmpty()) {
+            placeholder = options.comment;
+        } else {
+            placeholder = options.placeholder;
+        }
+
+        return placeholder;
     }
 
     private _isShowCollection(): boolean {

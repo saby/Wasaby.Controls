@@ -282,6 +282,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       lookup._getContainer = function() {
          return {offsetWidth: 100};
       };
+      lookup._getOffsetForInfobox = () => 5;
       lookup._notify = function(eventName) {
          if (eventName === 'openInfoBox') {
             isNotifyOpenPopup = true;
@@ -290,8 +291,12 @@ describe('Controls/_lookup/BaseLookupView', function() {
 
       lookup._openInfoBox(null, config);
       deepStrictEqual(config, {
-         width: 100
-      });
+         width: 100,
+         offset: {
+             horizontal: -5
+         }
+
+   });
       ok(!lookup._suggestState);
       ok(lookup._infoboxOpened);
       ok(isNotifyOpenPopup);

@@ -1,4 +1,4 @@
-import * as itemTemplate from 'wml!Controls/_lookup/Lookup/itemTemplate';
+import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTemplate';
 import {TemplateFunction} from 'UI/Base';
 import {default as BaseLookupInput, ILookupInputOptions} from 'Controls/_lookup/BaseLookupInput';
 import showSelector from 'Controls/_lookup/showSelector';
@@ -82,6 +82,7 @@ let OUTER_INDENT_INPUT = 0;
 
 export default class MultipleInput extends BaseLookupInput {
     protected _rootContainerClasses: string = 'controls-Lookup controls-MultipleInput';
+    protected _itemTemplateClasses: string = 'controls-MultipleInput__SelectedCollection_item';
     protected _listOfDependentOptions: string[] = ['displayProperty', 'readOnly', 'placeholder', 'isInputVisible'];
     protected _availableWidthCollection: number;
 
@@ -149,7 +150,8 @@ export default class MultipleInput extends BaseLookupInput {
             ...BaseLookup.getDefaultOptions(),
             ...{
                 itemTemplate,
-                multiSelect: true
+                multiSelect: true,
+                showClearButton: false
             }
         };
     }

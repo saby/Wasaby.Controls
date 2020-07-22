@@ -60,7 +60,6 @@
                     <Controls._lookup.SelectedCollection
                             name="collection"
                             counterClassName="controls-Lookup__counter"
-                            itemTemplate="{{_options.itemTemplate}}"
                             displayProperty="{{_options.displayProperty}}"
                             itemsLayout="{{_multiLineState ? 'default' : 'oneRow'}}"
                             items="{{_items}}"
@@ -73,7 +72,11 @@
                             on:openInfoBox="_openInfoBox()"
                             on:closeInfoBox="_closeInfoBox()"
                             attr:class="controls-Lookup__collection {{_isInputVisible(_options) ? 'controls-Lookup__collection_with_input'}}"
-                            attr:style="max-width:{{_isInputVisible(_options) ? _availableWidthCollection}}px;"/>
+                            attr:style="max-width:{{_isInputVisible(_options) ? _availableWidthCollection}}px;">
+                        <ws:itemTemplate>
+                            <ws:partial template="{{_options.itemTemplate}}" attr:class="{{_itemTemplateClasses}}"/>
+                        </ws:itemTemplate>
+                    </Controls._lookup.SelectedCollection>
                 </ws:if>
             </ws:leftFieldWrapper>
 

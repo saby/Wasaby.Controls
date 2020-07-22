@@ -9,7 +9,7 @@ import {List} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 // @ts-ignore
-import * as itemTemplate from 'wml!Controls/_lookup/Button/itemTemplate';
+import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTemplate';
 import {IValidationStatusOptions, ValidationStatus} from '../_interface/IValidationStatus';
 // @ts-ignore
 import rk = require('i18n!Controls');
