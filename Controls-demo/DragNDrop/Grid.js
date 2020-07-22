@@ -35,8 +35,8 @@ define('Controls-demo/DragNDrop/Grid', [
             title: 'Additional'
          }];
       },
-      _dragStart: function(event, items) {
-         return new ListEntity({
+      _dragStart: function(event, items, draggedKey) {
+         return draggedKey === 0 ? false : new ListEntity({
             items: items
          });
       },
