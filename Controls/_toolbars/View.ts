@@ -60,6 +60,13 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @default ''
      */
     popupClassName: string;
+    /**
+     * @name Controls/_toolbars/IToolbarOptions#itemsSpacing
+     * @cfg {String} Размер расстояния между кнопками.
+     * @variant medium
+     * @variant big
+     * @default medium
+     */
     itemsSpacing: TItemsSpacing;
     /**
      * @name Controls/_toolbars/View#additionalProperty

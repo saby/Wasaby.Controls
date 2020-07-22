@@ -1,3 +1,5 @@
+import {TemplateFunction} from 'UI/Base';
+
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в дополнительном меню {@link Controls/toolbars:View тулбара}.
  * @class Controls/toolbars:ItemTemplate
@@ -5,7 +7,7 @@
  * @public
  * @see Controls/toolbars:View
  * @see Controls/toolbars
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/buttons-switches/toolbar/#template-standart">руководство разработчика</a>
@@ -28,17 +30,17 @@
 
 /**
  * @name Controls/toolbars:ItemTemplate#item
- * @cfg {String} item Элемент тулбара.
+ * @cfg {Object} item Элемент тулбара.
  */
 
 /**
  * @name Controls/toolbars:ItemTemplate#buttonTemplate
- * @cfg {String} buttonTemplate Шаблон кнопки тулбара.
+ * @cfg {String|Function} buttonTemplate Шаблон кнопки тулбара.
  */
 
 /**
  * @name Controls/toolbars:ItemTemplate#buttonTemplateOptions
- * @cfg {String} buttonTemplateOptions Опции шаблона кнопки.
+ * @cfg {Object} buttonTemplateOptions Опции шаблона кнопки.
  */
 
 export default interface IItemTemplateOptions {
@@ -55,7 +57,7 @@ export default interface IItemTemplateOptions {
 
     /**
      * @deprecated
-     */ 
+     */
     buttonTransparent?: boolean;
 
     /**
@@ -82,5 +84,9 @@ export default interface IItemTemplateOptions {
      * @deprecated
      */
     contentTemplate?: string;
+    itemSpacing?: string;
+    theme?: string;
+    item?: object;
+    buttonTemplate?: string | TemplateFunction;
+    buttonTemplateOptions?: object;
  }
- 
