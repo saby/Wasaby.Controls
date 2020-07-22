@@ -10,34 +10,6 @@
  * @author Красильников А.С.
  */
 
-/**
- * Шаблон, который по умолчанию используется для отображения элементов в контроле {@link Controls/toolbars:View}.
- * @class Controls/toolbars:ItemTemplate
- * @author Красильников А.С.
- */
-/**
- * @name Controls/toolbars:ItemTemplate#item
- * @cfg {Controls/_toolbars/IToolbarSource/Item.typedef} элемент тулбара.
- */
-/**
- * @name Controls/toolbars:ItemTemplate#buttonTemplate
- * @cfg {UI/Base:TemplateFunction} шаблон кнопки тулбара.
- * @default Controls/buttons#ButtonTemplate
- */
-/**
- * @name Controls/toolbars:ItemTemplate#buttonTemplateOptions
- * @cfg {Object} Опции шаблона кнопки.
- * @see Controls/toolbars:ItemTemplate#buttonTemplate
- */
-/**
- * @name Controls/toolbars:ItemTemplate#itemsSpacing
- * @cfg {String} Значение опции тулбара {@link Controls/toolbars:View#itemsSpacing}.
- */
-/**
- * @name Controls/toolbars:ItemTemplate#theme
- * @cfg {String} Значение опции тулбара {@link Controls/toolbars:View#theme}.
- */
-
 import ItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 export {ItemTemplate};
 
