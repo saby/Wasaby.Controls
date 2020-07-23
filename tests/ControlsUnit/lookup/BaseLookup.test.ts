@@ -63,14 +63,10 @@ describe('Controls/lookup:Input', () => {
 
     describe('handlers', () => {
 
-        it('addItemHandler', async () => {
+        it('addItem', async () => {
             const lookup = await getBaseLookup();
-            const notifyStub = stub(lookup, '_notify');
-            lookup._addItemHandler({} as unknown as SyntheticEvent, new Model());
-
+            lookup._addItem(new Model());
             assert.deepStrictEqual(lookup._items.getCount(), 1);
-            assert.ok(notifyStub.withArgs('choose').calledOnce);
-            notifyStub.restore();
         });
 
     });
