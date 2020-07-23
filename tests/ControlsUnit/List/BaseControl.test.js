@@ -2448,7 +2448,7 @@ define([
             };
             assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger should be visible');
             scrollParams = {
-               scrollTop: 200,
+               scrollTop: 101,
                clientHeight: 300,
                scrollHeight: 600
             };
@@ -2463,7 +2463,7 @@ define([
             };
             assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'down'), 'down trigger should be visible');
             scrollParams = {
-               scrollTop: 0,
+               scrollTop: 199,
                clientHeight: 300,
                scrollHeight: 600
             };
@@ -2478,7 +2478,7 @@ define([
             };
             assert.isTrue(calcTriggerVisibility({_pagingVisible: true}, scrollParams, 100, 'down'), 'down trigger should be visible');
             scrollParams = {
-               scrollTop: 100,
+               scrollTop: 150,
                clientHeight: 300,
                scrollHeight: 600
             };
