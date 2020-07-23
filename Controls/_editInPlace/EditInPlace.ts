@@ -230,7 +230,8 @@ const _private = {
     },
 
     validate(self: EditInPlace): Promise<any> {
-        return self._formController.submit();
+        self._forceUpdate();
+        return self._formController.deferSubmit();
     },
 
     hasParentInItems(item: Model, listViewModel: any): boolean|void {
@@ -923,7 +924,7 @@ export default class EditInPlace {
          * Ideally, validation should take value through options and reset automagically.
          * TODO: https://online.sbis.ru/opendoc.html?guid=951f6762-8e37-4182-a7fc-3104a35ce27a
          */
-        this._formController.setValidationResult();
+        this._formController.setValidationResult(null);
     }
 
     _forceUpdate(): void {

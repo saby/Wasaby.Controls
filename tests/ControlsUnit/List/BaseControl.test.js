@@ -3866,34 +3866,6 @@ define([
             ctrl._beforeUpdate(cfg);
             assert.isTrue(ctrl._editInPlace._options.readOnly);
          });
-
-         it('should update form controlled if it was updated', async () => {
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               keyProperty: 'id',
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               editingConfig: {
-                  item: new entity.Model({rawData: { id: 1 }})
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: lists.ListViewModel,
-            };
-            var ctrl = new lists.BaseControl(cfg);
-            ctrl.saveOptions(cfg);
-            await ctrl._beforeMount(cfg);
-            const formController = {};
-            ctrl._children.formController = formController;
-            ctrl._beforeUpdate(cfg);
-            ctrl._afterUpdate(cfg);
-            assert.equal(ctrl._editInPlace._formController, formController);
-         });
       });
 
       it('can\'t start drag on readonly list', function() {
