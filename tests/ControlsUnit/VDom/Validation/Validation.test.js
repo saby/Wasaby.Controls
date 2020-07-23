@@ -153,6 +153,31 @@ define([
          Controller.destroy();
       });
 
+      it('config for openInfoBox', () => {
+         let validCtrl = new validateMod.Container();
+         validCtrl.saveOptions({
+            errorTemplate: 'myTemplate'
+         });
+         validCtrl._validationResult = 'Error';
+         validCtrl._container = 'myContainer';
+         let newCfg = {
+            target: 'myContainer',
+            validationStatus: 'invalid',
+            template: 'myTemplate',
+            templateOptions: {
+               errors: 'Error'
+            },
+            eventHandlers: {},
+            closeOnOutsideClick: false,
+         };
+
+         validCtrl._callInfoBox = (cfg) => {
+            cfg.eventHandlers = {};
+            assert.deepEqual(newCfg, cfg);
+         };
+         validCtrl._openInfoBox();
+      });
+
       it('submit', (done) => {
          let Controller = new validateMod.ControllerClass();
          let validator1 = getValidator(true);
