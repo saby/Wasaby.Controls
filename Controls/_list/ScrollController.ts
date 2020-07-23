@@ -175,7 +175,9 @@ export default class ScrollController {
             if (options.needScrollCalculation) {
                 this._initModelObserving(options);
             }
-            this._initVirtualScroll(options);
+            if (this._options.collection !== options.collection) {
+                this._initVirtualScroll(options);
+            }
             this._options.collection = options.collection;
             this._options.needScrollCalculation = options.needScrollCalculation;
         }
