@@ -58,7 +58,11 @@ var
                self._options.editObject.set(field, self._editObject.get(field));
             });
          }
-         self._editObject.acceptChanges();
+
+         /* При старте редактирования в стейт кладется клон
+          * Нужно вернуть оригинальную запись, чтобы при изменении в ней изменения отражались в контроле
+          */
+         self._editObject = self._options.editObject;
       }
    };
 
@@ -78,7 +82,7 @@ var
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/input/edit/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_editableArea.less">переменные тем оформления</a>
- * 
+ *
  * @demo Controls-demo/EditableArea/EditableArea
  */
 

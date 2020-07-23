@@ -320,8 +320,8 @@ define([
             assert.equal(eventQueue[1].event, 'afterEndEdit');
             assert.equal(eventQueue[1].eventArgs[0], instance._editObject);
             assert.equal(cfg.editObject.get('text'), 'asdf');
-            assert.isFalse(instance._editObject.isChanged());
-            assert.isFalse(instance._options.editObject.isChanged());
+            assert.equal(instance._editObject, instance._options.editObject);
+            assert.isTrue(instance._options.editObject.isChanged());
             assert.isFalse(instance._isEditing);
          });
 
@@ -388,9 +388,9 @@ define([
             assert.equal(eventQueue[1].event, 'afterEndEdit');
             assert.equal(eventQueue[1].eventArgs[0], instance._editObject);
             assert.equal(cfg.editObject.get('text'), 'asdf');
+            assert.equal(instance._editObject, instance._options.editObject);
+            assert.isTrue(instance._options.editObject.isChanged());
             assert.isFalse(instance._isEditing);
-            assert.isFalse(instance._editObject.isChanged());
-            assert.isFalse(instance._options.editObject.isChanged());
          });
       });
    });
