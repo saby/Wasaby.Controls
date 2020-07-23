@@ -404,7 +404,17 @@ define([
          scrollMod.Watcher._private.doScroll(ins, 'pageUp', containerMock);
          assert.deepEqual(-100, containerMock.scrollTop);
 
-         
+         containerMock.scrollTop = 200;
+         ins._topPlaceholderSize = 200;
+         const sendByRegistrar = scrollMod.Watcher._private.sendByRegistrar;
+         scrollMod.Watcher._private.sendByRegistrar = (self, event, params) => {
+            ins._topPlaceholderSize = 0;
+            params.applyScrollTopCallback();
+         }
+         scrollMod.Watcher._private.doScroll(ins, 'pageUp', containerMock);
+         assert.deepEqual(100, containerMock.scrollTop);
+         scrollMod.Watcher._private.sendByRegistrar = sendByRegistrar;
+
          containerMock.scrollTop = 2500;
          ins._bottomPlaceholderSize = 0;
          scrollMod.Watcher._private.doScroll(ins, 'pageDown', containerMock);

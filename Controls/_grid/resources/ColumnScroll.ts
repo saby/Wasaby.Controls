@@ -7,6 +7,7 @@ import {detection} from 'Env/Env';
 export interface IColumnScrollOptions {
     stickyColumnsCount?: number;
     hasMultiSelect: boolean;
+    needBottomPadding?: boolean;
 
     theme?: string;
     backgroundStyle?: string;
@@ -168,6 +169,7 @@ export class ColumnScroll {
         const backgroundStyle = this._options.backgroundStyle;
 
         let shadowClasses = `controls-ColumnScroll__shadow_theme-${theme}`
+            + ` controls-ColumnScroll__shadow_with${this._options.needBottomPadding ? '' : 'out'}-bottom-padding_theme-${theme}`
             + ` controls-ColumnScroll__shadow-${position}_theme-${theme}`
             + ` controls-horizontal-gradient-${backgroundStyle}_theme-${theme}`;
 
@@ -199,7 +201,7 @@ export class ColumnScroll {
      * вызвано еще одно обновление. Время ожидания регулируется константой DELAY_UPDATE_SIZES.
      * @see DELAY_UPDATE_SIZES
      */
-    updateSizes(afterUpdateCallback: () => void = null, immediate: boolean = false): void {
+    updateSizes(afterUpdateCallback: TAfterUpdateSizesCallback, immediate: boolean = false): void {
         const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
         if (immediate) {
             this._updateSizes(isFullGridSupport, afterUpdateCallback);
@@ -239,7 +241,6 @@ export class ColumnScroll {
             // reset scroll position after resize, if we don't need scroll
             if (newContentSize <= newContainerSize) {
                 this._scrollPosition = 0;
-                this._drawTransform(0, isFullGridSupport);
             }
 
             this._updateShadowState();
@@ -266,7 +267,7 @@ export class ColumnScroll {
         }
     }
 
-    private _debouncedUpdateSizes(isFullGridSupport: boolean, afterUpdateCallback: Function): void {
+    private _debouncedUpdateSizes(isFullGridSupport: boolean, afterUpdateCallback: TAfterUpdateSizesCallback): void {
         /* this function is debounced in ctor. Signatures of _debouncedUpdateSizes and _updateSizes must be equal */
     }
 
@@ -411,6 +412,10 @@ export class ColumnScroll {
      * @param element
      */
     scrollToElementIfHidden(element: HTMLElement): void {
+        // Не скроллим к зафиксированным ячейкам.
+        if (!!element.closest(`.${JS_SELECTORS.FIXED_ELEMENT}`)) {
+            return;
+        }
         const { right: activeElementRight, left: activeElementLeft  } = element.getBoundingClientRect();
 
         const containerRect = this._scrollContainer.getBoundingClientRect();

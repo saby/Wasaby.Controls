@@ -179,7 +179,7 @@ define(
             let pendingDeferred = new Deferred();
 
             let Pending = {
-               _hasRegisteredPendings: () => hasPending,
+               hasRegisteredPendings: () => hasPending,
                finishPendingOperations: () => pendingDeferred
             };
 
@@ -196,7 +196,7 @@ define(
                Manager.remove(id2).then(() => {
                   assert.equal(Manager._popupItems.getCount(), 2);
                   Pending = {
-                     _hasRegisteredPendings: () => hasPending,
+                     hasRegisteredPendings: () => hasPending,
                      finishPendingOperations: () => pendingDeferred
                   };
 
@@ -500,7 +500,7 @@ define(
             } catch(err) {
                hasError = true;
             }
-            assert.equal(false, hasError, 'Не смогли вызвать обработку анимании на контроллере')
+            assert.equal(false, hasError, 'Не смогли вызвать обработку анимании на контроллере');
          });
 
          it('calculateZIndex', () => {
@@ -535,9 +535,37 @@ define(
             };
             Manager.show(item4, controller);
             assert.equal(Manager._popupItems.at(3).currentZIndex, 5000);
-
             Manager.destroy();
-         })
+         });
+
+         it('finishPendings', () => {
+            let Manager = getManager();
+            let popupId = Manager.show({
+               closeOnOutsideClick: true,
+               closeOnDeactivated: true
+            }, new BaseController());
+
+            let hasPending = true;
+            let pendingDeferred = new Deferred();
+
+            let Pending = {
+               hasRegisteredPendings: () => hasPending,
+               finishPendingOperations: () => pendingDeferred
+            };
+
+            Manager._getPopupContainer = () => ({
+               getPending: () => Pending
+            });
+
+            Manager._finishPendings(popupId,null,null,null);
+            let item = Manager._popupItems.at(0);
+            let error = new Error('error');
+            error.canceled = true;
+            item.removePending.errback(error);
+            assert.strictEqual(item.popupState, 'created');
+            assert.strictEqual(item.removePending, null);
+            Manager.destroy();
+         });
       });
    }
 );

@@ -5,13 +5,18 @@ import {generateData} from '../../../DemoHelpers/DataCatalog';
 import {getActionsForContacts as getItemActions} from '../../../DemoHelpers/ItemActionsCatalog';
 import { IItemAction } from 'Controls/itemActions';
 
+interface IItem {
+    title: string;
+    id: number | string;
+}
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     protected _itemActions: IItemAction[] = getItemActions();
-    private _dataArray: any = generateData({
+    private _dataArray: unknown = generateData({
         count: 100,
-        beforeCreateItemCallback: (item: any) => {
+        beforeCreateItemCallback: (item: IItem) => {
             item.title = `Запись с идентификатором ${item.id} и каким то не очень длинным текстом`;
         }
     });

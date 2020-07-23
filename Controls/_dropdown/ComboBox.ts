@@ -1,38 +1,41 @@
 import rk = require('i18n!Controls');
-import Control = require('Core/Control');
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/ComboBox/ComboBox');
-import Utils = require('Types/util');
-import dropdownUtils = require('Controls/_dropdown/Util');
-import tmplNotify = require('Controls/Utils/tmplNotify');
+import * as Utils from 'Types/util';
+import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
+import * as tmplNotify from 'Controls/Utils/tmplNotify';
+import Controller from 'Controls/_dropdown/_Controller';
+import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {ISingleSelectableOptions} from 'Controls/interface';
+import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
+import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
+import {IStickyPopupOptions} from 'Controls/popup';
+import * as Merge from 'Core/core-merge';
+import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
 
-var getPropValue = Utils.object.getPropertyValue.bind(Utils);
+interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
+   placeholder?: string;
+   value?: string;
+}
 
-var _private = {
-   popupVisibilityChanged: function (state) {
-      this._isOpen = state;
-      this._forceUpdate();
-   },
-   //FIXME delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-   getContainerNode: function(container:[HTMLElement]|HTMLElement):HTMLElement {
-      return container[0] || container;
-   }
-};
+const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Полный список параметров отображается при нажатии на контрол.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FCombobox%2FComboboxVDom">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/combobox/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less">переменные тем оформления dropdown</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
- * 
+ *
  * @class Controls/_dropdown/ComboBox
  * @extends Core/Control
  * @implements Controls/_interface/ISource
  * @implements Controls/interface/IItemTemplate
- * @implements Controls/_interface/IFilter
+ * @implements Controls/_interface/IFilterChanged
  * @implements Controls/_interface/ISingleSelectable
  * @implements Controls/interface/IDropdownEmptyText
  * @implements Controls/interface/IInputPlaceholder
@@ -53,7 +56,7 @@ var _private = {
  * @extends Core/Control
  * @implements Controls/_interface/ISource
  * @implements Controls/interface/IItemTemplate
- * @implements Controls/_interface/IFilter
+ * @implements Controls/_interface/IFilterChanged
  * @implements Controls/_interface/ISingleSelectable
  * @implements Controls/interface/IDropdownEmptyText
  * @implements Controls/_input/interface/IBase
@@ -84,76 +87,135 @@ var _private = {
  *    }
  */
 
-var ComboBox = Control.extend({
-   _template: template,
-   _isOpen: false,
-   _notifyHandler: tmplNotify,
+class ComboBox extends BaseDropdown {
+   protected _template: TemplateFunction = template;
+   protected _notifyHandler: Function = tmplNotify;
 
-   _beforeMount: function (options) {
-      this._onClose = _private.popupVisibilityChanged.bind(this, false);
-      this._onOpen = _private.popupVisibilityChanged.bind(this, true);
+   _beforeMount(options: IComboboxOptions,
+                context: object,
+                receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._setText = this._setText.bind(this);
-   },
-
-   _afterMount: function () {
       this._targetPoint = {
          vertical: 'bottom'
       };
-      this._width = _private.getContainerNode(this._container).offsetWidth;
-      this._forceUpdate();
-   },
 
-   _beforeUpdate: function () {
-      var containerNode = _private.getContainerNode(this._container);
+      this._controller = new Controller(this._getControllerOptions(options));
+      return loadItems(this._controller, receivedState, options.source);
+   }
+
+   _beforeUpdate(options: IComboboxOptions): void {
+      const containerNode = this._getContainerNode(this._container);
 
       if (this._width !== containerNode.offsetWidth) {
          this._width = containerNode.offsetWidth;
       }
-   },
+      this._controller.update(this._getControllerOptions(options));
+   }
 
-   _selectedItemsChangedHandler: function (event, selectedItems) {
-      var key = getPropValue(selectedItems[0], this._options.keyProperty);
+   _getControllerOptions(options: IComboboxOptions): object {
+      const controllerOptions = getDropdownControllerOptions(options);
+      return { ...controllerOptions, ...{
+            selectedKeys: [options.selectedKey],
+            dataLoadCallback: options.dataLoadCallback,
+            marker: false,
+            popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup')
+                           + ' controls-ComboBox-popup_theme-' + options.theme,
+            typeShadow: 'suggestionsContainer',
+            close: this._onClose,
+            open: this._onOpen,
+            allowPin: false,
+            selectedItemsChangedCallback: this._setText,
+            theme: options.theme,
+            itemPadding: {
+               right: 'menu-xs',
+               left: 'menu-xs'
+            },
+            targetPoint: this._targetPoint,
+            openerControl: this
+         }
+      };
+   }
+
+   _getMenuPopupConfig(): IStickyPopupOptions {
+      if (!this._width) {
+         this._width = this._getContainerNode(this._container).offsetWidth;
+      }
+      return {
+         templateOptions: {
+            width: this._width
+         },
+         eventHandlers: {
+            onOpen: this._onOpen.bind(this),
+            onClose: this._onClose.bind(this),
+            onResult: this._onResult.bind(this)
+         }
+      };
+   }
+
+   _selectedItemsChangedHandler(selectedItems): void {
+      const key = getPropValue(selectedItems[0], this._options.keyProperty);
       this._setText(selectedItems);
       this._notify('valueChanged', [this._value]);
       this._notify('selectedKeyChanged', [key]);
-      this._isOpen = false;
-   },
+   }
 
-   _setText: function (selectedItems) {
+   _setText(selectedItems): void {
       this._isEmptyItem = getPropValue(selectedItems[0], this._options.keyProperty) === null || selectedItems[0] === null;
       if (this._isEmptyItem) {
          this._value = '';
-         this._placeholder = dropdownUtils.prepareEmpty(this._options.emptyText);
+         this._placeholder = prepareEmpty(this._options.emptyText);
       } else {
          this._value = String(getPropValue(selectedItems[0], this._options.displayProperty) || '');
          this._placeholder = this._options.placeholder;
       }
-   },
-
-   _deactivated: function() {
-      this.closeMenu();
-   },
-
-   openMenu(popupOptions?: object): void {
-      this._children.controller.openMenu(popupOptions);
-   },
-
-   closeMenu(): void {
-      this._children.controller.closeMenu();
    }
 
-});
+   _handleMouseDown(event: SyntheticEvent<MouseEvent>): void {
+      if (!isLeftMouseButton(event)) {
+         return;
+      }
+      if (this._popupId) {
+         this._controller.closeMenu();
+      } else {
+         this.openMenu();
+      }
+   }
 
-ComboBox.getDefaultOptions = function () {
-   return {
-      placeholder: rk('Выберите') + '...'
-   };
-};
+   openMenu(popupOptions?: IStickyPopupOptions): void {
+      const config = this._getMenuPopupConfig();
+      this._controller.setMenuPopupTarget(this._container);
 
-ComboBox._private = _private;
+      this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
+         if (typeof result === 'string') {
+            this._popupId = result;
+         } else if (result) {
+            this._selectedItemsChangedHandler(result);
+         }
+      });
+   }
 
-ComboBox._theme = ['Controls/dropdown'];
+   protected _onResult(action: string, data): void {
+      if (action === 'itemClick') {
+         const item = this._controller.getPreparedItem(data, this._options.keyProperty);
+         this._selectedItemsChangedHandler([item]);
+         this._controller.handleSelectedItems(item);
+      }
+   }
+
+   //FIXME delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+   private _getContainerNode(container:[HTMLElement]|HTMLElement): HTMLElement {
+      return container[0] || container;
+   }
+
+   static _theme: string[] = ['Controls/dropdown'];
+
+   static getDefaultOptions(): object {
+      return {
+         placeholder: rk('Выберите') + '...'
+      };
+   }
+}
 
 export = ComboBox;

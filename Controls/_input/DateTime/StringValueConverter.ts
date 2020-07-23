@@ -1,6 +1,9 @@
 import cExtend = require('Core/core-simpleExtend');
+import {instanceOfModule} from 'Core/core-instance';
+import {constants} from 'Env/Env';
+import {DateTime} from 'Types/entity';
 import formatter = require('Types/formatter');
-import {dateMaskConstants} from 'Controls/interface';
+import {dateMaskConstants} from 'Controls/Utils/DateControlsUtils';
 import dateUtils = require('Controls/Utils/Date');
 import {getMaskType, DATE_MASK_TYPE, DATE_TIME_MASK_TYPE, TIME_MASK_TYPE} from './Utils';
 
@@ -347,11 +350,20 @@ var ModuleClass = cExtend.extend({
     * @param value
     * @returns {*}
     */
-   getStringByValue: function(value, mask) {
+   getStringByValue(value: Date, mask: string): string {
+      let dateString: string = '';
       if (dateUtils.isValidDate(value)) {
-         return formatter.date(value, this._mask || mask);
+         const actualMask: string = this._mask || mask;
+         // Если дата имеет тип ДатаВремя, то при передачи на клиент она будет сконвертирована в часовой пояс клиента.
+         // На сервере отрендерим дату в том же часовом поясе.
+         if (constants.isServerSide && instanceOfModule(value, 'Types/entity:DateTime')) {
+            const tzOffset: number = DateTime.getClientTimezoneOffset();
+            dateString = formatter.date(value, actualMask, tzOffset);
+         } else {
+            dateString = formatter.date(value, actualMask);
+         }
       }
-      return '';
+      return dateString;
    },
 
    /**

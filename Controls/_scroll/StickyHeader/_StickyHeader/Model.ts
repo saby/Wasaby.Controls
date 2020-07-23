@@ -38,6 +38,10 @@ export = simpleExtend.extend({
       return this._fixedPosition;
    },
 
+   isFixed(): boolean {
+      return !!this._fixedPosition;
+   },
+
    /**
     * @param {Object} config
     * @param {Object} config.topTarget DOM element

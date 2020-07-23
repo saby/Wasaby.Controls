@@ -208,7 +208,8 @@ describe('Controls/grid_clean/GridViewModel', () => {
                     keyProperty: 'key',
                     columns: generateFlatSimpleColumns(),
                     multiSelectVisibility: 'hidden',
-                    header: generateFlatSimpleHeader()
+                    header: generateFlatSimpleHeader(),
+                    rowSeparatorSize: 's'
                 });
             });
 
@@ -218,18 +219,33 @@ describe('Controls/grid_clean/GridViewModel', () => {
 
             it('hasMoreData: true', () => {
                 gridViewModel.setHasMoreData(true);
+                assert.isFalse(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR_true'));
                 assert.isFalse(gridViewModel.getCurrent().isLastItem);
 
                 gridViewModel.goToNext();
-                assert.isFalse(gridViewModel.getCurrent().isLastItem);
+                assert.isTrue(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR_true'));
+                assert.isTrue(gridViewModel.getCurrent().isLastItem);
             });
 
             it('hasMoreData: false', () => {
                 gridViewModel.setHasMoreData(false);
+                assert.isFalse(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR_false'));
                 assert.isFalse(gridViewModel.getCurrent().isLastItem);
 
                 gridViewModel.goToNext();
+                assert.isTrue(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR_false'));
                 assert.isTrue(gridViewModel.getCurrent().isLastItem);
+            });
+
+            it('hasMoreData: true with infinity navigation ', () => {
+                gridViewModel._options.navigation = {
+                    view: 'infinity'
+                };
+                gridViewModel.setHasMoreData(true);
+                assert.isFalse(gridViewModel.getCurrent().isLastItem);
+
+                gridViewModel.goToNext();
+                assert.isFalse(gridViewModel.getCurrent().isLastItem);
             });
         });
     });

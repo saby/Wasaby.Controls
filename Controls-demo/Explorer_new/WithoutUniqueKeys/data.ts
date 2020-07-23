@@ -42,7 +42,8 @@ const columns = [{
 }];
 
 class DemoUniqueMemory extends HierarchicalMemory {
-    query(query: Query) {
+    // tslint:disable-next-line
+    query(query: Query): any {
         const where = query.getWhere();
         if (where.parentUnique) {
             where.parent = (where.parentUnique.split(','))[0];

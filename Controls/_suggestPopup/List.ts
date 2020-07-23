@@ -7,6 +7,7 @@ import clone = require('Core/core-clone');
 import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import { constants } from 'Env/Env';
+import {RecordSet} from 'Types/collection';
 
 
 const DIALOG_PAGE_SIZE = 25;
@@ -110,9 +111,12 @@ var List = Control.extend({
    _layerName: null,
    _markerVisibility: MARKER_VISIBILITY_DEFAULT,
    _pendingMarkerVisibility: null,
+   _isSuggestListEmpty: false,
 
    _beforeMount: function(options, context) {
       this._searchEndCallback = this._searchEndCallback.bind(this);
+      this._collectionChange = this._collectionChange.bind(this);
+      this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
       _private.checkContext(this, context);
    },
 
@@ -146,6 +150,32 @@ var List = Control.extend({
       if (this._options.task1176635657) {
          this._notify('tabsSelectedKeyChanged', [key]);
       }
+   },
+
+   _itemsReadyCallback(items: RecordSet): void {
+      this._unsubscribeFromItemsEvents();
+      this._items = items;
+      this._items.subscribe('onCollectionChange', this._collectionChange);
+   },
+
+   _collectionChange(): void {
+      const isMaxCountNavigation = this._suggestListOptions &&
+                                   this._suggestListOptions.navigation &&
+                                   this._suggestListOptions.navigation.view === 'maxCount';
+      if (isMaxCountNavigation) {
+         this._isSuggestListEmpty = !this._items.getCount();
+      }
+   },
+
+   _unsubscribeFromItemsEvents(): void {
+      if (this._items) {
+         this._items.unsubscribe('onCollectionChange', this._collectionChange);
+      }
+   },
+
+   _beforeUnmount(): void {
+      this._unsubscribeFromItemsEvents();
+      this._items = null;
    },
 
    _inputKeydown: function(event, domEvent) {

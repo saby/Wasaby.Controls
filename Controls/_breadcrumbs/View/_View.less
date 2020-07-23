@@ -36,16 +36,33 @@
    max-width: 100%;
    white-space: nowrap;
    position: relative;
+   box-sizing: border-box;
    .baseline-fix();
 }
 .controls-BreadCrumbsView__crumb_theme-@{themeName} {
   color: @item_text-color_default_breadcrumbsView;
   height: @height_breadcrumbsView;
+  font-size: @item_font-size_default_breadcrumbsView;
   &:before {
     font-size: @line-height_breadcrumbsView;
   }
    padding-right: @droppable_border-thickness_breadcrumbsView;
 }
+
+.controls-BreadCrumbsView__crumb_withOverflow {
+   flex-shrink: 1;
+   .text-overflow();
+}
+.controls-BreadCrumbsView__crumb_withOverflow_theme-@{themeName} {
+   min-width: @item_icon-size_default_breadcrumbsView + @item_text_min-width_breadcrumbs;
+}
+.controls-BreadCrumbsView__crumb_withOverflow_withoutArrow_theme-@{themeName} {
+   min-width: @item_text_min-width_breadcrumbs ;
+}
+.controls-BreadCrumbsView__crumb_withoutOverflow {
+   flex-shrink: 0;
+}
+
 .controls-BreadCrumbsView__crumb__left_edge {
    padding: 0 @droppable_border-thickness_breadcrumbsView;
 }
@@ -146,9 +163,6 @@
 .controls-BreadCrumbsView__title {
    .text-overflow();
    display: inline;
-}
-.controls-BreadCrumbsView__title_theme-@{themeName} {
-   font-size: @item_font-size_default_breadcrumbsView;
 }
 
 .controls-BreadCrumbsView__arrow {

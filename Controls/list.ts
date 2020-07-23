@@ -72,24 +72,16 @@ import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
 import DataContainer = require('Controls/_list/Data');
 import _forTemplate = require('wml!Controls/_list/resources/For');
-import _swipeActionTemplate = require('wml!Controls/_list/Swipe/resources/SwipeAction');
-import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
-import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsTemplate');
-
-import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
 import BaseEditingTemplate = require('wml!Controls/_list/EditInPlace/baseEditingTemplate');
 import MoneyEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/MoneyChooser');
 import NumberEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/NumberChooser');
-import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
+
 import BaseViewModel = require('Controls/_list/BaseViewModel');
 import ListViewModel = require('Controls/_list/ListViewModel');
 import {default as ListControl} from 'Controls/_list/ListControl';
 import ListView = require('Controls/_list/ListView');
-import SwipeTemplate = require('wml!Controls/_list/Swipe/resources/SwipeTemplate');
 import GroupContentResultsTemplate = require('wml!Controls/_list/GroupContentResultsTemplate');
-import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
-import ItemOutput = require('wml!Controls/_list/resources/ItemOutput');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import BaseControl = require('Controls/_list/BaseControl');
@@ -101,7 +93,17 @@ import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
+import {default as ScrollController} from './_list/ScrollController';
 import {IList} from './_list/interface/IList';
+import {default as DataController} from 'Controls/_list/Data/ControllerClass';
+
+import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
+
+// @deprecated
+import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
+import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsTemplate');
+import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeAction');
+import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
 
 export {
     AddButton,
@@ -115,10 +117,7 @@ export {
     Remover,
     DataContainer,
     _forTemplate,
-    _swipeActionTemplate,
-    _itemActionsForTemplate,
 
-    GridLayoutUtil,
     EditingTemplate,
     BaseEditingTemplate,
     MoneyEditingTemplate,
@@ -128,11 +127,7 @@ export {
     ListViewModel,
     ListControl,
     ListView,
-    ItemActionsTemplate,
-    SwipeTemplate,
     GroupContentResultsTemplate,
-    ItemOutputWrapper,
-    ItemOutput,
     ItemsUtil,
     TreeItemsUtil,
     BaseControl,
@@ -146,5 +141,13 @@ export {
     InertialScrolling,
     IVirtualScrollConfig,
     IList,
-    VirtualScroll
+    VirtualScroll,
+    ScrollController,
+    DataController,
+
+    // @deprecated
+    _itemActionsForTemplate,
+    ItemActionsTemplate,
+    _swipeActionTemplate,
+    SwipeTemplate
 };

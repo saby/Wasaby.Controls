@@ -9,6 +9,22 @@ import * as template from 'wml!Controls/_jumpingLabel/SelectionContainer/Selecti
 
 export interface ISelectionContainerOptions extends IBaseOptions, ISingleSelectableOptions, IMultiSelectableOptions {}
 
+/**
+ * Контрол, отображающий подсказку рядом со своим контентом. Если в контентной области нет данных, подсказка отображается как placeholder.
+ * @remark
+ * Используется с контролами, поддерживающими интерфейс {@link Controls/interface/IMultiSelectable IMultiSelectable}
+ * Полезные ссылки
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FJumpingLabel%2FStandard%2FIndex">Демо-пример</a>
+ * * <a href="http://axure.tensor.ru/StandardsV8/%D0%BF%D0%BE%D0%BB%D1%8F_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0.html">Стандарт</a>
+ *
+ * @class Controls/_jumpingLabel/SelectionContainer
+ * @extends Controls/_jumpingLabel/Base
+ *
+ * @public
+ *
+ * @author Красильников А.С.
+ */
+
 class SelectionContainer extends Base<ISelectionContainerOptions> implements ISingleSelectable, IMultiSelectable {
     private _hasKeys: boolean = null;
 

@@ -27,6 +27,7 @@
  */
 
 import Container = require('Controls/_scroll/Container');
+import ContainerNew from 'Controls/_scroll/ContainerNew';
 import Watcher = require('Controls/_scroll/Scroll/Watcher');
 import StickyHeader = require('Controls/_scroll/StickyHeader');
 import _Scrollbar = require('Controls/_scroll/Scroll/Scrollbar');
@@ -37,6 +38,7 @@ import IntersectionObserverController from 'Controls/_scroll/IntersectionObserve
 import IntersectionObserverContainer from 'Controls/_scroll/IntersectionObserver/Container';
 import EdgeIntersectionObserverContainer from 'Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer';
 import IntersectionObserverSyntheticEntry from 'Controls/_scroll/IntersectionObserver/SyntheticEntry';
+import _ContainerBase from 'Controls/_scroll/ContainerBase';
 
 import Group from 'Controls/_scroll/StickyHeader/Group';
 import {isStickySupport, getNextId as getNextStickyId, getOffset as getStickyOffset} from 'Controls/_scroll/StickyHeader/Utils';
@@ -45,6 +47,7 @@ import HotKeysContainer from 'Controls/_scroll/HotKeysContainer';
 
 export {
    Container,
+   ContainerNew as _ContainerNew,
    Watcher,
    StickyHeader,
    _Scrollbar,
@@ -60,5 +63,6 @@ export {
    IntersectionObserverController,
    IntersectionObserverContainer,
    EdgeIntersectionObserverContainer,
-   IntersectionObserverSyntheticEntry
-}
+   IntersectionObserverSyntheticEntry,
+   _ContainerBase
+};

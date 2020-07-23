@@ -50,7 +50,11 @@ const maxPercentValue = 100;
  * @example
  * Слайдер с ползунком, установленным в положение 40.
  * <pre class="brush:html">
- *   <Controls.slider:Base value="{{40}}"/>
+ *   <Controls.slider:Base bind:value="{{_value}}"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._value = 40;
  * </pre>
  */
 
@@ -61,7 +65,11 @@ const maxPercentValue = 100;
  * @example
  * Slider with the point placed at position 40;
  * <pre class="brush:html">
- *   <Controls.slider:Base value="{{40}}"/>
+ *   <Controls.slider:Base bind:value="{{_value}}"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._value = 40;
  * </pre>
  */
 
@@ -71,18 +79,24 @@ const maxPercentValue = 100;
  * @example
  * Слайдер с закрашенным интервалом.
  * <pre class="brush:html">
- *    <Controls.slider:Base minValue={{10}} maxValue={{100}} scaleStep={{10}}>
+ *    <Controls.slider:Base minValue={{0}} maxValue={{100}}>
  *       <ws:intervals>
  *          <ws:Array>
  *             <ws:Object
- *                color="success"
- *                start={{10}}
- *                end={{40}}
+ *                color="primary"
+ *                start={{0}}
+ *                end={{10}}
+ *             </ws:Object>
+ *             <ws:Object
+ *                color="danger"
+ *                start={{30}}
+ *                end={{70}}
  *             </ws:Object>
  *          </ws:Array>
  *       </ws:intervals>
  *    </Controls.slider:Base>
  * </pre>
+ * @demo Controls-demo/Slider/Base/Intervals/Index
  */
 
 /*
@@ -91,18 +105,24 @@ const maxPercentValue = 100;
  * @example
  * Colored slider.
  * <pre class="brush:html">
- *    <Controls.slider:Base minValue={{10}} maxValue={{100}} scaleStep={{10}}>
+ *   <Controls.slider:Base minValue={{0}} maxValue={{100}}>
  *       <ws:intervals>
  *          <ws:Array>
  *             <ws:Object
- *                color="success"
- *                start={{10}}
- *                end={{40}}
+ *                color="primary"
+ *                start={{0}}
+ *                end={{10}}
+ *             </ws:Object>
+ *             <ws:Object
+ *                color="danger"
+ *                start={{30}}
+ *                end={{70}}
  *             </ws:Object>
  *          </ws:Array>
  *       </ws:intervals>
  *    </Controls.slider:Base>
  * </pre>
+ * @demo Controls-demo/Slider/Base/Intervals/Index
  */
 
 class Base extends SliderBase<ISliderBaseOptions> implements ISlider {

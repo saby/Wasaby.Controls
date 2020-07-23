@@ -585,11 +585,8 @@ define([
             it(`should set homeButtonVisible to ${test.homeButtonVisible} if ratio is equal ${test.ratio}.`, function() {
                const
                   component = calendarTestUtils.createComponent(PeriodDialog, {}),
-                  entries = [
-                     {},
-                     new scroll.IntersectionObserverSyntheticEntry({ intersectionRatio: test.ratio }, {})
-                  ];
-               component._currentDayIntersectHandler(null, entries);
+                  entry = new scroll.IntersectionObserverSyntheticEntry({ intersectionRatio: test.ratio }, {})
+               component._currentDayIntersectHandler(null, entry);
 
                if (test.homeButtonVisible) {
                   assert.isTrue(component._homeButtonVisible);

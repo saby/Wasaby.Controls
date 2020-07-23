@@ -284,6 +284,16 @@
    text-overflow: ellipsis;
 }
 
+/* В safari на iPad так отрисовывается Tensor-font, что у блоков с текстом сверху на ~1 пиксель больше отступ, чем
+    у тех же блоков в любых других браузерах, в том числе на macOS. Это приводит к тому, что разделители у групп визуально
+    задраны на ~1px */
+.ws-is-mobile-safari {
+   .controls-ListView__groupContent-text_theme-@{themeName} {
+      position: relative;
+      top: -1px;
+   }
+}
+
 .controls-ListView__groupExpander {
    cursor: pointer;
 }
@@ -589,4 +599,32 @@
 
 .controls-text-list_theme-@{themeName}{
    color: @list-text-color_decoratorMoney;
+}
+
+.controls-ListView__item_background_danger_theme-@{themeName} {
+   background-color: @danger_color;
+}
+
+.controls-ListView__item_background_success_theme-@{themeName} {
+   background-color: @success_color;
+}
+
+.controls-ListView__item_background_warning_theme-@{themeName} {
+   background-color: @warning_color;
+}
+
+.controls-ListView__item_background_primary_theme-@{themeName} {
+   background-color: @primary_color;
+}
+
+.controls-ListView__item_background_secondary_theme-@{themeName} {
+   background-color: @secondary_color;
+}
+
+.controls-ListView__item_background_unaccented_theme-@{themeName} {
+   background-color: @unaccented_color;
+}
+
+.controls-ListView__item_background_readonly_theme-@{themeName} {
+   background-color: @readonly_color;
 }

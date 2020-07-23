@@ -1,5 +1,4 @@
 import CollectionItem from './CollectionItem';
-import { register } from 'Types/di';
 import { TileCollection } from '../display';
 
 export default class TileCollectionItem<T> extends CollectionItem<T> {
@@ -199,4 +198,3 @@ Object.assign(TileCollectionItem.prototype, {
     _$canShowActions: false,
 });
 
-register('Controls/display:TileCollectionItem', TileCollectionItem, {instantiate: false});

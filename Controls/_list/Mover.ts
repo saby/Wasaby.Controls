@@ -326,10 +326,10 @@ var _private = {
  * Контрол должен располагаться в одном контейнере {@link Controls/list:DataContainer} со списком.
  * В случае использования {@link Controls/operations:Controller} для корректной обработки событий необходимо помещать Controls/list:Mover внутри Controls/operations:Controller.
  * 
- * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">демо-пример</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover-remover/">руководство разработчика</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a
+ * Полезные ссылки: 
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FtreeGrid%2FMover%2FBase%2FIndex">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
  * 
  * @class Controls/_list/Mover
  * @extends Controls/_list/BaseAction
@@ -415,16 +415,21 @@ var Mover = BaseAction.extend({
         }
     },
     moveItemsWithDialog(items: []|IMoveItemsParams): void {
-        const isNewLogic = !items.forEach && !items.selected;
 
-        if (this.validate(items)) {
-            if (isNewLogic) {
-                _private.openMoveDialog(this, items);
-            } else {
-                _private.getItemsBySelection.call(this, items).addCallback((items: []) => {
-                    _private.openMoveDialog(this, _private.prepareMovedItems(this, items));
-                });
+        if (this._options.moveDialogTemplate) {
+            const isNewLogic = !items.forEach && !items.selected;
+
+            if (this.validate(items)) {
+                if (isNewLogic) {
+                    _private.openMoveDialog(this, items);
+                } else {
+                    _private.getItemsBySelection.call(this, items).addCallback((items: []) => {
+                        _private.openMoveDialog(this, _private.prepareMovedItems(this, items));
+                    });
+                }
             }
+        } else {
+            Logger.warn('Mover: Can\'t call moveItemsWithDialog! moveDialogTemplate option, is undefined', this);
         }
     }
 });

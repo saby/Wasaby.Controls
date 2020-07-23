@@ -29,6 +29,7 @@ export interface IBasePopupOptions {
     zIndex?: number; // TODO Compatible
     isCompoundTemplate?: boolean; // TODO Compatible
     _type?: string; // TODO Compatible
+    isHelper?: boolean; //TODO удалить после перехода со статических методов на хелперы
 }
 
 export interface IOpener {
@@ -41,7 +42,7 @@ export interface IBaseOpener {
     readonly '[Controls/_popup/interface/IBaseOpener]': boolean;
 }
 
-/**
+/*  https://online.sbis.ru/opendoc.html?guid=f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
  * Открывает всплывающее окно.
  * @function Controls/_popup/interface/IBaseOpener#open
  * @param popupOptions Конфигурация всплывающего окна
@@ -55,7 +56,7 @@ export interface IBaseOpener {
  * @param controller Popup Controller
  */
 
-/**
+/* https://online.sbis.ru/opendoc.html?guid=f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
  * @name Controls/_popup/interface/IBaseOpener#close
  * @description Метод вызова закрытия всплывающего окна
  * @function
@@ -164,6 +165,42 @@ export interface IBaseOpener {
 /**
  * @name Controls/_popup/interface/IBaseOpener#template
  * @cfg {String|Function} Шаблон всплывающего окна
+ */
+
+/**
+ * @name Controls/_popup/interface/IBaseOpener#zIndexCallback
+ * @cfg {Function} Функция, позволяющая высчитать z-index окна вручную.
+ * На вход принимает параметры:
+ * <b>currentItem</b> - конфигурация текущего окна, для которого высчитывается z-index.
+ * <b>popupList</b> - Список с конфигурацией открытых на данный момент окон.
+ * @remark
+ * Функция позволяет решить нетривиальные сценарии взаимодействия окон и не должна использоваться повсеместно.
+ * Для большинства сценариев должно быть достаточно базового механизма простановки z-index.
+ * @example
+ * В этом примере открывается окно с подсказкой. Для этого окна z-index выставляется на 1 больше чем у родителя,
+ * чтобы не конфликтовать с другими окнами.
+ * <pre>
+ *    // MyTooltip.wml
+ *    <Controls.popup:Sticky zIndexCallback="_zIndexCallback" />
+ * </pre>
+ *
+ * <pre>
+ *    // MyTooltip.js
+ *    Control.extend({
+ *       ...
+ *       _zIndexCallback(currentItem) {
+ *          if (currentItem.parentZIndex) {
+ *             return currentItem.parentZIndex + 1;
+ *          }
+ *       }
+ *       ...
+ *    });
+ * </pre>
+ */
+
+/**
+ * @name Controls/_popup/interface/IBaseOpener#topPopup
+ * @cfg {Boolean} Определяет, будет ли окно открываться выше всех окон на странице.
  */
 
 /*

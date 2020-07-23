@@ -1,14 +1,18 @@
-import Control = require('Core/Control');
+import {TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_lookup/MultipleInput/MultipleInput');
 import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
+import showSelector from 'Controls/_lookup/showSelector';
+import {default as BaseLookup} from 'Controls/_lookup/BaseLookup';
+import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
+import * as tmplNotify from 'Controls/Utils/tmplNotify';
 
 /**
  * Поле ввода с автодополнением и возможностью выбора значений из справочника.
- * 
+ *
  * @remark
  * Отличается от {@link Controls/_lookup/Lookup поля связи} выводом выбранных значений.
  * Ширина выбранных занчений будет пропорционально распределена по ширине контрола, чтобы все значения поместились.
- * 
+ *
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FLookup%2FIndex">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/directory/lookup/">руководство разработчика</a>
@@ -22,7 +26,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/ITextValue
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
@@ -53,7 +57,7 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/ITextValue
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
@@ -71,19 +75,21 @@ import itemTemplate = require('wml!Controls/_lookup/Lookup/itemTemplate');
  * @author Герасимов А.М.
  */
 
-var MultipleInput = Control.extend({
-    _template: template,
+export default class MultipleInput extends BaseLookup {
+    protected _template: TemplateFunction = template;
+    protected _notifyHandler: Function = tmplNotify;
 
-    showSelector: function (popupOptions) {
-        return this._children.controller.showSelector(popupOptions);
+    showSelector(popupOptions: IStackPopupOptions): void {
+        showSelector(this, popupOptions, false);
     }
-});
 
-MultipleInput.getDefaultOptions = function() {
-    return {
-        itemTemplate: itemTemplate
-    };
-};
-
-export = MultipleInput
-
+    static getDefaultOptions(): object {
+        return {
+            ...BaseLookup.getDefaultOptions(),
+            ...{
+                itemTemplate,
+                multiSelect: true
+            }
+        };
+    }
+}

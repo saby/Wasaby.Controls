@@ -17,7 +17,7 @@ import {factory} from 'Types/chain';
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @control
  * @public
  * @category Popup
@@ -61,7 +61,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
     protected _sendResult(event: SyntheticEvent<MouseEvent>,
                           action: string,
-                          data: any,
+                          data: unknown,
                           nativeEvent: SyntheticEvent<MouseEvent>): false {
         this._notify('sendResult', [action, data, nativeEvent], {bubbling: true});
 
@@ -110,7 +110,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
     private _setCloseButtonVisibility(options: IMenuPopupOptions): void {
         this._closeButtonVisibility = !!(options.closeButtonVisibility ||
-            (options.showClose && !options.root) || options.searchParam);
+            (options.showClose && !options.root) || (options.searchParam && !options.multiSelect));
     }
 
     private _prepareHeaderConfig(options: IMenuPopupOptions): void {

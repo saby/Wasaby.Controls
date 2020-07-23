@@ -12,7 +12,7 @@ export default class extends Control {
 
    _beforeMount() {
       this._gridColumns = [{
-         template: 'Controls-demo/operations/SelectionViewMode/resources/PersonInfo'
+         template: 'wml!Controls-demo/operations/SelectionViewMode/resources/PersonInfo'
       }];
       this._viewSource = new Memory({
          keyProperty: 'id',

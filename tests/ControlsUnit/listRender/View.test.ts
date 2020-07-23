@@ -3,8 +3,11 @@ import { assert } from 'chai';
 import View, {IViewOptions} from 'Controls/_listRender/View';
 import { RecordSet } from 'Types/collection';
 
+import { stub } from 'sinon';
+import {IItemActionsItem} from 'Controls/itemActions';
+
 import 'Controls/display';
-import {Sticky} from 'Controls/popup';
+import {IStickyPopupOptions, Sticky} from 'Controls/popup';
 
 describe('Controls/_listRender/View', () => {
     let items: RecordSet;
@@ -164,7 +167,8 @@ describe('Controls/_listRender/View', () => {
                 getActiveItem(): any {
                     return this._$activeItem;
                 },
-                at: () => item
+                at: () => item,
+                find: () => null
             };
             fakeEvent = {
                 propagating: true,
@@ -211,14 +215,64 @@ describe('Controls/_listRender/View', () => {
         // Должен устанавливать contextMenuConfig при инициализации itemActionsController
         it('should set contextMenuConfig to itemActionsController', async () => {
             let popupConfig;
-            Sticky.openPopup = (config) => {
+            let stubOpenPopup = stub(Sticky, 'openPopup');
+            stubOpenPopup.callsFake((config: IStickyPopupOptions) => {
                 popupConfig = config;
                 return Promise.resolve(config);
-            };
+            });
             await view._onItemContextMenu(null, item, fakeEvent);
             assert.exists(popupConfig, 'popupConfig has not been set');
             assert.equal(popupConfig.templateOptions.groupProperty, 'title', 'groupProperty from contextMenuConfig has not been applied');
             assert.equal(popupConfig.templateOptions.iconSize, 's', 'iconSize from contextMenuConfig has not been applied');
+
+            view._closePopup();
+            assert.strictEqual(view._itemActionsController.getActiveItem(), null);
+            assert.strictEqual(view._itemActionsController.getSwipeItem(), null);
+            stubOpenPopup.restore();
+        });
+    });
+
+    describe('_itemActionsMenuCloseHandler()', () => {
+        let stubClosePopup;
+        let view: View;
+
+        beforeEach(() => {
+            view = new View(defaultCfg);
+            view._collection = {
+                _$activeItem: null,
+                getEditingConfig: () => null,
+                setActionsTemplateConfig: () => null,
+                getItemBySourceKey: () => item,
+                setActiveItem: function(_item) {
+                    this._$activeItem = _item;
+                },
+                getActiveItem: function() {
+                    return this._$activeItem;
+                },
+                at: () => item,
+                find: () => null
+            };
+            stubClosePopup = stub(Sticky, 'closePopup');
+        });
+        afterEach(() => {
+            stubClosePopup.restore();
+        });
+
+        // В случае клика вне меню и при нажатии на крестик нужно вызывать закрытие меню
+        it('should call Sticky.closePopup method on close handler', () => {
+            let isPopupCloseCalled = false;
+            stubClosePopup.callsFake((popupId) => {
+                isPopupCloseCalled = true;
+            });
+            view._itemActionsMenuId = 'megaPopup';
+            view._itemActionsController = {
+                setActiveItem(item: IItemActionsItem) {
+                },
+                deactivateSwipe(): void {
+                }
+            }
+            view._itemActionsMenuCloseHandler(null, null);
+            assert.isTrue(isPopupCloseCalled);
         });
     });
 });

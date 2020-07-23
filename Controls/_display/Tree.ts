@@ -16,7 +16,6 @@ import AdjacencyListStrategy from './itemsStrategy/AdjacencyList';
 import MaterializedPathStrategy from './itemsStrategy/MaterializedPath';
 import IItemsStrategy from './IItemsStrategy';
 import RootStrategy from './itemsStrategy/Root';
-import {register} from 'Types/di';
 import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
 
@@ -696,4 +695,3 @@ Object.assign(Tree.prototype, {
     _root: null
 });
 
-register('Controls/display:Tree', Tree, {instantiate: false});

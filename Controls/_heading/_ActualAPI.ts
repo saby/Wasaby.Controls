@@ -1,22 +1,62 @@
 import {IBackOptions} from './Back';
-import {Logger} from "UI/Utils";
+import {Logger} from 'UI/Utils';
+import {constants} from 'Env/Env';
+
+export function titleSize(size: 's' | 'm' | 'l' | 'xl', fontSize: string): string {
+    if (size) {
+        const fontSizesTable = {
+            s: 'm',
+            m: 'l',
+            l: '3xl',
+            xl: '4xl'
+        };
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.heading.Title: Используется устаревшая опция size, ' +
+                `нужно использовать fontSize="${fontSizesTable[size]}". ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+        }
+        return fontSizesTable[size];
+    } else {
+        return fontSize;
+    }
+}
+
+export function titleStyle(style: 'primary' | 'secondary' | 'info', fontColorStyle: string): string {
+    if (style) {
+        const fontStylesTable = {
+            info: 'label',
+            primary: 'primary',
+            secondary: 'secondary'
+        };
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.heading.Title: Используется устаревшая опция style, ' +
+                `нужно использовать fontColorStyle="${fontStylesTable[style]}" ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+        }
+        return fontStylesTable[style];
+    } else {
+        return fontColorStyle;
+    }
+}
 
 export function counterSize(size: 's' | 'm' | 'l', fontSize: string): string {
     if (fontSize) {
         return fontSize;
     } else {
-        // TODO: будет удалено в версию после 5100
-        // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-        // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-        /*Logger.error('Controls.heading.Back: Используется устаревшая опция size. ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontSize.');*/
         const fontSizesTable = {
             s: 'm',
             m: 'l',
             l: '3xl'
         };
         const result: string = fontSizesTable[size];
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.heading.Back: Используется устаревшая опция size, ' +
+                `нужно использовать fontSize="${result}" ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+        }
         return result || 'l';
     }
 }
@@ -25,21 +65,22 @@ export function counterStyle(style: 'primary' | 'secondary' | 'disabled', fontCo
     if (fontColorStyle) {
         return fontColorStyle;
     } else {
-        // TODO: будет удалено в версию после 5100
-        // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-        // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-        /*Logger.error('Controls.heading.Counter: Используется устаревшая опция style. ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опцию fontColorStyle.');*/
         const fontStylesTable = {
             primary: 'primary',
             secondary: 'secondary',
             disabled: 'unaccented'
         };
         const result: string = fontStylesTable[style];
+        if (constants.isBrowserPlatform) {
+            // TODO: будет удалено в версию после 5100
+            Logger.error('Controls.heading.Counter: Используется устаревшая опция style, ' +
+                `нужно использовать fontColorStyle="${result}" ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+        }
         return result || 'primary';
     }
 }
+
 export function backSizeOptions(size: string): string {
     const fontSizesTable = {
         s: 'l',
@@ -51,38 +92,25 @@ export function backSizeOptions(size: string): string {
 }
 
 export function backSize(options: IBackOptions): { fontSize: string, iconSize: string } {
-    if (options.size !== undefined) {
+    const result = backSizeOptions(options.size);
+    if (options.size !== undefined && constants.isBrowserPlatform) {
         // TODO: будет удалено в версию после 5100
-        // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-        // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-        /*Logger.error('Controls.heading.Back: Используется устаревшая опция size. ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на опции fontSize и iconSize');*/
+        Logger.error('Controls.heading.Back: Используется устаревшая опция size. ' +
+            `нужно использовать fontSize="${result} и iconSize=${options.size}" ` +
+            'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
     }
     return {
-        fontSize: options.fontSize || backSizeOptions(options.size) ,
+        fontSize: options.fontSize || result,
         iconSize: options.iconSize || options.size
     };
 }
 
 export function backStyleOptions(style: 'primary' | 'secondary'): { fontColorStyle: string, iconStyle: string } {
     if (style === 'secondary') {
-        // TODO: будет удалено в версию после 5100
-        // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-        // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-        /*Logger.error('Controls.heading.Back: Используется устаревшая опция style="secondary". ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на fontColorStyle: "secondary", iconStyle: "primary".');*/
         return {
             fontColorStyle: 'secondary', iconStyle: 'primary'
         };
     } else {
-        // TODO: будет удалено в версию после 5100
-        // Раскоментирую в следующем реквесте, чтобы нормально прошла сборка engine.
-        // https://online.sbis.ru/doc/ac1c07a5-68d7-465f-9e33-0d6a1c88ceeb
-        /*Logger.error('Controls.heading.Back: Используется устаревшая опция style="primary". ' +
-            'Переход на актуальное API был по задаче https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be. ' +
-            'Можете передать ошибку на Журавлева Максима со ссылкой на репозиторий и именем контрола, или поправить самостоятельно на fontColorStyle: "primary", iconStyle: "secondary".');*/
         return {
             fontColorStyle: 'primary', iconStyle: 'secondary'
         };
@@ -90,8 +118,15 @@ export function backStyleOptions(style: 'primary' | 'secondary'): { fontColorSty
 }
 
 export function backStyle(options: IBackOptions): { fontColorStyle: string, iconStyle: string } {
+    const result = backStyleOptions(options.style);
+    if (options.style !== undefined && constants.isBrowserPlatform) {
+        // TODO: будет удалено в версию после 5100
+        Logger.error('Controls.heading.Back: Используется устаревшая опция style. ' +
+            `нужно использовать fontColorStyle="${result.fontColorStyle} и iconStyle=${result.iconStyle}" ` +
+            'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+    }
     return {
-        fontColorStyle: options.fontColorStyle || backStyleOptions(options.style).fontColorStyle || 'primary',
-        iconStyle: options.iconStyle || backStyleOptions(options.style).iconStyle || 'secondary'
+        fontColorStyle: options.fontColorStyle || result.fontColorStyle || 'primary',
+        iconStyle: options.iconStyle || result.iconStyle || 'secondary'
     };
 }

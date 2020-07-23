@@ -69,6 +69,29 @@
 
 .controls-PeriodDialog__header-period {
    flex-grow: 1;
+   align-self: baseline;
+}
+
+.ws-is-ie,
+.ws-is-firefox {
+   /*
+     Механизмы рендеринга webkit и FF/IE/EDGE по-разному реализуют высоту строки.
+     Чтобы не было прыжков между вызывающим элементом и заголовком (который выровнен по базовой линии)
+     вычитаем 1px (чтобы в FF/IE/EDGE было так же, как chrome).
+     Вертикальное выравнивание элементов заголовка по центру не подойдёт, т.к по стандартам эл-ты в заголовках находится
+     не по центру, а выше на 1px.
+     Демо пример https://jsfiddle.net/yxf25pjh/3/
+   */
+   .controls-PeriodDialog__header-period::before {
+      font-size: @header_lineheight_dialog - 1;
+   }
+}
+
+.controls-PeriodDialog__header-period::before {
+   content: '\200b';
+   display: inline-block;
+   width: 0;
+   font-size: @header_lineheight_dialog;
 }
 
 .controls-PeriodDialog__header-rangeDash {

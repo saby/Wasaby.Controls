@@ -142,10 +142,14 @@ define([
             notify: () => undefined,
             forceUpdate: () => undefined,
             source: source,
+            updateMarkedKey: () => undefined,
             updateItemActions: () => undefined,
             multiSelectVisibility: false,
             notify: () => undefined,
-            forceUpdate: () => undefined
+            forceUpdate: () => undefined,
+            readOnly: false,
+            listViewModel: listViewModel
+
          });
          eip._formController = {
             submit: function() {
@@ -439,16 +443,23 @@ define([
                source: source
             });
 
+            let updateMarkedKeyCalled = false;
+            eip._options.updateMarkedKey = (key) => {
+               updateMarkedKeyCalled = true;
+            };
+
             eip._options.notify = function(event, args) {
                if (event === 'afterBeginEdit') {
                   assert.equal(eip._editingItem, args[0]);
                   assert.isTrue(args[1]);
-                  done();
                }
             };
 
             eip.beginAdd({
                item: newItem
+            }).then(() => {
+               assert.isTrue(updateMarkedKeyCalled);
+               done()
             });
          });
 
@@ -891,6 +902,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHiden = true;
                   }
@@ -927,6 +939,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHiden = true;
                   }
@@ -965,6 +978,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHidden = true;
                   }
@@ -1041,7 +1055,6 @@ define([
                      if (event === 'afterEndEdit') {
                         assert.equal(editingItem, args[0]);
                         assert.isTrue(args[1]);
-                        assert.equal(listViewModel.getMarkedKey(), 4);
                         assert.isNull(listViewModel.getEditingItemData());
                         done();
                      }
@@ -2094,7 +2107,8 @@ define([
 
             Object.assign(eip._options,{
                listViewModel: listViewModel,
-               source: source
+               source: source,
+               multiSelectVisibility: 'hidden'
             });
 
             await eip.beginAdd();
@@ -2104,7 +2118,6 @@ define([
                assert.equal(editingItem, eip._editingItemData.item);
                assert.equal(eip._options.multiSelectVisibility, 'visible');
             };
-            eip._editingItemData = Object.assign({}, eip._editingItemData);
             eip.updateEditingData({multiSelectVisibility: 'visible', listViewModel: listViewModel});
             assert.isTrue(isItemDataRegenerated);
          });
@@ -2115,7 +2128,8 @@ define([
 
             Object.assign(eip._options,{
                listViewModel: listViewModel,
-               source: source
+               source: source,
+               multiSelectVisibility: 'visible'
             });
 
             await eip.beginAdd();
@@ -2124,8 +2138,8 @@ define([
 
             let spy = sinon.spy(listViewModel, 'subscribe');
 
-            eip.updateEditingData({listViewModel: listViewModel});
-            eip.updateEditingData({listViewModel: listViewModel});
+            eip.updateEditingData({listViewModel: listViewModel, multiSelectVisibility: 'visible'});
+            eip.updateEditingData({listViewModel: listViewModel, multiSelectVisibility: 'visible'});
 
             assert.isTrue(spy.calledOnceWith('onCollectionChange', eip._updateIndex));
          });
@@ -2144,6 +2158,16 @@ define([
             eip.updateEditingData({listViewModel: listViewModel});
 
             assert.isTrue(spy.notCalled);
+         });
+
+         it('should reset editing data if readoonly', async (done) => {
+            sinon.stub(eip, '_setEditingItemData').callsFake(() => {
+               done();
+            });
+            eip._editingItemData = {};
+            eip.updateEditingData({
+               readOnly: true
+            });
          });
       });
 
@@ -2232,6 +2256,32 @@ define([
             assert.equal(eip._formController, formController);
          });
       });
+
+      it('multi call showIndicator. Should be shown only one indicator', () => {
+         const globalIndicatorId = 123;
+         let showCount = 0;
+         let hideCount = 0;
+
+         eip._notify = (eName, args) => {
+            if (eName === 'showIndicator') {
+               showCount++;
+               return globalIndicatorId;
+            } else if (eName === 'hideIndicator') {
+               hideCount++;
+               assert.equal(args[0], globalIndicatorId);
+            }
+         };
+
+         eip._showIndicator();
+         eip._showIndicator();
+
+         eip._hideIndicator();
+         eip._hideIndicator();
+
+         assert.equal(1, showCount);
+         assert.equal(1, hideCount);
+      });
+
 
    });
 

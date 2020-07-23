@@ -7,4 +7,5 @@
             searchMode="{{_searchMode}}"
             markedKey="{{_options.markedKey}}"
             markerVisibility="{{_options.markerVisibility}}"
-            searchValue="{{_currentSearchValue}}"/>
+            searchValue="{{_currentSearchValue}}"
+            itemsReadyCallback="{{_options.itemsReadyCallback}}"/>

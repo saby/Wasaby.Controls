@@ -22,6 +22,7 @@ import scrollToElement = require('Controls/Utils/scrollToElement');
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
 import yearTemplate = require('wml!Controls/_calendar/MonthList/YearTemplate');
+import {error as dataSourceError, parking} from 'Controls/dataSource';
 import {Logger} from 'UI/Utils';
 
 interface IModuleComponentOptions extends
@@ -93,6 +94,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _enrichItemsDebounced: Function;
 
     protected _virtualPageSize: number;
+    protected _errorViewConfig: parking.ViewConfig;
+    private _errorController: dataSourceError.Controller = new dataSourceError.Controller({});
 
     protected _beforeMount(options: IModuleComponentOptions, context?: object, receivedState?: TItems):
                            Promise<TItems> | void {
@@ -132,7 +135,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     protected _afterMount(): void {
-        this._updateScrollAfterViewModification();
+        this._updateScrollAfterViewModification(true);
     }
 
     protected _beforeUpdate(options: IModuleComponentOptions): void {
@@ -165,7 +168,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    protected _afterRender(): void {
+    // Хуки на момент вызова группируются, нужно использовать _beforePaint вместо _afterRender (так же как в списке).
+    protected _beforePaint(): void {
         this._updateScrollAfterViewModification();
     }
 
@@ -291,34 +295,36 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         // We go around all the elements where the intersection with the scrolled container has changed and
         // find the element that is at the top and it is not fully displayed.
         for (const entry of entries) {
-            if (entry.data.type !== ITEM_TYPES.body) {
-                continue;
-            }
-            const entryDate: Date = entry.data.date;
-            const rootBounds: DOMRect = entry.nativeEntry.rootBounds;
-            // На Ipad приходит уже не актуальное положение элементов.
-            // При дальнейшем скролировании обсервер уже не вызывается.
-            const boundingClientRect: DOMRect = detection.isMobileIOS ?
-                entry.nativeEntry.target.getBoundingClientRect() : entry.nativeEntry.boundingClientRect;
+            if (entry.data) {
+                if (entry.data.type !== ITEM_TYPES.body) {
+                    continue;
+                }
+                const entryDate: Date = entry.data.date;
+                const rootBounds: DOMRect = entry.nativeEntry.rootBounds;
+                // На Ipad приходит уже не актуальное положение элементов.
+                // При дальнейшем скролировании обсервер уже не вызывается.
+                const boundingClientRect: DOMRect = detection.isMobileIOS ?
+                    entry.nativeEntry.target.getBoundingClientRect() : entry.nativeEntry.boundingClientRect;
 
-            // We select only those containers that are not fully displayed
-            // and intersect with the scrolled container in its upper part, or lie higher.
-            if (boundingClientRect.top - rootBounds.top <= 0) {
-                if (boundingClientRect.bottom - rootBounds.top > 0) {
-                    // If the bottom of the container lies at or below the top of the scrolled container, then we found the right date
-                    date = entryDate;
-                    break;
-                } else if (rootBounds.top - boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
-                    // If the container is completely invisible and lies on top of the scrolled area,
-                    // then the next container may intersect with the scrolled area.
-                    // We save the date, and check the following. This condition branch is needed,
-                    // because a situation is possible when the container partially intersected from above, climbed up,
-                    // persecuted, and the lower container approached the upper edge and its intersection did not change.
-                    const delta: number = this._options.order === 'asc' ? 1 : -1;
-                    if (this._options.viewMode === VIEW_MODE.year) {
-                        date = new this._options.dateConstructor(entryDate.getFullYear() + delta, entryDate.getMonth());
-                    } else {
-                        date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + delta);
+                // We select only those containers that are not fully displayed
+                // and intersect with the scrolled container in its upper part, or lie higher.
+                if (boundingClientRect.top - rootBounds.top <= 0) {
+                    if (boundingClientRect.bottom - rootBounds.top > 0) {
+                        // If the bottom of the container lies at or below the top of the scrolled container, then we found the right date
+                        date = entryDate;
+                        break;
+                    } else if (rootBounds.top - boundingClientRect.bottom < entry.nativeEntry.target.offsetHeight) {
+                        // If the container is completely invisible and lies on top of the scrolled area,
+                        // then the next container may intersect with the scrolled area.
+                        // We save the date, and check the following. This condition branch is needed,
+                        // because a situation is possible when the container partially intersected from above, climbed up,
+                        // persecuted, and the lower container approached the upper edge and its intersection did not change.
+                        const delta: number = this._options.order === 'asc' ? 1 : -1;
+                        if (this._options.viewMode === VIEW_MODE.year) {
+                            date = new this._options.dateConstructor(entryDate.getFullYear() + delta, entryDate.getMonth());
+                        } else {
+                            date = new this._options.dateConstructor(entryDate.getFullYear(), entryDate.getMonth() + delta);
+                        }
                     }
                 }
             }
@@ -360,13 +366,13 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     protected invalidatePeriod(start: Date, end: Date): void {
         if (this._extData) {
             this._extData.invalidatePeriod(start, end);
-            this._extData.enrichItems(this._displayedDates);
+            this._extData.enrichItems(this._displayedDates).catch((error: Error) => this._errorHandler(error));
         }
     }
 
     private _enrichItems(): void {
         if (this._extData) {
-            this._extData.enrichItems(this._displayedDates);
+            this._extData.enrichItems(this._displayedDates).catch((error: Error) => this._errorHandler(error));
         }
     }
 
@@ -374,11 +380,18 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         return date ? formatDate(date, formatDate.FULL_MONTH) : '';
     }
 
-    private _updateScrollAfterViewModification(): void {
+    private _updateScrollAfterViewModification(notResetPositionToScroll: boolean): void {
         if (this._positionToScroll && this._canScroll(this._positionToScroll)) {
             if (this._scrollToDate(this._positionToScroll)) {
-                this._positionToScroll = null;
-                this._lastPositionFromOptions = null;
+                // Список после mount заказывает перерисовку, после которой он добавляет отступ 1px и устанавливает
+                // scrollTop = 1px. Поэтому после MonthList::mount не нужно сбрасывать positionToScroll, ведь в
+                // beforePaint нужен повторный подскролл к отображаемой дате.
+                if (notResetPositionToScroll) {
+                    this._forceUpdate();
+                } else {
+                    this._positionToScroll = null;
+                    this._lastPositionFromOptions = null;
+                }
             }
         }
     }
@@ -460,6 +473,16 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     protected _dateToDataString(date: Date): string {
         return monthListUtils.dateToId(date);
+    }
+
+    private _errorHandler(error: Error): Promise<unknown> {
+        return this._errorController.process({
+            error,
+            mode: dataSourceError.Mode.dialog
+        }).then((errorViewConfig) => {
+            this._errorViewConfig = errorViewConfig;
+            return error;
+        });
     }
 
     // Формируем дату для шаблона элемента через эту функцию несмотря на то,

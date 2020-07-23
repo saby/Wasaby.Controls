@@ -108,5 +108,74 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
         });
         assert.isFalse(isCallbackCalled, 'Callback wasCalled for destroyed controller.');
     });
-});
 
+    it('shouldn\'t scroll to fixed element', () => {
+        const target = {
+            closest: (selector: string) => selector === '.controls-Grid_columnScroll__fixed' ? {} : null,
+            getBoundingClientRect: () => ({
+                left: -100,
+                right: 100
+            })
+        } as HTMLElement;
+        assert.equal(columnScroll.getScrollPosition(), 0);
+        columnScroll.scrollToElementIfHidden(target);
+        assert.equal(columnScroll.getScrollPosition(), 0);
+    });
+
+    it('getShadowClasses', () => {
+        // @ts-ignore
+        columnScroll._shadowState = {start: true, end: true};
+        let shadowClasses = columnScroll.getShadowClasses('start');
+        let expectedClasses = `controls-ColumnScroll__shadow_theme-default`
+            + ` controls-ColumnScroll__shadow_without-bottom-padding_theme-default`
+            + ` controls-ColumnScroll__shadow-start_theme-default`
+            + ` controls-horizontal-gradient-default_theme-default`;
+        assert.equal(shadowClasses, expectedClasses, 'wrong start shadow classes for visible shadow without bottom padding');
+        
+        // @ts-ignore
+        shadowClasses = columnScroll.getShadowClasses('end');
+        expectedClasses = `controls-ColumnScroll__shadow_theme-default`
+            + ` controls-ColumnScroll__shadow_without-bottom-padding_theme-default`
+            + ` controls-ColumnScroll__shadow-end_theme-default`
+            + ` controls-horizontal-gradient-default_theme-default`;
+        assert.equal(shadowClasses, expectedClasses, 'wrong end shadow classes for visible shadow without bottom padding');
+        
+        // @ts-ignore
+        columnScroll._shadowState = {start: false, end: false};
+        shadowClasses = columnScroll.getShadowClasses('start');
+        expectedClasses = `controls-ColumnScroll__shadow_theme-default`
+            + ` controls-ColumnScroll__shadow_without-bottom-padding_theme-default`
+            + ` controls-ColumnScroll__shadow-start_theme-default`
+            + ` controls-horizontal-gradient-default_theme-default`
+            + ` controls-ColumnScroll__shadow_invisible`;
+        assert.equal(shadowClasses, expectedClasses, 'wrong start shadow classes for invisible shadow without bottom padding');
+        
+        // @ts-ignore
+        shadowClasses = columnScroll.getShadowClasses('end');
+        expectedClasses = `controls-ColumnScroll__shadow_theme-default`
+            + ` controls-ColumnScroll__shadow_without-bottom-padding_theme-default`
+            + ` controls-ColumnScroll__shadow-end_theme-default`
+            + ` controls-horizontal-gradient-default_theme-default`
+            + ` controls-ColumnScroll__shadow_invisible`;
+        assert.equal(shadowClasses, expectedClasses, 'wrong end shadow classes for invisible shadow without bottom padding');
+    
+        // @ts-ignore
+        columnScroll._shadowState = {start: true, end: true};
+        columnScroll._options.needBottomPadding = true;
+        let shadowClasses = columnScroll.getShadowClasses('start');
+        let expectedClasses = `controls-ColumnScroll__shadow_theme-default`
+            + ` controls-ColumnScroll__shadow_with-bottom-padding_theme-default`
+            + ` controls-ColumnScroll__shadow-start_theme-default`
+            + ` controls-horizontal-gradient-default_theme-default`;
+        assert.equal(shadowClasses, expectedClasses, 'wrong start shadow classes for visible shadow with bottom padding');
+        
+        // @ts-ignore
+        shadowClasses = columnScroll.getShadowClasses('end');
+        expectedClasses = `controls-ColumnScroll__shadow_theme-default`
+            + ` controls-ColumnScroll__shadow_with-bottom-padding_theme-default`
+            + ` controls-ColumnScroll__shadow-end_theme-default`
+            + ` controls-horizontal-gradient-default_theme-default`;
+        assert.equal(shadowClasses, expectedClasses, 'wrong end shadow classes for visible shadow with bottom padding');
+        
+    });
+});

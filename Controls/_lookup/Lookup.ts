@@ -1,19 +1,21 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_lookup/Lookup/Lookup');
+import * as template from 'wml!Controls/_lookup/Lookup/Lookup';
+import {TemplateFunction} from 'UI/Base';
+import {default as BaseLookup} from 'Controls/_lookup/BaseLookup';
+import showSelector from 'Controls/_lookup/showSelector';
+import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
+import * as tmplNotify from 'Controls/Utils/tmplNotify';
 
 /**
  * Поле ввода с автодополнением и возможностью выбора значений из справочника.
  * Выбранные значения отображаются в виде текста с кнопкой удаления внутри поля ввода.
- * 
+ *
  * @remark
- * Поддерживает автовысоту в зависимости от выбранных значений {@link multiLine},
- * одиночный и множественный выбор {@link multiSelect}.
- * 
+ * Поддерживает автовысоту в зависимости от выбранных значений {@link multiLine}, а также одиночный и множественный выбор (см. {@link multiSelect}).
+ *
  * Полезные ссылки:
- * * <a href="">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/directory/lookup/">руководство разработчика</a>
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FLookup%2FIndex">переменные тем оформления</a>
- * 
+ *
  *
  * @class Controls/_lookup/Lookup
  * @extends Core/Control
@@ -23,7 +25,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ITextValue
@@ -59,7 +61,7 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * @mixes Controls/interface/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ITextValue
@@ -175,14 +177,30 @@ import template = require('wml!Controls/_lookup/Lookup/Lookup');
  * If the value is not specified, the comment field will not be displayed.
  */
 
-var Lookup = Control.extend({
-   _template: template,
+/**
+ * @name Controls/_lookup/Lookup#suggestSource
+ * @cfg {Types/source:ICrudPlus} Устанавливает источник для автодополнения.
+ * @remark
+ * Если опция не указана, то вместо нее автоматически передается значение опции {@link Controls/_lookup/Lookup#source}.
+ *
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       suggestSource="{{_source}}"
+ *       keyProperty="id"
+ *       searchParam="title"
+ *       multiSelect="{{true}}">
+ *    </Controls.lookup:Input>
+ * </pre>
+ */
 
-   showSelector: function (popupOptions) {
+export default class Lookup extends BaseLookup {
+   protected _template: TemplateFunction = template;
+   protected _notifyHandler: Function = tmplNotify;
+
+   showSelector(popupOptions: IStackPopupOptions): void {
       this._children.view.closeSuggest();
-      return this._children.controller.showSelector(popupOptions);
+      return showSelector(this, popupOptions, this._options.multiSelect);
    }
-});
-
-export = Lookup;
-
+}

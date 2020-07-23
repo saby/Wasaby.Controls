@@ -10,15 +10,14 @@ export default class extends Control {
     protected _viewSource: HierarchicalMemory;
     protected _columns: IColumn[] = DeepInside.getColumns();
     protected _expandedItems: TExpandOrColapsItems = [null];
+    // tslint:disable-next-line
     protected _collapsedItems: TExpandOrColapsItems = [6];
 
     protected _beforeMount(): void {
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
             data: DeepInside.getData(),
-            filter: function () {
-                return true;
-            }
+            filter: (): boolean => true
         });
     }
 

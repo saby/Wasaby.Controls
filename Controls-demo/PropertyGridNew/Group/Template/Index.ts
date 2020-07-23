@@ -1,5 +1,5 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/PropertyGridNew/Group/Template/Template"
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/PropertyGridNew/Group/Template/Template';
 import {getEditingObject, getSource} from 'Controls-demo/PropertyGridNew/resources/Data';
 
 export default class extends Control {

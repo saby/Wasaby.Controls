@@ -5,7 +5,6 @@ import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { IHeader } from 'Controls-demo/types';
 import * as Template from 'wml!Controls-demo/grid/Results/SingleRecordResults/Simple/Simple';
 
-
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;

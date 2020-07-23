@@ -21,16 +21,16 @@
  * @property {Boolean} multiSelect Определяет, установлен ли множественный выбор.
  * @property {Controls/_interface/ISelectorDialog} selectorTemplate Шаблон панели выбора элементов.
  * @property {Function|String} itemTemplate Шаблон рендеринга элементов.
- * Подробнее о настройке itemTemplate читайте {@link Controls/menu:IMenuControl#itemTemplate здесь}.
+ * Подробнее о настройке itemTemplate читайте {@link Controls/_menu/interface/IMenuControl#itemTemplate здесь}.
  * Для задания элемента в качестве заголовка используйте шаблон {@link Controls/filterPopup:SimplePanelEmptyItemTemplate}.
  * @property {String} itemTemplateProperty Имя свойства, содержащего шаблон для рендеринга элементов.
- * Подробнее о настройке itemTemplateProperty читайте {@link Controls/menu:IMenuControl#itemTemplateProperty здесь}.
+ * Подробнее о настройке itemTemplateProperty читайте {@link Controls/_menu/interface/IMenuControl#itemTemplateProperty здесь}.
  * Для задания элемента в качестве заголовка используйте шаблон {@link Controls/filterPopup:SimplePanelEmptyItemTemplate}.
  * @property {Object} filter Конфигурация фильтра-объект с именами полей и их значениями.
  * Подробнее читайте {@link Controls/_interface/IFilter#filter здесь}.
  * @property {Object} navigation Конфигурация навигации по списку. Настройка навигации источника данных (страницы, смещение, положение) и представления навигации (страницы, бесконечная прокрутка и т. д.).
  * Подробнее читайте {@link Controls/_interface/INavigation#navigation здесь}.
- * @property {String} editorMode Режим отображения редактора. Принимаемые значения см. в документации редактора.
+ * @property {String} editorMode Режим отображения редактора. Принимаемые значения смотрите в документации редактора.
  */
 
 /*
@@ -78,7 +78,7 @@
  * Для каждого типа будет построен соответствующий редактор этого типа.
  *
  * В настоящей версии фреймворка поддерживается только 1 значение — dateRange.
- * При его установке будет построен контрол {@link Controls/dateRange:Selector}.
+ * При его установке будет построен контрол {@link Controls/dateRange:RangeShortSelector}.
  */
 
 /*

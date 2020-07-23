@@ -3,7 +3,7 @@
     <ws:partial template="wml!Controls/_grid/layout/table/ColGroup" listModel="{{ _listModel }}"/>
 
     <!-- Заголовок таблицы -->
-    <ws:if data="{{ _listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList() }}">
+    <ws:if data="{{ _listModel.getHeaderModel() && _listModel.isDrawHeaderWithEmptyList() }}">
         <ws:partial template="{{ _baseHeaderTemplate }}" attr:name="header" headerModel="{{_listModel.getHeaderModel()}}" defaultHeaderContent="{{_headerContentTemplate}}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
     </ws:if>
 
@@ -23,9 +23,9 @@
                     itemActionsClass="{{_options.itemActionsClass}}"
                     groupTemplate="{{_groupTemplate}}"
                     itemActionsPosition="{{_options.itemActionsPosition}}"
-                    itemOutputWrapper="{{_itemOutputWrapper}}"
                     swipeTemplate="{{_options.swipeTemplate}}"
                     backgroundStyle="{{_options.backgroundStyle || _options.style}}"
+                    isColumnScrollVisible="{{ isColumnScrollVisible }}"
                     tagTemplate="{{_options.tagTemplate}}">
             <ws:editArrowTemplate>
                 <ws:partial template="wml!Controls/_grid/_editArrowTemplate"></ws:partial>
@@ -48,7 +48,7 @@
                     isFullGridSupport="{{ _isFullGridSupport }}"
                     containerSize="{{ _containerSize }}"
                     hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"
-                    hasColumnScroll="{{ _options.columnScroll }}"/>
+                    hasColumnScroll="{{ _isColumnScrollVisible }}"/>
     </ws:if>
 
     <!-- Результаты снизу -->

@@ -1,5 +1,4 @@
 import {TemplateFunction, Control} from 'UI/Base';
-import {ICrudPlus} from 'Types/source';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
@@ -22,7 +21,6 @@ export interface IColumnsInnerViewOptions extends IList {
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
     initialWidth: number;
-    source: ICrudPlus;
 }
 
 const SPACING = 12;
@@ -36,7 +34,7 @@ export default class ColumnsInnerView extends Control {
     private _columnsCount: number;
     private _columnsController: ColumnsController;
     private _markerController: MarkerController;
-    private _columnsIndexes: number[][];
+    private _columnsIndexes:  Array<number>[];
     private _model: Collection<Model>;
     protected _options: IColumnsInnerViewOptions;
     private _spacing: number = SPACING;
@@ -113,17 +111,60 @@ export default class ColumnsInnerView extends Control {
         const model = this._model;
         const column = this._columnsController.calcColumn(model, index, this._columnsCount);
         item.setColumn(column);
-        this._columnsIndexes[column].push(index);
     }
 
-    private updateColumns(): void {
+    private updateColumnIndexesByModel(): void {
         this._columnsIndexes = new Array<[number]>(this._columnsCount);
         for (let i = 0; i < this._columnsCount; i++) {
             this._columnsIndexes[i] = [];
         }
-        this._model.each(this.setColumnOnItem.bind(this));
+        this._model.each( (item, index) => {
+            this._columnsIndexes[item.getColumn()].push(index as number);         
+        });
     }
-
+    private updateColumns(): void {
+        this._columnsIndexes = null;
+        this._model.each(this.setColumnOnItem.bind(this));
+        this.updateColumnIndexesByModel();
+    }
+    private processRemovingItem(item: any): boolean {
+        let done = true;
+        if (item.columnIndex >= this._columnsIndexes[item.column].length) {
+            done = false;
+            while (!done && (item.column + 1) < this._columnsCount) {
+                
+                if (this._columnsIndexes[item.column + 1].length > 0) {
+                    
+                    if (this._columnsIndexes[item.column + 1].length > 1) {
+                        done = true;
+                    }
+                    let nextIndex = this._columnsIndexes[item.column + 1].pop();
+                    this._columnsIndexes[item.column].push(nextIndex);
+                    let nextItem = this._model.getItemBySourceIndex(nextIndex) as CollectionItem<Model>;
+                    nextItem.setColumn(item.column);
+                }
+                item.column++;
+            }
+        }
+        return !done;
+    }
+    private processRemoving(removedItemsIndex: number, removedItems: [CollectionItem<Model>]): void {
+        const collection = this._options.listModel.getCollection();
+        let removedItemsIndexes = removedItems.map((item, index) => {
+            let column = item.getColumn();
+            let columnIndex = this._columnsIndexes[column].findIndex((elem) => elem === (index + removedItemsIndex));
+            return {
+                column,
+                columnIndex,
+            }
+        });
+        this.updateColumnIndexesByModel();
+        let needLoadMore = removedItemsIndexes.some(this.processRemovingItem.bind(this));
+        
+        if (needLoadMore) {
+            this._notify('loadMore', ['down']);
+        }
+    }
     protected _onCollectionChange(_e: unknown,
                                   action: string,
                                   newItems: [CollectionItem<Model>],
@@ -133,7 +174,10 @@ export default class ColumnsInnerView extends Control {
         if (action === 'a') {
             newItems.forEach(this.setColumnOnItem.bind(this));
         }
-        if (action !== 'ch' && action !== 'm') {
+        if (action === 'rm') {
+            this.processRemoving(removedItemsIndex, removedItems);
+        }
+        if (action === 'rs') {
             this.updateColumns();
         }
     }

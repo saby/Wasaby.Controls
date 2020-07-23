@@ -213,6 +213,7 @@ define([
             lookup = new Lookup(),
             getItemsSizesLastRow = Lookup._private.getItemsSizesLastRow,
             getCounterWidth = Lookup._private.getCounterWidth,
+            initializeConstants = Lookup._private.initializeConstants,
             newOptions = {
                maxVisibleItems: 7,
                items: getItems(6),
@@ -248,6 +249,7 @@ define([
          Lookup._private.getCounterWidth = function() {
             return COUNTER_WIDTH;
          };
+         Lookup._private.initializeConstants = function() {};
 
          newOptions.multiSelect = true;
          lookup._calculatingSizes(newOptions);
@@ -289,6 +291,7 @@ define([
 
          Lookup._private.getItemsSizesLastRow = getItemsSizesLastRow;
          Lookup._private.getCounterWidth = getCounterWidth;
+         Lookup._private.initializeConstants = initializeConstants;
       });
 
       it('_openInfoBox', function() {

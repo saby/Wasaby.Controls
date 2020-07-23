@@ -18,7 +18,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
    /**
     * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
     * Он состоит из трех блоков: Отбираются, Еще можно отобрать, Ранее отбирались.
-    * 
+    *
     * @remark
     * Полезные ссылки:
     * * <a href="/materials/Controls-demo/app/Controls-demo%2FFilter%2FButton%2FPanelVDom">демо-пример</a>
@@ -103,6 +103,13 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
             throw new Error('Controls/filterPopup:Panel::items option is required');
          }
       },
+      /**
+       * Для совместимости старой и новой панелей, пока не откажемся от filter:Button и поля id в структуре.
+       * @param item
+       */
+      getItemName(item): string {
+         return item.name || item.id;
+      },
 
       resolveHistoryId: function(self, options, context) {
          if (options.historyId) {
@@ -149,7 +156,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
       filterHistoryItems: function(self, items: object[]): object[] {
          function getOriginalItem(self, historyItem: object): object {
             return find(self._items, (originalItem) => {
-               return originalItem.id === historyItem.id;
+               return _private.getItemName(originalItem) === _private.getItemName(historyItem);
             });
          }
 
@@ -207,7 +214,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          chain.factory(items).each(function(item) {
             if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
                (getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility'))) {
-               filter[item.id] = getPropValue(item, 'value');
+               filter[_private.getItemName(item)] = getPropValue(item, 'value');
             }
          });
          return filter;

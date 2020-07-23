@@ -1,5 +1,4 @@
-import {GridViewModel} from 'Controls/grid';
-import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
+import {GridViewModel, GridLayoutUtil, COLUMN_SCROLL_JS_SELECTORS} from 'Controls/grid';
 import {
     getBottomPaddingRowIndex,
     getFooterIndex,
@@ -7,6 +6,7 @@ import {
     getResultsIndex, getTopOffset, IBaseTreeGridRowIndexOptions
 } from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil';
 import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
+
 
 function isLastColumn(
    itemData: object,
@@ -124,10 +124,26 @@ var
             if (this._options.resultsVisibility === 'visible') {
                 return true;
             }
-            var items = this.getDisplay();
+            const items = this.getDisplay();
             if (items) {
-                var rootItems = this._model.getHierarchyRelation().getChildren(items.getRoot().getContents(), this.getItems());
-                return this.getHasMoreData() || rootItems && rootItems.length > 1;
+                const parentProperty = this._options.parentProperty;
+                const parent = items.getRoot().getContents();
+                if (!parentProperty) {
+                    let count = 0;
+                    if (!parent) {
+                        this.getItems().each(() => {
+                            count++;
+                        });
+                    }
+                    return this.getHasMoreData() || count > 1;
+                } else {
+                    let parentId = parent;
+                    if ((parent && parent['[Types/_entity/Record]'])) {
+                        parentId = parent.get(parentProperty);
+                    }
+                    let item = this.getItems().getIndicesByValue(parentProperty, parentId);
+                    return this.getHasMoreData() || item.length > 1;
+                }
             }
         },
         getItemDataByItem: function(dispItem) {
@@ -155,9 +171,9 @@ var
 
             current.isLastColumn = isLastColumn;
 
-            current.getCurrentColumn = function () {
+            current.getCurrentColumn = function (backgroundColorStyle: string) {
                 let
-                    currentColumn = superGetCurrentColumn();
+                    currentColumn = superGetCurrentColumn(backgroundColorStyle);
                 currentColumn.nodeType = current.item.get && current.item.get(current.nodeProperty);
 
                 currentColumn.prepareExpanderClasses = current.prepareExpanderClasses;
@@ -239,9 +255,14 @@ var
                         if (index === self._options.columns.length - 1) {
                             classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
                         }
+
+                        if (self._options.columnScroll && (index < self._options.stickyColumnsCount)) {
+                            classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
+                        }
                     } else {
                         classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
                         classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
+                        classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
                     }
 
                     return classes;

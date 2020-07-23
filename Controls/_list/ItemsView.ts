@@ -9,8 +9,7 @@ var _private = {
     createListModel: function (cfg) {
         return new ItemsViewModel({
             items: cfg.items,
-            keyProperty: cfg.keyProperty,
-            displayProperty: cfg.displayProperty
+            keyProperty: cfg.keyProperty
         });
     },
 

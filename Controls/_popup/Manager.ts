@@ -5,7 +5,6 @@ import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import {Logger} from 'UI/Utils';
 import {IPopupItem, IPopupOptions, IPopupController, IPopupItemInfo} from 'Controls/_popup/interface/IPopup';
 import {goUpByControlTree} from 'UI/Focus';
-import {delay as runDelayed} from 'Types/function';
 import {List} from 'Types/collection';
 import {Bus as EventBus} from 'Env/Event';
 import {detection} from 'Env/Env';
@@ -44,6 +43,16 @@ class Manager extends Control<IManagerOptions> {
         ManagerController.setManager(this);
         ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
         EventBus.channel('navigation').subscribe('onBeforeNavigate', this._navigationHandler.bind(this));
+
+        if (detection.isMobilePlatform) {
+            window.addEventListener('orientationchange', () => {
+                // Таймаут нужен, чтобы размеры страницы изменились. На момент вызова события размеры старые.
+                setTimeout(() => {
+                    this.orientationChangeHandler();
+                }, 0);
+            });
+        }
+
         if (detection.isMobileIOS) {
             this._controllerVisibilityChangeHandler = this._controllerVisibilityChangeHandler.bind(this);
             EventBus.globalChannel().subscribe('MobileInputFocus', this._controllerVisibilityChangeHandler);
@@ -178,6 +187,18 @@ class Manager extends Control<IManagerOptions> {
             (item.popupState === item.controller.POPUP_STATE_START_DESTROYING ||
              item.popupState === item.controller.POPUP_STATE_DESTROYING ||
              item.popupState === item.controller.POPUP_STATE_DESTROYED);
+    }
+
+    private orientationChangeHandler(): void {
+        let needUpdate = false;
+        this._popupItems.each((item) => {
+            if (this._popupUpdated(item.id)) {
+                needUpdate = true;
+            }
+        });
+        if (needUpdate) {
+            this._redrawItems();
+        }
     }
 
     private _updateContext(context: IManagerTouchContext): void {
@@ -528,7 +549,7 @@ class Manager extends Control<IManagerOptions> {
     }
 
     private _callEvents(options: IPopupOptions = {}, event: string, args: unknown[] = []): boolean {
-        if (options._events) {
+        if (options._events && options._events[event]) {
             options._events[event](event, args);
         }
         if (options.eventHandlers && typeof options.eventHandlers[event] === 'function') {
@@ -553,10 +574,10 @@ class Manager extends Control<IManagerOptions> {
         this._redrawItems();
     }
 
-    private _redrawItems(): void {
+    private _redrawItems(): Promise<void> {
         this._updateZIndex();
         this._popupItems._nextVersion();
-        ManagerController.getContainer().setPopupItems(this._popupItems);
+        return ManagerController.getContainer().setPopupItems(this._popupItems);
     }
 
     private _updateZIndex(): void {
@@ -636,7 +657,7 @@ class Manager extends Control<IManagerOptions> {
             popupCallback && popupCallback();
 
             if (registrator) {
-                const hasRegisterPendings = registrator._hasRegisteredPendings(popupId);
+                const hasRegisterPendings = registrator.hasRegisteredPendings(popupId);
                 if (hasRegisterPendings) {
                     pendingCallback && pendingCallback();
                 }
@@ -658,6 +679,8 @@ class Manager extends Control<IManagerOptions> {
                     pendingsFinishedCallback && pendingsFinishedCallback();
                 }, (e) => {
                     item.removePending = null;
+                    // Change popupState from 'destroyed' to 'created' after cancelFinishPending
+                    item.popupState = item.controller.POPUP_STATE_CREATED;
                     if (e.canceled !== true) {
                         Logger.error('Controls/_popup/Manager/Container: Не получилось завершить пендинги: ' +
                             '(name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')',
@@ -703,10 +726,7 @@ class Manager extends Control<IManagerOptions> {
 
     private _updatePopupOptions(id: string, item: IPopupItem, oldOptions: IPopupOptions, result: boolean): void {
         if (result) {
-            this._redrawItems();
-
-            // wait, until popup will be update options
-            runDelayed(() => {
+            this._redrawItems().then(() => {
                 ManagerController.getContainer().activatePopup(id);
             });
         } else {
@@ -722,7 +742,7 @@ class Manager extends Control<IManagerOptions> {
         this._popupItems.each((item) => {
             const registrator = this._getPopupContainer().getPending();
             if (registrator) {
-                if (registrator._hasRegisteredPendings(item.id)) {
+                if (registrator.hasRegisteredPendings(item.id)) {
                     hasPendings = true;
                 }
             }

@@ -20,7 +20,7 @@ import {RecordSet} from 'Types/collection';
 export interface IContextMenuConfig {
     /**
      * @name Controls/_itemActions/interface/IContextMenuConfig#items
-     * @cfg {Types/collection:Recordset} набор элементов для замены в контекстном меню
+     * @cfg {Types/collection:RecordSet} набор элементов для замены в контекстном меню
      */
     items?: RecordSet;
     /**

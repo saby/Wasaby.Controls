@@ -79,7 +79,7 @@
 .controls-Menu__row-checkbox-right_theme-@{themeName} {
    position: absolute;
    top: (@item_height_menu - @height_checkbox) / 2;
-   right: 0;
+   right: @checkbox_offset-right_menu;
 }
 
 .controls-Menu__row-checkbox_invisible_theme-@{themeName} {
@@ -256,22 +256,24 @@
    cursor: pointer;
 }
 
-.controls-Menu__applyButton {
-   height: 100%;
-   width: 100%;
-}
-
 .controls-Menu__applyButton_theme-@{themeName} {
    position: absolute;
-   top: (@item_height_menu - @apply-button_inline-height_menuPopup) / 2;
    z-index: 2;
+}
+
+.controls-Menu_withHeader__applyButton_theme-@{themeName} {
+   top: (@item_height_menu - @apply-button_inline-height_menuPopup) / 2;
+}
+
+.controls-Menu_withoutHeader__applyButton_theme-@{themeName} {
+   top: (@item_height_menu - @apply-button_inline-height_menuPopup) / 2 + @content_padding-top_sticky;
 }
 
 .controls-Menu_withClose__applyButton_theme-@{themeName} {
    right: @close-button_offset-right_sticky + @width_closeButton_link + @apply-button_offset_menuPopup;
 }
 
-.controls-Menu_default__applyButton_theme-@{themeName} {
+.controls-Menu_withoutClose__applyButton_theme-@{themeName} {
    right: @apply-button_offset_menuPopup;
 }
 

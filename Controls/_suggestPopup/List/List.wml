@@ -1,4 +1,4 @@
-<div class="controls-Suggest_list">
+<div class="controls-Suggest_list {{_isSuggestListEmpty ? 'controls-Suggest_list_empty'}}">
     <ws:if data="{{_options.tabsOptions && (!_suggestListOptions || !_suggestListOptions.dialogMode)}}">
         <Controls.Container.Async templateName="Controls/tabs:Buttons">
             <ws:partial template="{{'Controls/tabs:Buttons'}}"
@@ -19,6 +19,7 @@
                                        navigation="{{_navigation}}"
                                        searchEndCallback="{{_searchEndCallback}}"
                                        markerVisibility="{{_markerVisibility}}"
+                                       itemsReadyCallback="{{_itemsReadyCallback}}"
                                        on:markedKeyChanged="_markedKeyChanged()">
     </Controls.deprecatedList:Container>
 

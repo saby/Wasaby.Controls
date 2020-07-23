@@ -29,12 +29,9 @@ class StackController extends BaseController {
     constructor(): void {
         super();
         if (document) {
-            if (document.body) {
+            const isApplicationInit = !!document.documentElement.controlNodes;
+            if (isApplicationInit) {
                 StackController.calcStackParentCoords();
-            } else {
-                document.addEventListener('DOMContentLoaded', () => {
-                    StackController.calcStackParentCoords();
-                });
             }
             //TODO: https://online.sbis.ru/opendoc.html?guid=38b056ea-33a7-4f3c-84e5-ab52de810925
             window.addEventListener('resize', this._updateStackParentCoords, true);
@@ -371,11 +368,15 @@ class StackController extends BaseController {
     }
 
     private _showPopup(item: IPopupItem): void {
+        // TODO: https://online.sbis.ru/opendoc.html?guid=2b0f7d75-15e8-4549-8780-2ec83037ecf8
         item.popupOptions.hidden = false;
+        item.position.hidden = false;
     }
 
     private _hidePopup(item: IPopupItem): void {
+        // TODO: https://online.sbis.ru/opendoc.html?guid=2b0f7d75-15e8-4549-8780-2ec83037ecf8
         item.popupOptions.hidden = true;
+        item.position.hidden = true;
     }
 
     private _updatePopupOptions(item: IPopupItem): void {

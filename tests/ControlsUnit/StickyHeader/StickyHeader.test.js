@@ -109,21 +109,21 @@ define([
          });
       });
 
-      describe('_onScrollStateChanged', function() {
+      describe('_onScrollStateChangedOld', function() {
          it('canScroll', function () {
             const component = createComponent(StickyHeader, {});
             sinon.stub(component, '_forceUpdate');
             component._model = {
                fixedPosition: 'top'
             };
-            component._onScrollStateChanged('canScroll');
+            component._onScrollStateChangedOld('canScroll');
             assert.isTrue(component._canScroll);
             sinon.assert.called(component._forceUpdate);
          });
 
          it('cantScroll', function () {
             const component = createComponent(StickyHeader, {});
-            component._onScrollStateChanged('cantScroll');
+            component._onScrollStateChangedOld('cantScroll');
             assert.isFalse(component._canScroll);
          });
       });
@@ -131,22 +131,33 @@ define([
       describe('_observeHandler', function() {
          it('should not update state if control is hidden', function() {
             const component = createComponent(StickyHeader, {});
+            var sandbox = sinon.createSandbox();
             component._container = {
-               closest: sinon.stub().returns(true)
+               closest: sandbox.stub().returns(true)
             };
-            sinon.stub(component, '_createObserver');
-            sinon.stub(StickyHeaderUtils, 'isHidden').returns(true);
+            sandbox.stub(component, '_createObserver');
+            sandbox.stub(StickyHeaderUtils, 'isHidden').returns(true);
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
-            sinon.stub(component._model, 'update');
+            sandbox.stub(component._model, 'update');
 
             component._observeHandler();
 
-            sinon.assert.notCalled(component._model.update);
-            sinon.restore();
+            sandbox.assert.notCalled(component._model.update);
+            sandbox.restore();
          });
       });
 
       describe('_getStyle', function() {
+         var sandbox;
+         beforeEach(function() {
+            sandbox = sinon.createSandbox();
+         });
+
+         afterEach(function() {
+            sandbox.restore();
+            sandbox = null;
+         });
+
          it('should set correct z-index', function() {
             const component = createComponent(StickyHeader, {fixedZIndex: 2});
             component._context = {
@@ -176,7 +187,6 @@ define([
 
          it('should return correct min-height.', function() {
             const
-               sandbox = sinon.createSandbox(),
                component = createComponent(StickyHeader, { fixedZIndex: 2, position: 'topbottom' });
             sandbox.replace(component, '_getComputedStyle', function() {
                return { boxSizing: 'border-box', minHeight: '30px' };
@@ -187,7 +197,7 @@ define([
             component._stickyHeadersHeight = {
                top: 10
             };
-            component._isMobilePlatform = true;
+            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(1);
 
             component._model = { fixedPosition: 'top' };
             component._container = { style: { paddingTop: '' } };
@@ -196,13 +206,10 @@ define([
             component._minHeight = 40;
             component._container.style.minHeight = 40;
             assert.include(component._getStyle(), 'min-height:40px;');
-
-            sandbox.restore();
          });
 
          it('should return correct styles for Android.', function() {
             const
-               sandbox = sinon.createSandbox(),
                component = createComponent(StickyHeader, { fixedZIndex: 2, position: 'top' });
             let style;
             sandbox.replace(component, '_getComputedStyle', function() {
@@ -211,23 +218,19 @@ define([
             component._stickyHeadersHeight = {
                top: 10
             };
-            component._isMobileAndroid = true;
+            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(3);
 
             component._model = { fixedPosition: 'top' };
             component._container = { style: { paddingTop: '' } };
-
             style = component._getStyle();
             assert.include(style, 'min-height:33px;');
             assert.include(style, 'top: 7px;');
             assert.include(style, 'margin-top: -3px;');
             assert.include(style, 'padding-top:4px;');
-
-            sandbox.restore();
          });
 
          it('should return correct styles for container with border on mobile platforms.', function() {
             const
-               sandbox = sinon.createSandbox(),
                component = createComponent(StickyHeader, { fixedZIndex: 2, position: 'top' });
             let style;
             sandbox.replace(component, '_getComputedStyle', function() {
@@ -236,7 +239,7 @@ define([
             component._stickyHeadersHeight = {
                top: 10
             };
-            component._isMobilePlatform = true;
+            sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(1);
 
             component._model = { fixedPosition: 'top' };
             component._container = { style: { paddingTop: '' } };
@@ -354,14 +357,14 @@ define([
          });
       });
 
-      describe('_updateFixed', function() {
+      describe('updateFixed', function() {
          it('should turn on a shadow and generate force update if the corresponding identifier is passed.', function() {
             const component = createComponent(StickyHeader, {});
             component._isFixed = false;
             component._canScroll = true;
             component._model = { fixedPosition: false };
             sinon.stub(component, '_forceUpdate');
-            component._updateFixed([component._index]);
+            component.updateFixed([component._index]);
             assert.isTrue(component._isFixed);
             sinon.assert.called(component._forceUpdate);
             sinon.restore();
@@ -372,7 +375,7 @@ define([
             component._canScroll = true;
             component._model = { fixedPosition: false };
             sinon.stub(component, '_forceUpdate');
-            component._updateFixed(['someId']);
+            component.updateFixed(['someId']);
             assert.isFalse(component._isFixed);
             sinon.assert.called(component._forceUpdate);
             sinon.restore();
@@ -381,7 +384,7 @@ define([
             const component = createComponent(StickyHeader, {});
             component._isFixed = true;
             sinon.stub(component, '_forceUpdate');
-            component._updateFixed([component._index]);
+            component.updateFixed([component._index]);
             assert.isTrue(component._isFixed);
             sinon.assert.notCalled(component._forceUpdate);
             sinon.restore();

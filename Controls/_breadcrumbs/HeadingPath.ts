@@ -16,7 +16,7 @@ var _private = {
         //containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
         if (options.items.length > 1) {
             self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
-            BreadCrumbsUtil.drawBreadCrumbs(self, self._breadCrumbsItems);
+            self._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(self._breadCrumbsItems);
             self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
 
         } else {
@@ -42,6 +42,8 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @public
  * @author Авраменко А.С.
@@ -57,6 +59,8 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @public
  * @author Авраменко А.С.

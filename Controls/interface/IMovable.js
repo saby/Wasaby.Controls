@@ -71,23 +71,24 @@ define('Controls/interface/IMovable', [
    /**
     * @name Controls/interface/IMovable#moveDialogTemplate
     * @cfg {IMoveDialogTemplateProp|null} Шаблон диалогового окна выбора целевой записи для перемещения.
-    * Рекомендуется использовать стандартный шаблон {@link Controls/MoveDialog}.
+    * Рекомендуется использовать стандартный шаблон {@link Controls/moverDialog:Template}.
     * @example
-    * <pre>
-    *    <Controls.list:Mover>
-    *       <ws:moveDialogTemplate templateName="Controls/MoveDialog">
-    *          <ws:templateOptions
-    *             root="rootId"
-    *             searchParam="folderTitle"
-    *             parentProperty="parent"
-    *             nodeProperty="parent@">
+    * <pre class="brush: html; highlight: [2,3,4,5,6,7,8,9,10]">
+    * <Controls.list:Mover>
+    *    <ws:moveDialogTemplate templateName="Controls/moverDialog:Template">
+    *       <ws:templateOptions
+    *          root="rootId"
+    *          searchParam="folderTitle"
+    *          parentProperty="parent"
+    *          nodeProperty="parent@">
     *             <ws:filter moveDialog="{{true}}"/>
-    *          </ws:templateOptions>
-    *       </ws:moveDialogTemplate>
-    *    </Controls.list:Mover>
+    *       </ws:templateOptions>
+    *    </ws:moveDialogTemplate>
+    * </Controls.list:Mover>
     * </pre>
     * @see moveItemsWithDialog
-    * @see Controls/MoveDialog
+    * @see Controls/moverDialog:Template
+    * @demo Controls-demo/treeGrid/Mover/Base/Index
     */
 
    /*

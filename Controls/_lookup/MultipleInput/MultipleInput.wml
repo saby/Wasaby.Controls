@@ -1,11 +1,21 @@
-<Controls._lookup.ControllerMultipleInput
-      name="controller"
-      scope="{{_options}}"
-      multiSelect="{{true}}"
-      attr:class="controls-Lookup controls-MultipleInput">
-   <Controls._lookup.MultipleInput.LookupView scope="{{_options}}" multiSelect="{{true}}">
+<div class="controls-Lookup controls-MultipleInput">
+   <Controls._lookup.MultipleInput.LookupView
+           scope="{{_options}}"
+           multiSelect="{{true}}"
+           items="{{_items}}"
+           on:showSelector="_showSelectorHandler()"
+           on:addItem="_addItemHandler()"
+           on:removeItem="_removeItemHandler()"
+           on:updateItems="_updateItemsHandler()"
+           on:valueChanged="_notifyHandler('valueChanged')"
+           on:itemClick="_notifyHandler('itemClick')"
+           on:inputCompleted="_notifyHandler('inputCompleted')"
+           on:tagClick="_notifyHandler('tagClick')"
+           on:tagHover="_notifyHandler('tagHover')"
+           on:openInfoBox="_notifyHandler('openInfoBox')"
+           on:closeInfoBox="_notifyHandler('closeInfoBox')">
       <ws:itemTemplate>
          <ws:partial template="{{_options.itemTemplate}}" attr:class="controls-MultipleInput__SelectedCollection_item"/>
       </ws:itemTemplate>
    </Controls._lookup.MultipleInput.LookupView>
-</Controls._lookup.ControllerMultipleInput>
+</div>

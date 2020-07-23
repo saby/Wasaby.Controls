@@ -68,7 +68,7 @@ var
  * @class Controls/_editableArea/View
  * @extends Core/Control
  * @mixes Controls/interface/IEditableArea
- * @author Авраменко А.С.
+ * @author Красильников А.С.
  * @public
  *
  * @remark

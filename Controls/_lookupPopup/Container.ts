@@ -22,6 +22,9 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
    selection: TSelectionRecord;
    root?: string|number|null;
    searchParam?: string;
+   items: RecordSet;
+   parentProperty?: string;
+   nodeProperty?: string;
 }
 /**
  * Контейнер принимает опцию selectedItems от Controls/lookupPopup:Controller и устанавливает опцию selectedKeys для дочернего списка.
@@ -29,7 +32,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
  * Должен использоваться внутри Controls/lookupPopup:Controller.
  * В одном Controls/lookupPopup:Controller можно использовать несколько контейнеров.
  *
- * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>статье</a>.
+ * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/directory/layout-selector-stack/'>статье</a>.
  *
  * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Пример</a> использования контрола.
  *
@@ -216,30 +219,51 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             return adapter;
          },
 
-         prepareFilter({filter, selection, searchParam, parentProperty, root}: IFilterConfig): object {
+         prepareFilter({
+           filter,
+           selection,
+           searchParam,
+           parentProperty,
+           nodeProperty,
+           root,
+           items
+        }: IFilterConfig): object {
             const selectedKeys = selection.get('marked');
             const currentRoot = root !== undefined ? root : null;
-            filter = Utils.object.clone(filter);
+            const resultFilter = Utils.object.clone(filter);
+            const hasSearchParamInFilter = searchParam && resultFilter[searchParam];
+            let hasSelectedNodes = false;
 
-             // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
-             // TODO KINDO
-             // При отметке всех записей в фильтре проставляется selection в виде:
-             // marked: [null]
-             // excluded: [null]
-             // Если что-то поискать, отметить всё через панель массовых операций, и нажать "Выбрать"
-             // то в фильтр необходимо посылать searchParam и selection, иначе выборка будет включать все записи,
-             // даже которые не попали под фильтрацию при поиске.
-             // Если просто отмечают записи чекбоксами (не через панель массовых операций),
-             // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
+            if (nodeProperty && items) {
+               let selectedItem;
+               selectedKeys.forEach((key) => {
+                  selectedItem = items.getRecordById(key);
+
+                  if (selectedItem && !hasSelectedNodes) {
+                     hasSelectedNodes = selectedItem.get(nodeProperty);
+                  }
+               });
+            }
+
+            // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
+            // TODO KINDO
+            // При отметке всех записей в фильтре проставляется selection в виде:
+            // marked: [null]
+            // excluded: [null]
+            // Если что-то поискать, отметить всё через панель массовых операций, и нажать "Выбрать"
+            // то в фильтр необходимо посылать searchParam и selection, иначе выборка будет включать все записи,
+            // даже которые не попали под фильтрацию при поиске.
+            // Если просто отмечают записи чекбоксами (не через панель массовых операций),
+            // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
              // и запрос с searchParam в фильтре вернёт не все записи, которые есть в selection'e.
-            if (searchParam && ArrayUtil.invertTypeIndexOf(selectedKeys, currentRoot) === -1) {
-               delete filter[searchParam];
+            if (hasSearchParamInFilter && ArrayUtil.invertTypeIndexOf(selectedKeys, currentRoot) === -1 && !hasSelectedNodes) {
+               delete resultFilter[searchParam];
             }
             if (parentProperty) {
-               delete filter[parentProperty];
+               delete resultFilter[parentProperty];
             }
-            filter.selection = selection;
-            return filter;
+            resultFilter.selection = selection;
+            return resultFilter;
          },
 
          prepareResult: function(result, initialSelection, keyProperty, selectCompleteInitiator) {
@@ -339,7 +363,6 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
          loadSelectedItems(self: object, filter: object): Promise<RecordSet> {
             const dataOptions = self.context.get('dataOptions');
             const items = dataOptions.items;
-            let indicatorId;
             let loadItemsPromise;
 
             if (_private.needLoadItemsOnSelectComplete(self)) {
@@ -351,11 +374,11 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
                } else {
                   const crudWrapper = _private.getCrudWrapper(dataOptions.source);
                   const loadItemsCallback = (loadedItems) => {
-                     self._notify('hideIndicator', [indicatorId], {bubbling: true});
+                     _private.hideIndicator(self);
                      return loadedItems;
                   };
 
-                  indicatorId = self._notify('showIndicator', [], {bubbling: true});
+                  _private.showIndicator(self);
                   loadItemsPromise = crudWrapper.query({filter}).then(loadItemsCallback, loadItemsCallback);
                }
             } else {
@@ -363,6 +386,17 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             }
 
             return loadItemsPromise;
+         },
+
+         showIndicator(self): void {
+            self._loadingIndicatorId = self._notify('showIndicator', [], {bubbling: true});
+         },
+
+         hideIndicator(self): void {
+            if (self._loadingIndicatorId) {
+               self._notify('hideIndicator', [self._loadingIndicatorId], {bubbling: true});
+               self._loadingIndicatorId = null;
+            }
          }
       };
 
@@ -373,6 +407,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
          _selection: null,
          _excludedKeys: null,
          _selectCompleteInitiator: false,
+         _loadingIndicatorId: null,
 
          _beforeMount(options, context): void {
             this._selectedKeys = _private.getSelectedKeys(options, context);
@@ -395,6 +430,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
 
          _beforeUnmount(): void {
             UnregisterUtil(this, 'selectComplete');
+            _private.hideIndicator(this);
          },
 
          _selectComplete(): void {
@@ -426,7 +462,9 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
                selection,
                searchParam: options.searchParam,
                parentProperty: options.parentProperty,
-               root: options.root
+               nodeProperty: options.nodeProperty,
+               root: options.root,
+               items
             });
 
             // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f 

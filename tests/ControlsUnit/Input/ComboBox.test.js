@@ -83,54 +83,40 @@ define(
                   assert.equal(data[0], '2');
                }
             };
-            combobox._selectedItemsChangedHandler('itemClick', [itemsRecords.at(1)]);
-            assert.isFalse(combobox._isOpen);
          });
 
-         it('popupVisibilityChanged', function() {
-            let combobox = getCombobox(config);
+         describe('_beforeMount', function() {
+            it('beforeMount with selectedKeys', () => {
+               let combobox = getCombobox(config);
+               combobox._beforeMount(config);
+               assert.equal(combobox._value, 'New text');
+               assert.equal(combobox._placeholder, 'This is placeholder'); 
+            });
 
-            dropdown.Combobox._private.popupVisibilityChanged.call(combobox, true);
-            assert.isTrue(combobox._isOpen);
-
-            dropdown.Combobox._private.popupVisibilityChanged.call(combobox, false);
-            assert.isFalse(combobox._isOpen);
-         });
-
-         it('_beforeMount', function() {
-            let combobox = getCombobox(config);
-            combobox._beforeMount(config);
-            assert.equal(combobox._value, 'New text');
-            assert.equal(combobox._placeholder, 'This is placeholder');
+            it('beforeMount without source', () => {
+               const comboboxOptions = {...config};
+               delete comboboxOptions.source;
+               const combobox = getCombobox(comboboxOptions);
+               assert.ok(combobox._beforeMount(comboboxOptions) === undefined);
+            });
          });
 
          it('_beforeUpdate width change', function() {
             let combobox = getCombobox(config);
             combobox._container = {offsetWidth: 250};
+            combobox._controller = {
+               update: () => {}
+            };
             assert.equal(combobox._width, undefined);
             combobox._beforeUpdate({});
             assert.equal(combobox._width, 250);
          });
-         it('_afterMount', function() {
+
+         it('dataLoadCallback option', function() {
             let combobox = getCombobox(config);
-            combobox._container = {offsetWidth: 250};
-            assert.equal(combobox._width, undefined);
-            assert.equal(combobox._targetPoint, undefined);
-            combobox._afterMount();
-            assert.equal(combobox._width, 250);
-            assert.deepEqual(combobox._targetPoint, {vertical: 'bottom'});
-         });
+            const result = combobox._getControllerOptions({ dataLoadCallback: 'testDataLoadCallback' });
 
-         it('_deactivated', () => {
-            let combobox = getCombobox(config);
-            let closed = false;
-
-            combobox.closeMenu = () => {
-               closed = true;
-            };
-
-            combobox._deactivated();
-            assert.isTrue(closed);
+            assert.equal(result.dataLoadCallback, 'testDataLoadCallback');
          });
       });
    }

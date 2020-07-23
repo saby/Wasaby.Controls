@@ -41,9 +41,7 @@
 </ws:template>
 
 <ws:template name="footerTemplateIf">
-    <ws:if data="{{_loadingIndicatorState === 'all'}}">
-        <ws:partial template="loadingIndicator"/>
-    </ws:if>
+    <ws:partial if="{{ _shouldShowLoadingIndicator('inFooter') }}" template="loadingIndicator"/>
     <ws:if data="{{_options.footerTemplate}}">
         <div class="controls-BaseControl__footer-content_theme-{{_options.theme}}">
             <ws:partial template="{{_options.footerTemplate}}"/>
@@ -79,39 +77,27 @@
         </div>
     </ws:if>
 </ws:template>
-<ws:template name="withDragNDrop">
-    <Controls.dragnDrop:Container
-        on:dragStart="_dragStart()"
-        on:dragEnd="_dragEnd()"
-        on:dragLeave="_dragLeave()"
-        on:dragEnter="_dragEnter()"
-        on:documentDragEnd="_documentDragEnd()"
-        draggingTemplate="{{_options.draggingTemplate}}"
-        name="dragNDropContainer"
-    >
-        <ws:content>
-            <ws:partial template="{{viewContent}}" />
-        </ws:content>
-    </Controls.dragnDrop:Container>
-</ws:template>
 <ws:template name="viewTpl">
     <div class="controls-ScrollController">
-        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;"></div>
-        <div name="topLoadTrigger"></div>
+        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{!_isMounted ? 'display: none;'}}"></div>
+        <!-- Скрываем topLoadTrigger через display: none, чтобы он не срабатывал сразу после mount. Отступы ему ещё не установлены и он
+        сработает сразу после инициализации, хотя далеко не факт что это нужно. -->
+        <div name="topLoadTrigger" style="{{!_isMounted ? 'display: none'}}"></div>
         <Controls.validate:Controller name="formController">
             <ws:partial
                     attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
+                    attr:style="{{_attachLoadTopTriggerToNull ? 'padding-top: 1px;'}}"
                     name="{{name}}"
                     template="{{ _options.content }}"
                     scope="{{_options}}"
                     loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
-                    dragNDropControl="{{_children.dragNDropContainer}}"
                     _needBottomPadding="{{_needBottomPadding}}"
                     listModel="{{_listViewModel}}"
                     editingItemData="{{_editingItemData}}"
                     startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
                     isAdd="{{_editingItemData ? _editingItemData.isAdd : undefined}}"
                     on:animationend="_onItemSwipeAnimationEnd()"
+                    on:deactivated="_onListDeactivated()"
                     on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
                     on:itemClick="_onItemClick()"
                     on:groupClick="_onGroupClick()"
@@ -125,7 +111,6 @@
                     on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                     on:hoveredCellChanged="_notifyHandler('hoveredCellChanged')"
                     on:itemSwipe="_onItemSwipe()"
-                    on:dragStart="_notifyHandler('dragStart')"
                     on:editingRowKeyDown="_onEditingRowKeyDown()"
                     on:rowDeactivated="_onRowDeactivated()"
                     on:itemsContainerReady="_itemsContainerReadyHandler()"
@@ -136,6 +121,7 @@
                     on:updatePlaceholdersSize="_stopBubblingEvent()"
                     on:saveScrollPosition="_stopBubblingEvent()"
                     on:restoreScrollPosition="_stopBubblingEvent()"
+                    on:loadMore="_loadMore()"
                 >
                 <ws:itemActionsTemplate>
                     <ws:partial
@@ -177,16 +163,7 @@
     </div>
 </ws:template>
 <ws:template name="fullView">
-    <ws:if data="{{_options.itemsDragNDrop}}">
-        <ws:partial template="withDragNDrop">
-            <ws:viewContent>
-                <ws:partial template="viewTpl"  name="{{name}}"/>
-            </ws:viewContent>
-        </ws:partial>
-    </ws:if>
-    <ws:else>
-        <ws:partial template="viewTpl" name="{{name}}"/>
-    </ws:else>
+    <ws:partial template="viewTpl" name="{{name}}"/>
 </ws:template>
 
 <Controls.dataSource:error.Container
@@ -194,14 +171,16 @@
     viewConfig="{{ __error }}"
     on:keyDown="_onViewKeyDown()"
 >
-    <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()" on:mouseenter="_initItemActions(_options)" on:touchstart="_initItemActions(_options)">
+    <div class="controls-BaseControl"
+         on:sortingChanged="_sortingChanged()"
+         on:mouseenter="_mouseEnter()"
+         on:mouseleave="_mouseLeave()"
+         on:touchstart="_initItemActions(_options)">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
 
         <ws:if data="{{_listViewModel}}">
 
-            <ws:if data="{{_loadingIndicatorState=== 'up'}}">
-                <ws:partial template="loadingIndicator"/>
-            </ws:if>
+            <ws:partial if="{{ _shouldShowLoadingIndicator('beforeEmptyTemplate') }}" template="loadingIndicator"/>
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
 
@@ -211,9 +190,7 @@
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>
 
-        <ws:if data="{{_loadingIndicatorState === 'down'}}">
-            <ws:partial template="loadingIndicator"/>
-        </ws:if>
+        <ws:partial if="{{ _shouldShowLoadingIndicator('afterList') }}" template="loadingIndicator"/>
 
         <ws:if data="{{_showContinueSearchButton}}">
             <ws:partial template="{{_options.continueSearchTemplate}}">

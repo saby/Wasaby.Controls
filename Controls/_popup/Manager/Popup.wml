@@ -6,7 +6,7 @@
      templateName="{{ _compatibleTemplateName}}"
      template="{{ _stringTemplate ? _options.template}}">
     <ws:partial
-            attr:class="controls-Popup__template{{_options.hidden ? ' ws-hidden'}}"
+            attr:class="controls-Popup__template"
             template="{{_options.content}}"
             scope="{{_options}}"
             opener="{{null}}"

@@ -536,7 +536,7 @@ function updateFilterHistory(cfg) {
        *
        * @class Controls/_filter/Controller
        * @extends Core/Control
-       * @mixes Controls/_interface/IFilter
+       * @mixes Controls/_interface/IFilterChanged
        * @mixes Controls/_filter/IPrefetch
        * @control
        * @public
@@ -551,7 +551,7 @@ function updateFilterHistory(cfg) {
        *
        * @class Controls/_filter/Controller
        * @extends Core/Control
-       * @mixes Controls/_interface/IFilter
+       * @mixes Controls/_interface/IFilterChanged
        * @control
        * @public
        * @author Герасимов А.М.
@@ -828,7 +828,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                         return history;
                     });
                 } else {
-                    _private.resolveItems(this, state.historyId, state.filterSource, [], options.historyItems).then((history) => {
+                    return _private.resolveItems(this, state.historyId, state.filterSource, [], options.historyItems).then((history) => {
                         _private.itemsReady(this, state.filter, history);
                         return history;
                     });

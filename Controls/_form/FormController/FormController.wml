@@ -1,21 +1,19 @@
-<Controls.validate:Controller name="validation"
-   on:registerFormOperation="_registerFormOperationHandler()">
-   <div>
-      <ws:partial
-         name="errorContainer"
-         template="{{ _options.errorContainer || _errorContainer }}"
-         viewConfig="{{ __error }}"
-         on:dialogClosed="_onCloseErrorDialog()"
-      >
-         <ws:if data="{{ _record }}">
+<div on:registerFormOperation="_registerFormOperationHandler()"
+     on:validateCreated="_onValidateCreated()"
+     on:validateDestroyed="_onValidateDestroyed()">
+    <ws:partial
+            name="errorContainer"
+            template="{{ _options.errorContainer || _errorContainer }}"
+            viewConfig="{{ __error }}"
+            on:dialogClosed="_onCloseErrorDialog()">
+        <ws:if data="{{ _record }}">
             <ws:partial
-                 template="{{ _options.content }}"
-                 record="{{ _record }}"/>
-         </ws:if>
-         <ws:else>
+                    template="{{ _options.content }}"
+                    record="{{ _record }}"/>
+        </ws:if>
+        <ws:else>
             <invisible-node />
-         </ws:else>
-      </ws:partial>
-   </div>
-</Controls.validate:Controller>
+        </ws:else>
+    </ws:partial>
+</div>
 

@@ -13,6 +13,7 @@ import IBorderVisibility, {
     getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes
 } from './interface/IBorderVisibility';
 
+// @ts-ignore
 import * as template from 'wml!Controls/_input/Render/Render';
 
 type State =

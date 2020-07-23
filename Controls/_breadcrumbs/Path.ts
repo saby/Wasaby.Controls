@@ -5,7 +5,7 @@ import template = require('wml!Controls/_breadcrumbs/Path/Path');
 
 /**
  * Хлебные крошки.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FBreadCrumbs%2FScenarios">демо-пример</a>
@@ -14,6 +14,8 @@ import template = require('wml!Controls/_breadcrumbs/Path/Path');
  * @class Controls/_breadcrumbs/Path
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @public
  * @author Авраменко А.С.
@@ -28,6 +30,8 @@ import template = require('wml!Controls/_breadcrumbs/Path/Path');
  * @class Controls/_breadcrumbs/Path
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @private
  * @author Авраменко А.С.
@@ -41,7 +45,7 @@ var BreadCrumbs = Control.extend({
 
     _beforeMount: function (options) {
         if (options.items && options.items.length > 0) {
-            BreadCrumbsUtil.drawBreadCrumbs(this, options.items);
+            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(options.items);
         }
     },
     _beforeUpdate: function (newOptions) {
@@ -49,7 +53,7 @@ var BreadCrumbs = Control.extend({
     },
     _redrawIfNeed: function(currentItems, newItems) {
         if (BreadCrumbsUtil.shouldRedraw(currentItems, newItems)) {
-            BreadCrumbsUtil.drawBreadCrumbs(this, newItems);
+            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(newItems);
             this._viewUpdated = true;
         }
     },

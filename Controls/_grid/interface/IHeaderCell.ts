@@ -10,7 +10,7 @@ import {TCellAlign, TCellVerticalAlign} from 'Controls/grid';
 export type THeader = IHeaderCell[];
 
 /**
- * Интерфейс для конфигурации ячеек шапки в контроле {@link Controls/grid:View Таблица}.
+ * Интерфейс для конфигурации ячеек заголовка в контроле {@link Controls/grid:View Таблица}.
  *
  * @interface Controls/_grid/interface/IHeaderCell
  * @public
@@ -62,7 +62,7 @@ export interface IHeaderCell extends IControlOptions {
      * @default Controls/grid:HeaderContent
      * @remark
      * Параметры шаблона Controls/grid:HeaderContent доступны {@link Controls/grid:HeaderContent здесь}.
-     * Подробнее о работе с шаблоном читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/ документации}.
+     * Подробнее о работе с шаблоном читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/header/ документации}.
      * @example
      * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
      * <pre class="brush: html">
@@ -159,7 +159,7 @@ export interface IHeaderCell extends IControlOptions {
      * @remark
      * В качестве значения принимает имя поля.
      * Одновременно можно сортировать только по одному полю.
-     * Если в конфигурации ячейки задать это свойство, то в шапке таблицы в конкретной ячейке будет отображаться кнопка для изменения сортировки.
+     * Если в конфигурации ячейки задать это свойство, то в заголовке таблицы в конкретной ячейке будет отображаться кнопка для изменения сортировки.
      * Клик по кнопке будет менять порядок сортировки элементов на противоположный.
      * При этом элементы будут отсортированы по полю, имя которого указано в свойстве sortingProperty.
      * @example

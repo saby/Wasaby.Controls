@@ -269,6 +269,30 @@ describe('Controls/_source/NavigationController', () => {
                 hasMore = nc.hasMoreData('backward');
                 assert.isFalse(hasMore, 'Wrong more value');
             });
+
+            it('hasMoreData (hasMore is undefined) boolean true root', () => {
+                const START_PAGE = 0;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                rs.setMetaData({more: false});
+
+                const params = nc.updateQueryProperties(rs);
+                let hasMore = nc.hasMoreData('forward');
+                assert.isFalse(hasMore, 'Wrong more value');
+                hasMore = nc.hasMoreData('backward');
+                assert.isFalse(hasMore, 'Wrong more value');
+            });
         });
 
     });
@@ -322,7 +346,7 @@ describe('Controls/_source/NavigationController', () => {
                 const nc = new NavigationController({
                     navigationType: 'position',
                     navigationConfig: {
-                        position: 1,
+                        position: null,
                         field: 'id',
                         direction: 'bothways',
                         limit: QUERY_LIMIT
@@ -330,7 +354,7 @@ describe('Controls/_source/NavigationController', () => {
                 });
 
                 const params = nc.getQueryParams({filter: defFilter, sorting: defSorting});
-                assert.equal(1, params.filter['id~'], 'Wrong query params');
+                assert.equal(null, params.filter['id~'], 'Wrong query params');
                 assert.equal(QUERY_LIMIT, params.limit, 'Wrong query params');
             });
 

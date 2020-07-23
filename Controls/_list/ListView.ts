@@ -7,30 +7,12 @@ import {Logger} from 'UI/Utils';
 import ListViewTpl = require('wml!Controls/_list/ListView/ListView');
 import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
-import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
 import {isEqual} from "Types/object";
-import 'wml!Controls/_list/resources/ItemOutput';
 
 const DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
 
 var _private = {
     checkDeprecated: function(cfg, self) {
-        // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-        if (cfg.leftSpacing !== undefined) {
-            Logger.warn('IList: Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".', self);
-        }
-        if (cfg.leftPadding !== undefined) {
-            Logger.warn('IList: Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".', self);
-        }
-        if (cfg.rightSpacing !== undefined) {
-            Logger.warn('IList: Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".', self);
-        }
-        if (cfg.rightPadding !== undefined) {
-            Logger.warn('IList: Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".', self);
-        }
-        if (cfg.rowSpacing !== undefined) {
-            Logger.warn('IList: Option "rowSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.top and itemPadding.bottom".', self);
-        }
         if (cfg.contextMenuEnabled !== undefined) {
             Logger.warn('IList: Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".', self);
         }
@@ -84,24 +66,54 @@ var ListView = BaseControl.extend(
         _template: ListViewTpl,
         _groupTemplate: GroupTemplate,
         _defaultItemTemplate: defaultItemTemplate,
-        _itemOutputWrapper: ItemOutputWrapper,
         _pendingRedraw: false,
+        _reloadInProgress: false,
+        _callbackAfterReload: null,
 
         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
             this._debouncedSetHoveredItem = cDebounce(_private.setHoveredItem, DEBOUNCE_HOVERED_ITEM_CHANGED);
-            this._onListChangeFnc = (event, changesType) => {
+            this._onListChangeFnc = (event, changesType, action, newItems) => {
                // todo refactor by task https://online.sbis.ru/opendoc.html?guid=80fbcf1f-5804-4234-b635-a3c1fc8ccc73
+               // Из новой коллекции нотифается collectionChanged, в котором тип изменений указан в newItems.properties
+               const itemChangesType = newItems ? newItems.properties : null;
                if (changesType !== 'hoveredItemChanged' &&
                   changesType !== 'activeItemChanged' &&
                   changesType !== 'markedKeyChanged' &&
                   changesType !== 'itemActionsUpdated' &&
+                  itemChangesType !== 'marked' &&
+                  itemChangesType !== 'hovered' &&
+                  itemChangesType !== 'active' &&
                   !this._pendingRedraw) {
                   this._pendingRedraw = true;
                }
             };
-            this._onMarkedKeyChangedHandlerFnc = this._onMarkedKeyChangedHandler.bind(this);
         },
+
+        _doAfterReload(callback): void {
+            if (this._reloadInProgress) {
+                if (this._callbackAfterReload) {
+                    this._callbackAfterReload.push(callback);
+                } else {
+                    this._callbackAfterReload = [callback];
+                }
+            } else {
+                callback();
+            }
+        },
+
+        setReloadingState(state): void {
+            this._reloadInProgress = state;
+            if (state === false && this._callbackAfterReload) {
+                if (this._callbackAfterReload) {
+                    this._callbackAfterReload.forEach((callback) => {
+                        callback();
+                    });
+                    this._callbackAfterReload = null;
+                }
+            }
+        },
+
        _beforeMount: function(newOptions) {
             _private.checkDeprecated(newOptions, this);
             if (newOptions.groupTemplate) {
@@ -110,7 +122,6 @@ var ListView = BaseControl.extend(
             if (newOptions.listModel) {
                 this._listModel = newOptions.listModel;
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
-                this._listModel.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandlerFnc);
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
@@ -118,7 +129,6 @@ var ListView = BaseControl.extend(
         _beforeUnmount: function() {
             if (this._listModel) {
                 this._listModel.unsubscribe('onListChange', this._onListChangeFnc);
-                this._listModel.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandlerFnc);
             }
         },
 
@@ -135,23 +145,6 @@ var ListView = BaseControl.extend(
             }
             if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
                 this._listModel.setItemPadding(newOptions.itemPadding);
-            }
-
-            // TODO https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-            if (this._options.leftSpacing !== newOptions.leftSpacing) {
-                this._listModel.setLeftSpacing(newOptions.leftSpacing);
-            }
-            if (this._options.leftPadding !== newOptions.leftPadding) {
-                this._listModel.setLeftPadding(newOptions.leftPadding);
-            }
-            if (this._options.rightSpacing !== newOptions.rightSpacing) {
-                this._listModel.setRightSpacing(newOptions.rightSpacing);
-            }
-            if (this._options.rightPadding !== newOptions.rightPadding) {
-                this._listModel.setRightPadding(newOptions.rightPadding);
-            }
-            if (this._options.rowSpacing !== newOptions.rowSpacing) {
-                this._listModel.setRowSpacing(newOptions.rowSpacing);
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
@@ -256,10 +249,6 @@ var ListView = BaseControl.extend(
         },
 
         _onItemWheel: function(event) {
-        },
-
-        _onMarkedKeyChangedHandler: function(event, key) {
-            this._notify('markedKeyChanged', [key]);
         },
 
         setHoveredItem: function (item) {

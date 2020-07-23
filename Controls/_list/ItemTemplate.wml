@@ -2,11 +2,11 @@
    <ws:partial attr:class="{{itemData.calcCursorClasses(clickable, cursor)}}
        {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData._isSelected ?
        ' controls-ListView__itemV_withMarker controls-ListView__item__marked_' : ' controls-ListView__item__unmarked_') + itemData.style + '_theme-' + _options.theme}}
-       {{highlightOnHover !== false && !itemData.isEditing ? 'controls-ListView__item_highlightOnHover_' + itemData.style + '_theme_' + _options.theme}}
+       {{highlightOnHover !== false && !itemData.isEditing() ? 'controls-ListView__item_highlightOnHover_' + itemData.style + '_theme_' + _options.theme}}
        controls-ListView__item_{{itemData.style}} controls-ListView__item_{{itemData.style}}_theme-{{_options.theme}}
        controls-ListView__item_showActions
        {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-ListView__item_active_theme-' + _options.theme}}
-       {{!!itemData.isEditing ? ' controls-ListView__item_editing_theme-' + _options.theme}}
+       {{!!itemData.isEditing() ? ' controls-ListView__item_editing_theme-' + _options.theme}}
        {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + _options.theme}}
        js-controls-SwipeControl__actionsContainer"
        attr:key="{{itemData.item.getId()}}"
@@ -16,11 +16,11 @@
 <ws:template name="itemContentTpl">
     <ws:if data="{{itemData.hasMultiSelect}}">
        <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}} controls-ListView__checkbox_theme-{{_options.theme}}">
-          <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" checkboxReadOnly="{{ itemData.isAdd || checkboxReadOnly }}"/>
+          <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" checkboxReadOnly="{{ itemData.isAdd || checkboxReadOnly }}"/>
        </ws:partial>
     </ws:if>
 
-   <ws:if data="{{itemData.shouldDrawMarker(marker)}}">
+   <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked()}}">
       <div class="{{itemData.getMarkerClasses()}}"></div>
    </ws:if>
 
@@ -60,7 +60,7 @@
    </ws:partial>
 </ws:if>
 <ws:else>
-   <ws:partial template="itemOutputTpl">
+   <ws:partial template="itemOutputTpl" attr:class="{{backgroundColorStyle ? 'controls-ListView__item_background_' + backgroundColorStyle + '_theme-' + _options.theme}}">
       <div>
          <ws:partial template="itemContentTpl"/>
       </div>

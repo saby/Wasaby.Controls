@@ -7,7 +7,7 @@ import {default as OperationsController} from 'Controls/_operations/ControllerCl
 
 /**
  * Контрол используется для организации множественного выбора.
- * Он обеспечивает связь между Controls/operationsPanel:Containter и {@link Controls/list:Containter}.
+ * Он обеспечивает связь между {@link Controls/operations:PanelContainer} и {@link Controls/list:Container}.
  *
  * @remark
  * Полезные ссылки:

@@ -11,7 +11,8 @@ import {
     IOffset,
     validateIntersectionEntries,
     isHidden,
-    IFixedEventData
+    IFixedEventData,
+    getGapFixSize
 } from 'Controls/_scroll/StickyHeader/Utils';
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import fastUpdate from './FastUpdate';
@@ -19,6 +20,8 @@ import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
+import {IScrollState} from '../Utils/ScrollState'
+import {SCROLL_POSITION} from '../Utils/Scroll';
 
 export const enum SHADOW_VISIBILITY {
     visible = 'visible',
@@ -59,12 +62,6 @@ export interface IStickyHeaderOptions extends IControlOptions {
  * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
  */
 
-// For android, use a large patch, because 1 pixel is not enough. For all platforms we use the minimum values since
-// there may be layout problems if the headers will have paddings, margins, etc.
-const
-    ANDROID_GAP_FIX_OFFSET: number = 3,
-    MOBILE_GAP_FIX_OFFSET: number = 1;
-
 interface IStickyHeaderContext {
     stickyHeader: Function;
 }
@@ -97,7 +94,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
      */
     protected _isMobilePlatform: boolean = detection.isMobilePlatform;
     protected _isMobileAndroid: boolean = detection.isMobileAndroid;
-    protected _isSafari13: boolean = StickyHeader._isSafari13();
     protected _isIOSChrome: boolean = StickyHeader._isIOSChrome();
     protected _isMobileIOS: boolean = detection.isMobileIOS;
 
@@ -116,6 +112,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _cachedStyles: CSSStyleDeclaration = null;
     private _cssClassName: string = null;
     private _canScroll: boolean = false;
+    private _scrollState: IScrollState = {
+        canVerticalScroll: false
+    };
     private _negativeScrollTop: boolean = false;
     private _lastFixedPosition: string = '';
 
@@ -141,13 +140,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._backgroundStyle = this._options.backgroundVisible !== false ? this._options.backgroundStyle : BACKGROUND_STYLE.TRANSPARENT;
     }
 
-    protected _afterUpdate(): void {
-        this.updateBottomShadowStyle();
-    }
-
     protected _beforePaintOnMount(): void {
-        RegisterUtil(this, 'updateFixed', this._updateFixed.bind(this));
-
         this._notify('stickyRegister', [{
             id: this._index,
             inst: this,
@@ -162,7 +155,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
         // отказаться от closest.
-        this._scroll = this._container.closest('.controls-Scroll');
+        this._scroll = this._container.closest('.controls-Scroll, .controls-Scroll-Container');
         if (!this._scroll) {
             Logger.warn('Controls.scroll:StickyHeader: Используются фиксация заголовков вне Controls.scroll:Container. Либо используйте Controls.scroll:Container, либо уберите, либо отключите фиксацию заголовков в контролах в которых она включена.', this);
             return;
@@ -176,15 +169,19 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         // Переделать на новые события
         // https://online.sbis.ru/opendoc.html?guid=ca70827b-ee39-4d20-bf8c-32b10d286682
-        RegisterUtil(this, 'listScroll', this._onScrollStateChanged);
+        RegisterUtil(this, 'listScroll', this._onScrollStateChangedOld);
+
+        RegisterUtil(this, 'scrollStateChanged', this._onScrollStateChanged);
+
+        RegisterUtil(this, 'controlResize', this._resizeHandler);
 
         this._initObserver();
-        this.updateBottomShadowStyle();
     }
 
     protected _beforeUnmount(): void {
-        UnregisterUtil(this, 'updateFixed');
         UnregisterUtil(this, 'listScroll');
+        UnregisterUtil(this, 'controlResize');
+        UnregisterUtil(this, 'scrollStateChanged');
         if (this._model) {
             //Let the listeners know that the element is no longer fixed before the unmount.
             this._fixationStateChangeHandler('', this._model.fixedPosition);
@@ -203,7 +200,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
-        return getOffset(parentElement, this._container, position);
+        let offset = getOffset(parentElement, this._container, position);
+        if (this._model?.isFixed()) {
+            offset += getGapFixSize();
+        }
+        return offset;
     }
 
     resetSticky(): void {
@@ -214,6 +215,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         const container: HTMLElement = this._container;
         if (!isHidden(container)) {
             this._height = container.offsetHeight;
+            if (this._model?.isFixed()) {
+                this._height -= getGapFixSize();
+            }
         }
         return this._height;
     }
@@ -225,9 +229,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set top(value: number) {
         if (this._stickyHeadersHeight.top !== value) {
             this._stickyHeadersHeight.top = value;
+            // При установке top'а учитываем gap
+            const offset = getGapFixSize();
+            const topValue = value - offset;
             // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
             fastUpdate.mutate(() => {
-                this._container.style.top = `${value}px`;
+                this._container.style.top = `${topValue}px`;
             });
             this._forceUpdateIfCanScroll();
         }
@@ -240,8 +247,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set bottom(value: number) {
         if (this._stickyHeadersHeight.bottom !== value) {
             this._stickyHeadersHeight.bottom = value;
+            // При установке bottom учитываем gap
+            const offset = getGapFixSize();
+            const bottomValue = value - offset;
             // ОБновляем сразу же dom дерево что бы не было скачков в интерфейсе
-            this._container.style.bottom = `${value}px`;
+            this._container.style.bottom = `${bottomValue}px`;
             this._forceUpdateIfCanScroll();
         }
     }
@@ -250,7 +260,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._options.shadowVisibility;
     }
 
-    protected _onScrollStateChanged(eventType: string, scrollState): void {
+    protected _onScrollStateChangedOld(eventType: string, scrollState): void {
         if (eventType === 'canScroll') {
             this._canScroll = true;
             if (this._model.fixedPosition !== this._lastFixedPosition) {
@@ -263,12 +273,29 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
+    protected _onScrollStateChanged(scrollState: IScrollState): void {
+        let changed: boolean = false;
+        if (scrollState.canVerticalScroll !== this._scrollState.canVerticalScroll &&
+                this._model.fixedPosition !== this._lastFixedPosition) {
+            this._forceUpdate();
+        }
+        this._canScroll = scrollState.canVerticalScroll;
+        this._negativeScrollTop = scrollState.scrollTop < 0;
+
+        if (this._scrollState.verticalPosition !== scrollState.verticalPosition) {
+            changed = true;
+        }
+
+        this._scrollState = scrollState;
+
+        if (changed) {
+            this._forceUpdate();
+        }
+    }
+
     protected _resizeHandler(): void {
         if (this._needUpdateObserver) {
             this._initObserver();
-        }
-        if (this._isSafari13 || this._isIOSChrome) {
-            this.updateBottomShadowStyle();
         }
     }
 
@@ -406,11 +433,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
          * In this way, the content of the header does not change visually, and the free space disappears.
          * The offset must be at least as large as the free space. Take the nearest integer equal to one.
          */
-        if (this._isMobileAndroid) {
-            offset = ANDROID_GAP_FIX_OFFSET;
-        } else if (this._isMobilePlatform) {
-            offset = MOBILE_GAP_FIX_OFFSET;
-        }
+        offset = getGapFixSize();
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
 
@@ -485,34 +508,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             }
         }
 
-        // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
-        const container: HTMLElement = this._getNormalizedContainer();
-        if ((this._isSafari13 || this._isIOSChrome) && position === POSITION.bottom) {
-            return 'top: ' + (coord + (container ? container.offsetHeight : 0)) + 'px;';
-        }
-
         return position + ': -' + coord + 'px;';
     }
 
-    updateBottomShadowStyle(): void {
-        if (this._isSafari13 || this._isIOSChrome) {
-            const container: HTMLElement = this._getNormalizedContainer();
-            // "bottom" and "right" styles does not work in list header control on ios 13. Use top instead.
-            // There's no container at first building of template.
-            if (container) {
-                const offsetWidth = container.offsetWidth;
-                let offsetHeight = container.offsetHeight;
-                if (this._options.position.indexOf('bottom') !== -1) {
-                    offsetHeight -= MOBILE_GAP_FIX_OFFSET;
-                }
-                this._bottomShadowStyle =
-                     `bottom: unset; right: unset; top:${offsetHeight}px; width:${offsetWidth}px;`;
-                this._topShadowStyle = `right: unset; width:${offsetWidth}px;`;
-            }
-        }
-    }
-
-    protected _updateFixed(ids: number[]): void {
+    protected updateFixed(ids: number[]): void {
         const isFixed: boolean = ids.indexOf(this._index) !== -1;
         if (this._isFixed !== isFixed) {
             if (!this._model) {
@@ -540,8 +539,18 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
 
-        return !!((this._context.stickyHeader?.shadowPosition &&
-            this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
+        let shadowEnabled: boolean = false;
+
+        if (this._scrollState.verticalPosition &&
+            (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
+            shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END)) {
+            shadowEnabled = true;
+        }
+
+        let oldShadowEnabled: boolean = this._context.stickyHeader?.shadowPosition &&
+            this._context.stickyHeader?.shadowPosition?.indexOf(fixedPosition) !== -1;
+
+        return !!((shadowEnabled || oldShadowEnabled) &&
             ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isFixed)) &&
             this._options.shadowVisibility === SHADOW_VISIBILITY.visible &&
             (this._options.mode === MODE.stackable || this._isFixed));
@@ -572,10 +581,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     static _theme: string[] = ['Controls/scroll', 'Controls/Classes'];
-
-    static _isSafari13(): boolean {
-        return detection.safariVersion >= 13;
-    }
 
     static _isIOSChrome(): boolean {
         return detection.isMobileIOS && detection.chrome;

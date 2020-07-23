@@ -6,18 +6,23 @@
    width: 100%;
    position: relative;
 }
-.controls-Grid_dragging_process .controls-Grid__row-ladder-cell {
-   display: none;
-}
-.controls-Grid_dragging_process .controls-Grid__row-cell__content_ladderHeader {
-   visibility: visible;
+.controls-Grid_dragging_process {
+   .controls-Grid__row-ladder-cell {
+      display: none;
+   }
+
+   .controls-Grid__row-cell__content_ladderHeader .controls-Grid__row-cell__ladder-content:not(.controls-Grid__row-cell__ladder-content_hiddenForLadder),
+   .controls-Grid__row-cell__content_ladderHeader {
+      visibility: visible;
+   }
 }
 .controls-GridView__itemV_marker-default_theme-@{themeName} {
    position: absolute;
    width: @marker_thickness_list;
    background-color: @marker_color_list;
    left: 0;
-   top: 0px;
+   top: 0;
+   z-index: 2;
    height: 100%;
 }
 
@@ -162,6 +167,41 @@
    position: relative;
 }
 
+.controls-Grid__row-cell_background_danger_theme-@{themeName},
+.controls-Grid__row-cell__content_background_danger_theme-@{themeName} {
+   background-color: @danger_color;
+}
+
+.controls-Grid__row-cell_background_success_theme-@{themeName},
+.controls-Grid__row-cell__content_background_success_theme-@{themeName} {
+   background-color: @success_color;
+}
+
+.controls-Grid__row-cell_background_warning_theme-@{themeName},
+.controls-Grid__row-cell__content_background_warning_theme-@{themeName} {
+   background-color: @warning_color;
+}
+
+.controls-Grid__row-cell_background_primary_theme-@{themeName},
+.controls-Grid__row-cell__content_background_primary_theme-@{themeName} {
+   background-color: @primary_color;
+}
+
+.controls-Grid__row-cell_background_secondary_theme-@{themeName},
+.controls-Grid__row-cell__content_background_secondary_theme-@{themeName} {
+   background-color: @secondary_color;
+}
+
+.controls-Grid__row-cell_background_unaccented_theme-@{themeName},
+.controls-Grid__row-cell__content_background_unaccented_theme-@{themeName} {
+   background-color: @unaccented_color;
+}
+
+.controls-Grid__row-cell_background_readonly_theme-@{themeName},
+.controls-Grid__row-cell__content_background_readonly_theme-@{themeName} {
+   background-color: @readonly_color;
+}
+
 .controls-Grid__row-cell_theme-@{themeName} {
    min-height: @cell_min-height_grid;
 }
@@ -170,6 +210,16 @@
    flex-grow: 1;
    box-sizing: border-box;
    max-width: 100%;
+}
+
+// Хак для новой версии хрома (84 dev), заведён issue в поддержке хрома. В IE ломает вёрстку в автотестах
+// https://online.sbis.ru/opendoc.html?guid=2f994b36-59aa-49ba-8c49-d1a6c4e9084f
+// https://bugs.chromium.org/p/chromium/issues/detail?id=1103592
+.ws-is-chrome {
+   .controls-Grid__row-cell__content,
+   .controls-Grid__row-cell_colspaned {
+      height: 100%;
+   }
 }
 
 .controls-Grid__itemAction.controls-itemActionsV_outside_theme-@{themeName} {
@@ -245,18 +295,24 @@
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName}:not(.controls-Grid__row-ladder-cell) {
       background-color: @item_hover_background-color_list;
    }
-
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-background-default_theme-@{themeName} {
+      background-color: @item_hover_background-color_list;
+   }
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-background-stack_theme-@{themeName} {
       background-color: @item_hover_background-color_list;
    }
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content_hiddenForLadder {
       background-color: @item_hover_background-color_list;
    }
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content {
+      background-color: @item_hover_background-color_list;
+   }
 
    .controls-BaseControl_showActions_delayed .controls-Grid__row:hover {
-      > .controls-Grid__row-cell,
       > .controls-itemActionsV__container,
-      > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper {
+      > .controls-Grid__row-cell,
+      > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper,
+      > .controls-Grid__row-cell .controls-Grid__row-cell__content {
          > .controls-itemActionsV {
             transition: opacity 500ms step-end;
          }
@@ -266,9 +322,10 @@
    .controls-BaseControl_showActions_visible .controls-Grid .controls-Grid__row,
    .controls-BaseControl_showActions_onhover .controls-Grid__row:hover,
    .controls-BaseControl_showActions_delayed .controls-Grid__row:hover {
-      > .controls-Grid__row-cell,
       > .controls-itemActionsV__container,
-      > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper {
+      > .controls-Grid__row-cell,
+      > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper,
+      > .controls-Grid__row-cell .controls-Grid__row-cell__content {
          > .controls-itemActionsV {
             opacity: 1;
             visibility: visible;
@@ -288,8 +345,7 @@
 }
 .ws-is-hover .controls-BaseControl_showActions_visible .controls-Grid__row,
 .ws-is-hover .controls-BaseControl_showActions_delayed .controls-Grid__row:hover,
-.ws-is-hover .controls-BaseControl_showActions_onhover .controls-Grid__row:hover,
-.ws-is-touch .controls-GridView__item_active_theme-@{themeName} {
+.ws-is-hover .controls-BaseControl_showActions_onhover .controls-Grid__row:hover {
    .controls-Grid__editArrow-blur_theme-@{themeName},
    .controls-Grid__editArrow-wrapper_theme-@{themeName} {
       visibility: visible;
@@ -308,6 +364,11 @@
       visibility: visible;
       opacity: 1;
    }
+
+   /** При редактировании по месту, переопределяем фон содержимого ячейки */
+   .controls-Grid__row-cell__content {
+      background-color: @item_editing_background-color_list;
+   }
 }
 
 .controls-Grid__row-additional_ladderWrapper {
@@ -316,12 +377,14 @@
    bottom: 0;
 }
 
-.controls-Grid__row-cell__ladder-content_displayNoneForLadder {
-   display: none;
-}
-.controls-Grid__row-cell__ladder-content_hiddenForLadder,
-.controls-Grid__row-cell__content_hiddenForLadder .controls-Grid__row-cell__ladder-content {
-   visibility: hidden;
+.controls-Grid_support-ladder {
+   .controls-Grid__row-cell__ladder-content_displayNoneForLadder {
+      display: none;
+   }
+   .controls-Grid__row-cell__ladder-content_hiddenForLadder,
+   .controls-Grid__row-cell__content_hiddenForLadder .controls-Grid__row-cell__ladder-content {
+      visibility: hidden;
+   } 
 }
 .controls-Grid__row-cell__content_hiddenForLadder {
    z-index: 1;
@@ -512,7 +575,7 @@
 .controls-GridView__item_active_theme-@{themeName} {
    background-color: @item_hover_background-color_list;
 }
-.controls-GridView__item_active_theme-@{themeName} .controls-Grid__row-cell__content_hiddenForLadder {
+.controls-GridView__item_active_theme-@{themeName} .controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName} {
    background-color: @item_hover_background-color_list;
 }
 
@@ -579,7 +642,9 @@
    // https://online.sbis.ru/opendoc.html?guid=6d560d7a-c140-4d06-a1b6-53b326efe950
    // иначе все position: absolute элементы внутри position: sticky
    // начинают сроиться относительно родителя уровнем выше
-   transform: translateZ(0);
+   // translateZ лечит высоту, но ломает ширину внутри sticky контейнер
+   // translateY правит обе проблемы, с ним нормализуетя и высота и ширина, поэтому используем его
+   transform: translateY(0);
 }
 
 .controls-Grid__row-cell_selected-masterClassic_theme-@{themeName} {
@@ -654,8 +719,9 @@
 }
 
 .ws-is-hover {
-   .controls-Grid__row_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName},
-   .controls-Grid__row_masterClassic_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
+
+   .controls-Grid__row_highlightOnHover_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName},
+   .controls-Grid__row_highlightOnHover_masterClassic_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
       background-color: @master_item_hover_background-color_list;
    }
    .controls-Grid__row_highlightOnHover_master_theme-@{themeName}:hover .controls-background-master_theme-@{themeName},

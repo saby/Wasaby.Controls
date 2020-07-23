@@ -5,10 +5,10 @@ import {RecordSet} from 'Types/collection';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 
 interface IItem {
-    title: string,
-    id: number,
-    keyProperty: string,
-    count: number,
+    title: string;
+    id: number;
+    keyProperty: string;
+    count: number;
 }
 
 export default class extends Control {
@@ -16,8 +16,8 @@ export default class extends Control {
     private _viewSource: Memory;
     private _itemsCount: number = 1000;
 
-    //@ts-ignore
-    protected get _page() {
+    protected get _page(): number {
+        // tslint:disable-next-line
         return Math.ceil(this._itemsCount / 100 );
     }
 
@@ -25,7 +25,7 @@ export default class extends Control {
         keyProperty: 'id',
         count: 1000,
         beforeCreateItemCallback: (item: IItem) => {
-            item.title = `Запись с ключом ${item.id}.`
+            item.title = `Запись с ключом ${item.id}.`;
         }
     });
 
@@ -36,7 +36,7 @@ export default class extends Control {
                 title: `Запись с ключом ${this._itemsCount}.`
             }]
         }));
-        //@ts-ignore
+
         this._children.list.reload();
     }
 

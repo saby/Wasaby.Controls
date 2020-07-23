@@ -2,5 +2,5 @@
 <ws:partial template="{{content}}" 
             fix1177531473="{{itemData.getVersion()}}" 
             attr:class="controls-Grid__row-cell__ladder-content 
-                        {{(stickyProperty === ladderProperty || !stickyProperty) && itemData.ladder[ladderProperty].ladderLength >= 1 ? '' : 'controls-Grid__row-cell__ladder-content_hiddenForLadder'}} 
+                        {{(stickyProperty === ladderProperty || !stickyProperty) && itemData.ladder[ladderProperty].ladderLength >= 1 ? '' : 'controls-Grid__row-cell__ladder-content_hiddenForLadder'}}  
                         {{itemData.getLadderContentClasses(stickyProperty, ladderProperty)}}"/>

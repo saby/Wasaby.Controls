@@ -10,7 +10,7 @@ import {isEqual} from 'Types/object';
 import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
-import {detection} from 'Env/Env';
+import {detection, IoC} from 'Env/Env';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {factory as CollectionFactory, RecordSet} from 'Types/collection';
@@ -20,6 +20,8 @@ import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {DependencyTimer} from 'Controls/Utils/FastOpen';
+import {load} from 'Core/library';
 
 /**
  * Контрол "Объединенный фильтр". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
@@ -630,6 +632,25 @@ var _private = {
             }
         });
         return needReload;
+    },
+
+    _loadDependencies: function(): Promise<unknown> {
+        try {
+            const detailPanelTemplateName = this._options.detailPanelTemplateName;
+
+            if (!this._loadOperationsPanelPromise) {
+                this._loadOperationsPanelPromise = Promise.all([
+                   import('Controls/filterPopup'),
+                    // load потому-что в detailPanelTemplateName могут
+                    // передаваться значения вида Controls/filter:Popup, что не поддерживает import()
+                    (typeof detailPanelTemplateName === 'string') ?
+                       load(detailPanelTemplateName) : null
+                ]);
+            }
+            return this._loadOperationsPanelPromise;
+        } catch (e) {
+            IoC.resolve('ILogger').error('_filter:View', e);
+        }
     }
 };
 
@@ -641,6 +662,7 @@ var Filter = Control.extend({
     _idOpenSelector: null,
     _dateRangeItem: null,
     _hasResetValues: true,
+    _dependenciesTimer: null,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};
@@ -661,6 +683,15 @@ var Filter = Control.extend({
         return resultDef;
     },
 
+    _mouseEnterHandler: function(event: SyntheticEvent<MouseEvent>) {
+        if (!this._options.readOnly) {
+            if (!this._dependenciesTimer) {
+                this._dependenciesTimer = new DependencyTimer();
+            }
+            this._dependenciesTimer.start(_private._loadDependencies.bind(this));
+        }
+    },
+
     _beforeUpdate: function(newOptions) {
         if (newOptions.source && newOptions.source !== this._options.source) {
             const self = this;
@@ -673,6 +704,12 @@ var Filter = Control.extend({
                 });
             } else if (_private.isNeedHistoryReload(this._configs)) {
                 resultDef = _private.reload(this);
+            } else if (this._loadDeferred && !this._loadDeferred.isReady()) {
+                resultDef = this._loadDeferred.addCallback((): void => {
+                    _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
+                        _private.updateText(self, self._source, self._configs);
+                    });
+                });
             } else {
                 resultDef = _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
                     _private.updateText(self, self._source, self._configs);
