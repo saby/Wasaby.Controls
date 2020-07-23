@@ -145,14 +145,10 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
          __ContentLayer.default._private.getDropDownContainerSize = function() {
             return {height: 500};
          };
-         __ContentLayer.default._private.getScrollContainerSize = function() {
-            return {top: 100};
-         };
          self._container = getContainerIE({top: 40});
 
          __ContentLayer.default._private.updateMaxHeight(self);
-         assert.equal(self._maxScrollHeight, '400px');
-         assert.equal(self._maxContainerHeight, '460px');
+         assert.equal(self._maxHeight, '460px');
       });
 
       it('Suggest::_afterUpdate', function() {
