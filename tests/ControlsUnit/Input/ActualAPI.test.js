@@ -62,18 +62,6 @@ define(
             assert.equal(validationStatus('warning', 'invalid'), 'invalid');
             assert.equal(validationStatus('primary', 'invalid'), 'invalid');
          });
-         it('heightLine', function() {
-            const heightLine = input.ActualAPI.heightLine;
-
-            assert.equal(heightLine('s', undefined), 's');
-            assert.equal(heightLine('m', undefined), 'm');
-            assert.equal(heightLine('l', undefined), 'l');
-            assert.equal(heightLine('default', undefined), 'm');
-            assert.equal(heightLine(undefined, 'xs'), 'xs');
-            assert.equal(heightLine(undefined, 'xs'), 'xs');
-            assert.equal(heightLine(undefined, 'xs'), 'xs');
-            assert.equal(heightLine(undefined, 'xs'), 'xs');
-         });
       });
    }
 );

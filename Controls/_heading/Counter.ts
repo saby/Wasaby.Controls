@@ -2,11 +2,8 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import counterTemplate = require('wml!Controls/_heading/Counter/Counter');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {IFontColorStyle, IFontColorStyleOptions, IFontSize, IFontSizeOptions} from 'Controls/interface';
-import {counterSize, counterStyle} from './_ActualAPI';
 
 export interface ICounterOptions extends IControlOptions, IFontColorStyleOptions, IFontSizeOptions {
-    style?: 'primary' | 'secondary' | 'disabled';
-    size?: 's' | 'm' | 'l';
 }
 
 /**
@@ -53,18 +50,6 @@ class Counter extends Control<ICounterOptions> implements IFontColorStyle, IFont
     '[Controls/_interface/IFontSize]': boolean = true;
 
     protected _template: TemplateFunction = counterTemplate;
-    protected _fontSize: string;
-    protected _fontColorStyle: string;
-
-    protected _beforeMount(newOptions: ICounterOptions): void {
-        this._fontSize = counterSize(newOptions.size, newOptions.fontSize);
-        this._fontColorStyle = counterStyle(newOptions.style, newOptions.fontColorStyle);
-    }
-
-    protected _beforeUpdate(newOptions: ICounterOptions): void {
-        this._fontSize = counterSize(newOptions.size, newOptions.fontSize);
-        this._fontColorStyle = counterStyle(newOptions.style, newOptions.fontColorStyle);
-    }
 
     static _theme: string[] = ['Controls/heading', 'Controls/Classes'];
 
