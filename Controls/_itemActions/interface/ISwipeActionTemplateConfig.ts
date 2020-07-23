@@ -1,12 +1,9 @@
-import {TActionCaptionPosition} from './IItemActions';
+import {TActionCaptionPosition} from './IItemAction';
+import {ISwipeConfig} from 'Controls/display';
 
-export interface ISwipeActionTemplateConfig {
-    theme: string;
-    paddingSize: 's'|'m'|'l';
-    actionCaptionPosition: TActionCaptionPosition;
-    itemActionsSize?: 's'|'m'|'l';
+export interface ISwipeActionTemplateConfig extends ISwipeConfig {
+    theme?: string;
+    actionCaptionPosition?: TActionCaptionPosition;
     actionAlignment?: 'horizontal'|'vertical';
     hasActionWithIcon?: boolean;
-    needIcon?: Function;
-    needTitle?: Function;
 }

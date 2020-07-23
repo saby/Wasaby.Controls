@@ -50,6 +50,12 @@ export interface IPreviewer {
  */
 
 /**
+ * @typedef {Object} offset
+ * @property {Number} vertical
+ * @property {Number} horizontal
+ */
+
+/**
  * @typedef {Enum} vertical
  * @variant top
  * @variant bottom
@@ -71,6 +77,11 @@ export interface IPreviewer {
 /**
  * @name Controls/_popup/interface/IPreviewer#targetPoint
  * @cfg {direction} Точка позиционнирования всплывающего окна относительно вызывающего элемента.
+ */
+
+/**
+ * @name Controls/_popup/interface/IPreviewer#offset
+ * @cfg {offset} Устанавливает отступы от точки позиционнирования до всплывающего окна
  */
 
 /**

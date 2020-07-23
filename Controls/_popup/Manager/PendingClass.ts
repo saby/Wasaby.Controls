@@ -85,7 +85,9 @@ class PendingClass {
             this._pendings[root][this._pendingsCounter].loadingIndicatorId = this._notify('showIndicator', [indicatorConfig]);
         }
 
-        def.finally(function(pendingsCounter: number, res) {
+        def.catch(() => ({
+            //Ставим заглушку для того, чтобы не падали ошибки в консоль
+        })).finally(function(pendingsCounter: number, res) {
             this.unregisterPending(root, pendingsCounter);
             return res;
         }.bind(this, this._pendingsCounter));

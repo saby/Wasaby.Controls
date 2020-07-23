@@ -2,7 +2,6 @@ import Tree from './Tree';
 import TreeItem from './TreeItem';
 import SearchStrategy from './itemsStrategy/Search';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
-import {register} from 'Types/di';
 
 /**
  * Проекция для режима поиска. Объединяет развернутые узлы в один элемент с "хлебной крошкой" внутри.
@@ -25,4 +24,3 @@ Object.assign(Search.prototype, {
     '[Controls/_display/Search]': true
 });
 
-register('Controls/display:Search', Search, {instantiate: false});

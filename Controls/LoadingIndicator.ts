@@ -105,6 +105,11 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     protected _afterMount(cfg: ILoadingIndicatorOptions): void {
         if (cfg.mainIndicator) {
             LoadingIndicatorOpener._setIndicator(this);
+            // Вернул для индикаторов, вызванных из кода
+            requirejs(['Controls/popup'], (popup) => {
+                ManagerController = popup.Controller;
+                ManagerController.setIndicator(this);
+            });
         }
 
         // TODO Откатить DOM-решение или доказать невозмодность другого в задаче по ссылке ниже.
@@ -190,11 +195,11 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
      * @returns {String} Возвращает id индикатора загрузки. Используется в методе {@link hide} для закрытия индикатора.
      * @see hide
      */
-    show(config: ILoadingIndicatorOptions, waitPromise: Promise<any>): string {
+    show(config: ILoadingIndicatorOptions, waitPromise?: Promise<any>): string {
         return this._show({...config}, waitPromise);
     }
 
-    private _show(config: ILoadingIndicatorOptions, waitPromise: Promise<any>): string {
+    private _show(config: ILoadingIndicatorOptions, waitPromise?: Promise<any>): string {
         const newCfg = this._prepareConfig(config, waitPromise);
         const isOpened = this._getItemIndex(newCfg.id) > -1;
         if (isOpened) {

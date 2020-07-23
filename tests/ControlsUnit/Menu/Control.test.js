@@ -188,6 +188,33 @@ define(
                assert.equal(selectedKeys[0], 1);
             });
 
+            it('multiSelect=true, click on fixed item', function() {
+               menuControl._options.multiSelect = true;
+               item = item.clone();
+               item.set('pinned', true);
+
+               menuControl._itemClick('itemClick', item, {});
+               assert.equal(selectedItem.getKey(), 1);
+
+               menuControl._selectionChanged = true;
+               menuControl._itemClick('itemClick', item, {});
+               assert.equal(selectedItem.getKey(), 1);
+            });
+
+            it('multiSelect=true, click on history item', function() {
+               menuControl._options.multiSelect = true;
+               item = item.clone();
+               item.set('pinned', true);
+               item.set('HistoryId', null);
+
+               menuControl._itemClick('itemClick', item, {});
+               assert.equal(selectedItem.getKey(), 1);
+
+               menuControl._selectionChanged = true;
+               menuControl._itemClick('itemClick', item, {});
+               assert.equal(selectedKeys[0], 1);
+            });
+
             it('check pinClick', function() {
                let isPinClick = false;
                let nativeEvent = {

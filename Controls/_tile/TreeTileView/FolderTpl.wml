@@ -14,7 +14,7 @@
               attr:class="{{itemData.multiSelectClassList}}">
       <ws:templateOptions triState="{{true}}"
                          checkboxReadOnly="{{checkboxReadOnly}}"
-                         multiSelectStatus="{{itemData.multiSelectStatus}}"
+                         multiSelectStatus="{{itemData.isSelected()}}"
                          key="{{itemData.key}}" />
   </ws:partial>
   <span attr:class="controls-TreeTileView__nodeIcon_theme-{{theme}} icon-large icon-Folder icon-disabled"></span>

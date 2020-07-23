@@ -1,4 +1,4 @@
-import { ISwipeConfig } from './ISwipeConfig';
+import { ISwipeActionTemplateConfig } from './ISwipeActionTemplateConfig';
 import { IItemAction, TActionCaptionPosition } from './IItemAction';
 
 export interface IMeasurer {
@@ -9,7 +9,7 @@ export interface IMeasurer {
       actionCaptionPosition: TActionCaptionPosition,
       menuButtonVisibility: 'visible'|'adaptive',
       theme: string
-   ): ISwipeConfig;
+   ): ISwipeActionTemplateConfig;
    needIcon(action: IItemAction, actionCaptionPosition: TActionCaptionPosition, hasActionWithIcon?: boolean): boolean;
    needTitle(action: IItemAction, actionCaptionPosition: TActionCaptionPosition): boolean;
 }

@@ -1,5 +1,4 @@
 import Collection, { ItemsFactory, IOptions as IBaseOptions } from './Collection';
-import { register } from 'Types/di';
 import GridCollectionItem, { IOptions as IGridCollectionItemOptions } from './GridCollectionItem';
 import { IColumnConfig } from './GridColumn';
 
@@ -36,4 +35,3 @@ Object.assign(GridCollection.prototype, {
     _$columns: null
 });
 
-register('Controls/display:GridCollection', GridCollection, {instantiate: false});

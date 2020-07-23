@@ -25,7 +25,7 @@ import {
     RecordSet
 } from 'Types/collection';
 import { isEqual } from 'Types/object';
-import {create, register} from 'Types/di';
+import {create} from 'Types/di';
 import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
@@ -3608,4 +3608,3 @@ Object.assign(Collection.prototype, {
     getIdProperty: Collection.prototype.getKeyProperty
 });
 
-register('Controls/display:Collection', Collection, {instantiate: false});

@@ -1,7 +1,6 @@
 import Collection, {ItemsFactory} from './Collection';
 import ColumnsCollectionItem from './ColumnsCollectionItem';
 
-import {register} from 'Types/di';
 import {IOptions as ICollectionItemOptions} from './ColumnsCollectionItem';
 
 export default class ColumnsCollection<
@@ -28,4 +27,3 @@ Object.assign(ColumnsCollection.prototype, {
     _itemModule: 'Controls/display:ColumnsCollectionItem'
 });
 
-register('Controls/display:ColumnsCollection', ColumnsCollection, {instantiate: false});

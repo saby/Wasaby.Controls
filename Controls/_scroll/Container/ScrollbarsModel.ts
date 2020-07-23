@@ -28,7 +28,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     private _showScrollbarOnHover: boolean = true;
 
     private _models: object = {};
-    private _canScroll: boolean;
+    private _canScroll: boolean = false;
     private _scrollContainerStyles: string;
     private _overflowHidden: boolean;
     private _styleHideScrollbar: string;
