@@ -1,9 +1,9 @@
 import rk = require('i18n!Controls');
-import { ISwipeConfig  } from 'Controls/display';
 
 import { IMeasurer } from '../interface/IMeasurer';
 import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemAction';
 import { MeasurerUtils } from './MeasurerUtils';
+import {ISwipeActionTemplateConfig} from '../interface/ISwipeActionTemplateConfig';
 
 const breakpoints: Record<
    TActionCaptionPosition,
@@ -84,7 +84,7 @@ export const verticalMeasurer: IMeasurer = {
       actionCaptionPosition: TActionCaptionPosition,
       menuButtonVisibility: 'visible'|'adaptive',
       theme: string
-   ): ISwipeConfig {
+   ): ISwipeActionTemplateConfig {
       let columnsCount = 1;
       let itemActions = MeasurerUtils.getActualActions(actions);
 

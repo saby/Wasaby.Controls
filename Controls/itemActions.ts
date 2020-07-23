@@ -27,7 +27,8 @@ export {
     TItemActionsPosition,
     TActionCaptionPosition,
     TActionDisplayMode,
-    TIconStyle
+    TIconStyle,
+    IShownItemAction
 } from './_itemActions/interface/IItemAction';
 export {IContextMenuConfig} from './_itemActions/interface/IContextMenuConfig';
 export {IItemActionsItem, IItemActionsCollection, Controller} from './_itemActions/Controller';

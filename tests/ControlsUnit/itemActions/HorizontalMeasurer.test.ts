@@ -3,7 +3,7 @@ import { stub, SinonStub } from 'sinon';
 
 import * as rk from 'i18n!ControlsUnit';
 
-import { IItemAction } from 'Controls/_itemActions/interface/IItemAction';
+import { IItemAction, IShownItemAction } from 'Controls/_itemActions/interface/IItemAction';
 import { horizontalMeasurer } from 'Controls/_itemActions/measurers/HorizontalMeasurer';
 import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
@@ -86,7 +86,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
     });
 
     describe('getSwipeConfig', () => {
-        const actions: IItemAction[] = [
+        const actions: IShownItemAction[] = [
             {
                 id: 1,
                 icon: 'icon-PhoneNull'
@@ -370,7 +370,7 @@ describe('Controls/_itemActions/measurers/HorizontalMeasurer', () => {
                     showType: 2,
                     icon: 'icon-Profile'
                 }];
-            const result: IItemAction[] = [
+            const result: IShownItemAction[] = [
                 {
                     id: 1,
                     showType: 2,

@@ -38,7 +38,14 @@ import {
     GroupItem,
     ANIMATION_STATE
 } from 'Controls/display';
-import {Controller as ItemActionsController, IItemAction, TItemActionShowType, ItemActionsTemplate, SwipeActionsTemplate} from 'Controls/itemActions';
+import {
+    Controller as ItemActionsController,
+    IItemAction,
+    IShownItemAction,
+    TItemActionShowType,
+    ItemActionsTemplate,
+    SwipeActionsTemplate
+} from 'Controls/itemActions';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
@@ -1377,7 +1384,7 @@ const _private = {
      */
     handleItemActionClick(
         self: any,
-        action: IItemAction,
+        action: IShownItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isMenuClick: boolean): void {
@@ -1402,11 +1409,13 @@ const _private = {
      */
     openItemActionsMenu(
         self: any,
-        action: IItemAction,
+        action: IShownItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        const menuConfig = _private.getItemActionsController(self).prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
+        const menuConfig = _private
+            .getItemActionsController(self)
+            .prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
         }
@@ -1419,7 +1428,7 @@ const _private = {
         clickEvent.stopImmediatePropagation();
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
-            onClose: function () {
+            onClose(): void {
                 self._onItemActionsMenuClose(this);
             }
         };
@@ -3447,10 +3456,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @param itemData
      * @private
      */
-    _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, itemData: CollectionItem<Model>): void {
+    _onItemActionsClick(
+        event: SyntheticEvent<MouseEvent>,
+        action: IShownItemAction,
+        itemData: CollectionItem<Model>
+    ): void {
         event.stopPropagation();
-        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
-        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать
+        //  Record https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(itemData);
         const key = contents ? contents.getKey() : itemData.key;
         const item = this._listViewModel.getItemBySourceKey(key) || itemData;
