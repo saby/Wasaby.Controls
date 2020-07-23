@@ -172,7 +172,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
          return 0;
       }
 
-      return selectedCollectionUtils.getCounterWidth(itemsCount);
+      return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme);
    }
 
    private _isShowCounter(itemsCount: number, maxVisibleItems: number): boolean {
