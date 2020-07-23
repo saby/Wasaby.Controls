@@ -2,11 +2,13 @@ import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TemplateFunction} from 'UI/Base';
 import ContainerBase, {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
+import * as ScrollData from 'Controls/_scroll/Scroll/Context';
 import Observer from './IntersectionObserver/Observer';
 import template = require('wml!Controls/_scroll/Container/Container');
 import baseTemplate = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 import ShadowsModel from './Container/ShadowsModel';
 import ScrollbarsModel from './Container/ScrollbarsModel';
+import PagingModel from './Container/PagingModel';
 import {
     IScrollbars,
     IScrollbarsOptions,
@@ -93,6 +95,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _shadows: ShadowsModel;
     protected _scrollbars: ScrollbarsModel;
+    protected _paging: PagingModel;
     protected _dragging: boolean = false;
 
     protected _intersectionObserverController: Observer;
@@ -110,10 +113,22 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
-    _afterMount() {
+    _afterMount(options: IContainerOptions, context) {
+
+        if (context.ScrollData?.pagingVisible) {
+            this._paging = new PagingModel();
+        }
+
         super._afterMount();
+
         this._adjustContentMarginsForBlockRender();
         this._stickyHeaderController.init(this._container);
+    }
+
+    protected _beforeUpdate(options: IContainerOptions, context) {
+         if (context.ScrollData?.pagingVisible) {
+            this._paging.isVisible = this._state.canVerticalScroll;
+         }
     }
 
     protected _afterUpdate() {
@@ -133,6 +148,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         if (isUpdated) {
             this._shadows.updateScrollState(this._state);
             this._scrollbars.updateScrollState(this._state);
+            this._paging?.update(this._state);
             this._stickyHeaderController.setCanScroll(this._state.canVerticalScroll);
             this._scrollCssClass = this._getScrollContainerCssClass(this._options);
         }
@@ -289,6 +305,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
         return this._stickyHeaderController.getHeadersHeight(position, type)
+    }
+
+    static contextTypes() {
+       return {
+          ScrollData
+       };
     }
 
     static _theme: string[] = ['Controls/scroll'];
