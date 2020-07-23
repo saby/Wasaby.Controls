@@ -139,6 +139,18 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
          assert.equal(self._height, '400px');
       });
 
+      it('Suggest::_private.updateMaxHeight', function() {
+         var self = getComponentObject();
+         self._forceUpdate = function() {};
+         __ContentLayer.default._private.getDropDownContainerSize = function() {
+            return {height: 500};
+         };
+         self._container = getContainerIE({top: 40});
+
+         __ContentLayer.default._private.updateMaxHeight(self);
+         assert.equal(self._maxHeight, '460px');
+      });
+
       it('Suggest::_afterUpdate', function() {
          const layer = new __ContentLayer.default();
          const sandbox = sinon.createSandbox();
@@ -157,6 +169,8 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
             }
          });
          sandbox.replace(__ContentLayer.default._private, 'updateHeight', () => {});
+         __ContentLayer.default._private.getScrollContainerSize = function() {return {top: 0}};
+         layer._container = getContainer({top: 0});
 
          layer._afterUpdate();
          assert.isTrue(resizeStarted);
