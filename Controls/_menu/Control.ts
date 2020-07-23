@@ -248,7 +248,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (MenuControl._isPinIcon(sourceEvent.target)) {
             this._pinClick(event, item);
         } else {
-            if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem.getContents())) {
+            if (this._options.multiSelect && this._selectionChanged &&
+                !this._isEmptyItem(treeItem.getContents()) && !MenuControl._isFixedItem(item)) {
                 this._changeSelection(key, treeItem);
                 this._updateApplyButton();
 
@@ -497,6 +498,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _changeSelection(key: string|number|null, treeItem: CollectionItem<Model>): void {
+        const selectedItems = this._listModel.getSelectedItems();
+        if (selectedItems.length === 1 && MenuControl._isFixedItem(selectedItems[0].getContents())) {
+            MenuControl._selectItem(this._listModel, selectedItems[0].getContents().getKey(), false);
+        }
         MenuControl._selectItem(this._listModel, key, !treeItem.isSelected());
 
         const isEmptySelected: boolean = this._options.emptyText && !this._listModel.getSelectedItems().length;
@@ -814,6 +819,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private static _isHistoryItem(item: Model): boolean {
         return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
+    }
+
+    private static _isFixedItem(item: Model): boolean {
+        return !item.has('HistoryId') && item.get('pinned');
     }
 
     private static _additionalFilterCheck(options: IMenuControlOptions, item: Model): boolean {
