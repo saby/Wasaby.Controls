@@ -17,7 +17,7 @@
          </ws:for>
    </Controls.scroll:Container>
    <ws:if data="{{_needShowApplyButton}}">
-      <div class="controls-SimplePanel__applyButton_theme_{{_options.theme}}">
+      <div class="controls-SimplePanel__applyButton controls-SimplePanel__applyButton_theme_{{_options.theme}}">
          <Controls.buttons:Button viewMode="functionalButton"
                                   icon="icon-Yes"
                                   iconSize="m"
