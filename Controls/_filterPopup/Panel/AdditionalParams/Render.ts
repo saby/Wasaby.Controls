@@ -71,6 +71,10 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
         return column === currentColumn;
     }
 
+    protected _isGroup(collectionItem: CollectionItem<IFilterItem> | GroupItem<IFilterItem>): boolean {
+        return collectionItem instanceof GroupItem;
+    }
+
     protected _beforeUpdate(options: IAdditionalRenderOptions): void {
         if (this._options.source !== options.source) {
             this._collection = this._getCollection(options);
