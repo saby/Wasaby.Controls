@@ -325,7 +325,8 @@ BaseLookupView.getDefaultOptions = function () {
         displayProperty: 'title',
         multiSelect: false,
         maxVisibleItems: 7,
-        isInputVisible: true
+        isInputVisible: true,
+        horizontalPadding: 'xs'
     };
 };
 

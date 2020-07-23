@@ -133,7 +133,8 @@ export default abstract class BaseLookup extends Control {
     static getDefaultOptions(): object {
         return {
             selectedKeys: [],
-            multiSelect: false
+            multiSelect: false,
+            horizontalPadding: 'xs'
         };
     }
 

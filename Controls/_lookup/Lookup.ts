@@ -39,6 +39,8 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
  * @mixes Controls/interface/IInputField
  * @mixes Controls/interface/IInputStyle
  * @mixes Controls/_interface/IValidationStatus
+ * @mixes Controls/input:IBorderVisibility
+ * @mixes Controls/input:IPadding
  * @control
  * @public
  * @author Герасимов А.М.

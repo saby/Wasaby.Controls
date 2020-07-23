@@ -302,7 +302,8 @@ LookupView.getDefaultOptions = function() {
    return {
       displayProperty: 'title',
       multiSelect: false,
-      maxVisibleItems: 7
+      maxVisibleItems: 7,
+      horizontalPadding: 'xs'
    };
 };
 
