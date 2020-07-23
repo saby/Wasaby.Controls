@@ -34,7 +34,7 @@
       <ws:partial template="{{_options.emptyTemplate}}"/>
    </ws:else>
    <ws:if data="{{_arrowVisible}}">
-      <div class="controls-FilterPanel__separator" title="{{!_isMaxHeight ? rk('Свернуть') : rk('Развернуть')}}">
+      <div class="controls-FilterPanel__separator" title="{{!_isMaxHeight ? rk('Свернуть', 'ПанельФильтра') : rk('Развернуть', 'ПанельФильтра')}}">
          <Controls.toggle:BigSeparator
                  value="{{!_isMaxHeight}}"
                  on:click="_clickSeparatorHandler()"/>
