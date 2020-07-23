@@ -2951,7 +2951,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
                 collection: this.getViewModel(),
-                ...newOptions
+               needScrollCalculation: this._needScrollCalculation, ...newOptions
             });
         }
 

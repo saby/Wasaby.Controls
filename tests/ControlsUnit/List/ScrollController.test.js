@@ -35,6 +35,25 @@ define([
                })
             });
          });
+
+         it('should init observering if needScrollCalculation was updated', () => {
+            let items = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: {}
+            });
+            let model = new ListViewModel({
+                  items: items,
+                  keyProperty: 'id'
+               });
+            sinon.stub(scrollController, '_initVirtualScroll').callsFake(() => {});
+            const spy = sinon.spy(scrollController, '_initModelObserving');
+            scrollController._options.collection = model;
+            scrollController.update({
+               collection: model,
+               needScrollCalculation: true
+            });
+            assert.isTrue(spy.calledOnce);
+         });
       });
 
       describe('._registerObserver()', () => {
