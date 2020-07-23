@@ -36,7 +36,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     private _scrollLockedPosition: number = null;
     protected _scrollCssClass: string;
 
-    protected _tmplNotify: tmplNotify;
+    protected _tmplNotify: Function = tmplNotify;
 
     // Виртуальный скролл
     private _topPlaceholderSize: number = 0;
