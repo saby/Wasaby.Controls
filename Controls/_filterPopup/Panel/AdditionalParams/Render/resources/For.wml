@@ -3,11 +3,6 @@
          <ws:partial template="{{item.getItemTemplate(_options.itemTemplate, _options.groupTemplate)}}"
                      itemTemplateProperty="{{_options.itemTemplateProperty}}"
                      item="{{item.getContents()}}"
-                     collectionItem="{{item}}"
-                     on:valueChanged="_valueChangedHandler(item.getContents(), 'value')"
-                     on:visibilityChanged="_propertyChanged(item.getContents(), 'visibility')"
-                     on:textValueChanged="_propertyChanged(item.getContents(), 'textValue')"
-                     on:selectedKeysChanged="_propertyChanged(item.getContents(), 'value')"
-                     on:selectedKeyChanged="_propertyChanged(item.getContents(), 'value')"/>
+                     collectionItem="{{item}}"/>
    </ws:if>
 </ws:for>

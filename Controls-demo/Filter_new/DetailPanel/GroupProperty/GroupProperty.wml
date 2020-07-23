@@ -6,7 +6,7 @@
          itemTemplateProperty="itemTemplate"
          additionalTemplateProperty="additionalTemplate"
          groupProperty="group"
-         orientation="horizontal">
+         orientation="vertical">
       </Controls.filterPopup:DetailPanel>
    </div>
 </div>
