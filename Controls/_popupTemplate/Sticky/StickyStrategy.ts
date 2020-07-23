@@ -198,12 +198,16 @@ interface IPosition {
                resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
             } else {
                _private.invertPosition(popupCfg, direction);
-               let revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
+               const revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
                let revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
                if (revertPositionOverflow > 0) {
                   if ((positionOverflow <= revertPositionOverflow)) {
                      _private.invertPosition(popupCfg, direction);
-                     _private.restrictContainer(position, property, popupCfg, positionOverflow);
+                     _private.fixPosition(position, targetCoords);
+                     positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
+                     if (positionOverflow > 0 ) {
+                        _private.restrictContainer(position, property, popupCfg, positionOverflow);
+                     }
                      resultPosition = position;
                   } else {
                      //Fix position and overflow, if the revert position is outside of the window, but it can be position in the visible area
