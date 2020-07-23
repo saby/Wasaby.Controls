@@ -62,6 +62,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
             itemClassList: this._getClassList(treeItem),
             getPropValue: ItemsUtil.getPropertyValue,
             isEmptyItem: this._isEmptyItem(treeItem),
+            isFixedItem: this._isFixedItem(treeItem),
             isSelected: treeItem.isSelected.bind(treeItem)
         };
     }
@@ -132,6 +133,15 @@ class MenuRender extends Control<IMenuRenderOptions> {
 
     private _isHistoryItem(item: Model): boolean {
         return item.get('pinned') || item.get('recent') || item.get('frequent');
+    }
+
+    private _isFixedItem(treeItem: TreeItem<Model>): boolean {
+        let isFixed = false;
+        const item = treeItem.getContents();
+        if (item instanceof Model) {
+            isFixed = !item.has('HistoryId') && !!item.get('pinned');
+        }
+        return isFixed;
     }
 
     private _isGroupNext(treeItem: TreeItem<Model>): boolean {
