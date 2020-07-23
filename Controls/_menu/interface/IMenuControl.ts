@@ -259,3 +259,31 @@ export default interface IMenuControl {
  * };
  * </pre>
  */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#dataLoadErrback
+ * @cfg {Function}  Функция обратного вызова, которая будет вызываться, когда при загрузке данных произошла ошибка.
+ * @example
+ * WML:
+ * <pre>
+ * <Controls.menu:Control
+ *          keyProperty="id"
+ *          displayProperty="title"
+ *          dataLoadErrback="{{_errbackHandler}}"
+ *          source="{{_source)}}" />
+ * </pre>
+ * JS:
+ * <pre>
+ * this._source = new Memory({
+ *    keyProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Yaroslavl'},
+ *       {id: 2, title: 'Moscow'},
+ *       {id: 3, title: 'St-Petersburg'}
+ *    ]
+ * });
+ * this._errbackHandler = function(items) {
+ *   // do something
+ * };
+ * </pre>
+ */
