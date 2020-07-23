@@ -246,7 +246,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         }
     }
 
-    private _activate(enableScreenKeyboard: boolean = true): void {
+    private _activateLookup(enableScreenKeyboard: boolean = true): void {
         if (this._options.multiSelect) {
             this.activate({enableScreenKeyboard});
         } else {
@@ -276,7 +276,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
     private _choose(event: SyntheticEvent, item: Model): void {
         // move focus to input after select, because focus will be lost after closing popup
-        this._activate();
+        this._activateLookup();
 
         // Сначало сбросим значение поля ввода,
         // необходимо что бы событие selectedKeysChanged сработало после valueChanged
@@ -289,7 +289,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     private _crossClick(event: SyntheticEvent, item: Model): void {
         /* move focus to input, because focus will be lost after removing dom element */
         if (!this._infoboxOpened) {
-            this._activate(false);
+            this._activateLookup(false);
         }
         this._removeItem(item);
         this._resetInputValue();

@@ -355,13 +355,13 @@ describe('Controls/_lookup/BaseLookupView', function() {
          isActivate = true;
       };
 
-      lookup._activate();
+      lookup._activateLookup();
       ok(!isActivate);
       ok(lookup._needSetFocusInInput);
 
       lookup._needSetFocusInInput = false;
       lookup._options.multiSelect = true;
-      lookup._activate();
+      lookup._activateLookup();
       ok(isActivate);
       ok(!lookup._needSetFocusInInput);
    });
