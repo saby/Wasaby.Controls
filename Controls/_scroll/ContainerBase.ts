@@ -1,10 +1,11 @@
+import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import {detection} from 'Env/Env';
 import {Bus} from 'Env/Event';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {RegisterClass, Registrar} from 'Controls/event';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import ResizeObserverUtil from 'Controls/Utils/ResizeObserverUtil';
-import {canScrollByState, getScrollPositionTypeByState, SCROLL_DIRECTION} from './Utils/Scroll';
+import {canScrollByState, getContentSizeByState, getScrollPositionTypeByState, SCROLL_DIRECTION} from './Utils/Scroll';
 import {scrollTo} from './Utils/Scroll';
 import {IScrollState} from './Utils/ScrollState';
 import {SCROLL_MODE} from './Container/Type';
@@ -36,7 +37,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     private _scrollLockedPosition: number = null;
     protected _scrollCssClass: string;
 
-    protected _tmplNotify: tmplNotify;
+    protected _tmplNotify: Function = tmplNotify;
 
     // Виртуальный скролл
     private _topPlaceholderSize: number = 0;
@@ -60,7 +61,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _afterMount(): void {
         this._resizeObserver.observe(this._children.scrollContainer);
         this._resizeObserver.observe(this._children.content);
-        this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
+        // Состояние может быть уже инициализировано по событиям от списков
+        if (isEmpty(this._state)) {
+            this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
+        }
         // this._createEdgeIntersectionObserver();
 
         if (detection.isMobileIOS) {
@@ -102,9 +106,13 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _registerIt(event: SyntheticEvent, registerType: string, component: any,
                 callback: () => void, triggers): void {
         this._registrars.scrollStateChanged.register(event, registerType, component, callback);
-        this._onRegisterNewComponent(component);
+        if (registerType === 'scrollStateChanged') {
+            this._onRegisterNewComponent(component);
+        }
         // совместимость со списками
+        this._registrars.listScroll.register(event, registerType, component, callback);
         if (registerType === 'listScroll') {
+            this._onRegisterNewListScrollComponent(component);
             if (triggers) {
                 this._initIntersectionObserver(triggers, component);
             }
@@ -133,8 +141,90 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     //     // console.log(edge);
     // }
 
+    /*
+       * Scrolls to the given position from the top of the container.
+       * @function Controls/_scroll/Container#scrollTo
+       * @param {Number} Offset
+       */
     scrollTo(scrollPosition: number, direction: SCROLL_DIRECTION = SCROLL_DIRECTION.VERTICAL): void {
         scrollTo(this._children.scrollContainer, scrollPosition, direction);
+    }
+
+    /**
+     * Возвращает true если есть возможность вроскролить к позиции offset.
+     * @function Controls/_scroll/Container#canScrollTo
+     * @param offset Позиция в пикселях
+     * @noshow
+     */
+    canScrollTo(offset: number): boolean {
+        return offset <= this._state.scrollHeight - this._state.clientHeight;
+    }
+
+    /**
+     * Скроллит к выбранной позиции по горизонтале. Позиция определяется в пикселях от левого края контейнера.
+     * @function Controls/_scroll/Container#horizontalScrollTo
+     * @param {Number} Позиция в пикселях
+     */
+
+    /*
+     * Scrolls to the given position from the top of the container.
+     * @function Controls/_scroll/Container#scrollTo
+     * @param {Number} Offset
+     */
+    horizontalScrollTo(offset) {
+        this.scrollTo(offset, SCROLL_DIRECTION.HORIZONTAL);
+    }
+
+    /**
+     * Скроллит к верху контейнера
+     * @function Controls/_scroll/Container#scrollToTop
+     */
+
+    /*
+     * Scrolls to the top of the container.
+     * @function Controls/_scroll/Container#scrollToTop
+     */
+    scrollToTop() {
+        this.setScrollTop(0);
+    }
+
+    /**
+     * Скроллит к левому краю контейнера
+     * @function Controls/_scroll/Container#scrollToTop
+     */
+
+    /*
+     * Scrolls to the lefе of the container.
+     * @function Controls/_scroll/Container#scrollToTop
+     */
+    scrollToLeft() {
+        this.scrollTo(0, SCROLL_DIRECTION.HORIZONTAL);
+    }
+
+    /**
+     * Скроллит к низу контейнера
+     * @function Controls/_scroll/Container#scrollToBottom
+     */
+
+    /*
+     * Scrolls to the bottom of the container.
+     * @function Controls/_scroll/Container#scrollToBottom
+     */
+    scrollToBottom() {
+        this.setScrollTop(this._state.scrollHeight - this._state.clientHeight + this._topPlaceholderSize);
+    }
+
+    /**
+     * Скроллит к правому краю контейнера
+     * @function Controls/_scroll/Container#scrollToBottom
+     */
+
+    /*
+     * Scrolls to the right of the container.
+     * @function Controls/_scroll/Container#scrollToBottom
+     */
+    scrollToRight() {
+        this.scrollTo(this._state.scrollWidth - this._state.clientWidth);
     }
 
     onScrollContainer(newState: IScrollState): void {
@@ -338,6 +428,32 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
     }
 
+    _onRegisterNewListScrollComponent(component: any): void {
+        // Регистрция списков может произойти до инициализации состояния в _afterMount
+        if (isEmpty(this._state)) {
+            this._updateState(this._getFullStateFromDOM());
+        }
+        this._sendByListScrollRegistrarToComponent(
+            component,
+        this._state.canVerticalScroll ? 'canScroll' : 'cantScroll',
+        {
+            clientHeight: this._state.clientHeight,
+            scrollHeight: this._state.scrollHeight,
+            viewPortRect: this._state.viewPortRect
+        });
+
+        this._sendByListScrollRegistrarToComponent(
+            component,
+            'viewportResize',
+            {
+                scrollHeight: this._state.scrollHeight,
+                scrollTop: this._state.scrollTop,
+                clientHeight: this._state.clientHeight,
+                rect: this._state.viewPortRect
+            }
+        );
+    }
+
     private _initIntersectionObserver(elements, component): void {
         if (!this._observers[component.getInstanceId()]) {
             let eventName;
@@ -412,6 +528,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._notify(eventType, [params]);
     }
 
+    _sendByListScrollRegistrarToComponent(component: Control, eventType: string, params: object): void {
+        this._registrars.listScroll.startOnceTarget(component, eventType, params);
+    }
+
     _scrollToElement(event: SyntheticEvent<Event>, {itemContainer, toBottom, force}): void {
         event.stopPropagation();
         scrollToElement(itemContainer, toBottom, force);
@@ -429,6 +549,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     setScrollTop(scrollTop: number, withoutPlaceholder?: boolean): void {
+        const scrollContainer: HTMLElement = this._children.scrollContainer;
         if (this._isVirtualPlaceholderMode() && !withoutPlaceholder) {
             const scrollState: IScrollState = this._state;
             const cachedScrollTop = scrollTop;
@@ -437,10 +558,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             const applyScrollTop = () => {
 
                 // нужный scrollTop будет отличным от realScrollTop, если изменился _topPlaceholderSize. Вычисляем его по месту
-                this._container.scrollTop = cachedScrollTop - this._topPlaceholderSize;
+                scrollContainer.scrollTop = cachedScrollTop - this._topPlaceholderSize;
             };
             if (realScrollTop >= 0 && !scrollTopOverflow) {
-                this._container.scrollTop = realScrollTop;
+                scrollContainer.scrollTop = realScrollTop;
             } else if (this._topPlaceholderSize === 0 && realScrollTop < 0 || scrollTopOverflow && this._bottomPlaceholderSize === 0) {
                 applyScrollTop();
             } else {
@@ -454,18 +575,22 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                     });
             }
         } else {
-            this._container.scrollTop = scrollTop;
+            scrollContainer.scrollTop = scrollTop;
+            this._updateStateAndGenerateEvents({
+                scrollTop: scrollTop
+            });
         }
     }
 
 
     private _saveScrollPosition(event: SyntheticEvent<Event>): void {
+        const scrollContainer: HTMLElement = this._children.scrollContainer;
         // На это событие должен реагировать только ближайший скролл контейнер.
         // В противном случае произойдет подскролл в ненужном контейнере
         event.stopPropagation();
 
-        this._savedScrollTop = this._children.scrollContainer.scrollTop;
-        this._savedScrollPosition = this._children.scrollContainer.scrollHeight - this._savedScrollTop;
+        this._savedScrollTop = scrollContainer.scrollTop;
+        this._savedScrollPosition = scrollContainer.scrollHeight - this._savedScrollTop;
         // Инерционный скролл приводит к дерганью: мы уже
         // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
         // дерганья и лишняя загрузка данных.
@@ -493,6 +618,11 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             this._savedScrollTop - heightDifference + correctingHeight;
 
         this.setScrollTop(newPosition, true);
+    }
+
+    _updatePlaceholdersSize(e: SyntheticEvent<Event>, placeholdersSizes): void {
+        this._topPlaceholderSize = placeholdersSizes.top;
+        this._bottomPlaceholderSize = placeholdersSizes.bottom;
     }
 
     private _setOverflowScrolling(value: string): void {
