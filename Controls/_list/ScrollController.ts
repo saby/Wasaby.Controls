@@ -29,7 +29,7 @@ export interface IScrollParams {
 interface ICompatibilityOptions {
     useNewModel: boolean;
 }
-type TRecalcToDirectionResult = 'INDICATOR_UP' | 'INDICATOR_DOWN' | 'LOAD_MORE';
+type TShiftToDirectionResult = 'SHIFTING' | 'CANT_SHIFT';
 export interface IOptions extends IControlOptions, ICompatibilityOptions {
     virtualScrollConfig: {
         pageSize?: number;
@@ -337,11 +337,11 @@ export default class ScrollController {
     }
 
     /**
-     * Обработчик передвижения скроллбара
+     * Обработчик изменения положения виртуального скролла
      * @param params
      * @private
      */
-    scrollBarPositionChanged(params: IScrollParams): IPlaceholders {
+    virtualScrollPositionChanged(params: IScrollParams): IPlaceholders {
         if (this._virtualScroll) {
             const rangeShiftResult = this._virtualScroll.shiftRangeToScrollPosition(params.scrollTop);
             this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
@@ -356,7 +356,7 @@ export default class ScrollController {
      * @param direction
      * @private
      */
-    recalcToDirection(direction: IDirection): TRecalcToDirectionResult {
+    shiftToDirection(direction: IDirection): TShiftToDirectionResult {
         if (
             !this._virtualScroll ||
             this._virtualScroll &&
@@ -365,7 +365,7 @@ export default class ScrollController {
             !this._virtualScroll && this._options.virtualScrollConfig &&
             this._options.virtualScrollConfig.pageSize > this._options.collection.getCount()
         ) {
-            return 'LOAD_MORE';
+            return 'CANT_SHIFT';
         } else {
             if (this._virtualScroll && !this._virtualScroll.rangeChanged) {
                 this._inertialScrolling.callAfterScrollStopped(() => {
@@ -375,7 +375,7 @@ export default class ScrollController {
                         this._options.needScrollCalculation);
                     this._indicatorState = direction;
                 });
-                return direction === 'up' ? 'INDICATOR_UP' : 'INDICATOR_DOWN';
+                return 'SHIFTING';
             }
         }
     }

@@ -262,12 +262,13 @@ const _private = {
             self._attachLoadTopTriggerToNull = false;
         }
         if (self._scrollController) {
-            const {top, bottom} = self._scrollController.update({
+            self._loadOffset = self._scrollController.update({
                 forceInitVirtualScroll: isInfinityNavigation,
                 collection: self.getViewModel(),
                 ...self._options
             });
-            self.applyTriggerOffset(top, bottom);
+            self._loadOffset.top = self._attachLoadTopTriggerToNull ? 0 : self._loadOffset.top;
+            self.applyTriggerOffset(self._loadOffset);
         }
     },
 
@@ -795,9 +796,9 @@ const _private = {
 
             // Состояние триггеров не всегда соответствует действительности, приходится считать самим
             triggerVisibilityUp = self._loadTriggerVisibility.up ||
-                _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetTop, 'up');
+                _private.calcTriggerVisibility(self, scrollParams, self._loadOffset.top, 'up');
             triggerVisibilityDown = self._loadTriggerVisibility.down ||
-                _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetBottom, 'down');
+                _private.calcTriggerVisibility(self, scrollParams, self._loadOffset.bottom, 'down');
 
             // TODO Когда список становится пустым (например после поиска или смены фильтра),
             // если он находится вверху страницы, нижний загрузочный триггер может "вылететь"
@@ -1024,11 +1025,11 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=e0927a79-c520-4864-8d39-d99d36767b31
             // поэтому приходится вычислять видны ли они на экране
             if (!visbilityTriggerUp) {
-                visbilityTriggerUp = _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetTop, 'up');
+                visbilityTriggerUp = _private.calcTriggerVisibility(self, scrollParams, self._loadOffset.top, 'up');
             }
 
             if (!visbilityTriggerDown && self._viewSize && self._viewportSize) {
-                visbilityTriggerDown = _private.calcTriggerVisibility(self, scrollParams, self._loadOffsetBottom, 'down');
+                visbilityTriggerDown = _private.calcTriggerVisibility(self, scrollParams, self._loadOffset.bottom, 'down');
             }
 
             if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
@@ -1200,8 +1201,9 @@ const _private = {
         }
     },
 
-    throttledScrollBarPositionChanged: throttle((self, params) => {
-        let placeholders = self._scrollController.scrollBarPositionChanged(params);
+    // throttle нужен, чтобы при потоке одинаковых событий не пересчитывать состояние на каждое из них
+    throttledVirtualScrollPositionChanged: throttle((self, params) => {
+        let placeholders = self._scrollController.virtualScrollPositionChanged(params);
         _private.notifyPlaceholdersChanged(self, placeholders);
     }, SCROLLMOVE_DELAY, true),
 
@@ -1336,6 +1338,7 @@ const _private = {
     onCollectionChanged(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
+        // TODO: убрать флаг newModelChanged, когда не будет "старой" модели
         const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
         if (self._pagingNavigation) {
             if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_ADD) {
@@ -1357,8 +1360,7 @@ const _private = {
                 }
             }
             if (self._scrollController) {
-                
-                if (action || newModelChanged) {
+                if (action) {
                     let placeholders = null;
                     if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
 
@@ -1410,6 +1412,9 @@ const _private = {
             self._itemsChanged = true;
             _private.updateInitializedItemActions(self, self._options);
         }
+
+        // обрабатываем indexesChanged отдельно от add/move/remove, так как индексы могут меняться без этих событий
+        // Например, при движении виртуального диапазона.
         if (changesType === 'indexesChanged') {
             let start = self._listViewModel.getStartIndex();
             let stop = self._listViewModel.getStopIndex();
@@ -2106,6 +2111,7 @@ const _private = {
     },
 
     createScrollController(self: typeof BaseControl, options: any): void {
+        self._loadOffset = { top: LOAD_TRIGGER_OFFSET, bottom: LOAD_TRIGGER_OFFSET }
         self._scrollController = new ScrollController({
             virtualScrollConfig: options.virtualScrollConfig || {},
             needScrollCalculation: self._needScrollCalculation,
@@ -2413,8 +2419,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
     _hideIndicatorOnTriggerHideDirection: null,
-    _loadOffsetTop: LOAD_TRIGGER_OFFSET,
-    _loadOffsetBottom: LOAD_TRIGGER_OFFSET,
+
+    // хранения отступов триггеров хранится для вычисления видимости триггеров
+    _loadOffset: null,
     _loadingIndicatorContainerOffsetTop: 0,
     _viewSize: null,
     _viewportSize: null,
@@ -2683,9 +2690,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._viewportRect = viewportRect;
         if (this._scrollController) {
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
-            const {top, bottom} = this._scrollController.updateScrollParams({clientHeight: this._viewportSize});
-            this.applyTriggerOffset(top, bottom);
-
+            this._loadOffset = this._scrollController.updateScrollParams({clientHeight: this._viewportSize});
+            this._loadOffset.top = this._attachLoadTopTriggerToNull ? 0 : this._loadOffset.top;
+            this.applyTriggerOffset(this._loadOffset);
         }
     },
 
@@ -2747,13 +2754,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
     },
-    applyTriggerOffset(top: number, bottom: number): void {
-        this._loadOffsetTop = this._attachLoadTopTriggerToNull ? 0 : top;
-        this._loadOffsetBottom = bottom;
-        
+    applyTriggerOffset(offset: {top: number, bottom: number}): void {
         // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
-        this._children.topVirtualScrollTrigger?.style.top = `${this._loadOffsetTop}px`;
-        this._children.bottomVirtualScrollTrigger?.style.bottom = `${this._loadOffsetBottom}px`;
+        this._children.topVirtualScrollTrigger?.style.top = `${offset.top}px`;
+        this._children.bottomVirtualScrollTrigger?.style.bottom = `${offset.bottom}px`;
     },
     _viewResize(): void {
         const container = this._container[0] || this._container;
@@ -2762,8 +2766,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._scrollController) {
             const itemsHeights = getItemsHeightsData(this._getItemsContainer());
             this._scrollController.updateItemsHeights(itemsHeights);
-            const {top, bottom} = this._scrollController.updateScrollParams({scrollHeight: this._viewSize, clientHeight: this._viewportSize});
-            this.applyTriggerOffset(top, bottom);
+            
+            this._loadOffset = this._scrollController.updateScrollParams({scrollHeight: this._viewSize, clientHeight: this._viewportSize});
+            this._loadOffset.top = this._attachLoadTopTriggerToNull ? 0 : this._loadOffset.top;
+            this.applyTriggerOffset(this._loadOffset);
         }
 
         if (_private.needScrollPaging(this._options.navigation)) {
@@ -2958,13 +2964,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._editingItemData = this._editInPlace.getEditingItemData();
         }
 
+        if (this._syncLoadingIndicatorState) {
+            clearTimeout(this._syncLoadingIndicatorTimeout);
+            this._syncLoadingIndicatorTimeout = setTimeout(() => {
+                this.changeIndicatorStateHandler(true, this._syncLoadingIndicatorState);
+            }, INDICATOR_DELAY);
+        }
         if (this._scrollController) {
-            const {top, bottom} = this._scrollController.update({
+            this._loadOffset = this._scrollController.update({
                 forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
                 collection: this.getViewModel(),
                 ...newOptions
             }, {scrollHeight: this._viewSize, clientHeight: this._viewportSize});
-            this.applyTriggerOffset(top, bottom);
+            this._loadOffset.top = this._attachLoadTopTriggerToNull ? 0 : this._loadOffset.top;
+            this.applyTriggerOffset(this._loadOffset);
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -3200,11 +3213,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // её по ошибке: https://online.sbis.ru/opendoc.html?guid=cd0ba66a-115c-44d1-9384-0c81675d5b08
                 correctingHeight = 33;
             }
-            if (this._indicatorTimeout) {
-                clearTimeout(this._indicatorTimeout);
+            if (this._syncLoadingIndicatorTimeout) {
+                clearTimeout(this._syncLoadingIndicatorTimeout);
                 this.changeIndicatorStateHandler(false, 'up');
                 this.changeIndicatorStateHandler(false, 'down');
-                this._indicatorState = null;
+                this._syncLoadingIndicatorState = null;
             }
             let needCheckTriggers = this._scrollController.afterRender();
             if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
@@ -3241,8 +3254,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             scrollHeight: this._viewSize,
             scrollTop: this._scrollTop
         };
-        const triggerUp = _private.calcTriggerVisibility(this, scrollParams, this._loadOffsetBottom, 'up');
-        const triggerDown = _private.calcTriggerVisibility(this, scrollParams, this._loadOffsetTop, 'down');
+        const triggerUp = _private.calcTriggerVisibility(this, scrollParams, this._loadOffset.bottom, 'up');
+        const triggerDown = _private.calcTriggerVisibility(this, scrollParams, this._loadOffset.top, 'down');
         this._scrollController.setTriggerVisibility('up', triggerUp);
         this._scrollController.setTriggerVisibility('down', triggerDown);
         if (triggerUp) {
@@ -3253,16 +3266,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
     handleTriggerVisible(direction: IDirection): void {
-    
-        const recalcResult = this._scrollController.recalcToDirection(direction);
-        if (recalcResult === 'LOAD_MORE') {
+        // Вызываем сдвиг диапазона
+        const shiftResult = this._scrollController.shiftToDirection(direction);
+        if (shiftResult === 'CANT_SHIFT') {
+            // Если не получилось сдвинуть, значит загруженные данные кончились, значит загружаем
             this.loadMore(direction);
-        } else if (recalcResult) {
-            this._indicatorState = direction;
-            clearTimeout(this._indicatorTimeout);
-            this._indicatorTimeout = setTimeout(() => {
-                this.changeIndicatorStateHandler(true, this._indicatorState);
-            }, INDICATOR_DELAY);
+        } else if (shiftResult === 'SHIFTING') {
+            // если отрисовка записей во время сдвига диапазона занимает много времени, нужно будет показать индикатор загрузки
+            this._syncLoadingIndicatorState = direction;
         }
     },
     _scrollToFirstItemIfNeed(): void {
@@ -3923,7 +3934,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
     
-    //TODO: вынести в батчер?
+    // TODO: вынести в батчер?
+    // при добавлении групп и листьев в деревьях, записи добавляются по одиночке, а не все разом. 
+    // Если обрабатывать все это по отдельности, не собирая в одну пачку, то алгоритмы виртуального скролла начинают работать некорректно
     startBatchAdding(direction: IDirection): void {
         this._addItemsDirection = direction;
     },
@@ -3981,7 +3994,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this.viewportResizeHandler(params.clientHeight, params.rect);
                 break;
             case 'virtualScrollMove':
-                _private.throttledScrollBarPositionChanged(this, params);
+                _private.throttledVirtualScrollPositionChanged(this, params);
                 break;
             case 'canScroll':
                 this.canScrollHandler(params);
