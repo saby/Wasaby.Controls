@@ -77,7 +77,12 @@ export function prepareLadder(params: IPrepareLadderParams): {} {
     }
 
     for (idx = params.stopIndex - 1; idx >= params.startIndex; idx--) {
-        item = params.display.at(idx).getContents();
+        const dispItem = params.display.at(idx);
+        if (dispItem.isEditing()) {
+            continue;
+        }
+
+        item = dispItem.getContents();
         prevItem = idx - 1 >= params.startIndex ? params.display.at(idx - 1).getContents() : null;
 
         if (supportLadder) {
