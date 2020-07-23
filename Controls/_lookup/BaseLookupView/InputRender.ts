@@ -1,7 +1,5 @@
 import input = require('Controls/input');
 import template = require('wml!Controls/_lookup/BaseLookupView/InputRender/InputRender');
-import * as ActualAPI from "../../_input/ActualAPI";
-
 
    var InputRenderLookup = input.Text.extend({
       _template: template,
@@ -9,12 +7,12 @@ import * as ActualAPI from "../../_input/ActualAPI";
 
       _beforeMount: function(options) {
          InputRenderLookup.superclass._beforeMount.apply(this, arguments);
-         this._inlineHeight = input.ActualAPI.inlineHeight(options.size, options.inlineHeight);
+         input.generateStates(this, options);
       },
 
       _beforeUpdate: function(options) {
          InputRenderLookup.superclass._beforeUpdate.apply(this, arguments);
-         this._inlineHeight = input.ActualAPI.inlineHeight(options.size, options.inlineHeight);
+         input.generateStates(this, options);
       },
 
       _beforeUnmount: function() {
