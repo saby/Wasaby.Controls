@@ -531,7 +531,7 @@ export default class _Controller implements IDropdownController {
          autofocus: false,
          closeOnOutsideClick: true
       };
-      const popupConfig = popupOptions || this._options.menuPopupOptions;
+      const popupConfig = Merge(popupOptions, this._options.menuPopupOptions || {});
       return Merge(config, popupConfig || {});
    }
 }

@@ -114,11 +114,6 @@ class Data extends Control/** @lends Controls/_list/Data.prototype */{
       if (this._options.source !== newOptions.source) {
          this._loading = true;
          return this._sourceController.load().then((result) => {
-            this._sourceController.setItems(null);
-
-            // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-            this._items = result;
-            this._sourceController.setItems(result);
             this._prefetchSource = this._sourceController.getPrefetchSource(result);
             this._updateContext(this._dataOptionsContext);
             this._loading = false;

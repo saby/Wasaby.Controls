@@ -334,7 +334,7 @@ var
                   _private.setRoot(self, dataRoot, dataRoot);
                }
             }
-         }
+         },
       };
 
    /**
@@ -500,6 +500,10 @@ var
          this._canStartDragNDrop = _private.canStartDragNDrop.bind(null, this);
          this._updateHeadingPath = this._updateHeadingPath.bind(this);
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
+         this._needSetMarkerCallback = (item: Model, domEvent: any): boolean => {
+            return domEvent.target.closest('.js-controls-ListView__checkbox')
+               || item instanceof Array || item.get(this._options.nodeProperty) !== ITEM_TYPES.node;
+         };
 
          this._itemsPromise = new Promise((res) => { this._itemsResolver = res; });
          if (!cfg.source) {

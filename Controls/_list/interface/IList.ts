@@ -1,5 +1,5 @@
 import { TemplateFunction } from 'UI/Base';
-import { IItemAction, IContextMenuConfig } from 'Controls/itemActions';
+import { IItemAction, IContextMenuConfig, TActionCaptionPosition, TItemActionsPosition, TItemActionVisibilityCallback } from 'Controls/itemActions';
 
 /**
  * Интерфейс для списков.
@@ -10,42 +10,14 @@ import { IItemAction, IContextMenuConfig } from 'Controls/itemActions';
  */
 
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
-/**
- * @typedef {String} TIconStyle
- * @variant secondary
- * @variant warning
- * @variant danger
- * @variant success
- */
-type TIconStyle = 'secondary'|'warning'|'danger'|'success';
-/**
- * @typedef {String} TItemActionsPosition
- * @variant inside Внутри элемента.
- * @variant outside Под элементом.
- * @variant custom Произвольная позиция отображения. Задаётся через шаблон {@link Controls/interface/IItemTemplate itemTemplate}.
- */
-type TItemActionsPosition = 'inside'|'outside'|'custom';
+
 /**
  * @typedef {String} TActionAlignment
  * @variant horizontal По горизонтали.
  * @variant vertical По вертикали.
  */
 type TActionAlignment = 'horizontal'|'vertical';
-/**
- * @typedef {String} TActionCaptionPosition
- * @variant right Справа от иконки опции записи.
- * @variant bottom Под иконкой опции записи.
- * @variant none Не будет отображаться.
- */
-type TActionCaptionPosition = 'right'|'bottom'|'none';
-/**
- * @typedef {String} TActionDisplayMode
- * @variant title Показывать только заголовок.
- * @variant icon Показывать только иконку.
- * @variant both Показывать иконку и заголовок.
- * @variant auto Если есть иконка, то показывать иконку, иначе заголовок.
- */
-type TActionDisplayMode = 'title'|'icon'|'both'|'auto';
+
 type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|null;
@@ -81,7 +53,7 @@ export interface IList {
     actionAlignment?: TActionAlignment;
     actionCaptionPosition?: TActionCaptionPosition;
     itemActionsVisibility?: TItemActionsVisibility;
-    itemActionVisibilityCallback?: (action: IItemAction, item) => boolean;
+    itemActionVisibilityCallback?: TItemActionVisibilityCallback;
     itemActionsProperty?: string;
     markedKey?: string|number;
     stickyMarkedItem?: boolean;
@@ -250,49 +222,8 @@ export interface IList {
  */
 
 /**
- * @typedef {Object} ItemAction
- * @property {String} id Идентификатор опции записи.
- * @property {String} title Название опции записи.
- * @property {String} tooltip Текст подсказки при наведении мыши.
- * @property {String} icon Имя иконки для опции записи.
- * @property {TActionDisplayMode} displayMode Режим отображения опции записи.
- * @property {Enum} [item.showType] Определяет, где будет отображаться элемент. Значение берется из утилиты {@link Controls/Utils/Toolbar}.
- * Доступные значения:
- * * showType.MENU — элемент отображается только в меню.
- * * showType.MENU_TOOLBAR — элемент отображается в меню и в тулбаре.
- * * showType.TOOLBAR — элемент отображается только в тулбаре.
- * @property {String} style Значение свойства преобразуется в CSS-класс вида "controls-itemActionsV__action_style_<значение_свойства>".
- * Он будет установлен для html-контейнера самой опции записи, и свойства класса будут применены как к тексту (см. title), так и к иконке (см. icon).
- * @property {TIconStyle} [iconStyle=secondary] Стиль иконки.
- * Каждому значению свойства соответствует стиль, который определяется {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темой оформления} приложения.
- * @property {Function} handler Обработчик опции записи.
- * См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler-click/ пример обработчика}.
- * @property {String} parent Идентификатор родительской опции записи.
- * Используется для создания {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/hierarchy/ многоуровневого контекстного меню}.
- * @property {Boolean|null} parent@ Поле, описывающее тип узла (список, узел, скрытый узел).
- * Подробнее о различиях между типами узлов можно прочитать {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy здесь}.
- */
-
-/*ENG
- * @typedef {Object} ItemAction
- * @property {String} id Identifier of operation.
- * @property {String} title Operation name.
- * @property {String} icon Operation icon.
- * @property {Enum} [item.showType] Determines where item is displayed. The value is taken from the util 'Controls/Utils/Toolbar'. {@link Controls/Utils/Toolbar Details}
- * Values:
- * showType.MENU - item is displayed only in the menu
- * showType.MENU_TOOLBAR - item is displayed in the menu and toolbar
- * showType.TOOLBAR - item is displayed only in the toolbar
- * @property {String} style Operation style. (secondary | warning | danger | success).
- * @property {String} iconStyle Style of the action's icon. (secondary | warning | danger | success).
- * @property {Function} handler Operation handler.
- * @property {String} parent Key of the action's parent.
- * @property {boolean|null} parent@ Field that describes the type of the node (list, node, hidden node).
- */
-
-/**
  * @name Controls/_list/interface/IList#itemActions
- * @cfg {Array.<ItemAction>} Конфигурация опций записи.
+ * @cfg {Array.<Controls/itemActions:IItemAction>} Конфигурация опций записи.
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">демо-пример</a>.
  * Для корректной работы опций записи для контрола нужно задать значение в опции {@link Controls/list:View keyProperty}.
@@ -307,13 +238,13 @@ export interface IList {
 
 /*ENG
  * @name Controls/_list/interface/IList#itemActions
- * @cfg {Array.<ItemAction>} Array of configuration objects for buttons which will be shown when the user hovers over an item.
+ * @cfg {Array.<Controls/itemActions:IItemAction>} Array of configuration objects for buttons which will be shown when the user hovers over an item.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Example</a>.
  */
 
 /**
  * @name Controls/_list/interface/IList#itemActionsPosition
- * @cfg {TItemActionsPosition} Позиционирование панели с опциями записи.
+ * @cfg {Controls/_itemActions/interface/IItemAction/TItemActionsPosition.typedef} Позиционирование панели с опциями записи.
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">демо-пример</a>.
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FItemActionsCustom">демо-пример</a>.
@@ -353,7 +284,7 @@ export interface IList {
 
 /*ENG
  * @name Controls/_list/interface/IList#itemActionsPosition
- * @cfg {String} Position of item actions.
+ * @cfg {Controls/_itemActions/interface/IItemAction/TItemActionsPosition.typedef} Position of item actions.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Example</a>.
  * @variant inside Item actions will be positioned inside the item's row.
  * @variant outside Item actions will be positioned under the item's row.
@@ -480,7 +411,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#actionCaptionPosition
- * @cfg {TActionCaptionPosition} Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
+ * @cfg {Controls/_itemActions/interface/IItemAction/TActionCaptionPosition.typedef} Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">демо-пример</a>.
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
@@ -494,7 +425,7 @@ export interface IList {
 
 /*ENG
  * @name Controls/_list/interface/IList#actionCaptionPosition
- * @cfg {String} Determines where the caption of an item action will be displayed on swipe.
+ * @cfg {Controls/_itemActions/interface/IItemAction/TActionCaptionPosition.typedef} Determines where the caption of an item action will be displayed on swipe.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">Example</a>.
  * @variant right Title will be displayed to the right of the action's icon.
  * @variant bottom Title will be displayed under the action's icon.
@@ -614,19 +545,19 @@ export interface IList {
  *                {
  *                   id: 1,
  *                   title: 'Прочитано',
- *                   showType: showType.TOOLBAR,
+ *                   showType: TItemActionShowType.TOOLBAR,
  *                },
  *                {
  *                   id: 2,
  *                   icon: 'icon-PhoneNull',
  *                   title: 'Позвонить',
- *                   showType: showType.MENU_TOOLBAR,
+ *                   showType: TItemActionShowType.MENU_TOOLBAR,
  *                },
  *                {
  *                   id: 3,
  *                   icon: 'icon-EmptyMessage',
  *                   title: 'Написать',
- *                   showType: showType.TOOLBAR,
+ *                   showType: TItemActionShowType.TOOLBAR,
  *                }
  *             ]
  *          },

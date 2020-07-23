@@ -72,7 +72,6 @@ import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
 import {default as DataContainer} from 'Controls/_list/Data';
 import _forTemplate = require('wml!Controls/_list/resources/For');
-import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
 import BaseEditingTemplate = require('wml!Controls/_list/EditInPlace/baseEditingTemplate');
 import MoneyEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/MoneyChooser');
@@ -119,7 +118,6 @@ export {
     DataContainer,
     _forTemplate,
 
-    GridLayoutUtil,
     EditingTemplate,
     BaseEditingTemplate,
     MoneyEditingTemplate,

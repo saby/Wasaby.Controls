@@ -828,7 +828,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                         return history;
                     });
                 } else {
-                    _private.resolveItems(this, state.historyId, state.filterSource, [], options.historyItems).then((history) => {
+                    return _private.resolveItems(this, state.historyId, state.filterSource, [], options.historyItems).then((history) => {
                         _private.itemsReady(this, state.filter, history);
                         return history;
                     });

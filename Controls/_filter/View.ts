@@ -21,6 +21,7 @@ import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {DependencyTimer} from 'Controls/Utils/FastOpen';
+import {load} from 'Core/library';
 
 /**
  * Контрол "Объединенный фильтр". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
@@ -640,8 +641,10 @@ var _private = {
             if (!this._loadOperationsPanelPromise) {
                 this._loadOperationsPanelPromise = Promise.all([
                    import('Controls/filterPopup'),
+                    // load потому-что в detailPanelTemplateName могут
+                    // передаваться значения вида Controls/filter:Popup, что не поддерживает import()
                     (typeof detailPanelTemplateName === 'string') ?
-                       import(detailPanelTemplateName) : null
+                       load(detailPanelTemplateName) : null
                 ]);
             }
             return this._loadOperationsPanelPromise;

@@ -345,8 +345,7 @@
 }
 .ws-is-hover .controls-BaseControl_showActions_visible .controls-Grid__row,
 .ws-is-hover .controls-BaseControl_showActions_delayed .controls-Grid__row:hover,
-.ws-is-hover .controls-BaseControl_showActions_onhover .controls-Grid__row:hover,
-.ws-is-touch .controls-GridView__item_active_theme-@{themeName} {
+.ws-is-hover .controls-BaseControl_showActions_onhover .controls-Grid__row:hover {
    .controls-Grid__editArrow-blur_theme-@{themeName},
    .controls-Grid__editArrow-wrapper_theme-@{themeName} {
       visibility: visible;
@@ -378,13 +377,14 @@
    bottom: 0;
 }
 
-.controls-Grid__row-cell__ladder-content_displayNoneForLadder {
-   display: none;
-}
-
-.controls-Grid__row-cell__ladder-content_hiddenForLadder,
-.controls-Grid__row-cell__content_hiddenForLadder .controls-Grid__row-cell__ladder-content {
-   visibility: hidden;
+.controls-Grid_support-ladder {
+   .controls-Grid__row-cell__ladder-content_displayNoneForLadder {
+      display: none;
+   }
+   .controls-Grid__row-cell__ladder-content_hiddenForLadder,
+   .controls-Grid__row-cell__content_hiddenForLadder .controls-Grid__row-cell__ladder-content {
+      visibility: hidden;
+   } 
 }
 .controls-Grid__row-cell__content_hiddenForLadder {
    z-index: 1;
@@ -575,7 +575,7 @@
 .controls-GridView__item_active_theme-@{themeName} {
    background-color: @item_hover_background-color_list;
 }
-.controls-GridView__item_active_theme-@{themeName} .controls-Grid__row-cell__content_hiddenForLadder {
+.controls-GridView__item_active_theme-@{themeName} .controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName} {
    background-color: @item_hover_background-color_list;
 }
 

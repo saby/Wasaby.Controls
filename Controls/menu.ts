@@ -21,7 +21,7 @@ export {default as Popup} from 'Controls/_menu/Popup';
 export {default as HeaderTemplate} from 'Controls/_menu/Popup/headerTemplate';
 
 export {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
-export {default as IMenuPopup} from 'Controls/_menu/interface/IMenuPopup';
+export {default as IMenuPopup, IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 
 export {
     ItemTemplate,

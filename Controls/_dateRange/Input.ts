@@ -130,11 +130,11 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
 
     // ВНИМАНИЕ!!! Переделать по готовности задачи по доработке InputRender - https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
 
-    protected _keyUpHandler(event: SyntheticEvent): void {
+    protected _inputHandler(event: SyntheticEvent): void {
         // Move the focus only if the digit was pressed. Without this check, we see a bug in the following scenario.
         // The cursor is in a different input field. Click tab. By pressing the focus goes to this input field.
         // Release tab. Switches the focus in the field at the end of the period.
-        const key = parseInt(event.nativeEvent.key, 10);
+        const key = parseInt(event.nativeEvent.data, 10);
         if (!isNaN(key)) {
             this._focusChanger();
         }
@@ -144,7 +144,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         var datetimeStart = this._children.startValueField._container.querySelector('input');
         var datetimeEnd = this._children.endValueField._container.querySelector('input');
         if (datetimeStart.selectionStart === this._options.mask.length) {
-            this._children.endValueField.activate();
+            this._children.endValueField.activate({enableScreenKeyboard: true});
             datetimeEnd.setSelectionRange(0, 0);
         }
     }
