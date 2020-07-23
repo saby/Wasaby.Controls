@@ -170,14 +170,12 @@ export default class ScrollController {
     update(options: IOptions): void {
         if (options.collection && (
             this._options.collection !== options.collection ||
-            options.needScrollCalculation !== this._options.needScrollCalculation
+            options.needScrollCalculation && !this._options.needScrollCalculation
         )) {
             if (options.needScrollCalculation) {
                 this._initModelObserving(options);
             }
-            if (this._options.collection !== options.collection) {
-                this._initVirtualScroll(options);
-            }
+            this._initVirtualScroll(options);
             this._options.collection = options.collection;
             this._options.needScrollCalculation = options.needScrollCalculation;
         }
