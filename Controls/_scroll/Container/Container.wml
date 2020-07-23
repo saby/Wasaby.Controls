@@ -53,11 +53,11 @@
             </ws:if>
         </ws:if>
 
-        <ws:if data="{{_pagingState.visible}}">
+        <ws:if data="{{_paging.isVisible}}">
             <Controls.paging:Paging class="controls-Scroll__paging"
                                     contrastBackground="{{true}}"
-                                    backwardEnabled="{{_pagingState.stateUp}}"
-                                    forwardEnabled="{{_pagingState.stateDown}}"
+                                    backwardEnabled="{{_paging.stateUp}}"
+                                    forwardEnabled="{{_paging.stateDown}}"
                                     on:onArrowClick="_arrowClickHandler()"/>
         </ws:if>
     </div>

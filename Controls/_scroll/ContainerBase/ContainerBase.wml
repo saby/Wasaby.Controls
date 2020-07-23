@@ -1,7 +1,7 @@
 <div class="controls-Scroll-ContainerBase {{_scrollCssClass}}"
-     name="scrollContainer"
+     name="content"
      on:scroll="_scrollHandler()">
-    <div class="controls-containerBase_contentObserver" name="content">
+    <div class="controls-containerBase_contentObserver" name="userContent">
         <ws:partial
             attr:class="controls-containerBase_userContent"
             template="{{_options.content}}"
