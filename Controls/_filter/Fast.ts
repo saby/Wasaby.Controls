@@ -452,6 +452,7 @@ import {Model} from 'Types/entity';
                      query: (this._configs[index].popupItems || this._configs[index]._items).clone()
                   }
                }),
+               selectorOpener: this,
                selectorItems: this._configs[index]._items,
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,

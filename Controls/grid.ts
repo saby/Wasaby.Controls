@@ -21,8 +21,8 @@
 import {default as View} from 'Controls/_grid/Grid';
 import GroupTemplate = require('wml!Controls/_grid/GroupTemplate');
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
-import ColumnTemplate = require('wml!Controls/_grid/Column');
-import ColumnLightTemplate = require('wml!Controls/_grid/ColumnLight');
+import ColumnTemplate = require('wml!Controls/_grid/layout/common/ColumnContent');
+import ColumnLightTemplate = require('wml!Controls/_grid/layout/common/ColumnContentLight');
 
 import HeaderContent = require('wml!Controls/_grid/HeaderContent');
 import SortingButton from 'Controls/_grid/SortingButton';
