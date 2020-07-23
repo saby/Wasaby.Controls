@@ -30,9 +30,9 @@ export default interface ILoadingIndicator {
     hide(id?: string): void;
 }
 
-/*
+/**
  * @name Controls/_LoadingIndicator/interface/ILoadingIndicator#isGlobal
- * @cfg {Boolean} Показать индикатор над всей страницей или только над собственным контентом.
+ * @cfg {Boolean} Определяет, показать индикатор над всей страницей или только над собственным контентом.
  * @remark
  * true — индикатор позиционируется через position: fixed;
  * false — индикатор позиционируется через position: absolute.

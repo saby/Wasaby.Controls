@@ -27,7 +27,7 @@ const maxPercentValue = 100;
  * @extends Core/Control
  * @class Controls/_slider/Base
  * @mixes Controls/_slider/interface/ISlider
- * @author Колесов В.А.
+ * @author Красильников А.С.
  * @demo Controls-demo/Slider/Base/Base/Index
  */
 
