@@ -716,6 +716,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 item
             },
             closeButtonVisibility: false,
+            emptyText: null,
             showClose: false,
             showHeader: false,
             headerTemplate: null,
