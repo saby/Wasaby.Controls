@@ -365,16 +365,16 @@ var _private = {
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
  *
  * @class Controls/_input/Base
- * @extends UI/_base/Control
+ * @extends UI/Base:Control
  *
- * @implements Controls/_interface/IHeight
- * @implements Controls/_interface/IFontSize
- * @implements Controls/_interface/IFontColorStyle
- * @implements Controls/_input/interface/IBase
- * @implements Controls/_input/interface/ITag
- * @implements Controls/_input/interface/IValue
- * @implements Controls/_interface/IValidationStatus
- * @implements Controls/interface/IBorderStyle
+ * @implements Controls/interface:IHeight
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IBorderStyle
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IValidationStatus
+ * @implements Controls/input:IBase
+ * @implements Controls/input:ITag
+ * @implements Controls/input:IValue
  *
  * @public
  *

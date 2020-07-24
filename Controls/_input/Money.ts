@@ -19,10 +19,10 @@ interface IMoneyOptions extends INumberLengthOptions {
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
  *
  * @class Controls/_input/Money
- * @extends Controls/_input/Base
+ * @extends Controls/input:Base
  *
- * @mixes Controls/interface/IOnlyPositive
- * @mixes Controls/_input/interface/INumberLength
+ * @mixes Controls/interface:IOnlyPositive
+ * @mixes Controls/input:INumberLength
  *
  * @public
  * @demo Controls-demo/Input/Money/Base/Index

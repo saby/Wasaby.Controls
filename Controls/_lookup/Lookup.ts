@@ -36,8 +36,7 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputStyle
+ * @mixes Controls/input:IValue
  * @mixes Controls/_interface/IValidationStatus
  * @control
  * @public
@@ -72,8 +71,7 @@ import * as tmplNotify from 'Controls/Utils/tmplNotify';
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputStyle
+ * @mixes Controls/input:IValue
  * @control
  * @public
  * @author Герасимов А.М.
