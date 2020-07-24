@@ -96,7 +96,7 @@ export default {
              */
             popupClassName: undefined,
             // TODO: Доделать полноценную поддержку следующих опций. Пока не показываем их в документации.
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#checkedStart
              * @cfg {Date} Дата (месяц) начала установленного периода.
              *
@@ -109,7 +109,7 @@ export default {
              */
             checkedStart: undefined,
 
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#checkedEnd
              * @cfg {Date} Дата (месяц) окончания установленного периода.
              *
@@ -121,9 +121,10 @@ export default {
              */
             checkedEnd: undefined,
 
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#checkedIconCssClass
-             * @cfg {String} CSS-класс, который будет установлен у выделенных иконок. По умолчанию это зеленая галочка.
+             * @cfg {String} CSS-класс, который будет установлен у выделенных иконок.
+             * По умолчанию это зеленая галочка.
              */
 
             /*
@@ -132,9 +133,10 @@ export default {
              */
             checkedIconCssClass: 'icon-Yes icon-done',
 
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#uncheckedIconCssClass
-             * @cfg {String} CSS-класс, который будет установлен у невыделенных иконок. По умолчанию это серая галочка.
+             * @cfg {String} CSS-класс, который будет установлен у невыделенных иконок.
+             * @default undefined
              */
 
             /*
@@ -143,9 +145,10 @@ export default {
              */
             uncheckedIconCssClass: 'icon-Yes icon-disabled',
 
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#checkedIconTitle
-             * @cfg {String} Подсказка, которая будет отображаться при наведении на выделенную иконку. По умолчанию всплывающая подсказка отсутствует.
+             * @cfg {String} Подсказка, которая будет отображаться при наведении на выделенную иконку.
+             * @default undefined
              */
 
             /*
@@ -154,9 +157,10 @@ export default {
              */
             checkedIconTitle: undefined,
 
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#uncheckedIconTitle
-             * @cfg {String} Подсказка, которая будет отображаться при наведении на невыделенную иконку. По умолчанию всплывающая подсказка отсутствует.
+             * @cfg {String} Подсказка, которая будет отображаться при наведении на невыделенную иконку.
+             * @default undefined
              */
 
             /*
@@ -171,17 +175,20 @@ export default {
              * @cfg {Function} Устанавливает функцию, которая будет вызвана во время перерисовки компонента.
              * @remark
              * Аргументы функции:
-             * <ol>
-             *    <li>periods — Массив, содержащий массивы начала и окончания периода.</li>
-             * </ol>
+             * 
+             * * periods — Массив, содержащий массивы начала и окончания периода.</li>
+             * 
              * Функция должна возвращать массив логических элементов или объект, содержащий информацию об отображаемой иконке или Deffered'е, который запускает такой объект.
-             * Если функция возвращает true, будет отображена иконка, соответствующая параметрам {@Link checkedIconCssClass} и {@Link checkedIconTitle}.
-             * Если функция возвращает false, икноки будут отображены в соответствии с параметрами {@Link uncheckedIconCssClass} и {@Link uncheckedIconTitle}.
+             * Если функция возвращает true, будет отображена иконка, соответствующая параметрам {@link checkedIconCssClass} и {@link checkedIconTitle}.
+             * Если функция возвращает false, икноки будут отображены в соответствии с параметрами {@link uncheckedIconCssClass} и {@link uncheckedIconTitle}.
              * По умолчанию это зеленые и серые галочки.
              * Функция может возвращать объект, содержащий сведения о пользовательских окнах.
-             * { iconClass: 'icon-Yes icon-done',
-             *   title: 'Reporting period is closed'
-             *   }
+             * <pre class="brush: js">
+             * {
+             *    iconClass: 'icon-Yes icon-done',
+             *    title: 'Reporting period is closed'
+             * }
+             * </pre>
              *
              * @see updateIcons
              * @noshow
@@ -197,9 +204,9 @@ export default {
              * </ol>
              * The function must return an array of Boolean elements or an object containing information about
              * the displayed icon {@link Icon} or Deferred, which fires such an object.
-             * If the function returns true, the icon corresponding to the options {@Link checkedIconCssClass}
-             * and {@Link checkedIconTitle} will be drawn. If false, the icons will match the options
-             * {@Link uncheckedIconCssClass} and {@Link uncheckedIconTitle}.
+             * If the function returns true, the icon corresponding to the options {@link checkedIconCssClass}
+             * and {@link checkedIconTitle} will be drawn. If false, the icons will match the options
+             * {@link uncheckedIconCssClass} and {@link uncheckedIconTitle}.
              * By default, these are green and gray check marks.
              * The function can return an object containing information about custom windows.
              * { iconClass: 'icon-Yes icon-done',

@@ -11,7 +11,6 @@ export function titleSize(size: 's' | 'm' | 'l' | 'xl', fontSize: string): strin
             xl: '4xl'
         };
         if (constants.isBrowserPlatform) {
-            // TODO: будет удалено в версию после 5100
             Logger.error('Controls.heading.Title: Используется устаревшая опция size, ' +
                 `нужно использовать fontSize="${fontSizesTable[size]}". ` +
                 'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
@@ -30,7 +29,6 @@ export function titleStyle(style: 'primary' | 'secondary' | 'info', fontColorSty
             secondary: 'secondary'
         };
         if (constants.isBrowserPlatform) {
-            // TODO: будет удалено в версию после 5100
             Logger.error('Controls.heading.Title: Используется устаревшая опция style, ' +
                 `нужно использовать fontColorStyle="${fontStylesTable[style]}" ` +
                 'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
@@ -52,7 +50,6 @@ export function counterSize(size: 's' | 'm' | 'l', fontSize: string): string {
         };
         const result: string = fontSizesTable[size];
         if (constants.isBrowserPlatform) {
-            // TODO: будет удалено в версию после 5100
             Logger.error('Controls.heading.Back: Используется устаревшая опция size, ' +
                 `нужно использовать fontSize="${result}" ` +
                 'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
@@ -72,7 +69,6 @@ export function counterStyle(style: 'primary' | 'secondary' | 'disabled', fontCo
         };
         const result: string = fontStylesTable[style];
         if (constants.isBrowserPlatform) {
-            // TODO: будет удалено в версию после 5100
             Logger.error('Controls.heading.Counter: Используется устаревшая опция style, ' +
                 `нужно использовать fontColorStyle="${result}" ` +
                 'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
@@ -94,7 +90,6 @@ export function backSizeOptions(size: string): string {
 export function backSize(options: IBackOptions): { fontSize: string, iconSize: string } {
     const result = backSizeOptions(options.size);
     if (options.size !== undefined && constants.isBrowserPlatform) {
-        // TODO: будет удалено в версию после 5100
         Logger.error('Controls.heading.Back: Используется устаревшая опция size. ' +
             `нужно использовать fontSize="${result} и iconSize=${options.size}" ` +
             'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
@@ -120,7 +115,6 @@ export function backStyleOptions(style: 'primary' | 'secondary'): { fontColorSty
 export function backStyle(options: IBackOptions): { fontColorStyle: string, iconStyle: string } {
     const result = backStyleOptions(options.style);
     if (options.style !== undefined && constants.isBrowserPlatform) {
-        // TODO: будет удалено в версию после 5100
         Logger.error('Controls.heading.Back: Используется устаревшая опция style. ' +
             `нужно использовать fontColorStyle="${result.fontColorStyle} и iconStyle=${result.iconStyle}" ` +
             'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');

@@ -117,9 +117,6 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         if (JSON.stringify(border) !== JSON.stringify(this._border)) {
             this._border = border;
         }
-        this._fontSize = ActualAPI.fontSize(options.fontStyle, options.fontSize);
-        this._inlineHeight = ActualAPI.inlineHeight(options.size, options.inlineHeight);
-        this._fontColorStyle = ActualAPI.fontColorStyle(options.fontStyle, options.fontColorStyle);
         this._validationStatus = ActualAPI.validationStatus(options.style, options.validationStatus);
 
         if (options.state === '') {

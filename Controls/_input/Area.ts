@@ -7,10 +7,8 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
 
 import {Logger} from 'UI/Utils';
 import {detection, constants} from 'Env/Env';
-import * as ActualAPI from 'Controls/_input/ActualAPI';
 
 import 'Controls/decorator';
-
 
 /**
  * Многострочное поле ввода текста.
@@ -273,7 +271,6 @@ var Area = Text.extend({
         Area.superclass._beforeMount.apply(this, arguments);
 
         _private.validateLines(options.minLines, options.maxLines, this);
-        this._heightLine = ActualAPI.heightLine(options.size, options.fontSize);
     },
 
     _beforeUpdate: function (newOptions) {
@@ -282,7 +279,6 @@ var Area = Text.extend({
         if (this._options.minLines !== newOptions.minLines || this._options.maxLines !== newOptions.maxLines) {
             _private.validateLines(newOptions.minLines, newOptions.maxLines, this);
         }
-        this._heightLine = ActualAPI.heightLine(newOptions.size, newOptions.fontSize);
     },
 
     _inputHandler: function () {
@@ -369,7 +365,7 @@ Area.getDefaultOptions = function () {
 };
 
 Area.getOptionTypes = function () {
-    var optionTypes = Text.getOptionTypes();
+    const optionTypes = Text.getOptionTypes();
 
     optionTypes.minLines = entity.descriptor(Number, null);
     optionTypes.maxLines = entity.descriptor(Number, null);

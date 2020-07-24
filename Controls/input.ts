@@ -27,6 +27,7 @@
  * @includes ICallbackData Controls/_input/interface/ICallbackData
  * @includes isMaskFormatValid Controls/_input/Mask/isFormatValid#isFormatValid
  * @includes IBorderVisibility Controls/_input/interface/IBorderVisibility
+ * @includes IPadding Controls/_input/interface/IPadding
  * @public
  * @author Крайнов Д.О.
  */
@@ -96,6 +97,7 @@ export {default as AdapterMask} from 'Controls/_input/Adapter/Mask';
 export {default as isMaskFormatValid} from 'Controls/_input/Mask/isFormatValid';
 export {Formatter as MaskFormatter, FormatBuilder as MaskFormatBuilder} from 'Controls/decorator';
 export {IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility, getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes} from './_input/interface/IBorderVisibility';
+export {default as IPadding, IPaddingOptions, TPadding, getDefaultPaddingOptions, getOptionPaddingTypes} from './_input/interface/IBorderVisibility';
 export * from './_input/ActualAPI';
 
 /**
