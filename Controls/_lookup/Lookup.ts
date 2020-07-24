@@ -216,7 +216,7 @@ export default class Lookup extends BaseLookupInput {
    protected _rootContainerClasses: string = 'controls-Lookup';
    protected _multiLineState: boolean = false;
    protected _inputWidth: number;
-   protected _availableWidthCollection: number;
+   protected _availableWidthCollection: number = null;
    protected _counterWidth: number;
    protected _fieldWrapperMinHeight: number = null;
 
