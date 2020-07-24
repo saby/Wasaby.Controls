@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/list_new/ColumnSeparator/ColumnSeparator';
+import * as Template from 'wml!Controls-demo/list_new/Separator/Separator';
 import {Memory} from 'Types/source'
 import {getFewCategories as getData} from "../DemoHelpers/DataCatalog"
 

@@ -1939,6 +1939,10 @@ var
         },
 
         setRowSeparatorSize(rowSeparatorSize: IGridSeparatorOptions['rowSeparatorSize']): void {
+            rowSeparatorSize = _private.getSeparatorSizes({
+                rowSeparatorSize,
+                rowSeparatorVisibility: this._options.rowSeparatorVisibility
+            }).row;
             this._model.setRowSeparatorSize(rowSeparatorSize);
         },
 
