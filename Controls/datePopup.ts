@@ -3,7 +3,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor, Date as WSDate} from 'Types/entity';
-import {dateMaskConstants} from 'Controls/interface';
+import {dateMaskConstants} from 'Controls/Utils/DateControlsUtils';
 import {IRangeSelectable} from 'Controls/dateRange';
 import {DateRangeModel, IDateRangeSelectable} from 'Controls/dateRange';
 import {getRangeValueValidators} from 'Controls/Utils/DateControlsUtils';
@@ -24,6 +24,7 @@ import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "
  * @class Controls/datePopup
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
+ * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/interface/IDateMask
  * @mixes Controls/_datePopup/interfaces/IDatePopup
  * @mixes Controls/_interface/IDateRangeValidators
@@ -40,6 +41,7 @@ import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "
  * @class Controls/datePopup
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
+ * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/interface/IDateMask
  * @mixes Controls/datePopup/interfaces/IDatePopup
  * @mixes Controls/_interface/IDateRangeValidators
@@ -284,8 +286,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
     },
 
-    _currentDayIntersectHandler: function(event: SyntheticEvent, entries: IntersectionObserverSyntheticEntry[]): void {
-        this._homeButtonVisible = !entries[entries.length - 1].nativeEntry.intersectionRatio;
+    _currentDayIntersectHandler: function(event: SyntheticEvent, entry: IntersectionObserverSyntheticEntry): void {
+        this._homeButtonVisible = !entry.nativeEntry.intersectionRatio;
     },
 
     _yearsRangeChanged: function (e, start, end) {

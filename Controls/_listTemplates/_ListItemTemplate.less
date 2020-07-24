@@ -11,9 +11,9 @@
 }
 //todo: Сделать нормально, когда будут известны размеры
 .controls-listTemplates__listItemTemplate-image {
-   width: 150px;
-   height: 150px;
-   margin-right: 12px;
+   width: 160px;
+   height: 160px;
+   margin-right: @offset_m;
 }
 
 .controls-listTemplates__listItemTemplate-image_position-right {
@@ -21,7 +21,8 @@
 }
 
 .controls-listTemplates__listItemTemplate__itemContent {
+   height: 100%;
    display: flex;
    flex-direction: column;
-   flex-grow: 1;
+   width: 100%;
 }

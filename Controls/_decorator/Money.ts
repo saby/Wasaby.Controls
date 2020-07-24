@@ -9,8 +9,7 @@ import {
     IFontSize,
     IFontSizeOptions,
     IFontWeight,
-    IFontWeightOptions,
-    getFontWeightTypes
+    IFontWeightOptions
 } from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import {descriptor, DescriptorValidator} from 'Types/entity';
@@ -67,6 +66,7 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
  *
  * @author Красильников А.С.
  */
+
 class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, IFontColorStyle, IFontSize, IFontWeight {
     private _value: TValue;
     private _useGrouping: boolean;
@@ -204,7 +204,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
 
     static getOptionTypes(): Partial<Record<keyof IMoneyOptions, DescriptorValidator>> {
         return {
-            ...getFontWeightTypes(),
+            fontWeight: descriptor<string>(String).oneOf(['default', 'bold']),
             fontColorStyle: descriptor(String),
             fontSize: descriptor(String),
             useGrouping: descriptor(Boolean),

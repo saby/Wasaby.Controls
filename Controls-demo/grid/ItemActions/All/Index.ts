@@ -1,14 +1,17 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/grid/ItemActions/All/All"
-import {Memory} from "Types/source"
-import {getCountriesStats} from "../../DemoHelpers/DataCatalog"
-import {getActionsForContacts as getItemActions, getMoreActions} from "../../../list_new/DemoHelpers/ItemActionsCatalog"
-
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/grid/ItemActions/All/All';
+import {Memory} from 'Types/source';
+import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
+import {getActionsForContacts as getItemActions,
+    getMoreActions} from '../../../list_new/DemoHelpers/ItemActionsCatalog';
+import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { IItemAction } from 'Controls/itemActions';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns = getCountriesStats().getColumnsWithFixedWidths().map((cur, i) => {
+    protected _columns: IColumn[] = getCountriesStats().getColumnsWithFixedWidths().map((cur, i) => {
+    // tslint:disable-next-line
     if (i === 5) {
         return {
             ...cur,
@@ -17,11 +20,12 @@ export default class extends Control {
         }
     return cur;
     });
-    protected _itemActions = [...getItemActions(), ...getMoreActions()];
+    protected _itemActions: IItemAction[] = [...getItemActions(), ...getMoreActions()];
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
+            // tslint:disable-next-line
             data: getCountriesStats().getData().slice(1, 4)
         });
     }

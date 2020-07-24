@@ -5,7 +5,7 @@ import {RecordSet, List} from 'Types/collection';
 import {Collection} from 'Controls/display';
 import {Record} from 'Types/entity';
 import {INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
-import {Direction, IAdditionalQueryParams} from 'Controls/_source/interface/IAdditionalQueryParams';
+import {Direction, IAdditionalQueryParams} from 'Controls/_interface/IAdditionalQueryParams';
 
 type Key = string|number|null;
 type NavigationRecord = Record<{
@@ -46,10 +46,15 @@ export default class QueryParamsController implements IQueryParamsController {
         return this.getController(root).hasMoreData(direction, root);
     }
 
-    prepareQueryParams(direction: 'up' | 'down', callback?, config?, multiNavigation?: boolean): IAdditionalQueryParams {
+    prepareQueryParams(
+        direction: 'up' | 'down',
+        callback?: Function,
+        config?: IBaseSourceConfig,
+        root?: Key
+    ): IAdditionalQueryParams|IAdditionalQueryParams[] {
         let result;
 
-        if (multiNavigation) {
+        if (config && config.multiNavigation) {
             result = [];
             this._controllers.forEach((item) => {
                 result.push({
@@ -58,7 +63,7 @@ export default class QueryParamsController implements IQueryParamsController {
                 });
             });
         } else {
-            result = this.getController().prepareQueryParams(direction, callback, config);
+            result = this.getController(root).prepareQueryParams(direction, callback, config);
         }
 
         return result;
@@ -73,28 +78,30 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     setState(model: Collection<Record>, root?: Key): boolean {
-        return this.getController(root).setState(model);
+        return this.getController(root).setState(model, root);
     }
 
     updateQueryProperties(
         list?: RecordSet,
         direction?: Direction,
         config?: IBaseSourceConfig,
-        root?: Key
+        root?: Key,
+        callback?
     ): void {
         const more = list.getMetaData().more;
         let recordSetWithNavigation;
+        let meta;
 
         if (more instanceof RecordSet) {
             more.each((nav: NavigationRecord) => {
-                recordSetWithNavigation = new RecordSet();
-                recordSetWithNavigation.setMetaData({
-                    more: nav.get('nav_result')
-                });
-                this.getController(nav.get('id')).updateQueryProperties(recordSetWithNavigation, direction, config);
+                recordSetWithNavigation = list.clone(true);
+                meta = recordSetWithNavigation.getMetaData();
+                meta.more = nav.get('nav_result');
+                recordSetWithNavigation.setMetaData(meta);
+                this.getController(nav.get('id')).updateQueryProperties(recordSetWithNavigation, direction, config, callback);
             });
         } else {
-            this.getController(root).updateQueryProperties(list, direction, config);
+            this.getController(root).updateQueryProperties(list, direction, config, callback);
         }
     }
 
@@ -122,5 +129,4 @@ export default class QueryParamsController implements IQueryParamsController {
 
         return controllerItem.queryParamsController;
     }
-
 }

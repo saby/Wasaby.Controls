@@ -130,9 +130,15 @@ define([
          // assert.include(version, 'ITEM_ACTION_2');
 
          assert.include(version, 'WITHOUT_EDITING');
-         model._setEditingItemData({ key: 21, item: {}, setEditing: () => {} });
+
+         const editingItemData = { key: 21, item: {}, setEditing: () => {}, getVersion: () => '' };
+         model._setEditingItemData(editingItemData);
          version = model._calcItemVersion(item, key);
          assert.include(version, 'WITH_EDITING');
+
+         model._options.multiSelectVisibility = 'visible';
+         version = model._calcItemVersion(editingItemData, 21);
+         assert.equal(version, 'MULTISELECT-visible_EDITING_WITH_EDITING_1');
       });
 
       it('isShouldBeDrawnItem', function() {
@@ -147,20 +153,20 @@ define([
             },
             model = new lists.ListViewModel(cfg);
             const itemInRange = {
-               isSticky: false,
+               isStickedMasterItem: false,
                isGroup: false,
                isStickyHeader: false,
             }
             assert.isTrue(model.isShouldBeDrawnItem(itemInRange));
             const itemGroup = {
-               isSticky: false,
+               isStickedMasterItem: false,
                isGroup: true,
                isStickyHeader: true,
             }
             model._startIndex = 1;
             assert.isTrue(model.isShouldBeDrawnItem(itemGroup)); // curent index 0, strartIndex 1. item isn't in range but should render as group
             const itemSticky = {
-               isSticky: true,
+               isStickedMasterItem: true,
                isGroup: false,
                isStickyHeader: false,
             }
@@ -205,18 +211,15 @@ define([
             keyProperty: 'id',
             displayProperty: 'title',
             markedKey: 1,
-            markerVisibility: 'visible',
-            selectedKeys: {1: true}
+            markerVisibility: 'visible'
          };
 
          var iv = new lists.ListViewModel(cfg);
 
          var cur = iv.getCurrent();
          assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
-         assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(cfg.items.at(0), cur.item, 'Incorrect field set on getCurrent()');
-         assert.isTrue(cur.multiSelectStatus, 'Incorrect field set on getCurrent()');
       });
 
       it('getItemByMarkedKey', function () {
@@ -359,13 +362,32 @@ define([
 
          const model = new lists.ListViewModel(cfg);
 
+         let oldVersion = model.getVersion();
+
+         model.setMarkedKey(2, true, true);
+         assert.equal(model.getMarkedKey(), 2);
+         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
+
+         oldVersion = model.getVersion();
+
+         model.setMarkedKey(2, false);
+         assert.isNull(model.getMarkedKey());
+         assert.isFalse(model.getItemBySourceKey(2).isMarked());
+         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
+
+         oldVersion = model.getVersion();
+
+         model.setMarkedKey(null, false);
+         assert.isNull(model.getMarkedKey());
+         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
+
+         oldVersion = model.getVersion();
+
          model.setMarkedKey(2, true);
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
-
-         model.setMarkedKey(2, false);
-         assert.equal(model.getMarkedKey(), undefined);
-         assert.isFalse(model.getItemBySourceKey(2).isMarked());
+         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
       });
 
       // TODO SetItemActions
@@ -430,23 +452,6 @@ define([
          assert.isTrue(editingItem.drawActions, 'should draw actions on editing item if actions array is empty and toolbarVisibility = true');
       });*/
 
-      it('_updateSelection', function() {
-         var cfg = {
-            items: data,
-            keyProperty: 'id',
-            displayProperty: 'title',
-            selectedKeys: [1],
-            markedKey: null
-         };
-
-         var iv = new lists.ListViewModel(cfg);
-         assert.deepEqual(iv._selectedKeys, [1]);
-         var curPrefixItemVersion = iv._prefixItemVersion;
-         iv.updateSelection([2, 3]);
-         assert.deepEqual(iv._selectedKeys, [2, 3]);
-         assert.equal(iv._prefixItemVersion, curPrefixItemVersion);
-      });
-
       it('setMultiSelectVisibility', function() {
          var cfg = {
             items: data,
@@ -455,7 +460,7 @@ define([
          var iv = new lists.ListViewModel(cfg);
          var curPrefixItemVersion = iv._prefixItemVersion;
          iv.setMultiSelectVisibility('visible');
-         assert.equal(iv._prefixItemVersion, curPrefixItemVersion);
+         assert.equal(iv._prefixItemVersion, curPrefixItemVersion + 1);
       });
 
       it('setSwipeItem', function() {
@@ -561,6 +566,25 @@ define([
          assert.isAbove(lv.getVersion(), originalVersion);
       });
 
+      it('getPreviousItem', () => {
+         const model = new lists.ListViewModel({
+            items: new collection.RecordSet({
+               rawData: data,
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         });
+
+         let prevItemKey = model.getPreviousItem(1);
+         assert.equal(prevItemKey, 1);
+
+         prevItemKey = model.getPreviousItem(0);
+         assert.equal(prevItemKey, undefined);
+
+         prevItemKey = model.getPreviousItem(5);
+         assert.equal(prevItemKey, 3);
+      });
+
       describe('DragNDrop methods', function() {
          var dragItemData, dragEntity, target, lvm, current;
 
@@ -591,17 +615,17 @@ define([
             assert.isUndefined(item.isDragging);
 
             lvm.setDraggedItems(dragItemData, dragEntity);
-            lvm._markedKey = 2;
+            lvm.setMarkedKey(2, true);
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.isTrue(item.isDragging);
             assert.isTrue(item.isVisible);
-            assert.isTrue(item.isSticky);
+            assert.isTrue(item.isStickedMasterItem);
             assert.isFalse(item.hasMultiSelect);
 
-            lvm._markedKey = 3;
+            lvm.setMarkedKey(3, true);
             item = lvm.getItemDataByItem(lvm.getItemById('3', 'id'));
             assert.isUndefined(item.isDragging);
-            assert.isTrue(item.isSticky);
+            assert.isTrue(item.isStickedMasterItem);
             assert.isFalse(item.isVisible);
 
             item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
@@ -613,6 +637,15 @@ define([
                showed: [1]
             });
             assert.isTrue(!!item.shouldDisplayActions());
+
+            // Проверяем что чекбокс не будет показываться если запись редактируется
+            assert.isFalse(item.hasMultiSelect);
+            lvm.setMultiSelectVisibility('visible');
+            item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
+            assert.isTrue(item.hasMultiSelect);
+            lvm.getItemById('1', 'id').setEditing(true);
+            item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
+            assert.isFalse(item.hasMultiSelect);
          });
 
          it('getMultiSelectClassList hidden', function() {
@@ -631,7 +664,7 @@ define([
 
          it('getMultiSelectClassList onhover selected', function() {
             lvm._options.multiSelectVisibility = 'onhover';
-            lvm._selectedKeys = {'2': true};
+            lvm.setSelectedItems([lvm.getItemById(2, 'id').getContents()], true);
             var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable');
          });
@@ -640,6 +673,31 @@ define([
             lvm._options.multiSelectVisibility = 'onhover';
             var item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
             assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
+         });
+
+
+         it('getMultiSelectClassList', () => {
+            const current = {
+               isSelected: () => false
+            };
+
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, false),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
+
+            current.isSelected = () => true;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            current.isSelected = () => null;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            current.isSelected = () => undefined;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
          });
 
          it('setDragTargetPosition', function() {

@@ -4,17 +4,6 @@ import cMerge = require('Core/core-merge');
 import InvisibleFor = require('wml!Controls/_tile/TileView/resources/InvisibleFor');
 
 var DEFAULT_FOLDER_WIDTH = 250;
-const TILE_SIZES = {
-    small: {
-        minWidth: 220
-    },
-    medium: {
-        minWidth: 320
-    },
-    large: {
-        minWidth: 420
-    }
-};
 
 var TreeTileViewModel = TreeViewModel.extend({
     constructor: function (cfg) {
@@ -107,8 +96,8 @@ var TreeTileViewModel = TreeViewModel.extend({
     getTileItemData: function () {
         var opts = this._tileModel.getTileItemData();
         opts.defaultFolderWidth = DEFAULT_FOLDER_WIDTH;
-        if (this._options.tileMode === 'dynamic' && this._options.tileSize) {
-            opts.tileSize = TILE_SIZES[this._options.tileSize];
+        if (this._options.tileSize) {
+            opts.tileSize = this._options.tileSize;
         }
         return opts;
     },
@@ -186,6 +175,10 @@ var TreeTileViewModel = TreeViewModel.extend({
 
     getItemPaddingClasses(): string {
         return this._tileModel.getItemPaddingClasses();
+    },
+
+    setSelectedItems(): void {
+        TreeTileViewModel.superclass.setSelectedItems.apply(this, arguments);
     }
 });
 

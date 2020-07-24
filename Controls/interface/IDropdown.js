@@ -133,7 +133,7 @@ define('Controls/interface/IDropdown', [], function() {
     * WML:
     * <pre>
     *    <Controls.dropdown:Button source="{{_source}}" displayProperty="title" keyProperty="id"
-    *       menuPopupOptions={{_menuPopupOptions}}/>
+    *       menuPopupOptions="{{_menuPopupOptions}}"/>
     * </pre>
     *
     * JS:
@@ -284,6 +284,28 @@ define('Controls/interface/IDropdown', [], function() {
     * <pre>
     *    _closeMenu(): void {
     *       this._children.dropDownButton.closeMenu();
+    *    }
+    * </pre>
+    */
+
+   /**
+    * Перезагружает данные выпадающего списка.
+    * @function Controls/interface/IDropdown#reload
+    * @example
+    * WML:
+    * <pre>
+    *    <AnyControl on:itemsChanged="_reload()">
+    *       ...
+    *    </AnyControl>
+    *    <Controls.dropDown:Button name="dropDownButton">
+    *       ...
+    *    </Controls.dropDown:Button>
+    * </pre>
+    *
+    * ts:
+    * <pre>
+    *    _reload(): void {
+    *       this._children.dropDownButton.reload();
     *    }
     * </pre>
     */

@@ -2,7 +2,8 @@ import {Control, TemplateFunction} from 'UI/Base';
 import tmpl = require('wml!Controls/_LoadingIndicator/LoadingIndicator');
 import randomId = require('Core/helpers/Number/randomId');
 import {List} from 'Types/collection';
-import {ILoadingIndicatorOptions, ILoadingIndicator} from 'Controls/_LoadingIndicator/interface/ILoadingIndicator';
+import ILoadingIndicator, {ILoadingIndicatorOptions} from 'Controls/_LoadingIndicator/interface/ILoadingIndicator';
+import LoadingIndicatorOpener from 'Controls/_LoadingIndicator/LoadingIndicatorOpener';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 
@@ -21,7 +22,7 @@ import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
  *
  * Событие hideIndicator используется для удаления запроса отображения индикатора.
  * Параметры события hideIndicator идентичны аргументам метода {@link hide}.
- * 
+ *
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_loadingIndicator.less">переменные тем оформления</a>
  *
@@ -94,7 +95,6 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     protected mods: Array<string> | string;
     protected delay: number;
     protected delayTimeout: number;
-    private _toggleEventTimerId: number;
 
     protected _beforeMount(cfg: ILoadingIndicatorOptions): void {
         this.mods = [];
@@ -103,14 +103,12 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     protected _afterMount(cfg: ILoadingIndicatorOptions): void {
-        const self = this;
         if (cfg.mainIndicator) {
+            LoadingIndicatorOpener._setIndicator(this);
+            // Вернул для индикаторов, вызванных из кода
             requirejs(['Controls/popup'], (popup) => {
-                // TODO: Индикатор сейчас напрямую зависит от Controls/popup и наоборот
-                // Надо либо пересмотреть формирование библиотек и включить LoadingIndicator в popup,
-                // Либо переписать индикатор так, чтобы зависимостей от Controls/popup не было.
                 ManagerController = popup.Controller;
-                ManagerController.setIndicator(self);
+                ManagerController.setIndicator(this);
             });
         }
 
@@ -118,10 +116,12 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         // https://online.sbis.ru/opendoc.html?guid=2bd41176-8896-4a0a-a04d-a93b8a4c3a2d
         this._redrawOverlay();
     }
+
     protected _beforeUpdate(cfg: ILoadingIndicatorOptions): void {
         this._updateProperties(cfg);
         this._redrawOverlay();
     }
+
     _updateProperties(cfg: ILoadingIndicatorOptions): void {
         if (cfg.isGlobal !== undefined) {
             this.isGlobal = cfg.isGlobal;
@@ -185,21 +185,21 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
      * @function
      * @name Controls/LoadingIndicator#show
      * @param {Object} [config] Объект с параметрами. Если не задан, по умолчанию используется значение аналогичного параметра контрола.
-     * @param {Boolean} [config.isGlobal=true] Определяет, глобальный или нет идентификатор.
+     * @param {Boolean} [config.isGlobal=true] Определяет, показать индикатор над всей страницей или только над собственным контентом.
      * @param {String} [config.message=''] Текст сообщения индикатора.
      * @param {Scroll} [config.scroll=''] Добавляет градиент фону индикатора.
      * @param {Small} [config.small=''] Размер индикатора.
      * @param {Overlay} [config.overlay=default] Настройки оверлея индикатора.
      * @param {Number} [config.delay=2000] Задержка перед началом показа индикатора.
      * @param {Promise} [waitPromise] Promise, к которому привязывается отображение индикатора. Индикатор скроется после завершения Promise.
-     * @return {Number} Возвращает id индикатора загрузки. Используется в методе {@link hide} для закрытия индикатора.
+     * @returns {String} Возвращает id индикатора загрузки. Используется в методе {@link hide} для закрытия индикатора.
      * @see hide
      */
-    show(config: ILoadingIndicatorOptions, waitPromise: Promise<any>): string {
+    show(config: ILoadingIndicatorOptions, waitPromise?: Promise<any>): string {
         return this._show({...config}, waitPromise);
     }
 
-    private _show(config: ILoadingIndicatorOptions, waitPromise: Promise<any>): string {
+    private _show(config: ILoadingIndicatorOptions, waitPromise?: Promise<any>): string {
         const newCfg = this._prepareConfig(config, waitPromise);
         const isOpened = this._getItemIndex(newCfg.id) > -1;
         if (isOpened) {
@@ -222,9 +222,8 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
      * @param {Number} id Идентификатор индикатора загрузки.
      * @see show
      */
-    hide(id: string): void {
+    hide(id?: string): void {
         if (!id) {
-
             // Used public api. In this case, hide the indicator immediately.
             this._clearStack();
             this._toggleIndicator(false, {});
@@ -269,6 +268,9 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
             config = {
                 message: config
             };
+        }
+        if (!config.hasOwnProperty('message')) {
+            config.message = '';
         }
         if (!config.hasOwnProperty('overlay')) {
             config.overlay = 'default';
@@ -317,13 +319,16 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     private _toggleIndicator(visible?: boolean, config: ILoadingIndicatorOptions = {}, force?: boolean): void {
-        const isGlobal = config.isGlobal || this.isGlobal;
+        const isGlobal = config.hasOwnProperty('isGlobal') ? config.isGlobal : this.isGlobal;
         clearTimeout(this.delayTimeout);
         this._updateZIndex(config);
         if (visible) {
             this._blockContent(true, config, isGlobal);
             if (force) {
                 this._toggleIndicatorVisible(true, config);
+                if (!isGlobal) {
+                    this._forceUpdate();
+                }
             } else {
                 // if we have indicator in stack, then don't hide overlay
                 this._toggleIndicatorVisible(this._stack.getCount() > 1 && this._isOverlayVisible, config);
@@ -336,13 +341,16 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
                 }, this._getDelay(config));
             }
         } else {
+            const needForceUpdate: boolean = this._isOverlayVisible || this._isMessageVisible;
             // if we dont't have indicator in stack, then hide overlay
             if (this._stack.getCount() === 0) {
                 this._toggleIndicatorVisible(false);
                 this._blockContent(false, config, isGlobal);
+                if (needForceUpdate) {
+                    this._forceUpdate();
+                }
             }
         }
-        this._forceUpdate();
     }
 
     private _blockContent(toggle, config, isGlobal): void {
@@ -371,40 +379,16 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     private _toggleEvents(toggle: boolean): void {
-        // TODO https://online.sbis.ru/opendoc.html?guid=157084a2-d702-40b9-b54e-1a42853c301e
-        // TODO в 4000 можно попробовать убрать таймаут, сейчас вернул его, чтобы не менять поведение перед выпуском
-        const delay = 100;
-
-        // Если оверлей отключен - блокировать ничего не надо
-        if (this._options.overlay === 'none') {
-            return;
-        }
-        this._clearToggleEventTimerId();
-        if (toggle) {
-            this._toggleEventTimerId = setTimeout(() => {
-                this._toggleEventTimerId = null;
-                this._toggleEventSubscribe(toggle);
-            }, delay);
-        } else {
-            this._toggleEventSubscribe(toggle);
-        }
-    }
-
-    _clearToggleEventTimerId(): void {
-        if (this._toggleEventTimerId) {
-            clearTimeout(this._toggleEventTimerId);
-            this._toggleEventTimerId = null;
-        }
-    }
-
-    private _toggleEventSubscribe(toggle: boolean): void {
         const action = toggle ? 'addEventListener' : 'removeEventListener';
         const events = ['mousedown', 'mouseup', 'click', 'keydown', 'keyup'];
+        // TODO https://online.sbis.ru/opendoc.html?guid=157084a2-d702-40b9-b54e-1a42853c301e
         for (const event of events) {
             if (window) {
                 window[action](event, LoadingIndicator._eventsHandler, true);
-                // В оффлайне стрельнул баг: если отписываться с флагом true(несмотря на такую же подписку)
-                // отписка от события не произойдет. вызываю дополнительно отписку без флага.
+                /**
+                 * В оффлайне стрельнул баг: если отписываться с флагом true(несмотря на такую же подписку)
+                 * отписка от события не произойдет. Вызываю дополнительно отписку без флага.
+                 */
                 if (!toggle) {
                     window[action](event, LoadingIndicator._eventsHandler);
                 }
@@ -416,7 +400,8 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         this._isOverlayVisible = toggle && config.overlay !== 'none';
         this._redrawOverlay();
     }
-    private  _clearOverlayTimerId(): void  {
+
+    private _clearOverlayTimerId(): void {
         if (this._toggleOverlayTimerId) {
             clearTimeout(this._toggleOverlayTimerId);
         }
@@ -540,5 +525,5 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     static _theme: string[] = ['Controls/_LoadingIndicator/LoadingIndicator'];
 }
 
+export {default as IndicatorOpener} from 'Controls/_LoadingIndicator/LoadingIndicatorOpener';
 export default LoadingIndicator;
-

@@ -35,7 +35,7 @@ export default class extends Control {
 
         return new Dnd.ItemsEntity({
             items,
-            title: firstItem.get('title'),
+            title: firstItem.get('title')
         });
     }
 
@@ -46,7 +46,6 @@ export default class extends Control {
     protected _onToggle(): void {
         this._multiselect = this._multiselect === 'visible' ? 'hidden' : 'visible';
     }
-
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

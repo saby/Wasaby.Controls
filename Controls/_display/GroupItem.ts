@@ -1,7 +1,6 @@
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './ExpandableMixin';
 import {mixin} from 'Types/util';
-import {register} from 'Types/di';
 import { TemplateFunction } from 'UI/Base';
 
 interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
@@ -45,4 +44,3 @@ Object.assign(GroupItem.prototype, {
     _instancePrefix: 'group-item-'
 });
 
-register('Controls/display:GroupItem', GroupItem, {instantiate: false});

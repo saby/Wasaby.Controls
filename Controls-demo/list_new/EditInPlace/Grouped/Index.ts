@@ -26,7 +26,10 @@ export default class extends Control {
         return groupId === 'apple' ? constView.hiddenGroup : groupId;
     }
 
-    protected _onBeforeBeginEdit(e: SyntheticEvent<null>, options: { item?: Model }, isAdd: boolean): Promise<{item: Model}> | void {
+    protected _onBeforeBeginEdit(
+        e: SyntheticEvent<null>,
+        options: { item?: Model },
+        isAdd: boolean): Promise<{item: Model}> | void {
         if (!isAdd) {
             this._activeGroup = this._groupingKeyCallback(options.item);
             return;

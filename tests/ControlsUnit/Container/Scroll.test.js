@@ -16,7 +16,8 @@ define(
             event = {
                stopImmediatePropagation: sinon.fake()
             }
-            scroll = new scrollMod.Container({});
+            scroll = new scrollMod.Container(scrollMod.Container.getDefaultOptions());
+            scroll._options = scrollMod.Container.getDefaultOptions();
 
             var templateFn = scroll._template;
 
@@ -49,6 +50,7 @@ define(
                start: sinon.fake()
             };
             scroll._children.content = {
+               offsetHeight: 40,
                scrollHeight: 50,
                scrollTop: 10
             };
@@ -65,8 +67,33 @@ define(
                top: 'auto',
                bottom: 'auto'
             };
+            scroll._stickyHeaderContext = {
+               updateConsumers: function() { }
+            };
 
             scroll._isMounted = true;
+         });
+
+         describe('_afterMount', function() {
+            it('should be enable shadows if the contents fit in the container', function () {
+               scroll._beforeMount(scrollMod.Container.getDefaultOptions(), {});
+               sinon.stub(scroll, '_adjustContentMarginsForBlockRender');
+               scroll._stickyHeaderController = {
+                  setCanScroll: sinon.fake(),
+                  init: sinon.fake()
+               };
+               scroll._afterMount();
+               assert.isTrue(scroll._displayState.shadowEnable.top);
+               assert.isTrue(scroll._displayState.shadowEnable.bottom);
+            });
+            it('should be disable shadows if the content does not fit in the container', function () {
+               scroll._beforeMount(scrollMod.Container.getDefaultOptions(), {});
+               scroll._children.content.offsetHeight = 100;
+               sinon.stub(scroll, '_adjustContentMarginsForBlockRender');
+               scroll._afterMount();
+               assert.isFalse(scroll._displayState.shadowEnable.top);
+               assert.isFalse(scroll._displayState.shadowEnable.bottom);
+            });
          });
 
          describe('_afterUpdate', function() {
@@ -100,7 +127,7 @@ define(
                      bottom: true
                   };
                   scroll._shadowVisibilityByInnerComponents.top = test.shadowVisibilityByInnerComponents;
-                  scroll._children.stickyController = {
+                  scroll._stickyHeaderController = {
                      hasFixed: function () {
                         return Boolean(test.hasFixed);
                      },
@@ -131,7 +158,7 @@ define(
 
                it('should display top shadow if scrollTop > 0.', function () {
                   scroll._displayState.shadowVisible.top = true;
-                  scroll._children.stickyController = {
+                  scroll._stickyHeaderController = {
                      hasFixed: function () {
                         return false;
                      },
@@ -145,7 +172,7 @@ define(
 
                it('should display left shadow if scrollLeft > 0.', function () {
                   scroll._displayState.shadowVisible.left = true;
-                  scroll._children.stickyController = {
+                  scroll._stickyHeaderController = {
                      hasFixed: function () {
                         return false;
                      },
@@ -157,25 +184,10 @@ define(
                   assert.isTrue(scroll._shadowVisible('left'));
                });
 
-               it('should not display top shadow if scrollTop < 0.', function () {
-                  scroll._displayState.shadowVisible.top = true;
-                  scroll._children.content.scrollTop = -10;
-                  scroll._children.stickyController = {
-                     hasFixed: function () {
-                        return false;
-                     },
-                     hasShadowVisible: function() {
-                        return false;
-                     }
-                  };
-
-                  assert.isFalse(scroll._shadowVisible('top'));
-               });
-
                it('should not display top shadow if scrollLeft < 0.', function () {
                   scroll._displayState.shadowVisible.left = true;
                   scroll._children.content.scrollLeft = -10;
-                  scroll._children.stickyController = {
+                  scroll._stickyHeaderController = {
                      hasFixed: function () {
                         return false;
                      },
@@ -260,10 +272,9 @@ define(
                scroll._container = {
                   closest: () => {}
                };
-               scroll._children = {
-                  stickyController: {
-                     setCanScroll: () => undefined
-                  }
+               scroll._stickyHeaderController = {
+                  setCanScroll: () => undefined,
+                  resizeHandler: () => undefined
                };
             });
             it('Content at the top', function() {
@@ -318,10 +329,9 @@ define(
                scroll._container = {
                   closest: () => {}
                };
-               scroll._children = {
-                  stickyController: {
-                     setCanScroll: sinon.stub()
-                  }
+               scroll._stickyHeaderController = {
+                  setCanScroll: sinon.stub(),
+                  resizeHandler: () => undefined
                };
             });
             it('should update _displayState if it changed(vertical scroll).', function() {
@@ -335,7 +345,7 @@ define(
 
                scroll._resizeHandler();
                assert.notStrictEqual(scroll._displayState, oldDisplayState);
-               sinon.assert.calledWith(scroll._children.stickyController.setCanScroll, false);
+               sinon.assert.calledWith(scroll._stickyHeaderController.setCanScroll, false);
 
                oldDisplayState = scroll._displayState;
                scroll._resizeHandler();
@@ -501,7 +511,7 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden controls-StickyHeaderController">' +
+                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
                   '<div class="controls-Scroll__userContent">test</div>' +
                   '</span>' +
                   '<div></div>' +
@@ -511,7 +521,7 @@ define(
                result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar controls-StickyHeaderController" style="margin-right: -15px;">' +
+                  '<span class="controls-Scroll__content controls-BlockLayout__blockGroup_theme-default controls-Scroll__content_hideNativeScrollbar" style="margin-right: -15px;">' +
                   '<div class="controls-Scroll__userContent">test</div>' +
                   '</span>' +
                   '<div></div>' +
@@ -566,15 +576,24 @@ define(
 
          describe('_fixedHandler', function() {
             it('Should update scroll style when header fixed', function() {
-               scroll._fixedHandler(null, 10, 10);
+               scroll._displayState.canScroll = true;
+               scroll._fixedHandler(10, 10);
                assert.strictEqual(scroll._scrollbarStyles, 'top:10px; bottom:10px;');
                assert.strictEqual(scroll._displayState.contentHeight, 30);
             });
             it('Should update scroll style when header unfixed', function() {
                scroll._headersHeight = { top: 10, bottom: 20 };
-               scroll._fixedHandler(null, 0, 0);
+               scroll._displayState.canScroll = true;
+               scroll._fixedHandler(0, 0);
                assert.strictEqual(scroll._scrollbarStyles, 'top:0px; bottom:0px;');
                assert.strictEqual(scroll._displayState.contentHeight, 50);
+            });
+            it('Should\'t update scroll style if there is no scroll', function() {
+               scroll._displayState.contentHeight = 40;
+               scroll._displayState.canScroll = false;
+               scroll._fixedHandler(10, 10);
+               assert.strictEqual(scroll._scrollbarStyles, '');
+               assert.strictEqual(scroll._displayState.contentHeight, 40);
             });
          });
 
@@ -676,6 +695,7 @@ define(
             let
                scrollContainer = new scrollMod.Container({}),
                sandbox = sinon.createSandbox();
+            let baseUpdateStates = scrollMod.Container._private.updateStates;
 
             scrollContainer._children = {
                content: {
@@ -696,7 +716,9 @@ define(
             it('scrollTop and scrollLeft has not changed. scroll should not fire', function() {
                sandbox.stub(scrollContainer._children.scrollDetect, 'start');
                sandbox.stub(scrollContainer, '_notify');
+               scrollMod.Container._private.updateStates = () => {};
                scrollContainer._scrollHandler({});
+               scrollMod.Container._private.updateStates = baseUpdateStates;
                sinon.assert.notCalled(scrollContainer._notify);
                sinon.assert.notCalled(scrollContainer._children.scrollDetect.start);
                sandbox.restore();
@@ -710,7 +732,9 @@ define(
                   sandbox.stub(scrollContainer._children.scrollDetect, 'start');
                   sandbox.stub(scrollContainer, '_notify');
                   scrollContainer._children.content[test.scrollType] = 10;
+                  scrollMod.Container._private.updateStates = () => {};
                   scrollContainer._scrollHandler({});
+                  scrollMod.Container._private.updateStates = baseUpdateStates;
                   sinon.assert.calledWith(scrollContainer._notify, 'scroll', [10]);
                   sinon.assert.calledWith(scrollContainer._children.scrollDetect.start, sinon.match.any, 10);
                   sandbox.restore();
@@ -787,7 +811,10 @@ define(
                'scroll top should not change because scroll bar is being dragged');
 
             // Dragging stops
+            let baseUpdateStates = scrollMod.Container._private.updateStates;
+            scrollMod.Container._private.updateStates = () => {};
             scrollContainer._draggingChangedHandler({}, false);
+            scrollMod.Container._private.updateStates = baseUpdateStates;
 
             assert.strictEqual(scrollContainer._scrollTop, 50,
                'restored scroll top value should be applied after drag end');

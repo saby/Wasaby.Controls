@@ -35,7 +35,6 @@
  * @includes ISearch Controls/_interface/ISearch
  * @includes ISelectorDialog Controls/_interface/ISelectorDialog
  * @includes ISelectionObject Controls/_interface/ISelectionObject
- * @includes IBorderVisibility Controls/_interface/IBorderVisibility
  * @public
  * @author Крайнов Д.О.
  */
@@ -54,7 +53,7 @@ export {default as IIcon, IIconOptions} from './_interface/IIcon';
 export {default as IIconSize, IIconSizeOptions} from './_interface/IIconSize';
 export {default as IFontColorStyle, IFontColorStyleOptions} from './_interface/IFontColorStyle';
 export {default as IFontSize, IFontSizeOptions} from './_interface/IFontSize';
-export {default as IFontWeight, IFontWeightOptions, TFontWeight, getFontWeightTypes} from './_interface/IFontWeight';
+export {default as IFontWeight, IFontWeightOptions, TFontWeight} from './_interface/IFontWeight';
 export {default as IHeight, IHeightOptions} from './_interface/IHeight';
 export {default as ISingleSelectable, ISingleSelectableOptions, TSelectedKey} from './_interface/ISingleSelectable';
 export {default as IMultiSelectable, IMultiSelectableOptions, TSelectedKeys} from './_interface/IMultiSelectable';
@@ -65,7 +64,7 @@ export {default as INumberFormat, INumberFormatOptions} from './_interface/INumb
 export {default as IExpandable, IExpandableOptions} from './_interface/IExpandable';
 export {default as ISorting, ISortingOptions} from './_interface/ISorting';
 export {default as ILookup, ILookupOptions} from './_interface/ILookup';
-export {default as IDateMask, IDateMaskOptions, dateMaskConstants} from './_interface/IDateMask';
+export {default as IDateMask, IDateMaskOptions} from './_interface/IDateMask';
 export {default as IDateRangeValidators, IDateRangeValidatorsOptions, DateRangeValidators} from './_interface/IDateRangeValidators';
 export {default as IPropStorage, IPropStorageOptions} from './_interface/IPropStorage';
 export {default as IBorderStyle, IBorderStyleOptions} from './_interface/IBorderStyle';
@@ -75,6 +74,7 @@ export {default as ISelectionType, ISelectionTypeOptions, TSelectionType, TSelec
 export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
 export {default as IRUM, IRUMOptions} from './_interface/IRUM';
 export {default as IFilter, IFilterOptions} from './_interface/IFilter';
+export {default as IFilterChanged} from './_interface/IFilterChanged';
 export {default as INavigation, INavigationOptions, INavigationOptionValue, INavigationPositionSourceConfig, INavigationPageSourceConfig, INavigationSourceConfig, IBaseSourceConfig, IBasePositionSourceConfig, IBasePageSourceConfig} from './_interface/INavigation';
 export {default as ISortingSelectorOptions} from './_interface/ISortingSelector';
 export {default as IDisplayedRanges, IDisplayedRangesOptions} from './_interface/IDisplayedRanges';
@@ -82,4 +82,3 @@ export {default as IOpenPopup} from './_interface/IOpenPopup';
 export {default as ISearch, ISearchOptions} from './_interface/ISearch';
 export {default as IFormOperation} from './_interface/IFormOperation';
 export {default as ISelectorDialog, ISelectorDialogOptions} from './_interface/ISelectorDialog';
-export {default as IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility, getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes} from './_interface/IBorderVisibility';

@@ -2,7 +2,7 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
-import { SelectionController } from 'Controls/multiselection';
+import { FlatSelectionStrategy, SelectionController } from 'Controls/multiselection';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
 import { spy } from 'sinon';
@@ -18,23 +18,7 @@ describe('Controls/_multiselection/Controller', () => {
       keyProperty: 'id'
    });
 
-   const strategy = {
-      unselect(): object { return { selected: [], excluded: [] }; },
-      select(): object { return { selected: [], excluded: [] }; },
-      update(): object { return { selected: [], excluded: [] }; },
-      selectAll(): object { return { selected: [], excluded: [] }; },
-      toggleAll(): object { return { selected: [], excluded: [] }; },
-      unselectAll(): object { return { selected: [], excluded: [] }; },
-      getCount(): void {},
-      getSelectionForModel(): object {
-         return {
-            get(): object { return []; }
-         };
-      },
-      isAllSelected(): boolean {
-         return false;
-      }
-   };
+   const strategy = new FlatSelectionStrategy({items});
 
    let controller, model;
 
@@ -52,42 +36,42 @@ describe('Controls/_multiselection/Controller', () => {
       });
    });
 
-   describe('update', () => {
-      it('model changed', () => {
-         model =  new ListViewModel({
-            items,
-            keyProperty: 'id'
-         });
-
-         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-
-         controller.update({
-            model,
-            selectedKeys: [],
-            excludedKeys: [],
-            strategyOptions: {}
-         }, false, false);
-
-         assert.isTrue(setSelectedItemsSpy.called);
+   it('update', () => {
+      model =  new ListViewModel({
+         items,
+         keyProperty: 'id'
       });
 
-      it('selection changed', () => {
-         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-         controller.update({
-            model,
-            selectedKeys: [1],
-            excludedKeys: [],
-            strategyOptions: {}
-         }, false, false);
-         assert.isTrue(setSelectedItemsSpy.called);
+      controller.update({
+         model,
+         selectedKeys: [1],
+         excludedKeys: [1],
+         strategyOptions: { items: model.getItems() }
       });
+
+      assert.equal(controller._model, model);
+      assert.deepEqual(controller._selectedKeys, [1]);
+      assert.deepEqual(controller._excludedKeys, [1]);
+      assert.equal(controller._strategy._items, model.getItems());
    });
 
    describe('toggleItem', () => {
       it ('toggle', () => {
-         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-         controller.toggleItem(1);
-         assert.isTrue(setSelectedItemsSpy.called);
+         const expectedResult = {
+            isAllSelected: false,
+            selectedCount: 1,
+            selectedKeysDiff: {
+               keys: [1],
+               added: [1],
+               removed: []
+            }, excludedKeysDiff: {
+               keys: [],
+               added: [],
+               removed: []
+            }
+         };
+         const result = controller.toggleItem(1);
+         assert.deepEqual(result, expectedResult);
       });
 
       it('toggle breadcrumbs', () => {
@@ -118,72 +102,236 @@ describe('Controls/_multiselection/Controller', () => {
             excludedKeys: []
          });
 
-         const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-         controller.toggleItem(2);
-         assert.isTrue(setSelectedItemsSpy.called);
+         const expectedResult = {
+            isAllSelected: false,
+            selectedCount: 1,
+            selectedKeysDiff: {
+               keys: [2],
+               added: [2],
+               removed: []
+            }, excludedKeysDiff: {
+               keys: [],
+               added: [],
+               removed: []
+            }
+         };
+
+         const result = controller.toggleItem(2);
+         assert.deepEqual(result, expectedResult);
       });
    });
 
-   it('clearSelection', () => {
-      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-      const result = controller.clearSelection();
-      assert.isTrue(setSelectedItemsSpy.called);
+   describe('clearSelection', () => {
+      it('not empty model', () => {
+         controller.toggleItem(1);
+
+         const result = controller.clearSelection();
+         assert.deepEqual(result, {
+            selectedKeysDiff: {
+               added: [],
+               removed: [1],
+               keys: []
+            },
+            excludedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            selectedCount: 0,
+            isAllSelected: false
+         });
+         assert.isFalse(model.getItemBySourceKey(1).isSelected());
+         assert.isFalse(model.getItemBySourceKey(2).isSelected());
+         assert.isFalse(model.getItemBySourceKey(3).isSelected());
+      });
+
+      it('clearSelection and empty model', () => {
+         model.setItems(new RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         }));
+
+         const result = controller.clearSelection();
+         assert.deepEqual(result, {
+            selectedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            excludedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            selectedCount: 0,
+            isAllSelected: false
+         });
+      });
+   });
+
+   describe('isAllSelected', () => {
+      it('not all selected', () => {
+         const result = controller.isAllSelected();
+         assert.isFalse(result);
+      });
+
+      it('all selected not by every item', () => {
+         controller.update({
+            model,
+            selectedKeys: [null],
+            excludedKeys: [],
+            strategyOptions: { items: model.getItems() }
+         });
+
+         const result = controller.isAllSelected(false);
+         assert.isTrue(result);
+      });
+   });
+
+   it('selectAll', () => {
+      const expectedResult = {
+         isAllSelected: true,
+         selectedCount: 3,
+         selectedKeysDiff: {
+            keys: [null],
+            added: [null],
+            removed: []
+         }, excludedKeysDiff: {
+            keys: [],
+            added: [],
+            removed: []
+         }
+      };
+      const result = controller.selectAll();
+      assert.deepEqual(result, expectedResult);
+   });
+
+   it('toggleAll', () => {
+      const expectedResult = {
+         isAllSelected: true,
+         selectedCount: 3,
+         selectedKeysDiff: {
+            keys: [null],
+            added: [null],
+            removed: []
+         }, excludedKeysDiff: {
+            keys: [],
+            added: [],
+            removed: []
+         }
+      };
+      const result = controller.toggleAll();
+      assert.deepEqual(result, expectedResult);
+   });
+
+   it('unselectAll', () => {
+      controller.toggleItem(1);
+
+      const expectedResult = {
+         isAllSelected: false,
+         selectedCount: 0,
+         selectedKeysDiff: {
+            keys: [],
+            added: [],
+            removed: [1]
+         }, excludedKeysDiff: {
+            keys: [],
+            added: [],
+            removed: []
+         }
+      };
+      const result = controller.unselectAll();
+      assert.deepEqual(result, expectedResult);
+   });
+
+   it('handleAddItems', () => {
+      model.setItems(new RecordSet({
+         rawData: [
+            { id: 1 },
+            { id: 2 },
+            { id: 3 },
+            { id: 4 }
+         ],
+         keyProperty: 'id'
+      }));
+
+      controller.update({
+         model,
+         selectedKeys: [1, 2, 3, 4],
+         excludedKeys: [],
+         strategyOptions: { items: model.getItems() }
+      });
+
+      const result = controller.handleAddItems([]);
       assert.deepEqual(result, {
          selectedKeysDiff: {
             added: [],
             removed: [],
-            keys: []
+            keys: [1, 2, 3, 4]
          },
          excludedKeysDiff: {
             added: [],
             removed: [],
             keys: []
          },
-         selectedCount: undefined,
-         isAllSelected: false
+         selectedCount: 4,
+         isAllSelected: true
       });
-   });
-
-   it('selectAll', () => {
-      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-      controller.selectAll();
-      assert.isTrue(setSelectedItemsSpy.called);
-   });
-
-   it('toggleAll', () => {
-      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-      controller.toggleAll();
-      assert.isTrue(setSelectedItemsSpy.called);
-   });
-
-   it('unselectAll', () => {
-      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-      controller.unselectAll();
-      assert.isTrue(setSelectedItemsSpy.called);
-   });
-
-   it('handleAddItems', () => {
-      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-      controller.handleAddItems([]);
-      assert.isTrue(setSelectedItemsSpy.called);
+      model.each((item) => assert.isTrue(item.isSelected()));
    });
 
    it('handleRemoveItems', () => {
-      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-      controller.handleRemoveItems([]);
-      assert.isTrue(setSelectedItemsSpy.called);
+      controller.toggleItem(1);
+
+      const expectedResult = {
+         isAllSelected: false,
+         selectedCount: 0,
+         selectedKeysDiff: {
+            keys: [],
+            added: [],
+            removed: [1]
+         }, excludedKeysDiff: {
+            keys: [],
+            added: [],
+            removed: []
+         }
+      };
+      const removedItem = {
+         getKey: () => 1
+      };
+      const result = controller.handleRemoveItems([removedItem]);
+      assert.deepEqual(result, expectedResult);
    });
 
-   it('handleReset', () => {
-      controller = new SelectionController({
-         model,
-         strategy,
-         selectedKeys: [null],
-         excludedKeys: [null]
-      });
+   it('with limit', () => {
+      controller.setLimit(2);
 
-      const setSelectedItemsSpy = spy(model, 'setSelectedItems');
-      controller.handleReset([], null, true);
-      assert.isTrue(setSelectedItemsSpy.called);
+      let result = controller.selectAll();
+      assert.equal(result.selectedCount, 2);
+
+      result = controller.toggleItem(3);
+      assert.equal(result.selectedCount, 3);
+   });
+
+   it('setSelectedKeys', () => {
+      controller.toggleItem(1);
+      const result = controller.setSelectedKeys([1], []);
+
+      const expectedResult = {
+         isAllSelected: false,
+         selectedCount: 1,
+         selectedKeysDiff: {
+            keys: [1],
+            added: [],
+            removed: []
+         }, excludedKeysDiff: {
+            keys: [],
+            added: [],
+            removed: []
+         }
+      };
+
+      assert.isTrue(model.getItemBySourceKey(1).isSelected());
+      assert.deepEqual(result, expectedResult);
    });
 });

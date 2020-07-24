@@ -23,3 +23,9 @@ export function getRangeValueValidators(validators?: Function[] | object[], rang
         })
     ];
 }
+
+export const dateMaskConstants = {
+    DD_MM_YYYY: 'DD.MM.YYYY',
+    DD_MM_YY: 'DD.MM.YY',
+    MM_YYYY: 'MM.YYYY'
+};

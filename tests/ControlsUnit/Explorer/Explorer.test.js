@@ -712,14 +712,6 @@ define([
                   commitEdit: () => commitEditResult
                }
             };
-
-            explorer._restoredMarkedKeys = {
-               null: {
-                  markedKey: null
-               }
-            };
-
-
             await (new Promise((res) => {
                isEventResultReturns = explorer._onItemClick({
                   stopPropagation: function() {
@@ -736,19 +728,19 @@ define([
                   nativeEvent: 123
                }, 3);
 
+               assert.strictEqual(explorer._restoredMarkedKeys['null'].markedKey, 'itemId');
+               assert.strictEqual(explorer._restoredMarkedKeys['itemId'].parent, null);
+               assert.strictEqual(explorer._restoredMarkedKeys['itemId'].markedKey, null);
+
                setTimeout(() => {
                   res();
                }, 0);
             }));
 
             assert.isFalse(isEventResultReturns);
-            assert.deepEqual({
-               ...explorer._restoredMarkedKeys,
-               itemId: {
-                  parent: null,
-                  markedKey: null
-               }
-            }, explorer._restoredMarkedKeys);
+            assert.strictEqual(explorer._restoredMarkedKeys['null'].markedKey, 'itemId');
+            assert.strictEqual(explorer._restoredMarkedKeys['itemId'].parent, null);
+            assert.strictEqual(explorer._restoredMarkedKeys['itemId'].markedKey, null);
             assert.isTrue(isPropagationStopped);
             // Click
             assert.isTrue(isWeNotified);
@@ -832,9 +824,10 @@ define([
 
             explorer._restoredMarkedKeys = {
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
-               itemId: {parent: null, markedKey: null}
+               itemId: {parent: null, cursorPosition: '1', markedKey: null}
             };
 
             explorer._onBreadCrumbsClick({}, {
@@ -845,16 +838,18 @@ define([
 
             assert.deepEqual({
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
             }, explorer._restoredMarkedKeys);
 
             explorer._restoredMarkedKeys = {
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
-               itemId: {parent: null, markedKey: 'itemId1'},
-               itemId1: {parent: 'itemId', markedKey: null}
+               itemId: {parent: null, cursorPosition: '1', markedKey: 'itemId1'},
+               itemId1: {parent: 'itemId', cursorPosition: '2', markedKey: null}
             };
             explorer._root = 'itemId1';
 
@@ -866,9 +861,10 @@ define([
 
             assert.deepEqual({
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
-               itemId: {parent: null, markedKey: 'itemId1'},
+               itemId: {parent: null, markedKey: 'itemId1', cursorPosition: '1'},
             }, explorer._restoredMarkedKeys);
 
             assert.isTrue(isNotified);

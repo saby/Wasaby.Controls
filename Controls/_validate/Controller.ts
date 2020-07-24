@@ -2,11 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Controller');
 import ValidateContainer from 'Controls/_validate/Container';
 import ControllerClass from 'Controls/_validate/ControllerClass';
-
-interface IValidateResult {
-    [key: number]: boolean;
-    hasErrors?: boolean;
-}
+import IValidateResult from 'Controls/_validate/interfaces/IValidateResult';
 
 /**
  * Контрол, регулирующий валидацию формы.
@@ -20,8 +16,14 @@ interface IValidateResult {
  */
 
 class Form extends Control<IControlOptions> {
-    _template: TemplateFunction = template;
     private _validateController: ControllerClass = new ControllerClass();
+
+    protected _template: TemplateFunction = template;
+
+    protected _afterUpdate(oldOptions?: IControlOptions, oldContext?: any): void {
+        super._afterUpdate(oldOptions, oldContext);
+        this._validateController.resolveSubmit();
+    }
 
     onValidateCreated(e: Event, control: ValidateContainer): void {
         this._validateController.addValidator(control);
@@ -32,7 +34,9 @@ class Form extends Control<IControlOptions> {
     }
 
     submit(): Promise<IValidateResult | Error> {
-        return this._validateController.submit();
+        // Для чего нужен _forceUpdate см внутри метода deferSubmit
+        this._forceUpdate();
+        return this._validateController.deferSubmit();
     }
 
     setValidationResult(): void {

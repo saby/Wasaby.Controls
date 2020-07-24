@@ -1,19 +1,22 @@
-import {Control, TemplateFunction} from "UI/Base";
-import * as Template from "wml!Controls-demo/treeGrid/Mover/Base/Base";
-import {HierarchicalMemory} from "Types/source";
-import {Gadgets} from "../../DemoHelpers/DataCatalog";
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/treeGrid/Mover/Base/Base';
+import {HierarchicalMemory} from 'Types/source';
+import {Gadgets} from '../../DemoHelpers/DataCatalog';
+import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { TExpandOrColapsItems } from 'Controls-demo/types';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
-    protected _columns: object[];
+    protected _columns: IColumn[];
     private _selectedKeys: [];
-    private _excludedKeys: [];
+    private _excludedKeys: TExpandOrColapsItems;
     private _filter: object;
 
-    protected _beforeMount(): any {
+    protected _beforeMount(): void {
         this._columns = [{
-            displayProperty: 'title'
+            displayProperty: 'title',
+            width: ''
         }];
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
@@ -47,7 +50,6 @@ export default class extends Control {
     protected _afterItemsMove(): void {
         this._children.treeGrid.reload();
     }
-
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

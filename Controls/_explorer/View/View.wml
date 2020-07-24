@@ -17,7 +17,6 @@
                                     name="treeControl"
                                     viewName="{{_viewName}}"
                                     viewModelConstructor="{{_viewModelConstructor}}"
-                                    leftPadding="{{_leftPadding}}"
                                     actionAlignment="{{ _viewMode === 'tile' ? 'vertical' : _options.actionAlignment }}"
                                     actionCaptionPosition="{{ _viewMode === 'tile' ? 'none' : _options.actionCaptionPosition }}"
                                     itemTemplate="{{_viewMode==='tile' ? _options.tileItemTemplate : _options.itemTemplate}}"
@@ -63,7 +62,8 @@
                                     dataLoadErrback="{{_dataLoadErrback}}"
                                     itemsReadyCallback="{{_itemsReadyCallback}}"
                                     serviceDataLoadCallback="{{_serviceDataLoadCallback}}"
-                                    itemsSetCallback="{{_itemsSetCallback}}"/>
+                                    itemsSetCallback="{{_itemsSetCallback}}"
+                                    _needSetMarkerCallback="{{_needSetMarkerCallback}}"/>
       </Controls._explorer.PathController>
    </Controls.dragnDrop:Container>
 </div>

@@ -3,7 +3,12 @@ import Deferred = require('Core/Deferred');
 import Env = require('Env/Env');
 import ScrollData = require('Controls/_scroll/Scroll/Context');
 import StickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
-import {isStickySupport} from 'Controls/_scroll/StickyHeader/Utils';
+import {
+    IFixedEventData,
+    isStickySupport,
+    TRegisterEventData,
+    TYPE_FIXED_HEADERS
+} from 'Controls/_scroll/StickyHeader/Utils';
 import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
 import ScrollHeightFixUtil = require('Controls/_scroll/Scroll/ScrollHeightFixUtil');
 import template = require('wml!Controls/_scroll/Scroll/Scroll');
@@ -18,10 +23,12 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
 import * as scrollToElement from 'Controls/Utils/scrollToElement';
 import {descriptor} from 'Types/entity';
-import {constants} from 'Env/Env';
+import {detection, constants} from 'Env/Env';
 import {LocalStorageNative} from 'Browser/Storage';
 import Observer from './IntersectionObserver/Observer';
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
+import StickyHeaderController from './StickyHeader/Controller';
+import {debounce} from 'Types/function';
 
 /**
  * Контейнер с тонким скроллом.
@@ -223,6 +230,26 @@ let
           return shadowPosition;
       },
 
+       _setScrollTop(self, value: number): void {
+            // На айпаде скроллбар не строится. Чтобы изменение св-ва _scrollTop не приводило к _forceUpdate
+            // его нельзя объявлять на шаблоне ( даже в ветке кода, которая не испольняется). Перевожу на сеттер.
+            self._scrollTop = value;
+            self._children.scrollBar?.setScrollPosition(value);
+            _private.updateStates(self);
+       },
+
+       updateStates(self): void {
+           const oldDisplayState = self._displayState;
+           const displayState = _private.calcDisplayState(self);
+
+           if (!isEqual(oldDisplayState, displayState)) {
+               self._displayState = displayState;
+               self._stickyHeaderController.setCanScroll(displayState.canScroll);
+               if (oldDisplayState.canScroll !== displayState.canScroll) {
+                   _private._updateScrollbar(self);
+               }
+           }
+       },
       /**
        * Возвращает включено ли отображение тени.
        * Если отключено, то не рендерим контейнер тени и не рассчитываем его состояние.
@@ -288,7 +315,8 @@ let
 
       setScrollTop: function(self, scrollTop) {
          self._children.scrollWatcher.setScrollTop(scrollTop);
-         self._scrollTop = _private.getScrollTop(self, self._children.content);
+         const value = _private.getScrollTop(self, self._children.content);
+         _private._setScrollTop(self, value);
          _private.notifyScrollEvents(self, scrollTop);
       },
 
@@ -358,14 +386,17 @@ let
          return ScrollHeightFixUtil.calcHeightFix(self._children.content);
       },
 
+      calcShadowEnable(options, position: POSITION, canScroll: boolean): boolean {
+          return options[`${position}ShadowVisibility`] === SHADOW_VISIBILITY.VISIBLE ||
+                 (_private.isShadowEnable(options, position) && canScroll)
+      },
+
       calcDisplayState(self) {
          const
              canScroll = _private.calcCanScroll(SCROLL_TYPE.VERTICAL, self),
              canHorizontalScroll = _private.calcCanScroll(SCROLL_TYPE.HORIZONTAL, self),
-             topShadowEnable = self._options.topShadowVisibility === SHADOW_VISIBILITY.VISIBLE ||
-                 (_private.isShadowEnable(self._options, POSITION.TOP) && canScroll),
-             bottomShadowEnable = self._options.bottomShadowVisibility === SHADOW_VISIBILITY.VISIBLE ||
-                 (_private.isShadowEnable(self._options, POSITION.BOTTOM) && canScroll),
+             topShadowEnable = _private.calcShadowEnable(self._options, POSITION.TOP, canScroll),
+             bottomShadowEnable = _private.calcShadowEnable(self._options, POSITION.BOTTOM, canScroll),
              shadowPosition = topShadowEnable || bottomShadowEnable ? _private.getShadowPosition(self) : '',
              leftShadowEnable = canHorizontalScroll,
              rightShadowEnable = canHorizontalScroll,
@@ -418,6 +449,14 @@ let
          self._displayState.horizontalShadowPosition = displayState.horizontalShadowPosition;
          self._displayState.shadowEnable = displayState.shadowEnable;
          self._displayState.shadowVisible = displayState.shadowVisible;
+      },
+
+       _updateScrollbar: function(self): void {
+          // Там где нативный скроллбар, стили считать не нужно
+         if (self._displayState.canScroll && self._scrollbarVisibility()) {
+            self._displayState.contentHeight = _private.getContentHeight(self);
+            self._scrollbarStyles =  'top:' + self._headersHeight.top + 'px; bottom:' + self._headersHeight.bottom + 'px;';
+         }
       },
 
       proxyEvent(self, event, eventName, args) {
@@ -495,6 +534,10 @@ let
 
       _isMounted: false,
 
+      _stickyHeaderController: null,
+       _topPlaceholderSizeChanged: false,
+       _updateScrollStateDebounce: null,
+
       constructor: function(cfg) {
          Scroll.superclass.constructor.call(this, cfg);
       },
@@ -519,7 +562,7 @@ let
          this.calcStyleOverflow(options.scrollMode);
          this._displayState = {};
          this._stickyHeaderContext = new StickyHeaderContext({
-            shadowPosition: options.topShadowVisibility !== SHADOW_VISIBILITY.HIDDEN ? 'bottom' : '',
+            shadowPosition: '',
          });
          this._headersHeight = {
             top: 0,
@@ -540,6 +583,10 @@ let
          } else {
             this._pagingState = {};
          }
+
+         this._stickyHeaderController = new StickyHeaderController(this, {
+             fixedCallback: this._stickyHeaderFixedCallback.bind(this)
+         });
 
          if (receivedState) {
             _private.updateDisplayState(this, receivedState.displayState);
@@ -613,11 +660,14 @@ let
       },
 
       _afterMount: function() {
+          this._stickyHeaderController.init(this._container);
+
          /**
           * Для определения heightFix и styleHideScrollbar может требоваться DOM, поэтому проверим
           * смогли ли мы в beforeMount их определить.
           */
-         var needUpdate = false, calculatedOptionValue;
+         let needUpdate = false;
+         let calculatedOptionValue;
 
          if (typeof this._displayState.heightFix === 'undefined') {
             this._displayState.heightFix = ScrollHeightFixUtil.calcHeightFix(this._children.content);
@@ -638,7 +688,7 @@ let
             this._displayState.canScroll = calculatedOptionValue;
             // Сделано не через опции потому что stickyController скоро станет не компонентом
             // а полностью js контроллером. И что бы избежать лишних синхронизаций.
-            this._children.stickyController.setCanScroll(calculatedOptionValue);
+            this._stickyHeaderController.setCanScroll(calculatedOptionValue);
             needUpdate = true;
          }
 
@@ -654,6 +704,18 @@ let
          calculatedOptionValue = _private.getHorizontalShadowPosition(this);
          if (calculatedOptionValue) {
             this._displayState.horizontalShadowPosition = calculatedOptionValue;
+            needUpdate = true;
+         }
+
+         calculatedOptionValue = _private.calcShadowEnable(this._options, POSITION.TOP, this._displayState.canScroll);
+         if (calculatedOptionValue) {
+            this._displayState.shadowEnable.top = calculatedOptionValue;
+            needUpdate = true;
+         }
+
+         calculatedOptionValue = _private.calcShadowEnable(this._options, POSITION.BOTTOM, this._displayState.canScroll);
+         if (calculatedOptionValue !== this._displayState.shadowEnable.bottom) {
+            this._displayState.shadowEnable.bottom = calculatedOptionValue;
             needUpdate = true;
          }
 
@@ -705,7 +767,7 @@ let
          if (!newEnv() && window) {
             window.addEventListener('resize', this._resizeHandler);
          }
-
+          this._updateScrollStateDebounce = debounce(this._updateScrollState.bind(this), 20);
           this._isMounted = true;
       },
 
@@ -720,15 +782,19 @@ let
             return;
          }
 
-         let displayState = _private.calcDisplayState(this);
+         const oldDisplayState = this._displayState;
+         const displayState = _private.calcDisplayState(this);
 
          if (!isEqual(this._displayState, displayState)) {
             this._displayState = displayState;
-            this._children.stickyController.setCanScroll(displayState.canScroll);
+            this._stickyHeaderController.setCanScroll(displayState.canScroll);
+            if (oldDisplayState.canScroll !== displayState.canScroll) {
+               _private._updateScrollbar(this);
+            }
             this._updateStickyHeaderContext();
-
-            this._forceUpdate();
          }
+
+         this._stickyHeaderController.updateContainer(this._container);
       },
 
       _beforeUnmount(): void {
@@ -744,24 +810,15 @@ let
              this._observer.destroy();
              this._observer = null;
          }
+         this._stickyHeaderController.destroy();
       },
 
       _shadowVisible(position: POSITION) {
-         const stickyController = this._children.stickyController;
+         const stickyController = this._stickyHeaderController;
          const fixed: boolean = stickyController?.hasFixed(position);
          const shadowVisible: boolean = stickyController?.hasShadowVisible(position);
          // Do not show shadows on the scroll container if there are fixed headers. They display their own shadows.
          if (fixed && shadowVisible) {
-            return false;
-         }
-
-         // On ipad with inertial scrolling due to the asynchronous triggering of scrolling and caption fixing  events,
-         // sometimes it turns out that when the first event is triggered, the shadow must be displayed,
-         // and immediately after the second event it is not necessary.
-         // These conditions appear during scrollTop < 0. Just do not display the shadow when scrollTop < 0.
-         // Turn off this check on the first build when there is no dom tree yet.
-         if (Env.detection.isMobileIOS && position === POSITION.TOP && this._children.content &&
-               _private.getScrollTop(this, this._children.content) < 0) {
             return false;
          }
 
@@ -775,6 +832,12 @@ let
            }
 
            return this._displayState.shadowVisible[position];
+       },
+
+       _stickyHeaderFixedCallback(position: POSITION): void {
+          if (!detection.isMobileIOS) {
+              this._forceUpdate();
+          }
        },
 
       _updateShadowMode(event, shadowVisibleObject): void {
@@ -811,7 +874,7 @@ let
       },
 
       setOverflowScrolling: function(value: string) {
-          this._children.content.style.webkitOverflowScrolling = value;
+          this._children.content.style.overflow = value;
       },
 
       /**
@@ -847,52 +910,60 @@ let
          if (this._isHidden()) {
             return;
          }
-         const displayState = _private.calcDisplayState(this);
-
-         if (!isEqual(this._displayState, displayState)) {
-            this._displayState = displayState;
-            this._children.stickyController.setCanScroll(displayState.canScroll);
-         }
-
+         _private.updateStates(this);
          _private.calcPagingStateBtn(this);
+         this._stickyHeaderController.resizeHandler();
       },
 
-      _scrollHandler: function(ev) {
-         const scrollTop = _private.getScrollTop(this, this._children.content);
-          const scrollLeft = _private.getScrollLeft(this, this._children.content);
+       _updateScrollState(event: SyntheticEvent): void {
+           const scrollTop = _private.getScrollTop(this, this._children.content);
+           const scrollLeft = _private.getScrollLeft(this, this._children.content);
+           this._topPlaceholderSizeChanged = false;
 
-         if (this._scrollLockedPosition !== null) {
-            this._children.content.scrollTop = this._scrollLockedPosition;
+           if (this._scrollLockedPosition !== null) {
+               this._children.content.scrollTop = this._scrollLockedPosition;
 
-            // Проверяем, изменился ли scrollTop, чтобы предотвратить ложные срабатывания события.
-            // Например, при пересчете размеров перед увеличением, плитка может растянуть контейнер между перерисовок,
-            // и вернуться к исходному размеру.
-            // После этого  scrollTop остается прежним, но срабатывает незапланированный нативный scroll
-         } else if (this._scrollTop !== scrollTop || this._scrollLeft !== scrollLeft) {
-            if (!this._dragging) {
-                if (this._scrollTop !== scrollTop) {
-                    this._scrollTop = scrollTop;
-                    this._notify('scroll', [this._scrollTop]);
-                }
-                if (this._scrollLeft !== scrollLeft) {
-                    this._scrollLeft = scrollLeft;
-                    this._notify('scroll', [this._scrollLeft]);
-                }
-            } else {
-               // scrollTop/scrollLeft нам во время перетаскивания могут проставить извне (например
-               // восстановив скролл после подгрузки новых данных). Во время перетаскивания,
-               // мы не меняем наш scrollTop/scrollLeft, чтобы сам скролл и позиция ползунка не
-               // перепрыгнули из под мышки пользователя, но запомним эту позицию,
-               // возможно нужно будет установить ее после завершения перетаскивания
-                if (this._scrollTop !== scrollTop) {
-                    this._scrollTopAfterDragEnd = scrollTop;
-                }
-                if (this._scrollLeft !== scrollLeft) {
-                    this._scrollLeftAfterDragEnd = scrollLeft;
-                }
-            }
-            this._children.scrollDetect.start(ev, this._scrollTop);
-         }
+               // Проверяем, изменился ли scrollTop, чтобы предотвратить ложные срабатывания события.
+               // Например, при пересчете размеров перед увеличением, плитка может растянуть контейнер между перерисовок,
+               // и вернуться к исходному размеру.
+               // После этого  scrollTop остается прежним, но срабатывает незапланированный нативный scroll
+           } else if (this._scrollTop !== scrollTop || this._scrollLeft !== scrollLeft) {
+               if (!this._dragging) {
+                   if (this._scrollTop !== scrollTop) {
+                       _private._setScrollTop(this, scrollTop);
+                       this._notify('scroll', [this._scrollTop]);
+                   }
+                   if (this._scrollLeft !== scrollLeft) {
+                       this._scrollLeft = scrollLeft;
+                       this._notify('scroll', [this._scrollLeft]);
+                   }
+               } else {
+                   // scrollTop/scrollLeft нам во время перетаскивания могут проставить извне (например
+                   // восстановив скролл после подгрузки новых данных). Во время перетаскивания,
+                   // мы не меняем наш scrollTop/scrollLeft, чтобы сам скролл и позиция ползунка не
+                   // перепрыгнули из под мышки пользователя, но запомним эту позицию,
+                   // возможно нужно будет установить ее после завершения перетаскивания
+                   if (this._scrollTop !== scrollTop) {
+                       this._scrollTopAfterDragEnd = scrollTop;
+                   }
+                   if (this._scrollLeft !== scrollLeft) {
+                       this._scrollLeftAfterDragEnd = scrollLeft;
+                   }
+               }
+               this._children.scrollDetect.start(event, this._scrollTop);
+           }
+       },
+
+      _scrollHandler: function(event: SyntheticEvent): void {
+          // Убираем дерганья скролбара при работе виртуального скролла. Когда отрабатывает виртуальный скрол, изменяется
+          // topPlaceholderSize, scrollTop же получаем складывая scrollTop c topPlaceholderSize, в итоге, контент в скрол
+          // контейнере еще не появился, scrollTop не изменился, а topPlaceholderSize уже был измненен. Поэтому чтобы не было
+          // дерганий скролбара мы отложенно высчитаем scrollTop.
+          if (!this._topPlaceholderSizeChanged) {
+              this._updateScrollState(event);
+          } else {
+              this._updateScrollStateDebounce(event);
+          }
       },
 
       _keydownHandler: function(ev) {
@@ -1030,7 +1101,7 @@ let
             // В случае если запомненная позиция скролла для восстановления не совпадает с
             // текущей, установим ее при окончании перетаскивания
             if (this._scrollTopAfterDragEnd !== this._scrollTop) {
-               this._scrollTop = this._scrollTopAfterDragEnd;
+                _private._setScrollTop(this, this._scrollTopAfterDragEnd);
                _private.notifyScrollEvents(this, this._scrollTop);
             }
             this._scrollTopAfterDragEnd = undefined;
@@ -1077,7 +1148,12 @@ let
 
           if (this._stickyHeaderContext.shadowPosition !== shadowPosition) {
               this._stickyHeaderContext.shadowPosition = shadowPosition;
-              this._stickyHeaderContext.updateConsumers();
+              // Контекст для тени постоянно вызывает обновление всех заголовков при смене shadowPosition, это
+              // сильно сказывается на производительности и вызывает дерганья при скролле на ios в случае,
+              // когда доскроллили до низа контейнера.
+              if (!detection.isMobileIOS) {
+                  this._stickyHeaderContext.updateConsumers();
+              }
           }
       },
 
@@ -1199,6 +1275,7 @@ let
       },
 
       _updatePlaceholdersSize: function(e, placeholdersSizes) {
+           this._topPlaceholderSizeChanged = true;
          if (this._topPlaceholderSize !== placeholdersSizes.top ||
             this._bottomPlaceholderSize !== placeholdersSizes.bottom) {
             this._topPlaceholderSize = placeholdersSizes.top;
@@ -1217,44 +1294,41 @@ let
          // В противном случае произойдет подскролл в ненужном контейнере
          event.stopPropagation();
 
-         // Инерционный скролл приводит к дерганью: мы уже
-         // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
-         // дерганья и лишняя загрузка данных.
-         // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
-         // https://popmotion.io/blog/20170704-manually-set-scroll-while-ios-momentum-scroll-bounces/
-         if (Env.detection.isMobileIOS) {
-            this.setOverflowScrolling('auto');
-         }
-
          this._savedScrollTop = this._children.content.scrollTop;
          this._savedScrollPosition = this._children.content.scrollHeight - this._savedScrollTop;
+          // Инерционный скролл приводит к дерганью: мы уже
+          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
+          // дерганья и лишняя загрузка данных.
+          // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
+          // https://popmotion.io/blog/20170704-manually-set-scroll-while-ios-momentum-scroll-bounces/
+          if (Env.detection.isMobileIOS) {
+              this.setOverflowScrolling('hidden');
+          }
       },
 
-      _restoreScrollPosition(event: SyntheticEvent<Event>, heightDifference: number, direction: string): void {
+      _restoreScrollPosition(event: SyntheticEvent<Event>, heightDifference: number, direction: string,
+                             correctingHeight: number = 0): void {
          // На это событие должен реагировать только ближайший скролл контейнер.
          // В противном случае произойдет подскролл в ненужном контейнере
          event.stopPropagation();
-
+          // Инерционный скролл приводит к дерганью: мы уже
+          // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
+          // дерганья и лишняя загрузка данных.
+          // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
+          if (Env.detection.isMobileIOS) {
+              this.setOverflowScrolling('');
+          }
          const newPosition = direction === 'up' ?
-             this._children.content.scrollHeight - this._savedScrollPosition + heightDifference :
-             this._savedScrollTop - heightDifference;
+             this._children.content.scrollHeight - this._savedScrollPosition + heightDifference - correctingHeight :
+             this._savedScrollTop - heightDifference + correctingHeight;
 
          this._children.scrollWatcher.setScrollTop(newPosition, true);
-
-         // Инерционный скролл приводит к дерганью: мы уже
-         // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
-         // дерганья и лишняя загрузка данных.
-         // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
-         if (Env.detection.isMobileIOS) {
-            this.setOverflowScrolling('');
-         }
       },
 
-      _fixedHandler: function(event, topHeight, bottomHeight) {
+      _fixedHandler: function(topHeight, bottomHeight) {
          this._headersHeight.top = topHeight;
          this._headersHeight.bottom = bottomHeight;
-         this._displayState.contentHeight = _private.getContentHeight(this);
-         this._scrollbarStyles =  'top:' + topHeight + 'px; bottom:' + bottomHeight + 'px;';
+         _private._updateScrollbar(this);
       },
 
       /* При получении фокуса input'ами на IOS13, может вызывается подскролл у ближайшего контейнера со скролом,
@@ -1298,6 +1372,25 @@ let
 
        _intersectHandler(items): void {
            this._notify('intersect', [items]);
+       },
+
+       // StickyHeaderController
+
+       _stickyFixedHandler(event: SyntheticEvent<Event>, fixedHeaderData: IFixedEventData): void {
+          this._stickyHeaderController.fixedHandler(event, fixedHeaderData);
+          this._fixedHandler(
+              this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed),
+              this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed)
+          )
+          this._notify('fixed', [this._headersHeight.top, this._headersHeight.bottom]);
+       },
+
+       _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
+          this._stickyHeaderController.registerHandler(event, data, register);
+       },
+
+       getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
+          return this._stickyHeaderController.getHeadersHeight(position, type)
        }
    });
 

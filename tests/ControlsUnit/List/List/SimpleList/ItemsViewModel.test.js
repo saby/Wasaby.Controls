@@ -135,7 +135,6 @@ define([
 
          var cur = iv.getCurrent();
          assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
-         assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(data[0], cur.item, 'Incorrect field set on getCurrent()');
 
@@ -229,7 +228,7 @@ define([
 
          //первый кейс - были items - массив, а ставим рекордсет. Должен полностью смениться инстанс
          var iv = new list.ItemsViewModel(cfg1);
-         iv.setItems(rs2);
+         iv.setItems(rs2, cfg1);
          assert.equal(rs2, iv._items, 'Incorrect items after setItems');
          assert.equal(2, iv.getVersion(), 'Incorrect version setItems');
          assert.equal(0, iv._startIndex, 'Incorrect startIndex after setItems');
@@ -238,18 +237,40 @@ define([
 
          //второй кейс - были items - рекордсет, и ставим рекордсет. Должен остаться инстанс старого, но данные новые
          iv = new list.ItemsViewModel(cfg2);
-         iv.setItems(rs2);
+         iv.setItems(rs2, cfg2);
          assert.equal(rs1, iv._items, 'Incorrect items after setItems');
          assert.equal(4, iv._items.at(0).get('id'), 'Incorrect items after setItems');
          assert.equal(1, iv.getVersion(), 'Incorrect version setItems');
 
-         iv.setItems(rs3);
+         iv.setItems(rs3, cfg2);
          assert.equal(2, iv.getVersion(), 'Incorrect version setItems');
          assert.equal(iv._items.getIdProperty(), 'id', 'Incorrect keyProperty');
 
-         iv.setItems(rs4);
+         iv.setItems(rs4, cfg2);
          assert.equal(4, iv.getVersion(), 'Incorrect version setItems');
          assert.equal(iv._items.getIdProperty(), 'key', 'Incorrect keyProperty');
+
+      });
+
+      it('Result from options', function () {
+         var metaData = {
+            results: ['results']
+         };
+         var rs1 = new collection.RecordSet({
+            rawData: data,
+            idProperty: 'id'
+         });
+         rs1.setMetaData(metaData);
+
+         var cfg1 = {
+            items: rs1,
+            keyProperty: 'id',
+            displayProperty: 'title'
+         };
+
+         var iv = new list.ItemsViewModel(cfg1);
+
+         assert.deepEqual(['results'], iv.getMetaResults(), 'Incorrect meta results after constructor');
 
       });
 
@@ -356,7 +377,7 @@ define([
          assert.equal(1, result, 'itemsReadycallback wasn\'t call');
 
          result = 0;
-         iv.setItems(rs2);
+         iv.setItems(rs2, cfg);
          assert.equal(1, result, 'itemsReadycallback wasn\'t call');
       });
 

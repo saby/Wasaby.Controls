@@ -2,7 +2,7 @@ import {register} from 'Types/di';
 import {Model, IModelProperty} from 'Types/entity';
 import {IHashMap} from 'Types/declarations';
 import {TreeItemsUtil} from 'Controls/list';
-import {HierarchicalMemory} from 'Types/source';
+import {HierarchicalMemory, Query} from 'Types/source';
 
 const data = [
     {
@@ -42,7 +42,8 @@ const columns = [{
 }];
 
 class DemoUniqueMemory extends HierarchicalMemory {
-    query(query) {
+    // tslint:disable-next-line
+    query(query: Query): any {
         const where = query.getWhere();
         if (where.parentUnique) {
             where.parent = (where.parentUnique.split(','))[0];

@@ -2,7 +2,10 @@
    <div class="controls-menu" attr:ws-no-focus="true">
       <ws:if data="{{_listModel}}">
          <ws:if data="{{_applyButtonVisible}}">
-            <div class="controls-DropdownList__applyButton controls-Menu__applyButton_theme-{{_options.theme}}">
+            <div class="controls-DropdownList__applyButton
+                        controls-Menu__applyButton_theme-{{_options.theme}}
+                        controls-Menu_{{_options.headerTemplate ? 'withHeader' : 'withoutHeader'}}__applyButton_theme-{{_options.theme}}
+                        controls-Menu_{{_closeButtonVisible ? 'withClose' : 'withoutClose'}}__applyButton_theme-{{_options.theme}}">
                <Controls.buttons:Button viewMode="functionalButton"
                                         icon="icon-Yes"
                                         iconSize="s"
@@ -65,7 +68,6 @@
                                 closeOnOutsideClick="{{true}}"
                                 on:showIndicator="_changeIndicatorOverlay()"
                                 on:result="_subMenuResult()"
-                                on:close="_closeSubMenu()"
                                 template="Controls/menu:Popup"
                                 className="controls-DropdownList__subMenu controls-Menu__subMenu controls-Menu__subMenu_margin_theme-{{_options.theme}}"/>
       </ws:if>

@@ -1,10 +1,17 @@
-define(['Controls/buttons'], function(buttons) {
-   'use strict';
-
+define(['Controls/buttons', 'UI/Utils'], function(buttons, {Logger}) {
    var btn;
    var actualAPI = buttons.ActualApi;
 
    describe('Controls.Button', function() {
+      var sandbox;
+      beforeEach(() => {
+         sandbox = sinon.createSandbox();
+         sandbox.stub(Logger, 'error');
+      });
+
+      afterEach(() => {
+         sandbox.restore();
+      });
       describe('styleToViewMode', function() {
          it('style linkMain', function() {
             let cfg = actualAPI.styleToViewMode('linkMain');
@@ -324,27 +331,6 @@ define(['Controls/buttons'], function(buttons) {
          });
       });
 
-      describe('constructor() and _beforeUpdate()', function() {
-         var inst;
-
-         beforeEach(function() {
-            inst = {};
-         });
-
-         it('constructor', function() {
-            buttons.Button.prototype._beforeMount.call(inst, {
-               style: 'primary'
-            });
-            assert.equal(inst._buttonStyle, 'primary');
-         });
-
-         it('_beforeUpdate', function() {
-            buttons.Button.prototype._beforeMount.call(inst, {
-               style: 'primary'
-            });
-            assert.equal(inst._buttonStyle, 'primary');
-         });
-      });
       describe('click', function() {
          var customEvent = {}, eventBublle = true;
 

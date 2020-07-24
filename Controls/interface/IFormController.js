@@ -63,6 +63,12 @@ define('Controls/interface/IFormController', [
     */
 
    /**
+    * @name Controls/interface/IFormController#confirmationShowingCallback
+    * @cfg {Function} Функция, которая определяет должно ли показаться окно с подтверждением сохранения/не сохранения измененных данных при закрытии диалога редактирования записи. Необходимо для случаев, когда есть измененные данные, не связанные с рекордом.
+    * @returns {Boolean} true - окно покажется. false - нет
+    */
+
+   /**
     * @name Controls/interface/IFormController#createMetaData
     * @cfg {Object} Задает ассоциативный массив, который используется только при создании новой записи для инициализации её начальными значениями. Создание записи выполняется методом, который задан в опции {@link Types/source:ICrud#create}.
     * Также, это значение по умолчанию метода create.
@@ -101,6 +107,32 @@ define('Controls/interface/IFormController', [
    /**
     * @name Controls/interface/IFormController#errorContainer
     * @cfg {Controls/dataSource:error.IContainerConstructor} Компонент для отображения шаблона ошибки по данным от {@link Controls/_dataSource/_error/Controller}
+    */
+
+   /**
+    * @name Controls/interface/IFormController#initializingWay
+    * @cfg {String} Устанавливает способ инициализации данных диалога редактирования.
+    * @variant 'local' Верстка контрола строится по записи, переданной в опцию {@link Controls/interface/IFormController#record record}, запроса на БЛ нет.
+    * @variant 'read' Перед построением верстки выполняется метод "Прочитать" по ключу, переданному в опцию {@link Controls/interface/IFormController#key key}. Построение <b>откладывается</b> до ответа БЛ.
+    * @variant 'create' Перед построением верстки выполняется метод "Создать", построение <b>откладывается</b> до ответа БЛ.
+    * @variant 'delayedRead' Верстка контрола строится по записи, переданной в опцию {@link Controls/interface/IFormController#record record}, параллельно выполняется метод "Прочитать" по ключу,
+    * переданному в опции {@link Controls/interface/IFormController#key key}.
+    * Построение вертки контрола <b>не откладывается.</b>
+    * @variant 'delayedCreate' Верстка контрола строится по записи, переданной в опцию
+    * {@link Controls/interface/IFormController#record record}, параллельно выполняется метод "Создать".
+    * Построение вертки контрола <b>не откладывается.</b>
+    * @example
+    * <pre>
+    *    <Controls.form:Controller initializingWay={{_myInitializingWay}}”>
+    *        ...
+    *    </Controls.form:Controller>
+    * </pre>
+    * <pre>
+    *    import {INITIALIZING_WAY} from 'Controls/form';
+    *    _beforeMount() {
+    *       this._myInitializingWay = INITIALIZING_WAY.CREATE;
+    *    }
+    * </pre>
     */
 
    /**
@@ -289,7 +321,7 @@ define('Controls/interface/IFormController', [
 
    /**
     * @event Controls/interface/IFormController#requestCustomUpdate Происходит перед сохранением записи.
-    * В обработчике события можно отменить  базовую логику сохранения (вернуть false) или отложить ее для выполнения пользовательских действий перед сохранением (вернуть Promise<boolean>).
+    * В обработчике события можно отменить  базовую логику сохранения (вернуть true) или отложить ее для выполнения пользовательских действий перед сохранением (вернуть Promise<boolean>).
     * Используется, например, для асинхронной валидации или пользовательского сохранения записи.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @example

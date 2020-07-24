@@ -1,6 +1,15 @@
 import {SyntheticEvent} from "Vdom/Vdom";
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {isStickySupport, getNextId, getOffset, POSITION, IOffset, IFixedEventData, TRegisterEventData} from 'Controls/_scroll/StickyHeader/Utils';
+import {
+    isStickySupport,
+    getNextId,
+    getOffset,
+    POSITION,
+    IOffset,
+    IFixedEventData,
+    TRegisterEventData,
+    getGapFixSize
+} from 'Controls/_scroll/StickyHeader/Utils';
 import template = require('wml!Controls/_scroll/StickyHeader/Group');
 import {SHADOW_VISIBILITY} from './_StickyHeader';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
@@ -82,27 +91,17 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         this._index = getNextId();
     }
 
-    protected _afterMount(): void {
-        RegisterUtil(this, 'updateFixed', this._updateFixed.bind(this));
-    }
-
-    protected _beforeUnmount(): void {
-        UnregisterUtil(this, 'updateFixed');
-    }
-
     getOffset(parentElement: HTMLElement, position: POSITION): number {
-        return getOffset(parentElement, this._container, position);
+        let offset: number = getOffset(parentElement, this._container, position);
+        if (this._fixed) {
+            offset += getGapFixSize();
+        }
+        return offset;
     }
 
     resetSticky(): void {
         for (const id in this._headers) {
             this._headers[id].inst.resetSticky();
-        }
-    }
-
-    updateBottomShadowStyle(): void {
-        for (const id in this._headers) {
-            this._headers[id].inst.updateBottomShadowStyle();
         }
     }
 
@@ -127,6 +126,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
             }
         }
         return SHADOW_VISIBILITY.hidden;
+    }
+
+    getChildrenHeaders(): TRegisterEventData[] {
+        return Object.keys(this._headers).map(id => this._headers[id]);
     }
 
     private _setOffset(value: number, position: POSITION): void {
@@ -164,15 +167,21 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         }
     }
 
-    protected _updateFixed(ids: number[]): void {
+    protected updateFixed(ids: number[]): void {
         var isFixed = ids.indexOf(this._index) !== -1;
         if (this._isFixed !== isFixed) {
             this._isFixed = isFixed;
             if (isFixed) {
-               this._children.stickyFixed.start(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
+               this._updateFixed(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
             } else {
-               this._children.stickyFixed.start([]);
+               this._updateFixed([]);
             }
+        }
+    }
+
+    _updateFixed(ids: number[]): void {
+        for (const id in this._headers) {
+            this._headers[id].inst.updateFixed(ids);
         }
     }
 

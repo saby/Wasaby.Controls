@@ -4,13 +4,16 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import {
-    TBorderVisibility, IBorderVisibility, IBorderVisibilityOptions,
-    getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes,
     IHeight, IHeightOptions, IFontColorStyle,
     IFontColorStyleOptions, IFontSize, IFontSizeOptions,
     IBorderStyle, IBorderStyleOptions, IValidationStatus, IValidationStatusOptions
 } from 'Controls/interface';
+import IBorderVisibility, {
+    TBorderVisibility, IBorderVisibilityOptions,
+    getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes
+} from './interface/IBorderVisibility';
 
+// @ts-ignore
 import * as template from 'wml!Controls/_input/Render/Render';
 
 type State =
@@ -101,7 +104,6 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     protected _fontColorStyle: string;
     protected _validationStatus: string;
     protected _template: TemplateFunction = template;
-    protected _theme: string[] = ['Controls/input', 'Controls/Classes'];
 
     readonly '[Controls/_interface/IHeight]': boolean = true;
     readonly '[Controls/_interface/IFontSize]': boolean = true;
@@ -111,10 +113,10 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     readonly '[Controls/interface/IBorderVisibility]': boolean = true;
 
     private updateState(options: IRenderOptions): void {
-        this._border = Render._detectToBorder(options.borderVisibility, options.multiline);
-        this._fontSize = ActualAPI.fontSize(options.fontStyle, options.fontSize);
-        this._inlineHeight = ActualAPI.inlineHeight(options.size, options.inlineHeight);
-        this._fontColorStyle = ActualAPI.fontColorStyle(options.fontStyle, options.fontColorStyle);
+        const border = Render._detectToBorder(options.borderVisibility, options.multiline);
+        if (JSON.stringify(border) !== JSON.stringify(this._border)) {
+            this._border = border;
+        }
         this._validationStatus = ActualAPI.validationStatus(options.style, options.validationStatus);
 
         if (options.state === '') {
@@ -165,6 +167,8 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
 
         this.updateState(this._options);
     }
+
+    static _theme: string[] = ['Controls/input', 'Controls/Classes'];
 
     private static notSupportFocusWithin(): boolean {
         return detection.isIE || (detection.isWinXP && detection.yandex);

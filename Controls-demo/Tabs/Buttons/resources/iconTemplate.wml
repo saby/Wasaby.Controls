@@ -1,0 +1,7 @@
+<div>
+    <div class="{{item.get('icon')}} icon-small
+            content_tab_margin controls-icon_style-{{item.get('iconStyle')}}_theme-{{_options.theme}}"></div>
+    <ws:if data='{{counter}}'>
+        <div style="display: inline-flex">{{counter}}</div>
+    </ws:if>
+</div>

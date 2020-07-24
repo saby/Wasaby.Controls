@@ -107,9 +107,16 @@ define(
          });
 
          it('click separator', function() {
+            let isResized = false;
+            list._notify = (event) => {
+               if (event === 'controlResize') {
+                  isResized = true;
+               }
+            };
             list._isMaxHeight = true;
             list._clickSeparatorHandler();
             assert.isFalse(list._isMaxHeight);
+            assert.isTrue(isResized);
          });
 
          it('_clickHandler', function() {

@@ -3,12 +3,13 @@ import * as Template from 'wml!Controls-demo/list_new/ItemActions/ItemActionsIco
 import {Memory} from 'Types/source';
 import {getContactsCatalog as getData} from '../../DemoHelpers/DataCatalog';
 import {getActionsForContacts as getItemActions} from '../../DemoHelpers/ItemActionsCatalog';
+import { IItemAction } from 'Controls/itemActions';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _itemActions: Array<{}> = getItemActions();
-    protected _contextMenuConfig: {} = {
+    protected _itemActions: IItemAction[] = getItemActions();
+    protected _contextMenuConfig: { iconSize: string } = {
         iconSize: 's'
     };
 
@@ -18,7 +19,6 @@ export default class extends Control {
             data: getData()
         });
     }
-
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -1,6 +1,6 @@
 import rk = require('i18n!Controls');
 import * as buttonsTemplate from 'wml!Controls/_search/Input/Buttons';
-import {Base, TextViewModel as ViewModel} from 'Controls/input';
+import {generateStates, Base, TextViewModel as ViewModel} from 'Controls/input';
 import {throttle} from 'Types/function';
 import {descriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
@@ -157,8 +157,9 @@ var _private = {
 var Search = Base.extend({
    _wasActionUser: false,
 
-   _beforeMount(): void {
+   _beforeMount(options): void {
       this._notifySearchClick = throttle(this._notifySearchClick, SEARCH_BY_CLICK_THROTTLE, false);
+      generateStates(this, options);
       return Search.superclass._beforeMount.apply(this, arguments);
    },
 

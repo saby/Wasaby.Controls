@@ -87,7 +87,7 @@ define(
 
             renderOptions.multiSelect = true;
             leftSpacing = menuRender.getLeftSpacing(renderOptions);
-            assert.equal(leftSpacing, 'null');
+            assert.equal(leftSpacing, 'm');
 
             renderOptions.itemPadding.left = 'xs';
             leftSpacing = menuRender.getLeftSpacing(renderOptions);
@@ -113,6 +113,16 @@ define(
             renderOptions.itemPadding.right = 'xs';
             rightSpacing = menuRender.getRightSpacing(renderOptions);
             assert.equal(rightSpacing, 'xs');
+
+            renderOptions.itemPadding.right = null;
+            renderOptions.multiSelect = true;
+            rightSpacing = menuRender.getRightSpacing(renderOptions);
+            assert.equal(rightSpacing, 'menu-multiSelect');
+
+            renderOptions.itemPadding.right = 'menu-close';
+            renderOptions.multiSelect = true;
+            rightSpacing = menuRender.getRightSpacing(renderOptions);
+            assert.equal(rightSpacing, 'menu-close-multiSelect');
          });
 
          describe('addEmptyItem', function() {
@@ -353,6 +363,7 @@ define(
             assert.isOk(itemData.item);
             assert.isOk(itemData.isSelected);
             assert.isOk(itemData.getPropValue);
+            assert.isFalse(itemData.isFixedItem);
          });
 
          it('getIconPadding', function() {

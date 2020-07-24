@@ -186,6 +186,17 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          assert.deepEqual(filterLayout._filterButtonItems, expectedButtonItems);
          assert.deepEqual(filterLayout._fastFilterItems, expectedFastItems);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValueFast', testKey2: ''});
+
+         filterLayout.saveOptions({
+            prefetchParams: {
+               PrefetchSessionId: 'test'
+            },
+            filter: {
+               PrefetchSessionId: 'test'
+            }
+         });
+         filterLayout._beforeUpdate({filterButtonSource: buttonItems});
+         assert.isFalse(filterLayout._filter.hasOwnProperty('PrefetchSessionId'));
       });
 
       it('_beforeUpdate new historyId', function () {
@@ -1000,7 +1011,9 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
                })
             ]
          });
-         let filterItems = [{id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField2: 'anyValue2'}];
+         let filterItems = [
+             {id: 'testId', value: 'testValue', resetValue: 'testResetValue', textValue: '', anyField2: 'anyValue2'},
+             {id: 'testId2', value: 'testValue2', resetValue: 'testResetValue2', textValue: '', anyField2: 'anyValue2', doNotSaveToHistory: true}];
          sandbox.replace(HistoryUtils, 'getHistorySource', () => {
             return {
                getItems: () => historyItems,
@@ -1013,10 +1026,12 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          filterItems = [{id: 'testId2', value: 'testValuePinned', resetValue: 'testResetValuePinned', textValue: '', anyField1: 'anyValue2'}]
          assert.isNull(Filter._private.getHistoryByItems(self, 'testId', filterItems), 'item cannot be deleted from pinned');
          assert.isFalse(self._updateMeta.isClient);
+         assert.isTrue(self._updateMeta.$_pinned);
 
          filterItems = [{id: 'testId3', value: 'testValueClient', resetValue: 'testResetValueClient', textValue: '', anyField1: 'anyValue3'}]
          assert.isNull(Filter._private.getHistoryByItems(self, 'testId', filterItems), 'item cannot be deleted from clint');
          assert.isTrue(self._updateMeta.isClient);
+         assert.isTrue(self._updateMeta.$_favorite);
          sandbox.restore();
       });
 

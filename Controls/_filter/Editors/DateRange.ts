@@ -10,6 +10,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
  * Подробнее о настройке объединенного фильтра с выбором периода читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3 здесь}.
  * @class Controls/_filter/Editors/DateRange
  * @mixes Controls/_dateRange/interfaces/ILinkView
+ * @mixes Controls/_dateRange/interfaces/IDateRange
  * @extends Core/Control
  * @author Герасимов А.М.
  * @see Controls/filter:View
@@ -80,8 +81,8 @@ class DateRangeEditor extends Control<IControlOptions> {
 /**
  * @name Controls/_filter/Editors/DateRange#editorMode
  * @cfg {String} Режим отображения редактора.
- * @variant Selector В качестве редактора используется {@link Controls/dateRange:Selector}.
- * @variant Lite В качестве редактора используется {@link Controls/dateRange:LiteSelector}.
+ * @variant Selector В качестве редактора используется {@link Controls/dateRange:RangeSelector}.
+ * @variant Lite В качестве редактора используется {@link Controls/dateRange:RangeShortSelector}.
  * @default Lite
  */
 export default DateRangeEditor;
@@ -97,4 +98,3 @@ export default DateRangeEditor;
  * @cfg {Array<Date>} Массив из двух значений - дата "от" и дата "до", которые применятся при сбросе.
  * @see value
  */
-

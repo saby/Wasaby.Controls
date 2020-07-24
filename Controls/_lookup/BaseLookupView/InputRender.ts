@@ -1,10 +1,19 @@
 import input = require('Controls/input');
 import template = require('wml!Controls/_lookup/BaseLookupView/InputRender/InputRender');
 
-
    var InputRenderLookup = input.Text.extend({
       _template: template,
       _defaultInput: null,
+
+      _beforeMount: function(options) {
+         InputRenderLookup.superclass._beforeMount.apply(this, arguments);
+         input.generateStates(this, options);
+      },
+
+      _beforeUpdate: function(options) {
+         InputRenderLookup.superclass._beforeUpdate.apply(this, arguments);
+         input.generateStates(this, options);
+      },
 
       _beforeUnmount: function() {
          this._defaultInput = null;

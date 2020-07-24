@@ -38,7 +38,6 @@
                                                       on:touchmove="_touchmovePage()"
                                                       on:touchend="_touchendPage()"
                                                       on:mousedown="_mousedownPage()"
-                                                      on:mouseup="_mouseupPage()"
                                                       on:keyPress="_keyPressHandler()"
                                                       on:mouseup="_mouseupPage()"
                                                       on:mouseleave="_mouseleavePage()"
@@ -52,9 +51,16 @@
                                                       <Controls.popup:Container attr:id="popup"
                                                                                 eventHandler="{{content._managerEventHandler}}"/>
                                                       <ws:partial
+                                                         attr:class="bodyContent__zIndex-context"
                                                          template="{{ _options.content }}"
                                                          scope="{{ templateConfig }}" />
-                                                      <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
+                                                       <ws:if data="{{_options.notesContent}}">
+                                                           <ws:partial
+                                                                   attr:class="bodyContent__notesContent"
+                                                                   template="{{ _options.notesContent }}"
+                                                                   scope="{{ templateConfig }}" />
+                                                       </ws:if>
+                                                      <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}" isGlobal="{{true}}">
                                                          <div></div>
                                                       </Controls.LoadingIndicator>
 

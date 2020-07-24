@@ -5,12 +5,20 @@ import { RecordSet } from 'Types/collection';
 
 import titleColumnTpl = require('wml!Controls-demo/grid/RenderContainer/titleColumn');
 import subtitleColumnTpl = require('wml!Controls-demo/grid/RenderContainer/subtitleColumn');
+import { IItemAction } from 'Controls/itemActions';
+
+const MAXITEMCOUNT = 100;
+
+interface IColumn {
+    template: unknown;
+    width?: string;
+}
 
 export default class GridRenderContainerDemo extends Control {
     protected _template: TemplateFunction = template;
 
-    protected _items: RecordSet = this._generateItems(100);
-    protected _columns = [
+    protected _items: RecordSet = this._generateItems(MAXITEMCOUNT);
+    protected _columns: IColumn[] = [
         {
             template: titleColumnTpl,
             width: '2fr'
@@ -23,7 +31,7 @@ export default class GridRenderContainerDemo extends Control {
         }
     ];
 
-    protected _itemActions: any[] = [
+    protected _itemActions: IItemAction[] = [
         {
             id: 1,
             icon: 'icon-PhoneNull',
@@ -41,7 +49,7 @@ export default class GridRenderContainerDemo extends Control {
         }
     ];
 
-    private _generateItems(count: number) {
+    private _generateItems(count: number): RecordSet {
         const rawData = [];
         for (let i = 0; i < count; i++) {
             rawData.push(this._generateItem(i));
@@ -52,10 +60,11 @@ export default class GridRenderContainerDemo extends Control {
         });
     }
 
-    private _generateItem(key: number) {
+    private _generateItem(key: number): object {
         return {
             key,
             title: `item ${key}`,
+            // tslint:disable-next-line
             subtitle: `${7*key*key % 101} -- ${9*key % 102}`
         };
     }

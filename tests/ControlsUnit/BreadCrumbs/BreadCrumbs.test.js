@@ -101,26 +101,21 @@ define([
                   title: '...'
                }
             };
-            bc._children = {
-               menuOpener: {
-                  open: function(openerOptions) {
-                     assert.equal(openerOptions.target, 123);
-                     assert.equal(openerOptions.templateOptions.displayProperty, 'test');
-                  },
-                  close: function() {}
+            bc._menuOpener = {
+               open: function (openerOptions) {
+                  assert.equal(openerOptions.target, 123);
+                  assert.equal(openerOptions.templateOptions.displayProperty, 'test');
+               },
+               close: function () {
                }
             };
             bc._dotsClick({
                currentTarget: 123,
             }, itemData);
-            bc._onOpen();
-            assert.isTrue(bc._popupIsOpen);
 
             bc._dotsClick({
                currentTarget: 123,
             }, itemData);
-            bc._onClose();
-            assert.isFalse(bc._popupIsOpen);
          });
       });
       it('_onResult', function(done) {
@@ -132,14 +127,12 @@ define([
                assert.equal(bc._options.items[0].get('id'), eventArgs[0].get('id'));
             }
          };
-         bc._children = {
-            menuOpener: {
-               close: function() {
-                  done();
-               }
+         bc._menuOpener = {
+            close: function () {
+               done();
             }
          };
-         bc._onResult(null, 'itemClick', args);
+         bc._onResult('itemClick', args);
       });
    });
 });

@@ -37,7 +37,7 @@ export interface ISelectionModel extends IBaseCollection<CollectionItem<Model>> 
     * Получить список элементов
     * @method
     * @public
-    * @return {RecordSet} писок элементов
+    * @return {RecordSet} список элементов
     */
    getCollection(): RecordSet;
 
@@ -45,11 +45,18 @@ export interface ISelectionModel extends IBaseCollection<CollectionItem<Model>> 
     * Задать выбранные элементы
     * @method
     * @public
-    * @param {Array<CollectionItem<Model>>} items Список элементов
+    * @param {Model[]} items Список элементов
     * @param {boolean} selected Состояние переданных элементов
+    * @param {Boolean} silent Не уведомлять о изменении
     * @void
     */
-   setSelectedItems(items: Array<CollectionItem<Model>>, selected: boolean): void;
+   setSelectedItems(items: Model[], selected: boolean, silent: boolean): void;
+
+   /**
+    * Возвращает кол-во элементов в проекции
+    * @return {number} кол-во элементов
+    */
+   getCount(): number;
 }
 
 /**

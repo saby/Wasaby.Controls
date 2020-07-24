@@ -99,7 +99,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
               // по-хорошему нужна возможность заморозки контрола внутри вкладок https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
               // пока же будем игнорировать такие пересчеты, если до этого уже считали
 
-              if ((clientHeight !== 0) && (scrollHeight !== 0) && self._sizeCache) {
+              if ((clientHeight !== 0) && (scrollHeight !== 0) || isEmpty(self._sizeCache)) {
                   self._sizeCache = {
                       scrollHeight: scrollHeight,
                       clientHeight: clientHeight
@@ -427,10 +427,13 @@ import {SyntheticEvent} from "Vdom/Vdom"
             const container = _private.getDOMContainer(this._container);
             if (this._isVirtualPlaceholderMode() && !withoutPlaceholder) {
                const sizeCache = _private.getSizeCache(this, container);
+               const cachedScrollTop = scrollTop;
                const realScrollTop = scrollTop - this._topPlaceholderSize;
                const scrollTopOverflow = sizeCache.scrollHeight - realScrollTop - sizeCache.clientHeight < 0;
                const applyScrollTop = () => {
-                  container.scrollTop = realScrollTop;
+
+                  // нужный scrollTop будет отличным от realScrollTop, если изменился _topPlaceholderSize. Вычисляем его по месту
+                  container.scrollTop = cachedScrollTop - this._topPlaceholderSize;
                };
                if (realScrollTop >= 0 && !scrollTopOverflow) {
                   container.scrollTop = realScrollTop;

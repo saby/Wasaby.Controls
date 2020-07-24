@@ -2,12 +2,10 @@
 import { Control, TemplateFunction } from 'UI/Base';
 import _template = require('wml!Controls/_dataSource/_error/Container');
 import { constants } from 'Env/Env';
-import { ViewConfig } from './Handler';
-import Mode from './Mode';
+import { Mode, Popup, ViewConfig } from 'Controls/error';
 import { isEqual } from 'Types/object';
 import { load } from 'Core/library';
 import { default as IContainer, IContainerConfig } from './IContainer';
-import Popup from './Popup';
 
 interface IInlistTemplateOptions {
     listOptions: object;
@@ -154,12 +152,18 @@ export default class Container extends Control<IContainerConfig> implements ICon
         return this._popupHelper.openDialog(config, this, {
             onClose: () => this._onDialogClosed()
         }).then((popupId) => {
-            this._popupId = popupId;
+            if (popupId) {
+                this._popupId = popupId;
+            }
         });
     }
 
-    private _notifyServiceError(template: Control, options: object): Promise<IDialogData> {
-        return this._notify('serviceError', [template, options, this], { bubbling: true });
+    private _notifyServiceError(template: Control, options: object): Promise<IDialogData> | IDialogData | void {
+        return this._notify(
+            'serviceError',
+            [template, options, this],
+            { bubbling: true }
+        ) as Promise<IDialogData> | IDialogData | void;
     }
 
     private __showDialog(config: Config): void {
@@ -175,7 +179,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
         config.isShowed = true;
         getTemplate(config.template)
             .then((dialogTemplate) => this._notifyServiceError(dialogTemplate, config.options))
-            .then((dialogData: IDialogData) => {
+            .then((dialogData) => {
                 /**
                  * Controls/popup:Global ловит событие 'serviceError'.
                  * В Wasaby окружении Controls/popup:Global есть на каждой странице в виде глобальной обертки.

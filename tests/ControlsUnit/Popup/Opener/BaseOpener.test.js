@@ -57,6 +57,7 @@ define(
          it('_beforeUnmount', () => {
             let opener = new popup.BaseOpener();
             let isHideIndicatorCall = false;
+            opener.saveOptions(popup.BaseOpener.getDefaultOptions());
             opener._indicatorId = '123';
             opener._openPopupTimerId = '145';
             opener._options.closePopupBeforeUnmount = true;
@@ -105,17 +106,15 @@ define(
       });
 
       it('getIndicatorConfig', () => {
-         const opener = new popup.BaseOpener();
          const standartCfg = {
-            id: '',
+            id: undefined,
             message: rk('Загрузка'),
             delay: 2000
          };
-         assert.deepEqual(standartCfg, opener._getIndicatorConfig());
-         opener._indicatorId = '123';
+         assert.deepEqual(standartCfg, popup.BaseOpener.util.getIndicatorConfig());
+         const indicatorId = '123';
          standartCfg.id = '123';
-         assert.deepEqual(standartCfg, opener._getIndicatorConfig());
-         opener.destroy();
+         assert.deepEqual(standartCfg, popup.BaseOpener.util.getIndicatorConfig(indicatorId));
       });
    }
 );

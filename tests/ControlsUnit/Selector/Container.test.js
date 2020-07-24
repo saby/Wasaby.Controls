@@ -45,6 +45,15 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
           assert.equal(lookupPopup.Container._private.getSelectedItems(emptyOptions, emptyContext).getCount(), 0);
       });
 
+      it('_beforeUnmount', () => {
+         const container = new lookupPopup.Container();
+
+         container._loadingIndicatorId = 'testId';
+         container._beforeUnmount();
+
+         assert.isNull(container._loadingIndicatorId);
+      });
+
       it('_private::getInitialSelectedItems', () => {
          const self = {};
          self._selectedKeys = [1];
@@ -173,6 +182,32 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             root: 1
          });
          assert.isTrue(preparedFilter.searchParam === 'test');
+      });
+
+      it('prepare filter with selected node and searchParam', () => {
+         const filter = {
+            searchParam: 'test',
+            parent: 123
+         };
+         const source = new sourceLib.Memory();
+         const selection = operations.selectionToRecord({ selected: [1, 2], excluded: [3, 4] }, source.getAdapter());
+         const items = new collection.RecordSet({
+            rawData: [
+               {
+                  id: 1,
+                  isNode: true
+               }
+            ]
+         });
+         const preparedFilter = lookupPopup.Container._private.prepareFilter({
+            filter,
+            selection,
+            searchParam: 'searchParam',
+            root: 1,
+            nodeProperty: 'isNode',
+            items
+         });
+         assert.equal(preparedFilter.searchParam, 'test');
       });
 
       it('prepareResult', function() {

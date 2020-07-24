@@ -1,9 +1,9 @@
 import rk = require('i18n!Controls');
-import { ISwipeConfig  } from 'Controls/display';
 
 import { IMeasurer } from '../interface/IMeasurer';
-import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemActions';
-import { Utils } from '../Utils';
+import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemAction';
+import { MeasurerUtils } from './MeasurerUtils';
+import {ISwipeActionTemplateConfig} from '../interface/ISwipeActionTemplateConfig';
 
 const breakpoints: Record<
    TActionCaptionPosition,
@@ -79,12 +79,14 @@ function getPaddingSize(
 export const verticalMeasurer: IMeasurer = {
    getSwipeConfig(
       actions: IItemAction[],
+      rowWidth: number,
       rowHeight: number,
       actionCaptionPosition: TActionCaptionPosition,
-      menuButtonVisibility: 'visible'|'adaptive'
-   ): ISwipeConfig {
+      menuButtonVisibility: 'visible'|'adaptive',
+      theme: string
+   ): ISwipeActionTemplateConfig {
       let columnsCount = 1;
-      let itemActions = Utils.getActualActions(actions);
+      let itemActions = MeasurerUtils.getActualActions(actions);
 
       const {
          itemActionsSize,

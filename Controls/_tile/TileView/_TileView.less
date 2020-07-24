@@ -80,11 +80,6 @@
    margin: @item_offset_tile / 2;
 }
 
-.controls-TileView__item .controls-itemActionsV {
-   visibility: visible;
-   opacity: 0;
-}
-
 .controls-TileView__itemContent_theme-@{themeName} {
    background-color: @item_backgorund-color_tile;
    box-sizing: border-box;
@@ -105,6 +100,7 @@
 }
 
 .controls-TileView__item_animated .controls-itemActionsV {
+   visibility: visible;
    transition: opacity 0.05s step-end;
 }
 .controls-TileView__item_animated {
@@ -229,10 +225,15 @@
 
 .controls-TileView__item_autoHeight {
    position: static;
+   height: 100%;
 }
 
 .controls-TileView__item_withoutMarker_theme-@{themeName} {
    border: @item_border-thickness_tile solid @item_border-color_tile;
+}
+
+.controls-TileView__item_withoutBorder_theme-@{themeName} {
+   border: @item_border-thickness_tile solid transparent;
 }
 
 .controls-TileView__item_withMarker_theme-@{themeName} {
@@ -340,4 +341,32 @@
    display: flex;
    flex-direction: column;
    height: 100%;
+}
+
+.controls-TileView__itemContent_background_danger_theme-@{themeName} {
+   background-color: @danger_color;
+}
+
+.controls-TileView__itemContent_background_success_theme-@{themeName} {
+   background-color: @success_color;
+}
+
+.controls-TileView__itemContent_background_warning_theme-@{themeName} {
+   background-color: @warning_color;
+}
+
+.controls-TileView__itemContent_background_primary_theme-@{themeName} {
+   background-color: @primary_color;
+}
+
+.controls-TileView__itemContent_background_secondary_theme-@{themeName} {
+   background-color: @secondary_color;
+}
+
+.controls-TileView__itemContent_background_unaccented_theme-@{themeName} {
+   background-color: @unaccented_color;
+}
+
+.controls-TileView__itemContent_background_readonly_theme-@{themeName} {
+   background-color: @readonly_color;
 }

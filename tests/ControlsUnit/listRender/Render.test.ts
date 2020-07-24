@@ -289,13 +289,15 @@ describe('Controls/_listRender/Render', () => {
 
         let itemSwipeFired = false;
         let itemSwipeParameter;
+        let itemSwipeClientWidth;
         let itemSwipeClientHeight;
         let itemSwipeBubbling = false;
         render._notify = (eventName, params, opts) => {
             if (eventName === 'itemSwipe') {
                 itemSwipeFired = true;
                 itemSwipeParameter = params[0];
-                itemSwipeClientHeight = params[2];
+                itemSwipeClientWidth = params[2];
+                itemSwipeClientHeight = params[3];
                 itemSwipeBubbling = !!(opts && opts.bubbling);
             }
         };
@@ -310,6 +312,7 @@ describe('Controls/_listRender/Render', () => {
                     classList: {
                         contains: () => true
                     },
+                    clientWidth: 321,
                     clientHeight: 123
                 })
             }
@@ -322,6 +325,7 @@ describe('Controls/_listRender/Render', () => {
         assert.isTrue(stopPropagationCalled, 'swipe event propagation should have stopped');
         assert.strictEqual(itemSwipeParameter, item);
         assert.isFalse(itemSwipeBubbling, 'itemSwipe should not bubble');
+        assert.strictEqual(itemSwipeClientWidth, 321);
         assert.strictEqual(itemSwipeClientHeight, 123);
     });
 
@@ -439,5 +443,37 @@ describe('Controls/_listRender/Render', () => {
         assert.isFalse(render._canHaveMultiselect({ multiselectVisibility: 'hidden' }));
         assert.isTrue(render._canHaveMultiselect({ multiselectVisibility: 'onhover' }));
         assert.isTrue(render._canHaveMultiselect({ multiselectVisibility: 'visible' }));
+    });
+
+    describe('Calling animation end handlers', () => {
+        let render: Render;
+        let lastCalledEvent: string;
+        beforeEach(() => {
+            lastCalledEvent = null;
+            render = new Render(defaultCfg);
+            render._notify = (eventName) => {
+                lastCalledEvent = eventName;
+            };
+        });
+
+        it('should not fire closeSwipe event on any event', () => {
+            render._onActionsSwipeAnimationEnd({
+                stopPropagation(): void {},
+                nativeEvent: {
+                    animationName: 'test'
+                }
+            });
+            assert.notExists(lastCalledEvent);
+        });
+
+        it('should fire closeSwipe event on \'itemActionsSwipeClose\' event', () => {
+            render._onActionsSwipeAnimationEnd({
+                stopPropagation(): void {},
+                nativeEvent: {
+                    animationName: 'itemActionsSwipeClose'
+                }
+            });
+            assert.equal(lastCalledEvent, 'closeSwipe');
+        });
     });
 });

@@ -11,19 +11,65 @@ import * as moneyEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/mone
 import * as numberEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/numberEditor';
 import * as defaultEditor from 'wml!Controls-demo/grid/EditInPlace/Decorators/defaultEditor';
 import * as Images from 'Controls-demo/DragNDrop/Images';
-import * as itemTpl from  'wml!Controls-demo/grid/resources/CellTemplates/CellWithBgc';
+import * as itemTpl from 'wml!Controls-demo/grid/resources/CellTemplates/CellWithBgc';
 import * as itemCountr from 'wml!Controls-demo/grid/resources/CellTemplates/CountryTemp';
 import * as resTpl from 'wml!Controls-demo/grid/EditInPlace/EditingCell/resultsTpl';
 import * as notScrollableCell from 'wml!Controls-demo/grid/ColumnScroll/DragScrolling/notScrollableCell';
 import * as notDraggableCell from 'wml!Controls-demo/grid/ColumnScroll/DragScrolling/notDraggableCell';
 import * as dragScrollPopulationCell from 'wml!Controls-demo/grid/ColumnScroll/DragScrolling/populationCell';
 
+import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { IHeader } from 'Controls-demo/types';
+
+export interface IData {
+    id: number;
+    number?: number;
+    country?: string;
+    capital?: string;
+    population?: number;
+    square?: number;
+    populationDensity?: number;
+    date?: string;
+    time?: string;
+    name?: string;
+    message?: string;
+    photo?: string;
+    state?: string;
+    fullName?: string;
+    invoice?: number;
+    documentSign?: number;
+    documentNum?: number;
+    taxBase?: number;
+    document?: string;
+    documentDate?: null | string;
+    serviceContract?: null | string;
+    description?: string;
+    shipper?: null | string;
+}
+
+export interface IColumnRes extends IColumn {
+    result?: number;
+    results?: number;
+}
+
+interface IResults {
+    full: Array<{ population: number, square: number, populationDensity: number }>;
+    partial: number[];
+}
+
+interface IImages {
+    dogadkin: string;
+    kesareva: string;
+    korbyt: string;
+    krainov: string;
+    baturina: string;
+}
 
 const resultCellTpl = numberResultTpl;
 
-function getCountriesStats() {
+const getCountriesStats = () => {
     return {
-        getData: () => [
+        getData: (): IData[] => [
             {
                 id: 0,
                 number: 1,
@@ -196,7 +242,7 @@ function getCountriesStats() {
                 populationDensity: 21.73
             }
         ],
-        getColumnsForVirtual: () => [
+        getColumnsForVirtual: (): IColumn[] => [
             {
                 displayProperty: 'number',
                 width: '40px'
@@ -208,41 +254,47 @@ function getCountriesStats() {
             {
                 displayProperty: 'capital',
                 width: '200px'
-            },
+            }
         ],
 
-        getColumnsWithoutWidths: () => [
+        getColumnsWithoutWidths: (): IColumn[] => [
             {
                 displayProperty: 'number',
+                width: ''
             },
             {
                 displayProperty: 'country',
+                width: ''
             },
             {
                 displayProperty: 'capital',
+                width: ''
             },
             {
                 displayProperty: 'population',
+                width: ''
             },
             {
                 displayProperty: 'square',
+                width: ''
             },
             {
                 displayProperty: 'populationDensity',
+                width: ''
             }
         ],
-        getColumnsForLoad: () => [
+        getColumnsForLoad: (): IColumn[] => [
             {
                 displayProperty: 'id',
-                width: '50px',
+                width: '50px'
             },
             {
                 displayProperty: 'load',
-                width: '200px',
-            },
+                width: '200px'
+            }
 
         ],
-        getColumnsWithFixedWidths: () => [
+        getColumnsWithFixedWidths: (): IColumn[] => [
             {
                 displayProperty: 'number',
                 width: '30px'
@@ -268,10 +320,10 @@ function getCountriesStats() {
                 width: '120px'
             }
         ],
-        getColumnsWithWidthsForSortingDemo: () => [
+        getColumnsWithWidthsForSortingDemo: (): IColumnRes[] => [
             {
                 displayProperty: 'number',
-                width: '40px',
+                width: '40px'
             },
             {
                 displayProperty: 'country',
@@ -297,7 +349,7 @@ function getCountriesStats() {
                 align: 'right'
             }
         ],
-        getColumnsWithWidths: () => [
+        getColumnsWithWidths: (): IColumnRes[] => [
             {
                 displayProperty: 'number',
                 width: '40px'
@@ -333,7 +385,7 @@ function getCountriesStats() {
                 compatibleWidth: '175px'
             }
         ],
-        getColumnsForDragScrolling: () => ([
+        getColumnsForDragScrolling: (): IColumn[] => ([
             {
                 displayProperty: 'number',
                 width: '40px'
@@ -369,7 +421,7 @@ function getCountriesStats() {
                 compatibleWidth: '175px'
             }
         ]),
-        getResults: () => ({
+        getResults: (): IResults => ({
             full: [
                 {
                     population: 3660205559.49,
@@ -387,9 +439,10 @@ function getCountriesStats() {
                     populationDensity: 1.87
                 }
             ],
+            // tslint:disable-next-line
             partial: [12345678910, 23456789101, 34567891012]
         }),
-        getColumnsWithAlign: () => [
+        getColumnsWithAlign: (): IColumn[] => [
             {
                 displayProperty: 'number',
                 width: '40px',
@@ -442,7 +495,7 @@ function getCountriesStats() {
                 width: '150px'
             }
         ],
-        getDefaultHeader: () => [
+        getDefaultHeader: (): IHeader[] => [
             {
                 title: '#'
             },
@@ -462,7 +515,7 @@ function getCountriesStats() {
                 title: 'Плотность населения чел/км2'
             }
         ],
-        getLongHeader: (textOverflow) => [
+        getLongHeader: (textOverflow): IHeader[] => [
             {
                 title: '#'
             },
@@ -471,22 +524,22 @@ function getCountriesStats() {
             },
             {
                 title: 'Столица строны из рейтинга',
-                textOverflow: textOverflow
+                textOverflow
             },
             {
                 title: 'Население страны по данным на 2018г.',
-                textOverflow: textOverflow
+                textOverflow
             },
             {
                 title: 'Площадь км2',
-                textOverflow: textOverflow
+                textOverflow
             },
             {
                 title: 'Плотность населения чел/км2',
-                textOverflow: textOverflow
+                textOverflow
             }
         ],
-        getMultiHeader: () => [
+        getMultiHeader: (): IHeader[] => [
             {
                 title: '#',
                 startRow: 1,
@@ -546,7 +599,7 @@ function getCountriesStats() {
                 endColumn: 7
             }
         ],
-        getMultiHeaderForDragScrolling: () => [
+        getMultiHeaderForDragScrolling: (): IHeader[] => [
             {
                 title: '#',
                 startRow: 1,
@@ -614,7 +667,7 @@ function getCountriesStats() {
             }
         ],
 
-        getMultiHeaderVar2: () => [
+        getMultiHeaderVar2: (): IHeader[] => [
             {
                 title: 'Географические характеристики стран',
                 startRow: 1,
@@ -659,7 +712,7 @@ function getCountriesStats() {
                 endColumn: 6
             }
         ],
-        getHeaderWithSorting: (textOverflow) => [
+        getHeaderWithSorting: (textOverflow): IHeader[] => [
             {
                 title: '#'
             },
@@ -668,7 +721,7 @@ function getCountriesStats() {
             },
             {
                 title: 'Название столицы страны',
-                textOverflow: textOverflow,
+                textOverflow,
                 sortingProperty: 'capital',
                 align: 'left'
             },
@@ -684,12 +737,12 @@ function getCountriesStats() {
             },
             {
                 title: 'Плотность населения чел/км2',
-                textOverflow: textOverflow,
+                textOverflow,
                 sortingProperty: 'populationDensity',
                 align: 'right'
             }
         ],
-        getColumnsWithTemplate: () => [
+        getColumnsWithTemplate: (): IColumn[] => [
             {
                 displayProperty: 'number',
                 width: 'max-content',
@@ -717,13 +770,13 @@ function getCountriesStats() {
                 width: 'max-content',
                 compatibleWidth: '60px'
             }
-        ],
-    }
-}
+        ]
+    };
+};
 
-function getMultilineLadder() {
+const getMultilineLadder = () => {
     return {
-        getData: () => [
+        getData: (): IData[] => [
             {
                 id: 1,
                 date: '01 мая',
@@ -821,11 +874,11 @@ function getMultilineLadder() {
             }
         ]
     };
-}
+};
 
-function getTasks() {
+const getTasks = () => {
     return {
-        getData: () => [
+        getData: (): IData[] => [
             {
                 id: 1,
                 message: 'Регламент: Ошибка в разработку. Автор: Дубенец Д.А. Описание: (reg-chrome-presto) 3.18.150 controls - Поехала верстка кнопок когда они задизейблены prestocarry',
@@ -908,7 +961,8 @@ function getTasks() {
             },
             {
                 id: 11,
-                message: 'Не работают хлебные крошки и навигация по ним если идентификатор записи равен 0 Как повторить',
+                message: 'Не работают хлебные крошки и навигация по' +
+                    'ним если идентификатор записи равен 0 Как повторить',
                 fullName: 'Догадкин Владимир',
                 photo: getImages().dogadkin,
                 date: '28 фев',
@@ -937,7 +991,7 @@ function getTasks() {
                 width: '200px'
             }
         ],
-        getDefaultColumns: () => [
+        getDefaultColumns: (): IColumn[] => [
             {
                 displayProperty: 'id',
                 width: '30px'
@@ -951,38 +1005,38 @@ function getTasks() {
                 width: '100px'
             }
         ],
-        getDefaultWithEditingColumns: () => [
+        getDefaultWithEditingColumns: (): IColumn[] => [
             {
                 displayProperty: 'id',
-                width: '30px',
+                width: '30px'
             },
             {
                 displayProperty: 'state',
                 width: '200px',
-                template: 'wml!Controls-demo/grid/Grouped/WithEditing/_cellEditor',
+                template: 'wml!Controls-demo/grid/Grouped/WithEditing/_cellEditor'
             },
             {
                 displayProperty: 'date',
                 width: '100px',
-                template: 'wml!Controls-demo/grid/Grouped/WithEditing/_cellEditor',
+                template: 'wml!Controls-demo/grid/Grouped/WithEditing/_cellEditor'
             }
-        ],
-    }
-}
+        ]
+    };
+};
 
-function getImages() {
+function getImages(): IImages {
     return {
         dogadkin: constants.resourceRoot + 'Controls-demo/grid/resources/images/dogadkin.png',
         kesareva: constants.resourceRoot + 'Controls-demo/grid/resources/images/kesareva.png',
         korbyt: constants.resourceRoot + 'Controls-demo/grid/resources/images/korbyt.png',
         krainov: constants.resourceRoot + 'Controls-demo/grid/resources/images/krainov.png',
         baturina: constants.resourceRoot + 'Controls-demo/grid/resources/images/baturina.png'
-    }
+    };
 }
 
-function getPorts() {
+const getPorts = () => {
     return {
-        getData: () => [
+        getData: (): IData[] => [
             {
                 id: 1,
                 name: 'Новороссийский морской торговый порт',
@@ -1023,7 +1077,7 @@ function getPorts() {
                 shipper: null
             }
         ],
-        getColumns: () => [
+        getColumns: (): IColumn[] => [
             {
                 width: '100px',
                 displayProperty: 'invoice'
@@ -1045,7 +1099,7 @@ function getPorts() {
                 displayProperty: 'taxBase'
             }
         ],
-        getDocumentSigns: () => [
+        getDocumentSigns: (): Array<{ id: number, title: string }> => [
             {
                 id: 1,
                 title: 'ТД предусмотрено'
@@ -1055,12 +1109,29 @@ function getPorts() {
                 title: 'ТД не предусмотрено'
             }
         ]
-    }
+    };
+};
+
+interface IEditingData {
+    id: number | string;
+    title?: string;
+    description?: string;
+    price?: string;
+    balance?: string;
+    balanceCostSumm?: string;
+    reserve?: string;
+    costPrice?: string;
+    email?: string;
+    required?: string;
+    length?: string;
+    documentSign?: number;
+    taxBase?: number;
+    document?: string;
 }
 
-function getEditing() {
+const getEditing = () => {
     return {
-        getEditingData: () => [
+        getEditingData: (): IEditingData[] => [
             {
                 id: 1,
                 title: 'Время',
@@ -1092,31 +1163,31 @@ function getEditing() {
                 costPrice: '3'
             }
         ],
-        getEditingValidationData: () => [
+        getEditingValidationData: (): IEditingData[] => [
             {
                 id: '1',
                 email: 'semen@gmail.com',
                 required: '89069953970',
-                length: '1234',
+                length: '1234'
             },
             {
                 id: '2',
                 email: 'artem@gmail.com',
                 required: '89069953970',
-                length: '123',
+                length: '123'
             },
             {
                 id: '3',
                 email: 'oleg@gmail.com',
                 required: '89069953970',
-                length: 'hello',
+                length: 'hello'
             }
         ],
-        getEditingColumns: () => [
+        getEditingColumns: (): IColumn[] => [
             {
                 displayProperty: 'title',
                 width: '200px',
-                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor'
             },
             {
                 displayProperty: 'price',
@@ -1135,7 +1206,7 @@ function getEditing() {
             {
                 displayProperty: 'description',
                 width: '200px',
-                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
+                template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor'
             },
             {
                 displayProperty: 'costPrice',
@@ -1156,20 +1227,20 @@ function getEditing() {
             {
                 displayProperty: 'email',
                 width: '200px',
-                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditor',
+                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditor'
             },
             {
                 displayProperty: 'required',
                 width: 'max-content',
-                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorRequired',
+                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorRequired'
             },
             {
                 displayProperty: 'length',
                 width: 'max-content',
-                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorDate',
-            },
+                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorDate'
+            }
         ],
-        getEditingHeaderValidations: () => [
+        getEditingHeaderValidations: (): IHeader[] => [
             {
                 title: 'email'
             },
@@ -1178,9 +1249,9 @@ function getEditing() {
             },
             {
                 title: 'Length'
-            },
+            }
         ],
-        getDecoratedEditingData: () => [
+        getDecoratedEditingData: (): IEditingData[] => [
             {
                 id: 1,
                 title: 'Новороссийский морской торговый порт',
@@ -1203,13 +1274,13 @@ function getEditing() {
                 document: '456990005'
             }
         ],
-        getDecoratedEditingHeader: () => [
+        getDecoratedEditingHeader: (): IHeader[] => [
             { title: 'Порт прибытия' },
             { title: 'Цена по накладной' },
             { title: 'Номер накладной' },
-            { title: 'Код накладной' },
+            { title: 'Код накладной' }
         ],
-        getDecoratedEditingColumns: () => [
+        getDecoratedEditingColumns: (): IColumn[] => [
             {
                 displayProperty: 'title',
                 width: '300px',
@@ -1232,11 +1303,25 @@ function getEditing() {
             }
         ]
     };
+};
+
+interface IDataForShow {
+    id: number;
+    px: string;
+    fr1of3: string;
+    fr2of3: string;
+    minMax: string;
+    auto: string;
+    maxContent: string;
 }
 
-function forShowWidths() {
+function forShowWidths(): {
+    getData(): IDataForShow[];
+    getHeader(): IHeader[];
+    getColumns1(): IColumn[];
+} {
     return {
-        getData() {
+        getData(): IDataForShow[] {
             return [
                 {
                     id: 1,
@@ -1256,9 +1341,9 @@ function forShowWidths() {
                     auto: 'Ячейка 3/4',
                     minMax: 'Ячейка 2/6'
                 }
-            ]
+            ];
         },
-        getHeader() {
+        getHeader(): IHeader[] {
             return [
                 {
                     title: '150px'
@@ -1278,9 +1363,9 @@ function forShowWidths() {
                 {
                     title: 'minmax(50px, 200px)'
                 }
-            ]
+            ];
         },
-        getColumns1() {
+        getColumns1(): IColumn[] {
             return [
                 {
                     displayProperty: 'px',
@@ -1311,9 +1396,19 @@ function forShowWidths() {
                     width: 'minmax(50px, 200px)',
                     compatibleWidth: '200px'
                 }
-            ]
-        },
-    }
+            ];
+        }
+    };
+}
+
+interface IDataForPadding {
+    id: number;
+    number: string;
+    country: string;
+    capital: string;
+    population: number;
+    square: number;
+    populationDensity: number;
 }
 
 const cellPadding = () => ({
@@ -1338,9 +1433,9 @@ const cellPadding = () => ({
         {
             displayProperty: 'capital',
             width: '100px'
-        },
+        }
     ]),
-    getData: () => ([
+    getData: (): IDataForPadding[] => ([
         {
             id: 0,
             number: 'Russian Federation',
@@ -1387,78 +1482,107 @@ const cellPadding = () => ({
             populationDensity: 21.86
         }
     ]),
-    getCellPaddingHeader: () => {
+    getCellPaddingHeader: (): IHeader[] => {
         return [
             {
-                title: 'right: S',
+                title: 'right: S'
             },
             {
-                title: 'left: S and right: null',
+                title: 'left: S and right: null'
             },
             {
-                title: 'left: default',
+                title: 'left: default'
             }
         ];
     }
-})
+});
 
-const DragNDrop = () => ({
+interface IDndData {
+    id: number;
+    title: string;
+    additional: string;
+    image: string;
+    'Раздел@': boolean;
+    Раздел: null | boolean;
+}
+
+interface IForDnD {
+  data: IDndData[];
+  columns: IColumn[];
+}
+
+const DragNDrop = (): IForDnD => ({
     data: [{
         id: 0,
         title: 'America',
         additional: 'USA',
         image: Images[0],
         'Раздел@': true,
-        'Раздел': null
+        Раздел: null
     }, {
         id: 1,
         title: 'France',
         additional: 'Europe',
         image: Images[1],
         'Раздел@': true,
-        'Раздел': null
+        Раздел: null
     }, {
         id: 2,
         title: 'Solar',
         additional: 'Star',
+        // tslint:disable-next-line
         image: Images[2],
         'Раздел@': true,
-        'Раздел': null
+        Раздел: null
     }, {
         id: 3,
         title: 'Luna',
         additional: 'Sattelite',
+        // tslint:disable-next-line
         image: Images[3],
         'Раздел@': null,
-        'Раздел': null
+        Раздел: null
     }, {
         id: 4,
         title: 'Pizza',
         additional: 'Food',
+        // tslint:disable-next-line
         image: Images[4],
         'Раздел@': null,
-        'Раздел': null
+        Раздел: null
     }, {
         id: 5,
         title: 'Monkey',
         additional: 'Animals',
+        // tslint:disable-next-line
         image: Images[5],
         'Раздел@': null,
-        'Раздел': null
+        Раздел: null
     }],
     columns: [{
         displayProperty: 'id',
         width: '30px'
     }, {
         displayProperty: 'title',
-        width: '200px',
+        width: '200px'
     }, {
         displayProperty: 'additional',
-        width: '200px',
-    }],
-})
+        width: '200px'
+    }]
+});
 
-const changeSourceData = () => ({
+interface IDataForChangeSource {
+    id: number;
+    load: string | number;
+    title: string;
+}
+
+interface IChangeSource {
+    data: IDataForChangeSource[];
+    data2: IDataForChangeSource[];
+}
+
+const changeSourceData = (): IChangeSource => ({
     data: [
         {
             id: 1,
@@ -1532,9 +1656,8 @@ const changeSourceData = () => ({
 
         }]
 });
-
-
-const countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"
+// tslint:disable
+const countries: string[] = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas"
     ,"Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands"
     ,"Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica"
     ,"Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea"

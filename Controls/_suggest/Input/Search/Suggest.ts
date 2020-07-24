@@ -10,21 +10,20 @@ import 'Controls/search';
 
 /**
  * Строка поиска с автодополнением, позволяет пользователю вводить однострочный текст.
- * 
+ *
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FSuggest%2FSearchInput">демо-пример</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/suggest/">руководство разработчика</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/directory/lookup/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggest.less">переменные тем оформления</a>
  *
  * @class Controls/_suggest/Input/Search/Suggest
  * @extends Controls/_input/Text
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @demo Controls-demo/Input/Search/Suggest/SuggestPG
+ * @demo Controls-demo/Suggest/SearchInput
  * @control
  * @public
  * @author Герасимов А.М.
@@ -39,7 +38,7 @@ import 'Controls/search';
  * @extends Controls/_input/Text
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG

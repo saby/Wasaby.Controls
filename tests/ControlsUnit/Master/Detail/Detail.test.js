@@ -54,7 +54,8 @@ define(['Controls/masterDetail'], function (masterDetail) {
          let options = {
             masterMinWidth: 100,
             masterWidth: 200,
-            masterMaxWidth: 299
+            masterMaxWidth: 299,
+            propStorageId: 10
          };
 
          Control._canResizing = Control._isCanResizing(options);
@@ -111,7 +112,8 @@ define(['Controls/masterDetail'], function (masterDetail) {
          let options = {
             masterMinWidth: 250,
             masterWidth: 200,
-            masterMaxWidth: 299
+            masterMaxWidth: 299,
+            propStorageId: 10
          };
          assert.equal(Control._isCanResizing(options), true);
 
@@ -140,6 +142,21 @@ define(['Controls/masterDetail'], function (masterDetail) {
          assert.equal(isSetSettings, true);
 
          Control.destroy();
-      })
+      });
+
+      it('masterWidthChanged', () => {
+         const control = new masterDetail.Base();
+         const sandbox = sinon.createSandbox();
+         const event = {};
+         const offset = 100;
+         sandbox.stub(control, '_notify');
+         control._currentWidth = 100;
+
+         control._offsetHandler(event, offset);
+
+         sinon.assert.calledWith(control._notify, 'masterWidthChanged', ['200px']);
+
+         sandbox.restore();
+      });
    });
 });

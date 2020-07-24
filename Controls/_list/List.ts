@@ -11,7 +11,7 @@ import {default as ListControl} from 'Controls/_list/ListControl';
 
 /**
  * Контрол «Плоский список» с пользовательским шаблоном элемента. Может загружать данные из источника данных.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list/">руководство разработчика</a>
@@ -24,7 +24,7 @@ import {default as ListControl} from 'Controls/_list/ListControl';
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/interface/IEditableList
@@ -56,7 +56,7 @@ import {default as ListControl} from 'Controls/_list/ListControl';
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/_interface/ISorting
@@ -80,7 +80,7 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
     protected _viewName = viewName;
     protected _viewTemplate: unknown = ListControl;
     protected _viewModelConstructor = null;
-    protected _children: { listControl: unknown };
+    protected _children: { listControl: ListControl };
 
     static _theme = ['Controls/list'];
 

@@ -77,10 +77,15 @@ class InfoBoxController extends StickyController.constructor {
         }
         this._openedPopupId = item.id;
 
-        // Remove the width obtained in getDefaultOptions
+        // Remove the width and height obtained in getDefaultOptions
         item.position.maxWidth = undefined;
+        item.position.maxHeight = undefined;
         //Removes set value to get real size of the content
+        const maxWidth = container.style.maxWidth;
         container.style.maxWidth = '';
+        container.style.maxHeight = '';
+        this.prepareConfig(item);
+        container.style.maxWidth = maxWidth;
 
         return super.elementCreated.apply(this, arguments);
     }
@@ -121,7 +126,7 @@ class InfoBoxController extends StickyController.constructor {
                 cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
             const sizes: IPopupSizes = {width: constants.MAX_WIDTH, height: 1, margins: {left: 0, top: 0}};
                 const position: IPopupPosition = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), this._getTargetCoords(item));
-                this.prepareConfig(item, sizes);
+                this.prepareConfig(item);
                 item.position.maxWidth = position.width;
             }
             item.position = {...item.position, ...defaultPosition};
@@ -135,7 +140,7 @@ class InfoBoxController extends StickyController.constructor {
         return baseConfig;
     }
 
-    prepareConfig(item: IPopupItem, sizes: IPopupSizes): IPopupItem {
+    prepareConfig(item: IPopupItem, sizes?: IPopupSizes = null): IPopupItem {
         cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
         return super.prepareConfig.apply(this, arguments);
     }

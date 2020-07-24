@@ -17,7 +17,7 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
 
    /**
     * Стандартный шаблон перемещения для списка.
-    * 
+    *
     * @remark
     * Полезные ссылки:
     * * <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">руководство разработчика</a>
@@ -26,7 +26,7 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * @class Controls/_dragnDrop/DraggingTemplate
     * @extends Core/Control
     * @control
-    * @private
+    * @public
     * @author Авраменко А.С.
     * @category DragNDrop
     */
@@ -487,12 +487,13 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     */
 
    var DraggingTemplate = Control.extend({
-      _theme: ['Controls/dragnDrop'],
       _template: template,
 
       _beforeMount: function(options) {
          this._itemsCount = _private.getCounterText(options.entity.getItems().length);
       }
    });
+
+   DraggingTemplate._theme = ['Controls/dragnDrop'];
 
    export = DraggingTemplate;

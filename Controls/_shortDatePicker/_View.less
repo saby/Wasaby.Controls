@@ -74,13 +74,17 @@
    border: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
 }
 
-.controls-PeriodLiteDialog__vLayoutItem-clickable_theme-@{themeName} {
-   &:hover {
+.ws-is-hover {
+   .controls-PeriodLiteDialog__vLayoutItem-clickable_theme-@{themeName}:hover {
       border-color: @item_hover_border-color_shortDatePicker;
       background-color: @item_hover_background-color_shortDatePicker;
    }
-   &:active {
-      border-color: @item_active_border-color_shortDatePicker;
+}
+
+.ws-is-touch {
+   .controls-PeriodLiteDialog__vLayoutItem-clickable_theme-@{themeName}:active {
+      border-color: @item_hover_border-color_shortDatePicker;
+      background-color: @item_hover_background-color_shortDatePicker;
    }
 }
 
@@ -399,18 +403,36 @@
    }
 }
 
-.controls-PeriodLiteDialog__fullYear-listElement-hovered:hover {
-   cursor: pointer;
-   border-bottom: none;
-   margin-top: -1px;
+.ws-is-hover {
+   .controls-PeriodLiteDialog__fullYear-listElement-hovered_theme-@{themeName}:hover {
+      border: solid @item_border-thickness_shortDatePicker @item_hover_border-color_shortDatePicker;
+   }
 
-   &::after {
-      border: none;
+   .controls-PeriodLiteDialog__fullYear-listElement-hovered:hover {
+      cursor: pointer;
+      border-bottom: none;
+      margin-top: -1px;
+
+      &::after {
+         border: none;
+      }
    }
 }
 
-.controls-PeriodLiteDialog__fullYear-listElement-hovered_theme-@{themeName}:hover {
-   border: solid @item_border-thickness_shortDatePicker @item_hover_border-color_shortDatePicker;
+.ws-is-touch {
+   .controls-PeriodLiteDialog__fullYear-listElement-hovered_theme-@{themeName}:active {
+      border: solid @item_border-thickness_shortDatePicker @item_hover_border-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__fullYear-listElement-hovered:active {
+      cursor: pointer;
+      border-bottom: none;
+      margin-top: -1px;
+
+      &::after {
+         border: none;
+      }
+   }
 }
 
 .controls-PeriodLiteDialog__month-list_theme-@{themeName} {

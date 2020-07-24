@@ -12,10 +12,9 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * Выбор происходит с помощью панели большого выбора периода.
  * 
  * @remark
- * В отличии от {@link Controls/_dateRange/LiteSelector быстрого выбора периода} позволяет выбирать произвольный диапазон дат.
- * 
+ *
  * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a> 
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a>
  *
  * @class Controls/_dateRange/RangeSelector
  * @extends Core/Control
@@ -23,6 +22,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @mixes Controls/_dateRange/interfaces/ISelector
  * @mixes Controls/_dateRange/interfaces/IDateRange
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
+ * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IOpenPopup
@@ -31,7 +31,6 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLink
- * @demo Controls-demo/Input/Date/RangeLinkView
  *
  */
 
@@ -57,7 +56,6 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLink
- * @demo Controls-demo/Input/Date/RangeLinkView
  *
  */
 var Component = BaseSelector.extend({
@@ -75,6 +73,7 @@ var Component = BaseSelector.extend({
                 opts.endValue = options.startValue;
             }
         }
+        opts.rangeSelectedCallback = options.rangeSelectedCallback;
         Component.superclass._updateRangeModel.call(this, opts);
     },
 
@@ -110,6 +109,7 @@ var Component = BaseSelector.extend({
                 clearButtonVisible: this._options.clearButtonVisible || this._options.clearButtonVisibility,
                 range: this._options.range,
                 _displayDate: this._options._displayDate,
+                rangeSelectedCallback: this._options.rangeSelectedCallback
             }
         };
     },

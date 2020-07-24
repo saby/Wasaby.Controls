@@ -6,13 +6,14 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
 
 /**
  * Контрол, открывающий всплывающее окно с пользовательским шаблоном внутри. Всплывающее окно располагается в правой части контентной области приложения и растянуто на всю высоту экрана.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/stack/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
- * 
+ * Для открытия стековых окон из кода используйте {@link Controls/popup:StackOpener}.
+ *
  * @class Controls/popup:Stack
  * @extends Controls/_popup/Opener/BaseOpener
  * @control
@@ -21,7 +22,7 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/IStack
  * @mixes Controls/_interface/IPropStorage
- * @demo Controls-demo/Popup/Opener/StackPG
+ * @demo Controls-demo/Popup/Opener/StackDemo
  * @public
  */
 
@@ -66,9 +67,18 @@ class Stack extends BaseOpener<IStackOpenerOptions> implements IStackOpener {
         return getStackConfig(popupOptions, this._getCurrentPopupId());
     }
 
+    protected _getIndicatorConfig(): void {
+        const baseConfig = super._getIndicatorConfig();
+        baseConfig.isGlobal = true;
+        return baseConfig;
+    }
+
     static openPopup(config: IStackPopupOptions): Promise<string> {
         return new Promise((resolve) => {
             const newCfg = getStackConfig(config);
+            if (!newCfg.hasOwnProperty('isHelper')) {
+                Logger.warn('Controls/popup:Stack: Для открытия стековых окон из кода используйте StackOpener');
+            }
             if (!newCfg.hasOwnProperty('opener')) {
                 Logger.error('Controls/popup:Stack: Для открытия окна через статический метод, обязательно нужно указать опцию opener');
             }

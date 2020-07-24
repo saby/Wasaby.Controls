@@ -6,7 +6,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
 
 /**
  * Поле ввода числовых значений.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
@@ -199,6 +199,7 @@ var _private = {
 
 var NumberInput = Base.extend({
     _defaultValue: 0,
+    _inputMode: 'decimal',
 
     _getViewModelOptions: function (options) {
         _private.validateOptions(options);

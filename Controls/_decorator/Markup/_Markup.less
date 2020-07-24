@@ -4,12 +4,14 @@
 @LinkDecorator__gradient-startColor: rgba(249, 249, 249, 0);
 @LinkDecorator__gradient-endColor: rgba(249, 249, 249, 1);
 @padding-right_decoratedLink: 2px;
+@padding-bottom_decoratedLink: 4px;
 
 .LinkDecorator__wrap {
-   display: block;
+   display: flex;
    overflow: hidden;
    max-width: 100%;
    padding-right: @padding-right_decoratedLink;
+   padding-bottom: @padding-bottom_decoratedLink;
 }
 
 .LinkDecorator__linkWrap {

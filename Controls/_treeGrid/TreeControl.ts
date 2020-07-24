@@ -135,10 +135,10 @@ var _private = {
             self._children.baseControl.showIndicator();
             filter[options.parentProperty] = nodeKey;
             _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation)
-                .load(filter, options.sorting)
+                .load(filter, options.sorting, null, null, nodeKey)
                 .addCallbacks((list) => {
                     listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
-                    baseSourceController.calculateState(list, nodeKey);
+                    baseSourceController.calculateState(list, null, nodeKey);
                     if (options.uniqueKeys) {
                         listViewModel.mergeItems(list);
                     } else {
@@ -178,16 +178,9 @@ var _private = {
     },
     prepareHasMoreStorage(sourceControllers: Record<string, SourceController>): Record<string, boolean> {
         const hasMore = {};
-        let hasMoreForNode;
 
         sourceControllers.forEach((controller, nodeKey) => {
-            hasMoreForNode = controller.hasMoreData('down');
-
-            if (hasMoreForNode === undefined) {
-                hasMoreForNode = controller.hasMoreData('down');
-            }
-
-            hasMore[nodeKey] = hasMoreForNode;
+            hasMore[nodeKey] = controller.hasMoreData('down', nodeKey);
         });
 
         return hasMore;
@@ -215,9 +208,9 @@ var _private = {
 
         filter[self._options.parentProperty] = nodeKey;
         self._children.baseControl.showIndicator();
-        nodeSourceControllers.get(nodeKey).load(filter, self._options.sorting, 'down').addCallbacks((list) => {
+        nodeSourceControllers.get(nodeKey).load(filter, self._options.sorting, 'down', null, nodeKey).addCallbacks((list) => {
             listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
-            baseSourceController.calculateState(list, nodeKey);
+            baseSourceController.calculateState(list, 'down', nodeKey);
             if (self._options.uniqueKeys) {
                 listViewModel.mergeItems(list);
             } else {
@@ -525,6 +518,9 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             if (this._options.editingConfig) {
                 baseControl.cancelEdit();
             }
+
+            this.setMarkedKey(undefined);
+
             baseControl.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
         }
 
@@ -578,7 +574,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
                 this._children.baseControl.reload();
             }
         }
-        if (oldOptions.groupMethod !== this._options.groupMethod || oldOptions.viewModelConstructor !== this._options.viewModelConstructor) {
+        if (oldOptions.viewModelConstructor !== this._options.viewModelConstructor) {
             _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
         }
     },

@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+import { spy } from 'sinon';
 
 import {
     Abstract as Display,
@@ -2652,6 +2653,18 @@ describe('Controls/_display/Collection', () => {
                 }
             });
         });
+
+        it('set selected silent', () => {
+            const notifyLaterSpy = spy(display, '_notifyLater');
+
+            display.setSelectedItems(
+               [list.at(0), list.at(1)],
+               true,
+               true
+            );
+
+            assert.isFalse(notifyLaterSpy.called);
+        });
     });
 
     describe('.invertSelectedItemsAll()', () => {
@@ -4468,6 +4481,35 @@ describe('Controls/_display/Collection', () => {
             const testingItem = display.getItemBySourceKey(2);
             display.setActiveItem(display.getItemBySourceKey(2));
             assert.equal(display.getActiveItem(), testingItem);
+        });
+    });
+
+    describe('getValidItemForMarker', () => {
+        let display: CollectionDisplay<Model>;
+
+        beforeEach(() => {
+            const items = [
+                { id: 1 },
+                { id: 2 },
+                { id: 3 }
+            ];
+            const rs = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs
+            });
+        });
+
+        it('next item', () => {
+            const validItem = display.getValidItemForMarker(0);
+            assert.equal(validItem.getContents().getKey(), 2);
+        });
+
+        it('prev item', () => {
+            const validItem = display.getValidItemForMarker(2);
+            assert.equal(validItem.getContents().getKey(), 2);
         });
     });
 });

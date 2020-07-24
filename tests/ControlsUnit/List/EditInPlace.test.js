@@ -142,11 +142,19 @@ define([
             notify: () => undefined,
             forceUpdate: () => undefined,
             source: source,
+            updateMarkedKey: () => undefined,
             updateItemActions: () => undefined,
+            multiSelectVisibility: false,
             notify: () => undefined,
-            forceUpdate: () => undefined
+            forceUpdate: () => undefined,
+            readOnly: false,
+            listViewModel: listViewModel
+
          });
          eip._formController = {
+             deferSubmit: function () {
+                 return this.submit();
+             },
             submit: function() {
                return Promise.resolve();
             },
@@ -234,6 +242,9 @@ define([
                listViewModel: listViewModel
             });
             eip._formController = {
+               deferSubmit: function () {
+                   return this.submit();
+               },
                submit: function () {
                   validateCalled = true;
                   return Deferred.success();
@@ -344,6 +355,19 @@ define([
 
             assert.isTrue(result instanceof Promise);
          });
+
+         // Необходимо устанавливать состояние "модель редактируется" для новой и старой модели
+         it('should set isEditing() for model', async () => {
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+            assert.isNotTrue(listViewModel.isEditing(), 'Model shouldn\'t be in editing state before beginEdit()');
+            await eip.beginEdit({
+               item: listViewModel.at(0).getContents()
+            });
+            assert.isTrue(listViewModel.isEditing(), 'Model should be in editing state after what had happened to her.');
+         });
       });
 
       describe('beginAdd', function() {
@@ -425,16 +449,23 @@ define([
                source: source
             });
 
+            let updateMarkedKeyCalled = false;
+            eip._options.updateMarkedKey = (key) => {
+               updateMarkedKeyCalled = true;
+            };
+
             eip._options.notify = function(event, args) {
                if (event === 'afterBeginEdit') {
                   assert.equal(eip._editingItem, args[0]);
                   assert.isTrue(args[1]);
-                  done();
                }
             };
 
             eip.beginAdd({
                item: newItem
+            }).then(() => {
+               assert.isTrue(updateMarkedKeyCalled);
+               done()
             });
          });
 
@@ -877,6 +908,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHiden = true;
                   }
@@ -913,6 +945,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHiden = true;
                   }
@@ -951,6 +984,7 @@ define([
                      isAfterEndEditHasBeenNotified = true;
                   } else if (e === 'showIndicator') {
                      isIndicatorHasBeenShown = true;
+                     return '123';
                   } else if (e === 'hideIndicator') {
                      isIndicatorHasBeenHidden = true;
                   }
@@ -1027,7 +1061,6 @@ define([
                      if (event === 'afterEndEdit') {
                         assert.equal(editingItem, args[0]);
                         assert.isTrue(args[1]);
-                        assert.equal(listViewModel.getMarkedKey(), 4);
                         assert.isNull(listViewModel.getEditingItemData());
                         done();
                      }
@@ -2080,7 +2113,8 @@ define([
 
             Object.assign(eip._options,{
                listViewModel: listViewModel,
-               source: source
+               source: source,
+               multiSelectVisibility: 'hidden'
             });
 
             await eip.beginAdd();
@@ -2090,9 +2124,56 @@ define([
                assert.equal(editingItem, eip._editingItemData.item);
                assert.equal(eip._options.multiSelectVisibility, 'visible');
             };
-
             eip.updateEditingData({multiSelectVisibility: 'visible', listViewModel: listViewModel});
             assert.isTrue(isItemDataRegenerated);
+         });
+
+         it('should suscribe onCollectionChange once', async () => {
+            let
+               isItemDataRegenerated = false;
+
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source,
+               multiSelectVisibility: 'visible'
+            });
+
+            await eip.beginAdd();
+
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
+
+            let spy = sinon.spy(listViewModel, 'subscribe');
+
+            eip.updateEditingData({listViewModel: listViewModel, multiSelectVisibility: 'visible'});
+            eip.updateEditingData({listViewModel: listViewModel, multiSelectVisibility: 'visible'});
+
+            assert.isTrue(spy.calledOnceWith('onCollectionChange', eip._updateIndex));
+         });
+
+         it('should suscribe updateEditingData once', async () => {
+            Object.assign(eip._options,{
+               listViewModel: listViewModel,
+               source: source
+            });
+
+            await eip.beginAdd();
+
+            eip._editingItemData = Object.assign({}, eip._editingItemData);
+            let spy = sinon.spy(eip, 'registerFormOperation');
+            eip._options.readOnly = true;
+            eip.updateEditingData({listViewModel: listViewModel});
+
+            assert.isTrue(spy.notCalled);
+         });
+
+         it('should reset editing data if readoonly', async (done) => {
+            sinon.stub(eip, '_setEditingItemData').callsFake(() => {
+               done();
+            });
+            eip._editingItemData = {};
+            eip.updateEditingData({
+               readOnly: true
+            });
          });
       });
 
@@ -2104,6 +2185,9 @@ define([
          eip._formController = {
             setValidationResult: function() {
                setValidationResultCalled = true;
+            },
+            deferSubmit: function () {
+                return this.submit();
             },
             submit: function() {
                return Deferred.success();
@@ -2145,5 +2229,69 @@ define([
          });
       });
 
+      describe('.processBeforeBeginEditResult()', () => {
+         it('should return result cancelled', async () => {
+            const eventResult = Promise.resolve('Cancel');
+            const result = await EditInPlace._private.processBeforeBeginEditResult(eip, {}, eventResult, false);
+            assert.deepEqual({cancelled: true}, result);
+         });
+
+         it('should return result cancelled when event result throw catch', async () => {
+            const eventResult = Promise.reject(new Error('!!!!'));
+            const result = await EditInPlace._private.processBeforeBeginEditResult(eip, {}, eventResult, false);
+            assert.deepEqual({cancelled: true}, result);
+         });
+      });
+
+      describe('.registerFormOperation()', () => {
+         const formController = {};
+         it('should set form controller', async () => {
+            eip.registerFormOperation(formController);
+
+            assert.equal(eip._formController, formController);
+         });
+
+         it('should notify registerFormOperation', async () => {
+            const spyNotify = sinon.spy(eip, '_notify');
+            eip.registerFormOperation(formController);
+
+            assert.equal(spyNotify.firstCall.args[0], 'registerFormOperation');
+         });
+
+         it('should do nothing if formController was undefined', async () => {
+            eip._formController = formController;
+            eip.registerFormOperation();
+
+            assert.equal(eip._formController, formController);
+         });
+      });
+
+      it('multi call showIndicator. Should be shown only one indicator', () => {
+         const globalIndicatorId = 123;
+         let showCount = 0;
+         let hideCount = 0;
+
+         eip._notify = (eName, args) => {
+            if (eName === 'showIndicator') {
+               showCount++;
+               return globalIndicatorId;
+            } else if (eName === 'hideIndicator') {
+               hideCount++;
+               assert.equal(args[0], globalIndicatorId);
+            }
+         };
+
+         eip._showIndicator();
+         eip._showIndicator();
+
+         eip._hideIndicator();
+         eip._hideIndicator();
+
+         assert.equal(1, showCount);
+         assert.equal(1, hideCount);
+      });
+
+
    });
+
 });

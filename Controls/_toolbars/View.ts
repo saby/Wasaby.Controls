@@ -4,9 +4,13 @@ import {factory, RecordSet} from 'Types/collection';
 import {descriptor, Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {Sticky  as StickyOpener} from 'Controls/popup';
-import {Controller as SourceController} from 'Controls/source';
-import {IShowType, showType, getMenuItems, needShowMenu} from 'Controls/Utils/Toolbar';
+import {StickyOpener} from 'Controls/popup';
+import {showType, getMenuItems, needShowMenu} from 'Controls/Utils/Toolbar';
+
+import {
+    getButtonTemplate, hasSourceChanged,
+    getButtonTemplateOptionsByItem, getTemplateByItem, loadItems
+} from 'Controls/_toolbars/Util';
 import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
 
 import {
@@ -26,53 +30,13 @@ import {IGrouped, IGroupedOptions} from 'Controls/dropdown';
 import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import * as ActualAPI from 'Controls/_toolbars/ActualAPI';
-import {ButtonTemplate, cssStyleGeneration} from 'Controls/buttons';
-import {CrudWrapper} from "../dataSource";
+import {DependencyTimer, isLeftMouseButton} from "Controls/Utils/FastOpen";
+import {IoC} from "Env/Env";
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
 type TypeItem = 'toolButton' | 'icon' | 'link' | 'list';
 export type TItemsSpacing = 'medium' | 'big';
-
-export function getButtonTemplateOptionsByItem(item: TItem, toolbarOptions: IControlOptions = {}): IButtonOptions {
-    const icon = item.get('icon');
-    const style = item.get('buttonStyle');
-    const viewMode = item.get('viewMode');
-
-    // todo: https://online.sbis.ru/opendoc.html?guid=244a5058-47c1-4896-a494-318ba2422497
-    const size = viewMode === 'functionalButton' ? 's' : 'm';
-    const iconSize = viewMode === 'functionalButton' ? 's' : 'm';
-
-    const iconStyle = item.get('iconStyle');
-    const transparent = item.get('buttonTransparent');
-    const caption = item.get('caption');
-    const captionPosition = item.get('captionPosition');
-    const readOnly = item.get('readOnly') || toolbarOptions.readOnly;
-    const fontColorStyle = item.get('fontColorStyle');
-    const contrastBackground = item.get('contrastBackground');
-    const cfg: IButtonOptions = {};
-    cfg._hoverIcon = true;
-    cssStyleGeneration.call(cfg, {
-        size,
-        icon,
-        style,
-        viewMode,
-        iconStyle,
-        iconSize,
-        transparent,
-        caption,
-        captionPosition,
-        readOnly,
-        fontColorStyle,
-        contrastBackground
-    });
-    cfg.readOnly = readOnly;
-    return cfg;
-}
-
-export function getButtonTemplate(): TemplateFunction {
-    return ButtonTemplate;
-}
 
 // Перейти на интерфейс выпадающих списков, когда он появится
 
@@ -91,13 +55,17 @@ export interface IMenuOptions {
  */
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions, IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions {
     /**
-     * Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
+     * @name Controls/_toolbars/IToolbarOptions#popupClassName
+     * @cfg {String} Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
+     * @default ''
      */
     popupClassName: string;
     /**
-     * Размер расстояния между кнопками.
-     * @remark
-     * Размер расстояния задается константой из стандартного набора размеров, который определен для текущей темы оформления.
+     * @name Controls/_toolbars/IToolbarOptions#itemsSpacing
+     * @cfg {String} Размер расстояния между кнопками.
+     * @variant medium
+     * @variant big
+     * @default medium
      */
     itemsSpacing: TItemsSpacing;
     /**
@@ -150,26 +118,30 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/Base/Index
  */
-class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate, IGrouped, IToolbarSource {
+
+class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate,
+    IGrouped, IToolbarSource {
     /*
      * Used in template
      */
-    protected _showType: IShowType = showType;
     protected _needShowMenu: boolean = null;
     protected _fullItemsList: TItems = null;
     protected _items: TItems = null;
     protected _menuItems: TItems = null;
     protected _source: ICrudPlus = null;
-    protected _originalSource = null;
+    protected _originalSource: ICrudPlus = null;
     protected _menuSource: ICrudPlus = null;
     protected _nodeProperty: string = null;
     protected _parentProperty: string = null;
     protected _menuOptions: object = null;
     protected _isLoadMenuItems: boolean = false;
     protected _buttonTemplate: TemplateFunction = getButtonTemplate();
-    protected _actualItems = null;
+    protected _actualItems: TItems = null;
 
     protected _template: TemplateFunction = template;
+
+    protected _dependenciesTimer: DependencyTimer = null;
+    private _loadViewPromise: Promise<unknown> = null;
 
     _children: {
         menuTarget: HTMLElement
@@ -180,6 +152,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     readonly '[Controls/_interface/IIconSize]': boolean = true;
     readonly '[Controls/_interface/IItemTemplate]': boolean = true;
     readonly '[Controls/_dropdown/interface/IGrouped]': boolean = true;
+    private _sticky: StickyOpener;
 
     constructor(...args) {
         super(args);
@@ -269,7 +242,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             eventHandlers: {
                 onResult: this._resultHandler,
                 onClose: () => {
-                    this._popupId = null;
                     this._closeHandler();
                 }
             },
@@ -279,8 +251,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             fittingMode: {
                 vertical: 'adaptive',
                 horizontal: 'overflow'
-            },
-            id: this._popupId
+            }
         };
     }
 
@@ -315,14 +286,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         this._needShowMenu = needShowMenu(this._actualItems);
     }
 
-    private _setStateBySource(source: ICrudPlus): Promise<TItems> {
-        return Toolbar._loadItems(source).then((items) => {
-            this._setStateByItems(items, source);
-
-            return items;
-        });
-    }
-
     private _needChangeState(newOptions: IToolbarOptions): boolean {
         const currentOptions = this._options;
 
@@ -334,16 +297,11 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         ].some((optionName: string) => currentOptions[optionName] !== newOptions[optionName]);
     }
 
-    private _hasSourceChanged(newSource?: ICrudPlus) {
-        const currentSource = this._options.source;
-
-        return newSource && currentSource !== newSource;
-    }
-
-    private _openMenu(config): void {
-        StickyOpener.openPopup(config, this).then((popupId) => {
-            this._popupId = popupId;
-        });
+    private _openMenu(config: IMenuOptions): void {
+        if (!this._sticky) {
+            this._sticky = new StickyOpener();
+        }
+        this._sticky.open(config);
     }
 
     protected _beforeMount(options: IToolbarOptions, context: {}, receivedItems?: TItems): Promise<TItems> {
@@ -353,7 +311,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (receivedItems) {
             this._setStateByItems(receivedItems, options.source);
         } else if (options.source) {
-            return this._setStateBySource(options.source);
+            return this.setStateBySource(options.source);
         }
     }
 
@@ -361,11 +319,17 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (this._needChangeState(newOptions)) {
             this._setState(newOptions);
         }
-        if (this._hasSourceChanged(newOptions.source)) {
+        if (hasSourceChanged(newOptions.source, this._options.source)) {
             this._originalSource = newOptions.source;
             this._isLoadMenuItems = false;
-            this._setStateBySource(newOptions.source);
+            this._sticky?.close();
+            this.setStateBySource(newOptions.source);
         }
+    }
+
+    protected _beforeUnmount(): void {
+        this._sticky?.close();
+        this._sticky = null;
     }
 
     protected _resultHandler(action, data): void {
@@ -376,10 +340,17 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             /**
              * menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
              */
-            if (this._popupId && !item.get(this._nodeProperty)) {
-                StickyOpener.closePopup(this._popupId);
+            if (this._sticky.isOpened() && !item.get(this._nodeProperty)) {
+                this._sticky.close();
             }
         }
+    }
+
+    protected setStateBySource(source: ICrudPlus): Promise<TItems> {
+        return loadItems(source).then((items) => {
+            this._setStateByItems(items, source);
+            return items;
+        });
     }
 
     protected _closeHandler(): void {
@@ -413,20 +384,21 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     protected _getTemplateByItem(item: TItem): TemplateFunction {
-        const selfItemTemplate: TemplateFunction = item.get(this._options.itemTemplateProperty);
-
-        if (selfItemTemplate) {
-            return selfItemTemplate;
-        }
-
-        return this._options.itemTemplate;
+        return getTemplateByItem(item, this._options);
     }
 
     protected _getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
         return getButtonTemplateOptionsByItem(item, this._options);
     }
 
-    protected _showMenu(event: SyntheticEvent<UIEvent>): void {
+    protected _mouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
+        if (!isLeftMouseButton(event)) {
+            return;
+        }
+        this._showMenu(event);
+    }
+
+    protected _showMenu(event: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
             if (!this._isLoadMenuItems) {
                 this._setMenuItems();
@@ -435,12 +407,35 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._notify('menuOpened', [], {bubbling: true});
             this._openMenu(this._getMenuConfig());
         }
-        /**
-         * Stop bubbling of 'click' after opening the menu.
-         * Nobody should have to catch the 'click'', if toolbar handled it.
-         * For example, list can catch this event and generate 'itemClick'.
-         */
+    }
+    protected _onClickHandler(event: SyntheticEvent): void {
         event.stopPropagation();
+    }
+    protected _mouseEnterHandler() {
+        if (!this._options.readOnly) {
+            if (!this._dependenciesTimer) {
+                this._dependenciesTimer = new DependencyTimer();
+            }
+            this._dependenciesTimer.start(this._loadDependencies.bind(this));
+        }
+    }
+    protected _mouseLeaveHandler(): void {
+        this._dependenciesTimer?.stop();
+    }
+    private _loadDependencies(): Promise<unknown> {
+        try {
+            if (!this._isLoadMenuItems) {
+                this._setMenuItems();
+                this._isLoadMenuItems = true;
+            }
+
+            if (!this._loadViewPromise) {
+                this._loadViewPromise = import('Controls/menu');
+            }
+            return this._loadViewPromise;
+        } catch (e) {
+            IoC.resolve('ILogger').error('_toolbars:View', e);
+        }
     }
 
     /**
@@ -484,12 +479,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return '';
     }
 
-    private static _loadItems(source: ICrudPlus): Promise<TItems> {
-        const crudWrapper = new CrudWrapper({source});
-
-        return crudWrapper.query({});
-    }
-
     private static _calcMenuItems(items: TItems): TItems {
         return getMenuItems<TItem>(items).value(factory.recordSet, {
             adapter: items.getAdapter(),
@@ -500,15 +489,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     static getDefaultOptions() {
         return {
-            /**
-             * @name Controls/_toolbars/View#popupClassName
-             * @default ''
-             */
             popupClassName: '',
-            /**
-             * @name Controls/_toolbars/View#itemsSpacing
-             * @default 'medium'
-             */
             itemsSpacing: 'medium',
             iconSize: 'm',
             itemTemplate: defaultItemTemplate

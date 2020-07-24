@@ -7,8 +7,13 @@
   width: 100%;
 }
 
-.controls-Lookup__inputRender {
+.controls-Lookup__inputRender_horizontalPadding-xs_theme-@{themeName} {
   padding-left: @padding-horizontal_inputText;
+  padding-right: 0;
+}
+
+.controls-Lookup__inputRender_horizontalPadding-null_theme-@{themeName} {
+  padding-left: 0;
   padding-right: 0;
 }
 
@@ -42,7 +47,7 @@
 // При этом, если ссылка находится вне поля связи, у неё должен быть line-height,
 // чтобы работало выравнивание относительно других элементов.
 .controls-Lookup__fieldWrapper .controls-Lookup__link {
-  line-height: initial;
+  line-height: normal;
 }
 
 .controls-Lookup__fieldWrapper-size-default_theme-@{themeName} {
@@ -138,8 +143,15 @@
 
 .controls-Lookup__showSelector_theme_@{themeName} {
   .icon-size-without-important(@trigger_icon-size_lookupInput);
-  padding: @trigger_padding_lookupInput;
   color: @trigger_icon-color_lookupInput;
+}
+
+.controls-Lookup__showSelector_horizontalPadding-xs_theme_@{themeName} {
+  padding: @trigger_padding_lookupInput;
+}
+
+.controls-Lookup__showSelector_horizontalPadding-null_theme_@{themeName} {
+  padding: @trigger_padding_lookupInput 0 @trigger_padding_lookupInput @trigger_padding_lookupInput;
 }
 
 .ws-is-hover {

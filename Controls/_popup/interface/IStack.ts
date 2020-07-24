@@ -51,8 +51,6 @@ export interface IStackOpener extends IOpener {
  *     });
  * </pre>
  * @see close
- * @see openPopup
- * @see closePopup
  */
 
 /*
@@ -92,89 +90,6 @@ export interface IStackOpener extends IOpener {
  * @name Controls/_popup/interface/IStack#close
  * @description Close Stack Popup.
  */
-
-
-
-/**
- * Статический метод для открытия стекового окна. При использовании метода не требуется создавать popup:Stack в верстке.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ Подробнее}.
- * @function Controls/_popup/interface/IStack#openPopup
- * @param {PopupOptions} config Конфигурация стекового окна
- * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
- * @remark
- * Для обновления уже открытого окна в config нужно передать св-во id с идентификатором открытого окна.
- * @static
- * @example
- * js
- * <pre>
- *    import {Stack} from 'Controls/popup';
- *    ...
- *    openStack() {
- *        Stack.openPopup({
- *          template: 'Example/MyStackTemplate',
- *          opener: this._children.myButton
- *        }).then((popupId) => {
- *          this._popupId = popupId;
- *        });
- *    },
- *
- *    closeStack() {
- *       Stack.closePopup(this._popupId);
- *    }
- * </pre>
- * @see closePopup
- * @see close
- * @see open
- */
-
-/*
- * Open Stack popup.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
- * @function Controls/_popup/interface/IStack#openPopup
- * @param {PopupOptions} config Stack popup options.
- * @return {Promise<string>} Returns id of popup. This id used for closing popup.
- * @static
- * @see closePopup
- */
-
-/**
- * Статический метод для закрытия окна по идентификатору.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/#open-popup Подробнее}.
- * @function Controls/_popup/interface/IStack#closePopup
- * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
- * @static
- * @example
- * js
- * <pre>
- *    import {Stack} from 'Controls/popup';
- *    ...
- *    openStack() {
- *        Stack.openPopup({
- *          template: 'Example/MyStackTemplate',
- *          opener: this._children.myButton
- *        }).then((popupId) => {
- *          this._popupId = popupId;
- *        });
- *    },
- *
- *    closeStack() {
- *       Stack.closePopup(this._popupId);
- *    }
- * </pre>
- * @see openPopup
- * @see opener
- * @see close
- */
-
-/*
- * Close Stack popup.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
- * @function Controls/_popup/interface/IStack#closePopup
- * @param {String} popupId Id of popup.
- * @static
- * @see openPopup
- */
-
 
 /**
  * @name Controls/_popup/interface/IStack#minWidth

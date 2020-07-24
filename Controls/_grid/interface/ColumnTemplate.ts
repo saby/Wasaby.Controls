@@ -8,7 +8,7 @@ export type TCursor = 'default' | 'pointer' | 'right';
 
 /**
  * Шаблон, который по умолчанию используется для отображения ячеек в контроле {@link Controls/grid:View Таблица}.
- * 
+ *
  * @class Controls/grid:ColumnTemplate
  * @author Авраменко А.С.
  * @see Controls/_grid/interface/IGridControl/Column.typedef
@@ -49,7 +49,7 @@ export type TCursor = 'default' | 'pointer' | 'right';
     *
     * * **columnIndex** — порядковый номер колонки. Отсчет от 0.
     * * **index** — порядковый номер строки. Отсчет от 0.
-    * * **isEditing** (тип Boolean) — признак {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ редактирования по месту}.
+    * * **isEditing()** — возвращает признак {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ редактирования по месту}.
     * * **item** (тип {@link Types/entity:Record}) — элемент, данные которого отображаются в колонке.
     * * **column** (тип {@link Controls/grid:IColumn IColumn}) — объект с конфигурацией колонки.
     *
@@ -158,6 +158,22 @@ export type TCursor = 'default' | 'pointer' | 'right';
      * @default pointer
      */
     cursor?: TCursor;
+
+    /**
+     * @typedef {String} backgroundColorStyle
+     * @variant danger
+     * @variant success
+     * @variant warning
+     * @variant primary
+     * @variant secondary
+     * @variant unaccented
+     * @variant readonly
+     */
+    /**
+     * @name Controls/grid:ColumnTemplate#backgroundColorStyle
+     * @cfg {backgroundColorStyle} Стиль фона ячейки.
+     */
+    backgroundColorStyle?: string;
 }
 
     /**

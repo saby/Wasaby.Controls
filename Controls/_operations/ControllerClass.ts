@@ -7,8 +7,10 @@ export default class OperationsController {
     private _savedListMarkedKey: Key = null;
     private _isOperationsPanelVisible: boolean = false;
     private _selectedTypeRegister: RegisterClass = null;
+    private _selectionViewModeChangedCallback: Function = null;
 
     constructor(options) {
+        this._selectionViewModeChangedCallback = options.selectionViewModeChangedCallback;
         this._options = options;
     }
 
@@ -40,11 +42,11 @@ export default class OperationsController {
         this._getRegister().unregister(event, component, config);
     }
 
-    selectionTypeChanged(type: string): void {
+    selectionTypeChanged(type: string, limit: number): void {
         if (type === 'all' || type === 'selected') {
-            this._options.selectionViewModeChangedCallback(type);
+            this._selectionViewModeChangedCallback(type);
         } else {
-            this._getRegister().start(type);
+            this._getRegister().start(type, limit);
         }
     }
 
@@ -52,7 +54,7 @@ export default class OperationsController {
         const root = 'root' in this._options ? this._options.root : null;
 
         if (newCurrentRoot !== root && this._options.selectionViewMode === 'selected') {
-            this._options.selectionViewModeChangedCallback('all');
+            this._selectionViewModeChangedCallback('all');
         }
 
         if (this._options.itemOpenHandler instanceof Function) {

@@ -15,7 +15,7 @@ import {isEqual} from 'Types/object';
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/_interface/ISorting
@@ -28,7 +28,7 @@ import {isEqual} from 'Types/object';
 
 export default class ListControl extends Control/** @lends Controls/_list/ListControl.prototype */{
     protected _template: TemplateFunction = ListControlTpl;
-    protected _children: { baseControl: unknown };
+    protected _children: { baseControl: Control };
     _beforeUpdate(cfg) {
         if (cfg.propStorageId && !isEqual(cfg.sorting, this._options.sorting)) {
             saveConfig(cfg.propStorageId, ['sorting'], cfg);

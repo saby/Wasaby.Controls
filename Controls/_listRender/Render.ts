@@ -7,7 +7,6 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { CollectionItem, Collection, EditInPlaceController, GroupItem } from 'Controls/display';
 import { constants } from 'Env/Env';
 import { Opener as DropdownOpener } from 'Controls/dropdown';
-import {Model} from 'types/entity';
 
 export interface IRenderOptions extends IControlOptions {
     listModel: Collection<unknown>;
@@ -19,7 +18,6 @@ export interface IRenderOptions extends IControlOptions {
 
 export interface IRenderChildren {
     itemsContainer?: HTMLDivElement;
-    menuOpener?: DropdownOpener;
 }
 
 export interface ISwipeEvent extends Event {
@@ -117,11 +115,14 @@ export default class Render extends Control<IRenderOptions> {
             ? itemContainer
             : itemContainer.querySelector('.js-controls-SwipeControl__actionsContainer');
 
-        this._notify('itemSwipe', [item, e, swipeContainer?.clientHeight]);
+        this._notify('itemSwipe', [item, e, swipeContainer?.clientWidth, swipeContainer?.clientHeight]);
     }
 
     protected _onActionsSwipeAnimationEnd(e: SyntheticEvent<null>): void {
-        this._notify('closeSwipe', [e]);
+        if (e.nativeEvent.animationName === 'itemActionsSwipeClose') {
+            e.stopPropagation();
+            this._notify('closeSwipe', [e]);
+        }
     }
 
     protected _onItemActionsClick(e: SyntheticEvent<MouseEvent>, action: unknown, item: CollectionItem<unknown>): void {

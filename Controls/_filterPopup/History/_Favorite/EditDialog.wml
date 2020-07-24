@@ -3,7 +3,7 @@
       <ws:contentTemplate>
          <span>
             <span class="controls-icon_style-label_theme-{{_options.theme}}">{{itemTemplate.item.caption}}</span>&nbsp;
-            <span>{{itemTemplate.item.textValue}}</span>
+            <span class="controls-FavoriteEditDialog__itemContent">{{itemTemplate.item.textValue}}</span>
          </span>
       </ws:contentTemplate>
    </ws:partial>
@@ -11,7 +11,7 @@
 
 <Controls.form:PrimaryAction on:triggered="_apply()">
    <Controls.popupTemplate:Dialog headingCaption="{[Параметры]}"
-                                  headingStyle="info"
+                                  headingFontColorStyle="label"
                                   attr:class="controls-FilterPanel__FavoriteEditDialog">
 
       <ws:headerContentTemplate>

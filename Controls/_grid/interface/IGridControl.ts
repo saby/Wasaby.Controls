@@ -106,24 +106,24 @@
 
 /**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Controls/grid:IHeaderCell} Описывает шапку таблицы.
+ * @cfg {Controls/grid:IHeaderCell} Конфигурация заголовка таблицы.
  * @remark
- * В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек шапки.
- * Для одноуровневых шапок первый объект массива задаёт конфигурацию для первой ячейки.
- * Условно ячейки шапки нумеруются слева направо.
- * Для многоуровневой шапки порядок объектов массива не соответствует конфигуруемой ячейке.
- * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/templates/header/">руководство разработчика</a>
- * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">демо-пример</a>
+ * В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек заголовка.
+ * Для одноуровневого заголовка первый объект массива задаёт конфигурацию для первой ячейки.
+ * Условно ячейки заголовка нумеруются слева направо.
+ * Для многоуровневого заголовка порядок объектов массива не соответствует конфигурируемой ячейке.
+ * Подробнее о работе с заголовком таблицы читайтет <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/header/">здесь</a>.
+ * @demo Controls-demo/grid/Header/Default/Index
  * @example
  * Пример 1. Для первой ячейки задаём пользовательский шаблон.
- * <pre class="brush: html">
+ * <pre class="brush: html; highlight: [2,3,4,5,6,7,8]">
  *    <Controls.grid:View>
  *       <ws:header>
  *          <ws:Array>
  *              <ws:template>
  *                  <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__cell_spacing_money" colData="{{colData}}" />
  *              </ws:template>
- *          </ws: Array>
+ *          </ws:Array>
  *       </ws:header>
  *    </Controls.grid:View>
  * </pre>
@@ -186,28 +186,28 @@
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">демо-пример</a>
  * @remark Перед отрисовкой убедитесь, что {@link Controls/display:Collection Collection} содержит необходимые данные при изменении параметра {@link Controls/_grid/interface/IGridControl#columns columns}. При необходимости вызовите асинхронный метод "reload" перед изменением параметра {@link Controls/_grid/interface/IGridControl#columns columns}.
  * @example
- * <pre>
- * _columns = [
- * {
- *     displayProperty: 'name',
- *     width: '1fr',
- *     align: 'left',
- *     template: _customNameTemplate
- * },
- * {
- *     displayProperty: 'balance',
- *     align: 'right',
- *     width: 'auto',
- *     resutTemplate: '_customResultTemplate',
- *     result: 12340
+ * <pre class="brush: js">
+ * _columns: null,
+ * _beforeMount: function() {
+ *    this._columns = [
+ *       {
+ *          displayProperty: 'name',
+ *          width: '1fr',
+ *          align: 'left',
+ *          template: _customNameTemplate
+ *       },
+ *       {
+ *          displayProperty: 'balance',
+ *          align: 'right',
+ *          width: 'auto',
+ *          resutTemplate: _customResultTemplate,
+ *          result: 12340
+ *       }
+ *    ];
  * }
- * ];
  * </pre>
- * <pre>
- *  <Controls.grid:View
- *      ...
- *      columns="{{_columns}}">
- *  </Controls.grid:View>
+ * <pre class="brush: html">
+ *  <Controls.grid:View columns="{{_columns}}" />
  * </pre>
  */
 
@@ -306,6 +306,7 @@
  * @see Controls/_grid/interface/IGridControl#columnScroll
  * @remark
  * Столбец флагов множественного выбора всегда зафиксирован, и не входит в число stickyColumnsCount.
+ * @demo Controls-demo/grid/ColumnScroll/Base/Index
  */
 
 /*
@@ -315,6 +316,7 @@
  * @see Controls/_grid/interface/IGridControl#columnScroll
  * @remark
  * Multiple selection column is always fixed and does not count towards this number.
+ * @demo Controls-demo/grid/ColumnScroll/Base/Index
  */
 
 /**

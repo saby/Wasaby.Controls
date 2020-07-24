@@ -1,15 +1,19 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/grid/Grouped/WithEditing/WithEditing"
-import {Memory} from "Types/source"
-import {getTasks} from "../../DemoHelpers/DataCatalog";
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/grid/Grouped/WithEditing/WithEditing';
+import {Memory} from 'Types/source';
+import {getTasks} from '../../DemoHelpers/DataCatalog';
 import 'wml!Controls-demo/grid/Grouped/WithEditing/_cellEditor';
+import { IColumn } from 'Controls/_grid/interface/IColumn';
 
+interface IItem {
+    get: (item: string) => string;
+}
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns = getTasks().getDefaultWithEditingColumns();
-    protected _groupingKeyCallback = (item) => {
+    protected _columns: IColumn[] = getTasks().getDefaultWithEditingColumns();
+    protected _groupingKeyCallback = (item: IItem): string => {
         return item.get('fullName');
     }
 

@@ -16,7 +16,7 @@ var _private = {
         //containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
         if (options.items.length > 1) {
             self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
-            BreadCrumbsUtil.drawBreadCrumbs(self, self._breadCrumbsItems);
+            self._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(self._breadCrumbsItems);
             self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
 
         } else {
@@ -31,17 +31,19 @@ var _private = {
 
 /**
  * Хлебные крошки с кнопкой "Назад".
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FBreadCrumbs%2FScenarios">демо-пример</a>
  * * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/bread-crumbs/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_breadcrumbs.less">переменные тем оформления</a>
- * 
+ *
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @public
  * @author Авраменко А.С.
@@ -57,6 +59,8 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFontSize
  * @control
  * @public
  * @author Авраменко А.С.
@@ -65,21 +69,24 @@ var _private = {
  */
 
 /**
- * @name Controls/_breadcrumbs/HeadingPath#backButtonStyle
- * @cfg {String} Стиль отображения кнопки "Назад".
- * @variant primary
- * @variant secondary
- * @default secondary
- * @see Controls/_heading/Back#style
+ * @name Controls/_breadcrumbs/HeadingPath#backButtonIconStyle
+ * @cfg {String} Стиль отображения иконки кнопки "Назад".
+ * @see Controls/_heading/Back#iconStyle
  */
 
-/*
- * @name Controls/_breadcrumbs/HeadingPath#backButtonStyle
- * @cfg {String} Back heading display style.
- * @variant primary
- * @variant secondary
- * @default secondary
- * @see Controls/_heading/Back#style
+/**
+ * @name Controls/_breadcrumbs/HeadingPath#backButtonFontColorStyle
+ * @cfg {String} Стиль цвета кнопки "Назад".
+ * @see Controls/_heading/Back#fontColorStyle
+ */
+
+/**
+ * @name Controls/_breadcrumbs/HeadingPath#displayMode
+ * @cfg {Boolean} Отображение крошек в несколько строк
+ * @variant default
+ * @variant multiline
+ * @default default
+ * @demo Controls-demo/BreadCrumbs/DisplayMode/Index
  */
 
 /**
@@ -174,8 +181,10 @@ BreadCrumbsPath.getDefaultOptions = function () {
     return {
         displayProperty: 'title',
         root: null,
-        backButtonStyle: 'secondary',
-        showActionButton: true
+        backButtonIconStyle: 'primary',
+        backButtonFontColorStyle: 'secondary',
+        showActionButton: true,
+        displayMode: 'default'
     };
 };
 

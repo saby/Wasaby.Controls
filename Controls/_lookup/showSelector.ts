@@ -1,3 +1,4 @@
+import merge = require('Core/core-merge');
 import {Stack as StackOpener, IStackPopupOptions} from 'Controls/popup';
 
 function getPopupOptions(self): IStackPopupOptions {
@@ -18,14 +19,15 @@ function getPopupOptions(self): IStackPopupOptions {
             onClose: () => {
                 self._openingSelector = null;
                 self._closeHandler();
+                self._notify('selectorClose');
             }
         }
-    }
+    };
 }
 
 function getTemplateOptions(self, multiSelect) {
     return {
-        selectedItems: self._getItems().clone(),
+        selectedItems: self._lookupController.getItems().clone(),
         multiSelect: multiSelect,
         handlers: {
             onSelectComplete: function (event, result) {
@@ -35,10 +37,8 @@ function getTemplateOptions(self, multiSelect) {
                 }
             }
         }
-    }
+    };
 }
-
-
 
 /**
  * Open selector
@@ -53,18 +53,18 @@ export default function(self, popupOptions, multiSelect) {
         const stackPopupOptions = getPopupOptions(self);
 
         if (selectorTemplate && selectorTemplate.popupOptions) {
-            Object.assign(stackPopupOptions, selectorTemplate.popupOptions);
+            merge(stackPopupOptions, selectorTemplate.popupOptions);
         }
 
         if (popupOptions && popupOptions.template || selectorTemplate) {
             stackPopupOptions.templateOptions = getTemplateOptions(self, multiSelect);
 
             if (selectorTemplate && selectorTemplate.templateOptions) {
-                Object.assign(stackPopupOptions.templateOptions, selectorTemplate.templateOptions);
+                merge(stackPopupOptions.templateOptions, selectorTemplate.templateOptions);
             }
 
             if (popupOptions) {
-                Object.assign(stackPopupOptions, popupOptions);
+                merge(stackPopupOptions, popupOptions);
             }
 
             self._openingSelector = StackOpener.openPopup(stackPopupOptions).then((id) => {

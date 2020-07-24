@@ -1,8 +1,4 @@
 <Controls.validate:Controller name="formController">
-   <Controls.scroll:IntersectionObserverController
-         threshold="{{[0, 0.01, 0.99, 1]}}"
-         observerName="datePopup"
-         on:intersect="_currentDayIntersectHandler()">
       <div class="controls-PeriodDialog controls-PeriodDialog_theme-{{_options.theme}}">
       <ws:partial
          template="{{_headerTmpl}}"
@@ -30,6 +26,7 @@
                   selectionType="{{_yearRangeSelectionType}}"
                   quantum="{{_yearRangeQuantum}}"
                   readOnly="{{false}}"
+                  rangeSelectedCallback="{{_options.rangeSelectedCallback}}"
                   bind:selectionProcessing="_yearsRangeSelectionProcessing"
                   on:rangeChanged="_yearsRangeChanged()"
                   on:selectionChanged="_yearsSelectionChanged()"
@@ -49,6 +46,7 @@
                endValue="{{_rangeModel.endValue}}"
                selectionType="{{_monthRangeSelectionType}}"
                quantum="{{_monthRangeQuantum}}"
+               rangeSelectedCallback="{{_options.rangeSelectedCallback}}"
                bind:selectionProcessing="_monthRangeSelectionProcessing"
                on:rangeChanged="_monthsRangeChanged()"
                on:selectionChanged="_monthsSelectionChanged()"
@@ -78,6 +76,7 @@
             endValue="{{_rangeModel.endValue}}"
             selectionType="{{_options.selectionType}}"
             quantum="{{_options.quantum}}"
+            rangeSelectedCallback="{{_options.rangeSelectedCallback}}"
             bind:selectionProcessing="_dateRangeSelectionProcessing"
             on:rangeChanged="_dateRangeChanged()"
             on:selectionChanged="_dateRangeSelectionChanged()"
@@ -101,5 +100,4 @@
             </Controls._datePopup.DateRange>
          </Controls.dateRange:DateRangeSelectionController>
       </div>
-   </Controls.scroll:IntersectionObserverController>
 </Controls.validate:Controller>

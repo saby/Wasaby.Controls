@@ -140,7 +140,9 @@ var _private = {
           return new Promise(function(resolve) {
               require(['Controls/suggestPopup'], function(result) {
                   self._emptyTemplate = result.EmptyErrorTemplate;
-                  self._children.indicator.hide();
+                  if (self._children.indicator) {
+                     self._children.indicator.hide();
+                  }
                   resolve();
               });
           });
@@ -155,7 +157,7 @@ var _private = {
    },
 
    prepareValue: function(self, value) {
-      return self._options.trim ? value.trim() : value;
+      return self._options.trim && value ? value.trim() : value;
    },
 
    shouldShowSuggest: function(self, searchResult) {
@@ -351,7 +353,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
  * @control
@@ -365,7 +367,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
  * @control
@@ -556,8 +558,10 @@ var SuggestLayout = Control.extend({
    _searchStart: function() {
       this._loading = true;
       // Обновим таймер, т.к. могут прерывать поиск новыми запросами
-      this._children.indicator.hide();
-      this._children.indicator.show();
+      if (this._children.indicator) {
+         this._children.indicator.hide();
+         this._children.indicator.show();
+      }
       if (this._options.searchStartCallback) {
          this._options.searchStartCallback();
       }

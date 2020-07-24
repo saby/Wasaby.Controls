@@ -1,4 +1,4 @@
-import {IAdditionalQueryParams, Direction} from './IAdditionalQueryParams';
+import {IAdditionalQueryParams, Direction} from 'Controls/_interface/IAdditionalQueryParams';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {Collection} from 'Controls/display';
@@ -37,7 +37,11 @@ export interface IQueryParamsController {
      * Collect current pagination state to pass them to Query object
      * @param direction
      */
-    prepareQueryParams(direction: Direction, callback?, config?: IBaseSourceConfig, multiNavigation?: boolean): IAdditionalQueryParams;
+    prepareQueryParams(
+        direction: Direction,
+        callback?: Function,
+        config?: IBaseSourceConfig
+    ): IAdditionalQueryParams|IAdditionalQueryParams[];
 
     /**
      * Метод для разрушения текущего объекта IQueryParamsController
@@ -61,7 +65,8 @@ export interface IQueryParamsController {
         list?: RecordSet  | {[p: string]: unknown},
         direction?: Direction,
         config?: IBaseSourceConfig,
-        root?: string|number
+        root?: string|number,
+        callback?
     ): void;
 
     /**
@@ -111,7 +116,7 @@ export interface IQueryParamsController {
      * @param model
      * TODO Probably Deprecated
      */
-    setState(model: Collection<Record>): boolean;
+    setState(model: Collection<Record>, rootKey: string|number|null): boolean;
 
     /**
      * Устанавливает текущую страницу в контроллере

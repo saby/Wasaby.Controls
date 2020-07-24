@@ -285,10 +285,12 @@ class StickyController extends BaseController {
         /* start: We remove the set values that affect the size and positioning to get the real size of the content */
         const width = container.style.width;
         const maxHeight = container.style.maxHeight;
+        const maxWidth = container.style.maxWidth;
         // Если внутри лежит скроллконтейнер, то восстанавливаем позицию скролла после изменения размеров
         const scroll = container.querySelector('.controls-Scroll__content');
         const scrollTop = scroll?.scrollTop;
-        container.style.maxHeight = item.position.maxHeight ? item.position.maxHeight + 'px' : '100vh';
+        container.style.maxHeight = item.popupOptions.maxHeight ? item.popupOptions.maxHeight + 'px' : '100vh';
+        container.style.maxWidth = item.popupOptions.maxWidth ? item.popupOptions.maxWidth + 'px' : '100vw';
         container.style.width = 'auto';
         container.style.height = 'auto';
 
@@ -298,12 +300,19 @@ class StickyController extends BaseController {
 
         /* start: Return all values to the node. Need for vdom synchronizer */
         container.style.width = width;
-        container.style.maxHeight = maxHeight;
+        container.style.maxWidth = maxWidth;
         // После того, как дочерние контролы меняют размеры, они кидают событие controlResize, окно отлавливает событие,
         // измеряет верстку и выставляет себе новую позицию и размеры. Т.к. это проходит минимум в 2 цикла синхронизации,
         // то визуально видны прыжки. Уменьшаю на 1 цикл синхронизации простановку размеров
         // Если ограничивающих размеров нет (контент влезает в экран), то ставим высоту по контенту.
+        container.style.maxHeight = item.position.maxHeight ? item.position.maxHeight + 'px' : '';
         container.style.height = item.position.height ? item.position.height + 'px' : 'auto';
+
+        // Синхронно ставлю новую позицию, чтобы не было прыжков при изменении контента
+        const verticalPosition = item.position.top ? 'top' : 'bottom';
+        const revertVerticalPosition = item.position.top ? 'bottom' : 'top';
+        container.style[verticalPosition] = item.position[verticalPosition] + 'px';
+        container.style[revertVerticalPosition] = 'auto';
 
         //TODO: https://online.sbis.ru/opendoc.html?guid=5ddf9f3b-2d0e-49aa-b5ed-12e943c761d8
         scroll?.scrollTop = scrollTop;
@@ -342,7 +351,7 @@ class StickyController extends BaseController {
         if (Env.detection.isMobileIOS) {
             item.position.top = 0;
             item.position.left = 0;
-            item.position.hidden = true;
+            item.position.invisible = true;
         }
     }
 

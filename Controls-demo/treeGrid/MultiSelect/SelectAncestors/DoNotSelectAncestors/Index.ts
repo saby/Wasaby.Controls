@@ -3,7 +3,6 @@ import * as Template from 'wml!Controls-demo/treeGrid/MultiSelect/SelectAncestor
 import {Memory} from 'Types/source';
 import {Gadgets} from '../../../DemoHelpers/DataCatalog';
 
-
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;

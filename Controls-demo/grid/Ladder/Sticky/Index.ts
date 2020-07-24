@@ -34,18 +34,21 @@ export default class extends Control {
             keyProperty: 'id',
             data: getTasks().getData()
         });
+        // tslint:disable-next-line
         this._columns[0].stickyProperty = 'photo';
+        // tslint:disable-next-line
         this._columns[1].resultTemplate = ResultsTpl;
+        // tslint:disable-next-line
         this._columns[2].stickyProperty = 'date';
     }
 
-    protected _dragStart(_: SyntheticEvent, items: string[]): ListItems {
+    protected _dragStart(_: SyntheticEvent, items: string[]): unknown {
         return new ListItems({
             items
         });
     }
 
-    protected _dragEnd(_: SyntheticEvent, entity: Collection<Record>, target: any, position: any): void {
+    protected _dragEnd(_: SyntheticEvent, entity: Collection<Record>, target: number, position: number): void {
         this._children.listMover.moveItems(entity.getItems(), target, position);
     }
 

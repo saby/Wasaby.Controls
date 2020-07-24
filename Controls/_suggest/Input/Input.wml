@@ -20,9 +20,15 @@
    filter="{{_options.filter}}"
    sorting="{{_options.sorting}}"
    value="{{_options.value}}"
+   suggestPopupOptions="{{_options.suggestPopupOptions}}"
    bind:suggestState="_suggestState">
    <Controls.input:Text
       scope="{{_options}}"
+      size="{{undefined}}"
+      fontStyle="{{undefined}}"
+      fontSize="{{_fontSize}}"
+      inlineHeight="{{_inlineHeight}}"
+      fontColorStyle="{{_fontColorStyle}}"
       on:tagClick="_notifyHandler('tagClick')"
       on:tagHover="_notifyHandler('tagHover')"
       on:valueChanged="_changeValueHandler()"

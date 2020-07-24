@@ -1,7 +1,6 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import { isEqual } from 'Types/object';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
-import { Record } from 'Types/entity';
+import { Model } from 'Types/entity';
 import { CollectionItem } from 'Controls/display';
 import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
 import {
@@ -13,8 +12,8 @@ import {
 import clone = require('Core/core-clone');
 
 /**
- * @class Controls/_multiselector/SelectionController
- * @author Авраменко А.С.
+ * @class Controls/_multiselection/Controller
+ * @author Панихин К.А.
  * @private
  */
 export class Controller {
@@ -22,6 +21,7 @@ export class Controller {
    private _selectedKeys: TKeys = [];
    private _excludedKeys: TKeys = [];
    private _strategy: ISelectionStrategy;
+   private _limit: number|undefined;
 
    private get _selection(): ISelection {
       return {
@@ -46,38 +46,84 @@ export class Controller {
    /**
     * Обновить состояние контроллера
     * @param options
-    * @param rootChanged
-    * @param filterChanged
+    * @void
     */
-   update(options: ISelectionControllerOptions): ISelectionControllerResult {
-      const modelChanged = options.model !== this._model;
-      const selectionChanged = this._isSelectionChanged(options.selectedKeys, options.excludedKeys);
+   update(options: ISelectionControllerOptions): void {
       this._strategy.update(options.strategyOptions);
-
-      if (modelChanged) {
-         this._model = options.model;
-      }
-
-      const oldSelection = clone(this._selection);
-      if (selectionChanged) {
-         this._selectedKeys = options.selectedKeys.slice();
-         this._excludedKeys = options.excludedKeys.slice();
-      }
-
-      if (selectionChanged || modelChanged) {
-         this._updateModel(this._selection);
-      }
-
-      return this._getResult(oldSelection, this._selection);
+      this._selectedKeys = options.selectedKeys.slice();
+      this._excludedKeys = options.excludedKeys.slice();
+      this._model = options.model;
    }
 
+   /**
+    * Установить ограничение на количество выбранных записей с помощью selectAll
+    * @param limit
+    */
+   setLimit(limit: number|undefined): void {
+      this._limit = limit;
+   }
+
+   /**
+    * Возвращает результат работы после конструктора
+    * @return {ISelectionControllerResult}
+    */
+   getResultAfterConstructor(): ISelectionControllerResult {
+      return this._getResult(this._selection, this._selection);
+   }
+
+   /**
+    * Очистить список выбранных элементов
+    * @return {ISelectionControllerResult}
+    */
    clearSelection(): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._clearSelection();
-      this._updateModel(this._selection);
       return this._getResult(oldSelection, this._selection);
    }
 
+   /**
+    * Проставляет выбранные элементы в модели
+    * @remark Не уведомляет о изменениях в модели
+    */
+   restoreSelection(): void {
+      // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
+      this._strategy.setItems(this._model.getCollection());
+      this._updateModel(this._selection, true);
+   }
+
+   /**
+    * Проставляет выбранные элементы в модели
+    * @return {ISelectionControllerResult}
+    */
+   setSelectedKeys(selectedKeys: TKey[], excludedKeys: TKey[]): ISelectionControllerResult {
+      const selection = {
+         selected: selectedKeys,
+         excluded: excludedKeys
+      };
+      this._updateModel(selection);
+      return this._getResult(selection, selection);
+   }
+
+   /**
+    * Проверяет, что было выбраны все записи.
+    * @param byEveryItem true - проверять выбранность каждого элемента по отдельности.
+    *  Иначе проверка происходит по наличию единого признака выбранности всех элементов.
+    * @return {ISelectionControllerResult}
+    */
+   isAllSelected(byEveryItem: boolean = true): boolean {
+      return this._strategy.isAllSelected(
+         this._selection,
+         this._model.getHasMoreData(),
+         this._model.getCount(),
+         byEveryItem
+      );
+   }
+
+   /**
+    * Изменить состояние выбранноси элемента
+    * @param key Ключ элемента
+    * @return {ISelectionControllerResult}
+    */
    toggleItem(key: TKey): ISelectionControllerResult {
       const status = this._getItemStatus(key);
       let newSelection;
@@ -85,69 +131,72 @@ export class Controller {
       if (status === true || status === null) {
          newSelection = this._strategy.unselect(this._selection, [key]);
       } else {
+         if (this._limit && !this._excludedKeys.includes(key)) {
+            this._increaseLimit([key]);
+         }
+
          newSelection = this._strategy.select(this._selection, [key]);
       }
 
-      this._updateModel(newSelection);
       const result = this._getResult(this._selection, newSelection);
       this._selection = newSelection;
       return result;
    }
 
+   /**
+    * Выбрать все элементы
+    * @return {ISelectionControllerResult}
+    */
    selectAll(): ISelectionControllerResult {
       const newSelection = this._strategy.selectAll(this._selection);
-      this._updateModel(newSelection);
       const result = this._getResult(this._selection, newSelection);
       this._selection = newSelection;
       return result;
    }
 
+   /**
+    * Переключить состояние выбранности у всех элементов
+    * @return {ISelectionControllerResult}
+    */
    toggleAll(): ISelectionControllerResult {
       const newSelection = this._strategy.toggleAll(this._selection, this._model.getHasMoreData());
 
-      this._updateModel(newSelection);
       const result = this._getResult(this._selection, newSelection);
       this._selection = newSelection;
-      return result;   }
+      return result;
+   }
 
+   /**
+    * Снять выбор со всех элементов
+    * @return {ISelectionControllerResult}
+    */
    unselectAll(): ISelectionControllerResult {
       const newSelection = this._strategy.unselectAll(this._selection);
 
-      this._updateModel(newSelection);
       const result = this._getResult(this._selection, newSelection);
       this._selection = newSelection;
-      return result;   }
-
-   handleAddItems(addedItems: Record[]): ISelectionControllerResult {
-      // TODO для улучшения производительности обрабатывать только изменившиеся элементы
-      this._updateModel(this._selection);
-      return {
-         selectedKeysDiff: { keys: [], added: [], removed: [] },
-         excludedKeysDiff: { keys: [], added: [], removed: [] },
-         selectedCount: this._getCount(this._selection),
-         isAllSelected: this._strategy.isAllSelected(this._selection, this._model.getHasMoreData(), this._model.getCount())
-      };
+      return result;
    }
 
-   handleRemoveItems(removedItems: Array<CollectionItem<Record>>): ISelectionControllerResult {
+   /**
+    * Обработать добавление новых элементов в список
+    * @param addedItems Новые элементы списка
+    * @return {ISelectionControllerResult}
+    */
+   handleAddItems(addedItems: Array<CollectionItem<Model>>): ISelectionControllerResult {
+      // TODO для улучшения производительности обрабатывать только изменившиеся элементы
+      this._updateModel(this._selection);
+      return this._getResult(this._selection, this._selection);
+   }
+
+   /**
+    * Обработать удаление элементов из списка
+    * @param removedItems Удаленные элементы из списка
+    * @return {ISelectionControllerResult}
+    */
+   handleRemoveItems(removedItems: Array<CollectionItem<Model>>): ISelectionControllerResult {
       const oldSelection = clone(this._selection);
       this._remove(this._getItemsKeys(removedItems));
-
-      // TODO для улучшения производительности обрабатывать только изменившиеся элементы
-      this._updateModel(this._selection);
-      return this._getResult(oldSelection, this._selection);
-   }
-
-   handleReset(newItems: Record[], prevRootId: TKey, rootChanged: boolean): ISelectionControllerResult {
-      const oldSelection = clone(this._selection);
-
-      // если у нас изменился корень и этот корень выбран, то это значит, что мы зашли в него нажали Выбрать все
-      // и вышли в родительский узел, по стандартам элементы должны стать невыбранными
-      if (rootChanged && this._selectedKeys.includes(prevRootId) && this._excludedKeys.includes(prevRootId)) {
-         this._clearSelection();
-         this._updateModel(this._selection);
-      }
-
       return this._getResult(oldSelection, this._selection);
    }
 
@@ -166,15 +215,11 @@ export class Controller {
    }
 
    private _getCount(selection?: ISelection): number | null {
-      return this._strategy.getCount(selection || this._selection, this._model.getHasMoreData());
+      return this._strategy.getCount(selection || this._selection, this._model.getHasMoreData(), this._limit);
    }
 
-   private _getItemsKeys(items: Array<CollectionItem<Record>>): TKeys {
-      return items.map((item) => item.getContents ? item.getContents().getId() : item.getId());
-   }
-
-   private _isSelectionChanged(selectedKeys: TKeys, excludedKeys: TKeys): boolean {
-      return !isEqual(selectedKeys, this._selectedKeys) || !isEqual(excludedKeys, this._excludedKeys);
+   private _getItemsKeys(items: Array<CollectionItem<Model>|Model>): TKeys {
+      return items.map((item) => item instanceof CollectionItem ? item.getContents().getKey() : item.getKey());
    }
 
    private _getResult(oldSelection: ISelection, newSelection: ISelection): ISelectionControllerResult {
@@ -209,10 +254,45 @@ export class Controller {
       };
    }
 
-   private _updateModel(selection: ISelection): void {
-      const selectionForModel = this._strategy.getSelectionForModel(selection);
-      this._model.setSelectedItems(selectionForModel.get(true), true);
-      this._model.setSelectedItems(selectionForModel.get(false), false);
-      this._model.setSelectedItems(selectionForModel.get(null), null);
+   /**
+    * Увеличивает лимит на количество выбранных записей, все предыдущие невыбранные записи при этом попадают в исключение
+    * @param {Array} keys
+    * @private
+    */
+   private _increaseLimit(keys: TKeys): void {
+      let selectedItemsCount: number = 0;
+      const limit: number = this._limit ? this._limit - this._excludedKeys.length : 0;
+
+      this._model.getCollection().forEach((item) => {
+         const key: TKey = item.getKey();
+
+         const selectionForModel = this._strategy.getSelectionForModel(this._selection, this._limit);
+
+         let itemStatus = false;
+         if (selectionForModel.get(true).filter((selectedItem) => selectedItem.getKey() === key).length > 0) {
+            itemStatus = true;
+         }
+
+         if (selectedItemsCount < limit && itemStatus !== false) {
+            selectedItemsCount++;
+         } else if (selectedItemsCount >= limit && keys.length) {
+            selectedItemsCount++;
+            this._limit++;
+
+            if (keys.includes(key)) {
+               keys.splice(keys.indexOf(key), 1);
+            } else {
+               this._excludedKeys.push(key);
+            }
+         }
+      });
+   }
+
+   private _updateModel(selection: ISelection, silent: boolean = false): void {
+      const selectionForModel = this._strategy.getSelectionForModel(selection, this._limit);
+      // TODO думаю лучше будет занотифаить об изменении один раз после всех вызовов (сейчас нотифай в каждом)
+      this._model.setSelectedItems(selectionForModel.get(true), true, silent);
+      this._model.setSelectedItems(selectionForModel.get(false), false, silent);
+      this._model.setSelectedItems(selectionForModel.get(null), null, silent);
    }
 }

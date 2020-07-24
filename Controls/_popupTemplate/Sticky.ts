@@ -3,16 +3,19 @@ import * as template from 'wml!Controls/_popupTemplate/Sticky/Sticky';
 import {Controller as ManagerController} from 'Controls/popup';
 import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from './interface/IPopupTemplateBase';
 
-interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOptions {}
+interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOptions {
+    shadowVisible?: boolean;
+}
 
 /**
  * Базовый шаблон для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ прилипающих блоков}.
- * 
+ * Имеет три контентные опции - для шапки, контента и подвала, а так же крестик закрытия, соответствующие стандарту выпадающих списков.
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/sticky/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
- * 
+ *
  * @class Controls/_popupTemplate/Sticky
  * @extends Core/Control
  * @control
@@ -23,6 +26,12 @@ interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOpti
  * @demo Controls-demo/PopupTemplate/Sticky/FooterContentTemplate/Index
  * @demo Controls-demo/PopupTemplate/Sticky/CloseButtonVisibility/Index
  * @demo Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Sticky#shadowVisible
+ * @cfg {Boolean} Определяет, будет ли отображаться тень у прилипающего блока
+ * @default false
  */
 
 class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTemplateBase {
@@ -52,11 +61,12 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
 
     static _theme: string[] = ['Controls/popupTemplate'];
 
-    static getDefaultOptions(): IPopupTemplateBaseOptions {
+    static getDefaultOptions(): IStickyTemplateOptions {
         return {
-            headingStyle: 'secondary',
-            headingSize: 'm',
-            closeButtonVisibility: true
+            headingFontSize: 'l',
+            headingFontColorStyle: 'secondary',
+            closeButtonVisibility: true,
+            shadowVisible: false
         };
     }
 }

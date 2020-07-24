@@ -20,7 +20,8 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/sticky/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
- * 
+ * Для открытия прилипающих окон из кода используйте {@link Controls/popup:StickyOpener}.
+ *
  * @class Controls/_popup/Opener/Sticky
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IBaseOpener
@@ -69,6 +70,16 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
         return baseConfig;
     }
 
+    protected _getIndicatorConfig(): void {
+        // В случае со стики глобальный индикатор только мешает, к примеру в саггесте пока вводят в поле ввода
+        // зовется открытие автодополнения. при открытии глобальный индикатор блокирует нажатие клавиш и не позволяет
+        // вводить символы, пока саггест не откроется, хотя в этом случае блокировка не нужна.
+        // По сути так со всеми окнами, открывающимися от таргета.
+        const baseConfig = super._getIndicatorConfig();
+        baseConfig.isGlobal = false;
+        return baseConfig;
+    }
+
     protected _scrollHandler(event: Event, scrollEvent: Event, initiator: string): void {
         if (this.isOpened() && event.type === 'scroll') {
             // Из-за флага listenAll на listener'e, подписка доходит до application'a всегда.
@@ -93,6 +104,9 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
     static openPopup(config: IStickyPopupOptions): Promise<string> {
         return new Promise((resolve) => {
             const newCfg = getStickyConfig(config);
+            if (!newCfg.hasOwnProperty('isHelper')) {
+                Logger.warn('Controls/popup:Sticky: Для открытия прилипающих окон из кода используйте StickyOpener');
+            }
             if (!newCfg.hasOwnProperty('opener')) {
                 Logger.error('Controls/popup:Sticky: Для открытия окна через статический метод, обязательно нужно указать опцию opener');
             }

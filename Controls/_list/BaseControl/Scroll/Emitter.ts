@@ -7,7 +7,6 @@ import template = require('wml!Controls/_list/BaseControl/Scroll/Emitter/Emitter
 var ScrollEmitter = Control.extend({
     _template: template,
 
-
     startRegister: function (triggers) {
         this._notify('register', ['listScroll', this, this.handleScroll, triggers], {bubbling: true});
     },

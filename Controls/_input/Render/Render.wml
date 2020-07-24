@@ -3,15 +3,15 @@
             {{_border.right ? 'controls-Render_border-right_theme-' + _options.theme : 'controls-Render_border-right-empty'}}
             {{_border.bottom ? 'controls-Render_border-bottom_theme-' + _options.theme : 'controls-Render_border-bottom-empty'}}
             {{_border.left ? 'controls-Render_border-left_theme-' + _options.theme : 'controls-Render_border-left-empty'}}
-            controls-Render-fontsize-{{_fontSize}}
+            controls-Render-fontsize-{{_options.fontSize}}
             controls-Render_textAlign-{{_options.textAlign}}
-            controls-Render{{_statePrefix}}_borderRadius-{{_inlineHeight}}_theme-{{_options.theme}}
-            controls-Render_state-{{_state}}_theme-{{_options.theme}}
-            controls-fontsize-{{_fontSize}}{{_fontSize !== 'inherit' ? '_theme-' + _options.theme}}
-            {{_fontSize !== 'inherit' ? 'controls-Render-fontsize-' + _fontSize + '_theme-' + _options.theme}}
-            controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
+            controls-Render{{_statePrefix}}_borderRadius-{{_options.inlineHeight}}_theme-{{_options.theme}}
+            controls-Render_state-{{_state}} controls-Render_state-{{_state}}_theme-{{_options.theme}}
+            controls-fontsize-{{_options.fontSize}}{{_options.fontSize !== 'inherit' ? '_theme-' + _options.theme}}
+            {{_options.fontSize !== 'inherit' ? 'controls-Render-fontsize-' + _options.fontSize + '_theme-' + _options.theme}}
+            controls-text-{{_options.fontColorStyle}}_theme-{{_options.theme}}
             {{_options.multiline ? 'controls-Render_multiline' :
-            'controls-inlineheight-' + _inlineHeight + '_theme-' + _options.theme + ' controls-Render-inlineheight-' + _inlineHeight + '_theme-' + _options.theme}}">
+            'controls-inlineheight-' + _options.inlineHeight + '_theme-' + _options.theme + ' controls-Render-inlineheight-' + _options.inlineHeight + '_theme-' + _options.theme}}">
    <div class="controls-Render__wrapper {{_options.footerTemplate ? 'controls-Render__wrapper_footer'}}">
       <ws:if data="{{!_options.multiline}}">
          <span class="controls-Render__baseline">&#65279;</span>
@@ -33,7 +33,7 @@
          </ws:placeholderTemplate>
       </ws:partial>
       <ws:if data="{{_options.rightFieldWrapper}}">
-         <ws:partial attr:class="controls-Render__afterField" template="{{_options.rightFieldWrapper}}" inlineHeight="{{_inlineHeight}}"/>
+         <ws:partial attr:class="controls-Render__afterField" template="{{_options.rightFieldWrapper}}" inlineHeight="{{_options.inlineHeight}}"/>
       </ws:if>
       <ws:if data="{{_options.footerTemplate}}">
          <ws:partial template="{{_options.footerTemplate}}"/>

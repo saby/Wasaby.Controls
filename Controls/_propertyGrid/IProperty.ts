@@ -87,5 +87,5 @@ export default interface IProperty {
      */
     group?: string;
 
-    propertyValue: any;
+    propertyValue?: unknown;
 }

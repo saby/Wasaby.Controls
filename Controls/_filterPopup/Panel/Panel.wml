@@ -30,14 +30,14 @@
               orientation="{{_options.orientation}}"
               emptyTemplate="{{_options.emptyHistoryTemplate}}"
               on:historyChanged="_historyItemsChanged()"
-              attr:class="controls-HistoryList__{{_options.orientation}}"
+              attr:class="controls-HistoryList__{{_options.orientation}}_theme-{{_options.theme}}"
               on:applyHistoryFilter="_applyHistoryFilter()"/>
    </ws:if>
 </ws:template>
 
 <Controls.form:PrimaryAction on:triggered="_applyFilter()">
     <Controls.popupTemplate:Dialog headingCaption="{{_options.headingCaption}}"
-                                                    headingStyle="{{_options.headingStyle}}"
+                                                    headingFontColorStyle="{{_options.headingStyle}}"
                                                     attr:class="controls-PanelFilter
                                                     controls-FilterPanel__{{_options.orientation}}_theme-{{_options.theme}}
                                                     {{_hasHistory ? 'controls-FilterPanel__' + _options.orientation + '_withHistory'}}">
@@ -47,16 +47,18 @@
                 <ws:partial template="{{_options.topTemplate}}"/>
              </div>
           </ws:if>
-          <ws:if data="{{_hasResetValue}}">
-             <Controls.buttons:Button viewMode="link" fontColorStyle="link" readOnly="{{!_isChanged || _options.readOnly}}" caption="{[По умолчанию]}"
-                              on:click="_resetFilter()"
-                              name="resetButton"
+          <div class="controls-FilterPanel__header__buttons">
+             <ws:if data="{{_hasResetValue}}">
+                <Controls.buttons:Button viewMode="link" fontColorStyle="link" readOnly="{{!_isChanged || _options.readOnly}}" caption="{[По умолчанию]}"
+                                 on:click="_resetFilter()"
+                                 name="resetButton"
+                                 attr:tabindex="-1"
+                                 attr:class="controls-FilterPanel__resetButton"/>
+             </ws:if>
+             <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
                               attr:tabindex="-1"
-                              attr:class="controls-FilterPanel__resetButton"/>
-          </ws:if>
-          <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
-                           attr:tabindex="-1"
-                           attr:class="controls-FilterPanel__filterButton"/>
+                              attr:class="controls-FilterPanel__filterButton"/>
+          </div>
        </ws:headerContentTemplate>
        <ws:bodyContentTemplate>
           <Controls.scroll:Container attr:class="controls-ScrollContainer__flex" attr:ws-autofocus="true">

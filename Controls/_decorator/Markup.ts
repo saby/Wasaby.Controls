@@ -57,8 +57,8 @@ import {delay} from 'Types/function';
     * Примечание: функция не должна изменять исходное значение.
     *
     * @example
-    * {@link Controls/_decorator/Markup/resolvers/highlight}
-    * {@link Controls/_decorator/Markup/resolvers/linkDecorate}
+    * {@link Controls/decorator:Highlight}
+    * {@link Controls/decorator:linkDecorate}
     */
 
    /*

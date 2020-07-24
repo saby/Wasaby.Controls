@@ -7,14 +7,16 @@ import {Model} from 'Types/entity';
 import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {showType} from 'Controls/Utils/Toolbar';
+import { IColumn } from 'Controls/_grid/interface/IColumn';
+import {IItemAction} from 'Controls/itemActions';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
 
-    private _viewSource: Memory;
-    private _fakeItemId: number;
-    private _columns;
-    private _itemActions = [
+    protected _viewSource: Memory;
+    protected _fakeItemId: number;
+    protected _columns: IColumn[];
+    protected _itemActions: IItemAction[] = [
         {
             id: 1,
             icon: 'icon-Erase icon-error',
@@ -32,15 +34,17 @@ export default class extends Control {
         }
     ];
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
         this._columns = getCountriesStats().getColumnsWithFixedWidths().map((column, index) => {
             const resultColumn = column;
+            // tslint:disable-next-line
             if (index !== 0) {
+                // tslint:disable-next-line
                 resultColumn.template = index < 3 ? editingCellText : editingCellNumber;
             }
             return resultColumn;
         });
-
+        // tslint:disable-next-line
         const data = getCountriesStats().getData().slice(0, 5);
         this._fakeItemId = data[data.length - 1].id;
         this._viewSource = new Memory({keyProperty: 'id', data});

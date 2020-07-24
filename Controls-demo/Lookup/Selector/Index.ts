@@ -7,7 +7,7 @@ import controlTemplate = require('wml!Controls-demo/Lookup/Selector/Index');
 import selectorTemplate = require('Controls-demo/Lookup/FlatListSelector/FlatListSelector');
 import selectorTemplateWithTabs = require('Controls-demo/Lookup/FlatListSelectorWithTabs/FlatListSelectorWithTabs');
 
-export default class extends Control{
+export default class extends Control {
    protected _template: TemplateFunction = controlTemplate;
    protected _source: Memory = null;
    protected _tabSource: Memory = null;
@@ -17,6 +17,11 @@ export default class extends Control{
    protected _selectedKeys2: any = null;
    protected _selectorTemplate: object = null;
    protected _selectorTemplateWithTabs: object = null;
+
+   private _textMultiply: string;
+   private _textMultiply2: string;
+   private _textMultiply3: string;
+   private _textSingle1: string;
 
    protected _beforeMount() {
       this._source = new Memory({
@@ -76,7 +81,7 @@ export default class extends Control{
    }
 
    protected selectedKeysChanged1(e, key) {
-      this._textSingle = 'Выбран ключ: ' + key;
+      this._textSingle1 = 'Выбран ключ: ' + key;
    }
 
    protected selectedKeysChanged2(e, keys) {
@@ -91,5 +96,5 @@ export default class extends Control{
       this._textMultiply3 = 'Выбраны ключи: ' + keys.join(', ');
    }
 
-   static _styles: string[] = ['Controls-demo/Controls-demo'];
+   static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Lookup/Selector/Index'];
 }

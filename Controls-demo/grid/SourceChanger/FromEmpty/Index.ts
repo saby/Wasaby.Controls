@@ -1,15 +1,16 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/grid/SourceChanger/FromEmpty/FromEmpty"
-import {Memory} from "Types/source"
-import {getCountriesStats, changeSourceData} from "../../DemoHelpers/DataCatalog"
-
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/grid/SourceChanger/FromEmpty/FromEmpty';
+import {Memory} from 'Types/source';
+import {getCountriesStats, changeSourceData} from '../../DemoHelpers/DataCatalog';
+import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { INavigation } from 'Controls-demo/types';
 
 const { data2: data } = changeSourceData();
-
-class demoSource extends Memory {
+// tslint:disable
+class DemoSource extends Memory {
     queryNumber: number = 0;
     pending: Promise<any>;
-    protected query(query) {
+    query(): Promise<any> {
         const args = arguments;
         return this.pending.then(() => {
             return super.query.apply(this, args).addCallback((items) => {
@@ -29,10 +30,11 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     private _viewSource2: Memory;
-    protected _columns = getCountriesStats().getColumnsForLoad();
-    private _resolve = null;
+    protected _columns: IColumn[] = getCountriesStats().getColumnsForLoad();
+    private _resolve: unknown = null;
+    protected _navigation: INavigation;
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: []
@@ -42,18 +44,18 @@ export default class extends Control {
             view: 'maxCount',
             sourceConfig: {
                 pageSize: 10,
-                page: 0,
+                page: 0
             },
             viewConfig: {
                 maxCountValue: 3
             }
         };
-        this._viewSource2 = new demoSource({
+        this._viewSource2 = new DemoSource({
             keyProperty: 'id',
-            data: data,
+            data
         });
     }
-    protected _onPen() {
+    protected _onPen(): void {
         const self = this;
         this._resolve();
         this._viewSource2.pending = new Promise((res) => { self._resolve = res; });
@@ -64,7 +66,6 @@ export default class extends Control {
         this._viewSource2.queryNumber = 0;
         this._viewSource = this._viewSource2;
     }
-
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

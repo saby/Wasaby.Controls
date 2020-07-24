@@ -38,9 +38,9 @@
  * @author Крайнов Д.О.
  */
 
-import Button = require('Controls/_dropdown/Button');
-import Input = require('Controls/_dropdown/Input');
-import _Controller = require('Controls/_dropdown/_Controller');
+import {default as Button} from 'Controls/_dropdown/Button';
+import {default as Input} from 'Controls/_dropdown/Input';
+import {default as _Controller} from 'Controls/_dropdown/_Controller';
 import Combobox = require('Controls/_dropdown/ComboBox');
 import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
 import GroupTemplate = require('wml!Controls/_dropdown/GroupTemplate');

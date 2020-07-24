@@ -6,6 +6,7 @@
               multiSelect="{{true}}"
               keyProperty="key"
               displayProperty="title"
+              emptyText="Not selected"
      />
    </div>
 </div>

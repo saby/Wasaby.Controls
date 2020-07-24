@@ -3,31 +3,38 @@ import template = require('wml!Controls-demo/list_new/ColumnsView/MasterDetail/M
 import columnTemplate = require('wml!Controls-demo/DragNDrop/MasterDetail/itemTemplates/masterItemTemplate');
 import * as data from 'Controls-demo/DragNDrop/MasterDetail/Data';
 import cInstance = require('Core/core-instance');
-import {Memory as MemorySource, Memory} from 'Types/source';
-import {generateData} from '../../DemoHelpers/DataCatalog';
+import {Memory} from 'Types/source';
 import {ListItems} from 'Controls/dragnDrop';
 import * as TaskEntity from 'Controls-demo/DragNDrop/MasterDetail/TasksEntity';
-import {TItemKey} from 'Controls/_display/interface';
-
-const NUMBER_OF_ITEMS = 50;
+import { TItemsReadyCallback } from 'Controls-demo/types';
+import {RecordSet} from 'Types/collection';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Collection} from 'Controls/display';
+import {Model} from 'Types/entity';
+import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { INavigation } from 'Controls-demo/types';
 
 export default class RenderDemo extends Control {
     protected _template: TemplateFunction = template;
-    protected gridColumns = [{
+    protected gridColumns: IColumn[] = [{
         displayProperty: 'name',
         width: '1fr',
         template: columnTemplate
     }];
-
     protected _viewSource: Memory;
-
-    protected _navigation: any;
-    protected _selectedKeys: [TItemKey];
+    protected _navigation: INavigation;
+    protected _selectedKeys: number[];
     protected _items: [object];
+    protected _detailSource: Memory;
+    protected _masterSource: Memory;
+    protected _itemsReadyCallbackMaster: TItemsReadyCallback;
+    protected _itemsReadyCallbackDetail: TItemsReadyCallback;
+    protected _itemsMaster: RecordSet;
+    protected _itemsDetail: RecordSet;
 
-    private _dataArray: Array<{id: number, title: string, description: string}>;
+    protected _dataArray: Array<{id: number, title: string, description: string}>;
 
-    _initSource() {
+    _initSource(): void {
         this._detailSource = new Memory({
             keyProperty: 'id',
             data: data.detail
@@ -44,61 +51,65 @@ export default class RenderDemo extends Control {
         this._itemsReadyCallbackMaster = this._itemsReadyMaster.bind(this);
         this._itemsReadyCallbackDetail = this._itemsReadyDetail.bind(this);
     }
-    _afterMount() {
+    _afterMount(): void {
         this._initSource();
     }
-    _itemsReadyMaster(items) {
+    _itemsReadyMaster(items: RecordSet): void {
         this._itemsMaster = items;
     }
 
-    _itemsReadyDetail(items) {
+    _itemsReadyDetail(items: RecordSet): void {
         this._itemsDetail = items;
     }
-
-    _dragEnterMaster(event, entity) {
+    // tslint:disable-next-line
+    _dragEnterMaster(_: SyntheticEvent, entity: any): void {
         return cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/MasterDetail/TasksEntity');
     }
 
-    _dragStartMaster(event, items) {
-        var firstItem = this._itemsMaster.getRecordById(items[0]);
-
+    // tslint:disable-next-line
+    _dragStartMaster(_: SyntheticEvent, items: RecordSet): any {
+        const firstItem = this._itemsMaster.getRecordById(items[0]);
         return new ListItems({
-            items: items,
+            items,
             mainText: firstItem.get('name')
         });
     }
-    _dragStartDetail(event, items) {
-        var firstItem = this._itemsDetail.getRecordById(items[0]);
-
+    // tslint:disable-next-line
+    _dragStartDetail(_: SyntheticEvent, items: RecordSet): any {
+        const firstItem = this._itemsDetail.getRecordById(items[0]);
         return new TaskEntity({
-            items: items,
+            items,
             mainText: firstItem.get('name'),
             image: firstItem.get('img'),
             additionalText: firstItem.get('shortMsg')
         });
     }
 
-    _dragEndMaster(event, entity, target, position) {
-        var
-            item,
-            targetId,
-            items = entity.getItems();
+    // tslint:disable-next-line
+    _dragEndMaster(_: SyntheticEvent, entity: Collection<Model>, target: any, position: string): void {
+        let item = null;
+        let targetId = null;
+        const items = entity.getItems();
 
         if (cInstance.instanceOfModule(entity, 'Controls-demo/DragNDrop/MasterDetail/TasksEntity')) {
             targetId = target.get('id');
-            items.forEach(function(id) {
+            // tslint:disable-next-line
+            items.forEach((id: string | number): void => {
                 item = this._itemsDetail.getRecordById(id);
                 item.set('parent', targetId);
                 this._detailSource.update(item);
             }, this);
+            // tslint:disable-next-line
             this._children.detailList.reload();
             this._selectedKeys = [];
         } else {
+            // tslint:disable-next-line
             this._children.masterMover.moveItems(items, target, position);
         }
     }
-
-    _dragEndDetail(event, entity, target, position) {
+    // tslint:disable-next-line
+    _dragEndDetail(_: SyntheticEvent, entity: Collection<Model>, target: any, position: string): void {
+        // tslint:disable-next-line
         this._children.detailMover.moveItems(entity.getItems(), target, position);
     }
 

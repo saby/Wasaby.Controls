@@ -1,9 +1,10 @@
-<div class="controls-listTemplates__imageTemplate" style="height:{{_options.imageHeight}}px;">
+<div class="controls-listTemplates__imageTemplate" attr:style="{{
+_options.height ? 'height: ' + _options.height * (!_options.isNode || _options.viewMode !== 'rectangle' ? 1 : _options.compressionCoefficient) + 'px; ': '' + _options.width ? 'width: ' + _options.width + 'px;' : ''}}">
    <img class="controls-listTemplates__imageTemplate_image
                controls-listTemplates__imageTemplate_image_viewMode-{{_options.viewMode}}"
         src="{{_options.src}}"/>
    <div class="controls-listTemplates__imageTemplate_image_effect-{{_options.effect}}"
-        style="{{_options.effect === 'gradient' ? 'background: linear-gradient(to bottom, transparent 0%,' + (_options.gradientColor || '#ffffff') + ' 100%);' : ''}}"></div>
+        style="{{_options.effect === 'gradient' ? 'background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%,' + (_options.gradientColor || '#ffffff') + ' 100%);' : ''}}"></div>
    <svg class="clip-svg" width="0" height="0">
       <defs>
          <clipPath id="controls-listTemplates__imageTemplate_ellipse" clipPathUnits="objectBoundingBox">

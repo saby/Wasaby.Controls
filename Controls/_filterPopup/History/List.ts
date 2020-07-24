@@ -229,9 +229,9 @@ var MAX_NUMBER_ITEMS = 5;
 
       _clickSeparatorHandler: function() {
          this._isMaxHeight = !this._isMaxHeight;
+         this._notify('controlResize', [], {bubbling: true});
       }
    });
    HistoryList._theme = ['Controls/filterPopup'];
    HistoryList._private = _private;
    export = HistoryList;
-

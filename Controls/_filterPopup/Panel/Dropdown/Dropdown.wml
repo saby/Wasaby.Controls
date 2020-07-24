@@ -4,6 +4,7 @@
            attr:class="controls-FilterDropdown__content"
            on:selectedKeysChanged="_selectedKeysChangedHandler()"
            on:textValueChanged="_textValueChangedHandler()"
+           on:selectorCallback="_selectorCallbackHandler()"
            on:dropDownOpen="_dropDownOpen()"
            on:dropDownClose="_dropDownClose()">
       <ws:contentTemplate>
@@ -11,7 +12,8 @@
             <ws:partial template="Controls/dropdown:inputDefaultContentTemplate" style="filter">
                <ws:contentTemplate>
                   <div class="controls-FilterDropdown__contentTemplate">
-                     <ws:partial template="{{_options.contentTemplate}}" class="controls-Dropdown__item_style-filter"/>
+                     <ws:partial template="{{_options.contentTemplate}}" class="controls-Dropdown__item_style-filter
+                      {{!contentTemplate.icon ? 'controls-FilterDropdown__content_text'}}"/>
                   </div>
                </ws:contentTemplate>
             </ws:partial>

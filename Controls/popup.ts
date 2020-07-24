@@ -20,6 +20,9 @@
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @includes IPreviewerOptions Controls/_popup/interface/IPreviewer
  * @includes IInfoBoxOptions Controls/_popup/interface/IInfoBox
+ * @includes StickyOpener Controls/_popup/PopupHelper/Sticky
+ * @includes StackOpener Controls/_popup/PopupHelper/Stack
+ * @includes DialogOpener Controls/_popup/PopupHelper/Dialog
  * @public
  * @author Крайнов Д.О.
  */
@@ -76,6 +79,10 @@ export {default as InfoboxButton} from './_popup/InfoBox/InfoboxButton';
 export {default as PreviewerTarget} from './_popup/Previewer';
 export {default as InfoboxTarget} from './_popup/InfoBox';
 export {default as PreviewerTemplate} from './_popup/Previewer/PreviewerTemplate';
+
+export {default as StackOpener} from './_popup/PopupHelper/Stack';
+export {default as StickyOpener} from './_popup/PopupHelper/Sticky';
+export {default as DialogOpener} from './_popup/PopupHelper/Dialog';
 
 export {default as IPopup, IPopupOptions, IPopupItem, IPopupSizes, IPopupPosition, IEventHandlers, IPopupItemInfo} from './_popup/interface/IPopup';
 export {IBasePopupOptions} from './_popup/interface/IBaseOpener';

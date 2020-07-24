@@ -1,5 +1,4 @@
-define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Controls/popup'], function(showSelector, BaseController, popup) {
-   'use strict';
+define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/popup', 'Types/collection'], function(showSelector, Lookup, popup, { RecordSet }) {
 
    describe('Controls/_lookup/showSelector', function() {
       let lastPopupOptions;
@@ -7,8 +6,11 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
       let stubOpenPopup;
 
       const getBaseController = function() {
-         const baseController = new BaseController();
+         const baseController = new Lookup.default();
 
+         baseController._lookupController = {
+            getItems: () => new RecordSet()
+         };
          baseController._options.selectorTemplate = {
             templateOptions: {
                selectedTab: 'defaultTab'
@@ -38,11 +40,9 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
 
       it('showSelector without params', function() {
          const baseController = getBaseController();
-         let items = baseController._getItems();
          showSelector.default(baseController);
          assert.isTrue(isShowSelector);
          assert.equal(lastPopupOptions.templateOptions.selectedTab, 'defaultTab');
-         assert.notEqual(lastPopupOptions.templateOptions.selectedItems, items);
          assert.equal(lastPopupOptions.width, 100);
          assert.equal(lastPopupOptions.opener, baseController);
          assert.equal(lastPopupOptions.multiSelect, undefined);
@@ -75,6 +75,21 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
          assert.equal(lastPopupOptions.opener, baseController);
       });
 
+      it('showSelector with handlers on templateOptions', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate = {
+            templateOptions: {
+               handlers: {
+                  onTestAction: () => {}
+               }
+            }
+         };
+         showSelector.default(baseController, {});
+
+         assert.isFunction(lastPopupOptions.templateOptions.handlers.onSelectComplete);
+         assert.isFunction(lastPopupOptions.templateOptions.handlers.onTestAction);
+      });
+
       it('showSelector with multiSelect', function() {
          const baseController = getBaseController();
          let selectCompleted = false;
@@ -91,6 +106,20 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
 
          showSelector.default(baseController, undefined, true);
          lastPopupOptions.templateOptions.handlers.onSelectComplete();
+      });
+
+      it('showSelector notify selector close', function() {
+         const baseController = getBaseController();
+         let selectorCloseNotified = false;
+         baseController._closeHandler = () => {};
+         baseController.notify = (eventName) => {
+            if (eventName === 'selectorClose') {
+               selectorCloseNotified = true;
+            }
+         };
+         showSelector.default(baseController, undefined, true);
+         lastPopupOptions.eventHandlers.onClose();
+         assert.isFalse(selectorCloseNotified);
       });
 
       it('showSelector with isCompoundTemplate:false', function() {

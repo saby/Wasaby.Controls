@@ -7,10 +7,8 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
 
 import {Logger} from 'UI/Utils';
 import {detection, constants} from 'Env/Env';
-import * as ActualAPI from 'Controls/_input/ActualAPI';
 
 import 'Controls/decorator';
-
 
 /**
  * Многострочное поле ввода текста.
@@ -18,7 +16,7 @@ import 'Controls/decorator';
  * Вы можете настроить {@link minLines минимальное} и {@link maxLines максимальное} количество строк.
  * Когда вводимый текст превысит ограничение {@link maxLines}, в поле появится скролл и оно перестанет увеличиваться по высоте.
  * Вы можете переместить текст в следующую строку с помощью {@link newLineKey горячих клавиш}.
- * 
+ *
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/input/text/">руководство разработчика</a>
@@ -273,7 +271,6 @@ var Area = Text.extend({
         Area.superclass._beforeMount.apply(this, arguments);
 
         _private.validateLines(options.minLines, options.maxLines, this);
-        this._heightLine = ActualAPI.heightLine(options.size, options.fontSize);
     },
 
     _beforeUpdate: function (newOptions) {
@@ -282,7 +279,6 @@ var Area = Text.extend({
         if (this._options.minLines !== newOptions.minLines || this._options.maxLines !== newOptions.maxLines) {
             _private.validateLines(newOptions.minLines, newOptions.maxLines, this);
         }
-        this._heightLine = ActualAPI.heightLine(newOptions.size, newOptions.fontSize);
     },
 
     _inputHandler: function () {
@@ -312,6 +308,27 @@ var Area = Text.extend({
         Area.superclass._keyUpHandler.apply(this, arguments);
 
         _private.newLineHandler(this, event, false);
+
+        /**
+         * После нажатия на стрелки клавиатуры, происходит перемещение курсора в поле.
+         * В результате перемещения, курсор может выйти за пределы видимой области, тогда произойдет
+         * прокрутка в scroll:Container. Отступы не учитываются при прокрутке. Поэтому, когда курсор
+         * находится в начале или в конце, тогда scroll:Container не докручивается, остается тень.
+         * В такой ситуации будем докручивать самостоятельно.
+         */
+        const keyCode = event.nativeEvent.keyCode;
+        if (keyCode >= constants.key.end && keyCode <= constants.key.down) {
+            const cursorPosition: number = this._viewModel.selection.end;
+            const beforeValue: string = this._viewModel.displayValue.substring(0, cursorPosition);
+            const afterValue: string = this._viewModel.displayValue.substring(cursorPosition);
+            const onFirstLine: boolean = beforeValue.indexOf('\n') === -1;
+            const onLastLine: boolean = afterValue.indexOf('\n') === -1;
+            if (onFirstLine) {
+                this._children.scroll.scrollTo(0);
+            } else if (onLastLine) {
+                this._children.scroll.scrollTo(this._getField().offsetHeight);
+            }
+        }
     },
 
     _recalculateLocationVisibleArea: function (field, displayValue, selection) {
@@ -348,7 +365,7 @@ Area.getDefaultOptions = function () {
 };
 
 Area.getOptionTypes = function () {
-    var optionTypes = Text.getOptionTypes();
+    const optionTypes = Text.getOptionTypes();
 
     optionTypes.minLines = entity.descriptor(Number, null);
     optionTypes.maxLines = entity.descriptor(Number, null);

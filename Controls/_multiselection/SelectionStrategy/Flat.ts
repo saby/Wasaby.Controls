@@ -2,7 +2,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import { RecordSet } from 'Types/collection';
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
-import { Record } from 'Types/entity';
+import { Model } from 'Types/entity';
 import { IFlatSelectionStrategyOptions} from '../interface';
 import ISelectionStrategy from './ISelectionStrategy';
 import clone = require('Core/core-clone');
@@ -25,6 +25,10 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
    update(options: IFlatSelectionStrategyOptions): void {
       this._items = options.items;
+   }
+
+   setItems(items: RecordSet): void {
+      this._items = items;
    }
 
    select(selection: ISelection, keys: TKeys): ISelection {
@@ -92,18 +96,27 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
-   getSelectionForModel(selection: ISelection): Map<boolean|null, Record[]> {
+   getSelectionForModel(selection: ISelection, limit?: number): Map<boolean|null, Model[]> {
+      let selectedItemsCount = 0;
       const selectedItems = new Map();
       // IE не поддерживает инициализацию конструктором
       selectedItems.set(true, []);
       selectedItems.set(false, []);
       selectedItems.set(null, []);
 
-      const _isAllSelected: boolean = this._isAllSelected(selection);
+      if (limit > 0) {
+         limit -= selection.excluded.length;
+      }
 
+      const isAllSelected: boolean = this._isAllSelected(selection);
       this._items.forEach((item) => {
-         const itemId: TKey = item.getId();
-         const selected = selection.selected.includes(itemId) || _isAllSelected && !selection.excluded.includes(itemId);
+         const itemId: TKey = item.getKey();
+         const selected = (!limit || selectedItemsCount < limit)
+            && (selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId));
+
+         if (selected) {
+            selectedItemsCount++;
+         }
 
          selectedItems.get(selected).push(item);
       });
@@ -111,13 +124,15 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return selectedItems;
    }
 
-   getCount(selection: ISelection, hasMoreData: boolean): number|null {
+   getCount(selection: ISelection, hasMoreData: boolean, limit?: number): number|null {
       let countItemsSelected: number|null = null;
       const itemsCount = this._items.getCount();
 
       if (this._isAllSelected(selection)) {
-         if (!hasMoreData) {
+         if (!hasMoreData && (!limit || itemsCount <= limit)) {
             countItemsSelected = itemsCount - selection.excluded.length;
+         } else if (limit) {
+            countItemsSelected = limit - selection.excluded.length;
          }
       } else {
          countItemsSelected = selection.selected.length;
@@ -126,9 +141,17 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return countItemsSelected;
    }
 
-   isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number): boolean {
-      return this._isAllSelected(selection) && selection.excluded.length === 0
-         || !hasMoreData && itemsCount === this.getCount(selection, hasMoreData);
+   isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number, byEveryItem: boolean = true): boolean {
+      let isAllSelected;
+
+      if (byEveryItem) {
+         isAllSelected = this._isAllSelected(selection) && selection.excluded.length === 0
+            || !hasMoreData && itemsCount > 0 && itemsCount === this.getCount(selection, hasMoreData);
+      } else {
+         isAllSelected = this._isAllSelected(selection);
+      }
+
+      return isAllSelected;
    }
 
    /**

@@ -1,8 +1,0 @@
-#!/bin/sh
-# Run unit testing via browser
-
-node -v
-
-npm install
-npm run build
-npm run test:browser

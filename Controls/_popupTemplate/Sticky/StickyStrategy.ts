@@ -9,6 +9,15 @@ if (detection.isMobileIOS && detection.IOSVersion === 12) {
    import('Controls/Utils/TouchKeyboardHelper').then((module) => TouchKeyboardHelper = module.default);
 }
 
+interface IVisualViewport {
+   height: number;
+   offsetLeft: number;
+   offsetTop: number;
+   pageLeft: number;
+   pageTop: number;
+   width: number;
+}
+
 interface IPosition {
     left?: Number;
     right?: Number;
@@ -117,17 +126,17 @@ interface IPosition {
             }
          }
          const viewportOffset: number = _private.getVisualViewport()[isHorizontal ? 'offsetLeft' : 'offsetTop'];
-         const viewportPage: number = _private.getVisualViewport()[isHorizontal ? 'pageLeft' : 'pageTop'];
+         // const viewportPage: number = _private.getVisualViewport()[isHorizontal ? 'pageLeft' : 'pageTop'];
 
          // viewportOffset и viewportPage показали одинаковое значение при показе клавиатуры, соответсвтенно по сути
          // размер с клавой учитывался 2 раза. Использую 1 значение, на всякий случай беру максимальное. теоретически
          // можно оптимизировать.
-         const viewportSpacing = Math.max(viewportOffset, viewportPage);
+         // const viewportSpacing = Math.max(viewportOffset, viewportPage);
 
          const positionValue: number = position[isHorizontal ? 'left' : 'top'];
          const popupSize: number = popupCfg.sizes[isHorizontal ? 'width' : 'height'];
          const windowSize: number = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
-         let overflow = positionValue + taskBarKeyboardIosHeight + popupSize - windowSize - viewportSpacing;
+         let overflow = positionValue + taskBarKeyboardIosHeight + popupSize - windowSize - viewportOffset;
          if (_private.isIOS12()) {
             overflow -= targetCoords[isHorizontal ? 'leftScroll' : 'topScroll'];
          }
@@ -189,12 +198,16 @@ interface IPosition {
                resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
             } else {
                _private.invertPosition(popupCfg, direction);
-               let revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
+               const revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
                let revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
                if (revertPositionOverflow > 0) {
                   if ((positionOverflow <= revertPositionOverflow)) {
                      _private.invertPosition(popupCfg, direction);
-                     _private.restrictContainer(position, property, popupCfg, positionOverflow);
+                     _private.fixPosition(position, targetCoords);
+                     positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
+                     if (positionOverflow > 0 ) {
+                        _private.restrictContainer(position, property, popupCfg, positionOverflow);
+                     }
                      resultPosition = position;
                   } else {
                      //Fix position and overflow, if the revert position is outside of the window, but it can be position in the visible area
@@ -327,7 +340,11 @@ interface IPosition {
          if (popupCfg.config.maxWidth) {
             position.maxWidth = Math.min(popupCfg.config.maxWidth, windowSizes.width);
          } else {
-            position.maxWidth = windowSizes.width;
+            let horizontalPadding = 0;
+            if (popupCfg.fittingMode.horizontal === 'adaptive') {
+               horizontalPadding = position.left || position.right || 0;
+            }
+            position.maxWidth = windowSizes.width - horizontalPadding;
          }
 
          if (popupCfg.config.minWidth) {
@@ -339,8 +356,11 @@ interface IPosition {
          } else {
             // На ios возвращается неверная высота страницы, из-за чего накладывая maxWidth === windowSizes.height
             // окно визуально обрезается. Делаю по body, у него высота правильная
-            position.maxHeight = _private.getViewportHeight();
-            // position.maxHeight = windowSizes.height;
+            let verticalPadding = 0;
+            if (popupCfg.fittingMode.vertical === 'adaptive') {
+               verticalPadding = position.top || position.bottom || 0;
+            }
+            position.maxHeight = _private.getViewportHeight() - verticalPadding + _private.getVisualViewport().pageTop;
          }
 
          if (popupCfg.config.minHeight) {
@@ -370,7 +390,7 @@ interface IPosition {
           return document.body.clientHeight;
       },
 
-      getVisualViewport(): object {
+      getVisualViewport(): IVisualViewport {
          if (window?.visualViewport) {
             return window.visualViewport;
          }
@@ -382,16 +402,26 @@ interface IPosition {
             width: document && document.body.clientWidth,
             height: document && document.body.clientHeight
          };
+      },
+      prepareRestrictiveCoords(popupCfg, targetCoords): void {
+         if (popupCfg.restrictiveContainerCoords) {
+            // Полная проверка на 4 стороны позволит удалить calculateRestrictionContainerCoords
+            if (popupCfg.restrictiveContainerCoords.top > targetCoords.top) {
+               targetCoords.top = popupCfg.restrictiveContainerCoords.top;
+            }
+            if (popupCfg.restrictiveContainerCoords.bottom < targetCoords.bottom) {
+               targetCoords.bottom = popupCfg.restrictiveContainerCoords.bottom;
+            }
+         }
       }
    };
 
    export = {
       getPosition: function(popupCfg, targetCoords) {
          var position = {
-
             // position: 'fixed'
          };
-
+         _private.prepareRestrictiveCoords(popupCfg, targetCoords);
          cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'horizontal'));
          cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'vertical'));
          _private.setMaxSizes(popupCfg, position);

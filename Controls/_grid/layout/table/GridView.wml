@@ -3,26 +3,13 @@
     <ws:partial template="wml!Controls/_grid/layout/table/ColGroup" listModel="{{ _listModel }}"/>
 
     <!-- Заголовок таблицы -->
-    <ws:if data="{{ _listModel.getHeader() && _listModel.isDrawHeaderWithEmptyList() }}">
-        <ws:partial template="{{ _baseHeaderTemplate }}" attr:name="header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
+    <ws:if data="{{ _listModel.getHeaderModel() && _listModel.isDrawHeaderWithEmptyList() }}">
+        <ws:partial template="{{ _baseHeaderTemplate }}" attr:name="header" headerModel="{{_listModel.getHeaderModel()}}" defaultHeaderContent="{{_headerContentTemplate}}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
     </ws:if>
 
     <!-- Результаты сверху -->
     <ws:if data="{{ _listModel.getResultsPosition() === 'top' }}">
         <ws:partial template="{{ _resultsTemplate }}" attr:name="results" listModel="{{_listModel}}" baseResultsTemplate="{{ _baseResultsTemplate }}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
-    </ws:if>
-    <!-- Скроллбар горизонтального скролла -->
-    <ws:if data="{{isDisplayColumnScroll}}">
-        <Controls._grid.ScrollWrapper
-                name="horizontalScrollWrapper"
-                position="{{ position }}"
-                contentSize="{{ contentSize }}"
-                gridSupport="no"
-                scrollWidth="{{ scrollWidth }}"
-                listModel="{{ _listModel }}"
-                positionChangeHandler="{{ positionChangeHandler }}"
-                backgroundStyle="{{_options.backgroundStyle || _options.style}}">
-        </Controls._grid.ScrollWrapper>
     </ws:if>
 
     <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer">
@@ -36,9 +23,9 @@
                     itemActionsClass="{{_options.itemActionsClass}}"
                     groupTemplate="{{_groupTemplate}}"
                     itemActionsPosition="{{_options.itemActionsPosition}}"
-                    itemOutputWrapper="{{_itemOutputWrapper}}"
                     swipeTemplate="{{_options.swipeTemplate}}"
                     backgroundStyle="{{_options.backgroundStyle || _options.style}}"
+                    isColumnScrollVisible="{{ isColumnScrollVisible }}"
                     tagTemplate="{{_options.tagTemplate}}">
             <ws:editArrowTemplate>
                 <ws:partial template="wml!Controls/_grid/_editArrowTemplate"></ws:partial>
@@ -59,9 +46,9 @@
                     emptyTemplate="{{ _options.emptyTemplate }}"
                     listModel="{{ _listModel }}"
                     isFullGridSupport="{{ _isFullGridSupport }}"
-                    containerSize="{{ containerSize }}"
+                    containerSize="{{ _containerSize }}"
                     hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"
-                    hasColumnScroll="{{ _options.columnScroll }}"/>
+                    hasColumnScroll="{{ _isColumnScrollVisible }}"/>
     </ws:if>
 
     <!-- Результаты снизу -->

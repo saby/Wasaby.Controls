@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_masterDetail/Base/Base';
 import {debounce} from 'Types/function';
-import { SyntheticEvent } from 'Vdom/Vdom';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import {IPropStorageOptions} from 'Controls/interface';
 
@@ -32,9 +32,9 @@ const RESIZE_DELAY = 50;
 interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     master: TemplateFunction;
     detail: TemplateFunction;
-    masterWidth: number|string;
-    masterMinWidth: number|string;
-    masterMaxWidth: number|string;
+    masterWidth: number | string;
+    masterMinWidth: number | string;
+    masterMaxWidth: number | string;
     contrastBackground: boolean;
 }
 
@@ -93,8 +93,16 @@ class Base extends Control<IMasterDetail> {
      * * false - фон, гармонично сочетающийся с окружением.
      */
 
+    /*
+     * @event Controls/_masterDetail/Base#masterWidthChanged Происходит при изменении ширины мастера.
+     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+     * @param {String} width Ширина мастера.
+     * @remark Событие провоцируется через движение границ, или после изменения размеров родительским контролом.
+     * @see propStorageId
+     */
+
     protected _template: TemplateFunction = template;
-    protected _selected: boolean|null;
+    protected _selected: boolean | null;
     protected _canResizing: boolean = false;
     protected _minOffset: number;
     protected _maxOffset: number;
@@ -125,7 +133,7 @@ class Base extends Control<IMasterDetail> {
                     resolve(this._currentWidth);
                 });
             });
-        } else {
+        } else if (this._canResizing) {
             this.initCurrentWidth(options.masterWidth);
         }
     }
@@ -158,7 +166,7 @@ class Base extends Control<IMasterDetail> {
         }
     }
 
-    private initCurrentWidth(width: string|number): void {
+    private initCurrentWidth(width: string | number): void {
         if (this._isPercentValue(width)) {
             this._currentWidth = String(width);
         } else if (width !== undefined) {
@@ -168,6 +176,7 @@ class Base extends Control<IMasterDetail> {
 
     private _updateOffsetDebounced(): void {
         this._updateOffset(this._options);
+        this._notify('masterWidthChanged', [this._currentWidth]);
     }
 
     protected _afterMount(options: IMasterDetail): void {
@@ -229,7 +238,7 @@ class Base extends Control<IMasterDetail> {
 
             // Если нет контейнера(до маунта) и значение задано в процентах, то мы не можем высчитать в px maxOffset
             // Пересчитаем после маунта в px, чтобы работало движение
-            if (this. _getContainerWidth() || !this._isPercentValue(options.masterMaxWidth)) {
+            if (this._getContainerWidth() || !this._isPercentValue(options.masterMaxWidth)) {
                 this._maxOffset = this._getOffsetValue(options.masterMaxWidth) - currentWidth;
                 // Protect against window resize
                 if (this._maxOffset < 0) {
@@ -240,7 +249,7 @@ class Base extends Control<IMasterDetail> {
 
             // Если нет контейнера(до маунта) и значение задано в процентах, то мы не можем высчитать в px minOffset
             // Пересчитаем после маунта в px, чтобы работало движение
-            if (this. _getContainerWidth() || !this._isPercentValue(options.masterMinWidth)) {
+            if (this._getContainerWidth() || !this._isPercentValue(options.masterMinWidth)) {
                 this._minOffset = currentWidth - this._getOffsetValue(options.masterMinWidth);
                 // Protect against window resize
                 if (this._minOffset < 0) {
@@ -254,7 +263,7 @@ class Base extends Control<IMasterDetail> {
 
     private _isCanResizing(options: IMasterDetail): boolean {
         const canResizing = options.masterWidth && options.masterMaxWidth && options.masterMinWidth &&
-            options.masterMaxWidth !== options.masterMinWidth;
+            options.masterMaxWidth !== options.masterMinWidth && options.propStorageId;
         return !!canResizing;
     }
 
@@ -263,14 +272,15 @@ class Base extends Control<IMasterDetail> {
             const width = parseInt(this._currentWidth, 10) + offset;
             this._currentWidth = width + 'px';
             this._updateOffset(this._options);
+            this._notify('masterWidthChanged', [this._currentWidth]);
         }
     }
 
-    private _isPercentValue(value: string|number): boolean {
+    private _isPercentValue(value: string | number): boolean {
         return `${value}`.includes('%');
     }
 
-    private _getOffsetValue(value: string|number): number {
+    private _getOffsetValue(value: string | number): number {
         const MaxPercent: number = 100;
         const intValue: number = parseInt(String(value), 10);
         if (!this._isPercentValue(value)) {
@@ -303,6 +313,9 @@ class Base extends Control<IMasterDetail> {
 
     static getDefaultOptions(): Partial<IMasterDetail> {
         return {
+            masterWidth: '27%',
+            masterMinWidth: 30,
+            masterMaxWidth: '50%',
             contrastBackground: true
         };
     }
