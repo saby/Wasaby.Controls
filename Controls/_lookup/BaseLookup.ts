@@ -11,6 +11,7 @@ type LookupReceivedState = RecordSet|null;
 
 export interface ILookupOptions extends ILookupBaseControllerOptions, IControlOptions {
     maxVisibleItems?: number;
+    items?: RecordSet;
 }
 
 export default abstract class
@@ -34,6 +35,9 @@ export default abstract class
                 this._inheritorBeforeMount(options);
                 return items;
             });
+        } else if (options.items) {
+            this._setItems(options.items);
+            this._inheritorBeforeMount(options);
         } else {
             this._items = this._lookupController.getItems();
             this._inheritorBeforeMount(options);
