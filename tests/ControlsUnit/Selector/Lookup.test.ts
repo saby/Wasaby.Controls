@@ -45,12 +45,8 @@ function getLookup({closeSuggestCallback}) {
     lookupControl._lookupController = {
         getItems: () => new RecordSet()
     };
-    lookupControl._children = {
-        view: {
-            closeSuggest: () => {
-                closeSuggestCallback();
-            }
-        }
+    lookupControl.closeSuggest = () => {
+        closeSuggestCallback();
     };
     return lookupControl;
 }

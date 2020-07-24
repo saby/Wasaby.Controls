@@ -175,13 +175,13 @@ describe('Controls/_listDragNDrop/TreeController', () => {
       const expandNode = function (itemData) {
          assert.equal(itemData, nodeItemData);
          expandNodeCalled = true;
-      }
+      };
 
       beforeEach(() => {
          expandNodeCalled = false;
          controller._timeoutForExpand = function(itemData, expandNode) {
             expandNode(itemData);
-         }
+         };
       });
 
       it('hover on not node', () => {
@@ -220,8 +220,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
 
          controller.startDrag(1, new ItemsEntity( { items: [5] } ));
 
-         nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
-         controller.startCountDownForExpandNode(nodeItemData, expandNode);
+         controller.startCountDownForExpandNode(controller._draggingItemData, expandNode);
          assert.isFalse(expandNodeCalled);
       });
    });

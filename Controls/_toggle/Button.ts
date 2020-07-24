@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {ActualApi, cssStyleGeneration, IButton, IButtonOptions} from 'Controls/buttons';
+import {ActualApi, simpleCssStyleGeneration, IButton, IButtonOptions} from 'Controls/buttons';
 import ToggleButtonTemplate = require('wml!Controls/_toggle/Button/Button');
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {
@@ -264,13 +264,13 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
 
     protected _beforeMount(newOptions: IToggleButtonOptions): void {
         // TODO удалить когда актуализируем опции в кнопках у прикладников
-        cssStyleGeneration.call(this, newOptions);
+        simpleCssStyleGeneration.call(this, newOptions);
         this._calculateState(newOptions);
     }
 
     protected _beforeUpdate(newOptions: IToggleButtonOptions): void {
         // TODO удалить когда актуализируем опции в кнопках у прикладников
-        cssStyleGeneration.call(this, newOptions);
+        simpleCssStyleGeneration.call(this, newOptions);
         this._calculateState(newOptions);
     }
 
@@ -280,7 +280,9 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
         return {
             viewMode: 'button',
             iconStyle: 'secondary',
-            theme: 'default'
+            contrastBackground: false,
+            fontSize: 'm',
+            buttonStyle: 'secondary'
         };
     }
 }

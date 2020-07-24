@@ -99,8 +99,7 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
             if (this._options.source !== newOptions.source) {
                this._loading = true;
                return this._dataController.loadItems().then((result) => {
-                  this._dataController.setItems(null);
-                  this._items = this._dataController.setItems(result);
+                  this._dataController.updatePrefetchProxy(result);
                   this._dataController.updateContext(this._dataOptionsContext);
                   this._loading = false;
                   return result;

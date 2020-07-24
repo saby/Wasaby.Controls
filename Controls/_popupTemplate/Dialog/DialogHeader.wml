@@ -4,8 +4,8 @@
          <div class="controls-DialogTemplate__caption controls-DialogTemplate__caption_theme_{{_options.theme}}">
             <Controls.heading:Title attr:class="controls-DialogTemplate__caption_text"
                                     caption="{{_options.headingCaption}}"
-                                    fontColorStyle="{{_options.headingStyle || _options.headingFontColorStyle}}"
-                                    fontSize="{{_options.headingSize || _options.headingFontSize}}"
+                                    fontColorStyle="{{_options.headingFontColorStyle}}"
+                                    fontSize="{{_options.headingFontSize}}"
                                     readOnly="{{true}}"
                                     tooltip="{{_options.headingCaption}}"/>
          </div>
