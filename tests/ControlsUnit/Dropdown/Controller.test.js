@@ -752,7 +752,7 @@ define(
 
          it('_private::getSourceController', function() {
             let dropdownController = getDropdownController(config);
-            dropdownController.setItems(configLazyLoad);
+            dropdownController.setItems(configLazyLoad.items);
             assert.isNotOk(dropdownController._sourceController);
 
             return new Promise((resolve) => {
