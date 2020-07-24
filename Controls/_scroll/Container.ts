@@ -23,7 +23,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
 import * as scrollToElement from 'Controls/Utils/scrollToElement';
 import {descriptor} from 'Types/entity';
-import {constants} from 'Env/Env';
+import {detection, constants} from 'Env/Env';
 import {LocalStorageNative} from 'Browser/Storage';
 import Observer from './IntersectionObserver/Observer';
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
@@ -835,7 +835,9 @@ let
        },
 
        _stickyHeaderFixedCallback(position: POSITION): void {
-          this._forceUpdate();
+          if (!detection.isMobileIOS) {
+              this._forceUpdate();
+          }
        },
 
       _updateShadowMode(event, shadowVisibleObject): void {
@@ -1146,7 +1148,12 @@ let
 
           if (this._stickyHeaderContext.shadowPosition !== shadowPosition) {
               this._stickyHeaderContext.shadowPosition = shadowPosition;
-              this._stickyHeaderContext.updateConsumers();
+              // Контекст для тени постоянно вызывает обновление всех заголовков при смене shadowPosition, это
+              // сильно сказывается на производительности и вызывает дерганья при скролле на ios в случае,
+              // когда доскроллили до низа контейнера.
+              if (!detection.isMobileIOS) {
+                  this._stickyHeaderContext.updateConsumers();
+              }
           }
       },
 
