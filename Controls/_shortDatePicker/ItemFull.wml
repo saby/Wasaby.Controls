@@ -33,7 +33,9 @@
                              (_halfyearHovered === halfYear.number) ? ' controls-PeriodLiteDialog__background-transparent'}}"
                     on:click="_onQuarterClick(quarter.number, _currentYear)"
                     on:mouseenter="_onQuarterMouseEnter(quarter.number, _currentYear)"
+                    on:touchstart="_onQuarterMouseEnter(quarter.number, _currentYear)"
                     on:mouseleave="_onQuarterMouseLeave(quarter.number)"
+                    on:touchend="_onQuarterMouseLeave(quarter.number)"
                >
                   {{ quarter.name }}
                </div>
@@ -44,7 +46,9 @@
                      {{ _options._yearHovered === _currentYear ||  (_halfyearHovered === halfYear.number) ? ' controls-PeriodLiteDialog__background-transparent'}}"
               on:click="_onHalfYearClick(halfYear.number, _currentYear)"
               on:mouseenter="_onHalfYearMouseEnter(halfYear.number)"
+              on:touchstart="_onHalfYearMouseEnter(halfYear.number)"
               on:mouseleave="_onHalfYearMouseLeave()"
+              on:touchend="_onHalfYearMouseLeave()"
               title="{{ halfYear.tooltip }}"
          >
             {{ halfYear.name }}

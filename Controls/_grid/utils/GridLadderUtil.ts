@@ -1,6 +1,5 @@
 import {isEqual} from 'Types/object';
 import {isFullGridSupport} from './GridLayoutUtil';
-import { find } from 'wasaby-cli/store/_repos/saby-ui/UI/_focus/DefaultOpenerFinder';
 
 interface IStickyColumnsParams {
     columns: [];
@@ -78,7 +77,12 @@ export function prepareLadder(params: IPrepareLadderParams): {} {
     }
 
     for (idx = params.stopIndex - 1; idx >= params.startIndex; idx--) {
-        item = params.display.at(idx).getContents();
+        const dispItem = params.display.at(idx);
+        if (dispItem.isEditing()) {
+            continue;
+        }
+
+        item = dispItem.getContents();
         prevItem = idx - 1 >= params.startIndex ? params.display.at(idx - 1).getContents() : null;
 
         if (supportLadder) {
@@ -106,7 +110,7 @@ export function prepareLadder(params: IPrepareLadderParams): {} {
                     state: stickyLadderState[stickyProperties[fIdx]],
                     ladder: stickyLadder[idx][stickyProperties[fIdx]]
                 });
-            }      
+            }
         }
     }
     return {

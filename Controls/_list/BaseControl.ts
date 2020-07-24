@@ -18,6 +18,7 @@ import {Model, relation} from 'Types/entity';
 import {IHashMap} from 'Types/declarations';
 
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {ControllerClass, Container as ValidateContainer} from 'Controls/validate';
 import {Logger} from 'UI/Utils';
 
 import {TouchContextField} from 'Controls/context';
@@ -37,7 +38,14 @@ import {
     GroupItem,
     ANIMATION_STATE
 } from 'Controls/display';
-import {Controller as ItemActionsController, IItemAction, TItemActionShowType, ItemActionsTemplate, SwipeActionsTemplate} from 'Controls/itemActions';
+import {
+    Controller as ItemActionsController,
+    IItemAction,
+    IShownItemAction,
+    TItemActionShowType,
+    ItemActionsTemplate,
+    SwipeActionsTemplate
+} from 'Controls/itemActions';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
@@ -908,13 +916,13 @@ const _private = {
 
     calcTriggerVisibility(self, scrollParams, triggerOffset, direction: 'up' | 'down'): boolean {
         if (direction === 'up') {
-            return scrollParams.scrollTop < triggerOffset * 1.3;
+            return scrollParams.scrollTop < triggerOffset;
         } else {
             let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
             if (self._pagingVisible) {
                 bottomScroll -= PAGING_PADDING;
             }
-            return bottomScroll < triggerOffset * 1.3;
+            return bottomScroll < triggerOffset;
         }
     },
     calcViewSize(viewSize: number, pagingVisible: boolean): number {
@@ -1376,7 +1384,7 @@ const _private = {
      */
     handleItemActionClick(
         self: any,
-        action: IItemAction,
+        action: IShownItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isMenuClick: boolean): void {
@@ -1401,11 +1409,13 @@ const _private = {
      */
     openItemActionsMenu(
         self: any,
-        action: IItemAction,
+        action: IShownItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        const menuConfig = _private.getItemActionsController(self).prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
+        const menuConfig = _private
+            .getItemActionsController(self)
+            .prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
         }
@@ -1418,7 +1428,7 @@ const _private = {
         clickEvent.stopImmediatePropagation();
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
-            onClose: function () {
+            onClose(): void {
                 self._onItemActionsMenuClose(this);
             }
         };
@@ -1796,7 +1806,9 @@ const _private = {
     // region Multiselection
 
     createSelectionController(self: any, options: any): SelectionController {
-        if (!self._listViewModel || !self._listViewModel.getCollection()) {
+        if (
+           !self._listViewModel || !self._listViewModel.getCollection() || options.multiSelectVisibility === 'hidden'
+        ) {
             return null;
         }
 
@@ -1856,23 +1868,27 @@ const _private = {
     },
 
     onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
-        let result;
+        const selectionController = _private._getSelectionController(this);
+        if (!selectionController) {
+            return;
+        }
 
-        _private._getSelectionController(this).setLimit(limit);
+        let result;
+        selectionController.setLimit(limit);
 
         switch (typeName) {
             case 'selectAll':
-                result = _private._getSelectionController(this).selectAll();
+                result = selectionController.selectAll();
                 break;
             case 'unselectAll':
-                result = _private._getSelectionController(this).unselectAll();
+                result = selectionController.unselectAll();
                 break;
             case 'toggleAll':
-                result = _private._getSelectionController(this).toggleAll();
+                result = selectionController.toggleAll();
                 break;
         }
 
-      _private.handleSelectionControllerResult(this, result);
+        _private.handleSelectionControllerResult(this, result);
    },
 
     handleSelectionControllerResult(self: any, result: ISelectionControllerResult): void {
@@ -2451,10 +2467,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _insideDragging: false,
     _endDragNDropTimer: null, // для IE
     _draggedKey: null,
+    _validateController: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
+        this._validateController = new ControllerClass();
         this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._startDragNDropCallback = this._startDragNDropCallback.bind(this);
     },
@@ -2781,7 +2799,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(this._children.formController);
+            this._editInPlace.registerFormOperation(this._validateController);
             this._editInPlace.updateViewModel(this._listViewModel);
         }
 
@@ -3065,6 +3083,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return _private.scrollToItem(this, key, toBottom, force);
     },
 
+    _onValidateCreated(e: Event, control: ValidateContainer): void {
+        this._validateController.addValidator(control);
+    },
+
+    _onValidateDestroyed(e: Event, control: ValidateContainer): void {
+        this._validateController.removeValidator(control);
+    },
+
     _beforeUnmount() {
         if (this._checkLoadToDirectionTimeout) {
             clearTimeout(this._checkLoadToDirectionTimeout);
@@ -3107,6 +3133,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._portionedSearch.destroy();
             this._portionedSearch = null;
         }
+
+        this._validateController.destroy();
+        this._validateController = null;
 
         // для связи с контроллером ПМО
         this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
@@ -3240,12 +3269,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(this._children.formController);
+            this._editInPlace.registerFormOperation(this._validateController);
             this._editInPlace.prepareHtmlInput();
+            this._validateController.resolveSubmit();
         }
 
         if (this._scrollController) {
-            this._scrollController.setTriggers(this._children)
+            this._scrollController.setTriggers(this._children);
             this._scrollController.registerObserver();
         }
     },
@@ -3426,10 +3456,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @param itemData
      * @private
      */
-    _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: IItemAction, itemData: CollectionItem<Model>): void {
+    _onItemActionsClick(
+        event: SyntheticEvent<MouseEvent>,
+        action: IShownItemAction,
+        itemData: CollectionItem<Model>
+    ): void {
         event.stopPropagation();
-        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать Record
-        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+        // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать
+        //  Record https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(itemData);
         const key = contents ? contents.getKey() : itemData.key;
         const item = this._listViewModel.getItemBySourceKey(key) || itemData;
@@ -3503,8 +3537,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // При редактировании по месту маркер появляется только если в списке больше одной записи.
         // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-        const canBeMarked = this._mouseDownItemKey === key
+        let canBeMarked = this._mouseDownItemKey === key
            && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
+
+        // TODO изабвиться по задаче https://online.sbis.ru/opendoc.html?guid=f7029014-33b3-4cd6-aefb-8572e42123a2
+        // Колбэк передается из explorer.View, чтобы не проставлять маркер перед проваливанием в узел
+        if (this._options._needSetMarkerCallback) {
+            canBeMarked = canBeMarked && this._options._needSetMarkerCallback(itemData.item, domEvent);
+        }
 
         if (canBeMarked) {
             this.setMarkedKey(key);

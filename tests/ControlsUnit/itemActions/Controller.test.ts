@@ -6,14 +6,17 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {ANIMATION_STATE, Collection, CollectionItem, ISwipeConfig} from 'Controls/display';
 import {IOptions as ICollectionOptions} from 'Controls/_display/Collection';
 
-import {Controller as ItemActionsController, IItemActionsControllerOptions} from 'Controls/_itemActions/Controller';
 import {
-    IItemAction,
+    Controller as ItemActionsController,
     IItemActionsCollection,
     IItemActionsItem,
+    IControllerOptions
+} from 'Controls/_itemActions/Controller';
+import {
+    IItemAction,
     TActionDisplayMode,
     TItemActionShowType
-} from 'Controls/_itemActions/interface/IItemActions';
+} from 'Controls/_itemActions/interface/IItemAction';
 import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
@@ -195,7 +198,7 @@ describe('Controls/_itemActions/Controller', () => {
         return new Collection<Record>(collectionConfig);
     }
 
-    function initializeControllerOptions(options?: IItemActionsControllerOptions): IItemActionsControllerOptions {
+    function initializeControllerOptions(options?: IControllerOptions): IControllerOptions {
         return {
             collection: options ? options.collection : null,
             itemActions: options ? options.itemActions : null,
@@ -607,7 +610,7 @@ describe('Controls/_itemActions/Controller', () => {
             itemActionsController.activateSwipe(3, 100, 50);
             const config = collection.getSwipeConfig();
             assert.exists(config, 'Swipe activation should make configuration');
-            assert.isTrue(config.itemActions.showed[config.itemActions.showed.length -1]._isMenu, 'menu button was not added');
+            assert.isTrue(config.itemActions.showed[config.itemActions.showed.length - 1]._isMenu, 'menu button was not added');
         });
 
         // T2.3. В зависимости от actionAlignment, для получения конфигурации используется правильный measurer
@@ -730,7 +733,7 @@ describe('Controls/_itemActions/Controller', () => {
         });
 
         // T2.10. При свайпе добавляется editArrow в набор операций, вызывается editArrowVisibilityCallback.
-        it('should call add editArrow for every item action when necessary', () => {
+        it('should add editArrow for every item action when necessary', () => {
             const editArrowAction: IItemAction = {
                 id: 'view',
                 icon: '',
@@ -757,6 +760,28 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isTrue(recordWithCorrectType, 'The argument of editArrowVisibilityCallback isn\'t Model');
             assert.equal(config.itemActions.showed[0].id, 'view', 'First action should be \'editArrow\'');
         });
+
+        //T2.10.1 При свайпе editArrow добавляется в набор операций также и при itemActionsPosition: 'outside'
+        it('should add editArrow when itemActionsPosition: \'outside\'', () => {
+            const editArrowAction: IItemAction = {
+                id: 'view',
+                icon: '',
+                showType: TItemActionShowType.TOOLBAR,
+            };
+            const editArrowVisibilityCallback = () => true;
+            itemActionsController.update(initializeControllerOptions({
+                collection,
+                itemActions,
+                theme: 'default',
+                editArrowAction,
+                itemActionsPosition: 'outside',
+                editArrowVisibilityCallback
+            }));
+            itemActionsController.activateSwipe(1, 50);
+            const item = itemActionsController.getSwipeItem();
+            assert.exists(item, 'Swipe activation should set swiped item');
+            assert.equal(item.getActions().showed[0].id, 'view', 'First action should be \'editArrow\'');
+        })
 
         // T2.11 При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
         it('should right-swipe item on activateRightSwipe() method', () => {
@@ -1204,7 +1229,7 @@ describe('Controls/_itemActions/Controller', () => {
                 ];
                 const parentAction = {
                     id: null,
-                    icon: `icon-ExpandDown`,
+                    icon: 'icon-ExpandDown',
                     style: 'secondary',
                     iconStyle: 'secondary',
                     _isMenu: true

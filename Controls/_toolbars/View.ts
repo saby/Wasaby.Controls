@@ -55,13 +55,17 @@ export interface IMenuOptions {
  */
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions, IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions {
     /**
-     * Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
+     * @name Controls/_toolbars/IToolbarOptions#popupClassName
+     * @cfg {String} Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
+     * @default ''
      */
     popupClassName: string;
     /**
-     * Размер расстояния между кнопками.
-     * @remark
-     * Размер расстояния задается константой из стандартного набора размеров, который определен для текущей темы оформления.
+     * @name Controls/_toolbars/IToolbarOptions#itemsSpacing
+     * @cfg {String} Размер расстояния между кнопками.
+     * @variant medium
+     * @variant big
+     * @default medium
      */
     itemsSpacing: TItemsSpacing;
     /**
@@ -114,6 +118,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/Base/Index
  */
+
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate,
     IGrouped, IToolbarSource {
     /*
@@ -484,15 +489,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     static getDefaultOptions() {
         return {
-            /**
-             * @name Controls/_toolbars/View#popupClassName
-             * @default ''
-             */
             popupClassName: '',
-            /**
-             * @name Controls/_toolbars/View#itemsSpacing
-             * @default 'medium'
-             */
             itemsSpacing: 'medium',
             iconSize: 'm',
             itemTemplate: defaultItemTemplate

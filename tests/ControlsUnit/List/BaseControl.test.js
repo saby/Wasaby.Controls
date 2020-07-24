@@ -1728,13 +1728,16 @@ define([
             controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
             assert.isNotNull(controller);
 
+            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+            assert.isNull(controller);
+
             baseControl._listViewModel = null;
             controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
             assert.isNull(controller);
          });
 
          it('should init selection controller even when multiselectVisibility===\'null\'', () => {
-            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
+            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: null });
             assert.isNotNull(controller);
          });
       });
@@ -1752,7 +1755,7 @@ define([
                viewModelConstructor: lists.ListViewModel,
                selectedKeys: [],
                excludedKeys: [],
-               multiSelectVisibility: 'hidden'
+               multiSelectVisibility: 'visible'
             },
             baseControl = new lists.BaseControl(lnCfg);
 
@@ -2445,7 +2448,7 @@ define([
             };
             assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger should be visible');
             scrollParams = {
-               scrollTop: 200,
+               scrollTop: 101,
                clientHeight: 300,
                scrollHeight: 600
             };
@@ -2460,7 +2463,7 @@ define([
             };
             assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'down'), 'down trigger should be visible');
             scrollParams = {
-               scrollTop: 0,
+               scrollTop: 199,
                clientHeight: 300,
                scrollHeight: 600
             };
@@ -2475,7 +2478,7 @@ define([
             };
             assert.isTrue(calcTriggerVisibility({_pagingVisible: true}, scrollParams, 100, 'down'), 'down trigger should be visible');
             scrollParams = {
-               scrollTop: 100,
+               scrollTop: 150,
                clientHeight: 300,
                scrollHeight: 600
             };
@@ -3862,34 +3865,6 @@ define([
             cfg.readOnly = true;
             ctrl._beforeUpdate(cfg);
             assert.isTrue(ctrl._editInPlace._options.readOnly);
-         });
-
-         it('should update form controlled if it was updated', async () => {
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               keyProperty: 'id',
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               editingConfig: {
-                  item: new entity.Model({rawData: { id: 1 }})
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: lists.ListViewModel,
-            };
-            var ctrl = new lists.BaseControl(cfg);
-            ctrl.saveOptions(cfg);
-            await ctrl._beforeMount(cfg);
-            const formController = {};
-            ctrl._children.formController = formController;
-            ctrl._beforeUpdate(cfg);
-            ctrl._afterUpdate(cfg);
-            assert.equal(ctrl._editInPlace._formController, formController);
          });
       });
 
@@ -6816,18 +6791,18 @@ define([
 
          describe('_onItemMouseUp', () => {
 
-               it('notify parent', () => {
-                  const originalEvent = {
-                     target: {},
-                     nativeEvent: {}
-                  };
-                  const event = {
-                     stopPropagation: () => {
-                     }
-                  };
-                  const itemData = {item: {}};
+            it('notify parent', () => {
+               const originalEvent = {
+                  target: {},
+                  nativeEvent: {}
+               };
+               const event = {
+                  stopPropagation: () => {
+                  }
+               };
+               const itemData = {item: {}};
 
-                  baseControl._items.getCount = () => 1;
+               baseControl._items.getCount = () => 1;
 
                baseControl._notify = (eName, args) => {
                   if (eName === 'itemMouseUp') {
@@ -6846,32 +6821,39 @@ define([
                baseControlOptions.markerVisibility = 'onactivated';
                await mountBaseControl(baseControl, baseControlOptions);
 
-               baseControl._scrollController = {
-                  scrollToItem(key) {
-                     assert.equal(key, 1);
-                  },
-                  reset: () => undefined
-               }
+               const originalEvent = {target: {}};
+               const event = {};
 
-                  const originalEvent = {target: {}};
-                  const event = {};
-                  let setMarkedKeyIsCalled = false;
+               const notifySpy = sinon.spy(baseControl, '_notify');
 
-                  baseControl._items.getCount = () => 1;
-                  baseControl._mouseDownItemKey = 1;
-                  baseControl._markerController = {
-                     calculateMarkedKey: function (key) {
-                        assert.equal(key, 1);
-                        setMarkedKeyIsCalled = true;
-                     },
-                     getMarkedKey: () => 1
-                  };
+               baseControl._items.getCount = () => 1;
+               baseControl._mouseDownItemKey = 1;
 
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
                baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
 
-                  assert.equal(setMarkedKeyIsCalled, true);
-               });
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+            });
+
+            it('not should marker, _needSetMarkerCallback return false', async function() {
+               baseControlOptions._needSetMarkerCallback = () => false;
+               await mountBaseControl(baseControl, baseControlOptions);
+
+               const originalEvent = {target: { closest: () => false}};
+               const event = {};
+
+               const notifySpy = sinon.spy(baseControl, '_notify');
+
+               baseControl._items.getCount = () => 1;
+               baseControl._mouseDownItemKey = 1;
+
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+               baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
+
+               assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+               assert.isUndefined(baseControl._listViewModel.getMarkedItem());
+            });
 
             it('should not mark single item if editing', async function() {
                baseControlOptions.markerVisibility = 'onactivated';

@@ -43,7 +43,7 @@ export {
    Collection,
    ItemTemplate,
    Opener,
-   ButtonItemTemplate,
+   ItemTemplate as ButtonItemTemplate,
    PlaceholderChooser,
    Link
 };

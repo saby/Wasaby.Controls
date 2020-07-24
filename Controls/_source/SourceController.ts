@@ -220,7 +220,7 @@ var SourceController = cExtend.extend({
       def = _private.callQuery(this._source, this._options.keyProperty, queryParams)
          .addCallback(function(list) {
             if (self._queryParamsController) {
-               self._queryParamsController.updateQueryProperties(list, direction, config, root);
+               self._queryParamsController.updateQueryProperties(list, direction, config, root, self._options.queryParamsCallback);
             }
             return list;
          }).addErrback(function(error) {

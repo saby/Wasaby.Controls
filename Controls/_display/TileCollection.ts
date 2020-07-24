@@ -1,8 +1,6 @@
 import Collection from './Collection';
 import TileCollectionItem from './TileCollectionItem';
 
-import { register } from 'Types/di';
-
 const DEFAULT_TILE_HEIGHT = 200;
 const DEFAULT_TILE_WIDTH = 250;
 const DEFAULT_COMPRESSION_COEFF = 0.7;
@@ -186,4 +184,3 @@ Object.assign(TileCollection.prototype, {
     _hoveredItem: null
 });
 
-register('Controls/display:TileCollection', TileCollection, {instantiate: false});

@@ -25,7 +25,7 @@ import * as DefaultItemTpl from 'wml!Controls/_grid/ItemTemplateResolver';
 import * as GridItemTemplate from 'wml!Controls/_grid/layout/grid/Item';
 import * as TableItemTemplate from 'wml!Controls/_grid/layout/table/Item';
 
-import * as ColumnTpl from 'wml!Controls/_grid/Column';
+import * as ColumnTpl from 'wml!Controls/_grid/layout/common/ColumnContent';
 import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
 
 import {Logger} from 'UI/Utils';
@@ -391,6 +391,7 @@ var
 
             if (this._options.columnScroll) {
                 _private.updateColumnScrollByOptions(this, oldOptions, this._options);
+                this._listModel.setColumnScrollVisibility(this._isColumnScrollVisible());
             }
 
             this._columnsHaveBeenChanged = false;
@@ -483,6 +484,9 @@ var
             if (this._options.columnScroll) {
                 classes.add(COLUMN_SCROLL_JS_SELECTORS.CONTENT);
                 classes.add(DRAG_SCROLL_JS_SELECTORS.CONTENT, this._isDragScrollingVisible(options));
+            }
+            if (this._listModel.isSupportLadder(this._options.ladderProperties)) {
+                classes.add('controls-Grid_support-ladder')
             }
             return classes.compile();
         },

@@ -433,7 +433,8 @@ define(['Controls/grid'], function(gridMod) {
                setHeader: () => {},
                setColumnScroll: () => {},
                unsubscribe: () => {},
-               setStickyColumnsCount: () => {}
+               setStickyColumnsCount: () => {},
+               setColumnScrollVisibility: () => {}
             };
 
             contentContainer = {
@@ -593,6 +594,7 @@ define(['Controls/grid'], function(gridMod) {
                   gridView._beforeUpdate({...cfg, multiSelectVisibility: 'visible'});
                   gridView.saveOptions({...cfg, multiSelectVisibility: 'visible'});
                   gridView._resizeHandler();
+                  gridView._isColumnScrollVisible = () => {};
                   gridView._afterUpdate({...cfg, multiSelectVisibility: 'hidden'});
 
                   setTimeout(resolve, 20);
@@ -610,7 +612,8 @@ define(['Controls/grid'], function(gridMod) {
                gridView._columnScrollController = {
                   setStickyColumnsCount: () => {calledMethods.push('setStickyColumnsCount')},
                   setMultiSelectVisibility: () => {calledMethods.push('setMultiSelectVisibility')},
-                  updateSizes: () => {calledMethods.push('updateSizes')}
+                  updateSizes: () => {calledMethods.push('updateSizes')},
+                  isVisible: () => {}
                };
                gridView._children.columnScrollContainer = {
                   getElementsByClassName: (selector) => selector === 'controls-Grid_columnScroll' ? [{offsetWidth: 100, scrollWidth: 200}] : null
@@ -618,6 +621,7 @@ define(['Controls/grid'], function(gridMod) {
 
                gridView._beforeUpdate(newOptions);
                gridView.saveOptions(newOptions);
+               gridView._isColumnScrollVisible = () => {};
                gridView._afterUpdate(oldOptions);
 
                assert.deepEqual(calledMethods, ['setStickyColumnsCount', 'setMultiSelectVisibility', 'updateSizes']);

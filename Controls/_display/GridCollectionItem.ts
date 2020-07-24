@@ -1,6 +1,5 @@
 import CollectionItem, { IOptions as IBaseOptions } from './CollectionItem';
 import GridCollection from './GridCollection';
-import { register } from 'Types/di';
 import GridColumn, { IOptions as IGridColumnOptions, IColumnConfig } from './GridColumn';
 
 export interface IOptions<T> extends IBaseOptions<T> {
@@ -91,4 +90,3 @@ Object.assign(GridCollectionItem.prototype, {
     _$columnItems: null
 });
 
-register('Controls/display:GridCollectionItem', GridCollectionItem, {instantiate: false});

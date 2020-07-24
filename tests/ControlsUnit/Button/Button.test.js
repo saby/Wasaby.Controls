@@ -331,27 +331,6 @@ define(['Controls/buttons', 'UI/Utils'], function(buttons, {Logger}) {
          });
       });
 
-      describe('constructor() and _beforeUpdate()', function() {
-         var inst;
-
-         beforeEach(function() {
-            inst = {};
-         });
-
-         it('constructor', function() {
-            buttons.Button.prototype._beforeMount.call(inst, {
-               style: 'primary'
-            });
-            assert.equal(inst._buttonStyle, 'primary');
-         });
-
-         it('_beforeUpdate', function() {
-            buttons.Button.prototype._beforeMount.call(inst, {
-               style: 'primary'
-            });
-            assert.equal(inst._buttonStyle, 'primary');
-         });
-      });
       describe('click', function() {
          var customEvent = {}, eventBublle = true;
 

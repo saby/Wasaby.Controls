@@ -313,6 +313,55 @@ define(['Controls/treeGrid',
          treeGrid.ViewModel.superclass.getItemDataByItem = originFn;
       });
 
+      it('node footer classes', function() {
+         let initialColumns = [{
+                width: '1fr',
+                displayProperty: 'title'
+             }],
+             model = new treeGrid.ViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {id: 0, title: 'i0', parent: null, type: true},
+                      {id: 1, title: 'i1', parent: null, type: false},
+                      {id: 2, title: 'i2', parent: null, type: null}
+                   ]
+                }),
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                theme: 'default',
+                rowSeparatorSize: 'l',
+                parentProperty: 'parent',
+                columns: initialColumns,
+                columnScroll: true,
+                stickyColumnsCount: 1
+             });
+
+         let originFn = treeGrid.ViewModel.superclass.getItemDataByItem;
+         treeGrid.ViewModel.superclass.getItemDataByItem = function() {
+            return {
+               item: {},
+               columns: initialColumns,
+               nodeFooters: [{}],
+               rowIndex: 1,
+               itemPadding: {},
+               getCurrentColumn: function() {
+                  return {
+                     cellClasses: ''
+                  };
+               },
+               columnScroll: true
+            };
+         };
+
+         let nodeFooter = model.getItemDataByItem.call(model).nodeFooters[0];
+         assert.isTrue(nodeFooter.getColumnClasses(0).indexOf('controls-Grid_columnScroll__fixed') !== -1);
+         assert.isTrue(nodeFooter.getColumnClasses(0, { colspan: false }).indexOf('controls-Grid_columnScroll__fixed') !== -1);
+         assert.equal(nodeFooter.classes, nodeFooter.getColumnClasses(0));
+
+         treeGrid.ViewModel.superclass.getItemDataByItem = originFn;
+      });
+
       it('calcRowIndex', function () {
          var
              initialColumns = [{
