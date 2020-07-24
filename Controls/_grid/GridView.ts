@@ -10,8 +10,7 @@ import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/
 import getDimensions = require("Controls/Utils/getDimensions");
 
 import * as GridViewTemplateChooser from 'wml!Controls/_grid/GridViewTemplateChooser';
-import * as GridLayout from 'wml!Controls/_grid/layout/grid/GridView';
-import * as TableLayout from 'wml!Controls/_grid/layout/table/GridView';
+import * as GridTemplate from 'wml!Controls/_grid/layout/common/GridView';
 
 import * as GridHeader from 'wml!Controls/_grid/layout/grid/Header';
 import * as TableHeader from 'wml!Controls/_grid/layout/table/Header';
@@ -21,7 +20,6 @@ import * as GridResults from 'wml!Controls/_grid/layout/grid/Results';
 import * as TableResults from 'wml!Controls/_grid/layout/table/Results';
 import 'wml!Controls/_grid/layout/common/ResultCellContent';
 
-import * as DefaultItemTpl from 'wml!Controls/_grid/ItemTemplateResolver';
 import * as GridItemTemplate from 'wml!Controls/_grid/layout/grid/Item';
 import * as TableItemTemplate from 'wml!Controls/_grid/layout/table/Item';
 
@@ -75,7 +73,7 @@ var
         },
 
         setBaseTemplates(self: GridView, isFullGridSupport: boolean): void {
-            self._gridTemplate = isFullGridSupport ? GridLayout : TableLayout;
+            self._gridTemplate = GridTemplate;
             self._baseHeaderTemplate = isFullGridSupport ? GridHeader : TableHeader;
             self._baseResultsTemplate = isFullGridSupport ? GridResults : TableResults;
         },
@@ -277,7 +275,7 @@ var
         _resultsTemplate: null,
 
         _groupTemplate: GroupTemplate,
-        _defaultItemTemplate: DefaultItemTpl,
+        _defaultItemTemplate: GridItemTemplate,
         _headerContentTemplate: HeaderContentTpl,
 
         _notifyHandler: tmplNotify,
