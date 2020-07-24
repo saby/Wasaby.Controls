@@ -409,10 +409,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
         const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
 
-        if (baseCfg.hasOwnProperty('verticalAlign') || baseCfg.hasOwnProperty('horizontalAlign')) {
-            Logger.error('Controls/popup:Sticky : Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
-        }
-
         return baseCfg;
     }
 
