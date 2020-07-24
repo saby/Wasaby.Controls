@@ -200,7 +200,7 @@ class ComboBox extends BaseDropdown {
 
    protected _onResult(action: string, data): void {
       if (action === 'itemClick') {
-         const item = this._controller.getPreparedItem(data, this._options.keyProperty);
+         const item = this._controller.getPreparedItem(data);
          this._selectedItemsChangedHandler([item]);
          this._controller.handleSelectedItems(item);
       }

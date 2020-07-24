@@ -216,7 +216,7 @@ export default class Button extends BaseDropdown {
    }
 
    protected _itemClick(data, nativeEvent): void {
-      const item = this._controller.getPreparedItem(data, this._options.keyProperty);
+      const item = this._controller.getPreparedItem(data);
       const res = this._onItemClickHandler([item], nativeEvent);
 
       // dropDown must close by default, but user can cancel closing, if returns false from event
