@@ -254,6 +254,24 @@ define(
             });
          });
 
+         it('set source after mount', function(done) {
+            const config = {keyProperty: 'id'};
+            const data = getDataWithConfig(config);
+
+            data._beforeMount(config);
+
+            data._beforeUpdate({
+               source: new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: sourceDataEdited
+               }),
+               keyProperty: 'id'
+            }).addCallback(function() {
+               assert.deepEqual(data._items.getRawData(), sourceDataEdited);
+               done();
+            });
+         });
+
          it('itemsChanged', (done) => {
             const config = {
                source: source,

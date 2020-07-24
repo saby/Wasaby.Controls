@@ -75,7 +75,11 @@ export default class Browser extends Control {
         if (this._options.source !== newOptions.source) {
             this._loading = true;
             return this._dataController.loadItems().then((result) => {
-                this._items = this._dataController.setItems(result);
+                if (!this._items) {
+                    this._items = this._dataController.setItems(result);
+                } else {
+                    this._dataController.updatePrefetchProxy(result);
+                }
                 this._dataController.updateContext(this._dataOptionsContext);
                 this._loading = false;
                 return result;
