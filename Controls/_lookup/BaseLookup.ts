@@ -125,7 +125,8 @@ export default abstract class
     static getDefaultOptions(): object {
         return {
             selectedKeys: [],
-            multiSelect: false
+            multiSelect: false,
+            horizontalPadding: 'xs'
         };
     }
 
