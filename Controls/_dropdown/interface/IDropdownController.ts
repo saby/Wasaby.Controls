@@ -20,7 +20,7 @@ export default interface IDropdownController {
     closeMenu(): void;
     destroy(): void;
     getPreparedItem(item: Model): Model;
-    onSelectorResult(selectedItems: RecordSet): void;
+    handleSelectorResult(selectedItems: RecordSet): void;
 }
 
 export interface IDropdownControllerOptions extends IControlOptions, IDropdownSourceOptions,

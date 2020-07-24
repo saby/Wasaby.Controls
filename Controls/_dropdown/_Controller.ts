@@ -179,7 +179,7 @@ export default class _Controller implements IDropdownController {
       return this._prepareItem(item, this._options.keyProperty, this._source);
    }
 
-   onSelectorResult(selectedItems: RecordSet): void {
+   handleSelectorResult(selectedItems: RecordSet): void {
       const newItems = this._getNewItems(this._items, selectedItems, this._options.keyProperty);
 
       // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.

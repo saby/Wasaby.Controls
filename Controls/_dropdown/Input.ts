@@ -385,7 +385,7 @@ export default class Input extends BaseDropdown {
    }
 
    protected _selectorResult(data): void {
-      this._controller.onSelectorResult(data);
+      this._controller.handleSelectorResult(data);
       this._selectedItemsChangedHandler(data);
    }
 
