@@ -37,6 +37,12 @@ define(['Controls/filterPopup'], function(filterPopup) {
          assert.isTrue(selectedKeysEventFired);
       });
 
+      it('_selectorCallbackHandler', function() {
+         const notifyStub = sandbox.stub(dropDown, '_notify');
+         dropDown._selectorCallbackHandler({}, 'items1', 'items2');
+         assert.isTrue(notifyStub.withArgs('selectorCallback', ['items1', 'items2']).calledOnce);
+      });
+
       it('_dropDownOpen', function() {
          const notifyStub = sandbox.stub(dropDown, '_notify');
          dropDown._dropDownOpen({});
