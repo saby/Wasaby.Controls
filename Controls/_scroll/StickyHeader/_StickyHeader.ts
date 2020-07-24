@@ -214,7 +214,13 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     get height(): number {
         const container: HTMLElement = this._container;
         if (!isHidden(container)) {
-            this._height = container.offsetHeight;
+            // Проблема: заголовок помечен зафиксированным, но еще не успел пройти цикл синхронизации
+            // где навешиваются padding/margin/top. Из-за этого высота, получаемая через .offsetHeight будет
+            // не актуальная, когда цикл обновления завершится. Неактуальные размеры придут в scroll:Container
+            // и вызовут полную перерисовку, т.к. контрол посчитает что изменились высоты контента.
+            // При след. замерах возьмется актуальная высота и опять начнется перерисовка.
+            // Т.к. смещения только на ios добавляем, считаю высоту через clientHeight только для ios.
+            this._height = detection.isMobileIOS ? container.clientHeight : container.offsetHeight;
             if (this._model?.isFixed()) {
                 this._height -= getGapFixSize();
             }
