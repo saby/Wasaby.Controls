@@ -1,12 +1,13 @@
 import {default as Lookup} from 'Controls/_lookup/Lookup';
-import {ILookupBaseControllerOptions} from 'Controls/_lookup/BaseControllerClass';
+import {ILookupOptions} from 'Controls/_lookup/BaseLookup';
 import {assert} from 'chai';
 import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 import {stub} from 'sinon';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {RecordSet} from 'Types/collection';
 
-async function getBaseLookup(options?: ILookupBaseControllerOptions): Promise<Lookup> {
+async function getBaseLookup(options?: ILookupOptions): Promise<Lookup> {
     const lookupOptions = options || {
         source: getSource(),
         selectedKeys: []
@@ -55,8 +56,27 @@ describe('Controls/lookup:Input', () => {
                 source: null,
                 selectedKeys: []
             };
-            const lookup = await getBaseLookup(options as unknown as ILookupBaseControllerOptions);
+            const lookup = await getBaseLookup(options as unknown as ILookupOptions);
             assert.deepStrictEqual(lookup._items.getCount(), 0);
+        });
+
+        it('without source and selectedKeys but with items option', async () => {
+            const data = [
+                {id: 1},
+                {id: 2},
+                {id: 3}
+            ];
+            const options = {
+                source: null,
+                selectedKeys: [],
+                items: new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                })
+            };
+
+            const lookup = await getBaseLookup(options as unknown as ILookupOptions);
+            assert.deepStrictEqual(lookup._items.getCount(), data.length);
         });
 
     });
