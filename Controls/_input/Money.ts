@@ -10,7 +10,7 @@ interface IMoneyOptions extends INumberLengthOptions {
 }
 
 /**
- * Поле ввода денег.
+ * Поле ввода числовых значений. Отличается от {@link Controls/input:Number} отображением введенного значения, согласно стандарту денежных полей ввода.
  *
  * @remark
  * Полезные ссылки:
