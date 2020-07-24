@@ -10,8 +10,7 @@ import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/
 import getDimensions = require("Controls/Utils/getDimensions");
 
 import * as GridViewTemplateChooser from 'wml!Controls/_grid/GridViewTemplateChooser';
-import * as GridLayout from 'wml!Controls/_grid/layout/grid/GridView';
-import * as TableLayout from 'wml!Controls/_grid/layout/table/GridView';
+import * as GridTemplate from 'wml!Controls/_grid/layout/common/GridView';
 
 import * as GridHeader from 'wml!Controls/_grid/layout/grid/Header';
 import * as TableHeader from 'wml!Controls/_grid/layout/table/Header';
@@ -74,7 +73,7 @@ var
         },
 
         setBaseTemplates(self: GridView, isFullGridSupport: boolean): void {
-            self._gridTemplate = isFullGridSupport ? GridLayout : TableLayout;
+            self._gridTemplate = GridTemplate;
             self._baseHeaderTemplate = isFullGridSupport ? GridHeader : TableHeader;
             self._baseResultsTemplate = isFullGridSupport ? GridResults : TableResults;
         },
