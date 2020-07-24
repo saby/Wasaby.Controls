@@ -19,7 +19,12 @@
  */
 
 import {default as View} from 'Controls/_grid/Grid';
-import ItemTemplate = require('wml!Controls/_grid/ItemTemplateResolver');
+import * as GridLayoutUtil from './_grid/utils/GridLayoutUtil';
+
+import GridLayoutItemTemplate = require('wml!Controls/_grid/layout/grid/Item');
+import TableLayoutItemTemplate = require('wml!Controls/_grid/layout/table/Item');
+const ItemTemplate = GridLayoutUtil.isFullGridSupport() ? GridLayoutItemTemplate : TableLayoutItemTemplate;
+
 import ResultsTemplate = require('wml!Controls/_grid/ResultsTemplateResolver');
 import GroupTemplate = require('wml!Controls/_grid/GroupTemplate');
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
@@ -35,7 +40,6 @@ import SortingSelector from 'Controls/_grid/SortingSelector';
 import RowEditor = require('wml!Controls/_grid/RowEditor');
 import * as ResultColumnTemplate from 'wml!Controls/_grid/layout/common/ResultCellContent';
 
-import * as GridLayoutUtil from './_grid/utils/GridLayoutUtil';
 
 export {
     View,
