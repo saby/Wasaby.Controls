@@ -6,9 +6,10 @@ define(
       'Controls/display',
       'Types/collection',
       'Types/entity',
-      'Controls/Constants'
+      'Controls/Constants',
+      'Controls/popup'
    ],
-   function(menu, source, Clone, display, collection, entity, ControlsConstants) {
+   function(menu, source, Clone, display, collection, entity, ControlsConstants, popup) {
       describe('Menu:Control', function() {
          let defaultItems = [
             { key: 0, title: 'все страны' },
@@ -178,6 +179,33 @@ define(
 
             it('multiSelect=true', function() {
                menuControl._options.multiSelect = true;
+
+               menuControl._itemClick('itemClick', item, {});
+               assert.equal(selectedItem.getKey(), 1);
+
+               menuControl._selectionChanged = true;
+               menuControl._itemClick('itemClick', item, {});
+               assert.equal(selectedKeys[0], 1);
+            });
+
+            it('multiSelect=true, click on fixed item', function() {
+               menuControl._options.multiSelect = true;
+               item = item.clone();
+               item.set('pinned', true);
+
+               menuControl._itemClick('itemClick', item, {});
+               assert.equal(selectedItem.getKey(), 1);
+
+               menuControl._selectionChanged = true;
+               menuControl._itemClick('itemClick', item, {});
+               assert.equal(selectedItem.getKey(), 1);
+            });
+
+            it('multiSelect=true, click on history item', function() {
+               menuControl._options.multiSelect = true;
+               item = item.clone();
+               item.set('pinned', true);
+               item.set('HistoryId', null);
 
                menuControl._itemClick('itemClick', item, {});
                assert.equal(selectedItem.getKey(), 1);
@@ -500,11 +528,17 @@ define(
             menuControl._listModel = getListModel();
 
             let selectCompleted = false, closed = false, opened = false, actualOptions;
-            menuControl._options.selectorOpener = {
-               openPopup: (tplOptions) => { opened = true; actualOptions = tplOptions; return Promise.resolve()},
-               closePopup: () => { closed = true; }
-            };
+
+            let sandbox = sinon.createSandbox();
+            sandbox.replace(popup.Stack, 'openPopup', (tplOptions) => {
+               opened = true;
+               actualOptions = tplOptions;
+               return Promise.resolve();
+            });
+            sandbox.replace(popup.Stack, 'closePopup', () => { closed = true; });
+
             menuControl._options.selectorDialogResult = () => {selectCompleted = true};
+            menuControl._options.selectorOpener = 'testSelectorOpener';
 
             menuControl._openSelectorDialog(menuOptions);
 
@@ -515,10 +549,12 @@ define(
             assert.strictEqual(actualOptions.templateOptions.option2, '2');
             assert.isOk(actualOptions.eventHandlers.onResult);
             assert.isTrue(actualOptions.hasOwnProperty('opener'));
+            assert.equal(actualOptions.opener, 'testSelectorOpener');
             assert.isTrue(opened);
 
             actualOptions.eventHandlers.onResult();
             assert.isTrue(closed);
+            sandbox.restore();
          });
 
          it('_openSelectorDialog with empty item', () => {
@@ -537,12 +573,16 @@ define(
                title: 'Not selected'
             };
             items.push(emptyItem);
-            emptyMenuControl._options.selectorOpener = {
-               openPopup: (tplOptions) => { selectorOptions = tplOptions; return Promise.resolve()},
-            };
+            let sandbox = sinon.createSandbox();
+            sandbox.replace(popup.Stack, 'openPopup', (tplOptions) => {
+               selectorOptions = tplOptions;
+               return Promise.resolve();
+            });
             emptyMenuControl._listModel = getListModel(items);
             emptyMenuControl._openSelectorDialog({});
             assert.strictEqual(selectorOptions.templateOptions.selectedItems.getCount(), 0);
+
+            sandbox.restore();
          });
 
          describe('displayFilter', function() {

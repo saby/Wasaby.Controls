@@ -4,6 +4,7 @@
                   scope="{{_options}}"
                   items="{{_items}}"
                   name="Path"
+                  displayMode="{{_options.breadcrumbsDisplayMode}}"
                   withoutBackButton="{{_withoutBackButton}}"
                   attr:class="controls-Explorer__Path_theme-{{_options.theme}}
                               {{_options.style == 'master' || _options.style == 'masterClassic' ? 'controls-Explorer__Path_master_theme-' + _options.theme}}

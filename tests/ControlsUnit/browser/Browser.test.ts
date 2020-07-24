@@ -1,6 +1,6 @@
 import {Browser} from 'Controls/browser';
 import {Memory} from 'Types/source';
-import {equal} from 'assert';
+import {equal, deepStrictEqual} from 'assert';
 
 const browserData = [
     {
@@ -36,31 +36,61 @@ describe('Controls/browser:Browser', () => {
 
     describe('_beforeMount', () => {
 
-        describe('searchValue on _beforeMount', () => {
+        describe('searchController', () => {
 
-            it('searchValue is longer then minSearchLength', () => {
-                const options = getBrowserOptions();
-                options.searchValue = 'Sash';
-                const browser = getBrowser(options);
-                browser._beforeMount(options, {});
-                equal(browser._searchValue, 'Sash');
+            describe('searchValue on _beforeMount', () => {
+
+                it('searchValue is longer then minSearchLength', () => {
+                    const options = getBrowserOptions();
+                    options.searchValue = 'Sash';
+                    const browser = getBrowser(options);
+                    return new Promise((resolve) => {
+                        browser._beforeMount(options, {}).then(() => {
+                            equal(browser._searchValue, 'Sash');
+                            resolve();
+                        });
+                    });
+                });
+
+                it('filter in context without source on _beforeMount', () => {
+                    const options = getBrowserOptions();
+                    const filter = {
+                        testField: 'testValue'
+                    };
+                    options.source = null;
+                    options.filter = filter;
+
+                    const browser = getBrowser(options);
+                    browser._beforeMount(options, {});
+                    equal(browser._dataOptionsContext.filter, filter);
+                    equal(browser._filter, filter);
+                    deepStrictEqual(browser._searchController._dataOptions.filter, filter);
+                });
+
             });
+        });
 
-            it('filter in context without source on _beforeMount', () => {
+    });
+
+    describe('_beforeUpdate', () => {
+
+        describe('searchController', () => {
+
+            it('context in searchController updated', async () => {
                 const options = getBrowserOptions();
                 const filter = {
                     testField: 'testValue'
                 };
-                options.source = null;
                 options.filter = filter;
-
                 const browser = getBrowser(options);
-                browser._beforeMount(options, {});
-                equal(browser._dataOptionsContext.filter, filter);
-                equal(browser._filter, filter);
+                await browser._beforeMount(options);
+
+                browser._beforeUpdate(options);
+                deepStrictEqual(browser._searchController._dataOptions.filter, filter);
             });
 
         });
+
     });
 
 });

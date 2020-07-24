@@ -5,7 +5,6 @@
                 bind:month="_month"
                 bind:startValue="_startValue"
                 bind:endValue="_endValue"
-                attr:class="controlsDemo-MonthSlider__selected"
         />
     </div>
     <div class="controlsDemo__cell">

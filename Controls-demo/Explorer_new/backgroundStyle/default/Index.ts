@@ -9,11 +9,16 @@ import {TRoot, IHeader} from 'Controls-demo/types';
 export default class extends Control {
    protected _template: TemplateFunction = Template;
    protected _viewSource: MemorySource;
+   protected _viewSearchSource: MemorySource;
+   protected _headerSource: MemorySource;
    protected _columns: IColumn[] = Gadgets.getSearchColumns();
-   protected _root: TRoot = null;
+   protected _headerRoot: TRoot = null;
+   protected _searchRoot: TRoot = null;
+   protected _root: TRoot = 1;
    protected _searchStartingWith: string = 'root';
    protected _searchStartingWithSource: Memory = null;
-   protected _filter: object = {demo: 123};
+   protected _emptyFilter: object = {demo: 123};
+   protected _filter: object = {demo: 123, title: 'Жесткий диск Seagate Original SATA-III 1Tb ST1000NC001 Constellation СS (7200rpm) 64Mb 3.5'};
    protected _header: IHeader[] = [
       {
          title: ''
@@ -31,6 +36,14 @@ export default class extends Control {
          keyProperty: 'id',
          data: Gadgets.getSearchData()
       });
+      this._viewSearchSource = new MemorySource({
+         keyProperty: 'id',
+         data: Gadgets.getSearchDataLongFolderName()
+      });
+      this._headerSource = new MemorySource({
+         keyProperty: 'id',
+         data: [{id: 1, parent: null, 'parent@': true, code: null, price: null, title: 'Комплектующие'}]
+      });
       this._searchStartingWithSource = new Memory({
          keyProperty: 'id',
          data: [
@@ -44,5 +57,8 @@ export default class extends Control {
       });
    }
 
-   static _styles: string[] = ['Controls-demo/Controls-demo'];
+   static _theme: string[] = ['Controls/Classes'];
+   static _styles: string[] = [
+      'Controls-demo/Controls-demo'
+   ];
 }

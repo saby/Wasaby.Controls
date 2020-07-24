@@ -376,17 +376,22 @@ define(
          });
 
          it('loadDependencies, loadItemsTemplates', async() => {
+            let actualOptions;
             const controller = getDropdownController(config);
-            let stub = sandbox.stub(controller, '_loadItemsTemplates');
+
+            sandbox.replace(controller, '_loadItemsTemplates', (options) => {
+               actualOptions = options;
+               return Promise.resolve(true);
+            });
 
             // items not loaded, loadItemsTemplates was called
             await controller.loadDependencies();
-            sinon.assert.calledOnce(stub);
-            stub.restore();
+            assert.isOk(actualOptions);
 
             // items already loaded, loadItemsTemplates was called
+            actualOptions = null;
             await controller.loadDependencies();
-            sinon.assert.calledOnce(stub);
+            assert.isOk(actualOptions);
          });
 
          it('check empty item update', () => {
@@ -423,7 +428,10 @@ define(
             dropdownController._items = itemsRecords.clone();
             dropdownController._source = 'testSource';
 
-            popup.Sticky.openPopup = () => {opened = true; };
+            sandbox.replace(popup.Sticky, 'openPopup', () => {
+               opened = true;
+               return Promise.resolve(true);
+            });
             dropdownController._sourceController = { hasMoreData: () => false, load: () => Deferred.success(itemsRecords.clone()) };
             dropdownController._open().then(function() {
                assert.isTrue(!!dropdownController._menuSource);
@@ -565,7 +573,20 @@ define(
             dropdownController._open();
          });
 
-         describe ('menuPopupOptions', () => {
+         it('getPreparedItem', () => {
+            let dropdownController = getDropdownController(configLazyLoad);
+            let actualSource;
+
+            dropdownController._prepareItem = (item, key, source) => {
+               actualSource = source;
+            };
+
+            dropdownController._source = 'testSource';
+            dropdownController.getPreparedItem('item', 'key');
+            assert.equal(actualSource, 'testSource');
+         });
+
+         describe('menuPopupOptions', () => {
             let newConfig, dropdownController;
             beforeEach(() => {
                newConfig = clone(config);
@@ -585,7 +606,8 @@ define(
                   hasMoreData: () => {}
                };
             });
-            it ('only popupOptions', () => {
+
+            it('only popupOptions', () => {
                const resultPopupConfig = dropdownController._getPopupOptions();
                assert.deepEqual(resultPopupConfig.fittingMode,  {
                   vertical: 'adaptive',
@@ -601,6 +623,16 @@ define(
 
                assert.isTrue(resultPopupConfig.templateOptions.closeButtonVisibility);
                assert.equal(resultPopupConfig.templateOptions.source, 'testSource');
+            });
+
+            it('templateOptions', () => {
+               const resultPopupConfig = dropdownController._getPopupOptions({
+                  testPopupOptions: 'testValue'
+               });
+
+               assert.equal(resultPopupConfig.direction, 'top');
+               assert.equal(resultPopupConfig.target, 'testTarget');
+               assert.equal(resultPopupConfig.testPopupOptions, 'testValue');
             });
          });
 
@@ -618,53 +650,63 @@ define(
             assert.isFalse(opened);
          });
 
-         it('openMenu', async() => {
+         describe('openMenu', () => {
             let dropdownController = getDropdownController(config);
             let openConfig;
 
-            dropdownController._sourceController = { hasMoreData: () => false };
-            dropdownController._source = 'testSource';
-            dropdownController._items = new collection.RecordSet({
-               keyProperty: 'id',
-               rawData: items
+            before(() => {
+               dropdownController._sourceController = { hasMoreData: () => false };
+               dropdownController._source = 'testSource';
+               dropdownController._items = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: items
+               });
+               sandbox.replace(popup.Sticky, 'openPopup', (popupConfig) => {
+                  openConfig = popupConfig;
+                  return Promise.resolve(true);
+               });
             });
 
-            sandbox.replace(popup.Sticky, 'openPopup', (popupConfig) => {
-               openConfig = popupConfig;
-               return Promise.resolve(true);
+            it('simple', async() => {
+               await dropdownController.openMenu({ testOption: 'testValue' });
+               assert.equal(openConfig.testOption, 'testValue');
             });
 
-            await dropdownController.openMenu({ testOption: 'testValue' });
-            assert.equal(openConfig.testOption, 'testValue');
+            describe('one item', () => {
+               beforeEach(() => {
+                  dropdownController._items = new collection.RecordSet({
+                     keyProperty: 'id',
+                     rawData: [{
+                        id: 1,
+                        title: 'testTitle'
+                     }]
+                  });
+                  dropdownController._options.footerTemplate = null;
+                  dropdownController._options.emptyText = null;
+                  openConfig = null;
+               });
 
-            dropdownController._items = new collection.RecordSet({
-               keyProperty: 'id',
-               rawData: [{
-                  id: 1,
-                  title: 'testTitle'
-               }]
+               it('with footer', async() => {
+                  dropdownController._options.footerTemplate = {};
+
+                  await dropdownController.openMenu({ testOption: 'testValue' });
+                  assert.equal(openConfig.testOption, 'testValue');
+               });
+
+               it('with emptyText', async() => {
+                  dropdownController._options.emptyText = '123';
+
+                  await dropdownController.openMenu({ testOption: 'testValue' });
+                  assert.equal(openConfig.testOption, 'testValue');
+               });
+
+               it('simple', async() => {
+                  await dropdownController.openMenu().then((items) => {
+                     assert.equal(items[0].get('id'), 1);
+                  });
+                  assert.equal(openConfig, null);
+               });
             });
-            openConfig = null;
-            dropdownController._options.footerTemplate = {};
-
-            await dropdownController.openMenu({ testOption: 'testValue' });
-            assert.equal(openConfig.testOption, 'testValue');
-
-            dropdownController._options.footerTemplate = null;
-            dropdownController._options.emptyText = '123';
-            openConfig = null;
-
-            await dropdownController.openMenu({ testOption: 'testValue' });
-            assert.equal(openConfig.testOption, 'testValue');
-
-            dropdownController._options.emptyText = null;
-            openConfig = null;
-
-            await dropdownController.openMenu().then((items) => {
-               assert.equal(items[0].get('id'), 1);
-            });
-            assert.equal(openConfig, null);
-
          });
 
          it('closeMenu', () => {

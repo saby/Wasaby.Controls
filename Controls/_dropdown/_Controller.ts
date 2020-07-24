@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as Control from 'Core/Control';
 // @ts-ignore
-import {Sticky as StickyOpener, Stack as StackOpener} from 'Controls/popup';
+import {Sticky as StickyOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
 import {factory} from 'Types/chain';
 import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
@@ -69,13 +69,13 @@ export default class _Controller implements IDropdownController {
       });
    }
 
-   setItems(recievedState: {items?: RecordSet, history?: RecordSet}): RecordSet {
+   setItems(receivedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet> {
       return this._getSourceController(this._options).addCallback((sourceController) => {
-         this._setItems(recievedState.items);
+         this._setItems(receivedState.items);
          sourceController.calculateState(this._items);
 
-         if (recievedState.history) {
-            this._source.setHistory(recievedState.history);
+         if (receivedState.history) {
+            this._source.setHistory(receivedState.history);
             this._setItems(this._source.prepareItems(this._items));
          }
 
@@ -138,7 +138,7 @@ export default class _Controller implements IDropdownController {
       if (!this._items) {
          deps.push(this._getloadItemsPromise().then(() => this._loadItemsTemplates(this._options)));
       } else {
-         deps.push(this._loadItemsTemplates(this, this._options));
+         deps.push(this._loadItemsTemplates(this._options));
       }
 
       return Promise.all(deps);
@@ -172,8 +172,8 @@ export default class _Controller implements IDropdownController {
       this._closeDropdownList();
    }
 
-   getPreparedItem(data, keyProperty, source) {
-      return this._prepareItem(data, keyProperty, source);
+   getPreparedItem(data, keyProperty) {
+      return this._prepareItem(data, keyProperty, this._source);
    }
 
    onSelectorResult(selectedItems): void {
@@ -513,8 +513,7 @@ export default class _Controller implements IDropdownController {
          width: this._options.width !== undefined ?
              (this.target[0] || this.target).offsetWidth :
              undefined,
-         hasMoreButton: this._sourceController.hasMoreData('down'),
-         selectorOpener: StackOpener
+         hasMoreButton: this._sourceController.hasMoreData('down')
       };
       const config = {
          id: this._popupId,
@@ -532,7 +531,7 @@ export default class _Controller implements IDropdownController {
          autofocus: false,
          closeOnOutsideClick: true
       };
-      const popupConfig = popupOptions || this._options.menuPopupOptions;
+      const popupConfig = Merge(popupOptions, this._options.menuPopupOptions || {});
       return Merge(config, popupConfig || {});
    }
 }

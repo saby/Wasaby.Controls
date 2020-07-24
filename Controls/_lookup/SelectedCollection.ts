@@ -14,7 +14,7 @@ import { Sticky, IStickyPopupOptions } from 'Controls/popup';
 
 /**
  * Контрол, отображающий коллекцию элементов.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less">переменные тем оформления</a>
@@ -50,7 +50,7 @@ interface ISelectedCollectionChildren {
 
 class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _template: TemplateFunction = template;
-   protected _visibleItems: unknown[] = 0;
+   protected _visibleItems: Model[] = null;
    protected _notifyHandler: (event: SyntheticEvent, eventName: string) => void = tmplNotify;
    protected _getItemMaxWidth: Function = selectedCollectionUtils.getItemMaxWidth;
    protected _getItemOrder: Function = selectedCollectionUtils.getItemOrder;
@@ -103,7 +103,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
 
       if (eventName) {
          event.stopPropagation();
-         this._notify(eventName, [item]);
+         this._notify(eventName, [item, event.nativeEvent]);
       }
    }
 
@@ -153,11 +153,17 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
       });
    }
 
-   private _getVisibleItems(items: RecordSet, maxVisibleItems: number): unknown[]  {
-      const itemsInArray: unknown[] = chain.factory(items).value();
-      const indexFirstVisibleItem: number = Math.max(maxVisibleItems ? items.getCount() - maxVisibleItems : 0, 0);
+   private _getVisibleItems(items: RecordSet, maxVisibleItems: number): Model[]  {
+      const startIndex = Math.max(maxVisibleItems ? items.getCount() - maxVisibleItems : 0, 0);
+      const resultItems = [];
 
-      return itemsInArray.slice(indexFirstVisibleItem);
+      items.each((item, index) => {
+         if (index >= startIndex) {
+            resultItems.push(item);
+         }
+      });
+
+      return resultItems;
    }
 
    private _getCounterWidth(itemsCount: number, readOnly: boolean, itemsLayout: String): number {
@@ -166,7 +172,7 @@ class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
          return 0;
       }
 
-      return selectedCollectionUtils.getCounterWidth(itemsCount);
+      return selectedCollectionUtils.getCounterWidth(itemsCount, this._options.theme);
    }
 
    private _isShowCounter(itemsCount: number, maxVisibleItems: number): boolean {

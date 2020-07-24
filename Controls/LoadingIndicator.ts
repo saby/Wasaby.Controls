@@ -2,7 +2,8 @@ import {Control, TemplateFunction} from 'UI/Base';
 import tmpl = require('wml!Controls/_LoadingIndicator/LoadingIndicator');
 import randomId = require('Core/helpers/Number/randomId');
 import {List} from 'Types/collection';
-import {ILoadingIndicatorOptions, ILoadingIndicator} from 'Controls/_LoadingIndicator/interface/ILoadingIndicator';
+import ILoadingIndicator, {ILoadingIndicatorOptions} from 'Controls/_LoadingIndicator/interface/ILoadingIndicator';
+import LoadingIndicatorOpener from 'Controls/_LoadingIndicator/LoadingIndicatorOpener';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 
@@ -102,14 +103,12 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     protected _afterMount(cfg: ILoadingIndicatorOptions): void {
-        const self = this;
         if (cfg.mainIndicator) {
+            LoadingIndicatorOpener._setIndicator(this);
+            // Вернул для индикаторов, вызванных из кода
             requirejs(['Controls/popup'], (popup) => {
-                // TODO: Индикатор сейчас напрямую зависит от Controls/popup и наоборот
-                // Надо либо пересмотреть формирование библиотек и включить LoadingIndicator в popup,
-                // Либо переписать индикатор так, чтобы зависимостей от Controls/popup не было.
                 ManagerController = popup.Controller;
-                ManagerController.setIndicator(self);
+                ManagerController.setIndicator(this);
             });
         }
 
@@ -186,21 +185,21 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
      * @function
      * @name Controls/LoadingIndicator#show
      * @param {Object} [config] Объект с параметрами. Если не задан, по умолчанию используется значение аналогичного параметра контрола.
-     * @param {Boolean} [config.isGlobal=true] Определяет, глобальный или нет идентификатор.
+     * @param {Boolean} [config.isGlobal=true] Определяет, показать индикатор над всей страницей или только над собственным контентом.
      * @param {String} [config.message=''] Текст сообщения индикатора.
      * @param {Scroll} [config.scroll=''] Добавляет градиент фону индикатора.
      * @param {Small} [config.small=''] Размер индикатора.
      * @param {Overlay} [config.overlay=default] Настройки оверлея индикатора.
      * @param {Number} [config.delay=2000] Задержка перед началом показа индикатора.
      * @param {Promise} [waitPromise] Promise, к которому привязывается отображение индикатора. Индикатор скроется после завершения Promise.
-     * @return {Number} Возвращает id индикатора загрузки. Используется в методе {@link hide} для закрытия индикатора.
+     * @returns {String} Возвращает id индикатора загрузки. Используется в методе {@link hide} для закрытия индикатора.
      * @see hide
      */
-    show(config: ILoadingIndicatorOptions, waitPromise: Promise<any>): string {
+    show(config: ILoadingIndicatorOptions, waitPromise?: Promise<any>): string {
         return this._show({...config}, waitPromise);
     }
 
-    private _show(config: ILoadingIndicatorOptions, waitPromise: Promise<any>): string {
+    private _show(config: ILoadingIndicatorOptions, waitPromise?: Promise<any>): string {
         const newCfg = this._prepareConfig(config, waitPromise);
         const isOpened = this._getItemIndex(newCfg.id) > -1;
         if (isOpened) {
@@ -223,9 +222,8 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
      * @param {Number} id Идентификатор индикатора загрузки.
      * @see show
      */
-    hide(id: string): void {
+    hide(id?: string): void {
         if (!id) {
-
             // Used public api. In this case, hide the indicator immediately.
             this._clearStack();
             this._toggleIndicator(false, {});
@@ -527,5 +525,5 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     static _theme: string[] = ['Controls/_LoadingIndicator/LoadingIndicator'];
 }
 
+export {default as IndicatorOpener} from 'Controls/_LoadingIndicator/LoadingIndicatorOpener';
 export default LoadingIndicator;
-

@@ -427,10 +427,13 @@ import {SyntheticEvent} from "Vdom/Vdom"
             const container = _private.getDOMContainer(this._container);
             if (this._isVirtualPlaceholderMode() && !withoutPlaceholder) {
                const sizeCache = _private.getSizeCache(this, container);
+               const cachedScrollTop = scrollTop;
                const realScrollTop = scrollTop - this._topPlaceholderSize;
                const scrollTopOverflow = sizeCache.scrollHeight - realScrollTop - sizeCache.clientHeight < 0;
                const applyScrollTop = () => {
-                  container.scrollTop = realScrollTop;
+
+                  // нужный scrollTop будет отличным от realScrollTop, если изменился _topPlaceholderSize. Вычисляем его по месту
+                  container.scrollTop = cachedScrollTop - this._topPlaceholderSize;
                };
                if (realScrollTop >= 0 && !scrollTopOverflow) {
                   container.scrollTop = realScrollTop;

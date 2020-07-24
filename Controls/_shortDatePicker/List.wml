@@ -6,7 +6,9 @@
     <ws:yearHeaderTemplate>
         <div
                 on:mouseenter="_onYearMouseEnter(yearHeaderTemplate.date.getFullYear())"
+                on:touchstart="_onYearMouseEnter(yearHeaderTemplate.date.getFullYear())"
                 on:mouseleave="_onYearMouseLeave()"
+                on:touchend="_onYearMouseLeave()"
                 on:click="_onYearClick(yearHeaderTemplate.date.getFullYear())"
                 class="controls-PeriodLiteDialog__fullYear-listElement
                        controls-PeriodLiteDialog__fullYear-listElement_theme-{{_options.theme}}

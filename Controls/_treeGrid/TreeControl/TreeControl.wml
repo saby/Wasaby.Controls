@@ -14,7 +14,8 @@
                            getHasMoreData="{{_getHasMoreData}}"
                            nodeConfig="{{_options.nodeConfig}}"
                            nodesSourceControllers="{{_nodesSourceControllers}}"
-                           on:navigationParamsChanged="_notifyHandler('navigationParamsChanged')">
+                           on:navigationParamsChanged="_notifyHandler('navigationParamsChanged')"
+                           _needSetMarkerCallback="{{_options._needSetMarkerCallback}}">
    <ws:expanderTemplate>
       <div on:mousedown="_onExpanderMouseDown(expanderTemplate.itemData.key, expanderTemplate.itemData.dispItem)"
            on:mouseup="_onExpanderMouseUp(expanderTemplate.itemData.key, expanderTemplate.itemData.dispItem)"

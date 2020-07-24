@@ -166,7 +166,7 @@ export default class extends Control{
          items.each(function (item) {
             correctKeys.push(item.get('id'));
             parentId = item.get('parent');
-            if (parentId) {
+            if (parentId && correctKeys.indexOf(parentId) === -1) {
                correctKeys.push(parentId);
             }
          });

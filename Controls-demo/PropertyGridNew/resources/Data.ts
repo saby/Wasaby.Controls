@@ -1,6 +1,7 @@
 import {Enum} from 'Types/collection';
+import {IProperty} from 'Controls/propertyGrid';
 
-function getEditingObject() {
+function getEditingObject(): object {
     return {
         description: 'This is http://mysite.com',
         tileView: true,
@@ -14,7 +15,7 @@ function getEditingObject() {
     };
 }
 
-function getSource() {
+function getSource(): IProperty[] {
     return [
         {
             name: 'description',

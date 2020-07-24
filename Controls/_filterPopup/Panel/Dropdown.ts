@@ -1,5 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/Panel/Dropdown/Dropdown');
+import {List} from 'Types/collection';
+import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
    /**
@@ -40,6 +42,12 @@ class FilterDropdown extends Control<IControlOptions> {
 
       protected _textValueChangedHandler(event: SyntheticEvent, text): void {
          this._notify('textValueChanged', [text]);
+      }
+
+      protected _selectorCallbackHandler(event: SyntheticEvent,
+                                         initSelectorItems: List<Model>,
+                                         selectedItems: List<Model>): {} {
+         return this._notify('selectorCallback', [initSelectorItems, selectedItems]);
       }
 
       protected _resetHandler(): void {

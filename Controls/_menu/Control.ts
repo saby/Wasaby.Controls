@@ -23,7 +23,7 @@ import {TouchContextField} from 'Controls/context';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
-import {Stack} from 'Controls/popup/Stack';
+import {Stack} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
 
 /**
@@ -33,12 +33,37 @@ import {TKey} from 'Controls/_menu/interface/IMenuControl';
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_menu/interface/IMenuControl
  * @demo Controls-demo/Menu/Control/Source/Index
  * @control
  * @category Popup
  * @author Герасимов А.М.
+ */
+
+/**
+ * @event Controls/_menu/Control#itemClick Происходит при выборе элемента
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Выбранный элемент.
+ * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, подменю не закроется.
+ * По умолчанию, когда выбран пункт с иерархией, подменю закрывается.
+ * @example
+ * В следующем примере показано, как незакрывать подменю, если кликнули на пункт с иерархией.
+ * <pre>
+ *    <Controls.menu:Control
+ *          displayProperty="title"
+ *          keyProperty="key"
+ *          source="{{_source}}"
+ *          on:itemClick="_itemClickHandler()" />
+ * </pre>
+ * TS:
+ * <pre>
+ *    protected _itemClickHandler(e, item): boolean {
+ *       if (item.get(nodeProperty)) {
+ *          return false;
+ *       }
+ *    }
+ * </pre>
  */
 
 interface IMenuPosition {
@@ -178,12 +203,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     protected _itemSwipe(e: SyntheticEvent<null>,
                          item: CollectionItem<Model>,
                          swipeEvent: SyntheticEvent<TouchEvent>,
+                         swipeContainerWidth: number,
                          swipeContainerHeight: number): void {
         const isSwipeLeft = swipeEvent.nativeEvent.direction === 'left';
         const itemKey = item.getContents().getKey();
         if (this._options.itemActions) {
             if (isSwipeLeft) {
-                this._itemActionsController.activateSwipe(itemKey, swipeContainerHeight);
+                this._itemActionsController.activateSwipe(itemKey, swipeContainerWidth, swipeContainerHeight);
             } else {
                 this._itemActionsController.deactivateSwipe();
             }
@@ -222,7 +248,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (MenuControl._isPinIcon(sourceEvent.target)) {
             this._pinClick(event, item);
         } else {
-            if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem.getContents())) {
+            if (this._options.multiSelect && this._selectionChanged &&
+                !this._isEmptyItem(treeItem.getContents()) && !MenuControl._isFixedItem(item)) {
                 this._changeSelection(key, treeItem);
                 this._updateApplyButton();
 
@@ -235,10 +262,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 }
             }
         }
-    }
-
-    private static _isPinIcon(target: EventTarget): boolean {
-        return !!((target as HTMLElement)?.closest('.controls-Menu__iconPin'));
     }
 
     private _pinClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
@@ -291,12 +314,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             selectedItems = this._options.selectorOpenCallback();
         } else {
             selectedItems = new List<Model>({
-                items: <Model[]>this._getSelectedItems().filter((item: Model): boolean => {
+                items: this._getSelectedItems().filter((item: Model): boolean => {
                     return !this._isEmptyItem(item);
-                })
+                }) as Model[]
             });
         }
-        this._options.selectorOpener.openPopup(this._getSelectorDialogOptions(this._options, selectedItems)).then((popupId) => {
+        Stack.openPopup(this._getSelectorDialogOptions(this._options, selectedItems)).then((popupId) => {
             this._popupId = popupId;
         });
         this._notify('moreButtonClick', [selectedItems]);
@@ -334,7 +357,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    private _isNeedKeepMenuOpen(needCloseDropDown: boolean, nativeEvent: MouseEvent): boolean {
+    private _isNeedKeepMenuOpen(
+        needCloseDropDown: boolean,
+        nativeEvent: MouseEvent): boolean {
         if (needCloseDropDown) {
             this._setSubMenuPosition();
             this._isMouseInOpenedItemArea = this._isMouseInOpenedItemAreaCheck(nativeEvent);
@@ -353,9 +378,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    private _setItemParamsOnHandle(item: CollectionItem<Model>,
-                                  target: EventTarget,
-                                  nativeEvent: MouseEvent): void {
+    private _setItemParamsOnHandle(
+        item: CollectionItem<Model>,
+        target: EventTarget,
+        nativeEvent: MouseEvent): void {
         this._hoveredItem = item;
         this._hoveredTarget = target;
         this._enterEvent = nativeEvent;
@@ -374,9 +400,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    private _handleCurrentItem(item: CollectionItem<Model>,
-                              target: EventTarget,
-                              nativeEvent: MouseEvent): void {
+    private _handleCurrentItem(
+        item: CollectionItem<Model>,
+        target: EventTarget,
+        nativeEvent: MouseEvent): void {
         const needOpenDropDown: boolean = item.getContents().get(this._options.nodeProperty) &&
             !item.getContents().get('readOnly');
         const needCloseDropDown: boolean = this._subMenu && this._subDropdownItem && this._subDropdownItem !== item;
@@ -399,7 +426,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _startClosingTimout(): void {
-        this._closingTimer = <any>setTimeout(this._closeSubMenu.bind(this), SUB_DROPDOWN_DELAY);
+        // window для соотвествия типов
+        this._closingTimer = window.setTimeout(this._closeSubMenu.bind(this), SUB_DROPDOWN_DELAY);
     }
 
     private _clearOpeningTimout(): void {
@@ -416,7 +444,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _startOpeningTimeout(): void {
         this._clearOpeningTimout();
-        this._openingTimer = <any>setTimeout((): void => {
+        this._openingTimer = window.setTimeout((): void => {
             this._handleItemTimeoutCallback();
         }, SUB_DROPDOWN_DELAY);
     }
@@ -431,63 +459,49 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._subMenuPosition.height, curMouseEvent.clientX, curMouseEvent.clientY);
 
         const thirdSegment: number = MenuControl._calculatePointRelativePosition(this._subMenuPosition.left,
-            this._openSubMenuEvent.clientX,this._subMenuPosition.top +
+            this._openSubMenuEvent.clientX, this._subMenuPosition.top +
             this._subMenuPosition.height, this._openSubMenuEvent.clientY, curMouseEvent.clientX, curMouseEvent.clientY);
 
-        return MenuControl._getSign(firstSegment) === MenuControl._getSign(secondSegment) &&
-            MenuControl._getSign(firstSegment) === MenuControl._getSign(thirdSegment);
-    }
-
-    // FIXME https://online.sbis.ru/opendoc.html?guid=923f813d-7ed2-4e7d-94d8-65b0b733a4bd
-    private static _getSign(x: number): number {
-        x = +x;
-        if (x === 0 || isNaN(x)) {
-            return x;
-        }
-        return x > 0 ? 1 : -1;
-    }
-
-    private static _calculatePointRelativePosition(firstSegmentPointX: number,
-                                           secondSegmentPointX: number,
-                                           firstSegmentPointY: number,
-                                           secondSegmentPointY: number,
-                                           curPointX: number,
-                                           curPointY: number): number {
-        return (firstSegmentPointX - curPointX) * (secondSegmentPointY - firstSegmentPointY) -
-            (secondSegmentPointX - firstSegmentPointX) * (firstSegmentPointY - curPointY);
+        return Math.sign(firstSegment) === Math.sign(secondSegment) &&
+            Math.sign(firstSegment) === Math.sign(thirdSegment);
     }
 
     private _getSelectorDialogOptions(options: IMenuControlOptions, selectedItems: List<Model>): object {
         const selectorTemplate: ISelectorTemplate = options.selectorTemplate;
         const selectorDialogResult: Function = options.selectorDialogResult;
-        const selectorOpener: Stack = options.selectorOpener;
 
         const templateConfig: object = {
             selectedItems,
             handlers: {
                 onSelectComplete: (event, result) => {
                     selectorDialogResult(event, result);
-                    selectorOpener.close();
+                    Stack.closePopup(this._popupId);
                 }
             }
         };
         Merge(templateConfig, selectorTemplate.templateOptions);
 
         return Merge({
-            opener: this,
+            // Т.к само меню закроется после открытия стекового окна,
+            // в опенер нужно положить контрол, который останется на странице.
+            opener: this._options.selectorOpener,
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: options.isCompoundTemplate,
             eventHandlers: {
                 onResult: (result, event) => {
                     selectorDialogResult(event, result);
-                    selectorOpener.closePopup(this._popupId);
+                    Stack.closePopup(this._popupId);
                 }
             }
         }, selectorTemplate.popupOptions || {});
     }
 
     private _changeSelection(key: string|number|null, treeItem: CollectionItem<Model>): void {
+        const selectedItems = this._listModel.getSelectedItems();
+        if (selectedItems.length === 1 && MenuControl._isFixedItem(selectedItems[0].getContents())) {
+            MenuControl._selectItem(this._listModel, selectedItems[0].getContents().getKey(), false);
+        }
         MenuControl._selectItem(this._listModel, key, !treeItem.isSelected());
 
         const isEmptySelected: boolean = this._options.emptyText && !this._listModel.getSelectedItems().length;
@@ -529,9 +543,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _updateApplyButton(): void {
         const isApplyButtonVisible: boolean = this._applyButtonVisible;
-        const newSelectedKeys: TSelectedKeys = factory(this._listModel.getSelectedItems()).map(item => {
-            return item.getContents().get(this._options.keyProperty);
-        }).value();
+        const newSelectedKeys: TSelectedKeys = factory(this._listModel.getSelectedItems()).map(
+            (item: CollectionItem<Model>) =>
+                item.getContents().get(this._options.keyProperty)
+            ).value();
         this._applyButtonVisible = this._isSelectedKeysChanged(newSelectedKeys, this._options.selectedKeys);
 
         if (this._applyButtonVisible !== isApplyButtonVisible) {
@@ -594,26 +609,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return listModel;
     }
 
-    private static _isHistoryItem(item: Model): boolean {
-        return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
-    }
-
-    private static _additionalFilterCheck(options: IMenuControlOptions, item: Model): boolean {
-        return (!item.get || !item.get(options.additionalProperty) || MenuControl._isHistoryItem(item));
-    }
-
-    private static _displayFilter(options: IMenuControlOptions, item: Model): boolean {
-        let isVisible: boolean = true;
-        if (item && item.get && options.parentProperty && options.nodeProperty) {
-            let parent: TKey = item.get(options.parentProperty);
-            if (parent === undefined) {
-                parent = null;
-            }
-            isVisible = parent === options.root;
-        }
-        return isVisible;
-    }
-
     private _groupMethod(options: IMenuControlOptions, item: Model): string {
         const groupId: string = item.get(options.groupProperty);
         const isHistoryItem: boolean = MenuControl._isHistoryItem(item) && this._options.root === null;
@@ -660,7 +655,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 this._createViewModel(items, options);
                 this._moreButtonVisible = options.selectorTemplate &&
                     this._getSourceController(options).hasMoreData('down');
-                this._expandButtonVisible = this._isExpandButtonVisible(items, options.additionalProperty, options.root);
+                this._expandButtonVisible = this._isExpandButtonVisible(
+                    items,
+                    options.additionalProperty,
+                    options.root);
 
                 return items;
             },
@@ -734,7 +732,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getSourceSubMenu(root: TKey): ICrudPlus {
         let source: ICrudPlus = this._options.source;
-        const collection =  this._listModel.getCollection() as any as RecordSet<Model>;
+        const collection =  this._listModel.getCollection() as unknown as RecordSet<Model>;
+
         if (collection.getIndexByValue(this._options.parentProperty, root) !== -1) {
             source = new PrefetchProxy({
                 target: this._options.source,
@@ -777,14 +776,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         };
     }
 
-    private static _selectItem(collection: Collection<Model>, key: number|string, state: boolean): void {
-        const item: CollectionItem<Model> = collection.getItemBySourceKey(key);
-        if (item) {
-            item.setSelected(state, true);
-            collection.nextVersion();
-        }
-    }
-
     private _processError(error: Error): Promise<dataSourceError.ViewConfig|void> {
         return this._getErrorController().process({
             error,
@@ -811,6 +802,52 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     static _theme: string[] = ['Controls/menu'];
+
+    private static _isPinIcon(target: EventTarget): boolean {
+        return !!((target as HTMLElement)?.closest('.controls-Menu__iconPin'));
+    }
+
+    private static _calculatePointRelativePosition(firstSegmentPointX: number,
+                                                   secondSegmentPointX: number,
+                                                   firstSegmentPointY: number,
+                                                   secondSegmentPointY: number,
+                                                   curPointX: number,
+                                                   curPointY: number): number {
+        return (firstSegmentPointX - curPointX) * (secondSegmentPointY - firstSegmentPointY) -
+            (secondSegmentPointX - firstSegmentPointX) * (firstSegmentPointY - curPointY);
+    }
+
+    private static _isHistoryItem(item: Model): boolean {
+        return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
+    }
+
+    private static _isFixedItem(item: Model): boolean {
+        return !item.has('HistoryId') && item.get('pinned');
+    }
+
+    private static _additionalFilterCheck(options: IMenuControlOptions, item: Model): boolean {
+        return (!item.get || !item.get(options.additionalProperty) || MenuControl._isHistoryItem(item));
+    }
+
+    private static _displayFilter(options: IMenuControlOptions, item: Model): boolean {
+        let isVisible: boolean = true;
+        if (item && item.get && options.parentProperty && options.nodeProperty) {
+            let parent: TKey = item.get(options.parentProperty);
+            if (parent === undefined) {
+                parent = null;
+            }
+            isVisible = parent === options.root;
+        }
+        return isVisible;
+    }
+
+    private static _selectItem(collection: Collection<Model>, key: number|string, state: boolean): void {
+        const item: CollectionItem<Model> = collection.getItemBySourceKey(key);
+        if (item) {
+            item.setSelected(state, true);
+            collection.nextVersion();
+        }
+    }
 
     static getDefaultOptions(): object {
         return {

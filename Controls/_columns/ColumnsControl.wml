@@ -3,7 +3,7 @@
                             _keyDownHandler="{{_keyDownHandler}}"
                             name="baseControl">
     <!--прокидываем itemTemplate т.к. иначе мы не понимаем, что нужно перестраивать partial, потому что изменения только в замыкании функции-->
-    <Controls._columns.ColumnsInnerView scope="{{_options}}" name="innerView">
+    <Controls._columns.ColumnsInnerView name="innerView">
         <ws:partial template="{{_options.viewName}}" itemTemplate="{{_options.itemTemplate}}"/>
     </Controls._columns.ColumnsInnerView>
 </Controls.list:BaseControl>

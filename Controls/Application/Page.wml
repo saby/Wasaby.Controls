@@ -38,7 +38,6 @@
                                                       on:touchmove="_touchmovePage()"
                                                       on:touchend="_touchendPage()"
                                                       on:mousedown="_mousedownPage()"
-                                                      on:mouseup="_mouseupPage()"
                                                       on:keyPress="_keyPressHandler()"
                                                       on:mouseup="_mouseupPage()"
                                                       on:mouseleave="_mouseleavePage()"

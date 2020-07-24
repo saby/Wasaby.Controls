@@ -452,12 +452,12 @@ import {Model} from 'Types/entity';
                      query: (this._configs[index].popupItems || this._configs[index]._items).clone()
                   }
                }),
+               selectorOpener: this,
                selectorItems: this._configs[index]._items,
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: this._configs[index]._sourceController.hasMoreData('down'),
                navigation: this._configs[index]._sourceController.getNavigation(),
-               selectorOpener: this._children.selectorOpener,
                selectorDialogResult: this._onSelectorTemplateResult.bind(this),
                afterSelectorOpenCallback: this._afterSelectorOpenCallback.bind(this),
                dropdownClassName: `controls-FastFilter_width-popup_theme-${this._options.theme}`

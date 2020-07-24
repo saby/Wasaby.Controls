@@ -41,9 +41,7 @@
 </ws:template>
 
 <ws:template name="footerTemplateIf">
-    <ws:if data="{{_loadingIndicatorState === 'all'}}">
-        <ws:partial template="loadingIndicator"/>
-    </ws:if>
+    <ws:partial if="{{ _shouldShowLoadingIndicator('inFooter') }}" template="loadingIndicator"/>
     <ws:if data="{{_options.footerTemplate}}">
         <div class="controls-BaseControl__footer-content_theme-{{_options.theme}}">
             <ws:partial template="{{_options.footerTemplate}}"/>
@@ -81,78 +79,82 @@
 </ws:template>
 <ws:template name="viewTpl">
     <div class="controls-ScrollController">
-        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;"></div>
-        <div name="topLoadTrigger"></div>
-        <Controls.validate:Controller name="formController">
-            <ws:partial
-                    attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
-                    name="{{name}}"
-                    template="{{ _options.content }}"
-                    scope="{{_options}}"
-                    loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
-                    _needBottomPadding="{{_needBottomPadding}}"
-                    listModel="{{_listViewModel}}"
-                    editingItemData="{{_editingItemData}}"
-                    startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
-                    isAdd="{{_editingItemData ? _editingItemData.isAdd : undefined}}"
-                    on:animationend="_onItemSwipeAnimationEnd()"
-                    on:deactivated="_onListDeactivated()"
-                    on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
-                    on:itemClick="_onItemClick()"
-                    on:groupClick="_onGroupClick()"
-                    on:editArrowClick="_notifyHandler('editArrowClick')"
-                    on:itemContextMenu="_onItemContextMenu()"
-                    on:itemMouseDown="_itemMouseDown()"
-                    on:itemMouseUp="_itemMouseUp()"
-                    on:itemMouseEnter="_itemMouseEnter()"
-                    on:itemMouseMove="_itemMouseMove()"
-                    on:itemMouseLeave="_itemMouseLeave()"
-                    on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
-                    on:hoveredCellChanged="_notifyHandler('hoveredCellChanged')"
-                    on:itemSwipe="_onItemSwipe()"
-                    on:editingRowKeyDown="_onEditingRowKeyDown()"
-                    on:rowDeactivated="_onRowDeactivated()"
-                    on:itemsContainerReady="_itemsContainerReadyHandler()"
-                    on:controlResize="_viewResize()"
-                    on:doScroll="_stopBubblingEvent()"
-                    on:scrollToElement="_stopBubblingEvent()"
-                    on:updateShadowMode="_stopBubblingEvent()"
-                    on:updatePlaceholdersSize="_stopBubblingEvent()"
-                    on:saveScrollPosition="_stopBubblingEvent()"
-                    on:restoreScrollPosition="_stopBubblingEvent()"
-                >
-                <ws:itemActionsTemplate>
-                    <ws:partial
-                            template="{{_itemActionsTemplate}}"
-                            scope="{{ _listViewModel.getActionsTemplateConfig() }}"
-                            useNewModel="{{ _options.useNewModel }}"/>
-                </ws:itemActionsTemplate>
-                <ws:swipeTemplate>
-                    <ws:partial
-                            template="{{ _swipeTemplate }}"
-                            scope="{{ _listViewModel.getActionsTemplateConfig() }}"
-                            swipeConfig="{{ _listViewModel.getSwipeConfig() }}"
-                            animationState="{{ _listViewModel.getSwipeAnimation() }}" />
-                </ws:swipeTemplate>
-               <ws:tagTemplate>
-                  <ws:partial template="wml!Controls/Application/TagTemplate/TagTemplate"
-                              on:click="_onTagClickHandler(tagTemplate.dispItem, tagTemplate.columnIndex)"
-                              on:mouseenter="_onTagHoverHandler(tagTemplate.dispItem, tagTemplate.columnIndex)"/>
-               </ws:tagTemplate>
-                <ws:viewTemplate>
-                    <ws:partial template="{{_options.viewName}}"/>
-                </ws:viewTemplate>
-                <ws:footerTemplate>
-                    <ws:partial template="footerTemplateIf"/>
-                </ws:footerTemplate>
-                <ws:multiSelectTpl>
-                    <ws:partial template="multiSelectTplIf"/>
-                </ws:multiSelectTpl>
-                <ws:emptyTemplate>
-                    <ws:partial template="emptyTemplateIf"/>
-                </ws:emptyTemplate>
-            </ws:partial>
-        </Controls.validate:Controller>
+        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{!_isMounted ? 'display: none;'}}"></div>
+        <!-- Скрываем topLoadTrigger через display: none, чтобы он не срабатывал сразу после mount. Отступы ему ещё не установлены и он
+        сработает сразу после инициализации, хотя далеко не факт что это нужно. -->
+        <div name="topLoadTrigger" style="{{!_isMounted ? 'display: none'}}"></div>
+        <ws:partial
+                attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
+                attr:style="{{_attachLoadTopTriggerToNull ? 'padding-top: 1px;'}}"
+                name="{{name}}"
+                template="{{ _options.content }}"
+                scope="{{_options}}"
+                loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
+                _needBottomPadding="{{_needBottomPadding}}"
+                listModel="{{_listViewModel}}"
+                editingItemData="{{_editingItemData}}"
+                startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
+                isAdd="{{_editingItemData ? _editingItemData.isAdd : undefined}}"
+                on:validateCreated="_onValidateCreated()"
+                on:validateDestroyed="_onValidateDestroyed()"
+                on:animationend="_onItemSwipeAnimationEnd()"
+                on:deactivated="_onListDeactivated()"
+                on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+                on:itemClick="_onItemClick()"
+                on:groupClick="_onGroupClick()"
+                on:editArrowClick="_notifyHandler('editArrowClick')"
+                on:itemContextMenu="_onItemContextMenu()"
+                on:itemMouseDown="_itemMouseDown()"
+                on:itemMouseUp="_itemMouseUp()"
+                on:itemMouseEnter="_itemMouseEnter()"
+                on:itemMouseMove="_itemMouseMove()"
+                on:itemMouseLeave="_itemMouseLeave()"
+                on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                on:hoveredCellChanged="_notifyHandler('hoveredCellChanged')"
+                on:itemSwipe="_onItemSwipe()"
+                on:editingRowKeyDown="_onEditingRowKeyDown()"
+                on:rowDeactivated="_onRowDeactivated()"
+                on:itemsContainerReady="_itemsContainerReadyHandler()"
+                on:controlResize="_viewResize()"
+                on:doScroll="_stopBubblingEvent()"
+                on:scrollToElement="_stopBubblingEvent()"
+                on:updateShadowMode="_stopBubblingEvent()"
+                on:updatePlaceholdersSize="_stopBubblingEvent()"
+                on:saveScrollPosition="_stopBubblingEvent()"
+                on:restoreScrollPosition="_stopBubblingEvent()"
+                on:loadMore="_loadMore()"
+        >
+            <ws:itemActionsTemplate>
+                <ws:partial
+                        template="{{_itemActionsTemplate}}"
+                        scope="{{ _listViewModel.getActionsTemplateConfig() }}"
+                        useNewModel="{{ _options.useNewModel }}"/>
+            </ws:itemActionsTemplate>
+            <ws:swipeTemplate>
+                <ws:partial
+                        template="{{ _swipeTemplate }}"
+                        scope="{{ _listViewModel.getActionsTemplateConfig() }}"
+                        swipeConfig="{{ _listViewModel.getSwipeConfig() }}"
+                        animationState="{{ _listViewModel.getSwipeAnimation() }}"/>
+            </ws:swipeTemplate>
+            <ws:tagTemplate>
+                <ws:partial template="wml!Controls/Application/TagTemplate/TagTemplate"
+                            on:click="_onTagClickHandler(tagTemplate.dispItem, tagTemplate.columnIndex)"
+                            on:mouseenter="_onTagHoverHandler(tagTemplate.dispItem, tagTemplate.columnIndex)"/>
+            </ws:tagTemplate>
+            <ws:viewTemplate>
+                <ws:partial template="{{_options.viewName}}"/>
+            </ws:viewTemplate>
+            <ws:footerTemplate>
+                <ws:partial template="footerTemplateIf"/>
+            </ws:footerTemplate>
+            <ws:multiSelectTpl>
+                <ws:partial template="multiSelectTplIf"/>
+            </ws:multiSelectTpl>
+            <ws:emptyTemplate>
+                <ws:partial template="emptyTemplateIf"/>
+            </ws:emptyTemplate>
+        </ws:partial>
         <div name="bottomVirtualScrollTrigger" style="position: relative; bottom: 0;"></div>
         <div name="bottomLoadTrigger"></div>
         <ws:if data="{{_needScrollCalculation}}">
@@ -178,9 +180,7 @@
 
         <ws:if data="{{_listViewModel}}">
 
-            <ws:if data="{{_loadingIndicatorState=== 'up'}}">
-                <ws:partial template="loadingIndicator"/>
-            </ws:if>
+            <ws:partial if="{{ _shouldShowLoadingIndicator('beforeEmptyTemplate') }}" template="loadingIndicator"/>
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
 
@@ -190,9 +190,7 @@
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>
 
-        <ws:if data="{{_loadingIndicatorState === 'down'}}">
-            <ws:partial template="loadingIndicator"/>
-        </ws:if>
+        <ws:partial if="{{ _shouldShowLoadingIndicator('afterList') }}" template="loadingIndicator"/>
 
         <ws:if data="{{_showContinueSearchButton}}">
             <ws:partial template="{{_options.continueSearchTemplate}}">

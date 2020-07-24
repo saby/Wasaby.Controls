@@ -2,7 +2,7 @@ import {TemplateFunction} from 'UI/Base';
 import {IMenuBaseOptions} from './IMenuBase';
 import {ISourceOptions, INavigationOptions, IFilterOptions, ISelectorDialogOptions} from 'Controls/interface';
 import {IItemAction} from 'Controls/itemActions';
-import {Stack} from "Controls/popup";
+import {Stack} from 'Controls/popup';
 
 export type TKey = string|number|null;
 
@@ -98,7 +98,7 @@ export default interface IMenuControl {
  *          source="{{_source}}">
  *       <ws:nodeFooterTemplate>
  *          <div class="ControlsDemo-InputDropdown-footerTpl">
- *             <Controls.buttons:Button caption="+ New template" size="l" viewMode="link" on:click="_clickHandler(itemData.key)"/>
+ *             <Controls.buttons:Button caption="+ New template" fontSize="l" viewMode="link" on:click="_clickHandler(itemData.key)"/>
  *          </div>
  *       </ws:nodeFooterTemplate>
  *    </Controls.menu:Control>
@@ -261,26 +261,29 @@ export default interface IMenuControl {
  */
 
 /**
- * @event Controls/_menu/interface/IMenuControl#itemClick Происходит при выборе элемента
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Model} item Выбранный элемент.
- * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, подменю не закроется.
- * По умолчанию, когда выбран пункт с иерархией, подменю закрывается.
+ * @name Controls/_menu/interface/IMenuControl#dataLoadErrback
+ * @cfg {Function}  Функция обратного вызова, которая будет вызываться, когда при загрузке данных произошла ошибка.
  * @example
- * В следующем примере показано, как незакрывать подменю, если кликнули на пункт с иерархией.
+ * WML:
  * <pre>
- *    <Controls.menu:Control
+ * <Controls.menu:Control
+ *          keyProperty="id"
  *          displayProperty="title"
- *          keyProperty="key"
- *          source="{{_source}}"
- *          on:itemClick="_itemClickHandler()" />
+ *          dataLoadErrback="{{_errbackHandler}}"
+ *          source="{{_source)}}" />
  * </pre>
- * TS:
+ * JS:
  * <pre>
- *    protected _itemClickHandler(e, item): boolean {
- *       if (item.get(nodeProperty)) {
- *          return false;
- *       }
- *    }
+ * this._source = new Memory({
+ *    keyProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Yaroslavl'},
+ *       {id: 2, title: 'Moscow'},
+ *       {id: 3, title: 'St-Petersburg'}
+ *    ]
+ * });
+ * this._errbackHandler = function(items) {
+ *   // do something
+ * };
  * </pre>
  */

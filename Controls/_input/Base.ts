@@ -20,6 +20,7 @@ import {
 } from 'Controls/_input/Base/InputUtil';
 import MobileFocusController from 'Controls/_input/Base/MobileFocusController';
 import {FixBugs} from './FixBugs';
+import {getOptionPaddingTypes, getDefaultPaddingOptions} from './interface/IPadding';
 
 import 'wml!Controls/_input/Base/Stretcher';
 import 'wml!Controls/_input/Base/FixValueAttr';
@@ -375,6 +376,8 @@ var _private = {
  * @implements Controls/_input/interface/IValue
  * @implements Controls/_interface/IValidationStatus
  * @implements Controls/interface/IBorderStyle
+ * @implements Controls/_input/interface/IBorderVisibility
+ * @implements Controls/_input/interface/IPadding
  *
  * @public
  *
@@ -436,6 +439,11 @@ var Base = Control.extend({
      * @protected
      */
     _type: 'text',
+
+    /**
+     * Значение атрибута inputmode в нативном поле ввода.
+     */
+    _inputMode: 'text',
 
     /**
      * @type {String} Value of the name attribute in the native field.
@@ -688,6 +696,7 @@ var Base = Control.extend({
             scope: {
                 controlName: CONTROL_NAME,
                 autoComplete: this._autoComplete,
+                inputMode: this._inputMode,
                 calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
                 isFieldFocused: _private.isFieldFocused.bind(_private, this)
             }
@@ -755,6 +764,12 @@ var Base = Control.extend({
         if (keyCode === Env.constants.key.enter && this._isTriggeredChangeEventByEnterKey()) {
             _private.callChangeHandler(this);
         }
+    },
+    _cutHandler: function() {
+        // redefinition
+    },
+    _copyHandler: function() {
+        // redefinition
     },
     /**
      * Event handler key up in native field.
@@ -1090,9 +1105,9 @@ Base._private = _private;
 
 Base.getDefaultOptions = function () {
     return {
+        ...getDefaultPaddingOptions(),
         tooltip: '',
         style: 'info',
-        horizontalPadding: 'xs',
         inlineHeight: 'default',
         placeholder: '',
         textAlign: 'left',
@@ -1106,9 +1121,7 @@ Base.getDefaultOptions = function () {
 
 Base.getOptionTypes = function () {
     return {
-        horizontalPadding: entity.descriptor(String).oneOf([
-            'xs', 'null'
-        ]),
+        ...getOptionPaddingTypes(),
         value: entity.descriptor(String, null),
         tooltip: entity.descriptor(String),
         /*autoComplete: entity.descriptor(String).oneOf([

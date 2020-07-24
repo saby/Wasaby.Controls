@@ -25,7 +25,7 @@ import * as DefaultItemTpl from 'wml!Controls/_grid/ItemTemplateResolver';
 import * as GridItemTemplate from 'wml!Controls/_grid/layout/grid/Item';
 import * as TableItemTemplate from 'wml!Controls/_grid/layout/table/Item';
 
-import * as ColumnTpl from 'wml!Controls/_grid/Column';
+import * as ColumnTpl from 'wml!Controls/_grid/layout/common/ColumnContent';
 import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
 
 import {Logger} from 'UI/Utils';
@@ -63,7 +63,8 @@ var
             if (shouldAddActionsCell({
                 hasColumnScroll: !!self._options.columnScroll,
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
-                hasColumns: !!columns.length
+                hasColumns: !!columns.length,
+                itemActionsPosition: self._options.itemActionsPosition
             })) {
                 columnsWidths = columnsWidths.concat(['0px']);
             }
@@ -154,6 +155,7 @@ var
         },
         createColumnScroll(self, options): void {
             self._columnScrollController = new ColumnScroll({
+                needBottomPadding: options._needBottomPadding,
                 stickyColumnsCount: options.stickyColumnsCount,
                 hasMultiSelect: options.multiSelectVisibility !== 'hidden',
                 theme: options.theme,
@@ -389,6 +391,7 @@ var
 
             if (this._options.columnScroll) {
                 _private.updateColumnScrollByOptions(this, oldOptions, this._options);
+                this._listModel.setColumnScrollVisibility(this._isColumnScrollVisible());
             }
 
             this._columnsHaveBeenChanged = false;
@@ -482,6 +485,9 @@ var
                 classes.add(COLUMN_SCROLL_JS_SELECTORS.CONTENT);
                 classes.add(DRAG_SCROLL_JS_SELECTORS.CONTENT, this._isDragScrollingVisible(options));
             }
+            if (this._listModel.isSupportLadder(this._options.ladderProperties)) {
+                classes.add('controls-Grid_support-ladder')
+            }
             return classes.compile();
         },
 
@@ -544,6 +550,9 @@ var
             } else {
                 return false;
             }
+        },
+        isColumnScrollVisible(): boolean {
+          return this._isColumnScrollVisible();
         },
 
         _isDragScrollingEnabled(options): boolean {

@@ -1,5 +1,7 @@
 import rk = require('i18n!Controls');
-import * as isEmpty from 'Core/helpers/Object/isEmpty';
+import Controller from 'Controls/_dropdown/_Controller';
+import {ICrudPlus} from 'Types/source';
+import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 
 export function prepareEmpty(emptyText) {
    if (emptyText) {
@@ -7,10 +9,14 @@ export function prepareEmpty(emptyText) {
    }
 }
 
-export function loadItems(controller, recievedState) {
-   if (!recievedState || isEmpty(recievedState)) {
+export function loadItems(
+    controller: Controller,
+    receivedState: DropdownReceivedState,
+    source: ICrudPlus
+): void | Promise<DropdownReceivedState> {
+   if (receivedState) {
+      return controller.setItems(receivedState);
+   } else if (source) {
       return controller.loadItems();
-   } else {
-      controller.setItems(recievedState);
    }
 }
