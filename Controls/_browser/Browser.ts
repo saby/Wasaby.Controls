@@ -155,7 +155,7 @@ export default class Browser extends Control {
         // on itemChanged event prefetchSource will updated,
         // but createPrefetchSource method work async becouse of promise,
         // then we need to create prefetchSource synchronously
-        this._dataController.setItems(items);
+        this._dataController.updatePrefetchProxy(items);
         this._dataController.updateContext(this._dataOptionsContext);
     }
 
