@@ -66,6 +66,7 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
  *
  * @author Красильников А.С.
  */
+
 class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, IFontColorStyle, IFontSize, IFontWeight {
     private _value: TValue;
     private _useGrouping: boolean;

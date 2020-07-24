@@ -185,7 +185,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
      * @function
      * @name Controls/LoadingIndicator#show
      * @param {Object} [config] Объект с параметрами. Если не задан, по умолчанию используется значение аналогичного параметра контрола.
-     * @param {Boolean} [config.isGlobal=true] Определяет, глобальный или нет идентификатор.
+     * @param {Boolean} [config.isGlobal=true] Определяет, показать индикатор над всей страницей или только над собственным контентом.
      * @param {String} [config.message=''] Текст сообщения индикатора.
      * @param {Scroll} [config.scroll=''] Добавляет градиент фону индикатора.
      * @param {Small} [config.small=''] Размер индикатора.
