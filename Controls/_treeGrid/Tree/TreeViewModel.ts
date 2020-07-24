@@ -675,12 +675,8 @@ var
                 this._setPrevDragTargetPosition(targetPosition);
             } else {
                 this._prevDragTargetPosition = null;
-
-                // The fake item must be displayed at the correct level.
-                if (targetPosition) {
-                    this._draggingItemData.level = targetPosition.data.level;
-                }
             }
+
             TreeViewModel.superclass.setDragTargetPosition.apply(this, arguments);
         },
 

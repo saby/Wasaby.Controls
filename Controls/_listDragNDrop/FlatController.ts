@@ -14,6 +14,8 @@ export interface IFlatModel {
    getItemBySourceKey(key: TKey): CollectionItem<Model>;
 
    getIndexByKey(key: TKey): number;
+
+   at(index: number): CollectionItem<Model>;
 }
 
 export interface IFlatItemData {
