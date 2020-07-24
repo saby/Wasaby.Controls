@@ -7,18 +7,14 @@ import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadItems} from 'Controls/_dropdown/Util';
 import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
-import {IGroupedOptions} from 'Controls/dropdown';
-import {IIconOptions, IHeightOptions, IIconSizeOptions, IIconStyleOptions} from 'Controls/interface';
+import {IIconOptions, IHeightOptions} from 'Controls/interface';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
-import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 import {IStickyPopupOptions} from 'Controls/popup';
-import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
 
-interface IButtonOptions extends IBaseDropdownOptions, IGroupedOptions, IIconOptions, IHeightOptions,
-         IIconSizeOptions, IIconStyleOptions, IMenuControlOptions, IMenuPopupOptions {
+interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
    additionalProperty?: string;
    lazyItemsLoading?: boolean;
    buttonStyle?: string;
@@ -220,7 +216,7 @@ export default class Button extends BaseDropdown {
    }
 
    protected _itemClick(data, nativeEvent): void {
-      const item = this._controller.getPreparedItem(data, this._options.keyProperty);
+      const item = this._controller.getPreparedItem(data);
       const res = this._onItemClickHandler([item], nativeEvent);
 
       // dropDown must close by default, but user can cancel closing, if returns false from event

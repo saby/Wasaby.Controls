@@ -9,18 +9,13 @@ import {isEqual} from 'Types/object';
 import Controller from 'Controls/_dropdown/_Controller';
 import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {IGroupedOptions} from './interface/IGrouped';
-import {IIconSizeOptions} from 'Controls/interface';
-import IMenuPopup, {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
 import {IStickyPopupOptions} from 'Controls/popup';
-import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
 
-interface IInputOptions extends IBaseDropdownOptions, IGroupedOptions, IIconSizeOptions,
-    IMenuPopupOptions, IMenuControlOptions {
+interface IInputOptions extends IBaseDropdownOptions {
    fontColorStyle?: string;
    fontSize?: string;
    showHeader?: boolean;
@@ -375,7 +370,7 @@ export default class Input extends BaseDropdown {
    }
 
    protected _itemClick(data): void {
-      const item = this._controller.getPreparedItem(data, this._options.keyProperty);
+      const item = this._controller.getPreparedItem(data);
       const res = this._selectedItemsChangedHandler([item]);
 
       // dropDown must close by default, but user can cancel closing, if returns false from event
@@ -390,7 +385,7 @@ export default class Input extends BaseDropdown {
    }
 
    protected _selectorResult(data): void {
-      this._controller.onSelectorResult(data);
+      this._controller.handleSelectorResult(data);
       this._selectedItemsChangedHandler(data);
    }
 
