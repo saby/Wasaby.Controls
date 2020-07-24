@@ -204,6 +204,7 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     protected _showIndicatorHandler(event: Event): string {
+        // Вернул для индикаторов, вызванных из кода
         const args = this._prepareEventArs(event, arguments);
         const config = args[0];
         if (typeof config === 'object') {

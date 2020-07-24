@@ -48,10 +48,7 @@ export default class Browser extends Control {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
-        this._createSearchController(options, context);
         this._operationsController = this._createOperationsController(options);
-        this._searchController = this._createSearchController(options, context);
-        this._searchValue = this._searchController.getSearchValue();
 
         this._filter = options.filter;
         this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
@@ -60,16 +57,15 @@ export default class Browser extends Control {
         this._dataOptionsContext = this._dataController.createContext();
 
         if (receivedState && isNewEnvironment()) {
-            this._items = receivedState;
-            this._dataController.setItems(receivedState);
-            this._dataController.updateContext(this._dataOptionsContext);
+            this._setItemsAndCreateSearchController(receivedState, options);
         } else if (options.source) {
             return this._dataController.loadItems().then((items) => {
-                this._items = items;
-                this._dataController.setItems(items);
-                this._dataController.updateContext(this._dataOptionsContext);
+                this._setItemsAndCreateSearchController(items, options);
                 return items;
             });
+        } else {
+            this._dataController.updateContext(this._dataOptionsContext);
+            this._createSearchControllerWithContext(options, this._dataOptionsContext);
         }
     }
 
@@ -89,7 +85,10 @@ export default class Browser extends Control {
             this._dataController.updateContext(this._dataOptionsContext);
         }
         this._operationsController.update(newOptions);
-        this._searchController.update(this._getSearchControllerOptions(newOptions), context);
+        this._searchController.update(
+            this._getSearchControllerOptions(newOptions),
+            {dataOptions: this._dataOptionsContext}
+        );
     }
 
     protected _beforeUnmount(): void {
@@ -107,6 +106,18 @@ export default class Browser extends Control {
             this._errorRegister.destroy();
             this._errorRegister = null;
         }
+    }
+
+    private _setItemsAndCreateSearchController(items: RecordSet, options): void {
+        this._items = items;
+        this._dataController.setItems(items);
+        this._dataController.updateContext(this._dataOptionsContext);
+        this._createSearchControllerWithContext(options, this._dataOptionsContext);
+    }
+
+    private _createSearchControllerWithContext(options, context): void {
+        this._searchController = this._createSearchController(options, {dataOptions: context});
+        this._searchValue = this._searchController.getSearchValue();
     }
 
     _itemsReadyCallbackHandler(items): void {
@@ -228,7 +239,9 @@ export default class Browser extends Control {
 
     _getSearchController(): SearchController {
         if (!this._searchController) {
-            this._searchController = this._createSearchController(this._options, this._context);
+            this._searchController = this._createSearchController(this._options, {
+                dataOptions: this._dataOptionsContext
+            });
         }
         return this._searchController;
     }

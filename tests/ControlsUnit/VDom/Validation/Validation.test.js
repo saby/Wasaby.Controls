@@ -33,27 +33,20 @@ define([
    }
 
    describe('Validate/Container', () => {
-      var stubP;
-      var calls = [];
-      var validCtrl = new validateMod.Container();
-      validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
-      beforeEach(function() {
-         stubP = sinon.stub(validCtrl._private, 'callInfoBox').callsFake(() => undefined);
-      });
-      afterEach(function() {
-         stubP.restore();
-      });
-      it('valueChangedNotify', () => {
-         validCtrl._valueChangedHandler(null, 'test');
-         assert.deepEqual(calls, [{
-            name: 'notify',
-            arguments: ['valueChanged', ['test']]
-         }]);
-      });
+       var stubP;
+       var calls = [];
+       var validCtrl = new validateMod.Container();
+       validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
+       beforeEach(function() {
+           stubP = sinon.stub(validCtrl, '_callInfoBox').callsFake(() => undefined);
+       });
+       afterEach(function() {
+           stubP.restore();
+       });
       it('closeInfoBox', () => {
          validCtrl._isOpened = false;
          validCtrl._validationResult = 'error';
-         validCtrl._private.openInfoBox(validCtrl);
+         validCtrl._openInfoBox(validCtrl);
          validCtrl._mouseInfoboxHandler({type: 'mouseenter'});
          assert.deepEqual(validCtrl._isOpened, true);
          validCtrl._mouseInfoboxHandler({type: 'close'});
@@ -62,6 +55,7 @@ define([
       });
       it('cleanValid', () => {
          var validCtrl = new validateMod.Container();
+         validCtrl._callInfoBox = () => {};
          validCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(validCtrl._validationResult, null);
          validCtrl._validationResult = 'Error';
@@ -71,6 +65,7 @@ define([
       });
       it('setValidResult', () => {
          var validCtrl = new validateMod.Container();
+         validCtrl._callInfoBox = () => {};
          var validConfig = {
             hideInfoBox: true,
          };
@@ -156,6 +151,31 @@ define([
          assert.equal(validator2._validationResult, null);
 
          Controller.destroy();
+      });
+
+      it('config for openInfoBox', () => {
+         let validCtrl = new validateMod.Container();
+         validCtrl.saveOptions({
+            errorTemplate: 'myTemplate'
+         });
+         validCtrl._validationResult = 'Error';
+         validCtrl._container = 'myContainer';
+         let newCfg = {
+            target: 'myContainer',
+            validationStatus: 'invalid',
+            template: 'myTemplate',
+            templateOptions: {
+               errors: 'Error'
+            },
+            eventHandlers: {},
+            closeOnOutsideClick: false,
+         };
+
+         validCtrl._callInfoBox = (cfg) => {
+            cfg.eventHandlers = {};
+            assert.deepEqual(newCfg, cfg);
+         };
+         validCtrl._openInfoBox();
       });
 
       it('submit', (done) => {

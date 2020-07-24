@@ -133,6 +133,17 @@ define(
             //assert.isTrue(popupTemplate.StackController._stack.at(7).popupOptions.hidden);
             assert.isFalse(popupTemplate.StackController._stack.at(8).popupOptions.hidden);
 
+            assert.isTrue(popupTemplate.StackController._stack.at(0).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(1).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(2).position.hidden);
+            assert.isFalse(popupTemplate.StackController._stack.at(3).position.hidden);
+            assert.isFalse(popupTemplate.StackController._stack.at(4).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(5).position.hidden);
+            assert.isFalse(popupTemplate.StackController._stack.at(6).position.hidden);
+            // 7 индекс не интересен, потому что popupState: 'destroying'. Проверяем, что не повлиял на 8 индекс
+            //assert.isTrue(popupTemplate.StackController._stack.at(7).popupOptions.hidden);
+            assert.isFalse(popupTemplate.StackController._stack.at(8).position.hidden);
+
 
             popupTemplate.StackController._stack.add({
                containerWidth: 1100,
@@ -623,6 +634,7 @@ define(
             };
             Controller._getItemPosition = () => {
                isCalcPoistionCalled = true;
+               return {width: 720};
             };
             let item = {
                position: { width: 720 },
@@ -659,6 +671,7 @@ define(
 
          it('stack compatible popup', () => {
             let item = {
+               position: {},
                popupOptions: {
                   template: {},
                   minWidth: 800,
@@ -666,7 +679,7 @@ define(
                   isCompoundTemplate: true
                }
             };
-            popupTemplate.StackController.getDefaultConfig(item)
+            popupTemplate.StackController.getDefaultConfig(item);
             assert.equal(item.position.top, -10000);
             assert.equal(item.position.left, -10000);
 

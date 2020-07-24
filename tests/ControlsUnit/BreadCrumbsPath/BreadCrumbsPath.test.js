@@ -1,4 +1,5 @@
 define([
+   'Controls/_breadcrumbs/MultilinePath',
    'Controls/_breadcrumbs/HeadingPath',
    'Controls/_breadcrumbs/Path',
    'Controls/_breadcrumbs/Utils',
@@ -6,6 +7,7 @@ define([
    'Core/Deferred',
    'Types/entity'
 ], function(
+    MultilinePath,
    HeadingPath,
    Path,
    BreadCrumbsUtil,
@@ -120,5 +122,89 @@ define([
          };
 
       BreadCrumbsUtil.drawBreadCrumbs = drawBreadCrumbs;
+   });
+   describe('Controls.BreadCrumbs.MultilinePath', function() {
+      var MultilinePathCrumbs = new MultilinePath.default();
+      var Util = BreadCrumbsUtil.default;
+      MultilinePathCrumbs.ARROW_WIDTH = 10;
+      MultilinePathCrumbs.DOTS_WIDTH = 20;
+      MultilinePathCrumbs.BREAD_CRUMB_MIN_WIDTH = 30;
+      // 2 крошки
+      var items1 = [
+         {
+            id: 1,
+            title: 'Очень длинное название',
+            secondTitle: 'тест1',
+            parent: null
+         },
+         {
+            id: 2,
+            title: 'Длинное название второй папки',
+            secondTitle: 'тест2',
+            parent: 1
+         }
+      ].map((item) => {
+         return new entity.Model({
+            rawData: item,
+            keyProperty: 'id'
+         });
+      });
+      // несколько крошек
+      var items2 = [
+         {
+            id: 1,
+            title: 'Очень длинное название',
+            secondTitle: 'тест1',
+            parent: null
+         },
+         {
+            id: 2,
+            title: 'Длинное название второй папки',
+            secondTitle: 'тест2',
+            parent: 1
+         },
+         {
+            id: 2,
+            title: 'Длинное название папки',
+            secondTitle: 'тест2',
+            parent: 1
+         },
+         {
+            id: 2,
+            title: 'Длинное название папки',
+            secondTitle: 'тест2',
+            parent: 1
+         }
+      ].map((item) => {
+         return new entity.Model({
+            rawData: item,
+            keyProperty: 'id'
+         });
+      });
+      it('2 crumbs', function() {
+         MultilinePathCrumbs._getItemsWidth = () => {
+            return [50, 50];
+         };
+         MultilinePathCrumbs._calculateBreadCrumbsToDraw(items1, 100);
+         assert.isTrue(MultilinePathCrumbs._visibleItemsFirst.length === 2);
+         assert.isTrue(MultilinePathCrumbs._visibleItemsSecond.length === 0);
+      });
+      it('несколько крошек, причем последняя не влезает в первый контейнер без сокращения', function() {
+         MultilinePathCrumbs._getItemsWidth = () => {
+            return [100, 100, 100, 100];
+         };
+         MultilinePathCrumbs._calculateBreadCrumbsToDraw(items2, 350);
+         assert.isTrue(MultilinePathCrumbs._visibleItemsFirst.length === 4);
+         // последняя крошка сократилась, а не упала вниз.
+         assert.isTrue(MultilinePathCrumbs._visibleItemsSecond.length === 0);
+      });
+      it('несколько крошек, причем последняя не влезает в первый контейнер с сокращением', function() {
+         MultilinePathCrumbs._getItemsWidth = () => {
+            return [100, 100, 100, 100];
+         };
+         MultilinePathCrumbs._calculateBreadCrumbsToDraw(items2, 320);
+         assert.isTrue(MultilinePathCrumbs._visibleItemsFirst.length === 3);
+         assert.isTrue(MultilinePathCrumbs._visibleItemsSecond.length === 1);
+      });
    });
 });

@@ -1,5 +1,4 @@
-define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Controls/popup'], function(showSelector, BaseController, popup) {
-   'use strict';
+define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/popup', 'Types/collection'], function(showSelector, Lookup, popup, { RecordSet }) {
 
    describe('Controls/_lookup/showSelector', function() {
       let lastPopupOptions;
@@ -7,8 +6,11 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
       let stubOpenPopup;
 
       const getBaseController = function() {
-         const baseController = new BaseController();
+         const baseController = new Lookup.default();
 
+         baseController._lookupController = {
+            getItems: () => new RecordSet()
+         };
          baseController._options.selectorTemplate = {
             templateOptions: {
                selectedTab: 'defaultTab'
@@ -38,11 +40,9 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController', 'Con
 
       it('showSelector without params', function() {
          const baseController = getBaseController();
-         let items = baseController._getItems();
          showSelector.default(baseController);
          assert.isTrue(isShowSelector);
          assert.equal(lastPopupOptions.templateOptions.selectedTab, 'defaultTab');
-         assert.notEqual(lastPopupOptions.templateOptions.selectedItems, items);
          assert.equal(lastPopupOptions.width, 100);
          assert.equal(lastPopupOptions.opener, baseController);
          assert.equal(lastPopupOptions.multiSelect, undefined);

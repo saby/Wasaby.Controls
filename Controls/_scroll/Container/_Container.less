@@ -1,0 +1,15 @@
+.controls-Scroll-Container {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.ws-is-hover {
+    .controls-Scroll-Container:hover {
+        > .controls-Scroll__scrollbar {
+            visibility: visible;
+        }
+    }
+}

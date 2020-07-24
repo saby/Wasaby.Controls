@@ -9,7 +9,6 @@ import {
     SerializableMixin
 } from 'Types/entity';
 import {IList} from 'Types/collection';
-import {register} from 'Types/di';
 import {mixin} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
@@ -294,15 +293,6 @@ export default class CollectionItem<T> extends mixin<
     }
 
     isEditing(): boolean {
-        return this._$editing;
-    }
-
-    /**
-     * Т.к. не получается быстро избавиться от IsEditing в старых моделях,
-     * называем метод иначе. Когда избавимся от старой модели, этот метод будет не нужен и
-     * можно будет везде использовать isEditing()
-     */
-    isEditingState(): boolean {
         return this._$editing;
     }
 
@@ -602,5 +592,3 @@ Object.assign(CollectionItem.prototype, {
     _version: 0,
     _counters: null
 });
-
-register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});

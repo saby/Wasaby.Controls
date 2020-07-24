@@ -1,9 +1,11 @@
 import {ISourceOptions, IHierarchyOptions, IFilterOptions, INavigationOptions, ISortingOptions} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import cInstance = require('Core/core-instance');
-import {Controller} from 'Controls/source';
+import {CrudWrapper} from 'Controls/dataSource';
+import {NavigationController} from 'Controls/source';
+import {IAdditionalQueryParams} from 'Controls/_interface/IAdditionalQueryParams';
 import {ContextOptions} from 'Controls/context';
-import {PrefetchProxy, DataSet, ICrudPlus, QueryWhere} from 'Types/source';
+import {PrefetchProxy, DataSet, ICrudPlus, QueryWhere, ICrud} from 'Types/source';
 import {isEqual} from 'Types/object';
 import {TArrayGroupId, prepareFilterCollapsedGroups} from 'Controls/_list/Controllers/Grouping';
 import {groupUtil} from 'Controls/dataSource';
@@ -73,7 +75,7 @@ export default class DataControllerClass {
         this._filter = filter;
     }
 
-    updateContext(context: ContextOptions): void {
+    updateContext(context: typeof ContextOptions): void {
         const contextOptions = this._getContextOptions();
 
         for (const i in contextOptions) {
@@ -84,17 +86,17 @@ export default class DataControllerClass {
         context.updateConsumers();
     }
 
-    createContext(options?: IDataContextOptions): ContextOptions {
+    updatePrefetchProxy(items: RecordSet): void {
+        this._prefetchSource = this._getPrefetchSource(items);
+    }
+
+    createContext(options?: IDataContextOptions): typeof ContextOptions {
         return new ContextOptions(options);
     }
 
     loadItems(): Promise<RecordSet> {
-        const groupHistoryId = DataControllerClass._getGroupHistoryId(this._options);
-        const sourceController = new Controller({
-            source: this._options.source,
-            navigation: this._options.navigation,
-            keyProperty: this._options.keyProperty
-        });
+        const options = this._options;
+        const groupHistoryId = DataControllerClass._getGroupHistoryId(options);
         let filterPromise;
 
         if (typeof groupHistoryId !== 'string') {
@@ -106,14 +108,35 @@ export default class DataControllerClass {
         }
 
         return filterPromise.then((filter) => {
-            return sourceController.load(
-                DataControllerClass._prepareFilter(filter, this._options),
-                this._options.sorting
-            ).catch((error) => {
-                if (this._options.dataLoadErrback instanceof Function) {
-                    this._options.dataLoadErrback(error);
+            const preparedFilter = DataControllerClass._prepareFilter(filter, options);
+            const crudWrapper = new CrudWrapper({
+                source: options.source as unknown as ICrud
+            });
+            let params = {
+                filter: preparedFilter,
+                sorting: options.sorting
+            } as IAdditionalQueryParams;
+
+            if (options.navigation && options.navigation.source) {
+                const navigationController = new NavigationController({
+                    navigationType: options.navigation.source,
+                    navigationConfig: options.navigation.sourceConfig
+                });
+                params = navigationController.getQueryParams({
+                    filter: params.filter,
+                    sorting: params.sorting
+                });
+            }
+            return crudWrapper.query(
+                params,
+                this._options.keyProperty
+            ).then((result) => {
+                if (result instanceof Error) {
+                    if (this._options.dataLoadErrback instanceof Function) {
+                        this._options.dataLoadErrback(result);
+                    }
                 }
-                return error;
+                return result;
             });
         });
     }

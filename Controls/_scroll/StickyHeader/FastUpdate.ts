@@ -1,3 +1,4 @@
+import {detection} from 'Env/Env';
 
 /**
  * Класс с помощью которого компонуем считывание размеров с фиксированных заголовков. Перед считыванием размеров,
@@ -18,14 +19,16 @@
 class FastUpdate {
     _measures: Function[] = [];
     _mutates: Function[] = [];
-    _stickyContainersForReset: Element[] = [];
+    _stickyContainersForReset: object[] = [];
 
     _isInvalid: boolean = false;
 
     _promise: Promise<void>;
 
     resetSticky(elements: Element[]): void {
-        this._stickyContainersForReset = this._stickyContainersForReset.concat(elements);
+        elements.forEach(element => {
+            this._stickyContainersForReset.push({container: element})
+        });
     }
 
     measure(fn: Function): Promise<void> {
@@ -63,17 +66,35 @@ class FastUpdate {
     }
 
     protected _resetSticky() {
-        for (let container of this._stickyContainersForReset) {
-            container.style.position = 'static';
+        for (let stickyHeader of this._stickyContainersForReset) {
+            // Устаналиваем relative вместо static, т.к в safari почему-то после сброса в static и
+            // обратной установкой position: sticky тень думает, что заголовок все еще static.
+            // Попытка "дёрнуть" тень установкой display none и обратно display block успехом не увенчалась.
+            stickyHeader.container.style.position = 'relative';
+            this._resetPosition(stickyHeader);
         }
     }
 
+    protected _resetPosition(stickyHeader: object): void {
+        stickyHeader.top = stickyHeader.container.style.top;
+        stickyHeader.bottom = stickyHeader.container.style.bottom;
+        stickyHeader.container.style.top = '';
+        stickyHeader.container.style.bottom = '';
+    }
+
     protected _restoreSticky() {
-        for (let container of this._stickyContainersForReset) {
-            container.style.position = '';
+        for (let stickyHeader of this._stickyContainersForReset) {
+            stickyHeader.container.style.position = '';
+            this._restorePosition(stickyHeader);
         }
         this._stickyContainersForReset = [];
     }
+
+    protected _restorePosition(stickyHeader: object): void {
+        stickyHeader.container.style.top = stickyHeader.top;
+        stickyHeader.container.style.bottom = stickyHeader.bottom;
+    }
+
 }
 
 const fastUpdate = new FastUpdate();

@@ -10,7 +10,8 @@ export type TKey = string|number|null;
 
 export default interface IDropdownController {
     loadItems(): Promise<RecordSet>;
-    setItems(recievedState: {items?: RecordSet, history?: RecordSet}):RecordSet;
+    reload(): Promise<RecordSet>;
+    setItems(receivedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>;
     update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void;
     loadDependencies(): Promise<any>;
     setMenuPopupTarget(target: any): void;
@@ -18,7 +19,7 @@ export default interface IDropdownController {
     closeMenu(): void;
     destroy(): void;
     applyClick(data: RecordSet): void;
-    getPreparedItem(data: RecordSet, keyProperty: TKey, source: Memory): any;
+    getPreparedItem(data: RecordSet, keyProperty: TKey): any;
     onSelectorResult(selectedItems: RecordSet): void;
 }
 

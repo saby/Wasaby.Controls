@@ -1,4 +1,5 @@
 <div class="controlsDemo__wrapper">
+   <div on:click="removeItems()">remove selected items</div>
    <Controls.scroll:Container attr:class="controlsDemo__height400 controlsDemo__minWidth600">
       <Controls.columns:View
          keyProperty="id"

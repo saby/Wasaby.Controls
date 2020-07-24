@@ -2,11 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Controller');
 import ValidateContainer from 'Controls/_validate/Container';
 import ControllerClass from 'Controls/_validate/ControllerClass';
-
-interface IValidateResult {
-    [key: number]: boolean;
-    hasErrors?: boolean;
-}
+import IValidateResult from 'Controls/_validate/interfaces/IValidateResult';
 
 /**
  * Контрол, регулирующий валидацию формы.
@@ -20,30 +16,13 @@ interface IValidateResult {
  */
 
 class Form extends Control<IControlOptions> {
-    private _submitPromise: Promise<IValidateResult | Error>;
-    private _submitResolve: (res: IValidateResult) => void = null;
-    private _submitReject: (res: Error) => void = null;
     private _validateController: ControllerClass = new ControllerClass();
 
     protected _template: TemplateFunction = template;
 
     protected _afterUpdate(oldOptions?: IControlOptions, oldContext?: any): void {
         super._afterUpdate(oldOptions, oldContext);
-
-        if (this._submitPromise) {
-            const submitResolve = this._submitResolve;
-            const submitReject = this._submitReject;
-            this._submitResolve = null;
-            this._submitReject = null;
-            this._submitPromise = null;
-            this._validateController.submit()
-                .then((result: IValidateResult) => {
-                    submitResolve(result);
-                })
-                .catch((error: Error) => {
-                    submitReject(error);
-                });
-        }
+        this._validateController.resolveSubmit();
     }
 
     onValidateCreated(e: Event, control: ValidateContainer): void {
@@ -55,24 +34,9 @@ class Form extends Control<IControlOptions> {
     }
 
     submit(): Promise<IValidateResult | Error> {
-        /**
-         * Если метод будет вызван во время цикла синхронизации, то дочерние контролы
-         * будут иметь старые опции, а работать должны с новыми. Поэтому откладываем действия до завершения цикла синхронизации.
-         * Примеры возникающих ошибок:
-         * https://online.sbis.ru/opendoc.html?guid=801ee6cf-7ba0-489d-b69c-60a89f976cec
-         * https://online.sbis.ru/doc/6603463e-30fa-47b6-ba06-93b08bdc1590
-         * У поля ввода установлена опция trim = 'true', при завершении редактирования будет обработано значение с пробелами,
-         * т.к. последовательно произойдет измененние значения поля ввода -> завершение редактирования -> вызов submit -> обновление значения в поле ввода.
-         */
-        if (!this._submitPromise) {
-            this._submitPromise = new Promise((resolve, reject) => {
-                this._submitResolve = resolve;
-                this._submitReject = reject;
-            });
-        }
+        // Для чего нужен _forceUpdate см внутри метода deferSubmit
         this._forceUpdate();
-
-        return this._submitPromise;
+        return this._validateController.deferSubmit();
     }
 
     setValidationResult(): void {

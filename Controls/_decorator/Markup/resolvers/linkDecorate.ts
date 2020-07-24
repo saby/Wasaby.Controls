@@ -12,7 +12,7 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  * @example
  * <pre class="brush: xml">
  * <!-- WML -->
- *    <Controls.decorator:Markup value="{{ _json }}" tagResolver="{{ _tagResolver }}" />
+ * <Controls.decorator:Markup value="{{ _json }}" tagResolver="{{ _tagResolver }}" />
  * </pre>
  * <pre class="brush: js">
  * // JavaScript

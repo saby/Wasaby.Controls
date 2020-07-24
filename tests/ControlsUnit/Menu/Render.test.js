@@ -87,7 +87,7 @@ define(
 
             renderOptions.multiSelect = true;
             leftSpacing = menuRender.getLeftSpacing(renderOptions);
-            assert.equal(leftSpacing, 'null');
+            assert.equal(leftSpacing, 'm');
 
             renderOptions.itemPadding.left = 'xs';
             leftSpacing = menuRender.getLeftSpacing(renderOptions);
@@ -363,6 +363,7 @@ define(
             assert.isOk(itemData.item);
             assert.isOk(itemData.isSelected);
             assert.isOk(itemData.getPropValue);
+            assert.isFalse(itemData.isFixedItem);
          });
 
          it('getIconPadding', function() {

@@ -22,6 +22,8 @@ export default interface IDropdownSource {
  * @property {String} [item.icon] Определяет иконку элемента. {@link Controls/_interface/IIcon#icon Подробнее}
  * @property {String} [item.title] Определеяет текст элемента.
  * @property {String} [item.tooltip] Определеяет текст всплывающей подсказки, появляющейся при наведении на элемент, если он отличается от title.
+ * @property {String} [item.pinned] Определеяет является ли пункт закрепленным.
+ * Пункт будет отображен на той же позиции, на которой он находится в загруженном рекордсете. В меню с множественным выбором клик по такому пункту сбрасывает выделение.
  *
  */
 

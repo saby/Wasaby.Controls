@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {IRenderOptions} from 'Controls/listRender';
 import {IMenuBaseOptions} from 'Controls/_menu/interface/IMenuBase';
-import {Tree, TreeItem, GroupItem} from 'Controls/display';
+import {Tree, TreeItem, GroupItem, Collection} from 'Controls/display';
 import * as itemTemplate from 'wml!Controls/_menu/Render/itemTemplate';
 import * as multiSelectTpl from 'wml!Controls/_menu/Render/multiSelectTpl';
 import ViewTemplate = require('wml!Controls/_menu/Render/Render');
@@ -62,13 +62,15 @@ class MenuRender extends Control<IMenuRenderOptions> {
             itemClassList: this._getClassList(treeItem),
             getPropValue: ItemsUtil.getPropertyValue,
             isEmptyItem: this._isEmptyItem(treeItem),
+            isFixedItem: this._isFixedItem(treeItem),
             isSelected: treeItem.isSelected.bind(treeItem)
         };
     }
 
     protected _proxyEvent(e: SyntheticEvent<MouseEvent>, eventName: string): void {
         e.stopPropagation();
-        const args = Array.prototype.slice.call(arguments, 2);
+        const slicePos = 2;
+        const args = Array.prototype.slice.call(arguments, slicePos);
         this._notify(eventName, args);
     }
 
@@ -87,7 +89,9 @@ class MenuRender extends Control<IMenuRenderOptions> {
         const item = treeItem.getContents();
         let classes = treeItem.getContentClasses(this._options.theme);
         if (item.get) {
-            classes += ' controls-Menu__row_state_' + (item.get('readOnly') ? 'readOnly' : 'default') + '_theme-' + this._options.theme;
+            classes += ' controls-Menu__row_state_' +
+                (item.get('readOnly') ? 'readOnly' : 'default') +
+                '_theme-' + this._options.theme;
             if (this._isEmptyItem(treeItem) && !this._options.multiSelect) {
                 classes += ' controls-Menu__emptyItem_theme-' + this._options.theme;
             } else {
@@ -110,12 +114,16 @@ class MenuRender extends Control<IMenuRenderOptions> {
         const item = treeItem.getContents();
         const nextItem = this._getNextItem(treeItem);
         const isGroupNext = this._isGroupNext(treeItem);
-        return !isGroupNext && nextItem?.getContents() && this._isHistoryItem(item) && !this.hasParent(treeItem.getContents()) && !this._isHistoryItem(nextItem.getContents());
+        return !isGroupNext &&
+            nextItem?.getContents() &&
+            this._isHistoryItem(item) &&
+            !this.hasParent(treeItem.getContents()) &&
+            !this._isHistoryItem(nextItem.getContents());
     }
 
     protected _isGroupVisible(groupItem: GroupItem): boolean {
-        let collection = groupItem.getOwner();
-        let itemsGroupCount = collection.getGroupItems(groupItem.getContents()).length;
+        const collection = groupItem.getOwner();
+        const itemsGroupCount = collection.getGroupItems(groupItem.getContents()).length;
         return !groupItem.isHiddenGroup() && itemsGroupCount > 0 && itemsGroupCount !== collection.getCount(true);
     }
 
@@ -125,6 +133,15 @@ class MenuRender extends Control<IMenuRenderOptions> {
 
     private _isHistoryItem(item: Model): boolean {
         return item.get('pinned') || item.get('recent') || item.get('frequent');
+    }
+
+    private _isFixedItem(treeItem: TreeItem<Model>): boolean {
+        let isFixed = false;
+        const item = treeItem.getContents();
+        if (item instanceof Model) {
+            isFixed = !item.has('HistoryId') && !!item.get('pinned');
+        }
+        return isFixed;
     }
 
     private _isGroupNext(treeItem: TreeItem<Model>): boolean {
@@ -149,7 +166,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
 
     private addEmptyItem(listModel: Tree, options: IMenuRenderOptions): void {
         const collection = listModel.getCollection();
-        let emptyItem = this._getItemModel(collection, options.keyProperty);
+        const emptyItem = this._getItemModel(collection, options.keyProperty);
 
         const data = {};
         data[options.keyProperty] = options.emptyKey;
@@ -185,8 +202,6 @@ class MenuRender extends Control<IMenuRenderOptions> {
         let leftSpacing = 'm';
         if (options.itemPadding.left) {
             leftSpacing = options.itemPadding.left;
-        } else if (options.multiSelect) {
-            leftSpacing = 'null';
         }
         return leftSpacing;
     }
@@ -242,7 +257,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
         }
     }
 
-    private _selectItem(collection: any, key: number|string, state: boolean): void {
+    private _selectItem(collection: Collection<unknown>, key: number|string, state: boolean): void {
         const item = collection.getItemBySourceKey(key);
         if (item) {
             item.setSelected(state, true);

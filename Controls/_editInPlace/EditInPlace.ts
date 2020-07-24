@@ -31,6 +31,7 @@ const _private = {
         if (!isAdd) {
             self._originalItem = options.item;
         }
+
         return _private.processBeforeBeginEditResult(self, options, result, isAdd);
     },
 
@@ -40,6 +41,13 @@ const _private = {
         self._setEditingItemData(self._editingItem);
         self._notify('afterBeginEdit', [self._editingItem, isAdd]);
         self._options.updateItemActions();
+
+        // При редактировании по месту маркер появляется только если в списке больше одной записи.
+        // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
+        if (self._options.listViewModel.getCount() > 1) {
+            self._options.updateMarkedKey(self._editingItem.getKey());
+        }
+
         return options;
     },
 
@@ -135,13 +143,6 @@ const _private = {
 
     afterEndEdit(self: EditInPlace, commit: boolean): void {
         const afterEndEditArgs = [self._isAdd ? self._editingItem : self._originalItem, self._isAdd];
-
-        // При редактировании по месту маркер появляется только если в списке больше одной записи.
-        // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-        if (self._isAdd && commit && self._options.listViewModel.getCount() > 1) {
-            // TODO переделать на marker.Controller, когда этот контрол будет переводиться в контроллер
-            self._options.listViewModel.setMarkedKey(self._editingItem.getId());
-        }
         if (self._options.useNewModel) {
             self._options.listViewModel.getCollection().acceptChanges();
         } else {
@@ -229,7 +230,8 @@ const _private = {
     },
 
     validate(self: EditInPlace): Promise<any> {
-        return self._formController.submit();
+        self._forceUpdate();
+        return self._formController.deferSubmit();
     },
 
     hasParentInItems(item: Model, listViewModel: any): boolean|void {
@@ -277,7 +279,7 @@ const _private = {
             parentId = editingItem.get(listViewModel._options.parentProperty);
             parentIndex = listViewModel.getIndexBySourceItem(
                 // @ts-ignore
-                listViewModel.getItemById(parentId, listViewModel._options.keyProperty).getContents()
+                listViewModel.getItemById(parentId, listViewModel.getKeyProperty()).getContents()
             );
             // @ts-ignore
             count = parentIndex + listViewModel.getChildren(parentId).length + 1;
@@ -306,7 +308,7 @@ const _private = {
             parentId = editingItem.get(listViewModel._options.parentProperty);
             parentIndex = listViewModel.getIndexBySourceItem(
                 // @ts-ignore
-                listViewModel.getItemById(parentId, listViewModel._options.keyProperty
+                listViewModel.getItemById(parentId, listViewModel.getKeyProperty()
             ).getContents());
             count = parentIndex + 1;
         } else {
@@ -339,8 +341,8 @@ const _private = {
             originalItem = listViewModel.getItemBySourceKey(editingItem.get(listViewModel.getKeyProperty()));
         } else {
             originalItem = listViewModel.getItemById(
-                editingItem.get(listViewModel._options.keyProperty),
-                listViewModel._options.keyProperty
+                editingItem.get(listViewModel.getKeyProperty()),
+                listViewModel.getKeyProperty()
             );
         }
 
@@ -351,16 +353,16 @@ const _private = {
             parentIndex = listViewModel.getIndexByKey(
                 listViewModel.getItemById(
                     parentId,
-                    listViewModel._options.keyProperty
+                    listViewModel.getKeyProperty()
                 ).getContents().getKey()
             );
             index = parentIndex + (
                 defaultIndex !== undefined ? defaultIndex : listViewModel.getDisplayChildrenCount(parentId)
             ) + 1;
-        } else if (listViewModel._options.groupingKeyCallback || groupProperty) {
+        } else if (listViewModel.getDisplay().getGroup()) {
             const groupId = groupProperty ?
                 editingItem.get(groupProperty) :
-                listViewModel._options.groupingKeyCallback(editingItem);
+                listViewModel.getDisplay().getGroup()(editingItem);
             const isAddInTop = self._options.editingConfig && self._options.editingConfig.addPosition === 'top';
             index = _private.getItemIndexWithGrouping(listViewModel.getDisplay(), groupId, isAddInTop);
         }
@@ -398,7 +400,6 @@ const _private = {
         *   поэтому рисуем его над первой группой в Controls/_list/resources/For.wml:47
         *
         *   При добавлении в конец индекс будет на один больше последнего элемента списка / группы.
-        *   Controls/_list/resources/ItemOutput.wml:31
         *   TODO: Возможно, стоит всегда выставлять индекс записи рядом с которой выводим добавляемую запись, а,
         *    над или под ней выводить, решать через editingConfig.addPosition
         * */
@@ -440,6 +441,7 @@ export interface IEditingOptions {
     notify?: any;
     forceUpdate?: Function;
     listView?: any;
+    updateMarkedKey: Function;
     updateItemActions: Function;
     isDestroyed: Function;
     theme: String;
@@ -503,8 +505,8 @@ export default class EditInPlace {
                         ).getContents();
                     } else {
                         this._originalItem = listViewModel.getItemById(
-                            this._editingItem.get(listViewModel._options.keyProperty),
-                            listViewModel._options.keyProperty
+                            this._editingItem.get(listViewModel.getKeyProperty()),
+                            listViewModel.getKeyProperty()
                         ).getContents();
                     }
                 }
@@ -632,7 +634,9 @@ export default class EditInPlace {
             this._options.editingConfig &&
             this._options.editingConfig.editOnClick &&
             !this._options.readOnly &&
-            originalEvent.type === 'click'
+            originalEvent.type === 'click' &&
+            //событие onclick при даблкике срабатвает два раза, второй раз там item из редактирования по месту
+            this._editingItem !== item
         ) {
             if (originalEvent.target.closest('.js-controls-ListView__notEditable')) {
                 result = this.commitEdit();
@@ -803,8 +807,8 @@ export default class EditInPlace {
             );
         } else  {
             editingItemProjection = listViewModel.getItemById(
-                this._editingItem.get(listViewModel._options.keyProperty),
-                listViewModel._options.keyProperty
+                this._editingItem.get(listViewModel.getKeyProperty()),
+                listViewModel.getKeyProperty()
             );
         }
 
@@ -815,6 +819,7 @@ export default class EditInPlace {
             } else {
                 editingItemProjection = listViewModel._prepareDisplayItemForAdd(item);
             }
+            editingItemProjection.setEditing(true);
         }
 
         listViewModel.setEditing(true);
@@ -822,7 +827,7 @@ export default class EditInPlace {
             displayLib.EditInPlaceController.beginEdit(listViewModel, item.getId(), item);
         } else {
             this._editingItemData = listViewModel.getItemDataByItem(editingItemProjection);
-            this._editingItemData.isEditing = true;
+            editingItemProjection.setEditing(true, item, true);
             // TODO Make sure all of this is available in the new model
             if (this._isAdd && _private.hasParentInItems(this._editingItem, listViewModel)) {
                 this._editingItemData.level = listViewModel.getItemById(
@@ -888,12 +893,19 @@ export default class EditInPlace {
     }
 
     _showIndicator(): void {
-        this._loadingIndicatorId = this._notify('showIndicator', [{}], {bubbling: true});
+        // Редактирование по месту использует глобальный индикатор загрузки.
+        // Если какая либо операция вызвала индикатор и до его закрытия произошла еще одна операция
+        // нуждающаяся в индикаторе, не нужно скрывать прошлый и показывать новый, т.к. будет моргание индикатора.
+        if (!this._loadingIndicatorId) {
+            this._loadingIndicatorId = this._notify('showIndicator', [{}], {bubbling: true});
+        }
     }
 
     _hideIndicator(): void {
-        this._notify('hideIndicator', [this._loadingIndicatorId], {bubbling: true});
-        this._loadingIndicatorId = null;
+        if (this._loadingIndicatorId) {
+            this._notify('hideIndicator', [this._loadingIndicatorId], {bubbling: true});
+            this._loadingIndicatorId = null;
+        }
     }
 
     reset(): void {
@@ -912,7 +924,7 @@ export default class EditInPlace {
          * Ideally, validation should take value through options and reset automagically.
          * TODO: https://online.sbis.ru/opendoc.html?guid=951f6762-8e37-4182-a7fc-3104a35ce27a
          */
-        this._formController.setValidationResult();
+        this._formController.setValidationResult(null);
     }
 
     _forceUpdate(): void {

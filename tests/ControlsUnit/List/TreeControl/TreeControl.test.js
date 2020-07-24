@@ -174,6 +174,7 @@ define([
                getIndexByKey: function() {
 
                },
+               getRoot: function() {},
                getCount:function(){
                   return 2;
                },
@@ -267,7 +268,7 @@ define([
          model.setItems(new collection.RecordSet({
             rawData: rawData,
             keyProperty: 'key'
-         }));
+         }), cfg);
          model.setMarkedKey(1);
          treeGrid.TreeControl._private.expandMarkedItem(treeControl);
          model.setMarkedKey(2);
@@ -357,12 +358,24 @@ define([
          });
          let expandSorting;
          let originalCreateSourceController = treeGrid.TreeControl._private.createSourceController;
+         const items = new collection.RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         });
+         const model = treeControl._children.baseControl.getViewModel();
+         model.setItems(items, treeControl._children.baseControl._options);
          treeGrid.TreeControl._private.createSourceController = function() {
             return {
                load: function(filter, sorting) {
-                  var result = Deferred.success([]);
+                  var result = Deferred.success(new collection.RecordSet({
+                     rawData: getHierarchyData(),
+                     keyProperty: 'id'
+                  }));
                   expandSorting = sorting;
                   return result
+               },
+               hasMoreData: function () {
+                  return false;
                }
             }
          };
@@ -370,6 +383,7 @@ define([
          treeGrid.TreeControl._private.toggleExpanded(treeControl, {
             getContents: function() {
                return {
+                  get: () => null,
                   getId: function() {
                      return 1;
                   }
@@ -529,6 +543,9 @@ define([
                load: function() {
                   loadedDataFromServer = true;
                   return Deferred.success([]);
+               },
+               hasMoreData: function () {
+                  return false;
                }
             };
          };
@@ -587,6 +604,7 @@ define([
                resetExpandedItems: function() {
 
                },
+               getRoot: function() {},
                getItems: function() {
                   return {
                      at: function () {}
@@ -666,6 +684,8 @@ define([
          treeViewModel._model._display = {
             setFilter: () => {},
             destroy: () => {},
+            getCollapsedGroups: () => undefined,
+            getKeyProperty: () => 'id',
             setRoot: (root) => {
                treeViewModel._model._root = root;
             },
@@ -677,7 +697,8 @@ define([
                };
             },
             subscribe: () => {},
-            unsubscribe: () => {}
+            unsubscribe: () => {},
+            getCount: () => 2
          };
 
          // Need to know that list notifies when he has been changed after setting new root by treeControl._afterUpdate
@@ -758,10 +779,15 @@ define([
 
          treeViewModel._model._display = {
             setFilter: () => undefined,
+            getCollapsedGroups: () => undefined,
+            unsubscribe: () => {},
+            destroy: () => {},
+            getKeyProperty: () => 'id',
             setRoot: (root) => {
                treeViewModel._model._root = root;
             },
-            getRoot: () => treeViewModel._model._root
+            getRoot: () => treeViewModel._model._root,
+            getCount: () => 1
          };
 
          treeControl._needResetExpandedItems = true;
@@ -843,9 +869,14 @@ define([
             setRoot: (root) => {
                treeViewModel._model._root = root;
             },
+            getCollapsedGroups: () => undefined,
+            getKeyProperty: () => 'id',
+            unsubscribe: () => {},
+            destroy: () => {},
             getRoot: () => treeViewModel._model._root,
             getExpandedItems: () => [1, 2],
-            getItems: () => items
+            getItems: () => items,
+            getCount: () => 2
          };
          treeControl._deepReload = true;
 
@@ -871,7 +902,7 @@ define([
          assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
       });
 
-      describe('List nafigation', function() {
+      describe('List navigation', function() {
          var stubScrollToItem;
 
          before(function() {
@@ -1063,6 +1094,8 @@ define([
                   }
                };
             },
+            unsubscribe: () => {},
+            destroy: () => {},
             getChildren: function() {
                return {
                   getCount() {
@@ -1077,6 +1110,11 @@ define([
                });
             },
             getItemBySourceItem: function () {
+               return null;
+            },
+            getCollapsedGroups: () => undefined,
+            getKeyProperty: () => 'id',
+            getCount() {
                return null;
             }
          };
@@ -1571,7 +1609,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: rawData,
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          treeControl._children = {
             baseControl: {
@@ -1632,7 +1670,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: rawData,
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          treeControl._children = {
             baseControl: {
@@ -1689,7 +1727,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
-         }));
+         }), cfg);
          var treeControl = new treeGrid.TreeControl(cfg);
          treeControl.saveOptions(cfg);
          treeControl._children = {
@@ -1753,7 +1791,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: data,
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          treeControl = new treeGrid.TreeControl(cfg);
          treeControl.saveOptions(cfg);
@@ -1872,7 +1910,7 @@ define([
            treeGridViewModel.setItems(new collection.RecordSet({
                rawData: data,
                idProperty: 'id'
-           }));
+           }), cfg);
 
            treeControl = new treeGrid.TreeControl(cfg);
            treeControl.saveOptions(cfg);
@@ -1945,7 +1983,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: data,
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          treeControl = new treeGrid.TreeControl(cfg);
          treeControl.saveOptions(cfg);
@@ -2045,7 +2083,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          assert.deepEqual(treeGrid.TreeControl._private.getReloadableNodes(treeGridViewModel, 0, 'id', 'Раздел@'), [1]);
       });
@@ -2112,7 +2150,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
-         }));
+         }), cfg);
          treeGridViewModel.setExpandedItems([null]);
 
          var filter = {};
@@ -2162,7 +2200,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
-         }));
+         }), cfg);
 
          treeGrid.TreeControl._private.applyReloadedNodes(treeGridViewModel, 0, 'id', 'Раздел@', newItems);
 
@@ -2187,7 +2225,7 @@ define([
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
-         }));
+         }), cfg);
          var nodes = [];
          var lists = [];
 

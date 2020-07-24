@@ -18,6 +18,8 @@ export default class RenderDemo extends Control {
 
     protected _items: RecordSet;
 
+    protected _selectedKeys: [];
+
     private _dataArray: Array<{id: number, title: string, description: string}>;
     // tslint:disable-next-line
     private deleteHandler(item: any): void {
@@ -28,6 +30,17 @@ export default class RenderDemo extends Control {
     private _itemsReadyCallback(items: RecordSet): void {
         this._items = items;
     }
+    private removeItems(): void {
+        let items = this._selectedKeys;
+        let item;
+        for (var i = 0; i < items.length; i++) {
+            item = this._items.getRecordById(items[i]);
+            if (item) {
+                this._items.remove(item);
+            }
+        }
+        this._selectedKeys = [];
+    }
     protected _beforeMount(): void {
         this._itemActions = [{
             id: 1,
@@ -37,6 +50,7 @@ export default class RenderDemo extends Control {
             showType: 2,
             handler: this.deleteHandler.bind(this)
         }];
+        this._selectedKeys = [];
         this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
         this._dataArray = generateData<{id: number, title: string, description: string, column: number}>({
             count: NUMBER_OF_ITEMS,

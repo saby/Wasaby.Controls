@@ -29,6 +29,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         itemTemplateProperty: options.itemTemplateProperty,
         itemTemplate: options.itemTemplate,
         footerTemplate: options.footerTemplate,
+        nodeFooterTemplate: options.nodeFooterTemplate,
         closeButtonVisibility: options.closeButtonVisibility,
         openerControl: options.openerControl,
         readOnly: options.readOnly,

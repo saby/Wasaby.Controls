@@ -33,6 +33,8 @@ class Container extends Control<IControlOptions> {
     protected _popupItems: List<IPopupItem>;
     protected _removeItems: IRemovedItem[] = [];
     protected _pendingController: PendingClass;
+    private _redrawResolve: Function;
+    private _redrawPromise: Promise<void>;
 
     protected _beforeMount(): void {
         this._popupItems = new List();
@@ -54,6 +56,11 @@ class Container extends Control<IControlOptions> {
             });
             this._removeItems = [];
         }
+        if (this._redrawResolve) {
+            this._redrawResolve();
+            this._redrawResolve = null;
+            this._redrawPromise = null;
+        }
     }
 
     /**
@@ -61,9 +68,15 @@ class Container extends Control<IControlOptions> {
      * @function Controls/_popup/Manager/Container#setPopupItems
      * @param {List} popupItems new popup set
      */
-    setPopupItems(popupItems: List<IPopupItem>): void {
+    setPopupItems(popupItems: List<IPopupItem>): Promise<void> {
         this._popupItems = popupItems;
         this._calcOverlayId(popupItems);
+        if (!this._redrawPromise)  {
+            this._redrawPromise = new Promise((resolve) => {
+                this._redrawResolve = resolve;
+            });
+        }
+        return this._redrawPromise;
     }
 
     private _calcOverlayId(popupItems: List<IPopupItem>): void {

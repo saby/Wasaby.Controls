@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {ActualApi, cssStyleGeneration, IButton, IButtonOptions} from 'Controls/buttons';
+import {ActualApi, simpleCssStyleGeneration, IButton, IButtonOptions} from 'Controls/buttons';
 import ToggleButtonTemplate = require('wml!Controls/_toggle/Button/Button');
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {
@@ -37,7 +37,7 @@ export interface IToggleButtonOptions extends
 
 /**
  * Кнопка, которая переключается между двумя состояниями: включено и выключено.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FStandart%2FIndex">демо-пример</a>
@@ -126,11 +126,11 @@ export interface IToggleButtonOptions extends
  * @example
  * Переключатель с двумя заголовками:
  * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" viewMode="link"/>
+ *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Change', 'Save']}}" viewMode="link"/>
  * </pre>
  * Переключатель с одним заголовком
  * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Save']}}" viewMode="link"/>
+ *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Save']}}" viewMode="link"/>
  * </pre>
  */
 
@@ -142,11 +142,11 @@ export interface IToggleButtonOptions extends
  * @example
  * Toggle button with two captions.
  * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" viewMode="link"/>
+ *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Change', 'Save']}}" viewMode="link"/>
  * </pre>
  * Toggle button with one caption.
  * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Save']}}" viewMode="link"/>
+ *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Save']}}" viewMode="link"/>
  * </pre>
  */
 
@@ -160,7 +160,7 @@ export interface IToggleButtonOptions extends
  * @example
  * Кнопка-переключатель в режиме отображения - 'link'.
  * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="link" size="xl"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="link" fontSize="3xl"/>
  * </pre>
  * Кнопка-переключатель в режиме отображения - 'toolButton'.
  * <pre>
@@ -182,15 +182,15 @@ export interface IToggleButtonOptions extends
  * @example
  * Toggle button with 'link' viewMode.
  * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="link" fontSize="3xl"/>
  * </pre>
  * Toggle button with 'toolButton' viewMode.
  * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" style="danger" viewMode="toolButton"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="danger" viewMode="toolButton"/>
  * </pre>
  * Toggle button with 'pushButton' viewMode.
  * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="pushButton"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="pushButton"/>
  * </pre>
  */
 class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
@@ -264,13 +264,13 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
 
     protected _beforeMount(newOptions: IToggleButtonOptions): void {
         // TODO удалить когда актуализируем опции в кнопках у прикладников
-        cssStyleGeneration.call(this, newOptions);
+        simpleCssStyleGeneration.call(this, newOptions);
         this._calculateState(newOptions);
     }
 
     protected _beforeUpdate(newOptions: IToggleButtonOptions): void {
         // TODO удалить когда актуализируем опции в кнопках у прикладников
-        cssStyleGeneration.call(this, newOptions);
+        simpleCssStyleGeneration.call(this, newOptions);
         this._calculateState(newOptions);
     }
 
@@ -280,7 +280,9 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
         return {
             viewMode: 'button',
             iconStyle: 'secondary',
-            theme: 'default'
+            contrastBackground: false,
+            fontSize: 'm',
+            buttonStyle: 'secondary'
         };
     }
 }

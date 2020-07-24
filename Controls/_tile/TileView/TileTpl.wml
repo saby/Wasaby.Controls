@@ -23,14 +23,15 @@
                {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility) + '_theme-' + theme}}
                {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData._isSelected ?
                   ' controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-' + theme :
-                  border !== false ? ' controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-' + theme}}
+                  border !== false ? ' controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-' + theme
+                  :  ' controls-TileView__item_withoutBorder_theme-' + theme }}
                {{itemData.canShowActions ? ' controls-ListView__item_showActions'}}"
         attr:style="{{itemData.position ? itemData.position}} ">
       <ws:partial if="{{itemData.hasMultiSelect}}"
                   template="{{multiSelectTpl}}"
                   checkboxReadOnly="{{checkboxReadOnly}}"
                   attr:class="{{itemData.multiSelectClassList}}">
-         <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" />
+         <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" />
       </ws:partial>
       <ws:if data="{{contentTemplate}}">
          <ws:partial template="{{contentTemplate}}"
@@ -94,7 +95,7 @@
       </ws:partial>
    </ws:if>
    <ws:else>
-      <ws:partial template="itemTpl" attr:style="{{(staticHeight ? ('height:' + itemData.itemsHeight + 'px; ') : '') + '-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
+      <ws:partial template="itemTpl" attr:style="{{(staticHeight ? ('height:' + (height ? height : itemData.itemsHeight) + 'px; ') : '') + '-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
          <ws:if data="{{!staticHeight}}">
             <div style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
          </ws:if>

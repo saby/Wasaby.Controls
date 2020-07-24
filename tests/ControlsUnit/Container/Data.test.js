@@ -68,11 +68,12 @@ define(
 
             data._beforeMount(dataOptions).then(() => {
                data._dataOptionsContext = new contexts.ContextOptions();
+               const prefetchSource = data._dataOptionsContext.prefetchSource;
                var loadDef = data._beforeUpdate({source: newSource, idProperty: 'id'})
                assert.isTrue(data._loading);
                loadDef.addCallback(function() {
                   try {
-                     assert.deepEqual(data._items.getRawData(), sourceDataEdited);
+                     assert.isTrue(data._dataOptionsContext.prefetchSource !== prefetchSource);
                      assert.isFalse(data._loading);
                      done();
                   } catch (e) {
@@ -172,6 +173,17 @@ define(
             assert.equal(data._dataController._prefetchSource._$data.query, sourceData);
          });
 
+         it('_beforeMount without source', () => {
+            const filter = {
+               testField: 'testValue'
+            };
+            const dataOptions = { keyProperty: 'id', filter };
+            const data = getDataWithConfig(dataOptions);
+
+            data._beforeMount(dataOptions);
+            assert.deepEqual(data._dataOptionsContext.filter, filter);
+         });
+
          it('_beforeMount with root and parentProperty', async() => {
             const data = new sourceLib.DataSet();
             let sourceQuery;
@@ -208,30 +220,6 @@ define(
             assert.isTrue(data._items === newItems);
          });
 
-         it('update not equal source', function(done) {
-            var
-               items,
-               config = {source: source, keyProperty: 'id'},
-               data = getDataWithConfig(config);
-
-            data._beforeMount(config).addCallback(function() {
-               items = data._items;
-
-               data._beforeUpdate({source: new sourceLib.Memory({
-                  keyProperty: 'id',
-                  model: 'Types/entity:Record',
-                  data: sourceDataEdited
-               }), idProperty: 'id'}).addCallback(function() {
-                  try {
-                     assert.isFalse(data._items === items);
-                     done();
-                  } catch (e) {
-                     done(e);
-                  }
-               });
-            });
-         });
-
          it('data source options tests', function(done) {
             var config = {source: null, keyProperty: 'id'},
                data = getDataWithConfig(config);
@@ -250,20 +238,17 @@ define(
             });
          });
 
-         it('update equal source', function(done) {
-            var
-                items,
-                config = {source: source, keyProperty: 'id'},
-                data = getDataWithConfig(config);
+         it('update source', function(done) {
+            const config = {source: source, keyProperty: 'id'};
+            const data = getDataWithConfig(config);
 
             data._beforeMount(config).addCallback(function() {
-               items = data._items;
-
+               const prefetchSource = data._dataOptionsContext.prefetchSource;
                data._beforeUpdate({source: new sourceLib.Memory({
                      keyProperty: 'id',
                      data: sourceDataEdited
                   }), idProperty: 'id'}).addCallback(function() {
-                  assert.isTrue(data._items !== items);
+                  assert.isTrue(prefetchSource !== data._dataOptionsContext.prefetchSource);
                   done();
                });
             });

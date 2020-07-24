@@ -12,6 +12,9 @@ export default {
                 oldWindowManager._acquiredIndexes.push(zIndex);
                 oldWindowManager.setVisible(zIndex);
             }
+            oldWindowManager._popupZIndex = oldWindowManager._popupZIndex || [];
+            oldWindowManager._popupZIndex.push(zIndex);
+
             // 1. Делаю notify всегда, т.к. в setVisible нотифай делается через setTimeout, из-за чего
             // могут промаргивать окна которые высчитывают свой zindex относительно других.
             // 2. В старом WM могут храниться не только zindex'ы от окон, например старый listView сохраняет свой
@@ -29,6 +32,12 @@ export default {
         }
         if (oldWindowManager) {
             oldWindowManager.releaseZIndex(zIndex);
+
+            oldWindowManager._popupZIndex = oldWindowManager._popupZIndex || [];
+            const zIndexPosition = oldWindowManager._popupZIndex.indexOf(zIndex);
+            if (zIndexPosition >= 0) {
+                oldWindowManager._popupZIndex.splice(zIndexPosition, 1);
+            }
         }
     }
 };

@@ -4,7 +4,7 @@ import {factory, RecordSet} from 'Types/collection';
 import {descriptor, Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {Sticky  as StickyOpener} from 'Controls/popup';
+import {StickyOpener} from 'Controls/popup';
 import {showType, getMenuItems, needShowMenu} from 'Controls/Utils/Toolbar';
 
 import {
@@ -30,6 +30,8 @@ import {IGrouped, IGroupedOptions} from 'Controls/dropdown';
 import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import * as ActualAPI from 'Controls/_toolbars/ActualAPI';
+import {DependencyTimer, isLeftMouseButton} from "Controls/Utils/FastOpen";
+import {IoC} from "Env/Env";
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -53,13 +55,17 @@ export interface IMenuOptions {
  */
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions, IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions {
     /**
-     * Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
+     * @name Controls/_toolbars/IToolbarOptions#popupClassName
+     * @cfg {String} Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
+     * @default ''
      */
     popupClassName: string;
     /**
-     * Размер расстояния между кнопками.
-     * @remark
-     * Размер расстояния задается константой из стандартного набора размеров, который определен для текущей темы оформления.
+     * @name Controls/_toolbars/IToolbarOptions#itemsSpacing
+     * @cfg {String} Размер расстояния между кнопками.
+     * @variant medium
+     * @variant big
+     * @default medium
      */
     itemsSpacing: TItemsSpacing;
     /**
@@ -112,6 +118,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/Base/Index
  */
+
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate,
     IGrouped, IToolbarSource {
     /*
@@ -133,6 +140,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     protected _template: TemplateFunction = template;
 
+    protected _dependenciesTimer: DependencyTimer = null;
+    private _loadViewPromise: Promise<unknown> = null;
+
     _children: {
         menuTarget: HTMLElement
     };
@@ -142,7 +152,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     readonly '[Controls/_interface/IIconSize]': boolean = true;
     readonly '[Controls/_interface/IItemTemplate]': boolean = true;
     readonly '[Controls/_dropdown/interface/IGrouped]': boolean = true;
-    private _popupId: string;
+    private _sticky: StickyOpener;
 
     constructor(...args) {
         super(args);
@@ -154,7 +164,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
         return {...this._menuOptions, ...{
-                id: this._popupId,
                 opener: this,
                 className: `${options.popupClassName} controls-Toolbar__popup__list_theme-${options.theme}`,
                 templateOptions: {
@@ -233,7 +242,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             eventHandlers: {
                 onResult: this._resultHandler,
                 onClose: () => {
-                    this._popupId = null;
                     this._closeHandler();
                 }
             },
@@ -243,8 +251,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             fittingMode: {
                 vertical: 'adaptive',
                 horizontal: 'overflow'
-            },
-            id: this._popupId
+            }
         };
     }
 
@@ -291,9 +298,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _openMenu(config: IMenuOptions): void {
-        StickyOpener.openPopup(config).then((popupId) => {
-            this._popupId = popupId;
-        });
+        if (!this._sticky) {
+            this._sticky = new StickyOpener();
+        }
+        this._sticky.open(config);
     }
 
     protected _beforeMount(options: IToolbarOptions, context: {}, receivedItems?: TItems): Promise<TItems> {
@@ -314,8 +322,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (hasSourceChanged(newOptions.source, this._options.source)) {
             this._originalSource = newOptions.source;
             this._isLoadMenuItems = false;
+            this._sticky?.close();
             this.setStateBySource(newOptions.source);
         }
+    }
+
+    protected _beforeUnmount(): void {
+        this._sticky?.close();
+        this._sticky = null;
     }
 
     protected _resultHandler(action, data): void {
@@ -326,8 +340,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             /**
              * menuOpener may not exist because toolbar can be closed by toolbar parent in item click handler
              */
-            if (this._popupId && !item.get(this._nodeProperty)) {
-                StickyOpener.closePopup(this._popupId);
+            if (this._sticky.isOpened() && !item.get(this._nodeProperty)) {
+                this._sticky.close();
             }
         }
     }
@@ -377,7 +391,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return getButtonTemplateOptionsByItem(item, this._options);
     }
 
-    protected _showMenu(event: SyntheticEvent<UIEvent>): void {
+    protected _mouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
+        if (!isLeftMouseButton(event)) {
+            return;
+        }
+        this._showMenu(event);
+    }
+
+    protected _showMenu(event: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
             if (!this._isLoadMenuItems) {
                 this._setMenuItems();
@@ -386,12 +407,35 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._notify('menuOpened', [], {bubbling: true});
             this._openMenu(this._getMenuConfig());
         }
-        /**
-         * Stop bubbling of 'click' after opening the menu.
-         * Nobody should have to catch the 'click'', if toolbar handled it.
-         * For example, list can catch this event and generate 'itemClick'.
-         */
+    }
+    protected _onClickHandler(event: SyntheticEvent): void {
         event.stopPropagation();
+    }
+    protected _mouseEnterHandler() {
+        if (!this._options.readOnly) {
+            if (!this._dependenciesTimer) {
+                this._dependenciesTimer = new DependencyTimer();
+            }
+            this._dependenciesTimer.start(this._loadDependencies.bind(this));
+        }
+    }
+    protected _mouseLeaveHandler(): void {
+        this._dependenciesTimer?.stop();
+    }
+    private _loadDependencies(): Promise<unknown> {
+        try {
+            if (!this._isLoadMenuItems) {
+                this._setMenuItems();
+                this._isLoadMenuItems = true;
+            }
+
+            if (!this._loadViewPromise) {
+                this._loadViewPromise = import('Controls/menu');
+            }
+            return this._loadViewPromise;
+        } catch (e) {
+            IoC.resolve('ILogger').error('_toolbars:View', e);
+        }
     }
 
     /**
@@ -445,15 +489,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     static getDefaultOptions() {
         return {
-            /**
-             * @name Controls/_toolbars/View#popupClassName
-             * @default ''
-             */
             popupClassName: '',
-            /**
-             * @name Controls/_toolbars/View#itemsSpacing
-             * @default 'medium'
-             */
             itemsSpacing: 'medium',
             iconSize: 'm',
             itemTemplate: defaultItemTemplate

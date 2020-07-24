@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Input/Input');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {getOptionTypes} from 'Controls/_suggest/Utils';
-import 'Controls/input';
+import {generateStates} from 'Controls/input';
 
 /**
  * Поле ввода с автодополнением это одострочное поле ввода, которое помогает пользователю ввести текст, предлагая подходящие варианты по первым набранным символам.
@@ -17,7 +17,7 @@ import 'Controls/input';
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/interface/IBorderStyle
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
@@ -44,7 +44,7 @@ import 'Controls/input';
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
@@ -53,6 +53,14 @@ import 'Controls/input';
  * @category Input
  * @demo Controls-demo/Input/Suggest/SuggestPG
  * @author Gerasimov A.M.
+ */
+
+/**
+ * @event Происходит перед открытием окна выбора, которое открывается при клике на "Показать всё".
+ * @remark
+ * Кнопка "Показать всё" отображается в подвале автодополнения.
+ * @name Controls/_suggest/Input#showSelector
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
 var Suggest = Control.extend({
@@ -64,10 +72,11 @@ var Suggest = Control.extend({
 
    // <editor-fold desc="LifeCycle">
 
-   _beforeMount: function() {
+   _beforeMount: function(options) {
       this._searchStart = this._searchStart.bind(this);
       this._searchEnd = this._searchEnd.bind(this);
       this._searchError = this._searchError.bind(this);
+      generateStates(this, options);
    },
 
    // </editor-fold>

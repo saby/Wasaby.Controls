@@ -6,7 +6,7 @@ import BaseLayer from './__BaseLayer';
 import template = require('wml!Controls/_suggestPopup/Layer/__ContentLayer');
 
 var _private = {
-   getSizes: function(self, dropDownContainer) {
+   getSizes(self, dropDownContainer): object {
       var boundingClientToJSON = function(bc) {
          var resultObj = {};
 
@@ -64,12 +64,12 @@ var _private = {
       return result;
    },
 
-   getDropDownContainerSize: function(container) {
+   getDropDownContainerSize(container): object {
       container = container || document.getElementsByClassName('controls-Popup__stack-target-container')[0] || document.body;
       return container.getBoundingClientRect();
    },
 
-   updateHeight: function(self) {
+   updateHeight(self): void {
       const height = _private.calcHeight(self);
       const heightChanged = self._height !== height;
 
@@ -86,23 +86,31 @@ var _private = {
     * @param dropDownContainer container for dropDown
     * @returns {string}
     */
-   calcHeight: function(self, dropDownContainer) {
-      var sizes = _private.getSizes(self, dropDownContainer);
-      var dropDownContainerSize = _private.getDropDownContainerSize(dropDownContainer);
-      var suggestSize = sizes.suggest;
-      var height = self._height;
-      var optionValue = suggestSize.top;
-      var suggestBottomSideCoord = optionValue + suggestSize.height;
+   calcHeight(self, dropDownContainer): string {
+      const sizes = _private.getSizes(self, dropDownContainer);
+      const dropDownContainerSize = _private.getDropDownContainerSize(dropDownContainer);
+      const suggestSize = sizes.suggest;
+      let height = self._height;
+      const optionValue = suggestSize.top;
+      const suggestBottomSideCoord = optionValue + suggestSize.height;
 
       if (suggestBottomSideCoord < 0) {
          height = suggestSize.height + suggestBottomSideCoord + 'px';
-      } else if (suggestBottomSideCoord > dropDownContainerSize.height) {
+      } else if (suggestBottomSideCoord >= dropDownContainerSize.height) {
          height = dropDownContainerSize.height - suggestSize.top + 'px';
       } else if (height) {
          height = 'auto';
       }
-
       return height;
+   },
+
+   updateMaxHeight(self): void {
+      const dropDownContainerBCR = _private.getDropDownContainerSize();
+      if (dropDownContainerBCR !== self._dropDownContainerBCR) {
+         self._dropDownContainerBCR = dropDownContainerBCR;
+         const suggestBCR = self._container.getBoundingClientRect();
+         self._maxHeight = dropDownContainerBCR.height - suggestBCR.top + 'px';
+      }
    }
 };
 
@@ -110,10 +118,12 @@ var __ContentLayer = BaseLayer.extend({
 
    _template: template,
    _height: 'auto',
+   _maxHeight: 'none',
 
-   _afterUpdate: function() {
+   _afterUpdate(): void {
       /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
        2) do not change orientation of suggest, if suggest already showed or data loading now */
+      _private.updateMaxHeight(this);
       if (this._options.showContent) {
          const needNotifyControlResizeEvent = this._controlResized;
          _private.updateHeight(this);
@@ -125,11 +135,11 @@ var __ContentLayer = BaseLayer.extend({
       }
    },
 
-   _resize: function() {
+   _resize(): void {
       _private.updateHeight(this);
    },
 
-   close: function() {
+   close(): void {
       this._notify('close', [], {bubbling: true});
    }
 
@@ -139,4 +149,3 @@ __ContentLayer._theme = ['Controls/suggest', 'Controls/suggestPopup'];
 __ContentLayer._private = _private;
 
 export default __ContentLayer;
-

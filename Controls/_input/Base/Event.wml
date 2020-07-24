@@ -1,4 +1,6 @@
 <ws:partial template="{{content}}"
+            on:cut="_cutHandler()"
+            on:copy="_copyHandler()"
             on:keyup="_keyUpHandler()"
             on:keydown="_keyDownHandler()"
             on:click="_clickHandler()"

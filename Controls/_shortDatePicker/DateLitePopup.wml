@@ -27,7 +27,9 @@
                     class="controls-PeriodLiteDialog__year controls-PeriodLiteDialog__year_theme-{{_options.theme}}
                            {{ _getYearCssClasses() }}"
                     on:mouseenter="_onYearMouseEnter(_position.getFullYear())"
+                    on:touchstart="_onYearMouseEnter(_position.getFullYear())"
                     on:mouseleave="_onYearMouseLeave()"
+                    on:touchend="_onYearMouseLeave()"
                     on:click="_onYearClick(_position.getFullYear())"
             >
                {{ _position.getFullYear() }}
