@@ -269,8 +269,15 @@ define(
             let propagationStopped = false;
 
             data._beforeMount(config).addCallback(function() {
-               const newList = new collection.RecordSet();
+               const newList = new collection.RecordSet({
+                  data: [{
+                     id: 0,
+                     title: 'Ivan'
+                  }],
+                  keyProperty: 'id'
+               });
                data._itemsChanged(event, newList);
+               assert.isTrue(!data._items.getRecordById(0), 'items changed instead of prefetchSource');
                assert.isTrue(propagationStopped);
                done();
             });
