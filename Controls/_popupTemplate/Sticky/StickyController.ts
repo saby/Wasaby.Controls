@@ -54,23 +54,6 @@ const _private = {
         newCfg.direction = newCfg.direction || {};
         newCfg.offset = newCfg.offset || {};
 
-        if (newCfg.horizontalAlign && typeof (config.horizontalAlign) === 'object') {
-            if ('side' in newCfg.horizontalAlign) {
-                newCfg.direction.horizontal = newCfg.horizontalAlign.side;
-            }
-            if ('offset' in newCfg.horizontalAlign) {
-                newCfg.offset.horizontal = newCfg.horizontalAlign.offset;
-            }
-        }
-
-        if (newCfg.verticalAlign && typeof (config.verticalAlign) === 'object') {
-            if ('side' in newCfg.verticalAlign) {
-                newCfg.direction.vertical = newCfg.verticalAlign.side;
-            }
-            if ('offset' in newCfg.verticalAlign) {
-                newCfg.offset.vertical = newCfg.verticalAlign.offset;
-            }
-        }
         if (typeof config.fittingMode === 'string') {
             newCfg.fittingMode = {
                 vertical: config.fittingMode,
@@ -143,16 +126,7 @@ const _private = {
         const newStickyPosition = {
             targetPoint: position.targetPoint,
             direction: position.direction,
-            offset: position.offset,
-            horizontalAlign: { // TODO: to remove
-                side: position.direction.horizontal,
-                offset: position.offset.horizontal
-            },
-            verticalAlign: { // TODO: to remove
-                side: position.direction.vertical,
-                offset: position.offset.vertical
-            },
-            corner: position.corner // TODO: to remove
+            offset: position.offset
         };
         // быстрая проверка на равенство простых объектов
         if (JSON.stringify(item.popupOptions.stickyPosition) !== JSON.stringify(newStickyPosition)) {
