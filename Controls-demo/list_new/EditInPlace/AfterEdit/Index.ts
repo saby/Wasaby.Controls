@@ -6,9 +6,6 @@ import {getEditableCatalog as getData} from '../../DemoHelpers/DataCatalog';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {editing as constEditing} from 'Controls/Constants';
 
-const TIMEOUT1000 = 1000;
-const TIMEOUT3000 = 3000;
-
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
@@ -21,12 +18,13 @@ export default class extends Control {
         });
         this._isShowAddButton = true;
     }
+
     // tslint:disable-next-line
-    protected _afterBeginEdit(e: SyntheticEvent<null>, {item}: {item: Model}, isAdd: boolean): void {
+    protected _afterBeginEdit(e: SyntheticEvent<null>, {item}: { item: Model }, isAdd: boolean): void {
         this._isShowAddButton = false;
     }
 
-    protected _afterEndEdit(e: SyntheticEvent<null>, {item}: {item: Model}, isAdd: boolean):void{
+    protected _afterEndEdit(e: SyntheticEvent<null>, {item}: { item: Model }, isAdd: boolean): void {
         this._isShowAddButton = true;
     }
 
