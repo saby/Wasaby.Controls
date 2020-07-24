@@ -159,7 +159,7 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
             //on filterChanged event filter state will updated
             //on itemChanged event prefetchSource will updated, but createPrefetchSource method work async becouse of promise,
             //then we need to create prefetchSource synchronously
-            this._dataController.setItems(items);
+            this._dataController.updatePrefetchProxy(items);
             this._dataController.updateContext(this._dataOptionsContext);
             event.stopPropagation();
          },
