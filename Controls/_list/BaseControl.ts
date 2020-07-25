@@ -2726,7 +2726,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._scrollController) {
-            this._scrollController.update({collection: newOptions.listViewModel || this.getViewModel(), ...newOptions});
+            this._scrollController.update({
+                collection: newOptions.listViewModel || this.getViewModel(),
+                needScrollCalculation: this._needScrollCalculation,
+                ...newOptions
+            });
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
