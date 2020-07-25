@@ -1851,8 +1851,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getCurrentResultsColumn && goToNextResultsColumn && isEndResultsColumn && resetResultsColumns', function() {
             const offset = gridViewModel._maxEndRow ? (gridViewModel._maxEndRow - 1 ) * gridViewModel._headerCellMinHeight : 0;
 
-            gridViewModel._options.columns[1].columnSeparatorSize = {
-               left: 's'
+            gridViewModel._resultsColumns[2].columnSeparatorSize = {
+               left: 's',
             };
 
             function assertColumn(actual, expected) {
@@ -1863,7 +1863,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assertColumn(gridViewModel.getCurrentResultsColumn(), {
                column: {},
-               cellClasses: 'controls-Grid__results-cell controls-Grid__results-cell_theme-default controls-Grid__results-cell-checkbox_theme-default',
+               cellClasses: 'controls-Grid__results-cell controls-background-default_theme-default controls-Grid__cell_default controls-Grid__results-cell_theme-default controls-Grid__results-cell-checkbox_theme-default',
                index: 0
             });
             assert.equal(true, gridViewModel.isEndResultsColumn(), 'Incorrect value "isEndResultsColumn()" after first call "getCurrentResultsColumn()".');
