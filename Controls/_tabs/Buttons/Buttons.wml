@@ -5,22 +5,20 @@
                  attr:style="{{_prepareItemOrder(index)}}"
                  attr:title="{{ item[_options.displayProperty] }}"
                  on:mousedown="_onItemClick(item.get(_options.keyProperty))">
-                <ws:if data="{{ _getTemplate(_options.itemLeftTemplate, item, _options.leftTemplateProperty) }}">
-                    <ws:partial template="{{ _getTemplate(_options.itemLeftTemplate, item, _options.leftTemplateProperty) }}"
-                                selected="{{item[_options.keyProperty] === _options.selectedKey}}"
-                                item="{{item}}" />
+                <ws:if data="{{ _options.leftTemplateProperty && item.get(_options.leftTemplateProperty)}}">
+                    <ws:partial template="{{ item.get(_options.leftTemplateProperty) }}"
+                                item="{{item}}"></ws:partial>
                 </ws:if>
                 <ws:partial
                         attr:class="controls-Tabs__itemClickableArea controls-Tabs__itemClickableArea_theme_{{_options.theme}} {{_prepareItemSelectedClass(item)}}"
-                        template="{{ _getTemplate(_options.itemTemplate, item, _options.itemTemplateProperty) || _defaultItemTemplate}}"
-                        selected="{{item[_options.keyProperty] === _options.selectedKey}}"
+                        template="{{ _options.itemTemplateProperty ? item.get(_options.itemTemplateProperty) ?  item.get(_options.itemTemplateProperty) : (_options.itemTemplate || _defaultItemTemplate) : (_options.itemTemplate || _defaultItemTemplate)}}"
+                        selected="{{item[_options.keyProperty] === _options.selectedKey ? true : false}}"
                         displayProperty="{{_options.displayProperty}}"
                         keyProperty="{{_options.keyProperty}}"
                         item="{{item}}"/>
-                <ws:if data="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}">
-                    <ws:partial template="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}"
-                                selected="{{item[_options.keyProperty] === _options.selectedKey}}"
-                                item="{{item}}" />
+                <ws:if data="{{ _options.rightTemplateProperty && item.get(_options.rightTemplateProperty)}}">
+                    <ws:partial template="{{item.get(_options.rightTemplateProperty)}}"
+                                item="{{item}}"></ws:partial>
                 </ws:if>
                 <ws:if data="{{item.get('contentTab')}}">
                     <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_theme_{{_options.theme}}

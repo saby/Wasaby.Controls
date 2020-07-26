@@ -133,15 +133,6 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons {
         return '-ms-flex-order:' + order + '; order:' + order;
     }
 
-    protected _getTemplate(template: TemplateFunction, item: Model, itemTemplateProperty: string): TemplateFunction {
-        if (itemTemplateProperty) {
-            if (item.get(itemTemplateProperty)) {
-                return item.get(itemTemplateProperty);
-            }
-        }
-        return template;
-    }
-
     private _initItems(source: SbisService): Promise<IReceivedState> {
         this._crudWrapper = new CrudWrapper({
             source
