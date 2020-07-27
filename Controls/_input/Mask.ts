@@ -10,12 +10,12 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
 
       /**
        * Поле ввода значения с заданным форматом.
-       *
+       * 
        * @remark
        * Каждый вводимый символ проходит проверку на соответствие формату {@link mask маски}.
        * Контрол поддерживает возможность показа или скрытия формата маски в незаполненном поле ввода, регулируемую с помощью опции {@link replacer}.
        * Если {@link replacer символ замены} определен, то поле ввода вычисляет свою ширину автоматически по контенту. При этом во всех режимах поддерживается возможность установки ширины поля ввода через CSS.
-       *
+       * 
        * Полезные ссылки:
        * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
        * * <a href="/doc/platform/developmentapl/interface-development/controls/input/mask/">руководство разработчика</a>
@@ -23,9 +23,6 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
        *
        * @class Controls/_input/Mask
        * @extends Controls/_input/Base
-       * // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
-       * @ignoreOptions value
-       * @ignoreEvents valueChanged inputCompleted
        *
        * @mixes Controls/interface/IInputMaskValue
        * @public

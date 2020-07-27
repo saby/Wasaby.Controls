@@ -33,7 +33,8 @@ import 'Controls/lookup';
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputStyle
  * @mixes Controls/_interface/ISelectorDialog
  * @control
  * @public
@@ -64,7 +65,8 @@ import 'Controls/lookup';
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputStyle
  * @control
  * @public
  * @author Kapustin I.A.
