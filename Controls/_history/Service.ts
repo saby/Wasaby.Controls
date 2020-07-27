@@ -177,10 +177,10 @@ export default class HistroryService extends mixin<SerializableMixin, OptionsToP
         return typeof id === 'number' ? intMethod : stringMethod;
     }
 
-    private _updateFavoriteData(data: any, meta: any): void {
+    private _updateFavoriteData(data: Model, meta: Record<string, any>): void {
         this._getHistoryDataSource().call('UpdateData', {
             history_id: this._$historyId || data.get('HistoryId'),
-            object_id: data.getId(),
+            object_id: data.getKey(),
             data: data.get('ObjectData'),
             history_type: Number(meta.isClient)
         });
@@ -217,10 +217,10 @@ export default class HistroryService extends mixin<SerializableMixin, OptionsToP
         return resultDef;
     }
 
-    private _deleteItem(data: any, meta: any): Promise<any> {
+    private _deleteItem(data: Model, meta: any): Promise<any> {
         return this._callQuery( 'Delete', {
             history_id: this._$historyId,
-            object_id: data.getId(),
+            object_id: data.getKey(),
             history_type: Number(meta.isClient)
         });
     }

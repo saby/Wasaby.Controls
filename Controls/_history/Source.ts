@@ -114,7 +114,11 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
     }
 
 // region private
-    private _getSourceByMeta(meta: Record<string, string>, historySource: Service, originSource: ICrud): Service | ICrud {
+    private _getSourceByMeta(
+        meta: Record<string, string> = {},
+        historySource: Service,
+        originSource: ICrud
+    ): Service | ICrud {
         const hasHistoryFields = Object.keys(meta).some((field: string): boolean => {
             return HISTORY_META_FIELDS.includes(field);
         });
@@ -179,10 +183,10 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
         };
     }
 
-    private _getPinnedIds(pinned: Model[]): string[] {
-        return pinned.map((item: Model): string => {
+    private _getPinnedIds(pinned: RecordSet): string[] {
+        return factory(pinned).map((item: Model): string => {
             return item.getKey();
-        });
+        }).value();
     }
 
     private _getFrequentIds(frequent: Model[], filteredPinned: string[]): string[] {
