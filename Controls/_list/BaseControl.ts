@@ -2523,7 +2523,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 if (receivedData) {
                     viewModelConfig.items = receivedData;
                 } else {
-                    if (!newOptions.source || (newOptions.source._$data.query !== newOptions.items)) {
+                    if (!newOptions.source) {
                         delete viewModelConfig.items;
                     }
                 }
