@@ -15,13 +15,13 @@ import {Confirmation} from 'Controls/popup';
 import CrudController from 'Controls/_form/CrudController';
 
 interface IFormController extends IControlOptions {
-    createMetaData?: unknown;
-    destroyMetaData?: unknown;
+    readMetaData?: object;
+    createMetaData?: object;
+    destroyMetaData?: object;
     errorContainer?: IContainerConstructor;
     isNewRecord?: boolean;
     key?: string;
     keyProperty?: string;
-    readMetaData?: unknown;
     record?: Model;
     errorController?: dataSourceError.Controller;
     source?: Memory;
@@ -31,8 +31,6 @@ interface IFormController extends IControlOptions {
     //удалить при переходе на новые опции
     dataSource?: Memory;
     initValues?: unknown;
-    destroyMeta?: unknown;
-    idProperty?: string;
 }
 
 interface IReceivedState {
@@ -194,12 +192,6 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
         if (options.initValues) {
             Logger.error('FormController: Use option "createMetaData" instead of "initValues"', this);
-        }
-        if (options.destroyMeta) {
-            Logger.error('FormController: Use option "destroyMetaData " instead of "destroyMeta"', this);
-        }
-        if (options.idProperty) {
-            Logger.error('FormController: Use option "keyProperty " instead of "idProperty"', this);
         }
         const receivedError = receivedState.errorConfig;
         const receivedData = receivedState.data;
@@ -473,17 +465,16 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _getRecordId(): number | string {
-        if (!this._record.getId && !this._options.idProperty && !this._options.keyProperty) {
-            Logger.error('FormController: Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда', this);
+        if (!this._record.getId && !this._options.keyProperty) {
+            Logger.error('FormController: Рекорд не является моделью и не задана опция keyProperty, указывающая на ключевое поле рекорда', this);
             return null;
         }
-        const keyProperty = this._options.idProperty || this._options.keyProperty;
-        return keyProperty ? this._record.get(keyProperty) : this._record.getId();
+        return this._options.keyProperty ? this._record.get(this._options.keyProperty) : this._record.getId();
     }
 
     private _tryDeleteNewRecord(): Promise<undefined> {
         if (this._needDestroyRecord()) {
-            return this._source.destroy(this._getRecordId(), this._options.destroyMeta || this._options.destroyMetaData);
+            return this._source.destroy(this._getRecordId(), this._options.destroyMetaData);
         }
         return Promise.resolve();
     }
@@ -710,8 +701,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     delete(destroyMetaData: unknown): Promise<Model | undefined> {
-        destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
-        const resultProm = this._crudController.delete(this._record, destroyMetaData);
+        const resultProm = this._crudController.delete(this._record, destroyMetaData || this._options.destroyMetaData);
 
         return resultProm.then((record) => {
             this._setRecord(null);
