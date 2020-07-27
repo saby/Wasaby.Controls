@@ -205,6 +205,14 @@ define([
             assert.isFalse(instance._isEditing);
          });
 
+         it('call without starting editing', function() {
+            instance._beforeMount(cfg2);
+            instance.saveOptions(cfg2);
+            instance._notify = mockNotify();
+            instance.cancelEdit();
+            assert.equal(eventQueue.length, 0);
+         });
+
          it('cancel', function() {
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
