@@ -31,7 +31,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
       }, {
          'id': 5,
          'parent': null,
-         'node': null
+         'node': true
       }, {
          'id': 6,
          'parent': null,
@@ -43,7 +43,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
       items,
       keyProperty: 'id',
       parentProperty: 'parent',
-      nodeProperty: 'node',
+      nodeProperty: 'node'
    };
 
    beforeEach(() => {

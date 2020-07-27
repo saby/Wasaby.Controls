@@ -79,6 +79,10 @@ export default class TreeController extends FlatController {
    }
 
    calculateDragPosition(targetItemData: ITreeItemData, position: TPosition): IDragPosition {
+      if (!this._draggingItemData.dispItem.isNode() && targetItemData.dispItem.isNode()) {
+         position = 'on';
+      }
+
       let result;
 
       if (this._draggingItemData && this._draggingItemData.index === targetItemData.index) {
