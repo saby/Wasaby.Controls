@@ -2905,6 +2905,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader = new GroupingLoader({});
         } else if (!newOptions.groupProperty && this._options.groupProperty) {
             this._groupingLoader.destroy();
+        } else if (newOptions.groupProperty !== this._options.groupProperty) {
+            if (this._groupingLoader) {
+                this._groupingLoader.destroy();
+            }
+            this._groupingLoader = new GroupingLoader({});
         }
 
         if (_private.hasMarkerController(this)) {
