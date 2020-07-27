@@ -39,7 +39,8 @@ import * as inputRender from 'wml!Controls/_lookup/MultipleInput/resources/input
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputStyle
  * @control
  * @public
  * @author Герасимов А.М.
@@ -69,7 +70,8 @@ import * as inputRender from 'wml!Controls/_lookup/MultipleInput/resources/input
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
+ * @mixes Controls/interface/IInputField
+ * @mixes Controls/interface/IInputStyle
  * @control
  * @public
  * @author Герасимов А.М.

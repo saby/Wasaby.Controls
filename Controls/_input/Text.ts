@@ -3,18 +3,21 @@ import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Text/ViewModel');
 import {Logger} from 'UI/Utils';
 
+
 /**
  * Однострочное поле ввода текста.
+ * 
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/input/text/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
+ * 
  *
  * @class Controls/_input/Text
- * @extends Controls/input:Base
+ * @extends Controls/_input/Base
  *
- * @mixes Controls/input:IText
+ * @mixes Controls/_input/interface/IText
  *
  * @public
  * @demo Controls-demo/Input/Text/Base/Index
