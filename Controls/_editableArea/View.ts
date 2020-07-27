@@ -161,6 +161,12 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    },
 
    cancelEdit: function () {
+      /**
+       * Защита от ситуации, когда зовут отмену редактирования, а оно не начиналось.
+       */
+      if (!this._isEditing) {
+         return;
+      }
       return _private.endEdit(this, false);
    },
 
