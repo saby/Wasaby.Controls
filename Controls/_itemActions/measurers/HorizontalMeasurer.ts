@@ -6,9 +6,9 @@ import {
    IItemAction,
    TItemActionShowType,
    TItemActionsSize,
-   TActionCaptionPosition,
-   IShownItemAction
+   TActionCaptionPosition
 } from '../interface/IItemAction';
+import { IShownItemAction } from '../interface/IItemActionsContainer';
 import { MeasurerUtils } from './MeasurerUtils';
 import { ISwipeActionTemplateConfig } from '../interface/ISwipeActionTemplateConfig';
 
