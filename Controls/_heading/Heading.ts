@@ -66,12 +66,3 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFo
 }
 
 export default Header;
-
-/**
- * @name Controls/_heading/Heading#readOnly
- * @cfg {Boolean} Определяет режим взаимодействия с контролом.
- * @default false
- * @remark
- * * true - заголовок не кликабельный.
- * * false - заголовок кликабельный.
- */
