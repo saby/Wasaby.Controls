@@ -1,6 +1,6 @@
 import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
-import ViewModel = require('Controls/_input/Text/ViewModel');
+import ViewModel from 'Controls/_input/Text/ViewModel';
 import {Logger} from 'UI/Utils';
 
 /**
