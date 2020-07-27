@@ -2801,6 +2801,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._validateController);
             this._editInPlace.updateViewModel(this._listViewModel);
+            this._editInPlace.setErrorContainer(this._children.errorContainer);
         }
 
         // для связи с контроллером ПМО
