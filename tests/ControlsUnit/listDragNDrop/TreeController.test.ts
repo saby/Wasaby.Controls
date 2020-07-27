@@ -59,7 +59,10 @@ describe('Controls/_listDragNDrop/TreeController', () => {
                return {
                   top: 50,
                   height: 35
-               }
+               };
+            },
+            classList: {
+               contains: () => true
             }
          },
          nativeEvent: {
