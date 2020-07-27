@@ -22,6 +22,7 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
  * @remark
  * Может использоваться самостоятельно или в составе сложных заголовков, состоящих из {@link Controls/heading:Separator}, {@link Controls/heading:Counter} и {@link Controls/heading:Title}.
  * Для одновременной подсветки всех частей сложного заголовка при наведении используйте класс controls-Header_all__clickable на контейнере.
+ * Кликабельность заголовка зависит от {@link readOnly режима отображения}.
  *
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">демо-пример</a>
@@ -40,29 +41,13 @@ export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITool
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/IFontSize
  */
-
-/*
- * Heading with support different display styles and sizes. Can be used independently or as part of complex headings(you can see it in <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Demo-example</a>) consisting of a <a href="/docs/js/Controls/_heading/Counter/?v=3.18.500">counter</a>, a <a href="/docs/js/Controls/_heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
- *
- * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Demo-example</a>.
- *
- *
- * @class Controls/_heading/Heading
- * @extends Core/Control
- * @control
- * @public
- * @author Красильников А.С.
- * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
- *
- * @mixes Controls/_interface/ITooltip
- * @mixes Controls/_interface/ICaption
- * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_heading/Heading/HeadingStyles
- */
-
 class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFontColorStyle, IFontSize {
     protected _template: TemplateFunction = headingTemplate;
+
+    readonly '[Controls/_interface/ICaption]': boolean = true;
+    readonly '[Controls/_interface/ITooltip]': boolean = true;
+    readonly '[Controls/_interface/IFontSize]': boolean = true;
+    readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
 
     static _theme: string[] = ['Controls/heading', 'Controls/Classes'];
 
@@ -78,9 +63,6 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFo
             caption: EntityDescriptor(String),
         };
     }
-
-    '[Controls/_interface/ITooltip]': true;
-    '[Controls/_interface/ICaption]': true;
 }
 
 export default Header;
