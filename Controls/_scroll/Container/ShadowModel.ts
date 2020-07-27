@@ -73,7 +73,7 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
         return this._isVisible;
     }
 
-    get isVisibleCSSShadow() {
+    get isVisibleShadowOnCSS() {
         if (this._visibilityByInnerComponents !== SHADOW_VISIBILITY.AUTO) {
             return this._visibilityByInnerComponents;
         }
