@@ -56,14 +56,23 @@ export default class TreeController extends FlatController {
    }
 
    calculateDragPositionRelativeNode(itemData: ITreeItemData, event: SyntheticEvent<MouseEvent>): IDragPosition {
+      if (this._draggingItemData.key === itemData.key) {
+         return null;
+      }
+
       let dragPosition;
 
       const offset = this._calculateOffset(event);
       if (offset) {
-         if (this._draggingItemData && !this.isInsideDragTargetNode(event, offset)) {
-            const position = offset.top < DRAG_MAX_OFFSET ? 'before' : 'after';
-            dragPosition = this.calculateDragPosition(itemData, position);
+         let position;
+         if (offset.top < DRAG_MAX_OFFSET) {
+            position = 'before';
+         } else if (offset.bottom < DRAG_MAX_OFFSET) {
+            position = 'after';
+         } else {
+            position = 'on';
          }
+         dragPosition = this.calculateDragPosition(itemData, position);
       }
 
       return dragPosition;
@@ -75,16 +84,12 @@ export default class TreeController extends FlatController {
       if (this._draggingItemData && this._draggingItemData.index === targetItemData.index) {
          result = this._model.getPrevDragPosition() || null;
       } else if (targetItemData.dispItem.isNode()) {
-         if (position === 'after' || position === 'before') {
-            result = this._calculateDragTargetPosition(targetItemData, position);
-         } else {
-            result = {
-               index: targetItemData.index,
-               position: 'on',
-               item: targetItemData.item,
-               data: targetItemData
-            };
-         }
+         result = {
+            index: targetItemData.index,
+            position,
+            item: targetItemData.item,
+            data: targetItemData
+         };
       } else {
          result = super.calculateDragPosition(targetItemData);
       }
@@ -124,47 +129,34 @@ export default class TreeController extends FlatController {
       }, EXPAND_ON_DRAG_DELAY);
    }
 
-   private _calculateDragTargetPosition(itemData: ITreeItemData, position: TPosition): IDragPosition {
-      let
-         result,
-         startPosition,
-         afterExpandedNode = position === 'after' && this._model.getExpandedItems().indexOf(itemData.dispItem.getContents().getKey()) !== -1;
-
-      //The position should not change if the record is dragged from the
-      //bottom/top to up/down and brought to the bottom/top of the folder.
-      const prevDragPosition = this._model.getPrevDragPosition();
-      if (prevDragPosition) {
-         if (prevDragPosition.index === itemData.index) {
-            startPosition = prevDragPosition.position;
-         } else {
-            startPosition = prevDragPosition.index < itemData.index ? 'before' : 'after';
-         }
-      }
-
-      if (position !== startPosition && !afterExpandedNode) {
-         result = {
-            index: itemData.index,
-            item: itemData.item,
-            data: itemData,
-            position: position
-         };
-      }
-
-      return result;
-   }
-
    private _calculateOffset(event: SyntheticEvent<MouseEvent>): IOffset {
       let result = null;
 
-      const dragTarget = event.target;
+      const dragTarget = this._getTargetRow(event);
       if (dragTarget) {
          const dragTargetRect = dragTarget.getBoundingClientRect();
 
-         result = { top: null, bottom: null }
+         result = { top: null, bottom: null };
          result.top = event.nativeEvent.pageY - dragTargetRect.top;
          result.bottom = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
       }
 
       return result;
+   }
+
+   private _getTargetRow(event: SyntheticEvent<MouseEvent>): EventTarget {
+      const startTarget = event.target;
+      let target = startTarget;
+
+      while (!target.classList.contains('controls-Grid__row-cell')) {
+         target = target.parentNode;
+
+         if (target.classList.contains('controls-BaseControl')) {
+            target = startTarget;
+            break;
+         }
+      }
+
+      return target;
    }
 }
