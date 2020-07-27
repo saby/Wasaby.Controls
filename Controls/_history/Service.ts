@@ -138,7 +138,7 @@ const STORAGES_USAGE = {};
  * false - BL return items without data
  */
 
-export default class HistroryService extends mixin<SerializableMixin, OptionsToPropertyMixin>(
+export default class HistoryService extends mixin<SerializableMixin, OptionsToPropertyMixin>(
     SerializableMixin,
     OptionsToPropertyMixin
 ) implements ICrud {
@@ -406,6 +406,6 @@ export default class HistroryService extends mixin<SerializableMixin, OptionsToP
     }
 }
 
-Object.assign(HistroryService.prototype, {
+Object.assign(HistoryService.prototype, {
     _moduleName: 'Controls/history:Service'
 });

@@ -493,6 +493,7 @@ define(
                   done();
                });
             });
+
             it('initHistory', function(done) {
                let newData = new sourceLib.DataSet({
                   rawData: {
@@ -562,7 +563,7 @@ define(
                   let oldHSource = hSource._$historySource;
                   let sourceItems = res.getAll();
                   hSource._initHistory(newData, sourceItems);
-                  assert.equal(hSource._$history.pinned.getCount(), 2);
+                  assert.equal(hSource._$history.pinned.getCount(), 1);
                   hSource._$history.pinned.forEach(function(pinnedItem) {
                      assert.isFalse(pinnedItem.getId() == '1');
                      assert.isFalse(pinnedItem.getId() == '9');
@@ -586,14 +587,14 @@ define(
 
             it('_private:getRecentIds', function() {
                let recentIds = hSource._getRecentIds(hSource._$history.recent, ['5'], ['6', '4']);
-               assert.deepEqual(recentIds, ['7', '8']);
+               assert.deepEqual(recentIds, ['8']);
             });
 
             it('_private:getFilterHistory', function() {
                let expectedResult = {
                   pinned: ['5'],
                   frequent: ['6', '4'],
-                  recent: ['7', '8']
+                  recent: ['8']
                };
                let actualResult = hSource._getFilterHistory(hSource._$history);
                assert.deepEqual(expectedResult, actualResult);
@@ -624,7 +625,7 @@ define(
                };
                hSource._$history.recent = createRecordSet(recentFilteredData);
                hSource._$recentCount = 8;
-               actualResult = hSource.getFilterHistory(hSource._$history);
+               actualResult = hSource._getFilterHistory(hSource._$history);
                assert.deepEqual(expectedResult, actualResult);
 
                // 6 pinned
@@ -651,7 +652,7 @@ define(
                };
                hSource._$history.pinned = createRecordSet(pinnedFilteredData);
                hSource._$recentCount = 3;
-               actualResult = hSource.getFilterHistory(hSource._$history);
+               actualResult = hSource._getFilterHistory(hSource._$history);
                assert.deepEqual(expectedResult, actualResult);
 
                // 8 pinned
@@ -680,7 +681,7 @@ define(
                };
                hSource._$history.pinned = createRecordSet(pinnedFilteredData);
                hSource._$recentCount = 2;
-               actualResult = hSource.getFilterHistory(hSource._$history);
+               actualResult = hSource._getFilterHistory(hSource._$history);
                assert.deepEqual(expectedResult, actualResult);
             });
          });
@@ -707,6 +708,14 @@ define(
                   // throw error
                   assert.equal(error, true);
                });
+            });
+
+            it('serialization', function() {
+               const someConfig = {
+                  source: hSource
+               };
+               const configClone = util.object.clone(someConfig);
+               assert.isOk(configClone.source instanceof historyMod.Source);
             });
          });
       });
