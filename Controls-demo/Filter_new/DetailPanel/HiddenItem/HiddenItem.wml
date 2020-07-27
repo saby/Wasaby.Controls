@@ -1,0 +1,10 @@
+<div class="controlsDemo__wrapper">
+    <div class="control-demo__FilterDetailPanel__wrapper">
+        <Controls.filterPopup:DetailPanel
+                attr:class="controls-FilterPanel__width-m"
+                items="{{_items}}"
+                itemTemplateProperty="itemTemplate" >
+            <ws:itemTemplate templateName="wml!Controls-demo/Filter_new/DetailPanel/HiddenItem/itemTemplate" />
+        </Controls.filterPopup:DetailPanel>
+    </div>
+</div>

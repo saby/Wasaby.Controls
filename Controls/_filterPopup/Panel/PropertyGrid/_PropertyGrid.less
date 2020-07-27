@@ -1,9 +1,18 @@
 .controls-PropertyGrid__item {
    display: flex;
-   align-items: baseline;
+   align-items: center;
 }
 
-.controls-PropertyGrid__item_theme-@{themeName} {
+.controls-PropertyGrid__item-template_theme-@{themeName} {
+   min-height: @basic_item_height_filterPanel;
+}
+
+.controls-PropertyGrid__item-template_theme-@{themeName}:empty {
+   min-height: 0;
+   margin-bottom: 0;
+}
+
+.controls-PropertyGrid__notLastItem {
    margin-bottom: @basic_item_padding-bottom_filterPanel;
 }
 

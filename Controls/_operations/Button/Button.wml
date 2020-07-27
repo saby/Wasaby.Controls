@@ -1,5 +1,4 @@
-<div on:click="_handleClick()"
-     on:mousedown="_handleMouseDown()"
+<div on:mousedown="_handleMouseDown()"
      on:mouseenter="_handleMouseEnter()"
      on:mouseleave="_handleMouseLeave()"
      class="controls-OperationsButton controls-OperationsButton_theme-{{_options.theme}}

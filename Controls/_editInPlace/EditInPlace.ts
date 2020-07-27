@@ -202,7 +202,7 @@ const _private = {
             theme: self._options.theme,
             mode: dataSourceError.Mode.dialog
         }).then((errorConfig: dataSourceError.ViewConfig) => {
-            self._errorController.show(errorConfig);
+            self._errorContainer.show(errorConfig);
             return Promise.reject(error);
         });
     },
@@ -472,6 +472,7 @@ export default class EditInPlace {
     _pendingInputRenderState: any;
     _isCommitInProcess: boolean;
     _listViewModel: any;
+    _errorContainer: any;
 
     constructor(options: IEditingOptions = { } as IEditingOptions) {
         this._updateIndex = this._updateIndex.bind(this);
@@ -527,6 +528,10 @@ export default class EditInPlace {
                 isDestroyed: () => this._options.isDestroyed()
             }], {bubbling: true});
         }
+    }
+
+    setErrorContainer(errorContainer: any) {
+        this._errorContainer = errorContainer;
     }
 
     updateViewModel(listViewModel: any): void {
