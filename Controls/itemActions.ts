@@ -21,15 +21,14 @@
 export {
     TItemActionVisibilityCallback,
     TEditArrowVisibilityCallback,
-    IItemActionsContainer,
-    IItemAction,
     TItemActionShowType,
     TItemActionsPosition,
     TActionCaptionPosition,
     TActionDisplayMode,
     TIconStyle,
-    IShownItemAction
+    IItemAction
 } from './_itemActions/interface/IItemAction';
+export {IShownItemAction, IItemActionsContainer} from './_itemActions/interface/IItemActionsContainer';
 export {IContextMenuConfig} from './_itemActions/interface/IContextMenuConfig';
 export {IItemActionsItem, IItemActionsCollection, Controller} from './_itemActions/Controller';
 export {Utils} from './_itemActions/Utils';
