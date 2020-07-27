@@ -1985,11 +1985,11 @@ var
         },
 
         setRowSeparatorSize(rowSeparatorSize: IGridSeparatorOptions['rowSeparatorSize']): void {
-            this._options.rowSeparatorSize = _private.getSeparatorSizes({
+            rowSeparatorSize = _private.getSeparatorSizes({
                 rowSeparatorSize,
                 rowSeparatorVisibility: this._options.rowSeparatorVisibility
             }).row;
-            this._nextModelVersion();
+            this._model.setRowSeparatorSize(rowSeparatorSize);
         },
 
         setColumnSeparatorSize(columnSeparatorSize: IGridSeparatorOptions['columnSeparatorSize']): void {
