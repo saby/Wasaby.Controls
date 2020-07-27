@@ -126,6 +126,10 @@ export default class Button extends BaseLookup<ISelectorButtonOptions> {
       return undefined;
    }
 
+   protected _itemsChanged(): void {
+      return undefined;
+   }
+
    static getDefaultOptions = (): ISelectorButtonOptions => {
       const buttonOptions = {
          fontColorStyle: 'link',
