@@ -362,6 +362,7 @@ define(
                item,
                key: expectedOptions.root
             };
+            expectedOptions.emptyText = null;
             expectedOptions.closeButtonVisibility = false;
             expectedOptions.showClose = false;
             expectedOptions.showHeader = false;
