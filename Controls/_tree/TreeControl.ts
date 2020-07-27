@@ -14,7 +14,7 @@ import { Controller as SourceController } from 'Controls/source';
 import { error as dataSourceError } from 'Controls/dataSource';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 
-import TreeControlTpl = require('wml!Controls/_treeBase/TreeControl/TreeControl');
+import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
 
 const HOT_KEYS = {
     expandMarkedItem: Env.constants.key.right,
