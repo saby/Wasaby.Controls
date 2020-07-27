@@ -44,8 +44,7 @@ import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTempl
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputStyle
+ * @mixes Controls/input:IValue
  * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/input:IBorderVisibility
  * @mixes Controls/input:IPadding
@@ -82,8 +81,7 @@ import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTempl
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputStyle
+ * @mixes Controls/input:IValue
  * @control
  * @public
  * @author Герасимов А.М.
