@@ -13,7 +13,6 @@ import {ControllerClass, Container as ValidateContainer, IValidateResult} from '
 import {IFormOperation} from 'Controls/interface';
 import {Confirmation} from 'Controls/popup';
 import CrudController from 'Controls/_form/CrudController';
-import { Parking } from 'SbisEnvUI/Maintains';
 
 interface IFormController extends IControlOptions {
     readMetaData?: object;
@@ -187,7 +186,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         this.__errorController = options.errorController || new dataSourceError.Controller({
             viewConfig: {
                 options: {
-                    size: Parking.Const.Size.large
+                    size: 'large'
                 }
             }
         });
