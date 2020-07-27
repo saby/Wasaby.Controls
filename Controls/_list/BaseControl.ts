@@ -2523,7 +2523,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 if (receivedData) {
                     viewModelConfig.items = receivedData;
                 } else {
-                    delete viewModelConfig.items;
+                    if (!newOptions.source || (newOptions.source.getData().query !== newOptions.items)) {
+                        delete viewModelConfig.items;
+                    }
                 }
                 viewModelConfig.supportVirtualScroll = self._needScrollCalculation;
                 self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
