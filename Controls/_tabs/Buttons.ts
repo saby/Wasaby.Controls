@@ -54,7 +54,8 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons {
     protected _beforeMount(options: ITabsButtonsOptions,
                            context: object,
                            receivedState: IReceivedState): void | Promise<IReceivedState> {
-        if (receivedState) {
+        // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
+        if (receivedState && !TabsButtons._checkHasFunction(receivedState)) {
             this._prepareState(receivedState);
         } else if (options.source) {
             return this._initItems(options.source).then((result: IReceivedState) => {
@@ -189,6 +190,28 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons {
         } else {
             return style;
         }
+    }
+
+    static _checkHasFunction(receivedState: IReceivedState): boolean {
+        // Функции, передаваемые с сервера на клиент в receivedState, не могут корректно десериализоваться.
+        // Поэтому, если есть функции в receivedState, заново делаем запрос за данными.
+        // Ошибку выводит ядро
+        if (receivedState?.items?.getCount) {
+            const count = receivedState.items.getCount();
+            for (let i = 0; i < count; i++) {
+                const item = receivedState.items.at(i);
+                const value = cInstance.instanceOfModule(item, 'Types/entity:Record') ? item.getRawData() : item;
+                for (const key in value) {
+                    // При рекваере шаблона, он возвращает массив, в 0 индексе которого лежит объект с функцией
+                    if (typeof value[key] === 'function' ||
+                        value[key] instanceof Array && typeof value[key][0].func === 'function') {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     static getDefaultOptions(): ITabsButtonsOptions {
