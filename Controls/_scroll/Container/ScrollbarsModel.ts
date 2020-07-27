@@ -107,7 +107,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     }
 
     get scrollContainerStyles() {
-        return this._scrollContainerStyles;
+        return this._canScroll ? this._scrollContainerStyles : '';
     }
 
     getScrollContainerClasses(): string {
