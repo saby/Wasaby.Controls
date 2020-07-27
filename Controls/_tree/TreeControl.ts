@@ -1,32 +1,33 @@
 import Control = require('Core/Control');
-import TreeControlTpl = require('wml!Controls/_treeGrid/TreeControl/TreeControl');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
+import { isEqual } from 'Types/object';
+import { Map } from 'Types/shim';
+
+import { saveConfig } from 'Controls/Application/SettingsController';
 import keysHandler = require('Controls/Utils/keysHandler');
-import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import {Controller as SourceController} from 'Controls/source';
-import {isEqual} from 'Types/object';
-import {saveConfig} from 'Controls/Application/SettingsController';
-import {Map} from 'Types/shim';
-import {error as dataSourceError} from 'Controls/dataSource';
-import {MouseButtons, MouseUp} from './../Utils/MouseEventHelper';
-import { DndTreeController } from '../listDragNDrop';
+import { MouseButtons, MouseUp } from 'Controls/Utils/MouseEventHelper';
+import { DndTreeController } from 'Controls/listDragNDrop';
+import { Controller as SourceController } from 'Controls/source';
+import { error as dataSourceError } from 'Controls/dataSource';
+import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 
-var
-    HOT_KEYS = {
-        expandMarkedItem: Env.constants.key.right,
-        collapseMarkedItem: Env.constants.key.left
-    };
+import TreeControlTpl = require('wml!Controls/_treeBase/TreeControl/TreeControl');
 
-var DRAG_MAX_OFFSET = 15,
-    EXPAND_ON_DRAG_DELAY = 1000,
-    DEFAULT_COLUMNS_VALUE = [];
+const HOT_KEYS = {
+    expandMarkedItem: Env.constants.key.right,
+    collapseMarkedItem: Env.constants.key.left
+};
+
+const DRAG_MAX_OFFSET = 15;
+const EXPAND_ON_DRAG_DELAY = 1000;
+const DEFAULT_COLUMNS_VALUE = [];
 
 type TNodeSourceControllers = Map<string, SourceController>;
 
-var _private = {
+const _private = {
     /**
      * @param {Controls/_treeGrid/TreeControl} self
      * @param {Error} error
