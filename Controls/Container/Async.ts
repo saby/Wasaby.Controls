@@ -92,7 +92,14 @@ class Async extends Control<IOptions, TStateRecivied> {
    protected _template: TemplateFunction = template;
    private currentTemplateName: string;
    private optionsForComponent: Record<string, unknown> = {};
-   private canUpdate: boolean = true;
+   /**
+    * Флаг для того, чтобы избежать повторной загрузки шаблона, при изменении опций до окончания асинхронной загрузки
+    */
+   private asyncLoading: boolean = false;
+   /**
+    * Флаг, о том, что произошла ошибка при загрузке модуля - чтобы не было циклической попытки загрузки
+    */
+   private loadingErrorOccurred: boolean = false;
    protected error: TStateRecivied | void;
    protected userErrorMessage: string | void;
    private errorHandler: parking.Handler;
@@ -128,7 +135,7 @@ class Async extends Control<IOptions, TStateRecivied> {
     * @param {*} opts
     */
    _beforeUpdate(opts: IOptions): void {
-      if (!this.canUpdate) {
+      if (this.asyncLoading) {
          return;
       }
 
@@ -145,8 +152,15 @@ class Async extends Control<IOptions, TStateRecivied> {
       }
    }
 
+   /**
+    * Если до обновления не загрузили синхронно, то пробуем загрузить асинхронно
+    */
    _afterUpdate(): void {
-      if (!this.canUpdate) {
+      if (this.asyncLoading) {
+         return;
+      }
+      if (this.loadingErrorOccurred) {
+         this.loadingErrorOccurred = false;
          return;
       }
       if (this.currentTemplateName === this._options.templateName) {
@@ -174,9 +188,11 @@ class Async extends Control<IOptions, TStateRecivied> {
 
       // Need this flag to prevent setting new options for content
       // that wasn't loaded yet
-      this.canUpdate = false;
-      const result = promise.then<TStateRecivied, TStateRecivied>((loaded) => {
-         this.canUpdate = true;
+      this.asyncLoading = true;
+      this.loadingErrorOccurred = false;
+
+      return promise.then<TStateRecivied, TStateRecivied>((loaded) => {
+         this.asyncLoading = false;
          if (loaded === null) {
             this.error = generateErrorMsg(name);
             this.userErrorMessage = rk('У СБИС возникла проблема');
@@ -186,13 +202,12 @@ class Async extends Control<IOptions, TStateRecivied> {
          this._insertComponent(loaded, options, name);
          return true;
       }, (err) => {
-         this.canUpdate = true;
+         this.asyncLoading = false;
+         this.loadingErrorOccurred = true;
          this.error = generateErrorMsg(name);
          this.userErrorMessage = err.message;
          return err;
       });
-
-      return result;
    }
 
    _pushDepToHeadData(dep: string): void {
