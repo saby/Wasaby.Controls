@@ -4,7 +4,7 @@
            nodeProperty="type"
            parentProperty="parent"
            hasChildrenProperty="hasChild"
-           expanderDisplayMode="adaptive"
+           expanderVisibility="hasChildren"
            source="{{_treeSource}}">
       <ws:columns>
          <ws:Array>

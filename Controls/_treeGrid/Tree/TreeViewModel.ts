@@ -6,6 +6,7 @@ import {isEqual} from 'Types/object';
 import {TemplateFunction} from 'UI/Base';
 import { IDragPosition, ITreeItemData } from 'Controls/listDragNDrop';
 import { ItemsEntity } from 'Controls/dragnDrop';
+import {Logger} from 'UI/Utils';
 
 var
     _private = {
@@ -53,6 +54,8 @@ var
             if (cfg.expanderVisibility) {
                 return cfg.expanderVisibility;
             }
+            // TODO: Удалить #rea_1179794968
+            Logger.warn('TreeGrid: option expanderDisplayMode is deprecated and will be removed in first next major version after 15.6000. Use expanderVisibility.');
             return cfg.expanderDisplayMode === 'adaptive' ? 'hasChildren' : 'visible';
         },
 
@@ -581,6 +584,7 @@ var
             return this._options.nodeFooterTemplate;
         },
 
+        // TODO: Удалить #rea_1179794968
         setExpanderDisplayMode: function(expanderDisplayMode) {
             this._options.expanderDisplayMode = expanderDisplayMode;
             this._nextModelVersion();

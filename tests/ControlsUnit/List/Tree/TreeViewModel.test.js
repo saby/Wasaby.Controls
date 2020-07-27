@@ -494,7 +494,6 @@ define([
          });
          it('getItemDataByItem', function() {
             const originFn = treeGrid.TreeViewModel.superclass.getItemDataByItem;
-            treeGrid.TreeViewModel.getItemDataByItem(treeViewModel._display.at(0)).nodeFooters.length)
             treeGrid.TreeViewModel.superclass.getItemDataByItem = function() {
                return {
                   item: {},
@@ -508,9 +507,9 @@ define([
                };
             };
             treeViewModel = new treeGrid.TreeViewModel(cfg);
-            const itemData = treeGridViewModel.getCurrent();
+            const itemData = treeViewModel.getCurrent();
             assert.isTrue(!!itemData.getLevelIndentClasses);
-            treeGrid.ViewModel.superclass.getItemDataByItem = originFn;
+            treeGrid.TreeViewModel.superclass.getItemDataByItem = originFn;
          });
       });
       describe('expandedItems', function() {
@@ -745,6 +744,7 @@ define([
          });
       });
 
+      // TODO: Удалить #rea_1179794968
       describe('expanderDisplayMode', function() {
          var
 

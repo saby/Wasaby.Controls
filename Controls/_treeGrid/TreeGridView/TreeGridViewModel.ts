@@ -107,6 +107,7 @@ var
         setNodeFooterTemplate: function (nodeFooterTemplate) {
             this._model.setNodeFooterTemplate(nodeFooterTemplate);
         },
+        // TODO: Удалить #rea_1179794968
         setExpanderDisplayMode: function (expanderDisplayMode) {
             // Выпилить в 19.200
             this._model.setExpanderDisplayMode(expanderDisplayMode);
