@@ -166,6 +166,7 @@ export default class _Controller implements IDropdownController {
       }
       this._setItems(null);
       this._closeDropdownList();
+      this._sticky = null;
    }
 
    handleSelectedItems(data): void {
