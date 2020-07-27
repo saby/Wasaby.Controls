@@ -154,7 +154,10 @@ describe('Controls/_listDragNDrop/TreeController', () => {
                return {
                   top: 50,
                   height: 35
-               }
+               };
+            },
+            classList: {
+               contains: () => true
             }
          },
          nativeEvent: {
@@ -166,7 +169,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
       controller.calculateDragPositionRelativeNode(targetNodeData, event);
 
       // undefined - так как startDrag не был вызван
-      assert.isTrue(calculateDragPositionSpy.withArgs(targetNodeData, 'after').calledOnce,
+      assert.isTrue(calculateDragPositionSpy.withArgs(targetNodeData, 'before').calledOnce,
          'calculateDragPosition не вызвался или вызвался с неверными параметрами');
    });
 

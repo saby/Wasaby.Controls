@@ -65,9 +65,9 @@ export default class TreeController extends FlatController {
       const offset = this._calculateOffset(event);
       if (offset) {
          let position;
-         if (offset.top < DRAG_MAX_OFFSET) {
+         if (offset.top <= DRAG_MAX_OFFSET) {
             position = 'before';
-         } else if (offset.bottom < DRAG_MAX_OFFSET) {
+         } else if (offset.bottom <= DRAG_MAX_OFFSET) {
             position = 'after';
          } else {
             position = 'on';
@@ -86,7 +86,7 @@ export default class TreeController extends FlatController {
       } else if (targetItemData.dispItem.isNode()) {
          result = {
             index: targetItemData.index,
-            position,
+            position: position ? position : 'on',
             item: targetItemData.item,
             data: targetItemData
          };
@@ -145,6 +145,10 @@ export default class TreeController extends FlatController {
    }
 
    private _getTargetRow(event: SyntheticEvent<MouseEvent>): EventTarget {
+      if (!event || !event.target || !event.target.classList) {
+         return null;
+      }
+
       const startTarget = event.target;
       let target = startTarget;
 
