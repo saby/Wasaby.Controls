@@ -127,8 +127,8 @@ define([
       it('afterReloadCallback before mounting should not cause errors', function() {
 
          //по сценарию https://online.sbis.ru/opendoc.html?guid=8237131f-3294-4704-92a5-fe448e40bf50
-         let tree =  new tree.TreeControl({viewModelConstructor: treeGrid.ViewModel});
-         tree.TreeControl._private.afterReloadCallback(tree);
+         const treeInst = new tree.TreeControl({viewModelConstructor: treeGrid.ViewModel});
+         tree.TreeControl._private.afterReloadCallback(treeInst);
       });
       it('TreeControl._private.toggleExpanded', function() {
          var
