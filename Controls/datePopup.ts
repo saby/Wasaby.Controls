@@ -291,6 +291,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _unregisterCurrentDayIntersectHandler: function() {
+        // Если в IntersectionObserverContainer, который сделит за сегодняшним днём, происходит событие unregister -
+        // значит текущий день точно не отображается. Делаем "Домик" видимым.
         this._homeButtonVisible = true;
     },
 
