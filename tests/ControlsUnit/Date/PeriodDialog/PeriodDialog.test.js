@@ -573,19 +573,16 @@ define([
 
       describe('_currentDayIntersectHandler', function() {
          [{
-            ratio: 0,
+            isIntersecting: false,
             homeButtonVisible: true
          }, {
-            ratio: 0.5,
-            homeButtonVisible: false
-         }, {
-            ratio: 1,
+            isIntersecting: true,
             homeButtonVisible: false
          }].forEach(function(test) {
-            it(`should set homeButtonVisible to ${test.homeButtonVisible} if ratio is equal ${test.ratio}.`, function() {
+            it(`should set homeButtonVisible to ${test.homeButtonVisible} if isIntersecting is ${test.isIntersecting}.`, function() {
                const
                   component = calendarTestUtils.createComponent(PeriodDialog, {}),
-                  entry = new scroll.IntersectionObserverSyntheticEntry({ intersectionRatio: test.ratio }, {})
+                  entry = new scroll.IntersectionObserverSyntheticEntry({ isIntersecting: test.isIntersecting }, {})
                component._currentDayIntersectHandler(null, entry);
 
                if (test.homeButtonVisible) {
