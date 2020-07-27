@@ -9,7 +9,7 @@ type IOptions = IModelOptions;
  * Поле ввода временного интервала.
  * @remark
  * Позволяет вводить время с точностью от суток до секунд.
- *
+ * 
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/input/date/">руководство разработчика</a>
@@ -17,12 +17,8 @@ type IOptions = IModelOptions;
  *
  * @class Controls/_input/TimeInterval
  * @extends Controls/_input/Base
- * // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
- * @ignoreOptions value
  *
  * @mixes Controls/interface/ITimeInterval
- *
- * @ignoreOptions placeholder
  *
  * @public
  * @demo Controls-demo/Input/TimeInterval/Base/Index

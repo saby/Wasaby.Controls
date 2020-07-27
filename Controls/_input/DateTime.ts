@@ -23,7 +23,7 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  *    <li>времени;</li>
  *    <li>даты и времени.</li>
  * </ol>
- *
+ * 
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDateTime%2FDateTime">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/input/date/">руководство разработчика</a>
@@ -37,8 +37,6 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/_input/interface/IValueValidators
- *
- * @ignoreOptions placeholder
  *
  * @control
  * @public
