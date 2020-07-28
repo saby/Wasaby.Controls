@@ -79,6 +79,7 @@ export default class TreeController extends FlatController {
    }
 
    calculateDragPosition(targetItemData: ITreeItemData, position: TPosition): IDragPosition {
+      // Если перетаскиваем лист на узел, то позиция может быть только 'on'
       if (!this._draggingItemData.dispItem.isNode() && targetItemData.dispItem.isNode()) {
          position = 'on';
       }
@@ -148,18 +149,27 @@ export default class TreeController extends FlatController {
       return result;
    }
 
+   /**
+    * Получаем по event.target строку списка
+    * @param event
+    * @private
+    * @remark это нужно для того, чтобы когда event.target это содержимое строки, которое по высоте меньше 20 px,
+    *  то проверка на 10px сверху и снизу сработает неправильно и нельзя будет навести на узел(position='on')
+    */
    private _getTargetRow(event: SyntheticEvent<MouseEvent>): EventTarget {
-      if (!event || !event.target || !event.target.classList) {
-         return null;
+      if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
+         return event.target;
       }
 
       const startTarget = event.target;
       let target = startTarget;
 
-      while (!target.classList.contains('controls-Grid__row-cell')) {
+      while (!target.parentNode.classList.contains('controls-ListView__itemV')) {
          target = target.parentNode;
 
-         if (target.classList.contains('controls-BaseControl')) {
+         // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
+         if (!target.classList || !target.parentNode || !target.parentNode.classList
+             || target.classList.contains('controls-BaseControl')) {
             target = startTarget;
             break;
          }
