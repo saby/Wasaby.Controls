@@ -202,7 +202,7 @@ const _private = {
             theme: self._options.theme,
             mode: dataSourceError.Mode.dialog
         }).then((errorConfig: dataSourceError.ViewConfig) => {
-            self._errorController.show(errorConfig);
+            self._errorContainer.show(errorConfig);
             return Promise.reject(error);
         });
     },
@@ -230,7 +230,8 @@ const _private = {
     },
 
     validate(self: EditInPlace): Promise<any> {
-        return self._formController.submit();
+        self._forceUpdate();
+        return self._formController.deferSubmit();
     },
 
     hasParentInItems(item: Model, listViewModel: any): boolean|void {
@@ -399,7 +400,6 @@ const _private = {
         *   поэтому рисуем его над первой группой в Controls/_list/resources/For.wml:47
         *
         *   При добавлении в конец индекс будет на один больше последнего элемента списка / группы.
-        *   Controls/_list/resources/ItemOutput.wml:31
         *   TODO: Возможно, стоит всегда выставлять индекс записи рядом с которой выводим добавляемую запись, а,
         *    над или под ней выводить, решать через editingConfig.addPosition
         * */
@@ -472,6 +472,7 @@ export default class EditInPlace {
     _pendingInputRenderState: any;
     _isCommitInProcess: boolean;
     _listViewModel: any;
+    _errorContainer: any;
 
     constructor(options: IEditingOptions = { } as IEditingOptions) {
         this._updateIndex = this._updateIndex.bind(this);
@@ -527,6 +528,10 @@ export default class EditInPlace {
                 isDestroyed: () => this._options.isDestroyed()
             }], {bubbling: true});
         }
+    }
+
+    setErrorContainer(errorContainer: any) {
+        this._errorContainer = errorContainer;
     }
 
     updateViewModel(listViewModel: any): void {
@@ -924,7 +929,7 @@ export default class EditInPlace {
          * Ideally, validation should take value through options and reset automagically.
          * TODO: https://online.sbis.ru/opendoc.html?guid=951f6762-8e37-4182-a7fc-3104a35ce27a
          */
-        this._formController.setValidationResult();
+        this._formController.setValidationResult(null);
     }
 
     _forceUpdate(): void {

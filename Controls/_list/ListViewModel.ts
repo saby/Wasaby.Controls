@@ -61,14 +61,13 @@ var _private = {
         return self.getItemById(markedKey, self.getKeyProperty());
     },
 
-    getMultiSelectClassList: function (current): string {
-        let
-            checkboxOnHover = current.multiSelectVisibility === 'onhover',
-            isSelected = current.multiSelectStatus !== false && current.multiSelectStatus !== undefined; // так как null - это тоже выбрано
+    getMultiSelectClassList(current, checkboxOnHover: boolean): string {
+        const isSelected = current.isSelected();
+        const checkboxVisible = isSelected !== false && isSelected !== undefined; // так как null - это тоже выбрано
 
         return CssClassList.add('js-controls-ListView__checkbox')
                            .add('js-controls-ListView__notEditable')
-                           .add('controls-ListView__checkbox-onhover', checkboxOnHover && !isSelected)
+                           .add('controls-ListView__checkbox-onhover', checkboxOnHover && !checkboxVisible)
                            .compile();
     },
 
@@ -119,7 +118,7 @@ var _private = {
             itemsModelCurrent.dispItem.hasActionWithIcon !== undefined ? itemsModelCurrent.dispItem.hasActionWithIcon() : false
         );
         itemsModelCurrent.isSelected = (): boolean => (
-            itemsModelCurrent.dispItem.isSelected !== undefined ? itemsModelCurrent.dispItem.isSelected() : itemsModelCurrent._isSelected
+            itemsModelCurrent.dispItem.isSelected()
         );
         itemsModelCurrent.setSelected = (selected: boolean|null, silent?: boolean): void => {
             itemsModelCurrent._isSelected = true;
@@ -188,16 +187,15 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
         itemsModelCurrent._isSelected = itemsModelCurrent.dispItem.isMarked();
-        itemsModelCurrent.multiSelectStatus = itemsModelCurrent.isSelected();
         itemsModelCurrent.searchValue = this._options.searchValue;
-        itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
         itemsModelCurrent.isStickedMasterItem = itemsModelCurrent._isSelected && this._isSupportStickyMarkedItem();
         itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden' && !itemsModelCurrent.dispItem.isEditing();
-        itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ? _private.getMultiSelectClassList(itemsModelCurrent) : '';
+        itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ?
+            _private.getMultiSelectClassList(itemsModelCurrent, this._options.multiSelectVisibility === 'onhover') : '';
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         itemsModelCurrent.backgroundStyle = this._options.backgroundStyle || this._options.style;
         if (itemsModelCurrent.isGroup) {
@@ -540,7 +538,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
     getNextItem: function (itemIndex) {
         var nextIndex = itemIndex, nextItem, itemsCount = this._display.getCount();
-        while (nextIndex < itemsCount) {
+        while (nextIndex > -1 && nextIndex < itemsCount) {
             nextItem = this._display.at(nextIndex).getContents();
             if (this.isValidItemForMarkedKey(nextItem)) {
                 return nextItem.getId();
@@ -558,6 +556,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     getPrevByIndex(index: number): Model {
         const id = this.getPreviousItem(index);
         return this.getItemBySourceKey(id);
+    },
+    // для совместимости с новой моделью
+    getIndexBySourceIndex(sourceIndex: number): number {
+        return this.getDisplay().getIndexBySourceIndex(sourceIndex);
     },
 
     getValidItemForMarker: function(index) {

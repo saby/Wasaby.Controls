@@ -7,9 +7,10 @@ define(
       'Core/Deferred',
       'Types/entity',
       'Types/collection',
-      'Controls/popup'
+      'Controls/popup',
+      'Controls/buttons'
    ],
-   (dropdown, sourceLib, Clone, history, Deferred, entity, collection, popup) => {
+   (dropdown, sourceLib, Clone, history, Deferred, entity, collection, popup, buttons) => {
       describe('MenuButton', () => {
          let items = [
             {
@@ -400,6 +401,42 @@ define(
             loadedItems = new collection.RecordSet({ rawData: [{ id: 1 }] });
             menu._dataLoadCallback(loadedItems);
             assert.isTrue(menu._hasItems);
+         });
+
+         it('check target', () => {
+            let actualTarget;
+            menu._controller = {
+               openMenu: () => Promise.resolve(),
+               setMenuPopupTarget: (target) => {actualTarget = target;}
+            };
+            menu._children = {
+               content: 'testTarget'
+            };
+            menu.openMenu();
+            assert.equal(actualTarget, 'testTarget');
+         });
+
+         it('_updateState', () => {
+            let optionsUpdated = false;
+            const options = {
+               isNewOptionsUsed: false
+            };
+            buttons.ActualApi.styleToViewMode = () => {
+               optionsUpdated = true;
+               return {
+                  viewMode: '',
+                  style: '',
+                  buttonAdd: false
+               };
+            };
+            menu._updateState(options);
+            assert.isTrue(optionsUpdated);
+
+            options.isNewOptionsUsed = true;
+            optionsUpdated = false;
+
+            menu._updateState(options);
+            assert.isFalse(optionsUpdated);
          });
       });
    }

@@ -31,7 +31,7 @@
                   template="{{multiSelectTpl}}"
                   checkboxReadOnly="{{checkboxReadOnly}}"
                   attr:class="{{itemData.multiSelectClassList}}">
-         <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" />
+         <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" />
       </ws:partial>
       <ws:if data="{{contentTemplate}}">
          <ws:partial template="{{contentTemplate}}"

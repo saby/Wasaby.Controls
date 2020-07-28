@@ -17,28 +17,16 @@ define('Controls/interface/IFilterButton', [
     */
 
    /**
-    * @typedef {Boolean} Visibility
-    * @remark
-    * true - Редактор фильтров расположен в главном блоке.
-    * false - Редактор фильтров расположен в дополнительном блоке.
-    */
-
-   /*
-    * @typedef {Boolean} Visibility
-    * @remark
-    * true - The filter editor is located in the main block.
-    * false - The filter editor is located in the additional block.
-    */
-
-   /**
     * @typedef {Object} FilterPanelItems
     * @property {String} id Имя поля фильтра.
     * @property {*} value Текущее значение поля фильтра.
     * @property {*} resetValue Значение поля при сбрасывании фильтра.
     * @property {String} textValue Текстовое значение поля фильтра. Используется для отображения текста у кнопки фильтра.
     * @property {String} resetTextValue Текстовое значение поля, которое устанавливается когда фильтр сброшен. Когда textValue равно resetTextValue, текстовое значение фильтра не отображается рядом с кнопкой.
-    * Используется для фильтров, в которых отстутвует значение resetValue.
-    * @property {Visibility} visibility Определяет, в каком блоке расположен редактор фильтров. Для редакторов фильтров, которые никогда не отображаются в блоке "Еще можно отобрать", указывать не нужно.
+    * Используется для фильтров, в которых отсутствует значение resetValue.
+    * @property {Boolean} visibility Определяет, в каком блоке расположен редактор фильтров. Для редакторов фильтров, которые никогда не отображаются в блоке "Еще можно отобрать", указывать не нужно.
+    * В значении true редактор фильтров расположен в главном блоке, а при значении false — в дополнительном блоке.
+    * 
     */
 
    /*
@@ -49,11 +37,13 @@ define('Controls/interface/IFilterButton', [
     * @property {String} textValue Text value of filter field.  Used to display a textual representation of the filter
     * @property {String} resetTextValue Text value for reset. It is recommended to use if not set resetValue
     * @property {Visibility} visibility Defines in which block the filter editor is located. For filter editors that are never displayed in the "Also possible to select" section, you do not need to specify.
+    * true - The filter editor is located in the main block.
+    * false - The filter editor is located in the additional block.
     */
 
    /**
     * @name Controls/interface/IFilterButton#items
-    * @cfg {FilterPanelItems[]} Специальная структура для визуального представления фильтра.
+    * @cfg {FilterPanelItems[]} Структура для визуального представления фильтра.
     * @remark
     * Опция "value" каждого элемента будет передаваться в фильтр по "id" этого элемента.
     * Если параметр видимости не установлен, элемент фильтра всегда будет отображаться в главном блоке.
@@ -61,29 +51,31 @@ define('Controls/interface/IFilterButton', [
     * Пример настройки опции "items" для двух фильтров.
     * Первый фильтр будет отображаться в главном блоке "Отбираются".
     * Второй фильтр будет отображаться в дополнительном блоке "Еще можно отобрать", так как для него установлено свойство visibility = false.
-    * TMPL:
-    * <pre>
-    *    <Controls.filter:Selector
-    *       items={{_items}}
-    *       templateName="wml!MyModule/panelTemplate"/>
+    * 
+    * <pre class="brush: html; highlight: [2]">
+    * <Controls.filter:Selector
+    *     items="{{_items}}"
+    *     templateName="wml!MyModule/panelTemplate"/>
     * </pre>
     *
-    * MyModule/panelTemplate.wml
-    * <pre>
-    *    <Controls.filterPopup:Panel>
-    *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
-    *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
-    *    </Controls.filterPopup:Panel>
+    * <pre class="brush: html;">
+    * <!-- MyModule/panelTemplate.wml -->
+    * <Controls.filterPopup:Panel>
+    *     <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
+    *     <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
+    * </Controls.filterPopup:Panel>
     * </pre>
     *
-    * JS:
-    * <pre>
+    * <pre class="brush: js;">
+    * // JavaScript
+    * _items: null,
+    * beforeMount: function() {
     *    this._items = [
     *       { id: 'type', value: ['1'], resetValue: ['1'] },
     *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false }
     *    ];
+    * }
     * </pre>
-    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
     */
 
    /*
@@ -118,7 +110,6 @@ define('Controls/interface/IFilterButton', [
     *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false }
     *    ];
     * </pre>
-    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
     */
 
    /**
@@ -128,18 +119,18 @@ define('Controls/interface/IFilterButton', [
     * Например, в шаблоне можно разместить контрол выбора периода.
     * @example
     * Пример вставки быстрого выбора периода:
-    * <pre>
-    *    <Controls.filter:Selector
-    *       templateName="wml!MyModule/panelTemplate"
-    *       items="{{_items}}">
-    *       <ws:lineSpaceTemplate>
-    *          <Controls.dateRange:RangeShortSelector
+    * <pre class="brush: html; highlight: [4,5,6,7,8]">
+    * <Controls.filter:Selector
+    *     templateName="wml!MyModule/panelTemplate"
+    *     items="{{_items}}">
+    *     <ws:lineSpaceTemplate>
+    *         <Controls.dateRange:RangeShortSelector
     *             startValue="{{_startValue}}"
     *             endValue="{{_endValue}}"/>
-    *       </ws:lineSpaceTemplate>
-    *    </Controls.filter:Selector>
+    *     </ws:lineSpaceTemplate>
+    * </Controls.filter:Selector>
     * </pre>
-    * @see Controls.dateRange:RangeShortSelector
+    * @see Controls/dateRange:RangeShortSelector
     */
 
    /*
@@ -167,37 +158,40 @@ define('Controls/interface/IFilterButton', [
     * @name Controls/interface/IFilterButton#templateName
     * @cfg {String} Шаблон всплывающей панели, которая открывается после клика по кнопке.
     * @remark
-    * В качестве шаблона рекомендуется использовать {@link Controls.filter:Selector/Panel }
-    * Подробнее о настройке панели фильтров читайте <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>здесь</a>.
+    * В качестве шаблона рекомендуется использовать {@link Controls/filter:Selector}.
+    * Подробнее о настройке панели фильтров читайте <a href='/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/'>здесь</a>.
     * Важно: для ленивой загрузки шаблона в значение опции необходимо передать путь до контрола.
     * @example
     * Пример настройки параметров для двух фильтров.
+    * 
+    * <pre class="brush: html; highlight: [4]">
+    * <!-- WML -->
+    * <Controls.filter:Selector
+    *     items="{{_items}}"
+    *     templateName="wml!MyModule/panelTemplate"/>
+    * </pre>
+    *
     * Шаблоны отображения обоих фильтров в главном блоке находятся в разделе "MyModule/mainBlockTemplate.wml"
     * Шаблоны для отображения второго фильтра в дополнительном блоке находятся в разделе "MyModule/additionalBlockTemplate.wml"
-    * TMPL:
-    * <pre>
-    *    <Controls.filter:Selector
-    *       items={{_items}}
-    *       templateName="wml!MyModule/panelTemplate"/>
+    * <pre class="brush: html;">
+    * <!-- MyModule/panelTemplate.wml -->
+    * <Controls.filterPopup:Panel>
+    *     <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
+    *     <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
+    * </Controls.filterPopup:Panel>
     * </pre>
     *
-    * MyModule/panelTemplate.wml
-    * <pre>
-    *    <Controls.filterPopup:Panel>
-    *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
-    *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
-    *    </Controls.filterPopup:Panel>
-    * </pre>
-    *
-    * JS:
-    * <pre>
+    * <pre class="brush: js;">
+    * // JavaScript
+    * _items: null,
+    * beforeMount: function() {
     *    this._items = [
     *       { id: 'type', value: ['1'], resetValue: ['1'] },
     *       { id: 'deleted', value: true, resetValue: false, textValue: 'Deleted', visibility: false }
     *    ];
+    * }
     * </pre>
-    * @see <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>Guide for setup Filter Button and Fast Filter</a>
-    * @see Controls.filter:Selector/Panel
+    * @see Controls/filter:Selector
     */
 
    /*
@@ -238,18 +232,22 @@ define('Controls/interface/IFilterButton', [
     */
 
    /**
-    * @name Controls/interface/IFilterButton#alignment
-    * @cfg {String} Задаёт выравнивание кнопки фильтров.
+    * @typedef {String} Alignment
     * @variant right Кнопка прикреплена к правому краю. Всплывающая панель открывается влево. Строка выбранных фильтров отображается слева от кнопки.
     * @variant left Кнопка прикреплена к левому краю. Всплывающая панель открывается вправо. Строка выбранных фильтров отображается справа от кнопки.
+    */
+
+   /**
+    * @name Controls/interface/IFilterButton#alignment
+    * @cfg {Alignment} Задаёт выравнивание кнопки фильтров.
     * @default right
     * @example
     * Пример открытия панели фильтров справа:
-    * <pre>
-    *    <Controls.filter:Selector
-    *       templateName="wml!MyModule/panelTemplate"
-    *       items="{{_items}}"
-    *       alignment="left" />
+    * <pre class="brush: html; highlight: [4]">
+    * <Controls.filter:Selector
+    *     templateName="wml!MyModule/panelTemplate"
+    *     items="{{_items}}"
+    *     alignment="left" />
     * </pre>
     */
 

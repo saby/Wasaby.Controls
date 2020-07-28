@@ -1,9 +1,14 @@
-import rk = require('i18n!Controls');
-import { ISwipeConfig } from 'Controls/display';
+import rk = require('i18n!Controls');;
 import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
 import { IMeasurer } from '../interface/IMeasurer';
-import { IItemAction, TItemActionShowType, TItemActionsSize, TActionCaptionPosition } from '../interface/IItemActions';
+import {
+   IItemAction,
+   TItemActionShowType,
+   TItemActionsSize,
+   TActionCaptionPosition
+} from '../interface/IItemAction';
+import { IShownItemAction } from '../interface/IItemActionsContainer';
 import { MeasurerUtils } from './MeasurerUtils';
 import { ISwipeActionTemplateConfig } from '../interface/ISwipeActionTemplateConfig';
 
@@ -25,7 +30,7 @@ class HorizontalMeasurer implements IMeasurer {
       actionCaptionPosition: ActionCaptionPosition,
       menuButtonVisibility: 'visible'|'adaptive',
       theme: string
-   ): ISwipeConfig {
+   ): ISwipeActionTemplateConfig {
       const actualActions: IItemAction[] = MeasurerUtils.getActualActions(actions);
       let visibleActions: IItemAction[] = [];
       const actionTemplateConfig = this._getActionTemplateConfig(rowHeight, actionCaptionPosition, theme);
@@ -101,7 +106,7 @@ class HorizontalMeasurer implements IMeasurer {
     * Возвращает кнопку Ещё
     * @private
     */
-   private static _getMenuItemAction(): IItemAction {
+   private static _getMenuItemAction(): IShownItemAction {
       return {
          id: null,
          icon: 'icon-SwipeMenu',

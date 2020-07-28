@@ -13,7 +13,7 @@ var SearchGridViewModel = TreeGridViewModel.extend({
         return SearchGridViewModel.superclass._calcRowIndex.apply(this, arguments);
     },
 
-    _isSupportLadder: function() {
+    isSupportLadder: function() {
         return false;
     },
 

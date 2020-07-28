@@ -265,8 +265,14 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
 
         // Если открывают не через инстанс опенера (инстанс сейчас сам показываем индикатор, т.к. грузит зависимости)
         // И если опционально показ индикатора не отключен, то на момент построения окна покажем индикатор
-        if (!cfg.id && !cfg._events && cfg.showIndicator !== false) {
-            BaseOpenerUtil.showIndicator(cfg);
+        if (!cfg._events && cfg.showIndicator !== false) {
+            // Если окно уже открыто или открывается, новые обработчики не создаем
+            const popupItem = ManagerController.find(cfg.id);
+            if (popupItem) {
+                cfg._events = popupItem.popupOptions._events;
+            } else {
+                BaseOpenerUtil.showIndicator(cfg);
+            }
         }
 
         if (!isNewEnvironment()) {

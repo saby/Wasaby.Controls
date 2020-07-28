@@ -52,12 +52,20 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
         const canScroll = canScrollByState(scrollState, this._direction);
         const position = getScrollPositionByState(scrollState, this._direction);
         const contentSize = getContentSizeByState(scrollState, this._direction);
-        if (canScroll !== this._canScroll || position !== this._position || contentSize !== this._contentSize) {
+        if (canScroll !== this._canScroll || position !== this._position) {
             this._canScroll = canScroll;
             this._position = position;
-            this._contentSize = contentSize;
             this._nextVersion();
             changed = true;
+        }
+
+        if (contentSize !== this._contentSize) {
+            // Если значение впервые инициализируется - не вызываем перерисовку
+            if (this._contentSize !== undefined) {
+                this._nextVersion();
+                changed = true;
+            }
+            this._contentSize = contentSize;
         }
         return changed;
     }

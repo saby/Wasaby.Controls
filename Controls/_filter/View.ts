@@ -10,7 +10,7 @@ import {isEqual} from 'Types/object';
 import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
-import {detection} from 'Env/Env';
+import {detection, IoC} from 'Env/Env';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {factory as CollectionFactory, RecordSet} from 'Types/collection';
@@ -20,18 +20,19 @@ import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {DependencyTimer} from 'Controls/Utils/FastOpen';
+import {load} from 'Core/library';
 
 /**
  * Контрол "Объединенный фильтр". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
  * Состоит из кнопки-иконки, строкового представления выбранного фильтра и параметров быстрого фильтра.
- * @remark
  * @remark
  * При клике на кнопку-иконку или строковое представления открывается панель фильтров, созданная на основе {@link Controls/filterPopup:DetailPanel}.
  * При клике на параметры быстрого фильтра открывается панель "Быстрых фильтров", созданная на основе {@link Controls/filterPopup:SimplePanel}.
  *
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FFilterView%2FFilterView">демо-пример</a>
- * * <a href="https://wasaby.dev/doc/platform/controls/list-environment/filter-search/filter-view">руководство разработчика по работе с контролом</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/">руководство разработчика по работе с контролом</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
@@ -630,6 +631,25 @@ var _private = {
             }
         });
         return needReload;
+    },
+
+    _loadDependencies: function(): Promise<unknown> {
+        try {
+            const detailPanelTemplateName = this._options.detailPanelTemplateName;
+
+            if (!this._loadOperationsPanelPromise) {
+                this._loadOperationsPanelPromise = Promise.all([
+                   import('Controls/filterPopup'),
+                    // load потому-что в detailPanelTemplateName могут
+                    // передаваться значения вида Controls/filter:Popup, что не поддерживает import()
+                    (typeof detailPanelTemplateName === 'string') ?
+                       load(detailPanelTemplateName) : null
+                ]);
+            }
+            return this._loadOperationsPanelPromise;
+        } catch (e) {
+            IoC.resolve('ILogger').error('_filter:View', e);
+        }
     }
 };
 
@@ -641,6 +661,7 @@ var Filter = Control.extend({
     _idOpenSelector: null,
     _dateRangeItem: null,
     _hasResetValues: true,
+    _dependenciesTimer: null,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};
@@ -659,6 +680,15 @@ var Filter = Control.extend({
         }
         this._hasSelectorTemplate = _private.hasSelectorTemplate(this._source);
         return resultDef;
+    },
+
+    _mouseEnterHandler: function(event: SyntheticEvent<MouseEvent>) {
+        if (!this._options.readOnly) {
+            if (!this._dependenciesTimer) {
+                this._dependenciesTimer = new DependencyTimer();
+            }
+            this._dependenciesTimer.start(_private._loadDependencies.bind(this));
+        }
     },
 
     _beforeUpdate: function(newOptions) {

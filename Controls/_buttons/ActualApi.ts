@@ -167,8 +167,7 @@ const ActualApi = {
       } else {
          if (typeof options.transparent !== 'undefined') {
             if (hasMsg && constants.isBrowserPlatform) {
-               // TODO: будет удалено в версию после 5100
-               Logger.error('Button: Используется устаревшая опция transparent". ' +
+               Logger.error('Используется устаревшая опция transparent". ' +
                    `нужно использовать contrastBackground="${!options.transparent}" ` +
                    'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
             }
@@ -185,8 +184,7 @@ const ActualApi = {
          return optionButtonStyle;
       } else {
          if (optionStyle && hasMsg && constants.isBrowserPlatform) {
-            // TODO: будет удалено в версию после 5100
-            Logger.error('Button: Используется устаревшая опция style". ' +
+            Logger.error('Используется устаревшая опция style". ' +
                 `нужно использовать buttonStyle="${optionStyle}" ` +
                 'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
          }
@@ -280,9 +278,8 @@ const ActualApi = {
                }
             }
             if (hasMsg && constants.isBrowserPlatform) {
-               // TODO: будет удалено в версию после 5100
-               Logger.error('Button: Используется устаревшая опция size". ' +
-                   `нужно использовать buttonStyle="${result}" ` +
+               Logger.error('Используется устаревшая опция size". ' +
+                   `нужно использовать fontSize="${result}" ` +
                    'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
             }
             return result || 'm';
@@ -332,8 +329,7 @@ const ActualApi = {
             height = undefined;
          }
          if (hasMsg && optionSize && constants.isBrowserPlatform) {
-            // TODO: будет удалено в версию после 5100
-            Logger.error('Button: Используется устаревшая опция size". ' +
+            Logger.error('Используется устаревшая опция size". ' +
                 `нужно использовать inlineHeight="${height}" ` +
                 'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
          }

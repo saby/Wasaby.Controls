@@ -72,7 +72,6 @@ import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
 import DataContainer = require('Controls/_list/Data');
 import _forTemplate = require('wml!Controls/_list/resources/For');
-import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
 import BaseEditingTemplate = require('wml!Controls/_list/EditInPlace/baseEditingTemplate');
 import MoneyEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/MoneyChooser');
@@ -83,8 +82,6 @@ import ListViewModel = require('Controls/_list/ListViewModel');
 import {default as ListControl} from 'Controls/_list/ListControl';
 import ListView = require('Controls/_list/ListView');
 import GroupContentResultsTemplate = require('wml!Controls/_list/GroupContentResultsTemplate');
-import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
-import ItemOutput = require('wml!Controls/_list/resources/ItemOutput');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import BaseControl = require('Controls/_list/BaseControl');
@@ -121,7 +118,6 @@ export {
     DataContainer,
     _forTemplate,
 
-    GridLayoutUtil,
     EditingTemplate,
     BaseEditingTemplate,
     MoneyEditingTemplate,
@@ -132,8 +128,6 @@ export {
     ListControl,
     ListView,
     GroupContentResultsTemplate,
-    ItemOutputWrapper,
-    ItemOutput,
     ItemsUtil,
     TreeItemsUtil,
     BaseControl,

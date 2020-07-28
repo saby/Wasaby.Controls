@@ -20,6 +20,7 @@ import {
 } from 'Controls/_input/Base/InputUtil';
 import MobileFocusController from 'Controls/_input/Base/MobileFocusController';
 import {FixBugs} from './FixBugs';
+import {getOptionPaddingTypes, getDefaultPaddingOptions} from './interface/IPadding';
 
 import 'wml!Controls/_input/Base/Stretcher';
 import 'wml!Controls/_input/Base/FixValueAttr';
@@ -375,6 +376,8 @@ var _private = {
  * @implements Controls/_input/interface/IValue
  * @implements Controls/_interface/IValidationStatus
  * @implements Controls/interface/IBorderStyle
+ * @implements Controls/_input/interface/IBorderVisibility
+ * @implements Controls/_input/interface/IPadding
  *
  * @public
  *
@@ -1102,9 +1105,9 @@ Base._private = _private;
 
 Base.getDefaultOptions = function () {
     return {
+        ...getDefaultPaddingOptions(),
         tooltip: '',
         style: 'info',
-        horizontalPadding: 'xs',
         inlineHeight: 'default',
         placeholder: '',
         textAlign: 'left',
@@ -1118,9 +1121,7 @@ Base.getDefaultOptions = function () {
 
 Base.getOptionTypes = function () {
     return {
-        horizontalPadding: entity.descriptor(String).oneOf([
-            'xs', 'null'
-        ]),
+        ...getOptionPaddingTypes(),
         value: entity.descriptor(String, null),
         tooltip: entity.descriptor(String),
         /*autoComplete: entity.descriptor(String).oneOf([

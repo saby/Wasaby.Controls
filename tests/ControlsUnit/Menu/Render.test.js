@@ -363,6 +363,7 @@ define(
             assert.isOk(itemData.item);
             assert.isOk(itemData.isSelected);
             assert.isOk(itemData.getPropValue);
+            assert.isFalse(itemData.isFixedItem);
          });
 
          it('getIconPadding', function() {

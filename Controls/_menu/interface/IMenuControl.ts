@@ -51,37 +51,6 @@ export default interface IMenuControl {
  */
 
 /**
- * @name Controls/_menu/interface/IMenuControl#multiSelect
- * @cfg {Boolean} Определяет, установлен ли множественный выбор.
- * @default false
- * @demo Controls-demo/Menu/Control/MultiSelect/Index
- * @example
- * Множественный выбор установлен.
- * WML:
- * <pre>
- * <Controls.menu:Control
- *       selectedKeys="{{_selectedKeys}}"
- *       keyProperty="id"
- *       displayProperty="title"
- *       source="{{_source}}"
- *       multiSelect="{{true}}">
- * </Controls.menu:Control>
- * </pre>
- * JS:
- * <pre>
- * this._source = new Memory({
- *    keyProperty: 'id',
- *    data: [
- *       {id: 1, title: 'Yaroslavl'},
- *       {id: 2, title: 'Moscow'},
- *       {id: 3, title: 'St-Petersburg'}
- *    ]
- * });
- * this._selectedKeys = [1, 3];
- * </pre>
- */
-
-/**
  * @name Controls/_menu/interface/IMenuControl#nodeFooterTemplate
  * @cfg {Function | String} Шаблон подвала, отображающийся для всех подменю.
  * В шаблон передается объект itemData со следующими полями:
@@ -255,6 +224,34 @@ export default interface IMenuControl {
  *    ]
  * });
  * this._callbackHandler = function(items) {
+ *   // do something
+ * };
+ * </pre>
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#dataLoadErrback
+ * @cfg {Function}  Функция обратного вызова, которая будет вызываться, когда при загрузке данных произошла ошибка.
+ * @example
+ * WML:
+ * <pre>
+ * <Controls.menu:Control
+ *          keyProperty="id"
+ *          displayProperty="title"
+ *          dataLoadErrback="{{_errbackHandler}}"
+ *          source="{{_source)}}" />
+ * </pre>
+ * JS:
+ * <pre>
+ * this._source = new Memory({
+ *    keyProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Yaroslavl'},
+ *       {id: 2, title: 'Moscow'},
+ *       {id: 3, title: 'St-Petersburg'}
+ *    ]
+ * });
+ * this._errbackHandler = function(items) {
  *   // do something
  * };
  * </pre>

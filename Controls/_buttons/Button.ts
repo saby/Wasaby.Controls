@@ -65,6 +65,50 @@ export function cssStyleGeneration(options: IButtonControlOptions, hasMsg: boole
     }
 }
 
+function defaultHeight(viewMode: string): string {
+    if (viewMode === 'button') {
+        return 'default';
+    } else if (viewMode === 'toolButton' || viewMode === 'pushButton' || viewMode === 'functionalButton') {
+        return 'l';
+    }
+}
+
+function defaultFontColorStyle(viewMode: string): string {
+    if (viewMode === 'link') {
+        return 'link';
+    }
+}
+
+export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
+    const oldViewModeToken = ActualApi.viewMode(options.viewMode, options.viewMode);
+
+    this._buttonStyle = options.readOnly ? 'readonly' : options.buttonStyle;
+    this._contrastBackground = options.contrastBackground;
+    this._viewMode = oldViewModeToken.viewMode;
+    if (typeof oldViewModeToken.contrast !== 'undefined') {
+        this._contrastBackground = oldViewModeToken.contrast;
+    }
+    this._height = options.inlineHeight ? options.inlineHeight : defaultHeight(this._viewMode);
+    this._fontColorStyle = options.fontColorStyle ? options.fontColorStyle : defaultFontColorStyle(this._viewMode);
+    this._fontSize = options.fontSize;
+    this._hasIcon = !!options.icon;
+
+    this._caption = options.caption;
+    this._stringCaption = typeof options.caption === 'string';
+    this._captionPosition = options.captionPosition || 'right';
+
+    this._icon = options.icon;
+    this._iconSize = options.icon ? ActualApi.iconSize(options.iconSize, this._icon) : '';
+    this._iconStyle = options.icon ?
+        ActualApi.iconStyle(options.iconStyle, this._icon, options.readOnly, options.buttonAdd) : '';
+
+    if (this._viewMode === 'linkButton') {
+        const actualState = ActualApi.actualLinkButton(this._viewMode, this._height);
+        this._viewMode = actualState.viewMode;
+        this._height = actualState.height;
+    }
+}
+
 /**
  * Графический контрол, который предоставляет пользователю возможность простого запуска события при нажатии на него.
  *
@@ -204,11 +248,11 @@ class Button extends Control<IButtonControlOptions> implements
    protected _hoverIcon: boolean = true;
 
    protected _beforeMount(options: IButtonControlOptions): void {
-      cssStyleGeneration.call(this, options, true);
+       simpleCssStyleGeneration.call(this, options);
    }
 
    protected _beforeUpdate(newOptions: IButtonControlOptions): void {
-      cssStyleGeneration.call(this, newOptions);
+       simpleCssStyleGeneration.call(this, newOptions);
    }
 
    protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
@@ -230,7 +274,9 @@ class Button extends Control<IButtonControlOptions> implements
          viewMode: 'button',
          iconStyle: 'secondary',
          captionPosition: 'right',
-         theme: 'default'
+         contrastBackground: false,
+         fontSize: 'm',
+         buttonStyle: 'secondary'
       };
    }
 }

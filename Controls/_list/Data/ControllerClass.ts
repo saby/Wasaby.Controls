@@ -86,6 +86,10 @@ export default class DataControllerClass {
         context.updateConsumers();
     }
 
+    updatePrefetchProxy(items: RecordSet): void {
+        this._prefetchSource = this._getPrefetchSource(items);
+    }
+
     createContext(options?: IDataContextOptions): typeof ContextOptions {
         return new ContextOptions(options);
     }

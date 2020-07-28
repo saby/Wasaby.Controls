@@ -4,6 +4,7 @@
            attr:class="controls-FilterDropdown__content"
            on:selectedKeysChanged="_selectedKeysChangedHandler()"
            on:textValueChanged="_textValueChangedHandler()"
+           on:selectorCallback="_selectorCallbackHandler()"
            on:dropDownOpen="_dropDownOpen()"
            on:dropDownClose="_dropDownClose()">
       <ws:contentTemplate>

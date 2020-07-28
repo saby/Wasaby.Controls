@@ -1,19 +1,21 @@
-import {Control} from 'UI/Base';
+import {Control, IControlOptions} from 'UI/Base';
 import {RecordSet, List} from 'Types/collection';
 import {default as LookupController, ILookupBaseControllerOptions, SelectedItems} from './BaseControllerClass';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor, Model} from 'Types/entity';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
+// @ts-ignore
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
-import {ICrudPlus} from 'Types/source';
 
 type LookupReceivedState = RecordSet|null;
 
-export interface ILookupOptions extends ILookupBaseControllerOptions {
-    suggestSource?: ICrudPlus;
+export interface ILookupOptions extends ILookupBaseControllerOptions, IControlOptions {
+    maxVisibleItems?: number;
+    items?: RecordSet;
 }
 
-export default abstract class BaseLookup extends Control {
+export default abstract class
+    BaseLookup<T extends ILookupOptions> extends Control<T, LookupReceivedState> {
     protected _lookupController: LookupController;
     protected _items: SelectedItems;
 
@@ -26,13 +28,19 @@ export default abstract class BaseLookup extends Control {
 
         if (receivedState && !isEmpty(receivedState)) {
             this._setItems(receivedState);
-        } else if (options.selectedKeys.length) {
+            this._inheritorBeforeMount(options);
+        } else if (options.selectedKeys.length && options.source) {
             return this._lookupController.loadItems().then((items) => {
                 this._setItems(items);
+                this._inheritorBeforeMount(options);
                 return items;
             });
+        } else if (options.items) {
+            this._setItems(options.items);
+            this._inheritorBeforeMount(options);
         } else {
             this._items = this._lookupController.getItems();
+            this._inheritorBeforeMount(options);
         }
     }
 
@@ -50,20 +58,12 @@ export default abstract class BaseLookup extends Control {
         } else if (updateResult) {
             updateResultCallback();
         }
-    }
-
-    protected _updateItemsHandler(event: SyntheticEvent|null, items: RecordSet|List<Model>): void {
-        this._updateItems(items);
+        this._inheritorBeforeUpdate(newOptions);
     }
 
     protected _updateItems(items: RecordSet|List<Model>): void {
         this._lookupController.setItems(items);
         this._afterItemsChanged();
-    }
-
-    protected _addItemHandler(event: SyntheticEvent, item: Model): void {
-        this._addItem(item);
-        this._notify('choose', [item]);
     }
 
     protected _addItem(item: Model): void {
@@ -72,18 +72,10 @@ export default abstract class BaseLookup extends Control {
         }
     }
 
-    protected _removeItemHandler(event: SyntheticEvent, item: Model): void {
-        this._removeItem(item);
-    }
-
     protected _removeItem(item: Model): void {
         if (this._lookupController.removeItem(item)) {
             this._afterItemsChanged();
         }
-    }
-
-    protected _showSelectorHandler(event: SyntheticEvent, popupOptions?: IStackPopupOptions): void|boolean {
-        return this._showSelector(popupOptions);
     }
 
     protected _showSelector(popupOptions?: IStackPopupOptions): void|boolean {
@@ -102,14 +94,12 @@ export default abstract class BaseLookup extends Control {
         const selectResult =
             this._notify('selectorCallback', [this._lookupController.getItems(), result]) ||
             result;
-        this._lookupController.setItemsAndSaveToHistory(selectResult);
+        this._lookupController.setItemsAndSaveToHistory(selectResult as SelectedItems);
         this._afterItemsChanged();
         if (this._options.value) {
             this._notify('valueChanged', ['']);
         }
     }
-
-    abstract showSelector(popupOptions?: IStackPopupOptions): void;
 
     private _afterItemsChanged(): void {
         this._items = this._lookupController.getItems();
@@ -128,12 +118,19 @@ export default abstract class BaseLookup extends Control {
         this._notify('textValueChanged', [controller.getTextValue()]);
     }
 
+    abstract showSelector(popupOptions?: IStackPopupOptions): void;
+
+    protected abstract _inheritorBeforeMount(options: ILookupOptions): void;
+
+    protected abstract _inheritorBeforeUpdate(options: ILookupOptions): void;
+
     static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
             selectedKeys: [],
-            multiSelect: false
+            multiSelect: false,
+            horizontalPadding: 'xs'
         };
     }
 

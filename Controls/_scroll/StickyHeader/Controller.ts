@@ -17,6 +17,10 @@ interface IHeightEntry {
     value: number;
 }
 
+interface IStickyHeaderController {
+    fixedCallback?: (position: string) => void;
+}
+
 class StickyHeaderController {
     // Register of all registered headers. Stores references to instances of headers.
     private _headers: object;
@@ -34,10 +38,11 @@ class StickyHeaderController {
     private _canScroll: boolean = false;
     private _resizeHandlerDebounced: Function;
     private _container: HTMLElement;
+    private _options: IStickyHeaderController = {};
 
     // TODO: Избавиться от передачи контрола доработав логику ResizeObserverUtil
     // https://online.sbis.ru/opendoc.html?guid=4091b62e-cca4-45d8-834b-324f3b441892
-    constructor(control: Control) {
+    constructor(control: Control, options: IStickyHeaderController = {}) {
         this._headersStack = {
             top: [],
             bottom: []
@@ -46,6 +51,7 @@ class StickyHeaderController {
             top: [],
             bottom: []
         };
+        this._options.fixedCallback = options.fixedCallback;
         this._headers = {};
         this._resizeHandlerDebounced = debounce(this.resizeHandler.bind(this), 50);
         this._stickyHeaderResizeObserver = new ResizeObserverUtil(
@@ -232,16 +238,28 @@ class StickyHeaderController {
         if (!isFixationUpdated) {
             return;
         }
+
+        // fixedPosition пуст когда идет открепление
+        const position = fixedHeaderData.fixedPosition || fixedHeaderData.prevPosition;
         // If the header is single, then it makes no sense to send notifications.
         // Thus, we prevent unnecessary force updates on receiving messages.
-        if (fixedHeaderData.fixedPosition && this._fixedHeadersStack[fixedHeaderData.fixedPosition].length === 1) {
-            return;
+        const isSingleHeader = fixedHeaderData.fixedPosition &&
+            this._fixedHeadersStack[fixedHeaderData.fixedPosition].length === 1;
+
+        if (!isSingleHeader) {
+            for (const id in this._headers) {
+                this._headers[id].inst.updateFixed([
+                    this._fixedHeadersStack.top[this._fixedHeadersStack.top.length - 1],
+                    this._fixedHeadersStack.bottom[this._fixedHeadersStack.bottom.length - 1]
+                ]);
+            }
         }
-        for (const id in this._headers) {
-            this._headers[id].inst.updateFixed([
-                this._fixedHeadersStack.top[this._fixedHeadersStack.top.length - 1],
-                this._fixedHeadersStack.bottom[this._fixedHeadersStack.bottom.length - 1]
-            ]);
+        this._callFixedCallback(position);
+    }
+
+    private _callFixedCallback(position: string): void {
+        if (typeof this._options.fixedCallback === 'function') {
+            this._options.fixedCallback(position);
         }
     }
 
