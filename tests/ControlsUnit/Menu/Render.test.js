@@ -341,6 +341,10 @@ define(
 
                renderOptions.listModel.at(0).getContents().set('pinned', true);
                actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+
+               renderOptions.listModel.at(0).getContents().set('HistoryId', 'test');
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
                assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
             });
 

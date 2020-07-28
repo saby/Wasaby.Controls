@@ -410,7 +410,7 @@ const _private = {
                     // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                     if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
                         _private.checkLoadToDirectionCapability(self, filter, navigation);
-                    } else {
+                    } else if (!self._wasScrollToEnd) {
                         _private.checkNeedAttachLoadTopTriggerToNull(self);
                     }
                 });
@@ -508,6 +508,9 @@ const _private = {
     },
     keyDownEnd(self, event) {
         _private.setMarkerAfterScroll(self, event);
+        if (self._options.navigation.viewConfig.showEndButton) {
+            _private.scrollToEdge(self, 'down');
+        }
     },
     keyDownPageUp(self, event) {
         _private.setMarkerAfterScroll(self, event);
@@ -1793,6 +1796,8 @@ const _private = {
 
         const lastItemKey = ItemsUtil.getPropertyValue(lastItem, self._options.keyProperty);
 
+        self._wasScrollToEnd = true;
+
         // Последняя страница уже загружена но конец списка не обязательно отображается,
         // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
         _private.scrollToItem(self, lastItemKey, true, true).then(() => {
@@ -2814,7 +2819,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
-        _private.checkNeedAttachLoadTopTriggerToNull(this);
+        if (!this._wasScrollToEnd) {
+            _private.checkNeedAttachLoadTopTriggerToNull(this);
+        }
     },
 
     _beforeUpdate(newOptions) {
@@ -3265,6 +3272,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._itemReloaded = false;
         }
 
+        this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
         this._modelRecreated = false;
         if (this._callbackAfterUpdate) {

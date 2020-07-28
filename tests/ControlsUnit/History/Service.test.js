@@ -27,7 +27,7 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env', 'UI/U
          const service = new history.Service({historyId: 'testId'});
          const loadDeferred = new Deferred();
 
-         service._historyDataSource = {call: () => loadDeferred};
+         service._$historyDataSource = {call: () => loadDeferred};
 
          let queryDef = service.query();
          assert.isTrue(queryDef === loadDeferred);
@@ -81,7 +81,7 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env', 'UI/U
          let methodName;
          let methodMeta;
 
-         service._historyDataSource = {call: (method, meta) => {
+         service._$historyDataSource = {call: (method, meta) => {
             methodName = method;
             methodMeta = meta;
          }};

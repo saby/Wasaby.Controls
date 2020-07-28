@@ -99,7 +99,7 @@ var _private = {
          this.fillClient(self, history, items);
          this.fillFavoritePinned(self, history, items);
       }
-      if (self.historySource._pinned !== false) {
+      if (self.historySource._$pinned !== false) {
          this.fillPinned(self, history, items);
       }
       this.fillRecent(self, history, items);
@@ -167,8 +167,8 @@ var _private = {
    },
 
    fillRecent: function(self, history, items) {
-      let pinnedCount = self.historySource._pinned !== false ? history.pinned.getCount() : 0;
-      let maxLength = self.historySource._recent - pinnedCount - 1;
+      let pinnedCount = self.historySource._$pinned !== false ? history.pinned.getCount() : 0;
+      let maxLength = self.historySource._$recent - pinnedCount - 1;
       let currentCount = 0;
       let isPinned;
 
