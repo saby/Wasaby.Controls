@@ -13,6 +13,7 @@ import {Map} from 'Types/shim';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {MouseButtons, MouseUp} from './../Utils/MouseEventHelper';
 import { DndTreeController } from '../listDragNDrop';
+import { SyntheticEvent } from 'Vdom/Vdom';
 
 var
     HOT_KEYS = {
@@ -452,6 +453,35 @@ var _private = {
         }
 
         return source;
+    },
+
+    /**
+     * Получаем по event.target строку списка
+     * @param event
+     * @private
+     * @remark это нужно для того, чтобы когда event.target это содержимое строки, которое по высоте меньше 20 px,
+     *  то проверка на 10px сверху и снизу сработает неправильно и нельзя будет навести на узел(position='on')
+     */
+    getTargetRow(event: SyntheticEvent): EventTarget {
+        if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
+            return event.target;
+        }
+
+        const startTarget = event.target;
+        let target = startTarget;
+
+        while (!target.parentNode.classList.contains('controls-ListView__itemV')) {
+            target = target.parentNode;
+
+            // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
+            if (!target.classList || !target.parentNode || !target.parentNode.classList
+                || target.classList.contains('controls-BaseControl')) {
+                target = startTarget;
+                break;
+            }
+        }
+
+        return target;
     }
 };
 
@@ -692,7 +722,8 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
     _nodeMouseMove: function(itemData, event) {
         const dndListController = this._children.baseControl.getDndListController();
 
-        const dragTargetPosition = dndListController.calculateDragPositionRelativeNode(itemData, event);
+        const targetElement = _private.getTargetRow(event);
+        const dragTargetPosition = dndListController.calculateDragPositionRelativeNode(itemData, event, targetElement);
 
         if (dragTargetPosition) {
             if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.item, dragTargetPosition.position]) !== false) {
@@ -708,7 +739,7 @@ var TreeControl = Control.extend(/** @lends Controls/_treeGrid/TreeControl.proto
             }
         }
 
-        if (dndListController.isInsideDragTargetNode(event)) {
+        if (dndListController.isInsideDragTargetNode(event, targetElement)) {
             dndListController.startCountDownForExpandNode(itemData, this._expandNodeOnDrag);
         }
     },

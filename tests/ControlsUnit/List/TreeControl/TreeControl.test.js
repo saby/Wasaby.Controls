@@ -346,6 +346,33 @@ define([
          });
       });
 
+      it('_private.getTargetRow', () => {
+         const event = {
+            target: {
+               getBoundingClientRect() {
+                  return {
+                     top: 50,
+                     height: 35
+                  };
+               },
+               classList: {
+                  contains: () => false
+               },
+               parentNode: {
+                  classList: {
+                     contains: (style) => style === 'controls-ListView__itemV'
+                  }
+               }
+            },
+            nativeEvent: {
+               pageY: 60
+            }
+         };
+
+         const target = treeGrid.TreeControl._private.getTargetRow(event);
+         assert.equal(event.target, target);
+      });
+
       it('TreeControl.toggleExpanded with sorting', function() {
          let treeControl = correctCreateTreeControl({
             columns: [],

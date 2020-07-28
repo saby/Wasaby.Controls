@@ -11,9 +11,9 @@ export interface ITreeModel extends IFlatModel {
    getPrevDragPosition(): IDragPosition;
 
    calculateDragTargetPosition(itemData: ITreeItemData, position: TPosition): IDragPosition;
-   getItemDataByItem(item: TreeItem<Model>);
+   getItemDataByItem(item: TreeItem<Model>): ITreeItemData;
 
-   getExpandedItems(): Array<object>;
+   getExpandedItems(): object[];
 }
 
 export interface ITreeItemData extends IFlatItemData {
@@ -39,12 +39,10 @@ export default class TreeController extends FlatController {
     * Если не передать offset, то он будет посчитан
     * @rem
     * @param event {SyntheticEvent<MouseEvent>} событие клика на узел
-    * @param offset {IOffset} смещение мышки относительно верха и низа узла
+    * @param targetElement {EventTarget} элемент на который навели
     */
-   isInsideDragTargetNode(event: SyntheticEvent<MouseEvent>, offset?: IOffset): boolean {
-      if (!offset) {
-         offset = this._calculateOffset(event);
-      }
+   isInsideDragTargetNode(event: SyntheticEvent<MouseEvent>, targetElement: EventTarget): boolean {
+      const offset = this._calculateOffset(event, targetElement);
 
       if (offset) {
          if (offset.top > DRAG_MAX_OFFSET && offset.bottom > DRAG_MAX_OFFSET) {
@@ -55,14 +53,18 @@ export default class TreeController extends FlatController {
       return false;
    }
 
-   calculateDragPositionRelativeNode(itemData: ITreeItemData, event: SyntheticEvent<MouseEvent>): IDragPosition {
+   calculateDragPositionRelativeNode(
+       itemData: ITreeItemData,
+       event: SyntheticEvent<MouseEvent>,
+       targetElement: EventTarget
+   ): IDragPosition {
       if (this._draggingItemData.key === itemData.key) {
          return null;
       }
 
       let dragPosition;
 
-      const offset = this._calculateOffset(event);
+      const offset = this._calculateOffset(event, targetElement);
       if (offset) {
          let position;
          if (offset.top <= DRAG_MAX_OFFSET) {
@@ -134,12 +136,11 @@ export default class TreeController extends FlatController {
       }, EXPAND_ON_DRAG_DELAY);
    }
 
-   private _calculateOffset(event: SyntheticEvent<MouseEvent>): IOffset {
+   private _calculateOffset(event: SyntheticEvent<MouseEvent>, targetElement: EventTarget): IOffset {
       let result = null;
 
-      const dragTarget = this._getTargetRow(event);
-      if (dragTarget) {
-         const dragTargetRect = dragTarget.getBoundingClientRect();
+      if (targetElement) {
+         const dragTargetRect = targetElement.getBoundingClientRect();
 
          result = { top: null, bottom: null };
          result.top = event.nativeEvent.pageY - dragTargetRect.top;
@@ -147,34 +148,5 @@ export default class TreeController extends FlatController {
       }
 
       return result;
-   }
-
-   /**
-    * Получаем по event.target строку списка
-    * @param event
-    * @private
-    * @remark это нужно для того, чтобы когда event.target это содержимое строки, которое по высоте меньше 20 px,
-    *  то проверка на 10px сверху и снизу сработает неправильно и нельзя будет навести на узел(position='on')
-    */
-   private _getTargetRow(event: SyntheticEvent<MouseEvent>): EventTarget {
-      if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
-         return event.target;
-      }
-
-      const startTarget = event.target;
-      let target = startTarget;
-
-      while (!target.parentNode.classList.contains('controls-ListView__itemV')) {
-         target = target.parentNode;
-
-         // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
-         if (!target.classList || !target.parentNode || !target.parentNode.classList
-             || target.classList.contains('controls-BaseControl')) {
-            target = startTarget;
-            break;
-         }
-      }
-
-      return target;
    }
 }

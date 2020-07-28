@@ -60,9 +60,6 @@ describe('Controls/_listDragNDrop/TreeController', () => {
                   top: 50,
                   height: 35
                };
-            },
-            classList: {
-               contains: () => true
             }
          },
          nativeEvent: {
@@ -70,13 +67,13 @@ describe('Controls/_listDragNDrop/TreeController', () => {
          }
       };
       assert.isFalse(controller.isInsideDragTargetNode({}));
-      assert.isTrue(controller.isInsideDragTargetNode(event));
+      assert.isTrue(controller.isInsideDragTargetNode(event, event.target));
 
       event.nativeEvent.pageY = 30;
-      assert.isFalse(controller.isInsideDragTargetNode(event));
+      assert.isFalse(controller.isInsideDragTargetNode(event, event.target));
 
       event.nativeEvent.pageY = 90;
-      assert.isFalse(controller.isInsideDragTargetNode(event));
+      assert.isFalse(controller.isInsideDragTargetNode(event, event.target));
    });
 
    describe('calculateDragPosition', () => {
@@ -158,9 +155,6 @@ describe('Controls/_listDragNDrop/TreeController', () => {
                      top: 50,
                      height: 35
                   };
-               },
-               classList: {
-                  contains: () => true
                }
             },
             nativeEvent: {
@@ -169,41 +163,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
          };
 
          const targetNodeData = model.getItemDataByItem(model.getItemBySourceKey(1));
-         const position = controller.calculateDragPositionRelativeNode(targetNodeData, event);
-
-         assert.deepEqual(position, {
-            index: targetNodeData.index,
-            position: 'before',
-            item: targetNodeData.item,
-            data: targetNodeData
-         });
-      });
-
-      it('target is content of row', () => {
-         const event = {
-            target: {
-               getBoundingClientRect(): object {
-                  return {
-                     top: 50,
-                     height: 35
-                  };
-               },
-               classList: {
-                  contains: (style: string) => false
-               },
-               parentNode: {
-                  classList: {
-                     contains: (style: string) => style === 'controls-ListView__itemV'
-                  }
-               }
-            },
-            nativeEvent: {
-               pageY: 60
-            }
-         };
-
-         const targetNodeData = model.getItemDataByItem(model.getItemBySourceKey(1));
-         const position = controller.calculateDragPositionRelativeNode(targetNodeData, event);
+         const position = controller.calculateDragPositionRelativeNode(targetNodeData, event, event.target);
 
          assert.deepEqual(position, {
             index: targetNodeData.index,
