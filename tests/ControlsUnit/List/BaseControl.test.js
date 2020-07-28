@@ -4674,7 +4674,8 @@ define([
                         return {
                            getKey: () => 2
                         };
-                     }
+                     },
+                     setMarked: () => null
                   }],
                   null);
 
@@ -4700,7 +4701,8 @@ define([
                      id: 2,
                      showType: 0
                   }]
-               })
+               }),
+               setMarked: () => null
             };
             instance._itemActionsController.setActiveItem(breadcrumbItem);
             instance.getViewModel()
