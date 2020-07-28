@@ -66,7 +66,7 @@ define([
       ];
    }
 
-   describe('Controls.Tree.TreeControl', function() {
+   describe('Controls.tree.TreeControl', function() {
       it('TreeControl creating with expandedItems', function() {
          return new Promise(function(resolve, reject) {
             correctCreateTreeControl({
