@@ -19,6 +19,20 @@
 .controls-Render_state-search-valid-active_theme-@{themeName},
 .controls-Render_state-search-invalid-active_theme-@{themeName},
 .controls-Render_state-search-invalidAccent-active_theme-@{themeName} {
+   border-color: @border-color_searchInput;
+   background: @background-color_searchInput;
+}
+
+.controls-Render_state-search-valid_caretFilled_theme-@{themeName},
+.controls-Render_state-search-invalid_caretFilled_theme-@{themeName},
+.controls-Render_state-search-invalidAccent_caretFilled_theme-@{themeName} {
+   border-color: @border-color_focus_searchInput;
+   background: @background-color_focus_searchInput;
+}
+
+.controls-Render_state-search-valid-active_caretFilled_theme-@{themeName},
+.controls-Render_state-search-invalid-active_caretFilled_theme-@{themeName},
+.controls-Render_state-search-invalidAccent-active_caretFilled_theme-@{themeName} {
    border-color: @border-color_focus_searchInput;
    background: @background-color_focus_searchInput;
 }
@@ -28,15 +42,6 @@
 .controls-Render_state-searchContrast-invalidAccent_theme-@{themeName} {
    border-color: @border-color_contrast_searchInput;
    background: @background-color_contrast_searchInput;
-}
-
-.controls-Search_state-search__input_border_theme-@{themeName} {
-   border-color: @border-color_focus_searchInput;
-   background: @background-color_focus_searchInput;
-}
-.controls-Search_state-searchContrast__input_border_theme-@{themeName} {
-   border-color: @border-color_contrast_focus_searchInput;
-   background: @background-color_contrast_focus_searchInput;
 }
 
 .controls-Render_state-searchContrast-valid-active_theme-@{themeName},
