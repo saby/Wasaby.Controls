@@ -2,7 +2,7 @@
    <Controls.filterPopup:Lookup
            caption="{{_options.caption}}"
            bind:value="_value"
-           bind:selectedKeys="_options.selectedKeys"
+           selectedKeys="{{_options.selectedKeys}}"
            source="{{_options.source}}"
            placeholder="{{_options.placeholder}}"
            searchParam="title"
