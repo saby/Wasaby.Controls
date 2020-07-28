@@ -70,8 +70,8 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
 
       it('Suggest::getHistoryService', function(done) {
          getHistorySource({_options: {historyId: 'TEST_HISTORY_ID_GET_SOURCE'}}).addCallback(function(historyService) {
-            assert.equal(12, historyService._recent);
-            assert.equal('TEST_HISTORY_ID_GET_SOURCE', historyService._historyId);
+            assert.equal(12, historyService._$recent);
+            assert.equal('TEST_HISTORY_ID_GET_SOURCE', historyService._$historyId);
             done();
          });
       });

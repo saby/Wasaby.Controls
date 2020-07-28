@@ -59,7 +59,7 @@ define(
             var panel2 = getFilterPanel(config2);
             filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID', false).addCallback(function(items) {
                assert.isOk(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'})._history);
-               assert.isFalse(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'}).historySource._favorite);
+               assert.isFalse(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'}).historySource._$favorite);
                assert.equal(items.getCount(), 2);
                Env.constants.isServerSide = isServerSide;
                done();
@@ -73,7 +73,7 @@ define(
                pinned: false
             };
             let hSource = filter.HistoryUtils.getHistorySource(historyConfig);
-            assert.strictEqual(hSource.historySource._recent, history.Constants.MAX_HISTORY_REPORTS + 1);
+            assert.strictEqual(hSource.historySource._$recent, history.Constants.MAX_HISTORY_REPORTS + 1);
          });
 
          it('Init::historyItems fail loading', function(done) {
