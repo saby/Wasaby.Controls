@@ -19,7 +19,7 @@ import {default as Store} from 'Controls/Store';
  */
 
 /*
- * Special container for component with {@link Controls/interface/IInputField}.
+ * Special container for component with {@link Controls/input:IValue}.
  * Listens for child's "valueChanged" event and notify bubbling event "search".
  * NOTE: must be located inside {@link Controls/_search/Controller}.
  *

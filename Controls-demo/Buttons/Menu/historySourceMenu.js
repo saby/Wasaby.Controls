@@ -124,7 +124,7 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
          var query = new source.Query().where({
             $_history: true
          });
-         hs.historySource.query = function() {
+         hs._$historySource.query = function() {
             var def = new Deferred();
             def.addCallback(function(set) {
                return set;
@@ -135,7 +135,7 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
          hs.query(query);
 
          // Заглушка, чтобы демка не ломилась не сервис истории
-         hs.historySource.update = function(item, meta) {
+         hs._$historySource.update = function(item, meta) {
             var pinned = srcData.getRow().get('pinned');
             var recent = srcData.getRow().get('recent');
             var historyItem;
@@ -165,7 +165,7 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
             srcData = createDataSet(frequentData, pinned.getRawData(), recentData);
             return {};
          };
-         hs.historySource.query();
+         hs._$historySource.query();
          return hs;
       }
 

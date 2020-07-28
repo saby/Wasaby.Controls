@@ -30,7 +30,7 @@ export interface ICallbackData<T> extends IFieldData {
 
 /**
  * Определяет функцию обратного вызова, изменяющую обработку ввода.
- * @typedef {Function} ICallback
+ * @callback ICallback
  * @param T Тип значения поля ввода.
  * @param {ICallbackData} data данные основного процесса обработки ввода.
  * @return {IFieldData} измененные данные.
@@ -139,6 +139,10 @@ export interface IValueOptions<T> {
     inputCallback: ICallback<T>;
 }
 
+export interface IValue {
+    readonly '[Controls/_input/interface/IValue]': boolean;
+}
+
 /**
  * @name Controls/_input/interface/IValue#valueChanged
  * @event Происходит при изменении отображаемого значения контрола ввода.
@@ -181,7 +185,6 @@ export interface IValueOptions<T> {
  *
  * @see value
  */
-
 /**
  * @name Controls/_input/interface/IValue#inputCompleted
  * @event Происходит при завершении ввода. Завершение ввода — это контрол потерял фокус, или пользователь нажал клавишу "Enter".
@@ -204,9 +207,3 @@ export interface IValueOptions<T> {
  * </pre>
  * @see value
  */
-
-interface IValue {
-    readonly '[Controls/_input/interface/IValue]': boolean;
-}
-
-export default IValue;

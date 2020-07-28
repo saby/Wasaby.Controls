@@ -80,13 +80,13 @@ interface IRenderOptions extends IControlOptions, IHeightOptions, IBorderVisibil
  * @class Controls/_input/Render
  * @extends UI/_base/Control
  *
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_input/interface/ITag
- * @mixes Controls/_interface/IValidationStatus
- * @mixes Controls/interface/IBorderStyle
- * @mixes Controls/interface/IBorderVisibility
+ * @mixes Controls/interface:IHeight
+ * @mixes Controls/interface:IFontSize
+ * @mixes Controls/interface:IBorderStyle
+ * @mixes Controls/interface:IFontColorStyle
+ * @mixes Controls/interface:IValidationStatus
+ * @mixes Controls/input:ITag
+ * @mixes Controls/input:IBorderVisibility
  *
  * @author Красильников А.С.
  * @private
