@@ -50,6 +50,9 @@ export class ViewModel extends BaseViewModel {
     }
 
     protected _convertToValue(displayValue: string) {
+        if (this._displayValue === displayValue) {
+            return this._value;
+        }
         return this._valueToTimeIntervalConverter(displayValue);
     }
 
