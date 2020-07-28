@@ -42,6 +42,14 @@ define('Controls-demo/Index', [
          _afterMount: function() {
             window.localStorage.setItem('controlSettingsStorage', JSON.stringify({}));
          },
+         _getPopupHeaderTheme: function(theme) {
+            var retailHead = 'retail__';
+
+            if (theme.indexOf(retailHead) !== -1) {
+               return retailHead + 'header-' + theme.slice(retailHead.length);
+            }
+            return theme;
+         },
          _getTitle: function() {
             var location = this._getLocation();
             if (location) {
