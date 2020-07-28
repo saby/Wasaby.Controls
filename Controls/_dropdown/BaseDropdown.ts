@@ -11,7 +11,7 @@ export type DropdownReceivedState = {items?: RecordSet, history?: RecordSet};
 
 export abstract class BaseDropdown extends Control<IControlOptions, DropdownReceivedState> {
     protected _controller: IDropdownController = null;
-    protected _popupId: string = null;
+    protected _isOpened: boolean = false;
     protected _dependenciesTimer: DependencyTimer = null;
 
     reload(): void {
@@ -29,7 +29,7 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
     }
 
     protected _handleKeyDown(event): void {
-        if (event.nativeEvent.keyCode === constants.key.esc && this._popupId) {
+        if (event.nativeEvent.keyCode === constants.key.esc && this._isOpened) {
             this._controller.closeMenu();
             event.stopPropagation();
         }
@@ -54,11 +54,12 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
     }
 
     protected _onOpen(): void {
+        this._isOpened = true;
         this._notify('dropDownOpen');
     }
 
     protected _onClose(): void {
-        this._popupId = null;
+        this._isOpened = false;
         this._controller.handleClose();
         this._notify('dropDownClose');
     }
@@ -76,7 +77,7 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
     }
 
     protected _handleScroll(): void {
-        if (this._popupId) {
+        if (this._isOpened) {
             this._controller.closeMenu();
         }
     }

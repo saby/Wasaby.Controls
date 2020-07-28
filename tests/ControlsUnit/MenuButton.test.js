@@ -7,9 +7,10 @@ define(
       'Core/Deferred',
       'Types/entity',
       'Types/collection',
-      'Controls/popup'
+      'Controls/popup',
+      'Controls/buttons'
    ],
-   (dropdown, sourceLib, Clone, history, Deferred, entity, collection, popup) => {
+   (dropdown, sourceLib, Clone, history, Deferred, entity, collection, popup, buttons) => {
       describe('MenuButton', () => {
          let items = [
             {
@@ -239,7 +240,7 @@ define(
             assert.isFalse(menuClosed);
 
             // Тестируем нажатие esc, когда выпадающий список открыт
-            menu._popupId = 'testId';
+            menu._isOpened = true;
 
             menu._handleKeyDown(event);
             assert.isTrue(menuClosed);
@@ -337,7 +338,7 @@ define(
 
             // returned undefined from handler and no hierarchy
             closed = false;
-            menu._popupId = 'test';
+            menu._isOpened = true;
             closeByNodeClick = undefined;
             menu._onResult('itemClick', menu._controller._items.at(4));
             assert.isTrue(closed);
@@ -413,6 +414,29 @@ define(
             };
             menu.openMenu();
             assert.equal(actualTarget, 'testTarget');
+         });
+
+         it('_updateState', () => {
+            let optionsUpdated = false;
+            const options = {
+               isNewOptionsUsed: false
+            };
+            buttons.ActualApi.styleToViewMode = () => {
+               optionsUpdated = true;
+               return {
+                  viewMode: '',
+                  style: '',
+                  buttonAdd: false
+               };
+            };
+            menu._updateState(options);
+            assert.isTrue(optionsUpdated);
+
+            options.isNewOptionsUsed = true;
+            optionsUpdated = false;
+
+            menu._updateState(options);
+            assert.isFalse(optionsUpdated);
          });
       });
    }

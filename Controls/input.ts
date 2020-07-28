@@ -74,7 +74,7 @@ import Date = require('Controls/_input/Date/Picker');
 import {default as Render} from 'Controls/_input/Render';
 import TimeInterval from 'Controls/_input/TimeInterval';
 import Money from 'Controls/_input/Money';
-import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask'
+import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
@@ -85,25 +85,25 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import hoursFormat from  'Controls/_input/InputCallback/hoursFormat';
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
-import INewLineKey from 'Controls/_input/interface/INewLineKey';
 import * as MaskFormatterValue from 'Controls/_input/Mask/FormatterValue';
-export {default as IText, ITextOptions} from 'Controls/_input/interface/IText';
-export {default as IBase, IBaseOptions, TextAlign, AutoComplete} from 'Controls/_input/interface/IBase';
-export {default as ITag, ITagOptions, TagStyle} from 'Controls/_input/interface/ITag';
-export {default as INumberLength, INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
-export {default as IValue, IValueOptions, ICallback, ICallbackData, IFieldData} from 'Controls/_input/interface/IValue';
+export {IText, ITextOptions} from 'Controls/_input/interface/IText';
+export {INewLineKey, INewLineKeyOptions} from 'Controls/_input/interface/INewLineKey';
+export {IBase, IBaseOptions, TextAlign, AutoComplete} from 'Controls/_input/interface/IBase';
+export {ITag, ITagOptions, TagStyle} from 'Controls/_input/interface/ITag';
+export {INumberLength, INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
+export {IValue, IValueOptions, ICallback, ICallbackData, IFieldData} from 'Controls/_input/interface/IValue';
 export {default as MobileFocusController} from 'Controls/_input/Base/MobileFocusController';
 export {default as AdapterMask} from 'Controls/_input/Adapter/Mask';
 export {default as isMaskFormatValid} from 'Controls/_input/Mask/isFormatValid';
 export {Formatter as MaskFormatter, FormatBuilder as MaskFormatBuilder} from 'Controls/decorator';
-export {default as IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility, getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes} from './_input/interface/IBorderVisibility';
-export {default as IPadding, IPaddingOptions, TPadding, getDefaultPaddingOptions, getOptionPaddingTypes} from './_input/interface/IBorderVisibility';
+export {IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility, getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes} from './_input/interface/IBorderVisibility';
+export {IPadding, IPaddingOptions, TPadding, getDefaultPaddingOptions, getOptionPaddingTypes} from './_input/interface/IBorderVisibility';
 export * from './_input/ActualAPI';
 
 /**
  * ПРИВАТНЫЕ МОДУЛИ.
  * ЭКСПОРТИРУЮТСЯ ДЛЯ UNIT-ТЕСТИРОВАНИЯ.
- * НЕ ИСПОЛЬЗОВАТЬ НА ПРИКЛАДНОЙ СТРОНЕ!!!
+ * НЕ ИСПОЛЬЗОВАТЬ НА ПРИКЛАДНОЙ СТОРОНЕ!!!
  */
 export {FixBugs as __FixBugs} from 'Controls/_input/FixBugs';
 export {ValueInField as __ValueInField} from 'Controls/_input/FixBugs/ValueInField';
@@ -144,7 +144,6 @@ export {
     MaskFormatterValue,
     StringValueConverter,
     InputCallback,
-    INewLineKey,
     ActualAPI,
     IDateTimeMask
 };

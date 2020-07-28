@@ -23,8 +23,8 @@ import 'Controls/decorator';
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
  *
  * @class Controls/_input/Area
- * @extends Controls/_input/Text
- * @mixes Controls/_input/interface/INewLineKey
+ * @extends Controls/input:Text
+ * @mixes Controls/input:INewLineKey
  *
  * @public
  * @demo Controls-demo/Input/Area/MinMaxLines/Index

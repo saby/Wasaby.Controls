@@ -3,7 +3,6 @@ import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Number/ViewModel');
 
-
 /**
  * Поле ввода числовых значений.
  *
@@ -15,27 +14,10 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  *
  * @class Controls/_input/Number
  * @extends Controls/_input/Base
+ * // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
+ * @ignoreOptions value
  *
  * @mixes Controls/interface/IOnlyPositive
- * @mixes Controls/interface/IInputNumber
- * @mixes Controls/_interface/INumberFormat
- * @mixes Controls/_input/interface/INumberLength
- *
- * @public
- * @demo Controls-demo/Input/Number/Base/Index
- *
- * @author Красильников А.С.
- */
-
-/*
- * Controls that allows user to enter single-line number.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">Demo example.</a>.
- *
- * @class Controls/_input/Number
- * @extends Controls/_input/Base
- *
- * @mixes Controls/interface/IOnlyPositive
- * @mixes Controls/interface/IInputNumber
  * @mixes Controls/_interface/INumberFormat
  * @mixes Controls/_input/interface/INumberLength
  *
