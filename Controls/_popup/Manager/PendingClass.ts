@@ -89,6 +89,8 @@ class PendingClass {
             this.unregisterPending(root, pendingCounter);
             return res;
         };
+        // Дублируем функцию в then и catch потому, что при использовании catch и finally finishPendingOperations
+        // срабатывает раньше, чем происходит unregister пендинга.
         def.then(promiseHandler).catch(promiseHandler);
 
         this._pendingsCounter++;
