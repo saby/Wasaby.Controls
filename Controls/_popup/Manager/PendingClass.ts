@@ -84,13 +84,12 @@ class PendingClass {
             const indicatorConfig = {id: this._pendings[root][this._pendingsCounter].loadingIndicatorId};
             this._pendings[root][this._pendingsCounter].loadingIndicatorId = this._notify('showIndicator', [indicatorConfig]);
         }
-
-        def.catch(() => ({
-            //Ставим заглушку для того, чтобы не падали ошибки в консоль
-        })).finally(function(pendingsCounter: number, res) {
-            this.unregisterPending(root, pendingsCounter);
+        const promiseHandler = (res) => {
+            const pendingCounter = this._pendingsCounter;
+            this.unregisterPending(root, pendingCounter);
             return res;
-        }.bind(this, this._pendingsCounter));
+        };
+        def.then(promiseHandler).catch(promiseHandler);
 
         this._pendingsCounter++;
     }
