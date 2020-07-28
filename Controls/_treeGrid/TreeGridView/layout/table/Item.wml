@@ -97,11 +97,11 @@
                             </ws:for>
                         </ws:if>
                         <ws:if data="{{itemData.shouldDrawExpander(itemData, expanderIcon)}}">
-                            <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{expanderIcon}}"
+                            <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
                                         expanderSize="{{itemData.getExpanderSize(expanderSize)}}"/>
                         </ws:if>
                         <ws:else
-                                data="{{itemData.shouldDrawExpanderPadding(itemData, expanderIcon, itemData.getExpanderSize(expanderSize))}}">
+                                data="{{itemData.shouldDrawExpanderPadding(itemData, expanderIcon, expanderSize)}}">
                             <div class="{{itemData.getExpanderPaddingClasses(itemData, expanderSize)}} js-controls-ListView__notEditable"></div>
                         </ws:else>
                     </ws:if>

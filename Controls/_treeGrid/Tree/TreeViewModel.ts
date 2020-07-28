@@ -55,7 +55,9 @@ var
                 return cfg.expanderVisibility;
             }
             // TODO: Удалить #rea_1179794968
-            Logger.warn('TreeGrid: option expanderDisplayMode is deprecated and will be removed in first next major version after 15.6000. Use expanderVisibility.');
+            if (typeof cfg.expanderDisplayMode !== 'undefined') {
+                Logger.warn('TreeGrid: option expanderDisplayMode is deprecated and will be removed in first next major version after 15.6000. Use expanderVisibility.');
+            }
             return cfg.expanderDisplayMode === 'adaptive' ? 'hasChildren' : 'visible';
         },
 
@@ -155,13 +157,14 @@ var
             // Show expander icon if it is not equal 'none' or render leafs
             return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem && itemData.hasChildItem);
         },
-        shouldDrawExpanderPadding(itemData, tmplExpanderIcon): boolean {
+        shouldDrawExpanderPadding(itemData, tmplExpanderIcon, tmplExpanderSize): boolean {
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
+            const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
 
             if (itemData.expanderVisibility === 'hasChildren') {
                 return itemData.thereIsChildItem && expanderIcon !== 'none';
             } else {
-                return expanderIcon !== 'none';
+                return !expanderSize && expanderIcon !== 'none';
             }
         },
         getExpanderPaddingClasses(itemData, tmplExpanderSize, isNodeFooter): string {
@@ -334,14 +337,9 @@ var
                         expanderSize?: 's' | 'm' | 'l' | 'xl';
                     }): boolean => {
                         if (spacingFor === 'levelIndent') {
-                            return !(
-                                (tmplOptions.withoutLevelPadding === true) ||
-                                (self._options.expanderIcon === 'none') ||
-                                (tmplOptions.expanderIcon === 'none')
-                            );
+                            return tmplOptions.withoutLevelPadding !== true;
                         } else if (spacingFor === 'expanderPadding') {
-                            return (self._options.expanderIcon !== 'none') ||
-                                    (tmplOptions.expanderIcon !== 'none');
+                            return current.shouldDrawExpanderPadding(current, tmplOptions.expanderIcon, tmplOptions.expanderSize);
                         }
                     },
                     getLevelIndentClasses: (expanderSize: string, levelIndentSize: string) => {

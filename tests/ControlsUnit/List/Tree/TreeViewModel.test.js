@@ -290,34 +290,40 @@ define([
                   shouldDrawExpanderPadding = treeGrid.TreeViewModel._private.shouldDrawExpanderPadding;
               assert.isTrue(shouldDrawExpanderPadding({
                   getExpanderIcon: () => 'node',
+                  getExpanderSize: () => undefined,
                   expanderVisibility: 'visible',
                   thereIsChildItem: true
-              }, 'node'));
+              }, 'node', undefined));
               assert.isTrue(shouldDrawExpanderPadding({
                   getExpanderIcon: () => 'node',
+                  getExpanderSize: () => undefined,
                   expanderVisibility: 'visible',
                   thereIsChildItem: false
-              }, 'node'));
+              }, 'node', undefined));
               assert.isTrue(shouldDrawExpanderPadding({
                   getExpanderIcon: () => 'node',
+                  getExpanderSize: () => undefined,
                   expanderVisibility: 'hasChildren',
                   thereIsChildItem: true
-              }, 'node'));
+              }, 'node', undefined));
               assert.isFalse(shouldDrawExpanderPadding({
                   getExpanderIcon: () => 'none',
+                  getExpanderSize: () => undefined,
                   expanderVisibility: 'visible',
                   thereIsChildItem: true
-              }, 'none'));
+              }, 'none', undefined));
               assert.isFalse(shouldDrawExpanderPadding({
                   getExpanderIcon: () => 'none',
+                  getExpanderSize: () => undefined,
                   expanderVisibility: 'hasChildren',
                   thereIsChildItem: true
-              }, 'none'));
+              }, 'none', undefined));
               assert.isFalse(shouldDrawExpanderPadding({
                   getExpanderIcon: () => 'node',
+                  getExpanderSize: () => undefined,
                   expanderVisibility: 'hasChildren',
                   thereIsChildItem: false
-              }, 'node'));
+              }, 'node', undefined));
           });
           it('should redraw list if once folder was deleted', function() {
             var
