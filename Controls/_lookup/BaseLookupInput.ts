@@ -146,6 +146,10 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         }
     }
 
+    protected _itemsChanged(): void {
+        this._calculateSizes(this._options);
+    }
+
     private _activated(): void {
         this._active = true;
     }
