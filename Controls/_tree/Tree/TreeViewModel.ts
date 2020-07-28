@@ -622,7 +622,6 @@ var
             current.getExpanderPaddingClasses = _private.getExpanderPaddingClasses;
 
 
-
             current.expanderVisibility = _private.getExpanderVisibility(this._options);
             current.getLevelIndentSize = _private.getLevelIndentSize;
             current.getLevelIndentClasses = (itemData, tmplExpanderSize: string, levelIndentSize: string): string => {
@@ -635,7 +634,6 @@ var
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;
             current.thereIsChildItem = this._thereIsChildItem;
-            current.hasChildItem = !current.isGroup && _private.hasChildItem(this, current.key);
 
             // todo https://online.sbis.ru/opendoc.html?guid=0649e69a-d507-4024-9f99-c70205f535ef
             current.expanderTemplate = this._options.expanderTemplate;
@@ -654,10 +652,10 @@ var
                 }
             }
 
-           current.useNewNodeFooters = this._options.useNewNodeFooters;
-           if (current.item.get) {
-               _private.setNodeFooterIfNeed(this, current);
-           }
+            current.useNewNodeFooters = this._options.useNewNodeFooters;
+            if (current.item.get) {
+                _private.setNodeFooterIfNeed(this, current);
+            }
             return current;
         },
 

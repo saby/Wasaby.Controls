@@ -14,7 +14,7 @@
            bind:root="_root"
            bind:expandedItems="_expandedItems"
            itemsFilterMethod="{{_itemsFilterMethod}}"
-           expanderVisibility="hasChildren"
+           expanderDisplayMode="adaptive"
            expanderVisibility="{{_options.expanderVisibility}}"
            emptyTemplate="{{_options.emptyTemplate}}"
            columns="{{_columns}}"/>
@@ -36,7 +36,7 @@
            bind:root="_root"
            bind:expandedItems="_expandedItems"
            itemsFilterMethod="{{_itemsFilterMethod}}"
-           expanderVisibility="hasChildren"
+           expanderDisplayMode="adaptive"
            expanderVisibility="{{_options.expanderVisibility}}"
            emptyTemplate="{{_options.emptyTemplate}}"
            columns="{{_columns}}"

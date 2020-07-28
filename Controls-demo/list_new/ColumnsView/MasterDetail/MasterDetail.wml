@@ -22,7 +22,7 @@
                                    style="master"
                                    markerVisibility='visible'
                                    nodeProperty="Раздел@"
-                                   expanderVisibility="hasChildren"
+                                   expanderDisplayMode="adaptive"
                                    columns="{{gridColumns}}"
                            >
                               <ws:draggingTemplate>
