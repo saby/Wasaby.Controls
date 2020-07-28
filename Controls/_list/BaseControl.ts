@@ -76,6 +76,7 @@ import * as itemActionsTemplate from 'wml!Controls/_list/ItemActions/resources/I
 import * as swipeTemplate from 'wml!Controls/_list/Swipe/resources/SwipeTemplate';
 import {IList} from "./interface/IList";
 import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
+import { IScrollControllerResult } from './ScrollContainer/interfaces';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -244,7 +245,7 @@ const _private = {
         }
     },
 
-    checkNeedAttachLoadTopTriggerToNull(self): void {
+    attachLoadTopTriggerToNullIfNeed(self): void {
         // Если нужно сделать опциональным поведение отложенной загрузки вверх, то проверку добавлять здесь.
         // if (!cfg.attachLoadTopTriggerToNull) return;
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
@@ -262,13 +263,13 @@ const _private = {
             self._attachLoadTopTriggerToNull = false;
         }
         if (self._scrollController) {
-            self._loadOffset = self._scrollController.update({
+            let result = self._scrollController.update({
+                attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: isInfinityNavigation,
                 collection: self.getViewModel(),
                 ...self._options
             });
-            self._loadOffset.top = self._attachLoadTopTriggerToNull ? 0 : self._loadOffset.top;
-            self.applyTriggerOffset(self._loadOffset);
+            _private.handleScrollControllerResult(self, result);
         }
     },
 
@@ -397,7 +398,7 @@ const _private = {
                 if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
                     _private.checkLoadToDirectionCapability(self, filter, navigation);
                 } else {
-                    _private.checkNeedAttachLoadTopTriggerToNull(self);
+                    _private.attachLoadTopTriggerToNullIfNeed(self);
                 }
                 });
             }).addErrback(function(error: Error) {
@@ -1194,17 +1195,11 @@ const _private = {
         return offsetTop;
     },
 
-    
-    notifyPlaceholdersChanged(self, placeholders): void {
-        if (self._isMounted) {
-            self._notify('updatePlaceholdersSize', [placeholders], {bubbling: true});
-        }
-    },
 
     // throttle нужен, чтобы при потоке одинаковых событий не пересчитывать состояние на каждое из них
     throttledVirtualScrollPositionChanged: throttle((self, params) => {
-        let placeholders = self._scrollController.virtualScrollPositionChanged(params);
-        _private.notifyPlaceholdersChanged(self, placeholders);
+        let result = self._scrollController.scrollPositionChange(params, true);
+        _private.handleScrollControllerResult(self, result);
     }, SCROLLMOVE_DELAY, true),
 
     handleListScrollSync(self, scrollTop) {
@@ -1361,7 +1356,7 @@ const _private = {
             }
             if (self._scrollController) {
                 if (action) {
-                    let placeholders = null;
+                    let result = null;
                     if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
 
                         // TODO: this._batcher.addItems(newItemsIndex, newItems)
@@ -1369,20 +1364,20 @@ const _private = {
                             self._addItems.push(...newItems);
                             self._addItemsIndex = newItemsIndex;
                         } else {
-                            placeholders = self._scrollController.addItems(newItemsIndex, newItems);
+                            result = self._scrollController.handleAddItems(newItemsIndex, newItems);
                         }
                             
                     }
                     if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
                         // When move items call removeHandler with "forceShift" param.
                         // https://online.sbis.ru/opendoc.html?guid=4e6981f5-27e1-44e5-832e-2a080a89d6a7
-                        placeholders = self._scrollController.removeItems(removedItemsIndex, removedItems, action === IObservable.ACTION_MOVE);
+                        result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems, action === IObservable.ACTION_MOVE);
                     }
                     if (action === IObservable.ACTION_RESET) {
-                        placeholders = self._scrollController.resetItems();
+                        result = self._scrollController.resetItems();
                     }
-                    if (placeholders) {
-                        _private.notifyPlaceholdersChanged(self, placeholders);
+                    if (result) {
+                        _private.handleScrollControllerResult(self, result);
                     }
                 }
             }
@@ -2022,6 +2017,19 @@ const _private = {
 
     // endregion
 
+    handleScrollControllerResult(self, result: IScrollControllerResult) {
+        if (result.placeholders) {
+            if (self._isMounted) {
+                self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
+            }
+        }
+        if (result.triggerOffset) {
+            self.applyTriggerOffset(result.triggerOffset);
+        }
+        if (result.activeElement) {
+            self._notify('activeElementChanged', [result.activeElement]);
+        }
+    },
     onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
       // подписываемся на рекордсет, чтобы следить какие элементы будут удалены
       // при подписке на модель событие remove летит еще и при скрытии элементов
@@ -2663,8 +2671,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._inertialScrolling;
     },
 
-    scrollMoveSyncHandler(params: unknown): void {
-        _private.handleListScrollSync(this, params);
+    scrollMoveSyncHandler(params: IScrollParams): void {
+        
+        _private.handleListScrollSync(this, params.scrollTop);
+
+        let result = this._scrollController.scrollPositionChange(params);
+        _private.handleScrollControllerResult(this, result);
 
         if (detection.isMobileIOS) {
             this._getInertialScrolling().scrollStarted();
@@ -2690,9 +2702,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._viewportRect = viewportRect;
         if (this._scrollController) {
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
-            this._loadOffset = this._scrollController.updateScrollParams({clientHeight: this._viewportSize});
-            this._loadOffset.top = this._attachLoadTopTriggerToNull ? 0 : this._loadOffset.top;
-            this.applyTriggerOffset(this._loadOffset);
+            let result = this._scrollController.updateScrollParams({clientHeight: this._viewportSize});
+            _private.handleScrollControllerResult(this, result);
         }
     },
 
@@ -2767,9 +2778,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const itemsHeights = getItemsHeightsData(this._getItemsContainer());
             this._scrollController.updateItemsHeights(itemsHeights);
             
-            this._loadOffset = this._scrollController.updateScrollParams({scrollHeight: this._viewSize, clientHeight: this._viewportSize});
-            this._loadOffset.top = this._attachLoadTopTriggerToNull ? 0 : this._loadOffset.top;
-            this.applyTriggerOffset(this._loadOffset);
+            let result = this._scrollController.updateScrollParams({scrollHeight: this._viewSize, clientHeight: this._viewportSize});
+            _private.handleScrollControllerResult(this, result);
         }
 
         if (_private.needScrollPaging(this._options.navigation)) {
@@ -2805,7 +2815,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadedItems = null;
 
         if (this._scrollController) {
-            this._scrollController.afterMount();
+            this._scrollController.afterRender();
         }
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
@@ -2830,7 +2840,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
-        _private.checkNeedAttachLoadTopTriggerToNull(this);
+        _private.attachLoadTopTriggerToNullIfNeed(this);
     },
 
     _beforeUpdate(newOptions) {
@@ -2964,6 +2974,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._editingItemData = this._editInPlace.getEditingItemData();
         }
 
+        // Синхронный индикатор загрузки для реестров, в которых записи - тяжелые контролы. 
+        // Их отрисовка может занять много времени, поэтому следует показать индикатор, не дожидаясь ее окончания.
         if (this._syncLoadingIndicatorState) {
             clearTimeout(this._syncLoadingIndicatorTimeout);
             this._syncLoadingIndicatorTimeout = setTimeout(() => {
@@ -2971,13 +2983,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
         if (this._scrollController) {
-            this._loadOffset = this._scrollController.update({
+            let result = this._scrollController.update({
+                attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
                 collection: this.getViewModel(),
                 ...newOptions
             }, {scrollHeight: this._viewSize, clientHeight: this._viewportSize});
-            this._loadOffset.top = this._attachLoadTopTriggerToNull ? 0 : this._loadOffset.top;
-            this.applyTriggerOffset(this._loadOffset);
+            _private.handleScrollControllerResult(this, result);
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -3266,14 +3278,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
     handleTriggerVisible(direction: IDirection): void {
-        // Вызываем сдвиг диапазона
-        const shiftResult = this._scrollController.shiftToDirection(direction);
-        if (shiftResult === 'CANT_SHIFT') {
-            // Если не получилось сдвинуть, значит загруженные данные кончились, значит загружаем
-            this.loadMore(direction);
-        } else if (shiftResult === 'SHIFTING') {
+        // Вызываем сдвиг диапазона в направлении видимого триггера
+        if (this._scrollController.tryShiftToDirection(direction)) {
             // если отрисовка записей во время сдвига диапазона занимает много времени, нужно будет показать индикатор загрузки
             this._syncLoadingIndicatorState = direction;
+        } else {
+            // Если не получилось сдвинуть, значит загруженные данные кончились, значит загружаем
+            this.loadMore(direction);
         }
     },
     _scrollToFirstItemIfNeed(): void {
@@ -3984,11 +3995,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this.triggerVisibilityChangedHandler('up', false);
                 break;
             case 'scrollMoveSync':
-                let activeElement = this._scrollController.scrollPositionChanged(params);
-                if (activeElement !== undefined) {
-                    this._notify('activeElementChanged', [activeElement]);
-                }
-                this.scrollMoveSyncHandler(params.scrollTop);
+                this.scrollMoveSyncHandler(params);
                 break;
             case 'viewportResize':
                 this.viewportResizeHandler(params.clientHeight, params.rect);
