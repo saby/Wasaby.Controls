@@ -367,73 +367,59 @@ const changeSourceData = (): IChangeSource => ({
     data: [
         {
             id: 1,
-            load: 'One',
-            title: 'hello'
+            title: 'One'
         }, {
             id: 2,
-            load: 'Two',
-            title: 'hello'
+            title: 'Two'
 
         }, {
             id: 3,
-            load: 'three',
-            title: 'hello'
+            title: 'three'
 
         }, {
             id: 4,
-            load: 'Four',
-            title: 'hello'
+            title: 'Four'
 
         }, {
             id: 5,
-            load: 'Five',
-            title: 'hello'
+            title: 'Five'
 
         }, {
             id: 6,
-            load: 'Six',
-            title: 'hello'
+            title: 'Six'
 
         }, {
             id: 7,
-            load: 'Seven',
-            title: 'hello'
+            title: 'Seven'
 
         }],
     data2: [
         {
             id: 1,
-            load: 1,
-            title: 'hello'
+            title: 1
         }, {
             id: 2,
-            load: 2,
-            title: 'hello'
+            title: 2
 
         }, {
             id: 3,
-            load: 2,
-            title: 'hello'
+            title: 2
 
         }, {
             id: 4,
-            load: 2,
-            title: 'hello'
+            title: 2
 
         }, {
             id: 5,
-            load: 2,
-            title: 'hello'
+            title: 2
 
         }, {
             id: 6,
-            load: 2,
-            title: 'hello'
+            title: 2
 
         }, {
             id: 7,
-            load: 2,
-            title: 'hello'
+            title: 2
 
         }]
 });
