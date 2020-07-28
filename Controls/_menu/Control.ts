@@ -8,7 +8,7 @@ import {RecordSet, List} from 'Types/collection';
 import {ICrudPlus, PrefetchProxy, QueryWhere} from 'Types/source';
 import * as Clone from 'Core/core-clone';
 import * as Merge from 'Core/core-merge';
-import {Collection, Search, CollectionItem, SelectionController} from 'Controls/display';
+import {Collection, Search, CollectionItem} from 'Controls/display';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
@@ -39,6 +39,37 @@ import {TKey} from 'Controls/_menu/interface/IMenuControl';
  * @control
  * @category Popup
  * @author Герасимов А.М.
+ */
+
+/**
+ * @name Controls/_menu/Control#multiSelect
+ * @cfg {Boolean} Определяет, установлен ли множественный выбор.
+ * @default false
+ * @demo Controls-demo/Menu/Control/MultiSelect/Index
+ * @example
+ * Множественный выбор установлен.
+ * WML:
+ * <pre>
+ * <Controls.menu:Control
+ *       selectedKeys="{{_selectedKeys}}"
+ *       keyProperty="id"
+ *       displayProperty="title"
+ *       source="{{_source}}"
+ *       multiSelect="{{true}}">
+ * </Controls.menu:Control>
+ * </pre>
+ * JS:
+ * <pre>
+ * this._source = new Memory({
+ *    keyProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Yaroslavl'},
+ *       {id: 2, title: 'Moscow'},
+ *       {id: 3, title: 'St-Petersburg'}
+ *    ]
+ * });
+ * this._selectedKeys = [1, 3];
+ * </pre>
  */
 
 /**
@@ -248,7 +279,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (MenuControl._isPinIcon(sourceEvent.target)) {
             this._pinClick(event, item);
         } else {
-            if (this._options.multiSelect && this._selectionChanged && !this._isEmptyItem(treeItem.getContents())) {
+            if (this._options.multiSelect && this._selectionChanged &&
+                !this._isEmptyItem(treeItem.getContents()) && !MenuControl._isFixedItem(item)) {
                 this._changeSelection(key, treeItem);
                 this._updateApplyButton();
 
@@ -497,6 +529,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _changeSelection(key: string|number|null, treeItem: CollectionItem<Model>): void {
+        const selectedItems = this._listModel.getSelectedItems();
+        if (selectedItems.length === 1 && MenuControl._isFixedItem(selectedItems[0].getContents())) {
+            MenuControl._selectItem(this._listModel, selectedItems[0].getContents().getKey(), false);
+        }
         MenuControl._selectItem(this._listModel, key, !treeItem.isSelected());
 
         const isEmptySelected: boolean = this._options.emptyText && !this._listModel.getSelectedItems().length;
@@ -711,6 +747,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 item
             },
             closeButtonVisibility: false,
+            emptyText: null,
             showClose: false,
             showHeader: false,
             headerTemplate: null,
@@ -814,6 +851,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private static _isHistoryItem(item: Model): boolean {
         return !!(item.get('pinned') || item.get('recent') || item.get('frequent'));
+    }
+
+    private static _isFixedItem(item: Model): boolean {
+        return !item.has('HistoryId') && item.get('pinned');
     }
 
     private static _additionalFilterCheck(options: IMenuControlOptions, item: Model): boolean {

@@ -1217,8 +1217,8 @@ var
 
             if (!resultsColumn.column?.isActionCell && (columnIndex > hasMultiSelect ? 1 : 0)) {
                 const columnSeparatorSize = _private.getSeparatorForColumn(
-                    this._options.columns,
-                    columnIndex - (hasMultiSelect ? 1 : 0),
+                    this._resultsColumns,
+                    columnIndex,
                     this._options.columnSeparatorSize
                 );
 

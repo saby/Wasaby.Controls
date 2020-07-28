@@ -44,6 +44,27 @@ describe('Controls/scroll:ContainerNew ScrollbarsModel', () => {
         });
     });
 
+    describe('scrollContainerStyles', () => {
+        const state = {
+            overflowHidden: true,
+            scrollContainerStyles: 'scrollContainerStyles',
+            styleHideScrollbar: 'styleHideScrollbar'
+        };
+        const model: ScrollbarsModel = new ScrollbarsModel({
+            ...getScrollbarsDefaultOptions(),
+            scrollMode: SCROLL_MODE.VERTICAL
+        }, state);
+
+        it('canScroll = false', () => {
+            model._canScroll = false;
+           assert.equal(model.scrollContainerStyles, '');
+        });
+        it('canScroll = true', () => {
+            model._canScroll = true;
+            assert.equal(model.scrollContainerStyles, 'scrollContainerStyles');
+        });
+    });
+
     describe('serializeState', () => {
         it('should serialize state.', () => {
             const model: ScrollbarsModel = new ScrollbarsModel({

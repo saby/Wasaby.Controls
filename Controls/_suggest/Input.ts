@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Input/Input');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {getOptionTypes} from 'Controls/_suggest/Utils';
-import 'Controls/input';
+import {generateStates} from 'Controls/input';
 
 /**
  * Поле ввода с автодополнением это одострочное поле ввода, которое помогает пользователю ввести текст, предлагая подходящие варианты по первым набранным символам.
@@ -72,10 +72,11 @@ var Suggest = Control.extend({
 
    // <editor-fold desc="LifeCycle">
 
-   _beforeMount: function() {
+   _beforeMount: function(options) {
       this._searchStart = this._searchStart.bind(this);
       this._searchEnd = this._searchEnd.bind(this);
       this._searchError = this._searchError.bind(this);
+      generateStates(this, options);
    },
 
    // </editor-fold>

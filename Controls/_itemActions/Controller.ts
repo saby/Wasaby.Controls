@@ -8,9 +8,7 @@ import { TItemKey, ISwipeConfig, ANIMATION_STATE, IBaseCollection, IItemActionsT
 import { IStickyPopupOptions } from 'Controls/popup';
 import { IMenuPopupOptions } from 'Controls/menu';
 import {
-    IShownItemAction,
     TItemActionVisibilityCallback,
-    IItemActionsContainer,
     TItemActionShowType,
     TItemActionsSize,
     IItemAction,
@@ -20,6 +18,7 @@ import {
     TActionDisplayMode,
     TMenuButtonVisibility
 } from './interface/IItemAction';
+import {IShownItemAction, IItemActionsContainer} from './interface/IItemActionsContainer';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
 import { Utils } from './Utils';

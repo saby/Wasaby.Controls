@@ -237,6 +237,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
                 validationStatus: 'invalid',
                 template: this._options.errorTemplate,
                 templateOptions: {errors: this._validationResult},
+                closeOnOutsideClick: false,
                 eventHandlers: {
                     onResult: this._mouseInfoboxHandler.bind(this),
                     onClose: this._closeHandler.bind(this)

@@ -79,9 +79,12 @@ export default class Browser extends Control {
         if (this._options.source !== newOptions.source) {
             this._loading = true;
             return this._sourceController.load().then((result) => {
-                this._items = result;
-                this._sourceController.setItems(result);
-                this._prefetchSource = this._sourceController.getPrefetchSource(result);
+                if (!this._items) {
+                    this._items = result;
+                    this._sourceController.setItems(result);
+                } else {
+                    this._prefetchSource = this._sourceController.getPrefetchSource(result);
+                }
                 this._updateContext(this._dataOptionsContext);
                 this._loading = false;
                 return result;
@@ -159,7 +162,6 @@ export default class Browser extends Control {
         // on itemChanged event prefetchSource will updated,
         // but createPrefetchSource method work async becouse of promise,
         // then we need to create prefetchSource synchronously
-        this._sourceController.setItems(items);
         this._prefetchSource = this._sourceController.getPrefetchSource(items);
         this._updateContext(this._dataOptionsContext);
     }

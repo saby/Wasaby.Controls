@@ -254,6 +254,24 @@ define(
             });
          });
 
+         it('set source after mount', function(done) {
+            const config = {keyProperty: 'id'};
+            const data = getDataWithConfig(config);
+
+            data._beforeMount(config);
+
+            data._beforeUpdate({
+               source: new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: sourceDataEdited
+               }),
+               keyProperty: 'id'
+            }).addCallback(function() {
+               assert.deepEqual(data._items.getRawData(), sourceDataEdited);
+               done();
+            });
+         });
+
          it('itemsChanged', (done) => {
             const config = {
                source: source,
@@ -269,8 +287,15 @@ define(
             let propagationStopped = false;
 
             data._beforeMount(config).addCallback(function() {
-               const newList = new collection.RecordSet();
+               const newList = new collection.RecordSet({
+                  data: [{
+                     id: 0,
+                     title: 'Ivan'
+                  }],
+                  keyProperty: 'id'
+               });
                data._itemsChanged(event, newList);
+               assert.isTrue(!data._items.getRecordById(0), 'items changed instead of prefetchSource');
                assert.isTrue(propagationStopped);
                done();
             });

@@ -29,10 +29,20 @@ class StackController extends BaseController {
     constructor(): void {
         super();
         if (document) {
-            const isApplicationInit = !!document.documentElement.controlNodes;
-            if (isApplicationInit) {
-                StackController.calcStackParentCoords();
-            }
+            const APPLICATION_INTERVAL_TIMER = 50;
+            // В случае, если контроллер летит сразу при загрузке страницы, нужно дождаться пока построится приложение
+            // чтобы делать замеры, иначе нужные стили могут не прилететь => в кэш попадет некорректная позиция
+            const checkApplication = () => {
+                setTimeout(() => {
+                    let isApplicationInit = !!document.documentElement.controlNodes;
+                    if (isApplicationInit) {
+                        StackController.calcStackParentCoords();
+                    } else {
+                        checkApplication();
+                    }
+                }, APPLICATION_INTERVAL_TIMER);
+            };
+            checkApplication();
             //TODO: https://online.sbis.ru/opendoc.html?guid=38b056ea-33a7-4f3c-84e5-ab52de810925
             window.addEventListener('resize', this._updateStackParentCoords, true);
             window.addEventListener('scroll', this._updateStackParentCoords, true);

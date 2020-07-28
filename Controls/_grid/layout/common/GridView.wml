@@ -1,6 +1,9 @@
-<table attr:class="{{ _gridViewClasses }}" attr:style="{{ _gridViewStyles }}">
+<div class="{{ _gridViewClasses }}" style="{{ _gridViewStyles }}">
+
     <!-- Настройка ширин колонок для табличной вёрстки -->
-    <ws:partial template="wml!Controls/_grid/layout/table/ColGroup" listModel="{{ _listModel }}"/>
+    <ws:if data="{{ !_isFullGridSupport }}">
+        <ws:partial template="wml!Controls/_grid/layout/table/ColGroup" listModel="{{ _listModel }}"/>
+    </ws:if>
 
     <!-- Заголовок таблицы -->
     <ws:if data="{{ _listModel.getHeaderModel() && _listModel.isDrawHeaderWithEmptyList() }}">
@@ -12,7 +15,23 @@
         <ws:partial template="{{ _resultsTemplate }}" attr:name="results" listModel="{{_listModel}}" baseResultsTemplate="{{ _baseResultsTemplate }}" backgroundStyle="{{_options.backgroundStyle || _options.style}}"/>
     </ws:if>
 
-    <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer">
+    <!-- Скроллбар горизонтального скролла. При табличной верстке находится вне таблицы. -->
+    <ws:if data="{{ _isFullGridSupport && _isColumnScrollVisible }}">
+        <Controls._grid.ScrollWrapper
+                name="horizontalScrollWrapper"
+                position="{{ _horizontalScrollPosition }}"
+                contentSize="{{ _contentSizeForHScroll }}"
+                gridSupport="full"
+                scrollWidth="{{ _horizontalScrollWidth }}"
+                listModel="{{ _listModel }}"
+                trackVisible="{{ _trackVisible }}"
+                positionChangeHandler="{{ _horizontalPositionChangedHandler }}"
+                backgroundStyle="{{_options.backgroundStyle || _options.style}}">
+        </Controls._grid.ScrollWrapper>
+    </ws:if>
+
+
+    <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
         <ws:partial template="wml!Controls/_list/resources/For"
                     listModel="{{_listModel}}"
                     itemTemplate="{{_itemTemplate}}"
@@ -25,19 +44,25 @@
                     itemActionsPosition="{{_options.itemActionsPosition}}"
                     swipeTemplate="{{_options.swipeTemplate}}"
                     backgroundStyle="{{_options.backgroundStyle || _options.style}}"
-                    isColumnScrollVisible="{{ isColumnScrollVisible }}"
+                    isColumnScrollVisible="{{ _isColumnScrollVisible }}"
                     tagTemplate="{{_options.tagTemplate}}">
             <ws:editArrowTemplate>
                 <ws:partial template="wml!Controls/_grid/_editArrowTemplate"></ws:partial>
             </ws:editArrowTemplate>
         </ws:partial>
-    </tbody>
+    </div>
+
 
     <!-- Отступ под последней записью вслучае, если в таблице есть операции над записью "вне строки" -->
     <ws:if data="{{_options._needBottomPadding}}">
-        <tr>
-            <td class="controls-itemActionsV_outside-spacing_theme-{{_options.theme}}" colspan="{{ _listModel.getColspanFor('bottomPadding') }}"></td>
-        </tr>
+        <ws:if data="{{ _isFullGridSupport }}">
+            <div class="controls-itemActionsV_outside-spacing_theme-{{_options.theme}}" style="{{_listModel.getBottomPaddingStyles()}}"></div>
+        </ws:if>
+        <ws:else>
+            <tr>
+                <td class="controls-itemActionsV_outside-spacing_theme-{{_options.theme}}" colspan="{{ _listModel.getColspanFor('bottomPadding') }}"></td>
+            </tr>
+        </ws:else>
     </ws:if>
 
     <!-- Шаблон пустой таблицы -->
@@ -57,11 +82,20 @@
     </ws:if>
 
     <!-- Подвал таблицы -->
-    <tr>
-        <td colspan="{{_listModel.getColspanFor('footer')}}">
-            <div class="{{_getFooterClasses()}}" style="{{_listModel.getFooterStyles()}}">
-                <ws:partial template="{{_options.footerTemplate}}"/>
-            </div>
-        </td>
-    </tr>
-</table>
+    <ws:if data="{{ _isFullGridSupport }}">
+        <div class="{{_getFooterClasses()}}" style="{{_listModel.getFooterStyles()}}">
+            <ws:partial template="{{_options.footerTemplate}}"/>
+        </div>
+    </ws:if>
+    <ws:else>
+        <tr>
+            <td colspan="{{_listModel.getColspanFor('footer')}}">
+                <div class="{{_getFooterClasses()}}" style="{{_listModel.getFooterStyles()}}">
+                    <ws:partial template="{{_options.footerTemplate}}"/>
+                </div>
+            </td>
+        </tr>
+    </ws:else>
+</div>
+
+

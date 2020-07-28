@@ -1,4 +1,5 @@
-import {IShownItemAction, TItemActionShowType} from '../interface/IItemAction';
+import { TItemActionShowType } from '../interface/IItemAction';
+import { IShownItemAction } from '../interface/IItemActionsContainer';
 
 /**
  * Утилиты для измерения опций свайпа, которые нужно показать на странице

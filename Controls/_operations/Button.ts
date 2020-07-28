@@ -77,7 +77,6 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
          }
       }
    }
-   protected _handleClick(): void {}
    protected _handleMouseEnter(): void {
       if (!this._options.readOnly) {
          if (!this._dependenciesTimer) {
@@ -92,7 +91,12 @@ export default class OperationsButton extends Control<IOperationsButtonOptions> 
    private _loadDependencies(): Promise<unknown> {
       try {
          if (!this._loadOperationsPanelPromise) {
-            this._loadOperationsPanelPromise = import('Controls/operationsPanel');
+            this._loadOperationsPanelPromise = Promise.all([
+               import('Controls/operationsPanel')
+                  .then(({OperationsPanel}) => OperationsPanel.loadCSS()),
+               import('Controls/toggle')
+                  .then(({Checkbox}) => Checkbox.loadCSS())
+            ]);
          }
          return this._loadOperationsPanelPromise;
       } catch (e) {

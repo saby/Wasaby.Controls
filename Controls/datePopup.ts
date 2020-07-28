@@ -287,7 +287,13 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _currentDayIntersectHandler: function(event: SyntheticEvent, entry: IntersectionObserverSyntheticEntry): void {
-        this._homeButtonVisible = !entry.nativeEntry.intersectionRatio;
+        this._homeButtonVisible = !entry.nativeEntry.isIntersecting;
+    },
+
+    _unregisterCurrentDayIntersectHandler: function() {
+        // Если в IntersectionObserverContainer, который сделит за сегодняшним днём, происходит событие unregister -
+        // значит текущий день точно не отображается. Делаем "Домик" видимым.
+        this._homeButtonVisible = true;
     },
 
     _yearsRangeChanged: function (e, start, end) {

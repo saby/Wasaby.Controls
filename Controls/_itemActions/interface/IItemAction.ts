@@ -2,11 +2,13 @@ import {Model} from 'Types/entity';
 
 /**
  * @typedef {String} TItemActionShowType
- * @remark
- * Эта опция не влияет на иерархию построения меню для тулбара.
- * @variant 0 показывать опцию только в дополнительном меню
- * @variant 1 показывать опцию в дополнительном меню и тулбаре
- * @variant 2 показывать опцию только в тулбаре
+ * @description
+ * Позволяет настроить, какие опции записи будут показаны по ховеру, а какие - в доп.меню.
+ * Влияет на порядок отображения опций записи по свайпу.
+ * Экспортируемый enum: Controls/itemActions:TItemActionShowType
+ * @variant MENU показывать опцию только в дополнительном меню
+ * @variant MENU_TOOLBAR показывать опцию в дополнительном меню и тулбаре
+ * @variant TOOLBAR показывать опцию только в тулбаре
  */
 export enum TItemActionShowType {
     // show only in Menu
@@ -19,10 +21,13 @@ export enum TItemActionShowType {
 
 /**
  * @typedef {String} TActionDisplayMode
- * @variant title показывать только заголовок
- * @variant icon показывать только иконку
- * @variant both показывать иконку и заголовок
- * @variant auto если есть иконка, то показывать иконку, иначе заголовок
+ * @description
+ * Позволяет настроить режим отображения заголовка и иконки опций записи.
+ * Экспортируемый enum: Controls/itemActions:TActionDisplayMode
+ * @variant TITLE показывать только заголовок
+ * @variant ICON показывать только иконку
+ * @variant BOTH показывать иконку и заголовок
+ * @variant AUTO если есть иконка, то показывать иконку, иначе заголовок
  */
 export enum TActionDisplayMode {
     TITLE = 'title',
@@ -38,7 +43,7 @@ export enum TActionDisplayMode {
  * @variant danger
  * @variant success
  */
-export type TIconStyle = 'secondary'|'warning'|'danger'|'success';
+export type TIconStyle = 'secondary' | 'warning' | 'danger' | 'success';
 
 /**
  * @typedef {String} TActionCaptionPosition
@@ -46,7 +51,7 @@ export type TIconStyle = 'secondary'|'warning'|'danger'|'success';
  * @variant bottom Под иконкой опции записи.
  * @variant none Не будет отображаться.
  */
-export type TActionCaptionPosition = 'right'|'bottom'|'none';
+export type TActionCaptionPosition = 'right' | 'bottom' | 'none';
 
 /**
  * @typedef {String} TItemActionsPosition
@@ -54,7 +59,7 @@ export type TActionCaptionPosition = 'right'|'bottom'|'none';
  * @variant outside Под элементом.
  * @variant custom Произвольная позиция отображения. Задаётся через шаблон {@link Controls/interface/IItemTemplate itemTemplate}.
  */
-export type TItemActionsPosition = 'inside'|'outside'|'custom';
+export type TItemActionsPosition = 'inside' | 'outside' | 'custom';
 
 /**
  * @typedef {string} TItemActionsSize
@@ -62,7 +67,7 @@ export type TItemActionsPosition = 'inside'|'outside'|'custom';
  * @variant inside Внутри элемента.
  * @variant outside Под элементом.
  */
-export type TItemActionsSize = 'm'|'l';
+export type TItemActionsSize = 'm' | 'l';
 
 /**
  * @typedef {string} TItemActionsSize
@@ -70,7 +75,7 @@ export type TItemActionsSize = 'm'|'l';
  * @variant visible - кнопка видима в любом случае
  * @variant adaptive - Расчёт происходит от количесива элементов в свайпе
  */
-export type TMenuButtonVisibility = 'visible'|'adaptive';
+export type TMenuButtonVisibility = 'visible' | 'adaptive';
 
 /**
  * @typedef {Function} TItemActionHandler
@@ -85,13 +90,14 @@ export type TItemActionHandler = (item: Model) => void;
  * @interface Controls/_itemActions/interface/IItemAction
  * @description
  * Опции записи могут быть использованы в следующих вариантах:
- * 1.	Панель опций записи, отображаемая в desktop браузерах
- * 2.	Панель опций записи, появляющаяся при свайпе по записи влево.
- * 3.	Всплывающее меню, появляющееся при нажатии на кнопку дополнительных опций записи.
- * 4.	Всплывающее (контекстное) меню, появляющееся при нажатии правой кнопкой мыши.
+ * 1.    Панель опций записи, отображаемая в desktop браузерах
+ * 2.    Панель опций записи, появляющаяся при свайпе по записи влево.
+ * 3.    Всплывающее меню, появляющееся при нажатии на кнопку дополнительных опций записи.
+ * 4.    Всплывающее (контекстное) меню, появляющееся при нажатии правой кнопкой мыши.
  * @public
  * @author Аверкиев П.А.
  */
+
 /*
  * Interface describing configuration for a button which will be shown when the user hovers over a list item.
  * @interface Controls/_itemActions/interface/IItemAction
@@ -219,35 +225,6 @@ export interface IItemAction {
 }
 
 /**
- * Расширенный интерфейс IItemAction с полями для использования в шаблоне
- * @interface
- * @private
- * @author Аверкиев П.А.
- */
-/*
- * Extended interface for itemActions to use it inside of template
- * @interface
- * @private
- * @author Аверкиев П.А.
- */
-export interface IShownItemAction extends IItemAction {
-    /**
-     * Показывать текст операции
-     */
-    showTitle?: boolean;
-
-    /**
-     * Показывать иконку операции
-     */
-    showIcon?: boolean;
-
-    /**
-     * Определяет, что опция является меню
-     */
-    _isMenu?: boolean;
-}
-
-/**
  * @typedef {Function} TItemActionVisibilityCallback
  * @description
  * Функция обратного вызова для определения видимости опций записи.
@@ -257,14 +234,9 @@ export interface IShownItemAction extends IItemAction {
 export type TItemActionVisibilityCallback = (action: IItemAction, item: Model) => boolean;
 
 /**
- * @typedef {Function} TItemActionVisibilityCallback
+ * @typedef {Function} TEditArrowVisibilityCallback
  * @description
  * Функция обратного вызова для определения видимости кнопки редактирования в свайпе.
  * @param item Model
  */
 export type TEditArrowVisibilityCallback = (item: Model) => boolean;
-
-export interface IItemActionsContainer {
-    all: IItemAction[];
-    showed: IShownItemAction[];
-}
