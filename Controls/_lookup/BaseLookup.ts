@@ -44,7 +44,7 @@ export default abstract class
         }
     }
 
-    protected _beforeUpdate(newOptions: ILookupOptions): void {
+    protected _beforeUpdate(newOptions: ILookupOptions): Promise<SelectedItems>|void|boolean {
         const updateResult = this._lookupController.update(newOptions);
         const updateResultCallback = () => {
             this._afterItemsChanged();
@@ -59,6 +59,7 @@ export default abstract class
             updateResultCallback();
         }
         this._inheritorBeforeUpdate(newOptions);
+        return updateResult;
     }
 
     protected _updateItems(items: RecordSet|List<Model>): void {
@@ -102,7 +103,7 @@ export default abstract class
     }
 
     private _afterItemsChanged(): void {
-        this._items = this._lookupController.getItems();
+        this._itemsChanged(this._items = this._lookupController.getItems());
         this._notifyChanges();
     }
 
@@ -123,6 +124,8 @@ export default abstract class
     protected abstract _inheritorBeforeMount(options: ILookupOptions): void;
 
     protected abstract _inheritorBeforeUpdate(options: ILookupOptions): void;
+
+    protected abstract _itemsChanged(items: SelectedItems): void;
 
     static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
 
