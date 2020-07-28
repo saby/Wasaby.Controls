@@ -294,6 +294,10 @@ const _private = {
                 forceInitVirtualScroll: isInfinityNavigation,
                 collection: self.getViewModel(),
                 ...self._options
+            }, {
+                clientHeight: self._viewportSize,
+                scrollTop: self._scrollTop,
+                scrollHeight: self._viewSize
             });
             _private.handleScrollControllerResult(self, result);
         }
@@ -785,9 +789,9 @@ const _private = {
 
             // Состояние триггеров не всегда соответствует действительности, приходится считать самим
             triggerVisibilityUp = self._loadTriggerVisibility.up ||
-                _private.calcTriggerVisibility(self, scrollParams, self._loadOffset.top, 'up');
+                _private.calcTriggerVisibility(self, scrollParams, self._loadTriggerOffset.top, 'up');
             triggerVisibilityDown = self._loadTriggerVisibility.down ||
-                _private.calcTriggerVisibility(self, scrollParams, self._loadOffset.bottom, 'down');
+                _private.calcTriggerVisibility(self, scrollParams, self._loadTriggerOffset.bottom, 'down');
 
             // TODO Когда список становится пустым (например после поиска или смены фильтра),
             // если он находится вверху страницы, нижний загрузочный триггер может "вылететь"
@@ -957,7 +961,7 @@ const _private = {
     },
 
     calcTriggerVisibility(self, scrollParams, triggerOffset, direction: 'up' | 'down'): boolean {
-        if (this._container.closest('.ws-hidden')) {
+        if (self._container && self._container.closest && self._container.closest('.ws-hidden')) {
             return false;
         }
         if (direction === 'up') {
@@ -1014,11 +1018,11 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=e0927a79-c520-4864-8d39-d99d36767b31
             // поэтому приходится вычислять видны ли они на экране
             if (!visbilityTriggerUp) {
-                visbilityTriggerUp = _private.calcTriggerVisibility(self, scrollParams, self._loadOffset.top, 'up');
+                visbilityTriggerUp = _private.calcTriggerVisibility(self, scrollParams, self._loadTriggerOffset.top, 'up');
             }
 
             if (!visbilityTriggerDown && self._viewSize && self._viewportSize) {
-                visbilityTriggerDown = _private.calcTriggerVisibility(self, scrollParams, self._loadOffset.bottom, 'down');
+                visbilityTriggerDown = _private.calcTriggerVisibility(self, scrollParams, self._loadTriggerOffset.bottom, 'down');
             }
 
             if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
@@ -1043,7 +1047,7 @@ const _private = {
             // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
             self._isScrollShown = true;
 
-            self._viewportRect = params.viewportRect;
+            self._viewportRect = params.viewPortRect;
 
             if (_private.needScrollPaging(self._options.navigation)) {
                 const scrollParams = {
@@ -1361,7 +1365,7 @@ const _private = {
                         result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems, action === IObservable.ACTION_MOVE);
                     }
                     if (action === IObservable.ACTION_RESET) {
-                        result = self._scrollController.resetItems();
+                        result = self._scrollController.handleResetItems();
                     }
                     if (result) {
                         _private.handleScrollControllerResult(self, result);
@@ -2006,12 +2010,16 @@ const _private = {
     // endregion
 
     handleScrollControllerResult(self, result: IScrollControllerResult) {
+        if (!result) {
+            return;
+        }
         if (result.placeholders) {
             if (self._isMounted) {
                 self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
             }
         }
         if (result.triggerOffset) {
+            self._loadTriggerOffset = result.triggerOffset;
             self.applyTriggerOffset(result.triggerOffset);
         }
         if (result.activeElement) {
@@ -2188,7 +2196,6 @@ const _private = {
     },
 
     createScrollController(self: typeof BaseControl, options: any): void {
-        self._loadOffset = { top: LOAD_TRIGGER_OFFSET, bottom: LOAD_TRIGGER_OFFSET }
         self._scrollController = new ScrollController({
             virtualScrollConfig: options.virtualScrollConfig || {},
             needScrollCalculation: self._needScrollCalculation,
@@ -2495,7 +2502,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _hideIndicatorOnTriggerHideDirection: null,
 
     // хранения отступов триггеров хранится для вычисления видимости триггеров
-    _loadOffset: null,
+    _loadTriggerOffset: null,
     _loadingIndicatorContainerOffsetTop: 0,
     _viewSize: null,
     _viewportSize: null,
@@ -2569,6 +2576,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._validateController = new ControllerClass();
         this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._startDragNDropCallback = this._startDragNDropCallback.bind(this);
+        this._loadTriggerOffset = { top: LOAD_TRIGGER_OFFSET, bottom: LOAD_TRIGGER_OFFSET };
     },
 
     /**
@@ -2764,7 +2772,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         
         _private.handleListScrollSync(this, params.scrollTop);
 
-        let result = this._scrollController.scrollPositionChange(params);
+        let result = this._scrollController?.scrollPositionChange(params);
         _private.handleScrollControllerResult(this, result);
 
         if (detection.isMobileIOS) {
@@ -2786,9 +2794,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect): void {
         const container = this._container[0] || this._container;
-        _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), viewportRect);
         this._viewportSize = viewportHeight;
         this._viewportRect = viewportRect;
+        _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), viewportRect);
         if (this._scrollController) {
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             let result = this._scrollController.updateScrollParams({clientHeight: this._viewportSize});
@@ -2838,7 +2846,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.needScrollPaging(this._options.navigation)) {
             this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewportSize);
         }
-        this._scrollController.setTriggerVisibility(direction, state);
+        this._scrollController?.setTriggerVisibility(direction, state);
         if (state) {
             this.handleTriggerVisible(direction);
         }
@@ -2904,7 +2912,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadedItems = null;
 
         if (this._scrollController) {
-            this._scrollController.afterRender();
+            this._scrollController?.afterRender();
         }
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
@@ -3259,10 +3267,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._editInPlace.reset();
         }
 
-        if (this._scrollController) {
-            this._scrollController.reset();
-        }
-
         if (this._portionedSearch) {
             this._portionedSearch.destroy();
             this._portionedSearch = null;
@@ -3387,8 +3391,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             scrollHeight: this._viewSize,
             scrollTop: this._scrollTop
         };
-        const triggerUp = _private.calcTriggerVisibility(this, scrollParams, this._loadOffset.bottom, 'up');
-        const triggerDown = _private.calcTriggerVisibility(this, scrollParams, this._loadOffset.top, 'down');
+        const triggerUp = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.bottom, 'up');
+        const triggerDown = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.top, 'down');
         this._scrollController.setTriggerVisibility('up', triggerUp);
         this._scrollController.setTriggerVisibility('down', triggerDown);
         if (triggerUp) {
@@ -4106,7 +4110,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // в итоге ScrollContainer, который реагирует на afterRender beforeRender начинает восстанавливать скролл не
         // по отрисовке записей а по другой перерисовке списка, например появлению пэйджинга
         if (this._addItems && this._addItems.length) {
-            this._scrollController.addItems(this._addItemsIndex, this._addItems, direction);
+            this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction);
         }
 
         this._addItems = [];

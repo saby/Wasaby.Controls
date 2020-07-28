@@ -36,55 +36,7 @@ define([
             });
          });
 
-         it('should init observering if needScrollCalculation was updated', () => {
-            let items = new collection.RecordSet({
-               keyProperty: 'id',
-               rawData: {}
-            });
-            let model = new ListViewModel({
-                  items: items,
-                  keyProperty: 'id'
-               });
-            sinon.stub(scrollController, '_initVirtualScroll').callsFake(() => {});
-            const spy = sinon.spy(scrollController, '_initModelObserving');
-            scrollController._options.collection = model;
-            scrollController.update({
-               collection: model,
-               needScrollCalculation: true
-            });
-            assert.isTrue(spy.calledOnce);
-         });
       });
-
-      describe('._registerObserver()', () => {
-         it('should do nothing if trigers was undefined', () => {
-            scrollController._triggers = undefined;
-            scrollController._observerRegistered = true;
-
-            assert.doesNotThrow(() => scrollController._registerObserver());
-         });
-      });
-
-      describe('.setTriggers()', () => {
-         it('should reset observerRegistered if scrollObserver was changed', () => {
-            scrollController._triggers = {
-               scrollObserver: {}
-            };
-            scrollController._observerRegistered = true;
-            scrollController.setTriggers({
-               scrollObserver: {}
-            });
-            assert.isFalse(scrollController._observerRegistered);
-         });
-      });
-
-      describe('_registerObserver', () => {
-         it('should not throw error when observer doesnt exists', () => {
-            scrollController._triggers = {};
-            assert.doesNotThrow(() => scrollController._registerObserver());
-         });
-      });
-
 
       describe('._initVirtualScroll()', () => {
          it('should not create virtual scroll', () => {

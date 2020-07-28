@@ -95,11 +95,13 @@ export default class ScrollController {
     }
 
     private getResult(result: IScrollControllerResult) {
-        return {placeholders: this._changedPlaceholders, ...result}
+        const placeholders = this._changedPlaceholders;
+        this._changedPlaceholders = null;
+        return {placeholders, ...result}
     }
 
     updateScrollParams(params: Partial<IScrollParams>):  IScrollControllerResult {
-        if (this._virtualScroll) {
+        if (this._virtualScroll && params) {
             let newParams: Partial<IContainerHeights> = {trigger: this._triggerOffset};
             if (params.clientHeight) {
                 newParams.viewport = params.clientHeight;
@@ -114,10 +116,12 @@ export default class ScrollController {
                 triggerOffset: this.getTriggerOffset(this._viewHeight, 
                                                      this._viewportHeight, 
                                                      this._options.attachLoadTopTriggerToNull)});
+        } else {
+            return null;
         }
     }
 
-    update(options: IOptions, params: Partial<IScrollParams>): IScrollControllerResult {
+    update(options: IOptions, params?: Partial<IScrollParams>): IScrollControllerResult {
         if (options.collection && (
             this._options.collection !== options.collection ||
             options.needScrollCalculation && !this._options.needScrollCalculation

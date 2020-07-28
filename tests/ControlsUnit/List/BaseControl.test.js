@@ -312,6 +312,7 @@ define([
       it('should recalculate triggers visibility when current up and down are not set or false', () => {
          const self = {
             _options: {},
+            _loadTriggerOffset: {top: 100, bottom: 100},
             _loadTriggerVisibility: {
                up: false,
                down: false
@@ -2286,7 +2287,7 @@ define([
 
             ctrl._scrollController._triggers = triggers;
             ctrl._viewSize = 1000;
-            ctrl._viewPortSize = 400;
+            ctrl._viewportSize = 400;
             // эмулируем появление скролла
             await lists.BaseControl._private.onScrollShow(ctrl, heightParams);
             ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
@@ -2677,7 +2678,7 @@ define([
                   return Promise.resolve();
                },
                registerObserver: () => undefined,
-               reset: () => undefined,
+               scrollPositionChange: () => undefined,
                setTriggers: () => undefined
             };
 
@@ -2710,7 +2711,7 @@ define([
 
             assert.isTrue(ctrl._scrollPageLocked, 'Paging should be locked after paging Prev until handleScrollMoveSync');
             ctrl._setMarkerAfterScroll = false;
-            ctrl.scrollMoveSyncHandler(null, { scrollTop: 0 });
+            ctrl.scrollMoveSyncHandler({ scrollTop: 0 });
             assert.isFalse(ctrl._scrollPageLocked, 'Paging should be unlocked in handleScrollMoveSync');
 
             done();
@@ -2937,11 +2938,11 @@ define([
             getBoundingClientRect: () => ({y: 0})
          };
 
-          it('update sourceController onListChange', function() {
+          it('update sourceController onCollectionChanged', function() {
               sandbox.stub(lists.BaseControl._private, 'prepareFooter');
 
               baseControl._listViewModel.getItems().getMetaData().more = 5;
-              lists.BaseControl._private.onListChange(baseControl, null, 'collectionChanged');
+              lists.BaseControl._private.onCollectionChanged(baseControl, null, 'collectionChanged');
 
               sinon.assert.calledOnce(lists.BaseControl._private.prepareFooter);
           });
@@ -3056,7 +3057,7 @@ define([
             baseControl = new lists.BaseControl(cfg),
             doScrollNotified = false;
 
-         baseControl._viewPortRect = {top: 0}
+         baseControl._viewportRect = {top: 0}
          baseControl._notify = function(eventName) {
             if (eventName === 'doScroll') {
                doScrollNotified = true;
@@ -4165,7 +4166,7 @@ define([
             }
          };
 
-         ctrl._viewPortRect = { top: 0 }
+         ctrl._viewportRect = { top: 0 }
          //dragend without deferred
          dragEnded = false;
 
@@ -4925,7 +4926,7 @@ define([
                   };
                }
             },
-            _viewPortRect: { top: 0 },
+            _viewportRect: { top: 0 },
             _options: {}
          };
          const navigation = {
@@ -5097,7 +5098,7 @@ define([
 
          /* Список находится в скроллконтейнере, но не личном. До списка лежит контент */
          bc._isScrollShown = true;
-         bc._viewPortRect = {
+         bc._viewportRect = {
             top: 50
          };
          bc._scrollTop = 1000;
@@ -5239,7 +5240,7 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
-      it('onListChange call selectionController methods', () => {
+      it('onCollectionChanged call selectionController methods', () => {
          let clearSelectionCalled = false,
              handleAddItemsCalled = false;
 
@@ -5268,27 +5269,27 @@ define([
             handleinitItemActionsCalled = true;
          });
 
-         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged');
          assert.isFalse(clearSelectionCalled);
          assert.isFalse(handleAddItemsCalled);
 
          self._listViewModel.getCount = () => 0;
-         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged');
          assert.isTrue(clearSelectionCalled);
          assert.isFalse(handleAddItemsCalled);
 
          clearSelectionCalled = false;
          self._selectionController.isAllSelected = () => false;
-         lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
+         lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged');
          assert.isFalse(clearSelectionCalled);
          assert.isFalse(handleAddItemsCalled);
 
          clearSelectionCalled = false;
-         lists.BaseControl._private.onListChange(self, null, '');
+         lists.BaseControl._private.onCollectionChanged(self, null, '');
          assert.isFalse(clearSelectionCalled);
          assert.isFalse(handleAddItemsCalled);
 
-         lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'a', 'items');
+         lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'a', 'items');
          assert.isFalse(clearSelectionCalled);
          assert.isTrue(handleAddItemsCalled);
 
@@ -5423,7 +5424,7 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
-      describe('onListChange with some values of \'properties\' should not reinitialize itemactions', () => {
+      describe('onCollectionChanged with some values of \'properties\' should not reinitialize itemactions', () => {
          let self;
          let handleinitItemActionsCalled;
          let items;
@@ -5460,48 +5461,48 @@ define([
          // Смена маркера не должна провоцировать обновление itemActions
          it('should not call updateItemActions when marker has changed', () => {
             items.properties = 'marked';
-            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
             assert.isFalse(handleinitItemActionsCalled);
          });
 
          // Свайп не должен провоцировать обновление itemActions
          it('should not call updateItemActions when item has swiped', () => {
             items.properties = 'swiped';
-            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
             assert.isFalse(handleinitItemActionsCalled);
          });
 
          // Активация не должна провоцировать обновление itemActions
          it('should not call updateItemActions when item has been activated', () => {
             items.properties = 'active';
-            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
             assert.isFalse(handleinitItemActionsCalled);
          });
 
          // Установка флага hovered не должна провоцировать обновление itemActions
          it('should not call updateItemActions when item\'s hovered has been set', () => {
             items.properties = 'hovered';
-            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
             assert.isFalse(handleinitItemActionsCalled);
          });
 
          // Drag не должен провоцировать обновление itemActions
          it('should not call updateItemActions when item has been dragged', () => {
             items.properties = 'dragged';
-            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
             assert.isFalse(handleinitItemActionsCalled);
          });
 
          // Ввод данных в строку редактирования не должен провоцировать обновление itemActions
          it('should not call updateItemActions when item has been dragged', () => {
             items.properties = 'editingContents';
-            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
             assert.isFalse(handleinitItemActionsCalled);
          });
 
          // Если значение properties===undefined не указан, то обновление itemActions происходит по умолчанию
          it('should call updateItemActions when properties is not set', () => {
-            lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'ch', items);
+            lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'ch', items);
             assert.isTrue(handleinitItemActionsCalled);
          });
       });
