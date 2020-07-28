@@ -1,24 +1,8 @@
 import {descriptor} from 'Types/entity';
 
-/**
- * @typedef {String} THorizontalPadding
- * @variant xs
- * @variant null
- */
 export type THorizontalPadding = 'xs' | 'null';
 
-/**
- * Интерфейс для контролов, которые поддерживают разные размеры отступов текста от контейнера.
- *
- * @interface Controls/_input/interface/IPadding
- * @public
- * @author Красильников А.С.
- */
 export interface IPaddingOptions {
-    /**
-     * @name Controls/_input/interface/IPadding#horizontalPadding
-     * @cfg {THorizontalPadding} Размер отступов контрола по горизонтали.
-     */
     horizontalPadding: THorizontalPadding;
 }
 
@@ -36,8 +20,23 @@ export function getOptionPaddingTypes(): object {
     };
 }
 
-interface IPadding {
+/**
+ * Интерфейс для контролов, которые поддерживают разные размеры отступов текста от контейнера.
+ *
+ * @interface Controls/_input/interface/IPadding
+ * @public
+ * @author Красильников А.С.
+ */
+export interface IPadding {
     readonly '[Controls/interface/IPadding]': boolean;
 }
 
-export default IPadding;
+/**
+ * @typedef {String} THorizontalPadding
+ * @variant xs
+ * @variant null
+ */
+/**
+ * @name Controls/_input/interface/IPadding#horizontalPadding
+ * @cfg {THorizontalPadding} Размер отступов контрола по горизонтали.
+ */
