@@ -546,6 +546,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
             viewModel.setNodeFooterTemplate(newOptions.nodeFooterTemplate);
         }
+        // TODO: Удалить #rea_1179794968
         if (newOptions.expanderDisplayMode !== this._options.expanderDisplayMode) {
             viewModel.setExpanderDisplayMode(newOptions.expanderDisplayMode);
         }

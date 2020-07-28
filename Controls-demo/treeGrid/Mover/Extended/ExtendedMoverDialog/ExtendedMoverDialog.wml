@@ -23,7 +23,7 @@
                                     on:itemClick="_onItemClick()"
                                     parentProperty="parent"
                                     nodeProperty="type"
-                                    expanderDisplayMode="adaptive"
+                                    expanderVisibility="hasChildren"
                                     columns="{{_options.columns}}"/>
                         </Controls.list:Container>
                     </Controls.scroll:Container>
