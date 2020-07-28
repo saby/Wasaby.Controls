@@ -1133,6 +1133,16 @@ define([
                      parent: null
                   };
                   const configClone = {...config};
+
+                  configClone.root = null;
+                  configClone.searchValue = 'test';
+                  treeControl._beforeUpdate(configClone);
+                  try {
+                     assert.isFalse(treeControl._updatedRoot);
+                  } catch (e) {
+                     reject(e);
+                  }
+
                   configClone.root = 'testRoot';
                   treeControl._beforeUpdate(configClone);
                   treeControl._options.root = 'testRoot';
@@ -1140,6 +1150,7 @@ define([
                      assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
                      assert.deepEqual(filterOnOptionChange, newFilter);
                      assert.isTrue(isSourceControllerDestroyed);
+                     assert.isTrue(treeControl._updatedRoot);
                   } catch (e) {
                      reject(e);
                   }
