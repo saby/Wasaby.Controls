@@ -5,7 +5,31 @@
 import {default as Lookup} from 'Controls/_lookup/Lookup';
 import {Model} from 'Types/entity';
 import {List} from 'Types/collection';
+import {Memory} from 'Types/source';
 import {strictEqual, ok, deepStrictEqual} from 'assert';
+
+function getMemoryWithFilter(): Memory {
+   return new Memory({
+      data: [
+         {
+            id: 0,
+            name: 'Sasha'
+         },
+         {
+            id: 1,
+            name: 'Sergey'
+         },
+         {
+            id: 2,
+            name: 'Aleksey'
+         }
+      ],
+      filter: (item, query) => {
+         return query?.id.includes(item.get('id'));
+      },
+      keyProperty: 'id'
+   });
+}
 
 function getItems(countItems: number): List<Model> {
    const items = [];
@@ -22,6 +46,35 @@ function getItems(countItems: number): List<Model> {
 }
 
 describe('Controls/_lookup/Lookup/LookupView', () => {
+
+   describe('_beforeUpdate', () => {
+
+      it('items are loaded and sizes calculated after selectedKeys changed', async () => {
+         const lookup = new Lookup();
+         let options = {
+            source: getMemoryWithFilter(),
+            keyProperty: 'id',
+            selectedKeys: [],
+            multiSelect: true
+         };
+         let itemsChanged = false;
+
+         await lookup._beforeMount(options);
+
+         options = {...options};
+         options.selectedKeys = [0, 1];
+         lookup._itemsChanged = () => {
+            itemsChanged = true;
+         };
+
+         await lookup._beforeUpdate(options);
+
+         ok(lookup._items.getCount());
+         ok(itemsChanged);
+      });
+
+   });
+
    it('getAvailableCollectionWidth', () => {
       const afterFieldWrapperWidth = 20;
       const lookup = new Lookup();
