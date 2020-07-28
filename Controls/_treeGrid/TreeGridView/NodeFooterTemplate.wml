@@ -11,13 +11,13 @@
 
 
 <ws:template name="footer_content">
-    <ws:if data="{{ footer.needSpacingFor('levelIndent', _options) }}">
+    <ws:if data="{{ withoutLevelPadding !== true }}">
         <ws:for data="i in footer.level">
             <div class="controls-TreeGrid__row-levelPadding {{footer.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
         </ws:for>
     </ws:if>
 
-    <div if="{{ footer.needSpacingFor('expanderPadding', _options) }}" class="{{ footer.getExpanderPaddingClasses(expanderSize) }}" ></div>
+    <div if="{{ footer.shouldDrawExpanderPadding(expanderIcon, expanderSize) }}" class="{{ footer.getExpanderPaddingClasses(expanderSize) }}" ></div>
 
     <ws:if data="{{ footer.hasMoreStorage }}">
         <Controls.buttons:Button attr:class="controls-TreeGrid__nodeFooterLoadMore js-controls-TreeGrid__nodeFooter__LoadMoreButton"

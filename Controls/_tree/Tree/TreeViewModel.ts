@@ -177,7 +177,7 @@ var
         },
         getExpanderClasses(itemData, tmplExpanderIcon, tmplExpanderSize): string {
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
-            const expanderSize = itemData.getExpanderSize(tmplExpanderSize) || 'default';
+            const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
             const theme = itemData.theme;
             const style = itemData.style || 'default';
             const itemType = itemData.item.get(itemData.nodeProperty);
@@ -328,22 +328,12 @@ var
                     item: params.dispItem.getContents(),
                     dispItem: params.dispItem,
                     level: params.dispItem.getLevel(),
+                    shouldDrawExpanderPadding: (expanderIcon, expanderSize) => _private.shouldDrawExpanderPadding(current, expanderIcon, expanderSize),
                     getExpanderPaddingClasses: (tmplExpanderSize) => _private.getExpanderPaddingClasses(current, tmplExpanderSize, true),
                     multiSelectVisibility: self._options.multiSelectVisibility,
                     template: params.template,
                     hasMoreStorage: !!params.hasMoreStorage,
                     getExpanderSize: (tplExpanderSize) => tplExpanderSize || self._options.expanderSize,
-                    needSpacingFor: (spacingFor: 'levelIndent' | 'expanderPadding', tmplOptions: {
-                        withoutLevelPadding?: boolean;
-                        expanderIcon?: 'none' | 'node' | 'hiddenNode';
-                        expanderSize?: 's' | 'm' | 'l' | 'xl';
-                    }): boolean => {
-                        if (spacingFor === 'levelIndent') {
-                            return tmplOptions.withoutLevelPadding !== true;
-                        } else if (spacingFor === 'expanderPadding') {
-                            return current.shouldDrawExpanderPadding(current, tmplOptions.expanderIcon, tmplOptions.expanderSize);
-                        }
-                    },
                     getLevelIndentClasses: (expanderSize: string, levelIndentSize: string) => {
                         return current.getLevelIndentClasses(current, expanderSize, levelIndentSize);
                     }
