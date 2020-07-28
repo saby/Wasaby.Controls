@@ -5240,6 +5240,51 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
+      describe('_private.onListChange', () => {
+         let baseControl;
+
+         beforeEach(async () => {
+            const data = [
+               {
+                  id: 1,
+                  title: 'Первый',
+                  type: 1
+               },
+               {
+                  id: 2,
+                  title: 'Второй',
+                  type: 2
+               }
+            ];
+            const source = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            });
+            const cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            };
+            baseControl = new lists.BaseControl();
+            baseControl.saveOptions(cfg);
+            await baseControl._beforeMount(cfg);
+         });
+
+         it('reset marker for removed items', () => {
+            baseControl.setMarkedKey(1);
+            const item = baseControl.getViewModel().getItemBySourceKey(1);
+            assert.isTrue(item.isMarked());
+
+            lists.BaseControl._private.onListChange(baseControl, {}, 'collectionChanged', 'rm', [], null, [item], 0);
+            assert.isFalse(item.isMarked());
+         });
+      });
+
       it('onListChange call selectionController methods', () => {
          let clearSelectionCalled = false,
              handleAddItemsCalled = false;

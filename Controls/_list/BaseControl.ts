@@ -1268,7 +1268,16 @@ const _private = {
         }
     },
 
-    onListChange(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
+    onListChange(
+        self: any,
+        event: SyntheticEvent,
+        changesType: string,
+        action: string,
+        newItems: Array<CollectionItem<Model>>,
+        newItemsIndex: number,
+        removedItems: Array<CollectionItem<Model>>,
+        removedItemsIndex: number
+    ): void {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
         const newModelChanged = self._options.useNewModel && _private.isNewModelItemsChange(action, newItems);
@@ -1293,13 +1302,20 @@ const _private = {
             if (self._selectionController) {
                 let result;
 
-               if (self._listViewModel.getCount() === 0 && _private._getSelectionController(self).isAllSelected()) {
-                   result = _private._getSelectionController(self).clearSelection();
-               } else if (action === IObservable.ACTION_ADD) {
-                   result = _private._getSelectionController(self).handleAddItems(newItems);
-               }
+                if (self._listViewModel.getCount() === 0 && _private._getSelectionController(self).isAllSelected()) {
+                    result = _private._getSelectionController(self).clearSelection();
+                } else if (action === IObservable.ACTION_ADD) {
+                    result = _private._getSelectionController(self).handleAddItems(newItems);
+                }
 
-               _private.handleSelectionControllerResult(self, result);
+                _private.handleSelectionControllerResult(self, result);
+            }
+
+            // Когда action=remove значит были скрыты или удалены элементы
+            // Если элементы скрылись, то для них нужно сбросить состояние marked,
+            // чтобы при их показе не было лишнего маркера
+            if (action === IObservable.ACTION_REMOVE && _private.hasMarkerController(self)) {
+                removedItems.forEach((item) => item.setMarked(false, true));
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
@@ -1314,7 +1330,7 @@ const _private = {
         ) {
             self._itemsChanged = true;
             _private.updateInitializedItemActions(self, self._options);
-            }
+        }
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
             self._forceUpdate();
