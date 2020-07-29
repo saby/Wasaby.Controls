@@ -413,6 +413,10 @@ interface IPosition {
                targetCoords.bottom = popupCfg.restrictiveContainerCoords.bottom;
             }
          }
+      },
+      resetMargins(position): void {
+         // Сбрасываю все отступы, которые заданы на css. Они уже учтены в позиции
+         position.margin = 0;
       }
    };
 
@@ -425,6 +429,7 @@ interface IPosition {
          cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'horizontal'));
          cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'vertical'));
          _private.setMaxSizes(popupCfg, position);
+         _private.resetMargins(position);
          return position;
       },
       _private: _private
