@@ -106,11 +106,11 @@ var
         },
         isActionsColumn(itemData, currentColumn, colspan) {
             return (
-                itemData.getLastColumnIndex() === currentColumn.columnIndex ||
+                (itemData.getLastColumnIndex() === currentColumn.columnIndex ||
                 (
                     colspan &&
                     currentColumn.columnIndex === (itemData.multiSelectVisibility === 'hidden' ? 0 : 1)
-                )
+                )) && itemData.itemActionsPosition !== 'custom'
             );
         },
         isDrawActions: function(itemData, currentColumn, colspan) {
