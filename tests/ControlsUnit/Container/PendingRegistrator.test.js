@@ -99,6 +99,49 @@ define(
             Registrator._beforeUnmount();
             Registrator.destroy();
          });
+
+         it('should call unregisterPending1', (done) => {
+            let sandbox = sinon.sandbox.create();
+            let resolver;
+            const Registrator = new PendingRegistrator();
+            Registrator._beforeMount();
+            const promise = new Promise((resolve) => {
+               resolver = resolve;
+            });
+
+            let stub = sandbox.stub(Registrator._pendingController, 'unregisterPending');
+            Registrator._registerPendingHandler(null, promise, {});
+            promise.then(() => {
+               sinon.assert.calledOnce(stub);
+               done();
+               Registrator._beforeUnmount();
+               Registrator.destroy();
+               sandbox.restore();
+            }).catch(done);
+            resolver();
+         });
+
+         it('should call unregisterPending2', (done) => {
+            let sandbox = sinon.sandbox.create();
+            let rejector;
+            const Registrator = new PendingRegistrator();
+            Registrator._beforeMount();
+            const promise = new Promise((resolve, reject) => {
+               rejector = reject;
+            });
+
+            let stub = sandbox.stub(Registrator._pendingController, 'unregisterPending');
+            Registrator._registerPendingHandler(null, promise, {});
+            promise.then(done)
+               .catch(() => {
+                  sinon.assert.calledOnce(stub);
+                  done();
+                  Registrator._beforeUnmount();
+                  Registrator.destroy();
+                  sandbox.restore();
+               });
+            rejector();
+         });
       });
    }
 );
