@@ -1,4 +1,5 @@
 <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate.templateName}}"
+            a="{{debug()}}"
             item="{{item}}"
             templateOptions="{{_options.itemTemplate.templateOptions}}"/>
 
