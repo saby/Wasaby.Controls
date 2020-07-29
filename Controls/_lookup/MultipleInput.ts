@@ -137,6 +137,8 @@ export default class MultipleInput extends BaseLookupInput {
                 }, '');
             } else if (placeholder.func instanceof Function) {
                 placeHolderTpl = placeholder.func();
+            } else {
+                placeHolderTpl = placeholder;
             }
         }
 
