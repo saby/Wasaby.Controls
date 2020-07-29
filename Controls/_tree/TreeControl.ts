@@ -742,7 +742,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         TreeControl.superclass._beforeUnmount.apply(this, arguments);
     }
 });
-TreeControl._theme = ['Controls/tree'];
+TreeControl._theme = ['Controls/treeGrid'];
 
 TreeControl.getDefaultOptions = () => {
     return {
