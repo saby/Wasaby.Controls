@@ -2892,13 +2892,13 @@ define([
          }));
 
          item = baseControl._listViewModel.getItemBySourceKey(1);
-         assert.isFalse(item.isMarked());
-         assert.isFalse(item.isSelected());
+         item.setMarked(false);
+         item.setSelected(false);
 
          await baseControl.reload(false, {});
 
          item = baseControl._listViewModel.getItemBySourceKey(1);
-         assert.equal(baseControl._listViewModel.getMarkedKey(), 1);
+         assert.isTrue(item.isMarked());
          assert.isTrue(item.isSelected());
       });
 
@@ -5241,7 +5241,7 @@ define([
 
       it('onListChange call selectionController methods', () => {
          let clearSelectionCalled = false,
-             handleAddItemsCalled = false;
+             restoreSelectionCalled = false;
 
          const self = {
             _options: {
@@ -5251,9 +5251,8 @@ define([
             _selectionController: {
                isAllSelected: () => true,
                clearSelection: () => { clearSelectionCalled = true },
-               handleAddItems: (items) => {
-                  handleAddItemsCalled = true;
-                  assert.equal(items, 'items');
+               restoreSelection: (items) => {
+                  restoreSelectionCalled = true;
                }
             },
             _listViewModel: {
@@ -5270,27 +5269,27 @@ define([
 
          lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
          assert.isFalse(clearSelectionCalled);
-         assert.isFalse(handleAddItemsCalled);
+         assert.isFalse(restoreSelectionCalled);
 
          self._listViewModel.getCount = () => 0;
          lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
          assert.isTrue(clearSelectionCalled);
-         assert.isFalse(handleAddItemsCalled);
+         assert.isFalse(restoreSelectionCalled);
 
          clearSelectionCalled = false;
          self._selectionController.isAllSelected = () => false;
          lists.BaseControl._private.onListChange(self, null, 'collectionChanged');
          assert.isFalse(clearSelectionCalled);
-         assert.isFalse(handleAddItemsCalled);
+         assert.isFalse(restoreSelectionCalled);
 
          clearSelectionCalled = false;
          lists.BaseControl._private.onListChange(self, null, '');
          assert.isFalse(clearSelectionCalled);
-         assert.isFalse(handleAddItemsCalled);
+         assert.isFalse(restoreSelectionCalled);
 
          lists.BaseControl._private.onListChange(self, null, 'collectionChanged', 'a', 'items');
          assert.isFalse(clearSelectionCalled);
-         assert.isTrue(handleAddItemsCalled);
+         assert.isTrue(restoreSelectionCalled);
 
          sandbox.restore();
       });
@@ -5439,7 +5438,7 @@ define([
                   isAllSelected: () => true,
                   clearSelection: () => {},
                   handleReset: (items, prevRoot, rootChanged) => {},
-                  handleAddItems: (items) => {}
+                  restoreSelection: (items) => {}
                },
                _listViewModel: {
                   getCount: () => 5

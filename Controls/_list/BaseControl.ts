@@ -1292,8 +1292,8 @@ const _private = {
 
                if (self._listViewModel.getCount() === 0 && _private._getSelectionController(self).isAllSelected()) {
                    result = _private._getSelectionController(self).clearSelection();
-               } else if (action === IObservable.ACTION_ADD) {
-                   result = _private._getSelectionController(self).handleAddItems(newItems);
+               } else if (newItems) {
+                   result = _private._getSelectionController(self).restoreSelection();
                }
 
                _private.handleSelectionControllerResult(self, result);
