@@ -65,22 +65,21 @@ import {ContextOptions} from 'Controls/context';
  */
 
 class Data extends Control/** @lends Controls/_list/Data.prototype */{
-   _template: TemplateFunction = template;
-   _loading: boolean = false;
-   _itemsReadyCallback: Function = null;
-   _filter = null;
-   _navigation = null;
-   _keyProperty = null;
-   _sorting = null;
-   _errorRegister = null;
-   private _items: RecordSet;
+   protected _template: TemplateFunction = template;
+   private _loading: boolean = false;
+   private _itemsReadyCallback: Function = null;
+   private _errorRegister: RegisterClass = null;
    private _sourceController: SourceController = null;
+   private _dataOptionsContext: ContextOptions;
+
+   private _items: RecordSet;
    private _prefetchSource: PrefetchProxy;
 
    _beforeMount(options: IDataOptions, context, receivedState: RecordSet|undefined): Promise<RecordSet>|void {
 
-      this._filter = options.filter;
+      // TODO придумать как отказаться от этого свойства
       this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
+
       this._errorRegister = new RegisterClass({register: 'dataError'});
 
       this._sourceController = new SourceController(options);
@@ -97,8 +96,7 @@ class Data extends Control/** @lends Controls/_list/Data.prototype */{
          return this._sourceController.load().then((items) => {
 
             // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-            this._items = items;
-            this._sourceController.setItems(items);
+            this._items = this._sourceController.setItems(items);
             this._prefetchSource = this._sourceController.getPrefetchSource(receivedState);
             this._updateContext(this._dataOptionsContext);
             return items;
@@ -110,22 +108,18 @@ class Data extends Control/** @lends Controls/_list/Data.prototype */{
 
    _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet> {
       const isChanged = this._sourceController.update({...newOptions});
-
-      if (this._options.source !== newOptions.source) {
+      if (isChanged) {
          this._loading = true;
          return this._sourceController.load().then((result) => {
             if (!this._items) {
-               this._items = result;
-            } else {
-               this._prefetchSource = this._sourceController.getPrefetchSource(result);
+               this._items = this._sourceController.setItems(result);
             }
+
+            this._prefetchSource = this._sourceController.getPrefetchSource(result);
             this._updateContext(this._dataOptionsContext);
             this._loading = false;
             return result;
          });
-      } else if (isChanged) {
-         this._sourceController.setFilter(this._filter = newOptions.filter);
-         this._updateContext(this._dataOptionsContext);
       }
    }
 

@@ -7,13 +7,17 @@ import {Logger} from 'UI/Utils';
 import {QueryOrderSelector, QueryWhereExpression, PrefetchProxy} from 'Types/source';
 import {IAdditionalQueryParams} from 'Controls/_interface/IAdditionalQueryParams';
 import {default as groupUtil} from './GroupUtil';
+import {isEqual} from 'Types/object';
 
 interface IControllerOptions {
     keyProperty: string;
+    source: ICrud;
+
     filter: QueryWhereExpression<any>;
     sorting: QueryOrderSelector;
-    source: ICrud;
     navigation: INavigationOptionValue<INavigationSourceConfig>;
+
+    root: string;
 
     // for grouping
     groupProperty: string;
@@ -23,10 +27,12 @@ interface IControllerOptions {
 }
 
 class Controller {
-    private readonly _options: IControllerOptions;
+    private _options: IControllerOptions;
     private _filter: QueryWhereExpression<any>;
     private _crudWrapper: CrudWrapper;
     private _navigationController: NavigationController;
+    private _items: RecordSet;
+
     constructor(cfg: IControllerOptions) {
         this._options = cfg;
         this._filter = cfg.filter;
@@ -57,19 +63,31 @@ class Controller {
         }
     }
 
-    setItems(): void {
-        return;
+    setItems(items: RecordSet): RecordSet {
+        this._items = items;
     }
 
     setFilter(): void {
         return;
     }
 
-    update(): void {
-        return;
+    update(newOptions: IControllerOptions): boolean {
+        const isFilterChanged = !isEqual(newOptions.filter, this._options.filter);
+        if (isFilterChanged) {
+            this._filter = newOptions.filter;
+        }
+
+        const isChanged =
+            isFilterChanged ||
+            !isEqual(newOptions.navigation, this._options.navigation) ||
+            newOptions.sorting !== this._options.sorting ||
+            newOptions.keyProperty !== this._options.keyProperty ||
+            newOptions.root !== this._options.root;
+
+        this._options = newOptions;
+        return isChanged;
     }
 
-    // TODO от этого надо отказаться
     getPrefetchSource(data: RecordSet|DataSet|Error): PrefetchProxy {
         let source = this._options.source;
         source = source instanceof PrefetchProxy ? source.getOriginal() : source;
