@@ -729,7 +729,6 @@ define([
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
-         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
@@ -804,7 +803,6 @@ define([
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
-         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
 
@@ -870,7 +868,6 @@ define([
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
-         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
@@ -999,7 +996,6 @@ define([
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
-         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
             up: false,
@@ -1071,7 +1067,6 @@ define([
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
-         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
             up: false,
@@ -1856,7 +1851,6 @@ define([
             clientHeight: 100,
             getBoundingClientRect: () => ({ y: 0 })
          };
-         baseControl._scrollController.__getItemsContainer = () => ({children: []});
          baseControl._afterMount(cfg);
 
          const loadPromise = lists.BaseControl._private.loadToDirection(baseControl, 'up');
@@ -1892,7 +1886,6 @@ define([
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
-         ctrl._scrollController.__getItemsContainer = () => ({children: []});
          ctrl._afterMount(cfg);
 
          ctrl._sourceController.load = sinon.stub()
@@ -2286,7 +2279,6 @@ define([
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
 
-            ctrl._scrollController._triggers = triggers;
             ctrl._viewSize = 1000;
             ctrl._viewportSize = 400;
             // эмулируем появление скролла
@@ -2603,7 +2595,7 @@ define([
                   }
                   return Promise.resolve();
                },
-               reset: () => undefined
+               handleResetItems: () => undefined
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
@@ -2669,7 +2661,7 @@ define([
             ctrl._notify = function(eventName, type) {
                result = type;
             };
-            ctrl._scrollController ={
+            ctrl._scrollController = {
                scrollToItem(key) {
                   if (key === data[0].id) {
                      result = ['top'];
@@ -2678,6 +2670,7 @@ define([
                   }
                   return Promise.resolve();
                },
+               handleResetItems: () => undefined,
                registerObserver: () => undefined,
                scrollPositionChange: () => undefined,
                setTriggers: () => undefined
@@ -4289,7 +4282,6 @@ define([
             instance._beforeMount(cfg);
             instance._listViewModel.setItems(rs, cfg);
             instance._items = rs;
-            instance._children = {scrollController: { scrollToItem: () => null }};
 
             // Пока что необходимо в любом случае проинициализировать ItemActionsController
             // иначе у нас не будет работать ни swipe() ни rightSwipe()
@@ -4502,7 +4494,8 @@ define([
             };
             instance.saveOptions(cfg);
             instance._scrollController = {
-               scrollToItem: () => {}
+               scrollToItem: () => {},
+               handleResetItems: () => {}
             };
             instance._container = {
                querySelector: (selector) => ({
@@ -5203,7 +5196,6 @@ define([
              instance = new lists.BaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
-         instance._scrollController.afterMount = () => undefined;
          instance._container = {};
          let fakeNotify = sandbox.spy(instance, '_notify')
              .withArgs('drawItems');
@@ -5529,7 +5521,6 @@ define([
             clientHeight: 100,
             getBoundingClientRect: () => ({ y: 0 })
          };
-         instance._scrollController.__getItemsContainer = () => ({children: []});
          instance._afterMount(cfg);
 
          instance._beforeUpdate(cfg);
@@ -6246,7 +6237,6 @@ define([
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
             ctrl._container =  {getElementsByClassName: () => ([{clientHeight: 100}])};
-            ctrl._scrollController.__getItemsContainer = () => ({children: []});
             ctrl._afterMount(cfg);
 
             assert.isNull(ctrl._loadedItems);
@@ -6691,7 +6681,6 @@ define([
             control.saveOptions(options);
             await control._beforeMount(options);
             control._container =  {getElementsByClassName: () => ([ {clientHeight: 0, offsetHeight:0}])};
-            control._scrollController.__getItemsContainer = () => ({children: []});
             await control._afterMount(options);
          }
 
@@ -6899,7 +6888,7 @@ define([
                         }
                         return Promise.resolve();
                      },
-                     reset: () => undefined
+                     handleResetItems: () => {}
                   };
 
                   // No editing

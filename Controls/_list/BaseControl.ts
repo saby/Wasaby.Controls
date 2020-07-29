@@ -4108,6 +4108,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // Если обрабатывать все это по отдельности, не собирая в одну пачку, то алгоритмы виртуального скролла начинают работать некорректно
     startBatchAdding(direction: IDirection): void {
         this._addItemsDirection = direction;
+        this._addItems = [];
     },
 
     //TODO: вынести в батчер?
