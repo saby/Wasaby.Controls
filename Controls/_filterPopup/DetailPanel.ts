@@ -255,7 +255,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          return hasAdditional;
       },
 
-      getKeyProperty(items: IFilterItem): string {
+      getKeyProperty(items: IFilterItem[]): string {
          const firstItem = chain.factory(items).first();
          return firstItem.hasOwnProperty('name') ? 'name' : 'id';
       },
