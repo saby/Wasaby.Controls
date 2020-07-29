@@ -271,6 +271,7 @@ export default class ScrollController {
 
             return { 
                     placeholders: rangeShiftResult.placeholders,
+                    activeElement: options.activeElement,
                     scrollToActiveElement: options.activeElement !== undefined
                 };
         }
