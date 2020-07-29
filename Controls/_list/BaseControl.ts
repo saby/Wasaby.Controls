@@ -1315,7 +1315,7 @@ const _private = {
             // Если элементы скрылись, то для них нужно сбросить состояние marked,
             // чтобы при их показе не было лишнего маркера
             if (action === IObservable.ACTION_REMOVE && _private.hasMarkerController(self)) {
-                removedItems.forEach((item) => item.setMarked(false, true));
+                _private.getMarkerController(self).resetMarkedState(removedItems);
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,

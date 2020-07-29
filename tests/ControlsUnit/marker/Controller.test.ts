@@ -347,8 +347,23 @@ describe('Controls/marker/Controller', () => {
       });
    });
 
+   it('resetMarkedState', () => {
+      const item1 = model.getItemBySourceKey(1);
+      const item2 = model.getItemBySourceKey(2);
+      item1.setMarked(true);
+      item2.setMarked(true);
+
+      assert.isTrue(item1.isMarked());
+      assert.isTrue(item2.isMarked());
+
+      controller.resetMarkedState([item1, item2]);
+
+      assert.isFalse(item1.isMarked());
+      assert.isFalse(item2.isMarked());
+   });
+
    it('should work with breadcrumbs', () => {
-      items = new RecordSet({
+      const items = new RecordSet({
          rawData: [{
             id: 1,
             parent: null,
@@ -374,7 +389,7 @@ describe('Controls/marker/Controller', () => {
          keyProperty: 'id'
       });
 
-      model = new SearchGridViewModel({
+      const model = new SearchGridViewModel({
          items,
          keyProperty: 'id',
          parentProperty: 'parent',
@@ -382,8 +397,8 @@ describe('Controls/marker/Controller', () => {
          columns: [{}]
       });
 
-      controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
-      assert.equal(controller._markedKey, 2);
+      const controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
+      assert.equal(controller.getMarkedKey(), 2);
 
       let result = controller.moveMarkerToNext();
       assert.equal(result, 4);
@@ -397,7 +412,7 @@ describe('Controls/marker/Controller', () => {
       items.removeAt(2);
       items.removeAt(2);
 
-      const result = controller.handleRemoveItems(2);
+      result = controller.handleRemoveItems(2);
       assert.equal(result, 2);
    });
 });

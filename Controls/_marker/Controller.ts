@@ -163,6 +163,14 @@ export class Controller {
    }
 
    /**
+    * Сбросить состояние marked для переданных элементов
+    * @param items Список элементов коллекции
+    */
+   resetMarkedState(items: Array<CollectionItem<Model>>): void {
+      items.forEach((item) => item.setMarked(false, true));
+   }
+
+   /**
     * Устанавливает маркер на первый элемент, который полностью виден на странице
     * @param items список HTMLElement-ов на странице
     * @param verticalOffset вертикальное смещение скролла
