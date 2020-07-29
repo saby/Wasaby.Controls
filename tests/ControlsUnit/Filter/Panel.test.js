@@ -100,6 +100,24 @@ define(
             assert.isTrue(panel._hasAdditionalParams);
          });
 
+         it('getKeyProperty', () => {
+            const id = filterPopup.DetailPanel._private.getKeyProperty(items);
+            const newItems = [{
+               name: 'test',
+               value: 1,
+               resetValue: null
+            },
+            {
+               name: 'test1',
+               value: 2,
+               resetValue: 3
+            }
+            ];
+            const name = filterPopup.DetailPanel._private.getKeyProperty(newItems);
+            assert.isTrue(id === 'id');
+            assert.isTrue(name === 'name');
+         });
+
          it('before update new items', function() {
             let newConfig = Clone(config);
             newConfig.items[2].visibility = true;

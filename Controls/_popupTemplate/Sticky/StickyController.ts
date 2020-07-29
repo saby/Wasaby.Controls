@@ -105,13 +105,12 @@ const _private = {
         className += ' controls-Popup-corner-horizontal-' + cfg.targetPoint.horizontal;
         className += ' controls-Popup-align-horizontal-' + cfg.direction.horizontal;
         className += ' controls-Popup-align-vertical-' + cfg.direction.vertical;
-        className += ' controls-Sticky__reset-margins';
         return className;
     },
 
     removeOrientationClasses(cfg) {
         if (cfg.popupOptions.className) {
-            cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*|controls-Sticky__reset-margins/g, '').trim();
+            cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
         }
     },
 
