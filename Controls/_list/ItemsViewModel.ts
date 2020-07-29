@@ -260,7 +260,7 @@ var ItemsViewModel = BaseViewModel.extend({
                 index: this._display.getIndex(dispItem),
                 item: dispItem.getContents(),
                 dispItem,
-                theme: this._options.theme,
+                theme: this.getTheme(),
                 _preferVersionAPI: true,
                 getVersion(): string {
                     return self._calcItemVersion(itemData.item, itemData.key);
