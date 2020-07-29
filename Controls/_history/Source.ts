@@ -14,7 +14,7 @@ export interface IHistorySourceOptions {
     originSource: ICrud;
     historySource: Service;
     parentProperty: string;
-    pinned: Array<string | number>;
+    pinned: Array<string | number>|boolean;
     displayProperty: string;
     nodeProperty: string;
 }

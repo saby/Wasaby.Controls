@@ -9,13 +9,15 @@ import LoadPromisesStorage from './LoadPromisesStorage';
 import {Logger} from 'UI/Utils';
 import {detection} from 'Env/Env';
 
+export type HistoryListParam = Array<number | string> | boolean;
+
 export interface IHistoryServiceOptions {
     historyId: string;
     historyIds?: string[];
-    pinned?: Array<string | number>;
-    frequent?: Array<string | number>;
-    recent?: Array<string | number>;
-    favorite?: Array<string | number>;
+    pinned?: HistoryListParam;
+    frequent?: HistoryListParam;
+    recent?: HistoryListParam;
+    favorite?: HistoryListParam;
     dataLoaded?: boolean;
 }
 const STORAGES_USAGE = {};
