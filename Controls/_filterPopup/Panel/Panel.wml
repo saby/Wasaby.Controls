@@ -12,7 +12,7 @@
               source="{{_items}}"
               render="{{_options.additionalPanelTemplate}}"
               columnProperty="column"
-              keyProperty="name"
+              keyProperty="{{_keyProperty}}"
               groupProperty="{{_options.groupProperty}}"
               itemTemplate="{{_options.additionalTemplate}}"
               itemTemplateProperty="{{_options.additionalTemplateProperty}}"

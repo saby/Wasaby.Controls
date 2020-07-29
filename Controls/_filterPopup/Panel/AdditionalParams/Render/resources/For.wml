@@ -3,6 +3,7 @@
       <ws:if data="{{_options.isGroup(item)}}">
          <ws:partial template="{{_options.item.getItemTemplate(_options.itemTemplate, _options.groupTemplate)}}"
                      itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                     itemTemplate="{{_options.additionalTemplate}}"
                      item="{{_options.item.getContents()}}"
                      collectionItem="{{_options.item}}"
                      on:valueChanged="_propertyChanged(_options.item.getContents(), 'value')"

@@ -3,7 +3,7 @@ import Control = require('Core/Control');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
-import Deferred = require('Core/Deferred');
+import {IFilterItem} from 'Controls/filter';
 import find = require('Core/helpers/Object/find');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
@@ -255,6 +255,11 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          return hasAdditional;
       },
 
+      getKeyProperty(items: IFilterItem): string {
+         const firstItem = chain.factory(items).first();
+         return firstItem.hasOwnProperty('name') ? 'name' : 'id';
+      },
+
       prepareItems: function(items) {
          let value, isValueReseted;
          chain.factory(items).each(function(item) {
@@ -279,11 +284,13 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
       _hasResetValue: false,
       _hasAdditionalParams: false,
       _hasHistory: false,
+      _keyProperty: null,
 
       _beforeMount: function(options, context) {
          _private.resolveItems(this, options, context);
          _private.resolveHistoryId(this, options, this._contextOptions);
          this._hasAdditionalParams = (options.additionalTemplate || options.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
+         this._keyProperty = _private.getKeyProperty(this._items);
          this._isChanged = _private.isChangedValue(this._items);
          this._hasResetValue = FilterUtils.hasResetValue(this._items);
          const isReportPanel = options.orientation === 'horizontal';
@@ -294,6 +301,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          if (!isEqual(this._options.items, newOptions.items)) {
             _private.resolveItems(this, newOptions, context);
          }
+         this._keyProperty = _private.getKeyProperty(this._items);
          this._isChanged = _private.isChangedValue(this._items);
          this._hasAdditionalParams = (newOptions.additionalTemplate || newOptions.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          this._hasResetValue = FilterUtils.hasResetValue(this._items);
