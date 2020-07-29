@@ -1948,6 +1948,12 @@ const _private = {
                    _private.handleMarkerControllerResult(self, newMarkedKey);
                }
                break;
+           case IObservable.ACTION_REPLACE:
+               // Если Record изменили, то пересоздастся CollectionItem и нужно для него восстановить маркер
+               if (_private.hasMarkerController(self)) {
+                   _private.getMarkerController(self).restoreMarker();
+               }
+               break;
        }
        _private.handleSelectionControllerResult(self, selectionControllerResult);
    },
