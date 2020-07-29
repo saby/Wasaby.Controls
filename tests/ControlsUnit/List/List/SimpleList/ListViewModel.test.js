@@ -636,7 +636,7 @@ define([
                all: [1, 2],
                showed: [1]
             });
-            assert.isTrue(!!item.shouldDisplayActions());
+            assert.isTrue(!!(item.hasVisibleActions() || item.isEditing()));
 
             // Проверяем что чекбокс не будет показываться если запись редактируется
             assert.isFalse(item.hasMultiSelect);
