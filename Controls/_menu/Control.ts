@@ -105,6 +105,8 @@ interface IMenuPosition {
 
 const SUB_DROPDOWN_DELAY = 400;
 
+const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
+
 export default class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     readonly '[Controls/_menu/interface/IMenuControl]': boolean = true;
     protected _template: TemplateFunction = ViewTemplate;
@@ -118,6 +120,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     protected _expandButtonVisible: boolean = false;
     protected _applyButtonVisible: boolean = false;
     protected _closeButtonVisible: boolean = false;
+    protected _expander: boolean;
     private _sourceController: typeof SourceController = null;
     private _subDropdownItem: CollectionItem<Model>|null;
     private _selectionChanged: boolean = false;
@@ -128,6 +131,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _isMouseInOpenedItemArea: boolean = false;
     private _expandedItemsFilter: Function;
     private _additionalFilter: Function;
+    private _limitHistoryFilter: Function;
     private _notifyResizeAfterRender: Boolean = false;
     private _itemActionsController: ItemActionsController;
 
@@ -146,6 +150,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                            receivedState?: void): Deferred<RecordSet> {
         this._expandedItemsFilter = this._expandedItemsFilterCheck.bind(this);
         this._additionalFilter = MenuControl._additionalFilterCheck.bind(this, options);
+        this._limitHistoryFilter = MenuControl._limitHistoryCheck.bind(this);
 
         this._closeButtonVisible = options.itemPadding.right === 'menu-close';
 
@@ -312,10 +317,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     protected _toggleExpanded(event: SyntheticEvent<MouseEvent>, value: boolean): void {
+        let toggleFilter = this._additionalFilter;
+        if (!this._options.additionalProperty) {
+            toggleFilter = this._limitHistoryFilter;
+        }
         if (value) {
-            this._listModel.removeFilter(this._additionalFilter);
+            this._listModel.removeFilter(toggleFilter);
         } else {
-            this._listModel.addFilter(this._additionalFilter);
+            this._listModel.addFilter(toggleFilter);
         }
         // TODO after deleting additionalProperty option
         // if (value) {
@@ -636,6 +645,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
         if (options.additionalProperty) {
             listModel.addFilter(this._additionalFilter);
+        } else if (options.allowPin && options.root === null && !this._expander) {
+            listModel.addFilter(this._limitHistoryFilter);
         }
         return listModel;
     }
@@ -688,8 +699,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     this._getSourceController(options).hasMoreData('down');
                 this._expandButtonVisible = this._isExpandButtonVisible(
                     items,
-                    options.additionalProperty,
-                    options.root);
+                    options);
 
                 return items;
             },
@@ -698,16 +708,20 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _isExpandButtonVisible(items: RecordSet,
-                                   additionalProperty: string,
-                                   root: string|number|null): boolean {
+                                   options: IMenuControlOptions): boolean {
         let hasAdditional: boolean = false;
 
-        if (additionalProperty && root === null) {
+        if (options.additionalProperty && options.root === null) {
             items.each((item: Model): void => {
                 if (!hasAdditional) {
-                    hasAdditional = item.get(additionalProperty) && !MenuControl._isHistoryItem(item);
+                    hasAdditional = item.get(options.additionalProperty) && !MenuControl._isHistoryItem(item);
                 }
             });
+        } else if (options.allowPin && options.root === null) {
+            const itemsCount = factory(items).count((item) => {
+                return !item.get(options.parentProperty);
+            }).value()[0];
+            hasAdditional = itemsCount > MAX_HISTORY_VISIBLE_ITEMS_COUNT + 1;
         }
         return hasAdditional;
     }
@@ -859,6 +873,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private static _additionalFilterCheck(options: IMenuControlOptions, item: Model): boolean {
         return (!item.get || !item.get(options.additionalProperty) || MenuControl._isHistoryItem(item));
+    }
+
+    private static _limitHistoryCheck(item: Model, index: number): boolean {
+        return index < MAX_HISTORY_VISIBLE_ITEMS_COUNT;
     }
 
     private static _displayFilter(options: IMenuControlOptions, item: Model): boolean {
