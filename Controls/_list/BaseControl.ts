@@ -2034,9 +2034,6 @@ const _private = {
             self._loadTriggerOffset = result.triggerOffset;
             self.applyTriggerOffset(result.triggerOffset);
         }
-        if (result.activeElement) {
-            self._notify('activeElementChanged', [result.activeElement]);
-        }
         if (result.scrollToActiveElement) {
             _private.scrollToItem(self, result.activeElement, false, true);
         }
