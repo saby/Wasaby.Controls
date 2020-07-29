@@ -2,6 +2,7 @@ import {default as Lookup} from 'Controls/_lookup/MultipleInput';
 import {Model} from 'Types/entity';
 import {List} from 'Types/collection';
 import {strictEqual, ok} from 'assert';
+import * as getWidthUtil from 'Controls/Utils/getWidth';
 
 function getItems(countItems: number): List<Model> {
    const items = [];
@@ -22,9 +23,10 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       const placeholderWidth = 35;
       const fieldWrapperWidth = 145;
       const lookupView = new Lookup();
-      const originGetPlaceholderWidth = Lookup._getPlaceholderWidth;
+      const originGetWidth = getWidthUtil.getWidth;
+      const placeholder = 'testPlaceholder';
       // Избавимся от работы с версткой
-      Lookup._getPlaceholderWidth = function() {
+      getWidthUtil.getWidth = function() {
          return placeholderWidth;
       };
       lookupView._getFieldWrapperWidth = function() {
@@ -34,14 +36,16 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
 
       lookupView._items =  getItems(3);
       strictEqual(lookupView._getAvailableWidthCollection({
-         maxVisibleItems: 3
+         maxVisibleItems: 3,
+         placeholder
       }), fieldWrapperWidth);
 
       lookupView._items =  getItems(2);
       strictEqual(lookupView._getAvailableWidthCollection({
-         maxVisibleItems: 3
+         maxVisibleItems: 3,
+         placeholder
       }), fieldWrapperWidth - placeholderWidth);
-      Lookup._getPlaceholderWidth = originGetPlaceholderWidth;
+      getWidthUtil.getWidth = originGetWidth;
    });
 
    it('_calculateSizes', function() {

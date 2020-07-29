@@ -1324,9 +1324,16 @@ const _private = {
         }
     },
 
-    // TODO: упорядочить проверки и переписать на switch
-    onCollectionChanged(self, event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
-
+    onCollectionChanged(
+        self: any,
+        event: SyntheticEvent,
+        changesType: string,
+        action: string,
+        newItems: Array<CollectionItem<Model>>,
+        newItemsIndex: number,
+        removedItems: Array<CollectionItem<Model>>,
+        removedItemsIndex: number
+    ): void {
         // TODO Понять, какое ускорение мы получим, если будем лучше фильтровать
         // изменения по changesType в новой модели
         // TODO: убрать флаг newModelChanged, когда не будет "старой" модели
@@ -1379,13 +1386,20 @@ const _private = {
             if (self._selectionController) {
                 let result;
 
-               if (self._listViewModel.getCount() === 0 && _private._getSelectionController(self).isAllSelected()) {
-                   result = _private._getSelectionController(self).clearSelection();
-               } else if (action === IObservable.ACTION_ADD) {
-                   result = _private._getSelectionController(self).handleAddItems(newItems);
-               }
+                if (self._listViewModel.getCount() === 0 && _private._getSelectionController(self).isAllSelected()) {
+                    result = _private._getSelectionController(self).clearSelection();
+                } else if (action === IObservable.ACTION_ADD) {
+                    result = _private._getSelectionController(self).handleAddItems(newItems);
+                }
 
-               _private.handleSelectionControllerResult(self, result);
+                _private.handleSelectionControllerResult(self, result);
+            }
+
+            // Когда action=remove значит были скрыты или удалены элементы
+            // Если элементы скрылись, то для них нужно сбросить состояние marked,
+            // чтобы при их показе не было лишнего маркера
+            if (action === IObservable.ACTION_REMOVE && _private.hasMarkerController(self)) {
+                _private.getMarkerController(self).resetMarkedState(removedItems);
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
@@ -1401,17 +1415,7 @@ const _private = {
             self._itemsChanged = true;
             _private.updateInitializedItemActions(self, self._options);
         }
-
-        // обрабатываем indexesChanged отдельно от add/move/remove, так как индексы могут меняться без этих событий
-        // Например, при движении виртуального диапазона.
-        if (changesType === 'indexesChanged') {
-            let start = self._listViewModel.getStartIndex();
-            let stop = self._listViewModel.getStopIndex();
-            self.updateShadowModeHandler({
-                up: start > 0,
-                down: stop < self._listViewModel.getCount()
-            });
-        }
+        
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
             self._forceUpdate();
@@ -2047,6 +2051,12 @@ const _private = {
                if (removedItemsIndex !== undefined && self._markerController) {
                    const newMarkedKey = self._markerController.handleRemoveItems(removedItemsIndex);
                    _private.handleMarkerControllerResult(self, newMarkedKey);
+               }
+               break;
+           case IObservable.ACTION_REPLACE:
+               // Если Record изменили, то пересоздастся CollectionItem и нужно для него восстановить маркер
+               if (_private.hasMarkerController(self)) {
+                   _private.getMarkerController(self).restoreMarker();
                }
                break;
        }

@@ -38,10 +38,13 @@ class Manager extends Control<IManagerOptions> {
     _contextIsTouch: boolean = false;
     _popupItems: List<IPopupItem> = new List();
 
+    protected _beforeMount(options: IManagerOptions): void {
+        ManagerController.setPopupHeaderTheme(options.popupHeaderTheme);
+    }
+
     protected _afterMount(options: IManagerOptions, context: IManagerTouchContext): void {
         this._updateContext(context);
         ManagerController.setManager(this);
-        ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
         EventBus.channel('navigation').subscribe('onBeforeNavigate', this._navigationHandler.bind(this));
 
         if (detection.isMobilePlatform) {

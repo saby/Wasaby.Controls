@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/list_new/ItemTemplate/MarkedKey/MarkedKey';
+import * as Template from 'wml!Controls-demo/list_new/ItemTemplate/Marker/Marker';
 import {Memory} from 'Types/source';
 import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
 

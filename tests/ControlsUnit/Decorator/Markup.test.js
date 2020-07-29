@@ -5,15 +5,11 @@ define([
    'Controls/decorator',
    'Controls/_decorator/Markup/resources/template',
    'Controls/_decorator/Markup/resources/linkDecorateUtils',
-   'Controls/Application',
-   'UI/Base',
    'Env/Env'
 ], function(
    decorator,
    template,
    linkDecorateUtils,
-   Application,
-   Base,
    Env
 ) {
    'use strict';
@@ -77,15 +73,6 @@ define([
          },
          'https://ya.ru'
       ],
-      httpLinkNode = ['a',
-         {
-            'class': 'asLink',
-            rel: 'noreferrer noopener',
-            href: 'http://ya.ru',
-            target: '_blank'
-         },
-         'http://ya.ru'
-      ],
       wwwLinkNode = ['a',
          {
             'class': 'asLink',
@@ -94,33 +81,6 @@ define([
             target: '_blank'
          },
          'www.ya.ru'
-      ],
-      ftpLinkNode = ['a',
-         {
-            'class': 'asLink',
-            rel: 'noreferrer noopener',
-            href: 'ftp://ya.ru',
-            target: '_blank'
-         },
-         'ftp://ya.ru'
-      ],
-      fileLinkNode = ['a',
-         {
-            'class': 'asLink',
-            rel: 'noreferrer noopener',
-            href: 'file://ya.ru',
-            target: '_blank'
-         },
-         'file://ya.ru'
-      ],
-      smbLinkNode = ['a',
-         {
-            'class': 'asLink',
-            rel: 'noreferrer noopener',
-            href: 'smb://ya.ru',
-            target: '_blank'
-         },
-         'smb://ya.ru'
       ],
       decoratedLinkService,
       currentVersion = '2',
@@ -1675,118 +1635,6 @@ define([
             var checkFromString = linkDecorateUtils.getDecoratedLink(parentNode[1]);
             assert.deepEqual(expectedFromString, checkFromString);
          });
-      });
-   });
-   describe('Controls.Application headJson options', function() {
-      var realBuildnumber;
-      var realResourceRoot;
-      var realGetAppData;
-      var app;
-
-      before(function() {
-         app = new Application();
-         app._getResourceUrl = function (str) { return str + '?testversion'}
-         realBuildnumber = global.contents.buildnumber;
-         global.contents.buildnumber = '0';
-         realResourceRoot = global.wsConfig.resourceRoot;
-         global.wsConfig.resourceRoot = '/test/';
-         realGetAppData = Base.AppData.getAppData;
-         Base.AppData.getAppData = function() {
-            return {};
-         };
-      });
-
-      after(function() {
-         global.contents.buildnumber = realBuildnumber;
-         global.wsConfig.resourceRoot = realResourceRoot;
-         Base.AppData.getAppData = realGetAppData;
-      });
-
-      it('script with module scr', function() {
-         var json = [['script', { src: '/test/Controls/_decorator/Markup.js' }]];
-         app._beforeMount({ headJson: json });
-         var goodHtml = '<script src="/test/Controls/_decorator/Markup.js?testversion"></script>';
-         var checkHtml = template({
-            _options: {
-               value: app.headJson[0],
-               validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver.bind(app)
-            }
-         }, {});
-         equalsHtml(goodHtml, checkHtml);
-      });
-
-      it('link with module href', function() {
-         var json = [['link', { href: '/test/Controls/_decorator/Markup/resolvers/highlight.css' }]];
-         app._beforeMount({ headJson: json });
-         var goodHtml = '<link href="/test/Controls/_decorator/Markup/resolvers/highlight.css?testversion" />';
-         var checkHtml = template({
-            _options: {
-               value: app.headJson[0],
-               validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver.bind(app)
-            }
-         }, {});
-         equalsHtml(goodHtml, checkHtml);
-      });
-
-      it('script with non-module scr', function() {
-         var json = [['script', { src: 'https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' }]];
-         app._beforeMount({ headJson: json });
-         var goodHtml = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js?testversion"></script>';
-         var checkHtml = template({
-            _options: {
-               value: app.headJson[0],
-               validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver.bind(app)
-            }
-         }, {});
-         equalsHtml(goodHtml, checkHtml);
-      });
-
-      it('link with non-module href', function() {
-         var json = [['link', { src: 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' }]];
-         app._beforeMount({ headJson: json });
-         var goodHtml = '<link src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css?testversion" />';
-         var checkHtml = template({
-            _options: {
-               value: app.headJson[0],
-               validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver.bind(app)
-            }
-         }, {});
-         equalsHtml(goodHtml, checkHtml);
-      });
-
-      it('module link in an attribute that is not a link', function() {
-         var json = [['meta', {
-            name: '/test/Controls/_decorator/Markup.js',
-            content: 'yes'
-         }]];
-         app._beforeMount({ headJson: json });
-         var goodHtml = '<meta name="/test/Controls/_decorator/Markup.js" content="yes" />';
-         var checkHtml = template({
-            _options: {
-               value: app.headJson[0],
-               validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver.bind(app)
-            }
-         }, {});
-         equalsHtml(goodHtml, checkHtml);
-      });
-
-      it('just a title', function() {
-         var json = [['title', 'SABY']];
-         app._beforeMount({ headJson: json });
-         var goodHtml = '<title>SABY</title>';
-         var checkHtml = template({
-            _options: {
-               value: app.headJson[0],
-               validHtml: app.headValidHtml,
-               tagResolver: app.headTagResolver.bind(app)
-            }
-         }, {});
-         equalsHtml(goodHtml, checkHtml);
       });
    });
 });
