@@ -72,6 +72,7 @@ interface IRenderOptions extends IControlOptions, IHeightOptions, IBorderVisibil
     rightFieldWrapper?: TemplateFunction;
     state: string;
     border: IBorder;
+    wasActionByUser: boolean;
 }
 
 /**
