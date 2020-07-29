@@ -219,7 +219,7 @@ export default class ScrollController {
         }
     }
 
-    private _initVirtualScroll(options: IOptions, count?: number): IPlaceholders {
+    private _initVirtualScroll(options: IOptions, count?: number): IScrollControllerResult {
         const virtualScrollConfig = options.virtualScrollConfig || {};
         if (options.collection && (
             !virtualScrollConfig.pageSize ||
@@ -268,7 +268,10 @@ export default class ScrollController {
                 options.needScrollCalculation
             );
 
-            return rangeShiftResult.placeholders;
+            return { 
+                    placeholders: rangeShiftResult.placeholders,
+                    scrollToActiveElement: options.activeElement !== undefined
+                };
         }
     }
 

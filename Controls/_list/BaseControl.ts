@@ -2030,6 +2030,9 @@ const _private = {
         if (result.activeElement) {
             self._notify('activeElementChanged', [result.activeElement]);
         }
+        if (result.scrollToActiveElement) {
+            _private.scrollToItem(self, result.activeElement, false, true);
+        }
     },
     onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
         // подписываемся на рекордсет, чтобы следить какие элементы будут удалены

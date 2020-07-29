@@ -21,6 +21,7 @@ export interface IScrollControllerResult {
     placeholders?: IPlaceholders;
     triggerOffset?: ITriggerOffset;
     activeElement?: TItemKey;
+    scrollToActiveElement?: boolean;
 }
 
 /**
