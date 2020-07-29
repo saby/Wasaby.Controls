@@ -6,7 +6,8 @@
                collection="{{_collection}}"
                columnProperty="{{_options.columnProperty}}"
                groupTemplate="{{_groupTemplate}}"
-               itemTemplate="{{_options.itemTemplate.templateName || _itemTemplate}}"
+               itemTemplate="{{_itemTemplate}}"
+               additionalTemplate="{{_options.itemTemplate}}"
                column="{{direction}}"/>
 </ws:template>
 <div class="controls-AdditionalParamsRender">
