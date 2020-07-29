@@ -2916,9 +2916,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._loadedItems = null;
 
-        if (this._scrollController) {
-            this._scrollController?.afterRender();
-        }
+        this._scrollController?.afterRender();
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
         // TODO https://online.sbis.ru/opendoc.html?guid=3042889b-181c-47ec-b036-a7e24c323f5f
@@ -4095,8 +4093,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         let itemsHeights = getItemsHeightsData(this._getItemsContainer());
+        this._viewSize = this._container.clientHeight;
         if (this._scrollController) {
             this._scrollController.updateItemsHeights(itemsHeights);
+            let result = this._scrollController.updateScrollParams({scrollHeight: this._viewSize});
+            _private.handleScrollControllerResult(this, result);
         }
     },
 
