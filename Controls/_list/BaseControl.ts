@@ -3091,11 +3091,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
         if (this._scrollController) {
-            if (this._options.activeElement !== newOptions.activeElement) {
-                _private.doAfterUpdate(this, () => {
-                    _private.scrollToItem(this, newOptions.activeElement, false, true);
-                })
-            }
             let result = this._scrollController.update({
                 attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
