@@ -2213,6 +2213,7 @@ const _private = {
             useNewModel: options.useNewModel,
             forceInitVirtualScroll: options?.navigation?.view === 'infinity'
         });
+        let result = self._scrollController.getResult();
     },
 
     /**

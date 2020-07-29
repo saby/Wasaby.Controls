@@ -80,7 +80,7 @@ export default class ScrollController {
     // Сущность управляющая инерционным скроллингом на мобильных устройствах
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
 
-    private _changedPlaceholders: IPlaceholders;
+    private _preparedResult: IScrollControllerResult;
 
     protected _options: any;
 
@@ -91,13 +91,13 @@ export default class ScrollController {
                 ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
             }
         }
-        this._initVirtualScroll(options);
+        this._preparedResult = this._initVirtualScroll(options);
     }
 
-    private getResult(result: IScrollControllerResult) {
-        const placeholders = this._changedPlaceholders;
-        this._changedPlaceholders = null;
-        return {placeholders, ...result}
+    getResult(result: IScrollControllerResult = {}) {
+        const preparedResult = this._preparedResult;
+        this._preparedResult = {};
+        return {...preparedResult, ...result}
     }
 
     updateScrollParams(params: Partial<IScrollParams>):  IScrollControllerResult {
@@ -192,7 +192,7 @@ export default class ScrollController {
                                         index,
                                         this._options.collection.getCount()
                                     );
-                                    this._changedPlaceholders = rangeShiftResult.placeholders;
+                                    this._preparedResult = { placeholders: rangeShiftResult.placeholders };
                                     this._setCollectionIndices(
                                         this._options.collection,
                                         rangeShiftResult.range,
