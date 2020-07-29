@@ -244,42 +244,6 @@ describe('Controls/_multiselection/Controller', () => {
       assert.deepEqual(result, expectedResult);
    });
 
-   it('handleAddItems', () => {
-      model.setItems(new RecordSet({
-         rawData: [
-            { id: 1 },
-            { id: 2 },
-            { id: 3 },
-            { id: 4 }
-         ],
-         keyProperty: 'id'
-      }));
-
-      controller.update({
-         model,
-         selectedKeys: [1, 2, 3, 4],
-         excludedKeys: [],
-         strategyOptions: { items: model.getItems() }
-      });
-
-      const result = controller.handleAddItems([]);
-      assert.deepEqual(result, {
-         selectedKeysDiff: {
-            added: [],
-            removed: [],
-            keys: [1, 2, 3, 4]
-         },
-         excludedKeysDiff: {
-            added: [],
-            removed: [],
-            keys: []
-         },
-         selectedCount: 4,
-         isAllSelected: true
-      });
-      model.each((item) => assert.isTrue(item.isSelected()));
-   });
-
    it('handleRemoveItems', () => {
       controller.toggleItem(1);
 

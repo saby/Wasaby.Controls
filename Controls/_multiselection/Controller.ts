@@ -84,11 +84,13 @@ export class Controller {
    /**
     * Проставляет выбранные элементы в модели
     * @remark Не уведомляет о изменениях в модели
+    * @return {ISelectionControllerResult}
     */
-   restoreSelection(): void {
+   restoreSelection(): ISelectionControllerResult {
       // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
       this._strategy.setItems(this._model.getCollection());
       this._updateModel(this._selection, true);
+      return this._getResult(this._selection, this._selection);
    }
 
    /**
@@ -176,17 +178,6 @@ export class Controller {
       const result = this._getResult(this._selection, newSelection);
       this._selection = newSelection;
       return result;
-   }
-
-   /**
-    * Обработать добавление новых элементов в список
-    * @param addedItems Новые элементы списка
-    * @return {ISelectionControllerResult}
-    */
-   handleAddItems(addedItems: Array<CollectionItem<Model>>): ISelectionControllerResult {
-      // TODO для улучшения производительности обрабатывать только изменившиеся элементы
-      this._updateModel(this._selection);
-      return this._getResult(this._selection, this._selection);
    }
 
    /**
