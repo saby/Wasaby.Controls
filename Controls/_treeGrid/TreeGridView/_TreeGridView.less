@@ -211,6 +211,13 @@
    opacity: 1;
 }
 
+.controls-TreeGrid__row__searchBreadCrumbs .controls-itemActionsV__container {
+   // При поиске в списке с горизонтальным скроллом, хлебная крошка фиксируется и растягивается,
+   // стек z-index'ов для операций над записью на хлебных крошках должен начинаться с z-index хлебной крошки (фиксированной колонки).
+   // https://online.sbis.ru/opendoc.html?guid=7ec6ad1a-6c9d-412d-b477-7935d81c82cc
+   z-index: 3;
+}
+
 .ws-is-hover {
    .controls-BaseControl_showActions_visible .controls-Grid__row,
    .controls-BaseControl_showActions_onhover .controls-Grid__row:hover,
