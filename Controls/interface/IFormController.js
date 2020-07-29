@@ -117,10 +117,10 @@ define('Controls/interface/IFormController', [
     * @variant 'create' Перед построением верстки выполняется метод "Создать", построение <b>откладывается</b> до ответа БЛ.
     * @variant 'delayedRead' Верстка контрола строится по записи, переданной в опцию {@link Controls/interface/IFormController#record record}, параллельно выполняется метод "Прочитать" по ключу,
     * переданному в опции {@link Controls/interface/IFormController#key key}.
-    * Построение вёрстки контрола <b>не откладывается.</b>
+    * Построение вертки контрола <b>не откладывается.</b>
     * @variant 'delayedCreate' Верстка контрола строится по записи, переданной в опцию
     * {@link Controls/interface/IFormController#record record}, параллельно выполняется метод "Создать".
-    * Построение вёрстки контрола <b>не откладывается.</b>
+    * Построение вертки контрола <b>не откладывается.</b>
     * @example
     * <pre>
     *    <Controls.form:Controller initializingWay={{_myInitializingWay}}”>

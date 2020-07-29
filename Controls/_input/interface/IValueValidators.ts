@@ -2,10 +2,10 @@ import {descriptor} from 'Types/entity';
 
 export interface ValueValidatorObject {
    validator: Function;
-   arguments: object;
+   arguments: object
 }
 
-export type ValueValidators = ValueValidatorObject[] | Function[];
+export type ValueValidators = ValueValidatorObject[] | Function[]
 
 export interface IValueValidatorsOptions {
     valueValidators: ValueValidators;
