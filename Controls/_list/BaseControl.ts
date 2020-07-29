@@ -1415,7 +1415,7 @@ const _private = {
             self._itemsChanged = true;
             _private.updateInitializedItemActions(self, self._options);
         }
-        
+
         // If BaseControl hasn't mounted yet, there's no reason to call _forceUpdate
         if (self._isMounted) {
             self._forceUpdate();
@@ -2224,6 +2224,7 @@ const _private = {
             forceInitVirtualScroll: options?.navigation?.view === 'infinity'
         });
         let result = self._scrollController.getResult();
+        _private.handleScrollControllerResult(self, result);
     },
 
     /**
