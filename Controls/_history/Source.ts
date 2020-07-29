@@ -13,10 +13,10 @@ import {default as Service} from './Service';
 export interface IHistorySourceOptions {
     originSource: ICrud;
     historySource: Service;
-    parentProperty: string;
-    pinned: Array<string | number>;
-    displayProperty: string;
-    nodeProperty: string;
+    parentProperty?: string;
+    pinned?: Array<string | number>|boolean;
+    displayProperty?: string;
+    nodeProperty?: string;
 }
 
 interface IHistoryData {

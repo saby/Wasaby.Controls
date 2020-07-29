@@ -193,6 +193,26 @@ define([
 
       });
 
+      it('actual theme on itemData', function () {
+         const cfg = {
+            items: data,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            theme: 'first'
+         };
+         const model = new list.ItemsViewModel(cfg);
+         const dispItem = {
+            getContents: () => ({
+               getId: () => '123'
+            })
+         };
+
+         assert.equal(model.getItemDataByItem(dispItem).theme, 'first');
+         model.setTheme('second');
+         assert.equal(model.getItemDataByItem(dispItem).theme, 'second');
+         assert.equal(model._options.theme, 'first');
+      });
+
       it('setItems', function () {
          var rs1 = new collection.RecordSet({
             rawData: data,
@@ -680,7 +700,7 @@ define([
            assert.isTrue(isUpdated);
 
        });
-       
+
        it('should update prefix on move items', function () {
          const cfg = {
              keyProperty: 'id',
