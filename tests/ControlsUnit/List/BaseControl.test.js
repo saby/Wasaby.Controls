@@ -7185,6 +7185,54 @@ define([
             assert.isTrue(endDragSpy.called);
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
          });
+
+         describe('_private.onListChange', () => {
+            let baseControl;
+
+            beforeEach(async () => {
+               const data = [
+                  {
+                     id: 1,
+                     title: 'Первый',
+                     type: 1
+                  },
+                  {
+                     id: 2,
+                     title: 'Второй',
+                     type: 2
+                  }
+               ];
+               const source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: data
+               });
+               const cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewModelConfig: {
+                     items: [],
+                     keyProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  keyProperty: 'id',
+                  source: source
+               };
+               baseControl = new lists.BaseControl();
+               baseControl.saveOptions(cfg);
+               await baseControl._beforeMount(cfg);
+            });
+
+            it('restore marker for replaced item', () => {
+               baseControl.setMarkedKey(1);
+               let item = baseControl.getViewModel().getItemBySourceKey(1);
+               assert.isTrue(item.isMarked());
+
+               item.setMarked(false);
+
+               lists.BaseControl._private.onItemsChanged(baseControl, 'rp', [item.getContents()], 0);
+               item = baseControl.getViewModel().getItemBySourceKey(1);
+               assert.isTrue(item.isMarked());
+            });
+         });
       });
    });
 });
