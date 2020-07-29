@@ -2022,9 +2022,12 @@ const _private = {
         if (!result) {
             return;
         }
-        if (result.placeholders) {
-            if (self._isMounted) {
+        if (self._isMounted) {
+            if (result.placeholders) {
                 self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
+            }
+            if (result.activeElement) {
+                self._notify('activeElementChanged', [result.activeElement]);
             }
         }
         if (result.triggerOffset) {
