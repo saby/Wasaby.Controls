@@ -26,15 +26,12 @@
 .controls-Render_state-search-valid_caretFilled_theme-@{themeName},
 .controls-Render_state-search-invalid_caretFilled_theme-@{themeName},
 .controls-Render_state-search-invalidAccent_caretFilled_theme-@{themeName} {
-   border-color: @border-color_focus_searchInput;
-   background: @background-color_focus_searchInput;
-}
 
-.controls-Render_state-search-valid-active_caretFilled_theme-@{themeName},
-.controls-Render_state-search-invalid-active_caretFilled_theme-@{themeName},
-.controls-Render_state-search-invalidAccent-active_caretFilled_theme-@{themeName} {
-   border-color: @border-color_focus_searchInput;
-   background: @background-color_focus_searchInput;
+   &:focus-within {
+      border-color: @border-color_focus_searchInput;
+      background: @background-color_focus_searchInput;
+   }
+
 }
 
 .controls-Render_state-searchContrast-valid_theme-@{themeName},
