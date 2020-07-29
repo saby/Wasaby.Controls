@@ -1507,10 +1507,9 @@ var
             current.getColspanFor = (elementName: string) => self.getColspanFor.apply(self, [elementName]);
             current.stickyColumnsCount = this._options.stickyColumnsCount;
 
-            current.style = this._options.style;
             current.rowSeparatorSize = this._options.rowSeparatorSize;
             current.columnSeparatorSize = this._options.columnSeparatorSize;
-            current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
+            current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${current.theme}` : '';
             current.getSeparatorForColumn = _private.getSeparatorForColumn;
             current.isLastItem = (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
                                  (this.getCount() - 1 === current.index);
@@ -1520,10 +1519,10 @@ var
             );
 
             const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
-            current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${self._options.theme}
-            controls-GridView__itemV_marker-${style}_theme-${self._options.theme}
-            controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${self._options.theme}
-            controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${self._options.theme}`;
+            current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${current.theme}
+            controls-GridView__itemV_marker-${style}_theme-${current.theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${current.theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${current.theme}`;
 
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
@@ -1558,7 +1557,7 @@ var
             }
 
             if (current.isGroup) {
-                current.groupPaddingClasses = _private.getGroupPaddingClasses(current, this._options.theme);
+                current.groupPaddingClasses = _private.getGroupPaddingClasses(current, current.theme);
                 current.shouldFixGroupOnColumn = (columnAlignGroup?: number) => {
                     return columnAlignGroup !== undefined && columnAlignGroup < current.columns.length - (current.hasMultiSelect ? 1 : 0);
                 };
@@ -1595,7 +1594,7 @@ var
                 if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
                     if (!hasMainCell) {
-                        result += ' controls-Grid__row-cell__ladder-spacing_theme-' + self._options.theme;
+                        result += ' controls-Grid__row-cell__ladder-spacing_theme-' + current.theme;
                     }
                 }
                 return result;
@@ -1659,14 +1658,14 @@ var
                         getActions: current.getActions,
                         getContents: current.getContents
                 };
-                currentColumn.classList = _private.getItemColumnCellClasses(current, self._options.theme, backgroundColorStyle);
+                currentColumn.classList = _private.getItemColumnCellClasses(current, current.theme, backgroundColorStyle);
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
                      * isColspaned добавлена как костыль для временного лечения ошибки.
                      * После закрытия можно удалить здесь и из шаблонов.
                      * https://online.sbis.ru/opendoc.html?guid=4230f8f0-7fd1-4018-bd8c-08d703af3899
                      */
-                    columnData.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${self._options.theme}`;
+                    columnData.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${current.theme}`;
                     return columnData.classList.padding;
                 };
                 currentColumn.column = current.columns[current.columnIndex];
