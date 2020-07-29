@@ -122,6 +122,7 @@ export default class ScrollController {
     }
 
     update(options: IOptions, params?: Partial<IScrollParams>): IScrollControllerResult {
+        let result = {};
         if (options.collection && (
             this._options.collection !== options.collection ||
             options.needScrollCalculation && !this._options.needScrollCalculation
@@ -131,7 +132,7 @@ export default class ScrollController {
                     ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
                 }
             }
-            this._initVirtualScroll(options);
+            result = this._initVirtualScroll(options);
             this._options.collection = options.collection;
             this._options.needScrollCalculation = options.needScrollCalculation;
         }
@@ -144,7 +145,7 @@ export default class ScrollController {
         }
         
         this._isRendering = true;
-        return this.updateScrollParams(params);
+        return {...result, ...this.updateScrollParams(params)};
     }
 
     needToSaveAndRestoreScrollPosition(): boolean {
@@ -471,8 +472,9 @@ export default class ScrollController {
      * @private
      */
     handleAddItems(addIndex: number, items: object[], direction?: IDirection): IScrollControllerResult {
+        let result = {}
         if (!this._virtualScroll) {
-            this._initVirtualScroll(
+            result = this._initVirtualScroll(
                 {...this._options, forceInitVirtualScroll: true},
                 (this._options.collection.getCount() - items.length)
             );
@@ -488,7 +490,7 @@ export default class ScrollController {
         this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
             this._options.needScrollCalculation);
         this.setIndicesAfterCollectionChange();
-        return this.getResult({ placeholders: rangeShiftResult.placeholders });
+        return this.getResult({...result, placeholders: rangeShiftResult.placeholders });
     }
     
     /**
@@ -509,9 +511,9 @@ export default class ScrollController {
     }
 
     handleResetItems(): IScrollControllerResult {
-        let placeholders = this._initVirtualScroll(this._options);
+        let result = this._initVirtualScroll(this._options);
         this.setIndicesAfterCollectionChange();
-        return this.getResult({ placeholders });
+        return this.getResult(result);
     }
 
 
