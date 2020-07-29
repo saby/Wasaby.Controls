@@ -268,11 +268,6 @@ export default class ScrollController {
                 options.needScrollCalculation
             );
 
-            if (options.activeElement) {
-                this._restoreScrollResolve = () => {
-                    this.scrollToItem(options.activeElement, false, true);
-                };
-            }
             return rangeShiftResult.placeholders;
         }
     }

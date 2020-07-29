@@ -2208,10 +2208,7 @@ const _private = {
             collection: self._listViewModel,
             activeElement: options.activeElement,
             useNewModel: options.useNewModel,
-            forceInitVirtualScroll: options?.navigation?.view === 'infinity',
-            notify: (name, args, params) => {
-                return self._notify(name, args, params);
-            }
+            forceInitVirtualScroll: options?.navigation?.view === 'infinity'
         });
     },
 
@@ -3093,6 +3090,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
         if (this._scrollController) {
+            if (this._options.activeElement !== newOptions.activeElement) {
+                _private.doAfterUpdate(this, () => {
+                    _private.scrollToItem(this, newOptions.activeElement, false, true);
+                })
+            }
             let result = this._scrollController.update({
                 attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
@@ -3364,6 +3366,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this.changeIndicatorStateHandler(false, 'down');
                 this._syncLoadingIndicatorState = null;
             }
+            
+            this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             let needCheckTriggers = this._scrollController.afterRender();
             if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
                 const {direction, heightDifference} = this._scrollController.getParamsToRestoreScroll();
@@ -3399,15 +3403,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             scrollHeight: this._viewSize,
             scrollTop: this._scrollTop
         };
-        const triggerUp = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.bottom, 'up');
-        const triggerDown = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.top, 'down');
-        this._scrollController.setTriggerVisibility('up', triggerUp);
+        const triggerDown = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.bottom, 'down');
+        const triggerUp = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.top, 'up');
         this._scrollController.setTriggerVisibility('down', triggerDown);
-        if (triggerUp) {
-            this.handleTriggerVisible('up');
-        }
+        this._scrollController.setTriggerVisibility('up', triggerUp);
         if (triggerDown) {
             this.handleTriggerVisible('down');
+        }
+        if (triggerUp) {
+            this.handleTriggerVisible('up');
         }
     },
     handleTriggerVisible(direction: IDirection): void {
