@@ -14,6 +14,12 @@ define('ControlsUnit/Calendar/Utils', [
          mv = new Component(cfg);
          //в afterMount идут дейтсвия с контейнером
          mv._container = mv._container || {};
+         mv._children = {
+            startValueField: {},
+            endValueField: {
+               activate: () => true
+            }
+         };
          mv.saveOptions(cfg);
          mv._beforeMount(cfg);
          return mv;

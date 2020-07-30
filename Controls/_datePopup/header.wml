@@ -47,7 +47,7 @@
           attr:ws-autofocus="true"
           attr:class="controls-PeriodDialog__header-datePickerStart"
           on:valueChanged="_startValuePickerChanged()"
-          on:keyup="_startValueFieldKeyUpHandler()"
+          on:inputControl="_inputControlHandler()"
        />
 
       <ws:if data="{{_options.selectionType !== 'single'}}">
