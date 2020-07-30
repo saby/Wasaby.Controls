@@ -206,7 +206,7 @@
    min-height: @cell_min-height_grid;
 }
 
-.controls-Grid__row-cell_colspaned {
+.controls-Grid__row-cell__content_colspaned {
    flex-grow: 1;
    box-sizing: border-box;
    max-width: 100%;
@@ -217,7 +217,7 @@
 // https://bugs.chromium.org/p/chromium/issues/detail?id=1103592
 .ws-is-chrome {
    .controls-Grid__row-cell__content,
-   .controls-Grid__row-cell_colspaned {
+   .controls-Grid__row-cell__content_colspaned {
       height: 100%;
    }
 }
@@ -384,7 +384,7 @@
    .controls-Grid__row-cell__ladder-content_hiddenForLadder,
    .controls-Grid__row-cell__content_hiddenForLadder .controls-Grid__row-cell__ladder-content {
       visibility: hidden;
-   } 
+   }
 }
 .controls-Grid__row-cell__content_hiddenForLadder {
    z-index: 1;

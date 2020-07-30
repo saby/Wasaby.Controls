@@ -38,7 +38,7 @@
     </ws:if>
     <ws:else>
         <ws:if data="{{colspan}}">
-            <div class="controls-Grid__row-cell_colspaned {{ currentColumn.getColspanedPaddingClassList(currentColumn, colspan).getAll() }}">
+            <div class="controls-Grid__row-cell__content_colspaned {{ currentColumn.getColspanedPaddingClassList(currentColumn, colspan).getAll() }}">
                 <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
             </div>
         </ws:if>
@@ -71,6 +71,7 @@
                     {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
                     {{ marker !== false ? currentColumn.classList.marked }}
                     controls-Grid__cell_valign_{{currentColumn.column.compatibleValign || 'top'}}
+                    {{ colspan ? 'controls-Grid__row-cell_colspaned'}}
                     {{className || ''}}">
         <div class="{{ currentColumn.classList.relativeCellWrapper }}">
             <ws:partial template="{{content}}" />
