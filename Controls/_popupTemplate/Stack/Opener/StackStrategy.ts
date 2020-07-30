@@ -14,6 +14,7 @@ interface IPosition {
     minWidth?: number;
     maxWidth?: number;
     position?: string;
+    height?: string;
 }
 
 // Minimum popup indentation from the right edge
@@ -114,7 +115,7 @@ export = {
             width,
             right: hasMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
-            bottom: 0
+            height: tCoords.height
         };
 
         // on mobile device fixed container proxying scroll on bottom container

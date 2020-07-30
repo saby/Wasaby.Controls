@@ -29,20 +29,6 @@ class StackController extends BaseController {
     constructor(): void {
         super();
         if (document) {
-            const APPLICATION_INTERVAL_TIMER = 50;
-            // В случае, если контроллер летит сразу при загрузке страницы, нужно дождаться пока построится приложение
-            // чтобы делать замеры, иначе нужные стили могут не прилететь => в кэш попадет некорректная позиция
-            const checkApplication = () => {
-                setTimeout(() => {
-                    let isApplicationInit = !!document.documentElement.controlNodes;
-                    if (isApplicationInit) {
-                        StackController.calcStackParentCoords();
-                    } else {
-                        checkApplication();
-                    }
-                }, APPLICATION_INTERVAL_TIMER);
-            };
-            checkApplication();
             //TODO: https://online.sbis.ru/opendoc.html?guid=38b056ea-33a7-4f3c-84e5-ab52de810925
             window.addEventListener('resize', this._updateStackParentCoords, true);
             window.addEventListener('scroll', this._updateStackParentCoords, true);
@@ -130,12 +116,12 @@ class StackController extends BaseController {
     }
 
     resizeOuter(): boolean {
-        StackController.stackParentCoords = null;
+        StackController.stackParentCoords = {};
         return super.resizeOuter.apply(this, arguments);
     }
 
     workspaceResize(): boolean {
-        StackController.stackParentCoords = null;
+        StackController.stackParentCoords = {};
         return !!this._stack.getCount();
     }
 
@@ -314,7 +300,7 @@ class StackController extends BaseController {
     }
 
     private _getItemPosition(item: IPopupItem): IPopupPosition {
-        const targetCoords = this._getStackParentCoords();
+        const targetCoords = this._getStackParentCoords(item);
         const position = StackStrategy.getPosition(targetCoords, item);
         item.popupOptions.stackWidth = position.width;
         item.popupOptions.workspaceWidth = position.width;
@@ -373,8 +359,8 @@ class StackController extends BaseController {
         return stackContainer.querySelector('.controls-Stack__content-wrapper');
     }
 
-    private _getStackParentCoords(): IPopupPosition {
-        return StackController.calcStackParentCoords();
+    private _getStackParentCoords(item: IPopupItem): IPopupPosition {
+        return StackController.calcStackParentCoords(item);
     }
 
     private _showPopup(item: IPopupItem): void {
@@ -494,8 +480,7 @@ class StackController extends BaseController {
     }
 
     private _updateStackParentCoords(): void {
-        StackController.stackParentCoords = null;
-        StackController.calcStackParentCoords();
+        StackController.stackParentCoords = {};
     }
 
     // TODO COMPATIBLE
@@ -520,13 +505,38 @@ class StackController extends BaseController {
         }
     }
 
-    private static stackParentCoords: IPopupPosition;
+    private static stackParentCoords = {};
 
-    static calcStackParentCoords(): IPopupPosition {
-        if (StackController.stackParentCoords) {
-            return StackController.stackParentCoords;
+    static calcStackParentCoords(item: IPopupItem): IPopupPosition {
+        const getRestrictiveContainer = (popupItem: IPopupItem) => {
+            if (popupItem.popupOptions.restrictiveContainer) {
+                return popupItem.popupOptions.restrictiveContainer;
+            }
+            // Проверяем, есть ли у родителя ограничивающий контейнер
+            if (popupItem.parentId) {
+                const parentItem = require('Controls/popup').Controller.find(popupItem.parentId);
+                return getRestrictiveContainer(parentItem);
+            }
+        };
+        const restrictiveContainerName = '.controls-Popup__stack-target-container';
+        const restrictiveContainer = getRestrictiveContainer(item);
+
+        let stackRoot: HTMLElement;
+
+        if (restrictiveContainer) {
+            if (StackController.stackParentCoords[restrictiveContainer]) {
+                return StackController.stackParentCoords[restrictiveContainer];
+            }
+            stackRoot = document.querySelector(restrictiveContainer);
         }
-        let stackRoot: HTMLDivElement = document.querySelector('.controls-Popup__stack-target-container');
+
+        if (!stackRoot) {
+            if (StackController.stackParentCoords[restrictiveContainerName]) {
+                return StackController.stackParentCoords[restrictiveContainerName];
+            }
+            stackRoot = document.querySelector(restrictiveContainerName);
+        }
+
         if (!stackRoot && !isNewEnvironment()) {
             stackRoot = document.querySelector('.ws-float-area-stack-root');
             const isNewPageTemplate = document.body.classList.contains('ws-new-page-template');
@@ -538,11 +548,13 @@ class StackController extends BaseController {
         const targetCoords = TargetCoords.get(stackRoot || document.body);
         // calc with scroll, because stack popup has fixed position only on desktop and can scroll with page
         const leftPageScroll = detection.isMobilePlatform ? 0 : targetCoords.leftScroll;
-        StackController.stackParentCoords = {
+        const position: IPopupPosition = {
             top: Math.max(targetCoords.top, 0),
+            height: targetCoords.height,
             right: document.documentElement.clientWidth - targetCoords.right + leftPageScroll
         };
-        return StackController.stackParentCoords;
+        StackController.stackParentCoords[restrictiveContainer || restrictiveContainerName] = position;
+        return position;
     }
 }
 
