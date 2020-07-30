@@ -1,6 +1,7 @@
 .controls-listTemplates__imageTemplate_image_viewMode-circle {
    border-radius: 50%;
 }
+
 .controls-listTemplates__imageTemplate_image_effect-gradient {
    position: absolute;
    pointer-events: none;
@@ -9,9 +10,10 @@
    bottom: 0;
    left: 0;
 }
+// FIXME: Костыль, до выполнения задачи https://online.sbis.ru/opendoc.html?guid=7251d305-2779-4142-8683-cdadec29d917
 
 .controls-listTemplates__imageTemplate_image_viewMode-ellipse {
-   clip-path: url("#controls-listTemplates__imageTemplate_ellipse");
+   clip-path: url("#NavigationPanels-Accordion__image_ellipse");
 }
 
 .controls-listTemplates__imageTemplate {
@@ -32,5 +34,7 @@
 .controls-listTemplates__imageTemplate_image {
    height: 100%;
    width: 100%;
-   object-fit: cover;
+   background-repeat: no-repeat;
+   background-size: cover;
+   background-position: center;
 }
