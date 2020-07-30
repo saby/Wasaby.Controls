@@ -5,7 +5,6 @@ import { assert } from 'chai';
 import { FlatSelectionStrategy, SelectionController } from 'Controls/multiselection';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
-import { spy } from 'sinon';
 import { SearchGridViewModel} from 'Controls/treeGrid';
 
 describe('Controls/_multiselection/Controller', () => {
@@ -242,6 +241,45 @@ describe('Controls/_multiselection/Controller', () => {
       };
       const result = controller.unselectAll();
       assert.deepEqual(result, expectedResult);
+   });
+
+   it('handleAddItems', () => {
+      model.setItems(new RecordSet({
+         rawData: [
+            { id: 1 },
+            { id: 2 },
+            { id: 3 },
+            { id: 4 }
+         ],
+         keyProperty: 'id'
+      }));
+
+      controller.update({
+         model,
+         selectedKeys: [1, 2, 3, 4],
+         excludedKeys: [],
+         strategyOptions: { items: model.getItems() }
+      });
+
+      const addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
+      const result = controller.handleAddItems(addedItems);
+      assert.deepEqual(result, {
+         selectedKeysDiff: {
+            added: [],
+            removed: [],
+            keys: [1, 2, 3, 4]
+         },
+         excludedKeysDiff: {
+            added: [],
+            removed: [],
+            keys: []
+         },
+         selectedCount: 4,
+         isAllSelected: true
+      });
+
+      assert.isTrue(model.getItemBySourceKey(1).isSelected());
+      assert.isTrue(model.getItemBySourceKey(2).isSelected());
    });
 
    it('handleRemoveItems', () => {
