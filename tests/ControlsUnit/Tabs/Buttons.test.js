@@ -8,6 +8,66 @@ define([
    'Types/collection'
 ], function(tabsMod, sourceLib, entity, collection) {
    describe('Controls/_tabs/Buttons', function() {
+      const data = [
+         {
+            id: 1,
+            title: 'Первый',
+            align: 'left'
+         },
+         {
+            id: 2,
+            title: 'Второй'
+         },
+         {
+            id: 3,
+            title: 'Третий',
+            align: 'left'
+         },
+         {
+            id: 4,
+            title: 'Четвертый'
+         },
+         {
+            id: 5,
+            title: 'Пятый'
+         },
+         {
+            id: 6,
+            title: 'Шестой',
+            align: 'left'
+         },
+         {
+            id: 7,
+            title: 'Седьмой'
+         },
+         {
+            id: 8,
+            title: 'Восьмой'
+         },
+         {
+            id: 9,
+            title: 'Девятый',
+            align: 'left'
+         },
+         {
+            id: 10,
+            title: 'Десятый'
+         },
+         {
+            id: 11,
+            title: 'Одиннадцатый'
+         },
+         {
+            id: 12,
+            title: 'Двенадцатый',
+            align: 'left'
+         },
+         {
+            id: 13,
+            title: 'Тринадцатый'
+         }
+      ];
+
       it('prepareItemOrder', function() {
          var
             expected = '-ms-flex-order:2; order:2';
@@ -16,68 +76,9 @@ define([
          assert.equal(expected, tabInstance._prepareItemOrder(0), 'wrong order cross-brwoser styles');
          tabInstance.destroy();
       });
-      it('initItems', function(done) {
+      it('initItems by source', function(done) {
          var
             tabInstance = new tabsMod.Buttons(),
-            data = [
-               {
-                  id: 1,
-                  title: 'Первый',
-                  align: 'left'
-               },
-               {
-                  id: 2,
-                  title: 'Второй'
-               },
-               {
-                  id: 3,
-                  title: 'Третий',
-                  align: 'left'
-               },
-               {
-                  id: 4,
-                  title: 'Четвертый'
-               },
-               {
-                  id: 5,
-                  title: 'Пятый'
-               },
-               {
-                  id: 6,
-                  title: 'Шестой',
-                  align: 'left'
-               },
-               {
-                  id: 7,
-                  title: 'Седьмой'
-               },
-               {
-                  id: 8,
-                  title: 'Восьмой'
-               },
-               {
-                  id: 9,
-                  title: 'Девятый',
-                  align: 'left'
-               },
-               {
-                  id: 10,
-                  title: 'Десятый'
-               },
-               {
-                  id: 11,
-                  title: 'Одиннадцатый'
-               },
-               {
-                  id: 12,
-                  title: 'Двенадцатый',
-                  align: 'left'
-               },
-               {
-                  id: 13,
-                  title: 'Тринадцатый'
-               }
-            ],
             source = new sourceLib.Memory({
                data: data,
                keyProperty: 'id'
@@ -93,6 +94,22 @@ define([
             tabInstance.destroy();
             done();
          });
+      });
+      it('initItems by items', function() {
+         const tabInstance = new tabsMod.Buttons();
+         let items = new collection.RecordSet({
+            rawData: data,
+            keyProperty: 'id'
+         });
+
+         const result = tabInstance._prepareItems(items);
+         const itemsOrder = result.itemsOrder;
+         assert.equal(1, itemsOrder[0], 'incorrect  left order');
+         assert.equal(30, itemsOrder[1], 'incorrect right order');
+         assert.equal(5, itemsOrder[11], 'incorrect right order');
+         assert.equal(36, itemsOrder[10], 'incorrect right order');
+         assert.equal(37, tabInstance._lastRightOrder, 'incorrect last right order');
+         tabInstance.destroy();
       });
       it('prepareItemClass', function() {
          var

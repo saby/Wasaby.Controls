@@ -1,11 +1,19 @@
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {SbisService} from 'Types/source';
 import {ISingleSelectableOptions, IItemTemplateOptions} from 'Controls/interface';
+import {RecordSet} from 'Types/collection';
 export interface ITabsButtons {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean;
 }
 
+/**
+ * Интерфейс для опций контрола вкладок.
+ * @interface Controls/_tabs/interface/ITabsButtons
+ * @public
+ */
+
 export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableOptions, IItemTemplateOptions {
+    items?: RecordSet;
     source?: SbisService;
     style?: string;
     displayProperty?: string;
@@ -174,6 +182,43 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  *        }
  *        ]
  *    })
+ * </pre>
+ */
+
+/**
+ * @name Controls/_tabs/interface/ITabsButtons#items
+ * @cfg {Types/collection:RecordSet} Набор данных для отображения вкладок.
+ * @remark
+ * Элементу можно задать свойство 'align', которое определяет выравнивание вкладок.
+ * Если одной из крайних вкладок надо отобразить оба разделителя, слева и справа, то используйте свойство contentTab в значении true
+ * @example
+ * На вкладках будут отображаться данные из _items. Первый элемент отображается с выравниванием по левому краю, другие элементы отображаются по умолчанию - справа.
+ * <pre>
+ *    <Controls.tabs:Buttons
+ *              bind:selectedKey='_selectedKey'
+ *              keyProperty="key"
+ *              items="{{_items}}"
+ *    />
+ * </pre>
+ * <pre>
+ *   this._selectedKey = '1';
+ *   this._items = new RecordSet({
+ *          keyProperty: 'id',
+ *          rawData: [
+ *              {
+ *                  id: '1',
+ *                  title: 'Document'
+ *              },
+ *              {
+ *                  id: '2',
+ *                  title: 'Files'
+ *              },
+ *              {
+ *                  id: '3',
+ *                  title: 'Orders'
+ *              }
+ *          ]
+ *      });
  * </pre>
  */
 
