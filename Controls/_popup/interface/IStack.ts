@@ -138,6 +138,46 @@ export interface IStackOpener extends IOpener {
  */
 
 /**
+ * @name Controls/_popup/interface/IStack#restrictiveContainer
+ * @cfg {String} Опция задает контейнер (через <b>селектор</b>), внутри которого будет позиционироваться окно. Окно не может спозиционироваться за пределами restrictiveContainer.
+ * @remark
+ * Алгоритм поиска контейнера, внутри которого будут строиться окна:
+ * <ol>
+ *     <li>Если задана опция restrictiveContainer, то ищем глобальным поиском класс по селектору, заданному в опции.
+ *     Если ничего не нашли или опция не задана см. следующий шаг</li>
+ *     <li>Если у окна есть родитель, то опрашиваем родителя, в каком контейнере он спозиционировался и выбираем его.</li>
+ *     <li>Если родителя нет, то ищем глобальным селектором класс <b>controls-Popup__stack-target-container</b></li>
+ * </ol>
+ *
+ * Класс controls-Popup__stack-target-container является зарезервированным и должен быть объявлен на странице только 1 раз.
+ * Классом должен быть добавлен на контейнер, по которому позиционируются стековые окна по умолчанию.
+ * @example
+ * wml
+ * <pre>
+ *     <div class='myRestrictiveContainer'>Контейнер со своими размерами</div>
+ *     <Controls.buttons:Button caption="open stack" on:click="_openStack()"/>
+ * </pre>
+ *
+ * <pre class="brush: js">
+ * import {StackOpener} from 'Controls/popup';
+ * _beforeMount(): void{
+ *    this._stackOpener = new StackOpener();
+ * }
+ * _openStack(): void {
+ *     const config = {
+ *          template: 'Controls-demo/Popup/TestStack',
+ *          closeOnOutsideClick: true,
+ *          autofocus: true,
+ *          opener: null,
+ *          restrictiveContainer: '.myRestrictiveContainer'
+ *     };
+ *     this._stackOpener.open(config);
+ * }
+ * </pre>
+ * @demo Controls-demo/Popup/Stack/RestrictiveContainer/Index
+ */
+
+/**
  * @typedef {Object} PopupOptions
  * @description Конфигурация стековой панели.
  * @property {Boolean} [autofocus=true] Определяет, установится ли фокус на шаблон попапа после его открытия.
