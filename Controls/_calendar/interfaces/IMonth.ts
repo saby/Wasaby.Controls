@@ -15,7 +15,7 @@ export default {
 
             /**
              * @name Controls/_calendar/interfaces/IMonth#month
-             * @cfg {Date|String} Месяц, с которого откроется календарь.
+             * @cfg {Date|String} Отображаемый месяц.
              * @remark
              * Строка должна быть формата ISO 8601.
              * Дата игнорируется.
@@ -68,6 +68,7 @@ export default {
             dayFormatter: undefined,
 
             /**
+             * ENG
              * @typedef {String} Mode
              * @variant current Only the current month is displayed
              * @variant extended 6 weeks are displayed. The first week of the current month is complete,
@@ -76,6 +77,14 @@ export default {
              */
 
             /**
+             * @name Controls/_calendar/interfaces/IMonth#mode
+             * @cfg {String} Режим отображения месяца
+             * @variant extended - расширенный режим, в котором будут отображены 6 недель
+             * @variant current - отобразиться нынешний месяц
+             * @default current
+             */
+            /**
+             * ENG
              * @name Controls/_calendar/interfaces/IMonth#mode
              * @cfg {String} Month view mode
              * @default current
