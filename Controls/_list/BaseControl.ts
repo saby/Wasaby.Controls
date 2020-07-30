@@ -2223,8 +2223,6 @@ const _private = {
             useNewModel: options.useNewModel,
             forceInitVirtualScroll: options?.navigation?.view === 'infinity'
         });
-        let result = self._scrollController.getResult();
-        _private.handleScrollControllerResult(self, result);
     },
 
     /**
@@ -2928,7 +2926,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._loadedItems = null;
 
-        this._scrollController?.afterRender();
+        if (this._scrollController) {
+            let result = this._scrollController.getResult();
+            _private.handleScrollControllerResult(this, result);
+            this._scrollController.afterRender();
+        }
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
         // TODO https://online.sbis.ru/opendoc.html?guid=3042889b-181c-47ec-b036-a7e24c323f5f
