@@ -2035,7 +2035,7 @@ const _private = {
             self.applyTriggerOffset(result.triggerOffset);
         }
         if (result.scrollToActiveElement) {
-            _private.doAfterUpdate(self, _private.scrollToItem(self, result.activeElement, false, true));
+            _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
         }
     },
     onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
