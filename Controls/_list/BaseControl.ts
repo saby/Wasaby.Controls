@@ -974,7 +974,7 @@ const _private = {
             if (self._pagingVisible) {
                 bottomScroll -= PAGING_PADDING;
             }
-            return bottomScroll < triggerOffset;
+            return bottomScroll <= triggerOffset;
         }
     },
     calcViewSize(viewSize: number, pagingVisible: boolean): number {
@@ -2035,7 +2035,7 @@ const _private = {
             self.applyTriggerOffset(result.triggerOffset);
         }
         if (result.scrollToActiveElement) {
-            _private.scrollToItem(self, result.activeElement, false, true);
+            _private.doAfterUpdate(self, _private.scrollToItem(self, result.activeElement, false, true));
         }
     },
     onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
