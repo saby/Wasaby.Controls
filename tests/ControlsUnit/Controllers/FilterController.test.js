@@ -12,6 +12,9 @@ define(['Controls/operations', 'Types/source'], function (operations, source) {
 
          filterController._beforeUpdate({filter: {}, source: sourceInstance, selectionViewMode: 'selected'});
          assert.isTrue('SelectionWithPath' in filterController._filter);
+
+         filterController._beforeUpdate({filter: {}, source: sourceInstance, selectedKeys: [1, 2], excludedKeys: [3], parentProperty: 'testParentProperty'});
+         assert.isTrue('entries' in filterController._filter);
       });
    });
 });
