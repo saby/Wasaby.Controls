@@ -311,9 +311,24 @@ var
             return position;
          },
 
+         /**
+          * Восстанавливает значение курсора для курсорной навигации при выходе из папки.
+          * Одна из частей механизма сохранения позиции скролла и отмеченной записи при проваливании в папку и выходе назад.
+          *
+          * @param self
+          * @param itemId id узла из которого выходим
+          */
          restorePositionNavigation(self, itemId): void {
-            if (self._restoredMarkedKeys[itemId]) {
-               self._navigation.sourceConfig.position = self._restoredMarkedKeys[itemId].cursorPosition;
+            const hasRestoreDataForCurrent = !!self._restoredMarkedKeys[itemId];
+            if (hasRestoreDataForCurrent) {
+               const parentId = self._restoredMarkedKeys[itemId].parent;
+               const restoreDataForParent = self._restoredMarkedKeys[parentId];
+               if (restoreDataForParent && typeof restoreDataForParent.cursorPosition !== 'undefined') {
+                  self._navigation.sourceConfig.position = restoreDataForParent.cursorPosition;
+               } else {
+                  const fromOptions = self._options._navigation && self._options._navigation.sourceConfig && self._options._navigation.sourceConfig.position;
+                  self._navigation.sourceConfig.position = fromOptions || null;
+               }
             }
          },
 
