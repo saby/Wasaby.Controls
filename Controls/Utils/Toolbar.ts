@@ -87,12 +87,14 @@ export function getMenuItems<T extends Record>(items: RecordSet<T> | T[]): Chain
       return item.get('showType') !== this.showType.TOOLBAR;
    });
 }
+
 export function needShowMenu(items: RecordSet): boolean {
-    let isNeedShowToolbar = false;
-    items.forEach( item => {
-       if (item.get('showType') !== this.showType.TOOLBAR) {
-          isNeedShowToolbar = true;
-       }
-    });
-    return isNeedShowToolbar;
+    const enumerator = items.getEnumerator();
+    while (enumerator.moveNext()) {
+        if (enumerator.getCurrent().get('showType') !== this.showType.TOOLBAR) {
+            return true;
+        }
+    }
+
+    return false;
 }

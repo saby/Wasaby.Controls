@@ -1,7 +1,6 @@
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {SbisService} from 'Types/source';
-import {ISingleSelectableOptions, IItemTemplateOptions} from 'Controls/interface';
-import {RecordSet} from 'Types/collection';
+import {ISingleSelectableOptions, IItemTemplateOptions, IItemsOptions} from 'Controls/interface';
 export interface ITabsButtons {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean;
 }
@@ -13,8 +12,7 @@ export interface ITabsButtons {
  * @author Красильников А.С.
  */
 
-export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableOptions, IItemTemplateOptions {
-    items?: RecordSet;
+export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableOptions, IItemTemplateOptions, IItemsOptions<object> {
     source?: SbisService;
     style?: string;
     displayProperty?: string;
@@ -38,7 +36,7 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * <Controls.tabs:Buttons
  *     tabSpaceTemplate=".../spaceTemplate" />
  * </pre>
- * 
+ *
  * <pre class="brush: html;">
  * <!-- spaceTemplate.wml -->
  * <div class="additionalContent">
@@ -87,7 +85,7 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * @default primary
  * @remark
  * Если стандартная тема вам не подходит, вы можете переопределить переменные:
- * 
+ *
  * * @border-color_Tabs-item_selected_primary
  * * @text-color_Tabs-item_selected_primary
  * * @border-color_Tabs-item_selected_secondary
@@ -188,47 +186,6 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * @see items
  */
 
-/**
- * @name Controls/_tabs/interface/ITabsButtons#items
- * @cfg {Types/collection:RecordSet} Набор данных для отображения вкладок.
- * @remark
- * Элементу можно задать свойство align, которое определяет выравнивание вкладок.
- * Если одной из крайних вкладок надо отобразить оба разделителя, слева и справа, то используйте свойство contentTab в значении true.
- * @example
- * На вкладках будут отображаться данные из _items. Первый элемент отображается с выравниванием по левому краю, другие элементы отображаются по умолчанию - справа.
- * <pre class="brush: html; highlight: [4]">
- * <Controls.tabs:Buttons
- *     bind:selectedKey="_selectedKey"
- *     keyProperty="key"
- *     items="{{_items}}"/>
- * </pre>
- * <pre class="brush: js; highlight: [5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]">
- * _selectedKey: null,
- * _items: null,
- * _beforeMount: function() {
- *    this._selectedKey = '1';
- *    this._items = new RecordSet({
- *       keyProperty: 'id',
- *       rawData: [
- *          {
- *             id: '1',
- *             title: 'Document'
- *          },
- *          {
- *             id: '2',
- *             title: 'Files'
- *          },
- *          {
- *             id: '3',
- *             title: 'Orders'
- *          }
- *       ]
- *    });
- * }
- * </pre>
- * @see source
- */
-
 /*
  * @name Controls/_tabs/interface/ITabsButtons#source
  * @cfg {Types/source:Base} Object that implements ISource interface for data access.
@@ -281,7 +238,7 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * <ul>
  * @example
  * Вкладки со стандартным шаблоном элемента (шаблоном по умолчанию).
- * 
+ *
  * <pre class="brush: html; highlight: [6,7,8,9,10]">
  * <Controls.tabs:Buttons
  *     bind:selectedKey="SelectedKey3"
@@ -344,12 +301,12 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  *     itemTemplateProperty="myTemplate"
  *     source="{{_source}}" />
  * </pre>
- * 
+ *
  * <pre class="brush: html">
  * <!-- myTemplate.wml -->
  * <div class="controls-Tabs__item_custom">{{item.get(displayProperty || 'title')}}</div>
  * </pre>
- * 
+ *
  * <pre class="brush: js">
  * _source: null,
  * beforeMount: function() {
@@ -415,7 +372,7 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * <!-- myTemplate.wml -->
  * <div class="{{item.get('icon')}} icon-small controls-icon_style-{{item.get('iconStyle')}}_theme-{{_options.theme}}"></div>
  * </pre>
- * 
+ *
  * <pre class="brush: js">
  * _source: null,
  * beforeMount: function() {
@@ -446,7 +403,7 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * <!-- myTemplate.wml -->
  * <div class="{{item.get('icon')}} icon-small controls-icon_style-{{item.get('iconStyle')}}_theme-{{_options.theme}}"></div>
  * </pre>
- * 
+ *
  * <pre class="brush: js">
  * _source: null,
  * beforeMount: function() {
@@ -468,7 +425,7 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * @cfg {String} Шаблон элемента, находящегося справа от основного содержимого.
  * @remark
  * Базовый шаблон itemRightTemplate поддерживает следующие параметры:
- * 
+ *
  * - item {Model} — запись текущей вкладки;
  * - selected {Boolean} — выбрана ли вкладка, на которой располагается шаблон;
  * @example
@@ -489,7 +446,7 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * @cfg {String} Шаблон элемента, находящегося слева от основного содержимого.
  * @remark
  * Базовый шаблон itemLeftTemplate поддерживает следующие параметры:
- * 
+ *
  * - item {Model} — запись текущей вкладки.
  * - selected {Boolean} — выбрана ли вкладка, на которой располагается шаблон.
  * @example
