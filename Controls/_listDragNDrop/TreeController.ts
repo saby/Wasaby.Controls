@@ -58,7 +58,7 @@ export default class TreeController extends FlatController {
        event: SyntheticEvent<MouseEvent>,
        targetElement: EventTarget
    ): IDragPosition {
-      if (this._draggingItemData.key === itemData.key) {
+      if (this._draggingItemData && this._draggingItemData.key === itemData.key) {
          return null;
       }
 
@@ -82,7 +82,8 @@ export default class TreeController extends FlatController {
 
    calculateDragPosition(targetItemData: ITreeItemData, position: TPosition): IDragPosition {
       // Если перетаскиваем лист на узел, то позиция может быть только 'on'
-      if (!this._draggingItemData.dispItem.isNode() && targetItemData.dispItem.isNode()) {
+      // Если нет перетаскиваемого элемента, то значит мы перетаскивам в папку другого реестра
+      if (!this._draggingItemData || !this._draggingItemData.dispItem.isNode() && targetItemData.dispItem.isNode()) {
          position = 'on';
       }
 
