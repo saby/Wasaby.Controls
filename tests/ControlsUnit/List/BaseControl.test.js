@@ -4399,6 +4399,41 @@ define([
                spySetMarkedKey.restore();
             });
          });
+
+         // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа
+         // Предполагаем, что контейнер содержит класс js-controls-Swipe__measurementContainer
+         it('should correctly calculate row size for list', () => {
+            // fake HTMLElement
+            const fakeElement = {
+               classList: {
+                  contains: (selector) => true,
+               },
+               clientWidth: 500,
+               clientHeight: 31
+            };
+            const _result = lists.BaseControl._private.getSwipeContainerSize(fakeElement);
+            assert.equal(_result.width, 500);
+            assert.equal(_result.height, 31);
+         });
+
+         // Должен правильно рассчитывать ширину для записей таблицы при отображении опций свайпа
+         // Предполагаем, что сам контейнер не содержит класс js-controls-Swipe__measurementContainer,
+         // а его потомки содержат
+         it('should correctly calculate row size for grid', () => {
+            // fake HTMLElement
+            const fakeElement = {
+               classList: {
+                  contains: (selector) => false,
+               },
+               querySelectorAll: (selector) => (new Array(5)).map((el) => ({
+                  clientWidth: 50,
+                  clientHeight: 31
+               }))
+            };
+            const _result = lists.BaseControl._private.getSwipeContainerSize(fakeElement);
+            assert.equal(_result.width, 250);
+            assert.equal(_result.height, 31);
+         });
       });
 
       describe('ItemActions menu', () => {
