@@ -4425,10 +4425,10 @@ define([
                classList: {
                   contains: (selector) => false,
                },
-               querySelectorAll: (selector) => (new Array(5)).map((el) => ({
+               querySelectorAll: (selector) => (new Array(5)).fill({
                   clientWidth: 50,
                   clientHeight: 31
-               }))
+               })
             };
             const _result = lists.BaseControl._private.getSwipeContainerSize(fakeElement);
             assert.equal(_result.width, 250);
