@@ -371,7 +371,7 @@ define([
             }
          };
 
-         const target = treeGrid.TreeControl._private.getTargetRow(event);
+         const target = tree.TreeControl._private.getTargetRow(event);
          assert.equal(event.target, target);
       });
 
