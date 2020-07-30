@@ -83,14 +83,14 @@
 
     <!-- Подвал таблицы -->
     <ws:if data="{{ _isFullGridSupport }}">
-        <div class="{{_getFooterClasses()}}" style="{{_listModel.getFooterStyles()}}">
+        <div class="{{_getFooterClasses()}}" style="{{_getFooterStyles()}} {{_listModel.getFooterStyles()}}">
             <ws:partial template="{{_options.footerTemplate}}"/>
         </div>
     </ws:if>
     <ws:else>
         <tr>
             <td colspan="{{_listModel.getColspanFor('footer')}}">
-                <div class="{{_getFooterClasses()}}" style="{{_listModel.getFooterStyles()}}">
+                <div class="{{_getFooterClasses()}}" style="{{_getFooterStyles()}} {{_listModel.getFooterStyles()}}">
                     <ws:partial template="{{_options.footerTemplate}}"/>
                 </div>
             </td>

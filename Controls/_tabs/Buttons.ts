@@ -2,8 +2,6 @@
  * Created by kraynovdo on 25.01.2018.
  */
 import {Control, TemplateFunction} from 'UI/Base';
-import {Logger} from 'UI/Utils';
-import {factory} from 'Types/chain';
 import {CrudWrapper} from 'Controls/dataSource';
 import * as cInstance from 'Core/core-instance';
 import {RecordSet} from 'Types/collection';
@@ -57,6 +55,9 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons {
         // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
         if (receivedState && !TabsButtons._checkHasFunction(receivedState)) {
             this._prepareState(receivedState);
+        } else if (options.items) {
+            const itemsData = this._prepareItems(options.items);
+            this._prepareState(itemsData);
         } else if (options.source) {
             return this._initItems(options.source).then((result: IReceivedState) => {
                 this._prepareState(result);
@@ -69,8 +70,11 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons {
         if (newOptions.source && newOptions.source !== this._options.source) {
             this._initItems(newOptions.source).then((result) => {
                 this._prepareState(result);
-                this._forceUpdate();
             });
+        }
+        if (newOptions.items && newOptions.items !== this._options.items) {
+            const itemsData = this._prepareItems(newOptions.items);
+            this._prepareState(itemsData);
         }
     }
 
@@ -83,7 +87,9 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons {
         const options: ITabsButtonsOptions = this._options;
         const classes: string[] = ['controls-Tabs__item controls-Tabs__item_theme_' + options.theme];
 
-        const align: string = item.get('align') ? item.get('align') : 'right';
+        const itemAlign: string = item.get('align');
+        const align: string = itemAlign ? itemAlign : 'right';
+
         const isLastItem: boolean = order === this._lastRightOrder;
 
         classes.push(`controls-Tabs__item_align_${align} ` +
@@ -98,9 +104,11 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons {
         } else {
             classes.push('controls-Tabs__item_default controls-Tabs__item_default_theme_' + options.theme);
         }
-        if (item.get('type')) {
-            classes.push('controls-Tabs__item_type_' + item.get('type') +
-                ' controls-Tabs__item_type_' + item.get('type') + '_theme_' + options.theme);
+
+        const itemType: string = item.get('type');
+        if (itemType) {
+            classes.push('controls-Tabs__item_type_' + itemType +
+                ' controls-Tabs__item_type_' + itemType + '_theme_' + options.theme);
         }
 
         // TODO: по поручению опишут как и что должно сжиматься.
@@ -136,11 +144,36 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons {
 
     protected _getTemplate(template: TemplateFunction, item: Model, itemTemplateProperty: string): TemplateFunction {
         if (itemTemplateProperty) {
-            if (item.get(itemTemplateProperty)) {
-                return item.get(itemTemplateProperty);
+            const templatePropertyByItem = item.get(itemTemplateProperty);
+            if (templatePropertyByItem) {
+                return templatePropertyByItem;
             }
         }
         return template;
+    }
+
+    private _prepareItems(items: RecordSet): IReceivedState {
+        let leftOrder: number = 1;
+        let rightOrder: number = 30;
+        const itemsOrder: number[] = [];
+
+        items.each((item: Model) => {
+            if (item.get('align') === 'left') {
+                itemsOrder.push(leftOrder++);
+            } else {
+                itemsOrder.push(rightOrder++);
+            }
+        });
+
+        // save last right order
+        rightOrder--;
+        this._lastRightOrder = rightOrder;
+
+        return {
+            items,
+            itemsOrder,
+            lastRightOrder: rightOrder
+        };
     }
 
     private _initItems(source: SbisService): Promise<IReceivedState> {
@@ -148,27 +181,7 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons {
             source
         });
         return this._crudWrapper.query({}).then((items: RecordSet) => {
-            let leftOrder: number = 1;
-            let rightOrder: number = 30;
-            const itemsOrder: number[] = [];
-
-            items.each((item: Model) => {
-                if (item.get('align') === 'left') {
-                    itemsOrder.push(leftOrder++);
-                } else {
-                    itemsOrder.push(rightOrder++);
-                }
-            });
-
-            // save last right order
-            rightOrder--;
-            this._lastRightOrder = rightOrder;
-
-            return {
-                items,
-                itemsOrder,
-                lastRightOrder: rightOrder
-            };
+            return this._prepareItems(items);
         });
     }
 
