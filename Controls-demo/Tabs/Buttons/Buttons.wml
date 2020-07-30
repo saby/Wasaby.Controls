@@ -4,7 +4,7 @@
         <Controls.tabs:Buttons
                       bind:selectedKey='SelectedKey1'
                       keyProperty="id"
-                      source="{{_source1}}"
+                      items="{{_items}}"
         />
     </div>
     <div class="separator">Прижатые к левому краю</div>
@@ -57,7 +57,7 @@
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKeyNull'
                 keyProperty="id"
-                source="{{_source1}}"
+                items="{{_items}}"
         />
     </div>
     <div class="separator">Прикладной контент перед вкладками</div>
