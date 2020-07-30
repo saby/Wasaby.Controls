@@ -138,6 +138,35 @@ export interface IStackOpener extends IOpener {
  */
 
 /**
+ * @name Controls/_popup/interface/IStack#restrictiveContainer
+ * @cfg {String} Опция задает контейнер (через <b>селектор</b>), внутри которого будет позиционироваться окно. Окно не может спозиционироваться за пределами restrictiveContainer.
+ * @example
+ * wml
+ * <pre>
+ *     <div class='myRestrictiveContainer'>Контейнер со своими размерами</div>
+ *     <Controls.buttons:Button caption="open stack" on:click="_openStack()"/>
+ * </pre>
+ *
+ * <pre class="brush: js">
+ * import {StackOpener} from 'Controls/popup';
+ * _beforeMount(): void{
+ *    this._stackOpener = new StackOpener();
+ * }
+ * _openStack(): void {
+ *     const config = {
+ *          template: 'Controls-demo/Popup/TestStack',
+ *          closeOnOutsideClick: true,
+ *          autofocus: true,
+ *          opener: null,
+ *          restrictiveContainer: '.myRestrictiveContainer'
+ *     };
+ *     this._stackOpener.open(config);
+ * }
+ * </pre>
+ * @demo Controls-demo/Popup/Stack/RestrictiveContainer/Index
+ */
+
+/**
  * @typedef {Object} PopupOptions
  * @description Конфигурация стековой панели.
  * @property {Boolean} [autofocus=true] Определяет, установится ли фокус на шаблон попапа после его открытия.
