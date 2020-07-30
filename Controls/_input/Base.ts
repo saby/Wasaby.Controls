@@ -15,9 +15,9 @@ import {
     split,
     getInputType,
     getAdaptiveInputType,
-    IInputType,
-    ISplitValue
+    IInputType
 } from 'Controls/_input/Base/InputUtil';
+import {ISplitValue} from './resources/Types';
 import MobileFocusController from 'Controls/_input/Base/MobileFocusController';
 import {FixBugs} from './FixBugs';
 import {getOptionPaddingTypes, getDefaultPaddingOptions} from './interface/IPadding';
@@ -334,7 +334,6 @@ var _private = {
         model.selection = self._getFieldSelection();
 
         _private.updateField(self, model.displayValue, model.selection);
-        model.changesHaveBeenApplied();
     },
 
     compatAutoComplete: function (autoComplete) {
@@ -801,12 +800,6 @@ var Base = Control.extend({
          */
         runDelayed(function () {
             self._viewModel.selection = self._getFieldSelection();
-
-            /**
-             * Changes are applied during the synchronization cycle. We are not in it,
-             * so we need to inform the model that the changes have been applied.
-             */
-            self._viewModel.changesHaveBeenApplied();
         });
         this._firstClick = false;
     },
@@ -827,10 +820,10 @@ var Base = Control.extend({
         const field = this._getField();
         const model = this._viewModel;
         const data = this._fixBugs.dataForInputProcessing({
-            oldSelection: model.oldSelection,
+            oldSelection: model.selection,
             newPosition: field.selectionEnd,
             newValue: field.value,
-            oldValue: model.oldDisplayValue
+            oldValue: model.displayValue
         });
         const value = data.oldValue;
         const newValue = data.newValue;
@@ -860,12 +853,11 @@ var Base = Control.extend({
          * Например, можно воспользоваться setTimeout. https://jsfiddle.net/fxzsqug4/2/
          * Однако, можно просто не синхронизироваться с моделью во время обработки события input.
          * Потому что модель синхронизируется с полем во время цикла синхронизации, если изменения
-         * не были применены (у модели не был вызван метод changesHaveBeenApplied). Такой подход увеличит время перерисоки,
+         * не были применены. Такой подход увеличит время перерисоки,
          * но в местах с багом этого визуально не заметно.
          */
         if (!this._isMobileAndroid) {
             _private.updateField(this, model.displayValue, model.selection);
-            model.changesHaveBeenApplied();
         }
     },
 
@@ -1050,12 +1042,16 @@ var Base = Control.extend({
         const model = this._viewModel;
         const field = this._getField();
 
-        if (model.shouldBeChanged && field) {
-            this._updateFieldInTemplate();
-            model.changesHaveBeenApplied();
+        if (field) {
+            const shouldBeChanged =
+                field.value !== model.displayValue ||
+                _private.hasSelectionChanged(field, model.selection);
+            if (shouldBeChanged) {
+                this._updateFieldInTemplate();
 
-            if (_private.isFieldFocused(this) && !field.readOnly) {
-                this._recalculateLocationVisibleArea(field, model.displayValue, model.selection);
+                if (_private.isFieldFocused(this) && !field.readOnly) {
+                    this._recalculateLocationVisibleArea(field, model.displayValue, model.selection);
+                }
             }
         }
 
@@ -1107,7 +1103,6 @@ Base.getDefaultOptions = function () {
     return {
         ...getDefaultPaddingOptions(),
         tooltip: '',
-        style: 'info',
         inlineHeight: 'default',
         placeholder: '',
         textAlign: 'left',
@@ -1144,14 +1139,6 @@ Base.getOptionTypes = function () {
         textAlign: entity.descriptor(String).oneOf([
             'left',
             'right'
-        ]),
-        style: entity.descriptor(String).oneOf([
-            'info',
-            'danger',
-            'invalid',
-            'primary',
-            'success',
-            'warning'
         ]),
         tagStyle: entity.descriptor(String).oneOf([
             'info',
