@@ -304,6 +304,11 @@ var
 
             this._horizontalPositionChangedHandler = this._horizontalPositionChangedHandler.bind(this);
 
+            // При прокидывании функции через шаблон и последующем вызове, она вызывается с областью видимости шаблона, а не контрола.
+            // https://online.sbis.ru/opendoc.html?guid=756c49a6-13da-4e54-9333-fdd7a7fb6461
+            this._getFooterClasses = this._getFooterClasses.bind(this);
+            this._getFooterStyles = this._getFooterStyles.bind(this);
+
             return resultSuper;
         },
 
@@ -424,6 +429,18 @@ var
                 classList = classList.add(`controls-GridView__footer__itemActionsV_outside_theme-${this._options.theme}`);
             }
             return classList.compile();
+        },
+
+        /**
+         * @protected
+         */
+        _getFooterStyles(): string {
+            let styles = '';
+
+            if (this._containerSize && this._isColumnScrollVisible()) {
+                styles += `width: ${this._containerSize}px;`;
+            }
+            return styles;
         },
 
         resizeNotifyOnListChanged(): void {
