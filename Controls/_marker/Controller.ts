@@ -7,11 +7,13 @@ export class Controller {
    private _model: IMarkerModel;
    private _markerVisibility: TVisibility;
    private _markedKey: TKey;
+   private _task1179814711: boolean = false;
 
    constructor(options: IOptions) {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-      this.setMarkedKey(options.markedKey);
+      this._task1179814711 = options.task1179814711;
+      this.setMarkedKey(options.markedKey, false, true);
    }
 
    /**
@@ -31,7 +33,7 @@ export class Controller {
       if (markerVisibilityChanged && this._markerVisibility === Visibility.Visible && !options.markedKey) {
          this._markedKey = this._setMarkerOnFirstItem();
       } else {
-         this.setMarkedKey(options.markedKey, silent);
+         this.setMarkedKey(options.markedKey, silent, true);
       }
 
       return this._markedKey;
@@ -44,7 +46,7 @@ export class Controller {
     * @param [silent=false]
     * @return {string|number} новый ключ маркера
     */
-   setMarkedKey(key: TKey, silent: boolean = false): TKey {
+   setMarkedKey(key: TKey, silent: boolean = false, byUpdateOptions: boolean = false): TKey {
       if ((key === undefined || key === null) && this._markerVisibility !== Visibility.Visible) {
          if (this._markedKey === key) {
             return this._markedKey;
@@ -66,8 +68,16 @@ export class Controller {
       }
 
       if (item) {
-         this._model.setMarkedKey(this._markedKey, false, true);
-         this._model.setMarkedKey(key, true, silent);
+         if (this._task1179814711) {
+            // новый ключ в модели ставим только если метод вызвали из _beforeUpdate
+            if (byUpdateOptions) {
+               this._model.setMarkedKey(this._markedKey, false, true);
+               this._model.setMarkedKey(key, true, silent);
+            }
+         } else {
+            this._model.setMarkedKey(this._markedKey, false, true);
+            this._model.setMarkedKey(key, true, silent);
+         }
          this._markedKey = key;
       } else {
          switch (this._markerVisibility) {

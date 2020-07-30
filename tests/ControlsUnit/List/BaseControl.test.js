@@ -1822,7 +1822,8 @@ define([
                   assert.equal(key, 2);
                   return key;
                }
-            }
+            },
+            _options: {}
          };
 
          const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');

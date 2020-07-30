@@ -471,6 +471,10 @@ const _private = {
     setMarkedKey(self, key: string | number): void {
         if (self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
+            if (self._options.task1179814711) {
+                // по этой опции модель не обновится в контроллере => не будет занотифаено событие
+                self._notify('markedKeyChanged', [self._markedKey]);
+            }
         }
     },
     moveMarkerToNext(self, event) {
@@ -1964,7 +1968,8 @@ const _private = {
         return new MarkerController({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey
+            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markedKey,
+            task1179814711: options.task1179814711
         });
    },
 
