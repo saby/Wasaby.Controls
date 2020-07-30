@@ -1,44 +1,60 @@
-import BaseViewModel = require('Controls/_input/Base/ViewModel');
-      
+import BaseViewModel from '../BaseViewModel';
+import {IInputType, ISplitValue} from '../resources/Types';
+import {textBySplitValue, hasSelectionChanged} from '../resources/Util';
+import {IText} from 'Controls/decorator';
 
-      /**
-       * @class Controls/_input/Text/ViewModel
-       * @extends Controls/_input/Base/ViewModel
-       *
-       * @private
-       *
-       * @author Красильников А.С.
-       */
+interface IViewModelOptions {
+    maxLength?: number;
+    constraint?: string;
+}
 
-      var _private = {
-         constraint: function(splitValue, constraint) {
-            var constraintRegExp = new RegExp(constraint, 'g');
-            var match = splitValue.insert.match(constraintRegExp);
+class ViewModel extends BaseViewModel<string, IViewModelOptions> {
+    protected _convertToDisplayValue(value: string | null): string {
+        return value === null ? '' : value;
+    }
 
-            splitValue.insert = match ? match.join('') : '';
-         },
+    protected _convertToValue(displayValue: string): string {
+        return displayValue;
+    }
 
-         maxLength: function(splitValue, maxLength) {
-            var maxInsertionLength = maxLength - splitValue.before.length - splitValue.after.length;
-
-            splitValue.insert = splitValue.insert.substring(0, maxInsertionLength);
-         }
-      };
-
-      var ViewModel = BaseViewModel.extend({
-         handleInput: function(splitValue, inputType) {
-            if (inputType === 'insert') {
-               if (this.options.constraint) {
-                  _private.constraint(splitValue, this.options.constraint);
-               }
-               if (this.options.maxLength) {
-                  _private.maxLength(splitValue, this.options.maxLength);
-               }
+    handleInput(splitValue: ISplitValue, inputType: IInputType): boolean {
+        if (inputType === 'insert') {
+            if (this._options.constraint) {
+                ViewModel._limitChars(splitValue, this._options.constraint);
             }
+            if (this._options.maxLength) {
+                ViewModel._limitLength(splitValue, this._options.maxLength);
+            }
+        }
 
-            return ViewModel.superclass.handleInput.call(this, splitValue, inputType);
-         }
-      });
+        const text: IText = textBySplitValue(splitValue);
+        const displayValueChanged: boolean = this._displayValue !== text.value;
+        const selectionChanged: boolean = hasSelectionChanged(this._selection, text.carriagePosition);
 
-      export = ViewModel;
-   
+        if (displayValueChanged) {
+            this._setDisplayValue(text.value);
+        }
+        if (selectionChanged) {
+            this._setSelection(text.carriagePosition);
+        }
+        if (displayValueChanged || selectionChanged) {
+            this._nextVersion();
+        }
+
+        return displayValueChanged;
+    }
+
+    private static _limitChars(splitValue: ISplitValue, constraint: string): void {
+        const constraintRegExp: RegExp = new RegExp(constraint, 'g');
+        const match: RegExpMatchArray | null = splitValue.insert.match(constraintRegExp);
+
+        splitValue.insert = match ? match.join('') : '';
+    }
+
+    private static _limitLength(splitValue: ISplitValue, maxLength: number): void {
+        const maxInsertionLength: number = maxLength - splitValue.before.length - splitValue.after.length;
+        splitValue.insert = splitValue.insert.substring(0, maxInsertionLength);
+    }
+}
+
+export default ViewModel;
