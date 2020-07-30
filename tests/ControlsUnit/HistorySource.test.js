@@ -291,7 +291,8 @@ define(
                assert.equal(historyItems.at(0).get('title'), 'Запись 5');
                assert.equal(historyItems.at(1).get('title'), 'Запись 7');
                assert.equal(historyItems.at(3).get('title'), 'Запись 6');
-               assert.equal(historyItems.at(8).getId(), '7_history');
+               assert.equal(historyItems.at(8).get('copyOriginalId'), '7_history');
+               assert.equal(historyItems.at(8).getId(), '7');
                assert.equal(historyItems.getFormat().getCount(), 10);
                hSource._$history.pinned.removeAt(1);
             });
