@@ -205,6 +205,7 @@ var
             this._listModel.setColumnTemplate(ColumnTpl);
             this._setResultsTemplate(cfg);
             this._listModel.headerInEmptyListVisible = cfg.headerInEmptyListVisible;
+            this._listModel.setColumnScroll(cfg.columnScroll);
 
             // Коротко: если изменить набор колонок или заголовков пока gridView не построена, то они и не применятся.
             // Подробнее: GridControl создает модель и отдает ее в GridView через BaseControl. BaseControl занимается обработкой ошибок, в том
