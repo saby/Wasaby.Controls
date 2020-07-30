@@ -472,6 +472,7 @@ const _private = {
         if (self._markerController) {
             self._markedKey = self._markerController.setMarkedKey(key);
             if (self._options.task1179814711) {
+                // по этой опции модель не обновится в контроллере => не будет занотифаено событие
                 self._notify('markedKeyChanged', [self._markedKey]);
             }
         }

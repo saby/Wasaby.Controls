@@ -31,7 +31,7 @@ export class Controller {
       // если visibility изменили на visible и не передали ключ, то ставим marker на первый элемент,
       // иначе проставляем переданный ключ
       if (markerVisibilityChanged && this._markerVisibility === Visibility.Visible && !options.markedKey) {
-         this._markedKey = this._setMarkerOnFirstItem(true);
+         this._markedKey = this._setMarkerOnFirstItem();
       } else {
          this.setMarkedKey(options.markedKey, silent, true);
       }
@@ -85,7 +85,7 @@ export class Controller {
                // Маркер сбросим только если список не пустой и элемента с текущим маркером не найдено
                if (this._model.getCount() > 0) {
                   if (this._markedKey) {
-                     this._markedKey = this._setMarkerOnFirstItem(byUpdateOptions);
+                     this._markedKey = this._setMarkerOnFirstItem();
                   } else {
                      this._model.setMarkedKey(this._markedKey, false, true);
                      this._markedKey = null;
@@ -93,7 +93,7 @@ export class Controller {
                }
                break;
             case Visibility.Visible:
-               this._markedKey = this._setMarkerOnFirstItem(byUpdateOptions);
+               this._markedKey = this._setMarkerOnFirstItem();
                break;
          }
       }
@@ -113,7 +113,7 @@ export class Controller {
          item.setMarked(true, true);
       } else if (this._model.getCount() > 0
           && (this._markerVisibility === Visibility.Visible || this._markerVisibility === Visibility.OnActivated && this._markedKey)) {
-         this._markedKey = this._setMarkerOnFirstItem(false);
+         this._markedKey = this._setMarkerOnFirstItem();
       }
 
       return this._markedKey;
@@ -215,7 +215,7 @@ export class Controller {
     * @private
     * @remark Всегда уведомляет о новом ключе, так как у прикладника в этом случае хранится другой ключ
     */
-   private _setMarkerOnFirstItem(byUpdateOptions: boolean): TKey {
+   private _setMarkerOnFirstItem(): TKey {
       // если модель пустая, то не на что ставить маркер
       if (!this._model.getCount()) {
          // TODO удалить после перехода на новую модель. В старой модели markedKey хранится в состоянии, нужно сбрасывать
