@@ -41,7 +41,7 @@
    <!-- Ячейка с данными колонки -->
    <ws:else>
       <ws:if data="{{colspan}}">
-         <div class="controls-Grid__row-cell_colspaned
+         <div class="controls-Grid__row-cell__content_colspaned
                      {{ currentColumn.getColspanedPaddingClassList(currentColumn, colspan).getAll() }}
                      {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
                      {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}">
