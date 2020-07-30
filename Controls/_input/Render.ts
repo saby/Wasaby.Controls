@@ -103,7 +103,6 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     protected _fontSize: string;
     protected _inlineHeight: string;
     protected _fontColorStyle: string;
-    protected _validationStatus: string;
     protected _template: TemplateFunction = template;
 
     readonly '[Controls/_interface/IHeight]': boolean = true;
@@ -113,23 +112,17 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     readonly '[Controls/interface/IBorderStyle]': boolean = true;
     readonly '[Controls/interface/IBorderVisibility]': boolean = true;
 
-    private updateState(options: IRenderOptions): void {
-        const border = Render._detectToBorder(options.borderVisibility, options.multiline);
-        if (JSON.stringify(border) !== JSON.stringify(this._border)) {
-            this._border = border;
-        }
-        this._validationStatus = ActualAPI.validationStatus(options.style, options.validationStatus);
-
+    private _setState(options: IRenderOptions): void {
         if (options.state === '') {
-            this._state = `${this.calcState(options)}`;
+            this._state = `${this._calcState(options)}`;
             this._statePrefix = '';
         } else {
-            this._state = `${options.state}-${this.calcState(options)}`;
+            this._state = `${options.state}-${this._calcState(options)}`;
             this._statePrefix = `_${options.state}`;
         }
     }
 
-    private calcState(options: IRenderOptions): State {
+    private _calcState(options: IRenderOptions): State {
         if (options.readOnly) {
             if (options.multiline) {
                 return 'readonly-multiline';
@@ -137,14 +130,14 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
 
             return 'readonly';
         }
-        if (options.borderStyle && this._validationStatus === 'valid') {
+        if (options.borderStyle && options.validationStatus === 'valid') {
             return options.borderStyle;
         }
 
         if (this._contentActive && Render.notSupportFocusWithin()) {
-            return this._validationStatus + '-active';
+            return options.validationStatus + '-active';
         }
-        return this._validationStatus;
+        return options.validationStatus;
     }
 
     protected _tagClickHandler(event: SyntheticEvent<MouseEvent>): void {
@@ -156,17 +149,21 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     }
 
     protected _beforeMount(options: IRenderOptions): void {
-        this.updateState(options);
+        this._border = Render._detectToBorder(options.borderVisibility, options.multiline);
+        this._setState(options);
     }
 
     protected _beforeUpdate(options: IRenderOptions): void {
-        this.updateState(options);
+        if (options.borderVisibility !== this._options.borderVisibility) {
+            this._border = Render._detectToBorder(options.borderVisibility, options.multiline);
+        }
+        this._setState(options);
     }
 
     protected _setContentActive(event: SyntheticEvent<FocusEvent>, newContentActive: boolean): void {
         this._contentActive = newContentActive;
 
-        this.updateState(this._options);
+        this._calcState(this._options);
     }
 
     static _theme: string[] = ['Controls/input', 'Controls/Classes'];
@@ -215,7 +212,8 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     static getDefaultOptions(): object {
         return {
             ...getDefaultBorderVisibilityOptions(),
-            state: ''
+            state: '',
+            validationStatus: 'valid'
         };
     }
 }

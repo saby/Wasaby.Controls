@@ -3,7 +3,6 @@
                         inlineHeight="{{_options.inlineHeight}}"
                         borderVisibility="{{_options.borderVisibility}}"
                         viewModel="{{_viewModel}}"
-                        style="{{_options.style}}"
                         validationStatus="{{_options.validationStatus}}"
                         multiline="{{_multiline}}"
                         tagStyle="{{_options.tagStyle}}"
@@ -25,7 +24,6 @@
             <ws:partial options="{{_options}}"
                         scope="{{_readOnlyField.scope}}"
                         value="{{_viewModel.displayValue}}"
-                        selection="{{_viewModel.selection}}"
                         template="{{_readOnlyField.template}}"/>
          </ws:if>
          <ws:else>
@@ -39,7 +37,6 @@
                         template="{{_field.template}}"
                         wasActionUser="{{_wasActionUser}}"
                         value="{{_viewModel.displayValue}}"
-                        selection="{{_viewModel.selection}}"
                         hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
                         isEdge="{{_isEdge}}"/>
          </ws:else>
