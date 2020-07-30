@@ -11,9 +11,9 @@ export interface ITreeModel extends IFlatModel {
    getPrevDragPosition(): IDragPosition;
 
    calculateDragTargetPosition(itemData: ITreeItemData, position: TPosition): IDragPosition;
-   getItemDataByItem(item: TreeItem<Model>);
+   getItemDataByItem(item: TreeItem<Model>): ITreeItemData;
 
-   getExpandedItems(): Array<object>;
+   getExpandedItems(): object[];
 }
 
 export interface ITreeItemData extends IFlatItemData {
@@ -39,12 +39,10 @@ export default class TreeController extends FlatController {
     * Если не передать offset, то он будет посчитан
     * @rem
     * @param event {SyntheticEvent<MouseEvent>} событие клика на узел
-    * @param offset {IOffset} смещение мышки относительно верха и низа узла
+    * @param targetElement {EventTarget} элемент на который навели
     */
-   isInsideDragTargetNode(event: SyntheticEvent<MouseEvent>, offset?: IOffset): boolean {
-      if (!offset) {
-         offset = this._calculateOffset(event);
-      }
+   isInsideDragTargetNode(event: SyntheticEvent<MouseEvent>, targetElement: EventTarget): boolean {
+      const offset = this._calculateOffset(event, targetElement);
 
       if (offset) {
          if (offset.top > DRAG_MAX_OFFSET && offset.bottom > DRAG_MAX_OFFSET) {
@@ -55,36 +53,50 @@ export default class TreeController extends FlatController {
       return false;
    }
 
-   calculateDragPositionRelativeNode(itemData: ITreeItemData, event: SyntheticEvent<MouseEvent>): IDragPosition {
+   calculateDragPositionRelativeNode(
+       itemData: ITreeItemData,
+       event: SyntheticEvent<MouseEvent>,
+       targetElement: EventTarget
+   ): IDragPosition {
+      if (this._draggingItemData.key === itemData.key) {
+         return null;
+      }
+
       let dragPosition;
 
-      const offset = this._calculateOffset(event);
+      const offset = this._calculateOffset(event, targetElement);
       if (offset) {
-         if (this._draggingItemData && !this.isInsideDragTargetNode(event, offset)) {
-            const position = offset.top < DRAG_MAX_OFFSET ? 'before' : 'after';
-            dragPosition = this.calculateDragPosition(itemData, position);
+         let position;
+         if (offset.top <= DRAG_MAX_OFFSET) {
+            position = 'before';
+         } else if (offset.bottom <= DRAG_MAX_OFFSET) {
+            position = 'after';
+         } else {
+            position = 'on';
          }
+         dragPosition = this.calculateDragPosition(itemData, position);
       }
 
       return dragPosition;
    }
 
    calculateDragPosition(targetItemData: ITreeItemData, position: TPosition): IDragPosition {
+      // Если перетаскиваем лист на узел, то позиция может быть только 'on'
+      if (!this._draggingItemData.dispItem.isNode() && targetItemData.dispItem.isNode()) {
+         position = 'on';
+      }
+
       let result;
 
       if (this._draggingItemData && this._draggingItemData.index === targetItemData.index) {
          result = this._model.getPrevDragPosition() || null;
       } else if (targetItemData.dispItem.isNode()) {
-         if (position === 'after' || position === 'before') {
-            result = this._calculateDragTargetPosition(targetItemData, position);
-         } else {
-            result = {
-               index: targetItemData.index,
-               position: 'on',
-               item: targetItemData.item,
-               data: targetItemData
-            };
-         }
+         result = {
+            index: targetItemData.index,
+            position: position ? position : 'on',
+            item: targetItemData.item,
+            data: targetItemData
+         };
       } else {
          result = super.calculateDragPosition(targetItemData);
       }
@@ -124,43 +136,13 @@ export default class TreeController extends FlatController {
       }, EXPAND_ON_DRAG_DELAY);
    }
 
-   private _calculateDragTargetPosition(itemData: ITreeItemData, position: TPosition): IDragPosition {
-      let
-         result,
-         startPosition,
-         afterExpandedNode = position === 'after' && this._model.getExpandedItems().indexOf(itemData.dispItem.getContents().getKey()) !== -1;
-
-      //The position should not change if the record is dragged from the
-      //bottom/top to up/down and brought to the bottom/top of the folder.
-      const prevDragPosition = this._model.getPrevDragPosition();
-      if (prevDragPosition) {
-         if (prevDragPosition.index === itemData.index) {
-            startPosition = prevDragPosition.position;
-         } else {
-            startPosition = prevDragPosition.index < itemData.index ? 'before' : 'after';
-         }
-      }
-
-      if (position !== startPosition && !afterExpandedNode) {
-         result = {
-            index: itemData.index,
-            item: itemData.item,
-            data: itemData,
-            position: position
-         };
-      }
-
-      return result;
-   }
-
-   private _calculateOffset(event: SyntheticEvent<MouseEvent>): IOffset {
+   private _calculateOffset(event: SyntheticEvent<MouseEvent>, targetElement: EventTarget): IOffset {
       let result = null;
 
-      const dragTarget = event.target;
-      if (dragTarget) {
-         const dragTargetRect = dragTarget.getBoundingClientRect();
+      if (targetElement) {
+         const dragTargetRect = targetElement.getBoundingClientRect();
 
-         result = { top: null, bottom: null }
+         result = { top: null, bottom: null };
          result.top = event.nativeEvent.pageY - dragTargetRect.top;
          result.bottom = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
       }
