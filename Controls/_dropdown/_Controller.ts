@@ -203,8 +203,8 @@ export default class _Controller implements IDropdownController {
 
    pinClick(item): void {
       const preparedItem = this._prepareItem(item, this._options.keyProperty, this._source);
-      this._options.source.update(item.clone(), {
-         $_pinned: !item.get('pinned')
+      this._options.source.update(preparedItem.clone(), {
+         $_pinned: !preparedItem.get('pinned')
       });
       this._setItems(null);
       this._open();
@@ -506,6 +506,7 @@ export default class _Controller implements IDropdownController {
          closeButtonVisibility: false,
          emptyText: this._getEmptyText(),
          allowPin: this._options.allowPin && this._hasHistory(this._options),
+         keyProperty: this._hasHistory(this._options) ? 'copyOriginalId' : baseConfig.keyProperty,
          headerTemplate: this._options.headTemplate || this._options.headerTemplate,
          footerContentTemplate: this._options.footerContentTemplate || this._options.footerTemplate,
          items: this._items,
