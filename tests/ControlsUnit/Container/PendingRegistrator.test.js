@@ -142,6 +142,34 @@ define(
                });
             rejector();
          });
+         [{
+            pendingCounter: 0
+         }, {
+            pendingCounter: 10
+         }].forEach((test, testNumber) => {
+            it('should use correct _pendingsCounter ' + testNumber, (done) => {
+               let sandbox = sinon.sandbox.create();
+               let resolver;
+               const Registrator = new PendingRegistrator();
+               Registrator._beforeMount();
+               const promise = new Promise((resolve) => {
+                  resolver = resolve;
+               });
+
+               Registrator._pendingController._pendingsCounter = test.pendingCounter;
+
+               let stub = sandbox.stub(Registrator._pendingController, 'unregisterPending');
+               Registrator._registerPendingHandler(null, promise, {});
+               promise.then(() => {
+                  sinon.assert.calledWith(stub, null, test.pendingCounter);
+                  done();
+                  Registrator._beforeUnmount();
+                  Registrator.destroy();
+                  sandbox.restore();
+               }).catch(done);
+               resolver();
+            });
+         });
       });
    }
 );
