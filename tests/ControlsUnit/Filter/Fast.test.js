@@ -831,7 +831,7 @@ define(
                      historyId: 'TEST_HISTORY_ID_FAST_FILTER'
                   })
                });
-               historySource.historySource._historyDataSource = () => {
+               historySource._$historySource._$historyDataSource = () => {
                   return new Deferred.success();
                };
                historySource.getItems = () => {

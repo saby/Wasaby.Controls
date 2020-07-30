@@ -131,7 +131,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     _updateState(...args) {
         const isUpdated: boolean = super._updateState(...args);
         if (isUpdated) {
-            this._shadows.updateScrollState(this._state);
+            // Убираем старое поведение теней, новые тени сделаны через CSS, рассчеты производить более не требуется
+            // Старое поведение в будущем понадбится в тех местах, где присутствуют картинки и/или непрозрачный фон.
+            // this._shadows.updateScrollState(this._state);
             this._scrollbars.updateScrollState(this._state);
             this._stickyHeaderController.setCanScroll(this._state.canVerticalScroll);
             this._scrollCssClass = this._getScrollContainerCssClass(this._options);

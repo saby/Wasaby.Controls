@@ -1,6 +1,7 @@
 <Controls-demo.ContainerTheme>
    <Controls.Application scope="{{_options}}"
                          theme="{{content.theme}}"
+                         popupHeaderTheme="{{_getPopupHeaderTheme(content.theme)}}"
                          bodyClass="controls-default-bg"
                          title="{{_title}}"
                          loadDataProviders="{{false}}"
@@ -9,8 +10,8 @@
          <link data-vdomignore="true" rel="shortcut icon" href="{{_options.resourceRoot}}Controls-demo/wasaby.ico?v=1" type="image/x-icon"/>
       </ws:head>
       <ws:content>
-         <Controls-demo.RootRouter 
-            correctTemplate="{{_correctTemplate}}" 
+         <Controls-demo.RootRouter
+            correctTemplate="{{_correctTemplate}}"
             appRoot="{{_options.appRoot}}"
             sourceUrl="{{_options.sourceUrl}}"
          />

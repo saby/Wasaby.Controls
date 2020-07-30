@@ -4,7 +4,6 @@
             <div class="controls-PropertyGrid__item controls-PropertyGrid__item_theme-{{_options.theme}}
                         {{index === _lastVisibleIndex ? 'controls-PropertyGrid__lastItem' : 'controls-PropertyGrid__notLastItem'}}">
                 <ws:partial template="{{item[_options.itemTemplateProperty] || _options.itemTemplate.templateName}}"
-                            attr:class="controls-PropertyGrid__item-template_theme-{{_options.theme}}"
                             item="{{item}}"
                             templateOptions="{{_options.itemTemplate.templateOptions}}"
                             on:valueChanged="_valueChangedHandler(index)"

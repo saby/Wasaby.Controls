@@ -518,9 +518,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             if (this._options.editingConfig) {
                 baseControl.cancelEdit();
             }
-
-            this.setMarkedKey(undefined);
-
             baseControl.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
         }
 
@@ -745,7 +742,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         TreeControl.superclass._beforeUnmount.apply(this, arguments);
     }
 });
-TreeControl._theme = ['Controls/tree'];
+TreeControl._theme = ['Controls/treeGrid'];
 
 TreeControl.getDefaultOptions = () => {
     return {

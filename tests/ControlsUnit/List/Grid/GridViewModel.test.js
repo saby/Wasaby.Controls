@@ -263,7 +263,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   {
                      inputData: {
                         itemData: {
-                           shouldDisplayActions: () => false,
+                           hasVisibleActions: () => false,
+                           isEditing: () => false,
                            multiSelectVisibility: 'hidden',
                            getLastColumnIndex: function() {
                               return 0;
@@ -280,7 +281,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   {
                      inputData: {
                         itemData: {
-                           shouldDisplayActions: () => true,
+                           hasVisibleActions: () => true,
+                           isEditing: () => true,
                            multiSelectVisibility: 'hidden',
                            getLastColumnIndex: function() {
                               return 0;
@@ -297,7 +299,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   {
                      inputData: {
                         itemData: {
-                           shouldDisplayActions: () => true,
+                           hasVisibleActions: () => true,
+                           isEditing: () => true,
                            multiSelectVisibility: 'hidden',
                            getLastColumnIndex: function() {
                               return 1;
@@ -314,7 +317,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   {
                      inputData: {
                         itemData: {
-                           shouldDisplayActions: () => true,
+                           hasVisibleActions: () => true,
+                           isEditing: () => true,
                            multiSelectVisibility: 'visible',
                            getLastColumnIndex: function() {
                               return 2;
@@ -331,7 +335,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   {
                      inputData: {
                         itemData: {
-                           shouldDisplayActions: () => true,
+                           hasVisibleActions: () => true,
+                           isEditing: () => true,
                            multiSelectVisibility: 'visible',
                            getLastColumnIndex: function() {
                               return 2;

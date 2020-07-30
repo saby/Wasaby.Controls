@@ -101,7 +101,7 @@ define(
 
             let self = {
                historySource: {
-                  _recent: 11
+                  _$recent: 11
                }
             };
             historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
@@ -131,7 +131,7 @@ define(
             assert.equal(itemsRecent.getCount(), 10);
 
             itemsRecent.clear();
-            self.historySource._recent = 5;
+            self.historySource._$recent = 5;
             historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
             assert.equal(itemsRecent.getCount(), 4);
 
@@ -141,7 +141,7 @@ define(
             assert.equal(itemsRecent.getCount(), 3);
 
             itemsRecent.clear();
-            self.historySource._pinned = false;
+            self.historySource._$pinned = false;
             historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
             assert.equal(itemsRecent.getCount(), 4);
          });

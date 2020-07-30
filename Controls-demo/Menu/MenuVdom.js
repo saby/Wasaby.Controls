@@ -169,13 +169,13 @@ define('Controls-demo/Menu/MenuVdom', [
                nodeProperty: '@parent'
             });
             // Заглушка, чтобы демка не ломилась не сервис истории
-            hs.historySource.update = function() {
+            hs._$historySource.update = function() {
                return {};
             };
             var query = new source.Query().where({
                $_history: true
             });
-            hs.historySource.query = function() {
+            hs._$historySource.query = function() {
                var def = new Deferred();
                def.addCallback(function(set) {
                   return set;
@@ -184,7 +184,7 @@ define('Controls-demo/Menu/MenuVdom', [
                return def;
             };
             hs.query(query);
-            hs.historySource.query();
+            hs._$historySource.query();
             return hs;
          },
 

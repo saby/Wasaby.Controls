@@ -12,7 +12,7 @@ import { IShownItemAction } from '../interface/IItemActionsContainer';
 import { MeasurerUtils } from './MeasurerUtils';
 import { ISwipeActionTemplateConfig } from '../interface/ISwipeActionTemplateConfig';
 
-import * as SwipeActionTemplate from 'wml!Controls/_itemActions/resources/templates/SwipeTemplate';
+import * as SwipeActionTemplate from 'wml!Controls/_itemActions/resources/templates/SwipeAction';
 
 const MAX_ACTIONS_COUNT = 3;
 const HEIGHT_LOWER_BOUND_WITH_TITLE = 58;

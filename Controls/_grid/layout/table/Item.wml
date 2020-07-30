@@ -6,7 +6,7 @@
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
                     attr:class="js-controls-ColumnScroll__notDraggable"
                     highlightOnHover="{{highlightOnHover}}"
-                    theme="{{_options.theme}}"/>
+                    theme="{{itemData.theme}}"/>
     </ws:if>
     <ws:else data="{{itemData.itemActionsPosition !== 'custom'}}">
         <ws:partial template="{{itemActionsTemplate}}"
@@ -15,7 +15,7 @@
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
                     attr:class="controls-Grid__itemAction js-controls-ColumnScroll__notDraggable"
                     highlightOnHover="{{highlightOnHover}}"
-                    theme="{{_options.theme}}"/>
+                    theme="{{itemData.theme}}"/>
     </ws:else>
 </ws:template>
 
@@ -33,7 +33,7 @@
             </div>
         </ws:if>
         <ws:else>
-            <div class="{{'controls-Grid__cell_spacingFirstCol_' + itemData.itemPadding.left + '_theme-' +_options.theme}}"></div>
+            <div class="{{'controls-Grid__cell_spacingFirstCol_' + itemData.itemPadding.left + '_theme-' +itemData.theme}}"></div>
         </ws:else>
     </ws:if>
     <ws:else>
@@ -67,8 +67,8 @@
         attr:key="{{ itemData.getCurrentColumnKey() }}{{ keyPostfix ? ('_' + keyPostfix) : '' }}"
         attr:class="js-controls-SwipeControl__actionsContainer
                     {{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
-                    {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
-                    {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + _options.theme}}
+                    {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}
+                    {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
                     {{ marker !== false ? currentColumn.classList.marked }}
                     controls-Grid__cell_valign_{{currentColumn.column.compatibleValign || 'top'}}
                     {{className || ''}}">

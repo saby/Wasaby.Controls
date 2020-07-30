@@ -72,7 +72,7 @@ define('Controls-demo/Input/Dropdown/historySourceDropdown',
          var query = new source.Query().where({
             $_history: true
          });
-         hs.historySource.query = function() {
+         hs._$historySource.query = function() {
             var def = new Deferred();
             def.addCallback(function(set) {
                return set;
@@ -81,11 +81,11 @@ define('Controls-demo/Input/Dropdown/historySourceDropdown',
             return def;
          };
          // Заглушка, чтобы демка не ломилась не сервис истории
-         hs.historySource.update = function() {
+         hs._$historySource.update = function() {
             return {};
          };
          hs.query(query);
-         hs.historySource.query();
+         hs._$historySource.query();
          return hs;
       }
 

@@ -22,12 +22,12 @@
      <div attr:class="controls-TreeTileView__dragTargetNode_theme-{{theme}}"></div>
   </ws:if>
   <div attr:class=" controls-TreeTileView__title controls-TreeTileView__title_theme-{{theme}}" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
-  <ws:partial if="{{itemData.isSwiped() && itemData.shouldDisplayActions()}}"
+  <ws:partial if="{{itemData.isSwiped() && (itemData.hasVisibleActions() || itemData.isEditing())}}"
               highlightOnHover="{{highlightOnHover}}"
               template="{{swipeTemplate}}"
               itemData="{{itemData}}"
               itemActionsTemplate="{{itemActionsTemplate}}"/>
-  <ws:partial if="{{!itemData.isSwiped() && itemData.shouldDisplayActions() && itemData.itemActionsPosition !== 'custom'}}"
+  <ws:partial if="{{!itemData.isSwiped() && (itemData.hasVisibleActions() || itemData.isEditing()) && itemData.itemActionsPosition !== 'custom'}}"
               template="{{itemActionsTemplate}}"
               highlightOnHover="{{highlightOnHover}}"
               itemData="{{itemData}}"

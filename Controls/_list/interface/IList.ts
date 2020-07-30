@@ -20,8 +20,8 @@ type TActionAlignment = 'horizontal'|'vertical';
 
 type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
-type TVerticalItemPadding = 'S'|null;
-type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|null;
+type TVerticalItemPadding = 'S'|'null';
+type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'null';
 /**
  * @typedef {String} TItemActionsVisibility
  * @variant onhover Операции над записью отображаются при наведении на запись;
