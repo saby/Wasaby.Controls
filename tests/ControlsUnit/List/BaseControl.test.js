@@ -3217,7 +3217,9 @@ define([
             clearSelection: () => null,
             toggleItem: () => null,
             setSelectedKeys: () => null,
-            handleAddItems: () => null
+            handleAddItems: () => null,
+            handleResetItems: () => null,
+            restoreSelection: () => null
          };
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
