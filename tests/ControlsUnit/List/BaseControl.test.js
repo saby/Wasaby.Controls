@@ -1809,7 +1809,7 @@ define([
          const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');
          const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'calculateMarkedKey');
 
-         lists.BaseControl._private.setMarkedKey({}, 2);
+         lists.BaseControl._private.setMarkedKey({_options: {}}, 2);
          assert.isFalse(setMarkedKeySpy.called);
          assert.isFalse(scrollToItemSpy.called);
 
