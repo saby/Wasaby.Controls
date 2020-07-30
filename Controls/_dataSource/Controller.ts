@@ -9,7 +9,19 @@ import {IAdditionalQueryParams} from 'Controls/_interface/IAdditionalQueryParams
 import {default as groupUtil} from './GroupUtil';
 import {isEqual} from 'Types/object';
 
-interface IControllerOptions {
+export interface IControlerState {
+    keyProperty: string;
+    source: ICrud;
+
+    sorting: QueryOrderSelector;
+    filter: QueryWhereExpression<any>;
+    navigation: INavigationOptionValue<INavigationSourceConfig>;
+
+    items: RecordSet;
+    prefetchSource: PrefetchProxy;
+}
+
+export interface IControllerOptions {
     keyProperty: string;
     source: ICrud;
 
@@ -17,6 +29,9 @@ interface IControllerOptions {
     sorting: QueryOrderSelector;
     navigation: INavigationOptionValue<INavigationSourceConfig>;
 
+    dataLoadErrback: Function;
+
+    parentProperty: string;
     root: string;
 
     // for grouping
@@ -26,7 +41,7 @@ interface IControllerOptions {
     historyIdCollapsedGroups: string;
 }
 
-class Controller {
+export default class Controller {
     private _options: IControllerOptions;
     private _filter: QueryWhereExpression<any>;
     private _crudWrapper: CrudWrapper;
@@ -40,11 +55,11 @@ class Controller {
     load(): Promise<RecordSet> {
         if (this._options.source) {
             // todo можно передавать меньше опций здесь, просто из-за совместимости юзается 4 опции для групп вместо 2х
-            return this._getFilterForCollapsedGroups(this._filter, this._options).then((filter) => {
-                this._filter = filter;
+            return Controller._getFilterForCollapsedGroups(this._filter, this._options).then((filter) => {
+                const preparedFilter = Controller._getFilterHierarchy(filter, this._options);
                 const crudWrapper = this._getCrudWrapper(this._options.source);
                 let params = {
-                    filter: this._filter,
+                    filter: preparedFilter,
                     sorting: this._options.sorting
                 } as IAdditionalQueryParams;
 
@@ -55,7 +70,14 @@ class Controller {
                         sorting: params.sorting
                     });
                 }
-                return crudWrapper.query(params, this._options.keyProperty);
+                return crudWrapper.query(params, this._options.keyProperty).then((result) => {
+                    if (result instanceof Error) {
+                        if (this._options.dataLoadErrback instanceof Function) {
+                            this._options.dataLoadErrback(result);
+                        }
+                    }
+                    return result;
+                });
             });
         } else {
             Logger.error('source/Controller: Source option has incorrect type');
@@ -65,10 +87,11 @@ class Controller {
 
     setItems(items: RecordSet): RecordSet {
         this._items = items;
+        return this._items;
     }
 
-    setFilter(): void {
-        return;
+    setFilter(filter: QueryWhereExpression<any>): void {
+        this._filter = filter;
     }
 
     update(newOptions: IControllerOptions): boolean {
@@ -80,6 +103,7 @@ class Controller {
         const isChanged =
             isFilterChanged ||
             !isEqual(newOptions.navigation, this._options.navigation) ||
+            newOptions.source !== this._options.source ||
             newOptions.sorting !== this._options.sorting ||
             newOptions.keyProperty !== this._options.keyProperty ||
             newOptions.root !== this._options.root;
@@ -88,15 +112,31 @@ class Controller {
         return isChanged;
     }
 
+    getState(): IControlerState {
+        return {
+            keyProperty: this._options.keyProperty,
+            source: this._options.source,
+
+            filter: this._filter,
+            sorting: this._options.sorting,
+            navigation: this._options.navigation,
+
+            items: this._items,
+            prefetchSource: this.getPrefetchSource(this._items)
+        };
+    }
+
     getPrefetchSource(data: RecordSet|DataSet|Error): PrefetchProxy {
-        let source = this._options.source;
-        source = source instanceof PrefetchProxy ? source.getOriginal() : source;
-        return new PrefetchProxy({
-            target: source,
-            data: {
-                query: data
-            }
-        });
+        if (data) {
+            let source = this._options.source;
+            source = source instanceof PrefetchProxy ? source.getOriginal() : source;
+            return new PrefetchProxy({
+                target: source,
+                data: {
+                    query: data
+                }
+            });
+        }
     }
 
     private _getCrudWrapper(sourceOption: ICrud): CrudWrapper {
@@ -118,7 +158,7 @@ class Controller {
         return this._navigationController;
     }
 
-    private _getFilterForCollapsedGroups(
+    private static _getFilterForCollapsedGroups(
         initialFilter: QueryWhereExpression<any>,
         options: IControllerOptions
     ): Promise<QueryWhereExpression<any>> {
@@ -139,5 +179,18 @@ class Controller {
         }
     }
 
+    private static _getFilterHierarchy(
+        initialFilter: QueryWhereExpression<any>,
+        options: IControllerOptions): QueryWhereExpression<any> {
+        let modifiedFilter = {};
+
+        if (options.root && options.parentProperty) {
+            modifiedFilter = {...initialFilter};
+            modifiedFilter[options.parentProperty] = options.root;
+            return modifiedFilter;
+        }
+
+        return initialFilter;
+    }
+
 }
-export default Controller;

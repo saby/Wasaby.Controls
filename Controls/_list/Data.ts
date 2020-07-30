@@ -3,11 +3,36 @@ import template = require('wml!Controls/_list/Data');
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {RegisterClass} from 'Controls/event';
 import {RecordSet} from 'Types/collection';
-import {PrefetchProxy} from 'Types/source';
+import {PrefetchProxy, QueryWhereExpression} from 'Types/source';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {IControllerOptions, IControlerState} from 'Controls/_dataSource/Controller';
 
-import {default as DataController, IDataContextOptions, IDataOptions} from 'Controls/_list/Data/ControllerClass';
+import {default as DataController} from 'Controls/_list/Data/ControllerClass';
 import {ContextOptions} from 'Controls/context';
+import {ISourceOptions, IHierarchyOptions, IFilterOptions, INavigationOptions, ISortingOptions} from 'Controls/interface';
+
+export interface IDataOptions extends IControlOptions,
+    ISourceOptions,
+    IHierarchyOptions,
+    IFilterOptions,
+    INavigationOptions<unknown>,
+    ISortingOptions {
+   dataLoadErrback?: Function;
+   root?: string|number|null;
+   groupProperty?: string;
+   groupingKeyCallback?: Function;
+   groupHistoryId?: string;
+   historyIdCollapsedGroups?: string;
+}
+
+export interface IDataContextOptions extends ISourceOptions,
+    INavigationOptions<unknown>,
+    IFilterOptions,
+    ISortingOptions {
+   prefetchSource: PrefetchProxy;
+   keyProperty: string;
+   items: RecordSet;
+}
 /**
  * Контрол-контейнер, предоставляющий контекстное поле "dataOptions" с необходимыми данными для дочерних контейнеров.
  *
@@ -64,7 +89,7 @@ import {ContextOptions} from 'Controls/context';
  * @param root {String|Number} Идентификатор корневой записи.
  */
 
-class Data extends Control/** @lends Controls/_list/Data.prototype */{
+class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype */{
    protected _template: TemplateFunction = template;
    private _loading: boolean = false;
    private _itemsReadyCallback: Function = null;
@@ -73,7 +98,7 @@ class Data extends Control/** @lends Controls/_list/Data.prototype */{
    private _dataOptionsContext: ContextOptions;
 
    private _items: RecordSet;
-   private _prefetchSource: PrefetchProxy;
+   private _filter: QueryWhereExpression<any>;
 
    _beforeMount(options: IDataOptions, context, receivedState: RecordSet|undefined): Promise<RecordSet>|void {
 
@@ -83,31 +108,35 @@ class Data extends Control/** @lends Controls/_list/Data.prototype */{
       this._errorRegister = new RegisterClass({register: 'dataError'});
 
       this._sourceController = new SourceController(options);
-      this._dataOptionsContext = this._createContext(options);
+      let controllerState = this._sourceController.getState();
+
+      // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+      this._filter = controllerState.filter;
+      this._dataOptionsContext = this._createContext(controllerState);
 
       if (receivedState && isNewEnvironment()) {
+         this._sourceController.setItems(receivedState);
+         controllerState = this._sourceController.getState();
 
          // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-         this._items = receivedState;
-         this._sourceController.setItems(receivedState);
-         this._prefetchSource = this._sourceController.getPrefetchSource(receivedState);
-         this._updateContext(this._dataOptionsContext);
+         this._items = controllerState.items;
+         this._updateContext(controllerState);
       } else if (options.source) {
          return this._sourceController.load().then((items) => {
 
             // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
             this._items = this._sourceController.setItems(items);
-            this._prefetchSource = this._sourceController.getPrefetchSource(receivedState);
-            this._updateContext(this._dataOptionsContext);
+            controllerState = this._sourceController.getState();
+            this._updateContext(controllerState);
             return items;
          });
       } else {
-         this._updateContext(this._dataOptionsContext);
+         this._updateContext(controllerState);
       }
    }
 
    _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet> {
-      const isChanged = this._sourceController.update({...newOptions});
+      const isChanged = this._sourceController.update(newOptions);
       if (isChanged) {
          this._loading = true;
          return this._sourceController.load().then((result) => {
@@ -115,8 +144,11 @@ class Data extends Control/** @lends Controls/_list/Data.prototype */{
                this._items = this._sourceController.setItems(result);
             }
 
-            this._prefetchSource = this._sourceController.getPrefetchSource(result);
-            this._updateContext(this._dataOptionsContext);
+            const controllerState = this._sourceController.getState();
+
+            // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+            this._filter = controllerState.filter;
+            this._updateContext(controllerState);
             this._loading = false;
             return result;
          });
@@ -141,7 +173,8 @@ class Data extends Control/** @lends Controls/_list/Data.prototype */{
    _itemsReadyCallbackHandler(items): void {
       if (this._items !== items) {
          this._items = this._sourceController.setItems(items);
-         this._updateContext(this._dataOptionsContext);
+         const controllerState = this._sourceController.getState();
+         this._updateContext(controllerState);
       }
 
       if (this._options.itemsReadyCallback) {
@@ -150,8 +183,12 @@ class Data extends Control/** @lends Controls/_list/Data.prototype */{
    }
 
    _filterChanged(event, filter): void {
-      this._sourceController.setFilter(this._filter = filter);
-      this._updateContext(this._dataOptionsContext);
+      this._sourceController.setFilter(filter);
+      const controllerState = this._sourceController.getState();
+
+      // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+      this._filter = controllerState.filter;
+      this._updateContext(controllerState);
 
       /* If filter changed, prefetchSource should return data not from cache,
          will be changed by task https://online.sbis.ru/opendoc.html?guid=861459e2-a229-441d-9d5d-14fdcbc6676a */
@@ -163,41 +200,35 @@ class Data extends Control/** @lends Controls/_list/Data.prototype */{
       this._notify('rootChanged', [root]);
    }
 
+   // TODO сейчас есть подписка на itemsChanged из поиска. По хорошему не должно быть.
    _itemsChanged(event:Event, items): void {
       //search:Cotnroller fires two events after search: itemsChanged, filterChanged
       //on filterChanged event filter state will updated
       //on itemChanged event prefetchSource will updated, but createPrefetchSource method work async becouse of promise,
       //then we need to create prefetchSource synchronously
-      this._prefetchSource = this._sourceController.getPrefetchSource(items);
-      this._updateContext(this._dataOptionsContext);
+
+      if (!this._items) {
+         this._items = this._sourceController.setItems(items);
+      }
+
+      const controllerState = this._sourceController.getState();
+      this._updateContext(controllerState);
       event.stopPropagation();
    }
 
-   private _createContext(options?: IDataContextOptions): typeof ContextOptions {
+   private _createContext(options?: IControlerState): typeof ContextOptions {
       return new ContextOptions(options);
    }
 
-   private _updateContext(context: typeof ContextOptions): void {
-      const contextOptions = this._getContextOptions();
+   private _updateContext(sourceControllerState: IControlerState): void {
+      const curContext = this._dataOptionsContext;
 
-      for (const i in contextOptions) {
-         if (contextOptions.hasOwnProperty(i)) {
-            context[i] = contextOptions[i];
+      for (const i in sourceControllerState) {
+         if (sourceControllerState.hasOwnProperty(i)) {
+            curContext[i] = sourceControllerState[i];
          }
       }
-      context.updateConsumers();
-   }
-
-   private _getContextOptions(): IDataContextOptions {
-      return {
-         filter: this._filter,
-         navigation: this._options.navigation,
-         keyProperty: this._options.keyProperty,
-         sorting: this._options.sorting,
-         items: this._items,
-         prefetchSource: this._prefetchSource,
-         source: this._options.source
-      };
+      curContext.updateConsumers();
    }
 
    _getChildContext(): object {

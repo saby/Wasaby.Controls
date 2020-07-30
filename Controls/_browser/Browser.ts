@@ -6,14 +6,13 @@ import {ControllerClass as SearchController} from 'Controls/search';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {RecordSet} from 'Types/collection';
 
-import {DataController} from 'Controls/list';
-import {ContextOptions, ContextOptions as DataOptions} from '../context';
+import {ContextOptions} from 'Controls/context';
 import {RegisterClass} from 'Controls/event';
-import {default as DataControllerClass, IDataContextOptions} from '../_list/Data/ControllerClass';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {PrefetchProxy} from 'Types/source';
+import {IControllerOptions, IControlerState} from 'Controls/_dataSource/Controller';
 
 type Key = string|number|null;
 
@@ -39,12 +38,11 @@ export default class Browser extends Control {
     private _inputSearchValue: string = '';
 
     private _sourceController: SourceController = null;
-    private _prefetchSource: PrefetchProxy;
     private _itemsReadyCallback: Function;
     private _loading: boolean = false;
     private _items: RecordSet;
     private _filter: object;
-    private _dataOptionsContext: unknown;
+    private _dataOptionsContext: ContextOptions;
     private _errorRegister: RegisterClass;
 
     protected _beforeMount(options, context, receivedState): void|Promise<RecordSet> {
@@ -58,7 +56,8 @@ export default class Browser extends Control {
         this._errorRegister = new RegisterClass({register: 'dataError'});
 
         this._sourceController = new SourceController(options);
-        this._dataOptionsContext = this._createContext(options);
+        const controllerState = this._sourceController.getState();
+        this._dataOptionsContext = this._createContext(controllerState);
 
         if (receivedState && isNewEnvironment()) {
             this._setItemsAndCreateSearchController(receivedState, options);
@@ -68,30 +67,29 @@ export default class Browser extends Control {
                 return items;
             });
         } else {
-            this._updateContext(this._dataOptionsContext);
+            this._updateContext(controllerState);
             this._createSearchControllerWithContext(options, this._dataOptionsContext);
         }
     }
 
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
-        const isChanged = this._sourceController.update({...newOptions});
-        this._filter = newOptions.filter;
-
-        if (this._options.source !== newOptions.source) {
+        const isChanged = this._sourceController.update(newOptions);
+        if (isChanged) {
             this._loading = true;
             return this._sourceController.load().then((result) => {
                 if (!this._items) {
-                    this._items = result;
-                    this._sourceController.setItems(result);
-                } else {
-                    this._prefetchSource = this._sourceController.getPrefetchSource(result);
+                    this._items = this._sourceController.setItems(result);
                 }
-                this._updateContext(this._dataOptionsContext);
+
+                const controllerState = this._sourceController.getState();
+
+                // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+                this._filter = controllerState.filter;
+                this._updateContext(controllerState);
+
                 this._loading = false;
                 return result;
             });
-        } else if (isChanged) {
-            this._updateContext(this._dataOptionsContext);
         }
         this._operationsController.update(newOptions);
         this._searchController.update(
@@ -118,10 +116,11 @@ export default class Browser extends Control {
     }
 
     private _setItemsAndCreateSearchController(items: RecordSet, options): void {
-        this._items = items;
-        this._sourceController.setItems(items);
-        this._prefetchSource = this._sourceController.getPrefetchSource(items);
-        this._updateContext(this._dataOptionsContext);
+
+        // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+        this._items = this._sourceController.setItems(items);
+        const controllerState = this._sourceController.getState();
+        this._updateContext(controllerState);
         this._createSearchControllerWithContext(options, this._dataOptionsContext);
     }
 
@@ -133,8 +132,8 @@ export default class Browser extends Control {
     _itemsReadyCallbackHandler(items): void {
         if (this._items !== items) {
             this._items = this._sourceController.setItems(items);
-            this._prefetchSource = this._sourceController.getPrefetchSource(items);
-            this._updateContext(this._dataOptionsContext);
+            const controllerState = this._sourceController.getState();
+            this._updateContext(controllerState);
         }
 
         if (this._options.itemsReadyCallback) {
@@ -143,8 +142,13 @@ export default class Browser extends Control {
     }
 
     _filterChanged(event: SyntheticEvent, filter: object): void {
-        this._sourceController.setFilter(this._filter = filter);
-        this._updateContext(this._dataOptionsContext);
+        this._sourceController.setFilter(filter);
+
+        const controllerState = this._sourceController.getState();
+
+        // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+        this._filter = controllerState.filter;
+        this._updateContext(controllerState);
 
         /* If filter changed, prefetchSource should return data not from cache,
            will be changed by task https://online.sbis.ru/opendoc.html?guid=861459e2-a229-441d-9d5d-14fdcbc6676a */
@@ -162,8 +166,13 @@ export default class Browser extends Control {
         // on itemChanged event prefetchSource will updated,
         // but createPrefetchSource method work async becouse of promise,
         // then we need to create prefetchSource synchronously
-        this._prefetchSource = this._sourceController.getPrefetchSource(items);
-        this._updateContext(this._dataOptionsContext);
+        if (!this._items) {
+            this._items = this._sourceController.setItems(items);
+        }
+
+        const controllerState = this._sourceController.getState();
+        this._updateContext(controllerState);
+        event.stopPropagation();
     }
 
     protected _getChildContext(): IDataChildContext {
@@ -172,31 +181,19 @@ export default class Browser extends Control {
         };
     }
 
-    private _createContext(options?: IDataContextOptions): typeof ContextOptions {
+    private _createContext(options?: IControlerState): typeof ContextOptions {
         return new ContextOptions(options);
     }
 
-    private _updateContext(context: typeof ContextOptions): void {
-        const contextOptions = this._getContextOptions();
+    private _updateContext(sourceControllerState: IControlerState): void {
+        const curContext = this._dataOptionsContext;
 
-        for (const i in contextOptions) {
-            if (contextOptions.hasOwnProperty(i)) {
-                context[i] = contextOptions[i];
+        for (const i in sourceControllerState) {
+            if (sourceControllerState.hasOwnProperty(i)) {
+                curContext[i] = sourceControllerState[i];
             }
         }
-        context.updateConsumers();
-    }
-
-    private _getContextOptions(): IDataContextOptions {
-        return {
-            filter: this._filter,
-            navigation: this._options.navigation,
-            keyProperty: this._options.keyProperty,
-            sorting: this._options.sorting,
-            items: this._items,
-            prefetchSource: this._prefetchSource,
-            source: this._options.source
-        };
+        curContext.updateConsumers();
     }
 
     protected _onDataError(event: SyntheticEvent, errbackConfig: dataSourceError.ViewConfig): void {
