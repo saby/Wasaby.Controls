@@ -84,13 +84,11 @@ export class Controller {
    /**
     * Проставляет выбранные элементы в модели
     * @remark Не уведомляет о изменениях в модели
-    * @return {ISelectionControllerResult}
     */
-   restoreSelection(): ISelectionControllerResult {
+   restoreSelection(): void {
       // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
       this._strategy.setItems(this._model.getCollection());
       this._updateModel(this._selection, true);
-      return this._getResult(this._selection, this._selection);
    }
 
    /**
@@ -191,6 +189,26 @@ export class Controller {
       return this._getResult(oldSelection, this._selection);
    }
 
+   /**
+    * Обработать сброс элементов в список
+    * @return {ISelectionControllerResult}
+    */
+   handleResetItems(): ISelectionControllerResult {
+      this._updateModel(this._selection);
+      return this._getResult(this._selection, this._selection);
+   }
+
+   /**
+    * Обработать добавление новых элементов в список
+    * @param addedItems Новые элементы списка
+    * @return {ISelectionControllerResult}
+    */
+   handleAddItems(addedItems: Array<CollectionItem<Model>>): ISelectionControllerResult {
+      const records = addedItems.map((item) => item.getContents());
+      this._updateModel(this._selection, false, records);
+      return this._getResult(this._selection, this._selection);
+   }
+
    private _clearSelection(): void {
       this._selectedKeys = [];
       this._excludedKeys = [];
@@ -279,8 +297,8 @@ export class Controller {
       });
    }
 
-   private _updateModel(selection: ISelection, silent: boolean = false): void {
-      const selectionForModel = this._strategy.getSelectionForModel(selection, this._limit);
+   private _updateModel(selection: ISelection, silent: boolean = false, items?: Model[]): void {
+      const selectionForModel = this._strategy.getSelectionForModel(selection, this._limit, items);
       // TODO думаю лучше будет занотифаить об изменении один раз после всех вызовов (сейчас нотифай в каждом)
       this._model.setSelectedItems(selectionForModel.get(true), true, silent);
       this._model.setSelectedItems(selectionForModel.get(false), false, silent);
