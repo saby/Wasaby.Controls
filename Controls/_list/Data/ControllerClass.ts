@@ -75,7 +75,7 @@ export default class DataControllerClass {
         this._filter = filter;
     }
 
-    updateContext(context: typeof ContextOptions): void {
+    /*updateContext(context: typeof ContextOptions): void {
         const contextOptions = this._getContextOptions();
 
         for (const i in contextOptions) {
@@ -84,15 +84,15 @@ export default class DataControllerClass {
             }
         }
         context.updateConsumers();
-    }
+    }*/
 
     updatePrefetchProxy(items: RecordSet): void {
         this._prefetchSource = this._getPrefetchSource(items);
     }
 
-    createContext(options?: IDataContextOptions): typeof ContextOptions {
+    /*createContext(options?: IDataContextOptions): typeof ContextOptions {
         return new ContextOptions(options);
-    }
+    }*/
 
     loadItems(): Promise<RecordSet> {
         const options = this._options;
@@ -141,7 +141,7 @@ export default class DataControllerClass {
         });
     }
 
-    private _getContextOptions(): IDataContextOptions {
+    /*private _getContextOptions(): IDataContextOptions {
         return {
             filter: this._filter,
             navigation: this._options.navigation,
@@ -151,7 +151,7 @@ export default class DataControllerClass {
             prefetchSource: this._prefetchSource,
             source: this._options.source
         };
-    }
+    }*/
 
     private _getPrefetchSource(data: RecordSet|DataSet|Error): PrefetchProxy {
         return new PrefetchProxy({
