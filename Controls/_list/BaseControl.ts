@@ -1304,7 +1304,7 @@ const _private = {
 
                 if (self._listViewModel.getCount() === 0 && _private._getSelectionController(self).isAllSelected()) {
                     result = _private._getSelectionController(self).clearSelection();
-                } else if (newItems) {
+                } else if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_RESET || action === IObservable.ACTION_REPLACE) {
                     result = _private._getSelectionController(self).restoreSelection();
                 }
 
