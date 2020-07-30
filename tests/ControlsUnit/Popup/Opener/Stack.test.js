@@ -47,8 +47,11 @@ define(
          };
 
          it('Opener: getConfig', () => {
-            let config = popupMod.Stack.prototype._getStackConfig();
+            const baseConfig = {options: false};
+            let config = popupMod.Stack.prototype._getStackConfig(baseConfig);
             assert.equal(config.isDefaultOpener, true);
+            assert.equal(config.options, false);
+            assert.isTrue(baseConfig !== config);
 
             config = popupMod.Stack.prototype._getStackConfig({ isDefaultOpener: false });
             assert.equal(config.isDefaultOpener, false);
