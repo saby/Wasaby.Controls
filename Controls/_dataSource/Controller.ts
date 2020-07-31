@@ -140,21 +140,20 @@ export default class Controller {
     }
 
     private _getCrudWrapper(sourceOption: ICrud): CrudWrapper {
-        if (!this._crudWrapper) {
-            this._crudWrapper = new CrudWrapper({source: sourceOption});
-        }
+        // TODO https://online.sbis.ru/opendoc.html?guid=fbee8765-cfc2-40b7-9d0d-75655412b284
+        this._crudWrapper = new CrudWrapper({source: sourceOption});
         return this._crudWrapper;
     }
 
     private _getNavigationController(
         navigationOption: INavigationOptionValue<INavigationSourceConfig>
     ): NavigationController {
-        if (!this._navigationController) {
-            this._navigationController = new NavigationController({
-                navigationType: navigationOption.source,
-                navigationConfig: navigationOption.sourceConfig
-            });
-        }
+        // TODO https://online.sbis.ru/opendoc.html?guid=fbee8765-cfc2-40b7-9d0d-75655412b284
+        this._navigationController = new NavigationController({
+            navigationType: navigationOption.source,
+            navigationConfig: navigationOption.sourceConfig
+        });
+
         return this._navigationController;
     }
 
