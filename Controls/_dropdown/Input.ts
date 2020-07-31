@@ -14,6 +14,9 @@ import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
+import HistoryController from 'Controls/_dropdown/HistoryController';
+import {RecordSet} from 'Types/collection';
+import {Model} from 'Types/entity';
 
 interface IInputOptions extends IBaseDropdownOptions {
    fontColorStyle?: string;
@@ -258,31 +261,38 @@ export default class Input extends BaseDropdown {
                 receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
       this._prepareDisplayState = this._prepareDisplayState.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
+      this._historyController = new HistoryController(this._getHistoryControllerOptions(options));
       this._controller = new Controller(this._getControllerOptions(options));
 
-      return loadItems(this._controller, receivedState, options.source);
+      return loadItems(this._controller, this._historyController, receivedState, options.source);
    }
 
    _beforeUpdate(options: IInputOptions): void {
+      this._historyController.update(this._getHistoryControllerOptions(options));
       this._controller.update(this._getControllerOptions(options));
    }
 
    _getControllerOptions(options: IInputOptions): object {
-      const controllerOptions = getDropdownControllerOptions(options);
-      return { ...controllerOptions, ...{
-            dataLoadCallback: this._dataLoadCallback,
-            selectorOpener: this,
-            selectedKeys: options.selectedKeys || [],
-            popupClassName: options.popupClassName || (options.showHeader || options.headerTemplate ?
-                'controls-DropdownList__margin-head' : options.multiSelect ?
-                    'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') +
-                ' theme_' + options.theme,
-            caption: options.caption || this._text ,
-            allowPin: false,
-            selectedItemsChangedCallback: this._prepareDisplayState.bind(this),
-            openerControl: this
-         }
+      const inputConfig = {
+         filter: this._historyController.getPreparedFilter(),
+         historyId: options.historyId,
+         keyProperty: this._historyController.hasHistory(options) ? 'copyOriginalId' : options.keyProperty,
+         dataLoadCallback: this._dataLoadCallback,
+         selectorOpener: this,
+         selectedKeys: options.selectedKeys || [],
+         popupClassName: options.popupClassName || (options.showHeader || options.headerTemplate ?
+             'controls-DropdownList__margin-head' : options.multiSelect ?
+                 'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') +
+             ' theme_' + options.theme,
+         caption: options.caption || this._text ,
+         allowPin: false,
+         selectedItemsChangedCallback: this._prepareDisplayState.bind(this),
       };
+      const controllerOptions = getDropdownControllerOptions(options, inputConfig);
+      return { ...controllerOptions, ...{
+         source: this._historyController.getPreparedSource(),
+         openerControl: this
+      } };
    }
 
    _getMenuPopupConfig(): IStickyPopupOptions {
@@ -368,12 +378,13 @@ export default class Input extends BaseDropdown {
    }
 
    protected _itemClick(data): void {
-      const item = this._controller.getPreparedItem(data);
+      const item = this._historyController.getPreparedItem(data);
       const res = this._selectedItemsChangedHandler([item]);
 
       // dropDown must close by default, but user can cancel closing, if returns false from event
       if (res !== false) {
-         this._controller.handleSelectedItems(item);
+         this._historyController.updateHistory(item);
+         this._controller.handleSelectedItems();
       }
    }
 
@@ -382,9 +393,13 @@ export default class Input extends BaseDropdown {
       this._controller.handleSelectedItems(data);
    }
 
-   protected _selectorResult(data): void {
-      this._controller.handleSelectorResult(data);
-      this._selectedItemsChangedHandler(data);
+   protected _selectorResult(selectedItems): void {
+      const hasHistory = this._historyController.hasHistory(this._options);
+      this._controller.handleSelectorResult(selectedItems, hasHistory);
+      if (hasHistory) {
+         this._historyController.updateHistory(factory(selectedItems).toArray());
+      }
+      this._selectedItemsChangedHandler(selectedItems);
    }
 
    protected _selectorTemplateResult(event, selectedItems): void {
