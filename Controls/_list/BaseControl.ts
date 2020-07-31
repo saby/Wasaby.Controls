@@ -1306,6 +1306,8 @@ const _private = {
                     result = _private._getSelectionController(self).clearSelection();
                 } else if (action === IObservable.ACTION_ADD) {
                     result = _private._getSelectionController(self).handleAddItems(newItems);
+                } else if (action === IObservable.ACTION_RESET || action === IObservable.ACTION_REPLACE) {
+                    result = _private._getSelectionController(self).handleResetItems();
                 }
 
                 _private.handleSelectionControllerResult(self, result);

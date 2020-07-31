@@ -179,17 +179,6 @@ export class Controller {
    }
 
    /**
-    * Обработать добавление новых элементов в список
-    * @param addedItems Новые элементы списка
-    * @return {ISelectionControllerResult}
-    */
-   handleAddItems(addedItems: Array<CollectionItem<Model>>): ISelectionControllerResult {
-      // TODO для улучшения производительности обрабатывать только изменившиеся элементы
-      this._updateModel(this._selection);
-      return this._getResult(this._selection, this._selection);
-   }
-
-   /**
     * Обработать удаление элементов из списка
     * @param removedItems Удаленные элементы из списка
     * @return {ISelectionControllerResult}
@@ -198,6 +187,26 @@ export class Controller {
       const oldSelection = clone(this._selection);
       this._remove(this._getItemsKeys(removedItems));
       return this._getResult(oldSelection, this._selection);
+   }
+
+   /**
+    * Обработать сброс элементов в список
+    * @return {ISelectionControllerResult}
+    */
+   handleResetItems(): ISelectionControllerResult {
+      this._updateModel(this._selection);
+      return this._getResult(this._selection, this._selection);
+   }
+
+   /**
+    * Обработать добавление новых элементов в список
+    * @param addedItems Новые элементы списка
+    * @return {ISelectionControllerResult}
+    */
+   handleAddItems(addedItems: Array<CollectionItem<Model>>): ISelectionControllerResult {
+      const records = addedItems.map((item) => item.getContents());
+      this._updateModel(this._selection, false, records);
+      return this._getResult(this._selection, this._selection);
    }
 
    private _clearSelection(): void {
@@ -288,8 +297,8 @@ export class Controller {
       });
    }
 
-   private _updateModel(selection: ISelection, silent: boolean = false): void {
-      const selectionForModel = this._strategy.getSelectionForModel(selection, this._limit);
+   private _updateModel(selection: ISelection, silent: boolean = false, items?: Model[]): void {
+      const selectionForModel = this._strategy.getSelectionForModel(selection, this._limit, items);
       // TODO думаю лучше будет занотифаить об изменении один раз после всех вызовов (сейчас нотифай в каждом)
       this._model.setSelectedItems(selectionForModel.get(true), true, silent);
       this._model.setSelectedItems(selectionForModel.get(false), false, silent);
