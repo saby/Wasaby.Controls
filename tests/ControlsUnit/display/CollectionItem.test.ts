@@ -469,7 +469,7 @@ describe('Controls/_display/CollectionItem', () => {
             'controls-ListView__item_highlightOnHover_default_theme_default',
             'controls-ListView__item_default',
             'controls-ListView__item_showActions',
-            'js-controls-Swipe__measurementContainer'
+            'js-controls-ItemActions__swipeMeasurementContainer'
         ];
         const editingClasses = [
             'controls-ListView__item_editing'
