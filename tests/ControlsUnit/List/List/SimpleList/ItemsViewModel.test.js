@@ -730,24 +730,5 @@ define([
          assert.isTrue(isUpdated);
 
      });
-
-      it('should set changesType=loadingPercentChanged when loadingPercentChanged was changed', () => {
-         const items = new collection.RecordSet({
-            rawData: [
-               {id: 0, docviewLoadingPercent: 20}
-            ],
-            idProperty: 'id'
-         });
-         const cfg = {
-            keyProperty: 'id',
-            items
-         };
-         const model = new list.ItemsViewModel(cfg);
-         model._nextModelVersion = (notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) => {
-            assert.equal(changesType, 'loadingPercentChanged');
-         };
-
-         items.at(0).set('docviewLoadingPercent', 40);
-      });
    })
 });

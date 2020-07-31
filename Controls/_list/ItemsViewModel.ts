@@ -67,7 +67,8 @@ var _private = {
     },
 
     /**
-     * Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется.
+     * TODO https://online.sbis.ru/opendoc.html?guid=b8b8bd83-acd7-44eb-a915-f664b350363b
+     *  Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
      */
     isLoadingPercentsChanged(newItems: Array<CollectionItem<Model>>): boolean {
         return newItems &&
@@ -428,7 +429,8 @@ var ItemsViewModel = BaseViewModel.extend({
             collectionChangeResult === 'updatePrefix' ? false : (action !== collection.IObservable.ACTION_RESET &&
                                                                  action !== collection.IObservable.ACTION_MOVE);
         let changesType = 'collectionChanged';
-        // Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
+        // TODO https://online.sbis.ru/opendoc.html?guid=b8b8bd83-acd7-44eb-a915-f664b350363b
+        //  Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
         if (action === collection.IObservable.ACTION_CHANGE && _private.isLoadingPercentsChanged(newItems)) {
             changesType = 'loadingPercentChanged';
         }
