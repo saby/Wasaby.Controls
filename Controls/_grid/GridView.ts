@@ -54,7 +54,7 @@ var
             if (stickyCellsCount === 1) {
                 columnsWidths = ['0px'].concat(initialWidths);
             } else if (stickyCellsCount === 2) {
-                columnsWidths = ['0px', initialWidths[0]].concat(['0px']).concat(initialWidths.slice(1))
+                columnsWidths = ['0px', initialWidths[0], '0px'].concat(initialWidths.slice(1))
             } else {
                 columnsWidths = initialWidths;
             }
