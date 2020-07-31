@@ -11,7 +11,6 @@ import {RegisterClass} from 'Controls/event';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
-import {PrefetchProxy} from 'Types/source';
 import {IControllerOptions, IControlerState} from 'Controls/_dataSource/Controller';
 
 type Key = string|number|null;
@@ -299,7 +298,7 @@ export default class Browser extends Control {
 
     static contextTypes(): object {
         return {
-            dataOptions: DataOptions
+            dataOptions: ContextOptions
         };
     }
 

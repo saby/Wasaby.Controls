@@ -6,8 +6,6 @@ import {RecordSet} from 'Types/collection';
 import {PrefetchProxy, QueryWhereExpression} from 'Types/source';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {IControllerOptions, IControlerState} from 'Controls/_dataSource/Controller';
-
-import {default as DataController} from 'Controls/_list/Data/ControllerClass';
 import {ContextOptions} from 'Controls/context';
 import {ISourceOptions, IHierarchyOptions, IFilterOptions, INavigationOptions, ISortingOptions} from 'Controls/interface';
 
