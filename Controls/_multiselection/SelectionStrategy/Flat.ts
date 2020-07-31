@@ -96,7 +96,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
-   getSelectionForModel(selection: ISelection, limit?: number): Map<boolean|null, Model[]> {
+   getSelectionForModel(selection: ISelection, limit?: number, items?: Model[]): Map<boolean|null, Model[]> {
       let selectedItemsCount = 0;
       const selectedItems = new Map();
       // IE не поддерживает инициализацию конструктором
@@ -109,7 +109,9 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       }
 
       const isAllSelected: boolean = this._isAllSelected(selection);
-      this._items.forEach((item) => {
+
+      const processingItems = items ? items : this._items;
+      processingItems.forEach((item) => {
          const itemId: TKey = item.getKey();
          const selected = (!limit || selectedItemsCount < limit)
             && (selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId));
