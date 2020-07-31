@@ -34,7 +34,7 @@
    </div>
    <div if="{{ _headerType === _HEADER_TYPES.input }}"
         name="inputs"
-        class="controls-PeriodDialog__header-period"
+        class="controls-PeriodDialog__header-period controls-PeriodDialog__header-period-inputs"
         on:focusout="_inputFocusOutHandler()">
        <Controls.input:DateBase
           name="startValueField"
