@@ -99,6 +99,77 @@ define(
             Registrator._beforeUnmount();
             Registrator.destroy();
          });
+
+         it('should call unregisterPending1', (done) => {
+            let sandbox = sinon.sandbox.create();
+            let resolver;
+            const Registrator = new PendingRegistrator();
+            Registrator._beforeMount();
+            const promise = new Promise((resolve) => {
+               resolver = resolve;
+            });
+
+            let stub = sandbox.stub(Registrator._pendingController, 'unregisterPending');
+            Registrator._registerPendingHandler(null, promise, {});
+            promise.then(() => {
+               sinon.assert.calledOnce(stub);
+               done();
+               Registrator._beforeUnmount();
+               Registrator.destroy();
+               sandbox.restore();
+            }).catch(done);
+            resolver();
+         });
+
+         it('should call unregisterPending2', (done) => {
+            let sandbox = sinon.sandbox.create();
+            let rejector;
+            const Registrator = new PendingRegistrator();
+            Registrator._beforeMount();
+            const promise = new Promise((resolve, reject) => {
+               rejector = reject;
+            });
+
+            let stub = sandbox.stub(Registrator._pendingController, 'unregisterPending');
+            Registrator._registerPendingHandler(null, promise, {});
+            promise.then(done)
+               .catch(() => {
+                  sinon.assert.calledOnce(stub);
+                  done();
+                  Registrator._beforeUnmount();
+                  Registrator.destroy();
+                  sandbox.restore();
+               });
+            rejector();
+         });
+         [{
+            pendingCounter: 0
+         }, {
+            pendingCounter: 10
+         }].forEach((test, testNumber) => {
+            it('should use correct _pendingsCounter ' + testNumber, (done) => {
+               let sandbox = sinon.sandbox.create();
+               let resolver;
+               const Registrator = new PendingRegistrator();
+               Registrator._beforeMount();
+               const promise = new Promise((resolve) => {
+                  resolver = resolve;
+               });
+
+               Registrator._pendingController._pendingsCounter = test.pendingCounter;
+
+               let stub = sandbox.stub(Registrator._pendingController, 'unregisterPending');
+               Registrator._registerPendingHandler(null, promise, {});
+               promise.then(() => {
+                  sinon.assert.calledWith(stub, null, test.pendingCounter);
+                  done();
+                  Registrator._beforeUnmount();
+                  Registrator.destroy();
+                  sandbox.restore();
+               }).catch(done);
+               resolver();
+            });
+         });
       });
    }
 );

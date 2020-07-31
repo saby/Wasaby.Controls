@@ -68,7 +68,7 @@ var _private = {
             self._headerRangeModel.endValue = end;
             _private.updateYearsRangeModel(self, start, end);
         },
-        updateYearsRangeModel: function(self, start: Date, end: Date): void {
+        updateYearsRangeModel: function (self, start: Date, end: Date): void {
             if (dateUtils.isStartOfYear(start) && dateUtils.isEndOfYear(end)) {
                 self._yearRangeModel.startValue = start;
                 self._yearRangeModel.endValue = end;
@@ -84,7 +84,7 @@ var _private = {
                 {bubbling: true}
             );
         },
-        getViewState: function(options, monthStateEnabled, yearStateEnabled) {
+        getViewState: function (options, monthStateEnabled, yearStateEnabled) {
             if (monthStateEnabled) {
                 if (yearStateEnabled) {
                     if (((dateUtils.isValidDate(options.startValue) && dateUtils.isValidDate(options.endValue)) &&
@@ -99,7 +99,7 @@ var _private = {
             return STATES.year;
         },
 
-        toggleState: function(self, date?: Date): void {
+        toggleState: function (self, date?: Date): void {
             self._state = self._state === STATES.year ? STATES.month : STATES.year;
 
             const displayedDate = date || self._options.startValue || self._options.endValue || new Date();
@@ -107,11 +107,11 @@ var _private = {
                 dateUtils.getStartOfYear(displayedDate) : dateUtils.getStartOfMonth(displayedDate);
         },
 
-        isMaskWithDays: function(mask: string) {
+        isMaskWithDays: function (mask: string) {
             return mask.indexOf('D') !== -1;
         },
 
-        isInputsValid: function(self): Promise<boolean> {
+        isInputsValid: function (self): Promise<boolean> {
             return self._children.formController.submit().then((results: object) => {
                 return !Object.keys(results).find((key) => Array.isArray(results[key]));
             });
@@ -124,7 +124,8 @@ var _private = {
 
         updateStartValueValidators(self, validators?: Function[]): void {
             const startValueValidators: Function[] = validators || self._options.startValueValidators;
-            self._startValueValidators = getRangeValueValidators(startValueValidators, self._rangeModel, self._rangeModel.startValue);;
+            self._startValueValidators = getRangeValueValidators(startValueValidators, self._rangeModel, self._rangeModel.startValue);
+            ;
         },
 
         updateEndValueValidators(self, validators?: Function[]): void {
@@ -188,19 +189,21 @@ var Component = BaseControl.extend([EventProxyMixin], {
                 options.startValue :
                 new Date()));
 
-        this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
+        this._rangeModel = new DateRangeModel({dateConstructor: options.dateConstructor});
         this._rangeModel.update(options);
 
         this._startValueValidators = [];
         this._endValueValidators = [];
         _private.updateValidators(this, options);
-        this._rangeModel.subscribe('rangeChanged', () => { _private.updateValidators(this); });
+        this._rangeModel.subscribe('rangeChanged', () => {
+            _private.updateValidators(this);
+        });
 
         this._prepareTheme();
-        this._headerRangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
+        this._headerRangeModel = new DateRangeModel({dateConstructor: options.dateConstructor});
         this._headerRangeModel.update(options);
 
-        this._yearRangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
+        this._yearRangeModel = new DateRangeModel({dateConstructor: options.dateConstructor});
         _private.updateYearsRangeModel(this, options.startValue, options.endValue);
 
         this._monthStateEnabled = periodDialogUtils.isMonthStateEnabled(options);
@@ -251,7 +254,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._headerType = options.headerType;
     },
 
-    _afterUpdate: function(): void {
+    _afterUpdate: function (): void {
         if (this._activateInputField) {
             this.activate();
             this._activateInputField = false;
@@ -267,7 +270,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._headerTheme = ManagerController.getPopupHeaderTheme();
     },
 
-    _toggleStateClick: function(): void {
+    _toggleStateClick: function (): void {
         _private.toggleState(this);
         this._updateHomeButtonVisible();
     },
@@ -286,11 +289,11 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
     },
 
-    _currentDayIntersectHandler: function(event: SyntheticEvent, entry: IntersectionObserverSyntheticEntry): void {
+    _currentDayIntersectHandler: function (event: SyntheticEvent, entry: IntersectionObserverSyntheticEntry): void {
         this._homeButtonVisible = !entry.nativeEntry.isIntersecting;
     },
 
-    _unregisterCurrentDayIntersectHandler: function() {
+    _unregisterCurrentDayIntersectHandler: function () {
         // Если в IntersectionObserverContainer, который сделит за сегодняшним днём, происходит событие unregister -
         // значит текущий день точно не отображается. Делаем "Домик" видимым.
         this._homeButtonVisible = true;
@@ -309,7 +312,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
     },
 
-    _onHeaderLinkRangeChanged: function(e, startValue, endValue) {
+    _onHeaderLinkRangeChanged: function (e, startValue, endValue) {
         _private.rangeChanged(this, startValue, endValue);
     },
 
@@ -339,7 +342,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
         this._rangeModel.endValue = endYear;
     },
 
-    _onYearsSelectionHoveredValueChanged: function(e, value) {
+    _onYearsSelectionHoveredValueChanged: function (e, value) {
         // We update the displayed date only during the selection process.
         if (value) {
             this._displayedDate = value;
@@ -354,7 +357,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
         _private.sendResult(this, start, dateUtils.getEndOfYear(end));
     },
 
-    _onYearsItemClick: function(e: SyntheticEvent, item: Date): void {
+    _onYearsItemClick: function (e: SyntheticEvent, item: Date): void {
         this._displayedDate = item;
     },
 
@@ -363,14 +366,14 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _monthsRangeSelectionStarted: function (e, start, end) {
-       this._yearsRangeSelectionProcessing = false;
+        this._yearsRangeSelectionProcessing = false;
     },
 
     _monthsSelectionChanged: function (e, start, end) {
         _private.selectionChanged(this, start, end ? dateUtils.getEndOfMonth(end) : null);
     },
 
-    _monthsRangeSelectionEnded: function(e: SyntheticEvent<Event>, start: Date, end: Date): void {
+    _monthsRangeSelectionEnded: function (e: SyntheticEvent<Event>, start: Date, end: Date): void {
         const endOfMonth: Date = dateUtils.getEndOfMonth(end);
         _private.rangeChanged(this, start, endOfMonth);
         _private.sendResult(this, start, endOfMonth);
@@ -412,33 +415,19 @@ var Component = BaseControl.extend([EventProxyMixin], {
     _closeClick: function () {
         this._notify('close');
     },
-    _getChildContext: function() {
+    _getChildContext: function () {
         return {
             ScrollData: new ScrollData({pagingVisible: false})
         };
     },
 
-    // TODO Переделать по готовности задачи по доработке InputRender
-    //  https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
-    _startValueFieldKeyUpHandler: function(event) {
-        if (!this._children.endValueField) {
-            return;
-        }
-        // Move the focus only if the digit was pressed. Without this check, we see a bug in the following scenario.
-        // The cursor is in a different input field. Click tab. By pressing the focus goes to this input field.
-        // Release tab. Switches the focus in the field at the end of the period.
-        const key = parseInt(event.nativeEvent.key, 10);
-        if (!isNaN(key)) {
-             const startField = this._children.startValueField._container.querySelector('input');
-             const endField = this._children.endValueField._container.querySelector('input');
-             if (startField.selectionStart === this._mask.length) {
-                this._children.endValueField.activate();
-                endField.setSelectionRange(0, 0);
-             }
+    _inputControlHandler: function (event, value, displayValue, selection) {
+        if (selection.end === displayValue.length) {
+            this._children.endValueField.activate({enableScreenKeyboard: true});
         }
     },
 
-    _inputFocusOutHandler: function(event): Promise<boolean> {
+    _inputFocusOutHandler: function (event): Promise<boolean> {
         if (this._headerType === this._options.headerType) {
             return;
         }
