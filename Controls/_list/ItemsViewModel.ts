@@ -64,6 +64,18 @@ var _private = {
             filter.push(cfg.itemsFilterMethod);
         }
         return filter;
+    },
+
+    /**
+     * TODO https://online.sbis.ru/opendoc.html?guid=b8b8bd83-acd7-44eb-a915-f664b350363b
+     *  Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
+     */
+    isLoadingPercentsChanged(newItems: Array<CollectionItem<Model>>): boolean {
+        return newItems &&
+            newItems.length &&
+            newItems[0].getContents() &&
+            newItems[0].getContents().getChanged &&
+            newItems[0].getContents().getChanged().indexOf('docviewLoadingPercent') !== -1;
     }
 };
 var ItemsViewModel = BaseViewModel.extend({
@@ -416,8 +428,14 @@ var ItemsViewModel = BaseViewModel.extend({
         const shouldNotUpdatePrefix =
             collectionChangeResult === 'updatePrefix' ? false : (action !== collection.IObservable.ACTION_RESET &&
                                                                  action !== collection.IObservable.ACTION_MOVE);
+        let changesType = 'collectionChanged';
+        // TODO https://online.sbis.ru/opendoc.html?guid=b8b8bd83-acd7-44eb-a915-f664b350363b
+        //  Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
+        if (action === collection.IObservable.ACTION_CHANGE && _private.isLoadingPercentsChanged(newItems)) {
+            changesType = 'loadingPercentChanged';
+        }
 
-        this._nextModelVersion(shouldNotUpdatePrefix, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+        this._nextModelVersion(shouldNotUpdatePrefix, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
         this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
     _onBeginCollectionChange: function() {
