@@ -23,6 +23,15 @@ define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/dis
          assert.isTrue(Util.shouldAddStickyLadderCell([{ title: 'photo', stickyProperty: 'photo' }]));
          assert.isFalse(Util.shouldAddStickyLadderCell([{ title: 'photo', stickyProperty: 'photo' }], undefined, {}));
       });
+      it('stickyLadderCellsCount', function() {
+         assert.strictEqual(Util.stickyLadderCellsCount(), 0);
+         assert.strictEqual(Util.stickyLadderCellsCount([]), 0);
+         assert.strictEqual(Util.stickyLadderCellsCount([], { index: 1, property: 'sticky' }), 1);
+         assert.strictEqual(Util.stickyLadderCellsCount([{ title: 'photo' }], { index: 1, property: 'sticky' }), 1);
+         assert.strictEqual(Util.stickyLadderCellsCount([{ title: 'photo', stickyProperty: 'photo' }]), 1);
+         assert.strictEqual(Util.stickyLadderCellsCount([{ title: 'photo', stickyProperty: ['date', 'time'] }]), 2);
+         assert.strictEqual(Util.stickyLadderCellsCount([{ title: 'photo', stickyProperty: 'photo' }], undefined, {}), 0);
+      });
       it('prepareLadder', function() {
          const date1 = new Date(2017, 00, 01);
          const date2 = new Date(2017, 00, 03);
