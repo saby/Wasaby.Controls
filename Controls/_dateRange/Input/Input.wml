@@ -17,7 +17,7 @@
       autocompleteType="start"
       valueValidators="{{_startValueValidators}}"
       validateByFocusOut="{{_options.validateByFocusOut}}"
-      on:input="_inputHandler()"
+      on:inputControl="_inputControlHandler()"
       on:inputCompleted="_notifyInputCompleted()"
       on:tagClick="_proxyEvent('startTagClick')"
       on:tagHover="_proxyEvent('startTagHover')">
