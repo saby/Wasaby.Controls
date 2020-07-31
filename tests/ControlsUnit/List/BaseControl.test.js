@@ -4534,7 +4534,8 @@ define([
                      id: 2,
                      showType: 0
                   }]
-               })
+               }),
+               isSwiped: () => false
             };
             instance.saveOptions(cfg);
             instance._scrollController = {
@@ -4739,6 +4740,7 @@ define([
                      showType: 0
                   }]
                }),
+               isSwiped: () => false,
                setMarked: () => null
             };
             instance._itemActionsController.setActiveItem(breadcrumbItem);
