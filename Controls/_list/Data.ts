@@ -135,7 +135,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
    _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet> {
       const isChanged = this._sourceController.update(newOptions);
-      if (isChanged) {
+      if (this._options.source !== newOptions.source) {
          this._loading = true;
          return this._sourceController.load().then((items) => {
 
@@ -154,6 +154,12 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
             this._loading = false;
             return items;
          });
+      } else if (isChanged) {
+         const controllerState = this._sourceController.getState();
+
+         // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+         this._filter = controllerState.filter;
+         this._updateContext(controllerState);
       }
    }
 
