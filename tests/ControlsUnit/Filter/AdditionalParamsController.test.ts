@@ -1,5 +1,6 @@
 import {default as Controller} from 'Controls/_filterPopup/Panel/AdditionalParams/Controllers/AdditionalItems';
 import {assert} from 'chai';
+import {object} from 'Types/util';
 
 let itemsController = null;
 const defaultFilterItems = [{
@@ -126,6 +127,14 @@ function getItemsWithExpander(): any[] {
     return defaultFilterItems.concat(moreItems);
 }
 
+function getItemsWithOldKey(): unknown[] {
+    const items = object.clone(defaultFilterItems);
+    return items.map((item) => {
+        item.id = item.name;
+        delete item.name;
+    });
+}
+
 describe('AdditionalItemsController', () => {
     beforeEach(() => {
         itemsController = new Controller({
@@ -182,6 +191,24 @@ describe('AdditionalItemsController', () => {
             const newSource = itemsController.handleUpdateItem(defaultFilterItems[0], 'textValue', 'newText');
             assert.isTrue(newSource[0].visibility);
             assert.isTrue(newSource[0].textValue === 'newText');
+        });
+        it('old panel items', () => {
+            const controllerWithOldKey = new Controller({
+                keyProperty: 'id',
+                source: getItemsWithOldKey()
+            });
+            const result = controllerWithOldKey.getResult();
+            const correctColumns = {
+                payment: 'left',
+                payment2: 'left',
+                NDS: 'left',
+                payment3: 'right',
+                payment4: 'right'
+            };
+            const groupsCorrectCalculated = result.visibleItems.every((item) => {
+                return correctColumns[item.id] === item.column;
+            });
+            assert.isTrue(groupsCorrectCalculated);
         });
     });
 });
