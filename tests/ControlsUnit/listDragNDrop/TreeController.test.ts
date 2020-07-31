@@ -89,6 +89,19 @@ describe('Controls/_listDragNDrop/TreeController', () => {
          assert.equal(newPosition.position, 'after');
       });
 
+      it('move to another list', () => {
+         const nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
+         const anotherController = new DndTreeController(model);
+
+         const position = anotherController.calculateDragPosition(nodeItemData, 'before');
+         assert.deepEqual(position, {
+            index: nodeItemData.index,
+            position: 'on',
+            item: nodeItemData.item,
+            data: nodeItemData
+         });
+      });
+
       describe('hover on node', () => {
          it('not pass position', () => {
             const nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
@@ -143,7 +156,6 @@ describe('Controls/_listDragNDrop/TreeController', () => {
             });
          });
       });
-
    });
 
    describe('calculateDragPositionRelativeNode', () => {

@@ -47,8 +47,11 @@ define(
          };
 
          it('Opener: getConfig', () => {
-            let config = popupMod.Stack.prototype._getStackConfig();
+            const baseConfig = {options: false};
+            let config = popupMod.Stack.prototype._getStackConfig(baseConfig);
             assert.equal(config.isDefaultOpener, true);
+            assert.equal(config.options, false);
+            assert.isTrue(baseConfig !== config);
 
             config = popupMod.Stack.prototype._getStackConfig({ isDefaultOpener: false });
             assert.equal(config.isDefaultOpener, false);
@@ -57,12 +60,13 @@ define(
          it('stack with config sizes', () => {
             var position = StackStrategy.getPosition({
                top: 0,
-               right: 0
+               right: 0,
+               height: 20
             }, item);
             assert.isTrue(position.maxWidth === item.popupOptions.maxWidth);
             assert.isTrue(position.top === 0);
             assert.isTrue(position.right === 0);
-            assert.isTrue(position.bottom === 0);
+            assert.isTrue(position.height === 20);
             assert.isTrue(position.position === 'fixed');
          });
 
@@ -265,7 +269,6 @@ define(
             assert.equal(itemConfig.position.top, 0);
             assert.equal(itemConfig.position.right, 0);
             assert.equal(itemConfig.position.width, 800);
-            assert.equal(itemConfig.position.bottom, 0);
             assert.equal(itemConfig.popupOptions.content, popupTemplate.StackContent);
 
             let itemCount = 0;
@@ -487,12 +490,13 @@ define(
          it('stack from target container', () => {
             var position = StackStrategy.getPosition({
                top: 100,
-               right: 100
+               right: 100,
+               height: 20
             }, item);
             assert.equal(position.maxWidth, item.popupOptions.maxWidth);
             assert.isTrue(position.top === 100);
             assert.isTrue(position.right === 100);
-            assert.isTrue(position.bottom === 0);
+            assert.isTrue(position.height === 20);
          });
          it('stack without config sizes', () => {
             StackStrategy.getMaxPanelWidth = () => 1000;
@@ -502,12 +506,13 @@ define(
             };
             var position = StackStrategy.getPosition({
                top: 0,
-               right: 0
+               right: 0,
+               height: 20
             }, item);
             assert.equal(position.width, undefined);
             assert.isTrue(position.top === 0);
             assert.isTrue(position.right === 0);
-            assert.isTrue(position.bottom === 0);
+            assert.isTrue(position.height === 20);
 
             item.containerWidth = 1200;
             position = StackStrategy.getPosition({
@@ -545,7 +550,6 @@ define(
             }, item);
             assert.isTrue(position.top === 0);
             assert.isTrue(position.right === 0);
-            assert.isTrue(position.bottom === 0);
          });
 
          it('stack reset offset', () => {
@@ -562,7 +566,6 @@ define(
             assert.equal(position.width, item.popupOptions.minWidth);
             assert.isTrue(position.top === 0);
             assert.isTrue(position.right === 0);
-            assert.isTrue(position.bottom === 0);
          });
 
          it('stack width', () => {
