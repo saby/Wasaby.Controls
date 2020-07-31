@@ -137,9 +137,12 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       const isChanged = this._sourceController.update(newOptions);
       if (isChanged) {
          this._loading = true;
-         return this._sourceController.load().then((result) => {
+         return this._sourceController.load().then((items) => {
+
+            // для того чтобы мог посчитаться новый prefetch Source внутри
+            const newItems = this._sourceController.setItems(items);
             if (!this._items) {
-               this._items = this._sourceController.setItems(result);
+               this._items = newItems;
             }
 
             const controllerState = this._sourceController.getState();
@@ -147,8 +150,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
             // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
             this._filter = controllerState.filter;
             this._updateContext(controllerState);
+
             this._loading = false;
-            return result;
+            return items;
          });
       }
    }

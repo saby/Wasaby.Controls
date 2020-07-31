@@ -75,9 +75,12 @@ export default class Browser extends Control {
         const isChanged = this._sourceController.update(newOptions);
         if (isChanged) {
             this._loading = true;
-            return this._sourceController.load().then((result) => {
+            return this._sourceController.load().then((items) => {
+
+                // для того чтобы мог посчитаться новый prefetch Source внутри
+                const newItems = this._sourceController.setItems(items);
                 if (!this._items) {
-                    this._items = this._sourceController.setItems(result);
+                    this._items = newItems;
                 }
 
                 const controllerState = this._sourceController.getState();
@@ -87,7 +90,7 @@ export default class Browser extends Control {
                 this._updateContext(controllerState);
 
                 this._loading = false;
-                return result;
+                return items;
             });
         }
         this._operationsController.update(newOptions);
