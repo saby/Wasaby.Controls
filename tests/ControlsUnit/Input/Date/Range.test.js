@@ -156,33 +156,26 @@ define([
          });
       });
 
-      describe('_inputHandler', function() {
-         [{
-            data: '0',
-            checkHandle: true
-         }, {
-            data: '9',
-            checkHandle: true
-         }, {
-            data: 'x',
-            checkHandle: false
-         }].forEach(function(test) {
-            it('should generate events and close opener', function() {
-               const
-                  sandbox = sinon.sandbox.create(),
-                  component = calendarTestUtils.createComponent(dateRange.Input, options);
-
-               sandbox.stub(component, '_focusChanger');
-
-               component._inputHandler({ nativeEvent: { data: test.data } });
-
-               if (test.checkHandle) {
-                  sinon.assert.called(component._focusChanger);
-               } else {
-                  sinon.assert.notCalled(component._focusChanger);
-               }
-               sandbox.restore();
+      describe('_inputControlHandler', function() {
+         let sandbox, component;
+         beforeEach(() => {
+            sandbox = sinon.createSandbox();
+            component = calendarTestUtils.createComponent(dateRange.Input, options);
+            sandbox.stub(component._children.endValueField, 'activate');
+         });
+         it('Move to the next field', function() {
+            component._inputControlHandler({}, '', '12.12.12', {
+               start: 8,
+               end: 8
             });
+            sinon.assert.called(component._children.endValueField.activate);
+         });
+         it('Stayed the current field', function() {
+            component._inputControlHandler({}, '', '12.12.12', {
+               start: 0,
+               end: 0
+            });
+            sinon.assert.notCalled(component._children.endValueField.activate);
          });
       });
 
