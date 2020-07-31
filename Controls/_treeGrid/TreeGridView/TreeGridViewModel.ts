@@ -171,6 +171,17 @@ var
 
             current.isLastColumn = isLastColumn;
 
+            if (current.isLastRow) {
+                //Проверяем, что под послдней записью нет nodeFooter'a
+                const itemParent = current.dispItem.getParent && current.dispItem.getParent();
+                const itemParentRecord = itemParent && itemParent.getContents();
+                const parentKey = itemParentRecord && itemParentRecord.getKey && itemParentRecord.getKey();
+                current.isLastRow = current.isLastRow &&
+                    (!current.nodeFooters || !current.nodeFooters.some((element) => {
+                        return element.key === parentKey;
+                    }));
+            }
+
             current.getCurrentColumn = function (backgroundColorStyle: string) {
                 let
                     currentColumn = superGetCurrentColumn(backgroundColorStyle);

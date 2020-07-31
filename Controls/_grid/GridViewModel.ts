@@ -620,10 +620,6 @@ var
 
             itemData._staticRowClassses = `controls-Grid__row controls-Grid__row_${style}_theme-${theme} `;
 
-            if (itemData.isLastItem) {
-                itemData._staticRowClassses += 'controls-Grid__row_last ';
-            }
-
             itemData.getRowClasses = (tmplParams: {
                 highlightOnHover?: boolean;
                 clickable?: boolean;
@@ -635,8 +631,12 @@ var
                     classes += `controls-Grid__row_highlightOnHover_${style}_theme-${theme} `;
                 }
 
+                if (itemData.isLastRow) {
+                    itemData._staticRowClassses += 'controls-Grid__row_last ';
+                }
+
                 return `${itemData._staticRowClassses} ${classes.trim()}`;
-            }
+            };
         }
     },
 
@@ -1512,7 +1512,7 @@ var
             current.columnSeparatorSize = this._options.columnSeparatorSize;
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${this._options.theme}` : '';
             current.getSeparatorForColumn = _private.getSeparatorForColumn;
-            current.isLastItem = (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
+            current.isLastRow = (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
                                  (this.getCount() - 1 === current.index);
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
