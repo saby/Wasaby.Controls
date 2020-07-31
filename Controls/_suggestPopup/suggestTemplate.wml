@@ -1,5 +1,5 @@
 <Controls._suggestPopup.List>
-   <Controls.list:View>
+   <Controls.list:View keyProperty="{{_options.keyProperty}}">
       <ws:itemTemplate>
          <ws:partial template="Controls/list:ItemTemplate" displayProperty="{{displayProperty}}"/>
       </ws:itemTemplate>

@@ -13,29 +13,29 @@ describe('Controls/_listDragNDrop/TreeController', () => {
 
    const items = new RecordSet({
       rawData: [{
-         'id': 1,
-         'parent': null,
-         'node': true
+         id: 1,
+         parent: null,
+         node: true
       }, {
-         'id': 2,
-         'parent': 1,
-         'node': true
+         id: 2,
+         parent: 1,
+         node: true
       }, {
-         'id': 3,
-         'parent': 1,
-         'node': null
+         id: 3,
+         parent: 1,
+         node: null
       }, {
-         'id': 4,
-         'parent': 2,
-         'node': null
+         id: 4,
+         parent: 2,
+         node: null
       }, {
-         'id': 5,
-         'parent': null,
-         'node': null
+         id: 5,
+         parent: null,
+         node: true
       }, {
-         'id': 6,
-         'parent': null,
-         'node': null
+         id: 6,
+         parent: null,
+         node: null
       }],
       keyProperty: 'id'
    });
@@ -43,7 +43,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
       items,
       keyProperty: 'id',
       parentProperty: 'parent',
-      nodeProperty: 'node',
+      nodeProperty: 'node'
    };
 
    beforeEach(() => {
@@ -55,11 +55,11 @@ describe('Controls/_listDragNDrop/TreeController', () => {
    it('isInsideDragTargetNode', () => {
       const event = {
          target: {
-            getBoundingClientRect() {
+            getBoundingClientRect(): object {
                return {
                   top: 50,
                   height: 35
-               }
+               };
             }
          },
          nativeEvent: {
@@ -67,13 +67,13 @@ describe('Controls/_listDragNDrop/TreeController', () => {
          }
       };
       assert.isFalse(controller.isInsideDragTargetNode({}));
-      assert.isTrue(controller.isInsideDragTargetNode(event));
+      assert.isTrue(controller.isInsideDragTargetNode(event, event.target));
 
       event.nativeEvent.pageY = 30;
-      assert.isFalse(controller.isInsideDragTargetNode(event));
+      assert.isFalse(controller.isInsideDragTargetNode(event, event.target));
 
       event.nativeEvent.pageY = 90;
-      assert.isFalse(controller.isInsideDragTargetNode(event));
+      assert.isFalse(controller.isInsideDragTargetNode(event, event.target));
    });
 
    describe('calculateDragPosition', () => {
@@ -89,6 +89,19 @@ describe('Controls/_listDragNDrop/TreeController', () => {
          assert.equal(newPosition.position, 'after');
       });
 
+      it('move to another list', () => {
+         const nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
+         const anotherController = new DndTreeController(model);
+
+         const position = anotherController.calculateDragPosition(nodeItemData, 'before');
+         assert.deepEqual(position, {
+            index: nodeItemData.index,
+            position: 'on',
+            item: nodeItemData.item,
+            data: nodeItemData
+         });
+      });
+
       describe('hover on node', () => {
          it('not pass position', () => {
             const nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
@@ -99,7 +112,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
                position: 'on',
                item: nodeItemData.item,
                data: nodeItemData
-            })
+            });
          });
 
          it('before expanded node', () => {
@@ -116,7 +129,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
                position: 'before',
                item: nodeItemData.item,
                data: nodeItemData
-            })
+            });
          });
 
          it('was set prevDragPosition', () => {
@@ -140,46 +153,49 @@ describe('Controls/_listDragNDrop/TreeController', () => {
                position: 'before',
                item: targetNodeData.item,
                data: targetNodeData
-            })
+            });
          });
       });
-
    });
 
-   it('calculateDragPositionRelativeNode', () => {
-      const calculateDragPositionSpy = spy(controller, 'calculateDragPosition');
-      const event = {
-         target: {
-            getBoundingClientRect() {
-               return {
-                  top: 50,
-                  height: 35
+   describe('calculateDragPositionRelativeNode', () => {
+      it('before node', () => {
+         const event = {
+            target: {
+               getBoundingClientRect(): object {
+                  return {
+                     top: 50,
+                     height: 35
+                  };
                }
+            },
+            nativeEvent: {
+               pageY: 60
             }
-         },
-         nativeEvent: {
-            pageY: 60
-         }
-      };
+         };
 
-      const targetNodeData = model.getItemDataByItem(model.getItemBySourceKey(1));
-      controller.calculateDragPositionRelativeNode(targetNodeData, event);
+         const targetNodeData = model.getItemDataByItem(model.getItemBySourceKey(1));
+         const position = controller.calculateDragPositionRelativeNode(targetNodeData, event, event.target);
 
-      // undefined - так как startDrag не был вызван
-      assert.isTrue(calculateDragPositionSpy.withArgs(targetNodeData, 'after').calledOnce,
-         'calculateDragPosition не вызвался или вызвался с неверными параметрами');
+         assert.deepEqual(position, {
+            index: targetNodeData.index,
+            position: 'before',
+            item: targetNodeData.item,
+            data: targetNodeData
+         });
+      });
    });
 
    describe('startCountDownForExpandNode', () => {
       let expandNodeCalled = false, nodeItemData;
-      const expandNode = function (itemData) {
+      const expandNode = (itemData) => {
          assert.equal(itemData, nodeItemData);
          expandNodeCalled = true;
       };
 
       beforeEach(() => {
          expandNodeCalled = false;
-         controller._timeoutForExpand = function(itemData, expandNode) {
+         controller._timeoutForExpand = (itemData, expandNode) => {
             expandNode(itemData);
          };
       });

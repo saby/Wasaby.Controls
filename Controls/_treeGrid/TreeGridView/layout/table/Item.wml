@@ -20,7 +20,7 @@
 </ws:template>
 
 <ws:template name="COLUMN_COLSPAN_CONTENT">
-    <div class="controls-Grid__row-cell_colspaned {{ cellClassName || '' }}
+    <div class="controls-Grid__row-cell__content_colspaned {{ cellClassName || '' }}
        {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).top}}
        {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).bottom}}
        {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).right}}">
@@ -53,8 +53,9 @@
               {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}
               {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
               {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
+              {{ colspan ? 'controls-Grid__row-cell_colspaned'}}
               {{ marker !== false ? currentColumn.classList.marked }}
-              controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
+              controls-TreeGrid__row js-controls-ItemActions__measurementContainer"
             style="{{ currentColumn.tableCellStyles }}"
             colspan="{{(colspan === false && !!colspanLength) ? (currentColumn.columnIndex === (itemData.hasMultiSelect ? 1 : 0) ? colspanLength : 1) : itemData.getColspanFor((itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex == 0) ? 'multiSelectColumn' : (colspan || colspanCurrentNode ? 'node'))}}">
             <div class="controls-TreeGridView__row-cell_innerWrapper {{ currentColumn.classList.relativeCellWrapper }} {{itemData.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}">
@@ -143,7 +144,7 @@
               {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}
               {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
               {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-              controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
+              controls-TreeGrid__row js-controls-ItemActions__measurementContainer"
             colspan="1"
             style="width: 0; min-width: 0; max-width: 0; padding: 0px; overflow: visible; z-index: 3;">
             <div class="controls-TreeGridView__row-cell_innerWrapper {{ currentColumn.classList.relativeCellWrapper }}">

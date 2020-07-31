@@ -31,43 +31,6 @@ define(
             ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
          });
 
-         it('Checking default values of options.', function() {
-            assert.deepEqual(inputMod.Number.getDefaultOptions(), {
-               tooltip: '',
-               style: 'info',
-               spellCheck: true,
-               inlineHeight: 'default',
-               placeholder: '',
-               useGrouping: true,
-               textAlign: 'left',
-               autoComplete: 'off',
-               onlyPositive: false,
-               fontColorStyle: 'default',
-               fontSize: 'm',
-               selectOnClick: false,
-               showEmptyDecimals: false,
-               horizontalPadding: 'xs'
-            });
-         });
-         it('Checking types of options.', function() {
-            assert.deepEqual(Object.keys(inputMod.Number.getOptionTypes()).sort(), [
-               'value',
-               'style',
-               'tooltip',
-               'tagStyle',
-               'precision',
-               'textAlign',
-               'spellCheck',
-               'useGrouping',
-               'onlyPositive',
-               'selectOnClick',
-               'inputCallback',
-               'integersLength',
-               'showEmptyDecimals',
-               'horizontalPadding'
-            ].sort());
-         });
-
          it('The model belongs to the "Controls/_input/Number/ViewModel" class.', function() {
             ctrl._beforeMount({
                value: 0

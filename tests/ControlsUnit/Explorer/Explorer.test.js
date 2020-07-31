@@ -1225,7 +1225,6 @@ define([
             });
          });
 
-
          it('step back', () => {
 
             const cfg = {
@@ -1286,7 +1285,7 @@ define([
 
             assert.deepEqual(
                explorer._navigation.sourceConfig.position,
-               ['Title2', 2]
+               ['Title1', 1]
             );
 
 
@@ -1295,7 +1294,7 @@ define([
 
             assert.deepEqual(
                explorer._navigation.sourceConfig.position,
-               ['Title1', 1]
+               null
             );
          });
       });

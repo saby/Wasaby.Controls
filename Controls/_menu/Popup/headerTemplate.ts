@@ -4,7 +4,7 @@ import template = require('wml!Controls/_menu/Popup/headerTemplate');
 class Header extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
 
-    static _theme: string[] = ['Controls/menu'];
+    static _theme: string[] = ['Controls/Classes', 'Controls/menu', 'Controls/popupTemplate'];
 
     static getDefaultOptions(): object {
         return {

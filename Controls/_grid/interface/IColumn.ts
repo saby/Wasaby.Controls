@@ -126,13 +126,15 @@ export interface IColumn {
      * @default undefined
      * @demo Controls-demo/grid/Results/FromMeta/CustomResultsCells/Index
      * @remark
-     * Позволяет установить прикладной шаблон отображения элемента (именно шаблон, а не контрол!). При установке прикладного шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/grid:ResultColumnTemplate}.
+     * Позволяет установить прикладной шаблон отображения ячейки в строке итогов (именно шаблон, а не контрол!). При установке прикладного шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/grid:ResultColumnTemplate}.
      * 
      * Также шаблон {@link Controls/grid:ResultColumnTemplate} поддерживает параметры, с помощью которых можно изменить отображение ячейки.
      * 
      * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать прикладной шаблон. Также в опцию resultTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/grid:ResultColumnTemplate.
      * 
      * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/results/column/ руководстве разработчика}.
+     * 
+     * Для отображения строки итогов необходимо задать значение в опции {@link resultsPosition}.
      * @example
      * <pre class="brush: html; highlight: [5,6,7,8,9,10,11]">
      * <Controls.grid:View>

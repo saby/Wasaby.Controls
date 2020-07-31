@@ -17,7 +17,7 @@ export interface IBasePopupOptions {
     template?: Control<IControlOptions, unknown> | TemplateFunction | string;
     closeOnOutsideClick?: boolean;
     templateOptions?: unknown;
-    opener?: Control<IControlOptions, unknown>;
+    opener?: Control<IControlOptions, unknown> | null;
     autofocus?: boolean;
     topPopup?: boolean;
     modal?: boolean;

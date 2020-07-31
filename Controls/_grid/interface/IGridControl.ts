@@ -388,10 +388,27 @@
  * @name Controls/_grid/interface/IGridControl#resultsTemplate
  * @cfg {Function} Шаблон отображения строки итогов.
  * @default undeined
+ * @demo Controls-demo/grid/Results/ResultsTemplate/Index
  * @remark
- * **Важно**: для отображения строки итогов важно задать значение в опции {@link resultsPosition}.
- * Подробнее о параметрах шаблона Controls/grid:ResultsTemplate читайте {@link Controls/grid:ResultsTemplate здесь}.
- * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/results/ здесь}.
+ * Позволяет установить прикладной шаблон отображения строки итогов (именно шаблон, а не контрол!). При установке прикладного шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона Controls/grid:ResultsTemplate.
+ *
+ * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать прикладной шаблон. Также в опцию resultsTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/grid:ResultTemplate.
+ * 
+ * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/results/row/ руководстве разработчика}.
+ * 
+ * Для отображения строки итогов необходимо задать значение в опции {@link resultsPosition}.
+ * @example
+ * <pre class="brush: html;">
+ * <Controls.grid:View>
+ *     <ws:resultsTemplate>
+ *         <ws:partial template="Controls/grid:ResultsTemplate" scope="{{_options}}">
+ *             <ws:contentTemplate>
+ *                 <div>Итого: 2 страны с населением более миллиарда человек</div>
+ *             </ws:contentTemplate>
+ *         </ws:partial>
+ *     </ws:resultsTemplate>
+ * </Controls.grid:View>
+ * </pre>
  * @see resultsPosition
  * @see resultsVisibility
  */
@@ -414,6 +431,7 @@
  * @name Controls/_grid/interface/IGridControl#resultsPosition
  * @cfg {ResultsPosition|undefined} Положение строки итогов.
  * @default undefined
+ * @demo Controls-demo/grid/Results/ResultsPosition/Index
  * @remark
  * При значении опции **undefined** строка итогов скрыта.
  * @result
@@ -437,8 +455,9 @@
 /**
  * @name Controls/_grid/interface/IGridControl#resultsVisibility
  * @cfg {ResultsVisibility} Режим отображения строки итогов.
+ * @demo Controls-demo/grid/Results/FromMeta/Index
  * @remark
- * **Важно**: для отображения строки итогов важно задать значение в опции {@link resultsPosition}.
+ * Для отображения строки итогов необходимо задать значение в опции {@link resultsPosition}.
  * @default hasData
  * @see resultsTemplate
  * @see resultsPosition

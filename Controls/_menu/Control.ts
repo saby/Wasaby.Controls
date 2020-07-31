@@ -863,10 +863,17 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private static _displayFilter(options: IMenuControlOptions, item: Model): boolean {
         let isVisible: boolean = true;
+        const isStringType = typeof options.root === 'string';
         if (item && item.get && options.parentProperty && options.nodeProperty) {
             let parent: TKey = item.get(options.parentProperty);
             if (parent === undefined) {
                 parent = null;
+            }
+            // Для исторических меню keyProperty всегда заменяется на строковый.
+            // Если изначально был указан целочисленный ключ,
+            // то в поле родителя будет лежать также целочисленное значение, а в root будет лежать строка.
+            if (isStringType) {
+                parent = String(parent);
             }
             isVisible = parent === options.root;
         }

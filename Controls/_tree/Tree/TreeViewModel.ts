@@ -598,10 +598,10 @@ var
                 }
             }
 
-           current.useNewNodeFooters = this._options.useNewNodeFooters;
-           if (current.item.get) {
+            current.useNewNodeFooters = this._options.useNewNodeFooters;
+            if (current.item.get) {
                _private.setNodeFooterIfNeed(this, current);
-           }
+            }
             return current;
         },
 
@@ -678,7 +678,7 @@ var
                 this._prevDragTargetPosition = null;
 
                 //The fake item must be displayed at the correct level.
-                if (targetPosition) {
+                if (this._draggingItemData && targetPosition) {
                     this._draggingItemData.level = targetPosition.data.level;
                 }
             }
