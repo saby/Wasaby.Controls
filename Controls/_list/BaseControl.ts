@@ -125,7 +125,7 @@ const DRAG_SHIFT_LIMIT = 4;
 const IE_MOUSEMOVE_FIX_DELAY = 50;
 const DRAGGING_OFFSET = 10;
 
-const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-Swipe__measurementContainer';
+const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
 
 interface IAnimationEvent extends Event {
     animationName: string;

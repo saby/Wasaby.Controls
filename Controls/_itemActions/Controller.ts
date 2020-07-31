@@ -430,9 +430,10 @@ export class Controller {
     }
 
     /**
-     * Получает для указанного элемента коллекции набор опций записи для контекстного меню, отфильтрованный по parentAction
-     * Если parentAction - кнопка вызова дополнительного меню или parentAction не указан, то элементы фильтруются по showType.
+     * Получает для указанного элемента коллекции набор опций записи для меню, отфильтрованный по parentAction
+     * Если parentAction - кнопка вызова специального меню или parentAction не указан, то элементы фильтруются по showType.
      * Если parentAction содержит id, то элементы фильтруются по parent===id.
+     * Если был сделан свайп по элементу, то возвращаются все доступные опции записи.
      * @see http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BD%D0%BE%D0%B5_%D0%BC%D0%B5%D0%BD%D1%8E__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html
      * @param item
      * @param parentAction
@@ -441,6 +442,9 @@ export class Controller {
     private _getMenuActions(item: IItemActionsItem, parentAction: IShownItemAction): IItemAction[] {
         const actions = item.getActions();
         const allActions = actions && actions.all;
+        if (item.isSwiped() && parentAction._isMenu) {
+            return allActions;
+        }
         if (allActions) {
             return allActions.filter((action) => (
                 ((!parentAction || parentAction._isMenu) && action.showType !== TItemActionShowType.TOOLBAR) ||
