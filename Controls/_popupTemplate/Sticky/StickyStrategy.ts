@@ -266,6 +266,9 @@ interface IPosition {
          const width = position.width || popupCfg.sizes?.width;
          const body = _private.getBody();
          if (coords) {
+            if (coords.top > position.top) {
+               position.top = coords.top;
+            }
             let dif = (position.bottom + height) - (body.height - coords.top);
             if (dif > 0) {
                position.bottom -= dif;
@@ -273,7 +276,10 @@ interface IPosition {
                position.top = coords.bottom - height;
             }
 
-            dif = (position.right + width) - (body.height - coords.left);
+            if (coords.left > position.left) {
+               position.left = coords.left;
+            }
+            dif = (position.right + width) - (body.width - coords.left);
             if (dif > 0) {
                position.right -= dif;
             } else if (position.left + width > coords.right) {
