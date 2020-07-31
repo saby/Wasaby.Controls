@@ -320,9 +320,9 @@ define(
                   menuOptions: {
                      selectedKeys: [6],
                      keyProperty: 'id',
-                     filter: config.filter,
                      selectedItemsChangedCallback: selectedItemsChangedCallback
-                  }
+                  },
+                  filter: config.filter
                });
                assert.deepEqual(selectedItems[0].getRawData(), items[5]);
             });
@@ -780,8 +780,10 @@ define(
             it('_private::onResult applyClick with history', function() {
                let selectedItems;
                dropdownController._options = {
-                  selectedKeys: [2],
-                  keyProperty: 'id',
+                  menuOptions: {
+                     selectedKeys: [2],
+                     keyProperty: 'id',
+                  },
                   source: historySource,
                   filter: {},
                   notifySelectedItemsChanged: (d) => {
