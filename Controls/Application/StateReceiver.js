@@ -27,7 +27,7 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
    }
 
    //todo перенести в Serializer
-   const componentOptsReArray = [
+   var componentOptsReArray = [
       {
          toFind: /\\/g, // экранируем слеш первым
          toReplace: '\\\\'
