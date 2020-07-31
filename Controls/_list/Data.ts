@@ -205,8 +205,10 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       //on itemChanged event prefetchSource will updated, but createPrefetchSource method work async becouse of promise,
       //then we need to create prefetchSource synchronously
 
+      // для того чтобы мог посчитаться новый prefetch Source внутри
+      const newItems = this._sourceController.setItems(items);
       if (!this._items) {
-         this._items = this._sourceController.setItems(items);
+         this._items = newItems;
       }
 
       const controllerState = this._sourceController.getState();

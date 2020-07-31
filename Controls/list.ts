@@ -95,7 +95,6 @@ import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
 import {default as ScrollController} from './_list/ScrollController';
 import {IList} from './_list/interface/IList';
-import {default as DataController} from 'Controls/_list/Data/ControllerClass';
 
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 
@@ -142,8 +141,7 @@ export {
     IVirtualScrollConfig,
     IList,
     VirtualScroll,
-    ScrollController,
-    DataController,
+    ScrollController
 
     // @deprecated
     _itemActionsForTemplate,
