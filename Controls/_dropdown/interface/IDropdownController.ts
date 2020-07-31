@@ -1,5 +1,5 @@
 import {Control, IControlOptions} from 'UI/Base';
-import {ISourceOptions} from 'Controls/interface';
+import {ISourceOptions, IFilterOptions, INavigationOptions} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {Model} from 'Types/entity';
@@ -22,7 +22,7 @@ export default interface IDropdownController {
     handleClose(): void;
 }
 
-export interface IDropdownControllerOptions extends IControlOptions, ISourceOptions {
+export interface IDropdownControllerOptions extends IControlOptions, ISourceOptions, IFilterOptions, INavigationOptions {
     lazyItemsLoading?: boolean;
     menuOptions?: object;
     openerControl: Control;

@@ -728,6 +728,7 @@ define(
          });
 
          it('_private::getSourceController', function() {
+            config.menuOptions.dataLoadCallback = null;
             let dropdownController = getDropdownController(config);
             dropdownController.setItems(configLazyLoad.items);
             assert.isOk(dropdownController._sourceController);

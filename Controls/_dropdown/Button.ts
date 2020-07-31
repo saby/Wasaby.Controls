@@ -154,7 +154,6 @@ export default class Button extends BaseDropdown {
    _getControllerOptions(options: IButtonOptions): object {
       this._source = this._historyController.getPreparedSource();
       const buttonConfig = {
-         filter: this._historyController.getPreparedFilter(),
          historyId: options.historyId,
          keyProperty: this._historyController.hasHistory(options) ? 'copyOriginalId' : options.keyProperty,
          allowPin: this._historyController.hasHistory(options),
@@ -168,6 +167,7 @@ export default class Button extends BaseDropdown {
       };
       const controllerOptions = getDropdownControllerOptions(options, buttonConfig);
       return { ...controllerOptions, ...{
+            filter: this._historyController.getPreparedFilter(),
             source: this._historyController.getPreparedSource(),
             openerControl: this
          }

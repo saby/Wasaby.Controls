@@ -2,7 +2,6 @@ import {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdown
 
 export default function getDropdownControllerOptions(options: IDropdownControllerOptions, controlConfig): IDropdownControllerOptions {
     const menuOptions = { ...{
-        navigation: options.navigation,
         keyProperty: options.keyProperty,
         selectedKeys: options.selectedKeys,
         emptyText: options.emptyText,
@@ -49,6 +48,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
     }, ...controlConfig};
     return  {
         lazyItemsLoading: options.lazyItemsLoading,
+        navigation: options.navigation,
         menuOptions,
         openerControl: options.openerControl,
         readOnly: options.readOnly,

@@ -274,7 +274,6 @@ export default class Input extends BaseDropdown {
 
    _getControllerOptions(options: IInputOptions): object {
       const inputConfig = {
-         filter: this._historyController.getPreparedFilter(),
          historyId: options.historyId,
          keyProperty: this._historyController.hasHistory(options) ? 'copyOriginalId' : options.keyProperty,
          dataLoadCallback: this._dataLoadCallback,
@@ -290,6 +289,7 @@ export default class Input extends BaseDropdown {
       };
       const controllerOptions = getDropdownControllerOptions(options, inputConfig);
       return { ...controllerOptions, ...{
+         filter: this._historyController.getPreparedFilter(),
          source: this._historyController.getPreparedSource(),
          openerControl: this
       } };

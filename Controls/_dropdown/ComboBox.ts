@@ -121,7 +121,6 @@ class ComboBox extends BaseDropdown {
 
    _getControllerOptions(options: IComboboxOptions): object {
       const comboBoxConfig = {
-         filter: this._historyController.getPreparedFilter(),
          historyId: options.historyId,
          keyProperty: this._historyController.hasHistory(options) ? 'copyOriginalId' : options.keyProperty,
          selectedKeys: [options.selectedKey],
@@ -142,6 +141,7 @@ class ComboBox extends BaseDropdown {
       };
       const controllerOptions = getDropdownControllerOptions(options, comboBoxConfig);
       return { ...controllerOptions, ...{
+            filter: this._historyController.getPreparedFilter(),
             source: this._historyController.getPreparedSource(),
             openerControl: this
          }

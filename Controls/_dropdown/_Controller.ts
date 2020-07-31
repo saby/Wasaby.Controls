@@ -99,8 +99,8 @@ export default class _Controller implements IDropdownController {
          }
       }
       if ((newOptions.source && (newOptions.source !== oldOptions.source || !this._sourceController)) ||
-          !isEqual(newOptions.menuOptions.navigation, oldOptions.menuOptions.navigation) ||
-          !isEqual(newOptions.menuOptions.filter, oldOptions.menuOptions.filter)) {
+          !isEqual(newOptions.navigation, oldOptions.navigation) ||
+          !isEqual(newOptions.filter, oldOptions.filter)) {
          if (this._sourceController && !this._sourceController.isLoading()) {
             this._source = null;
             this._sourceController = null;
@@ -272,7 +272,7 @@ export default class _Controller implements IDropdownController {
       if (!this._sourceController) {
          this._sourceController = new SourceController({
             source: this._source,
-            navigation: options.menuOptions.navigation
+            navigation: options.navigation
          });
       }
       return this._sourceController;
@@ -296,7 +296,7 @@ export default class _Controller implements IDropdownController {
    private _loadItems(options) {
       return this._getSourceController(options).then(
           (sourceController) => {
-             return sourceController.load(options.menuOptions.filter).addCallback((items) => {
+             return sourceController.load(options.filter).addCallback((items) => {
                 if (options.menuOptions.dataLoadCallback) {
                    options.menuOptions.dataLoadCallback(items);
                 }
