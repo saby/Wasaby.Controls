@@ -1,6 +1,4 @@
-// @ts-ignore
 import * as Control from 'Core/Control';
-// @ts-ignore
 import IDropdownHistoryController, {IDropdownHistoryControllerOptions} from 'Controls/_dropdown/interface/IDropdownHistoryController';
 import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
@@ -13,7 +11,7 @@ import {Model} from 'Types/entity';
  *
  * @class Controls/_dropdown/HistoryController
  * @extends Core/Control
- * @mixes Controls/_dropdown/interface/IDropdownController
+ * @mixes Controls/_dropdown/interface/IDropdownHistoryController
  * @author Мельникова Е.А.
  * @control
  * @private
@@ -24,7 +22,7 @@ import {Model} from 'Types/entity';
  *
  * @class Controls/_dropdown/HistoryController
  * @extends Core/Control
- * @mixes Controls/_dropdown/interface/IDropdownController
+ * @mixes Controls/_dropdown/interface/IDropdownHistoryController
  * @author Мельникова Е.А.
  * @control
  * @private
