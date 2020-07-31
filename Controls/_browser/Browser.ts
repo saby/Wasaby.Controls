@@ -73,7 +73,7 @@ export default class Browser extends Control {
 
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
         const isChanged = this._sourceController.update(newOptions);
-        if (isChanged) {
+        if (this._options.source !== newOptions.source) {
             this._loading = true;
             return this._sourceController.load().then((items) => {
 
@@ -92,6 +92,12 @@ export default class Browser extends Control {
                 this._loading = false;
                 return items;
             });
+        } else if (isChanged) {
+            const controllerState = this._sourceController.getState();
+
+            // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+            this._filter = controllerState.filter;
+            this._updateContext(controllerState);
         }
         this._operationsController.update(newOptions);
         this._searchController.update(
@@ -177,7 +183,6 @@ export default class Browser extends Control {
 
         const controllerState = this._sourceController.getState();
         this._updateContext(controllerState);
-        event.stopPropagation();
     }
 
     protected _getChildContext(): IDataChildContext {
