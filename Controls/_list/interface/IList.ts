@@ -64,6 +64,7 @@ export interface IList {
     dataLoadErrback?: () => void;
     style?: TListStyle;
     backgroundStyle?: string;
+    hoverBackgroundStyle?: string;
     itemPadding?: IItemPadding;
     nodeConfig?: INodeConfig;
 }
@@ -953,4 +954,12 @@ export interface IList {
  * @variant l Wide row separator line.
  * @variant null Without row separator line
  * @default null
+ */
+
+/**
+ * @name Controls/_list/interface/IList#hoverBackgroundStyle
+ * @cfg {String} Префикс стиля для настройки фона при наведении на внутренние компоненты списочного контрола с фиксированным или абсолютным позиционированием.
+ * @default default
+ * @remark
+ * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
  */
