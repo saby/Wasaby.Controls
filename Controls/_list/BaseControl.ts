@@ -630,6 +630,7 @@ const _private = {
             beforeAddItems(addedItems);
             if (self._options.useNewModel) {
                 self._listViewModel.getCollection().prepend(addedItems);
+                self._listViewModel.getCollection().setMetaData(addedItems.getMetaData());
             } else {
                 self._listViewModel.prependItems(addedItems);
             }
@@ -642,6 +643,7 @@ const _private = {
                 beforeAddItems(addedItems);
                 if (self._options.useNewModel) {
                     self._listViewModel.getCollection().append(addedItems);
+                    self._listViewModel.getCollection().setMetaData(addedItems.getMetaData());
                 } else {
                     self._listViewModel.appendItems(addedItems);
                 }
