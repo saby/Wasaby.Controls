@@ -10,6 +10,7 @@ export interface ITabsButtons {
  * Интерфейс для опций контрола вкладок.
  * @interface Controls/_tabs/interface/ITabsButtons
  * @public
+ * @author Красильников А.С.
  */
 
 export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableOptions, IItemTemplateOptions {
@@ -26,27 +27,25 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
 
 /**
  * @name Controls/_tabs/interface/ITabsButtons#tabSpaceTemplate
- * @cfg {Content} Устанавливает шаблон, отображаемый между вкладками.
+ * @cfg {Content} Шаблон, отображаемый между вкладками.
  * @default undefined
  * @remark
- * Вкладка может быть выровнена по левому и правому краю, это определяется свойством 'align'.
- * Если у контрола есть левая и правая вкладки, то TabSpaceTemplate будет расположен между ними.
+ * Вкладка может быть выровнена по левому и правому краю, это определяется свойством align.
+ * Если у контрола есть левая и правая вкладки, то tabSpaceTemplate будет расположен между ними.
  * @example
  * Пример вкладок с шаблоном между ними:
- * <pre>
- *    <Controls.tabs:Buttons
- *       .....
- *       tabSpaceTemplate=".../spaceTemplate'"
- *       .....
- *    />
+ * <pre class="brush: html; highlight: [2]">
+ * <Controls.tabs:Buttons
+ *     tabSpaceTemplate=".../spaceTemplate" />
  * </pre>
- * spaceTemplate:
- * <pre>
- *    <div class="additionalContent">
- *       <Controls.buttons:Button .../>
- *       <Controls.buttons:Button .../>
- *       <Controls.buttons:Button .../>
- *    </div>
+ * 
+ * <pre class="brush: html;">
+ * <!-- spaceTemplate.wml -->
+ * <div class="additionalContent">
+ *     <Controls.buttons:Button .../>
+ *     <Controls.buttons:Button .../>
+ *     <Controls.buttons:Button .../>
+ * </div>
  * </pre>
  */
 
@@ -77,37 +76,37 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  */
 
 /**
- * @name Controls/_tabs/interface/ITabsButtons#style
- * @cfg {Enum} Стиль отображения вкладок.
+ * @typedef {String} Style
  * @variant primary
  * @variant secondary
+ */
+
+/**
+ * @name Controls/_tabs/interface/ITabsButtons#style
+ * @cfg {Style} Стиль отображения вкладок.
  * @default primary
  * @remark
  * Если стандартная тема вам не подходит, вы можете переопределить переменные:
- * <ul>
- *     <li>@border-color_Tabs-item_selected_primary,</li>
- *     <li>@text-color_Tabs-item_selected_primary,</li>
- *     <li>@border-color_Tabs-item_selected_secondary,</li>
- *     <li>@text-color_Tabs-item_selected_secondary</li>
- * </ul>
+ * 
+ * * @border-color_Tabs-item_selected_primary
+ * * @text-color_Tabs-item_selected_primary
+ * * @border-color_Tabs-item_selected_secondary
+ * * @text-color_Tabs-item_selected_secondary
  * @example
  * Вкладки с применением стиля 'secondary'.
- * <pre>
- *    <Controls.tabs:Buttons
- *       bind:selectedKey='_selectedKey'
- *       keyProperty="id"
- *       source="{{_source}}
- *       style="secondary"
- *       .....
- *    />
+ * <pre class="brush: html; highlight: [5]">
+ * <Controls.tabs:Buttons
+ *     bind:selectedKey='_selectedKey'
+ *     keyProperty="id"
+ *     source="{{_source}}"
+ *     style="secondary"/>
  * </pre>
  * Вкладки с применением стиля по умолчанию.
- * <pre>
- *    <Controls.tabs:Buttons
- *       bind:selectedKey='_selectedKey'
- *       keyProperty="id"
- *       source="{{_source}}
- *    />
+ * <pre class="brush: html;">
+ * <Controls.tabs:Buttons
+ *     bind:selectedKey="_selectedKey"
+ *     keyProperty="id"
+ *     source="{{_source}}"/>
  * </pre>
  */
 
@@ -151,75 +150,83 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * @cfg {Types/source:Base} Объект, реализующий ISource интерфейс для доступа к данным.
  * @default undefined
  * @remark
- * Элементу можно задать свойство 'align', которое определяет выравнивание вкладок.
- * Если одной из крайних вкладок надо отобразить оба разделителя, слева и справа, то используйте свойство contentTab в значении true
+ * Элементу можно задать свойство align, которое определяет выравнивание вкладок.
+ * Если одной из крайних вкладок надо отобразить оба разделителя, слева и справа, то используйте свойство contentTab в значении true.
  * @example
  * На вкладках будут отображаться данные из _source. Первый элемент отображается с выравниванием по левому краю, другие элементы отображаются по умолчанию - справа.
- * <pre>
- *    <Controls.tabs:Buttons
- *              bind:selectedKey='_selectedKey'
- *              keyProperty="key"
- *              source="{{_source}}"
- *    />
+ * <pre class="brush: html; highlight: [4]">
+ * <Controls.tabs:Buttons
+ *     bind:selectedKey="_selectedKey"
+ *     keyProperty="key"
+ *     source="{{_source}}" />
  * </pre>
- * <pre>
- *    _selectedKey: '1',
- *    _source: new Memory({
- *        keyProperty: 'key',
- *        data: [
- *        {
- *           key: '1',
- *           title: 'Yaroslavl',
- *           align: 'left'
- *        },
- *        {
- *           key: '2',
- *           title: 'Moscow'
- *        },
- *        {
- *           key: '3',
- *           title: 'St-Petersburg'
- *        }
- *        ]
- *    })
+ * <pre class="brush: js; highlight: [5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]">
+ * _selectedKey: null,
+ * _source: null,
+ * _beforeMount: function() {
+ *    this._selectedKey: '1',
+ *    this._source: new Memory({
+ *       keyProperty: 'key',
+ *       data: [
+ *          {
+ *             key: '1',
+ *             title: 'Yaroslavl',
+ *             align: 'left'
+ *          },
+ *          {
+ *             key: '2',
+ *             title: 'Moscow'
+ *          },
+ *          {
+ *             key: '3',
+ *             title: 'St-Petersburg'
+ *          }
+ *       ]
+ *    });
+ * }
  * </pre>
+ * @see items
  */
 
 /**
  * @name Controls/_tabs/interface/ITabsButtons#items
  * @cfg {Types/collection:RecordSet} Набор данных для отображения вкладок.
  * @remark
- * Элементу можно задать свойство 'align', которое определяет выравнивание вкладок.
- * Если одной из крайних вкладок надо отобразить оба разделителя, слева и справа, то используйте свойство contentTab в значении true
+ * Элементу можно задать свойство align, которое определяет выравнивание вкладок.
+ * Если одной из крайних вкладок надо отобразить оба разделителя, слева и справа, то используйте свойство contentTab в значении true.
  * @example
  * На вкладках будут отображаться данные из _items. Первый элемент отображается с выравниванием по левому краю, другие элементы отображаются по умолчанию - справа.
- * <pre>
- *    <Controls.tabs:Buttons
- *              bind:selectedKey='_selectedKey'
- *              keyProperty="key"
- *              items="{{_items}}"
- *    />
+ * <pre class="brush: html; highlight: [4]">
+ * <Controls.tabs:Buttons
+ *     bind:selectedKey="_selectedKey"
+ *     keyProperty="key"
+ *     items="{{_items}}"/>
  * </pre>
- * <pre>
- *   this._selectedKey = '1';
- *   this._items = new RecordSet({
- *          keyProperty: 'id',
- *          rawData: [
- *              {
- *                  id: '1',
- *                  title: 'Document'
- *              },
- *              {
- *                  id: '2',
- *                  title: 'Files'
- *              },
- *              {
- *                  id: '3',
- *                  title: 'Orders'
- *              }
- *          ]
- *      });
+ * <pre class="brush: js; highlight: [5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]">
+ * _selectedKey: null,
+ * _items: null,
+ * _beforeMount: function() {
+ *    this._selectedKey = '1';
+ *    this._items = new RecordSet({
+ *       keyProperty: 'id',
+ *       rawData: [
+ *          {
+ *             id: '1',
+ *             title: 'Document'
+ *          },
+ *          {
+ *             id: '2',
+ *             title: 'Files'
+ *          },
+ *          {
+ *             id: '3',
+ *             title: 'Orders'
+ *          }
+ *       ]
+ *    });
+ * }
  * </pre>
+ * @see source
  */
 
 /*
@@ -274,19 +281,21 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * <ul>
  * @example
  * Вкладки со стандартным шаблоном элемента (шаблоном по умолчанию).
- * <pre>
- *    <Controls.tabs:Buttons
- *                   bind:selectedKey='SelectedKey3'
- *                   keyProperty="id"
- *                   style="additional"
- *                   source="{{_source3}}">
- *       <ws:itemTemplate>
- *          <ws:partial template="Controls/tabs:buttonsItemTemplate"
- *                      item="{{itemTemplate.item}}"
- *                      displayProperty="caption"/>
- *       </ws:itemTemplate>
- *    </Controls.tabs:Buttons>
+ * 
+ * <pre class="brush: html; highlight: [6,7,8,9,10]">
+ * <Controls.tabs:Buttons
+ *     bind:selectedKey="SelectedKey3"
+ *     keyProperty="id"
+ *     style="additional"
+ *     source="{{_source3}}">
+ *     <ws:itemTemplate>
+ *         <ws:partial template="Controls/tabs:buttonsItemTemplate"
+ *                     item="{{itemTemplate.item}}"
+ *                     displayProperty="caption" />
+ *     </ws:itemTemplate>
+ * </Controls.tabs:Buttons>
  * </pre>
+ * @see itemTemplateProperty
  */
 
 /*
@@ -330,26 +339,31 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * <ul>
  * @example
  * Вкладки с шаблоном элемента.
- * <pre>
- *    <Controls.tabs:Buttons itemTemplateProperty="myTemplate"
- *                           source="{{_source}}
- *                           ...>
- *    </Controls.tabs:Buttons>
+ * <pre class="brush: html; highlight: [2]">
+ * <Controls.tabs:Buttons
+ *     itemTemplateProperty="myTemplate"
+ *     source="{{_source}}" />
  * </pre>
- * myTemplate
- * <pre>
- *    <div class="controls-Tabs__item_custom">{{item.get(displayProperty || 'title')}}</div>
+ * 
+ * <pre class="brush: html">
+ * <!-- myTemplate.wml -->
+ * <div class="controls-Tabs__item_custom">{{item.get(displayProperty || 'title')}}</div>
  * </pre>
- * <pre>
- *    _source: new Memory({
- *              keyProperty: 'id',
- *              data: [
- *                     {id: 1, title: 'I agree'},
- *                     {id: 2, title: 'I not decide'},
- *                     {id: 4, title: 'Will not seem', caption: 'I not agree',  myTemplate: 'wml!.../myTemplate'}
- *              ]
- *    })
+ * 
+ * <pre class="brush: js">
+ * _source: null,
+ * beforeMount: function() {
+ *    this._source: new Memory({
+ *       keyProperty: 'id',
+ *       data: [
+ *          {id: 1, title: 'I agree'},
+ *          {id: 2, title: 'I not decide'},
+ *          {id: 4, title: 'Will not seem', caption: 'I not agree',  myTemplate: 'wml!.../myTemplate'}
+ *       ]
+ *    });
+ * }
  * </pre>
+ * @see itemTemplate
  */
 
 /*
@@ -391,90 +405,102 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * @name Controls/_tabs/interface/ITabsButtons#rightTemplateProperty
  * @cfg {String} Имя поля, которое содержит шаблон отображения элемента, находящегося справа от основного содержимого.
  * @example
- * <pre>
- *    <Controls.tabs:Buttons rightTemplateProperty="myTemplate"
- *                           source="{{_source}}
- *                           ...>
- *    </Controls.tabs:Buttons>
+ * <pre class="brush: html; highlight: [2]">
+ * <Controls.tabs:Buttons
+ *     rightTemplateProperty="myTemplate"
+ *     source="{{_source}}" />
  * </pre>
  *
- * myTemplate
- * <pre>
- *    <div class="{{item.get('icon')}} icon-small controls-icon_style-{{item.get('iconStyle')}}_theme-{{_options.theme}}"></div
+ * <pre class="brush: html">
+ * <!-- myTemplate.wml -->
+ * <div class="{{item.get('icon')}} icon-small controls-icon_style-{{item.get('iconStyle')}}_theme-{{_options.theme}}"></div>
  * </pre>
- * <pre>
- *    _source: new Memory({
- *              keyProperty: 'id',
- *              data: [
- *                     {id: 1, title: 'I agree'},
- *                     {id: 2, title: 'I not decide'},
- *                     {id: 4, title: 'Will not seem', caption: 'I not agree',  myTemplate: 'wml!.../myTemplate'}
- *              ]
- *    })
+ * 
+ * <pre class="brush: js">
+ * _source: null,
+ * beforeMount: function() {
+ *    this._source: new Memory({
+ *       keyProperty: 'id',
+ *       data: [
+ *          {id: 1, title: 'I agree'},
+ *          {id: 2, title: 'I not decide'},
+ *          {id: 4, title: 'Will not seem', caption: 'I not agree',  myTemplate: 'wml!.../myTemplate'}
+ *       ]
+ *    });
+ * }
  * </pre>
+ * @see leftTemplateProperty
  */
 
 /**
  * @name Controls/_tabs/interface/ITabsButtons#leftTemplateProperty
  * @cfg {String} Имя поля, которое содержит шаблон отображения элемента, находящегося слева от основного содержимого.
  * @example
- * <pre>
- *    <Controls.tabs:Buttons leftTemplateProperty="myTemplate"
- *                           source="{{_source}}
- *                           ...>
- *    </Controls.tabs:Buttons>
+ * <pre class="brush: html; highlight: [2]">
+ * <Controls.tabs:Buttons
+ *     leftTemplateProperty="myTemplate"
+ *     source="{{_source}}" />
  * </pre>
  *
- * myTemplate
- * <pre>
- *    <div class="{{item.get('icon')}} icon-small controls-icon_style-{{item.get('iconStyle')}}_theme-{{_options.theme}}"></div
+ * <pre class="brush: html">
+ * <!-- myTemplate.wml -->
+ * <div class="{{item.get('icon')}} icon-small controls-icon_style-{{item.get('iconStyle')}}_theme-{{_options.theme}}"></div>
  * </pre>
- * <pre>
- *    _source: new Memory({
- *              keyProperty: 'id',
- *              data: [
- *                     {id: 1, title: 'I agree'},
- *                     {id: 2, title: 'I not decide'},
- *                     {id: 4, title: 'Will not seem', caption: 'I not agree',  myTemplate: 'wml!.../myTemplate'}
- *              ]
- *    })
+ * 
+ * <pre class="brush: js">
+ * _source: null,
+ * beforeMount: function() {
+ *    this._source: new Memory({
+ *       keyProperty: 'id',
+ *       data: [
+ *          {id: 1, title: 'I agree'},
+ *          {id: 2, title: 'I not decide'},
+ *          {id: 4, title: 'Will not seem', caption: 'I not agree',  myTemplate: 'wml!.../myTemplate'}
+ *       ]
+ *    });
+ * }
  * </pre>
+ * @see rightTemplateProperty
  */
 
 /**
  * @name Controls/_tabs/interface/ITabsButtons#itemRightTemplate
- * Шаблон элемента, находящегося справа от основного содержимого.
+ * @cfg {String} Шаблон элемента, находящегося справа от основного содержимого.
  * @remark
  * Базовый шаблон itemRightTemplate поддерживает следующие параметры:
- * - item {Model} — Запись текущей вкладки
- * - selected {Boolean} — Выбрана ли вкладка, на которой располагается шаблон
+ * 
+ * - item {Model} — запись текущей вкладки;
+ * - selected {Boolean} — выбрана ли вкладка, на которой располагается шаблон;
  * @example
- * <pre>
- *    <Controls.tabs:Buttons bind:selectedKey='_mySelectedKey' keyProperty="id" source="{{_mySource}}">
+ * <pre class="brush: html; highlight: [2,3,4,5,6]">
+ * <Controls.tabs:Buttons bind:selectedKey="_mySelectedKey" keyProperty="id" source="{{_mySource}}">
  *     <ws:itemRightTemplate>
- *          <ws:if data="{{_counter}}">
- *              <ws:partial template="{{ _myRightTpl }}" item="{{itemRightTemplate.item}}" counter="{{_counter}}" />
- *          </ws:if>
- *    </ws:itemRightTemplate>
- *     </Controls.tabs:Buttons>
+ *         <ws:if data="{{_counter}}">
+ *             <ws:partial template="{{ _myRightTpl }}" item="{{itemRightTemplate.item}}" counter="{{_counter}}" />
+ *         </ws:if>
+ *     </ws:itemRightTemplate>
+ * </Controls.tabs:Buttons>
  * </pre>
+ * @see itemLeftTemplate
  */
 
 /**
  * @name Controls/_tabs/interface/ITabsButtons#itemLeftTemplate
- * Шаблон элемента, находящегося слева от основного содержимого.
+ * @cfg {String} Шаблон элемента, находящегося слева от основного содержимого.
  * @remark
  * Базовый шаблон itemLeftTemplate поддерживает следующие параметры:
- * - item {Model} — Запись текущей вкладки
- * - selected {Boolean} — Выбрана ли вкладка, на которой располагается шаблон
+ * 
+ * - item {Model} — запись текущей вкладки.
+ * - selected {Boolean} — выбрана ли вкладка, на которой располагается шаблон.
  * @example
- * <pre>
- *    <Controls.tabs:Buttons bind:selectedKey='_mySelectedKey' keyProperty="id" source="{{_mySource}}">
+ * <pre class="brush: html;highlight: [2,3,4,5,6]">
+ * <Controls.tabs:Buttons bind:selectedKey="_mySelectedKey" keyProperty="id" source="{{_mySource}}">
  *     <ws:itemLeftTemplate>
- *          <ws:if data="{{_counter}}">
- *              <ws:partial template="{{ _myRightTpl }}" item="{{itemLeftTemplate.item}}" counter="{{_counter}}" />
- *          </ws:if>
- *    </ws:itemRightTemplate>
- *     </Controls.tabs:Buttons>
+ *         <ws:if data="{{_counter}}">
+ *             <ws:partial template="{{ _myRightTpl }}" item="{{itemLeftTemplate.item}}" counter="{{_counter}}" />
+ *         </ws:if>
+ *     </ws:itemRightTemplate>
+ * </Controls.tabs:Buttons>
  * </pre>
+ * @see itemRightTemplate
  */
