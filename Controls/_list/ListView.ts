@@ -79,6 +79,7 @@ var ListView = BaseControl.extend(
                const itemChangesType = newItems ? newItems.properties : null;
                if (changesType !== 'hoveredItemChanged' &&
                   changesType !== 'activeItemChanged' &&
+                  changesType !== 'loadingPercentChanged' &&
                   changesType !== 'markedKeyChanged' &&
                   changesType !== 'itemActionsUpdated' &&
                   itemChangesType !== 'marked' &&
