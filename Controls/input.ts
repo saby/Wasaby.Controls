@@ -28,6 +28,7 @@
  * @includes isMaskFormatValid Controls/_input/Mask/isFormatValid#isFormatValid
  * @includes IBorderVisibility Controls/_input/interface/IBorderVisibility
  * @includes IPadding Controls/_input/interface/IPadding
+ * @includes ISelection Controls/_input/resources/Types:ISelection
  * @public
  * @author Крайнов Д.О.
  */
@@ -99,6 +100,7 @@ export {Formatter as MaskFormatter, FormatBuilder as MaskFormatBuilder} from 'Co
 export {IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility, getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes} from './_input/interface/IBorderVisibility';
 export {IPadding, IPaddingOptions, TPadding, getDefaultPaddingOptions, getOptionPaddingTypes} from './_input/interface/IBorderVisibility';
 export * from './_input/ActualAPI';
+export {ISelection} from './_input/resources/Types';
 
 /**
  * ПРИВАТНЫЕ МОДУЛИ.

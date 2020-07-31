@@ -73,10 +73,19 @@ define(
                ctrl._getField().selectionEnd = 4;
                ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
-               assert.deepEqual(calls, [{
+               assert.deepEqual(calls, [
+                  {
                   name: 'notify',
                   arguments: ['valueChanged', [1111, '1 111']]
-               }]);
+               },
+                  {
+                     name: 'notify',
+                     arguments: ['inputControl', [1111, '1 111', {
+                        start: 5,
+                        end: 5
+                     }]]
+                  }
+               ]);
             });
             it('Triad partitioning is disabled. Enter 123456', function() {
                ctrl._beforeMount({
@@ -89,10 +98,19 @@ define(
                ctrl._getField().selectionEnd = 6;
                ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['valueChanged', [123456, '123456']]
-               }]);
+               assert.deepEqual(calls, [
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', [123456, '123456']]
+                  },
+                  {
+                     name: 'notify',
+                     arguments: ['inputControl', [123456, '123456', {
+                        start: 6,
+                        end: 6
+                     }]]
+                  }
+               ]);
             });
          });
       });

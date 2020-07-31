@@ -172,6 +172,10 @@ var _private = {
         self._notify('valueChanged', [self._viewModel.value, self._viewModel.displayValue]);
     },
 
+    notifyInputControl: function (self) {
+        self._notify('inputControl', [self._viewModel.value, self._viewModel.displayValue, self._viewModel.selection]);
+    },
+
     /**
      * @param {Controls/_input/Base} self Control instance.
      */
@@ -203,6 +207,7 @@ var _private = {
                 _private.notifyValueChanged(self);
             }
         }
+        _private.notifyInputControl(self);
     },
 
     /**
