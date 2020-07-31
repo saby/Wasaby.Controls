@@ -141,7 +141,7 @@ export {
     IVirtualScrollConfig,
     IList,
     VirtualScroll,
-    ScrollController
+    ScrollController,
 
     // @deprecated
     _itemActionsForTemplate,
