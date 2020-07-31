@@ -171,7 +171,7 @@ import {Logger} from 'UI/Utils';
    }
 
    var template = function(data, attr, context, isVdom, sets?) {
-      markupGenerator = thelpers.getMarkupGenerator(isVdom);
+      markupGenerator = thelpers.createGenerator(isVdom);
       defCollection = {
          id: [],
          def: undefined
