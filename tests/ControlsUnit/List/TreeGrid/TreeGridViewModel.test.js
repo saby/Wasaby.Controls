@@ -256,6 +256,60 @@ define(['Controls/treeGrid',
          treeGrid.ViewModel.superclass.getItemDataByItem = originFn;
       });
 
+      it('check last row with node footer', function() {
+         var initialColumns = [{
+               width: '1fr',
+               displayProperty: 'title'
+            }],
+            model = new treeGrid.ViewModel({
+               theme: theme,
+               items: new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [
+                     {
+                        id: 0, title: 'i0', parent: null, type: true
+                     }
+                  ]
+               }),
+               keyProperty: 'id',
+               nodeProperty: 'type',
+               parentProperty: 'parent',
+               columns: initialColumns
+            });
+
+         let originFn = treeGrid.ViewModel.superclass.getItemDataByItem;
+         treeGrid.ViewModel.superclass.getItemDataByItem = function() {
+            return {
+               item: {},
+               columns: initialColumns,
+               nodeFooters: [{key: 0}],
+               rowIndex: 1,
+               itemPadding: {},
+               isLastRow: true,
+               getCurrentColumn: function() {
+                  return {
+                     cellClasses: ''
+                  };
+               },
+               dispItem: {
+                  getParent: () => {
+                     return {
+                        getContents: () => {
+                           return {
+                              getKey: () => 0
+                           };
+                        }
+                     };
+                  }
+               },
+               columnScroll: true
+            };
+         };
+
+         assert.isFalse(model.getItemDataByItem.call(model).isLastRow);
+         treeGrid.ViewModel.superclass.getItemDataByItem = originFn;
+      });
+
       it('getFooterStyles', function () {
          var
              initialColumns = [{

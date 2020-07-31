@@ -59,9 +59,9 @@ export default class AdditionalItemsController {
         factory(items).each((item) => {
             if (object.getPropertyValue(item, 'visibility') !== undefined) {
                 if (columns.left.length < countColumnItems) {
-                    columns.left.push(item.name);
+                    columns.left.push(object.getPropertyValue(item, this._options.keyProperty));
                 } else {
-                    columns.right.push(item.name);
+                    columns.right.push(object.getPropertyValue(item, this._options.keyProperty));
                 }
             }
         });
@@ -76,8 +76,8 @@ export default class AdditionalItemsController {
     }
 
     private _prepareColumns(items: IFilterItem[], columns: IAdditionalColumns): void {
-        items.forEach((item: IFilterItem, index): void => {
-            if (columns.left.includes(item.name)) {
+        items.forEach((item: IFilterItem): void => {
+            if (columns.left.includes(object.getPropertyValue(item, this._options.keyProperty))) {
                 item.column = 'left';
             } else {
                 item.column = 'right';
