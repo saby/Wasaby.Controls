@@ -125,7 +125,7 @@ const DRAG_SHIFT_LIMIT = 4;
 const IE_MOUSEMOVE_FIX_DELAY = 50;
 const DRAGGING_OFFSET = 10;
 
-const ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR = 'js-controls-SwipeControl__actionsContainer';
+const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-Swipe__measurementContainer';
 
 interface IAnimationEvent extends Event {
     animationName: string;
@@ -2356,9 +2356,32 @@ const _private = {
                 }
             }
         }
-    }
+    },
 
     // endregion
+
+    /**
+     * Получает размеры контейнера, которые будут использованы для измерения области отображения свайпа.
+     * Для строк таблиц, когда ширину строки можно измерить только по ширине столбцов,
+     * берём за правило, что высота всегда едина для всех колонок строки, а ширину столбцов
+     * надо сложить для получения ширины строки.
+     * @param itemContainer
+     */
+    getSwipeContainerSize(itemContainer: HTMLElement): {width: number, height: number} {
+        const result: {width: number, height: number} = { width: 0, height: 0 };
+        if (itemContainer.classList.contains(SWIPE_MEASUREMENT_CONTAINER_SELECTOR)) {
+            result.width = itemContainer.clientWidth;
+            result.height = itemContainer.clientHeight;
+        } else {
+            itemContainer
+                .querySelectorAll(`.${SWIPE_MEASUREMENT_CONTAINER_SELECTOR}`)
+                .forEach((container) => {
+                    result.width += container.clientWidth;
+                    result.height = result.height || container.clientHeight;
+                });
+        }
+        return result;
+    }
 };
 
 /**
@@ -3814,14 +3837,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         swipeEvent.stopPropagation();
         const key = item.getContents().getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
-        const swipeContainer =
-            itemContainer.classList.contains(ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR)
-                ? itemContainer
-                : itemContainer.querySelector('.' + ITEM_ACTIONS_SWIPE_CONTAINER_SELECTOR);
+        const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             _private.setMarkedKey(this, key);
-            _private.getItemActionsController(this).activateSwipe(item.getContents().getKey(), swipeContainer?.clientWidth, swipeContainer?.clientHeight);
+            _private.getItemActionsController(this).activateSwipe(item.getContents().getKey(), swipeContainer?.width, swipeContainer?.height);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             const swipedItem = _private.getItemActionsController(this).getSwipeItem();
