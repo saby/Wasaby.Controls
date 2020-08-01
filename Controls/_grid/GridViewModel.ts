@@ -1732,9 +1732,11 @@ var
             this._nextModelVersion();
         },
 
-        setColumnScroll(columnScroll: boolean): void {
+        setColumnScroll(columnScroll: boolean, silent: boolean = false): void {
             this._options.columnScroll = columnScroll;
-            this._nextModelVersion();
+            if (!silent) {
+                this._nextModelVersion();
+            }
         },
 
         setColumnScrollVisibility(columnScrollVisibility: boolean) {
