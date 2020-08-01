@@ -78,6 +78,8 @@ var TileViewModel = ListViewModel.extend({
             if (imageViewMode !== 'rectangle') {
                 tileSizes.imageHeight = null;
             }
+        } else if (imageViewMode !== 'rectangle') {
+            tileSizes.imageHeight = tileSizes.imageWidth;
         }
         return tileSizes;
     },
