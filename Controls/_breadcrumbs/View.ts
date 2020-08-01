@@ -23,7 +23,6 @@ const CRUMBS_COUNT = 2;
  * @mixes Controls/_interface/IFontSize
  * @control
  * @private
- * @author Авраменко А.С.
  */
 
 class BreadCrumbsView extends Control<IControlOptions> {
@@ -79,7 +78,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
 
     protected _afterRender(oldOptions): void {
         if (oldOptions.visibleItems !== this._options.visibleItems) {
-            // Если крошки пропали (стало 0 записей), либо наоборот появились (стало больше 0 записей), кинем ресайз,
+            // Если крошки пропали (стало 0 записей), либо наоборот [изменилось] (стало больше 0 записей), кинем ресайз,
             // т.к. изменится высота контрола
             if (!this._options.visibleItems.length || !oldOptions.visibleItems.length) {
                 this._notify('controlResize', [], {bubbling: true});
