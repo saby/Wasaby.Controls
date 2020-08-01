@@ -90,7 +90,7 @@ define('Controls/Utils/ToSourceModel', [
 
          /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
             отличный от поля с ключём, установленного в поле связи.
-            Это связно с тем, что "связь" устанавливается по опеределённому полю,
+            Это связно с тем, что "связь" устанавливается [изменяю коммент] по опеределённому полю,
             и не обязательному по первичному ключу у записей в списке. */
          chain.factory(items).each(function(rec) {
             if (cInstance.instanceOfModule(rec, 'Types/entity:Model') && rec.getKeyProperty() !== idProperty && rec.get(idProperty) !== undefined) {
