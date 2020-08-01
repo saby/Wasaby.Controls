@@ -164,7 +164,7 @@ var BreadCrumbsPath = Control.extend({
     _onBackButtonClick: function (e: Event) {
         Common.onBackButtonClick.call(this, e);
     },
-    _onHomeClick23: function () {
+    _onHomeClick: function () {
        /**
         * TODO: _options.root is actually current root, so it's wrong to use it. For now, we can take root from the first item. Revert this commit after:
         * https://online.sbis.ru/opendoc.html?guid=93986788-48e1-48df-9595-be9d8fb99e81
