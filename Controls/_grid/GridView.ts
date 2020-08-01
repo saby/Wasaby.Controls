@@ -210,6 +210,7 @@ var
             // Подробнее: GridControl создает модель и отдает ее в GridView через BaseControl. BaseControl занимается обработкой ошибок, в том
             // числе и разрывом соединения с сетью. При разрыве соединения BaseControl уничтожает GridView и показывает ошибку.
             // Если во время, пока GridView разрушена изменять ее опции, то это не приведет ни к каким реакциям.
+            this._listModel.setColumnScroll(cfg.columnScroll, true);
             this._listModel.setColumns(cfg.columns, true);
             this._listModel.setHeader(cfg.header, true);
 
