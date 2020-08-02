@@ -34,7 +34,6 @@ import viewName = require('Controls/_grid/GridView');
     * @demo Controls-demo/grid/Base/Index
     */
 
-
    /*
     * Table-looking list. Can load data from data source.
     * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
