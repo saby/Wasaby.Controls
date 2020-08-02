@@ -64,7 +64,7 @@ import viewName = require('Controls/_grid/GridView');
     * @demo Controls-demo/List/Grid/BasePG
     */
 
-export default class Grid extends List /** @lends Controls/grid:View1 */ {
+export default class Grid extends List /** @lends Controls/grid:View */ {
     _viewName = viewName;
     _viewTemplate = viewTemplate;
 
