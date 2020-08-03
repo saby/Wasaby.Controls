@@ -68,9 +68,8 @@ export default class Grid extends List /** @lends Controls/grid:View */ {
     _viewName = viewName;
     _viewTemplate = viewTemplate;
 
-    _getModelConstructor1() {
-        return GridViewModel1;
-        // так надо
+    _getModelConstructor() {
+        return GridViewModel;
     }
 }
 
