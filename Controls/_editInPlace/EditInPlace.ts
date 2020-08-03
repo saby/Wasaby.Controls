@@ -25,6 +25,11 @@ const typographyStyles = [
     'wordSpacing',
     'textIndent'
 ];
+
+export const JS_SELECTORS = {
+    NOT_EDITABLE: 'js-controls-ListView__notEditable'
+};
+
 const _private = {
     beginEdit(self: EditInPlace, options: IEditingConfig, isAdd?: boolean): Promise<IEditingConfig> {
         const result = self._notify('beforeBeginEdit', [options, !!isAdd]);
@@ -643,7 +648,7 @@ export default class EditInPlace {
             //событие onclick при даблкике срабатвает два раза, второй раз там item из редактирования по месту
             this._editingItem !== item
         ) {
-            if (originalEvent.target.closest('.js-controls-ListView__notEditable')) {
+            if (originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`)) {
                 result = this.commitEdit();
             } else {
                 result = this.beginEdit({
@@ -883,6 +888,10 @@ export default class EditInPlace {
                 _private.getAddPosition(this._options.editingConfig)
             );
         }
+    }
+
+    isTargetEditable(target: HTMLElement): boolean {
+        return false;
     }
 
     onRowDeactivated(e: SyntheticEvent, eventOptions: any): void {
