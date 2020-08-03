@@ -11,6 +11,7 @@ define([
          _activateCall: false,
          _validationResult: false,
          _isValidCall: false,
+         _isOpened: false,
          _options: {
             readOnly: readOnly
          },
@@ -20,6 +21,9 @@ define([
          },
          activate: () => {
             validator._activateCall = true;
+         },
+         openInfoBox: () => {
+            validator._isOpened = true;
          },
          setValidationResult: (result) => {
             validator._validationResult = result;
@@ -134,6 +138,19 @@ define([
          Controller._validates.push(validator1, validator2, validator3, validator4);
          Controller.submit().then(() => {
             assert.equal(validator3._activateCall, true);
+            Controller.destroy();
+            done();
+         });
+      });
+
+      it('openInfoBox at first valid container', (done) => {
+         let Controller = new validateMod.ControllerClass();
+         let validator1 = getValidator('Error');
+
+         Controller._validates.push(validator1);
+         Controller.submit().then(() => {
+            assert.equal(validator1._activateCall, true);
+            assert.equal(validator1._isOpened, true);
             Controller.destroy();
             done();
          });
