@@ -289,15 +289,18 @@ const _private = {
             self._attachLoadTopTriggerToNull = false;
         }
         if (self._scrollController) {
-            let result = self._scrollController.update({
-                attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
-                forceInitVirtualScroll: isInfinityNavigation,
-                collection: self.getViewModel(),
-                ...self._options
-            }, {
-                clientHeight: self._viewportSize,
-                scrollTop: self._scrollTop,
-                scrollHeight: self._viewSize
+            let result = self._scrollController.update({ 
+                options: {
+                    attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
+                    forceInitVirtualScroll: isInfinityNavigation,
+                    collection: self.getViewModel(),
+                    ...self._options
+                },
+                params: {
+                    clientHeight: self._viewportSize,
+                    scrollTop: self._scrollTop,
+                    scrollHeight: self._viewSize
+                }
             });
             _private.handleScrollControllerResult(self, result);
         }
@@ -2814,7 +2817,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), viewportRect);
         if (this._scrollController) {
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
-            let result = this._scrollController.updateScrollParams({clientHeight: this._viewportSize});
+            let result = this._scrollController.update({ params: {clientHeight: this._viewportSize} });
             _private.handleScrollControllerResult(this, result);
         }
     },
@@ -2890,7 +2893,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const itemsHeights = getItemsHeightsData(this._getItemsContainer());
             this._scrollController.updateItemsHeights(itemsHeights);
             
-            let result = this._scrollController.updateScrollParams({scrollHeight: this._viewSize, clientHeight: this._viewportSize});
+            let result = this._scrollController.update({ params: {scrollHeight: this._viewSize, clientHeight: this._viewportSize} });
             _private.handleScrollControllerResult(this, result);
         }
 
@@ -2929,7 +2932,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._scrollController) {
             let result = this._scrollController.getResult();
             _private.handleScrollControllerResult(this, result);
-            this._scrollController.afterRender();
+
+            result = this._scrollController.continueScrollToItemIfNeed();
+            _private.handleScrollControllerResult(this, result);
+            this._scrollController.completeScrollToItemIfNeed();
         }
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
@@ -3106,12 +3112,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._scrollController) {
             let result = this._scrollController.update({
-                attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
-                forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
-                collection: this.getViewModel(),
-                needScrollCalculation: this._needScrollCalculation,
-                ...newOptions
-            }, {scrollHeight: this._viewSize, clientHeight: this._viewportSize});
+                options: {
+                    attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
+                    forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
+                    collection: this.getViewModel(),
+                    needScrollCalculation: this._needScrollCalculation,
+                    ...newOptions
+                }
+            });
             _private.handleScrollControllerResult(this, result);
         }
 
@@ -3378,9 +3386,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
-            let needCheckTriggers = this._scrollController.afterRender();
+            let result = this._scrollController.continueScrollToItemIfNeed();
+            _private.handleScrollControllerResult(this, result);
+            let needCheckTriggers = !!result;
+            result = this._scrollController.completeScrollToItemIfNeed();
+            needCheckTriggers = needCheckTriggers || !!result;
+            _private.handleScrollControllerResult(this, result);
+            result = this._scrollController.completeVirtualScrollIfNeed();
+            needCheckTriggers = needCheckTriggers || !!result;
+            _private.handleScrollControllerResult(this, result);
+
             if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
-                const {direction, heightDifference} = this._scrollController.getParamsToRestoreScroll();
+                const {direction, heightDifference} = this._scrollController.getParamsToRestoreScrollPosition();
                 this._notify('restoreScrollPosition', [heightDifference, direction, correctingHeight], {bubbling: true});
                 needCheckTriggers = true;
             }
@@ -3409,7 +3426,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     checkTriggersVisibility(): void {
         const scrollParams = {
-            clientHeight: this._viewportSize,
+            clientHeight: this._viewportSize, 
             scrollHeight: this._viewSize,
             scrollTop: this._scrollTop
         };
@@ -3426,13 +3443,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
     handleTriggerVisible(direction: IDirection): void {
         // Вызываем сдвиг диапазона в направлении видимого триггера
-        if (this._scrollController.tryShiftToDirection(direction)) {
-            // если отрисовка записей во время сдвига диапазона занимает много времени, нужно будет показать индикатор загрузки
-            this._syncLoadingIndicatorState = direction;
-        } else {
-            // Если не получилось сдвинуть, значит загруженные данные кончились, значит загружаем
-            this.loadMore(direction);
-        }
+        this._scrollController.shiftToDirection(direction).then((result) => {
+            if (result) {
+                _private.handleScrollControllerResult(this, result);
+                this._syncLoadingIndicatorState = direction;
+            } else {
+                this.loadMore(direction);
+            }
+        });
     },
     _scrollToFirstItemIfNeed(): void {
         if (this._needScrollToFirstItem) {
@@ -4105,7 +4123,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._viewSize = this._container.clientHeight;
         if (this._scrollController) {
             this._scrollController.updateItemsHeights(itemsHeights);
-            let result = this._scrollController.updateScrollParams({scrollHeight: this._viewSize});
+            let result = this._scrollController.update({ params: {scrollHeight: this._viewSize} });
             _private.handleScrollControllerResult(this, result);
         }
     },
