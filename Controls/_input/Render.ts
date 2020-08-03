@@ -36,7 +36,7 @@ export interface IBorder {
     left: boolean;
 }
 
-interface IRenderOptions extends IControlOptions, IHeightOptions, IBorderVisibilityOptions,
+export interface IRenderOptions extends IControlOptions, IHeightOptions, IBorderVisibilityOptions,
     IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions, IBorderStyleOptions {
     /**
      * @name Controls/_input/Render#multiline
@@ -163,7 +163,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     protected _setContentActive(event: SyntheticEvent<FocusEvent>, newContentActive: boolean): void {
         this._contentActive = newContentActive;
 
-        this._calcState(this._options);
+        this._setState(this._options);
     }
 
     static _theme: string[] = ['Controls/input', 'Controls/Classes'];
@@ -209,7 +209,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
         };
     }
 
-    static getDefaultOptions(): object {
+    static getDefaultOptions(): Partial<IRenderOptions> {
         return {
             ...getDefaultBorderVisibilityOptions(),
             state: '',
