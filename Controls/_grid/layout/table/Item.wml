@@ -65,7 +65,7 @@
     <td colspan="{{ itemData.getColspanFor(colspanFor) }}"
         style="{{ currentColumn.tableCellStyles }}"
         attr:key="{{ itemData.getCurrentColumnKey() }}{{ keyPostfix ? ('_' + keyPostfix) : '' }}"
-        attr:class="js-controls-ItemActions__measurementContainer
+        attr:class="js-controls-ItemActions__swipeMeasurementContainer
                     {{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
                     {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}
                     {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
