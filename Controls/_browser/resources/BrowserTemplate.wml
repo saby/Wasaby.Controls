@@ -12,6 +12,7 @@
         root="{{_options.searchNavigationMode === 'expand' ? undefined : _root}}"
         searchParam="{{null}}"
         searchValue="{{_searchValue}}"
+        groupHistoryId="{{_groupHistoryId}}"
         inputSearchValue="{{_inputSearchValue}}"
         misspellValue="{{_misspellValue}}"
         loading="{{_loading || _options.loading}}"
