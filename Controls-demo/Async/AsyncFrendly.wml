@@ -1,0 +1,13 @@
+<div>
+    <Controls.dataSource:error.Container
+            viewConfig="{{ errorViewConfig }}"
+            attr:style="width:300px;height:300px;">
+        <Controls.Container.Async templateName="NotExistModule" errorCallback="{{ errorCallback }}">
+            <ws:content>
+                <div>
+                    <ws:partial template="{{ content.resolvedTemplate }}"></ws:partial>
+                </div>
+            </ws:content>
+        </Controls.Container.Async>
+    </Controls.dataSource:error.Container>
+</div>

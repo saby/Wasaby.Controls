@@ -101,6 +101,25 @@ define([
          });
       });
 
+      it('loadAsync failed with callback', function() {
+         var ml = new ModuleLoader();
+         var callbackCalled = false;
+         var errorCallback = (viewConfig, error) => {
+            callbackCalled = true;
+            assert.exists(viewConfig, 'Первый параметр errorCallback должен быть определен.');
+            assert.exists(error, 'Первый параметр errorCallback должен быть определен.');
+            assert.equal(typeof viewConfig, 'object', 'Первый параметр errorCallback должен быть объектом.');
+            assert.equal(viewConfig.status, 404, 'Первый параметр errorCallback имеет неправильную структуру.');
+         };
+         return ml.loadAsync('ControlsUnit/Async/Fail/TestModule', errorCallback).then(function() {
+            assert.fail('Should not resolved promise successfull');
+         }, function(err) {
+            assert.equal(err.message, 'У СБИС возникла проблема', 'Error message is wrong');
+            assert.equal(logErrors.length, 1);
+            assert.equal(callbackCalled, true, 'errorCallback не был вызван.');
+         });
+      });
+
       it('loadAsync faild found export control', function (done) {
          var ml = new ModuleLoader();
          ml.loadAsync('ControlsUnit/Async/TestModuleAsync:NotFound').then(function(res) {
