@@ -168,18 +168,20 @@ export default class ScrollController {
     }
 
     continueScrollToItemIfNeed(): IScrollControllerResult {
+        let result = null;
         if (this._continueScrollToItem) {
-            let result = this._continueScrollToItem();
+            result = this._continueScrollToItem();
             this._continueScrollToItem = null;
-            return this.getResult(result);
         }
-    }
-    completeScrollToItemIfNeed(): IScrollControllerResult {
         if (this._completeScrollToItem) {
             this._completeScrollToItem();
             this._completeScrollToItem = null;
-            return this.getResult();
+            if (!result) {
+                result = {};
+            }
         }
+        if (result)
+            return this.getResult(result);
     }
     completeVirtualScrollIfNeed(): IScrollControllerResult {
        if (this._applyScrollTopCallback) {
@@ -242,7 +244,7 @@ export default class ScrollController {
                             };
                         }
                         if (!this._isRendering) {
-                            this.completeScrollToItemIfNeed();
+                            this.continueScrollToItemIfNeed();
                         }
                     });
                 } else {

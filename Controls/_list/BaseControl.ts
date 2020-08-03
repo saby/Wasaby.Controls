@@ -2935,7 +2935,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             result = this._scrollController.continueScrollToItemIfNeed();
             _private.handleScrollControllerResult(this, result);
-            this._scrollController.completeScrollToItemIfNeed();
         }
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
@@ -3111,6 +3110,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
         if (this._scrollController) {
+            this._scrollController.setRendering(true);
             let result = this._scrollController.update({
                 options: {
                     attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
@@ -3386,12 +3386,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            this._scrollController.setRendering(false);
+
             let result = this._scrollController.continueScrollToItemIfNeed();
             _private.handleScrollControllerResult(this, result);
             let needCheckTriggers = !!result;
-            result = this._scrollController.completeScrollToItemIfNeed();
-            needCheckTriggers = needCheckTriggers || !!result;
-            _private.handleScrollControllerResult(this, result);
             result = this._scrollController.completeVirtualScrollIfNeed();
             needCheckTriggers = needCheckTriggers || !!result;
             _private.handleScrollControllerResult(this, result);
