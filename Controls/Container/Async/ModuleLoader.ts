@@ -99,7 +99,7 @@ class ModuleLoader {
         }
 
         const module = require(parsedInfo.name);
-        if (module instanceof Function || Object.keys(module).length > 0) {
+        if (typeof module !== 'undefined' && (module instanceof Function || Object.keys(module).length > 0)) {
             this.asyncLoadedModules[parsedInfo.name] = true;
             return true;
         }

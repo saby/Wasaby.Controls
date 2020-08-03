@@ -95,6 +95,7 @@ class ControllerClass {
             if (!!needValid) {
                 results.hasErrors = true;
                 this._activateValidator(needValid);
+                needValid.openInfoBox();
             }
             this._validates.reverse();
             return results;

@@ -28,8 +28,8 @@ import 'wml!Controls/_buttons/ButtonBase';
 export type IViewMode = 'button' | 'link' | 'toolButton' | 'functionalButton';
 
 export interface IButtonControlOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
-       IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
-       IButtonOptions {
+    IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
+    IButtonOptions {
     viewMode?: IViewMode;
     captionPosition: 'left' | 'right';
 }
@@ -65,7 +65,7 @@ export function cssStyleGeneration(options: IButtonControlOptions, hasMsg: boole
     }
 }
 
-function defaultHeight(viewMode: string): string {
+export function defaultHeight(viewMode: string): string {
     if (viewMode === 'button') {
         return 'default';
     } else if (viewMode === 'toolButton' || viewMode === 'pushButton' || viewMode === 'functionalButton') {
@@ -73,7 +73,7 @@ function defaultHeight(viewMode: string): string {
     }
 }
 
-function defaultFontColorStyle(viewMode: string): string {
+export function defaultFontColorStyle(viewMode: string): string {
     if (viewMode === 'link') {
         return 'link';
     }
@@ -107,6 +107,17 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
         this._viewMode = actualState.viewMode;
         this._height = actualState.height;
     }
+}
+
+export function getDefaultOptions(): object {
+    return {
+        viewMode: 'button',
+        iconStyle: 'secondary',
+        captionPosition: 'right',
+        contrastBackground: false,
+        fontSize: 'm',
+        buttonStyle: 'secondary'
+    };
 }
 
 /**
@@ -227,58 +238,50 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
  * @variant right Icon before caption.
  * @default right
  */
-class Button extends Control<IButtonControlOptions> implements
-      IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight, IButton {
-   protected _template: TemplateFunction = ButtonTemplate;
+class Button extends Control<IButtonControlOptions> implements IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight, IButton {
+    protected _template: TemplateFunction = ButtonTemplate;
 
-   // Называть _style нельзя, так как это состояние используется для темизации
-   protected _buttonStyle: string;
-   protected _fontColorStyle: string;
-   protected _fontSize: string;
-   protected _contrastBackground: boolean;
-   protected _hasIcon: boolean;
-   protected _viewMode: string;
-   protected _height: string;
-   protected _caption: string | TemplateFunction;
-   protected _stringCaption: boolean;
-   protected _captionPosition: string;
-   protected _icon: string;
-   protected _iconSize: string;
-   protected _iconStyle: string;
-   protected _hoverIcon: boolean = true;
+    // Называть _style нельзя, так как это состояние используется для темизации
+    protected _buttonStyle: string;
+    protected _fontColorStyle: string;
+    protected _fontSize: string;
+    protected _contrastBackground: boolean;
+    protected _hasIcon: boolean;
+    protected _viewMode: string;
+    protected _height: string;
+    protected _caption: string | TemplateFunction;
+    protected _stringCaption: boolean;
+    protected _captionPosition: string;
+    protected _icon: string;
+    protected _iconSize: string;
+    protected _iconStyle: string;
+    protected _hoverIcon: boolean = true;
 
-   protected _beforeMount(options: IButtonControlOptions): void {
-       simpleCssStyleGeneration.call(this, options);
-   }
+    protected _beforeMount(options: IButtonControlOptions): void {
+        simpleCssStyleGeneration.call(this, options);
+    }
 
-   protected _beforeUpdate(newOptions: IButtonControlOptions): void {
-       simpleCssStyleGeneration.call(this, newOptions);
-   }
+    protected _beforeUpdate(newOptions: IButtonControlOptions): void {
+        simpleCssStyleGeneration.call(this, newOptions);
+    }
 
-   protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
-      if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
-         this._notify('click');
-      }
-   }
+    protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
+        if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
+            this._notify('click');
+        }
+    }
 
-   protected _clickHandler(e: SyntheticEvent<MouseEvent>): void {
-      if (this._options.readOnly) {
-         e.stopPropagation();
-      }
-   }
+    protected _clickHandler(e: SyntheticEvent<MouseEvent>): void {
+        if (this._options.readOnly) {
+            e.stopPropagation();
+        }
+    }
 
-   static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
 
-   static getDefaultOptions(): object {
-      return {
-         viewMode: 'button',
-         iconStyle: 'secondary',
-         captionPosition: 'right',
-         contrastBackground: false,
-         fontSize: 'm',
-         buttonStyle: 'secondary'
-      };
-   }
+    static getDefaultOptions(): object {
+        return getDefaultOptions();
+    }
 }
 
 export default Button;

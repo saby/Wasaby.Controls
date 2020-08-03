@@ -1,4 +1,4 @@
-import {ICrudPlus, PrefetchProxy} from 'Types/source';
+import {ICrudPlus, PrefetchProxy, Memory} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {factory, RecordSet} from 'Types/collection';
 import {descriptor, Record} from 'Types/entity';
@@ -9,7 +9,7 @@ import {showType, getMenuItems, needShowMenu} from 'Controls/Utils/Toolbar';
 
 import {
     getButtonTemplate, hasSourceChanged,
-    getButtonTemplateOptionsByItem, getTemplateByItem, loadItems
+    getButtonTemplateOptionsByItem, getTemplateByItem, loadItems, getSimpleButtonTemplateOptionsByItem
 } from 'Controls/_toolbars/Util';
 import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
 
@@ -19,7 +19,9 @@ import {
     IIconSize,
     IIconSizeOptions,
     IItemTemplate,
-    IItemTemplateOptions
+    IItemTemplateOptions,
+    IItems,
+    IItemsOptions
 } from 'Controls/interface';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 
@@ -45,6 +47,7 @@ export interface IMenuOptions {
     targetPoint: IStickyPosition;
     eventHandlers: IEventHandlers;
     templateOptions: any;
+    template: string;
 }
 
 /**
@@ -53,7 +56,8 @@ export interface IMenuOptions {
  * @public
  * @author Красильников А.С.
  */
-export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions, IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions {
+export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
+    IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem> {
     /**
      * @name Controls/_toolbars/IToolbarOptions#popupClassName
      * @cfg {String} Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
@@ -94,7 +98,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @returns {Boolean} Определяет, должна ли операция отображаться.
      * @demo Controls-demo/Toolbar/ItemActions/Index
      */
-     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
+    itemActionVisibilityCallback?: TItemActionVisibilityCallback;
 }
 
 /**
@@ -112,7 +116,8 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * @mixes Controls/interface:IIconSize
  * @mixes Controls/_toolbars/IToolbarOptions
  * @mixes Controls/_toolbars/IToolbarSource
- * @mixes Controls/interface/IItemTemplate
+ * @mixes Controls/interface:IItemTemplate
+ * @mixes Controls/interface:IItems
  *
  * @public
  * @author Красильников А.С.
@@ -120,7 +125,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  */
 
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate,
-    IGrouped, IToolbarSource {
+    IGrouped, IToolbarSource, IItems {
     /*
      * Used in template
      */
@@ -129,11 +134,11 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _items: TItems = null;
     protected _menuItems: TItems = null;
     protected _source: ICrudPlus = null;
-    protected _originalSource: ICrudPlus = null;
+    protected _sourceByItems: Memory = null;
     protected _menuSource: ICrudPlus = null;
     protected _nodeProperty: string = null;
     protected _parentProperty: string = null;
-    protected _menuOptions: object = null;
+    protected _menuOptions: IMenuOptions = null;
     protected _isLoadMenuItems: boolean = false;
     protected _buttonTemplate: TemplateFunction = getButtonTemplate();
     protected _actualItems: TItems = null;
@@ -151,6 +156,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     readonly '[Controls/_toolbars/IToolbarSource]': boolean = true;
     readonly '[Controls/_interface/IIconSize]': boolean = true;
     readonly '[Controls/_interface/IItemTemplate]': boolean = true;
+    readonly '[Controls/_interface/IItems]': boolean = true;
     readonly '[Controls/_dropdown/interface/IGrouped]': boolean = true;
     private _sticky: StickyOpener;
 
@@ -161,98 +167,121 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         this._closeHandler = this._closeHandler.bind(this);
     }
 
+    private _getSourceForMenu(): ICrudPlus {
+        if (this._options.items) {
+            if (!this._sourceByItems) {
+                this._sourceByItems = new Memory({
+                    data: this._options.items,
+                    keyProperty: this._options.items.getKeyProperty()
+                });
+            }
+
+            return this._sourceByItems;
+        }
+        if (this._source) {
+            return this._source;
+        }
+    }
+
     private _getMenuConfig(): IStickyPopupOptions {
         const options = this._options;
-        return {...this._menuOptions, ...{
-                opener: this,
-                className: `${options.popupClassName} controls-Toolbar__popup__list_theme-${options.theme}`,
-                templateOptions: {
-                    source: this._menuSource,
-                    iconSize: options.iconSize,
-                    keyProperty: options.keyProperty,
-                    nodeProperty: options.nodeProperty,
-                    parentProperty: options.parentProperty,
-                    groupTemplate: options.groupTemplate,
-                    itemActions: options.itemActions,
-                    itemActionVisibilityCallback: options.itemActionVisibilityCallback,
-                    groupProperty: options.groupProperty,
-                    groupingKeyCallback: options.groupingKeyCallback,
-                    additionalProperty: options.additionalProperty,
-                    itemTemplateProperty: options.itemTemplateProperty,
-                    footerContentTemplate: options.popupFooterTemplate,
-                    closeButtonVisibility: true
-                },
-                target: this._children.menuTarget
-            }
+        return {
+            ...this._getMenuOptions(),
+            opener: this,
+            className: `${options.popupClassName} controls-Toolbar__popup__list_theme-${options.theme}`,
+            templateOptions: {
+                source: this._menuSource,
+                iconSize: options.iconSize,
+                keyProperty: options.keyProperty,
+                nodeProperty: options.nodeProperty,
+                parentProperty: options.parentProperty,
+                groupTemplate: options.groupTemplate,
+                itemActions: options.itemActions,
+                itemActionVisibilityCallback: options.itemActionVisibilityCallback,
+                groupProperty: options.groupProperty,
+                groupingKeyCallback: options.groupingKeyCallback,
+                additionalProperty: options.additionalProperty,
+                itemTemplateProperty: options.itemTemplateProperty,
+                footerContentTemplate: options.popupFooterTemplate,
+                closeButtonVisibility: true
+            },
+            target: this._children.menuTarget
         };
     }
 
     private _getMenuConfigByItem(item: TItem): IStickyPopupOptions {
         const options = this._options;
-        let source = this._source;
+        let source = this._getSourceForMenu();
         const root = item.get(options.keyProperty);
 
-        // Если запись для выпадающего списка еще не были загружены, то отдаем оригинальный источник вместо prefetchProxy
+        /**
+         * Если запись для выпадающего списка еще не были загружены,
+         * то отдаем оригинальный источник вместо prefetchProxy
+         */
         if (this._items.getIndexByValue(options.parentProperty, root) === -1) {
             source = options.source;
         }
-        return {...this._menuOptions, ...{
-                opener: this,
-                className: `controls-Toolbar__popup__${Toolbar._typeItem(item)}_theme-${options.theme} ${Toolbar._menuItemClassName(item)}`,
-                targetPoint: {
-                    vertical: 'top',
-                    horizontal: 'left'
-                },
-                direction: {
-                    horizontal: 'right'
-                },
-                templateOptions: {
-                    source,
-                    root,
-                    groupTemplate: options.groupTemplate,
-                    groupProperty: options.groupProperty,
-                    groupingKeyCallback: options.groupingKeyCallback,
-                    keyProperty: options.keyProperty,
-                    parentProperty: options.parentProperty,
-                    nodeProperty: options.nodeProperty,
-                    iconSize: options.iconSize,
-                    itemTemplateProperty: options.itemTemplateProperty,
-                    showHeader: item.get('showHeader'),
-                    closeButtonVisibility: !item.get('showHeader'),
-                    headConfig: {
-                        icon: item.get('icon'),
-                        caption: item.get('title'),
-                        iconSize: item.get('iconSize'),
-                        iconStyle: item.get('iconStyle')
-                    }
+        return {
+            ...this._getMenuOptions(),
+            opener: this,
+            className: `controls-Toolbar__popup__${Toolbar._typeItem(item)}_theme-${options.theme} ${Toolbar._menuItemClassName(item)}`,
+            targetPoint: {
+                vertical: 'top',
+                horizontal: 'left'
+            },
+            direction: {
+                horizontal: 'right'
+            },
+            templateOptions: {
+                source,
+                root,
+                groupTemplate: options.groupTemplate,
+                groupProperty: options.groupProperty,
+                groupingKeyCallback: options.groupingKeyCallback,
+                keyProperty: options.keyProperty,
+                parentProperty: options.parentProperty,
+                nodeProperty: options.nodeProperty,
+                iconSize: options.iconSize,
+                itemTemplateProperty: options.itemTemplateProperty,
+                showHeader: item.get('showHeader'),
+                closeButtonVisibility: !item.get('showHeader'),
+                headConfig: {
+                    icon: item.get('icon'),
+                    caption: item.get('title'),
+                    iconSize: item.get('iconSize'),
+                    iconStyle: item.get('iconStyle')
                 }
             }
         };
     }
 
     private _getMenuOptions(): IMenuOptions {
-        return {
-            direction: {
-                horizontal: 'left'
-            },
-            targetPoint: {
-                vertical: 'top',
-                horizontal: 'right'
-            },
-            eventHandlers: {
-                onResult: this._resultHandler,
-                onClose: () => {
-                    this._closeHandler();
+        if (!this._menuOptions) {
+            this._menuOptions = {
+                direction: {
+                    horizontal: 'left'
+                },
+                targetPoint: {
+                    vertical: 'top',
+                    horizontal: 'right'
+                },
+                eventHandlers: {
+                    onResult: this._resultHandler,
+                    onClose: () => {
+                        this._closeHandler();
+                    }
+                },
+                template: 'Controls/menu:Popup',
+                closeOnOutsideClick: true,
+                actionOnScroll: 'close',
+                fittingMode: {
+                    vertical: 'adaptive',
+                    horizontal: 'overflow'
                 }
-            },
-            template: 'Controls/menu:Popup',
-            closeOnOutsideClick: true,
-            actionOnScroll: 'close',
-            fittingMode: {
-                vertical: 'adaptive',
-                horizontal: 'overflow'
-            }
-        };
+            };
+        }
+
+        return this._menuOptions;
     }
 
     private _setState(options: IToolbarOptions): void {
@@ -272,17 +301,19 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     private _setMenuItems(): void {
         const menuItems = Toolbar._calcMenuItems(this._actualItems);
         this._menuItems = menuItems;
-        this._menuSource = this._createPrefetchProxy(this._originalSource, menuItems);
+        this._menuSource = this._createPrefetchProxy(this._options.source, menuItems);
     }
 
-    private _setStateByItems(items: TItems, source: ICrudPlus): void {
+    private _setStateByItems(items: TItems, isNewOptions: boolean, source?: ICrudPlus): void {
         this._fullItemsList = items;
         /**
-         * TODO: Можно удалить после выполнения https://online.sbis.ru/opendoc.html?guid=fe8e0736-7002-4a5f-b782-ea14e8bfb9be
+         * https://online.sbis.ru/opendoc.html?guid=6b6e9774-afb3-4379-8578-95ad0f0035a9
          */
-        this._actualItems = ActualAPI.items(items);
+        this._actualItems = isNewOptions ? items : ActualAPI.items(items);
         this._items = this._actualItems;
-        this._source = this._createPrefetchProxy(source, this._actualItems);
+        if (source) {
+            this._source = this._createPrefetchProxy(source, this._actualItems);
+        }
         this._needShowMenu = needShowMenu(this._actualItems);
     }
 
@@ -306,12 +337,15 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     protected _beforeMount(options: IToolbarOptions, context: {}, receivedItems?: TItems): Promise<TItems> {
         this._setState(options);
-        this._menuOptions = this._getMenuOptions();
-        this._originalSource = options.source;
-        if (receivedItems) {
-            this._setStateByItems(receivedItems, options.source);
-        } else if (options.source) {
-            return this.setStateBySource(options.source);
+
+        if (options.source) {
+            if (receivedItems) {
+                this._setStateByItems(receivedItems, options.isNewOptions, options.source);
+            } else {
+                return this.setStateBySource(options.source, options.isNewOptions);
+            }
+        } else if (options.items) {
+            this._setStateByItems(options.items, options.isNewOptions);
         }
     }
 
@@ -320,10 +354,13 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._setState(newOptions);
         }
         if (hasSourceChanged(newOptions.source, this._options.source)) {
-            this._originalSource = newOptions.source;
             this._isLoadMenuItems = false;
             this._sticky?.close();
-            this.setStateBySource(newOptions.source);
+            this.setStateBySource(newOptions.source, newOptions.isNewOptions);
+        }
+        if (this._options.items !== newOptions.items) {
+            this._sourceByItems = null;
+            this._setStateByItems(newOptions.items, newOptions.isNewOptions);
         }
     }
 
@@ -346,16 +383,16 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
-    protected setStateBySource(source: ICrudPlus): Promise<TItems> {
+    protected setStateBySource(source: ICrudPlus, isNewOptions: boolean): Promise<TItems> {
         return loadItems(source).then((items) => {
-            this._setStateByItems(items, source);
+            this._setStateByItems(items, isNewOptions, source);
             return items;
         });
     }
 
     protected _closeHandler(): void {
         this._notify('menuClosed', [], {bubbling: true});
-        this._setStateByItems(this._fullItemsList, this._options.source);
+        this._setStateByItems(this._fullItemsList, this._options.isNewOptions, this._options.source);
         this._setMenuItems();
     }
 
@@ -391,6 +428,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return getButtonTemplateOptionsByItem(item, this._options);
     }
 
+    protected _getSimpleButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
+        return getSimpleButtonTemplateOptionsByItem(item, this._options);
+    }
+
     protected _mouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
         if (!isLeftMouseButton(event)) {
             return;
@@ -408,9 +449,11 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._openMenu(this._getMenuConfig());
         }
     }
+
     protected _onClickHandler(event: SyntheticEvent): void {
         event.stopPropagation();
     }
+
     protected _mouseEnterHandler() {
         if (!this._options.readOnly) {
             if (!this._dependenciesTimer) {
@@ -419,9 +462,11 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._dependenciesTimer.start(this._loadDependencies.bind(this));
         }
     }
+
     protected _mouseLeaveHandler(): void {
         this._dependenciesTimer?.stop();
     }
+
     private _loadDependencies(): Promise<unknown> {
         try {
             if (!this._isLoadMenuItems) {
@@ -492,6 +537,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             popupClassName: '',
             itemsSpacing: 'medium',
             iconSize: 'm',
+            isNewOptions: false,
             itemTemplate: defaultItemTemplate
         };
     }

@@ -15,7 +15,7 @@
                     {{ _styleClass }} {{ _valueEnabledClass }}"
                     title="{{_options.tooltip}}"
                     name="openPopupTarget"
-                    on:click="_onClick()">
+                    on:mousedown="_onClick()">
                  {{ _caption }}
               </span>
            </ws:if>
@@ -26,7 +26,7 @@
                     fontSize="{{_options.fontSize}}"
                     viewMode="link"
                     tootltip="{{_options.tooltip}}"
-                    on:click="_onClick()"/>
+                    on:mousedown="_onClick()"/>
            </ws:else>
            <ws:else>
               <Controls.input:Label
@@ -34,7 +34,7 @@
                     caption="{{ _caption }}"
                     underline="hovered"
                     tootltip="{{_options.tooltip}}"
-                    on:click="_onClick()"/>
+                    on:mousedown="_onClick()"/>
            </ws:else>
         </span>
         <ws:if data="{{ _clearButtonVisible }}">
