@@ -332,7 +332,7 @@ define(
                   isClosed = false;
 
                dropdownController._sticky.close = () => {isClosed = true; };
-               readOnlyConfig.menuOptions.readOnly = true;
+               readOnlyConfig.readOnly = true;
                dropdownController.update(readOnlyConfig);
                assert.isTrue(isClosed);
             });
