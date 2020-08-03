@@ -27,7 +27,7 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
  */
 
 class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
-
+    readonly '[Controls/_interface/IFontSize]': boolean;
     protected _template: TemplateFunction = template;
     protected _visibleItemsFirst: Record[] = [];
     protected _visibleItemsSecond: Record[] = [];
@@ -201,7 +201,6 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
     }
 
     static _styles: string[] = ['Controls/Utils/FontLoadUtil'];
-    readonly "[Controls/_interface/IFontSize]": boolean;
 }
 
 export default MultilinePath;
