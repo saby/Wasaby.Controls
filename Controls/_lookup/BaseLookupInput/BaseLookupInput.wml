@@ -4,6 +4,7 @@
             on:choose="_choose()"
             on:activated="_activated()"
             on:deactivated="_deactivated()"
+            on:showSelector="_showSelector()"
             on:suggestStateChanged="_suggestStateChanged()"
             bind:suggestState="_suggestState"
             suggestTemplate="{{_options.suggestTemplate}}"
