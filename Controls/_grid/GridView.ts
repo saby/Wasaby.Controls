@@ -324,7 +324,6 @@ var
         _beforeUpdate(newCfg) {
             GridView.superclass._beforeUpdate.apply(this, arguments);
             const self = this;
-            const isColumnsScrollChanged = this._options.columnScroll !== newCfg.columnScroll;
             if (this._options.resultsPosition !== newCfg.resultsPosition) {
                 if (this._listModel) {
                     this._listModel.setResultsPosition(newCfg.resultsPosition);
@@ -342,7 +341,7 @@ var
             }
 
             // В зависимости от columnScroll вычисляются значения колонок для stickyHeader в методе setHeader.
-            if (isColumnsScrollChanged) {
+            if (this._options.columnScroll !== newCfg.columnScroll) {
                 this._listModel.setColumnScroll(newCfg.columnScroll);
                 if (!newCfg.columnScroll) {
                     _private.destroyColumnScroll(this);
@@ -353,8 +352,7 @@ var
             }
             _private.applyNewOptionsAfterReload(self, this._options, newCfg);
             // Вычисления в setHeader зависят от columnScroll.
-            if (isColumnsScrollChanged ||
-                !GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
+            if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._listModel.setHeader(newCfg.header);
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
