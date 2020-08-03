@@ -172,16 +172,12 @@ export default class ScrollController {
         if (this._continueScrollToItem) {
             result = this._continueScrollToItem();
             this._continueScrollToItem = null;
-        }
-        if (this._completeScrollToItem) {
+        } else if (this._completeScrollToItem) {
             this._completeScrollToItem();
             this._completeScrollToItem = null;
-            if (!result) {
-                result = {};
-            }
+            result = {};
         }
-        if (result)
-            return this.getResult(result);
+        return result;
     }
     completeVirtualScrollIfNeed(): IScrollControllerResult {
        if (this._applyScrollTopCallback) {
