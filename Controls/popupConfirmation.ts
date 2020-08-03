@@ -21,7 +21,6 @@
  */
 // @ts-ignore
 export { default as Template} from 'Controls/_popupConfirmation/Template';
-// @ts-ignore
 export { default as DialogTemplate} from 'Controls/_popupConfirmation/Opener/Dialog';
 export { default as Footer} from 'Controls/_popupConfirmation/Footer';
 export {IConfirmationFooterOptions, IConfirmationFooter} from 'Controls/_popup/interface/IConfirmationFooter';
