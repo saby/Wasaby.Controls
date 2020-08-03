@@ -248,6 +248,8 @@ export default class _Controller implements IDropdownController {
       } else if (!this._loadItemsPromise || this._loadItemsPromise.resolved && !this._items) {
          if (this._options.source && !this._items) {
             this._loadItemsPromise = this._loadItems(this._options);
+         } else {
+            this._loadItemsPromise = Promise.resolve();
          }
       }
       return this._loadItemsPromise;
