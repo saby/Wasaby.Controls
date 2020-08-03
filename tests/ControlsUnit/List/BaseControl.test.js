@@ -2892,13 +2892,13 @@ define([
          }));
 
          item = baseControl._listViewModel.getItemBySourceKey(1);
-         assert.isFalse(item.isMarked());
-         assert.isFalse(item.isSelected());
+         item.setMarked(false);
+         item.setSelected(false);
 
          await baseControl.reload(false, {});
 
          item = baseControl._listViewModel.getItemBySourceKey(1);
-         assert.equal(baseControl._listViewModel.getMarkedKey(), 1);
+         assert.isTrue(item.isMarked());
          assert.isTrue(item.isSelected());
       });
 
@@ -3217,6 +3217,8 @@ define([
             clearSelection: () => null,
             toggleItem: () => null,
             setSelectedKeys: () => null,
+            handleAddItems: () => null,
+            handleResetItems: () => null,
             restoreSelection: () => null
          };
          ctrl.saveOptions(cfg);
@@ -5253,7 +5255,6 @@ define([
                clearSelection: () => { clearSelectionCalled = true },
                handleAddItems: (items) => {
                   handleAddItemsCalled = true;
-                  assert.equal(items, 'items');
                }
             },
             _listViewModel: {

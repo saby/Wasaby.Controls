@@ -134,7 +134,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
-   getSelectionForModel(selection: ISelection): Map<boolean|null, Model[]> {
+   getSelectionForModel(selection: ISelection, limit?: number, items?: Model[]): Map<boolean|null, Model[]> {
       const selectedItems = new Map();
       // IE не поддерживает инициализацию конструктором
       selectedItems.set(true, []);
@@ -143,7 +143,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected);
 
-      this._items.forEach((item) => {
+      const processingItems = items ? items : this._items;
+      processingItems.forEach((item) => {
          const itemId: TKey = item.getKey();
          const parentId = this._getParentId(itemId);
          let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
