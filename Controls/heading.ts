@@ -26,4 +26,3 @@ export {default as Title} from './_heading/Heading';
 export {default as Back} from './_heading/Back';
 export {default as Separator} from './_heading/Separator';
 export {default as Counter} from './_heading/Counter';
-export * from './_heading/_ActualAPI';

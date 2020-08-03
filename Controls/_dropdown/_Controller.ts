@@ -14,6 +14,7 @@ import {RecordSet} from 'Types/collection';
 import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
+import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 
 /**
  * Контроллер для выпадающих списков.
@@ -53,7 +54,7 @@ export default class _Controller implements IDropdownController {
       this._sticky = new StickyOpener();
    }
 
-   loadItems(): Promise<RecordSet> {
+   loadItems(): Promise<DropdownReceivedState> {
       return new Promise((resolve) => {
          this._loadItems(this._options).addCallback((items) => {
             const beforeMountResult = {};
@@ -70,15 +71,10 @@ export default class _Controller implements IDropdownController {
       });
    }
 
-   setItems(receivedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet> {
+   setItems(items?: RecordSet): Promise<RecordSet> {
       return this._getSourceController(this._options).addCallback((sourceController) => {
-         this._setItems(receivedState.items);
+         this._setItems(items);
          sourceController.calculateState(this._items);
-
-         if (receivedState.history) {
-            this._source.setHistory(receivedState.history);
-            this._setItems(this._source.prepareItems(this._items));
-         }
 
          this._updateSelectedItems(this._options.emptyText, this._options.selectedKeys, this._options.keyProperty, this._options.selectedItemsChangedCallback);
          if (this._options.dataLoadCallback) {
@@ -87,6 +83,13 @@ export default class _Controller implements IDropdownController {
 
          return sourceController;
       });
+   }
+
+   setHistoryItems(history?: RecordSet): void {
+      if (history) {
+         this._source.setHistory(history);
+         this._setItems(this._source.prepareItems(this._items));
+      }
    }
 
    update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void {
@@ -133,7 +136,7 @@ export default class _Controller implements IDropdownController {
       });
    }
 
-   loadDependencies(): Promise<any> {
+   loadDependencies(): Promise<unknown[]> {
       const deps = [this._loadMenuTemplates(this._options)];
 
       if (!this._items) {
@@ -174,12 +177,12 @@ export default class _Controller implements IDropdownController {
       this._closeDropdownList();
    }
 
-   getPreparedItem(data, keyProperty) {
-      return this._prepareItem(data, keyProperty, this._source);
+   getPreparedItem(item: Model): Model {
+      return this._prepareItem(item, this._options.keyProperty, this._source);
    }
 
-   onSelectorResult(selectedItems): void {
-      var newItems = this._getNewItems(this._items, selectedItems, this._options.keyProperty);
+   handleSelectorResult(selectedItems: RecordSet): void {
+      const newItems = this._getNewItems(this._items, selectedItems, this._options.keyProperty);
 
       // From selector dialog records may return not yet been loaded, so we save items in the history and then load data.
       if (isHistorySource(this._source)) {
@@ -207,7 +210,7 @@ export default class _Controller implements IDropdownController {
       this._open();
    }
 
-   private _open(popupOptions?: object): Promise<any> {
+   private _open(popupOptions?: object): string|Promise<unknown[]> {
       if (this._options.readOnly) {
          return Promise.resolve();
       }
@@ -404,7 +407,7 @@ export default class _Controller implements IDropdownController {
       return newItems;
    }
 
-   private _prepareItem(item, keyProperty, source) {
+   private _prepareItem(item, keyProperty, source): Model {
       if (isHistorySource(source)) {
          return source.resetHistoryFields(item, keyProperty);
       } else {

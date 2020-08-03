@@ -285,8 +285,32 @@ import { RecordSet } from 'Types/collection';
  * @variant xl
  * @default s
  * @remark
- * Если установлена опция на Controls.treeGrid:View, не требуется устанавливать ее на Controls.treeGrid:ItemTemplate.
- * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
+ * Опции {@link Controls/_tree/interface/ITreeControlOptions#expanderSize expanderSize на контроле} и {@link Controls/treeGrid:ItemTemplate#expanderSize expanderSize на шаблоне элемента} не являются взаимоисключающими.
+ * {@link Controls/_tree/interface/ITreeControlOptions#expanderSize expanderSize на контроле} определяет размер области отведённой под иконку узла или скрытого узла для всего списка,
+ * включая автоматическую конфигурацию {@link Controls/_tree/interface/ITreeControlOptions#nodeFooterTemplate шаблона подвалов узлов}.
+ * Опция {@link Controls/treeGrid:ItemTemplate#expanderSize expanderSize на шаблоне элемента} приоритетнее, чем {@link Controls/_tree/interface/ITreeControlOptions#expanderSize expanderSize на контроле}.
+ * В случае, если для разных элементов дерева заданы разные значения опции, то для корректного выравнивания подвалов узлов необходимо продублировать опцию на
+ * {@link Controls/_tree/interface/ITreeControlOptions#nodeFooterTemplate шаблоне подвалов узлов}.
+ */
+
+/**
+ * @typedef {String} ExpanderIcon
+ * @variant none Иконки всех узлов не отображаются.
+ * @variant node Иконки всех узлов отображаются как иконки узлов.
+ * @variant hiddenNode Иконки всех узлов отображаются как иконки скрытых узлов."
+ */
+/**
+ * @name Controls/_tree/interface/ITreeControlOptions#expanderIcon
+ * @cfg {ExpanderIcon|undefined} Стиль отображения иконки для узла и скрытого узла.
+ * @default undefined
+ * @remark
+ * Когда в опции задано undefined, используются иконки узлов и скрытых узлов.
+ * Опции {@link Controls/_tree/interface/ITreeControlOptions#expanderIcon expanderIcon на контроле} и {@link Controls/treeGrid:ItemTemplate#expanderIcon expanderIcon на шаблоне элемента} не являются взаимоисключающими.
+ * {@link Controls/_tree/interface/ITreeControlOptions#expanderIcon expanderIcon на контроле} определяет стиль отображения иконки для узла и скрытого узла для всего списка,
+ * включая автоматическую конфигурацию {@link Controls/_tree/interface/ITreeControlOptions#nodeFooterTemplate шаблона подвалов узлов}.
+ * Опция {@link Controls/treeGrid:ItemTemplate#expanderIcon expanderIcon на шаблоне элемента} приоритетнее, чем {@link Controls/_tree/interface/ITreeControlOptions#expanderIcon expanderIcon на контроле}.
+ * В случае, если для разных элементов дерева заданы разные значения опции, то для корректного выравнивания подвалов узлов необходимо продублировать опцию на
+ * {@link Controls/_tree/interface/ITreeControlOptions#nodeFooterTemplate шаблоне подвалов узлов}.
  */
 
 /**

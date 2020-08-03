@@ -84,60 +84,9 @@ define('Controls/Application',
 
             return bodyClasses;
          },
-
-         // Generates JML from options array of objects
-         translateJML: function JMLTranslator(type, objects) {
-            var result = [];
-            for (var i = 0; i < objects.length; i++) {
-               result[i] = [type, objects[i]];
-            }
-            return result;
-         },
-         generateJML: function(links, styles, meta, scripts) {
-            var jml = [];
-            // фильтруем css (их вставит theme_controller)
-            jml = jml.concat(_private.translateJML('link', (links || []).filter(function (l) { return l.type !== 'text/css'; })))
-            jml = jml.concat(_private.translateJML('style', styles || []));
-            jml = jml.concat(_private.translateJML('meta', meta || []));
-            return jml;
-         },
          isHover: function(touchClass, dragClass) {
             return touchClass === 'ws-is-no-touch' && dragClass === 'ws-is-no-drag';
          }
-      };
-
-      function generateHeadValidHtml() {
-         // Tag names and attributes allowed in the head.
-         return {
-            validNodes: {
-               link: true,
-               style: true,
-               script: true,
-               meta: true,
-               title: true
-            },
-            validAttributes: {
-               rel: true,
-               defer: true,
-               as: true,
-               src: true,
-               name: true,
-               sizes: true,
-               crossorigin: true,
-               type: true,
-               href: true,
-               property: true,
-               'http-equiv': true,
-               content: true,
-               id: true,
-               'class': true
-            }
-         };
-      }
-
-      var linkAttributes = {
-         src: true,
-         href: true
       };
 
       var Page = Base.extend({
@@ -288,16 +237,8 @@ define('Controls/Application',
 
          _beforeMount: function(cfg) {
             this._checkDeprecatedOptions(cfg);
-            this.headTagResolver = this._headTagResolver.bind(this);
             this.BodyClasses = _private.calculateBodyClasses;
             this._scrollData = new scroll._scrollContext({ pagingVisible: cfg.pagingVisible });
-
-            // translate arrays of links, styles, meta and scripts from options to JsonML format
-            this.headJson = _private.generateJML(cfg.links, cfg.styles, cfg.meta, cfg.scripts);
-            if (Array.isArray(cfg.headJson)) {
-               this.headJson = this.headJson.concat(cfg.headJson);
-            }
-            this.headValidHtml = generateHeadValidHtml();
 
             var appData = UIBase.AppData.getAppData();
             this.RUMEnabled = cfg.RUMEnabled || appData.RUMEnabled || false;
@@ -314,8 +255,6 @@ define('Controls/Application',
                /* eslint-disable */
                if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
-                  this.headJson = undefined;
-                  this.headValidHtml = undefined;
                }
                /* eslint-enable */
             }
@@ -361,23 +300,6 @@ define('Controls/Application',
 
          _getResourceUrl: function(str) {
             return getResourceUrl(str);
-         },
-
-         _headTagResolver: function(value, parent) {
-            var newValue = decorator.noOuterTag(value, parent),
-               attributes = Array.isArray(newValue) && typeof newValue[1] === 'object' &&
-                  !Array.isArray(newValue[1]) && newValue[1];
-            if (attributes) {
-               for (var attributeName in attributes) {
-                  if (attributes.hasOwnProperty(attributeName)) {
-                     var attributeValue = attributes[attributeName];
-                     if (typeof attributeValue === 'string' && linkAttributes[attributeName]) {
-                        attributes[attributeName] = this._getResourceUrl(attributeValue);
-                     }
-                  }
-               }
-            }
-            return newValue;
          },
 
          _keyPressHandler: function(event) {
