@@ -55,11 +55,10 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
     * @mixes Controls/interface/IDraggable
-    * @mixes Controls/_grid/interface/IPropStorage
     *
     * @control
     * @public
-    * @author Авраменко А.С.
+    * @author Джеймс Бонд
     * @category List
     * @demo Controls-demo/List/Grid/BasePG
     */
@@ -75,6 +74,7 @@ export default class Grid extends List /** @lends Controls/grid:View */ {
 
 Grid.getDefaultOptions = function() {
    return {
+        // возвращаю опции
        stickyHeader: true,
        stickyColumnsCount: 1,
        rowSeparatorSize: null,
