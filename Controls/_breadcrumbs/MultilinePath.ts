@@ -201,6 +201,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
     }
 
     static _styles: string[] = ['Controls/Utils/FontLoadUtil'];
+    readonly "[Controls/_interface/IFontSize]": boolean;
 }
 
 export default MultilinePath;
