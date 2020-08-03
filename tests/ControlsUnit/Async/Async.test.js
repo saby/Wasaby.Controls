@@ -148,5 +148,35 @@ define([
             assert.strictEqual(async.optionsForComponent.resolvedTemplate, undefined);
          });
       }).timeout(4000);
+
+      it('Loading asynchronous client-side failed with callback', function() {
+         let callbackCalled = false;
+         let options = {
+            templateName: 'ControlsUnit/Async/Fail/TestControlAsync',
+            templateOptions: {},
+            errorCallback: (viewConfig, error) => {
+               callbackCalled = true;
+               assert.exists(viewConfig, 'Первый параметр errorCallback должен быть определен.');
+               assert.exists(error, 'Первый параметр errorCallback должен быть определен.');
+               assert.equal(typeof viewConfig, 'object', 'Первый параметр errorCallback должен быть объектом.');
+               assert.equal(viewConfig.status, 404, 'Первый параметр errorCallback имеет неправильную структуру.');
+            }
+         };
+
+         var ERROR_TEXT = 'Ошибка загрузки контрола ControlsUnit/Async/Fail/TestControlAsync\nВозможны следующие причины:\n\t                   • Ошибка в самом контроле\n\t                   • Долго отвечал БЛ метод в _beforeUpdate\n\t                   • Контрола не существует';
+
+         let async = new Async(options);
+         async._beforeMount(options);
+         async._beforeUpdate(options);
+         async._afterUpdate();
+
+         return new Promise(function(resolve) {
+            setTimeout(resolve, 2000);
+         }).then(function() {
+            assert.equal(callbackCalled, true, 'errorCallback не был вызван.');
+            assert.equal(async.error, ERROR_TEXT);
+            assert.strictEqual(async.optionsForComponent.resolvedTemplate, undefined);
+         });
+      }).timeout(4000);
    });
 });
