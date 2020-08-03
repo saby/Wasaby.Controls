@@ -122,7 +122,7 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
 
     getTileContentClasses(templateShadowVisibility?: string, templateMarker?: boolean, theme?:string): string {
         const theme = `_theme-${theme}`;
-        let classes = `controls-TileView__itemContent controls-TileView__itemContent${theme} js-controls-Swipe__measurementContainer`;
+        let classes = `controls-TileView__itemContent controls-TileView__itemContent${theme} js-controls-ItemActions__swipeMeasurementContainer`;
         classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}${theme}`;
         if (this.isActive()) {
             classes += ` controls-TileView__item_active${theme}`;
