@@ -16,7 +16,7 @@
                attr:class="{{_options.detailPanelTemplateName ? 'controls-FilterView-' + _options.alignment + '__block_theme-' + _options.theme}}"/>
 </ws:template>
 
-<div class="controls-FilterView_theme-{{_options.theme}} controls-FilterView-{{_options.alignment}}"
+<div class="controls-FilterView controls-FilterView_theme-{{_options.theme}} controls-FilterView-{{_options.alignment}}"
    on:mouseenter="_mouseEnterHandler()">
    <div class="controls-FilterView__wrapper_theme-{{_options.theme}}">
       <ws:if data="{{_dateRangeItem}}">

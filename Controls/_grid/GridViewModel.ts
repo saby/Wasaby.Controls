@@ -1521,7 +1521,7 @@ var
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
             );
 
-            const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
+            const style = !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${current.theme}
@@ -1734,9 +1734,11 @@ var
             this._nextModelVersion();
         },
 
-        setColumnScroll(columnScroll: boolean): void {
+        setColumnScroll(columnScroll: boolean, silent: boolean = false): void {
             this._options.columnScroll = columnScroll;
-            this._nextModelVersion();
+            if (!silent) {
+                this._nextModelVersion();
+            }
         },
 
         setColumnScrollVisibility(columnScrollVisibility: boolean) {

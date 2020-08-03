@@ -4416,7 +4416,7 @@ define([
          });
 
          // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа
-         // Предполагаем, что контейнер содержит класс js-controls-Swipe__measurementContainer
+         // Предполагаем, что контейнер содержит класс js-controls-ItemActions__swipeMeasurementContainer
          it('should correctly calculate row size for list', () => {
             // fake HTMLElement
             const fakeElement = {
@@ -4432,7 +4432,7 @@ define([
          });
 
          // Должен правильно рассчитывать ширину для записей таблицы при отображении опций свайпа
-         // Предполагаем, что сам контейнер не содержит класс js-controls-Swipe__measurementContainer,
+         // Предполагаем, что сам контейнер не содержит класс js-controls-ItemActions__swipeMeasurementContainer,
          // а его потомки содержат
          it('should correctly calculate row size for grid', () => {
             // fake HTMLElement
@@ -4547,7 +4547,8 @@ define([
                      id: 2,
                      showType: 0
                   }]
-               })
+               }),
+               isSwiped: () => false
             };
             instance.saveOptions(cfg);
             instance._scrollController = {
@@ -4752,6 +4753,7 @@ define([
                      showType: 0
                   }]
                }),
+               isSwiped: () => false,
                setMarked: () => null
             };
             instance._itemActionsController.setActiveItem(breadcrumbItem);

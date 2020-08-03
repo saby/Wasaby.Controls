@@ -46,7 +46,7 @@ export default class GridColumn<T> extends mixin<
 
     getCellClasses(templateHighlightOnHover: boolean): string {
         // GridViewModel -> getItemColumnCellClasses
-        let classes = 'controls-Grid__row-cell controls-Grid__row-cell_theme-default js-controls-Swipe__measurementContainer';
+        let classes = 'controls-Grid__row-cell controls-Grid__row-cell_theme-default js-controls-ItemActions__swipeMeasurementContainer';
 
         // if !checkBoxCell
         classes += ' controls-Grid__cell_fit';
