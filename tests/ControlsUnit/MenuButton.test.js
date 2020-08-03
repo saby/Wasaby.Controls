@@ -408,7 +408,8 @@ define(
             let actualTarget;
             menu._controller = {
                openMenu: () => Promise.resolve(),
-               setMenuPopupTarget: (target) => {actualTarget = target;}
+               setMenuPopupTarget: (target) => {actualTarget = target;},
+               setFilter: () => {}
             };
             menu._children = {
                content: 'testTarget'

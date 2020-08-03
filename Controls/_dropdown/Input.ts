@@ -279,7 +279,7 @@ export default class Input extends BaseDropdown {
          dataLoadCallback: this._dataLoadCallback,
          selectorOpener: this,
          selectedKeys: options.selectedKeys || [],
-         popupClassName: options.popupClassName || (options.showHeader || options.headerTemplate ?
+         className: options.popupClassName || (options.showHeader || options.headerTemplate ?
              'controls-DropdownList__margin-head' : options.multiSelect ?
                  'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') +
              ' theme_' + options.theme,
@@ -350,7 +350,7 @@ export default class Input extends BaseDropdown {
    openMenu(popupOptions?: IStickyPopupOptions): void {
       const config = this._getMenuPopupConfig();
       this._controller.setMenuPopupTarget(this._container);
-
+      this._controller.setFilter(this._historyController.getPreparedFilter());
       this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
          if (result) {
             this._selectedItemsChangedHandler(result);

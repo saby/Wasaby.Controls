@@ -201,6 +201,10 @@ export default class _Controller implements IDropdownController {
       }
    }
 
+   setFilter(filter) {
+      this._options.filter = filter;
+   }
+
    private _getNewItems(items: RecordSet, selectedItems: RecordSet, keyProperty: string): Model[] {
       const newItems = [];
 
@@ -426,7 +430,6 @@ export default class _Controller implements IDropdownController {
          emptyText: this._getEmptyText(),
          items: this._items,
          source: this._menuSource,
-         filter: this._filter,
          // FIXME this._container[0] delete after
          // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
          width: this._options.menuOptions.width !== undefined ?
@@ -437,6 +440,8 @@ export default class _Controller implements IDropdownController {
       const config = {
          templateOptions: Object.assign(baseConfig, templateOptions),
          template: 'Controls/menu:Popup',
+         className: baseConfig.className,
+         targetPoint: baseConfig.targetPoint,
          actionOnScroll: 'close',
          target: this.target,
          opener: this._options.openerControl,

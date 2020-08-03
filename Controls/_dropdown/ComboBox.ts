@@ -106,7 +106,7 @@ class ComboBox extends BaseDropdown {
       generateStates(this, options);
       this._historyController = new HistoryController(this._getHistoryControllerOptions(options));
       this._controller = new Controller(this._getControllerOptions(options));
-      return loadItems(this._controller, this._historyControlle, receivedState, options.source);
+      return loadItems(this._controller, this._historyController, receivedState, options.source);
    }
 
    _beforeUpdate(options: IComboboxOptions): void {
@@ -121,12 +121,11 @@ class ComboBox extends BaseDropdown {
 
    _getControllerOptions(options: IComboboxOptions): object {
       const comboBoxConfig = {
-         historyId: options.historyId,
          keyProperty: this._historyController.hasHistory(options) ? 'copyOriginalId' : options.keyProperty,
          selectedKeys: [options.selectedKey],
          dataLoadCallback: options.dataLoadCallback,
          marker: false,
-         popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup')
+         className: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup')
              + ' controls-ComboBox-popup_theme-' + options.theme,
          typeShadow: 'suggestionsContainer',
          close: this._onClose,
@@ -196,7 +195,7 @@ class ComboBox extends BaseDropdown {
    openMenu(popupOptions?: IStickyPopupOptions): void {
       const config = this._getMenuPopupConfig();
       this._controller.setMenuPopupTarget(this._container);
-
+      this._controller.setFilter(this._historyController.getPreparedFilter());
       this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
          if (result) {
             this._selectedItemsChangedHandler(result);

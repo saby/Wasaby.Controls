@@ -152,18 +152,15 @@ export default class Button extends BaseDropdown {
    }
 
    _getControllerOptions(options: IButtonOptions): object {
-      this._source = this._historyController.getPreparedSource();
       const buttonConfig = {
-         historyId: options.historyId,
          keyProperty: this._historyController.hasHistory(options) ? 'copyOriginalId' : options.keyProperty,
          allowPin: this._historyController.hasHistory(options),
-         headerTemplate: options.headTemplate || options.headerTemplate,
          headingCaption: options.caption,
          headingIcon: options.icon,
          headingIconSize: options.iconSize,
          dataLoadCallback: this._dataLoadCallback.bind(this),
-         popupClassName: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
-         hasIconPin: this._hasIconPin,
+         className: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
+         hasIconPin: this._hasIconPin
       };
       const controllerOptions = getDropdownControllerOptions(options, buttonConfig);
       return { ...controllerOptions, ...{
@@ -212,7 +209,7 @@ export default class Button extends BaseDropdown {
    openMenu(popupOptions?: IStickyPopupOptions): void {
       const config = this._getMenuPopupConfig();
       this._controller.setMenuPopupTarget(this._children.content);
-
+      this._controller.setFilter(this._historyController.getPreparedFilter());
       this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
          if (result) {
             this._onItemClickHandler(result);
@@ -246,7 +243,7 @@ export default class Button extends BaseDropdown {
 
    protected _pinClick(item): void {
       const preparedItem = this._historyController.getPreparedItem(item, this._options.keyProperty, this._options.source);
-      this._source.update(preparedItem.clone(), {
+      this._options.source.update(preparedItem.clone(), {
          $_pinned: !preparedItem.get('pinned')
       });
       this._controller.updateItems(null);

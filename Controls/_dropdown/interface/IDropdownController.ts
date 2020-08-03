@@ -20,6 +20,7 @@ export default interface IDropdownController {
     handleSelectedItems(): void;
     updateItems(items: RecordSet|null): void;
     handleClose(): void;
+    setFilter(filter: object): void;
 }
 
 export interface IDropdownControllerOptions extends IControlOptions, ISourceOptions, IFilterOptions, INavigationOptions {
