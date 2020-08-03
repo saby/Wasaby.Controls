@@ -56,11 +56,14 @@ describe('Controls/list_clean/ScrollController', () => {
             });
             const setViewIteratorSpy = spy(newCollection, 'setViewIterator');
             controller.update({
-                collection: newCollection,
-                virtualScrollConfig: {},
-                useNewModel: true,
-                needScrollCalculation: false
-            }, {});
+                options: {
+                    collection: newCollection,
+                    virtualScrollConfig: {},
+                    useNewModel: true,
+                    needScrollCalculation: false
+                }, 
+                params: {}
+            });
             assert.isFalse(setViewIteratorSpy.called);
         });
         it('needScrollCalculation === false.', () => {
@@ -78,10 +81,12 @@ describe('Controls/list_clean/ScrollController', () => {
             });
             const setViewIteratorSpy = spy(newCollection, 'setViewIterator');
             controller.update({
-                collection: newCollection,
-                virtualScrollConfig: {},
-                useNewModel: true,
-                needScrollCalculation: true
+                options: {
+                    collection: newCollection,
+                    virtualScrollConfig: {},
+                    useNewModel: true,
+                    needScrollCalculation: true
+                }
             });
             assert.isTrue(setViewIteratorSpy.called);
         });
@@ -100,11 +105,14 @@ describe('Controls/list_clean/ScrollController', () => {
                     attachLoadTopTriggerToNull: true
                 });
                 let result = controller.update({
-                    collection,
-                    virtualScrollConfig: {},
-                    needScrollCalculation: false,
-                    attachLoadTopTriggerToNull: true
-                }, {clientHeight: 100, scrollHeight: 300, scrollTop: 0});
+                    options: {
+                        collection,
+                        virtualScrollConfig: {},
+                        needScrollCalculation: false,
+                        attachLoadTopTriggerToNull: true
+                    }, 
+                    params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
+                });
 
                 assert.strictEqual(result.triggerOffset.top, 0);
             });
@@ -120,11 +128,13 @@ describe('Controls/list_clean/ScrollController', () => {
                 });
 
                 let result = controller.update({
-                    collection,
-                    virtualScrollConfig: {},
-                    needScrollCalculation: false,
-                    attachLoadTopTriggerToNull: false
-                }, {clientHeight: 100, scrollHeight: 300, scrollTop: 0});
+                    options: {
+                        collection,
+                        virtualScrollConfig: {},
+                        needScrollCalculation: false,
+                        attachLoadTopTriggerToNull: false
+                    }, params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
+                });
 
                 assert.strictEqual(result.triggerOffset.top, 30);
             });
@@ -143,11 +153,14 @@ describe('Controls/list_clean/ScrollController', () => {
                 const controller = new ScrollController(options);
 
                 let result = controller.update({
-                    collection,
-                    virtualScrollConfig: {},
-                    needScrollCalculation: false,
-                    attachLoadTopTriggerToNull: false
-                }, {clientHeight: 100, scrollHeight: 300, scrollTop: 0});
+                    options: {
+                        collection,
+                        virtualScrollConfig: {},
+                        needScrollCalculation: false,
+                        attachLoadTopTriggerToNull: false
+                    }, 
+                    params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
+                });
 
 
                 assert.strictEqual(result.triggerOffset.top, 30);
@@ -165,11 +178,14 @@ describe('Controls/list_clean/ScrollController', () => {
                 const controller = new ScrollController(options);
 
                 let result = controller.update({
-                    collection,
-                    virtualScrollConfig: {},
-                    needScrollCalculation: false,
-                    attachLoadTopTriggerToNull: true
-                }, {clientHeight: 100, scrollHeight: 300, scrollTop: 0});
+                    options: {
+                        collection,
+                        virtualScrollConfig: {},
+                        needScrollCalculation: false,
+                        attachLoadTopTriggerToNull: true
+                    }, 
+                    params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
+                });
 
 
                 assert.strictEqual(result.triggerOffset.top, 0);

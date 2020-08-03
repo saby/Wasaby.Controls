@@ -14,7 +14,9 @@ define([
          it('should update active element', () => {
             let activeElement = {};
             scrollController.update({
-               activeElement: activeElement
+               options: {
+                  activeElement: activeElement
+               }
             });
             assert.equal(activeElement, scrollController._options.activeElement);
          });
@@ -29,10 +31,12 @@ define([
                done();
             });
             scrollController.update({
-               collection: new ListViewModel({
-                  items: items,
-                  keyProperty: 'id'
-               })
+               options: {
+                  collection: new ListViewModel({
+                     items: items,
+                     keyProperty: 'id'
+                  })
+               }
             });
          });
 
