@@ -98,4 +98,12 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
             keyProperty: options.keyProperty
         };
     }
+
+    protected _updateControllerItems(data): void {
+        this._historyController.updateHistory(data);
+        if (this._controller.getSourceController()) {
+            this._controller.updateItems(this._historyController.getItemsWithHistory());
+        }
+        this.closeMenu();
+    }
 }

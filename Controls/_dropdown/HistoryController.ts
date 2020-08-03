@@ -1,6 +1,6 @@
 import * as Control from 'Core/Control';
 import IDropdownHistoryController, {IDropdownHistoryControllerOptions} from 'Controls/_dropdown/interface/IDropdownHistoryController';
-import {factory} from 'Types/chain';
+import {ICrudPlus} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
 import * as cInstance from 'Core/core-instance';
@@ -30,15 +30,16 @@ import {Model} from 'Types/entity';
 
 export default class HistoryController implements IDropdownHistoryController {
    protected _options: IDropdownHistoryControllerOptions = null;
+   protected _historySource: ICrudPlus = null;
 
    constructor(options: IDropdownHistoryControllerOptions) {
       this._options = options;
-      this.prepareSource(options);
+      this._historySource = options.source;
    }
 
    update(newOptions: IDropdownHistoryControllerOptions): void {
       this._options = newOptions;
-      this.prepareSource(newOptions);
+      this._historySource = newOptions.source;
    }
 
    setHistory(history?: RecordSet): void {
@@ -47,24 +48,21 @@ export default class HistoryController implements IDropdownHistoryController {
       }
    }
 
-   prepareSource(options: IDropdownHistoryControllerOptions): void {
+   getPreparedSource(): ICrudPlus {
       let sourcePromise;
 
-      if (this.hasHistory(options) && this._isLocalSource(options.source) && !options.historyNew) {
-         sourcePromise = getSource(options.source, options.historyId);
+      if (this.hasHistory(this._options) && this._isLocalSource(this._options.source) && !this._options.historyNew) {
+         sourcePromise = getSource(this._options.source, this._options.historyId);
       } else {
-         sourcePromise = Promise.resolve(options.source);
+         sourcePromise = Promise.resolve(this._options.source);
       }
       sourcePromise.then((source) => {
-         this._options.source = source;
+         this._historySource = source;
       });
+      return this._historySource;
    }
 
-   getPreparedSource(): Promise<RecordSet> {
-      return this._options.source;
-   }
-
-   getPreparedFilter(): Promise<RecordSet> {
+   getPreparedFilter(): object {
       let filter = this._options.filter;
 
       if (this.hasHistory(this._options)) {
@@ -96,20 +94,17 @@ export default class HistoryController implements IDropdownHistoryController {
       }
    }
 
-   handleSelectorResult(newItems: RecordSet, items: RecordSet): void {
-      if (isHistorySource(this._options.source)) {
-         if (newItems.length) {
-            this._sourceController = null;
-         }
-         this.updateHistory(factory(items).toArray());
-      }
-   }
-
    hasHistory(options: IDropdownHistoryControllerOptions): boolean {
       return options.historyId || isHistorySource(options.source);
    }
 
-   private _isLocalSource(source: RecordSet): boolean {
+   getItemsWithHistory(): RecordSet {
+      if(this._options.source.getItems) {
+         return this._options.source.getItems();
+      }
+   }
+
+   private _isLocalSource(source: ICrudPlus): boolean {
       return cInstance.instanceOfModule(source, 'Types/source:Local');
    }
 }

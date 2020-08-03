@@ -112,6 +112,38 @@ define(
             assert.isFalse(isKeysChanged);
          });
 
+         it('_private::getNewItems', function() {
+            let ddl = getDropdown(config);
+            let curItems = new collection.RecordSet({
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '2',
+                     title: 'Запись 2'
+                  }, {
+                     id: '3',
+                     title: 'Запись 3'
+                  }]
+               }),
+               selectedItems = new collection.RecordSet({
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '9',
+                     title: 'Запись 9'
+                  }, {
+                     id: '10',
+                     title: 'Запись 10'
+                  }]
+               });
+            let newItems = [selectedItems.at(1), selectedItems.at(2)];
+            let result = ddl._getNewItems(curItems, selectedItems, 'id');
+
+            assert.deepEqual(newItems, result);
+         });
+
          it('_handleMouseDown', () => {
             let isOpened = false;
             let ddl = getDropdown(config);

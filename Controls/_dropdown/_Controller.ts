@@ -165,13 +165,6 @@ export default class _Controller implements IDropdownController {
       this._sticky = null;
    }
 
-   handleSelectedItems(): void {
-      if (this._sourceController && this._source.getItems) {
-         this.updateItems(this._source.getItems());
-      }
-      this._closeDropdownList();
-   }
-
    updateItems(items: RecordSet|null): void {
       if (items) {
          this._createMenuSource(items);
@@ -186,34 +179,20 @@ export default class _Controller implements IDropdownController {
       this._menuSource = null;
    }
 
-   handleSelectorResult(selectedItems: RecordSet, needDestroySrcController: boolean): void {
-      const newItems = this._getNewItems(this._items, selectedItems, this._options.keyProperty);
-      if (needDestroySrcController) {
-         if (newItems.length) {
-            this._sourceController = null;
-         }
-         if (this._sourceController && this._source.getItems) {
-            this.updateItems(this._source.getItems());
-         }
-      } else {
-         this._items.prepend(newItems);
-         this.updateItems(this._items);
-      }
-   }
-
    setFilter(filter) {
       this._options.filter = filter;
    }
 
-   private _getNewItems(items: RecordSet, selectedItems: RecordSet, keyProperty: string): Model[] {
-      const newItems = [];
+   getSourceController(): Control {
+      return this._sourceController;
+   }
 
-      factory(selectedItems).each((item) => {
-         if (!this._getItemByKey(items, item.get(keyProperty), keyProperty)) {
-            newItems.push(item);
-         }
-      });
-      return newItems;
+   resetSourceController(): void {
+      this._sourceController = null;
+   }
+
+   getItems(): RecordSet {
+      return this._items;
    }
 
    private _open(popupOptions?: object): string|Promise<unknown[]> {

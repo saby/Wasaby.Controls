@@ -14,11 +14,12 @@ export default interface IDropdownController {
     openMenu(popupOptions?: object): Promise<unknown[]>;
     closeMenu(): void;
     destroy(): void;
-    handleSelectorResult(newItems: RecordSet, needDestroySrcController: boolean): void;
-    handleSelectedItems(): void;
     updateItems(items: RecordSet|null): void;
     handleClose(): void;
     setFilter(filter: object): void;
+    getSourceController(): Control;
+    resetSourceController(): void;
+    getItems(): RecordSet;
 }
 
 export interface IDropdownControllerOptions extends IControlOptions, ISourceOptions, IFilterOptions, INavigationOptions {

@@ -237,8 +237,7 @@ export default class Button extends BaseDropdown {
 
       // dropDown must close by default, but user can cancel closing, if returns false from event
       if (res !== false) {
-         this._historyController.updateHistory(item);
-         this._controller.handleSelectedItems();
+         this._updateControllerItems(data);
       }
    }
 

@@ -382,22 +382,30 @@ export default class Input extends BaseDropdown {
 
       // dropDown must close by default, but user can cancel closing, if returns false from event
       if (res !== false) {
-         this._historyController.updateHistory(item);
-         this._controller.handleSelectedItems();
+         this._updateControllerItems(data);
       }
    }
 
    protected _applyClick(data): void {
       this._selectedItemsChangedHandler(data);
-      this._historyController.updateHistory(data);
-      this._controller.handleSelectedItems();
+      this._updateControllerItems(data);
    }
 
    protected _selectorResult(selectedItems): void {
+      const controllerItems = this._controller.getItems();
+      const newItems = this._getNewItems(controllerItems, selectedItems, this._options.keyProperty);
+      const historyItems = this._historyController.getItemsWithHistory();
       const hasHistory = this._historyController.hasHistory(this._options);
-      this._controller.handleSelectorResult(selectedItems, hasHistory);
       if (hasHistory) {
-         this._historyController.updateHistory(factory(selectedItems).toArray());
+         if (newItems.length) {
+            this._controller.resetSourceController();
+         }
+         if(this._controller.getSourceController()) {
+            this._controller.updateItems(historyItems);
+         }
+      } else {
+         controllerItems.prepend(newItems);
+         this._controller.updateItems(controllerItems);
       }
       this._selectedItemsChangedHandler(selectedItems);
    }
@@ -405,6 +413,17 @@ export default class Input extends BaseDropdown {
    protected _selectorTemplateResult(event, selectedItems): void {
       let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
       this._selectorResult(result);
+   }
+
+   private _getNewItems(items: RecordSet, selectedItems: RecordSet, keyProperty: string): Model[] {
+      const newItems = [];
+
+      factory(selectedItems).each((item) => {
+         if (!items.at(items.getIndexByValue(keyProperty, item.get(keyProperty)))) {
+            newItems.push(item);
+         }
+      });
+      return newItems;
    }
 
    private _getSelectedKeys(items, keyProperty) {

@@ -695,38 +695,6 @@ define(
             assert.isTrue(closed);
          });
 
-         it('_private::getNewItems', function() {
-            let curItems = new collection.RecordSet({
-                  rawData: [{
-                     id: '1',
-                     title: 'Запись 1'
-                  }, {
-                     id: '2',
-                     title: 'Запись 2'
-                  }, {
-                     id: '3',
-                     title: 'Запись 3'
-                  }]
-               }),
-               selectedItems = new collection.RecordSet({
-                  rawData: [{
-                     id: '1',
-                     title: 'Запись 1'
-                  }, {
-                     id: '9',
-                     title: 'Запись 9'
-                  }, {
-                     id: '10',
-                     title: 'Запись 10'
-                  }]
-               });
-            let dropdownController = getDropdownController(config);
-            let newItems = [selectedItems.at(1), selectedItems.at(2)];
-            let result = dropdownController._getNewItems(curItems, selectedItems, 'id');
-
-            assert.deepEqual(newItems, result);
-         });
-
          it('_private::getSourceController', function() {
             config.menuOptions.dataLoadCallback = null;
             let dropdownController = getDropdownController(config);

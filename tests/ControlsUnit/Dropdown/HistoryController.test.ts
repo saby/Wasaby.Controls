@@ -48,18 +48,4 @@ describe('Controls/_dropdown/HistoryController', () => {
         item = historyController.getPreparedItem('item', 'key');
         assert.equal(item, 'item');
     });
-
-    it('prepareSource', async() => {
-        let historyController = getDropdownHistoryController(controllerConfig);
-
-        const config = {
-            source: new Source({
-                originSource: {}
-            }),
-            historyId: 'test'
-        };
-
-        await historyController.prepareSource('item', 'key');
-        cInstance.instanceOfModule(historyController._options.source, 'Controls/history:Source');
-    });
 });
