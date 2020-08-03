@@ -269,6 +269,21 @@ define(
                });
             });
 
+            it('_getloadItemsPromise', () => {
+               let errorCathed = false;
+               dropdownController._items = null;
+               dropdownController._loadItemsPromise = null;
+               dropdownController._options.source = null;
+               let promise = dropdownController._getloadItemsPromise();
+
+               try {
+                  promise.then(() => {});
+               } catch (error) {
+                  errorCathed = true;
+               }
+               assert.isFalse(errorCathed);
+            });
+
             it('without loaded items', () => {
                let configItems = clone(config),
                   selectedItems = [];
