@@ -2,7 +2,6 @@ import {Control, IControlOptions} from 'UI/Base';
 import {ISourceOptions, IFilterOptions, INavigationOptions} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
-import {Model} from 'Types/entity';
 export type TKey = string|number|null;
 
 export default interface IDropdownController {
@@ -15,7 +14,6 @@ export default interface IDropdownController {
     openMenu(popupOptions?: object): Promise<unknown[]>;
     closeMenu(): void;
     destroy(): void;
-    getPreparedItem(item: Model): Model;
     handleSelectorResult(newItems: RecordSet, needDestroySrcController: boolean): void;
     handleSelectedItems(): void;
     updateItems(items: RecordSet|null): void;

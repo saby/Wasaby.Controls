@@ -155,6 +155,7 @@ export default class Button extends BaseDropdown {
       const buttonConfig = {
          keyProperty: this._historyController.hasHistory(options) ? 'copyOriginalId' : options.keyProperty,
          allowPin: this._historyController.hasHistory(options),
+         headerTemplate: options.headTemplate || options.headerTemplate,
          headingCaption: options.caption,
          headingIcon: options.icon,
          headingIconSize: options.iconSize,

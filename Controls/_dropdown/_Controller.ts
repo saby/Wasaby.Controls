@@ -88,7 +88,7 @@ export default class _Controller implements IDropdownController {
    update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void {
       const oldOptions = {...this._options};
       this._options = newOptions;
-      if (newOptions.menuOptions.readOnly && newOptions.menuOptions.readOnly !== oldOptions.menuOptions.readOnly) {
+      if (newOptions.readOnly && newOptions.readOnly !== oldOptions.readOnly) {
          this._closeDropdownList();
       }
 
@@ -217,7 +217,7 @@ export default class _Controller implements IDropdownController {
    }
 
    private _open(popupOptions?: object): string|Promise<unknown[]> {
-      if (this._options.menuOptions.readOnly) {
+      if (this._options.readOnly) {
          return Promise.resolve();
       }
       if (popupOptions) {

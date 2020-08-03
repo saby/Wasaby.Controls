@@ -274,7 +274,6 @@ export default class Input extends BaseDropdown {
 
    _getControllerOptions(options: IInputOptions): object {
       const inputConfig = {
-         historyId: options.historyId,
          keyProperty: this._historyController.hasHistory(options) ? 'copyOriginalId' : options.keyProperty,
          dataLoadCallback: this._dataLoadCallback,
          selectorOpener: this,
@@ -390,7 +389,8 @@ export default class Input extends BaseDropdown {
 
    protected _applyClick(data): void {
       this._selectedItemsChangedHandler(data);
-      this._controller.handleSelectedItems(data);
+      this._historyController.updateHistory(data);
+      this._controller.handleSelectedItems();
    }
 
    protected _selectorResult(selectedItems): void {
