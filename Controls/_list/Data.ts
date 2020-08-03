@@ -160,6 +160,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          // TODO 1) filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
          // TODO 2) getState у SourceController пересоздаёт prefetchProxy,
          // TODO поэтому весь state на контекст перекладывать нельзя, иначе список перезагрузится с теми же данными
+         this._filter = controllerState.filter;
          this._dataOptionsContext.filter = controllerState.filter;
          this._dataOptionsContext.updateConsumers();
       }
