@@ -865,10 +865,14 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                         this._filterButtonItems,
                         this._fastFilterItems
                     );
+                    if (newOptions.prefetchParams) {
+                        this._isFilterChanged = true;
+                    }
                 }
 
                 if (filterButtonChanged && newOptions.prefetchParams) {
                     this._filter = Prefetch.clearPrefetchSession(this._filter);
+                    this._isFilterChanged = true;
                 }
 
                 if (newOptions.historyId !== this._options.historyId) {
