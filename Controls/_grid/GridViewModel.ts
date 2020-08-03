@@ -317,8 +317,7 @@ var
             if (current.isEditing()) {
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
-                let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
-                classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
+                classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;
             }
 
             if (current.columnScroll && !current.isEditing()) {
@@ -1650,7 +1649,6 @@ var
                         showEditArrow: current.showEditArrow,
                         itemPadding: current.itemPadding,
                         getLadderContentClasses: current.getLadderContentClasses,
-                        hoverBackgroundStyle: self._options.hoverBackgroundStyle || 'default',
                         getVersion: function () {
                            return _private.calcItemColumnVersion(self, current.getVersion(), this.columnIndex, this.index);
                         },
@@ -1991,11 +1989,11 @@ var
         },
 
         setRowSeparatorSize(rowSeparatorSize: IGridSeparatorOptions['rowSeparatorSize']): void {
-            rowSeparatorSize = _private.getSeparatorSizes({
+            this._options.rowSeparatorSize = _private.getSeparatorSizes({
                 rowSeparatorSize,
                 rowSeparatorVisibility: this._options.rowSeparatorVisibility
             }).row;
-            this._model.setRowSeparatorSize(rowSeparatorSize);
+            this._nextModelVersion();
         },
 
         setColumnSeparatorSize(columnSeparatorSize: IGridSeparatorOptions['columnSeparatorSize']): void {

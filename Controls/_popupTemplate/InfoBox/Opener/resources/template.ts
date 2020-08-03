@@ -1,5 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/InfoBox/Opener/resources/template');
+import Utils = require('View/Executor/Utils');
 import {load} from 'Core/library';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IInfoboxTemplateOptions} from 'Controls/_popupTemplate/InfoBox';
@@ -14,7 +15,7 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
    }
 
    private _needRequireModule(module: string | Function): boolean {
-      return typeof module === 'string' && !requirejs.defined(module);
+      return typeof module === 'string' && !Utils.RequireHelper.defined(module);
    }
 
    protected _close(): void {

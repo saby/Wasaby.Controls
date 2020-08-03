@@ -1,13 +1,12 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import controlTemplate =
-    require('wml!Controls-demo/Suggest_new/Selector/SuggestTemplate/resources/SuggestTemplateGrid');
+import controlTemplate = require('wml!Controls-demo/Suggest_new/Selector/SuggestTemplate/resources/SuggestTemplateGrid');
 import headerTemplate = require('wml!Controls-demo/Suggest_new/Selector/SuggestTemplate/resources/HeaderTemplate');
 
 class SuggestTemplateGrid extends Control{
    protected _template: TemplateFunction = controlTemplate;
-   protected _columns: object[] = null;
+   protected _columns = null;
 
-   _beforeMount(): void {
+   _beforeMount() {
       this._columns = [
          {
             displayProperty: 'title'

@@ -1,27 +1,26 @@
 import * as Deferred from 'Core/Deferred';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import ICrud from './ICrud';
-import {DataSet} from 'Types/source';
 
 const SEARCH_DELAY = 3000;
 
 export default class DelaySuggestSource {
    private source: ICrud;
-   protected _mixins: number[] = [];
-   constructor(opts: object) {
+   protected _mixins: any[] = [];
+   constructor(opts) {
       this.source = new SearchMemory(opts);
       this['[Types/_source/ICrud]'] = true;
    }
 
-   getModel(): string {
+   getModel() {
       return this.source.getModel();
    }
 
-   getKeyProperty(): string {
+   getKeyProperty() {
       return this.source.getKeyProperty();
    }
 
-   query(): Promise<DataSet> {
+   query(query) {
       const origQuery = this.source.query.apply(this.source, arguments);
       const loadDef = new Deferred();
 

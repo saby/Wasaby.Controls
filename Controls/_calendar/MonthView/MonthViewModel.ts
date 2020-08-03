@@ -54,7 +54,6 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          daysData: state.daysData,
          dateConstructor: state.dateConstructor || WSDate,
          readOnly: state.readOnly,
-         dayFormatter: state.dayFormatter,
          _date: state._date
       };
    },

@@ -1,33 +1,34 @@
 import {Control, IControlOptions} from 'UI/Base';
-import {ISearchOptions} from 'Controls/interface';
+import {INavigationOptions, IFilterOptions, IMultiSelectableOptions, ISearchOptions} from 'Controls/interface';
 import {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
+import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {IDropdownSourceOptions} from './IDropdownSource';
 import {RecordSet} from 'Types/collection';
-import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {Memory} from 'Types/source';
 import {IStickyPosition} from 'Controls/popup';
-import {Model} from 'Types/entity';
 export type TKey = string|number|null;
 
 export default interface IDropdownController {
-    loadItems(): Promise<DropdownReceivedState>;
+    loadItems(): Promise<RecordSet>;
     reload(): Promise<RecordSet>;
-    setItems(items?: RecordSet): Promise<RecordSet>;
-    setHistoryItems(history?: RecordSet): void;
+    setItems(receivedState: {items?: RecordSet, history?: RecordSet}): Promise<RecordSet>;
     update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void;
-    loadDependencies(): Promise<unknown[]>;
-    setMenuPopupTarget(target: HTMLElement): void;
-    openMenu(popupOptions?: object): string|Promise<unknown[]>;
+    loadDependencies(): Promise<any>;
+    setMenuPopupTarget(target: any): void;
+    openMenu(popupOptions?: object): Promise<any>;
     closeMenu(): void;
     destroy(): void;
-    getPreparedItem(item: Model): Model;
-    handleSelectorResult(selectedItems: RecordSet): void;
+    applyClick(data: RecordSet): void;
+    getPreparedItem(data: RecordSet, keyProperty: TKey): any;
+    onSelectorResult(selectedItems: RecordSet): void;
 }
 
-export interface IDropdownControllerOptions extends IControlOptions, IDropdownSourceOptions,
-    IMenuPopupOptions, ISearchOptions {
+export interface IDropdownControllerOptions extends IControlOptions, IDropdownSourceOptions, INavigationOptions,
+    IFilterOptions, IMultiSelectableOptions, IMenuPopupOptions, IMenuControlOptions, ISearchOptions {
     keyProperty: string;
     notifyEvent: Function;
     lazyItemsLoading?: boolean;
+    emptyText?: string;
     selectedItemsChangedCallback?: Function;
     dataLoadErrback?: Function;
     historyId?: string;
@@ -39,6 +40,7 @@ export interface IDropdownControllerOptions extends IControlOptions, IDropdownSo
     typeShadow?: string;
     openerControl: Control;
     targetPoint: IStickyPosition;
+    menuPopupOptions?: IMenuPopupOptions;
     additionalProperty?: string;
     hasIconPin?: boolean;
     showHeader?: boolean;

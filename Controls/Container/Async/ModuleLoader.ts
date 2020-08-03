@@ -32,7 +32,7 @@ class ModuleLoader {
         return mod;
     }
 
-    loadAsync(name: string, errorHandler?: Handler): Promise<Module> {
+    loadAsync(name: string, errorHandler: Handler): Promise<Module> {
         if (this.isLoaded(name)) {
             return Promise.resolve(this.loadSync(name));
         }
@@ -87,7 +87,7 @@ class ModuleLoader {
      *   вернуть ответ, что модуль загружен.
      * @param name имя модуля
      */
-    isLoaded(name: string): boolean {
+    private isLoaded(name: string): boolean {
         const parsedInfo: IParsedName = libHelper.parse(name);
         if (this.asyncLoadedModules[parsedInfo.name]) {
             return true;

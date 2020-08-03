@@ -5,11 +5,10 @@ import IDropdownController from 'Controls/_dropdown/interface/IDropdownControlle
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {DependencyTimer} from 'Controls/Utils/FastOpen';
 import {RecordSet} from 'Types/collection';
-import {IStickyPopupOptions} from 'Controls/popup';
 
 export type DropdownReceivedState = {items?: RecordSet, history?: RecordSet};
 
-export abstract class BaseDropdown extends Control<IControlOptions, DropdownReceivedState> {
+export class BaseDropdown extends Control<IControlOptions, DropdownReceivedState> {
     protected _controller: IDropdownController = null;
     protected _isOpened: boolean = false;
     protected _dependenciesTimer: DependencyTimer = null;
@@ -22,9 +21,7 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
         this._controller.closeMenu();
     }
 
-    abstract openMenu(popupOptions?: IStickyPopupOptions): void;
-
-    protected _afterMount(options?: IControlOptions, contexts?: object): void {
+    protected _afterMount(options?: IControlOptions, contexts?: any): void {
         RegisterUtil(this, 'scroll', this._handleScroll.bind(this));
     }
 

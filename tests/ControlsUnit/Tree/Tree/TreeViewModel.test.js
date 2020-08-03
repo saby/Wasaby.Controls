@@ -198,8 +198,7 @@ define([
                         get: function() {
                            return null;
                         }
-                     },
-                     getExpanderIcon: () => undefined
+                     }
                   }
                }, {
                   itemData: {
@@ -207,8 +206,7 @@ define([
                         get: function() {
                            return null;
                         }
-                     },
-                     getExpanderIcon: () => 'testIcon'
+                     }
                   },
                   expanderIcon: 'testIcon'
                }, {
@@ -217,8 +215,7 @@ define([
                         get: function() {
                            return null;
                         }
-                     },
-                     getExpanderIcon: () => 'none'
+                     }
                   },
                   expanderIcon: 'none'
                }, {
@@ -227,8 +224,7 @@ define([
                         get: function() {
                            return false;
                         }
-                     },
-                     getExpanderIcon: () => undefined
+                     }
                   }
                }, {
                   itemData: {
@@ -236,8 +232,7 @@ define([
                         get: function() {
                            return false;
                         }
-                     },
-                     getExpanderIcon: () => 'testIcon'
+                     }
                   },
                   expanderIcon: 'testIcon'
                }, {
@@ -246,8 +241,7 @@ define([
                         get: function() {
                            return false;
                         }
-                     },
-                     getExpanderIcon: () => 'none'
+                     }
                   },
                   expanderIcon: 'none'
                }, {
@@ -256,8 +250,7 @@ define([
                         get: function() {
                            return true;
                         }
-                     },
-                     getExpanderIcon: () => undefined
+                     }
                   }
                }, {
                   itemData: {
@@ -265,8 +258,7 @@ define([
                         get: function() {
                            return true;
                         }
-                     },
-                     getExpanderIcon: () => 'testIcon'
+                     }
                   },
                   expanderIcon: 'testIcon'
                }, {
@@ -275,8 +267,7 @@ define([
                         get: function() {
                            return true;
                         }
-                     },
-                     getExpanderIcon: () => 'none'
+                     }
                   },
                   expanderIcon: 'none'
                }],
@@ -291,41 +282,29 @@ define([
               var
                   shouldDrawExpanderPadding = tree.TreeViewModel._private.shouldDrawExpanderPadding;
               assert.isTrue(shouldDrawExpanderPadding({
-                  getExpanderIcon: () => 'node',
-                  getExpanderSize: () => undefined,
                   expanderVisibility: 'visible',
                   thereIsChildItem: true
-              }, 'node', undefined));
+              }, 'node'));
               assert.isTrue(shouldDrawExpanderPadding({
-                  getExpanderIcon: () => 'node',
-                  getExpanderSize: () => undefined,
                   expanderVisibility: 'visible',
                   thereIsChildItem: false
-              }, 'node', undefined));
+              }, 'node'));
               assert.isTrue(shouldDrawExpanderPadding({
-                  getExpanderIcon: () => 'node',
-                  getExpanderSize: () => undefined,
                   expanderVisibility: 'hasChildren',
                   thereIsChildItem: true
-              }, 'node', undefined));
+              }, 'node'));
               assert.isFalse(shouldDrawExpanderPadding({
-                  getExpanderIcon: () => 'none',
-                  getExpanderSize: () => undefined,
                   expanderVisibility: 'visible',
                   thereIsChildItem: true
-              }, 'none', undefined));
+              }, 'none'));
               assert.isFalse(shouldDrawExpanderPadding({
-                  getExpanderIcon: () => 'none',
-                  getExpanderSize: () => undefined,
                   expanderVisibility: 'hasChildren',
                   thereIsChildItem: true
-              }, 'none', undefined));
+              }, 'none'));
               assert.isFalse(shouldDrawExpanderPadding({
-                  getExpanderIcon: () => 'node',
-                  getExpanderSize: () => undefined,
                   expanderVisibility: 'hasChildren',
                   thereIsChildItem: false
-              }, 'node', undefined));
+              }, 'node'));
           });
           it('should redraw list if once folder was deleted', function() {
             var
@@ -395,13 +374,13 @@ define([
                 'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_theme-default controls-TreeGrid__row-expanderPadding_size_l_theme-default',
                 'controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_theme-default controls-TreeGrid__row-expanderPadding_size_xl_theme-default',
             ];
-            assert.equal(tree.TreeViewModel._private.getExpanderPaddingClasses({theme, getExpanderSize: () => undefined}, undefined), expectation[0]);
-            assert.equal(tree.TreeViewModel._private.getExpanderPaddingClasses({theme, getExpanderSize: () => 's'}, 's'), expectation[1]);
-            assert.equal(tree.TreeViewModel._private.getExpanderPaddingClasses({theme, getExpanderSize: () => 'm'}, 'm'), expectation[2]);
-            assert.equal(tree.TreeViewModel._private.getExpanderPaddingClasses({theme, getExpanderSize: () => 'l'}, 'l'), expectation[3]);
-            assert.equal(tree.TreeViewModel._private.getExpanderPaddingClasses({theme, getExpanderSize: () => 'xl'}, 'xl'), expectation[4]);
+            assert.equal(tree.TreeViewModel._private.getExpanderPaddingClasses(undefined, theme), expectation[0]);
+            assert.equal(tree.TreeViewModel._private.getExpanderPaddingClasses('s', theme), expectation[1]);
+            assert.equal(tree.TreeViewModel._private.getExpanderPaddingClasses('m', theme), expectation[2]);
+            assert.equal(tree.TreeViewModel._private.getExpanderPaddingClasses('l', theme), expectation[3]);
+            assert.equal(tree.TreeViewModel._private.getExpanderPaddingClasses('xl', theme), expectation[4]);
          });
-         it('getExpanderClasses', function() {
+         it('prepareExpanderClasses', function() {
             var
                itemPadding = {
                   top: 'default',
@@ -409,78 +388,60 @@ define([
                 },
                testsPrepareExpanderClasses = [{
                   itemData: {
-                     theme,
                      item: {
                         get: function() {
                            return false;
                         }
                      },
-                     getExpanderIcon: () => undefined,
-                     getExpanderSize: () => undefined,
                      itemPadding
                   }
                }, {
                   itemData: {
-                     theme,
                      item: {
                         get: function() {
                            return false;
                         }
                      },
-                     itemPadding,
-                     getExpanderIcon: () => 'testIcon',
-                     getExpanderSize: () => undefined,
+                     itemPadding
                   },
                   expanderIcon: 'testIcon'
                }, {
                   itemData: {
-                     theme,
-                     item: {
-                        get: function () {
-                           return true;
-                        }
-                     },
-                     itemPadding,
-                     getExpanderIcon: () => undefined,
-                     getExpanderSize: () => undefined,
-                  }
-               }, {
-                  itemData: {
-                     theme,
                      item: {
                         get: function() {
                            return true;
                         }
                      },
-                     itemPadding,
-                     getExpanderIcon: () => 'testIcon',
-                     getExpanderSize: () => undefined,
+                     itemPadding
+                  }
+               }, {
+                  itemData: {
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     },
+                     itemPadding
                   },
                   expanderIcon: 'testIcon'
                }, {
                   itemData: {
-                     theme,
                      item: {
-                        get: function () {
+                        get: function() {
                            return true;
                         }
                      },
-                     itemPadding,
-                     getExpanderIcon: () => 'node',
-                     getExpanderSize: () => undefined,
+                     itemPadding
                   },
                   expanderIcon: 'node'
                }, {
                   itemData: {
-                     theme,
                      item: {
                         get: function() {
                            return true;
                         }
                      },
-                     itemPadding,
-                     getExpanderIcon: () => 'hiddenNode',
-                     getExpanderSize: () => undefined,
+                     itemPadding
                   },
                   expanderIcon: 'hiddenNode'
                }],
@@ -494,30 +455,11 @@ define([
                ];
             testsPrepareExpanderClasses.forEach(function(item, i) {
                cAssert.isClassesEqual(
-                   tree.TreeViewModel._private.getExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon, undefined),
+                  tree.TreeViewModel._private.prepareExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon, undefined, theme),
                    testsResultPrepareExpanderClasses[i],
-                   'Invalid value "getExpanderClasses(...)" for step ' + i + '.'
+                   'Invalid value "prepareExpanderClasses(...)" for step ' + i + '.'
                );
             });
-         });
-         it('getItemDataByItem', function() {
-            const originFn = tree.TreeViewModel.superclass.getItemDataByItem;
-             tree.TreeViewModel.superclass.getItemDataByItem = function() {
-               return {
-                  item: {},
-                  getCurrentColumn: function() {
-                     return {
-                        classList: {
-                           base: ''
-                        }
-                     };
-                  }
-               };
-            };
-            treeViewModel = new tree.TreeViewModel(cfg);
-            const itemData = treeViewModel.getCurrent();
-            assert.isTrue(!!itemData.getLevelIndentClasses);
-             tree.TreeViewModel.superclass.getItemDataByItem = originFn;
          });
       });
       describe('expandedItems', function() {
@@ -752,7 +694,6 @@ define([
          });
       });
 
-      // TODO: Удалить #rea_1179794968
       describe('expanderDisplayMode', function() {
          var
 
