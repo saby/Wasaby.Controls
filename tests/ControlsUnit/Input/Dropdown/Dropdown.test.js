@@ -132,7 +132,13 @@ define(
             let ddl = getDropdown(config);
             ddl._controller = {
                setMenuPopupTarget: () => { target = 'test'; },
-               openMenu: (popupConfig) => { actualOptions = popupConfig; return Promise.resolve(); }
+               openMenu: (popupConfig) => { actualOptions = popupConfig; return Promise.resolve(); },
+               setFilter: () => {}
+            };
+
+            ddl._historyController = {
+               getPreparedFilter: ()=> {},
+               getPreparedSource: ()=> {}
             };
 
             ddl.openMenu();
