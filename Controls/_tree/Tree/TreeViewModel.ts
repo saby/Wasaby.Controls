@@ -8,6 +8,7 @@ import { TemplateFunction } from 'UI/Base';
 import { IDragPosition, ITreeItemData } from 'Controls/listDragNDrop';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import { TreeChildren, TreeItem } from 'Controls/display';
+import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 
 var
     _private = {
@@ -171,8 +172,8 @@ var
                 style = itemData.style || 'default',
                 expanderIconClass;
 
-            expanderClasses += ' controls-TreeGrid__row_' + style + '-expander_size_' + (expanderSize || 'default') + `_theme-${theme}`;
-            expanderClasses += ' js-controls-ListView__notEditable';
+            expanderClasses += ' controls-TreeGrid__row_' + style + '-expander_size_' + (expanderSize || 'default') + `_theme-${theme} `;
+            expanderClasses += EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE;
 
             expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${itemData.itemPadding.top}_theme-${theme}`;
             expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${itemData.itemPadding.bottom}_theme-${theme}`;
