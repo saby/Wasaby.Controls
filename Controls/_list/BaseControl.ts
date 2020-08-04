@@ -549,7 +549,11 @@ const _private = {
             }
 
         };
-        return self._scrollController?.scrollToItem(key, toBottom, force, scrollCallback);
+        return self._scrollController?.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
+            if (result) {
+                _private.handleScrollControllerResult(self, result);
+            }
+        });
     },
 
     keyDownHome(self, event) {
@@ -2976,8 +2980,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             let result = this._scrollController.getResult();
             _private.handleScrollControllerResult(this, result);
 
-            result = this._scrollController.continueScrollToItemIfNeed();
-            _private.handleScrollControllerResult(this, result);
+            this._scrollController.continueScrollToItemIfNeed();
         }
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
@@ -3435,12 +3438,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             this._scrollController.setRendering(false);
 
-            let result = this._scrollController.continueScrollToItemIfNeed();
-            _private.handleScrollControllerResult(this, result);
-            let needCheckTriggers = !!result;
-            result = this._scrollController.completeVirtualScrollIfNeed();
-            needCheckTriggers = needCheckTriggers || !!result;
-            _private.handleScrollControllerResult(this, result);
+            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() || 
+                                    this._scrollController.completeVirtualScrollIfNeed();
 
             if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
                 const {direction, heightDifference} = this._scrollController.getParamsToRestoreScrollPosition();
