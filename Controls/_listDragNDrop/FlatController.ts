@@ -1,7 +1,7 @@
 import { IDragPosition, TKey, TPosition } from './interface';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { ItemsEntity } from 'Controls/dragnDrop';
-import { CollectionItem } from 'Controls/display';
+import { CollectionItem, Collection } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { ISelectionObject } from 'Controls/interface';
 
@@ -22,6 +22,8 @@ export interface IFlatItemData {
    item: Model;
    key: TKey;
    dispItem: CollectionItem<Model>;
+   getContents?: () => Model;
+   getOwner?: () => Collection<Model>;
 }
 
 export default class FlatController {
@@ -87,11 +89,21 @@ export default class FlatController {
       return this._entity;
    }
 
-   calculateDragPosition(targetItemData: IFlatItemData, position?: TPosition): IDragPosition {
+   calculateDragPosition(targetItemData: IFlatItemData|CollectionItem<Model>, position?: TPosition): IDragPosition {
       let prevIndex = -1;
 
+      // New model compatibility
+      const index = (targetItemData as IFlatItemData).index !== undefined ?
+          (targetItemData as IFlatItemData).index :
+          (targetItemData.getOwner && targetItemData.getOwner().getIndex(targetItemData));
+
+      // New model compatibility
+      const item = (targetItemData as IFlatItemData).item !== undefined ?
+          (targetItemData as IFlatItemData).item :
+          (targetItemData.getContents && targetItemData.getContents());
+
       // If you hover on a record that is being dragged, then the position should not change.
-      if (this._draggingItemData && this._draggingItemData.index === targetItemData.index) {
+      if (this._draggingItemData && this._draggingItemData.index === index) {
          return null;
       }
 
@@ -103,19 +115,21 @@ export default class FlatController {
 
       if (prevIndex === -1) {
          position = 'before';
-      } else if (targetItemData.index > prevIndex) {
+      } else if (index > prevIndex) {
          position = 'after';
-      } else if (targetItemData.index < prevIndex) {
+      } else if (index < prevIndex) {
          position = 'before';
-      } else if (targetItemData.index === prevIndex) {
+      } else if (index === prevIndex) {
          position = this._dragPosition.position === 'after' ? 'before' : 'after';
       }
 
+      console.log(position);
+
       return {
-         index: targetItemData.index,
-         item: targetItemData.item,
+         index,
+         item,
          data: targetItemData,
-         position: position
+         position
       };
    }
 

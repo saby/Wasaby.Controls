@@ -169,12 +169,15 @@ export default class Drag<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         const protoItem = this.source.items.find((item) =>
             !(item instanceof GroupItem) && item.getContents().getKey() === this._options.avatarItemKey
         );
-        return this._createItem(protoItem?.getContents());
+        // TODO Add ColumnsDrag itemsStrategy
+        return this._createItem(protoItem?.getContents(), protoItem?.getColumn());
     }
 
-    protected _createItem(contents: S): T {
+    // TODO Add ColumnsDrag itemsStrategy
+    protected _createItem(contents: S, column?: number): T {
         const item = this.options.display.createItem({
-            contents
+            contents,
+            column
         }) as unknown as T;
         item.setDragged(true, true);
         return item;
