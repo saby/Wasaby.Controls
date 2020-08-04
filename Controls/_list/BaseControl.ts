@@ -4164,6 +4164,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
     _intersectHandler(e: SyntheticEvent, entryData) {
         this.triggerVisibilityChangedHandler(entryData.data, entryData.nativeEntry.intersectionRatio > 0);
+        e.stopImmediatePropagation();
     },
     _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
         switch (eventName) {
