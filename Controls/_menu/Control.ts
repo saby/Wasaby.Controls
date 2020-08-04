@@ -25,6 +25,7 @@ import {error as dataSourceError} from 'Controls/dataSource';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
 import {Stack} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 /**
  * Контрол меню.
@@ -126,6 +127,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _selectionChanged: boolean = false;
     private _expandedItems: RecordSet;
     private _itemsCount: number;
+    private _visibleIds: TKey[] = [];
     private _openingTimer: number = null;
     private _closingTimer: number = null;
     private _isMouseInOpenedItemArea: boolean = false;
@@ -694,12 +696,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 if (options.dataLoadCallback) {
                     options.dataLoadCallback(items);
                 }
-                this._createViewModel(items, options);
                 this._moreButtonVisible = options.selectorTemplate &&
                     this._getSourceController(options).hasMoreData('down');
                 this._expandButtonVisible = this._isExpandButtonVisible(
                     items,
                     options);
+                this._createViewModel(items, options);
 
                 return items;
             },
@@ -718,10 +720,18 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 }
             });
         } else if (options.allowPin && options.root === null) {
+            this._visibleIds = [];
             const itemsCount = factory(items).count((item) => {
-                return !item.get(options.parentProperty);
+                const hasParent = item.get(options.parentProperty);
+                if (!hasParent)  {
+                    this._visibleIds.push(item.getKey());
+                }
+                return !hasParent;
             }).value()[0];
             hasAdditional = itemsCount > MAX_HISTORY_VISIBLE_ITEMS_COUNT + 1;
+            if (hasAdditional) {
+                this._visibleIds.splice(MAX_HISTORY_VISIBLE_ITEMS_COUNT);
+            }
         }
         return hasAdditional;
     }
@@ -875,8 +885,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return (!item.get || !item.get(options.additionalProperty) || MenuControl._isHistoryItem(item));
     }
 
-    private static _limitHistoryCheck(item: Model, index: number): boolean {
-        return index < MAX_HISTORY_VISIBLE_ITEMS_COUNT;
+    private static _limitHistoryCheck(item: Model): boolean {
+        return this._visibleIds.includes(item.getKey());
     }
 
     private static _displayFilter(options: IMenuControlOptions, item: Model): boolean {
