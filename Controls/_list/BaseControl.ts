@@ -549,7 +549,11 @@ const _private = {
             }
 
         };
-        return self._scrollController?.scrollToItem(key, toBottom, force, scrollCallback);
+        return self._scrollController?.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
+            if (result) {
+                _private.handleScrollControllerResult(self, result);
+            }
+        });
     },
 
     keyDownHome(self, event) {
