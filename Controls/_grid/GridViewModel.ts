@@ -261,10 +261,15 @@ var
         },
 
         isFixedCell: function(params) {
-            const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isMultiHeader } = params;
+            const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isHeader, isMultiHeader, endColumn } = params;
             const
                 hasMultiSelect = multiSelectVisibility !== 'hidden',
                 columnOffset = hasMultiSelect ? 1 : 0;
+
+            if (isHeader && typeof endColumn !== 'undefined') {
+                // endColumn - конфиг GridLayout, он всегда больше на 1.
+                return endColumn - 1 <= stickyColumnsCount;
+            }
             const isCellIndexLessTheFixedIndex = columnIndex < (stickyColumnsCount + columnOffset);
             if (isMultiHeader !== undefined) {
                 return isCellIndexLessTheFixedIndex && rowIndex === 0;
@@ -964,7 +969,9 @@ var
             if (this.isStickyHeader()) {
                headerColumn.zIndex = _private.getHeaderZIndex({
                   columnIndex: columnIndex,
+                  endColumn: cell.endColumn,
                   rowIndex,
+                  isHeader: true,
                   isMultiHeader: this._isMultiHeader,
                   multiSelectVisibility: this._options.multiSelectVisibility,
                   stickyColumnsCount: this._options.stickyColumnsCount,
@@ -979,7 +986,9 @@ var
             if (this._options.columnScroll) {
                 cellClasses += _private.getColumnScrollCellClasses({
                     columnIndex: columnIndex,
+                    endColumn: cell.endColumn,
                     rowIndex,
+                    isHeader: true,
                     isMultiHeader: this._isMultiHeader,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
