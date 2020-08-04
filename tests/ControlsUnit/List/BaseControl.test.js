@@ -3364,6 +3364,22 @@ define([
 
       });
 
+      it('getUpdatedMetaData: set full metaData.more on load to direction with position navigation', () => {
+         const updatedMeta = lists.BaseControl._private.getUpdatedMetaData(
+             { more: {before: true, after: false} },
+             { more: false },
+             {
+                source: 'position',
+                sourceConfig: {
+                   direction: 'both'
+                }
+             },
+             'up'
+         );
+
+         assert.isFalse(updatedMeta.more.before);
+      });
+
       it('needFooterPadding', function() {
          let cfg = {
             itemActionsPosition: 'outside'
