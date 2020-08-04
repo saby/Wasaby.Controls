@@ -16,6 +16,8 @@
       visibility: visible;
    }
 }
+
+.controls-GridView__itemV_marker-masterClassic_theme-@{themeName},
 .controls-GridView__itemV_marker-default_theme-@{themeName} {
    position: absolute;
    width: @marker_thickness_list;
@@ -673,9 +675,14 @@
       position: absolute;
       left: 0;
       pointer-events: none;
-      top: -@masterClassic_item_selected_border-thickness_list;
-      bottom: -@masterClassic_item_selected_border-thickness_list;
+      top: 0;
+      bottom: 0;
    }
+}
+
+.controls-GridView__itemV_marker-masterClassic_theme-@{themeName} {
+   top: @masterClassic_item_selected_border-thickness_list;
+   height: calc(100% ~'-' 2 * @masterClassic_item_selected_border-thickness_list);
 }
 
 .controls-Grid__row-cell_selected__last-masterClassic_theme-@{themeName} {

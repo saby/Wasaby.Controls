@@ -41,6 +41,7 @@ export default class Browser extends Control {
     private _loading: boolean = false;
     private _items: RecordSet;
     private _filter: object;
+    private _groupHistoryId: string;
     private _dataOptionsContext: ContextOptions;
     private _errorRegister: RegisterClass;
 
@@ -51,6 +52,7 @@ export default class Browser extends Control {
         this._operationsController = this._createOperationsController(options);
 
         this._filter = options.filter;
+        this._groupHistoryId = options.groupHistoryId;
         this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
         this._errorRegister = new RegisterClass({register: 'dataError'});
 
@@ -90,6 +92,7 @@ export default class Browser extends Control {
                 this._updateContext(controllerState);
 
                 this._loading = false;
+                this._groupHistoryId = newOptions.groupHistoryId;
                 return items;
             });
         } else if (isChanged) {
@@ -101,6 +104,7 @@ export default class Browser extends Control {
             this._filter = controllerState.filter;
             this._dataOptionsContext.filter = controllerState.filter;
             this._dataOptionsContext.updateConsumers();
+            this._groupHistoryId = newOptions.groupHistoryId;
         }
         this._operationsController.update(newOptions);
         this._searchController.update(

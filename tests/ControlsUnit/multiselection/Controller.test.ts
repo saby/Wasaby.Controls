@@ -5,7 +5,6 @@ import { assert } from 'chai';
 import { FlatSelectionStrategy, SelectionController } from 'Controls/multiselection';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
-import { spy } from 'sinon';
 import { SearchGridViewModel} from 'Controls/treeGrid';
 
 describe('Controls/_multiselection/Controller', () => {
@@ -262,7 +261,8 @@ describe('Controls/_multiselection/Controller', () => {
          strategyOptions: { items: model.getItems() }
       });
 
-      const result = controller.handleAddItems([]);
+      const addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
+      const result = controller.handleAddItems(addedItems);
       assert.deepEqual(result, {
          selectedKeysDiff: {
             added: [],
@@ -277,7 +277,9 @@ describe('Controls/_multiselection/Controller', () => {
          selectedCount: 4,
          isAllSelected: true
       });
-      model.each((item) => assert.isTrue(item.isSelected()));
+
+      assert.isTrue(model.getItemBySourceKey(1).isSelected());
+      assert.isTrue(model.getItemBySourceKey(2).isSelected());
    });
 
    it('handleRemoveItems', () => {

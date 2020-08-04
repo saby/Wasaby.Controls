@@ -118,6 +118,10 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
         return !this._validationResult;
     }
 
+    openInfoBox(): void {
+        this._openInfoBox();
+    }
+
     protected _hoverHandler(): void {
         this._clearCloseId();
         if (!this._isOpened) {

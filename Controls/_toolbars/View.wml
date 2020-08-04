@@ -6,7 +6,7 @@
                         item="{{item}}"
                         itemsSpacing="{{_options.itemsSpacing}}"
                         buttonTemplate="{{_buttonTemplate}}"
-                        buttonTemplateOptions="{{_getButtonTemplateOptionsByItem(item)}}"
+                        buttonTemplateOptions="{{_options.isNewOptions ? _getSimpleButtonTemplateOptionsByItem(item) : _getButtonTemplateOptionsByItem(item)}}"
                         theme="{{_options.theme}}"
                         on:click="_itemClickHandler(item)"/>
          </ws:if>

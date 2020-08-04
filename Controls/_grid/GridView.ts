@@ -54,7 +54,7 @@ var
             if (stickyCellsCount === 1) {
                 columnsWidths = ['0px'].concat(initialWidths);
             } else if (stickyCellsCount === 2) {
-                columnsWidths = ['0px', initialWidths[0]].concat(['0px']).concat(initialWidths.slice(1))
+                columnsWidths = ['0px', initialWidths[0], '0px'].concat(initialWidths.slice(1))
             } else {
                 columnsWidths = initialWidths;
             }
@@ -299,6 +299,7 @@ var
             // Подробнее: GridControl создает модель и отдает ее в GridView через BaseControl. BaseControl занимается обработкой ошибок, в том
             // числе и разрывом соединения с сетью. При разрыве соединения BaseControl уничтожает GridView и показывает ошибку.
             // Если во время, пока GridView разрушена изменять ее опции, то это не приведет ни к каким реакциям.
+            this._listModel.setColumnScroll(cfg.columnScroll, true);
             this._listModel.setColumns(cfg.columns, true);
             this._listModel.setHeader(cfg.header, true);
 
@@ -323,6 +324,7 @@ var
         _beforeUpdate(newCfg) {
             GridView.superclass._beforeUpdate.apply(this, arguments);
             const self = this;
+            const isColumnsScrollChanged = this._options.columnScroll !== newCfg.columnScroll;
             if (this._options.resultsPosition !== newCfg.resultsPosition) {
                 if (this._listModel) {
                     this._listModel.setResultsPosition(newCfg.resultsPosition);
@@ -340,7 +342,7 @@ var
             }
 
             // В зависимости от columnScroll вычисляются значения колонок для stickyHeader в методе setHeader.
-            if (this._options.columnScroll !== newCfg.columnScroll) {
+            if (isColumnsScrollChanged) {
                 this._listModel.setColumnScroll(newCfg.columnScroll);
                 if (!newCfg.columnScroll) {
                     _private.destroyColumnScroll(this);
@@ -351,7 +353,8 @@ var
             }
             _private.applyNewOptionsAfterReload(self, this._options, newCfg);
             // Вычисления в setHeader зависят от columnScroll.
-            if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
+            if (isColumnsScrollChanged ||
+                !GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._listModel.setHeader(newCfg.header);
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {

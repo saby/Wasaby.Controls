@@ -526,4 +526,5 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
 }
 
 export {default as IndicatorOpener} from 'Controls/_LoadingIndicator/LoadingIndicatorOpener';
+export {default as ILoadingIndicator, ILoadingIndicatorOptions} from 'Controls/_LoadingIndicator/interface/ILoadingIndicator';
 export default LoadingIndicator;

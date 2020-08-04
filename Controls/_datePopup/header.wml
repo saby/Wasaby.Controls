@@ -34,7 +34,7 @@
    </div>
    <div if="{{ _headerType === _HEADER_TYPES.input }}"
         name="inputs"
-        class="controls-PeriodDialog__header-period"
+        class="controls-PeriodDialog__header-period controls-PeriodDialog__header-period-inputs"
         on:focusout="_inputFocusOutHandler()">
        <Controls.input:DateBase
           name="startValueField"
@@ -47,7 +47,7 @@
           attr:ws-autofocus="true"
           attr:class="controls-PeriodDialog__header-datePickerStart"
           on:valueChanged="_startValuePickerChanged()"
-          on:keyup="_startValueFieldKeyUpHandler()"
+          on:inputControl="_inputControlHandler()"
        />
 
       <ws:if data="{{_options.selectionType !== 'single'}}">

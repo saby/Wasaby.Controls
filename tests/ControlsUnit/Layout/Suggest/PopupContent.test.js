@@ -44,6 +44,11 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
          assert.isTrue(layer._shouldScrollToBottom);
          assert.isFalse(layer._showContent);
          assert.isTrue(layer._pendingShowContent);
+
+         layer._showContent = true;
+         layer._shouldScrollToBottom = false;
+         layer._beforeUpdate(optionsReverseList);
+         assert.isFalse(layer._shouldScrollToBottom);
       });
 
       it('afterUpdate', function() {

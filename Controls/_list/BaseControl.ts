@@ -125,7 +125,7 @@ const DRAG_SHIFT_LIMIT = 4;
 const IE_MOUSEMOVE_FIX_DELAY = 50;
 const DRAGGING_OFFSET = 10;
 
-const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-Swipe__measurementContainer';
+const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
 
 interface IAnimationEvent extends Event {
     animationName: string;
@@ -630,6 +630,7 @@ const _private = {
             beforeAddItems(addedItems);
             if (self._options.useNewModel) {
                 self._listViewModel.getCollection().prepend(addedItems);
+                self._listViewModel.getCollection().setMetaData(addedItems.getMetaData());
             } else {
                 self._listViewModel.prependItems(addedItems);
             }
@@ -642,6 +643,7 @@ const _private = {
                 beforeAddItems(addedItems);
                 if (self._options.useNewModel) {
                     self._listViewModel.getCollection().append(addedItems);
+                    self._listViewModel.getCollection().setMetaData(addedItems.getMetaData());
                 } else {
                     self._listViewModel.appendItems(addedItems);
                 }
@@ -1306,6 +1308,8 @@ const _private = {
                     result = _private._getSelectionController(self).clearSelection();
                 } else if (action === IObservable.ACTION_ADD) {
                     result = _private._getSelectionController(self).handleAddItems(newItems);
+                } else if (action === IObservable.ACTION_RESET || action === IObservable.ACTION_REPLACE) {
+                    result = _private._getSelectionController(self).handleResetItems();
                 }
 
                 _private.handleSelectionControllerResult(self, result);
@@ -3018,8 +3022,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.closeActionsMenu(this);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 return this._prepareGroups(newOptions, (collapsedGroups) => {
-                    self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
                     return _private.reload(self, newOptions).addCallback(() => {
+                        this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
                         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                         _private.updateInitializedItemActions(this, newOptions);
                     });

@@ -24,18 +24,5 @@
             <div attr:class="ControlsDemo-padding_text">{{_demoText}}</div>
         </div>
     </Controls.scroll:Container>
-
-
-    <h2>Scrolling and sticking headers</h2>
-    <Controls.scroll:Container attr:class="ControlsDemo-scroll_with_grid">
-        <div>
-            <div attr:class="ControlsDemo-padding_text">{{_demoText}}</div>
-            <Controls.grid:View
-                    header="{{_gridHeader}}"
-                    source="{{_viewSource}}"
-                    columns="{{_gridColumns}}"
-                    keyProperty="id">
-            </Controls.grid:View>
-        </div>
-    </Controls.scroll:Container>
+    <Controls-demo.Container.StickyHeader.Index/>
 </div>

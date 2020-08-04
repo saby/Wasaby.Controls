@@ -956,6 +956,15 @@ define(
             assert.equal(position.bottom, 75);
             assert.equal(position.right, 65);
 
+            position = {
+               top: 0,
+               left: 10
+            };
+
+            StickyStrategy._private.calculateRestrictionContainerCoords(popupCfg, position);
+            assert.equal(position.top, 20);
+            assert.equal(position.left, 30);
+
             StickyStrategy._private.getBody = getBody;
          });
       });

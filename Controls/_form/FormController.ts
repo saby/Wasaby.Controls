@@ -183,13 +183,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     private _validateController: ControllerClass = new ControllerClass();
 
     protected _beforeMount(options?: IFormController, context?: object, receivedState: IReceivedState = {}): Promise<ICrudResult> | void {
-        this.__errorController = options.errorController || new dataSourceError.Controller({
-            viewConfig: {
-                options: {
-                    size: 'large'
-                }
-            }
-        });
+        this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._source = options.source || options.dataSource;
         this._crudController = new CrudController(this._source, this._notifyHandler.bind(this),
             this.registerPendingNotifier.bind(this), this.indicatorNotifier.bind(this));

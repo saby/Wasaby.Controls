@@ -75,10 +75,19 @@ define(
             });
             ctrl.paste('test paste');
 
-            assert.deepEqual(calls, [{
+            assert.deepEqual(calls, [
+               {
                name: 'notify',
                arguments: ['valueChanged', ['test paste', 'test paste']]
-            }]);
+            },
+               {
+                  name: 'notify',
+                  arguments: ['inputControl', ['test paste', 'test paste', {
+                     start: 10,
+                     end: 10
+                  }]]
+               }
+            ]);
          });
          it('The model belongs to the "Controls/input:BaseViewModel" class.', function() {
             ctrl._beforeMount({
@@ -130,8 +139,8 @@ define(
             InputUtility.init(ctrl);
 
             ctrl._focusInHandler({
-                  target: {}
-               });
+               target: {}
+            });
             InputUtility.insert(ctrl, 'test');
             InputUtility.triggerInput(ctrl);
 
@@ -139,6 +148,13 @@ define(
                {
                   name: 'notify',
                   arguments: ['valueChanged', ['callback', 'callback']]
+               },
+               {
+                  name: 'notify',
+                  arguments: ['inputControl', ['callback', 'callback', {
+                     start: 0,
+                     end: 0
+                  }]]
                }
             ]);
          });
@@ -381,7 +397,7 @@ define(
                   keyCode: Env.constants.key.enter
                }));
 
-               assert.equal(calls.length, 2);
+               assert.equal(calls.length, 4);
             });
          });
          describe('Click event', function() {
@@ -760,6 +776,13 @@ define(
                   },
                   {
                      name: 'notify',
+                     arguments: ['inputControl', ['test', 'test', {
+                        start: 4,
+                        end: 4
+                     }]]
+                  },
+                  {
+                     name: 'notify',
                      arguments: ['inputCompleted', ['test', 'test']]
                   }
                ]);
@@ -790,10 +813,19 @@ define(
                   keyCode: Env.constants.key.enter
                }));
 
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['valueChanged', ['test', 'test']]
-               }]);
+               assert.deepEqual(calls, [
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', ['test', 'test']]
+                  },
+                  {
+                     name: 'notify',
+                     arguments: ['inputControl', ['test', 'test', {
+                        start: 4,
+                        end: 4
+                     }]]
+                  }
+               ]);
             });
          });
          describe('The value in the field is changed via auto-complete.', function() {
@@ -810,10 +842,19 @@ define(
                ctrl._getField().selectionEnd = 24;
                ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['valueChanged', ['test auto-complete value', 'test auto-complete value']]
-               }]);
+               assert.deepEqual(calls, [
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', ['test auto-complete value', 'test auto-complete value']]
+                  },
+                  {
+                     name: 'notify',
+                     arguments: ['inputControl', ['test auto-complete value', 'test auto-complete value', {
+                        start: 24,
+                        end: 24
+                     }]]
+                  }
+               ]);
             });
             it('In an not empty field.', function() {
                ctrl._getActiveElement = function() {
@@ -828,10 +869,19 @@ define(
                ctrl._getField().selectionEnd = 24;
                ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['valueChanged', ['test auto-complete value', 'test auto-complete value']]
-               }]);
+               assert.deepEqual(calls, [
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', ['test auto-complete value', 'test auto-complete value']]
+                  },
+                  {
+                     name: 'notify',
+                     arguments: ['inputControl', ['test auto-complete value', 'test auto-complete value', {
+                        start: 24,
+                        end: 24
+                     }]]
+                  }
+               ]);
             });
          });
          describe('hidePlaceholder', function() {

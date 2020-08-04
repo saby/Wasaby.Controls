@@ -134,7 +134,7 @@ export interface IColumn {
      * 
      * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/results/column/ руководстве разработчика}.
      * 
-     * Для отображения строки итогов необходимо задать значение в опции {@link resultsPosition}.
+     * Для отображения строки итогов необходимо задать значение в опции {@link Controls/grid:View#resultsPosition resultsPosition}.
      * @example
      * <pre class="brush: html; highlight: [5,6,7,8,9,10,11]">
      * <Controls.grid:View>
