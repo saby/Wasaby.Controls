@@ -1,10 +1,10 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper demo__main-container">
     <Controls.popup:Infobox name="IBOpener"></Controls.popup:Infobox>
     <div>
         <h1>StateIndicator</h1>
         <div class="controlsDemo__wrapper">
             <div class="controlsDemo__flexRow">
-                <div class="ControlsDemo__stateIndicator controlsDemo__minWidth600">
+                <div class="ControlsDemo__stateIndicator demo__column-width">
                     <h2>With one value</h2>
                     <div class="demo__block">
                         <div class="demo__label">0% filled</div>
@@ -28,7 +28,7 @@
                                                           attr:index="3" data="{{_datas[3]}}" scale="{{_scales[3]}}"/>
                     </div>
                 </div>
-                <div class="ControlsDemo__stateIndicator controlsDemo__minWidth600">
+                <div class="ControlsDemo__stateIndicator demo__column-width">
                     <h2>With two values</h2>
                     <h3>10 sectors</h3>
                     <div class="demo__block">
@@ -61,7 +61,7 @@
             </div>
 
             <div class="controlsDemo__flexRow">
-                <div class="ControlsDemo__stateIndicator2 controlsDemo__minWidth600">
+                <div class="ControlsDemo__stateIndicator2 demo__column-width">
                     <h2>With three values</h2>
                     <h3>20 sectors</h3>
                     <div class="demo__block">
@@ -76,7 +76,7 @@
                                                           scale="{{_scales[10]}}"/>
                     </div>
                 </div>
-                <div class="ControlsDemo__stateIndicator2 controlsDemo__minWidth600">
+                <div class="ControlsDemo__stateIndicator2 demo__column-width">
                     <h2>With several values</h2>
                     <h3>Custom number of sectors and colors</h3>
                     <div class="demo__block">
