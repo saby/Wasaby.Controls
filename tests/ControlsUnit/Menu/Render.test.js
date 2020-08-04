@@ -37,6 +37,7 @@ define(
                      s: [
                         { n: 'id', t: 'Строка' },
                         { n: 'title', t: 'Строка' },
+                        { n: 'parent', t: 'Строка' },
                      ]
                   },
                   keyProperty: 'id',
@@ -144,6 +145,12 @@ define(
                assert.equal(renderOptions.listModel.getCount(), 1);
                assert.equal(renderOptions.listModel.getCollection().at(0).get('title'), 'Not selected');
                assert.equal(renderOptions.listModel.getCollection().at(0).get('id'), null);
+            });
+
+            it('check parentProperty', function() {
+               menuRender.addEmptyItem(renderOptions.listModel, {...renderOptions, parentProperty: 'parent', root: null});
+               assert.equal(renderOptions.listModel.getCount(), 1);
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('parent'), null);
             });
 
             it('check selected empty item', function() {
