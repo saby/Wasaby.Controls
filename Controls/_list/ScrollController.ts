@@ -177,15 +177,16 @@ export default class ScrollController {
             this._completeScrollToItem();
             this._completeScrollToItem = null;
             result = true;
+        };
+    }
+    completeVirtualScrollIfNeed(): boolean {
+        let result = false;
+        if (this._applyScrollTopCallback) {
+                this._applyScrollTopCallback();
+                this._applyScrollTopCallback = null;
+                result = true;
         }
         return result;
-    }
-    completeVirtualScrollIfNeed(): IScrollControllerResult {
-       if (this._applyScrollTopCallback) {
-            this._applyScrollTopCallback();
-            this._applyScrollTopCallback = null;
-            return this.getResult();
-       }
     }
     /**
      * Функция подскролла к элементу
