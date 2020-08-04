@@ -2524,9 +2524,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             self._viewModelConstructor = newOptions.viewModelConstructor;
             if (receivedData) {
                 viewModelConfig.items = receivedData;
-            } else if (newOptions.source && typeof newOptions.source.getData !== 'undefined') {
-                receivedData = newOptions.source.getData().query;
-                viewModelConfig.items = receivedData;
             } else {
                 delete viewModelConfig.items;
             }
@@ -2618,12 +2615,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     if (newOptions.itemsReadyCallback) {
                         newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                     }
-                    if (self._listViewModel) {
-                        _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
-                    }
-                } else {
-                    viewModelConfig.items = data;
-                    self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
                     if (self._listViewModel) {
                         _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                     }
