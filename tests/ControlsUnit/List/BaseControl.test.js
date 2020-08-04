@@ -3261,7 +3261,7 @@ define([
             };
          });
 
-         it('should stop event propagation', () => {
+         it('should stop event propagation if target is checkbox', () => {
             let stopPropagationCalled = false;
             let event = {
                stopPropagation: function() {
@@ -3270,6 +3270,19 @@ define([
             };
             ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), originalEvent);
             assert.isTrue(stopPropagationCalled);
+         });
+
+         it('shouldnt stop event propagation if editing will start', () => {
+            let stopPropagationCalled = false;
+            let event = {
+               stopPropagation: function() {
+                  stopPropagationCalled = true;
+               }
+            };
+            ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), {
+               target: { closest: () => null }
+            });
+            assert.isFalse(stopPropagationCalled);
          });
 
          it('should call deactivateSwipe method', () => {

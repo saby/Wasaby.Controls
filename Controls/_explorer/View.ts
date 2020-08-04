@@ -17,6 +17,7 @@ import {
    INavigationPositionSourceConfig as IPositionSourceConfig,
    INavigationOptionValue as INavigation
 }  from '../_interface/INavigation';
+import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 
 var
       HOT_KEYS = {
@@ -632,7 +633,13 @@ var
             this._isGoingFront = true;
          };
 
-         if (res !== false && item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
+         // Не нужно проваливаться в папку, если должно начаться ее редактирование
+         const isNodeEditable = () => {
+            const hasEditOnClick = !!this._options.editingConfig && !!this._options.editingConfig.editOnClick;
+            return hasEditOnClick && !clickEvent.target.closest(`.${EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE}`);
+         };
+
+         if (res !== false && item.get(this._options.nodeProperty) === ITEM_TYPES.node && !isNodeEditable()) {
             // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся.
             // Дополнять restoredKeyObject нужно СИНХРОННО, иначе на момент вызова restoredKeyObject опции уже будут
             // новые и маркер запомнится не для того root'а. Ошибка:
