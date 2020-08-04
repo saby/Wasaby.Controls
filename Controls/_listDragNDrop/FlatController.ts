@@ -22,8 +22,6 @@ export interface IFlatItemData {
    item: Model;
    key: TKey;
    dispItem: CollectionItem<Model>;
-   getContents?: () => Model;
-   getOwner?: () => Collection<Model>;
 }
 
 export default class FlatController {
@@ -89,21 +87,12 @@ export default class FlatController {
       return this._entity;
    }
 
+   // This is incompatible with new model
    calculateDragPosition(targetItemData: IFlatItemData|CollectionItem<Model>, position?: TPosition): IDragPosition {
       let prevIndex = -1;
 
-      // New model compatibility
-      const index = (targetItemData as IFlatItemData).index !== undefined ?
-          (targetItemData as IFlatItemData).index :
-          (targetItemData.getOwner && targetItemData.getOwner().getIndex(targetItemData));
-
-      // New model compatibility
-      const item = (targetItemData as IFlatItemData).item !== undefined ?
-          (targetItemData as IFlatItemData).item :
-          (targetItemData.getContents && targetItemData.getContents());
-
       // If you hover on a record that is being dragged, then the position should not change.
-      if (this._draggingItemData && this._draggingItemData.index === index) {
+      if (this._draggingItemData && this._draggingItemData.index === targetItemData.index) {
          return null;
       }
 
@@ -115,21 +104,19 @@ export default class FlatController {
 
       if (prevIndex === -1) {
          position = 'before';
-      } else if (index > prevIndex) {
+      } else if (targetItemData.index > prevIndex) {
          position = 'after';
-      } else if (index < prevIndex) {
+      } else if (targetItemData.index < prevIndex) {
          position = 'before';
-      } else if (index === prevIndex) {
+      } else if (targetItemData.index === prevIndex) {
          position = this._dragPosition.position === 'after' ? 'before' : 'after';
       }
 
-      console.log(position);
-
       return {
-         index,
-         item,
+         index: targetItemData.index,
+         item: targetItemData.item,
          data: targetItemData,
-         position
+         position: position
       };
    }
 

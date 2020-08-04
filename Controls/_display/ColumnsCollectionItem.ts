@@ -12,7 +12,7 @@ export default class ColumnsCollectionItem<T> extends CollectionItem<T> {
     protected _$owner: ColumnsCollection<T>;
 
     constructor(options?: IOptions<T>) {
-        super();
+        super(options);
         this._$column = options?.column || 0;
     }
 
