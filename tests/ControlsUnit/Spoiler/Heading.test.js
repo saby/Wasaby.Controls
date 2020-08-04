@@ -90,18 +90,35 @@ define(
                assert.equal(ctrl._view, 'expanded');
                assert.equal(ctrl._caption, 'Заголовок1');
             });
-            it('updateStates', function() {
+            it('mount and click', function() {
                options.captions = ['Заголовок1', 'Заголовок2'];
                ctrl._beforeMount(options);
                assert.equal(ctrl._expanded, false);
                assert.equal(ctrl._icon, 'ExpandLight');
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, 'Заголовок2');
-               ctrl._expanded = true;
-               ctrl._updateStates(options, ctrl._expanded);
+               ctrl._options = options;
+               ctrl._clickHandler();
+               ctrl._beforeUpdate(options);
                assert.equal(ctrl._icon, 'CollapseLight');
                assert.equal(ctrl._view, 'expanded');
                assert.equal(ctrl._caption, 'Заголовок1');
+            });
+            it('fontColorStyle', function() {
+               assert.equal(spoiler.Heading._calcFontColorStyle(true), 'secondary');
+               assert.equal(spoiler.Heading._calcFontColorStyle(false), 'label');
+               assert.equal(spoiler.Heading._calcFontColorStyle(true, 'label'), 'label');
+               assert.equal(spoiler.Heading._calcFontColorStyle(false, 'label'), 'label');
+               assert.equal(spoiler.Heading._calcFontColorStyle(true, 'secondary'), 'secondary');
+               assert.equal(spoiler.Heading._calcFontColorStyle(false, 'secondary'), 'secondary');
+            });
+            it('fontWeight', function() {
+               assert.equal(spoiler.Heading._calcFontWeight(true), 'bold');
+               assert.equal(spoiler.Heading._calcFontWeight(false), 'default');
+               assert.equal(spoiler.Heading._calcFontWeight(true, 'bold'), 'bold');
+               assert.equal(spoiler.Heading._calcFontWeight(false, 'bold'), 'bold');
+               assert.equal(spoiler.Heading._calcFontWeight(true, 'default'), 'default');
+               assert.equal(spoiler.Heading._calcFontWeight(false, 'default'), 'default');
             });
          });
       });
