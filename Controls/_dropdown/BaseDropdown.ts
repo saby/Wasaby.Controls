@@ -102,7 +102,10 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
     protected _updateControllerItems(data): void {
         this._historyController.updateHistory(data);
         if (this._controller.getSourceController()) {
-            this._controller.updateItems(this._historyController.getItemsWithHistory());
+            const itemsWithHistory = this._historyController.getItemsWithHistory();
+            if (itemsWithHistory) {
+                this._controller.updateItems(itemsWithHistory);
+            }
         }
         this.closeMenu();
     }
