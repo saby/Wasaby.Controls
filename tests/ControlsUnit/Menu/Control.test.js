@@ -179,6 +179,7 @@ define(
 
                const result = menuControl._isExpandButtonVisible(items, newMenuOptions);
                assert.isTrue(result);
+               assert.equal(menuControl._visibleIds.length, 10);
             });
 
             it('expandButton hidden, history menu', () => {
@@ -186,6 +187,7 @@ define(
 
                const result = menuControl._isExpandButtonVisible(items, newMenuOptions);
                assert.isFalse(result, 'level is not first');
+               assert.equal(menuControl._visibleIds.length, 0);
             });
          });
 
