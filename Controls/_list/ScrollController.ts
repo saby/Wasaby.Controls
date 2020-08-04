@@ -178,6 +178,7 @@ export default class ScrollController {
             this._completeScrollToItem = null;
             result = true;
         };
+        return result;
     }
     completeVirtualScrollIfNeed(): boolean {
         let result = false;
