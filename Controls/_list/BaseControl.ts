@@ -629,8 +629,10 @@ const _private = {
         const drawItemsUp = (countCurrentItems, addedItems) => {
             beforeAddItems(addedItems);
             if (self._options.useNewModel) {
-                self._listViewModel.getCollection().prepend(addedItems);
-                self._listViewModel.getCollection().setMetaData(addedItems.getMetaData());
+                const collection = self._listViewModel.getCollection();
+                const newMetaData = _private.getUpdatedMetaData(collection.getMetaData(), addedItems.getMetaData(), self._options.navigation, direction);
+                collection.prepend(addedItems);
+                collection.setMetaData(newMetaData);
             } else {
                 self._listViewModel.prependItems(addedItems);
             }
@@ -642,8 +644,10 @@ const _private = {
             if (direction === 'down') {
                 beforeAddItems(addedItems);
                 if (self._options.useNewModel) {
-                    self._listViewModel.getCollection().append(addedItems);
-                    self._listViewModel.getCollection().setMetaData(addedItems.getMetaData());
+                    const collection = self._listViewModel.getCollection();
+                    const newMetaData = _private.getUpdatedMetaData(collection.getMetaData(), addedItems.getMetaData(), self._options.navigation, direction);
+                    collection.append(addedItems);
+                    collection.setMetaData(newMetaData);
                 } else {
                     self._listViewModel.appendItems(addedItems);
                 }
@@ -775,6 +779,18 @@ const _private = {
         } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, navigation)) {
             _private.loadToDirectionIfNeed(self, 'down', filter);
         }
+    },
+
+    getUpdatedMetaData(oldMetaData, loadedMetaData, navigation: INavigationOptionValue<INavigationSourceConfig>, direction: 'up' | 'down') {
+        if (navigation.source !== 'position' || navigation.sourceConfig.direction !== 'both') {
+            return loadedMetaData;
+        }
+        const resultMeta = { ...loadedMetaData, more: oldMetaData.more };
+        const directionMeta = direction === 'up' ? 'before' : 'after';
+
+        resultMeta.more[directionMeta] = typeof loadedMetaData.more === 'object' ? loadedMetaData.more[directionMeta] : loadedMetaData.more;
+
+        return resultMeta;
     },
 
     needLoadNextPageAfterLoad(loadedList: RecordSet, listViewModel, navigation): boolean {
