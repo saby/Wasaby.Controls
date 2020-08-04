@@ -2179,6 +2179,36 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             })
             assert.isFalse(secondRow);
          });
+         it('update version if column scroll visibility has been changed', function () {
+            const testModel = new gridMod.GridViewModel({
+               ...cfg,
+               items: new collection.RecordSet({
+                  rawData: [ { id: 1, group: 'once'} ],
+                  keyProperty: 'id'
+               })
+            });
+
+            let oldVersion = testModel.getVersion();
+            let newVersion;
+
+            // undefined -> false
+            testModel.setColumnScrollVisibility(false);
+            newVersion = testModel.getVersion();
+            assert.equal(newVersion - oldVersion, 0);
+            oldVersion = newVersion;
+
+            // undefined -> true
+            testModel.setColumnScrollVisibility(true);
+            newVersion = testModel.getVersion();
+            assert.equal(newVersion - oldVersion, 1);
+            oldVersion = newVersion;
+
+            // true -> false
+            testModel.setColumnScrollVisibility(false);
+            newVersion = testModel.getVersion();
+            assert.equal(newVersion - oldVersion, 1);
+            oldVersion = newVersion;
+         });
          it('getColumnScrollCellClasses', function() {
             const backgroundStyle = 'controls-background-default_theme-default';
             const fixedCell = ` controls-Grid_columnScroll__fixed controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
