@@ -127,7 +127,7 @@ export default abstract class
 
     protected abstract _itemsChanged(items: SelectedItems): void;
 
-    static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/lookup', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
