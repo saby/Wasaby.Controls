@@ -120,6 +120,11 @@ var __ContentLayer = BaseLayer.extend({
    _height: 'auto',
    _maxHeight: 'none',
 
+   _afterMount(): void {
+      const suggest = this._container.getBoundingClientRect();
+      this._height = suggest.height + 'px';
+   },
+
    _afterUpdate(): void {
       /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
        2) do not change orientation of suggest, if suggest already showed or data loading now */
@@ -127,7 +132,7 @@ var __ContentLayer = BaseLayer.extend({
       if (this._options.showContent) {
          const needNotifyControlResizeEvent = this._controlResized;
          _private.updateHeight(this);
-
+         this._showContent = this._options.showContent;
          if (needNotifyControlResizeEvent) {
             this._children.resize.start();
             this._controlResized = false;
