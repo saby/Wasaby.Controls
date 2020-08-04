@@ -4,9 +4,9 @@ import * as library from 'Core/library';
 import { IoC, constants } from 'Env/Env';
 import { descriptor } from 'Types/entity';
 import { Control, IControlOptions, TemplateFunction, headDataStore } from 'UI/Base';
-import { parking } from 'Controls/dataSource';
 import rk = require('i18n!Controls');
 import template = require('wml!Controls/Container/Async/Async');
+import {ViewConfig} from "../_error/Handler";
 
 /**
  * Контейнер для асинхронной загрузки контролов.
@@ -63,9 +63,14 @@ import template = require('wml!Controls/Container/Async/Async');
  */
 
 /**
- * @name Controls/Container/Async#errorHandler
- * @cfg {Controls/dataSource:parking.Handler} Обработчик ошибки возникнувшей при загрузке компонента,
- * напр. если нужна обработка ошибки не стандартным обработчиком дружелюбных ошибок.
+ * @name Controls/Container/Async#errorCallback
+ * @cfg {function} Callback для обработки ошибки возникнувшей при загрузке компонента,
+ * напр. если нужно показать дружелюбную ошибку вместо простого текста ошибки.
+ * Если не передавать (т.е. не обрабатывать ошибку), то при ошибке загрузки компонента будет выведен текст ошибки,
+ * поясняющий причину ошибки.
+ * С этим callback можно обработать ошибку как нужно прикладному разработчику.
+ * @see Controls/dataSource:error.Controller
+ *
  */
 
 const moduleLoader = new ModuleLoader();
@@ -84,7 +89,7 @@ type TStateRecivied = boolean | string;
 interface IOptions extends IControlOptions {
    templateName: string;
    templateOptions: IControlOptions;
-   errorHandler: parking.Handler;
+   errorCallback: (viewConfig: void|ViewConfig, error: unknown) => void;
 }
 
 const SUCCESS_BUILDED = 's';
@@ -102,7 +107,7 @@ class Async extends Control<IOptions, TStateRecivied> {
    private loadingErrorOccurred: boolean = false;
    protected error: TStateRecivied | void;
    protected userErrorMessage: string | void;
-   private errorHandler: parking.Handler;
+   private errorCallback: (viewConfig: void|ViewConfig, error: unknown) => void;
 
    _beforeMount(options: IOptions, _: unknown, receivedState: TStateRecivied): Promise<TStateRecivied> {
       if (typeof options.templateName === 'undefined') {
@@ -110,7 +115,7 @@ class Async extends Control<IOptions, TStateRecivied> {
          IoC.resolve('ILogger').warn(this.error);
          return Promise.resolve(this.error);
       }
-      this.errorHandler = options.errorHandler;
+      this.errorCallback = options.errorCallback;
 
       if (receivedState && receivedState !== SUCCESS_BUILDED) {
          IoC.resolve('ILogger').error(receivedState);
@@ -184,7 +189,7 @@ class Async extends Control<IOptions, TStateRecivied> {
    }
 
    _loadContentAsync(name: string, options: IControlOptions): Promise<TStateRecivied> {
-      const promise = moduleLoader.loadAsync(name, this.errorHandler);
+      const promise = moduleLoader.loadAsync(name, this.errorCallback);
 
       // Need this flag to prevent setting new options for content
       // that wasn't loaded yet
