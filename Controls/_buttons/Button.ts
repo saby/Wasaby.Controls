@@ -80,14 +80,9 @@ export function defaultFontColorStyle(viewMode: string): string {
 }
 
 export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
-    const oldViewModeToken = ActualApi.viewMode(options.viewMode, options.viewMode);
-
     this._buttonStyle = options.readOnly ? 'readonly' : options.buttonStyle;
     this._contrastBackground = options.contrastBackground;
-    this._viewMode = oldViewModeToken.viewMode;
-    if (typeof oldViewModeToken.contrast !== 'undefined') {
-        this._contrastBackground = oldViewModeToken.contrast;
-    }
+    this._viewMode = options.viewMode;
     this._height = options.inlineHeight ? options.inlineHeight : defaultHeight(this._viewMode);
     this._fontColorStyle = options.fontColorStyle ? options.fontColorStyle : defaultFontColorStyle(this._viewMode);
     this._fontSize = options.fontSize;
@@ -98,10 +93,14 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
     this._captionPosition = options.captionPosition || 'right';
 
     this._icon = options.icon;
-    this._iconSize = options.icon ? ActualApi.iconSize(options.iconSize, this._icon) : '';
-    this._iconStyle = options.icon ?
-        ActualApi.iconStyle(options.iconStyle, this._icon, options.readOnly, options.buttonAdd) : '';
-
+    if (options.icon) {
+        this._iconSize = ActualApi.iconSize(options.iconSize, this._icon);
+        if (options.readOnly) {
+            this._iconStyle = 'readonly';
+        } else {
+            this._iconStyle =  options.buttonAdd ? 'default' : options.iconStyle;
+        }
+    }
     if (this._viewMode === 'linkButton') {
         const actualState = ActualApi.actualLinkButton(this._viewMode, this._height);
         this._viewMode = actualState.viewMode;
