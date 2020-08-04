@@ -172,6 +172,9 @@ class MenuRender extends Control<IMenuRenderOptions> {
         data[options.keyProperty] = options.emptyKey;
         data[options.displayProperty] = options.emptyText;
 
+        if (options.parentProperty) {
+            data[options.parentProperty] = options.root;
+        }
         emptyItem.set(data);
         collection.prepend([emptyItem]);
 
