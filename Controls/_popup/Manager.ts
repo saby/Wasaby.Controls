@@ -13,6 +13,8 @@ import * as Deferred from 'Core/Deferred';
 import * as cClone from 'Core/core-clone';
 import template = require('wml!Controls/_popup/Manager/Manager');
 
+const ORIENTATION_CHANGE_DELAY = 10;
+
 /**
  * Popups Manager
  * @class Controls/_popup/Manager
@@ -49,10 +51,11 @@ class Manager extends Control<IManagerOptions> {
 
         if (detection.isMobilePlatform) {
             window.addEventListener('orientationchange', () => {
-                // Таймаут нужен, чтобы размеры страницы изменились. На момент вызова события размеры старые.
+                // На момент срабатывания обработчика приходят старые размеры страницы.
+                // Опытным путем был подобран таймаут, после которого приходят актуальные размеры.
                 setTimeout(() => {
                     this.orientationChangeHandler();
-                }, 0);
+                }, ORIENTATION_CHANGE_DELAY);
             });
         }
 
