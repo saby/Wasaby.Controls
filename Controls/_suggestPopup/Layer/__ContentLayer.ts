@@ -117,13 +117,8 @@ var _private = {
 var __ContentLayer = BaseLayer.extend({
 
    _template: template,
-   _height: 'auto',
+   _height: '0px',
    _maxHeight: 'none',
-
-   _afterMount(): void {
-      const suggest = this._container.getBoundingClientRect();
-      this._height = suggest.height + 'px';
-   },
 
    _afterUpdate(): void {
       /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
