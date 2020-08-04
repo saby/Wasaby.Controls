@@ -30,6 +30,7 @@
                     on:touchstart="_onYearMouseEnter(_position.getFullYear())"
                     on:mouseleave="_onYearMouseLeave()"
                     on:touchend="_onYearMouseLeave()"
+                    on:touchmove="_onYearMouseLeave()"
                     on:click="_onYearClick(_position.getFullYear())"
             >
                {{ _position.getFullYear() }}
