@@ -3267,7 +3267,7 @@ define([
             };
          });
 
-         it('should stop event propagation', () => {
+         it('should stop event propagation if target is checkbox', () => {
             let stopPropagationCalled = false;
             let event = {
                stopPropagation: function() {
@@ -3276,6 +3276,19 @@ define([
             };
             ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), originalEvent);
             assert.isTrue(stopPropagationCalled);
+         });
+
+         it('shouldnt stop event propagation if editing will start', () => {
+            let stopPropagationCalled = false;
+            let event = {
+               stopPropagation: function() {
+                  stopPropagationCalled = true;
+               }
+            };
+            ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), {
+               target: { closest: () => null }
+            });
+            assert.isFalse(stopPropagationCalled);
          });
 
          it('should call deactivateSwipe method', () => {
@@ -3368,6 +3381,22 @@ define([
          await ctrl._beforeMount(cfg);
          assert.isTrue(setHasMoreDataCalled);
 
+      });
+
+      it('getUpdatedMetaData: set full metaData.more on load to direction with position navigation', () => {
+         const updatedMeta = lists.BaseControl._private.getUpdatedMetaData(
+             { more: {before: true, after: false} },
+             { more: false },
+             {
+                source: 'position',
+                sourceConfig: {
+                   direction: 'both'
+                }
+             },
+             'up'
+         );
+
+         assert.isFalse(updatedMeta.more.before);
       });
 
       it('needFooterPadding', function() {

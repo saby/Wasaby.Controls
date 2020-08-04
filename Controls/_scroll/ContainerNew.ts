@@ -2,11 +2,13 @@ import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TemplateFunction} from 'UI/Base';
 import ContainerBase, {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
+import * as ScrollData from 'Controls/_scroll/Scroll/Context';
 import Observer from './IntersectionObserver/Observer';
 import template = require('wml!Controls/_scroll/Container/Container');
 import baseTemplate = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 import ShadowsModel from './Container/ShadowsModel';
 import ScrollbarsModel from './Container/ScrollbarsModel';
+import PagingModel from './Container/PagingModel';
 import {
     IScrollbars,
     IScrollbarsOptions,
@@ -82,6 +84,21 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  * @variant inverted Inverted theme (for dark backgrounds).
  */
 
+/**
+ * @name Controls/_scroll/ContainerNew#optimizeShadow
+ * @cfg {Boolean} Включает режим быстрой отрисовки тени.
+ * @default true
+ * @variant true Оптимизированные тени.
+ * @variant false Не оптимизированные тени.
+ * @remark
+ * Отключите оптимизированные тени, если:
+ * <ul>
+ *     <li> У скролл контейнера непрозрачный фон </li>
+ *     <li> Скролл контейнер находится в элементе с непрозрачным фоном </li>
+ *     <li> В скролл конейтенере присутствуют изображения. </li>
+ * </ul>
+ */
+
 const SCROLL_BY_ARROWS = 40;
 
 export default class Container extends ContainerBase<IContainerOptions> implements IScrollbars {
@@ -93,6 +110,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _shadows: ShadowsModel;
     protected _scrollbars: ScrollbarsModel;
+    protected _paging: PagingModel;
     protected _dragging: boolean = false;
 
     protected _intersectionObserverController: Observer;
@@ -110,13 +128,27 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
-    _afterMount() {
+    _afterMount(options: IContainerOptions, context) {
+
+        if (context.ScrollData?.pagingVisible) {
+            this._paging = new PagingModel();
+        }
+
         super._afterMount();
+
         this._adjustContentMarginsForBlockRender();
         this._stickyHeaderController.init(this._container);
     }
 
+    protected _beforeUpdate(options: IContainerOptions, context) {
+        super._beforeUpdate(...arguments);
+        if (context.ScrollData?.pagingVisible) {
+            this._paging.isVisible = this._state.canVerticalScroll;
+        }
+    }
+
     protected _afterUpdate() {
+        super._afterUpdate(...arguments);
         this._stickyHeaderController.updateContainer(this._container);
     }
 
@@ -132,9 +164,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         const isUpdated: boolean = super._updateState(...args);
         if (isUpdated) {
             // Убираем старое поведение теней, новые тени сделаны через CSS, рассчеты производить более не требуется
-            // Старое поведение в будущем понадбится в тех местах, где присутствуют картинки и/или непрозрачный фон.
-            // this._shadows.updateScrollState(this._state);
+            // Старое поведение нужно включать в тех местах, где присутствуют картинки и/или непрозрачный фон.
+            if (!this._options.optimizeShadow) {
+                this._shadows.updateScrollState(this._state);
+            }
             this._scrollbars.updateScrollState(this._state);
+            this._paging?.update(this._state);
             this._stickyHeaderController.setCanScroll(this._state.canVerticalScroll);
             this._scrollCssClass = this._getScrollContainerCssClass(this._options);
         }
@@ -146,7 +181,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     private _adjustContentMarginsForBlockRender(): void {
-        let computedStyle = getComputedStyle(this._children.scrollContainer);
+        let computedStyle = getComputedStyle(this._children.content);
         let marginTop = parseInt(computedStyle.marginTop, 10);
         let marginRight = parseInt(computedStyle.marginRight, 10);
         this._scrollbars.adjustContentMarginsForBlockRender(marginTop, marginRight);
@@ -274,6 +309,11 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._notify('intersect', [items]);
     }
 
+    protected _getOptimizeShadowClass(): string {
+        return `controls-Scroll__background-Shadow_style-${this._options.shadowStyle}_theme-${this._options.theme} ` +
+            `controls-Scroll__background-Shadow_top-${this._shadows.top.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom.isVisibleShadowOnCSS}_style-${this._options.shadowStyle}_theme-${this._options.theme}`;
+    }
+
     // StickyHeaderController
 
     _stickyFixedHandler(event: SyntheticEvent<Event>, fixedHeaderData: IFixedEventData): void {
@@ -290,7 +330,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
-        return this._stickyHeaderController.getHeadersHeight(position, type)
+        return this._stickyHeaderController.getHeadersHeight(position, type);
+    }
+
+    static contextTypes() {
+       return {
+          ScrollData
+       };
     }
 
     static _theme: string[] = ['Controls/scroll'];
@@ -300,7 +346,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             ...getScrollbarsDefaultOptions(),
             topShadowVisibility: SHADOW_VISIBILITY.AUTO,
             bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
-            scrollMode: 'vertical'
+            shadowStyle: 'default',
+            scrollMode: 'vertical',
+            optimizeShadow: true
         };
     }
 }

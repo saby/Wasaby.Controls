@@ -4,6 +4,7 @@
             <ws:partial
                     template="{{itemTemplate}}"
                     itemData="{{itemData}}"
+                    fontSize="{{fontSize}}"
                     displayProperty="{{ displayProperty }}"
             />
         </ws:template>

@@ -817,40 +817,43 @@ define(['Controls/grid'], function(gridMod) {
             assert.isTrue(updateShadowStyleCalled);
          });
       });
-   });
 
-   // при смене columnScroll необходимо пересчитывать настройки хеадера
-   it('should update header when columnScroll has changed', () => {
-      let isSetHeaderCalled = false;
-      const cfg = {
-         multiSelectVisibility: 'hidden',
-         stickyColumnsCount: 1,
-         columnScroll: false,
-         columns: [
-            { displayProperty: 'field1', template: 'column1' },
-            { displayProperty: 'field2', template: 'column2' }
-         ],
-         header: [
-            { displayProperty: 'field1', template: 'column1' },
-            { displayProperty: 'field2', template: 'column2' }
-         ]
-      };
-      const gridView = new gridMod.GridView(cfg);
-      gridView.saveOptions(cfg);
-      gridView._listModel = {
-         setHeader: () => {
-            isSetHeaderCalled = true;
-         },
-         setColumnScroll: () => {}
-      };
-      gridView._children = {
-         columnScrollContainer: {
-            getElementsByClassName: () => []
-         }
-      };
-      gridView._beforeUpdate({...cfg, columnScroll: true});
-      gridView.saveOptions({...cfg, columnScroll: true});
-      gridView._afterUpdate({...cfg, columnScroll: true});
-      assert.isTrue(isSetHeaderCalled);
+      // при смене columnScroll необходимо пересчитывать настройки хеадера
+      it('should update header when columnScroll has changed', () => {
+         let isSetHeaderCalled = false;
+         const cfg = {
+            multiSelectVisibility: 'hidden',
+            stickyColumnsCount: 1,
+            columnScroll: false,
+            columns: [
+               { displayProperty: 'field1', template: 'column1' },
+               { displayProperty: 'field2', template: 'column2' }
+            ],
+            header: [
+               { displayProperty: 'field1', template: 'column1' },
+               { displayProperty: 'field2', template: 'column2' }
+            ]
+         };
+         const gridView = new gridMod.GridView(cfg);
+         gridView.saveOptions(cfg);
+         gridView._listModel = {
+            setHeader: () => {
+               isSetHeaderCalled = true;
+            },
+            setColumnScroll: () => {},
+            setColumnScrollVisibility: () => {}
+         };
+         gridView._children = {
+            columnScrollContainer: {
+               getElementsByClassName: () => [{
+
+               }]
+            }
+         };
+         gridView._beforeUpdate({...cfg, columnScroll: true});
+         gridView.saveOptions({...cfg, columnScroll: true});
+         gridView._afterUpdate({...cfg, columnScroll: true});
+         assert.isTrue(isSetHeaderCalled);
+      });
    });
 });
