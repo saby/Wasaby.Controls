@@ -22,6 +22,6 @@ class SearchFlat extends Control<IControlOptions> {
         });
     }
 
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Menu/Control/Menu'];
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 export default SearchFlat;
