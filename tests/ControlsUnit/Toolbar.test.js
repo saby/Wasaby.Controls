@@ -469,6 +469,22 @@ define(
                assert.isTrue(Toolbar._menuSource._$target instanceof sourceLib.Memory);
                assert.isTrue(Toolbar._menuSource._$data.query instanceof collection.RecordSet);
             });
+            it('_setMenuItems without source', async() => {
+               const cfg = {
+                  items: new collection.RecordSet({
+                     rawData: defaultItems
+                  }),
+                  parentProperty: 'parent',
+                  nodeProperty: '@parent'
+               };
+               let Toolbar = new toolbars.View(cfg);
+               await Toolbar._beforeMount(cfg);
+               Toolbar._options = cfg;
+               Toolbar._setMenuItems();
+               assert.isTrue(Toolbar._menuSource instanceof sourceLib.PrefetchProxy);
+               assert.isTrue(Toolbar._menuSource._$target instanceof sourceLib.Memory);
+               assert.isTrue(Toolbar._menuSource._$data.query instanceof collection.RecordSet);
+            });
             it('_getMenuOptions - fittingMode', () => {
                let Toolbar = new toolbars.View(config);
                Toolbar._beforeMount(config);

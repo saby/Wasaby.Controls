@@ -64,7 +64,7 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
     const defaultOptions = getDefaultOptions();
     const icon = item.get('icon');
     const caption = item.get('caption');
-    const viewMode = item.get('viewMode') || defaultOptions.viewMode;
+    const viewMode = item.get('viewMode') || 'link';
     const readOnly = item.get('readOnly') || toolbarOptions.readOnly;
     const buttonStyle = item.get('buttonStyle') || defaultOptions.buttonStyle;
     const iconStyle = item.get('iconStyle') || defaultOptions.iconStyle;
