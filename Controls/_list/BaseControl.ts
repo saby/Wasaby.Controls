@@ -2619,6 +2619,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     if (self._listViewModel) {
                         _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                     }
+                } else {
+                    viewModelConfig.items = data;
+                    self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
+                    if (self._listViewModel) {
+                        _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
+                    }
                 }
                 self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
