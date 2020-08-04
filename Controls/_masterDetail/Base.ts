@@ -112,6 +112,7 @@ class Base extends Control<IMasterDetail> {
     protected _currentMinWidth: string;
     protected _containerWidth: number;
     protected _updateOffsetDebounced: Function;
+    protected _isOffsetCalculated: boolean = false;
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<number> | void {
         this._updateOffsetDebounced = debounce(this._updateOffsetDebounced.bind(this), RESIZE_DELAY);
@@ -140,6 +141,12 @@ class Base extends Control<IMasterDetail> {
 
     private _getSettings(options: IMasterDetail): Promise<object> {
         return getSettings([options.propStorageId]);
+    }
+    private _dragStartHandler(): void {
+        if (!this._isOffsetCalculated && this._canResizing) {
+            this._isOffsetCalculated = true;
+            this._updateOffset(this._options);
+        }
     }
 
     private _setSettings(width: number): void {
@@ -181,9 +188,6 @@ class Base extends Control<IMasterDetail> {
 
     protected _afterMount(options: IMasterDetail): void {
         this._prevCurrentWidth = this._currentWidth;
-        if (this._canResizing) {
-            this._updateOffset(options);
-        }
     }
 
     protected _beforeUpdate(options: IMasterDetail): void {

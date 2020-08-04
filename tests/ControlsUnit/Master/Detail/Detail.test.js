@@ -59,7 +59,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          };
 
          Control._canResizing = Control._isCanResizing(options);
-         Control._afterMount(options);
+         Control._updateOffset(options);
          assert.equal(Control._minOffset, 100);
          assert.equal(Control._maxOffset, 99);
          assert.equal(Control._currentWidth, '200px');
@@ -104,6 +104,24 @@ define(['Controls/masterDetail'], function (masterDetail) {
          assert.equal(Control._currentMaxWidth, '0px');
          assert.equal(Control._currentWidth, '0px');
 
+         Control.destroy();
+      });
+
+      it ('_dragStartHandler', () => {
+         let Control = new masterDetail.Base();
+         let options = {
+            masterMinWidth: 100,
+            masterWidth: 150,
+            masterMaxWidth: 200
+         };
+         Control._options = options;
+         Control._canResizing = true;
+         assert.isFalse(Control._isOffsetCalculated);
+         Control._dragStartHandler();
+         assert.isTrue(Control._isOffsetCalculated);
+         assert.equal(Control._minOffset, 50);
+         assert.equal(Control._maxOffset, 50);
+         assert.equal(Control._currentWidth, '150px');
          Control.destroy();
       });
 
