@@ -1,7 +1,7 @@
 import libHelper = require('Core/library');
 import { IoC } from 'Env/Env';
 import rk = require('i18n!Controls');
-import { ParkingController, Controller, Handler } from 'Controls/error';
+import { ParkingController, Controller, ViewConfig } from 'Controls/error';
 
 type Module = unknown;
 let cache: Record<string, Promise<Module>> = {};
@@ -32,7 +32,7 @@ class ModuleLoader {
         return mod;
     }
 
-    loadAsync(name: string, errorHandler?: Handler): Promise<Module> {
+    loadAsync(name: string, errorCallback?: (viewConfig: void|ViewConfig, error: unknown) => void): Promise<Module> {
         if (this.isLoaded(name)) {
             return Promise.resolve(this.loadSync(name));
         }
@@ -55,9 +55,11 @@ class ModuleLoader {
             const errorMessage = "Couldn't load module " + parsedInfo.name;
             IoC.resolve('ILogger').error(errorMessage, error);
             return new ParkingController({
-                configField: Controller.CONFIG_FIELD,
-                handlers: errorHandler !== undefined ? [errorHandler] : []})
-                .process({error}).then((viewConfig) => {
+                configField: Controller.CONFIG_FIELD})
+                .process({error, mode: 'include'}).then((viewConfig) => {
+                    if (errorCallback && typeof errorCallback === 'function') {
+                        errorCallback(viewConfig, error);
+                    }
                     const message = viewConfig?.options?.message;
                     throw new Error(message || rk('У СБИС возникла проблема'));
                 });
