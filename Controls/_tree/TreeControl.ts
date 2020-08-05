@@ -658,8 +658,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     setMarkedKey: function(key) {
         this._children.baseControl.setMarkedKey(key);
     },
-    scrollToItem(key: string|number, toBottom: boolean): void {
-        this._children.baseControl.scrollToItem(key, toBottom);
+    scrollToItem(key: string|number, toBottom: boolean, force: boolean): void {
+        this._children.baseControl.scrollToItem(key, toBottom, force);
     },
     reloadItem: function(key, readMeta, direction):Deferred {
         let baseControl = this._children.baseControl;
