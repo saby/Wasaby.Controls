@@ -46,7 +46,8 @@ import {getHeadersHeight as getStickyHeadersHeight} from 'Controls/_scroll/Stick
 import HotKeysContainer from 'Controls/_scroll/HotKeysContainer';
 
 export {
-   Container,
+   // Container,
+    ContainerNew as Container,
    ContainerNew as _ContainerNew,
    Watcher,
    StickyHeader,
