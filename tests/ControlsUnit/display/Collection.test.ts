@@ -560,18 +560,18 @@ describe('Controls/_display/Collection', () => {
             const list = new RecordSet({
                 rawData: data
             });
+            let ids = [];
             const display = new CollectionDisplay({
                 collection: list,
                 importantItemProperties: ['id'],
                 filter: (item, index, displayItem, displayIndex) => {
-                    count++;
+                    ids[index] = item.get('id');
                     return displayIndex > -1;
                 }
             });
 
-            let count = 0;
             list.at(0).set('id', 'foo');
-            assert.equal(count, data.length);
+            assert.deepEqual(ids, ['foo', 2, 3]);
 
             display.destroy();
             list.destroy();
@@ -4142,9 +4142,9 @@ describe('Controls/_display/Collection', () => {
 
         it('should clone the collection', () => {
             const serializer = new Serializer();
+            const items = display.getItems();
             const json = JSON.stringify(display, serializer.serialize);
             const clone = JSON.parse(json, serializer.deserialize);
-            const items = display.getItems();
             const cloneItems = clone.getItems();
 
             for (let i = 0; i < items.length; i++) {

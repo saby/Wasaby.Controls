@@ -78,6 +78,7 @@ export interface ISessionItemState<T> {
 }
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState {
+    _initialized?: Boolean;
     _composer: ItemsStrategyComposer<S, T>;
 }
 
@@ -209,6 +210,8 @@ function onCollectionChange<T>(
     oldItems: T[],
     oldItemsIndex: number
 ): void {
+    this._init();
+
     let session;
 
     switch (action) {
@@ -314,6 +317,8 @@ function onCollectionItemChange<T>(
     if (!this.isEventRaising()) {
         return;
     }
+
+    this._init();
 
     if (this._sourceCollectionSynchronized) {
         this._notifySourceCollectionItemChange(event, item, index, properties);
@@ -623,6 +628,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$importantItemProperties: string[];
 
     /**
+     * Экземпляр проинициализирован
+     */
+    protected _initialized: boolean;
+
+    /**
      * Возвращать локализованные значения для типов, поддерживающих локализацию
      */
     protected _localize: boolean;
@@ -769,7 +779,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._userStrategies = [];
 
-        this._reBuild();
         this._bindHandlers();
         if (this._$collection['[Types/_collection/IObservable]']) {
             (this._$collection as ObservableMixin).subscribe('onCollectionChange', this._onCollectionChange);
@@ -1002,6 +1011,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     // endregion
 
     // region Public
+
+    subscribe(event: string, handler: Function, ctx?: object): void {
+        this._init();
+        super.subscribe(event, handler, ctx);
+    }
 
     // region Access
 
@@ -1448,6 +1462,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._$filter = filters.filter((item) => typeof item === 'function');
 
+        this._init();
         const session = this._startUpdateSession();
         this._reFilter();
         this._finishUpdateSession(session);
@@ -1505,6 +1520,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._$filter.splice(at, 0, filter);
         }
 
+        this._init();
         const session = this._startUpdateSession();
         this._reFilter();
         this._finishUpdateSession(session);
@@ -1567,6 +1583,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._$filter.splice(at, 1);
 
+        this._init();
         const session = this._startUpdateSession();
         this._reFilter();
         this._finishUpdateSession(session);
@@ -1607,7 +1624,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             return;
         }
 
+        this._init();
         this._switchImportantPropertiesByGroup(false);
+
         if (!this._composer) {
             this._$group = group;
             this._switchImportantPropertiesByGroup(true);
@@ -1824,6 +1843,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * </pre>
      */
     setSort(...args: Array<SortFunction<S, T>>): void {
+        this._init();
         const session = this._startUpdateSession();
         const sorts = args[0] instanceof Array ? args[0] : args;
 
@@ -1892,6 +1912,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             return;
         }
 
+        this._init();
         const session = this._startUpdateSession();
 
         this._switchImportantPropertiesByUserSort(false);
@@ -1952,6 +1973,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             return false;
         }
 
+        this._init();
         const session = this._startUpdateSession();
 
         this._switchImportantPropertiesByUserSort(false);
@@ -2003,6 +2025,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             return;
         }
 
+        this._init();
         const session = this._startUpdateSession();
 
         this._$unique = unique;
@@ -2777,6 +2800,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * @protected
      */
     protected _getItemsFactory(): ItemsFactory<T> {
+        this._init();
+
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
             return create(this._itemModule, options);
@@ -2788,6 +2813,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * @protected
      */
     protected _getItemsStrategy(): IItemsStrategy<S, T> {
+        this._init();
+
         if (!this._composer) {
             this._composer = this._createComposer();
         }
@@ -2832,6 +2859,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * @protected
      */
     protected _getEnumerator(unlink?: boolean): CollectionEnumerator<T> {
+        this._init();
+
         return this._buildEnumerator(
             unlink ? this._getItems().slice() : this._getItems.bind(this),
             unlink ? this._filterMap.slice() : this._filterMap,
@@ -2926,6 +2955,22 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     // endregion
 
     // region Calculation
+
+    protected _init(): void {
+        if (this._initialized) {
+            return;
+        }
+
+        this._initialized = true;
+
+        this._reGroup();
+        this._reSort();
+
+        this._resetFilter(this._getItemsStrategy().count);
+        if (this._isFiltered()) {
+            this._reFilter();
+        }
+    }
 
     /**
      * Перерасчитывает все данные заново
@@ -3138,7 +3183,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * @protected
      */
     protected _buildSortMap(): number[] {
-        return this._getItems().map((item, index) => index);
+        const sortMap = [];
+        for (let i = 0, count = this._getItemsStrategy().count; i < count; i++) {
+            sortMap.push(i);
+        }
+        return sortMap;
+        // return this._getItems().map((item, index) => index);
     }
 
     /**
