@@ -139,6 +139,9 @@ var ListView = BaseControl.extend(
                 this._listModel = newOptions.listModel;
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
                 this._listModel.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedHandlerFnc);
+
+                // Если изменить опцию модели пока ListView не построена, то они и не применятся.
+                this._listModel.setItemPadding(newOptions.itemPadding, true);
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
