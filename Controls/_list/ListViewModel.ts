@@ -164,9 +164,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         this._reloadedKeys = {};
     },
-    setItemPadding: function(itemPadding) {
+    setItemPadding: function(itemPadding, silent = false) {
         this._options.itemPadding = itemPadding;
-        this._nextModelVersion();
+        if (!silent) {
+            this._nextModelVersion();
+        }
     },
     getItemPadding: function() {
         return _private.getItemPadding(this._options);
