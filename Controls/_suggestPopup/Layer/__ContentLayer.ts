@@ -119,6 +119,7 @@ var __ContentLayer = BaseLayer.extend({
    _template: template,
    _height: '0px',
    _maxHeight: 'none',
+   _showContent: false,
 
    _afterUpdate(): void {
       /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
