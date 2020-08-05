@@ -31,7 +31,13 @@ class EditDialog extends Control<IEditDialog> {
     private _isClient: boolean;
     protected _globalSource: Memory = globalConfig;
     private _selectedFilters: string[];
+    private _keyProperty: string;
     protected _source: Memory;
+
+    private _getKeyProperty(items: IFilterItem[]): string {
+        const firstItem = items[0];
+        return firstItem.hasOwnProperty('id') ? 'id' : 'name';
+    }
 
     private isDisplayItem(item: IFilterItem): boolean {
         return item.hasOwnProperty('value') && item.value?.length !== 0 && item.textValue && item.visibility !== false;
@@ -41,13 +47,13 @@ class EditDialog extends Control<IEditDialog> {
         const data = factory(items).filter((item) => {
 
             if (self.isDisplayItem(item)) {
-                self._selectedFilters.push(item.name);
+                self._selectedFilters.push(item[this._keyProperty]);
                 return !!item;
             }
         }).value();
 
         return new Memory({
-            keyProperty: 'name',
+            keyProperty: this._keyProperty,
             data
         });
     }
@@ -61,6 +67,7 @@ class EditDialog extends Control<IEditDialog> {
     }
 
     protected _beforeMount(options: IEditDialog): void {
+        this._keyProperty = this._getKeyProperty(options.items);
         this.prepareConfig(this, options);
     }
 
@@ -69,6 +76,7 @@ class EditDialog extends Control<IEditDialog> {
             newOptions.isClient !== this._options.isClient ||
             newOptions.isFavorite !== this._options.isFavorite ||
             newOptions.editedTextValue !== this._options.editedTextValue) {
+            this._keyProperty = this._getKeyProperty(newOptions.items);
             this.prepareConfig(this, newOptions);
         }
     }
@@ -111,7 +119,7 @@ class EditDialog extends Control<IEditDialog> {
     private getItemsToSave(items: object[], selectedFilters: string[]): void {
         const resultItems = Clone(items);
         factory(resultItems).each((item: IFilterItem) => {
-            if (!selectedFilters.includes(item.name) && this.isDisplayItem(item)) {
+            if (!selectedFilters.includes(item[this._keyProperty]) && this.isDisplayItem(item)) {
                 item.textValue = '';
                 item.value = null;
                 item.visibility = item.visibility === true ? false : item.visibility;
