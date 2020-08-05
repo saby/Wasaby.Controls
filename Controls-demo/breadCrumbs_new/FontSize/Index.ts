@@ -11,7 +11,15 @@ class FontColorStyle extends Control<IControlOptions> {
         this._items = [
             { id: 1, title: 'Первая папка', parent: null },
             { id: 2, title: 'Вторая папка', parent: 1 },
-            { id: 3, title: 'Третья папка', parent: 2 }
+            { id: 3, title: 'Третья папка', parent: 2 },
+            { id: 4, title: 'Вторая папка', parent: 1 },
+            { id: 5, title: 'Вторая папка', parent: 1 },
+            { id: 6, title: 'Третья папка', parent: 2 },
+            { id: 7, title: 'Вторая папка', parent: 1 },
+            { id: 8, title: 'Вторая папка', parent: 1 },
+            { id: 9, title: 'Третья папка', parent: 2 },
+            { id: 10, title: 'Вторая папка', parent: 1 },
+            { id: 11, title: 'Вторая папка', parent: 1 },
         ].map((item) => {
             return new Model({
                 rawData: item,
@@ -26,3 +34,4 @@ class FontColorStyle extends Control<IControlOptions> {
 }
 
 export default FontColorStyle;
+inlineHeight

@@ -188,6 +188,10 @@ class Base extends Control<IMasterDetail> {
 
     protected _afterMount(options: IMasterDetail): void {
         this._prevCurrentWidth = this._currentWidth;
+        if (options.masterWidth !== undefined) {
+            const currentWidth = this._getOffsetValue(this._currentWidth || options.masterWidth);
+            this._currentWidth = currentWidth + 'px';
+        }
     }
 
     protected _beforeUpdate(options: IMasterDetail): void {
@@ -238,7 +242,6 @@ class Base extends Control<IMasterDetail> {
             options.masterMaxWidth !== undefined &&
             options.masterMinWidth !== undefined) {
             let currentWidth = this._getOffsetValue(this._currentWidth || options.masterWidth);
-            this._currentWidth = currentWidth + 'px';
 
             // Если нет контейнера(до маунта) и значение задано в процентах, то мы не можем высчитать в px maxOffset
             // Пересчитаем после маунта в px, чтобы работало движение
