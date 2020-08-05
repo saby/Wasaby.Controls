@@ -2563,8 +2563,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     }
 
                     if ((newOptions.markerVisibility === 'visible' ||
-                            (newOptions.markerVisibility === 'onactivated' && newOptions.markedKey)
-                        )) {
+                        (newOptions.markerVisibility === 'onactivated' && newOptions.markedKey)
+                    )) {
                         self._markerController = _private.createMarkerController(self, newOptions);
                     }
 
