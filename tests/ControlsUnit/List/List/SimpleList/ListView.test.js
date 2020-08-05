@@ -156,14 +156,14 @@ define([
 
       it('should notify about resize after the list was updated with new items', function() {
          var
-            cfg = {
-               listModel: new lists.ListViewModel({
-                  items: [],
-                  keyProperty: 'id'
-               }),
-               keyProperty: 'id'
-            },
-            listView = new lists.ListView(cfg);
+             cfg = {
+                listModel: new lists.ListViewModel({
+                   items: [],
+                   keyProperty: 'id'
+                }),
+                keyProperty: 'id'
+             },
+             listView = new lists.ListView(cfg);
          listView.saveOptions(cfg);
          listView._beforeMount(cfg);
          var stub = sandbox.stub(listView, '_notify').withArgs('controlResize', [], { bubbling: true });
@@ -172,6 +172,35 @@ define([
          assert.isFalse(stub.called);
          listView._afterRender(cfg);
          assert.isTrue(stub.calledOnce);
+      });
+
+      it('set actual item padding in existing model', function() {
+         const oldItemPadding = {
+            top: 'null',
+            bottom: 'null',
+            left: 'null',
+            right: 'null'
+         };
+         const newItemPadding = {
+            top: 'xl',
+            bottom: 'xl',
+            left: 'm',
+            right: 'xs'
+         };
+         const cfg = {
+            itemPadding: newItemPadding,
+            listModel: new lists.ListViewModel({
+               items: [],
+               itemPadding: oldItemPadding,
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         };
+         assert.deepEqual(cfg.listModel._options.itemPadding, oldItemPadding);
+         const listView = new lists.ListView(cfg);
+         listView.saveOptions(cfg);
+         listView._beforeMount(cfg);
+         assert.deepEqual(listView._listModel._options.itemPadding, newItemPadding);
       });
 
       it('should notify about resize only once even if the list was changed multiple times during an update', function() {
