@@ -578,6 +578,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return index <= this._itemsCount;
     }
 
+    private _limitHistoryCheck(item: Model): boolean {
+        return this._visibleIds.includes(item.getKey());
+    }
+
     private _isSelectedKeysChanged(newKeys: TSelectedKeys, oldKeys: TSelectedKeys): boolean {
         const diffKeys: TSelectedKeys = factory(newKeys).filter((key) => !oldKeys.includes(key)).value();
         return newKeys.length !== oldKeys.length || !!diffKeys.length;
@@ -883,10 +887,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private static _additionalFilterCheck(options: IMenuControlOptions, item: Model): boolean {
         return (!item.get || !item.get(options.additionalProperty) || MenuControl._isHistoryItem(item));
-    }
-
-    private static _limitHistoryCheck(item: Model): boolean {
-        return this._visibleIds.includes(item.getKey());
     }
 
     private static _displayFilter(options: IMenuControlOptions, item: Model): boolean {
