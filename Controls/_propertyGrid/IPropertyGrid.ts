@@ -66,35 +66,11 @@ export interface IPropertyGrid {
 /*
  * @name Controls/_propertyGrid/IPropertyGrid#editingObject
  * @cfg {Object} data object that will be displayed as editors with values in _propertyGrid
- */ 
-
-/**
- * @typedef {Object} IPropertyGridProperty
- * @property {String} name Имя свойства.
- * @property {String} caption Пользовательский заголовок, который будет отображаться как метка для редактора.
- * @property {String} editorTemplateName Имя контрола, который будет использоваться в качестве редактора. Если параметр не задан, будет использоваться редактор по умолчанию.
- * @property {Object} editorOptions Опции редактора.
- * @property {String} type Тип свойства, доступные значения:
- * ‘int’, ‘boolean’, ‘string’, ‘enum’, ‘date’. Если параметр не задан, тип будет определен по значению параметра value.
- * @property {String} group Поле, по которому будут сгруппированы редакторы.
  */
-
-/*
- * @typedef {Object} IPropertyGridProperty
- * @property {String} name property name.
- * @property {String} caption A custom caption to appear as label for this field.
- * If specified, the caption will be shown in the name column instead of the property name.
- * @property {String} editorTemplateName Name of the control, the will be user as editor,
- * if left unset the default editor will used.
- * @property {Object} editorOptions Options for the editor.
- * @property {String} type Type of property, the available values are:
- * ‘int’, ‘boolean’, ‘string’, ‘enum’, ‘date’,if left unset, type will detected by value.
- * @property {String} group by this field editors will grouped.
- */ 
 
 /**
  * @name Controls/_propertyGrid/IPropertyGrid#source
- * @cfg {IPropertyGridProperty[]} Конфигурация свойств в PropertyGrid.
+ * @cfg {Controls/_propertyGrid/IProperty[]} Конфигурация свойств в PropertyGrid.
  * Например, можно установить текст метки, которая будет отображаться рядом с редактором или сгруппировать свойства по определённому признаку.
  * @remark Если конфигурация для свойства не передана, она будет сформирована автоматически.
  * @example
