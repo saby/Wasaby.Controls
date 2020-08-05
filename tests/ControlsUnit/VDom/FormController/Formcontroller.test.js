@@ -83,6 +83,7 @@ define([
          });
 
          Promise.all([p1, p2, p3, p4]).then(() => {
+            FC._isDestroyedFromCore = true;
             FC.destroy();
             done();
          });
@@ -104,6 +105,7 @@ define([
          FC._createChangeRecordPending();
          FC._beforeUnmount();
          assert.isTrue(FC._pendingPromise === null);
+         FC._isDestroyedFromCore = true;
          FC.destroy();
       });
 
@@ -276,6 +278,7 @@ define([
          assert.equal(createCalled, true);
          assert.equal(FC._isNewRecord, true);
 
+         FC._isDestroyedFromCore = true;
          FC.destroy();
       });
 
@@ -300,6 +303,7 @@ define([
          options.initializingWay = 'test';
          initializingWay = FC._calcInitializingWay(options);
          assert.equal(initializingWay, 'test');
+         FC._isDestroyedFromCore = true;
          FC.destroy();
       });
 
@@ -323,6 +327,7 @@ define([
          FC._update().then(() => {
             assert.equal(stubUpdate.callCount, 1);
             done();
+            FC._isDestroyedFromCore = true;
             FC.destroy();
          });
       });
@@ -426,6 +431,7 @@ define([
          assert.equal(isCancelCalled, false);
          assert.equal(FC._formOperationsStorage.length, 0);
 
+         FC._isDestroyedFromCore = true;
          FC.destroy();
       });
 
@@ -468,6 +474,7 @@ define([
          FC.update(configData).then(() => {
             assert.deepEqual(data, argsCorrectUpdate);
             done();
+            FC._isDestroyedFromCore = true;
             FC.destroy();
          });
       });
@@ -494,6 +501,7 @@ define([
          }
          let FC = createFC();
          FC._beforeUnmount();
+         FC._isDestroyedFromCore = true;
          FC.destroy();
 
          assert.equal(isDestroyCall, false);
@@ -505,6 +513,7 @@ define([
          };
          FC2._beforeUnmount();
          assert.equal(isDestroyCall, true);
+         FC._isDestroyedFromCore = true;
          FC2.destroy();
       });
 
@@ -533,6 +542,7 @@ define([
          FC._tryDeleteNewRecord();
          assert.equal(isDestroyCalled, true);
 
+         FC._isDestroyedFromCore = true;
          FC.destroy();
       });
 
@@ -565,6 +575,7 @@ define([
          FC._confirmDialogResult(true, new Promise(()=>{}));
          promise.catch(() => {
             assert.equal(calledEventName, 'cancelFinishingPending');
+            FC._isDestroyedFromCore = true;
             FC.destroy();
             done();
          })
@@ -593,6 +604,7 @@ define([
          FC.update().then(() => {
             assert.equal(FC._isNewRecord, false);
             done();
+            FC._isDestroyedFromCore = true;
             FC.destroy();
          });
       });
@@ -608,6 +620,7 @@ define([
          FC._notifyToOpener = (eventName) => {
             if ( eventName === 'updateStarted') {
                update = true;
+               FC._isDestroyedFromCore = true;
                FC.destroy();
             }
          };
@@ -629,6 +642,7 @@ define([
          FC._processError = () => {};
          FC.update();
          assert.equal(update, true);
+         FC._isDestroyedFromCore = true;
          FC.destroy();
       });
 
@@ -658,6 +672,7 @@ define([
          FC.update().catch(() => {
             error = true;
             assert.isTrue(error);
+            FC._isDestroyedFromCore = true;
             FC.destroy();
             done();
          });
@@ -672,6 +687,7 @@ define([
          FC._readHandler();
          assert.equal(FC._wasRead, true);
          assert.equal(FC._isNewRecord, false);
+         FC._isDestroyedFromCore = true;
          FC.destroy();
       });
    });

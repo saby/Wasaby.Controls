@@ -38,6 +38,7 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
                   assert.equal(this._items.indexOf(item) !== -1, false, '_prepareSelected uncorrect');
                };
                Group._prepareSelected({ selectedKeys: [1] });
+               Group._isDestroyedFromCore = true;
                Group.destroy();
                done();
             });
@@ -72,6 +73,7 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
             Group._removeKey('5');
             assert.equal(Group._selectedKeys.length, 2, '_addTriStateKey wrong result');
 
+            Group._isDestroyedFromCore = true;
             Group.destroy();
          });
 
@@ -86,6 +88,7 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
             assert.equal(Group._isSelected('2'), true, '_isSelected, selected item has uncorrect result');
             assert.equal(Group._isSelected('3'), null, '_isSelected, tristate item has uncorrect result');
 
+            Group._isDestroyedFromCore = true;
             Group.destroy();
          });
 
@@ -99,6 +102,7 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
                keyProperty: 'key'
             };
             assert.equal(Group._getItemKey(item, options), '5', '_getItemKey, unselected item has uncorrect result');
+            Group._isDestroyedFromCore = true;
             Group.destroy();
          });
 
@@ -130,6 +134,7 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
             result = '';
             Group._valueChangedHandler(null, null, false);
             assert.equal(result, '_removeKey_updateItemChildSelection_notifySelectedKeys', '_valueChangedHandler, unselected item has uncorrect result');
+            Group._isDestroyedFromCore = true;
             Group.destroy();
          });
 
@@ -192,6 +197,7 @@ define(['Controls/toggle', 'Types/source'], function(toggles, sourceLib) {
             Group._options = { parentProperty: 1 };
             Group._setItemsSelection(fakeItem, Group._options);
             assert.equal(result, '_setItemsSelection_setItemsSelection', '_updateItemChildSelection, item has uncorrect result');
+            Group._isDestroyedFromCore = true;
             Group.destroy();
          });
       });

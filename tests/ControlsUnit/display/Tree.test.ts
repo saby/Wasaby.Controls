@@ -146,6 +146,7 @@ describe('Controls/_display/Tree', () => {
     });
 
     afterEach(() => {
+        (tree as any)._isDestroyedFromCore = true;
         tree.destroy();
         tree = undefined;
         items = undefined;

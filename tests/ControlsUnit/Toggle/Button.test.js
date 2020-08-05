@@ -19,6 +19,7 @@ define(['Controls/toggle'], function(toggle) {
       });
 
       afterEach(function() {
+         Btn._isDestroyedFromCore = true;
          Btn.destroy();
          Btn = undefined;
       });

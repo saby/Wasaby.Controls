@@ -76,6 +76,7 @@ define(
                assert.equal(Manager._popupItems.getCount(), 0);
                setTimeout(() => {
                   assert.equal(Manager._popupItems.getCount(), 1);
+                  Manager._isDestroyedFromCore = true;
                   Manager.destroy();
                   done();
                }, 30);
@@ -401,6 +402,7 @@ define(
             }
             Manager._mouseDownHandler(event);
             assert.equal(deactivatedCount, 2);
+            Manager._isDestroyedFromCore = true;
             Manager.destroy();
          });
          it('Linked Popups', function(done) {
@@ -433,6 +435,7 @@ define(
                // wait promise timeout
                setTimeout(() => {
                   assert.equal(Manager._popupItems.getCount(), 0);
+                  Manager._isDestroyedFromCore = true;
                   Manager.destroy();
                   done();
                }, 10);
@@ -453,6 +456,7 @@ define(
             Manager._removeFromParentConfig(Manager._popupItems.at(1));
             assert.equal(Manager._popupItems.at(0).childs.length, 0);
 
+            Manager._isDestroyedFromCore = true;
             Manager.destroy();
          });
          it('managerPopupCreated notified', function() {
@@ -535,6 +539,7 @@ define(
             };
             Manager.show(item4, controller);
             assert.equal(Manager._popupItems.at(3).currentZIndex, 5000);
+            Manager._isDestroyedFromCore = true;
             Manager.destroy();
          });
 
@@ -564,6 +569,7 @@ define(
             item.removePending.errback(error);
             assert.strictEqual(item.popupState, 'created');
             assert.strictEqual(item.removePending, null);
+            Manager._isDestroyedFromCore = true;
             Manager.destroy();
          });
       });

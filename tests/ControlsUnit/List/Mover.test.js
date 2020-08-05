@@ -57,6 +57,7 @@ define([
       });
 
       afterEach(function() {
+         mover._isDestroyedFromCore = true;
          mover.destroy();
       });
 

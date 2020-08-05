@@ -35,6 +35,7 @@ define([
       });
 
       afterEach(function() {
+         remover._isDestroyedFromCore = true;
          remover.destroy();
       });
 

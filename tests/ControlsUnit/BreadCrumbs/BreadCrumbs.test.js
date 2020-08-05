@@ -53,6 +53,7 @@ define([
          });
       });
       afterEach(function() {
+         bc._isDestroyedFromCore = true;
          bc.destroy();
          bc = null;
       });

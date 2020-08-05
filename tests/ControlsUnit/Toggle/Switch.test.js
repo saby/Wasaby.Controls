@@ -18,6 +18,7 @@ define(['Controls/toggle'], function (toggle) {
       });
 
       afterEach(function () {
+         SW._isDestroyedFromCore = true;
          SW.destroy();
          SW = undefined;
       });

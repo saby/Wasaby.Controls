@@ -27,6 +27,7 @@ define(
             PWInstance._options.trigger = 'hoverAndClick';
             PWInstance._contentMouseDownHandler(event);
             assert.deepEqual(result, true);
+            PWInstance._isDestroyedFromCore = true;
             PWInstance.destroy();
          });
          it('contentMouseenterHandler', () => {
@@ -43,6 +44,7 @@ define(
             PWInstance._isOpened = true;
             PWInstance._contentMouseenterHandler(event);
             assert.deepEqual(cancel, true);
+            PWInstance._isDestroyedFromCore = true;
             PWInstance.destroy();
          });
       });

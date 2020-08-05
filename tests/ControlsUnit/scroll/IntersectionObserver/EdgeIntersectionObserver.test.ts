@@ -64,6 +64,7 @@ describe('Controls/scroll:EdgeIntersectionObserverContainer', () => {
             const observer = new EdgeIntersectionObserver(
                 component, () => {}, 'topTrigger', 'bottomTrigger', );
 
+            observer._isDestroyedFromCore = true;
             observer.destroy();
 
             sinon.assert.calledWith(component._notify, 'intersectionObserverUnregister');

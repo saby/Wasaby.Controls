@@ -4,6 +4,7 @@ define(['Controls/toggle'], function (toggleMod) {
    describe('Controls/_toggle/DoubleSwitch', function () {
       afterEach(function () {
          if (SW) {
+            SW._isDestroyedFromCore = true;
             SW.destroy();
          }
          SW = undefined;

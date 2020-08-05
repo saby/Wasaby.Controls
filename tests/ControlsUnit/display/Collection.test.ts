@@ -80,9 +80,11 @@ describe('Controls/_display/Collection', () => {
     });
 
     afterEach(() => {
+        (display as any)._isDestroyedFromCore = true;
         display.destroy();
         display = undefined;
 
+        (list as any)._isDestroyedFromCore = true;
         list.destroy();
         list = undefined;
 
@@ -185,6 +187,7 @@ describe('Controls/_display/Collection', () => {
             assert.isTrue(importantProps.indexOf('foo') > -1);
             assert.isTrue(importantProps.indexOf('bar') > -1);
 
+            (display as any)._isDestroyedFromCore = true;
             display.destroy();
         });
 
@@ -203,6 +206,7 @@ describe('Controls/_display/Collection', () => {
             assert.isTrue(importantProps.indexOf('foo') > -1);
             assert.isTrue(importantProps.indexOf('bar') > -1);
 
+            (display as any)._isDestroyedFromCore = true;
             display.destroy();
         });
     });
@@ -241,6 +245,7 @@ describe('Controls/_display/Collection', () => {
             });
 
             afterEach(() => {
+                (display as any)._isDestroyedFromCore = true;
                 display.destroy();
                 display = undefined;
                 items = undefined;
@@ -573,7 +578,9 @@ describe('Controls/_display/Collection', () => {
             list.at(0).set('id', 'foo');
             assert.equal(count, data.length);
 
+            (display as any)._isDestroyedFromCore = true;
             display.destroy();
+            (list as any)._isDestroyedFromCore = true;
             list.destroy();
         });
 

@@ -9,6 +9,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          };
          Control._selectedMasterValueChangedHandler(event, 'newValue');
          assert.equal(Control._selected, 'newValue');
+         Control._isDestroyedFromCore = true;
          Control.destroy();
       });
 
@@ -29,6 +30,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
             assert.equal(result, '300px');
             assert.equal(Control._currentMinWidth, '100px');
             assert.equal(Control._currentMaxWidth, '300px');
+            Control._isDestroyedFromCore = true;
             Control.destroy();
             done();
          });
@@ -44,6 +46,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          };
          Control.initCurrentWidth(options.masterWidth);
          assert.equal(Control._currentWidth, '0px');
+         Control._isDestroyedFromCore = true;
          Control.destroy();
       });
 
@@ -104,6 +107,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          assert.equal(Control._currentMaxWidth, '0px');
          assert.equal(Control._currentWidth, '0px');
 
+         Control._isDestroyedFromCore = true;
          Control.destroy();
       });
 
@@ -122,6 +126,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
 
          options.masterMinWidth = options.masterMaxWidth;
          assert.equal(Control._isCanResizing(options), false);
+         Control._isDestroyedFromCore = true;
          Control.destroy();
       });
 
@@ -141,6 +146,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          assert.equal(isStartRegister, true);
          assert.equal(isSetSettings, true);
 
+         Control._isDestroyedFromCore = true;
          Control.destroy();
       });
 

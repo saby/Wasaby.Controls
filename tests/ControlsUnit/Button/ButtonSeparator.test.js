@@ -3,6 +3,7 @@ define(['Controls/toggle'], function(toggle) {
    var separator;
    describe('Controls/Button/Separator', function() {
       function destroySeparator() {
+         separator._isDestroyedFromCore = true;
          separator.destroy();
          separator = undefined;
       }

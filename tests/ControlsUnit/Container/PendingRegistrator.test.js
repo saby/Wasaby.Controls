@@ -39,6 +39,7 @@ define(
             assert.deepEqual(callPendingFail, [1, 3]);
 
             Registrator._beforeUnmount();
+            Registrator._isDestroyedFromCore = true;
             Registrator.destroy();
          });
          it('register/unregister pending', () => {
@@ -75,6 +76,7 @@ define(
             });
 
             Registrator._beforeUnmount();
+            Registrator._isDestroyedFromCore = true;
             Registrator.destroy();
          });
 
@@ -97,6 +99,7 @@ define(
             assert.equal(Registrator._hasRegisteredPendings(), true);
 
             Registrator._beforeUnmount();
+            Registrator._isDestroyedFromCore = true;
             Registrator.destroy();
          });
 
@@ -115,6 +118,7 @@ define(
                sinon.assert.calledOnce(stub);
                done();
                Registrator._beforeUnmount();
+               Registrator._isDestroyedFromCore = true;
                Registrator.destroy();
                sandbox.restore();
             }).catch(done);
@@ -137,6 +141,7 @@ define(
                   sinon.assert.calledOnce(stub);
                   done();
                   Registrator._beforeUnmount();
+                  Registrator._isDestroyedFromCore = true;
                   Registrator.destroy();
                   sandbox.restore();
                });
@@ -164,6 +169,7 @@ define(
                   sinon.assert.calledWith(stub, null, test.pendingCounter);
                   done();
                   Registrator._beforeUnmount();
+                  Registrator._isDestroyedFromCore = true;
                   Registrator.destroy();
                   sandbox.restore();
                }).catch(done);

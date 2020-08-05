@@ -5071,6 +5071,7 @@ define([
          };
          instance._beforeUpdate(newCfg);
          assert.equal(newKeyProperty, 'name');
+         instance._isDestroyedFromCore = true;
          instance.destroy();
       });
 

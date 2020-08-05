@@ -92,6 +92,7 @@ define([
          });
 
          afterEach(function() {
+            controller._isDestroyedFromCore = true;
             controller.destroy();
             controller = null;
             error = null;

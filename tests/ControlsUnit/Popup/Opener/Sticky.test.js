@@ -102,6 +102,8 @@ define(
             cfg.popupOptions.target._container = '123';
             assert.equal(cfg.popupOptions.target._container,
                StickyController._private.getTargetNode(cfg));
+               
+            cfg.popupOptions.target._isDestroyedFromCore = true;
             cfg.popupOptions.target.destroy();
 
             //Тестируем: передаем в опцию target domNode

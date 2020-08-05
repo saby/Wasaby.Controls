@@ -23,6 +23,7 @@ describe('Controls/list_clean/BaseControl', () => {
         });
 
         afterEach(() => {
+            baseControl._isDestroyedFromCore = true;
             baseControl.destroy();
             baseControl = undefined;
             if (typeof window === 'undefined') {
@@ -66,6 +67,7 @@ describe('Controls/list_clean/BaseControl', () => {
         });
 
         afterEach(() => {
+            baseControl._isDestroyedFromCore = true;
             baseControl.destroy();
             baseControl = undefined;
         });

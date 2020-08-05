@@ -21,6 +21,7 @@ define(
             assert.equal(false, stackC._canResize(null, 2, 3, 4));
             assert.equal(false, stackC._canResize(1, 2, 3, 3));
             assert.equal(true, stackC._canResize(1, 2, 3, 4));
+            stackC._isDestroyedFromCore = true;
             stackC.destroy();
          });
       });

@@ -56,6 +56,7 @@ define(
             list.removeAt(1);
             Container.setPopupItems(list);
             assert.equal(Container._overlayId, undefined);
+            Container._isDestroyedFromCore = true;
             Container.destroy();
          });
 
@@ -66,6 +67,7 @@ define(
             const redrawPromise = Container.setPopupItems({}).then(() => {
                isRedrawPromiseResolve = true;
                assert.equal(isRedrawPromiseResolve, true);
+               Container._isDestroyedFromCore = true;
                Container.destroy();
             });
             Container._afterRender();

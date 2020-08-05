@@ -15,6 +15,7 @@ define(
             };
             opener._afterMount();
             opener._notify = () => {};
+            opener._isDestroyedFromCore = true;
             opener.destroy();
          });
 
@@ -50,7 +51,9 @@ define(
             };
             opener2._getConfig(popupOptions);
 
+            opener._isDestroyedFromCore = true;
             opener.destroy();
+            opener2._isDestroyedFromCore = true;
 			      opener2.destroy();
          });
 
@@ -79,6 +82,7 @@ define(
             opener._beforeUnmount();
             assert.equal(opener._indicatorId, null);
             assert.equal(isHideIndicatorCall, false);
+            opener._isDestroyedFromCore = true;
             opener.destroy();
          });
       });
@@ -102,6 +106,7 @@ define(
             done();
          }, 10);
 
+         opener._isDestroyedFromCore = true;
          opener.destroy();
       });
 

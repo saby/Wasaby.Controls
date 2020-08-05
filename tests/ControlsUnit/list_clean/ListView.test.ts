@@ -18,6 +18,7 @@ describe('Controls/list_clean/ListView', () => {
         });
 
         afterEach(() => {
+            listView._isDestroyedFromCore = true;
             listView.destroy();
             listView = undefined;
         });

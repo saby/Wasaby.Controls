@@ -13,6 +13,7 @@ describe('Controls/_display/TileCollection', () => {
     });
 
     afterEach(() => {
+        (list as any)._isDestroyedFromCore = true;
         list.destroy();
         list = null;
     });

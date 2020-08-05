@@ -17,6 +17,7 @@ define([
          LoadingDelay._beforeMount({});
          assert.equal(LoadingDelay._getDelay({}), 2000);
          assert.equal(LoadingDelay._getDelay({ delay: 3 }), 3);
+         LoadingDelay._isDestroyedFromCore = true;
          LoadingDelay.destroy();
       });
 
@@ -86,6 +87,7 @@ define([
          LoadingInd.show(config, waitPromise);
          assert.equal(config.waitPromise, undefined);
 
+         LoadingInd._isDestroyedFromCore = true;
          LoadingInd.destroy();
       });
 
@@ -146,6 +148,7 @@ define([
          assert.equal(LoadingInd._getOverlay(overlay), 'default');
          LoadingInd._isMessageVisible = true;
          assert.equal(LoadingInd._getOverlay(overlay), overlay)
+         LoadingInd._isDestroyedFromCore = true;
          LoadingInd.destroy();
       });
 
@@ -177,6 +180,7 @@ define([
          LoadingInd._updateProperties(cfgEmpty);
          LoadingInd._beforeUpdate({});
          assert.equal(LoadingInd.message, '');
+         LoadingInd._isDestroyedFromCore = true;
          LoadingInd.destroy();
       });
 
@@ -232,10 +236,12 @@ define([
 
          isMessageVisible = true;
 
+         LoadingInd._isDestroyedFromCore = true;
          LoadingInd.destroy();
 
       });
       after(() => {
+         Loading._isDestroyedFromCore = true;
          Loading.destroy();
       });
    });

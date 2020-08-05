@@ -25,6 +25,7 @@ define(['Controls/popupTemplate'], (popupTemplate) => {
          });
 
          assert.equal(controlResizeNotified, true);
+         Stack._isDestroyedFromCore = true;
          Stack.destroy();
       });
    });

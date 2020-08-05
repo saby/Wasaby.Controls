@@ -65,6 +65,7 @@ define(
          ];
 
          after(() => {
+            list._isDestroyedFromCore = true;
             list.destroy();
          });
 

@@ -62,6 +62,7 @@ define(
             infoBoxItem.parentZIndex = null;
             zIndex = zIndexCallback(infoBoxItem, popupList);
             assert.equal(zIndex, null);
+            popupList._isDestroyedFromCore = true;
             popupList.destroy();
          });
       });
