@@ -365,7 +365,7 @@ export interface IList {
 /**
  * @event Controls/_list/interface/IList#actionClick Происходит при клике по {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/index/ опции записи}.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {ItemAction} action Объект с конфигурацией опции записи, по которой выполнили клик.
+ * @param {Controls/itemActions:IItemAction} action Объект с конфигурацией опции записи, по которой выполнили клик.
  * @param {Types/entity:Model} item Экземпляр записи, для которой была отображена опция записи.
  * @param {HTMLElement} itemContainer Контейнер записи, по которой был выполнен клик.
  * @param {Event} nativeEvent Дескриптор исходного события браузера. Может использоваться для получения информации о том, какие клавиши-модификаторы были использованы при клике (Ctrl etc.)
@@ -381,7 +381,7 @@ export interface IList {
 /*ENG
  * @event Controls/_list/interface/IList#actionClick Occurs when itemAction button is clicked.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
- * @param {ItemAction} action Object with configuration of the clicked action.
+ * @param {Controls/itemActions:IItemAction} action Object with configuration of the clicked action.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item whose action was clicked.
  * @param {Event} nativeEvent Native browser event
