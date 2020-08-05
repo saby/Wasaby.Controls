@@ -319,7 +319,9 @@ export default class SearchControllerClass {
     }
 
     private _isSearchValueChanged(searchValue: string): boolean {
-        return this._options.searchValue !== searchValue && this._isInputSearchValueChanged(searchValue);
+        return this._options.searchValue !== searchValue &&
+            this._searchValue !== searchValue &&
+            this._isInputSearchValueChanged(searchValue);
     }
 
     private _isInputSearchValueChanged(searchValue: string): boolean {
