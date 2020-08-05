@@ -172,6 +172,7 @@ var ListView = BaseControl.extend(
                 _private.checkMarkerShouldBeVisible(this)) {
                 this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
             }
+            this._notify('controlResize', [], {bubbling: true});
         },
 
         _afterRender: function() {
