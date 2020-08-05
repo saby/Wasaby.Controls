@@ -3,6 +3,8 @@ import template = require('wml!Controls/_propertyGrid/defaultEditors/Enum');
 
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 import IEditor from 'Controls/_propertyGrid/IEditor';
+import {IPropertyGridButton} from 'Controls/_propertyGrid/extendedEditors/BooleanGroup';
+import {RecordSet} from 'Types/collection';
 
 /**
  * Редактор для перечисляемого типа данных.
@@ -29,19 +31,36 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
  * @author Герасимов А.М.
  */
 
+type TEnumEditorViewMode = 'buttons' | 'dropdown';
+
+interface IOptions extends IEditorOptions {
+    viewMode: TEnumEditorViewMode;
+    buttons: IPropertyGridButton[];
+}
+
 // @ts-ignore
 class EnumEditor extends Control implements IEditor {
     protected _template: Function = template;
-    protected _options: IEditorOptions;
+    protected _options: IOptions;
 
+    protected _buttons: RecordSet;
+    protected _optionsCount: number;
     protected selectedKey: string = '';
 
-    _beforeMount(options: IEditorOptions): void {
+    _beforeMount(options: IOptions): void {
+        if (options.viewMode === 'buttons' && options.buttons) {
+            // @ts-ignore
+            options.buttons[options.buttons.length - 1].isLast = true;
+            this._buttons = new RecordSet({
+                keyProperty: 'id',
+                rawData: options.buttons
+            });
+        }
         this._enum = options.propertyValue;
         this.selectedKey = options.propertyValue.getAsValue();
     }
 
-    _beforeUpdate(options: IEditorOptions): void {
+    _beforeUpdate(options: IOptions): void {
         this._enum = options.propertyValue;
         this.selectedKey = options.propertyValue.getAsValue();
     }
@@ -50,6 +69,12 @@ class EnumEditor extends Control implements IEditor {
         this.selectedKey = value;
         this._enum.setByValue(value);
         this._notify('propertyValueChanged', [this._enum], {bubbling: true});
+    }
+
+    static getDefaultOptions(): Partial<IOptions> {
+        return {
+            viewMode: 'dropdown'
+        };
     }
 }
 

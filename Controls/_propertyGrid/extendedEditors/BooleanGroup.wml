@@ -1,0 +1,15 @@
+<div class="controls-PropertyGrid__editor_booleanGroup_control ws-flexbox">
+    <ws:for data="button in _buttons">
+        <Controls.toggle:Button
+                bind:value="button.active"
+                attr:class="controls-PropertyGrid__editor_booleanGroup_item{{button.isLast ? '-last' : ''}}"
+                fontSize="m"
+                inlineHeight="default"
+                viewMode="{{button.viewMode}}"
+                contrastBackground="{{true}}"
+                icons="{{[button.icon + ' icon-small']}}"
+                iconStyle="secondary"
+                tooltip="{{button.tooltip}}"
+                on:valueChanged="_valueChangedHandler(button.id)"/>
+    </ws:for>
+</div>

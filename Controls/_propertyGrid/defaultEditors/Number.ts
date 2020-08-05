@@ -39,18 +39,6 @@ class NumberEditor extends Control implements IEditor {
             this._notify('propertyValueChanged', [newValue], {bubbling: true});
         }
     }
-
-    static getDefaultOptions(): Partial<INumberEditorOptions> {
-        return {
-            inputConfig: {
-                useGrouping: false,
-                showEmptyDecimals: false,
-                integersLength: 2,
-                precision: 0,
-                onlyPositive: true
-            }
-        };
-    }
 }
 
 export = NumberEditor;
