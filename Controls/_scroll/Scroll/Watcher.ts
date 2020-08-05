@@ -219,10 +219,6 @@ import {SyntheticEvent} from "Vdom/Vdom"
 
          },
 
-         initIntersectionObserver: function(self, elements, component) {
-            
-         },
-
          onRegisterNewComponent: function(self, container, component, withObserver) {
             var sizeCache = _private.getSizeCache(self, container);
             if (!sizeCache.clientHeight) {
@@ -329,11 +325,6 @@ import {SyntheticEvent} from "Vdom/Vdom"
          _registerIt: function(event, registerType, component, callback, triggers) {
             if (registerType === 'listScroll') {
                this._registrar.register(event, component, callback);
-
-               if (global && global.IntersectionObserver && triggers) {
-                  this._canObserver = true;
-                  _private.initIntersectionObserver(this, triggers, component);
-               }
 
                _private.onRegisterNewComponent(this, _private.getDOMContainer(this._container), component, this._canObserver);
             }
