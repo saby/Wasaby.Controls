@@ -26,4 +26,3 @@ class FontColorStyle extends Control<IControlOptions> {
 }
 
 export default FontColorStyle;
-inlineHeight
