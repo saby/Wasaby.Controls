@@ -61,6 +61,17 @@ define([
          assert.isTrue(dragnDrop.Container._isDragStarted(startEvent, createNativeEvent('mousemove', 16, 10), true));
          assert.isTrue(dragnDrop.Container._isDragStarted(startEvent, createNativeEvent('mousemove', 20, 6), true));
       });
+      it('_beforeUnmount', function() {
+         var controller = new dragnDrop.Container();
+         var sandbox = sinon.createSandbox();
+         sandbox.stub(controller, '_onMouseUp');
+
+         controller._afterMount();
+         controller.startDragNDrop({}, createSyntheticEvent('mousedown', 20, 10));
+         controller._beforeUnmount();
+
+         sinon.assert.called(controller._onMouseUp);
+      });
       it('getDragOffset', function() {
          assert.deepEqual(dragnDrop.Container._getDragOffset(startEvent, createNativeEvent('mousemove', 40, 20)), {x: -20, y: -10});
          assert.deepEqual(dragnDrop.Container._getDragOffset(startEvent, createNativeEvent('mousemove', 0, 0)), {x: 20, y: 10});
