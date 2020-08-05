@@ -339,8 +339,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     private _updateDisplayedItems(entry: IntersectionObserverSyntheticEntry): void {
 
-        //TODO: убрать `!entry` после https://online.sbis.ru/opendoc.html?guid=fee96058-62bc-4af3-8a74-b9d3b680f8ef
-        if (!this._options.source || !entry) {
+        //TODO: убрать `!entry.data` после https://online.sbis.ru/opendoc.html?guid=fee96058-62bc-4af3-8a74-b9d3b680f8ef
+        if (!this._options.source || !entry.data) {
             return;
         }
 
