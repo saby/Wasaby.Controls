@@ -41,6 +41,11 @@ class EnumEditor extends Control implements IEditor {
         this.selectedKey = options.propertyValue.getAsValue();
     }
 
+    _beforeUpdate(options: IEditorOptions): void {
+        this._enum = options.propertyValue;
+        this.selectedKey = options.propertyValue.getAsValue();
+    }
+
     _selectedKeyChanged(event: Event, value: string): void {
         this.selectedKey = value;
         this._enum.setByValue(value);
