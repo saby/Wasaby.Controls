@@ -2510,141 +2510,141 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
         const receivedError = receivedState.errorConfig;
-        let receivedData = receivedState.data;
-        let viewModelConfig = {...newOptions};
-        if (collapsedGroups) {
-            viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
-        }
-
-        if (newOptions.groupProperty) {
-            self._groupingLoader = new GroupingLoader({});
-        }
-
-        if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
-            self._viewModelConstructor = newOptions.viewModelConstructor;
-            if (receivedData) {
-                viewModelConfig.items = receivedData;
-            } else {
-                delete viewModelConfig.items;
+        const receivedData = receivedState.data;
+            let viewModelConfig = {...newOptions};
+            if (collapsedGroups) {
+                viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
             }
 
-            viewModelConfig.supportVirtualScroll = self._needScrollCalculation;
-            self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
-        } else if (newOptions.useNewModel && receivedData) {
-            self._listViewModel = self._createNewModel(
-                receivedData,
-                viewModelConfig,
-                newOptions.viewModelConstructor
-            );
-            if (newOptions.itemsReadyCallback) {
-                newOptions.itemsReadyCallback(self._listViewModel.getCollection());
+            if (newOptions.groupProperty) {
+                self._groupingLoader = new GroupingLoader({});
             }
-        }
 
-        if (self._listViewModel) {
-            _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
-        }
-
-        if (newOptions.source) {
-            self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
-            if (receivedData) {
-                self._sourceController.calculateState(receivedData);
-                _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
-
-                if (newOptions.useNewModel) {
-                    self._items = self._listViewModel.getCollection();
+            if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
+                self._viewModelConstructor = newOptions.viewModelConstructor;
+                if (receivedData) {
+                    viewModelConfig.items = receivedData;
                 } else {
-                    self._items = self._listViewModel.getItems();
-                }
-                self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
-                if (self._pagingNavigation) {
-                    const hasMoreData = self._items.getMetaData().more;
-                    _private.updatePagingData(self, hasMoreData);
+                    delete viewModelConfig.items;
                 }
 
-                if ((newOptions.markerVisibility === 'visible' ||
-                        (newOptions.markerVisibility === 'onactivated' && newOptions.markedKey)
-                    )) {
-                    self._markerController = _private.createMarkerController(self, newOptions);
+                viewModelConfig.supportVirtualScroll = self._needScrollCalculation;
+                self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
+            } else if (newOptions.useNewModel && receivedData) {
+                self._listViewModel = self._createNewModel(
+                    receivedData,
+                    viewModelConfig,
+                    newOptions.viewModelConstructor
+                );
+                if (newOptions.itemsReadyCallback) {
+                    newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                 }
-
-                if (newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
-                    self._selectionController = _private.createSelectionController(self, newOptions);
-                }
-
-                if (newOptions.serviceDataLoadCallback instanceof Function) {
-                    newOptions.serviceDataLoadCallback(null, self._items);
-                }
-                if (newOptions.dataLoadCallback instanceof Function) {
-                    newOptions.dataLoadCallback(self._items);
-                }
-
-                _private.createEditingData(self, newOptions);
-
-                _private.createScrollController(self, newOptions);
-
-                _private.prepareFooter(self, newOptions.navigation, self._sourceController);
-
-                _private.initVisibleItemActions(self, newOptions);
-                return;
             }
-            if (receivedError) {
-                if (newOptions.dataLoadErrback instanceof Function) {
-                    newOptions.dataLoadErrback(receivedError);
-                }
-                return _private.showError(self, receivedError);
+
+            if (self._listViewModel) {
+                _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
-            return _private.reload(self, newOptions).addCallback((result) => {
 
-                // FIXME: https://online.sbis.ru/opendoc.html?guid=1f6b4847-7c9e-4e02-878c-8457aa492078
-                const data = result.data || (new RecordSet<Model>({
-                    keyProperty: self._options.keyProperty,
-                    rawData: []
-                }));
-
-                if (newOptions.useNewModel && !self._listViewModel) {
-                    self._items = data;
-                    self._listViewModel = self._createNewModel(
-                        data,
-                        viewModelConfig,
-                        newOptions.viewModelConstructor
-                    );
-
+            if (newOptions.source) {
+                self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
+                if (receivedData) {
+                    self._sourceController.calculateState(receivedData);
                     _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
-                    if (newOptions.itemsReadyCallback) {
-                        newOptions.itemsReadyCallback(self._listViewModel.getCollection());
+                    if (newOptions.useNewModel) {
+                        self._items = self._listViewModel.getCollection();
+                    } else {
+                        self._items = self._listViewModel.getItems();
                     }
-                    if (self._listViewModel) {
-                        _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
+                    self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
+                    if (self._pagingNavigation) {
+                        const hasMoreData = self._items.getMetaData().more;
+                        _private.updatePagingData(self, hasMoreData);
                     }
-                }
-                if (viewModelConfig.collapsedGroups) {
-                    self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
-                }
-                self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
-                _private.createEditingData(self, newOptions);
+                    if ((newOptions.markerVisibility === 'visible' ||
+                            (newOptions.markerVisibility === 'onactivated' && newOptions.markedKey)
+                        )) {
+                        self._markerController = _private.createMarkerController(self, newOptions);
+                    }
+
+                    if (newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
+                        self._selectionController = _private.createSelectionController(self, newOptions);
+                    }
+
+                    if (newOptions.serviceDataLoadCallback instanceof Function) {
+                        newOptions.serviceDataLoadCallback(null, self._items);
+                    }
+                    if (newOptions.dataLoadCallback instanceof Function) {
+                        newOptions.dataLoadCallback(self._items);
+                    }
+
+                    _private.createEditingData(self, newOptions);
+
+                    _private.createScrollController(self, newOptions);
+
+                    _private.prepareFooter(self, newOptions.navigation, self._sourceController);
+
+                    _private.initVisibleItemActions(self, newOptions);
+                    return;
+                }
+                if (receivedError) {
+                    if (newOptions.dataLoadErrback instanceof Function) {
+                        newOptions.dataLoadErrback(receivedError);
+                    }
+                    return _private.showError(self, receivedError);
+                }
+                return _private.reload(self, newOptions).addCallback((result) => {
+
+                    // FIXME: https://online.sbis.ru/opendoc.html?guid=1f6b4847-7c9e-4e02-878c-8457aa492078
+                    const data = result.data || (new RecordSet<Model>({
+                        keyProperty: self._options.keyProperty,
+                        rawData: []
+                    }));
+
+                    if (newOptions.useNewModel && !self._listViewModel) {
+                        self._items = data;
+                        self._listViewModel = self._createNewModel(
+                            data,
+                            viewModelConfig,
+                            newOptions.viewModelConstructor
+                        );
+
+                        _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
+
+                        if (newOptions.itemsReadyCallback) {
+                            newOptions.itemsReadyCallback(self._listViewModel.getCollection());
+                        }
+                        if (self._listViewModel) {
+                            _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
+                        }
+                    }
+                    if (viewModelConfig.collapsedGroups) {
+                        self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
+                    }
+                    self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
+
+                    _private.createEditingData(self, newOptions);
+                    _private.createScrollController(self, newOptions);
+
+                    _private.initVisibleItemActions(self, newOptions);
+
+                    // TODO Kingo.
+                    // В случае, когда в опцию источника передают PrefetchProxy
+                    // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
+                    // когда список обёрнут в DataContainer.
+                    // Т.к. и список и DataContainer из _beforeMount возвращают рекордсет
+                    // то при построении на сервере и последующем оживлении на клиенте
+                    // при сериализации это будет два разных рекордсета.
+                    // Если при загрузке данных возникла ошибка, то ошибку надо вернуть, чтобы при оживлении на клиенте
+                    // не было перезапроса за данными.
+                    if (result.errorConfig || !cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
+                        return getState(result);
+                    }
+                });
+            } else {
                 _private.createScrollController(self, newOptions);
-
-                _private.initVisibleItemActions(self, newOptions);
-
-                // TODO Kingo.
-                // В случае, когда в опцию источника передают PrefetchProxy
-                // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
-                // когда список обёрнут в DataContainer.
-                // Т.к. и список и DataContainer из _beforeMount возвращают рекордсет
-                // то при построении на сервере и последующем оживлении на клиенте
-                // при сериализации это будет два разных рекордсета.
-                // Если при загрузке данных возникла ошибка, то ошибку надо вернуть, чтобы при оживлении на клиенте
-                // не было перезапроса за данными.
-                if (result.errorConfig || !cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
-                    return getState(result);
-                }
-            });
-        } else {
-            _private.createScrollController(self, newOptions);
-        }
+            }
     },
 
    _prepareGroups(newOptions, callback: Function) {
