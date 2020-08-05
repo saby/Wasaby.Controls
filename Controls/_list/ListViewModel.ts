@@ -175,9 +175,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this.options = cfg;
         this.options.rowSeparatorSize = _private.getSeparatorSizes(this.options);
     },
-    setItemPadding: function(itemPadding) {
+    setItemPadding: function(itemPadding, silent = false) {
         this._options.itemPadding = itemPadding;
-        this._nextModelVersion();
+        if (!silent) {
+            this._nextModelVersion();
+        }
     },
     getItemPadding: function() {
         return _private.getItemPadding(this._options);
