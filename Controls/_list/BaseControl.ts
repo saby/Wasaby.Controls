@@ -2783,6 +2783,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                         }
                     }
+                    if (viewModelConfig.collapsedGroups) {
+                        self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
+                    }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
                     _private.createEditingData(self, newOptions);
