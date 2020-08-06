@@ -2384,6 +2384,29 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(gridModel.getCurrent().stickyLadder.prop.headingStyle, '123');
          });
+
+         it('has no bottom border between last row and adding row', () => {
+            const model = new gridMod.GridViewModel({
+               ...cfg,
+               items: new collection.RecordSet({
+                  rawData: [{id: 1}, {id: 2}],
+                  keyProperty: 'id'
+               }),
+               editingConfig: {}
+            });
+
+            model.goToNext();
+            model.setHasMoreData(true);
+            assert.isTrue(model.getCurrent().isLastRow);
+
+            model.resetCachedItemData();
+            model.getEditingItemData = () => ({
+               index: 2
+            });
+            model.reset();
+            model.goToNext();
+            assert.isFalse(model.getCurrent().isLastRow);
+         });
       });
 
       describe('no grid support', () => {
