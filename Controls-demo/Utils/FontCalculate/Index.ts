@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/FontCalculate/FontCalculate');
+import controlTemplate = require('wml!Controls-demo/Utils/FontCalculate/FontCalculate');
 import {Memory} from 'Types/source';
 
 class Component extends Control<IControlOptions> {
