@@ -209,6 +209,10 @@ class ComboBox extends BaseDropdown {
       return container[0] || container;
    }
 
+   protected _deactivated(): void {
+      this.closeMenu();
+   }
+
    static _theme: string[] = ['Controls/dropdown'];
 
    static getDefaultOptions(): object {
