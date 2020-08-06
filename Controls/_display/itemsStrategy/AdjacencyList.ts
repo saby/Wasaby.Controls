@@ -310,8 +310,15 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         if (sourceItem instanceof GroupItem) {
             item = sourceItem;
         } else if (sourceItem instanceof TreeItem) {
-            sourceItem.setParent(this._getParent(index));
-            item = sourceItem;
+            if (items.indexOf(sourceItem) === -1) {
+                sourceItem.setParent(this._getParent(index));
+                item = sourceItem;
+            } else {
+                item = this.options.display.createItem({
+                    contents: sourceItem.getContents(),
+                    parent: this._getParent(index)
+                });
+            }
         } else if (sourceItem instanceof CollectionItem) {
             item = sourceItem;
         } else {
