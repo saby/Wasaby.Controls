@@ -86,6 +86,17 @@ define(
             assert.equal(newConfig.showDelay, 300, 'error showDelay');
          });
 
+         it('PopupInfoBox: getDefaultOptions', () => {
+            let config = {
+               showIndicator: false,
+               closePopupBeforeUnmount: true,
+               actionOnScroll: 'close'
+            };
+            let newConfig = popup.Infobox.getDefaultOptions();
+
+            assert.deepEqual(newConfig, config);
+         });
+
          it('PopupInfoBox: resetTimeOut', () => {
             let Infobox = new popup.InfoboxTarget();
             Infobox._openId = 300;
