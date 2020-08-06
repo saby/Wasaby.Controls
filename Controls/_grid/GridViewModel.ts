@@ -1527,6 +1527,18 @@ var
             current.isLastRow = (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
                                  (this.getCount() - 1 === current.index);
 
+            // Если после последней записи идет добавление новой, не нужно рисовать широкую линию-разделитель между ними.
+            const editingItemData = this.getEditingItemData();
+            if (editingItemData) {
+                let index;
+                if (this._options.editingConfig.addPosition === 'top') {
+                    index = editingItemData.index - 1;
+                } else {
+                    index = editingItemData.index;
+                }
+                current.isLastRow = current.isLastRow  && (index - 1 < current.index);
+            }
+
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
             );
