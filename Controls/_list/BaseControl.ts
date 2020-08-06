@@ -2089,7 +2089,14 @@ const _private = {
                 readOnly: self._options.readOnly,
                 keyProperty: self._options.keyProperty,
                 notify: (name, args, params) => {
-                    return self._notify(name, args, params);
+                    const beforeBeginResult = self._notify(name, args, params);
+
+                    if (name === 'beforeBeginEdit' && self._savedItemClickArgs) {
+                        self._notify('itemClick', self._savedItemClickArgs, { bubbling: true });
+                        self._savedItemClickArgs = null;
+                    }
+
+                    return beforeBeginResult;
                 },
                 forceUpdate: () => {
                     self._forceUpdate();
@@ -3454,6 +3461,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
+
+            // Если редактирование запретило всплытие itemClick, значит оно попробует запустить редактирование.
+            // В таком случае нотифицировать об itemClick нужно после события beforeBeginEdit. Для этого сохраняем аргументы события.
+            this._savedItemClickArgs = e.isStopped() ? [item, originalEvent] : null;
         }
     },
 
