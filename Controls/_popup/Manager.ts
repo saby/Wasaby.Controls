@@ -13,7 +13,7 @@ import * as Deferred from 'Core/Deferred';
 import * as cClone from 'Core/core-clone';
 import template = require('wml!Controls/_popup/Manager/Manager');
 
-const ORIENTATION_CHANGE_DELAY = 10;
+const ORIENTATION_CHANGE_DELAY = 50;
 
 /**
  * Popups Manager
@@ -53,6 +53,7 @@ class Manager extends Control<IManagerOptions> {
             window.addEventListener('orientationchange', () => {
                 // На момент срабатывания обработчика приходят старые размеры страницы.
                 // Опытным путем был подобран таймаут, после которого приходят актуальные размеры.
+                // Для IPAD PRO необходимо 50мс
                 setTimeout(() => {
                     this.orientationChangeHandler();
                 }, ORIENTATION_CHANGE_DELAY);
