@@ -7031,7 +7031,6 @@ define([
                });
             });
 
-
          describe('_onItemClick', () => {
             it('click on checkbox should not notify itemClick, but other clicks should', function() {
                let isStopped = false;
@@ -7053,6 +7052,53 @@ define([
                isCheckbox = true;
                baseControl._onItemClick(e, {}, originalEvent);
                assert.isTrue(isStopped);
+            });
+
+            it('in list wit EIP itemClick should fire after beforeBeginEdit', (done) => {
+               let isItemClickStopped = false;
+               let firedEvents = [];
+               lists.BaseControl._private.createEditInPlace(baseControl, {
+                  ...baseControl._options,
+                  editingConfig: { editOnClick: true }
+               });
+
+               baseControl._editInPlace._formController = {
+                  deferSubmit: () => Promise.resolve()
+               };
+
+               const e = {
+                  isStopped: () => isItemClickStopped,
+                  stopPropagation() {
+                     isItemClickStopped = true;
+                     // Событие стопается еще до начала редактирования и отстрела нужных событий
+                     assert.deepEqual(firedEvents, []);
+                  }
+               };
+               const item = {};
+               const originalEvent = {
+                  target: {
+                     closest: () => null
+                  },
+                  type: 'click'
+               };
+
+               baseControl._notify = (eName, args, params) => {
+                  if (eName !== 'itemClick' && eName !== 'beforeBeginEdit') {
+                     return;
+                  }
+                  firedEvents.push(eName);
+                  if (eName === 'itemClick') {
+                     assert.isTrue(params.bubbling);
+                     assert.equal(args[0], item);
+                     assert.equal(args[1], originalEvent);
+                     assert.isTrue(isItemClickStopped);
+                     assert.deepEqual(['beforeBeginEdit', 'itemClick'], firedEvents);
+                     done();
+                  }
+               };
+
+               // click not on checkbox
+               baseControl._onItemClick(e, item, originalEvent);
             });
          });
       });
