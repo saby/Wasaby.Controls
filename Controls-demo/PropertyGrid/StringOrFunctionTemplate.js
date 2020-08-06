@@ -3,14 +3,15 @@ define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
       'Core/Control',
       'wml!Controls-demo/PropertyGrid/StringOrFunctionTemplate',
       'UI/Builder',
-      'View/config',
-      'View/Executor/TClosure',
-      'i18n!userTemplate',
+      'UI/Executor',
+      'i18n!userTemplate'
    ],
-   function(Control, template, Builder, config, tClosure) {
+   function(Control, template, Builder, Executor) {
       'use strict';
 
+      var tClosure = Executor.TClosure;
       var tmpl = Builder.Tmpl;
+      var config = Builder.Config;
 
       var stringTmpl = Control.extend({
          _template: template,

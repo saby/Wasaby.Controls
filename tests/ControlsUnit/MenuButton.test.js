@@ -416,27 +416,11 @@ define(
             assert.equal(actualTarget, 'testTarget');
          });
 
-         it('_updateState', () => {
-            let optionsUpdated = false;
-            const options = {
-               isNewOptionsUsed: false
-            };
-            buttons.ActualApi.styleToViewMode = () => {
-               optionsUpdated = true;
-               return {
-                  viewMode: '',
-                  style: '',
-                  buttonAdd: false
-               };
-            };
-            menu._updateState(options);
-            assert.isTrue(optionsUpdated);
-
-            options.isNewOptionsUsed = true;
-            optionsUpdated = false;
-
-            menu._updateState(options);
-            assert.isFalse(optionsUpdated);
+         it('_deactivated', function() {
+            let opened = true;
+            menu._controller.closeMenu = () => { opened = false; };
+            menu._deactivated();
+            assert.isFalse(opened);
          });
       });
    }

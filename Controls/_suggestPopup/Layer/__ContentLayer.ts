@@ -117,8 +117,9 @@ var _private = {
 var __ContentLayer = BaseLayer.extend({
 
    _template: template,
-   _height: 'auto',
+   _height: '0px',
    _maxHeight: 'none',
+   _showContent: false,
 
    _afterUpdate(): void {
       /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
@@ -127,7 +128,7 @@ var __ContentLayer = BaseLayer.extend({
       if (this._options.showContent) {
          const needNotifyControlResizeEvent = this._controlResized;
          _private.updateHeight(this);
-
+         this._showContent = this._options.showContent;
          if (needNotifyControlResizeEvent) {
             this._children.resize.start();
             this._controlResized = false;

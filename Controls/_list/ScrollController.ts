@@ -167,24 +167,27 @@ export default class ScrollController {
         this._isRendering = state;
     }
 
-    continueScrollToItemIfNeed(): IScrollControllerResult {
-        let result = null;
+    continueScrollToItemIfNeed(): boolean {
+        let result = false;
         if (this._continueScrollToItem) {
-            result = this._continueScrollToItem();
+            this._continueScrollToItem();
             this._continueScrollToItem = null;
+            result = true;
         } else if (this._completeScrollToItem) {
             this._completeScrollToItem();
             this._completeScrollToItem = null;
-            result = {};
-        }
+            result = true;
+        };
         return result;
     }
-    completeVirtualScrollIfNeed(): IScrollControllerResult {
-       if (this._applyScrollTopCallback) {
-            this._applyScrollTopCallback();
-            this._applyScrollTopCallback = null;
-            return this.getResult();
-       }
+    completeVirtualScrollIfNeed(): boolean {
+        let result = false;
+        if (this._applyScrollTopCallback) {
+                this._applyScrollTopCallback();
+                this._applyScrollTopCallback = null;
+                result = true;
+        }
+        return result;
     }
     /**
      * Функция подскролла к элементу
@@ -194,16 +197,15 @@ export default class ScrollController {
      * @remark Функция подскролливает к записи, если это возможно, в противном случае вызовется перестроение
      * от элемента
      */
-    scrollToItem(key: string | number, toBottom: boolean = true, force: boolean = false, scrollCallback): Promise<void> {
+    scrollToItem(key: string | number, toBottom: boolean = true, force: boolean = false, scrollCallback): Promise<IScrollControllerResult> {
         const index = this._options.collection.getIndexByKey(key);
 
         if (index !== -1) {
             return new Promise((resolve) => {
-
                 if (this._virtualScroll && this._virtualScroll.canScrollToItem(index, toBottom, force)) {
                     this._fakeScroll = true;
                     scrollCallback(index);
-                    resolve();
+                    resolve(null);
                 } else if (force) {
                     this._inertialScrolling.callAfterScrollStopped(() => {
                         if (this._virtualScroll && this._virtualScroll.rangeChanged) {
@@ -212,7 +214,7 @@ export default class ScrollController {
                             // Для этого используем _scrollToItemAfterRender.
                             // https://online.sbis.ru/opendoc.html?guid=2a97761f-e25a-4a10-9735-ded67e36e527
                             this._continueScrollToItem = () => {
-                                this.scrollToItem(key, toBottom, force, scrollCallback).then(resolve);
+                                this.scrollToItem(key, toBottom, force, scrollCallback).then((result) => resolve(result));
                             };
                         } else {
                             this._continueScrollToItem = () => {
@@ -233,9 +235,8 @@ export default class ScrollController {
                                     this._completeScrollToItem = () => {
                                         this._fakeScroll = true;
                                         scrollCallback(index);
-                                        resolve();
+                                        resolve({ placeholders: rangeShiftResult.placeholders });
                                     }
-                                    return { placeholders: rangeShiftResult.placeholders }
                                 }
                             };
                         }
@@ -244,11 +245,11 @@ export default class ScrollController {
                         }
                     });
                 } else {
-                    resolve();
+                    resolve(null);
                 }
             });
         } else {
-            return Promise.resolve();
+            return Promise.resolve(null);
         }
     }
 
@@ -435,30 +436,6 @@ export default class ScrollController {
                 }
             }
         });
-    }
-
-    tryShiftToDirection_(direction: IDirection): boolean {
-        if (
-            !this._virtualScroll ||
-            this._virtualScroll &&
-            !this._virtualScroll.rangeChanged &&
-            this._virtualScroll.isRangeOnEdge(direction) ||
-            !this._virtualScroll && this._options.virtualScrollConfig &&
-            this._options.virtualScrollConfig.pageSize > this._options.collection.getCount()
-        ) {
-            return false;
-        } else {
-            if (this._virtualScroll && !this._virtualScroll.rangeChanged) {
-                this._inertialScrolling.callAfterScrollStopped(() => {
-                    const rangeShiftResult = this._virtualScroll.shiftRange(direction);
-                    this._preparedResult.placeholders = rangeShiftResult.placeholders;
-                    this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
-                        this._options.needScrollCalculation);
-                    this._indicatorState = direction;
-                });
-                return true;
-            }
-        }
     }
     
     updateItemsHeights(itemsHeights: IItemsHeights) {

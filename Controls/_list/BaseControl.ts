@@ -84,6 +84,7 @@ import 'wml!Controls/_list/BaseControl/Footer';
 import {IList} from "./interface/IList";
 import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
+import { EdgeIntersectionObserver } from 'Controls/scroll';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -130,14 +131,6 @@ const DRAGGING_OFFSET = 10;
 const SCROLLMOVE_DELAY = 150;
 
 const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
-
-const SCROLL_TRIGGERS = [
-    "topVirtualScrollTrigger",
-    "bottomVirtualScrollTrigger",
-    "topLoadTrigger",
-    "bottomLoadTrigger",
-    "scrollObserver"
-];
 
 interface IAnimationEvent extends Event {
     animationName: string;
@@ -549,7 +542,11 @@ const _private = {
             }
 
         };
-        return self._scrollController?.scrollToItem(key, toBottom, force, scrollCallback);
+        return self._scrollController?.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
+            if (result) {
+                _private.handleScrollControllerResult(self, result);
+            }
+        });
     },
 
     keyDownHome(self, event) {
@@ -678,8 +675,10 @@ const _private = {
         const drawItemsUp = (countCurrentItems, addedItems) => {
             beforeAddItems(addedItems);
             if (self._options.useNewModel) {
-                self._listViewModel.getCollection().prepend(addedItems);
-                self._listViewModel.getCollection().setMetaData(addedItems.getMetaData());
+                const collection = self._listViewModel.getCollection();
+                const newMetaData = _private.getUpdatedMetaData(collection.getMetaData(), addedItems.getMetaData(), self._options.navigation, direction);
+                collection.prepend(addedItems);
+                collection.setMetaData(newMetaData);
             } else {
                 self._listViewModel.prependItems(addedItems);
             }
@@ -691,8 +690,10 @@ const _private = {
             if (direction === 'down') {
                 beforeAddItems(addedItems);
                 if (self._options.useNewModel) {
-                    self._listViewModel.getCollection().append(addedItems);
-                    self._listViewModel.getCollection().setMetaData(addedItems.getMetaData());
+                    const collection = self._listViewModel.getCollection();
+                    const newMetaData = _private.getUpdatedMetaData(collection.getMetaData(), addedItems.getMetaData(), self._options.navigation, direction);
+                    collection.append(addedItems);
+                    collection.setMetaData(newMetaData);
                 } else {
                     self._listViewModel.appendItems(addedItems);
                 }
@@ -702,7 +703,7 @@ const _private = {
             }
 
             if (!_private.hasMoreData(self, self._sourceController, direction) && !addedItems.getCount()) {
-                _private.updateShadowMode(self, self._shadowVisibility);
+                self.updateShadowModeHandler(self._shadowVisibility);
             }
         };
 
@@ -824,6 +825,18 @@ const _private = {
         } else if (_private.needLoadByMaxCountNavigation(self._listViewModel, navigation)) {
             _private.loadToDirectionIfNeed(self, 'down', filter);
         }
+    },
+
+    getUpdatedMetaData(oldMetaData, loadedMetaData, navigation: INavigationOptionValue<INavigationSourceConfig>, direction: 'up' | 'down') {
+        if (navigation.source !== 'position' || navigation.sourceConfig.direction !== 'both') {
+            return loadedMetaData;
+        }
+        const resultMeta = { ...loadedMetaData, more: oldMetaData.more };
+        const directionMeta = direction === 'up' ? 'before' : 'after';
+
+        resultMeta.more[directionMeta] = typeof loadedMetaData.more === 'object' ? loadedMetaData.more[directionMeta] : loadedMetaData.more;
+
+        return resultMeta;
     },
 
     needLoadNextPageAfterLoad(loadedList: RecordSet, listViewModel, navigation): boolean {
@@ -2181,7 +2194,14 @@ const _private = {
                 readOnly: self._options.readOnly,
                 keyProperty: self._options.keyProperty,
                 notify: (name, args, params) => {
-                    return self._notify(name, args, params);
+                    const beforeBeginResult = self._notify(name, args, params);
+
+                    if (name === 'beforeBeginEdit' && self._savedItemClickArgs) {
+                        self._notify('itemClick', self._savedItemClickArgs, { bubbling: true });
+                        self._savedItemClickArgs = null;
+                    }
+
+                    return beforeBeginResult;
                 },
                 forceUpdate: () => {
                     self._forceUpdate();
@@ -2763,6 +2783,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                         }
                     }
+                    if (viewModelConfig.collapsedGroups) {
+                        self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
+                    }
                     self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
                     _private.createEditingData(self, newOptions);
@@ -2950,6 +2973,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._viewSize = container.clientHeight;
         if (this._needScrollCalculation) {
             this._registerObserver();
+            this._registerIntersectionObserver();
         }
         if (this._options.itemsDragNDrop) {
             container.addEventListener('dragstart', this._nativeDragStart);
@@ -2960,8 +2984,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             let result = this._scrollController.getResult();
             _private.handleScrollControllerResult(this, result);
 
-            result = this._scrollController.continueScrollToItemIfNeed();
-            _private.handleScrollControllerResult(this, result);
+            this._scrollController.continueScrollToItemIfNeed();
         }
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
@@ -3333,6 +3356,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._validateController.destroy();
         this._validateController = null;
+        if (this._intersectionObserver) {
+            this._intersectionObserver.destroy();
+            this._intersectionObserver = null;
+        }
 
         // для связи с контроллером ПМО
         this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
@@ -3419,12 +3446,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             this._scrollController.setRendering(false);
 
-            let result = this._scrollController.continueScrollToItemIfNeed();
-            _private.handleScrollControllerResult(this, result);
-            let needCheckTriggers = !!result;
-            result = this._scrollController.completeVirtualScrollIfNeed();
-            needCheckTriggers = needCheckTriggers || !!result;
-            _private.handleScrollControllerResult(this, result);
+            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() || 
+                                    this._scrollController.completeVirtualScrollIfNeed();
 
             if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
                 const {direction, heightDifference} = this._scrollController.getParamsToRestoreScrollPosition();
@@ -3632,6 +3655,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
+
+            // Если редактирование запретило всплытие itemClick, значит оно попробует запустить редактирование.
+            // В таком случае нотифицировать об itemClick нужно после события beforeBeginEdit. Для этого сохраняем аргументы события.
+            this._savedItemClickArgs = e.isStopped() ? [item, originalEvent] : null;
         }
     },
 
@@ -4190,31 +4217,40 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _registerObserver(): void {
-        let triggers = {};
-        SCROLL_TRIGGERS.forEach(name => {
-            triggers[name] = this._children[name];
-        });
-        if (!this._observerRegistered && triggers['scrollObserver']) {
+        if (!this._observerRegistered && this._children.scrollObserver) {
             // @ts-ignore
-            this._children.scrollObserver.startRegister(triggers);
+            this._children.scrollObserver.startRegister([this._children.scrollObserver]);
             this._observerRegistered = true;
+        }
+    },
+
+    _registerIntersectionObserver(): void {
+        this._intersectionObserver = new EdgeIntersectionObserver(
+            this,
+            this._intersectionObserverHandler.bind(this), 
+            this._children.topVirtualScrollTrigger, 
+            this._children.bottomVirtualScrollTrigger);
+    },
+
+    _intersectionObserverHandler(eventName) {
+        switch (eventName) {
+            case 'bottomIn':
+                this.triggerVisibilityChangedHandler('down', true);
+                break;
+            case 'topIn':
+                this.triggerVisibilityChangedHandler('up', true);
+                break;
+            case 'bottomOut':
+                this.triggerVisibilityChangedHandler('down', false);
+                break;
+            case 'topOut':
+                this.triggerVisibilityChangedHandler('up', false);
+                break;
         }
     },
 
     _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
         switch (eventName) {
-            case 'virtualPageBottomStart':
-                this.triggerVisibilityChangedHandler('down', true);
-                break;
-            case 'virtualPageTopStart':
-                this.triggerVisibilityChangedHandler('up', true);
-                break;
-            case 'virtualPageBottomStop':
-                this.triggerVisibilityChangedHandler('down', false);
-                break;
-            case 'virtualPageTopStop':
-                this.triggerVisibilityChangedHandler('up', false);
-                break;
             case 'scrollMoveSync':
                 this.scrollMoveSyncHandler(params);
                 break;

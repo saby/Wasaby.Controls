@@ -667,6 +667,10 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
         return this._resetHistoryFields(item, keyProperty);
     }
 
+    getOriginSource(): ICrud {
+        return this._$originSource;
+    }
+
     getHistory(): IHistoryData {
         return this._$history;
     }

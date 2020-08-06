@@ -430,5 +430,9 @@ export default class Input extends BaseDropdown {
       return moreText;
    }
 
+   protected _deactivated(): void {
+      this.closeMenu();
+   }
+
    static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
 }

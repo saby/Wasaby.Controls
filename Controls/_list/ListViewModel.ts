@@ -14,6 +14,7 @@ import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {IItemAction} from 'Controls/itemActions';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
+import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 
 interface IListSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';
@@ -74,7 +75,7 @@ const _private = {
         const checkboxVisible = isSelected !== false && isSelected !== undefined; // так как null - это тоже выбрано
 
         return CssClassList.add('js-controls-ListView__checkbox')
-                           .add('js-controls-ListView__notEditable')
+                           .add(EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE)
                            .add('controls-ListView__checkbox-onhover', checkboxOnHover && !checkboxVisible)
                            .compile();
     },
@@ -174,9 +175,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this.options = cfg;
         this.options.rowSeparatorSize = _private.getSeparatorSizes(this.options);
     },
-    setItemPadding: function(itemPadding) {
+    setItemPadding: function(itemPadding, silent = false) {
         this._options.itemPadding = itemPadding;
-        this._nextModelVersion();
+        if (!silent) {
+            this._nextModelVersion();
+        }
     },
     getItemPadding: function() {
         return _private.getItemPadding(this._options);

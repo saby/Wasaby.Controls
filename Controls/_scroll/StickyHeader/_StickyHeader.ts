@@ -220,7 +220,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             // и вызовут полную перерисовку, т.к. контрол посчитает что изменились высоты контента.
             // При след. замерах возьмется актуальная высота и опять начнется перерисовка.
             // Т.к. смещения только на ios добавляем, считаю высоту через clientHeight только для ios.
-            this._height = detection.isMobileIOS ? container.clientHeight : container.offsetHeight;
+            // offsetHeight округляет к ближайшему числу, из-за этого на масштабе просвечивают полупиксели
+            this._height = detection.isMobileIOS ? container.clientHeight : container.offsetHeight - Math.abs(1 - window.devicePixelRatio);
             if (this._model?.isFixed()) {
                 this._height -= getGapFixSize();
             }
@@ -442,15 +443,28 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         offset = getGapFixSize();
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
+        const isIosOptimizedMode = this._options.fixIosTwitch && detection.isMobileIOS;
 
         if (this._options.position.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
-            style += 'top: ' + (top - (fixedPosition ? offset : 0)) + 'px;';
+            const checkOffset = fixedPosition || isIosOptimizedMode;
+            style += 'top: ' + (top - (checkOffset ? offset : 0)) + 'px;';
         }
 
         if (this._options.position.indexOf(POSITION.bottom) !== -1 && this._stickyHeadersHeight.bottom !== null) {
             bottom = this._stickyHeadersHeight.bottom;
             style += 'bottom: ' + (bottom - offset) + 'px;';
+        }
+
+        // На IOS чтобы избежать дерганий скролла при достижении нижней или верхей границы, требуется
+        // отключить обновления в DOM дереве дочерних элементов скролл контейнера. Сейчас обновления происходят
+        // в прилипающих заголовках в аттрибуте style при закреплении/откреплении заголовка. Опция позволяет
+        // отключить эти обновления.
+        // Повсеместно включать нельзя, на заголовках где есть бордеры или в контенте есть разные цвета фона
+        // могут наблюдаться проблемы.
+        if (isIosOptimizedMode) {
+            style += 'z-index: ' + this._options.fixedZIndex + ';';
+            return style;
         }
 
         if (fixedPosition) {

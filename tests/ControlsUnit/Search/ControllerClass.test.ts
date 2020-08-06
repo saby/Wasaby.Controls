@@ -62,6 +62,10 @@ describe('Controls/search:ControllerClass', () => {
 
     it('isSearchValueChanged', () => {
         const searchController = new ControllerClass(getDefaultOptions(), {});
+        searchController._searchValue = 'test';
+        assert.isFalse(searchController._isSearchValueChanged('test'));
+
+        searchController._searchValue = 'еуые';
         assert.isTrue(searchController._isSearchValueChanged('test'));
 
         searchController._inputSearchValue = 'test';

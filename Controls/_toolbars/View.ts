@@ -299,9 +299,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _setMenuItems(): void {
+        const source = this._options.source || this._getSourceForMenu();
         const menuItems = Toolbar._calcMenuItems(this._actualItems);
         this._menuItems = menuItems;
-        this._menuSource = this._createPrefetchProxy(this._options.source, menuItems);
+        this._menuSource = this._createPrefetchProxy(source, menuItems);
     }
 
     private _setStateByItems(items: TItems, isNewOptions: boolean, source?: ICrudPlus): void {

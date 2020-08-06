@@ -422,7 +422,7 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _inputControlHandler: function (event, value, displayValue, selection) {
-        if (selection.end === displayValue.length) {
+        if (selection.end === displayValue.length && this._options.selectionType !== IRangeSelectable.SELECTION_TYPES.single) {
             this._children.endValueField.activate({enableScreenKeyboard: true});
         }
     },
