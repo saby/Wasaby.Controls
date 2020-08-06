@@ -14,6 +14,7 @@ import PositionParamsCalculator from './NavigationController/PositionParamsCalcu
 import {IAdditionalQueryParams} from 'Controls/_interface/IAdditionalQueryParams';
 import {TNavigationSource, IBaseSourceConfig, INavigationSourceConfig, TNavigationDirection} from 'Controls/_interface/INavigation';
 import {IHashMap} from 'Types/declarations';
+import {applied} from 'Types/entity';
 /**
  * Вспомогательный интерфейс для определения типа typeof object
  * @interface IType
@@ -27,7 +28,14 @@ import {IHashMap} from 'Types/declarations';
  * @author Аверкиев П.А.
  */
 type IType<T> = new(...args: any[]) => T;
-
+interface INavigationStoresListItem {
+    id: TKey;
+    store: INavigationStore;
+}
+interface IAddParamsItem {
+    id: TKey;
+    addParams: IAdditionalQueryParams;
+}
 /**
  * Фабрика для создания экземпляра контроллера запроса навигации.
  * @remark
@@ -114,7 +122,7 @@ export class NavigationController {
 
     private _navigationType: TNavigationSource;
     private _navigationConfig: INavigationSourceConfig;
-    private _navigationStores: List<INavigationStore> = null;
+    private _navigationStores: List<INavigationStoresListItem> = null;
     private _paramsCalculator: IParamsCalculator = null;
 
     constructor(cfg: INavigationControllerOptions) {
@@ -140,15 +148,31 @@ export class NavigationController {
     getQueryParams(getQueryArgs: IGetQueryParamsArg,
                    id: TKey = null,
                    direction?: TNavigationDirection): IAdditionalQueryParams {
+
+        const calculator = this._getCalculator();
+        const navigationQueryConfig = getQueryArgs.navigationConfig || ({} as INavigationSourceConfig);
         const queryParams = NavigationController._getCleanParams(getQueryArgs);
 
         // Если id не передан то берется стор для корневого раздела, для которого жесткий id = null
         const store = this._getStore(id);
-        const calculator = this._getCalculator();
-        const navigationQueryConfig = getQueryArgs.navigationConfig || ({} as INavigationSourceConfig);
-
         const addParams = calculator.getQueryParams(store, navigationQueryConfig, direction);
         return NavigationController._mergeParams(queryParams, addParams);
+    }
+
+    getQueryParamsHierarchical(getQueryArgs: IGetQueryParamsArg): IAdditionalQueryParams[] {
+        const calculator = this._getCalculator();
+        const navigationQueryConfig = getQueryArgs.navigationConfig || ({} as INavigationSourceConfig);
+        const queryParams = NavigationController._getCleanParams(getQueryArgs);
+
+        const addParamsArray = [];
+        this._navigationStores.each((storesItem) => {
+            const store = storesItem.store;
+            addParamsArray.push({
+                id: storesItem.id,
+                addParams: calculator.getQueryParams(store, navigationQueryConfig)
+            });
+        });
+        return NavigationController._mergeParamsHierarchical(queryParams, addParamsArray);
     }
 
     /**
@@ -182,14 +206,17 @@ export class NavigationController {
     }
 
     private _getStore(id: TKey): INavigationStore {
-        let resStore: INavigationStore;
-        if (this._navigationStores[id]) {
-            resStore = this._navigationStores[id];
-        } else {
-            resStore = NavigationStoreFactory.resolve(this._navigationType, this._navigationConfig);
-            this._navigationStores[id] = resStore;
+        const storeIndex = this._navigationStores.getIndexByValue('id', id);
+        let resStoreItem: INavigationStoresListItem = this._navigationStores.at(storeIndex);
+
+        if (!resStoreItem) {
+            resStoreItem = {
+                id,
+                store: NavigationStoreFactory.resolve(this._navigationType, this._navigationConfig)
+            };
+            this._navigationStores.add(resStoreItem);
         }
-        return resStore;
+        return resStoreItem.store;
     }
 
     private _getCalculator(): IParamsCalculator {
@@ -247,6 +274,25 @@ export class NavigationController {
         }
 
         return resultParams;
+    }
+
+    private static _mergeParamsHierarchical(clean: IAdditionalQueryParams,
+                                            add: IAddParamsItem[]): IAdditionalQueryParams[] {
+
+        const resultParamsArray = [] as IAdditionalQueryParams[];
+        add.forEach((addItem) => {
+            const resultParams = NavigationController._mergeParams({...clean}, addItem.addParams);
+
+            // Добавляем в фильтр раздел и помечаем это поле, как первичный ключ
+            // Оно используется для формирования множественной навигации,
+            // Само поле будет удалено из фильтра перед запросом.
+
+            resultParams.filter.__root = new applied.PrimaryKey(addItem.id);
+
+            resultParamsArray.push(resultParams);
+        });
+
+        return resultParamsArray;
     }
 
     private static _getCleanParams(getQueryArgs: IGetQueryParamsArg): IAdditionalQueryParams {

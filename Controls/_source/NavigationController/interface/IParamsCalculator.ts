@@ -7,7 +7,7 @@ export default interface IParamsCalculator {
      getQueryParams(
          store: INavigationStore,
          navigationQueryConfig: IBaseSourceConfig,
-         direction: TNavigationDirection): IAdditionalQueryParams;
+         direction?: TNavigationDirection): IAdditionalQueryParams;
      updateQueryProperties(
          store: INavigationStore,
          list: RecordSet,

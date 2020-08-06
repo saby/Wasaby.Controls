@@ -635,4 +635,51 @@ describe('Controls/_source/NavigationController', () => {
 
         });
     });
+    describe('Both navigation types + multiroot', () => {
+        describe('getQueryParams', () => {
+            it ('Page', () => {
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: 0,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: true
+                    }
+                });
+
+                // creating some stores in Navigation controller
+                nc.getQueryParams({}, '1');
+                nc.getQueryParams({}, '2');
+
+                const params = nc.getQueryParamsHierarchical({filter: defFilter, sorting: defSorting});
+                assert.equal(2, params.length, 'Wrong query params');
+                assert.equal('1', params[0].filter.__root, 'Wrong query params');
+                assert.equal('2', params[1].filter.__root, 'Wrong query params');
+            });
+
+            it ('Position', () => {
+                const QUERY_LIMIT = 3;
+                let nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        position: 1,
+                        field: 'id',
+                        direction: 'both',
+                        limit: QUERY_LIMIT
+                    }
+                });
+
+                // creating some stores in Navigation controller
+                nc.getQueryParams({});
+                nc.getQueryParams({}, '1');
+                nc.getQueryParams({}, '2');
+
+                const params = nc.getQueryParamsHierarchical({filter: defFilter, sorting: defSorting});
+                assert.equal(3, params.length, 'Wrong query params');
+                assert.equal('null', params[0].filter.__root, 'Wrong query params');
+                assert.equal('1', params[1].filter.__root, 'Wrong query params');
+                assert.equal('2', params[1].filter.__root, 'Wrong query params');
+            });
+        });
+    });
 });
