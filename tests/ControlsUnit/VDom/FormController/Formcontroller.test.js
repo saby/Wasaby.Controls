@@ -513,7 +513,7 @@ define([
          };
          FC2._beforeUnmount();
          assert.equal(isDestroyCall, true);
-         FC._isDestroyedFromCore = true;
+         FC2._isDestroyedFromCore = true;
          FC2.destroy();
       });
 

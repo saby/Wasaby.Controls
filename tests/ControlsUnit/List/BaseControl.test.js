@@ -5101,6 +5101,7 @@ define([
          };
          instance._beforeUpdate(cfg);
          assert.isTrue(cancelClosed);
+         instance._isDestroyedFromCore = true;
          instance.destroy(cancelClosed);
       });
 
