@@ -116,9 +116,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          };
          Control._options = options;
          Control._canResizing = true;
-         assert.isFalse(Control._isOffsetCalculated);
          Control._dragStartHandler();
-         assert.isTrue(Control._isOffsetCalculated);
          assert.equal(Control._minOffset, 50);
          assert.equal(Control._maxOffset, 50);
          assert.equal(Control._currentWidth, '150px');

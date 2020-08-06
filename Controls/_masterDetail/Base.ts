@@ -112,7 +112,6 @@ class Base extends Control<IMasterDetail> {
     protected _currentMinWidth: string;
     protected _containerWidth: number;
     protected _updateOffsetDebounced: Function;
-    protected _isOffsetCalculated: boolean = false;
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<number> | void {
         this._updateOffsetDebounced = debounce(this._updateOffsetDebounced.bind(this), RESIZE_DELAY);
@@ -143,8 +142,7 @@ class Base extends Control<IMasterDetail> {
         return getSettings([options.propStorageId]);
     }
     private _dragStartHandler(): void {
-        if (!this._isOffsetCalculated && this._canResizing) {
-            this._isOffsetCalculated = true;
+        if (!this._minOffset && !this._maxOffset && this._canResizing) {
             this._updateOffset(this._options);
         }
     }
@@ -188,7 +186,7 @@ class Base extends Control<IMasterDetail> {
 
     protected _afterMount(options: IMasterDetail): void {
         this._prevCurrentWidth = this._currentWidth;
-        if (options.masterWidth !== undefined) {
+        if (this._canResizing) {
             const currentWidth = this._getOffsetValue(this._currentWidth || options.masterWidth);
             this._currentWidth = currentWidth + 'px';
         }
@@ -242,6 +240,7 @@ class Base extends Control<IMasterDetail> {
             options.masterMaxWidth !== undefined &&
             options.masterMinWidth !== undefined) {
             let currentWidth = this._getOffsetValue(this._currentWidth || options.masterWidth);
+            this._currentWidth = currentWidth + 'px';
 
             // Если нет контейнера(до маунта) и значение задано в процентах, то мы не можем высчитать в px maxOffset
             // Пересчитаем после маунта в px, чтобы работало движение
