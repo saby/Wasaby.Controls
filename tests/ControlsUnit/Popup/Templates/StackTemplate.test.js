@@ -1,4 +1,4 @@
-define(['Controls/popupTemplate'], (popupTemplate) => {
+define(['Controls/popupTemplate', 'UI/Vdom'], (popupTemplate, Vdom) => {
    'use strict';
    describe('Controls/_popupTemplate/Stack/Stack', () => {
       it('maximize button title', () => {
@@ -25,8 +25,7 @@ define(['Controls/popupTemplate'], (popupTemplate) => {
          });
 
          assert.equal(controlResizeNotified, true);
-         Stack._isDestroyedFromCore = true;
-         Stack.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(Stack, {});
       });
    });
 });

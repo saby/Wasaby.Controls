@@ -23,11 +23,9 @@ describe('Controls/_display/FlagsItem', () => {
     afterEach(() => {
         dict = undefined;
 
-        (display as any)._isDestroyedFromCore = true;
         display.destroy();
         display = undefined;
 
-        (collection as any)._isDestroyedFromCore = true;
         collection.destroy();
         collection = undefined;
     });

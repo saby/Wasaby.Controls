@@ -1,4 +1,4 @@
-define(['Controls/masterDetail'], function (masterDetail) {
+define(['Controls/masterDetail', 'UI/Vdom'], function (masterDetail, Vdom) {
    'use strict';
    describe('Controls.Container.MasterDetail', function () {
       it('selected master value changed', () => {
@@ -9,8 +9,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          };
          Control._selectedMasterValueChangedHandler(event, 'newValue');
          assert.equal(Control._selected, 'newValue');
-         Control._isDestroyedFromCore = true;
-         Control.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(Control, {});
       });
 
       it('beforeMount', (done) => {
@@ -30,8 +29,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
             assert.equal(result, '300px');
             assert.equal(Control._currentMinWidth, '100px');
             assert.equal(Control._currentMaxWidth, '300px');
-            Control._isDestroyedFromCore = true;
-            Control.destroy();
+            Vdom.Synchronizer.unMountControlFromDOM(Control, {});
             done();
          });
       });
@@ -46,8 +44,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          };
          Control.initCurrentWidth(options.masterWidth);
          assert.equal(Control._currentWidth, '0px');
-         Control._isDestroyedFromCore = true;
-         Control.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(Control, {});
       });
 
       it('update offset', () => {
@@ -107,8 +104,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          assert.equal(Control._currentMaxWidth, '0px');
          assert.equal(Control._currentWidth, '0px');
 
-         Control._isDestroyedFromCore = true;
-         Control.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(Control, {});
       });
 
       it('is can resizing', () => {
@@ -126,8 +122,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
 
          options.masterMinWidth = options.masterMaxWidth;
          assert.equal(Control._isCanResizing(options), false);
-         Control._isDestroyedFromCore = true;
-         Control.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(Control, {});
       });
 
       it('afterRender', () => {
@@ -146,8 +141,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          assert.equal(isStartRegister, true);
          assert.equal(isSetSettings, true);
 
-         Control._isDestroyedFromCore = true;
-         Control.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(Control, {});
       });
 
       it('masterWidthChanged', () => {

@@ -85,15 +85,12 @@ describe('Controls/_display/Ladder', () => {
     });
 
     afterEach(() => {
-        (ladder as any)._isDestroyedFromCore = true;
         ladder.destroy();
         ladder = undefined;
 
-        (collection as any)._isDestroyedFromCore = true;
         collection.destroy();
         collection = undefined;
 
-        (list as any)._isDestroyedFromCore = true;
         list.destroy();
         list = undefined;
 
@@ -1175,7 +1172,6 @@ describe('Controls/_display/Ladder', () => {
 
             ladder.isPrimary(items.at(0), 'name'); // force serialize _columnNames
             (Ladder as any).fromJSON(ladder.toJSON());
-            (ladder as any)._isDestroyedFromCore = true;
             ladder.destroy(); // unsubscribe
 
             let lastAction = null;

@@ -101,7 +101,6 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
             isCallbackCalled = true;
         });
 
-        (columnScroll as any)._isDestroyedFromCore = true;
         columnScroll.destroy();
 
         columnScroll.updateSizes(() => {

@@ -1,8 +1,10 @@
 define([
    'Controls/breadcrumbs',
+   'UI/Vdom',
    'Types/entity'
 ], function(
    crumbs,
+   Vdom,
    entity
 ) {
    describe('Controls.BreadCrumbs.View', function() {
@@ -53,8 +55,7 @@ define([
          });
       });
       afterEach(function() {
-         bc._isDestroyedFromCore = true;
-         bc.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(bc, {});
          bc = null;
       });
       it('_onHoveredItemChanged', function() {

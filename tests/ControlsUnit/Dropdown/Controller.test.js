@@ -659,7 +659,6 @@ define(
             dropdownController._options.openerControl = {
                _notify: () => {}
             };
-            dropdownController._isDestroyedFromCore = true;
             dropdownController.destroy();
             assert.isFalse(!!dropdownController._sourceController);
             assert.isTrue(isCanceled);

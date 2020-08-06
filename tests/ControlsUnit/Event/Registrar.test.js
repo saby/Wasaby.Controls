@@ -35,7 +35,6 @@ define([
          reg.unregister(evMock, compMock);
          assert.isTrue(!reg._registry['123abc'], '_registry has records after unregister');
 
-         reg._isDestroyedFromCore = true;
          reg.destroy();
       });
 
@@ -53,7 +52,6 @@ define([
 
          reg.unregister(evMock, compMock);
 
-         reg._isDestroyedFromCore = true;
          reg.destroy();
       });
    })

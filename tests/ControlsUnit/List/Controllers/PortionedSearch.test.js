@@ -121,7 +121,6 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
 
       it('destroy', () => {
          portionedSearchController.startSearch();
-         portionedSearchController._isDestroyedFromCore = true;
          portionedSearchController.destroy();
 
          clock.tick(31000);

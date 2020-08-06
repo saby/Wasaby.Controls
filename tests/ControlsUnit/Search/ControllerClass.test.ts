@@ -78,7 +78,6 @@ describe('Controls/search:ControllerClass', () => {
     it('destroy', () => {
         const searchController = new ControllerClass(getDefaultOptions(), {});
         const stub = sandbox.stub(searchController._getSearchController(getDefaultOptions()), 'abort');
-        (searchController as any)._isDestroyedFromCore = true;
         searchController.destroy();
         stub.withArgs(true);
     });

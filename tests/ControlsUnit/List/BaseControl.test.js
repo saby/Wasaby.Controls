@@ -4,6 +4,7 @@
  */
 define([
    'Types/source',
+   'UI/Vdom',
    'Types/collection',
    'Controls/list',
    'Controls/tree',
@@ -21,7 +22,7 @@ define([
    'Controls/listRender',
    'Controls/itemActions',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, lists, tree, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, dragNDrop, listRender, itemActions) {
+], function(sourceLib, Vdom, collection, lists, tree, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, dragNDrop, listRender, itemActions) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -5071,8 +5072,7 @@ define([
          };
          instance._beforeUpdate(newCfg);
          assert.equal(newKeyProperty, 'name');
-         instance._isDestroyedFromCore = true;
-         instance.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(instance, {});
       });
 
       it('close editInPlace if model changed', async () => {
@@ -5101,8 +5101,7 @@ define([
          };
          instance._beforeUpdate(cfg);
          assert.isTrue(cancelClosed);
-         instance._isDestroyedFromCore = true;
-         instance.destroy(cancelClosed);
+         Vdom.Synchronizer.unMountControlFromDOM(instance, {});
       });
 
       it('getListTopOffset', function () {

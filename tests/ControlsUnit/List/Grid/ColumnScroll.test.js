@@ -1007,7 +1007,6 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(200, columnScroll._contentContainerSize);
          columnScroll._children.content.scrollWidth = 650;
          columnScroll._children.content.offsetWidth = 300;
-         columnScroll._isDestroyedFromCore = true;
          columnScroll.destroy();
          columnScroll._resizeHandler();
          assert.equal(450, columnScroll._contentSize); // previous value

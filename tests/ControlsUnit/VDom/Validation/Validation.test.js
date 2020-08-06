@@ -1,8 +1,9 @@
 define([
    'Controls/validate',
+   'UI/Vdom',
    'Core/Deferred',
    'ControlsUnit/resources/ProxyCall',
-], function(validateMod, Deferred, ProxyCall) {
+], function(validateMod, Vdom, Deferred, ProxyCall) {
    'use strict';
 
    function getValidator(validateResult, readOnly) {
@@ -55,8 +56,7 @@ define([
          assert.deepEqual(validCtrl._isOpened, true);
          validCtrl._mouseInfoboxHandler({type: 'close'});
          assert.deepEqual(validCtrl._isOpened, false);
-         validCtrl._isDestroyedFromCore = true;
-         validCtrl.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(validCtrl, {});
       });
       it('cleanValid', () => {
          var validCtrl = new validateMod.Container();
@@ -66,8 +66,7 @@ define([
          validCtrl._validationResult = 'Error';
          validCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(validCtrl._validationResult, 'Error');
-         validCtrl._isDestroyedFromCore = true;
-         validCtrl.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(validCtrl, {});
       });
       it('setValidResult', () => {
          var validCtrl = new validateMod.Container();
@@ -87,8 +86,7 @@ define([
          validCtrl._isOpened = false;
          validCtrl.setValidationResult('Error 404', validConfig);
          assert.deepEqual(validCtrl._isOpened, false);
-         validCtrl._isDestroyedFromCore = true;
-         validCtrl.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(validCtrl, {});
       });
    });
    describe('Validate/ControllerClass', () => {
@@ -107,7 +105,6 @@ define([
 
          assert.equal(Controller._validates.length, 0);
 
-         Controller._isDestroyedFromCore = true;
          Controller.destroy();
       });
 
@@ -130,7 +127,6 @@ define([
          assert.equal(validator3._isValidCall, true);
          assert.equal(isValid, false);
 
-         Controller._isDestroyedFromCore = true;
          Controller.destroy();
       });
       it('activateFirstValidField', (done) => {
@@ -143,7 +139,6 @@ define([
          Controller._validates.push(validator1, validator2, validator3, validator4);
          Controller.submit().then(() => {
             assert.equal(validator3._activateCall, true);
-            Controller._isDestroyedFromCore = true;
             Controller.destroy();
             done();
          });
@@ -157,7 +152,6 @@ define([
          Controller.submit().then(() => {
             assert.equal(validator1._activateCall, true);
             assert.equal(validator1._isOpened, true);
-            Controller._isDestroyedFromCore = true;
             Controller.destroy();
             done();
          });
@@ -174,7 +168,6 @@ define([
          assert.equal(validator1._validationResult, null);
          assert.equal(validator2._validationResult, null);
 
-         Controller._isDestroyedFromCore = true;
          Controller.destroy();
       });
 
@@ -219,7 +212,6 @@ define([
 
             assert.equal(validator1._activateCall, true, 'is validate1 activate');
             assert.equal(validator2._activateCall, false, 'is validate2 activate');
-            Controller._isDestroyedFromCore = true;
             Controller.destroy();
             done();
          }).catch((error) => {

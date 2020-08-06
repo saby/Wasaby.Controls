@@ -64,7 +64,6 @@ describe('PageQueryParamsController', () => {
             testN++;
         });
         afterEach(() => {
-            (controller as any)._isDestroyedFromCore = true;
             controller.destroy();
         });
         

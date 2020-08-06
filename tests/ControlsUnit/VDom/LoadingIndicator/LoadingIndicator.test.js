@@ -1,6 +1,7 @@
 define([
-   'Controls/LoadingIndicator'
-], (LoadingIndicator) => {
+   'Controls/LoadingIndicator',
+   'UI/Vdom'
+], (LoadingIndicator, Vdom) => {
    'use strict';
 
    describe('LoadingIndicator-tests', () => {
@@ -17,8 +18,7 @@ define([
          LoadingDelay._beforeMount({});
          assert.equal(LoadingDelay._getDelay({}), 2000);
          assert.equal(LoadingDelay._getDelay({ delay: 3 }), 3);
-         LoadingDelay._isDestroyedFromCore = true;
-         LoadingDelay.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(LoadingDelay, {});
       });
 
       it('LoadingIndicator - add', () => {
@@ -87,8 +87,7 @@ define([
          LoadingInd.show(config, waitPromise);
          assert.equal(config.waitPromise, undefined);
 
-         LoadingInd._isDestroyedFromCore = true;
-         LoadingInd.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(LoadingInd, {});
       });
 
       it('LoadingIndicator - isOpened', () => {
@@ -148,8 +147,7 @@ define([
          assert.equal(LoadingInd._getOverlay(overlay), 'default');
          LoadingInd._isMessageVisible = true;
          assert.equal(LoadingInd._getOverlay(overlay), overlay)
-         LoadingInd._isDestroyedFromCore = true;
-         LoadingInd.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(LoadingInd, {});
       });
 
       it('LoadingIndicator - hide', () => {
@@ -180,8 +178,7 @@ define([
          LoadingInd._updateProperties(cfgEmpty);
          LoadingInd._beforeUpdate({});
          assert.equal(LoadingInd.message, '');
-         LoadingInd._isDestroyedFromCore = true;
-         LoadingInd.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(LoadingInd, {});
       });
 
       it('LoadingIndicator - toggleIndicator', (done) => {
@@ -236,13 +233,11 @@ define([
 
          isMessageVisible = true;
 
-         LoadingInd._isDestroyedFromCore = true;
-         LoadingInd.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(LoadingInd, {});
 
       });
       after(() => {
-         Loading._isDestroyedFromCore = true;
-         Loading.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(Loading, {});
       });
    });
 });

@@ -1,11 +1,12 @@
 define(
    [
       'Controls/popup',
+      'UI/Vdom',
       'Types/collection',
       'Core/helpers/Number/randomId'
    ],
 
-   function (popupMod, collection, randomId) {
+   function (popupMod, Vdom, collection, randomId) {
       'use strict';
       describe('Controls/_popup/Manager/Container', function () {
          let id;
@@ -56,8 +57,7 @@ define(
             list.removeAt(1);
             Container.setPopupItems(list);
             assert.equal(Container._overlayId, undefined);
-            Container._isDestroyedFromCore = true;
-            Container.destroy();
+            Vdom.Synchronizer.unMountControlFromDOM(Container, {});
          });
 
          it('popup items redraw promise', () => {
@@ -67,8 +67,7 @@ define(
             const redrawPromise = Container.setPopupItems({}).then(() => {
                isRedrawPromiseResolve = true;
                assert.equal(isRedrawPromiseResolve, true);
-               Container._isDestroyedFromCore = true;
-               Container.destroy();
+               Vdom.Synchronizer.unMountControlFromDOM(Container, {});
             });
             Container._afterRender();
             return redrawPromise;

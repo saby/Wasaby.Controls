@@ -1,9 +1,10 @@
 define(
    [
       'Controls/popup',
+      'UI/Vdom',
       'i18n!ControlsUnits'
    ],
-   (popup, rk) => {
+   (popup, Vdom, rk) => {
       'use strict';
 
       describe('Controls/_popup/Opener/BaseOpener', () => {
@@ -15,8 +16,7 @@ define(
             };
             opener._afterMount();
             opener._notify = () => {};
-            opener._isDestroyedFromCore = true;
-            opener.destroy();
+            Vdom.Synchronizer.unMountControlFromDOM(opener, {});
          });
 
          it('_getConfig', () => {
@@ -51,10 +51,8 @@ define(
             };
             opener2._getConfig(popupOptions);
 
-            opener._isDestroyedFromCore = true;
-            opener.destroy();
-            opener2._isDestroyedFromCore = true;
-			      opener2.destroy();
+            Vdom.Synchronizer.unMountControlFromDOM(opener, {});
+			   Vdom.Synchronizer.unMountControlFromDOM(opener2, {});
          });
 
          it('_beforeUnmount', () => {
@@ -82,8 +80,7 @@ define(
             opener._beforeUnmount();
             assert.equal(opener._indicatorId, null);
             assert.equal(isHideIndicatorCall, false);
-            opener._isDestroyedFromCore = true;
-            opener.destroy();
+            Vdom.Synchronizer.unMountControlFromDOM(opener, {});
          });
       });
 
@@ -106,8 +103,7 @@ define(
             done();
          }, 10);
 
-         opener._isDestroyedFromCore = true;
-         opener.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(opener, {});
       });
 
       it('getIndicatorConfig', () => {

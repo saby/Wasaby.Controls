@@ -1,11 +1,10 @@
-define(['Controls/toggle'], function (toggleMod) {
+define(['Controls/toggle', 'UI/Vdom'], function (toggleMod, Vdom) {
    'use strict';
    var SW, switcherClickedFlag;
    describe('Controls/_toggle/DoubleSwitch', function () {
       afterEach(function () {
          if (SW) {
-            SW._isDestroyedFromCore = true;
-            SW.destroy();
+            Vdom.Synchronizer.unMountControlFromDOM(SW, {});
          }
          SW = undefined;
          switcherClickedFlag = undefined;

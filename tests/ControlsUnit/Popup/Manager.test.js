@@ -1,11 +1,12 @@
 define(
    [
       'Controls/popup',
+      'UI/Vdom',
       'Controls/_popupTemplate/BaseController',
       'Core/Deferred'
    ],
 
-   function(popupMod, BaseController, Deferred) {
+   function(popupMod, Vdom, BaseController, Deferred) {
       'use strict';
       BaseController = BaseController.default;
 
@@ -76,8 +77,7 @@ define(
                assert.equal(Manager._popupItems.getCount(), 0);
                setTimeout(() => {
                   assert.equal(Manager._popupItems.getCount(), 1);
-                  Manager._isDestroyedFromCore = true;
-                  Manager.destroy();
+                  Vdom.Synchronizer.unMountControlFromDOM(Manager, {});
                   done();
                }, 30);
                return Promise.resolve();
@@ -402,8 +402,7 @@ define(
             }
             Manager._mouseDownHandler(event);
             assert.equal(deactivatedCount, 2);
-            Manager._isDestroyedFromCore = true;
-            Manager.destroy();
+            Vdom.Synchronizer.unMountControlFromDOM(Manager, {});
          });
          it('Linked Popups', function(done) {
             let Manager = getManager();
@@ -435,8 +434,7 @@ define(
                // wait promise timeout
                setTimeout(() => {
                   assert.equal(Manager._popupItems.getCount(), 0);
-                  Manager._isDestroyedFromCore = true;
-                  Manager.destroy();
+                  Vdom.Synchronizer.unMountControlFromDOM(Manager, {});
                   done();
                }, 10);
             }, 10);
@@ -456,8 +454,7 @@ define(
             Manager._removeFromParentConfig(Manager._popupItems.at(1));
             assert.equal(Manager._popupItems.at(0).childs.length, 0);
 
-            Manager._isDestroyedFromCore = true;
-            Manager.destroy();
+            Vdom.Synchronizer.unMountControlFromDOM(Manager, {});
          });
          it('managerPopupCreated notified', function() {
             let isPopupOpenedEventTriggered = false;
@@ -539,8 +536,7 @@ define(
             };
             Manager.show(item4, controller);
             assert.equal(Manager._popupItems.at(3).currentZIndex, 5000);
-            Manager._isDestroyedFromCore = true;
-            Manager.destroy();
+            Vdom.Synchronizer.unMountControlFromDOM(Manager, {});
          });
 
          it('finishPendings', () => {
@@ -569,8 +565,7 @@ define(
             item.removePending.errback(error);
             assert.strictEqual(item.popupState, 'created');
             assert.strictEqual(item.removePending, null);
-            Manager._isDestroyedFromCore = true;
-            Manager.destroy();
+            Vdom.Synchronizer.unMountControlFromDOM(Manager, {});
          });
       });
    }
