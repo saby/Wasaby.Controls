@@ -135,12 +135,16 @@
 
          <ws:if data="{{itemData.stickyProperties[index]}}">
             <ws:if data="{{index === 1}}">
-               <div class="controls-Grid__row-additional_ladderWrapper" style="left: -{{currentColumn.column.width}};">
+               <div class="controls-Grid__row-additional_ladderWrapper" 
+                  style="{{ 'right: 0; left: -' + currentColumn.column.width }};">
                   <ws:partial template="STICKY_LADDER_HEADER_CONTENT" attr:class="{{itemData.getAdditionalLadderClasses()}}" attr:style="z-index: 1" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
                </div>
             </ws:if>
             <ws:else>
-               <ws:partial template="STICKY_LADDER_HEADER_CONTENT"  attr:style="z-index: 2" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
+               <div class="controls-Grid__row-main_ladderWrapper" 
+                  style="{{ 'left: 0; right: -' + currentColumn.column.width }};">
+                  <ws:partial template="STICKY_LADDER_HEADER_CONTENT"  attr:style="z-index: 2" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
+               </div>
             </ws:else>
          </ws:if>
       </div>
