@@ -220,7 +220,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             // и вызовут полную перерисовку, т.к. контрол посчитает что изменились высоты контента.
             // При след. замерах возьмется актуальная высота и опять начнется перерисовка.
             // Т.к. смещения только на ios добавляем, считаю высоту через clientHeight только для ios.
-            this._height = detection.isMobileIOS ? container.clientHeight : container.offsetHeight;
+            // offsetHeight округляет к ближайшему числу, из-за этого на масштабе просвечивают полупиксели
+            this._height = detection.isMobileIOS ? container.clientHeight : container.offsetHeight - Math.abs(1 - window.devicePixelRatio);
             if (this._model?.isFixed()) {
                 this._height -= getGapFixSize();
             }
