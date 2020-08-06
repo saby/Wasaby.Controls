@@ -710,7 +710,7 @@ const _private = {
             }
 
             if (!_private.hasMoreData(self, self._sourceController, direction) && !addedItems.getCount()) {
-                _private.updateShadowMode(self, self._shadowVisibility);
+                self.updateShadowModeHandler(self._shadowVisibility);
             }
         };
 
