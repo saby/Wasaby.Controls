@@ -186,10 +186,6 @@ class Base extends Control<IMasterDetail> {
 
     protected _afterMount(options: IMasterDetail): void {
         this._prevCurrentWidth = this._currentWidth;
-        if (this._canResizing) {
-            const currentWidth = this._getOffsetValue(this._currentWidth || options.masterWidth);
-            this._currentWidth = currentWidth + 'px';
-        }
     }
 
     protected _beforeUpdate(options: IMasterDetail): void {
