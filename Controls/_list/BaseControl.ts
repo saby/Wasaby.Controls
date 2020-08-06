@@ -84,6 +84,7 @@ import 'wml!Controls/_list/BaseControl/Footer';
 import {IList} from "./interface/IList";
 import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
+import { EdgeIntersectionObserver } from 'Controls/scroll';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -130,14 +131,6 @@ const DRAGGING_OFFSET = 10;
 const SCROLLMOVE_DELAY = 150;
 
 const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
-
-const SCROLL_TRIGGERS = [
-    "topVirtualScrollTrigger",
-    "bottomVirtualScrollTrigger",
-    "topLoadTrigger",
-    "bottomLoadTrigger",
-    "scrollObserver"
-];
 
 interface IAnimationEvent extends Event {
     animationName: string;
@@ -2973,6 +2966,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._viewSize = container.clientHeight;
         if (this._needScrollCalculation) {
             this._registerObserver();
+            this._registerIntersectionObserver();
         }
         if (this._options.itemsDragNDrop) {
             container.addEventListener('dragstart', this._nativeDragStart);
@@ -3355,6 +3349,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._validateController.destroy();
         this._validateController = null;
+        if (this._intersectionObserver) {
+            this._intersectionObserver.destroy();
+            this._intersectionObserver = null;
+        }
 
         // для связи с контроллером ПМО
         this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
@@ -4208,31 +4206,40 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _registerObserver(): void {
-        let triggers = {};
-        SCROLL_TRIGGERS.forEach(name => {
-            triggers[name] = this._children[name];
-        });
-        if (!this._observerRegistered && triggers['scrollObserver']) {
+        if (!this._observerRegistered && this._children.scrollObserver) {
             // @ts-ignore
-            this._children.scrollObserver.startRegister(triggers);
+            this._children.scrollObserver.startRegister([this._children.scrollObserver]);
             this._observerRegistered = true;
+        }
+    },
+
+    _registerIntersectionObserver(): void {
+        this._intersectionObserver = new EdgeIntersectionObserver(
+            this,
+            this._intersectionObserverHandler.bind(this), 
+            this._children.topVirtualScrollTrigger, 
+            this._children.bottomVirtualScrollTrigger);
+    },
+
+    _intersectionObserverHandler(eventName) {
+        switch (eventName) {
+            case 'bottomIn':
+                this.triggerVisibilityChangedHandler('down', true);
+                break;
+            case 'topIn':
+                this.triggerVisibilityChangedHandler('up', true);
+                break;
+            case 'bottomOut':
+                this.triggerVisibilityChangedHandler('down', false);
+                break;
+            case 'topOut':
+                this.triggerVisibilityChangedHandler('up', false);
+                break;
         }
     },
 
     _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
         switch (eventName) {
-            case 'virtualPageBottomStart':
-                this.triggerVisibilityChangedHandler('down', true);
-                break;
-            case 'virtualPageTopStart':
-                this.triggerVisibilityChangedHandler('up', true);
-                break;
-            case 'virtualPageBottomStop':
-                this.triggerVisibilityChangedHandler('down', false);
-                break;
-            case 'virtualPageTopStop':
-                this.triggerVisibilityChangedHandler('up', false);
-                break;
             case 'scrollMoveSync':
                 this.scrollMoveSyncHandler(params);
                 break;
