@@ -95,7 +95,6 @@ describe('Controls/_display/itemsStrategy/AdjacencyList', () => {
             });
 
             strategy.items.forEach((item, index) => {
-                assert.notEqual(item, source.items[index]);
                 assert.strictEqual(item.getContents(), items[index]);
             });
 
@@ -497,41 +496,33 @@ describe('Controls/_display/itemsStrategy/AdjacencyList', () => {
         it('should return a TreeItem as node', () => {
             const items = [{node: true}];
             const source = getSource(items);
-            const strategy = new AdjacencyList({
-                source
-            });
+            const strategy = new AdjacencyList({source});
 
-            assert.isTrue(strategy.at(0).isNode());
+            assert.isTrue(strategy.at(0).getContents().node);
         });
 
         it('should return a TreeItem as leaf', () => {
             const items = [{node: false}];
             const source = getSource(items);
-            const strategy = new AdjacencyList({
-                source
-            });
+            const strategy = new AdjacencyList({source});
 
-            assert.isFalse(strategy.at(0).isNode());
+            assert.isFalse(strategy.at(0).getContents().node);
         });
 
         it('should return a TreeItem with children', () => {
             const items = [{hasChildren: true}];
             const source = getSource(items);
-            const strategy = new AdjacencyList({
-                source
-            });
+            const strategy = new AdjacencyList({source});
 
-            assert.isTrue(strategy.at(0).isHasChildren());
+            assert.isTrue(strategy.at(0).getContents().hasChildren);
         });
 
         it('should return a TreeItem without children', () => {
             const items = [{hasChildren: false}];
             const source = getSource(items);
-            const strategy = new AdjacencyList({
-                source
-            });
+            const strategy = new AdjacencyList({source});
 
-            assert.isFalse(strategy.at(0).isHasChildren());
+            assert.isFalse(strategy.at(0).getContents().hasChildren);
         });
     });
 
