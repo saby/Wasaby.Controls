@@ -309,11 +309,11 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         let item;
         if (sourceItem instanceof GroupItem) {
             item = sourceItem;
+        } else if (sourceItem instanceof TreeItem) {
+            sourceItem.setParent(this._getParent(index));
+            item = sourceItem;
         } else if (sourceItem instanceof CollectionItem) {
-            item = this.options.display.createItem({
-                contents: sourceItem.getContents(),
-                parent: this._getParent(index)
-            });
+            item = sourceItem;
         } else {
             throw new TypeError('Unexpected item type');
         }
