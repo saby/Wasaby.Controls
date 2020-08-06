@@ -19,6 +19,7 @@ import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import StickyHeaderController from './StickyHeader/Controller';
 import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyHeader/Utils';
 import {POSITION} from './Container/Type';
+import Env = require('Env/Env');
 
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadows {
 
@@ -310,8 +311,16 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _getOptimizeShadowClass(): string {
-        return `controls-Scroll__background-Shadow_style-${this._options.shadowStyle}_theme-${this._options.theme} ` +
-            `controls-Scroll__background-Shadow_top-${this._shadows.top.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom.isVisibleShadowOnCSS}_style-${this._options.shadowStyle}_theme-${this._options.theme}`;
+        let style = '';
+        if (this._isOptimizeShadowEnable()) {
+            style += `controls-Scroll__background-Shadow_style-${this._options.shadowStyle}_theme-${this._options.theme} ` +
+                `controls-Scroll__background-Shadow_top-${this._shadows.top.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom.isVisibleShadowOnCSS}_style-${this._options.shadowStyle}_theme-${this._options.theme}`;
+        }
+        return style;
+    }
+
+    protected _isOptimizeShadowEnable(): boolean {
+        return this._options.optimizeShadow && !Env.detection.isMobileIOS;
     }
 
     // StickyHeaderController
