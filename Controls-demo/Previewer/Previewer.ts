@@ -14,7 +14,6 @@ class Previewer extends Control<IControlOptions> {
    protected _selectedTrigger = 'hoverAndClick';
    protected _images = null;
    protected _text = 'Previewer has not opened yet';
-   protected _theme = ['Controls/Classes'];
    protected _resourceRoot;
    protected _defaultItemsWithoutToolbutton;
 

@@ -64,6 +64,7 @@ export interface IList {
     dataLoadErrback?: () => void;
     style?: TListStyle;
     backgroundStyle?: string;
+    hoverBackgroundStyle?: string;
     itemPadding?: IItemPadding;
     nodeConfig?: INodeConfig;
 }
@@ -934,4 +935,31 @@ export interface IList {
  * @name Controls/_list/interface/IList#backgroundStyle
  * @cfg {String} Style prefix to configure background for inner list control components with static or absolute positioning.
  * @default default (theme background)
+ */
+
+/**
+ * @name Controls/_list/interface/IList#rowSeparatorSize
+ * @cfg {Enum} Высота линии-разделителя строк.
+ * @variant s Размер тонкой линии-разделителя.
+ * @variant l Размер толстой линии-разделителя.
+ * @variant null Без линии-разделителя.
+ * @default null
+ * @default s
+ */
+
+/*
+ * @name Controls/_list/interface/IList#rowSeparatorSize
+ * @cfg {RowSeparatorSize} set row separator height.
+ * @variant s Thin row separator line.
+ * @variant l Wide row separator line.
+ * @variant null Without row separator line
+ * @default null
+ */
+
+/**
+ * @name Controls/_list/interface/IList#hoverBackgroundStyle
+ * @cfg {String} Префикс стиля для настройки фона при наведении на внутренние компоненты списочного контрола с фиксированным или абсолютным позиционированием.
+ * @default default
+ * @remark
+ * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
  */

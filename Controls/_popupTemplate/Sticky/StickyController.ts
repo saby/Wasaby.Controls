@@ -54,23 +54,6 @@ const _private = {
         newCfg.direction = newCfg.direction || {};
         newCfg.offset = newCfg.offset || {};
 
-        if (newCfg.horizontalAlign && typeof (config.horizontalAlign) === 'object') {
-            if ('side' in newCfg.horizontalAlign) {
-                newCfg.direction.horizontal = newCfg.horizontalAlign.side;
-            }
-            if ('offset' in newCfg.horizontalAlign) {
-                newCfg.offset.horizontal = newCfg.horizontalAlign.offset;
-            }
-        }
-
-        if (newCfg.verticalAlign && typeof (config.verticalAlign) === 'object') {
-            if ('side' in newCfg.verticalAlign) {
-                newCfg.direction.vertical = newCfg.verticalAlign.side;
-            }
-            if ('offset' in newCfg.verticalAlign) {
-                newCfg.offset.vertical = newCfg.verticalAlign.offset;
-            }
-        }
         if (typeof config.fittingMode === 'string') {
             newCfg.fittingMode = {
                 vertical: config.fittingMode,
@@ -122,13 +105,12 @@ const _private = {
         className += ' controls-Popup-corner-horizontal-' + cfg.targetPoint.horizontal;
         className += ' controls-Popup-align-horizontal-' + cfg.direction.horizontal;
         className += ' controls-Popup-align-vertical-' + cfg.direction.vertical;
-        className += ' controls-Sticky__reset-margins';
         return className;
     },
 
     removeOrientationClasses(cfg) {
         if (cfg.popupOptions.className) {
-            cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*|controls-Sticky__reset-margins/g, '').trim();
+            cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
         }
     },
 
@@ -143,16 +125,7 @@ const _private = {
         const newStickyPosition = {
             targetPoint: position.targetPoint,
             direction: position.direction,
-            offset: position.offset,
-            horizontalAlign: { // TODO: to remove
-                side: position.direction.horizontal,
-                offset: position.offset.horizontal
-            },
-            verticalAlign: { // TODO: to remove
-                side: position.direction.vertical,
-                offset: position.offset.vertical
-            },
-            corner: position.corner // TODO: to remove
+            offset: position.offset
         };
         // быстрая проверка на равенство простых объектов
         if (JSON.stringify(item.popupOptions.stickyPosition) !== JSON.stringify(newStickyPosition)) {
