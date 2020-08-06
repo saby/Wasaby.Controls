@@ -5,7 +5,7 @@
                 attr:class="controls-PropertyGrid__editor_booleanGroup_item{{button.isLast ? '-last' : ''}}"
                 fontSize="m"
                 inlineHeight="default"
-                viewMode="{{button.viewMode}}"
+                viewMode="pushButton"
                 contrastBackground="{{true}}"
                 icons="{{[button.icon + ' icon-small']}}"
                 iconStyle="secondary"
