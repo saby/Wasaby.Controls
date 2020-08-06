@@ -259,9 +259,12 @@ const _private = {
         }
     },
 
-    checkNeedAttachLoadTopTriggerToNull(self): void {
-        // Если нужно сделать опциональным поведение отложенной загрузки вверх, то проверку добавлять здесь.
-        // if (!cfg.attachLoadTopTriggerToNull) return;
+    checkNeedAttachLoadTopTriggerToNull(self, options): void {
+        // Поведение отложенной загрузки вверх нужно опциональное, например, для контактов
+        // https://online.sbis.ru/opendoc.html?guid=f07ea1a9-743c-42e4-a2ae-8411d59bcdce
+        if (options.attachLoadTopTriggerToNull === false) {
+            return;
+        }
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
         // В случае с pages, demand и maxCount проблема дополнительной загрузки после инициализации списка отсутствует.
         const isInfinityNavigation = _private.isInfinityNavigation(self._options.navigation);
@@ -411,7 +414,7 @@ const _private = {
                     if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
                         _private.checkLoadToDirectionCapability(self, filter, navigation);
                     } else if (!self._wasScrollToEnd) {
-                        _private.checkNeedAttachLoadTopTriggerToNull(self);
+                        _private.checkNeedAttachLoadTopTriggerToNull(self, cfg);
                     }
                 });
             }).addErrback(function(error: Error) {
@@ -2609,6 +2612,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (self._listViewModel) {
+                self._shouldNotifyOnDrawItems = true;
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
 
@@ -2888,7 +2892,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
         if (!this._wasScrollToEnd) {
-            _private.checkNeedAttachLoadTopTriggerToNull(this);
+            _private.checkNeedAttachLoadTopTriggerToNull(this, this._options);
         }
     },
 
@@ -4223,6 +4227,7 @@ BaseControl._theme = ['Controls/Classes', 'Controls/list'];
 
 BaseControl.getDefaultOptions = function() {
     return {
+        attachLoadTopTriggerToNull: true,
         uniqueKeys: true,
         multiSelectVisibility: 'hidden',
         markerVisibility: 'onactivated',
