@@ -142,12 +142,10 @@ var
                         result = 'actual';
                     }
                 } else {
-                    self._listModel?.setColumnScrollVisibility(false);
                     _private.destroyColumnScroll(self);
                     result = 'destroyed';
                 }
             } else {
-                self._listModel?.setColumnScrollVisibility(false);
                 _private.destroyColumnScroll(self);
                 result = 'destroyed';
             }
@@ -234,6 +232,7 @@ var
                 self._columnScrollContainerClasses = COLUMN_SCROLL_JS_SELECTORS.CONTAINER;
                 self._columnScrollShadowClasses = null;
                 self._columnScrollShadowStyles = null;
+                self._listModel?.setColumnScrollVisibility(false);
                 _private.destroyDragScroll(self);
             }
         },
