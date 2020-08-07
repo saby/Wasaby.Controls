@@ -359,7 +359,7 @@ define([
          FC._confirmRecordChangeHandler(defaultAnswerCallback, negativeAnswerCallback);
          assert.equal(isDefaultCalled, true);
          assert.equal(isNegativeCalled, false);
-         FC.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(FC, {});
       });
 
       it('FormController user operations', () => {

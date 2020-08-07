@@ -144,7 +144,7 @@ define([
 
          LoadingInd._hide('id');
          assert.equal(isItemRemove, false);
-         LoadingInd.destroy();
+         Vdom.Synchronizer.unMountControlFromDOM(LoadingInd, {});
       });
 
       it('LoadingIndicator - getOverlay', () => {
@@ -154,7 +154,7 @@ define([
          LoadingInd._isMessageVisible = false;
          assert.equal(LoadingInd._getOverlay(overlay), 'default');
          LoadingInd._isMessageVisible = true;
-         assert.equal(LoadingInd._getOverlay(overlay), overlay)
+         assert.equal(LoadingInd._getOverlay(overlay), overlay);
          Vdom.Synchronizer.unMountControlFromDOM(LoadingInd, {});
       });
 
