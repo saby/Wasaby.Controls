@@ -15,7 +15,7 @@ import ViewModel = require('Controls/_input/Number/ViewModel');
  * @class Controls/_input/Number
  * @extends Controls/_input/Base
  * // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
- * @ignoreOptions value
+ * @ignoreOptions Controls/_input/Base#value
  *
  * @mixes Controls/interface/IOnlyPositive
  * @mixes Controls/_interface/INumberFormat

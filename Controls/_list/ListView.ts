@@ -123,6 +123,9 @@ var ListView = BaseControl.extend(
             if (newOptions.listModel) {
                 this._listModel = newOptions.listModel;
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
+
+                // Если изменить опцию модели пока ListView не построена, то они и не применятся.
+                this._listModel.setItemPadding(newOptions.itemPadding, true);
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
@@ -169,6 +172,7 @@ var ListView = BaseControl.extend(
                 _private.checkMarkerShouldBeVisible(this)) {
                 this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
             }
+            this._notify('controlResize', [], {bubbling: true});
         },
 
         _afterRender: function() {

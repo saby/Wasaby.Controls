@@ -515,6 +515,43 @@ const getCountriesStats = () => {
                 title: 'Плотность населения чел/км2'
             }
         ],
+        getHeaderWithFirstColspan: () => [
+            {
+                title: 'Страна',
+                startRow: 1,
+                endRow: 2,
+                startColumn: 1,
+                endColumn: 3
+            },
+            {
+                title: 'Столица',
+                startRow: 1,
+                endRow: 2,
+                startColumn: 3,
+                endColumn: 4
+            },
+            {
+                title: 'Население',
+                startRow: 1,
+                endRow: 2,
+                startColumn: 4,
+                endColumn: 5
+            },
+            {
+                title: 'Площадь км2',
+                startRow: 1,
+                endRow: 2,
+                startColumn: 5,
+                endColumn: 6
+            },
+            {
+                title: 'Плотность населения чел/км2',
+                startRow: 1,
+                endRow: 2,
+                startColumn: 6,
+                endColumn: 7
+            }
+        ],
         getLongHeader: (textOverflow): IHeader[] => [
             {
                 title: '#'

@@ -111,32 +111,40 @@ define([
       });
 
       it('LoadingIndicator - remove indicator from stack', () => {
-         let resultVisible;
-         let resultConfigMessage;
-         let baseToggleMethod = Loading._toggleIndicator;
-         Loading._toggleIndicator = (visible, config) => {
-            assert.equal(resultVisible, visible);
-            assert.equal(resultConfigMessage, config && config.message);
+         let LoadingInd = new LoadingIndicator.default();
+         LoadingInd._beforeMount({});
+
+         let config1 = {
+            message: 'message 1'
          };
+         let config2 = {
+            message: 'message 2'
+         };
+         let config3 = {
+            message: 'message 3'
+         };
+         LoadingInd.show(config1);
+         LoadingInd.show(config2);
+         LoadingInd.show(config3);
 
-         let id = Loading._stack.at(0).id;
-         resultVisible = true;
-         resultConfigMessage = 'message 0';
-         Loading._hide(id);
-         assert.equal(Loading._stack.getCount(), 2);
+         let id = LoadingInd._stack.at(0).id;
+         LoadingInd._hide(id);
+         assert.equal(LoadingInd._stack.getCount(), 2);
 
-         id = Loading._stack.at(1).id;
-         resultConfigMessage = 'message 3';
-         Loading._hide(id);
-         assert.equal(Loading._stack.getCount(), 1);
+         id = LoadingInd._stack.at(1).id;
+         LoadingInd._hide(id);
+         assert.equal(LoadingInd._stack.getCount(), 1);
 
-         id = Loading._stack.at(0).id;
-         resultConfigMessage = undefined;
-         resultVisible = false;
-         Loading._hide(id);
-         assert.equal(Loading._stack.getCount(), 0);
+         id = LoadingInd._stack.at(0).id;
+         LoadingInd._hide(id);
+         assert.equal(LoadingInd._stack.getCount(), 0);
 
-         Loading._toggleIndicator = baseToggleMethod;
+         let isItemRemove = false;
+         LoadingInd._removeItem = () => isItemRemove = true;
+
+         LoadingInd._hide('id');
+         assert.equal(isItemRemove, false);
+         LoadingInd.destroy();
       });
 
       it('LoadingIndicator - getOverlay', () => {

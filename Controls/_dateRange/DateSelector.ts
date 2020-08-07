@@ -65,6 +65,11 @@ var Component = BaseSelector.extend({
       };
    },
 
+   _mouseEnterHandler(): void {
+      const loadCss = (datePopup) => datePopup.loadCSS();
+      this._startDependenciesTimer('Controls/datePopup', loadCss);
+   },
+
    _onResult: function(value) {
       this._notify('valueChanged', [value]);
       this._children.opener.close();

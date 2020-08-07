@@ -330,65 +330,36 @@ define([
 
       it('FormController _confirmRecordChangeHandler', async() => {
          let FC = new form.Controller();
-         let confirmPopupCalled = false;
-         FC._record = {
-            isChanged: () => true
+         let isDefaultCalled = false;
+         let isNegativeCalled = false;
+         let showConfirmPopupResult = false;
+         const defaultAnswerCallback = () => isDefaultCalled = true;
+         const negativeAnswerCallback = () => isNegativeCalled = true;
+         const mokePromiseFunction = () => {
+            return {
+               then: (thenCallback) => thenCallback(showConfirmPopupResult)
+            };
          };
-         FC._options.record = FC._record;
-         FC._showConfirmPopup = () => {
-            confirmPopupCalled = true;
-            return new Promise((resolve) => {
-               resolve(true);
-            });
-         };
-         FC._isNewRecord = true;
-         FC._notify = () => true;
-         FC.update().then(() => {
-         });
-         let result = await FC._confirmRecordChangeHandler(() => {
-            return 'Read'} , () => {
-            return 'Delete';
-         });
-         assert.isTrue(result);
-         assert.isTrue(confirmPopupCalled);
-         assert.isFalse( FC._isNewRecord);
 
-         FC._isNewRecord = true;
-         FC._record = {
-            isChanged: () => true
-         };
-         FC._record = {
-            isChanged: () => true
-         };
-         confirmPopupCalled = false;
-         FC._showConfirmPopup = () => {
-            confirmPopupCalled = true;
-            return new Promise((resolve) => {
-               resolve(false);
-            });
-         };
-         FC._isNewRecord = true;
-         result = await FC._confirmRecordChangeHandler(() => {
-            return 'Read'} , () => {
-            return 'Delete';
-         });
-         assert.isFalse(result);
-         assert.isTrue(confirmPopupCalled);
-         assert.isTrue( FC._isNewRecord);
+         FC._needShowConfirmation = () => false;
+         FC._confirmRecordChangeHandler(defaultAnswerCallback, negativeAnswerCallback);
+         assert.equal(isDefaultCalled, true);
+         assert.equal(isNegativeCalled, false);
+         isDefaultCalled = false;
 
-         FC._record = {
-            isChanged: () => false
-         };
-         confirmPopupCalled = false;
-         FC._options.record = FC._record;
-         FC._isNewRecord = true;
-         result = await FC._confirmRecordChangeHandler(() => {
-            return 'Read'} , () => {
-            return 'Delete';
-         });
-         assert.equal(result, 'Read');
-         assert.isFalse(confirmPopupCalled);
-         assert.isTrue( FC._isNewRecord);
+         FC._needShowConfirmation = () => true;
+         FC._showConfirmPopup = mokePromiseFunction;
+         FC._confirmRecordChangeHandler(defaultAnswerCallback, negativeAnswerCallback);
+         assert.equal(isDefaultCalled, false);
+         assert.equal(isNegativeCalled, true);
+         isNegativeCalled = false;
+
+         showConfirmPopupResult = true;
+         FC.update = mokePromiseFunction;
+         FC._confirmRecordChangeHandler(defaultAnswerCallback, negativeAnswerCallback);
+         assert.equal(isDefaultCalled, true);
+         assert.equal(isNegativeCalled, false);
+         FC.destroy();
       });
 
       it('FormController user operations', () => {

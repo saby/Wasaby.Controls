@@ -261,10 +261,15 @@ var
         },
 
         isFixedCell: function(params) {
-            const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isMultiHeader } = params;
+            const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isHeader, isMultiHeader, endColumn } = params;
             const
                 hasMultiSelect = multiSelectVisibility !== 'hidden',
                 columnOffset = hasMultiSelect ? 1 : 0;
+
+            if (isHeader && typeof endColumn !== 'undefined') {
+                // endColumn - конфиг GridLayout, он всегда больше на 1.
+                return endColumn - 1 <= stickyColumnsCount;
+            }
             const isCellIndexLessTheFixedIndex = columnIndex < (stickyColumnsCount + columnOffset);
             if (isMultiHeader !== undefined) {
                 return isCellIndexLessTheFixedIndex && rowIndex === 0;
@@ -965,7 +970,9 @@ var
             if (this.isStickyHeader()) {
                headerColumn.zIndex = _private.getHeaderZIndex({
                   columnIndex: columnIndex,
+                  endColumn: cell.endColumn,
                   rowIndex,
+                  isHeader: true,
                   isMultiHeader: this._isMultiHeader,
                   multiSelectVisibility: this._options.multiSelectVisibility,
                   stickyColumnsCount: this._options.stickyColumnsCount,
@@ -980,7 +987,9 @@ var
             if (this._options.columnScroll) {
                 cellClasses += _private.getColumnScrollCellClasses({
                     columnIndex: columnIndex,
+                    endColumn: cell.endColumn,
                     rowIndex,
+                    isHeader: true,
                     isMultiHeader: this._isMultiHeader,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
@@ -1517,6 +1526,18 @@ var
             current.getSeparatorForColumn = _private.getSeparatorForColumn;
             current.isLastRow = (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
                                  (this.getCount() - 1 === current.index);
+
+            // Если после последней записи идет добавление новой, не нужно рисовать широкую линию-разделитель между ними.
+            const editingItemData = this.getEditingItemData();
+            if (editingItemData) {
+                let index;
+                if (this._options.editingConfig.addPosition === 'top') {
+                    index = editingItemData.index - 1;
+                } else {
+                    index = editingItemData.index;
+                }
+                current.isLastRow = current.isLastRow  && (index - 1 < current.index);
+            }
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())

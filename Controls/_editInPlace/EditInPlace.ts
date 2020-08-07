@@ -25,6 +25,11 @@ const typographyStyles = [
     'wordSpacing',
     'textIndent'
 ];
+
+export const JS_SELECTORS = {
+    NOT_EDITABLE: 'js-controls-ListView__notEditable'
+};
+
 const _private = {
     beginEdit(self: EditInPlace, options: IEditingConfig, isAdd?: boolean): Promise<IEditingConfig> {
         const result = self._notify('beforeBeginEdit', [options, !!isAdd]);
@@ -643,9 +648,12 @@ export default class EditInPlace {
             //событие onclick при даблкике срабатвает два раза, второй раз там item из редактирования по месту
             this._editingItem !== item
         ) {
-            if (originalEvent.target.closest('.js-controls-ListView__notEditable')) {
+            if (originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`)) {
                 result = this.commitEdit();
             } else {
+                // При попытке старта редактирования, событие itemClick должно выстреливать после beforeBeginEdit.
+                e.stopPropagation();
+
                 result = this.beginEdit({
                     item
                 }).then((result) => {
@@ -672,11 +680,6 @@ export default class EditInPlace {
                     }
                     return result;
                 });
-                // The click should not bubble over the editing controller to ensure correct control works.
-                // e.c., a click can be processed by the selection controller, which should not occur when starting
-                // editing in place.
-                // https://online.sbis.ru/opendoc.html?guid=b3254c65-596b-4f89-af0f-c160217ce7a3
-                e.stopPropagation();
             }
         }
         return result;

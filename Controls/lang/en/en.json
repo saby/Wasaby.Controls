@@ -33,6 +33,7 @@
   "Ещё": "More",
   "Еще $count$s$": "$count$s$ more",
   "Загрузка": "Loading",
+  "Закрепить": "Pin",
   "Закрыть": "Close",
   "Запись реестра": "Registry record",
   "Значение поля должно быть меньше или равно значения поля \"$name$s$\"": "The field value must be less than or equal to the \"$name$s$\" field value",
@@ -62,6 +63,7 @@
   "Операция займет продолжительное время. Провести операцию?": "Operation will take long time. Perform operation?",
   "Отбираются": "Selected",
   "Открыть меню": "Open menu",
+  "Открепить": "Unpin",
   "Отмена": "Cancel",
   "Отметить": "Mark",
   "Отмечено": "Marked",
@@ -130,5 +132,6 @@
   "Вс": "Sun",
   "$errors$s$ из $count$s$ операций были обработаны с ошибкой": "$errors$s$ out of $count$s$ operations were processed with an error",
   "ПанельФильтра@@Развернуть": "Expand",
-  "ПанельФильтра@@Свернуть": "Collapse"
+  "ПанельФильтра@@Свернуть": "Collapse",
+  "Удалить": "Delete"
 }
