@@ -83,7 +83,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
         let shrinkItemIndex;
         let firstContainerItems = [];
 
-        if (items.length <= 2 && items.length > 0) {
+        if (items.length <= 2) {
             // Если крошек меньше двух, располагаем их в первом контейнере
             firstContainerItems = items.map((item, index, items) => {
                 const hasArrow = index !== 0;
