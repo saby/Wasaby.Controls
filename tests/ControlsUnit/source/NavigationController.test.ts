@@ -90,7 +90,7 @@ describe('Controls/_source/NavigationController', () => {
                     }
                 });
 
-                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, 'forward');
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, {}, 'forward');
                 assert.equal(TEST_PAGE_SIZE, params.limit, 'Wrong query params');
                 assert.equal(TEST_PAGE_SIZE, params.offset, 'Wrong query params');
             });
@@ -105,7 +105,7 @@ describe('Controls/_source/NavigationController', () => {
                     }
                 });
 
-                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, 'backward');
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, {}, 'backward');
                 assert.equal(TEST_PAGE_SIZE, params.limit, 'Wrong query params');
                 assert.equal(TEST_PAGE_SIZE, params.offset, 'Wrong query params');
             });
@@ -401,7 +401,7 @@ describe('Controls/_source/NavigationController', () => {
 
                 // if it is first call without updateQueryProperties before it, position should be null
                 // because backwardPosition isn't initialized
-                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, 'forward');
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, {}, 'forward');
                 assert.equal(null, params.filter['id>='], 'Wrong query params');
             });
 
@@ -418,7 +418,7 @@ describe('Controls/_source/NavigationController', () => {
 
                 // if it is first call without updateQueryProperties before it, position should be null
                 // because backwardPosition isn't initialized
-                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, 'backward');
+                const params = nc.getQueryParams({filter: defFilter, sorting: defSorting}, null, {}, 'backward');
                 assert.equal(null, params.filter['id<='], 'Wrong query params');
             });
 
@@ -633,6 +633,53 @@ describe('Controls/_source/NavigationController', () => {
                 assert.isTrue(hasMore, 'Wrong more value');
             });
 
+        });
+    });
+    describe('Both navigation types + multiroot', () => {
+        describe('getQueryParams', () => {
+            it ('Page', () => {
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: 0,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: true
+                    }
+                });
+
+                // creating some stores in Navigation controller
+                nc.getQueryParams({}, '1');
+                nc.getQueryParams({}, '2');
+
+                const params = nc.getQueryParamsForHierarchy({filter: defFilter, sorting: defSorting});
+                assert.equal(2, params.length, 'Wrong query params');
+                assert.equal('1', params[0].filter.__root.valueOf(), 'Wrong query params');
+                assert.equal('2', params[1].filter.__root.valueOf(), 'Wrong query params');
+            });
+
+            it ('Position', () => {
+                const QUERY_LIMIT = 3;
+                let nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        position: 1,
+                        field: 'id',
+                        direction: 'both',
+                        limit: QUERY_LIMIT
+                    }
+                });
+
+                // creating some stores in Navigation controller
+                nc.getQueryParams({});
+                nc.getQueryParams({}, '1');
+                nc.getQueryParams({}, '2');
+
+                const params = nc.getQueryParamsForHierarchy({filter: defFilter, sorting: defSorting});
+                assert.equal(3, params.length, 'Wrong query params');
+                assert.equal(null, params[0].filter.__root.valueOf(), 'Wrong query params');
+                assert.equal('1', params[1].filter.__root.valueOf(), 'Wrong query params');
+                assert.equal('2', params[2].filter.__root.valueOf(), 'Wrong query params');
+            });
         });
     });
 });

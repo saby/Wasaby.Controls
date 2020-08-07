@@ -5,7 +5,7 @@ import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interfac
 import {RecordSet} from 'Types/collection';
 import {Logger} from 'UI/Utils';
 import {QueryOrderSelector, QueryWhereExpression, PrefetchProxy} from 'Types/source';
-import {IAdditionalQueryParams} from 'Controls/_interface/IAdditionalQueryParams';
+import {IQueryParams} from 'Controls/_interface/IQueryParams';
 import {default as groupUtil} from './GroupUtil';
 import {isEqual} from 'Types/object';
 
@@ -61,7 +61,7 @@ export default class Controller {
                 let params = {
                     filter: preparedFilter,
                     sorting: this._options.sorting
-                } as IAdditionalQueryParams;
+                } as IQueryParams;
 
                 if (this._options.navigation) {
                     const navigationController = this._getNavigationController(this._options.navigation);
