@@ -30,8 +30,16 @@ export default class OperationsController {
     }
 
     setOperationsPanelVisible(visible: boolean): Key {
+        let markedKey;
+
         this._isOperationsPanelVisible = visible;
-        return this._setListMarkedKey(this._listMarkedKey);
+
+        if (visible && this._savedListMarkedKey !== null) {
+            markedKey = this.setListMarkedKey(this._savedListMarkedKey);
+        } else {
+            markedKey = this.setListMarkedKey(this._listMarkedKey);
+        }
+        return markedKey;
     }
 
     registerHandler(event, registerType, component, callback, config): void {
