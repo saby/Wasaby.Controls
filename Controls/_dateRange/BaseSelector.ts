@@ -1,9 +1,12 @@
 import BaseControl = require('Core/Control');
 import DateRangeModel from "./DateRangeModel";
 import proxyModelEvents from 'Controls/Utils/proxyModelEvents';
+import {DependencyTimer} from 'Controls/Utils/FastOpen';
+import {Logger} from 'UI/Utils';
 
 const Component = BaseControl.extend({
-
+    _dependenciesTimer: null,
+    _loadCalendarPopupPromise: null,
     _rangeModel: null,
     _isMinWidth: null,
 
@@ -43,6 +46,31 @@ const Component = BaseControl.extend({
 
     _rangeChangedHandler: function(event, startValue, endValue) {
         this._rangeModel.setRange(startValue, endValue);
+    },
+
+    _startDependenciesTimer(module, loadCss): void {
+        if (!this._options.readOnly) {
+            if (!this._dependenciesTimer) {
+                this._dependenciesTimer = new DependencyTimer();
+            }
+            this._dependenciesTimer.start(this._loadDependencies.bind(this, module, loadCss));
+        }
+    },
+
+    _mouseLeaveHandler(): void {
+        this._dependenciesTimer?.stop();
+    },
+
+    _loadDependencies(module: string, loadCss: Function): Promise<unknown> {
+        try {
+            if (!this._loadCalendarPopupPromise) {
+                this._loadCalendarPopupPromise = import(module)
+                    .then(loadCss);
+            }
+            return this._loadCalendarPopupPromise;
+        } catch (e) {
+            Logger.error(module, e);
+        }
     },
 
     _beforeUnmount: function () {
