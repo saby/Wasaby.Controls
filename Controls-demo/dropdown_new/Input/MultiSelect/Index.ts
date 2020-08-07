@@ -1,5 +1,4 @@
 import {Control, TemplateFunction} from 'UI/Base';
-// @ts-ignore
 import * as Template from 'wml!Controls-demo/dropdown_new/Input/MultiSelect/Index';
 
 export default class extends Control {

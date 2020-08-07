@@ -1,5 +1,4 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-// @ts-ignore
 import * as controlTemplate from 'wml!Controls-demo/dropdown_new/Input/ValidationStatus/Index';
 import {Memory} from 'Types/source';
 
