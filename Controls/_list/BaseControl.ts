@@ -265,8 +265,11 @@ const _private = {
     },
 
     attachLoadTopTriggerToNullIfNeed(self): void {
-        // Если нужно сделать опциональным поведение отложенной загрузки вверх, то проверку добавлять здесь.
-        // if (!cfg.attachLoadTopTriggerToNull) return;
+        // Поведение отложенной загрузки вверх нужно опциональное, например, для контактов
+        // https://online.sbis.ru/opendoc.html?guid=f07ea1a9-743c-42e4-a2ae-8411d59bcdce
+        if (self._options.attachLoadTopTriggerToNull === false) {
+            return;
+        }
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
         // В случае с pages, demand и maxCount проблема дополнительной загрузки после инициализации списка отсутствует.
         const isInfinityNavigation = _private.isInfinityNavigation(self._options.navigation);
@@ -282,12 +285,12 @@ const _private = {
             self._attachLoadTopTriggerToNull = false;
         }
         if (self._scrollController) {
-            let result = self._scrollController.update({ 
+            let result = self._scrollController.update({
                 options: {
+                    ...self._options,
                     attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
                     forceInitVirtualScroll: isInfinityNavigation,
-                    collection: self.getViewModel(),
-                    ...self._options
+                    collection: self.getViewModel()
                 },
                 params: {
                     clientHeight: self._viewportSize,
@@ -512,7 +515,7 @@ const _private = {
             _private.hasMoreData(self, sourceController, 'down');
     },
 
-      
+
     getItemContainerByIndex(index: number, itemsContainer: HTMLElement): HTMLElement {
         let startChildrenIndex = 0;
 
@@ -1385,7 +1388,7 @@ const _private = {
                         } else {
                             result = self._scrollController.handleAddItems(newItemsIndex, newItems);
                         }
-                            
+
                     }
                     if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
                         // When move items call removeHandler with "forceShift" param.
@@ -2539,6 +2542,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _template: BaseControlTpl,
     iWantVDOM: true,
 
+    _attachLoadTopTriggerToNull: false,
     _listViewModel: null,
     _viewModelConstructor: null,
 
@@ -2706,6 +2710,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (self._listViewModel) {
+                self._shouldNotifyOnDrawItems = true;
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
 
@@ -2837,7 +2842,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     scrollMoveSyncHandler(params: IScrollParams): void {
-        
+
         _private.handleListScrollSync(this, params.scrollTop);
 
         let result = this._scrollController?.scrollPositionChange(params);
@@ -2942,7 +2947,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._scrollController) {
             const itemsHeights = getItemsHeightsData(this._getItemsContainer());
             this._scrollController.updateItemsHeights(itemsHeights);
-            
+
             let result = this._scrollController.update({ params: {scrollHeight: this._viewSize, clientHeight: this._viewportSize} });
             _private.handleScrollControllerResult(this, result);
         }
@@ -3155,7 +3160,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._editingItemData = this._editInPlace.getEditingItemData();
         }
 
-        // Синхронный индикатор загрузки для реестров, в которых записи - тяжелые контролы. 
+        // Синхронный индикатор загрузки для реестров, в которых записи - тяжелые контролы.
         // Их отрисовка может занять много времени, поэтому следует показать индикатор, не дожидаясь ее окончания.
         if (this._syncLoadingIndicatorState) {
             clearTimeout(this._syncLoadingIndicatorTimeout);
@@ -3167,11 +3172,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.setRendering(true);
             let result = this._scrollController.update({
                 options: {
+                    ...newOptions,
                     attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
                     forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
                     collection: this.getViewModel(),
-                    needScrollCalculation: this._needScrollCalculation,
-                    ...newOptions
+                    needScrollCalculation: this._needScrollCalculation
                 }
             });
             _private.handleScrollControllerResult(this, result);
@@ -3442,11 +3447,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this.changeIndicatorStateHandler(false, 'down');
                 this._syncLoadingIndicatorState = null;
             }
-            
+
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             this._scrollController.setRendering(false);
 
-            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() || 
+            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
                                     this._scrollController.completeVirtualScrollIfNeed();
 
             if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
@@ -3458,7 +3463,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (needCheckTriggers) {
                 this.checkTriggerVisibilityWithTimeout();
             }
-            
+
         }
         this._actualPagingVisible = this._pagingVisible;
 
@@ -3479,7 +3484,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     checkTriggersVisibility(): void {
         const scrollParams = {
-            clientHeight: this._viewportSize, 
+            clientHeight: this._viewportSize,
             scrollHeight: this._viewSize,
             scrollTop: this._scrollTop
         };
@@ -4191,9 +4196,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.closeSwipe(this);
         }
     },
-    
+
     // TODO: вынести в батчер?
-    // при добавлении групп и листьев в деревьях, записи добавляются по одиночке, а не все разом. 
+    // при добавлении групп и листьев в деревьях, записи добавляются по одиночке, а не все разом.
     // Если обрабатывать все это по отдельности, не собирая в одну пачку, то алгоритмы виртуального скролла начинают работать некорректно
     startBatchAdding(direction: IDirection): void {
         this._addItemsDirection = direction;
@@ -4227,8 +4232,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _registerIntersectionObserver(): void {
         this._intersectionObserver = new EdgeIntersectionObserver(
             this,
-            this._intersectionObserverHandler.bind(this), 
-            this._children.topVirtualScrollTrigger, 
+            this._intersectionObserverHandler.bind(this),
+            this._children.topVirtualScrollTrigger,
             this._children.bottomVirtualScrollTrigger);
     },
 
@@ -4510,6 +4515,7 @@ BaseControl._theme = ['Controls/Classes', 'Controls/list'];
 
 BaseControl.getDefaultOptions = function() {
     return {
+        attachLoadTopTriggerToNull: true,
         uniqueKeys: true,
         multiSelectVisibility: 'hidden',
         markerVisibility: 'onactivated',
