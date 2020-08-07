@@ -26,8 +26,8 @@ define(
             newOptions.position.height = 10;
             assert.equal(false, Popup._isResized(oldOptions, newOptions));
 
-            oldOptions = { hidden: true, position: {} };
-            newOptions = { hidden: false, position: {} };
+            oldOptions = { position: {hidden: true} };
+            newOptions = { position: {hidden: false} };
 
             assert.equal(true, Popup._isResized(oldOptions, newOptions));
          });
