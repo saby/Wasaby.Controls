@@ -273,7 +273,7 @@ export interface IList {
  * </Controls.list:View>
  * </pre>
  * 
- * <pre class="brush: html; highlight: [4]">
+ * <pre class="brush: html; highlight: [4, 5, 6, 7]">
  * <!-- customTemplateName.wml -->
  * <div>{{itemData.item.title}}</div>
  * <ws:if data="{{!itemData.isSwiped()}}">
