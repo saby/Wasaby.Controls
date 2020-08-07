@@ -18,7 +18,6 @@ define(
             it('Test1', function() {
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'ExpandLight');
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, '');
             });
@@ -26,7 +25,6 @@ define(
                options.captions = 'Заголовок';
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'ExpandLight');
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, 'Заголовок');
             });
@@ -34,7 +32,6 @@ define(
                options.captions = ['Заголовок1', 'Заголовок2'];
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'ExpandLight');
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, 'Заголовок2');
             });
@@ -43,7 +40,6 @@ define(
                options.captions = ['Заголовок1', 'Заголовок2'];
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'ExpandLight');
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, 'Заголовок2');
             });
@@ -51,7 +47,6 @@ define(
                options.captions = [];
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'ExpandLight');
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, '');
             });
@@ -60,7 +55,6 @@ define(
                options.captions = [];
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'ExpandLight');
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, '');
             });
@@ -68,7 +62,6 @@ define(
                options.captions = ['Заголовок1'];
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'ExpandLight');
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, '');
             });
@@ -77,7 +70,6 @@ define(
                options.captions = ['Заголовок1'];
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'ExpandLight');
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, '');
             });
@@ -86,7 +78,6 @@ define(
                options.captions = ['Заголовок1', 'Заголовок2'];
                ctrl._beforeMount(options);
 
-               assert.equal(ctrl._icon, 'CollapseLight');
                assert.equal(ctrl._view, 'expanded');
                assert.equal(ctrl._caption, 'Заголовок1');
             });
@@ -94,13 +85,11 @@ define(
                options.captions = ['Заголовок1', 'Заголовок2'];
                ctrl._beforeMount(options);
                assert.equal(ctrl._expanded, false);
-               assert.equal(ctrl._icon, 'ExpandLight');
                assert.equal(ctrl._view, 'collapsed');
                assert.equal(ctrl._caption, 'Заголовок2');
                ctrl._options = options;
                ctrl._clickHandler();
                ctrl._beforeUpdate(options);
-               assert.equal(ctrl._icon, 'CollapseLight');
                assert.equal(ctrl._view, 'expanded');
                assert.equal(ctrl._caption, 'Заголовок1');
             });
