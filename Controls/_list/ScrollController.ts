@@ -671,7 +671,7 @@ export default class ScrollController {
      * которые могут вызваться в произвольный момент времени
      */
     private _doAfterRender(callback: Function): void {
-        if (this._isRendering) {
+        if (this._isRendering || this._virtualScroll.rangeChanged) {
             if (this._afterRenderCallbacks) {
                 this._afterRenderCallbacks.push(callback);
             } else {
