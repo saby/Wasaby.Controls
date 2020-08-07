@@ -2054,7 +2054,9 @@ define([
                }
             });
 
-            eip.beginEditByClick({}, newItem, {
+            eip.beginEditByClick({
+               stopPropagation: () => {}
+            }, newItem, {
                target: {
                   closest: function() {
                      return false;

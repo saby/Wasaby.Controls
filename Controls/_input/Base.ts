@@ -103,6 +103,7 @@ var _private = {
     updateField: function (self, value: string, selection) {
         _private.updateValue(self, value);
         self._updateSelection(selection);
+        self._currentVersionModel = self._viewModel.getVersion();
     },
 
     updateValue: function (self, value) {
@@ -563,6 +564,8 @@ var Base = Control.extend({
      */
     _fixBugs: null,
 
+    _currentVersionModel: null,
+
     /**
      * @type {Controls/_input/Render#style}
      * @protected
@@ -614,6 +617,7 @@ var Base = Control.extend({
 
         this._initProperties(options);
         _private.initViewModel(this, viewModelCtr, viewModelOptions, _private.getValue(this, options));
+        this._currentVersionModel = this._viewModel.getVersion();
 
         if (this._autoComplete !== 'off') {
             /**
@@ -677,7 +681,7 @@ var Base = Control.extend({
         this._fixBugs.beforeUpdate(this._options, newOptions);
     },
 
-    _afterUpdate: function() {
+    _afterUpdate: function () {
         this._fixBugs.afterUpdate();
     },
 
@@ -769,10 +773,10 @@ var Base = Control.extend({
             _private.callChangeHandler(this);
         }
     },
-    _cutHandler: function() {
+    _cutHandler: function () {
         // redefinition
     },
-    _copyHandler: function() {
+    _copyHandler: function () {
         // redefinition
     },
     /**
@@ -796,15 +800,14 @@ var Base = Control.extend({
      * @private
      */
     _clickHandler: function () {
-        var self = this;
-
         /**
          * If the value in the field is selected, when you click on the selected area,
          * the cursor in the field is placed after the event. https://jsfiddle.net/wv9o4xmd/
          * Therefore, we remember the selection from the field at the next drawing cycle.
          */
-        runDelayed(function () {
-            self._viewModel.selection = self._getFieldSelection();
+        runDelayed(() => {
+            this._viewModel.selection = this._getFieldSelection();
+            this._currentVersionModel = this._viewModel.getVersion();
         });
         this._firstClick = false;
     },
@@ -896,7 +899,7 @@ var Base = Control.extend({
         }
     },
 
-    _mouseDownOnContainerHandler: function(event: MouseEvent): void {
+    _mouseDownOnContainerHandler: function (event: MouseEvent): void {
         /**
          * Нативное поле ввода позиционируется относительно контейнера с отступами. Клик в область отступов
          * не будет приводить к фокусировке поля. Зовем фокусировку вручную.
@@ -1048,22 +1051,26 @@ var Base = Control.extend({
         const field = this._getField();
 
         if (field) {
-            const shouldBeChanged =
-                field.value !== model.displayValue ||
-                _private.hasSelectionChanged(field, model.selection);
+            const versionModel = model.getVersion();
+            /**
+             * Обновляемся по данным модели только в случае, если она поменяла версию с
+             * момента последнего обновления.
+             */
+            const shouldBeChanged = this._currentVersionModel !== versionModel;
             if (shouldBeChanged) {
                 this._updateFieldInTemplate();
 
                 if (_private.isFieldFocused(this) && !field.readOnly) {
                     this._recalculateLocationVisibleArea(field, model.displayValue, model.selection);
                 }
+                this._currentVersionModel = versionModel;
             }
         }
 
         return this._fixBugs.getFieldValue();
     },
 
-    _updateFieldInTemplate: function() {
+    _updateFieldInTemplate: function () {
         const model = this._viewModel;
         _private.updateField(this, model.displayValue, model.selection);
     },

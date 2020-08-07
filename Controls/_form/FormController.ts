@@ -181,6 +181,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     private __error: dataSourceError.ViewConfig;
     private _crudController: CrudController = null;
     private _validateController: ControllerClass = new ControllerClass();
+    private _isConfirmShowed: boolean;
 
     protected _beforeMount(options?: IFormController, context?: object, receivedState: IReceivedState = {}): Promise<ICrudResult> | void {
         this.__errorController = options.errorController || new dataSourceError.Controller({});
@@ -243,35 +244,43 @@ class FormController extends Control<IFormController, IReceivedState> {
         this._crudController.setDataSource(newOptions.dataSource || newOptions.source);
         if (newOptions.dataSource || newOptions.source) {
             this._source = newOptions.source || newOptions.dataSource;
-            //Сбрасываем состояние, только если данные поменялись, иначе будет зацикливаться
+            // Сбрасываем состояние, только если данные поменялись, иначе будет зацикливаться
             // создание записи -> ошибка -> beforeUpdate
             if (this._source !== this._options.source && this._source !== this._options.dataSource) {
                 this._createMetaDataOnUpdate = null;
             }
         }
+        const createMetaData = newOptions.initValues || newOptions.createMetaData;
+        const needRead: boolean = newOptions.key !== undefined && this._options.key !== newOptions.key;
+        const needCreate: boolean = newOptions.key === undefined &&
+            !newOptions.record && this._createMetaDataOnUpdate !== createMetaData;
 
         if (newOptions.record && this._record !== newOptions.record) {
-            this._setRecord(newOptions.record);
+            if (!needCreate && !needRead) {
+                this._confirmRecordChangeHandler(() => {
+                    this._setRecord(newOptions.record);
+                });
+            } else {
+                this._setRecord(newOptions.record);
+            }
         }
-        if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
+        if (needRead) {
             // Если текущий рекорд изменен, то покажем вопрос
-            const result = this._confirmRecordChangeHandler(() => {
+            this._confirmRecordChangeHandler(() => {
                 this.read(newOptions.key, newOptions.readMetaData);
             }, () => {
                 this._tryDeleteNewRecord().then(() => {
                     this.read(newOptions.key, newOptions.readMetaData);
                 });
             });
-            return;
-        }
-        // Если нет ключа и записи - то вызовем метод создать. Состояние isNewRecord обновим после того, как запись вычитается
-        // Иначе можем удалить рекорд, к которому новое значение опции isNewRecord не относится
-        const createMetaData = newOptions.initValues || newOptions.createMetaData;
-        // Добавил защиту от циклических вызовов: У контрола стреляет _beforeUpdate, нет рекорда и ключа => вызывается
-        // создание записи. Метод падает с ошибкой. У контрола стреляет _beforeUpdate, вызов метода создать повторяется бесконечно.
-        // Нельзя чтобы контрол ддосил БЛ.
-        if (newOptions.key === undefined && !newOptions.record && this._createMetaDataOnUpdate !== createMetaData) {
-            const _createBeforeUpdate = (createMetaData, newOptions: IFormController) => {
+        } else if (needCreate) {
+            // Если нет ключа и записи - то вызовем метод создать.
+            // Состояние isNewRecord обновим после того, как запись вычитается,
+            // иначе можем удалить рекорд, к которому новое значение опции isNewRecord не относится.
+            // Добавил защиту от циклических вызовов: У контрола стреляет _beforeUpdate, нет рекорда и ключа =>
+            // вызывается создание записи. Метод падает с ошибкой. У контрола стреляет _beforeUpdate,
+            // вызов метода создать повторяется бесконечно. Нельзя чтобы контрол ддосил БЛ.
+            this._confirmRecordChangeHandler(() => {
                 this._createMetaDataOnUpdate = createMetaData;
                 this.create(newOptions.initValues || newOptions.createMetaData).then(() => {
                     if (newOptions.hasOwnProperty('isNewRecord')) {
@@ -279,12 +288,6 @@ class FormController extends Control<IFormController, IReceivedState> {
                     }
                     this._createMetaDataOnUpdate = null;
                 });
-            };
-
-            const result = this._confirmRecordChangeHandler(() => {
-                    _createBeforeUpdate(createMetaData, newOptions);
-                }, () => {
-                _createBeforeUpdate(createMetaData, newOptions);
             });
         } else {
             if (newOptions.hasOwnProperty('isNewRecord')) {
@@ -315,23 +318,29 @@ class FormController extends Control<IFormController, IReceivedState> {
         return INITIALIZING_WAY.CREATE;
     }
 
-    private _confirmRecordChangeHandler(onYesAnswer: Function, onNoAnswer?: Function): Promise<Boolean> | undefined {
+    private _confirmRecordChangeHandler(defaultAnswerCallback: Function, negativeAnswerCallback?: Function): void {
+        if (this._isConfirmShowed) { // Защита от множ. вызова окна
+            return;
+        }
         if (this._needShowConfirmation()) {
-            return this._showConfirmPopup('yesno').then((answer) => {
+            this._isConfirmShowed = true;
+            this._showConfirmPopup('yesno').then((answer) => {
                 if (answer === true) {
                     this.update().then(() => {
-                        onYesAnswer();
+                        this._isConfirmShowed = false;
+                        defaultAnswerCallback();
                     });
-                    return true;
                 } else {
-                    if (onNoAnswer) {
-                        onNoAnswer();
+                    this._isConfirmShowed = false;
+                    if (negativeAnswerCallback) {
+                        negativeAnswerCallback();
+                    } else {
+                        defaultAnswerCallback();
                     }
-                    return false;
                 }
             });
         } else {
-            return onYesAnswer();
+            return defaultAnswerCallback();
         }
     }
 

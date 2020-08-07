@@ -113,7 +113,11 @@ export default class SearchControllerClass {
         }
 
         if (this._needUpdateViewMode(newOptions.viewMode)) {
-            this._updateViewMode(newOptions.viewMode);
+            if (this._isSearchViewMode()) {
+                this._previousViewMode = newOptions.viewMode;
+            } else {
+                this._updateViewMode(newOptions.viewMode);
+            }
         }
 
         if (this._searchController) {

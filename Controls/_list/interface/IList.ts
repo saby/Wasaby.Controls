@@ -43,6 +43,7 @@ interface IItemPadding {
 }
 
 export interface IList {
+    attachLoadTopTriggerToNull?: boolean;
     contextMenuVisibility?: boolean;
     contextMenuConfig?: IContextMenuConfig;
     emptyTemplate?: TemplateFunction|string;
@@ -74,6 +75,14 @@ export interface IList {
  * @interface Controls/_list/interface/IList
  * @public
  * @author Авраменко А.С.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#attachLoadTopTriggerToNull
+ * @cfg {Boolean} При изначальной загрузке списка прижимать верхний триггер загрузки к нулевой позиции.
+ * @remark
+ * Позволяет при двусторонней навигации избегать повторной загрузки данных сразу после инициализации списка.
+ * @default true
  */
 
 /**
