@@ -117,6 +117,11 @@ var Component = BaseSelector.extend({
         };
     },
 
+    _mouseEnterHandler(): void {
+        const loadCss = (datePopup) => datePopup.loadCSS();
+        this._startDependenciesTimer('Controls/datePopup', loadCss);
+    },
+
     shiftBack: function () {
         this._children.linkView.shiftBack();
     },

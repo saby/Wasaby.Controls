@@ -11,7 +11,6 @@ import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
 import {factory} from 'Types/chain';
 import {Constants} from 'Controls/history';
-import {convertToSourceDataArray} from 'Controls/_filterPopup/converterFilterStructure';
 
 var MAX_NUMBER_ITEMS = 5;
 
