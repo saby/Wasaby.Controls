@@ -259,10 +259,10 @@ const _private = {
         }
     },
 
-    checkNeedAttachLoadTopTriggerToNull(self, options): void {
+    checkNeedAttachLoadTopTriggerToNull(self): void {
         // Поведение отложенной загрузки вверх нужно опциональное, например, для контактов
         // https://online.sbis.ru/opendoc.html?guid=f07ea1a9-743c-42e4-a2ae-8411d59bcdce
-        if (options.attachLoadTopTriggerToNull === false) {
+        if (self._options.attachLoadTopTriggerToNull === false) {
             return;
         }
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
@@ -281,10 +281,10 @@ const _private = {
         }
         if (self._scrollController) {
             self._scrollController.update({
+                ...self._options,
                 attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: isInfinityNavigation,
-                collection: self.getViewModel(),
-                ...self._options
+                collection: self.getViewModel()
             });
         }
     },
@@ -414,7 +414,7 @@ const _private = {
                     if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
                         _private.checkLoadToDirectionCapability(self, filter, navigation);
                     } else if (!self._wasScrollToEnd) {
-                        _private.checkNeedAttachLoadTopTriggerToNull(self, cfg);
+                        _private.checkNeedAttachLoadTopTriggerToNull(self);
                     }
                 });
             }).addErrback(function(error: Error) {
@@ -2447,6 +2447,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _template: BaseControlTpl,
     iWantVDOM: true,
 
+    _attachLoadTopTriggerToNull: false,
     _listViewModel: null,
     _viewModelConstructor: null,
 
@@ -2892,7 +2893,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
         if (!this._wasScrollToEnd) {
-            _private.checkNeedAttachLoadTopTriggerToNull(this, this._options);
+            _private.checkNeedAttachLoadTopTriggerToNull(this);
         }
     },
 
@@ -3033,10 +3034,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._scrollController) {
             this._scrollController.update({
+                ...newOptions,
                 attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
                 collection: this.getViewModel(),
-               needScrollCalculation: this._needScrollCalculation, ...newOptions
+                needScrollCalculation: this._needScrollCalculation
             });
         }
 
