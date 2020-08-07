@@ -253,7 +253,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#itemActionsPosition
- * @cfg {Controls/_itemActions/interface/IItemAction/TItemActionsPosition.typedef} Позиционирование панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/position/ опциями записи{}.
+ * @cfg {Controls/_itemActions/interface/IItemAction/TItemActionsPosition.typedef} Позиционирование панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/position/ опциями записи}.
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">демо-пример</a>.
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FItemActionsCustom">демо-пример</a>.
