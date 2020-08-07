@@ -23,7 +23,7 @@ import {TouchContextField} from 'Controls/context';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
-import {Stack} from 'Controls/popup';
+import {StackOpener} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
 
 /**
@@ -139,7 +139,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _openSubMenuEvent: MouseEvent;
     private _errorController: dataSourceError.Controller;
     private _errorConfig: dataSourceError.ViewConfig|void;
-    private _popupId: string|null;
+    private _stack: StackOpener;
 
     protected _beforeMount(options: IMenuControlOptions,
                            context?: object,
@@ -148,7 +148,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._additionalFilter = MenuControl._additionalFilterCheck.bind(this, options);
 
         this._closeButtonVisible = options.itemPadding.right === 'menu-close';
-
+        this._stack = new StackOpener();
         if (options.source) {
             return this._loadItems(options);
         }
@@ -350,9 +350,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 }) as Model[]
             });
         }
-        Stack.openPopup(this._getSelectorDialogOptions(this._options, selectedItems)).then((popupId) => {
-            this._popupId = popupId;
-        });
+        this._stack.open(this._getSelectorDialogOptions(this._options, selectedItems));
         this._notify('moreButtonClick', [selectedItems]);
     }
 
@@ -506,7 +504,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             handlers: {
                 onSelectComplete: (event, result) => {
                     selectorDialogResult(event, result);
-                    Stack.closePopup(this._popupId);
+                    this._stack.close();
                 }
             }
         };
@@ -522,7 +520,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             eventHandlers: {
                 onResult: (result, event) => {
                     selectorDialogResult(event, result);
-                    Stack.closePopup(this._popupId);
+                    this._stack.close();
                 }
             }
         }, selectorTemplate.popupOptions || {});
