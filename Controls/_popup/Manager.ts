@@ -490,7 +490,7 @@ class Manager extends Control<IManagerOptions> {
             // Если над скрытым стековым окном позиционируются другие окна,
             // то не даем им реагировать на внутренние ресайзы
             // иначе позиция может сбиться, т.к. таргет в текущий момент невидим
-            if (!parentItem || parentItem.popupOptions.hidden !== true) {
+            if (!parentItem || parentItem.position.hidden !== true) {
                 return item.controller.resizeInner(item, this._getItemContainer(id));
             }
         }
