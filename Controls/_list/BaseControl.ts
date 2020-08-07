@@ -260,8 +260,11 @@ const _private = {
     },
 
     checkNeedAttachLoadTopTriggerToNull(self): void {
-        // Если нужно сделать опциональным поведение отложенной загрузки вверх, то проверку добавлять здесь.
-        // if (!cfg.attachLoadTopTriggerToNull) return;
+        // Поведение отложенной загрузки вверх нужно опциональное, например, для контактов
+        // https://online.sbis.ru/opendoc.html?guid=f07ea1a9-743c-42e4-a2ae-8411d59bcdce
+        if (self._options.attachLoadTopTriggerToNull === false) {
+            return;
+        }
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
         // В случае с pages, demand и maxCount проблема дополнительной загрузки после инициализации списка отсутствует.
         const isInfinityNavigation = _private.isInfinityNavigation(self._options.navigation);
@@ -278,10 +281,10 @@ const _private = {
         }
         if (self._scrollController) {
             self._scrollController.update({
+                ...self._options,
                 attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: isInfinityNavigation,
-                collection: self.getViewModel(),
-                ...self._options
+                collection: self.getViewModel()
             });
         }
     },
@@ -2451,6 +2454,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _template: BaseControlTpl,
     iWantVDOM: true,
 
+    _attachLoadTopTriggerToNull: false,
     _listViewModel: null,
     _viewModelConstructor: null,
 
@@ -2616,6 +2620,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (self._listViewModel) {
+                self._shouldNotifyOnDrawItems = true;
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
 
@@ -3036,10 +3041,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._scrollController) {
             this._scrollController.update({
+                ...newOptions,
                 attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
                 collection: this.getViewModel(),
-               needScrollCalculation: this._needScrollCalculation, ...newOptions
+                needScrollCalculation: this._needScrollCalculation
             });
         }
 
@@ -4234,6 +4240,7 @@ BaseControl._theme = ['Controls/Classes', 'Controls/list'];
 
 BaseControl.getDefaultOptions = function() {
     return {
+        attachLoadTopTriggerToNull: true,
         uniqueKeys: true,
         multiSelectVisibility: 'hidden',
         markerVisibility: 'onactivated',
