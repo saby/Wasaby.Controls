@@ -319,7 +319,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Получает контейнер для
+     * Получает контейнер элемента, для которого выполняется операция
      * @param item
      * @param isMenuClick
      */
@@ -424,7 +424,7 @@ export default class View extends Control<IViewOptions> {
      * Закрывает popup и снимает регистрацию его подписки на событие скролла
      * @private
      */
-    private _closePopup() {
+    private _closePopup(): void {
         if (this._itemActionsMenuId) {
             Sticky.closePopup(this._itemActionsMenuId);
             this._itemActionsController.setActiveItem(null);

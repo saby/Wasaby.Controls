@@ -3,6 +3,8 @@
  * @library Controls/itemActions
  * @includes IItemAction Controls/_itemActions/interface/IItemAction
  * @includes IContextMenuConfig Controls/_itemActions/interface/IContextMenuConfig
+ * @includes IItemActionsItem Controls/_itemActions/interface/IItemActionsItem
+ * @includes IItemActionsCollection Controls/_itemActions/interface/IItemActionsCollection
  * @includes Controller Controls/_itemActions/Controller
  * @public
  * @author Аверкиев П.А.
@@ -13,6 +15,8 @@
  * @library Controls/itemActions
  * @includes IItemAction Controls/_itemActions/interface/IItemAction
  * @includes IContextMenuConfig Controls/_itemActions/interface/IContextMenuConfig
+ * @includes IItemActionsItem Controls/_itemActions/interface/IItemActionsItem
+ * @includes IItemActionsCollection Controls/_itemActions/interface/IItemActionsCollection
  * @includes Controller Controls/_itemActions/Controller
  * @public
  * @author Аверкиев П.А.
@@ -30,7 +34,9 @@ export {
 } from './_itemActions/interface/IItemAction';
 export {IShownItemAction, IItemActionsContainer} from './_itemActions/interface/IItemActionsContainer';
 export {IContextMenuConfig} from './_itemActions/interface/IContextMenuConfig';
-export {IItemActionsItem, IItemActionsCollection, Controller} from './_itemActions/Controller';
+export {IItemActionsItem} from './_itemActions/interface/IItemActionsItem';
+export {IItemActionsCollection} from './_itemActions/interface/IItemActionsCollection';
+export {Controller} from './_itemActions/Controller';
 export {Utils} from './_itemActions/Utils';
 
 import * as ItemActionsForTemplate from 'wml!Controls/_itemActions/resources/templates/ItemActionsFor';
