@@ -26,6 +26,7 @@ import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
+import {editing as constEditing} from 'Controls/Constants';
 
 // Utils imports
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
@@ -2092,14 +2093,13 @@ const _private = {
                 readOnly: self._options.readOnly,
                 keyProperty: self._options.keyProperty,
                 notify: (name, args, params) => {
-                    const beforeBeginResult = self._notify(name, args, params);
+                    const eventResult = self._notify(name, args, params);
 
-                    if (name === 'beforeBeginEdit' && self._savedItemClickArgs) {
-                        self._notify('itemClick', self._savedItemClickArgs, { bubbling: true });
-                        self._savedItemClickArgs = null;
+                    if (name === 'beforeBeginEdit') {
+                        _private.onBeforeBeginEdit(self, eventResult);
                     }
 
-                    return beforeBeginResult;
+                    return eventResult;
                 },
                 forceUpdate: () => {
                     self._forceUpdate();
@@ -2411,6 +2411,32 @@ const _private = {
                 });
         }
         return result;
+    },
+    onBeforeBeginEdit(self, eventResult) {
+        if (self._savedItemClickArgs) {
+
+            // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
+            // обязательно должен случиться после события beforeBeginEdit.
+            self._notify('itemClick', self._savedItemClickArgs, {bubbling: true});
+
+            // Запись становится активной по клику, если не началось редактирование.
+            // Аргументы itemClick сохранены в состояние и используются для нотификации об активации элемента.
+            if (eventResult === constEditing.CANCEL) {
+                self._notify('itemActivate', self._savedItemClickArgs, {bubbling: true});
+                self._savedItemClickArgs = null;
+            } else if (eventResult && eventResult.finally) {
+                eventResult.then((res) => {
+                    if (res === constEditing.CANCEL) {
+                        self._notify('itemActivate', self._savedItemClickArgs, {bubbling: true});
+                    }
+                    return res;
+                }).finally(() => {
+                    self._savedItemClickArgs = null;
+                });
+            } else {
+                self._savedItemClickArgs = null;
+            }
+        }
     }
 };
 
@@ -3465,12 +3491,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             e.stopPropagation();
             return;
         }
+
+        // При клике по элементу может случиться 2 события: itemClick и itemActivate.
+        // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
+        // порядок событий будет beforeBeginEdit -> itemClick
+        // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
+        // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
-
-            // Если редактирование запретило всплытие itemClick, значит оно попробует запустить редактирование.
-            // В таком случае нотифицировать об itemClick нужно после события beforeBeginEdit. Для этого сохраняем аргументы события.
             this._savedItemClickArgs = e.isStopped() ? [item, originalEvent] : null;
+        } else {
+            this._notify('itemActivate', [item, originalEvent], { bubbling: true });
         }
     },
 
