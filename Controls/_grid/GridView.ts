@@ -135,6 +135,7 @@ var
                             self._horizontalScrollWidth = newSizes.scrollWidth;
                             self._containerSize = newSizes.containerSize;
                             self._updateColumnScrollData();
+                            self._listModel?.setColumnScrollVisibility(self._isColumnScrollVisible());
                         }, true);
                         result = 'created';
                     } else {
@@ -231,6 +232,7 @@ var
                 self._columnScrollContainerClasses = COLUMN_SCROLL_JS_SELECTORS.CONTAINER;
                 self._columnScrollShadowClasses = null;
                 self._columnScrollShadowStyles = null;
+                self._listModel?.setColumnScrollVisibility(false);
                 _private.destroyDragScroll(self);
             }
         },
@@ -395,7 +397,6 @@ var
 
             if (this._options.columnScroll) {
                 _private.updateColumnScrollByOptions(this, oldOptions, this._options);
-                this._listModel.setColumnScrollVisibility(this._isColumnScrollVisible());
             }
 
             this._columnsHaveBeenChanged = false;

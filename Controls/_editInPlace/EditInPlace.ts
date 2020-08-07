@@ -651,6 +651,9 @@ export default class EditInPlace {
             if (originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`)) {
                 result = this.commitEdit();
             } else {
+                // При попытке старта редактирования, событие itemClick должно выстреливать после beforeBeginEdit.
+                e.stopPropagation();
+
                 result = this.beginEdit({
                     item
                 }).then((result) => {
@@ -888,10 +891,6 @@ export default class EditInPlace {
                 _private.getAddPosition(this._options.editingConfig)
             );
         }
-    }
-
-    isTargetEditable(target: HTMLElement): boolean {
-        return false;
     }
 
     onRowDeactivated(e: SyntheticEvent, eventOptions: any): void {

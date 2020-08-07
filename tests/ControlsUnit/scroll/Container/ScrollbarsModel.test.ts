@@ -50,18 +50,22 @@ describe('Controls/scroll:ContainerNew ScrollbarsModel', () => {
             scrollContainerStyles: 'scrollContainerStyles',
             styleHideScrollbar: 'styleHideScrollbar'
         };
-        const model: ScrollbarsModel = new ScrollbarsModel({
+        let model: ScrollbarsModel = new ScrollbarsModel({
             ...getScrollbarsDefaultOptions(),
             scrollMode: SCROLL_MODE.VERTICAL
         }, state);
 
-        it('canScroll = false', () => {
-            model._canScroll = false;
-           assert.equal(model.scrollContainerStyles, '');
+        it('overflowHidden = true', () => {
+            assert.equal(model.scrollContainerStyles, '');
         });
-        it('canScroll = true', () => {
-            model._canScroll = true;
-            assert.equal(model.scrollContainerStyles, 'scrollContainerStyles');
+
+        it('overflowHidden = false', () => {
+            state.overflowHidden = false;
+            model = new ScrollbarsModel({
+                ...getScrollbarsDefaultOptions(),
+                scrollMode: SCROLL_MODE.VERTICAL
+            }, state);
+           assert.equal(model.scrollContainerStyles, 'scrollContainerStyles');
         });
     });
 

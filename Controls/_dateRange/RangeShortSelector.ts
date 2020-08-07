@@ -94,6 +94,11 @@ var Component = BaseSelector.extend({
         };
     },
 
+    _mouseEnterHandler(): void {
+        const loadCss = ({View}) => View.loadCSS();
+        this._startDependenciesTimer('Controls/shortDatePicker', loadCss);
+    },
+
     shiftBack: function () {
         this._children.linkView.shiftBack();
     },
