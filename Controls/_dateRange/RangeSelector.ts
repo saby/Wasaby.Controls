@@ -10,7 +10,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
 /**
  * Контрол позволяет пользователю выбрать диапазон дат с начальным и конечным значениями в календаре.
  * Выбор происходит с помощью панели большого выбора периода.
- * 
+ *
  * @remark
  *
  * Полезные ссылки:
@@ -75,6 +75,8 @@ var Component = BaseSelector.extend({
             }
         }
         opts.rangeSelectedCallback = options.rangeSelectedCallback;
+        opts.selectionType = options.selectionType;
+        opts.ranges = options.ranges;
         Component.superclass._updateRangeModel.call(this, opts);
     },
 
@@ -113,6 +115,11 @@ var Component = BaseSelector.extend({
                 rangeSelectedCallback: this._options.rangeSelectedCallback
             }
         };
+    },
+
+    _mouseEnterHandler(): void {
+        const loadCss = (datePopup) => datePopup.loadCSS();
+        this._startDependenciesTimer('Controls/datePopup', loadCss);
     },
 
     shiftBack: function () {

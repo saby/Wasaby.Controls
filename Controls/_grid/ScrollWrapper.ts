@@ -64,10 +64,9 @@ export default class HorizontalScrollWrapper extends Control<IControlOptions> {
         if (listModel.getMultiSelectVisibility() !== 'hidden') {
             offset += 1;
         }
-        // Учёт колонки с лесенкой
-        if (listModel.shouldAddStickyLadderCell()) {
-            offset += 1;
-        }
+        // Учёт колонки(или колонок) с лесенкой
+        offset += listModel.stickyLadderCellsCount();
+
         if (listModel._shouldAddActionsCell()) {
             lastCellOffset += 1;
         }

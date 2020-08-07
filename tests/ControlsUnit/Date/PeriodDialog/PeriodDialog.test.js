@@ -666,5 +666,74 @@ define([
          });
       });
 
+      describe('_inputControlHandler', function() {
+         [{
+            selectionType: 'range',
+         }, {
+            selectionType: 'quantum',
+         }].forEach(function (test) {
+            it('should activate adjacent input', function () {
+               const
+                  sandbox = sinon.sandbox.create(),
+                  component = calendarTestUtils.createComponent(PeriodDialog, {}),
+                  displayValue = {
+                     length: 8
+                  },
+                  selection = {
+                     end: 8
+                  };
+               let result = false;
+               component._children = {
+                  endValueField: {
+                     activate: () => {
+                        result = true;
+                     }
+                  }
+               };
+               component._options = {
+                  selectionType: test.selectionType
+               };
+               component._inputControlHandler('e', 'value', displayValue, selection);
+               assert.isTrue(result);
+               sandbox.restore();
+            });
+         });
+         [{
+            selectionType: 'range',
+            displayValueLength: 8,
+            selectionEnd: 7
+         }, {
+            selectionType: 'single',
+            displayValueLength: 8,
+            selectionEnd: 8
+         }].forEach(function (test) {
+            it('should not activate adjacent input', function() {
+               const
+                  sandbox = sinon.sandbox.create(),
+                  component = calendarTestUtils.createComponent(PeriodDialog, {}),
+                  displayValue = {
+                     length: test.displayValueLength
+                  },
+                  selection = {
+                     end: test.selectionEnd
+                  };
+               let result = false;
+               component._children = {
+                  endValueField: {
+                     activate: () => {
+                        result = true;
+                     }
+                  }
+               };
+               component._options = {
+                  selectionType: test.selectionType
+               };
+
+               component._inputControlHandler('e', 'value', displayValue, selection);
+               assert.isFalse(result);
+               sandbox.restore();
+            });
+         });
+      });
    });
 });

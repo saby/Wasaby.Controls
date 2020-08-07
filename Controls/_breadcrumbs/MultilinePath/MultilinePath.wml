@@ -4,6 +4,7 @@
             <Controls._breadcrumbs.View
                     visibleItems="{{_visibleItemsFirst}}"
                     displayMode="multiline"
+                    fontSize="{{_options.fontSize}}"
                     keyProperty="{{_options.keyProperty}}"
                     displayProperty="{{_options.displayProperty}}"
                     on:itemClick="_itemClickHandler()"/>
@@ -13,6 +14,7 @@
                     visibleItems="{{_visibleItemsSecond}}"
                     keyProperty="{{_options.keyProperty}}"
                     displayMode="multiline"
+                    fontSize="{{_options.fontSize}}"
                     items="{{_options.items}}"
                     displayProperty="{{_options.displayProperty}}"
                     on:itemClick="_itemClickHandler()"/>

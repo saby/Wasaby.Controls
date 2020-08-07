@@ -1,5 +1,5 @@
 import merge = require('Core/core-merge');
-import {Stack as StackOpener, IStackPopupOptions} from 'Controls/popup';
+import {StackOpener, IStackPopupOptions} from 'Controls/popup';
 
 function getPopupOptions(self): IStackPopupOptions {
     const selectorTemplate = self._options.selectorTemplate;
@@ -31,7 +31,7 @@ function getTemplateOptions(self, multiSelect) {
         multiSelect: multiSelect,
         handlers: {
             onSelectComplete: function (event, result) {
-                StackOpener.closePopup(self._popupId);
+                self._stack.close();
                 if (self._options.isCompoundTemplate) {
                     self._selectCallback(null, result);
                 }
@@ -48,6 +48,9 @@ function getTemplateOptions(self, multiSelect) {
  * @returns {Promise}
  */
 export default function(self, popupOptions, multiSelect) {
+    if (!self._stack) {
+        self._stack = new StackOpener();
+    }
     if (!self._openingSelector) {
         const selectorTemplate = self._options.selectorTemplate;
         const stackPopupOptions = getPopupOptions(self);
@@ -67,9 +70,7 @@ export default function(self, popupOptions, multiSelect) {
                 merge(stackPopupOptions, popupOptions);
             }
 
-            self._openingSelector = StackOpener.openPopup(stackPopupOptions).then((id) => {
-                self._popupId = id;
-            });
+            self._openingSelector = self._stack.open(stackPopupOptions)
         }
         return self._openingSelector;
     }

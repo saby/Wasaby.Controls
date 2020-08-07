@@ -70,11 +70,11 @@ interface ICords {
  * @property {Object} position Координаты указателя.
  * @property {Object} offset Смещение от начальной позиции посредством drag'n'drop.
  */
-interface IDragObject {
+export interface IDragObject<T = object> {
     domEvent: MouseEvent;
     position: ICords;
     offset: ICords;
-    entity: object;
+    entity: T;
     draggingTemplateOffset: number;
 }
 
@@ -101,6 +101,7 @@ class Container extends Control<IContainerOptions> {
      */
     private _dragEntity: object = null;
     private _startEvent: MouseEvent = null;
+    private _currentEvent: MouseEvent = null;
     private _startImmediately: boolean = null;
     private _documentDragging: boolean = false;
     private _insideDragging: boolean = false;
@@ -180,7 +181,7 @@ class Container extends Control<IContainerOptions> {
         }
     }
 
-    private _onMove(nativeEvent): void {
+    private _onMove(nativeEvent: MouseEvent): void {
         if (this._startEvent) {
             const dragObject: IDragObject = this._getDragObject(nativeEvent, this._startEvent);
             const dragStarted: boolean = Container._isDragStarted(this._startEvent, nativeEvent, this._startImmediately);
@@ -189,6 +190,7 @@ class Container extends Control<IContainerOptions> {
                 this._notify('_documentDragStart', [dragObject], {bubbling: true});
             }
             if (this._documentDragging) {
+                this._currentEvent = nativeEvent;
                 this._notify('dragMove', [dragObject]);
                 if (this._options.draggingTemplate) {
                     this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
@@ -246,6 +248,7 @@ class Container extends Control<IContainerOptions> {
         this._unregisterMouseUp();
         this._dragEntity = null;
         this._startEvent = null;
+        this._currentEvent = null;
     }
 
     protected _afterMount(options?: IContainerOptions, contexts?: any): void {
@@ -258,8 +261,14 @@ class Container extends Control<IContainerOptions> {
     protected _beforeUnmount(): void {
         super._beforeUnmount();
 
-        this._unregisterMouseMove();
-        this._unregisterMouseUp();
+        /**
+         * Когда контрол находится в режиме перемещения, и его уничтожили, тогда нужно завершенить перемещение.
+         * Это делается по событию mouseup. Вызовем обработчик этого события.
+         */
+        const event: MouseEvent = this._startEvent || this._currentEvent;
+        if (event) {
+            this._onMouseUp(new SyntheticEvent<MouseEvent>(event));
+        }
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
         this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
     }

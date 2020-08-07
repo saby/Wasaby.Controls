@@ -158,14 +158,14 @@ export default class Button extends BaseDropdown {
             dataLoadCallback: this._dataLoadCallback.bind(this),
             popupClassName: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
             hasIconPin: this._hasIconPin,
-            allowPin: true,
-            openerControl: this
+            allowPin: true
          }
       };
    }
 
    _getMenuPopupConfig(): IStickyPopupOptions {
       return {
+         opener: this._children.content,
          eventHandlers: {
             onOpen: this._onOpen.bind(this),
             onClose: this._onClose.bind(this),
@@ -231,6 +231,10 @@ export default class Button extends BaseDropdown {
       if (res !== false) {
          this._controller.handleSelectedItems(item);
       }
+   }
+
+   protected _deactivated(): void {
+      this.closeMenu();
    }
 
    static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];

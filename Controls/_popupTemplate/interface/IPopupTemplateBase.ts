@@ -28,7 +28,7 @@
 
 /**
  * @name Controls/_popupTemplate/interface/IPopupTemplateBase#headingFontColorStyle
- * @cfg {String} Стиль отображения заголовка.
+ * @cfg {String} Стиль отображения заголовка. Подробнее: {@link Controls/_interface/IFontColorStyle#fontColorStyle}
  * @default secondary
  * @see Controls.heading:Title#fontColorStyle
  */

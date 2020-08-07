@@ -15,7 +15,7 @@
                                        on:deactivated="_popupDeactivated(item.id)"
                                        on:keydown="_keyDownHandler()"
                                        on:activated="_popupActivated(item.id)"
-                                       attr:class="controls-Container__popup
+                                       attr:class="
                    {{_popupItems.getCount() - 1 === index ? 'controls-Scroll_webkitOverflowScrollingTouch'}}
                    {{item.popupOptions.className}}
                    {{item.position.invisible ? 'ws-invisible'}}

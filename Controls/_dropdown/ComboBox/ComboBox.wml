@@ -20,6 +20,7 @@
            on:mouseenter="_handleMouseEnter()"
            on:mouseleave="_handleMouseLeave()"
            on:keydown="_handleKeyDown()"
+           on:deactivated="_deactivated()"
            placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
            attr:class="controls-ComboBox-InputRender {{_isOpened ? 'controls-Popup__isolatedFocusingContext'}}">
       <ws:rightFieldWrapper>

@@ -1,9 +1,11 @@
 define([
    'Controls/Container/Async',
+   'Controls/Container/Async/ModuleLoader',
    'Env/Env',
    'ControlsUnit/Async/TestControlSync'
 ], function(
    Async,
+   ModuleLoader,
    Env,
    TestControlSync
 ) {
@@ -146,6 +148,38 @@ define([
          }).then(function() {
             assert.equal(async.error, ERROR_TEXT);
             assert.strictEqual(async.optionsForComponent.resolvedTemplate, undefined);
+         });
+      }).timeout(4000);
+
+      typeof window !== 'undefined' && it('Loading asynchronous client-side failed with callback', function() {
+         let callbackCalled = false;
+         let callbackParams = {};
+         let options = {
+            templateName: 'ControlsUnit/Async/FailCallback/TestControlAsync',
+            templateOptions: {},
+            errorCallback: (viewConfig, error) => {
+               callbackCalled = true;
+               callbackParams = { viewConfig: viewConfig, error: error };
+            }
+         };
+
+         var ERROR_TEXT = 'Ошибка загрузки контрола ControlsUnit/Async/FailCallback/TestControlAsync\nВозможны следующие причины:\n\t                   • Ошибка в самом контроле\n\t                   • Долго отвечал БЛ метод в _beforeUpdate\n\t                   • Контрола не существует';
+
+         let async = new Async(options);
+         async._beforeMount(options);
+         async._beforeUpdate(options);
+         async._afterUpdate();
+
+         return new Promise(function(resolve) {
+            setTimeout(resolve, 2000);
+         }).then(function() {
+            assert.equal(async.error, ERROR_TEXT);
+            assert.strictEqual(async.optionsForComponent.resolvedTemplate, undefined);
+            assert.equal(callbackCalled, true, 'errorCallback не был вызван.');
+            assert.exists(callbackParams.viewConfig, 'Первый параметр errorCallback должен быть определен.');
+            assert.exists(callbackParams.error, 'Второй параметр errorCallback должен быть определен.');
+            assert.equal(typeof callbackParams.viewConfig, 'object', 'Первый параметр errorCallback должен быть объектом.');
+            assert.equal(callbackParams.viewConfig.status, 404, 'Первый параметр errorCallback имеет неправильную структуру.');
          });
       }).timeout(4000);
    });

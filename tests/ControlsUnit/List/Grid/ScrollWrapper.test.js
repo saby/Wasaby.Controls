@@ -12,7 +12,7 @@ define(['Controls/_grid/ScrollWrapper'], function(ScrollWrapper) {
                isMultiHeader: () => false,
                getStickyColumnsCount: () => 1,
                getMultiSelectVisibility: () => 'hidden',
-               shouldAddStickyLadderCell: () => false,
+               stickyLadderCellsCount: () => 0,
                _shouldAddActionsCell: () => false,
                getColumns: () => columns,
                getHeader: () => header,
@@ -39,7 +39,7 @@ define(['Controls/_grid/ScrollWrapper'], function(ScrollWrapper) {
       });
       it('should calculate grid header offset when MultiSelect column and sticky ladder should be added', () => {
          wrapper._options.listModel.getMultiSelectVisibility = () => 'visible';
-         wrapper._options.listModel.shouldAddStickyLadderCell = () => true;
+         wrapper._options.listModel.stickyLadderCellsCount = () => 1;
          assert.equal('grid-column: 4 / 8;width: 500px', wrapper._getGridStyles(options));
       });
    });
