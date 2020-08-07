@@ -1,10 +1,10 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Input/Labels/Labels');
+import controlTemplate = require('wml!Controls-demo/Input/Label/Label');
 
-class Labels extends Control<IControlOptions> {
-    protected _value = Labels._defaultValue;
-    protected _requiredValue = Labels._defaultValue;
-    protected _topValue = Labels._defaultValue;
+class Label extends Control<IControlOptions> {
+    protected _value = Label._defaultValue;
+    protected _requiredValue = Label._defaultValue;
+    protected _topValue = Label._defaultValue;
     protected _placeholder = 'Tooltip';
 
     protected _template: TemplateFunction = controlTemplate;
@@ -14,4 +14,4 @@ class Labels extends Control<IControlOptions> {
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
-export default Labels;
+export default Label;
