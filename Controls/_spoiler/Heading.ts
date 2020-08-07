@@ -99,7 +99,6 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
     readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
 
     private _updateState(options: IHeadingOptions): void {
-        this._icon = Heading._calcIcon(this._expanded);
         this._view = Heading._calcView(this._expanded);
         this._caption = Heading._calcCaption(options.captions, this._expanded);
         this._fontWeight = Heading._calcFontWeight(this._expanded, options.fontWeight);
@@ -156,10 +155,6 @@ class Heading extends Control<IHeadingOptions> implements IHeading {
 
     private static _calcView(expanded: boolean): TView {
         return expanded ? 'expanded' : 'collapsed';
-    }
-
-    private static _calcIcon(expanded: boolean): TIcon {
-        return expanded ? 'CollapseLight' : 'ExpandLight';
     }
 
     protected static _calcFontWeight(expanded: boolean, fontWeight?: TFontWeight): TFontWeight {
