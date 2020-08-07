@@ -82,18 +82,23 @@ var CompoundArea = CompoundContainer.extend([
       /**
        * Поведение если вызвали через ENGINE/MiniCard.
        */
-      var _this = this;
-
+      this._hoverTargetMouseEnterHandler = () => {
+         clearTimeout(this._hoverTimer);
+         if (!this._destroyed) {
+            this._hoverTimer = null;
+         }
+      };
+      this._hoverTargetMouseOutHandler = () => {
+         const timerDelay: number = 1000;
+         this._hoverTimer = setTimeout(() => {
+            if (!this._destroyed) {
+               this.hide();
+            }
+         }, timerDelay);
+      };
       if (_options.hoverTarget) {
-         $(_options.hoverTarget).on('mouseenter', function() {
-            clearTimeout(_this._hoverTimer);
-            _this._hoverTimer = null;
-         });
-         $(_options.hoverTarget).on('mouseleave', function() {
-            _this._hoverTimer = setTimeout(function() {
-               _this.hide();
-            }, 1000);
-         });
+         $(_options.hoverTarget).on('mouseenter', this._hoverTargetMouseEnterHandler);
+         $(_options.hoverTarget).on('mouseleave', this._hoverTargetMouseOutHandler);
       }
       if (_options.popupComponent === 'recordFloatArea') {
          if (typeof _options.readOnly !== 'undefined') {
@@ -402,6 +407,10 @@ var CompoundArea = CompoundContainer.extend([
       this._logicParent = null;
       if (this._options.popupComponent === 'recordFloatArea') {
          this.unsubscribeOnBeforeUnload();
+      }
+      if (this._options.hoverTarget) {
+         $(this._options.hoverTarget).off('mouseenter', this._hoverTargetMouseEnterHandler);
+         $(this._options.hoverTarget).off('mouseleave', this._hoverTargetMouseOutHandler);
       }
    },
 

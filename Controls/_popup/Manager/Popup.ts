@@ -308,14 +308,15 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     private _isResized(oldOptions: IPopupOptions, newOptions: IPopupOptions): boolean {
-        const {position: oldPosition, hidden: oldHidden}: IPopupOptions = oldOptions;
-        const {position: newPosition, hidden: newHidden}: IPopupOptions = newOptions;
+        const {position: oldPosition}: IPopupOptions = oldOptions;
+        const {position: newPosition}: IPopupOptions = newOptions;
         const hasWidthChanged: boolean = oldPosition.width !== newPosition.width;
         const hasHeightChanged: boolean = oldPosition.height !== newPosition.height;
         const hasMaxHeightChanged: boolean = oldPosition.maxHeight !== newPosition.maxHeight;
-        const hasHiddenChanged: boolean = oldHidden !== newHidden;
+        const hasHiddenChanged: boolean = oldPosition.hidden !== newPosition.hidden;
 
-        return hasWidthChanged || hasHeightChanged || hasMaxHeightChanged || (hasHiddenChanged && newHidden === false);
+        return hasWidthChanged || hasHeightChanged || hasMaxHeightChanged ||
+            (hasHiddenChanged && newPosition.hidden === false);
     }
 
     // TODO Compatible
