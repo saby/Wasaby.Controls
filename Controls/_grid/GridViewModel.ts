@@ -690,6 +690,7 @@ var
             this._resolvers = {};
             this._model = this._createModel(cfg);
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+                this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
                 if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
                     this._ladder = _private.prepareLadder(this);
                 }
@@ -697,7 +698,6 @@ var
                     this._nextHeaderVersion();
                 }
                 this._nextVersion();
-                this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
             }.bind(this);
             this._onGroupsExpandChangeFn = function(event, changes) {
                 this._notify('onGroupsExpandChange', changes);
