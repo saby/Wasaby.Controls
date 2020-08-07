@@ -2,12 +2,12 @@ import {QueryNavigationType, QueryOrderSelector, QueryWhereExpression} from 'Typ
 
 export type Direction = 'up' | 'down';
 
-export interface IAdditionQueryParamsMeta {
+export interface IQueryParamsMeta {
    navigationType?: QueryNavigationType;
    hasMore?: boolean;
 }
-export interface IAdditionalQueryParams {
-   meta?: IAdditionQueryParamsMeta;
+export interface IQueryParams {
+   meta?: IQueryParamsMeta;
    limit?: number;
    offset?: number;
    filter?: QueryWhereExpression<any>;

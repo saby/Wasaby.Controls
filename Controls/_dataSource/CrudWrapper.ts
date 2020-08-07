@@ -5,7 +5,7 @@ import * as cInstance from 'Core/core-instance';
 
 import {Controller as ErrorController, Mode as ErrorMode, ViewConfig as ErrorViewConfig} from 'Controls/_dataSource/error';
 import {Logger} from 'UI/Utils';
-import {IAdditionalQueryParams} from 'Controls/_interface/IAdditionalQueryParams';
+import {IQueryParams} from 'Controls/_interface/IQueryParams';
 
 export interface ICrudWrapperOptions {
     source: ICrud;
@@ -172,7 +172,7 @@ export class CrudWrapper {
      * @param [queryParams] Params to build Query {@link Types/source/Query}
      * @return Promise resolving created Record {@link Types/_entity/Record} and rejecting an Error.
      */
-    query(queryParams: IAdditionalQueryParams, keyProperty?: string): Promise<RecordSet> {
+    query(queryParams: IQueryParams, keyProperty?: string): Promise<RecordSet> {
         let query = new Query();
         if (queryParams.filter) {
             query = query.where(queryParams.filter);

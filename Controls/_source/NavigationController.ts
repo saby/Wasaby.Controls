@@ -11,7 +11,7 @@ import PageParamsCalculator from './NavigationController/PageParamsCalculator';
 import {default as PositionNavigationStore, IPositionNavigationState} from './NavigationController/PositionNavigationStore';
 import PositionParamsCalculator from './NavigationController/PositionParamsCalculator';
 
-import {IAdditionalQueryParams} from 'Controls/_interface/IAdditionalQueryParams';
+import {IQueryParams} from 'Controls/_interface/IQueryParams';
 import {TNavigationSource, IBaseSourceConfig, INavigationSourceConfig, TNavigationDirection} from 'Controls/_interface/INavigation';
 import {IHashMap} from 'Types/declarations';
 import {applied} from 'Types/entity';
@@ -32,9 +32,9 @@ interface INavigationStoresListItem {
     id: TKey;
     store: INavigationStore;
 }
-interface IAddParamsItem {
+interface IAdditionalParamsItem {
     id: TKey;
-    addParams: IAdditionalQueryParams;
+    addParams: IQueryParams;
 }
 /**
  * Фабрика для создания экземпляра контроллера запроса навигации.
@@ -89,12 +89,6 @@ export interface INavigationControllerOptions {
 
 type TKey = string | number | null; // TODO общий тип
 
-interface IGetQueryParamsArg {
-    filter: QueryWhereExpression<unknown>;
-    sorting: QueryOrderSelector;
-    navigationConfig?: INavigationSourceConfig;
-}
-
 /**
  * Контроллер постраничной навигации
  * @remark
@@ -140,39 +134,42 @@ export class NavigationController {
      * Строит запрос данных на основе переданных параметров filter и sorting
      * Если в опцию navigation был передан объект INavigationOptionValue<INavigationSourceConfig>, его filter, sorting и настрйоки пейджинации
      * также одбавляются в запрос.
-     * @param getQueryArgs {} Настройки фильтрации, сортировки, навигации
+     * @param userQueryParams {IQueryParams} Настройки фильтрации, сортировки
+     * @param navigationConfig {INavigationSourceConfig} Настройки навигации
      * @param id {} Идентификатор запрашиваемого узла. По-умолчанию корневой узел.
      * @param direction {TNavigationDirection} Направление навигации.
      */
 
-    getQueryParams(getQueryArgs: IGetQueryParamsArg,
+    getQueryParams(userQueryParams: IQueryParams,
                    id: TKey = null,
-                   direction?: TNavigationDirection): IAdditionalQueryParams {
+                   navigationConfig?: INavigationSourceConfig,
+                   direction?: TNavigationDirection): IQueryParams {
 
         const calculator = this._getCalculator();
-        const navigationQueryConfig = getQueryArgs.navigationConfig || ({} as INavigationSourceConfig);
-        const queryParams = NavigationController._getCleanParams(getQueryArgs);
+        const navigationQueryConfig = navigationConfig || ({} as INavigationSourceConfig);
+        const mainQueryParams = NavigationController._getMainQueryParams(userQueryParams);
 
         // Если id не передан то берется стор для корневого раздела, для которого жесткий id = null
         const store = this._getStore(id);
-        const addParams = calculator.getQueryParams(store, navigationQueryConfig, direction);
-        return NavigationController._mergeParams(queryParams, addParams);
+        const addQueryParams = calculator.getQueryParams(store, navigationQueryConfig, direction);
+        return NavigationController._mergeParams(mainQueryParams, addQueryParams);
     }
 
-    getQueryParamsHierarchical(getQueryArgs: IGetQueryParamsArg): IAdditionalQueryParams[] {
+    getQueryParamsForHierarchy(userQueryParams: IQueryParams,
+                               navigationConfig?: INavigationSourceConfig): IQueryParams[] {
         const calculator = this._getCalculator();
-        const navigationQueryConfig = getQueryArgs.navigationConfig || ({} as INavigationSourceConfig);
-        const queryParams = NavigationController._getCleanParams(getQueryArgs);
+        const navigationQueryConfig = navigationConfig || ({} as INavigationSourceConfig);
+        const mainQueryParams = NavigationController._getMainQueryParams(userQueryParams);
 
-        const addParamsArray = [];
+        const addQueryParamsArray = [];
         this._navigationStores.each((storesItem) => {
             const store = storesItem.store;
-            addParamsArray.push({
+            addQueryParamsArray.push({
                 id: storesItem.id,
                 addParams: calculator.getQueryParams(store, navigationQueryConfig)
             });
         });
-        return NavigationController._mergeParamsHierarchical(queryParams, addParamsArray);
+        return NavigationController._mergeParamsHierarchical(mainQueryParams, addQueryParamsArray);
     }
 
     /**
@@ -252,16 +249,16 @@ export class NavigationController {
         this._navigationConfig = null;
     }
 
-    private static _mergeParams(clean: IAdditionalQueryParams, add: IAdditionalQueryParams): IAdditionalQueryParams {
-        const resultParams = clean;
+    private static _mergeParams(main: IQueryParams, additional: IQueryParams): IQueryParams {
+        const resultParams = main;
 
-        resultParams.limit = add.limit;
-        resultParams.offset = add.offset;
+        resultParams.limit = additional.limit;
+        resultParams.offset = additional.offset;
 
-        if (add.filter) {
+        if (additional.filter) {
             // we can't modify original filter
             resultParams.filter = cClone(resultParams.filter);
-            const navFilter = add.filter;
+            const navFilter = additional.filter;
             for (let i in navFilter) {
                 if (navFilter.hasOwnProperty(i)) {
                     resultParams.filter[i] = navFilter[i];
@@ -269,24 +266,26 @@ export class NavigationController {
             }
         }
 
-        if (add.meta) {
-            resultParams.meta = add.meta;
+        if (additional.meta) {
+            resultParams.meta = additional.meta;
         }
 
         return resultParams;
     }
 
-    private static _mergeParamsHierarchical(clean: IAdditionalQueryParams,
-                                            add: IAddParamsItem[]): IAdditionalQueryParams[] {
+    private static _mergeParamsHierarchical(main: IQueryParams,
+                                            additional: IAdditionalParamsItem[]): IQueryParams[] {
 
-        const resultParamsArray = [] as IAdditionalQueryParams[];
-        add.forEach((addItem) => {
-            const resultParams = NavigationController._mergeParams({...clean}, addItem.addParams);
+        const resultParamsArray = [] as IQueryParams[];
+        additional.forEach((addItem) => {
+            const resultParams = NavigationController._mergeParams({...main}, addItem.addParams);
+
+            // we can't modify original filter
+            resultParams.filter = cClone(resultParams.filter);
 
             // Добавляем в фильтр раздел и помечаем это поле, как первичный ключ
             // Оно используется для формирования множественной навигации,
             // Само поле будет удалено из фильтра перед запросом.
-
             resultParams.filter.__root = new applied.PrimaryKey(addItem.id);
 
             resultParamsArray.push(resultParams);
@@ -295,10 +294,10 @@ export class NavigationController {
         return resultParamsArray;
     }
 
-    private static _getCleanParams(getQueryArgs: IGetQueryParamsArg): IAdditionalQueryParams {
+    private static _getMainQueryParams(userQueryParams: IQueryParams): IQueryParams {
         return {
-            filter: getQueryArgs.filter || {},
-            sorting: getQueryArgs.sorting,
+            filter: userQueryParams.filter || {},
+            sorting: userQueryParams.sorting,
             limit: undefined,
             offset: undefined
         };
