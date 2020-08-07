@@ -48,6 +48,8 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
                 this._calculateBreadCrumbsToDraw(this._options.items, this._width);
                 this._forceUpdate();
             });
+        } else {
+            this._items = [];
         }
     }
 
@@ -81,7 +83,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
         let shrinkItemIndex;
         let firstContainerItems = [];
 
-        if (items.length <= 2) {
+        if (items.length <= 2 && items.length > 0) {
             // Если крошек меньше двух, располагаем их в первом контейнере
             firstContainerItems = items.map((item, index, items) => {
                 const hasArrow = index !== 0;
@@ -184,9 +186,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
     private _onResize(): void {
         if (this._width !== this._container.clientWidth) {
             this._width = this._container.clientWidth;
-            if (this._items) {
-                this._calculateBreadCrumbsToDraw(this._items, this._width);
-            }
+            this._calculateBreadCrumbsToDraw(this._items, this._width);
         }
     }
 
