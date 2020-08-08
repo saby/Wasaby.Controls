@@ -19,7 +19,7 @@
                                  controls-SpoilerHeading__icon_theme-{{_options.theme}}
                                  controls-SpoilerHeading__icon_{{_view}}_theme-{{_options.theme}}"/>
     </div>
-    <div class="controls-SpoilerHeading__caption
+    <div class="controls-SpoilerHeading__caption ws-ellipsis
                   controls-SpoilerHeading__caption_{{_view}}
                   controls-SpoilerHeading__caption_{{_view}}_theme-{{_options.theme}}
                   controls-SpoilerHeading__caption_captionPosition-{{_options.captionPosition}}">{{_caption}}
