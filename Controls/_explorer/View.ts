@@ -96,7 +96,7 @@ var
 
             function _remover(key) {
                Object.keys(self._restoredMarkedKeys).forEach((cur) => {
-                  if (self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent === String(key)) {
+                  if (self._restoredMarkedKeys[cur] && String(self._restoredMarkedKeys[cur].parent) === String(key)) {
                      const nextKey = cur;
                      delete self._restoredMarkedKeys[cur];
                      _remover(nextKey);
