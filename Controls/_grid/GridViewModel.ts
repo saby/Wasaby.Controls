@@ -36,8 +36,8 @@ import {IHeaderCell} from './interface/IHeaderCell';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
-const FIXED_HEADER_ZINDEX = 4;
-const STICKY_HEADER_ZINDEX = 3;
+const FIXED_HEADER_ZINDEX = 6;
+const STICKY_HEADER_ZINDEX = 5;
 
 interface IGridSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';
