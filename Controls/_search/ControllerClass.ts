@@ -113,7 +113,11 @@ export default class SearchControllerClass {
         }
 
         if (this._needUpdateViewMode(newOptions.viewMode)) {
-            this._updateViewMode(newOptions.viewMode);
+            if (this._isSearchViewMode()) {
+                this._previousViewMode = newOptions.viewMode;
+            } else {
+                this._updateViewMode(newOptions.viewMode);
+            }
         }
 
         if (this._searchController) {
@@ -319,7 +323,9 @@ export default class SearchControllerClass {
     }
 
     private _isSearchValueChanged(searchValue: string): boolean {
-        return this._options.searchValue !== searchValue && this._isInputSearchValueChanged(searchValue);
+        return this._options.searchValue !== searchValue &&
+            this._searchValue !== searchValue &&
+            this._isInputSearchValueChanged(searchValue);
     }
 
     private _isInputSearchValueChanged(searchValue: string): boolean {
@@ -486,6 +492,7 @@ export default class SearchControllerClass {
     }
 
     private _setPath(path: RecordSet): void {
+        this._path = path;
         if (this._options.pathChangedCallback) {
             this._options.pathChangedCallback(path);
         }

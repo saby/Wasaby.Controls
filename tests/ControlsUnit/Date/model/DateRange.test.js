@@ -112,6 +112,49 @@ define([
                cInstance.instanceOfModule(model.endValue, 'Types/entity:DateTime');
             });
          });
+
+         [{
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 11),
+            selectionType: 'quantum',
+            ranges: {
+               'weeks': [1]
+            },
+            rangeSelectedCallback: (startValue, endValue) => {
+               return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate()),
+                  new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() - 2)];
+            },
+            result: [new Date(2019, 0, 14), new Date(2019, 0, 18)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 12),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [3]
+            },
+            rangeSelectedCallback: (startValue, endValue) => {
+               return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate()),
+                  new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() + 3)];
+            },
+            result: [new Date(2019, 0, 10), new Date(2019, 0, 15)]
+         }].forEach(function (test) {
+            it('should shift period with quantum forward', function () {
+               let model = new dateRange.DateRangeModel();
+
+               model.update({
+                  startValue: test.startValue,
+                  endValue: test.endValue,
+                  selectionType: 'quantum',
+                  ranges: test.ranges,
+                  rangeSelectedCallback: test.rangeSelectedCallback
+               });
+               model.shiftForward();
+               assert.equal(model.startValue.getTime(), test.result[0].getTime());
+               cInstance.instanceOfModule(model.startValue, 'Types/entity:DateTime');
+               assert.equal(model.endValue.getTime(), test.result[1].getTime());
+               cInstance.instanceOfModule(model.endValue, 'Types/entity:DateTime');
+            });
+         });
       });
 
       describe('.shiftBack', function() {
@@ -142,6 +185,48 @@ define([
                assert.equal(model.startValue.getTime(), test.rStart.getTime());
                cInstance.instanceOfModule(model.startValue, 'Types/entity:DateTime');
                assert.equal(model.endValue.getTime(), test.rEnd.getTime());
+               cInstance.instanceOfModule(model.endValue, 'Types/entity:DateTime');
+            });
+         });
+         [{
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 11),
+            selectionType: 'quantum',
+            ranges: {
+               'weeks': [1]
+            },
+            rangeSelectedCallback: (startValue, endValue) => {
+               return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate()),
+                  new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() - 2)];
+            },
+            result: [new Date(2018, 11, 31), new Date(2019, 0, 4)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 12),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [3]
+            },
+            rangeSelectedCallback: (startValue, endValue) => {
+               return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate()),
+                  new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() + 3)];
+            },
+            result: [new Date(2019, 0, 4), new Date(2019, 0, 9)]
+         }].forEach(function (test) {
+            it('should shift period with quantum back', function () {
+               let model = new dateRange.DateRangeModel();
+
+               model.update({
+                  startValue: test.startValue,
+                  endValue: test.endValue,
+                  selectionType: 'quantum',
+                  ranges: test.ranges,
+                  rangeSelectedCallback: test.rangeSelectedCallback
+               });
+               model.shiftBack();
+               assert.equal(model.startValue.getTime(), test.result[0].getTime());
+               cInstance.instanceOfModule(model.startValue, 'Types/entity:DateTime');
+               assert.equal(model.endValue.getTime(), test.result[1].getTime());
                cInstance.instanceOfModule(model.endValue, 'Types/entity:DateTime');
             });
          });

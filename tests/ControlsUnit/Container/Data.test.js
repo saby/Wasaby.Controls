@@ -127,7 +127,10 @@ define(
             data._beforeMount({source: newSource, idProperty: 'id'}, {}, sourceData);
 
             assert.deepEqual(data._items, sourceData);
-            assert.isTrue(!!data._dataController._prefetchSource);
+
+            // TODO тест для совместимости, чтоб ничего не разломать
+            const prefSource = data._sourceController.getState().prefetchSource;
+            assert.isTrue(!!prefSource);
 
             resetCallback();
          });
@@ -147,9 +150,12 @@ define(
             let resetCallback = setNewEnvironmentValue(true);
 
             data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, sourceData);
-            assert.isTrue(data._dataController._prefetchSource.getOriginal() === memory);
-            assert.isTrue(data._dataController._prefetchSource !== prefetchSource);
-            assert.equal(data._dataController._prefetchSource._$data.query, sourceData);
+
+            // TODO тест для совместимости, чтоб ничего не разломать
+            const prefSource = data._sourceController.getState().prefetchSource;
+            assert.isTrue(prefSource.getOriginal() === memory);
+            assert.isTrue(prefSource !== prefetchSource);
+            assert.equal(prefSource._$data.query, sourceData);
 
             resetCallback();
          });
@@ -168,9 +174,12 @@ define(
             let data = getDataWithConfig({source: prefetchSource, keyProperty: 'id'});
 
             await data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, sourceData);
-            assert.isTrue(data._dataController._prefetchSource.getOriginal() === memory);
-            assert.isTrue(data._dataController._prefetchSource !== prefetchSource);
-            assert.equal(data._dataController._prefetchSource._$data.query, sourceData);
+
+            // TODO тест для совместимости, чтоб ничего не разломать
+            const prefSource = data._sourceController.getState().prefetchSource;
+            assert.isTrue(prefSource.getOriginal() === memory);
+            assert.isTrue(prefSource !== prefetchSource);
+            assert.equal(prefSource._$data.query, sourceData);
          });
 
          it('_beforeMount without source', () => {
@@ -232,8 +241,11 @@ define(
 
             //new source received in _beforeUpdate
             data._beforeUpdate({source: source}).addCallback(function() {
-               assert.isTrue(data._dataController._options.source === source);
-               assert.isTrue(!!data._dataController._prefetchSource);
+               assert.isTrue(data._sourceController._options.source === source);
+
+               // TODO тест для совместимости, чтоб ничего не разломать
+               const prefSource = data._sourceController.getState().prefetchSource;
+               assert.isTrue(!!prefSource);
                done();
             });
          });
@@ -309,7 +321,10 @@ define(
                data._beforeMount(config).addCallback(function() {
                   data._filterChanged(null, {test1: 'test1'});
                   assert.isTrue(config.source === data._dataOptionsContext.prefetchSource);
-                  assert.deepEqual(data._filter, {test1: 'test1'});
+
+                  // TODO тест для совместимости, чтоб ничего не разломать
+                  const filter = data._sourceController.getState().filter;
+                  assert.deepEqual(filter, {test1: 'test1'});
                   resolve();
                });
             });
@@ -346,8 +361,10 @@ define(
             var data = getDataWithConfig(config);
 
             data._beforeMount(config).then(function() {
-               assert.isTrue(!!data._dataController._prefetchSource);
-               assert.equal(data._dataController._options.source, source);
+               // TODO тест для совместимости, чтоб ничего не разломать
+               const prefetchSource = data._sourceController.getState().prefetchSource;
+               assert.isTrue(!!prefetchSource);
+               assert.equal(data._sourceController._options.source, source);
                assert.isTrue(dataLoadErrbackCalled);
                done();
             });

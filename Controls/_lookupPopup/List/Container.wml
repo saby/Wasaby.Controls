@@ -2,7 +2,7 @@
             scope="{{_options}}"
             selectedKeys="{{_selectedKeys}}"
             bind:markedKey="_markedKey"
-            on:itemClick="_itemClick()"
+            on:itemActivate="_itemActivate()"
             on:actionClick="_itemActionsClick()"
             itemActions="{{_itemActions}}"
             itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"

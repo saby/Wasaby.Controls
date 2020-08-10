@@ -3,7 +3,6 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
    describe('Controls/_lookup/showSelector', function() {
       let lastPopupOptions;
       let isShowSelector = false;
-      let stubOpenPopup;
 
       const getBaseController = function() {
          const baseController = new Lookup.default();
@@ -20,23 +19,17 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
             }
          };
 
+         baseController._stack = {
+            open: (popupOptions) => {
+               isShowSelector = true;
+               lastPopupOptions = popupOptions;
+               return Promise.resolve();
+            },
+            close: () => {}
+         };
+
          return baseController;
       };
-
-      before(function() {
-         stubOpenPopup = sinon.stub(popup.Stack, 'openPopup');
-         stubOpenPopup.callsFake(function(popupOptions) {
-            isShowSelector = true;
-            lastPopupOptions = popupOptions;
-            return Promise.resolve();
-         });
-      });
-
-      after(function() {
-         stubOpenPopup.restore();
-
-         stubOpenPopup = undefined;
-      });
 
       it('showSelector without params', function() {
          const baseController = getBaseController();
@@ -138,52 +131,39 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
       it('opening showSelector', function() {
          const baseController = getBaseController();
          isShowSelector = false;
-         baseController._openingSelector = null;
          showSelector.default(baseController, {});
          assert.isTrue(isShowSelector);
-         assert.isNotNull(baseController._openingSelector);
-
-         isShowSelector = false;
-         showSelector.default(baseController, {});
-         assert.isFalse(isShowSelector);
       });
 
       it('showSelector without selectorTemplate', function() {
          const baseController = getBaseController();
          baseController._options.selectorTemplate = null;
-         baseController._openingSelector = null;
 
-         assert.isNull(showSelector.default(baseController, {}));
+         assert.isFalse(showSelector.default(baseController, {}));
       });
 
       it('showSelector without selectorTemplate and popupOptions template', function() {
          const baseController = getBaseController();
          baseController._options.selectorTemplate = null;
          showSelector.default(baseController, {});
-
-         assert.isUndefined(baseController._openingSelector);
       });
 
       it('showSelector without selectorTemplate and with popupOptions template', function() {
          const baseController = getBaseController();
-         baseController._openingSelector = null;
          baseController._options.selectorTemplate = null;
          showSelector.default(baseController, {
             template: 'testTemplate'
          });
-         assert.isNotNull(baseController._openingSelector);
          assert.equal(lastPopupOptions.template, 'testTemplate');
       });
 
       it('showSelector with selectorTemplate', function() {
          const baseController = getBaseController();
-         baseController._openingSelector = null;
          baseController._options.selectorTemplate = {
             templateName: 'selectorTemplate'
          };
          showSelector.default(baseController, {});
          assert.equal(lastPopupOptions.template, 'selectorTemplate');
-         assert.isNotNull(baseController._openingSelector);
       });
    });
 });

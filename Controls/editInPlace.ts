@@ -1,1 +1,1 @@
-export {default as EditInPlace} from './_editInPlace/EditInPlace';
+export {default as EditInPlace, JS_SELECTORS} from './_editInPlace/EditInPlace';

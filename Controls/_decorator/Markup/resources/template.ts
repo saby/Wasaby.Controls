@@ -1,7 +1,7 @@
 /**
  * Created by rn.kondakov on 18.10.2018.
  */
-import thelpers = require('View/Executor/TClosure');
+import { TClosure as thelpers } from 'UI/Executor';
 import validHtml = require('Core/validHtml');
 import {Logger} from 'UI/Utils';
 
@@ -42,7 +42,7 @@ import {Logger} from 'UI/Utils';
       goodLinkAttributeRegExp = new RegExp(`^(${startOfGoodLinks.join('|')})`
          .replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`)),
       dataAttributeRegExp = /^data-(?!component$|bind$)([\w-]*[\w])+$/,
-      escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
+      escapeVdomRegExp = /&([a-zA-Z0-9#]+)/g,
       additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
 
    function isString(value) {
@@ -57,7 +57,7 @@ import {Logger} from 'UI/Utils';
            strNode = '"Невалидный Json узел"';
        }
 
-       Logger.error('View/Executor/TClosure' + `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`, control);
+       Logger.error('UI/Executor:TClosure' + `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`, control);
    }
 
    function generateEventSubscribeObject(handlerName) {
@@ -171,7 +171,7 @@ import {Logger} from 'UI/Utils';
    }
 
    var template = function(data, attr, context, isVdom, sets?) {
-      markupGenerator = thelpers.getMarkupGenerator(isVdom);
+      markupGenerator = thelpers.createGenerator(isVdom);
       defCollection = {
          id: [],
          def: undefined
@@ -229,7 +229,7 @@ import {Logger} from 'UI/Utils';
       try {
          elements = recursiveMarkup(value, attrsToDecorate, key + '0_');
       } catch (e) {
-          Logger.error('View/Executor/TClosure: ' + e.message, undefined, e);
+          Logger.error('UI/Executor:TClosure: ' + e.message, undefined, e);
       } finally {
          markupGenerator.escape = oldEscape;
       }

@@ -247,7 +247,7 @@ var _private = {
       //могут в качестве source передать prefetchSource, у которого нет методов getModel, getAdapter.
       //После этого этот модуль можно будет удалить.
       if (cInstance.instanceOfModule(source, 'Types/source:PrefetchProxy')) {
-         return source._$target;
+         return source.getOriginal();
       }
 
       return source;
@@ -256,7 +256,7 @@ var _private = {
    getOriginSource: function(source) {
       // In Selector/Suggest as source can be set historySource, in this case history should work differently
       if (source instanceof Source) {
-         return source.originSource;
+         return source.getOriginSource();
       }
 
       return _private.getCorrectSource(source);

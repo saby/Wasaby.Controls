@@ -197,6 +197,13 @@ define(['Controls/_filter/Controller', 'Core/Deferred', 'Types/entity', 'Control
          });
          filterLayout._beforeUpdate({filterButtonSource: buttonItems});
          assert.isFalse(filterLayout._filter.hasOwnProperty('PrefetchSessionId'));
+         filterLayout._beforeUpdate({
+            filter: {},
+            prefetchParams: {
+               PrefetchSessionId: 'test'
+            }
+         });
+         assert.isTrue(filterLayout._isFilterChanged);
       });
 
       it('_beforeUpdate new historyId', function () {

@@ -13,6 +13,8 @@ import * as Deferred from 'Core/Deferred';
 import * as cClone from 'Core/core-clone';
 import template = require('wml!Controls/_popup/Manager/Manager');
 
+const ORIENTATION_CHANGE_DELAY = 50;
+
 /**
  * Popups Manager
  * @class Controls/_popup/Manager
@@ -49,10 +51,12 @@ class Manager extends Control<IManagerOptions> {
 
         if (detection.isMobilePlatform) {
             window.addEventListener('orientationchange', () => {
-                // Таймаут нужен, чтобы размеры страницы изменились. На момент вызова события размеры старые.
+                // На момент срабатывания обработчика приходят старые размеры страницы.
+                // Опытным путем был подобран таймаут, после которого приходят актуальные размеры.
+                // Для IPAD PRO необходимо 50мс
                 setTimeout(() => {
                     this.orientationChangeHandler();
-                }, 0);
+                }, ORIENTATION_CHANGE_DELAY);
             });
         }
 
@@ -486,7 +490,7 @@ class Manager extends Control<IManagerOptions> {
             // Если над скрытым стековым окном позиционируются другие окна,
             // то не даем им реагировать на внутренние ресайзы
             // иначе позиция может сбиться, т.к. таргет в текущий момент невидим
-            if (!parentItem || parentItem.popupOptions.hidden !== true) {
+            if (!parentItem || parentItem.position.hidden !== true) {
                 return item.controller.resizeInner(item, this._getItemContainer(id));
             }
         }

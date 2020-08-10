@@ -11,7 +11,6 @@ import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
 import {factory} from 'Types/chain';
 import {Constants} from 'Controls/history';
-import {convertToSourceDataArray} from 'Controls/_filterPopup/converterFilterStructure';
 
 var MAX_NUMBER_ITEMS = 5;
 
@@ -94,7 +93,7 @@ var MAX_NUMBER_ITEMS = 5;
 
          let captionsObject = _private.mapByField(self._options.filterItems, 'caption');
          items = factory(items).map((historyItem) => {
-            historyItem.caption = captionsObject[historyItem.id];
+            historyItem.caption = captionsObject[_private.getItemId(historyItem)];
             return historyItem;
          }).value();
 
