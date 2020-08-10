@@ -36,7 +36,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
     protected BREAD_CRUMB_MIN_WIDTH: number = 0;
     protected DOTS_WIDTH: number = 0;
     protected _indexEdge: number = 0;
-    protected _items: Record[];
+    protected _items: Record[] = [];
 
     protected _afterMount(options: IBreadCrumbsOptions, contexts?: object, receivedState?: void): void {
         RegisterUtil(this, 'controlResize', this._onResize.bind(this));

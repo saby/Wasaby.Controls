@@ -134,6 +134,7 @@ define([
             };
             WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
             instance._beforeMount(cfg).addCallback(function() {
+               instance.saveOptions(cfg);
                assert.isFalse(instance._initialized);
                instance._notify = function(eventName, eventArgs, eventOptions) {
                   assert.equal(eventName, 'operationsPanelOpened');
@@ -163,6 +164,7 @@ define([
             };
             WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
             instance._beforeMount(cfg).addCallback(function() {
+               instance.saveOptions(cfg);
                assert.isFalse(instance._initialized);
                instance._afterMount();
                assert.isTrue(instance._initialized);
@@ -189,6 +191,7 @@ define([
             };
             WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
             await instance._beforeMount(cfg);
+            instance.saveOptions(cfg);
             instance._afterMount();
             assert.isFalse(resizeEventFired);
             assert.isTrue(instance._initialized);

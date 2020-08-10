@@ -306,7 +306,7 @@
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content_hiddenForLadder {
       background-color: @item_hover_background-color_list;
    }
-   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content {
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content:not(.controls-Grid__row-ladder-cell__content) {
       background-color: @item_hover_background-color_list;
    }
 
@@ -372,7 +372,16 @@
       background-color: @item_editing_background-color_list;
    }
 }
+.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+   right: @cell_padding-right_default_grid;
+}
 
+.controls-Grid__row-cell__content_halign_center .controls-Grid__row-cell__ladder-content_additional-with-main {
+   right: 0;
+   left: 0;
+}
+
+.controls-Grid__row-main_ladderWrapper,
 .controls-Grid__row-additional_ladderWrapper {
    position: absolute;
    top: 0;

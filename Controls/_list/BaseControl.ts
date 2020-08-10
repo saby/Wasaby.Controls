@@ -26,6 +26,7 @@ import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
+import {editing as constEditing} from 'Controls/Constants';
 
 // Utils imports
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
@@ -260,8 +261,11 @@ const _private = {
     },
 
     checkNeedAttachLoadTopTriggerToNull(self): void {
-        // Если нужно сделать опциональным поведение отложенной загрузки вверх, то проверку добавлять здесь.
-        // if (!cfg.attachLoadTopTriggerToNull) return;
+        // Поведение отложенной загрузки вверх нужно опциональное, например, для контактов
+        // https://online.sbis.ru/opendoc.html?guid=f07ea1a9-743c-42e4-a2ae-8411d59bcdce
+        if (self._options.attachLoadTopTriggerToNull === false) {
+            return;
+        }
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
         // В случае с pages, demand и maxCount проблема дополнительной загрузки после инициализации списка отсутствует.
         const isInfinityNavigation = _private.isInfinityNavigation(self._options.navigation);
@@ -278,10 +282,10 @@ const _private = {
         }
         if (self._scrollController) {
             self._scrollController.update({
+                ...self._options,
                 attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: isInfinityNavigation,
-                collection: self.getViewModel(),
-                ...self._options
+                collection: self.getViewModel()
             });
         }
     },
@@ -399,7 +403,7 @@ const _private = {
                         data: list
                     });
 
-                    if (self._isMounted && self._isScrollShown) {
+                    if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
                         // При полной перезагрузке данных нужно сбросить состояние скролла
                         // и вернуться к началу списка, иначе браузер будет пытаться восстановить
                         // scrollTop, догружая новые записи после сброса.
@@ -1313,7 +1317,9 @@ const _private = {
                     _private.prepareFooter(self, self._options.navigation, self._sourceController);
                 }
             }
-            if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
+
+            if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
+                self._itemActionsMenuId) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
             }
 
@@ -2089,14 +2095,13 @@ const _private = {
                 readOnly: self._options.readOnly,
                 keyProperty: self._options.keyProperty,
                 notify: (name, args, params) => {
-                    const beforeBeginResult = self._notify(name, args, params);
+                    const eventResult = self._notify(name, args, params);
 
-                    if (name === 'beforeBeginEdit' && self._savedItemClickArgs) {
-                        self._notify('itemClick', self._savedItemClickArgs, { bubbling: true });
-                        self._savedItemClickArgs = null;
+                    if (name === 'beforeBeginEdit') {
+                        _private.onBeforeBeginEdit(self, eventResult);
                     }
 
-                    return beforeBeginResult;
+                    return eventResult;
                 },
                 forceUpdate: () => {
                     self._forceUpdate();
@@ -2408,6 +2413,46 @@ const _private = {
                 });
         }
         return result;
+    },
+
+    /*
+    * Считается, что запись активировалась при клике по ней, если в результате этого клика не запустилось редактирование по месту.
+    * Начинаем запуск редактирования мы, но реально ли оно начнется сейчас знает только прикладник и редактирование по месту, но
+    * оно не дает нам никакой точки входа в этот момент.
+    * Обработчик события начала редактирования может вернуть несколько вариантов ответа. Надо прочекать все.
+    *
+    * В новой схеме этот момент будет учтен и код станет вида
+    * editingController.beginEdit(key).then((startResult) => {
+    *     if (startResult === 'aborted') {
+    *         this._notify('itemActivated');
+    *     }
+    * })
+    * */
+    onBeforeBeginEdit(self, eventResult) {
+        if (self._savedItemClickArgs) {
+
+            // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
+            // обязательно должен случиться после события beforeBeginEdit.
+            self._notify('itemClick', self._savedItemClickArgs, {bubbling: true});
+
+            // Запись становится активной по клику, если не началось редактирование.
+            // Аргументы itemClick сохранены в состояние и используются для нотификации об активации элемента.
+            if (eventResult === constEditing.CANCEL) {
+                self._notify('itemActivate', self._savedItemClickArgs, {bubbling: true});
+                self._savedItemClickArgs = null;
+            } else if (eventResult && eventResult.finally) {
+                eventResult.then((res) => {
+                    if (res === constEditing.CANCEL) {
+                        self._notify('itemActivate', self._savedItemClickArgs, {bubbling: true});
+                    }
+                    return res;
+                }).finally(() => {
+                    self._savedItemClickArgs = null;
+                });
+            } else {
+                self._savedItemClickArgs = null;
+            }
+        }
     }
 };
 
@@ -2451,6 +2496,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _template: BaseControlTpl,
     iWantVDOM: true,
 
+    _attachLoadTopTriggerToNull: false,
     _listViewModel: null,
     _viewModelConstructor: null,
 
@@ -2616,6 +2662,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (self._listViewModel) {
+                self._shouldNotifyOnDrawItems = true;
                 _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
             }
 
@@ -3036,10 +3083,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._scrollController) {
             this._scrollController.update({
+                ...newOptions,
                 attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
                 forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
                 collection: this.getViewModel(),
-               needScrollCalculation: this._needScrollCalculation, ...newOptions
+                needScrollCalculation: this._needScrollCalculation
             });
         }
 
@@ -3459,12 +3507,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             e.stopPropagation();
             return;
         }
+
+        // При клике по элементу может случиться 2 события: itemClick и itemActivate.
+        // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
+        // порядок событий будет beforeBeginEdit -> itemClick
+        // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
+        // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
-
-            // Если редактирование запретило всплытие itemClick, значит оно попробует запустить редактирование.
-            // В таком случае нотифицировать об itemClick нужно после события beforeBeginEdit. Для этого сохраняем аргументы события.
             this._savedItemClickArgs = e.isStopped() ? [item, originalEvent] : null;
+        } else {
+            this._notify('itemActivate', [item, originalEvent], { bubbling: true });
         }
     },
 
@@ -4234,6 +4287,7 @@ BaseControl._theme = ['Controls/Classes', 'Controls/list'];
 
 BaseControl.getDefaultOptions = function() {
     return {
+        attachLoadTopTriggerToNull: true,
         uniqueKeys: true,
         multiSelectVisibility: 'hidden',
         markerVisibility: 'onactivated',
