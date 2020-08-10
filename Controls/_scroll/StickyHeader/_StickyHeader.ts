@@ -519,6 +519,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     protected _resetTopBottomStyles(): void {
+        // Чистим top и bottom, т.к устанавливали их до этого напрямую, чтобы не было скачков в интерфейсе
         this._children.content.style.top = '';
         this._children.content.style.bottom = '';
     }
