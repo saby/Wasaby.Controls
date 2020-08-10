@@ -5,7 +5,7 @@
                  controls-Menu__row_{{multiLine ? 'multiLine' : 'singleLine'}}_theme-{{_options.theme}}">
    <ws:if data="{{marker !== false && treeItem.isSelected() &&
                   (!itemData.multiSelect || itemData.isEmptyItem || itemData.isFixedItem)}}">
-      <div class="controls-Menu__row_selected_theme-{{_options.theme}}"></div>
+      <div class="controls-Menu__row_selected_theme-{{_options.theme}} controls-Menu__content_padding_theme-{{_options.theme}}"></div>
    </ws:if>
    <ws:if data="{{!!treeItem.getContents().forEach}}">
       <ws:partial template="wml!Controls/_menu/Render/breadCrumbsTemplate"

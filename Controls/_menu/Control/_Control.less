@@ -47,10 +47,11 @@
    position: absolute;
    display: inline-flex;
    align-items: baseline;
-   top: initial;
+   top: 0;
    left: 0;
    &::before {
       content: '\200b';
+      font-size: @item_font-size_menu;
    }
    &::after {
       content: '';
