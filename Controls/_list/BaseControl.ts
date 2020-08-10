@@ -403,7 +403,7 @@ const _private = {
                         data: list
                     });
 
-                    if (self._isMounted && self._isScrollShown) {
+                    if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
                         // При полной перезагрузке данных нужно сбросить состояние скролла
                         // и вернуться к началу списка, иначе браузер будет пытаться восстановить
                         // scrollTop, догружая новые записи после сброса.
@@ -1317,7 +1317,9 @@ const _private = {
                     _private.prepareFooter(self, self._options.navigation, self._sourceController);
                 }
             }
-            if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
+
+            if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
+                self._itemActionsMenuId) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
             }
 

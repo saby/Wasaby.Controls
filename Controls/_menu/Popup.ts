@@ -23,6 +23,35 @@ import {factory} from 'Types/chain';
  * @category Popup
  * @author Герасимов А.М.
  */
+
+/**
+ * @name Controls/_menu/Popup#closeButtonVisibility
+ * @cfg {Boolean} Видимость кнопки закрытия.
+ * @remark В значении true кнопка отображается.
+ * @demo Controls-demo/Menu/Popup/CloseButtonVisibility/Index
+ * @example
+ * <pre class="brush: html; highlight: [6]">
+ * <!-- WML -->
+ * <Controls.menu:Popup
+ *       keyProperty="key"
+ *       displayProperty="title"
+ *       source="{{_source}}"
+ *       closeButtonVisibility="{{true}}">
+ * </Controls.menu:Popup>
+ * </pre>
+ * <pre class="brush: js">
+ * // JS
+ * this._source = new Memory({
+ *    keyProperty: 'key',
+ *    data: [
+ *       {key: 1, title: 'Yaroslavl'},
+ *       {key: 2, title: 'Moscow'},
+ *       {key: 3, title: 'St-Petersburg'}
+ *    ]
+ * });
+ * </pre>
+ */
+
 const SEARCH_DEPS = ['Controls/list:DataContainer', 'Controls/search:Controller', 'Controls/search:Input', 'Controls/search:InputContainer'];
 
 class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
