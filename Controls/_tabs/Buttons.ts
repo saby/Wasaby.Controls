@@ -9,6 +9,7 @@ import {Model} from 'Types/entity';
 import {SbisService} from 'Types/source';
 import {IItems} from 'Controls/interface';
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
+import { constants } from 'Env/Env';
 
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
@@ -55,16 +56,18 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
     protected _beforeMount(options: ITabsButtonsOptions,
                            context: object,
                            receivedState: IReceivedState): void | Promise<IReceivedState> {
-        // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
-        if (receivedState && !TabsButtons._checkHasFunction(receivedState)) {
+        if (receivedState) {
             this._prepareState(receivedState);
         } else if (options.items) {
             const itemsData = this._prepareItems(options.items);
             this._prepareState(itemsData);
         } else if (options.source) {
             return this._initItems(options.source).then((result: IReceivedState) => {
-                this._prepareState(result);
-                return result;
+                // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
+                if (!TabsButtons._checkHasFunction(result)) {
+                    this._prepareState(result);
+                    return result;
+                }
             });
         }
     }
@@ -211,8 +214,8 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
     static _checkHasFunction(receivedState: IReceivedState): boolean {
         // Функции, передаваемые с сервера на клиент в receivedState, не могут корректно десериализоваться.
         // Поэтому, если есть функции в receivedState, заново делаем запрос за данными.
-        // Ошибку выводит ядро
-        if (receivedState?.items?.getCount) {
+        // Если в записи есть функции, то итемы в receivedState не передаем, на клиенте перезапрашивает данные
+        if (constants.isServerSide && receivedState?.items?.getCount) {
             const count = receivedState.items.getCount();
             for (let i = 0; i < count; i++) {
                 const item = receivedState.items.at(i);
