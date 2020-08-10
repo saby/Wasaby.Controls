@@ -7,17 +7,22 @@ const CHROME = 'Controls/Utils/FontWidthConstants/Chrome';
 
 export const getFontWidth = (text, size) => {
     let browser;
+    let module;
     if (detection.chrome) {
+        module = CHROME;
         browser = 'CHROME';
     } else if (detection.firefox) {
+        module = FF;
         browser = 'FF';
     } else if (detection.safari) {
+        module = SAFARI;
         browser = 'SAFARI';
     } else if (detection.isIE) {
+        module = IE;
         browser = 'IE';
     }
 
-    return getFontWidthConstant(browser).then((fonts) => countTextWidth(text, fonts, size));
+    return loadFontWidthConstants(module, browser).then((fonts) => countTextWidth(text, fonts, size));
 };
 
 const countTextWidth = (text, font, size) => {
@@ -44,31 +49,4 @@ const loadFontWidthConstants = (module, moduleName) => {
         });
     }
     return promise;
-};
-
-const getFontWidthConstant = (browser) => {
-    let module;
-    switch (browser) {
-        case 'IE': {
-            module = IE;
-            break;
-        }
-        case 'FF': {
-            module = FF;
-            break;
-        }
-        case 'SAFARI': {
-            module = SAFARI;
-            break;
-        }
-        case 'CHROME': {
-            module = CHROME;
-            break;
-        }
-        default: {
-            module = CHROME;
-            break;
-        }
-    }
-    return loadFontWidthConstants(module, browser);
 };
