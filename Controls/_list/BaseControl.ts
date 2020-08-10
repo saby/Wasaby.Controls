@@ -416,7 +416,7 @@ const _private = {
                         data: list
                     });
 
-                    if (self._isMounted && self._isScrollShown) {
+                    if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
                         // При полной перезагрузке данных нужно сбросить состояние скролла
                         // и вернуться к началу списка, иначе браузер будет пытаться восстановить
                         // scrollTop, догружая новые записи после сброса.

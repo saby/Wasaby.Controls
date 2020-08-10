@@ -3071,6 +3071,14 @@ define([
             await baseControl._afterMount();
             assert.isTrue(baseControl._isMounted);
          });
+         it('after scroll to end', async function() {
+            baseControl._wasScrollToEnd = true;
+            await lists.BaseControl._private.reload(baseControl, cfg);
+            assert.isFalse(baseControl._resetScrollAfterReload);
+            scrollContainer.clientHeight = 100;
+            await baseControl._afterMount();
+            assert.isTrue(baseControl._isMounted);
+         });
          it('without scroll', async function() {
             baseControl._isScrollShown = false;
             await lists.BaseControl._private.reload(baseControl, cfg);

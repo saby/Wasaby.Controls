@@ -535,7 +535,9 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     _onBeginCollectionChange: function(action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
-        _private.updateIndexes(this, 0, this.getCount());
+        if (!this._isSupportVirtualScroll()) {
+            _private.updateIndexes(this, 0, this.getCount());
+        }
     },
     isValidItemForMarkedKey: function (item) {
         return item && !this._isGroup(item) && item.getId;
