@@ -16,7 +16,7 @@
     *
     * @class Controls/_decorator/Markup/resolvers/highlight
     * @private
-    * @author Волоцкой В.Д.
+    * @author Угриновский Н.В.
     * @remark
     * <pre class="brush: js">
     * // JavaScript
@@ -50,7 +50,7 @@
     *
     * @class Controls/_decorator/Markup/resolvers/highlight
     * @public
-    * @author Волоцкой В.Д.
+    * @author Угриновский Н.В.
     */    
    export default function highlight(value, parent, resolverParams) {
       // Resolve only strings and only if text to highlight exists and not empty.

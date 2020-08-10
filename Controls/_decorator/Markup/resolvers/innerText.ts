@@ -5,7 +5,7 @@
  *
  * @class Controls/_decorator/Markup/resolvers/innerText
  * @public
- * @author Волоцкой В.Д.
+ * @author Угриновский Н.В.
  */
 
 /*
@@ -15,7 +15,7 @@
  *
  * @class Controls/_decorator/Markup/resolvers/innerText
  * @public
- * @author Волоцкой В.Д.
+ * @author Угриновский Н.В.
  */
 const innerText = function innerText(value, parent) {
    if (typeof value === 'string') {

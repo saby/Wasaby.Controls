@@ -7,7 +7,7 @@ import { wrapLinksInString } from '../resources/linkDecorateUtils';
  *
  * @class Controls/_decorator/Markup/resolvers/linkWrap
  * @public
- * @author Волоцкой В.Д.
+ * @author Угриновский Н.В.
  */
 export default function linkWrap(value, parent) {
     if (typeof value === 'string') {

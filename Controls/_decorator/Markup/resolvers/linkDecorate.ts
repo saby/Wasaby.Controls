@@ -76,7 +76,7 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  * </pre>
  * @class Controls/_decorator/Markup/resolvers/linkDecorate
  * @public
- * @author Волоцкой В.Д.
+ * @author Угриновский Н.В.
  */
 
 /*
@@ -86,7 +86,7 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  *
  * @class Controls/_decorator/Markup/resolvers/linkDecorate
  * @public
- * @author Волоцкой В.Д.
+ * @author Угриновский Н.В.
  */
 export default function linkDecorate(value, parent) {
     if (!parent) {

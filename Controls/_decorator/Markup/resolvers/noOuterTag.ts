@@ -6,7 +6,7 @@
     * 
     * @class Controls/_decorator/Markup/resolvers/noOuterTag
     * @public
-    * @author Волоцкой В.Д.
+    * @author Угриновский Н.В.
     */
 
    /*
@@ -16,7 +16,7 @@
     *
     * @class Controls/_decorator/Markup/resolvers/noOuterTag
     * @public
-    * @author Волоцкой В.Д.
+    * @author Угриновский Н.В.
     */    
    export default function noOuterTag(value, parent) {
       if (!parent && value[0] === 'div') {

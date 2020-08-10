@@ -134,7 +134,7 @@ function isLinkGoodForDecorating(linkNode) {
  *
  * @class Controls/_decorator/Markup/resources/linkDecorateUtils
  * @private
- * @author Волоцкой В.Д.
+ * @author Угриновский Н.В.
  */
 
 /**
