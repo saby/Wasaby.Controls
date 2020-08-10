@@ -176,14 +176,14 @@ export class CrudWrapper {
 
         let query;
         if (Array.isArray(queryParams)) {
-            const queryArray = [];
+            const queriesArray = [];
             queryParams.forEach((queriesParamsItem) => {
-                queryArray.push(CrudWrapper._getQueryInstance(queriesParamsItem));
+                queriesArray.push(CrudWrapper._getQueryInstance(queriesParamsItem));
             });
-            if (queryArray.length > 1) {
-                query = queryArray[0].apply(queryArray[0], queryArray.slice(1));
+            if (queriesArray.length > 1) {
+                query = queriesArray[0].union.apply(queriesArray[0], queriesArray.slice(1));
             } else {
-                query = queryArray[0];
+                query = queriesArray[0];
             }
         } else {
             query = CrudWrapper._getQueryInstance(queryParams);
