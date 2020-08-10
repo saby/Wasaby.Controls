@@ -352,6 +352,29 @@ define([
          assert.equal(2, iv.getVersion(), 'Incorrect version appendItems');
       });
 
+      it('SetItemPadding Silent', function() {
+         var cfg = {
+            items: data,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            markerVisibility: 'visible'
+         };
+
+         var iv = new lists.ListViewModel(cfg);
+         var result = false;
+         iv._nextModelVersion = function () {
+            result = true;
+         };
+         iv.setItemPadding('xs');
+         assert.isTrue(result, 'Incorrest setItemPadding result');
+
+         result = false;
+         iv.setItemPadding('xs', true);
+
+         assert.isFalse(result, 'Incorrest setItemPadding result');
+
+      });
+
       it('setMarkedKey', function() {
          const cfg = {
             items: data,

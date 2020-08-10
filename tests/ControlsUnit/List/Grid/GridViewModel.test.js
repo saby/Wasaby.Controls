@@ -753,6 +753,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          });
 
+         it('SetItemPadding Silent', function() {
+
+            var iv = gridMod.GridViewModel(cfg);
+            var result = false;
+            iv._nextModelVersion = function () {
+               result = true;
+            };
+            iv.setItemPadding('xs');
+            assert.isTrue(result, 'Incorrest setItemPadding result');
+
+            result = false;
+            iv.setItemPadding('xs', true);
+
+            assert.isFalse(result, 'Incorrest setItemPadding result');
+         });
+
          it('getItemDataByItem', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             let data = gridViewModel.getItemDataByItem(dummyDispitem);
