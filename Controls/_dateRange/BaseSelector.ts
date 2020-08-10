@@ -6,6 +6,7 @@ import {Logger} from 'UI/Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import Sticky from 'Controls/_popup/Opener/Sticky';
 import LinkView from './LinkView';
+import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 
 interface IBaseSelectorOptions extends IControlOptions {
     prevArrowVisibility: boolean;
@@ -22,7 +23,7 @@ export default class BaseSelector<T> extends Control<T> {
         linkView: LinkView;
     };
 
-    protected _beforeMount(options: IBaseSelectorOptions): boolean {
+    protected _beforeMount(options: IBaseSelectorOptions): void {
         this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged', 'rangeChanged']);
         this._updateRangeModel(options);
@@ -31,7 +32,7 @@ export default class BaseSelector<T> extends Control<T> {
         // чтобы стрелки всегда были зафиксированы и не смещались.
         // https://online.sbis.ru/opendoc.html?guid=ae195d05-0e33-4532-a77a-7bd8c9783ef1
         if (options.prevArrowVisibility) {
-            return this._isMinWidth = true;
+            this._isMinWidth = true;
         }
     }
 
@@ -56,7 +57,7 @@ export default class BaseSelector<T> extends Control<T> {
         this._children.opener.open(this._getPopupOptions());
     }
 
-    protected _getPopupOptions(): object {
+    protected _getPopupOptions(): IStickyPopupOptions {
         return {};
     }
 
@@ -74,7 +75,7 @@ export default class BaseSelector<T> extends Control<T> {
     }
 
     protected _mouseLeaveHandler(): void {
-        this._dependenciesTimer.stop();
+        this._dependenciesTimer?.stop();
     }
 
     protected _loadDependencies(module: string, loadCss: any): Promise<unknown> {

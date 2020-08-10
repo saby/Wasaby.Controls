@@ -5,6 +5,7 @@ import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import coreMerge = require('Core/core-merge');
 import template = require('wml!Controls/_dateRange/RangeShortSelector/RangeShortSelector');
+import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 
 /**
  * Контрол позволяет пользователю выбрать временной период: месяц, квартал, полугодие, год. Выбор происходит с помощью панели быстрого выбора периода.
@@ -28,8 +29,6 @@ import template = require('wml!Controls/_dateRange/RangeShortSelector/RangeShort
  * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/LiteSelector/Index
- * @demo Controls-demo/dateRange/LiteSelector/Disabled/Index
- * @demo Controls-demo/dateRange/LiteSelector/ValueNotSpecified/Index
  *
  */
 
@@ -69,7 +68,7 @@ interface IRangeShortSelectorOptions extends IControlOptions {
 export default class RangeShortSelector extends BaseSelector<IRangeShortSelectorOptions> {
     protected _template: TemplateFunction = template;
 
-    protected _getPopupOptions(): object {
+    protected _getPopupOptions(): IStickyPopupOptions {
         let className;
         const container = this._children.linkView.getPopupTarget();
         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
