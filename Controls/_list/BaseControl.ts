@@ -1374,7 +1374,9 @@ const _private = {
                     _private.prepareFooter(self, self._options.navigation, self._sourceController);
                 }
             }
-            if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
+
+            if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
+                self._itemActionsMenuId) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
             }
             if (self._scrollController) {
