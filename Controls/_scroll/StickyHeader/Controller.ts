@@ -355,6 +355,21 @@ class StickyHeaderController {
         return header.offset[position];
     }
 
+    private _getHeaderOffsetByContent(id: number, position: POSITION) {
+        const header = this._headers[id];
+        const userContent: HTMLElement;
+        if (header.container.parentElement === this._container) {
+            userContent = this._container
+        } else {
+            const children = this._container.children;
+            userContent = position === POSITION.top ? children[0] : children[children.length - 1];
+        }
+        if (header.offset[position] === undefined) {
+            header.offset[position] = header.inst.getOffset(userContent, position);
+        }
+        return header.offset[position];
+    }
+
     /**
      * Очищает кэш вычисленных смещений заголовков относительно контроллера.
      * @private
@@ -398,15 +413,12 @@ class StickyHeaderController {
             headersHeight: number = 0,
             headerInst: StickyHeader;
 
-        if ((position === 'top' && !container.scrollTop) ||
-            (position === 'bottom' && container.scrollTop + container.clientHeight >= container.scrollHeight)) {
-            for (let headerId: number of headersStack) {
-                headerInst = this._headers[headerId].inst;
-                if (headersHeight === this._getHeaderOffset(headerId, position)) {
-                    this._headers[headerId].fixedInitially = true;
-                }
-                headersHeight += headerInst.height;
+        for (let headerId: number of headersStack) {
+            headerInst = this._headers[headerId].inst;
+            if (headersHeight === this._getHeaderOffsetByContent(headerId, position)) {
+                this._headers[headerId].fixedInitially = true;
             }
+            headersHeight += headerInst.height;
         }
     }
 
