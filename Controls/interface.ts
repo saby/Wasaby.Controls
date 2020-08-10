@@ -37,6 +37,7 @@
  * @includes ISelectionObject Controls/_interface/ISelectionObject
  * @includes IItems Controls/_interface/IItems
  * @includes IHref Controls/_interface/IHref
+ * @includes ISuggest Controls/_interface/ISuggest
  * @public
  * @author Крайнов Д.О.
  */
