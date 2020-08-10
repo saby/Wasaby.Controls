@@ -44,14 +44,20 @@
 }
 
 .controls-Menu__row_selected_theme-@{themeName} {
+   position: absolute;
+   display: inline-flex;
+   align-items: baseline;
+   top: 0;
+   left: 0;
+   &::before {
+      content: '\200b';
+      font-size: @item_font-size_menu;
+   }
    &::after {
       content: '';
       background: @marker_color_menu;
       width: @marker_width_menu;
       height: @marker_height_menu;
-      position: absolute;
-      left: 0;
-      top: (@item_height_menu - @marker_height_menu) / 2;
    }
 }
 
