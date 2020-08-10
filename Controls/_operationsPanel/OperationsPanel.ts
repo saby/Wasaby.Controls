@@ -63,10 +63,6 @@ var _private = {
    initialized(self, options: object): void {
       self._initialized = true;
 
-      scheduleCallbackAfterRedraw(self, () => {
-         self._notify('controlResize', [], {bubbling: true});
-      });
-
       if (options.operationsPanelOpenedCallback) {
          options.operationsPanelOpenedCallback();
       }
@@ -222,6 +218,9 @@ var OperationsPanel = Control.extend({
    _afterMount(): void {
       _private.checkToolbarWidth(this);
       _private.initialized(this, this._options);
+      scheduleCallbackAfterRedraw(this, () => {
+         this._notify('controlResize', [], {bubbling: true});
+      });
       this._notify('operationsPanelOpened');
    },
 

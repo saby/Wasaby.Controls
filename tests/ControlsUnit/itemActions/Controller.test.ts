@@ -1212,7 +1212,7 @@ describe('Controls/_itemActions/Controller', () => {
 
             // T3.7.2.2. parentAction задан и его _isMenu===true
             // T3.7.2.1.3. Среди экшнов отстутсвуют любые айтемы, у которых showtype===TOOLBAR
-            it('should collect any non-toolbar options when parentAction._isMenu===true', () => {
+            it('should collect any non-toolbar item actions when parentAction._isMenu===true', () => {
                 const localItemActions: IItemAction[] = [
                     {
                         id: 1,
@@ -1260,7 +1260,7 @@ describe('Controls/_itemActions/Controller', () => {
             });
 
             // T3.7.2.1.2. Среди экшнов присутствуют айтемы, у которых showtype===TOOLBAR
-            it('should collect only non-toolbar options when parentAction._isMenu===true', () => {
+            it('should collect only non-toolbar item actions when parentAction._isMenu===true', () => {
                 const localItemActions: IItemAction[] = [
                     {
                         id: 1,
@@ -1296,10 +1296,10 @@ describe('Controls/_itemActions/Controller', () => {
                     actionAlignment: 'vertical'
                 }));
                 const item3 = collection.getItemBySourceKey(3);
-                // @ts-ignore
                 const config = itemActionsController.prepareActionsMenuConfig(
                     item3,
                     clickEvent,
+                    // @ts-ignore
                     parentAction,
                     null,
                     false
@@ -1315,6 +1315,59 @@ describe('Controls/_itemActions/Controller', () => {
                 const unexpectedActions = config.templateOptions.source.data
                     .filter((action) => action.showType === TItemActionShowType.TOOLBAR);
                 assert.isEmpty(unexpectedActions);
+            });
+
+            it('should collect all item actions when item is swiped', () => {
+                const localItemActions: IItemAction[] = [
+                    {
+                        id: 1,
+                        icon: 'icon-PhoneNull',
+                        title: 'phone',
+                        showType: TItemActionShowType.MENU
+                    },
+                    {
+                        id: 5,
+                        title: 'Documentation',
+                        showType: TItemActionShowType.TOOLBAR,
+                        parent: 4
+                    },
+                    {
+                        id: 6,
+                        title: 'Development',
+                        showType: TItemActionShowType.MENU_TOOLBAR,
+                        parent: 4
+                    }
+                ];
+                const parentAction = {
+                    id: null,
+                    icon: 'icon-ExpandDown',
+                    style: 'secondary',
+                    iconStyle: 'secondary',
+                    _isMenu: true
+                };
+                // @ts-ignore
+                itemActionsController.update(initializeControllerOptions({
+                    collection,
+                    itemActions: localItemActions,
+                    theme: 'default',
+                    actionAlignment: 'vertical'
+                }));
+                const item3 = collection.getItemBySourceKey(3);
+
+                item3.setSwiped(true, true);
+                const config = itemActionsController.prepareActionsMenuConfig(
+                    item3,
+                    clickEvent,
+                    // @ts-ignore
+                    parentAction,
+                    null,
+                    false
+                );
+                assert.exists(config.templateOptions, 'Template options were not set');
+                // @ts-ignore
+                assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
+                // @ts-ignore
+                assert.deepEqual(config.templateOptions.source.data, localItemActions);
             });
         });
 

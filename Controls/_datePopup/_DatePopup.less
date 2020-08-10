@@ -73,7 +73,7 @@
 }
 
 /*
-     Механизмы рендеринга webkit и FF/IE/EDGE по-разному реализуют высоту строки.
+     Механизмы рендеринга webkit и FF/IE по-разному реализуют высоту строки.
      Чтобы не было прыжков между вызывающим элементом и заголовком (который выровнен по базовой линии)
      вычитаем 1px (чтобы в FF/IE/EDGE было так же, как chrome).
      Вертикальное выравнивание элементов заголовка по центру не подойдёт, т.к по стандартам эл-ты в заголовках находится
@@ -86,16 +86,6 @@
       font-size: @header_lineheight_dialog - 1;
    }
 }
-
-/*
-   На IE/EDGE применяем решение описанное выше только к режиму отображения хедера с использованием инпутов.
- */
-.ws-is-ie {
-   .controls-PeriodDialog__header-period-inputs::before {
-      font-size: @header_lineheight_dialog - 1;
-   }
-}
-
 .controls-PeriodDialog__header-period::before {
    content: '\200b';
    display: inline-block;

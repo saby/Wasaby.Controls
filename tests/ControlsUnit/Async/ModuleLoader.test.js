@@ -101,6 +101,31 @@ define([
          });
       });
 
+      it('loadAsync failed with callback', function() {
+         let ml = new ModuleLoader();
+         let callbackCalled = false;
+         let callbackParams = {};
+         let errorCallback = (viewConfig, error) => {
+            callbackCalled = true;
+            callbackParams = { viewConfig: viewConfig, error: error };
+         };
+         return ml.loadAsync('ControlsUnit/Async/Fail/TestModule', errorCallback).then(function() {
+            assert.fail('Should not resolved promise successfull');
+         }, function(err) {
+            assert.equal(err.message, 'У СБИС возникла проблема', 'Error message is wrong');
+            assert.equal(logErrors.length, 1);
+            assert.equal(callbackCalled, true, 'errorCallback не был вызван.');
+            assert.exists(callbackParams.error, 'Второй параметр errorCallback должен быть определен.');
+
+            // далее проверки только на клиенте, т.к. в тестах на сервере require возвращает "непонятную" ошибку
+            if (typeof window !== 'undefined') {
+               assert.exists(callbackParams.viewConfig, 'Первый параметр errorCallback должен быть определен.');
+               assert.equal(typeof callbackParams.viewConfig, 'object', 'Первый параметр errorCallback должен быть объектом.');
+               assert.equal(callbackParams.viewConfig.status, 404, 'Первый параметр errorCallback имеет неправильную структуру.');
+            }
+         });
+      });
+
       it('loadAsync faild found export control', function (done) {
          var ml = new ModuleLoader();
          ml.loadAsync('ControlsUnit/Async/TestModuleAsync:NotFound').then(function(res) {

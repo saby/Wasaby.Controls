@@ -1,4 +1,4 @@
-import {IAdditionalQueryParams, Direction} from 'Controls/_interface/IAdditionalQueryParams';
+import {IQueryParams, Direction} from 'Controls/_interface/IQueryParams';
 import {QueryNavigationType} from 'Types/source';
 import {default as PositionNavigationStore, IPositionNavigationState} from './PositionNavigationStore';
 import {IBasePositionSourceConfig, INavigationPositionSourceConfig} from 'Controls/interface';
@@ -23,8 +23,8 @@ class PositionParamsCalculator implements IParamsCalculator {
         store: PositionNavigationStore,
         config: INavigationPositionSourceConfig,
         direction?: TNavigationDirection
-    ): IAdditionalQueryParams {
-        const addParams: IAdditionalQueryParams = {};
+    ): IQueryParams {
+        const addParams: IQueryParams = {};
         addParams.meta = {navigationType: QueryNavigationType.Position};
 
         const storeParams = store.getState();

@@ -1,4 +1,4 @@
-import {IAdditionalQueryParams, Direction} from 'Controls/_interface/IAdditionalQueryParams';
+import {IQueryParams, Direction} from 'Controls/_interface/IQueryParams';
 import {QueryNavigationType} from 'Types/source';
 import {default as PageNavigationStore, IPageNavigationState} from './PageNavigationStore';
 import {IBasePageSourceConfig, INavigationPageSourceConfig} from 'Controls/interface';
@@ -11,8 +11,8 @@ class PageParamsCalculator implements IParamsCalculator {
         store: PageNavigationStore,
         config: INavigationPageSourceConfig,
         direction?: TNavigationDirection
-    ): IAdditionalQueryParams {
-        const addParams: IAdditionalQueryParams = {};
+    ): IQueryParams {
+        const addParams: IQueryParams = {};
         addParams.meta = {navigationType: QueryNavigationType.Page};
 
         const storeParams = store.getState();

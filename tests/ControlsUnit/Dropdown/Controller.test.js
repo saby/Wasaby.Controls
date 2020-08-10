@@ -269,6 +269,21 @@ define(
                });
             });
 
+            it('_getloadItemsPromise', () => {
+               let errorCathed = false;
+               dropdownController._items = null;
+               dropdownController._loadItemsPromise = null;
+               dropdownController._options.source = null;
+               let promise = dropdownController._getloadItemsPromise();
+
+               try {
+                  promise.then(() => {});
+               } catch (error) {
+                  errorCathed = true;
+               }
+               assert.isFalse(errorCathed);
+            });
+
             it('without loaded items', () => {
                let configItems = clone(config),
                   selectedItems = [];
@@ -608,6 +623,9 @@ define(
             });
 
             it('only popupOptions', () => {
+               dropdownController._popupOptions = {
+                  opener: 'test'
+               };
                const resultPopupConfig = dropdownController._getPopupOptions();
                assert.deepEqual(resultPopupConfig.fittingMode,  {
                   vertical: 'adaptive',
@@ -615,17 +633,25 @@ define(
                });
                assert.equal(resultPopupConfig.direction, 'top');
                assert.equal(resultPopupConfig.target, 'testTarget');
+               assert.equal(resultPopupConfig.opener, 'test');
             });
 
             it('templateOptions', () => {
                dropdownController._menuSource = 'testSource';
+               dropdownController._popupOptions = {
+                  opener: 'test'
+               };
                const resultPopupConfig = dropdownController._getPopupOptions();
 
                assert.isTrue(resultPopupConfig.templateOptions.closeButtonVisibility);
                assert.equal(resultPopupConfig.templateOptions.source, 'testSource');
+               assert.equal(resultPopupConfig.opener, 'test');
             });
 
             it('templateOptions', () => {
+               dropdownController._popupOptions = {
+                  opener: 'test'
+               };
                const resultPopupConfig = dropdownController._getPopupOptions({
                   testPopupOptions: 'testValue'
                });
@@ -633,6 +659,7 @@ define(
                assert.equal(resultPopupConfig.direction, 'top');
                assert.equal(resultPopupConfig.target, 'testTarget');
                assert.equal(resultPopupConfig.testPopupOptions, 'testValue');
+               assert.equal(resultPopupConfig.opener, 'test');
             });
          });
 

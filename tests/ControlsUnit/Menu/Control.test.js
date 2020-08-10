@@ -42,6 +42,7 @@ define(
          let getMenu = function(config) {
             const menuControl = new menu.Control(config);
             menuControl.saveOptions(config || defaultOptions);
+            menuControl._stack = new popup.StackOpener();
             return menuControl;
          };
 

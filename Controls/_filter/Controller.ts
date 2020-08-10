@@ -848,6 +848,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
             if (!this._options.useStore) {
                 const filterButtonChanged = this._options.filterButtonSource !== newOptions.filterButtonSource;
                 const fastFilterChanged = this._options.fastFilterSource !== newOptions.fastFilterSource;
+                const filterChanged = !isEqual(this._options.filter, newOptions.filter);
 
                 if (filterButtonChanged || fastFilterChanged) {
                     _private.setFilterItems(
@@ -858,13 +859,16 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                     _private.itemsReady(this, this._filter);
                 }
 
-                if (!isEqual(this._options.filter, newOptions.filter)) {
+                if (filterChanged) {
                     _private.applyItemsToFilter(
                         this,
                         Prefetch.prepareFilter(newOptions.filter, newOptions.prefetchParams),
                         this._filterButtonItems,
                         this._fastFilterItems
                     );
+                    if (newOptions.prefetchParams) {
+                        this._isFilterChanged = true;
+                    }
                 }
 
                 if (filterButtonChanged && newOptions.prefetchParams) {

@@ -193,7 +193,7 @@ Submit.getOptionTypes = function () {
          'default',
          'secondary',
          'success',
-         'done',
+         'primary',
          'error',
          'danger'
       ])

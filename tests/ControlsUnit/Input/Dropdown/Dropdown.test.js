@@ -371,6 +371,15 @@ define(
             assert.equal(result.nodeFooterTemplate, 'testNodeFooterTemplate');
             assert.isOk(result.selectorOpener);
          });
+
+         it('_deactivated', function() {
+            let opened = true;
+            const ddl = getDropdown(config);
+            ddl._beforeMount(config);
+            ddl._controller.closeMenu = () => { opened = false; };
+            ddl._deactivated();
+            assert.isFalse(opened);
+         });
       });
    }
 );

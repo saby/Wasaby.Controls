@@ -7,6 +7,7 @@ import * as cInstance from 'Core/core-instance';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {SbisService} from 'Types/source';
+import {IItems} from 'Controls/interface';
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
 
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
@@ -22,8 +23,9 @@ import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
  *
  * @class Controls/_tabs/Buttons
  * @extends Core/Control
- * @mixes Controls/_interface/ISingleSelectable
- * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface:ISingleSelectable
+ * @mixes Controls/interface:ISource
+ * @mixes Controls/interface:IItems
  * @mixes Controls/_tabs/interface/ITabsButtons
  * @control
  * @public
@@ -39,8 +41,9 @@ interface IReceivedState {
     lastRightOrder: number;
 }
 
-class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons {
-    readonly '[Controls/_tabs/interface/ITabsButtons]': boolean;
+class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, IItems {
+    readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
+    readonly '[Controls/_interface/IItems]': boolean = true;
 
     protected _template: TemplateFunction = TabButtonsTpl;
     protected _defaultItemTemplate: TemplateFunction = ItemTemplate;

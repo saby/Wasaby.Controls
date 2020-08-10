@@ -62,6 +62,10 @@ describe('Controls/search:ControllerClass', () => {
 
     it('isSearchValueChanged', () => {
         const searchController = new ControllerClass(getDefaultOptions(), {});
+        searchController._searchValue = 'test';
+        assert.isFalse(searchController._isSearchValueChanged('test'));
+
+        searchController._searchValue = 'еуые';
         assert.isTrue(searchController._isSearchValueChanged('test'));
 
         searchController._inputSearchValue = 'test';
@@ -144,5 +148,23 @@ describe('Controls/search:ControllerClass', () => {
             assert.equal(searchController._searchValue, 'tst');
             assert.equal(searchController._misspellValue, 'test');
         });
+    });
+
+    it('update with new viewMode', () => {
+        const searchController = new ControllerClass(getDefaultOptions(), {});
+        const options = {
+            viewMode: 'test'
+        };
+        const context = {
+            dataOptions: {
+                source: getMemorySource()
+            }
+        };
+
+        searchController._viewMode = 'search';
+        searchController._dataOptions = {};
+
+        searchController.update(options, context);
+        assert.equal(searchController._viewMode, 'search');
     });
 });

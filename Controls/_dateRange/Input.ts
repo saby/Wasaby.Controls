@@ -11,6 +11,8 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_dateRange/Input/Input');
 import getOptions from 'Controls/Utils/datePopupUtils';
 import {ISelection} from 'Controls/input';
+import {DependencyTimer} from 'Controls/Utils/FastOpen';
+import {Logger} from 'UI/Utils';
 
 interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
 }
@@ -66,6 +68,9 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
     protected _template: TemplateFunction = template;
     protected _proxyEvent: Function = tmplNotify;
 
+    private _dependenciesTimer: DependencyTimer = null;
+    private _loadCalendarPopupPromise: Promise<unknown> = null;
+
     protected _rangeModel;
 
     protected _startValueValidators: Function[] = [];
@@ -117,6 +122,29 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
             }
         };
         this._children.opener.open(cfg);
+    }
+
+    protected _mouseEnterHandler(): void {
+        if (!this._dependenciesTimer) {
+            this._dependenciesTimer = new DependencyTimer();
+        }
+        this._dependenciesTimer.start(this._loadDependencies);
+    }
+
+    protected _mouseLeaveHandler(): void {
+        this._dependenciesTimer?.stop();
+    }
+
+    private _loadDependencies(): Promise<unknown> {
+        try {
+            if (!this._loadCalendarPopupPromise) {
+                this._loadCalendarPopupPromise = import('Controls/datePopup')
+                    .then((datePopup) => datePopup.loadCSS());
+            }
+            return this._loadCalendarPopupPromise;
+        } catch (e) {
+            Logger.error('shortDatePicker:', e);
+        }
     }
 
     private _onResultWS3(event: SyntheticEvent, startValue: Date, endValue: Date): void {
