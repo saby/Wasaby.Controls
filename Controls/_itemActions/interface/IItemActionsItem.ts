@@ -82,7 +82,7 @@ export interface IItemActionsItem {
      * @public
      * @return {Boolean} Состояние редактирования текущего элемента
      */
-    isEditing?(): boolean;
+    isEditing(): boolean;
 
     // TODO уберётся отсюда по https://online.sbis.ru/opendoc.html?guid=183d60a3-fc2e-499c-8c50-aca0462c6f3d
     isRightSwiped?(): boolean;

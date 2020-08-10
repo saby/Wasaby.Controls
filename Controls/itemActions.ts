@@ -5,6 +5,7 @@
  * @includes IContextMenuConfig Controls/_itemActions/interface/IContextMenuConfig
  * @includes IItemActionsItem Controls/_itemActions/interface/IItemActionsItem
  * @includes IItemActionsCollection Controls/_itemActions/interface/IItemActionsCollection
+ * @includes IItemActionsTemplateConfig Controls/_itemActions/interface/IItemActionsTemplateConfig
  * @includes Controller Controls/_itemActions/Controller
  * @public
  * @author Аверкиев П.А.
@@ -17,6 +18,7 @@
  * @includes IContextMenuConfig Controls/_itemActions/interface/IContextMenuConfig
  * @includes IItemActionsItem Controls/_itemActions/interface/IItemActionsItem
  * @includes IItemActionsCollection Controls/_itemActions/interface/IItemActionsCollection
+ * @includes IItemActionsTemplateConfig Controls/_itemActions/interface/IItemActionsTemplateConfig
  * @includes Controller Controls/_itemActions/Controller
  * @public
  * @author Аверкиев П.А.
@@ -36,6 +38,7 @@ export {IShownItemAction, IItemActionsContainer} from './_itemActions/interface/
 export {IContextMenuConfig} from './_itemActions/interface/IContextMenuConfig';
 export {IItemActionsItem} from './_itemActions/interface/IItemActionsItem';
 export {IItemActionsCollection} from './_itemActions/interface/IItemActionsCollection';
+export {TActionAlignment, IItemActionsTemplateConfig} from './_itemActions/interface/IItemActionsTemplateConfig';
 export {Controller} from './_itemActions/Controller';
 export {Utils} from './_itemActions/Utils';
 

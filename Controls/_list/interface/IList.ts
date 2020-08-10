@@ -1,5 +1,5 @@
 import { TemplateFunction } from 'UI/Base';
-import { IItemAction, IContextMenuConfig, TActionCaptionPosition, TItemActionsPosition, TItemActionVisibilityCallback } from 'Controls/itemActions';
+import { IItemAction, IContextMenuConfig, TActionCaptionPosition, TItemActionsPosition, TItemActionVisibilityCallback, TActionAlignment } from 'Controls/itemActions';
 
 /**
  * Интерфейс для списков.
@@ -10,13 +10,6 @@ import { IItemAction, IContextMenuConfig, TActionCaptionPosition, TItemActionsPo
  */
 
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
-
-/**
- * @typedef {String} TActionAlignment
- * @variant horizontal По горизонтали.
- * @variant vertical По вертикали.
- */
-type TActionAlignment = 'horizontal'|'vertical';
 
 type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
@@ -389,7 +382,7 @@ export interface IList {
 
 /**
  * @name Controls/_list/interface/IList#actionAlignment
- * @cfg {TActionAlignment} Выравнивание опций записи, когда они отображаются в режиме swipe.
+ * @cfg {Controls/itemActions:TActionAlignment} Выравнивание опций записи, когда они отображаются в режиме swipe.
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">демо-пример</a>.
  * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
@@ -403,7 +396,7 @@ export interface IList {
 
 /*ENG
  * @name Controls/_list/interface/IList#actionAlignment
- * @cfg {String} Determines how item actions will be aligned on swipe.
+ * @cfg {Controls/itemActions:TActionAlignment} Determines how item actions will be aligned on swipe.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">Example</a>.
  * @variant horizontal Actions will be displayed in a line.
  * @variant vertical Actions will be displayed in a line.

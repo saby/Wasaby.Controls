@@ -7,7 +7,7 @@ export interface IBaseCollection<T> {
     getItemBySourceKey(key: TItemKey): T;
     find(predicate: (item: T) => boolean): T;
     nextVersion(): void;
-    setEventRaising?(enabled: boolean, analyze?: boolean): void;
+    setEventRaising(enabled: boolean, analyze?: boolean): void;
     getCount?(): number;
     getNext?(item: T): T;
     getPrevious?(item: T): T;

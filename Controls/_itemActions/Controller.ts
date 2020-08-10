@@ -379,12 +379,12 @@ export class Controller {
                 }
             }
         };
-        this._setEventRaising(false, true);
+        this._collection.setEventRaising(false, true);
         this._collection.each(assignActionsOnItem);
         if (editingItem) {
             assignActionsOnItem(editingItem);
         }
-        this._setEventRaising(true, true);
+        this._collection.setEventRaising(true, true);
         this._collection.setActionsAssigned(true);
 
         if (hasChanges) {
@@ -396,18 +396,6 @@ export class Controller {
         }
 
         return changedItemsIds;
-    }
-
-    /**
-     * Включает/выключает генерацию событий об изменении коллекции
-     * @param enabled Включить или выключить генерацию событий
-     * @param [analyze=false] Анализировать изменения (если включить, то при enabled = true будет произведен анализ всех изменений с момента enabled = false - сгенерируются события обо всех изменениях)
-     * @private
-     */
-    private _setEventRaising(enabled: boolean, analyze?: boolean): void {
-        if (!!this._collection.setEventRaising) {
-            this._collection.setEventRaising(enabled, analyze);
-        }
     }
 
     /**
@@ -473,9 +461,6 @@ export class Controller {
      * Вычисляет конфигурацию, которая используется в качестве scope у itemActionsTemplate
      */
     private _updateActionsTemplateConfig(options: IControllerOptions): void {
-        if (!this._collection.setActionsTemplateConfig) {
-            return;
-        }
         this._collection.setActionsTemplateConfig({
             toolbarVisibility: options.editingToolbarVisible,
             style: options.style,
@@ -622,8 +607,7 @@ export class Controller {
      * @private
      */
     private _isEditing(item: IItemActionsItem): boolean {
-        return (!!this._collection.isEditing && this._collection.isEditing()) &&
-            !(item.isEditing && item.isEditing());
+        return this._collection.isEditing() && !item.isEditing();
     }
 
     /**

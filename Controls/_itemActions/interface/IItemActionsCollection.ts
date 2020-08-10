@@ -1,5 +1,6 @@
-import {IBaseCollection, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
+import {IBaseCollection, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
 import {IItemActionsItem} from './IItemActionsItem';
+import {IItemActionsTemplateConfig} from './IItemActionsTemplateConfig';
 
 /**
  * Интерфейс коллекции, элементы которой обладают опциями записи
@@ -55,7 +56,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
      * @public
      * @return {Boolean} Состояние флага "Один из элементов коллекции редактируется"
      */
-    isEditing?(): boolean;
+    isEditing(): boolean;
 
     /**
      * Установить в модель конфиг для itemActionsTemplate/swipeTemplate
@@ -63,7 +64,7 @@ export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem
      * @method
      * @public
      */
-    setActionsTemplateConfig?(config: IItemActionsTemplateConfig): void;
+    setActionsTemplateConfig(config: IItemActionsTemplateConfig): void;
 
     /**
      * Получить конфиг для itemActionsTemplate/swipeTemplate
