@@ -11,6 +11,7 @@ export default interface IParamsCalculator {
      updateQueryProperties(
          store: INavigationStore,
          list: RecordSet,
+         metaMore: object | number | boolean,
          navigationQueryConfig: IBaseSourceConfig,
          direction: TNavigationDirection
      ): any;

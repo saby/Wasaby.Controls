@@ -14,7 +14,7 @@ import PositionParamsCalculator from './NavigationController/PositionParamsCalcu
 import {IQueryParams} from 'Controls/_interface/IQueryParams';
 import {TNavigationSource, IBaseSourceConfig, INavigationSourceConfig, TNavigationDirection} from 'Controls/_interface/INavigation';
 import {IHashMap} from 'Types/declarations';
-import {applied} from 'Types/entity';
+import {applied, Record} from 'Types/entity';
 /**
  * Вспомогательный интерфейс для определения типа typeof object
  * @interface IType
@@ -36,6 +36,7 @@ interface IAdditionalParamsItem {
     id: TKey;
     addParams: IQueryParams;
 }
+type TStoreNavigationState = IPositionNavigationState | IPageNavigationState;
 /**
  * Фабрика для создания экземпляра контроллера запроса навигации.
  * @remark
@@ -88,6 +89,10 @@ export interface INavigationControllerOptions {
 }
 
 type TKey = string | number | null; // TODO общий тип
+type NavigationRecord = Record<{
+    id: TKey,
+    nav_result: object | number | boolean
+}>;
 
 /**
  * Контроллер постраничной навигации
@@ -186,13 +191,28 @@ export class NavigationController {
         list: RecordSet,
         id: TKey = null,
         navigationConfig?: IBaseSourceConfig,
-        direction?: TNavigationDirection): IPageNavigationState | IPositionNavigationState {
+        direction?: TNavigationDirection
+    ): TStoreNavigationState[] {
 
-        // Если id не передан то берется стор для корневого раздела, для которого жесткий id = null
-        const store = this._getStore(id);
-
+        let updateResult: TStoreNavigationState[];
+        const metaMore = list.getMetaData().more;
         const calculator = this._getCalculator();
-        return calculator.updateQueryProperties(store, list, navigationConfig, direction);
+
+        if (metaMore instanceof RecordSet) {
+            updateResult = [];
+            metaMore.each((nav: NavigationRecord) => {
+                const metaMoreItem = nav.get('nav_result');
+                const store = this._getStore(nav.get('id'));
+                updateResult.push(
+                    calculator.updateQueryProperties(store, list, metaMoreItem, navigationConfig, direction)
+                );
+            });
+        } else {
+            // Если id не передан то берется стор для корневого раздела, для которого жесткий id = null
+            const store = this._getStore(id);
+            updateResult = [calculator.updateQueryProperties(store, list, metaMore, navigationConfig, direction)];
+        }
+        return updateResult;
     }
 
     hasMoreData(direction?: TNavigationDirection, id: TKey = null): boolean {
