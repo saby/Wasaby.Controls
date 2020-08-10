@@ -104,6 +104,10 @@ export default class ScrollController {
         return {...preparedResult, ...result}
     }
 
+    callAfterScrollStopped(callback: Function): void {
+        this._inertialScrolling.callAfterScrollStopped(callback);
+    }
+
     private updateContainerHeightsData(params: Partial<IScrollParams>):  IScrollControllerResult {
         if (this._virtualScroll && params) {
             let newParams: Partial<IContainerHeights> = {trigger: this._triggerOffset};

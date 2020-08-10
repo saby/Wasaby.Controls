@@ -64,7 +64,6 @@ import {default as ScrollController, IScrollParams} from './ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
-import InertialScrolling from './resources/utils/InertialScrolling';
 import {CssClassList} from '../Utils/CssClassList';
 import {
    FlatSelectionStrategy,
@@ -734,11 +733,14 @@ const _private = {
 
                 if (self._isMounted && self._scrollController) {
                     self.startBatchAdding(direction);
+                    self._scrollController.callAfterScrollStopped(() => {
+                        loadCallback(addedItems, countCurrentItems);
+                    });
+                } else {
+                    loadCallback(addedItems, countCurrentItems);
                 }
 
-                self._getInertialScrolling().callAfterScrollStopped(() => {
-                    loadCallback(addedItems, countCurrentItems);
-                });
+                
 
                 // Скрываем ошибку после успешной загрузки данных
                 _private.hideError(self);
@@ -2634,7 +2636,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _needBottomPadding: false,
     _noDataBeforeReload: null,
-    _inertialScrolling: null,
     _checkLoadToDirectionTimeout: null,
 
     _keepScrollAfterReload: false,
@@ -2874,13 +2875,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
        } else {
            return callback(undefined);
        }
-   },
-
-    _getInertialScrolling(): InertialScrolling {
-        if (!this._inertialScrolling) {
-            this._inertialScrolling = new InertialScrolling();
-        }
-        return this._inertialScrolling;
     },
 
     scrollMoveSyncHandler(params: IScrollParams): void {
@@ -2889,10 +2883,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         let result = this._scrollController?.scrollPositionChange(params);
         _private.handleScrollControllerResult(this, result);
-
-        if (detection.isMobileIOS) {
-            this._getInertialScrolling().scrollStarted();
-        }
     },
 
     scrollMoveHandler(params: unknown): void {
