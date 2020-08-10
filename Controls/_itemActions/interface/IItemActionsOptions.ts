@@ -95,14 +95,15 @@ export interface IItemActionsOptions {
 
     /**
      * @name Controls/_itemActions/interface/IItemActionsOptions#itemActionsPosition
-     * @cfg {Controls/_itemActions/interface/IItemAction/TItemActionsPosition.typedef} Позиционирование панели с опциями записи.
+     * @cfg {Controls/_itemActions/interface/IItemAction/TItemActionsPosition.typedef} Позиционирование панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/position/ опциями записи}.
      * @remark
      * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">демо-пример</a>.
      * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FItemActionsCustom">демо-пример</a>.
      * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+     * Пример использования значения custom можно посмотреть в {@link /doc/platform/developmentapl/interface-development/controls/list/list/item-template/config/#item-actions-position статье}.
      * @example
      * Размещаем опции записи в шаблоне с использованием itemActionsTemplate:
-     * <pre class="brush: html">
+     * <pre class="brush: html; highlight: [5]">
      * <Controls.list:View itemActionsPosition="custom" itemActions="{{_itemActions}}">
      *    <ws:itemTemplate>
      *      <ws:partial template="Controls/list:ItemTemplate">
@@ -114,7 +115,7 @@ export interface IItemActionsOptions {
      * </Controls.list:View>
      * </pre>
      *
-     * <pre class="brush: html">
+     * <pre class="brush: html; highlight: [4, 5, 6, 7]">
      * <!-- customTemplateName.wml -->
      * <div>{{itemData.item.title}}</div>
      *    <ws:if data="{{!itemData.isSwiped()}}">
