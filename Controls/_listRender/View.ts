@@ -13,13 +13,12 @@ import {
 } from 'Controls/display';
 import {
     Controller as ItemActionsController,
-    TItemActionVisibilityCallback,
     TEditArrowVisibilityCallback,
     IItemAction,
     TItemActionShowType,
-    TItemActionsPosition,
     IItemActionsItem,
-    IContextMenuConfig, IShownItemAction
+    IShownItemAction,
+    IItemActionsOptions
 } from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -33,33 +32,16 @@ import { ISwipeEvent } from './Render';
 
 import template = require('wml!Controls/_listRender/View/View');
 
-export interface IViewOptions extends IControlOptions {
+export interface IViewOptions extends IItemActionsOptions, IControlOptions {
     items: RecordSet;
-
     collection: string;
     render: string;
-
-    itemActions?: any[];
-    itemActionsVisibility?: 'onhover'|'delayed'|'visible';
-    itemActionVisibilityCallback?: TItemActionVisibilityCallback;
-    itemActionsPosition?: TItemActionsPosition;
-    itemActionsProperty?: string;
     style?: string;
-    itemActionsClass?: string;
-
-    actionAlignment?: 'horizontal'|'vertical';
-    actionCaptionPosition?: 'right'|'bottom'|'none';
-
     editingConfig?: any;
-
     markerVisibility?: TVisibility;
     markedKey?: number|string;
     showEditArrow?: boolean;
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
-    /**
-     * Конфигурация для контекстного меню опции записи.
-     */
-    contextMenuConfig?: IContextMenuConfig
 }
 
 export default class View extends Control<IViewOptions> {
