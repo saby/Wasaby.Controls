@@ -40,14 +40,14 @@ class PageParamsCalculator implements IParamsCalculator {
     updateQueryProperties(
         store: PageNavigationStore,
         list: RecordSet,
+        metaMore: number | boolean,
         config: IBasePageSourceConfig,
         direction?: TNavigationDirection
     ): IPageNavigationState  {
-        const moreValue = list.getMetaData().more;
         const storeParams = store.getState();
 
-        PageParamsCalculator._validateNavigation(moreValue, storeParams.hasMore);
-        store.setMetaMore(moreValue);
+        PageParamsCalculator._validateNavigation(metaMore, storeParams.hasMore);
+        store.setMetaMore(metaMore);
 
         switch (direction) {
             case 'forward': store.shiftNextPage(); break;

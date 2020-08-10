@@ -68,11 +68,11 @@ export default class ScrollController {
     private _continueScrollToItem: Function;
     private _completeScrollToItem: Function;
     private _applyScrollTopCallback: Function;
-    
+
     private _isRendering: boolean = false;
 
     private _placeholders: IPlaceholders;
-    
+
 
     // Флаг, который необходимо включать, чтобы не реагировать на скроллы происходящие вследствие
     // подскроллов создаваемых самим контролом (scrollToItem, восстановление позиции скролла после перерисовок)
@@ -117,8 +117,8 @@ export default class ScrollController {
             }
             this._virtualScroll.applyContainerHeightsData(newParams);
             return  this.getResult({
-                triggerOffset: this.getTriggerOffset(this._viewHeight, 
-                                                     this._viewportHeight, 
+                triggerOffset: this.getTriggerOffset(this._viewHeight,
+                                                     this._viewportHeight,
                                                      this._options.attachLoadTopTriggerToNull)});
         } else {
             return {};
@@ -145,12 +145,12 @@ export default class ScrollController {
             if (options.attachLoadTopTriggerToNull !== this._options.attachLoadTopTriggerToNull) {
                 this._options.attachLoadTopTriggerToNull = options.attachLoadTopTriggerToNull
                 if (!params) {
-                    result.triggerOffset = this.getTriggerOffset(this._viewHeight, 
-                                                                 this._viewportHeight, 
+                    result.triggerOffset = this.getTriggerOffset(this._viewHeight,
+                                                                 this._viewportHeight,
                                                                  this._options.attachLoadTopTriggerToNull);
                 }
             }
-        
+
             if (options.activeElement) {
                 this._options.activeElement = options.activeElement;
             }
@@ -177,7 +177,7 @@ export default class ScrollController {
             this._completeScrollToItem();
             this._completeScrollToItem = null;
             result = true;
-        };
+        }
         return result;
     }
     completeVirtualScrollIfNeed(): boolean {
@@ -240,7 +240,7 @@ export default class ScrollController {
                                 }
                             };
                         }
-                        if (!this._isRendering) {
+                        if (!this._isRendering && !this._virtualScroll.rangeChanged) {
                             this.continueScrollToItemIfNeed();
                         }
                     });
@@ -302,7 +302,7 @@ export default class ScrollController {
                 options.needScrollCalculation
             );
 
-            return { 
+            return {
                     placeholders: rangeShiftResult.placeholders,
                     activeElement: options.activeElement,
                     scrollToActiveElement: options.activeElement !== undefined
@@ -413,7 +413,7 @@ export default class ScrollController {
      */
     shiftToDirection(direction: IDirection): Promise<IScrollControllerResult> {
         return new Promise((resolve) => {
-            
+
             if (
                 !this._virtualScroll ||
                 this._virtualScroll &&
@@ -437,7 +437,7 @@ export default class ScrollController {
             }
         });
     }
-    
+
     updateItemsHeights(itemsHeights: IItemsHeights) {
         this._virtualScroll.updateItemsHeights(itemsHeights);
     }
@@ -448,7 +448,7 @@ export default class ScrollController {
     getParamsToRestoreScrollPosition(): IScrollRestoreParams {
         return  this._virtualScroll.getParamsToRestoreScroll();
     }
-    
+
     /**
      * Обработатывает добавление элементов в коллекцию
      * @param addIndex
@@ -464,19 +464,19 @@ export default class ScrollController {
                 (this._options.collection.getCount() - items.length)
             );
         }
-        
+
         const rangeShiftResult = this._virtualScroll.addItems(
             addIndex,
             items.length,
             this._triggerVisibility,
             direction
         );
-        
+
         this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
             this._options.needScrollCalculation);
         return this.getResult({...result, placeholders: rangeShiftResult.placeholders });
     }
-    
+
     /**
      * Обрабатывает удаление элементов из коллекции
      * @param removeIndex

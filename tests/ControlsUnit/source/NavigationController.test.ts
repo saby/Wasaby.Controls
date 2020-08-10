@@ -126,8 +126,8 @@ describe('Controls/_source/NavigationController', () => {
                 });
 
                 const params = nc.updateQueryProperties(rs);
-                assert.equal(1, params.nextPage, 'Wrong query properties');
-                assert.equal(-1, params.prevPage, 'Wrong query properties');
+                assert.equal(1, params[0].nextPage, 'Wrong query properties');
+                assert.equal(-1, params[0].prevPage, 'Wrong query properties');
             });
 
             it('updateQueryProperties root + forward', () => {
@@ -147,8 +147,8 @@ describe('Controls/_source/NavigationController', () => {
                 });
 
                 const params = nc.updateQueryProperties(rs, null, undefined, 'forward');
-                assert.equal(START_PAGE + 2, params.nextPage, 'Wrong query properties');
-                assert.equal(START_PAGE - 1, params.prevPage, 'Wrong query properties');
+                assert.equal(START_PAGE + 2, params[0].nextPage, 'Wrong query properties');
+                assert.equal(START_PAGE - 1, params[0].prevPage, 'Wrong query properties');
             });
 
             it('updateQueryProperties root + backward', () => {
@@ -168,8 +168,8 @@ describe('Controls/_source/NavigationController', () => {
                 });
 
                 const params = nc.updateQueryProperties(rs, null, undefined, 'backward');
-                assert.equal(START_PAGE + 1, params.nextPage, 'Wrong query properties');
-                assert.equal(START_PAGE - 2, params.prevPage, 'Wrong query properties');
+                assert.equal(START_PAGE + 1, params[0].nextPage, 'Wrong query properties');
+                assert.equal(START_PAGE - 2, params[0].prevPage, 'Wrong query properties');
             });
 
             it('hasMoreData undefined false root', () => {
@@ -437,8 +437,8 @@ describe('Controls/_source/NavigationController', () => {
                 });
 
                 let params = nc.updateQueryProperties(rs);
-                assert.deepEqual([6], params.forwardPosition, 'Wrong query properties');
-                assert.deepEqual([4], params.backwardPosition, 'Wrong query properties');
+                assert.deepEqual([6], params[0].forwardPosition, 'Wrong query properties');
+                assert.deepEqual([4], params[0].backwardPosition, 'Wrong query properties');
 
                 const rsforward = new RecordSet({
                     rawData: dataNext,
@@ -446,8 +446,8 @@ describe('Controls/_source/NavigationController', () => {
                 });
 
                 params = nc.updateQueryProperties(rsforward, null, undefined, 'forward');
-                assert.deepEqual([9], params.forwardPosition, 'Wrong query properties');
-                assert.deepEqual([4], params.backwardPosition, 'Wrong query properties');
+                assert.deepEqual([9], params[0].forwardPosition, 'Wrong query properties');
+                assert.deepEqual([4], params[0].backwardPosition, 'Wrong query properties');
 
                 const rsbackward = new RecordSet({
                     rawData: dataPrev,
@@ -455,8 +455,8 @@ describe('Controls/_source/NavigationController', () => {
                 });
 
                 params = nc.updateQueryProperties(rsbackward, null, undefined, 'backward');
-                assert.deepEqual([9], params.forwardPosition, 'Wrong query properties');
-                assert.deepEqual([1], params.backwardPosition, 'Wrong query properties');
+                assert.deepEqual([9], params[0].forwardPosition, 'Wrong query properties');
+                assert.deepEqual([1], params[0].backwardPosition, 'Wrong query properties');
             });
 
             it('updateQueryProperties compatible + meta.NextPosition root', () => {
@@ -476,8 +476,8 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({nextPosition : {before: [-1], after: [10]}});
 
                 const params = nc.updateQueryProperties(rs);
-                assert.deepEqual([10], params.forwardPosition, 'Wrong query properties');
-                assert.deepEqual([-1], params.backwardPosition, 'Wrong query properties');
+                assert.deepEqual([10], params[0].forwardPosition, 'Wrong query properties');
+                assert.deepEqual([-1], params[0].backwardPosition, 'Wrong query properties');
             });
 
             it('updateQueryProperties bothways + meta.NextPosition root', () => {
@@ -497,8 +497,8 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({nextPosition : {backward: [-1], forward: [10]}});
 
                 const params = nc.updateQueryProperties(rs);
-                assert.deepEqual([10], params.forwardPosition, 'Wrong query properties');
-                assert.deepEqual([-1], params.backwardPosition, 'Wrong query properties');
+                assert.deepEqual([10], params[0].forwardPosition, 'Wrong query properties');
+                assert.deepEqual([-1], params[0].backwardPosition, 'Wrong query properties');
             });
 
             it('updateQueryProperties forward + meta.NextPosition root', () => {
@@ -518,7 +518,7 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({nextPosition : [10]});
 
                 const params = nc.updateQueryProperties(rs);
-                assert.deepEqual([10], params.forwardPosition, 'Wrong query properties');
+                assert.deepEqual([10], params[0].forwardPosition, 'Wrong query properties');
             });
 
             it('updateQueryProperties forward + meta.NextPosition root', () => {
@@ -538,7 +538,7 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({nextPosition : [-1]});
 
                 const params = nc.updateQueryProperties(rs);
-                assert.deepEqual([-1], params.backwardPosition, 'Wrong query properties');
+                assert.deepEqual([-1], params[0].backwardPosition, 'Wrong query properties');
             });
 
             it('hasMoreData botways compatible values false root', () => {
@@ -679,6 +679,44 @@ describe('Controls/_source/NavigationController', () => {
                 assert.equal(null, params[0].filter.__root.valueOf(), 'Wrong query params');
                 assert.equal('1', params[1].filter.__root.valueOf(), 'Wrong query params');
                 assert.equal('2', params[2].filter.__root.valueOf(), 'Wrong query params');
+            });
+        });
+
+        describe('updateQueryProperties', () => {
+            it ('Position', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        field: 'id',
+                        direction: 'forward'
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                const metaRS = new RecordSet({
+                    rawData: [
+                        {
+                            id: '1',
+                            nav_result: true
+                        },
+                        {
+                            id: '2',
+                            nav_result: false
+                        }
+                    ]
+                });
+
+                rs.setMetaData({more: metaRS});
+
+                const params = nc.updateQueryProperties(rs);
+
+                assert.equal(2, params.length, 'Wrong query properties');
+                assert.equal('id', params[0].field, 'Wrong query properties');
+                assert.equal('id', params[1].field, 'Wrong query properties');
             });
         });
     });

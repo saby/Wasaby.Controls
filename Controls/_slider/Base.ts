@@ -168,10 +168,10 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
             if (start > end) {
                Logger.error('Slider: start of the interval must be less than end.');
             }
-            if (start <= minValue || start >= maxValue) {
+            if (start < minValue || start > maxValue) {
                Logger.error('Slider: start of the interval must be between minValue and maxValue.');
             }
-            if (end <= minValue || end >= maxValue) {
+            if (end < minValue || end > maxValue) {
                Logger.error('Slider: end of the interval must be between minValue and maxValue.');
             }
          });

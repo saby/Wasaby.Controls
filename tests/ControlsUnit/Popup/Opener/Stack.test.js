@@ -126,16 +126,16 @@ define(
             });
 
             popupTemplate.StackController._update();
-            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(1).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(2).popupOptions.hidden);
-            assert.isFalse(popupTemplate.StackController._stack.at(3).popupOptions.hidden);
-            assert.isFalse(popupTemplate.StackController._stack.at(4).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(5).popupOptions.hidden);
-            assert.isFalse(popupTemplate.StackController._stack.at(6).popupOptions.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(0).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(1).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(2).position.hidden);
+            assert.isFalse(popupTemplate.StackController._stack.at(3).position.hidden);
+            assert.isFalse(popupTemplate.StackController._stack.at(4).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(5).position.hidden);
+            assert.isFalse(popupTemplate.StackController._stack.at(6).position.hidden);
             // 7 индекс не интересен, потому что popupState: 'destroying'. Проверяем, что не повлиял на 8 индекс
-            //assert.isTrue(popupTemplate.StackController._stack.at(7).popupOptions.hidden);
-            assert.isFalse(popupTemplate.StackController._stack.at(8).popupOptions.hidden);
+            //assert.isTrue(popupTemplate.StackController._stack.at(7).position.hidden);
+            assert.isFalse(popupTemplate.StackController._stack.at(8).position.hidden);
 
             assert.isTrue(popupTemplate.StackController._stack.at(0).position.hidden);
             assert.isTrue(popupTemplate.StackController._stack.at(1).position.hidden);
@@ -145,7 +145,7 @@ define(
             assert.isTrue(popupTemplate.StackController._stack.at(5).position.hidden);
             assert.isFalse(popupTemplate.StackController._stack.at(6).position.hidden);
             // 7 индекс не интересен, потому что popupState: 'destroying'. Проверяем, что не повлиял на 8 индекс
-            //assert.isTrue(popupTemplate.StackController._stack.at(7).popupOptions.hidden);
+            //assert.isTrue(popupTemplate.StackController._stack.at(7).position.hidden);
             assert.isFalse(popupTemplate.StackController._stack.at(8).position.hidden);
 
 
@@ -183,23 +183,23 @@ define(
             popupTemplate.StackController._update();
             popupTemplate.StackController._getItemPosition = baseGetItemPosition;
 
-            assert.isTrue(popupTemplate.StackController._stack.at(0).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(1).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(2).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(3).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(4).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(5).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(6).popupOptions.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(0).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(1).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(2).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(3).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(4).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(5).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(6).position.hidden);
             // 7 индекс не интересен, потому что popupState: 'destroying'. Проверяем, что не повлиял на 8 индекс
-            //assert.isTrue(popupTemplate.StackController._stack.at(7).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(8).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(9).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(10).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(11).popupOptions.hidden);
-            assert.isFalse(popupTemplate.StackController._stack.at(12).popupOptions.hidden);
-            assert.isTrue(popupTemplate.StackController._stack.at(13).popupOptions.hidden);
-            assert.isFalse(popupTemplate.StackController._stack.at(14).popupOptions.hidden);
-            assert.isFalse(popupTemplate.StackController._stack.at(15).popupOptions.hidden);
+            //assert.isTrue(popupTemplate.StackController._stack.at(7).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(8).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(9).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(10).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(11).position.hidden);
+            assert.isFalse(popupTemplate.StackController._stack.at(12).position.hidden);
+            assert.isTrue(popupTemplate.StackController._stack.at(13).position.hidden);
+            assert.isFalse(popupTemplate.StackController._stack.at(14).position.hidden);
+            assert.isFalse(popupTemplate.StackController._stack.at(15).position.hidden);
          });
 
          it('validate Configuration', () => {
