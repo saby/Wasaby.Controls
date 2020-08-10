@@ -11,10 +11,10 @@
                     on:fixed="_stickyFixedHandler()"
                     on:stickyRegister="_stickyRegisterHandler()"
                     on:keydown="_keydownHandler()"/>
-        <ws:if data="{{_shadows.top.isEnabled && !_isOptimizeShadowEnable() }}">
+        <ws:if data="{{_shadows.top.isEnabled && !_isOptimizeShadowEnabled }}">
             <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_top {{!_shadows.top.isVisible ? ' ws-invisible'}}"></div>
         </ws:if>
-        <ws:if data="{{_shadows.bottom.isEnabled && !_isOptimizeShadowEnable() }}">
+        <ws:if data="{{_shadows.bottom.isEnabled && !_isOptimizeShadowEnabled }}">
             <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_bottom {{!_shadows.bottom.isVisible ? ' ws-invisible'}}"></div>
         </ws:if>
         <ws:if data="{{_shadows.left.isEnabled}}">

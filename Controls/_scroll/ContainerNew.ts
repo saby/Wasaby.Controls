@@ -1,4 +1,4 @@
-import {constants} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TemplateFunction} from 'UI/Base';
 import ContainerBase, {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
@@ -19,7 +19,6 @@ import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import StickyHeaderController from './StickyHeader/Controller';
 import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyHeader/Utils';
 import {POSITION} from './Container/Type';
-import Env = require('Env/Env');
 
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadows {
 
@@ -117,10 +116,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _intersectionObserverController: Observer;
     protected _stickyHeaderController: StickyHeaderController;
 
+    protected _isOptimizeShadowEnabled: boolean;
+
     _beforeMount(options: IContainerOptions, context, receivedState) {
         this._shadows = new ShadowsModel(options);
         this._scrollbars = new ScrollbarsModel(options, receivedState);
         this._stickyHeaderController = new StickyHeaderController(this);
+        this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
 
         super._beforeMount(...arguments);
 
@@ -312,15 +314,15 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _getOptimizeShadowClass(): string {
         let style = '';
-        if (this._isOptimizeShadowEnable()) {
+        if (this._isOptimizeShadowEnabled) {
             style += `controls-Scroll__background-Shadow_style-${this._options.shadowStyle}_theme-${this._options.theme} ` +
                 `controls-Scroll__background-Shadow_top-${this._shadows.top.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom.isVisibleShadowOnCSS}_style-${this._options.shadowStyle}_theme-${this._options.theme}`;
         }
         return style;
     }
 
-    protected _isOptimizeShadowEnable(): boolean {
-        return this._options.optimizeShadow && !Env.detection.isMobileIOS;
+    protected _getIsOptimizeShadowEnabled(options: IContainerOptions): boolean {
+        return options.optimizeShadow && !detection.isMobileIOS;
     }
 
     // StickyHeaderController
