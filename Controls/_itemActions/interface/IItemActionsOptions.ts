@@ -31,8 +31,6 @@ type TItemActionsVisibility = 'onhover'|'delayed'|'visible';
  */
 
 export interface IItemActionsOptions {
-    readonly '[Controls/_itemActions/interface/IItemActionsOptions]': boolean;
-
     /**
      * @name Controls/_itemActions/interface/IItemActionsOptions#contextMenuVisibility
      * @cfg {Boolean} Определяет доступность контекстного меню строки при нажатии на правую кнопку мыши.
