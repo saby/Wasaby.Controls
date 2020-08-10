@@ -1003,7 +1003,7 @@ const _private = {
 
             self._viewPortRect = params.viewPortRect;
 
-            if (_private.needScrollPaging(self._options.navigation)) {
+            if (_private.needScrollPaging(self, self._options.navigation)) {
                 const scrollParams = {
                     scrollTop: self._scrollTop,
                     scrollHeight: params.scrollHeight,
@@ -1039,9 +1039,14 @@ const _private = {
     },
     createScrollPagingController(self, scrollParams) {
         const scrollPagingConfig = {
+            pagingMode: self._options.pagingMode || 'basic',
             scrollParams,
             pagingCfgTrigger: (cfg) => {
                 self._pagingCfg = cfg;
+                if (self._pagingCfg.showDigits) {
+                    self._pagingCfg.pagesCount = self._currentPageSize;
+                    self._pagingCfg.selectedPage = self._currentPage;
+                }
                 self._forceUpdate();
             }
         };
@@ -1089,6 +1094,19 @@ const _private = {
         }
     },
 
+    scrollToBottom(): void {
+        _private.scrollPage(this, 'down');
+    },
+    scrollToTop(): void {
+        _private.scrollPage(this, 'up');
+    },
+    scrollForward(): void {
+        _private.scrollToEdge(this, 'Up');
+    },
+    scrollBackward(): void {
+        _private.scrollToEdge(this, 'Down');
+    },
+
     clearShowLoadingIndicatorTimer(self): void {
         if (self._loadingIndicatorTimer) {
             clearTimeout(self._loadingIndicatorTimer);
@@ -1132,7 +1150,7 @@ const _private = {
 
         self._scrollTop = scrollTop;
         self._scrollPageLocked = false;
-        if (_private.needScrollPaging(self._options.navigation)) {
+        if (_private.needScrollPaging(self, self._options.navigation)) {
             const scrollParams = {
                 scrollTop: self._scrollTop,
                 scrollHeight: self._viewSize,
@@ -1186,7 +1204,7 @@ const _private = {
     disablePagingNextButtons(self): void {
         if (self._pagingVisible) {
             self._pagingCfg = {...self._pagingCfg};
-            self._pagingCfg.forwardEnabled = false;
+            self._pagingCfg.arrowState.next = self._pagingCfg.arrowState.end = 'readonly';
         }
     },
 
@@ -1240,11 +1258,11 @@ const _private = {
         return navigationOpt && navigationOpt.view === 'infinity';
     },
 
-    needScrollPaging(navigationOpt) {
+    needScrollPaging(self, navigationOpt) {
         return (navigationOpt &&
             navigationOpt.view === 'infinity' &&
-            navigationOpt.viewConfig &&
-            navigationOpt.viewConfig.pagingMode
+            ((navigationOpt.viewConfig &&
+            navigationOpt.viewConfig.pagingMode) || self._options.pagingMode)
         );
     },
 
@@ -2396,7 +2414,7 @@ const _private = {
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_interface/INavigation
- @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
@@ -2746,7 +2764,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     scrollResizeHandler(params: object): void {
-        if (_private.needScrollPaging(this._options.navigation)) {
+        if (_private.needScrollPaging(this, this._options.navigation)) {
             // внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
             // поэтому нужен таймаут
             this._needPagingTimeout = setTimeout(() => {
@@ -2784,7 +2802,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.getPortionedSearch(this).stopSearch();
             }
         }
-        if (_private.needScrollPaging(this._options.navigation)) {
+        if (_private.needScrollPaging(this, this._options.navigation)) {
             this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewPortSize);
         }
     },
@@ -2810,7 +2828,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
-        if (_private.needScrollPaging(this._options.navigation)) {
+        if (_private.needScrollPaging(this, this._options.navigation)) {
             const scrollParams = {
                 scrollHeight: this._viewSize,
                 clientHeight: this._viewPortSize,

@@ -42,6 +42,8 @@ interface IItemPadding {
     right?: THorizontalItemPadding;
 }
 
+type TPagingMode = 'basic' | 'compact' | 'numbers';
+
 export interface IList {
     contextMenuVisibility?: boolean;
     contextMenuConfig?: IContextMenuConfig;
@@ -66,7 +68,22 @@ export interface IList {
     backgroundStyle?: string;
     itemPadding?: IItemPadding;
     nodeConfig?: INodeConfig;
+
+    pagingMode?: TPagingMode;
+    pagingContentTemplate?: TemplateFunction | string;
 }
+
+/**
+ * @name Controls/_list/interface/IList#pagingMode
+ * @cfg {String} Опция управляет внешним видом пэйджинга. Позволяет для каждого конкретного реестра задать внешний вид в зависимости от требований к интерфейсу.
+ * @variant basic Предназначен для пейджинга в реестре с подгрузкой по скроллу
+ * @variant compact Предназначен для пейджинга с отображением одной команды прокрутки
+ * @variant numbers Предназначен для пейджинга с подсчетом записей и страниц
+ */
+/**
+ * @name Controls/_list/interface/IList#pagingContentTemplate
+ * @cfg {Function} Опция управляет отображением счетчика непрочитанных сообщений
+ */
 
 /*ENG
  * Interface for lists.
