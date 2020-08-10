@@ -86,6 +86,7 @@ export default class Browser extends Control {
                 return result;
             });
         } else if (isChanged) {
+            this._dataController.setFilter(this._filter);
             this._dataController.updateContext(this._dataOptionsContext);
         }
         this._operationsController.update(newOptions);
