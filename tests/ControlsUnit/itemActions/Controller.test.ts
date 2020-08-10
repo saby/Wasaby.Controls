@@ -927,10 +927,6 @@ describe('Controls/_itemActions/Controller', () => {
             assert.isFalse(config.templateOptions.showHeader, 'showHeader should be false when isMenu parent passed');
         });
 
-        describe('Checking _getMenuActions() results', () => {
-
-        });
-
         // T3.6. Result.templateOptions.source содержит меню из ItemActions, соответствующих текущему parentAction
         it('should set result.templateOptions.source responsible to current parentActions', () => {
             const item3 = collection.getItemBySourceKey(3);
@@ -1317,13 +1313,13 @@ describe('Controls/_itemActions/Controller', () => {
                 assert.isEmpty(unexpectedActions);
             });
 
-            it('should collect all item actions when item is swiped', () => {
+            it('should collect non-"showed" item actions when item is swiped', () => {
                 const localItemActions: IItemAction[] = [
                     {
                         id: 1,
                         icon: 'icon-PhoneNull',
                         title: 'phone',
-                        showType: TItemActionShowType.MENU
+                        showType: TItemActionShowType.TOOLBAR
                     },
                     {
                         id: 5,
@@ -1334,7 +1330,13 @@ describe('Controls/_itemActions/Controller', () => {
                     {
                         id: 6,
                         title: 'Development',
-                        showType: TItemActionShowType.MENU_TOOLBAR,
+                        showType: TItemActionShowType.TOOLBAR,
+                        parent: 4
+                    },
+                    {
+                        id: 7,
+                        title: 'Sources',
+                        showType: TItemActionShowType.TOOLBAR,
                         parent: 4
                     }
                 ];
@@ -1353,8 +1355,8 @@ describe('Controls/_itemActions/Controller', () => {
                     actionAlignment: 'vertical'
                 }));
                 const item3 = collection.getItemBySourceKey(3);
-
                 item3.setSwiped(true, true);
+                item3.getActions().showed = item3.getActions().all.filter((item, i) => i !== 3);
                 const config = itemActionsController.prepareActionsMenuConfig(
                     item3,
                     clickEvent,
@@ -1367,7 +1369,7 @@ describe('Controls/_itemActions/Controller', () => {
                 // @ts-ignore
                 assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
                 // @ts-ignore
-                assert.deepEqual(config.templateOptions.source.data, localItemActions);
+                assert.deepEqual(config.templateOptions.source.data[0], localItemActions[3]);
             });
         });
 
