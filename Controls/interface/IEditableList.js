@@ -53,6 +53,7 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
     * Когда кнопки не отображаются, аналогичные действия выполняются с помощью {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/keys/ клавиш}.
     * @property {AddPositionOption} [addPosition=bottom] Позиция редактирования по месту.
+    * Если в контроле включена {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/grouping/ группировка} элементов, тогда в модели нового элемента необходимо задать поле с группой.
     * @property {Types/entity:Model} [item=undefined] Элемент, который будет запущен на редактирование при первой отрисовке контрола.
     * 
     * Элемент необязательно должен присутствовать в {@link Types/source:DataSet}, который получен от источника данных.
