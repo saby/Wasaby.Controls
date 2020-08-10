@@ -59,7 +59,7 @@ define([
                   };
                }
             };
-            scrollToElement(element);
+            scrollToElement.default(element);
             assert.equal(element.parentElement.scrollTop, 5);
          });
 
@@ -87,7 +87,7 @@ define([
                   };
                }
             };
-            scrollToElement(element, false, true);
+            scrollToElement.default(element, false, true);
             assert.equal(element.parentElement.scrollTop, 5);
          });
 
@@ -115,7 +115,7 @@ define([
                   };
                }
             };
-            scrollToElement(element, true);
+            scrollToElement.default(element, true);
             assert.equal(element.parentElement.scrollTop, 55);
          });
 
@@ -157,7 +157,7 @@ define([
                   };
                }
             };
-            scrollToElement(element, false, true);
+            scrollToElement.default(element, false, true);
             assert.equal(element.parentElement.parentElement.scrollTop, 0);
             assert.equal(element.parentElement.scrollTop, 10);
          });
@@ -186,7 +186,7 @@ define([
                   };
                }
             };
-            scrollToElement(element, true);
+            scrollToElement.default(element, true);
             assert.equal(element.parentElement.scrollTop, 55);
          });
 
@@ -203,7 +203,7 @@ define([
                      };
                   }
                };
-               scrollToElement(element);
+               scrollToElement.default(element);
                assert.equal(element.parentElement.scrollTop, 15);
             });
 
@@ -219,7 +219,7 @@ define([
                   },
                   className: ''
                };
-               scrollToElement(element, true);
+               scrollToElement.default(element, true);
                assert.equal(element.parentElement.scrollTop, 75);
             });
 
@@ -235,7 +235,7 @@ define([
                   },
                   className: ''
                };
-               scrollToElement(element, true);
+               scrollToElement.default(element, true);
                assert.equal(element.parentElement.scrollTop, 75);
             });
          });
@@ -266,7 +266,7 @@ define([
                   };
                }
             };
-            scrollToElement(element);
+            scrollToElement.default(element);
             assert.equal(element.parentElement.scrollTop, -5);
          });
 
@@ -294,7 +294,7 @@ define([
                   };
                }
             };
-            scrollToElement(element, false, true);
+            scrollToElement.default(element, false, true);
             assert.equal(element.parentElement.scrollTop, -5);
          });
 
@@ -322,7 +322,7 @@ define([
                   };
                }
             };
-            scrollToElement(element, true);
+            scrollToElement.default(element, true);
             assert.equal(element.parentElement.scrollTop, -55);
          });
 
@@ -339,7 +339,7 @@ define([
                      };
                   }
                };
-               scrollToElement(element);
+               scrollToElement.default(element);
                assert.equal(element.parentElement.scrollTop, 10);
             });
 
@@ -355,7 +355,7 @@ define([
                      };
                   }
                };
-               scrollToElement(element, true);
+               scrollToElement.default(element, true);
                assert.equal(element.parentElement.scrollTop, -25);
             });
          });

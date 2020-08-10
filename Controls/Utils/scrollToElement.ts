@@ -111,7 +111,7 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  * @author Красильников А.С.
  */
 
-function scrollToElement(element: HTMLElement, toBottom?: Boolean, force?: Boolean) {
+export default function scrollToElement(element: HTMLElement, toBottom?: Boolean, force?: Boolean): void {
    getScrollableParents(element).forEach(parent => {
       const
          elemToScroll = parent === document.documentElement ? document.body : parent,
@@ -139,5 +139,3 @@ function scrollToElement(element: HTMLElement, toBottom?: Boolean, force?: Boole
       }
    });
 }
-
-export = scrollToElement;
