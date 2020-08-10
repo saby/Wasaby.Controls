@@ -360,7 +360,7 @@ define([
             markerVisibility: 'visible'
          };
 
-         var iv = new lists.ListViewModel(cfg);
+         var iv = new lists.ListViewModel({...cfg});
          var result = false;
          iv._nextModelVersion = function () {
             result = true;
