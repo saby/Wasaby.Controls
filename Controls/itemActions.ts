@@ -38,7 +38,7 @@ export {IShownItemAction, IItemActionsContainer} from './_itemActions/interface/
 export {IContextMenuConfig} from './_itemActions/interface/IContextMenuConfig';
 export {IItemActionsItem} from './_itemActions/interface/IItemActionsItem';
 export {IItemActionsCollection} from './_itemActions/interface/IItemActionsCollection';
-export {TActionAlignment, IItemActionsTemplateConfig} from './_itemActions/interface/IItemActionsTemplateConfig';
+export {IItemActionsTemplateConfig} from './_itemActions/interface/IItemActionsTemplateConfig';
 export {IItemActionsOptions} from './_itemActions/interface/IItemActionsOptions';
 export {Controller} from './_itemActions/Controller';
 export {Utils} from './_itemActions/Utils';

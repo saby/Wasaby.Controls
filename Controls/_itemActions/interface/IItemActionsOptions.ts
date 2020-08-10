@@ -18,14 +18,14 @@ type TItemActionsVisibility = 'onhover'|'delayed'|'visible';
 
 /**
  * Интерфейс опций контрола, который работает с {@link Controls/_itemActions/Controller контроллером опций записи}
- * @interface Controls/_itemActions/interface/IItemActionsTemplateConfig
+ * @interface Controls/_itemActions/interface/IItemActionsOptions
  * @public
  * @author Аверкиев П.А.
  */
 
 /*
  * Interface of options of Control that works with {@link Controls/_itemActions/Controller Actions controller}
- * @interface Controls/_itemActions/interface/IItemActionsTemplateConfig
+ * @interface Controls/_itemActions/interface/IItemActionsOptions
  * @public
  * @author Аверкиев П.А.
  */
