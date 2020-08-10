@@ -117,12 +117,14 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _stickyHeaderController: StickyHeaderController;
 
     protected _isOptimizeShadowEnabled: boolean;
+    protected _optimizeShadowClass: string;
 
     _beforeMount(options: IContainerOptions, context, receivedState) {
         this._shadows = new ShadowsModel(options);
         this._scrollbars = new ScrollbarsModel(options, receivedState);
         this._stickyHeaderController = new StickyHeaderController(this);
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
+        this._optimizeShadowClass = this._getOptimizeShadowClass();
 
         super._beforeMount(...arguments);
 
@@ -148,6 +150,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         if (context.ScrollData?.pagingVisible) {
             this._paging.isVisible = this._state.canVerticalScroll;
         }
+        this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
+        this._optimizeShadowClass = this._getOptimizeShadowClass();
     }
 
     protected _afterUpdate() {
