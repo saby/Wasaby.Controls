@@ -245,7 +245,7 @@ class DialogController extends BaseController {
 
     private _getRestrictiveContainerSize(item: IDialogItem): IWindow {
         const baseRestrictiveContainerName = '.controls-Popup__dialog-target-container';
-        const restrictiveContainers = [item.popupOptions.restrictiveContainer, baseRestrictiveContainerName, '#body'];
+        const restrictiveContainers = [item.popupOptions.restrictiveContainer, baseRestrictiveContainerName, 'body'];
         for (const restrictiveContainer of restrictiveContainers) {
             if (restrictiveContainer) {
                 if (DialogController.RestrictiveContainerCoords[restrictiveContainer]) {
