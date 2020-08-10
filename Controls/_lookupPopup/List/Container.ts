@@ -190,7 +190,7 @@ let ACTION = {
 };
 
 let _private = {
-   getItemClickResult(itemKey: Key, keys: Key[], multiSelect: boolean): SelectionChangedEventResult {
+   getItemActivateResult(itemKey: Key, keys: Key[], multiSelect: boolean): SelectionChangedEventResult {
       const added = [];
       const removed = [];
       const itemIndex = keys.indexOf(itemKey);
@@ -239,7 +239,7 @@ let _private = {
          keys = self._options.selectedKeys;
       }
 
-      _private[eventName](self, _private.getItemClickResult(itemKey, keys, self._options.multiSelect));
+      _private[eventName](self, _private.getItemActivateResult(itemKey, keys, self._options.multiSelect));
    },
 
    notifySelectedKeysChanged(self, result: SelectionChangedEventResult): void {
@@ -275,7 +275,7 @@ let _private = {
       };
    },
 
-   itemClick(self, item: Record): void {
+   itemActivate(self, item: Record): void {
       const isMultiSelect = self._options.multiSelect;
       const selectedKeys = self._options.selectedKeys;
 
@@ -344,9 +344,9 @@ let Container = Control.extend({
       this._selectedKeys = null;
    },
 
-   _itemClick(event: SyntheticEvent, item: Record): void {
+   _itemActivate(event: SyntheticEvent, item: Record): void {
       if (!item.get(this._options.nodeProperty)) {
-         _private.itemClick(this, item);
+         _private.itemActivate(this, item);
       }
    },
 

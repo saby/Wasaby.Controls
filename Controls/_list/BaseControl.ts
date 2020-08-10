@@ -26,6 +26,7 @@ import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
+import {editing as constEditing} from 'Controls/Constants';
 
 // Utils imports
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
@@ -415,7 +416,7 @@ const _private = {
                         data: list
                     });
 
-                    if (self._isMounted && self._isScrollShown) {
+                    if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
                         // При полной перезагрузке данных нужно сбросить состояние скролла
                         // и вернуться к началу списка, иначе браузер будет пытаться восстановить
                         // scrollTop, догружая новые записи после сброса.
@@ -1373,7 +1374,9 @@ const _private = {
                     _private.prepareFooter(self, self._options.navigation, self._sourceController);
                 }
             }
-            if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
+
+            if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
+                self._itemActionsMenuId) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
             }
             if (self._scrollController) {
@@ -2197,14 +2200,13 @@ const _private = {
                 readOnly: self._options.readOnly,
                 keyProperty: self._options.keyProperty,
                 notify: (name, args, params) => {
-                    const beforeBeginResult = self._notify(name, args, params);
+                    const eventResult = self._notify(name, args, params);
 
-                    if (name === 'beforeBeginEdit' && self._savedItemClickArgs) {
-                        self._notify('itemClick', self._savedItemClickArgs, { bubbling: true });
-                        self._savedItemClickArgs = null;
+                    if (name === 'beforeBeginEdit') {
+                        _private.onBeforeBeginEdit(self, eventResult);
                     }
 
-                    return beforeBeginResult;
+                    return eventResult;
                 },
                 forceUpdate: () => {
                     self._forceUpdate();
@@ -2499,6 +2501,46 @@ const _private = {
                 });
         }
         return result;
+    },
+
+    /*
+    * Считается, что запись активировалась при клике по ней, если в результате этого клика не запустилось редактирование по месту.
+    * Начинаем запуск редактирования мы, но реально ли оно начнется сейчас знает только прикладник и редактирование по месту, но
+    * оно не дает нам никакой точки входа в этот момент.
+    * Обработчик события начала редактирования может вернуть несколько вариантов ответа. Надо прочекать все.
+    *
+    * В новой схеме этот момент будет учтен и код станет вида
+    * editingController.beginEdit(key).then((startResult) => {
+    *     if (startResult === 'aborted') {
+    *         this._notify('itemActivated');
+    *     }
+    * })
+    * */
+    onBeforeBeginEdit(self, eventResult) {
+        if (self._savedItemClickArgs) {
+
+            // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
+            // обязательно должен случиться после события beforeBeginEdit.
+            self._notify('itemClick', self._savedItemClickArgs, {bubbling: true});
+
+            // Запись становится активной по клику, если не началось редактирование.
+            // Аргументы itemClick сохранены в состояние и используются для нотификации об активации элемента.
+            if (eventResult === constEditing.CANCEL) {
+                self._notify('itemActivate', self._savedItemClickArgs, {bubbling: true});
+                self._savedItemClickArgs = null;
+            } else if (eventResult && eventResult.finally) {
+                eventResult.then((res) => {
+                    if (res === constEditing.CANCEL) {
+                        self._notify('itemActivate', self._savedItemClickArgs, {bubbling: true});
+                    }
+                    return res;
+                }).finally(() => {
+                    self._savedItemClickArgs = null;
+                });
+            } else {
+                self._savedItemClickArgs = null;
+            }
+        }
     }
 };
 
@@ -3021,6 +3063,22 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _updateScrollController(newOptions) {
+        if (this._scrollController) {
+            this._scrollController.setRendering(true);
+            let result = this._scrollController.update({
+                options: {
+                    ...newOptions,
+                    attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
+                    forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
+                    collection: this.getViewModel(),
+                    needScrollCalculation: this._needScrollCalculation
+                }
+            });
+            _private.handleScrollControllerResult(this, result);
+        }
+    },
+
     _beforeUpdate(newOptions) {
         this._updateInProgress = true;
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
@@ -3059,11 +3117,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;
 
+            // Важно обновить коллекцию в scrollContainer перед сбросом скролла, т.к. scrollContainer реагирует на
+            // scroll и произведет неправильные расчёты, т.к. у него старая collection.
+            // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
+            this._updateScrollController(newOptions);
             // Сбрасываем скролл при смене конструктора модели
             // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
             if (this._isScrollShown) {
                 this._notify('doScroll', ['top'], {bubbling: true});
             }
+        } else {
+            this._updateScrollController(newOptions);
         }
 
         if (this._dndListController) {
@@ -3167,19 +3231,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._syncLoadingIndicatorTimeout = setTimeout(() => {
                 this.changeIndicatorStateHandler(true, this._syncLoadingIndicatorState);
             }, INDICATOR_DELAY);
-        }
-        if (this._scrollController) {
-            this._scrollController.setRendering(true);
-            let result = this._scrollController.update({
-                options: {
-                    ...newOptions,
-                    attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
-                    forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
-                    collection: this.getViewModel(),
-                    needScrollCalculation: this._needScrollCalculation
-                }
-            });
-            _private.handleScrollControllerResult(this, result);
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -3658,12 +3709,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             e.stopPropagation();
             return;
         }
+
+        // При клике по элементу может случиться 2 события: itemClick и itemActivate.
+        // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
+        // порядок событий будет beforeBeginEdit -> itemClick
+        // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
+        // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
-
-            // Если редактирование запретило всплытие itemClick, значит оно попробует запустить редактирование.
-            // В таком случае нотифицировать об itemClick нужно после события beforeBeginEdit. Для этого сохраняем аргументы события.
             this._savedItemClickArgs = e.isStopped() ? [item, originalEvent] : null;
+        } else {
+            this._notify('itemActivate', [item, originalEvent], { bubbling: true });
         }
     },
 

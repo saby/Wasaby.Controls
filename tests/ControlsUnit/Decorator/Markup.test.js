@@ -221,10 +221,10 @@ define([
             assert.equal(decorator.Converter.jsonToHtml(['p', 'some text']), '<div><p>some text</p></div>');
          });
          it('escape', function() {
-            var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><&#39;'];
+            var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><&#39;&#'];
             var vdomTemplate = template({ _options: { 'value': json } }, {}, undefined, true);
-            equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;</p></div>');
-            assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><&amp;#39;');
+            equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;&amp;#</p></div>');
+            assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><&amp;#39;&amp;#');
             assert.equal(vdomTemplate[0].children[0].hprops.attributes.title, '"&amp;lt;<>');
          });
          it('one big', function() {

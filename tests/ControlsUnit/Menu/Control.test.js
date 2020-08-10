@@ -42,6 +42,7 @@ define(
          let getMenu = function(config) {
             const menuControl = new menu.Control(config);
             menuControl.saveOptions(config || defaultOptions);
+            menuControl._stack = new popup.StackOpener();
             return menuControl;
          };
 
@@ -144,6 +145,50 @@ define(
                });
                let listModel = menuControl._getCollection(doubleItems, { keyProperty: 'key' });
                assert.equal(listModel.getCount(), 1);
+            });
+
+            it ('check history filter', function() {
+               let isFilterApply = false;
+               menuControl._limitHistoryFilter = () => {
+                  isFilterApply = true;
+               };
+               menuControl._getCollection(items, {
+                  allowPin: true,
+                  root: null
+               });
+
+               assert.isTrue(isFilterApply);
+            });
+         });
+
+         describe('_isExpandButtonVisible', function() {
+            let menuControl, items;
+            beforeEach(() => {
+               const records = [];
+               for (let i = 0; i < 15; i++) {
+                  records.push({ get: () => {} });
+               }
+               menuControl = getMenu();
+               items = new collection.RecordSet({
+                  rawData: records,
+                  keyProperty: 'key'
+               });
+            });
+
+            it('expandButton visible, history menu', () => {
+               const newMenuOptions = { allowPin: true, root: null };
+
+               const result = menuControl._isExpandButtonVisible(items, newMenuOptions);
+               assert.isTrue(result);
+               assert.equal(menuControl._visibleIds.length, 10);
+            });
+
+            it('expandButton hidden, history menu', () => {
+               const newMenuOptions = { allowPin: true };
+
+               const result = menuControl._isExpandButtonVisible(items, newMenuOptions);
+               assert.isFalse(result, 'level is not first');
+               assert.equal(menuControl._visibleIds.length, 0);
             });
          });
 

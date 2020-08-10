@@ -2,15 +2,16 @@ define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
    [
       'Core/Control',
       'wml!Controls-demo/PropertyGrid/StringOrFunctionTemplate',
-      'View/Builder/Tmpl',
-      'View/config',
+      'UI/Builder',
       'UI/Executor',
-      'i18n!userTemplate',
+      'i18n!userTemplate'
    ],
-   function(Control, template, tmpl, config, Executor) {
+   function(Control, template, Builder, Executor) {
       'use strict';
 
       var tClosure = Executor.TClosure;
+      var tmpl = Builder.Tmpl;
+      var config = Builder.Config;
 
       var stringTmpl = Control.extend({
          _template: template,

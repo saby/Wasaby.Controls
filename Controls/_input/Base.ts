@@ -665,14 +665,6 @@ var Base = Control.extend({
 
         _private.updateViewModel(this, newViewModelOptions, _private.getValue(this, newOptions));
 
-        if (this._options.readOnly === true && newOptions.readOnly === false) {
-            // oldDisplayValue запоминается при клике на поле ввода. Если контрол был задизаблен и прикладной разработчик по
-            // клику на поле ввода меняет опцию readonly с true на false, то обработчик на клик не вызовется, т.к. в режиме
-            // readOnly поле ввода не отображается. Подробнее:
-            // TODO: https://online.sbis.ru/opendoc.html?guid=ba1ec63e-1915-499d-9e05-babfa3b79b41
-            this._viewModel._oldDisplayValue = oldDisplayValue;
-        }
-
         const displayValueChangedByParent: boolean = oldDisplayValue !== this._viewModel.displayValue;
         if (displayValueChangedByParent) {
             this._fixedDisplayValue = this._viewModel.displayValue;
