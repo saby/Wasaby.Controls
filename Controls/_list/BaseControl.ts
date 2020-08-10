@@ -3516,14 +3516,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
 
+        if (this._editInPlace) {
+            this._editInPlace.beginEditByClick(e, item, originalEvent);
+        }
+
         // При клике по элементу может случиться 2 события: itemClick и itemActivate.
         // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
         // порядок событий будет beforeBeginEdit -> itemClick
         // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
         // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
-        if (this._editInPlace) {
-            this._editInPlace.beginEditByClick(e, item, originalEvent);
-            this._savedItemClickArgs = e.isStopped() ? [item, originalEvent] : null;
+        if (e.isStopped()) {
+            this._savedItemClickArgs = [item, originalEvent];
         } else {
             this._notify('itemActivate', [item, originalEvent], { bubbling: true });
         }
