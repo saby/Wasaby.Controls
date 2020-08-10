@@ -2946,6 +2946,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _updateScrollController(newOptions) {
+        if (this._scrollController) {
+            this._scrollController.update({
+                ...newOptions,
+                attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
+                forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
+                collection: this.getViewModel(),
+                needScrollCalculation: this._needScrollCalculation
+            });
+        }
+    },
+
     _beforeUpdate(newOptions) {
         this._updateInProgress = true;
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
@@ -2980,11 +2992,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;
 
+            this._updateScrollController(newOptions);
             // Сбрасываем скролл при смене конструктора модели
             // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
             if (this._isScrollShown) {
                 this._notify('doScroll', ['top'], {bubbling: true});
             }
+        } else {
+            this._updateScrollController(newOptions);
         }
 
         if (this._dndListController) {
@@ -3079,16 +3094,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 {listViewModel: this._listViewModel, ...newOptions}
             );
             this._editingItemData = this._editInPlace.getEditingItemData();
-        }
-
-        if (this._scrollController) {
-            this._scrollController.update({
-                ...newOptions,
-                attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
-                forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
-                collection: this.getViewModel(),
-                needScrollCalculation: this._needScrollCalculation
-            });
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
