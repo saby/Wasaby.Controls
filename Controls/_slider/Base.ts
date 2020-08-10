@@ -125,6 +125,12 @@ const maxPercentValue = 100;
  * @demo Controls-demo/Slider/Base/Intervals/Index
  */
 
+/**
+ * @event Controls/_slider/Base#valueChanged Происходит при изменении значения слайдера.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {number} value Новое значение.
+ */
+
 class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
