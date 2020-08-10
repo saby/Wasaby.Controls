@@ -757,7 +757,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             var iv = new gridMod.GridViewModel({...cfg});
             var result = false;
-            iv._nextModelVersion = function () {
+            iv._model._nextModelVersion = function () {
                result = true;
             };
             iv.setItemPadding('xs');
