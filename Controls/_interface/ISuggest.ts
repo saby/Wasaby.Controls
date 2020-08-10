@@ -11,7 +11,7 @@ import {IStickyPopupOptions} from 'Controls/popup';
 import {IBase, ITag, IText, IValue} from 'Controls/input';
 import {IControlOptions} from 'UI/Base';
 
-export default interface ISuggestOptions extends IControlOptions, ISearch, INavigation,
+export interface ISuggestOptions extends IControlOptions, ISearch, INavigation,
    IBase, IBorderStyle, IFontColorStyle, IFontSize, ISource, ITag, IText, IValidationStatus,
    IValue, IFilter {
    displayProperty: string;
@@ -38,6 +38,9 @@ export default interface ISuggestOptions extends IControlOptions, ISearch, INavi
  * @public
  * @author Gerasimov A.M.
  */
+export default interface ISuggest {
+   readonly '[Controls/_interface/ISuggest]': boolean;
+}
 
 /**
  * @typedef {Object} ISuggestTemplateProp

@@ -86,3 +86,4 @@ export {default as IFormOperation} from './_interface/IFormOperation';
 export {default as ISelectorDialog, ISelectorDialogOptions} from './_interface/ISelectorDialog';
 export {default as IItems, IItemsOptions} from './_interface/IItems';
 export {default as IHref, IHrefOptions} from './_interface/IHref';
+export {default as ISuggest, ISuggestOptions, IEmptyTemplateProp, ISuggestFooterTemplate, ISuggestTemplateProp} from './_interface/ISuggest';
