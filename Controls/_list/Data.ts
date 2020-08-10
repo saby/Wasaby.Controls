@@ -110,6 +110,7 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
                   return result;
                });
             } else if (isChanged) {
+               this._dataController.setFilter(this._filter);
                this._dataController.updateContext(this._dataOptionsContext);
             }
          },
