@@ -1,9 +1,9 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import { RecordSet } from 'Types/collection';
-import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection, TSelectionType } from 'Controls/interface';
 import { Model } from 'Types/entity';
-import { IFlatSelectionStrategyOptions} from '../interface';
+import { IFlatSelectionStrategyOptions } from '../interface';
 import ISelectionStrategy from './ISelectionStrategy';
 import clone = require('Core/core-clone');
 
@@ -154,6 +154,10 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       }
 
       return isAllSelected;
+   }
+
+   getSelectionType(): TSelectionType {
+      return 'all';
    }
 
    /**

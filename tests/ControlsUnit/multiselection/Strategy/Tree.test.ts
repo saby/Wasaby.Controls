@@ -473,6 +473,50 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       });
    });
 
+   describe('getSelectionType', () => {
+
+      it('all items are selected with searchValue, only nodes in items', () => {
+         const node = {};
+         node[ListData.KEY_PROPERTY] = 'testKeyProp';
+         node[ListData.PARENT_PROPERTY] = null;
+         node[ListData.NODE_PROPERTY] = true;
+         const strategy = new TreeSelectionStrategy({
+            nodesSourceControllers,
+            selectDescendants: false,
+            selectAncestors: false,
+            hierarchyRelation: hierarchy,
+            rootId: null,
+            items: new RecordSet({
+               rawData: [node],
+               keyProperty: ListData.KEY_PROPERTY
+            }),
+            searchValue: 'test'
+         });
+         const selection = { selected: [null], excluded: [null] };
+         strategy.selectAll(selection);
+         assert.strictEqual(strategy.getSelectionType(selection), 'all');
+      });
+
+      it('all items are selected with searchValue', () => {
+         const strategy = new TreeSelectionStrategy({
+            nodesSourceControllers,
+            selectDescendants: false,
+            selectAncestors: false,
+            hierarchyRelation: hierarchy,
+            rootId: null,
+            items: new RecordSet({
+               rawData: ListData.getItems(),
+               keyProperty: ListData.KEY_PROPERTY
+            }),
+            searchValue: 'test'
+         });
+         const selection = { selected: [null], excluded: [null] };
+         strategy.selectAll(selection);
+         assert.strictEqual(strategy.getSelectionType(selection), 'leaf');
+      });
+
+   });
+
    it('setItems', () => {
       const newItems = new RecordSet({
          keyProperty: ListData.KEY_PROPERTY,

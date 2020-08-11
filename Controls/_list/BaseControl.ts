@@ -1995,6 +1995,7 @@ const _private = {
                     declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
                 }),
                 rootId: options.root,
+                searchValue: options.searchValue,
                 items
             };
         } else {
@@ -2042,6 +2043,7 @@ const _private = {
       }
 
         // для связи с контроллером ПМО
+        self._notify('listSelectionTypeChanged', [result.selectionType], {bubbling: true});
         self._notify('listSelectedKeysCountChanged', [result.selectedCount, result.isAllSelected], {bubbling: true});
     },
 
