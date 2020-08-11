@@ -1,28 +1,20 @@
 import {detection} from 'Env/Env';
 
-const IE = 'Controls/Utils/FontWidthConstants/IE';
-const FF = 'Controls/Utils/FontWidthConstants/FF';
-const SAFARI = 'Controls/Utils/FontWidthConstants/Safari';
-const CHROME = 'Controls/Utils/FontWidthConstants/Chrome';
+const constants = 'Controls/Utils/FontWidthConstants/';
 
 export const getFontWidth = (text, size) => {
     let browser;
-    let module;
     if (detection.chrome) {
-        module = CHROME;
-        browser = 'CHROME';
+        browser = 'Chrome';
     } else if (detection.firefox) {
-        module = FF;
         browser = 'FF';
     } else if (detection.safari) {
-        module = SAFARI;
-        browser = 'SAFARI';
+        browser = 'Safari';
     } else if (detection.isIE) {
-        module = IE;
         browser = 'IE';
     }
 
-    return loadFontWidthConstants(module, browser).then((fonts) => countTextWidth(text, fonts, size));
+    return loadFontWidthConstants(browser).then((fonts) => countTextWidth(text, fonts, size));
 };
 
 const countTextWidth = (text, font, size) => {
@@ -34,18 +26,19 @@ const countTextWidth = (text, font, size) => {
     return textWidth;
 };
 
-const loadFontWidthConstants = (module, moduleName) => {
+const loadFontWidthConstants = (browser) => {
     let promiseResolver;
+    const module = constants + browser;
     const promise = new Promise((resolve) => {
         promiseResolver = resolve;
     });
     if (requirejs.defined(module)) {
-        promiseResolver(import(module).then((constants) => {
-            return constants[moduleName];
+        promiseResolver(import(module).then((constant) => {
+            return constant[browser];
         }));
     } else {
-        import(module).then((constants) => {
-            promiseResolver(constants[moduleName]);
+        import(module).then((constant) => {
+            promiseResolver(constant[browser]);
         });
     }
     return promise;

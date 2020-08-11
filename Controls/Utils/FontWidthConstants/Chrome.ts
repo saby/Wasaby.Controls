@@ -1,4 +1,4 @@
-export const CHROME = {
+export const Chrome = {
     xs: {
         "0": 6.515625,
         "1": 6.515625,
