@@ -1,6 +1,3 @@
-/**
- * Created by rn.kondakov on 18.10.2018.
- */
 import { TClosure as thelpers } from 'UI/Executor';
 import validHtml = require('Core/validHtml');
 import {Logger} from 'UI/Utils';
@@ -42,7 +39,7 @@ import {Logger} from 'UI/Utils';
       goodLinkAttributeRegExp = new RegExp(`^(${startOfGoodLinks.join('|')})`
          .replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`)),
       dataAttributeRegExp = /^data-(?!component$|bind$)([\w-]*[\w])+$/,
-      escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
+      escapeVdomRegExp = /&([a-zA-Z0-9#]+)/g,
       additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
 
    function isString(value) {

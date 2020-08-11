@@ -64,9 +64,9 @@ class Phone extends Control<IPhoneOptions> {
         const validPhone = toString(phone.replace(/[^+\d]/g, ''));
         const mask = phoneMask(validPhone);
         const format = FormatBuilder.getFormat(mask, FORMAT_MASK_CHARS, REPLACER);
-        return Formatter.getFormatterData(format, {
+        return Formatter.formatData(format, {
             value: validPhone,
-            position: 0
+            carriagePosition: 0
         }).value;
     }
 

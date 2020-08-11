@@ -3283,6 +3283,7 @@ define([
          it('shouldnt stop event propagation if editing will start', () => {
             let stopPropagationCalled = false;
             let event = {
+               isStopped: () => stopPropagationCalled,
                stopPropagation: function() {
                   stopPropagationCalled = true;
                }
@@ -4726,8 +4727,8 @@ define([
             assert.equal(activeItem, null);
          });
 
-         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто удалён из списка
-         // Код должен работать согласно https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
+         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто, удалён из списка
+         // См. также https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
          it('should close context menu if its owner was removed', function() {
             instance._itemActionsMenuId = 'popup-id-0';
             instance._itemActionsController.setActiveItem(item);
@@ -4752,9 +4753,34 @@ define([
             assert.isNull(instance._itemActionsController.getActiveItem());
          });
 
+         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто, заменён
+         it('should close context menu if its owner was removed', function() {
+            instance._itemActionsMenuId = 'popup-id-0';
+            instance._itemActionsController.setActiveItem(item);
+            instance.getViewModel()
+               ._notify(
+                  'onListChange',
+                  'collectionChanged',
+                  collection.IObservable.ACTION_REPLACE,
+                  null,
+                  null,
+                  [{
+                     getContents: () => {
+                        return {
+                           getKey: () => 2
+                        };
+                     },
+                     setMarked: () => null
+                  }],
+                  null);
+
+            assert.isNull(instance._itemActionsMenuId);
+            assert.isNull(instance._itemActionsController.getActiveItem());
+         });
+
          // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто удалён из списка.
          // Даже если это breadCrumbsItem
-         // Код должен работать согласно https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
+         // См. также https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
          it('should close context menu if its owner was removed even if it was breadcrumbsItem', function() {
             instance._itemActionsMenuId = 'popup-id-0';
             const itemAt1 = instance._listViewModel.at(1);
@@ -7044,7 +7070,10 @@ define([
                let isStopped = false;
                let isCheckbox = false;
 
-               const e = { stopPropagation() { isStopped = true; } };
+               const e = {
+                  isStopped: () => isStopped,
+                  stopPropagation() { isStopped = true; }
+               };
 
                const originalEvent = {
                   target: {
