@@ -240,7 +240,7 @@ export default class ScrollController {
                                 }
                             };
                         }
-                        if (!this._isRendering && !this._virtualScroll.rangeChanged) {
+                        if (!this._isRendering && this._virtualScroll && !this._virtualScroll.rangeChanged) {
                             this.continueScrollToItemIfNeed();
                         }
                     });
