@@ -1,5 +1,5 @@
 import { Control } from 'UI/Base';
-import { Handler } from './Handler';
+import { Handler, ViewConfig } from './Handler';
 import ErrorController, { getPopupHelper } from './Controller';
 import { IPopupHelper, PopupId } from './Popup';
 
@@ -7,9 +7,11 @@ import { IPopupHelper, PopupId } from './Popup';
  * Показать диалог с дружелюбным сообщением об ошибке.
  * Функцияя объект со следующими свойствами:
  * - error: Error - ошибка, которую надо обработать.
- * - handlers: Function[] - необязательный; массив дополнительных обработчиков ошибки.
+ * - handlers: Function[] - необязательный; массив дополнительных обработчиков ошибки, которые вызываются перед платформенными.
+ * - postHandlers: Function[] - необязательный; массив дополнительных обработчиков ошибки, которые вызываются после платформенных.
  * - opener: Control - необязательный; контрол, открывающий диалоговое окно.
  * - dialogEventHandlers: Object - необязательный; {@link Controls/popup/IBaseOpener/options/eventHandlers| обработчики событий диалогового окна}.
+ * - beforeOpenDialogCallback: Function - необязательный; функция, в которую передаётся конфиг для показа ошибки.
  *
  * В случае обрыва соединения или недоступности сервисов ресурсы, необходимые для показа диалогового окна, могут
  * не загрузиться, в этом случае платформенное диалоговое окно открыть не получится и будет показан браузерный alert.
@@ -35,11 +37,13 @@ import { IPopupHelper, PopupId } from './Popup';
  * @public
  */
 
-interface IProcessOptions {
+export interface IProcessOptions {
     error: Error;
     handlers?: Handler[];
     opener?: Control;
     dialogEventHandlers?: Record<string, Function>;
+    postHandlers?: Handler[];
+    beforeOpenDialogCallback?: (viewConfig: ViewConfig) => void;
     _popupHelper?: IPopupHelper;
 }
 
@@ -49,14 +53,24 @@ export default function process(options: IProcessOptions): Promise<PopupId | voi
         handlers = [],
         opener,
         dialogEventHandlers,
+        postHandlers = [],
+        beforeOpenDialogCallback,
         _popupHelper = getPopupHelper()
     } = options;
 
     const controller = new ErrorController({ handlers }, _popupHelper);
 
+    for (const postHandler of postHandlers) {
+        controller.addHandler(postHandler, true);
+    }
+
     return controller.process(error).then((viewConfig) => {
         if (!viewConfig) {
             return;
+        }
+
+        if (typeof beforeOpenDialogCallback === 'function') {
+            beforeOpenDialogCallback(viewConfig);
         }
 
         return _popupHelper.openDialog(viewConfig, opener, dialogEventHandlers);
