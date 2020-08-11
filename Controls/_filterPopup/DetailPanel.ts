@@ -69,6 +69,17 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
     */
 
    /**
+    * @typedef {String} historySaveMode
+    * @variant pinned - по ховеру на элемент появляется команда закрепления записи.
+    * @variant favorite - по ховеру на элемент появляется команда добавления записи в избранное.
+    */
+
+   /**
+    * @name Controls/_filterPopup/DetailPanel#historySaveMode
+    * @cfg {historySaveMode} режим работы с историей фильтров.
+    */
+
+   /**
     * @event Controls/_filterPopup/DetailPanel#sendResult Происходит при клике по кнопке "Отобрать".
     * @param {Object} filter Объект фильтра {'filter_id': 'filter_value'}.
     * @param {Object} items Набор элементов.
@@ -293,8 +304,8 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          this._keyProperty = _private.getKeyProperty(this._items);
          this._isChanged = _private.isChangedValue(this._items);
          this._hasResetValue = FilterUtils.hasResetValue(this._items);
-         const isReportPanel = options.orientation === 'horizontal';
-         return _private.loadHistoryItems(this, this._historyId, isReportPanel);
+         const isFavoriteSaveMode = options.orientation === 'horizontal' || options.historySaveMode === 'favorite';
+         return _private.loadHistoryItems(this, this._historyId, isFavoriteSaveMode);
       },
 
       _beforeUpdate: function(newOptions, context) {
