@@ -237,7 +237,7 @@ describe('Controls/grid_clean/GridViewModel', () => {
                 assert.isTrue(gridViewModel.getCurrent().isLastRow);
             });
 
-            it('hasMoreData: true with infinity navigation ', () => {
+            it('hasMoreData: false with infinity navigation ', () => {
                 gridViewModel._options.navigation = {
                     view: 'infinity'
                 };
@@ -248,7 +248,7 @@ describe('Controls/grid_clean/GridViewModel', () => {
                 assert.isFalse(gridViewModel.getCurrent().isLastRow);
             });
 
-            it('hasMoreData ', () => {
+            it('hasMoreData: true with infinity navigation ', () => {
                 gridViewModel._options.navigation = {
                     view: 'infinity'
                 };
