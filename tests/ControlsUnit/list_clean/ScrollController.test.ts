@@ -4,6 +4,7 @@ import { Collection } from 'Controls/display';
 import { RecordSet } from 'Types/collection';
 import { ScrollController } from 'Controls/list';
 import * as Env from 'Env/Env';
+import * as sinon from 'sinon';
 
 describe('Controls/list_clean/ScrollController', () => {
     const items = new RecordSet({
@@ -62,7 +63,7 @@ describe('Controls/list_clean/ScrollController', () => {
                     virtualScrollConfig: {},
                     useNewModel: true,
                     needScrollCalculation: false
-                }, 
+                },
                 params: {}
             });
             assert.isFalse(setViewIteratorSpy.called);
@@ -111,7 +112,7 @@ describe('Controls/list_clean/ScrollController', () => {
                         virtualScrollConfig: {},
                         needScrollCalculation: false,
                         attachLoadTopTriggerToNull: true
-                    }, 
+                    },
                     params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
                 });
 
@@ -159,7 +160,7 @@ describe('Controls/list_clean/ScrollController', () => {
                         virtualScrollConfig: {},
                         needScrollCalculation: false,
                         attachLoadTopTriggerToNull: false
-                    }, 
+                    },
                     params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
                 });
 
@@ -184,7 +185,7 @@ describe('Controls/list_clean/ScrollController', () => {
                         virtualScrollConfig: {},
                         needScrollCalculation: false,
                         attachLoadTopTriggerToNull: true
-                    }, 
+                    },
                     params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
                 });
 
@@ -194,8 +195,10 @@ describe('Controls/list_clean/ScrollController', () => {
         });
     });
     describe('inertialScrolling', () => {
+        let clock;
         beforeEach(() => {
             Env.detection.isMobileIOS = true;
+            clock = sinon.useFakeTimers();
         });
 
         afterEach(() => {
@@ -204,6 +207,7 @@ describe('Controls/list_clean/ScrollController', () => {
             } else {
                 Env.detection.isMobileIOS = false;
             }
+            clock.restore();
         });
         const collection = new Collection({
             collection: items
@@ -218,8 +222,8 @@ describe('Controls/list_clean/ScrollController', () => {
         it('inertialScrolling created', () => {
             assert.isOk(controller._inertialScrolling);
         });
-        it('callAfterScrollStopped', (done) => {
-            
+        it('callAfterScrollStopped', () => {
+
             let callbackCalled = false;
             let callback = () => {
                 callbackCalled = true;
@@ -227,14 +231,12 @@ describe('Controls/list_clean/ScrollController', () => {
             controller.callAfterScrollStopped(callback);
             assert.isTrue(callbackCalled, 'callback must be called');
             callbackCalled = false;
-            
+
             controller.scrollPositionChange({scrollTop: 0, scrollHeight: 100, clientHeight: 50}, false);
             controller.callAfterScrollStopped(callback);
             assert.isFalse(callbackCalled, 'callback must be called with delay');
-            setTimeout(() => {
-                assert.isTrue(callbackCalled, 'callback must be called');
-                done();
-            }, 105);
+            clock.tick(101);
+            assert.isTrue(callbackCalled, 'callback must be called');
         });
     });
 });
