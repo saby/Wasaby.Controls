@@ -3626,7 +3626,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const item = this._listViewModel.getItemBySourceKey(key) || itemData;
         this.setMarkedKey(key);
 
-        if (action && !action._isMenu && !action['parent@']) {
+        if (action && !action.isMenu && !action['parent@']) {
             _private.handleItemActionClick(this, action, event, item, false);
         } else {
             _private.openItemActionsMenu(this, action, event, item, false);

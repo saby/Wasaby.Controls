@@ -236,7 +236,7 @@ export default class View extends Control<IViewOptions> {
         }
         // TODO fire 'markedKeyChanged' event
 
-        if (action && !action._isMenu && !action['parent@']) {
+        if (action && !action.isMenu && !action['parent@']) {
             this._handleItemActionClick(action, clickEvent, item, false);
         } else {
             this._openItemActionsMenu(action, clickEvent, item, false);
