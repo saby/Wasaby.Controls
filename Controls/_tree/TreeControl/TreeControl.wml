@@ -26,6 +26,13 @@
                      _options.theme)}}"
       ></div>
    </ws:expanderTemplate>
+   <ws:newFooterContentTemplate>
+       <ws:partial template="{{ newFooterContentTemplate.footer.template }}"
+                  footer="{{ newFooterContentTemplate.footer }}"
+                  on:click="_onLoadMoreClick(newFooterContentTemplate.footer.dispItem)"
+                  isHasMoreFooter="{{ newFooterContentTemplate.footer.hasMoreStorage }}"
+                  theme="{{ _options.theme }}"/>
+   </ws:newFooterContentTemplate>
    <ws:content>
       <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()"
                   on:arrowClick="_notifyHandler('arrowClick')"/>
