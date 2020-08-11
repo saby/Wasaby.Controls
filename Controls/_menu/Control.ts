@@ -577,7 +577,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _limitHistoryCheck(item: Model): boolean {
-        return this._visibleIds.includes(item.getKey());
+        let isVisible: boolean = true;
+        if (item && item.getKey) {
+            isVisible = this._visibleIds.includes(item.getKey());
+        }
+        return isVisible;
     }
 
     private _isSelectedKeysChanged(newKeys: TSelectedKeys, oldKeys: TSelectedKeys): boolean {

@@ -665,6 +665,30 @@ define(
             });
          });
 
+         describe('historyFilter', () => {
+            let menuControl = getMenu();
+            menuControl._visibleIds = [2, 6, 8];
+            let itemKey;
+            const item = { getKey: () => itemKey };
+
+            it('group item', function() {
+               const isVisible = menuControl._limitHistoryCheck('group');
+               assert.isTrue(isVisible);
+            });
+
+            it('invisible item', function() {
+               itemKey = 1;
+               const isVisible = menuControl._limitHistoryCheck(item);
+               assert.isFalse(isVisible, "_visibleIds doesn't include it");
+            });
+
+            it('visible item', function() {
+               itemKey = 6;
+               const isVisible = menuControl._limitHistoryCheck(item);
+               assert.isTrue(isVisible, '_visibleIds includes it');
+            });
+         });
+
          describe('groupMethod', function() {
             let menuControl = getMenu();
             let menuOptions = {groupProperty: 'group', root: null};
