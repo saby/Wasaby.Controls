@@ -839,6 +839,7 @@
    background: linear-gradient(90deg, rgba(240,245,251,0), @item_hover_background-color_list);
 }
 
+.controls-Grid__editArrow-blur_style-masterClassic_background_theme-@{themeName},
 .controls-Grid__editArrow-blur_style-master_background_theme-@{themeName} {
    background: linear-gradient(90deg, rgba(240,245,251,0), @master_item_hover_background-color_list);
 }
@@ -850,9 +851,15 @@
    fill: @edit-arrow_icon-color_grid;
    width: @edit-arrow_icon-size_grid;
    min-width: @edit-arrow_icon-size_grid;
-   height: @edit-arrow_icon-size_grid;
+   height: 100%;
    display: inline-block;
    line-height: 1;
+}
+
+// IE не умеет работать с height: 100%, если высота родителя не задана явно и зависит от контента.
+// Вместо того, чтобы растянуть блок на высоту родителя, IE растягивает самого родителя.
+.ws-is-ie .controls-Grid__editArrow_theme-@{themeName} {
+   height: @edit-arrow_icon-size_grid;
 }
 
 .controls-Grid__editArrow_style-default_background_theme-@{themeName} {
