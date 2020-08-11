@@ -4,7 +4,7 @@ import { Memory } from 'Types/source';
 import { isEqual } from 'Types/object';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { Model } from 'Types/entity';
-import { TItemKey, ISwipeConfig, ANIMATION_STATE, IBaseCollection, IItemActionsTemplateConfig } from 'Controls/display';
+import { TItemKey, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import { IStickyPopupOptions } from 'Controls/popup';
 import { IMenuPopupOptions } from 'Controls/menu';
 import {
@@ -18,6 +18,8 @@ import {
     TActionDisplayMode,
     TMenuButtonVisibility
 } from './interface/IItemAction';
+import {IItemActionsItem} from './interface/IItemActionsItem';
+import {IItemActionsCollection} from './interface/IItemActionsCollection';
 import {IShownItemAction, IItemActionsContainer} from './interface/IItemActionsContainer';
 import { verticalMeasurer } from './measurers/VerticalMeasurer';
 import { horizontalMeasurer } from './measurers/HorizontalMeasurer';
@@ -31,40 +33,6 @@ const DEFAULT_ACTION_CAPTION_POSITION = 'none';
 const DEFAULT_ACTION_POSITION = 'inside';
 
 const DEFAULT_ACTION_SIZE = 'm';
-
-export interface IItemActionsItem {
-    getActions(): IItemActionsContainer;
-    getContents(): Model;
-    setActions(actions: IItemActionsContainer, silent?: boolean): void;
-    setActive(active: boolean, silent?: boolean): void;
-    isActive(): boolean;
-    setSwiped(swiped: boolean, silent?: boolean): void;
-    isSwiped(): boolean;
-    isRightSwiped(): boolean;
-    isEditing(): boolean;
-}
-
-export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
-    setEventRaising?(raising: boolean, analyze?: boolean): void;
-    isActionsAssigned(): boolean;
-    setActionsAssigned(assigned: boolean): void;
-    setActionsTemplateConfig(config: IItemActionsTemplateConfig): void;
-    getActionsTemplateConfig(): IItemActionsTemplateConfig;
-    setSwipeConfig(config: ISwipeConfig): void;
-    getSwipeConfig(): ISwipeConfig;
-    setSwipeAnimation(state: ANIMATION_STATE): void;
-    getSwipeAnimation(): ANIMATION_STATE;
-
-    /**
-     * Было решено переместить get/setActiveItem в коллекцию, т.к.
-     * в TileView так организована работа с isHovered, isScaled и isAnimated и
-     * мы не можем снять эти состояния при клике внутри ItemActions
-     * @param item
-     */
-    setActiveItem(item: IItemActionsItem): void;
-    getActiveItem(): IItemActionsItem;
-    isEditing(): boolean;
-}
 
 /**
  * @interface Controls/_itemActions/IControllerOptions
@@ -128,15 +96,15 @@ export interface IControllerOptions {
     /**
      * Опция записи, которую необходимо тображать в свайпе, если есть editArrow
      */
-    editArrowAction: IItemAction;
+    editArrowAction?: IItemAction;
     /**
      * Видимость Опция записи, которую необходимо тображать в свайпе, если есть editArrow
      */
-    editArrowVisibilityCallback: TEditArrowVisibilityCallback;
+    editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
     /**
      * Конфигурация для контекстного меню опции записи.
      */
-    contextMenuConfig: IContextMenuConfig;
+    contextMenuConfig?: IContextMenuConfig;
     /**
      * Редактируемая запись
      */
@@ -244,9 +212,10 @@ export class Controller {
 
     /**
      * Получает последний swiped элемент
+     * TODO убрать isRightSwiped по https://online.sbis.ru/opendoc.html?guid=183d60a3-fc2e-499c-8c50-aca0462c6f3d
      */
     getSwipeItem(): IItemActionsItem {
-        return this._collection.find((item) => item.isSwiped() || item.isRightSwiped());
+        return this._collection.find((item) => item.isSwiped() || (!!item.isRightSwiped && item.isRightSwiped()));
     }
 
     /**
@@ -496,7 +465,6 @@ export class Controller {
      * Вычисляет конфигурацию, которая используется в качестве scope у itemActionsTemplate
      */
     private _updateActionsTemplateConfig(options: IControllerOptions): void {
-
         this._collection.setActionsTemplateConfig({
             toolbarVisibility: options.editingToolbarVisible,
             style: options.style,
@@ -608,7 +576,7 @@ export class Controller {
     private _getActionsContainer(item: IItemActionsItem): IItemActionsContainer {
         let showed;
         const actions = this._collectActionsForItem(item);
-        if (this._collection.isEditing() && !item.isEditing()) {
+        if (this._isEditing(item)) {
             showed = [];
         } else if (actions.length > 1) {
             showed = actions.filter((action) =>
@@ -634,6 +602,16 @@ export class Controller {
             all: actions,
             showed
         };
+    }
+
+    /**
+     * Если в коллекции и у элементов есть методы для проверки редактирования,
+     * то учитываем их значение
+     * @param item
+     * @private
+     */
+    private _isEditing(item: IItemActionsItem): boolean {
+        return this._collection.isEditing() && !item.isEditing();
     }
 
     /**

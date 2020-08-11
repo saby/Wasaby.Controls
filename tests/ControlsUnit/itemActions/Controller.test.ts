@@ -8,8 +8,6 @@ import {IOptions as ICollectionOptions} from 'Controls/_display/Collection';
 
 import {
     Controller as ItemActionsController,
-    IItemActionsCollection,
-    IItemActionsItem,
     IControllerOptions
 } from 'Controls/_itemActions/Controller';
 import {
@@ -17,6 +15,8 @@ import {
     TActionDisplayMode,
     TItemActionShowType
 } from 'Controls/_itemActions/interface/IItemAction';
+import {IItemActionsItem} from 'Controls/_itemActions/interface/IItemActionsItem';
+import {IItemActionsCollection} from 'Controls/_itemActions/interface/IItemActionsCollection';
 import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню

@@ -22,11 +22,11 @@ import collection = require('Types/collection');
 import { Model } from 'Types/entity';
 import {
     IEditingConfig,
-    IItemActionsTemplateConfig,
     ISwipeConfig,
     ANIMATION_STATE,
     CollectionItem
 } from 'Controls/display';
+import {IItemActionsTemplateConfig} from 'Controls/itemActions';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
