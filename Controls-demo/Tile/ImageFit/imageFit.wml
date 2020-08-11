@@ -1,0 +1,16 @@
+<div class="controlsDemo__wrapper">
+   <Controls.tile:View
+      tileMode="static"
+      displayProperty="title"
+      imageFit="contain"
+      imageProperty="image"
+      keyProperty="id"
+      source="{{_viewSource}}">
+      <ws:itemTemplate>
+         <ws:partial
+            itemWidth="{{200}}"
+            template="Controls/tile:ItemTemplate"
+            hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
+      </ws:itemTemplate>
+   </Controls.tile:View>
+</div>

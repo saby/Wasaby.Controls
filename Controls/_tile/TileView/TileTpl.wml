@@ -97,7 +97,7 @@
 </ws:template>
 
 <ws:template name="imageTpl">
-   <img attr:class="controls-TileView__image" src="{{itemData.item[itemData.imageProperty]}}"/>
+   <img attr:class="controls-TileView__image" src="{{itemData.getImageData(width, itemData).url}}"/>
 </ws:template>
 
 <ws:if data="{{invisible}}">

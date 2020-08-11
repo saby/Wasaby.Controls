@@ -2,11 +2,11 @@ import {ListViewModel} from 'Controls/list';
 import cMerge = require('Core/core-merge');
 import {Logger} from 'UI/Utils';
 import {object} from 'Types/util';
+import {getImageUrl, getImageSize, IMAGE_FIT} from './resources/ImageSizeUtil';
 
-var
-    DEFAULT_ITEM_WIDTH = 250,
-    DEFAULT_ITEM_HEIGHT = 200,
-    ITEM_COMPRESSION_COEFFICIENT = 0.7;
+const DEFAULT_ITEM_WIDTH = 250;
+const DEFAULT_ITEM_HEIGHT = 200;
+const ITEM_COMPRESSION_COEFFICIENT = 0.7;
 
 const TILE_SIZES = {
     s: {
@@ -42,7 +42,7 @@ const TILE_SIZES = {
 };
 
 var TileViewModel = ListViewModel.extend({
-    constructor: function () {
+    constructor() {
         TileViewModel.superclass.constructor.apply(this, arguments);
         this._tileMode = this._options.tileMode;
         if (this._options.hasOwnProperty('itemsHeight')) {
@@ -84,6 +84,29 @@ var TileViewModel = ListViewModel.extend({
         return tileSizes;
     },
 
+    getImageData(itemWidth: number, itemData: Record<string, any>): {url: string, unsetWidth: boolean} {
+        const {
+            itemsHeight,
+            tileMode,
+            item,
+            imageHeightProperty,
+            imageWidthProperty,
+            imageUrlResolver,
+            imageProperty,
+            imageFit} = itemData;
+        const imageHeight = item.get(imageHeightProperty);
+        const imageWidth = item.get(imageWidthProperty);
+        let baseUrl = item.get(imageProperty);
+        const sizes = getImageSize(itemWidth, itemsHeight, tileMode, imageHeight, imageWidth, imageFit);
+        if (imageFit === 'cover') {
+            baseUrl = getImageUrl(sizes.width, sizes.height, baseUrl, imageUrlResolver);
+        }
+        return {
+            url: baseUrl,
+            unsetWidth: sizes.unsetWidth
+        };
+    },
+
     getTileItemData: function () {
         const resultData =  {
             displayProperty: this._options.displayProperty,
@@ -92,7 +115,12 @@ var TileViewModel = ListViewModel.extend({
             imageProperty: this._options.imageProperty,
             defaultItemWidth: DEFAULT_ITEM_WIDTH,
             defaultShadowVisibility: 'visible',
-            itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT
+            itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT,
+            imageHeightProperty: this._options.imageHeightProperty,
+            imageWidthProperty: this._options.imageWidthProperty,
+            getImageData: this.getImageData,
+            imageFit: this._options.imageFit,
+            imageUrlResolver: this._options.imageUrlResolver
         };
         if (this._options.tileSize) {
             resultData.getTileSizes = this.getTileSizes;
