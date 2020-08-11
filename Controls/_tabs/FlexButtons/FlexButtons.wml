@@ -30,7 +30,6 @@
                             controls-Tabs__itemSeparator_align_{{item.get('contentTab') ? 'right' : item.get('align') || 'right'}}"></div>
             </div>
         </ws:for>
-        <div>еще...</div>
         <div class="controls-Tabs__space controls-Tabs__space_theme_{{_options.theme}}">
             <ws:if data="{{ _options.tabSpaceTemplate }}">
                 <ws:partial template="{{_options.tabSpaceTemplate}}" scope="{{_options}}"/>

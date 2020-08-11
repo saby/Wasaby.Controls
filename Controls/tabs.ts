@@ -17,6 +17,7 @@
  */
 
 export {default as Buttons} from 'Controls/_tabs/Buttons';
+export {default as Base} from 'Controls/_tabs/Base';
 export {ITabsButtons, ITabsButtonsOptions} from 'Controls/_tabs/interface/ITabsButtons';
 import buttonsItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 

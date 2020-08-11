@@ -1,0 +1,8 @@
+<div class="demo-TabButtons ControlsDemo-Tabs__rightAlign" style=" border: 1px solid red">
+        <Controls.tabs:Base
+                             bind:selectedKey='SelectedKey1'
+                             keyProperty="id"
+                             containerWidth="{{200}}"
+                             items="{{_items}}"
+               />
+    </div>
