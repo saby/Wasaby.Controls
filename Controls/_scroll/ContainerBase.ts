@@ -57,6 +57,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._registrars.scrollMove = new RegisterClass({register: 'scrollMove'});
         this._scrollCssClass = this._getScrollContainerCssClass(options);
         this._registrars.listScroll = new RegisterClass({register: 'listScroll'});
+        // Регистрар не из watcher а лежал на уровне самомго скролл контейнера. Дублирует подобное событие для списков.
+        // Используется как минимум в попапах.
+        this._registrars.scroll = new RegisterClass({register: 'scroll'});
     }
 
     _afterMount(): void {
@@ -148,10 +151,13 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 this._initIntersectionObserver(triggers, component);
             }
         }
+
+        this._registrars.scroll.register(event, registerType, component, callback);
     }
 
     _unRegisterIt(e: SyntheticEvent, registerType: string, component: any): void {
         this._registrars.scrollStateChanged.unregister(e, registerType, component);
+        this._registrars.scroll.unregister(e, registerType, component);
     }
 
     // _createEdgeIntersectionObserver() {
@@ -307,6 +313,17 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                     clientHeight: this._state.clientHeight,
                     scrollHeight: this._state.scrollHeight
                 }]);
+                this._sendByRegistrar(
+                    'scroll',
+                    [
+                        new SyntheticEvent(null, {
+                            type: 'scroll',
+                            target: this._children.content,
+                            currentTarget: this._children.content,
+                            _bubbling: false
+                        }),
+                        this._state.scrollTop
+                    ]);
             }
 
             this._generateCompatibleEvents();
