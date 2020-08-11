@@ -210,7 +210,8 @@
                     scope="{{_pagingCfg}}"
                     pagingMode="{{_options.pagingMode}}"
                     showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
-                    on:onArrowClick="__onPagingArrowClick()" />
+                    on:onArrowClick="__onPagingArrowClick()"
+                    on:selectedPageChanged="__pagingChangePage()"/>
             </div>
         </ws:if>
         <Controls.event:Listener
