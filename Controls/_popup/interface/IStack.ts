@@ -13,7 +13,6 @@ export interface IStackPopupOptions extends IBasePopupOptions {
     width?: number;
     maxWidth?: number;
     propStorageId?: number;
-    restrictiveContainer?: string;
 }
 
 export interface IStackOpener extends IOpener {
