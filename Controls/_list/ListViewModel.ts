@@ -9,10 +9,10 @@ import { Object as EventObject } from 'Env/Event';
 import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
 import { Model } from 'Types/entity';
-import { CollectionItem, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
+import { CollectionItem, IEditingConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
-import {IItemAction} from 'Controls/itemActions';
+import {IItemAction, IItemActionsTemplateConfig} from 'Controls/itemActions';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 
