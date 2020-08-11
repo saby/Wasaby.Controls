@@ -12,7 +12,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {IGroupedOptions} from './interface/IGrouped';
 import {IIconSizeOptions} from 'Controls/interface';
 import IMenuPopup, {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup';
-import {IStickyPopupOptions} from 'Controls/popup';
+import {IStickyPopupOptions, InfoboxTarget} from 'Controls/popup';
 import {IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
@@ -251,12 +251,17 @@ let getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * </pre>
  */
 
+interface IDropdownInputChildren {
+   infoboxTarget: InfoboxTarget;
+}
+
 export default class Input extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _defaultContentTemplate: TemplateFunction = defaultContentTemplate;
    protected _text: string = '';
    protected _hasMoreText: string = '';
    protected _selectedItems = '';
+   protected _children: IDropdownInputChildren;
 
    _beforeMount(options: IInputOptions,
                 context: object,
@@ -292,6 +297,7 @@ export default class Input extends BaseDropdown {
 
    _getMenuPopupConfig(): IStickyPopupOptions {
       return {
+         opener: this._children.infoboxTarget,
          templateOptions: {
             selectorDialogResult: this._selectorTemplateResult.bind(this)
          },

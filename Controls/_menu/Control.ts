@@ -361,7 +361,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 }) as Model[]
             });
         }
-        this._stack.open(this._getSelectorDialogOptions(this._options, selectedItems));
+        this._stack.open(this._getSelectorDialogOptions(this._stack, this._options, selectedItems));
         this._notify('moreButtonClick', [selectedItems]);
     }
 
@@ -506,7 +506,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             Math.sign(firstSegment) === Math.sign(thirdSegment);
     }
 
-    private _getSelectorDialogOptions(options: IMenuControlOptions, selectedItems: List<Model>): object {
+    private _getSelectorDialogOptions(opener: StackOpener, options: IMenuControlOptions, selectedItems: List<Model>): object {
         const selectorTemplate: ISelectorTemplate = options.selectorTemplate;
         const selectorDialogResult: Function = options.selectorDialogResult;
 
@@ -515,7 +515,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             handlers: {
                 onSelectComplete: (event, result) => {
                     selectorDialogResult(event, result);
-                    this._stack.close();
+                    opener.close();
                 }
             }
         };
