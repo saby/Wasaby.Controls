@@ -36,6 +36,13 @@ import {IHeaderCell} from './interface/IHeaderCell';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
+/**
+ * При установке этих значений следует учитывать, что z-index:
+ * .controls-Grid__cell_fixed_theme-@{themeName} = 3
+ * .controls-TreeGrid__row__searchBreadCrumbs .controls-itemActionsV__container = 4
+ * .controls-itemActionsV__container = 4
+ * .controls-Grid_columnScroll_wrapper = 5
+ */
 const FIXED_HEADER_ZINDEX = 6;
 const STICKY_HEADER_ZINDEX = 5;
 
@@ -277,14 +284,13 @@ var
             return isCellIndexLessTheFixedIndex;
         },
 
-
-        getHeaderZIndex: function(params) {
-            if (params.isColumnScrollVisible) {
-                return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
-            } else {
-                // Пока в таблице нет горизонтального скролла, шапка ен может быть проскролена по горизонтали.
-                return FIXED_HEADER_ZINDEX;
-            }
+        // Раньше по https://online.sbis.ru/doc/a4b0487a-4bc4-47e4-afce-3340833b1232 тут ещё была проверка на
+        // isColumnScrollVisible, но это приводило к тому, что в некоторых реестрах
+        // z-index всех столбцов формировались до установки isColumnScrollVisible=true как FIXED_HEADER_ZINDEX
+        // и т.к. они были на одном уровне, то возникал кейс по ошибке
+        // https://online.sbis.ru/opendoc.html?guid=42614e54-3ed7-41f4-9d57-a6971df66f9c
+        getHeaderZIndex(params): number {
+            return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
         },
 
         getColumnScrollCellClasses(params, theme): string {
