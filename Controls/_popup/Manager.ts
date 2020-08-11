@@ -551,7 +551,12 @@ class Manager extends Control<IManagerOptions> {
         if (item) {
             const popupOptions = cClone(item.popupOptions || {});
             popupOptions.id = item.id;
-            this._callEvents(popupOptions, event);
+            try {
+                this._callEvents(popupOptions, event);
+            } catch (e: Error) {
+                Logger.error(`В окне с шаблоном ${popupOptions.template}
+                произошла ошибка в обработчике события ${event}`, undefined, e);
+            }
         }
     }
 
