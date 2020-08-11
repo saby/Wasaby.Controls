@@ -134,8 +134,8 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
 
    _prepareRange(): Date[] {
       let range;
-      if (this._hasRanges()) {
-         //Если заданы кванты, то мы должны подстроить дату под них
+      if (this._hasRanges() && this._options.rangeSelectedCallback) {
+         //Если заданы кванты вместе с rangeSelectedCallback, то мы должны сначала подстроить дату под них
          range = CalendarUtils.updateRangeByQuantum(this.startValue, this.startValue, this._options.ranges);
       } else {
          range = [this.startValue, this.endValue];
