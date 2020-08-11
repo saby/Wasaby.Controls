@@ -3289,6 +3289,7 @@ define([
          it('shouldnt stop event propagation if editing will start', () => {
             let stopPropagationCalled = false;
             let event = {
+               isStopped: () => stopPropagationCalled,
                stopPropagation: function() {
                   stopPropagationCalled = true;
                }
@@ -7079,7 +7080,10 @@ define([
                let isStopped = false;
                let isCheckbox = false;
 
-               const e = { stopPropagation() { isStopped = true; } };
+               const e = {
+                  isStopped: () => isStopped,
+                  stopPropagation() { isStopped = true; }
+               };
 
                const originalEvent = {
                   target: {

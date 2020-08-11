@@ -101,6 +101,7 @@ define([
             component._observer = {
                disconnect: sinon.fake()
             };
+            sinon.stub(component, '_resetTopBottomStyles');
 
             component._beforeUnmount();
             assert.isUndefined(component._observeHandler);
