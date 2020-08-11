@@ -215,7 +215,7 @@ export default class _Controller implements IDropdownController {
          this._popupOptions =  popupOptions;
       }
       const openPopup = () => {
-         return this._sticky.open(this._getPopupOptions(this._popupOptions))
+         return this._sticky.open(this._getPopupOptions(this._popupOptions));
       };
 
       return this.loadDependencies().then(
@@ -503,7 +503,7 @@ export default class _Controller implements IDropdownController {
          closeButtonVisibility: false,
          emptyText: this._getEmptyText(),
          allowPin: this._options.allowPin && this._hasHistory(this._options),
-         keyProperty: this._hasHistory(this._options) ? 'copyOriginalId' : baseConfig.keyProperty,
+         keyProperty: isHistorySource(this._source) ? 'copyOriginalId' : baseConfig.keyProperty,
          headerTemplate: this._options.headTemplate || this._options.headerTemplate,
          footerContentTemplate: this._options.footerContentTemplate || this._options.footerTemplate,
          items: this._items,
