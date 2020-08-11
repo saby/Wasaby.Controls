@@ -79,7 +79,7 @@ export default abstract class
         }
     }
 
-    protected _showSelector(popupOptions?: IStackPopupOptions): void|boolean {
+    protected _showSelector(event: SyntheticEvent, popupOptions?: IStackPopupOptions): void|boolean {
         if (this._notify('showSelector') !== false) {
             return this.showSelector(popupOptions);
         }
