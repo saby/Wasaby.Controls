@@ -4,6 +4,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { TKeySelection as TKey } from 'Controls/interface';
 import {default as OperationsController} from 'Controls/_operations/ControllerClass';
+import { TSelectionType } from 'Controls/interface';
 
 /**
  * Контрол используется для организации множественного выбора.
@@ -38,6 +39,7 @@ import {default as OperationsController} from 'Controls/_operations/ControllerCl
 export default class MultiSelector extends Control {
    protected _template: TemplateFunction = template;
    protected _selectedKeysCount: number|null;
+   protected _selectionType: TSelectionType = 'all';
    protected _isAllSelected: boolean = false;
    protected _listMarkedKey: TKey = null;
    protected _notifyHandler: Function = tmplNotify;
@@ -92,6 +94,11 @@ export default class MultiSelector extends Control {
 
    protected _operationsPanelOpen(): void {
       this._listMarkedKey = this._getOperationsController(this._options).setOperationsPanelVisible(true);
+   }
+
+   protected _listSelectionTypeChanged(event: SyntheticEvent, selectionType: TSelectionType): void {
+      event.stopPropagation();
+      this._selectionType = selectionType;
    }
 
    protected _operationsPanelClose(): void {
