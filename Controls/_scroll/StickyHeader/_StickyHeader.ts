@@ -196,6 +196,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         this._observeHandler = undefined;
         this._observer = undefined;
+        this._resetTopBottomStyles();
         this._notify('stickyRegister', [{id: this._index}, false], {bubbling: true});
     }
 
@@ -529,6 +530,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
 
         return position + ': -' + coord + 'px;';
+    }
+
+    protected _resetTopBottomStyles(): void {
+        // Чистим top и bottom, т.к устанавливали их до этого напрямую, чтобы не было скачков в интерфейсе
+        this._children.content.style.top = '';
+        this._children.content.style.bottom = '';
     }
 
     protected updateFixed(ids: number[]): void {

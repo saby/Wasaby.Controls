@@ -3077,6 +3077,14 @@ define([
             await baseControl._afterMount();
             assert.isTrue(baseControl._isMounted);
          });
+         it('after scroll to end', async function() {
+            baseControl._wasScrollToEnd = true;
+            await lists.BaseControl._private.reload(baseControl, cfg);
+            assert.isFalse(baseControl._resetScrollAfterReload);
+            scrollContainer.clientHeight = 100;
+            await baseControl._afterMount();
+            assert.isTrue(baseControl._isMounted);
+         });
          it('without scroll', async function() {
             baseControl._isScrollShown = false;
             await lists.BaseControl._private.reload(baseControl, cfg);
@@ -3281,6 +3289,7 @@ define([
          it('shouldnt stop event propagation if editing will start', () => {
             let stopPropagationCalled = false;
             let event = {
+               isStopped: () => stopPropagationCalled,
                stopPropagation: function() {
                   stopPropagationCalled = true;
                }
@@ -4724,8 +4733,8 @@ define([
             assert.equal(activeItem, null);
          });
 
-         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто удалён из списка
-         // Код должен работать согласно https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
+         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто, удалён из списка
+         // См. также https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
          it('should close context menu if its owner was removed', function() {
             instance._itemActionsMenuId = 'popup-id-0';
             instance._itemActionsController.setActiveItem(item);
@@ -4750,9 +4759,34 @@ define([
             assert.isNull(instance._itemActionsController.getActiveItem());
          });
 
+         // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто, заменён
+         it('should close context menu if its owner was removed', function() {
+            instance._itemActionsMenuId = 'popup-id-0';
+            instance._itemActionsController.setActiveItem(item);
+            instance.getViewModel()
+               ._notify(
+                  'onListChange',
+                  'collectionChanged',
+                  collection.IObservable.ACTION_REPLACE,
+                  null,
+                  null,
+                  [{
+                     getContents: () => {
+                        return {
+                           getKey: () => 2
+                        };
+                     },
+                     setMarked: () => null
+                  }],
+                  null);
+
+            assert.isNull(instance._itemActionsMenuId);
+            assert.isNull(instance._itemActionsController.getActiveItem());
+         });
+
          // Необходимо закрывать контекстное меню, если элемент, по которому оно было открыто удалён из списка.
          // Даже если это breadCrumbsItem
-         // Код должен работать согласно https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
+         // См. также https://online.sbis.ru/opendoc.html?guid=b679bbc7-210f-4326-8c08-fcba2e3989aa
          it('should close context menu if its owner was removed even if it was breadcrumbsItem', function() {
             instance._itemActionsMenuId = 'popup-id-0';
             const itemAt1 = instance._listViewModel.at(1);
@@ -6604,21 +6638,29 @@ define([
                assert.equal(lists.BaseControl._private.calcPaging(self, hasMore, pageSize), 1);
             });
 
-            it('_pagingNavigationVisible', () => {
-               let updatePagingData = lists.BaseControl._private.updatePagingData;
-               let self = {
-                  _knownPagesCount: 1,
-                  _currentPageSize: 5,
-                  _currentPage: 1,
-               }
-               updatePagingData(self, 0);
-               assert.equal(self._pagingNavigationVisible, false, 'paging should not be visible');
-               updatePagingData(self, 10);
-               assert.equal(self._pagingNavigationVisible, true, 'paging should be visible');
-               updatePagingData(self, false);
-               assert.equal(self._pagingNavigationVisible, false, 'paging should not be visible');
-               updatePagingData(self, true);
-               assert.equal(self._pagingNavigationVisible, true, 'paging should be visible');
+            it('isPagingNavigationVisible', () => {
+               let isPagingNavigationVisible = lists.BaseControl._private.isPagingNavigationVisible;
+
+               // Известно общее количество записей, записей 0
+               let result = isPagingNavigationVisible(0, 0);
+               assert.isFalse(result, 'paging should not be visible');
+
+               // Известно общее количество записей, записей 10
+               result = isPagingNavigationVisible(10, 2);
+               assert.isTrue(result, 'paging should be visible');
+
+               // Неизвестно общее количество записей, записей, известно текущее количество страниц = 0, hasMore = false
+               result = isPagingNavigationVisible(false, 0);
+               assert.isFalse(result, 'paging should not be visible');
+
+               // Неизвестно общее количество записей, записей, известно текущее количество страниц = 2, hasMore = false
+               result = isPagingNavigationVisible(false, 2);
+               assert.isTrue(result, 'paging should not be visible');
+
+               // Неизвестно общее количество записей, записей, известно текущее количество страниц = 2, hasMore = true
+               result = isPagingNavigationVisible(true, 2);
+               assert.isTrue(result, 'paging should not be visible');
+
             });
 
             describe('getPagingLabelData', function() {
@@ -7046,7 +7088,10 @@ define([
                let isStopped = false;
                let isCheckbox = false;
 
-               const e = { stopPropagation() { isStopped = true; } };
+               const e = {
+                  isStopped: () => isStopped,
+                  stopPropagation() { isStopped = true; }
+               };
 
                const originalEvent = {
                   target: {

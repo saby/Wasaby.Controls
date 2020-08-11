@@ -887,15 +887,15 @@ define([
                null: {
                   markedKey: null
                },
-               itemId: {parent: null, markedKey: 'itemId1'},
-               itemId1: {parent: 'itemId', markedKey: 'itemId12'},
-               itemId12: {parent: 'itemId1', markedKey: null},
+               1: {parent: null, markedKey: 11},
+               11: {parent: 1, markedKey: 112},
+               112: {parent: 11, markedKey: null},
             };
-            explorer._root = 'itemId12';
-            explorerMod.View._private.pathCleaner(explorer, 'itemId');
+            explorer._root = 112;
+            explorerMod.View._private.pathCleaner(explorer, 1);
 
             assert.deepEqual({
-               itemId: {parent: null, markedKey: "itemId1"},
+               1: {parent: null, markedKey: 11},
                null: {markedKey: null}
             }, explorer._restoredMarkedKeys);
          });

@@ -403,7 +403,7 @@ const _private = {
                         data: list
                     });
 
-                    if (self._isMounted && self._isScrollShown) {
+                    if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
                         // При полной перезагрузке данных нужно сбросить состояние скролла
                         // и вернуться к началу списка, иначе браузер будет пытаться восстановить
                         // scrollTop, догружая новые записи после сброса.
@@ -1317,7 +1317,9 @@ const _private = {
                     _private.prepareFooter(self, self._options.navigation, self._sourceController);
                 }
             }
-            if (action === IObservable.ACTION_REMOVE && self._itemActionsMenuId) {
+
+            if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
+                self._itemActionsMenuId) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
             }
 
@@ -1712,9 +1714,12 @@ const _private = {
         return navigation && navigation.view === 'pages';
     },
 
+    isPagingNavigationVisible(hasMoreData, knownPagesCount) {
+        return knownPagesCount > 0 || hasMoreData > 0;
+    },
     updatePagingData(self, hasMoreData) {
-        self._pagingNavigationVisible = (hasMoreData > 0);
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
+        self._pagingNavigationVisible = _private.isPagingNavigationVisible(hasMoreData, self._knownPagesCount);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
@@ -2944,6 +2949,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _updateScrollController(newOptions) {
+        if (this._scrollController) {
+            this._scrollController.update({
+                ...newOptions,
+                attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
+                forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
+                collection: this.getViewModel(),
+                needScrollCalculation: this._needScrollCalculation
+            });
+        }
+    },
+
     _beforeUpdate(newOptions) {
         this._updateInProgress = true;
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
@@ -2978,11 +2995,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;
 
+            // Важно обновить коллекцию в scrollContainer перед сбросом скролла, т.к. scrollContainer реагирует на
+            // scroll и произведет неправильные расчёты, т.к. у него старая collection.
+            // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
+            this._updateScrollController(newOptions);
             // Сбрасываем скролл при смене конструктора модели
             // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
             if (this._isScrollShown) {
                 this._notify('doScroll', ['top'], {bubbling: true});
             }
+        } else {
+            this._updateScrollController(newOptions);
         }
 
         if (this._dndListController) {
@@ -3077,16 +3100,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 {listViewModel: this._listViewModel, ...newOptions}
             );
             this._editingItemData = this._editInPlace.getEditingItemData();
-        }
-
-        if (this._scrollController) {
-            this._scrollController.update({
-                ...newOptions,
-                attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
-                forceInitVirtualScroll: newOptions?.navigation?.view === 'infinity',
-                collection: this.getViewModel(),
-                needScrollCalculation: this._needScrollCalculation
-            });
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
@@ -3506,14 +3519,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
 
+        if (this._editInPlace) {
+            this._editInPlace.beginEditByClick(e, item, originalEvent);
+        }
+
         // При клике по элементу может случиться 2 события: itemClick и itemActivate.
         // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
         // порядок событий будет beforeBeginEdit -> itemClick
         // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
         // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
-        if (this._editInPlace) {
-            this._editInPlace.beginEditByClick(e, item, originalEvent);
-            this._savedItemClickArgs = e.isStopped() ? [item, originalEvent] : null;
+        if (e.isStopped()) {
+            this._savedItemClickArgs = [item, originalEvent];
         } else {
             this._notify('itemActivate', [item, originalEvent], { bubbling: true });
         }
@@ -3613,7 +3629,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const item = this._listViewModel.getItemBySourceKey(key) || itemData;
         this.setMarkedKey(key);
 
-        if (action && !action._isMenu && !action['parent@']) {
+        if (action && !action.isMenu && !action['parent@']) {
             _private.handleItemActionClick(this, action, event, item, false);
         } else {
             _private.openItemActionsMenu(this, action, event, item, false);
