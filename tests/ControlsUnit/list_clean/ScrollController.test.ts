@@ -3,6 +3,7 @@ import { spy } from 'sinon';
 import { Collection } from 'Controls/display';
 import { RecordSet } from 'Types/collection';
 import { ScrollController } from 'Controls/list';
+import * as Env from 'Env/Env';
 
 describe('Controls/list_clean/ScrollController', () => {
     const items = new RecordSet({
@@ -190,6 +191,50 @@ describe('Controls/list_clean/ScrollController', () => {
 
                 assert.strictEqual(result.triggerOffset.top, 0);
             });
+        });
+    });
+    describe('inertialScrolling', () => {
+        beforeEach(() => {
+            Env.detection.isMobileIOS = true;
+        });
+
+        afterEach(() => {
+            if (typeof window === 'undefined') {
+                Env.detection.isMobileIOS = undefined;
+            } else {
+                Env.detection.isMobileIOS = false;
+            }
+        });
+        const collection = new Collection({
+            collection: items
+        });
+        let options = {
+            collection,
+            virtualScrollConfig: {},
+            needScrollCalculation: false
+        };
+        const controller = new ScrollController(options);
+
+        it('inertialScrolling created', () => {
+            assert.isOk(controller._inertialScrolling);
+        });
+        it('callAfterScrollStopped', (done) => {
+            
+            let callbackCalled = false;
+            let callback = () => {
+                callbackCalled = true;
+            };
+            controller.callAfterScrollStopped(callback);
+            assert.isTrue(callbackCalled, 'callback must be called');
+            callbackCalled = false;
+            
+            controller.scrollPositionChange({scrollTop: 0, scrollHeight: 100, clientHeight: 50}, false);
+            controller.callAfterScrollStopped(callback);
+            assert.isFalse(callbackCalled, 'callback must be called with delay');
+            setTimeout(() => {
+                assert.isTrue(callbackCalled, 'callback must be called');
+                done();
+            }, 105);
         });
     });
 });
