@@ -851,15 +851,9 @@
    fill: @edit-arrow_icon-color_grid;
    width: @edit-arrow_icon-size_grid;
    min-width: @edit-arrow_icon-size_grid;
-   height: 100%;
+   height: @item_text-height_l_grid;
    display: inline-block;
    line-height: 1;
-}
-
-// IE не умеет работать с height: 100%, если высота родителя не задана явно и зависит от контента.
-// Вместо того, чтобы растянуть блок на высоту родителя, IE растягивает самого родителя.
-.ws-is-ie .controls-Grid__editArrow_theme-@{themeName} {
-   height: @edit-arrow_icon-size_grid;
 }
 
 .controls-Grid__editArrow_style-default_background_theme-@{themeName} {
