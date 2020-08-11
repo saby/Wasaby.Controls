@@ -113,6 +113,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _cssClassName: string = null;
     private _canScroll: boolean = false;
     private _scrollState: IScrollState = {
+        verticalPosition: SCROLL_POSITION.START,
         canVerticalScroll: false
     };
     private _negativeScrollTop: boolean = false;

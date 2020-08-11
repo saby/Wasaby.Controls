@@ -25,7 +25,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _options: IContainerBaseOptions;
 
     protected _state: IScrollState = {};
-    protected _oldState: IScrollState = null;
+    protected _oldState: IScrollState = {};
 
     private _registrars: any = [];
 
@@ -267,7 +267,12 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         if (Object.keys(this._state).length === 0) {
             this._updateState(this._getFullStateFromDOM());
         }
-        this._registrars.scrollStateChanged.startOnceTarget(component, {...this._state},{...this._oldState});
+        // Если нет скролла, то и заголовки незачем обновлять
+        const isInitializing = Object.keys(this._oldState).length === 0;
+        const hasScroll = this._state.clientHeight !== this._state.scrollHeight;
+        if (!isInitializing && hasScroll) {
+            this._registrars.scrollStateChanged.startOnceTarget(component, {...this._state},{...this._oldState});
+        }
     }
 
     _onResizeContainer(newState: IScrollState): void {
@@ -352,6 +357,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _updateState(newState: IScrollState): boolean {
         let isStateUpdated = false;
         this._oldState = {...this._state};
+        const isInitializing = Object.keys(this._oldState).length === 0;
         Object.keys(newState).forEach((key) => {
             if (this._state[key] !== newState[key]) {
                 this._state[key] = newState[key];
@@ -361,7 +367,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         if (isStateUpdated) {
             this._updateCalculatedState();
         }
-        return isStateUpdated;
+        return !isInitializing && isStateUpdated;
     }
 
     _updateCalculatedState(): void {
