@@ -2943,6 +2943,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
         if (!this._wasScrollToEnd) {
             _private.checkNeedAttachLoadTopTriggerToNull(this);
+            this._scrollToFirstItemIfNeed();
         }
     },
 
