@@ -6,9 +6,9 @@
     </div>
     <div class="controlsDemo__cell demo-switchTooltip__custom">
         <div class="controls-text-label controls-text-label_theme-{{_options.theme}}">tooltip="my switch""</div>
-        <Controls.toggle:Switch attr:class="demo-switch__element"
-                                bind:value="_value2"
-                                caption="state"
-                                tooltip="my switch"/>
+        <Controls.toggle:DoubleSwitch attr:class="demo-switch__element"
+                                      bind:value="_value2"
+                                      captions="{{['Turned on', 'Turned off']}}"
+                                      tooltip="my switch"/>
     </div>
 </div>
