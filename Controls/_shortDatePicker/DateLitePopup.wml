@@ -72,17 +72,5 @@
       </Controls.calendar:MonthList>
       <div class="controls-PeriodLiteDialog__years-prev controls-PeriodLiteDialog__years-prev_theme-{{_options.theme}}"
            on:click="_changeYear (-1)"></div>
-      <div class="controls-PeriodLiteDialog__years-home controls-PeriodLiteDialog__years-home_theme-{{_options.theme}}"
-           title="{[Поставить текущий диапазон]}">
-         <Controls.buttons:Button
-            class="controls-PeriodLiteDialog__homeButton"
-            viewMode="toolButton"
-            inlineHeight="m"
-            icon="icon-Home3"
-            iconSize="s"
-            iconStyle="secondary"
-            on:click="_onHomeClick()"
-         />
-      </div>
    </ws:if>
 </div>

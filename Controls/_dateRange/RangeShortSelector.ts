@@ -82,6 +82,10 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
             target: container,
             className,
             fittingMode: 'overflow',
+            direction: {
+                horizontal: 'right'
+            },
+            targetPoint: { horizontal: 'left' },
             eventHandlers: {
                 onResult: this._onResult.bind(this)
             },
