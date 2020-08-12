@@ -306,7 +306,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 }]);
             }
 
-            if (this._oldState.verticalPosition !== this._state.verticalPosition) {
+            if (this._oldState.scrollTop !== this._state.scrollTop) {
                 this._sendByRegistrar('scrollMove', [{
                     scrollTop: this._state.scrollTop,
                     position: this._state.verticalPosition,
@@ -449,7 +449,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             });
         }
 
-        if (this._state.verticalPosition !== this._oldState.verticalPosition) {
+        if (this._state.scrollTop !== this._oldState.scrollTop) {
             this._sendByListScrollRegistrar('scrollMoveSync', {
                 scrollTop: this._state.scrollTop,
                 position: this._state.verticalPosition,
