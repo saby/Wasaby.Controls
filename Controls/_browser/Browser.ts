@@ -73,9 +73,6 @@ export default class Browser extends Control {
 
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
         const isChanged = this._dataController.update({...newOptions});
-        if (isChanged) {
-            this._filter = newOptions.filter;
-        }
         if (this._options.source !== newOptions.source) {
             this._loading = true;
             return this._dataController.loadItems().then((result) => {
@@ -87,6 +84,7 @@ export default class Browser extends Control {
                 this._dataController.updateContext(this._dataOptionsContext);
                 this._loading = false;
                 this._groupHistoryId = newOptions.groupHistoryId;
+                this._filter = newOptions.filter;
                 return result;
             });
         } else if (isChanged) {

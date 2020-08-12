@@ -95,9 +95,6 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
 
          _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet> {
             const isChanged = this._dataController.update({...newOptions});
-            if (isChanged) {
-               this._filter = newOptions.filter;
-            }
             if (this._options.source !== newOptions.source) {
                this._loading = true;
                return this._dataController.loadItems().then((result) => {
@@ -107,6 +104,7 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
                      this._dataController.updatePrefetchProxy(result);
                   }
                   this._dataController.updateContext(this._dataOptionsContext);
+                  this._filter = newOptions.filter;
                   this._loading = false;
                   return result;
                });
