@@ -7,9 +7,10 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     private _dataArray: unknown = generateData({count: 100, entityTemplate: {title: 'lorem'}});
-    protected _count: number = 100;
+    protected _count: number;
 
     protected _beforeMount(): void {
+        this._count = 100;
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: this._dataArray
