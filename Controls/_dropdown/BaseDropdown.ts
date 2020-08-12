@@ -63,9 +63,6 @@ export class BaseDropdown extends Control<IControlOptions, DropdownReceivedState
 
     protected _footerClick(data): void {
         this._notify('footerClick', [data]);
-        if (!this._$active) {
-            this._controller.closeMenu();
-        }
     }
 
     protected _selectorDialogOpened(data): void {
