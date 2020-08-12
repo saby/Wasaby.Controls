@@ -596,6 +596,7 @@ define(
             assert.isOk(actualOptions.eventHandlers.onResult);
             assert.isTrue(actualOptions.hasOwnProperty('opener'));
             assert.equal(actualOptions.opener, 'testSelectorOpener');
+            assert.isTrue(actualOptions.closeOnOutsideClick);
             assert.isTrue(opened);
 
             actualOptions.eventHandlers.onResult();
