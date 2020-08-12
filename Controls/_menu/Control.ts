@@ -525,6 +525,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             // Т.к само меню закроется после открытия стекового окна,
             // в опенер нужно положить контрол, который останется на странице.
             opener: this._options.selectorOpener,
+            closeOnOutsideClick: true,
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: options.isCompoundTemplate,
