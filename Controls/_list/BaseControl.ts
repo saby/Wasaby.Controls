@@ -265,42 +265,41 @@ const _private = {
         }
     },
 
-    attachLoadTopTriggerToNullIfNeed(self): void {
+    supportAttachLoadTopTriggerToNull(options): boolean {
         // Поведение отложенной загрузки вверх нужно опциональное, например, для контактов
         // https://online.sbis.ru/opendoc.html?guid=f07ea1a9-743c-42e4-a2ae-8411d59bcdce
-        if (self._options.attachLoadTopTriggerToNull === false) {
-            return;
+        if (options.attachLoadTopTriggerToNull === false) {
+            return false;
         }
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
         // В случае с pages, demand и maxCount проблема дополнительной загрузки после инициализации списка отсутствует.
-        const isInfinityNavigation = _private.isInfinityNavigation(self._options.navigation);
+        const isInfinityNavigation = _private.isInfinityNavigation(options.navigation);
         if (!isInfinityNavigation) {
-            return;
+            return false;
         }
+        return true;
+    },
+
+    needAttachLoadTopTriggerToNull(self): boolean {
         const sourceController = self._sourceController;
         const hasMoreData = _private.hasMoreData(self, sourceController, 'up');
-        if (sourceController && hasMoreData && self._isMounted) {
+        return sourceController && hasMoreData;
+    },
+
+    attachLoadTopTriggerToNullIfNeed(self, options): boolean {
+        const supportAttachLoadTopTriggerToNull = _private.supportAttachLoadTopTriggerToNull(options);
+        if (!supportAttachLoadTopTriggerToNull) {
+            return false;
+        }
+        const needAttachLoadTopTriggerToNull = _private.needAttachLoadTopTriggerToNull(self);
+        if (needAttachLoadTopTriggerToNull && self._isMounted) {
             self._attachLoadTopTriggerToNull = true;
             self._needScrollToFirstItem = true;
         } else {
             self._attachLoadTopTriggerToNull = false;
         }
-        if (self._scrollController) {
-            let result = self._scrollController.update({
-                options: {
-                    ...self._options,
-                    attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
-                    forceInitVirtualScroll: isInfinityNavigation,
-                    collection: self.getViewModel()
-                },
-                params: {
-                    clientHeight: self._viewportSize,
-                    scrollTop: self._scrollTop,
-                    scrollHeight: self._viewSize
-                }
-            });
-            _private.handleScrollControllerResult(self, result);
-        }
+        self._updateScrollController(options);
+        return needAttachLoadTopTriggerToNull;
     },
 
     reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
@@ -428,7 +427,9 @@ const _private = {
                     if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
                         _private.checkLoadToDirectionCapability(self, filter, navigation);
                     } else if (!self._wasScrollToEnd) {
-                        _private.attachLoadTopTriggerToNullIfNeed(self);
+                        if (_private.attachLoadTopTriggerToNullIfNeed(self, cfg) && !self._isMounted) {
+                            self._hideTopTriggerUntilMount = true;
+                        }
                     }
                 });
             }).addErrback(function(error: Error) {
@@ -2597,6 +2598,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     iWantVDOM: true,
 
     _attachLoadTopTriggerToNull: false,
+    _hideTopTriggerUntilMount: false,
     _listViewModel: null,
     _viewModelConstructor: null,
 
@@ -2809,6 +2811,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
 
                     _private.initVisibleItemActions(self, newOptions);
+
+                    if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
+                        _private.needAttachLoadTopTriggerToNull(self)) {
+                        self._hideTopTriggerUntilMount = true;
+                    }
                     return;
                 }
                 if (receivedError) {
@@ -3028,6 +3035,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterMount() {
         this._isMounted = true;
+        this._hideTopTriggerUntilMount = false;
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
         if (this._needScrollCalculation) {
@@ -3070,9 +3078,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
 
-        if (!this._wasScrollToEnd) {
-            _private.attachLoadTopTriggerToNullIfNeed(this);
-        }
+        _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
     },
 
     _updateScrollController(newOptions) {
