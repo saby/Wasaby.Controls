@@ -15,7 +15,7 @@ define('Controls/Utils/getItemsBySelection', [
          });
       },
       selectionToRecord = function(selection, adapter, type) {
-         const recursive = selection.recursive === undefined ? true : selection.recursive;
+         var recursive = selection.recursive === undefined ? true : selection.recursive;
          return operations.selectionToRecord(selection, adapter, type, recursive);
       };
 
