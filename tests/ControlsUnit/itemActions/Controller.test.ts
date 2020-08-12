@@ -1372,7 +1372,7 @@ describe('Controls/_itemActions/Controller', () => {
                 assert.deepEqual(config.templateOptions.source.data[0], localItemActions[1],
                     'Non-toolbar options should be shown in menu');
                 // @ts-ignore
-                assert.deepEqual(config.templateOptions.source.data[0], localItemActions[3],
+                assert.deepEqual(config.templateOptions.source.data[1], localItemActions[3],
                     'Non-showed options should be shown in menu');
             });
         });
