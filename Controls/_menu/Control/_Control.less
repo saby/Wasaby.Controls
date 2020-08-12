@@ -19,7 +19,7 @@
 .controls-Menu__row {
    position: relative;
    display: flex;
-   align-items: initial;
+   align-items: center;
 }
 
 .controls-Menu__row_state_default_theme-@{themeName} {
@@ -48,7 +48,6 @@
    display: inline-flex;
    align-items: baseline;
    left: 0;
-   top: 0;
    &::before {
       content: '\200b';
       font-size: @item_font-size_menu;
@@ -94,6 +93,10 @@
 
 .controls-Menu__icon {
    .flex-shrink(0);
+}
+
+.controls-Menu__icon-invisible {
+   height: 0;
 }
 
 .controls-Menu__icon-left_theme-@{themeName} {
