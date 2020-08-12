@@ -340,7 +340,7 @@ var
                 this._listModel.setStickyColumnsCount(newCfg.stickyColumnsCount);
                 this._columnScrollController?.setStickyColumnsCount(newCfg.stickyColumnsCount, true);
             }
-            if (this._options.multiSelectVisibility !== newCfg.stickyColumnsCount) {
+            if (this._options.multiSelectVisibility !== newCfg.multiSelectVisibility) {
                 this._columnScrollController?.setMultiSelectVisibility(newCfg.multiSelectVisibility, true);
             }
 
