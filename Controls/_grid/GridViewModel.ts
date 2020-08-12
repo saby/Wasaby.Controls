@@ -967,7 +967,7 @@ var
             const headerColumn = {
                 column: cell,
                 index: columnIndex,
-                shadowVisibility: 'visible'
+                shadowVisibility: cell.ladderCell ? 'hidden' : 'visible'
             };
             let cellClasses = `controls-Grid__header-cell controls-Grid__header-cell_theme-${theme}` +
                 ` controls-Grid__${this._isMultiHeader ? 'multi-' : ''}header-cell_min-height_theme-${theme}` +
