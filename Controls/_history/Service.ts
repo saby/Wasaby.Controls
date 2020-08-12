@@ -300,17 +300,25 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
 // endregion
 
     update(data: any, meta: any): Promise<any> | object {
-        if (meta.hasOwnProperty('$_addFromData')) {
-            return this._addFromData(data);
-        }
-        if (meta.hasOwnProperty('$_pinned')) {
-            this._updatePinned(data, meta);
-        }
-        if (meta.hasOwnProperty('$_history')) {
-            this._updateHistory(data, meta);
-        }
-        if (meta.hasOwnProperty('$_favorite')) {
-            this._updateFavoriteData(data, meta);
+        /**
+         * В retailOffline нет сервиса истории и его там нельзя вызывать, в таком случае работаем без истории вообще.
+         * FIXME: https://online.sbis.ru/opendoc.html?guid=f0e4521b-873a-4b1a-97fe-2ecbb12409d1
+         */
+        if (detection.retailOffline) {
+            return Promise.resolve();
+        } else {
+            if (meta.hasOwnProperty('$_addFromData')) {
+                return this._addFromData(data);
+            }
+            if (meta.hasOwnProperty('$_pinned')) {
+                this._updatePinned(data, meta);
+            }
+            if (meta.hasOwnProperty('$_history')) {
+                this._updateHistory(data, meta);
+            }
+            if (meta.hasOwnProperty('$_favorite')) {
+                this._updateFavoriteData(data, meta);
+            }
         }
 
         return {};
