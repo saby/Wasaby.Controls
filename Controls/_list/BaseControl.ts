@@ -959,10 +959,19 @@ const _private = {
             self._shouldNotResetPagingCache = true;
             _private.reload(self, self._options).addCallback(function() {
                 self._shouldNotResetPagingCache = false;
-                if (direction === 'up') {
-                    self._notify('doScroll', ['top'], { bubbling: true });
-                } else {
-                    _private.jumpToEnd(self);
+
+                /**
+                 * Если есть ошибка, то не нужно скроллить, иначе неоднозначное поведение:
+                 * иногда скролл происходит раньше, чем показана ошибка, тогда показывается ошибка внутри списка;
+                 * иногда ошибка показывается раньше скролла, тогда ошибка во весь список.
+                 * https://online.sbis.ru/opendoc.html?guid=ab2c30cd-895d-4b1f-8f71-cd0063e581d2
+                 */
+                if (!self.__error) {
+                    if (direction === 'up') {
+                        self._notify('doScroll', ['top'], { bubbling: true });
+                    } else {
+                        _private.jumpToEnd(self);
+                    }
                 }
             });
         } else if (direction === 'up') {
