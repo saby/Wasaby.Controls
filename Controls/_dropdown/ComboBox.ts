@@ -107,6 +107,10 @@ class ComboBox extends BaseDropdown {
       return loadItems(this._controller, receivedState, options.source);
    }
 
+   protected _beforeUpdate(newOptions: IComboboxOptions): void {
+      this._controller.update(this._getControllerOptions(newOptions));
+   }
+
    _getControllerOptions(options: IComboboxOptions): object {
       const controllerOptions = getDropdownControllerOptions(options);
       return { ...controllerOptions, ...{
