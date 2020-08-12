@@ -42,7 +42,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._beforeMount(baseControlCfg);
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             baseControl._afterMount();
-            baseControl.scrollMoveSyncHandler();
+            baseControl.scrollMoveSyncHandler({scrollTop: 0});
             assert.isTrue(!!baseControl._inertialScrolling);
         });
     });
@@ -74,10 +74,19 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._beforeMount(baseControlCfg);
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             baseControl._afterMount();
-            assert.isFalse(!!baseControl._listViewModel._options.collapsedGroups);
+            assert.isFalse(!!baseControl._listViewModel.getCollapsedGroups());
+        });
+        it('is CollapsedGroup', () => {
+            let cfgClone = {...baseControlCfg};
+            // cfgClone.groupHistoryId = GROUP_HISTORY_ID_NAME;
+            cfgClone.collapsedGroups = [];
+            baseControl._beforeMount(cfgClone);
+            baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
+            baseControl._afterMount();
+            assert.isTrue(!!baseControl._listViewModel.getCollapsedGroups());
         });
         it('updated CollapsedGroups', async () => {
-            let cfgClone = {...baseControlCfg};
+            const cfgClone = {...baseControlCfg};
             baseControl.saveOptions(baseControlCfg);
             await baseControl._beforeMount(baseControlCfg);
             baseControl._beforeUpdate(baseControlCfg);

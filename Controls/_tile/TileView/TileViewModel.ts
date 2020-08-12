@@ -78,6 +78,8 @@ var TileViewModel = ListViewModel.extend({
             if (imageViewMode !== 'rectangle') {
                 tileSizes.imageHeight = null;
             }
+        } else if (imageViewMode !== 'rectangle') {
+            tileSizes.imageHeight = tileSizes.imageWidth;
         }
         return tileSizes;
     },
@@ -147,8 +149,13 @@ var TileViewModel = ListViewModel.extend({
         TileViewModel.superclass.setActiveItem.apply(this, arguments);
     },
 
-    _onCollectionChange: function() {
-        this.setHoveredItem(null);
+    _onCollectionChange(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
+        // TODO https://online.sbis.ru/opendoc.html?guid=b8b8bd83-acd7-44eb-a915-f664b350363b
+        //  Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
+        //  Это нужно, чтобы не сбрасывался hovered в плитке при изменении прогрессбара
+        if (!this._isLoadingPercentsChanged(newItems)) {
+            this.setHoveredItem(null);
+        }
         TileViewModel.superclass._onCollectionChange.apply(this, arguments);
     },
 

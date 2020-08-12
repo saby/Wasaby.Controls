@@ -298,21 +298,21 @@ function getHeaderMaxEndCellData(headerRows: IHeaderCell[][]): {maxRow: number, 
  * @param {Boolean} [hasMultiSelect] Отображаются чекбоксы или нет.
  * @param {Boolean} [isMultiHeader] активированы ли для grid множественные заголовки
  * @param {Boolean} [hasActionsCell] Необходимо ли добавлять ячейку действий
- * @param {Boolean} [stickyLadderCell] Необходимо ли добавлять ячейку для "лесенки"
+ * @param {Number} [stickyLadderCellsCount] Количество ячеек, добавляемых для лесенки
  * @return {Array} массив строк хэдера.
  * @example
  * const headerCells: IHeaderCell[] = [{title: 'name', startRow: 1, endRow: 2...}, {title: 'Price', startRow: 2, endRow: 3...}, ...];
  * let headerRowsArray = getHeaderRowsArray(headerCells, true, true, false, false);
  * // [[{}, {title: 'name', startRow: 1, endRow: 2...}}], [{{title: 'Price', startRow: 2, endRow: 3...}}], ...]
  *
- * let headerRowsArray = getHeaderRowsArray(headerCells, true, true, false, true);
- * // [[{}, {}, {title: 'name', startRow: 1, endRow: 2...}}], [{{title: 'Price', startRow: 2, endRow: 3...}}], ...]
+ * let headerRowsArray = getHeaderRowsArray(headerCells, true, true, false, 2);
+ * // [[{}, {}, {title: 'name', startRow: 1, endRow: 2...}}], {}, [{{title: 'Price', startRow: 2, endRow: 3...}}], ...]
  *
- * let headerRowsArray = getHeaderRowsArray(headerCells, true, true, true, true);
+ * let headerRowsArray = getHeaderRowsArray(headerCells, true, true, true, 1);
  * // [[{}, {}, {title: 'name', startRow: 1, endRow: 2...}}], [{{title: 'Price', startRow: 2, endRow: 3...}}], ..., {isActionCell: true, endColumn: ...}]
  */
 
-function getHeaderRowsArray(cells: IHeaderCell[], hasMultiSelect: boolean, isMultiHeader?: boolean, hasActionsCell?: boolean, stickyLadderCell?: boolean): IHeaderCell[][] {
+function getHeaderRowsArray(cells: IHeaderCell[], hasMultiSelect: boolean, isMultiHeader?: boolean, hasActionsCell?: boolean, stickyLadderCellsCount?: number): IHeaderCell[][] {
     let headerRows = [];
     if (!isMultiHeader) {
         headerRows.push(cells);
@@ -334,8 +334,10 @@ function getHeaderRowsArray(cells: IHeaderCell[], hasMultiSelect: boolean, isMul
         }
         headerRows = sortedColumns(headerRows);
     }
-    if (stickyLadderCell) {
-        headerRows[0] = [{}, ...headerRows[0]];
+    if (stickyLadderCellsCount === 2 ) {
+        headerRows[0] = [{ladderCell: true}, headerRows[0][0], {ladderCell: true}].concat(headerRows[0].slice(1));
+    } else if (stickyLadderCellsCount === 1) {
+        headerRows[0] = [{ladderCell: true}].concat(headerRows[0]);
     }
     if (hasMultiSelect) {
         headerRows[0] = [{}, ...headerRows[0]];

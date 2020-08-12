@@ -50,18 +50,22 @@ describe('Controls/scroll:ContainerNew ScrollbarsModel', () => {
             scrollContainerStyles: 'scrollContainerStyles',
             styleHideScrollbar: 'styleHideScrollbar'
         };
-        const model: ScrollbarsModel = new ScrollbarsModel({
+        let model: ScrollbarsModel = new ScrollbarsModel({
             ...getScrollbarsDefaultOptions(),
             scrollMode: SCROLL_MODE.VERTICAL
         }, state);
 
-        it('canScroll = false', () => {
-            model._canScroll = false;
-           assert.equal(model.scrollContainerStyles, '');
+        it('overflowHidden = true', () => {
+            assert.equal(model.scrollContainerStyles, '');
         });
-        it('canScroll = true', () => {
-            model._canScroll = true;
-            assert.equal(model.scrollContainerStyles, 'scrollContainerStyles');
+
+        it('overflowHidden = false', () => {
+            state.overflowHidden = false;
+            model = new ScrollbarsModel({
+                ...getScrollbarsDefaultOptions(),
+                scrollMode: SCROLL_MODE.VERTICAL
+            }, state);
+           assert.equal(model.scrollContainerStyles, 'scrollContainerStyles');
         });
     });
 
@@ -80,27 +84,37 @@ describe('Controls/scroll:ContainerNew ScrollbarsModel', () => {
     });
 
     describe('updateScrollState', () => {
+        const scrollState = {
+            scrollTop: 10,
+            scrollLeft: 20,
+            scrollHeight: 30,
+            scrollWidth: 40
+        };
         it('should update position and contentSize.', () => {
             const
                 model: ScrollbarsModel = new ScrollbarsModel({
                     ...getScrollbarsDefaultOptions(),
                     scrollMode: SCROLL_MODE.VERTICAL_HORIZONTAL
-                }),
-                scrollTop: number = 10,
-                scrollLeft: number = 20,
-                scrollHeight: number = 30,
-                scrollWidth: number = 40;
+                });
 
-            model.updateScrollState({
-                scrollTop: scrollTop,
-                scrollLeft: scrollLeft,
-                scrollHeight: scrollHeight,
-                scrollWidth: scrollWidth
-            })
-            assert.strictEqual(model._models.vertical.position, scrollTop);
-            assert.strictEqual(model._models.horizontal.position, scrollLeft);
-            assert.strictEqual(model._models.vertical.contentSize, scrollHeight);
-            assert.strictEqual(model._models.horizontal.contentSize, scrollWidth);
+            model.updateScrollState(scrollState, { offsetHeight: 50 });
+
+            assert.strictEqual(model._models.vertical.position, scrollState.scrollTop);
+            assert.strictEqual(model._models.horizontal.position, scrollState.scrollLeft);
+            assert.strictEqual(model._models.vertical.contentSize, scrollState.scrollHeight);
+            assert.strictEqual(model._models.horizontal.contentSize, scrollState.scrollWidth);
+        });
+
+        it('should set _overflowHidden to true if content fits into the container.', () => {
+            const
+                model: ScrollbarsModel = new ScrollbarsModel({
+                    ...getScrollbarsDefaultOptions(),
+                    scrollMode: SCROLL_MODE.VERTICAL_HORIZONTAL
+                });
+
+            model.updateScrollState(scrollState, { offsetHeight: 30 });
+
+            assert.isFalse(model._overflowHidden);
         });
     });
 });

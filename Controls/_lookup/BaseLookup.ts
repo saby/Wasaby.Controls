@@ -79,7 +79,7 @@ export default abstract class
         }
     }
 
-    protected _showSelector(popupOptions?: IStackPopupOptions): void|boolean {
+    protected _showSelector(event: SyntheticEvent, popupOptions?: IStackPopupOptions): void|boolean {
         if (this._notify('showSelector') !== false) {
             return this.showSelector(popupOptions);
         }
@@ -127,7 +127,7 @@ export default abstract class
 
     protected abstract _itemsChanged(items: SelectedItems): void;
 
-    static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/lookup', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {

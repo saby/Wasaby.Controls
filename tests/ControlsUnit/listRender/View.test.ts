@@ -151,7 +151,8 @@ describe('Controls/_listRender/View', () => {
                         id: 2,
                         showType: 0
                     }]
-                })
+                }),
+                isSwiped: () => false
             };
             view._collection = {
                 _$activeItem: null,

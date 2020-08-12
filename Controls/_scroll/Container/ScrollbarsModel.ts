@@ -10,9 +10,9 @@ import {IScrollState} from '../Utils/ScrollState';
 import {SCROLL_MODE} from './Type';
 
 interface ISerializeState {
-    overflowHidden: boolean,
-    styleHideScrollbar: string,
-    scrollContainerStyles: string
+    overflowHidden: boolean;
+    styleHideScrollbar: string;
+    scrollContainerStyles: string;
 }
 
 export default class ScrollbarsModel extends mixin<VersionableMixin>(VersionableMixin) implements IVersionable {
@@ -40,11 +40,13 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
 
         if (receivedState) {
             this._overflowHidden = receivedState.overflowHidden;
-            this._styleHideScrollbar = receivedState.styleHideScrollbar;
+            this._styleHideScrollbar = receivedState.styleHideScrollbar ||
+                ScrollWidthUtil.calcStyleHideScrollbar(options.scrollMode);
             this._scrollContainerStyles = receivedState.scrollContainerStyles;
         } else {
             this._overflowHidden = ScrollHeightFixUtil.calcHeightFix();
-            this._styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(options.scrollMode)
+            this._styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(options.scrollMode);
+
             if (this._styleHideScrollbar === '') {
                 this._scrollContainerStyles = '';
             }
@@ -68,7 +70,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             overflowHidden: this._overflowHidden,
             styleHideScrollbar: this._styleHideScrollbar,
             scrollContainerStyles: this._scrollContainerStyles
-        }
+        };
     }
 
     updateOptions(options: IScrollbarsOptions): void {
@@ -77,7 +79,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
-    updateScrollState(scrollState: IScrollState): void {
+    updateScrollState(scrollState: IScrollState, container: HTMLElement): void {
         let changed: boolean = false;
         for (let scrollbar of Object.keys(this._models)) {
             changed = this._models[scrollbar].updateScrollState(scrollState) || changed;
@@ -87,6 +89,19 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             this._canScroll = canScroll;
             changed = true;
         }
+
+        // Используем clientHeight в качестве offsetHeight если нижний скролбар не отбражается.
+        const isHorizontalScrollbarHidden = this._options.scrollMode === SCROLL_MODE.VERTICAL &&
+            !detection.firefox && !detection.isIE;
+        const overflowHidden = ScrollHeightFixUtil.calcHeightFix({
+            scrollHeight: scrollState.scrollHeight,
+            offsetHeight: isHorizontalScrollbarHidden ? scrollState.clientHeight : container.offsetHeight
+        });
+        if (overflowHidden !== this._overflowHidden) {
+            this._overflowHidden = overflowHidden;
+            changed = true;
+        }
+
         if (changed) {
             this._nextVersion();
         }
@@ -107,13 +122,13 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     }
 
     get scrollContainerStyles() {
-        return this._canScroll ? this._scrollContainerStyles : '';
+        return !this._overflowHidden ? this._scrollContainerStyles : '';
     }
 
     getScrollContainerClasses(): string {
         let css = '';
         if (this._useNativeScrollbar) {
-            css += ' controls-Scroll__content_auto'
+            css += ' controls-Scroll__content_auto';
         } else {
             css += ' controls-Scroll__content_hideNativeScrollbar';
             if (this._overflowHidden || this._scrollContainerStyles === undefined) {

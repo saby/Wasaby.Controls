@@ -1,5 +1,4 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-// @ts-ignore
 import * as controlTemplate from 'wml!Controls-demo/dropdown_new/Input/ValidationStatus/Index';
 import {Memory} from 'Types/source';
 
@@ -23,6 +22,6 @@ class SearchFlat extends Control<IControlOptions> {
         });
     }
 
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Menu/Control/Menu'];
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 export default SearchFlat;

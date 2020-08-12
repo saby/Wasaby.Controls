@@ -171,9 +171,11 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
          sandbox.replace(__ContentLayer.default._private, 'updateHeight', () => {});
          __ContentLayer.default._private.getScrollContainerSize = function() {return {top: 0}};
          layer._container = getContainer({top: 0});
+         layer._showContent = false;
 
          layer._afterUpdate();
          assert.isTrue(resizeStarted);
+         assert.isTrue(layer._showContent);
       });
    });
 

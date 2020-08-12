@@ -1,6 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import ActualApi from './ActualApi';
-import {IHref, IHrefOptions} from './interface/IHref';
 import {IButton, IButtonOptions} from './interface/IButton';
 import {IClick} from './interface/IClick';
 import {
@@ -19,7 +18,9 @@ import {
     IIconStyle,
     IIconStyleOptions,
     ITooltip,
-    ITooltipOptions
+    ITooltipOptions,
+    IHref,
+    IHrefOptions
 } from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');
@@ -28,8 +29,8 @@ import 'wml!Controls/_buttons/ButtonBase';
 export type IViewMode = 'button' | 'link' | 'toolButton' | 'functionalButton';
 
 export interface IButtonControlOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
-       IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
-       IButtonOptions {
+    IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
+    IButtonOptions {
     viewMode?: IViewMode;
     captionPosition: 'left' | 'right';
 }
@@ -65,7 +66,7 @@ export function cssStyleGeneration(options: IButtonControlOptions, hasMsg: boole
     }
 }
 
-function defaultHeight(viewMode: string): string {
+export function defaultHeight(viewMode: string): string {
     if (viewMode === 'button') {
         return 'default';
     } else if (viewMode === 'toolButton' || viewMode === 'pushButton' || viewMode === 'functionalButton') {
@@ -73,21 +74,16 @@ function defaultHeight(viewMode: string): string {
     }
 }
 
-function defaultFontColorStyle(viewMode: string): string {
+export function defaultFontColorStyle(viewMode: string): string {
     if (viewMode === 'link') {
         return 'link';
     }
 }
 
 export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
-    const oldViewModeToken = ActualApi.viewMode(options.viewMode, options.viewMode);
-
     this._buttonStyle = options.readOnly ? 'readonly' : options.buttonStyle;
     this._contrastBackground = options.contrastBackground;
-    this._viewMode = oldViewModeToken.viewMode;
-    if (typeof oldViewModeToken.contrast !== 'undefined') {
-        this._contrastBackground = oldViewModeToken.contrast;
-    }
+    this._viewMode = options.viewMode;
     this._height = options.inlineHeight ? options.inlineHeight : defaultHeight(this._viewMode);
     this._fontColorStyle = options.fontColorStyle ? options.fontColorStyle : defaultFontColorStyle(this._viewMode);
     this._fontSize = options.fontSize;
@@ -98,15 +94,30 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
     this._captionPosition = options.captionPosition || 'right';
 
     this._icon = options.icon;
-    this._iconSize = options.icon ? ActualApi.iconSize(options.iconSize, this._icon) : '';
-    this._iconStyle = options.icon ?
-        ActualApi.iconStyle(options.iconStyle, this._icon, options.readOnly, options.buttonAdd) : '';
-
+    if (options.icon) {
+        this._iconSize = ActualApi.iconSize(options.iconSize, this._icon);
+        if (options.readOnly) {
+            this._iconStyle = 'readonly';
+        } else {
+            this._iconStyle =  options.buttonAdd ? 'default' : options.iconStyle;
+        }
+    }
     if (this._viewMode === 'linkButton') {
         const actualState = ActualApi.actualLinkButton(this._viewMode, this._height);
         this._viewMode = actualState.viewMode;
         this._height = actualState.height;
     }
+}
+
+export function getDefaultOptions(): object {
+    return {
+        viewMode: 'button',
+        iconStyle: 'secondary',
+        captionPosition: 'right',
+        contrastBackground: false,
+        fontSize: 'm',
+        buttonStyle: 'secondary'
+    };
 }
 
 /**
@@ -121,7 +132,7 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
  *
  * @class Controls/_buttons/Button
  * @extends Core/Control
- * @mixes Controls/_buttons/interface/IHref
+ * @mixes Controls/interface:IHref
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_buttons/interface/IClick
@@ -146,7 +157,7 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
  *
  * @class Controls/_buttons/Button
  * @extends Core/Control
- * @mixes Controls/_buttons/interface/IHref
+ * @mixes Controls/interface:IHref
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_buttons/interface/IClick
@@ -227,58 +238,50 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
  * @variant right Icon before caption.
  * @default right
  */
-class Button extends Control<IButtonControlOptions> implements
-      IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight, IButton {
-   protected _template: TemplateFunction = ButtonTemplate;
+class Button extends Control<IButtonControlOptions> implements IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight, IButton {
+    protected _template: TemplateFunction = ButtonTemplate;
 
-   // Называть _style нельзя, так как это состояние используется для темизации
-   protected _buttonStyle: string;
-   protected _fontColorStyle: string;
-   protected _fontSize: string;
-   protected _contrastBackground: boolean;
-   protected _hasIcon: boolean;
-   protected _viewMode: string;
-   protected _height: string;
-   protected _caption: string | TemplateFunction;
-   protected _stringCaption: boolean;
-   protected _captionPosition: string;
-   protected _icon: string;
-   protected _iconSize: string;
-   protected _iconStyle: string;
-   protected _hoverIcon: boolean = true;
+    // Называть _style нельзя, так как это состояние используется для темизации
+    protected _buttonStyle: string;
+    protected _fontColorStyle: string;
+    protected _fontSize: string;
+    protected _contrastBackground: boolean;
+    protected _hasIcon: boolean;
+    protected _viewMode: string;
+    protected _height: string;
+    protected _caption: string | TemplateFunction;
+    protected _stringCaption: boolean;
+    protected _captionPosition: string;
+    protected _icon: string;
+    protected _iconSize: string;
+    protected _iconStyle: string;
+    protected _hoverIcon: boolean = true;
 
-   protected _beforeMount(options: IButtonControlOptions): void {
-       simpleCssStyleGeneration.call(this, options);
-   }
+    protected _beforeMount(options: IButtonControlOptions): void {
+        simpleCssStyleGeneration.call(this, options);
+    }
 
-   protected _beforeUpdate(newOptions: IButtonControlOptions): void {
-       simpleCssStyleGeneration.call(this, newOptions);
-   }
+    protected _beforeUpdate(newOptions: IButtonControlOptions): void {
+        simpleCssStyleGeneration.call(this, newOptions);
+    }
 
-   protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
-      if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
-         this._notify('click');
-      }
-   }
+    protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
+        if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
+            this._notify('click');
+        }
+    }
 
-   protected _clickHandler(e: SyntheticEvent<MouseEvent>): void {
-      if (this._options.readOnly) {
-         e.stopPropagation();
-      }
-   }
+    protected _clickHandler(e: SyntheticEvent<MouseEvent>): void {
+        if (this._options.readOnly) {
+            e.stopPropagation();
+        }
+    }
 
-   static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
 
-   static getDefaultOptions(): object {
-      return {
-         viewMode: 'button',
-         iconStyle: 'secondary',
-         captionPosition: 'right',
-         contrastBackground: false,
-         fontSize: 'm',
-         buttonStyle: 'secondary'
-      };
-   }
+    static getDefaultOptions(): object {
+        return getDefaultOptions();
+    }
 }
 
 export default Button;

@@ -16,6 +16,8 @@
       visibility: visible;
    }
 }
+
+.controls-GridView__itemV_marker-masterClassic_theme-@{themeName},
 .controls-GridView__itemV_marker-default_theme-@{themeName} {
    position: absolute;
    width: @marker_thickness_list;
@@ -62,7 +64,7 @@
 }
 
 .controls-Grid_columnScroll_wrapper {
-   z-index: 4;
+   z-index: 5;
    position: sticky;
 }
 
@@ -292,7 +294,7 @@
    display: -ms-grid;
 }
 .ws-is-hover {
-   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName}:not(.controls-Grid__row-ladder-cell) {
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover-default_theme-@{themeName}:not(.controls-Grid__row-ladder-cell) {
       background-color: @item_hover_background-color_list;
    }
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-background-default_theme-@{themeName} {
@@ -304,7 +306,7 @@
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content_hiddenForLadder {
       background-color: @item_hover_background-color_list;
    }
-   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content {
+   .controls-Grid__row_highlightOnHover-default_theme-@{themeName}:hover .controls-Grid__item_background-hover_default_theme-@{themeName}:not(.controls-Grid__row-ladder-cell__content) {
       background-color: @item_hover_background-color_list;
    }
 
@@ -370,7 +372,16 @@
       background-color: @item_editing_background-color_list;
    }
 }
+.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+   right: @cell_padding-right_default_grid;
+}
 
+.controls-Grid__row-cell__content_halign_center .controls-Grid__row-cell__ladder-content_additional-with-main {
+   right: 0;
+   left: 0;
+}
+
+.controls-Grid__row-main_ladderWrapper,
 .controls-Grid__row-additional_ladderWrapper {
    position: absolute;
    top: 0;
@@ -673,9 +684,14 @@
       position: absolute;
       left: 0;
       pointer-events: none;
-      top: -@masterClassic_item_selected_border-thickness_list;
-      bottom: -@masterClassic_item_selected_border-thickness_list;
+      top: 0;
+      bottom: 0;
    }
+}
+
+.controls-GridView__itemV_marker-masterClassic_theme-@{themeName} {
+   top: @masterClassic_item_selected_border-thickness_list;
+   height: calc(100% ~'-' 2 * @masterClassic_item_selected_border-thickness_list);
 }
 
 .controls-Grid__row-cell_selected__last-masterClassic_theme-@{themeName} {
@@ -728,8 +744,8 @@
 
 .ws-is-hover {
 
-   .controls-Grid__row_highlightOnHover_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName},
-   .controls-Grid__row_highlightOnHover_masterClassic_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover_theme-@{themeName} {
+   .controls-Grid__row_highlightOnHover_master_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover-master_theme-@{themeName},
+   .controls-Grid__row_highlightOnHover_masterClassic_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover-masterClassic_theme-@{themeName} {
       background-color: @master_item_hover_background-color_list;
    }
    .controls-Grid__row_highlightOnHover_master_theme-@{themeName}:hover .controls-background-master_theme-@{themeName},
@@ -747,7 +763,8 @@
 
    // Нужен отдельный стек z-index, иначе при скролле колонок из-за transform опции оказываются ниже данных таблицы и неправильно обрабатывается ховер
    // https://online.sbis.ru/opendoc.html?guid=6059b335-dad3-4458-b022-0260680d5c27
-   z-index: 1;
+   // Значение = 4, т.к. для .controls-Grid__cell_fixed_ сделано 3
+   z-index: 4;
 
    pointer-events: none;
    .controls-itemActionsV {

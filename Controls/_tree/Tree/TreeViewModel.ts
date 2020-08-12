@@ -9,6 +9,7 @@ import { IDragPosition, ITreeItemData } from 'Controls/listDragNDrop';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {Logger} from 'UI/Utils';
 import { TreeChildren, TreeItem } from 'Controls/display';
+import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 
 var
     _private = {
@@ -185,8 +186,8 @@ var
             let expanderClasses = `controls-TreeGrid__row-expander_theme-${theme}`;
             let expanderIconClass = '';
 
-            expanderClasses += ' controls-TreeGrid__row_' + style + '-expander_size_' + (expanderSize || 'default') + `_theme-${theme}`;
-            expanderClasses += ' js-controls-ListView__notEditable';
+            expanderClasses += ' controls-TreeGrid__row_' + style + '-expander_size_' + (expanderSize || 'default') + `_theme-${theme} `;
+            expanderClasses += EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE;
 
             expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${itemData.itemPadding.top}_theme-${theme}`;
             expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${itemData.itemPadding.bottom}_theme-${theme}`;
@@ -638,6 +639,7 @@ var
 
             // todo https://online.sbis.ru/opendoc.html?guid=0649e69a-d507-4024-9f99-c70205f535ef
             current.expanderTemplate = this._options.expanderTemplate;
+            current.newFooterContentTemplate = this._options.newFooterContentTemplate;
 
             if (current.item.get) {
                 current.level = current.dispItem.getLevel();

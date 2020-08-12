@@ -2,6 +2,7 @@ import cExtend = require('Core/core-simpleExtend');
 import {ObservableMixin, VersionableMixin, DateTime} from 'Types/entity';
 import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
 import DateUtil = require('Controls/Utils/Date');
+import CalendarUtils from './Utils';
 
 /**
  * Модель для контролов, предназначенных для ввода диапазона дат.
@@ -45,8 +46,8 @@ var _private = {
 var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], {
    _startValue: null,
    _endValue: null,
+   _options: null,
    _dateConstructor: DateTime,
-   _rangeSelectedCallback: null,
 
    constructor: function(cfg) {
       ModuleClass.superclass.constructor.apply(this, arguments);
@@ -56,6 +57,7 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
    },
 
    update: function(options) {
+      this._options = options;
       var changed = false;
       if (options.hasOwnProperty('startValue') && !DateUtil.isDatesEqual(options.startValue, this._startValue)) {
          this._startValue = options.startValue;
@@ -65,7 +67,6 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
          this._endValue = options.endValue;
          changed = true;
       }
-      this._rangeSelectedCallback = options.rangeSelectedCallback;
       return changed;
    },
 
@@ -110,10 +111,17 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
     * If you select a period of several whole months, quarters, six months, or years,
     * then shift it for the same period forward.
     */
-   shiftForward: function() {
-      var range = dateRangeUtil.shiftPeriod(this.startValue, this.endValue, dateRangeUtil.SHIFT_DIRECTION.FORWARD);
-      range = this._rangeSelected(range);
+   _shiftRange(direction: number): void {
+      let range = this._prepareRange();
+      range = dateRangeUtil.shiftPeriod(range[0], range[1], direction);
+      if (this._hasRanges()) {
+         range = this._rangeSelected(range);
+      }
       this.setRange(_private.createDate(this, range[0]), _private.createDate(this, range[1]));
+   },
+
+   shiftForward: function() {
+      this._shiftRange(dateRangeUtil.SHIFT_DIRECTION.FORWARD);
    },
 
    /**
@@ -121,13 +129,27 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
     * it shifts it for the same period back.
     */
    shiftBack: function() {
-      var range = dateRangeUtil.shiftPeriod(this.startValue, this.endValue, dateRangeUtil.SHIFT_DIRECTION.BACK);
-      range = this._rangeSelected(range);
-      this.setRange(_private.createDate(this, range[0]), _private.createDate(this, range[1]));
+      this._shiftRange(dateRangeUtil.SHIFT_DIRECTION.BACK);
    },
+
+   _prepareRange(): Date[] {
+      let range;
+      if (this._hasRanges() && this._options.rangeSelectedCallback) {
+         //Если заданы кванты вместе с rangeSelectedCallback, то мы должны сначала подстроить дату под них
+         range = CalendarUtils.updateRangeByQuantum(this.startValue, this.startValue, this._options.ranges);
+      } else {
+         range = [this.startValue, this.endValue];
+      }
+      return range;
+   },
+
+   _hasRanges(): boolean {
+      return this._options.selectionType === 'quantum' && this._options.ranges;
+   },
+
    _rangeSelected(range: Date[]): Date[] {
-      if (this._rangeSelectedCallback) {
-         return this._rangeSelectedCallback(range[0], range[1]);
+      if (this._options.rangeSelectedCallback) {
+         return this._options.rangeSelectedCallback(range[0], range[1]);
       }
       return range;
    }

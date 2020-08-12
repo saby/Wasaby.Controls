@@ -195,7 +195,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
      * @returns {String} Возвращает id индикатора загрузки. Используется в методе {@link hide} для закрытия индикатора.
      * @see hide
      */
-    show(config: ILoadingIndicatorOptions, waitPromise?: Promise<any>): string {
+    show(config?: ILoadingIndicatorOptions, waitPromise?: Promise<any>): string {
         return this._show({...config}, waitPromise);
     }
 
@@ -233,11 +233,14 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     private _hide(id: string): void {
-        this._removeItem(id);
-        if (this._stack.getCount()) {
-            this._toggleIndicator(true, this._stack.at(this._stack.getCount() - 1), true);
-        } else {
-            this._toggleIndicator(false);
+        const hasItem = this._getItemIndex(id) > -1;
+        if (hasItem) {
+            this._removeItem(id);
+            if (this._stack.getCount()) {
+                this._toggleIndicator(true, this._stack.at(this._stack.getCount() - 1), true);
+            } else {
+                this._toggleIndicator(false);
+            }
         }
     }
 
@@ -526,4 +529,5 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
 }
 
 export {default as IndicatorOpener} from 'Controls/_LoadingIndicator/LoadingIndicatorOpener';
+export {default as ILoadingIndicator, ILoadingIndicatorOptions} from 'Controls/_LoadingIndicator/interface/ILoadingIndicator';
 export default LoadingIndicator;

@@ -269,6 +269,21 @@ define(
                });
             });
 
+            it('_getloadItemsPromise', () => {
+               let errorCathed = false;
+               dropdownController._items = null;
+               dropdownController._loadItemsPromise = null;
+               dropdownController._options.source = null;
+               let promise = dropdownController._getloadItemsPromise();
+
+               try {
+                  promise.then(() => {});
+               } catch (error) {
+                  errorCathed = true;
+               }
+               assert.isFalse(errorCathed);
+            });
+
             it('without loaded items', () => {
                let configItems = clone(config),
                   selectedItems = [];
@@ -608,6 +623,9 @@ define(
             });
 
             it('only popupOptions', () => {
+               dropdownController._popupOptions = {
+                  opener: 'test'
+               };
                const resultPopupConfig = dropdownController._getPopupOptions();
                assert.deepEqual(resultPopupConfig.fittingMode,  {
                   vertical: 'adaptive',
@@ -615,17 +633,25 @@ define(
                });
                assert.equal(resultPopupConfig.direction, 'top');
                assert.equal(resultPopupConfig.target, 'testTarget');
+               assert.equal(resultPopupConfig.opener, 'test');
             });
 
             it('templateOptions', () => {
                dropdownController._menuSource = 'testSource';
+               dropdownController._popupOptions = {
+                  opener: 'test'
+               };
                const resultPopupConfig = dropdownController._getPopupOptions();
 
                assert.isTrue(resultPopupConfig.templateOptions.closeButtonVisibility);
                assert.equal(resultPopupConfig.templateOptions.source, 'testSource');
+               assert.equal(resultPopupConfig.opener, 'test');
             });
 
-            it('templateOptions', () => {
+            it('check merge popupOptions', () => {
+               dropdownController._popupOptions = {
+                  opener: 'test'
+               };
                const resultPopupConfig = dropdownController._getPopupOptions({
                   testPopupOptions: 'testValue'
                });
@@ -633,6 +659,21 @@ define(
                assert.equal(resultPopupConfig.direction, 'top');
                assert.equal(resultPopupConfig.target, 'testTarget');
                assert.equal(resultPopupConfig.testPopupOptions, 'testValue');
+               assert.equal(resultPopupConfig.opener, 'test');
+            });
+
+            it('check keyProperty option', () => {
+               dropdownController._popupOptions = { };
+               dropdownController._options.keyProperty = 'key';
+               dropdownController._source = new history.Source({});
+               let resultPopupConfig = dropdownController._getPopupOptions();
+
+               assert.equal(resultPopupConfig.templateOptions.keyProperty, 'copyOriginalId');
+
+               dropdownController._source = 'originalSource';
+               resultPopupConfig = dropdownController._getPopupOptions();
+
+               assert.equal(resultPopupConfig.templateOptions.keyProperty, 'key');
             });
          });
 

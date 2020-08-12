@@ -70,7 +70,7 @@ import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatorTe
 import ContinueSearchTemplate = require('wml!Controls/_list/resources/ContinueSearchTemplate');
 import Mover = require('Controls/_list/Mover');
 import Remover = require('Controls/_list/Remover');
-import DataContainer = require('Controls/_list/Data');
+import {default as DataContainer} from 'Controls/_list/Data';
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
 import BaseEditingTemplate = require('wml!Controls/_list/EditInPlace/baseEditingTemplate');
@@ -95,7 +95,6 @@ import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
 import {default as ScrollController} from './_list/ScrollController';
 import {IList} from './_list/interface/IList';
-import {default as DataController} from 'Controls/_list/Data/ControllerClass';
 
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 
@@ -143,7 +142,6 @@ export {
     IList,
     VirtualScroll,
     ScrollController,
-    DataController,
 
     // @deprecated
     _itemActionsForTemplate,

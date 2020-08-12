@@ -1,10 +1,12 @@
 <Controls.popup:InfoboxTarget targetSide="bottom"
                               trigger="{{_needInfobox ? 'hover' : 'demand'}}"
+                              name="infoboxTarget"
                               on:click="_handleClick()"
                               on:mousedown="_handleMouseDown()"
                               on:mouseenter="_handleMouseEnter()"
                               on:mouseleave="_handleMouseLeave()"
                               on:keydown="_handleKeyDown()"
+                              on:deactivated="_deactivated()"
                               attr:class="controls-Dropdown_theme_{{_options.theme}}
                                          {{(_options.validationStatus === 'invalid' || _options.validationStatus === 'invalidAccent') ? 'controls-Dropdown-validationStatus_invalid_theme_' + _options.theme}}">
     <ws:content>

@@ -171,6 +171,7 @@ define(
                toolbar._children.menuTarget = {
                   _container: 'target'
                };
+               toolbar._options = config;
                toolbar._openMenu = () => {};
                toolbar._showMenu({
                   stopPropagation: () => {
@@ -278,7 +279,9 @@ define(
                         source: '_options.source'
                      },
                      _source: 'items',
-                     _items: { getIndexByValue: () => {} }
+                     _items: { getIndexByValue: () => {} },
+                     _getSourceForMenu: () => testSelf._source,
+                     _getMenuOptions: () => testSelf._menuOptions
                   },
                   expectedConfig = {
                      opener: testSelf,
@@ -412,7 +415,8 @@ define(
                      _children: {
                         menuTarget: 'menuTarget'
                      },
-                     _menuSource: recordForMenu
+                     _menuSource: recordForMenu,
+                     _getMenuOptions: () => testSelf._menuOptions
                   },
                   templateOptions = {
                      iconSize: 'm',
@@ -459,6 +463,23 @@ define(
             it('_setMenuItems', async() => {
                let Toolbar = new toolbars.View(config);
                await Toolbar._beforeMount(config);
+               Toolbar._options = config;
+               Toolbar._setMenuItems();
+               assert.isTrue(Toolbar._menuSource instanceof sourceLib.PrefetchProxy);
+               assert.isTrue(Toolbar._menuSource._$target instanceof sourceLib.Memory);
+               assert.isTrue(Toolbar._menuSource._$data.query instanceof collection.RecordSet);
+            });
+            it('_setMenuItems without source', async() => {
+               const cfg = {
+                  items: new collection.RecordSet({
+                     rawData: defaultItems
+                  }),
+                  parentProperty: 'parent',
+                  nodeProperty: '@parent'
+               };
+               let Toolbar = new toolbars.View(cfg);
+               await Toolbar._beforeMount(cfg);
+               Toolbar._options = cfg;
                Toolbar._setMenuItems();
                assert.isTrue(Toolbar._menuSource instanceof sourceLib.PrefetchProxy);
                assert.isTrue(Toolbar._menuSource._$target instanceof sourceLib.Memory);
@@ -473,7 +494,7 @@ define(
                   vertical: 'adaptive',
                   horizontal: 'overflow'
                };
-               assert.deepEqual(Toolbar._menuOptions.fittingMode, fittingMode);
+               assert.deepEqual(Toolbar._getMenuOptions().fittingMode, fittingMode);
             });
          });
          function setTrue(assert) {

@@ -207,6 +207,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
         const options = BaseOpener.getDefaultOptions();
 
         options.actionOnScroll = 'close';
+        options.showIndicator = false;
         return options;
     }
 }

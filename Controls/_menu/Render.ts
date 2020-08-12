@@ -15,6 +15,15 @@ import {create as DiCreate} from 'Types/di';
 interface IMenuRenderOptions extends IMenuBaseOptions, IRenderOptions {
 }
 
+/**
+ * Контрол меню рендер.
+ * @class Controls/menu:Render
+ * @extends UI/_base/Control
+ * @private
+ * @control
+ * @author Герасимов А.М.
+ */
+
 class MenuRender extends Control<IMenuRenderOptions> {
     protected _template: TemplateFunction = ViewTemplate;
     protected _iconPadding: string;
@@ -172,6 +181,9 @@ class MenuRender extends Control<IMenuRenderOptions> {
         data[options.keyProperty] = options.emptyKey;
         data[options.displayProperty] = options.emptyText;
 
+        if (options.parentProperty) {
+            data[options.parentProperty] = options.root;
+        }
         emptyItem.set(data);
         collection.prepend([emptyItem]);
 

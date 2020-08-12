@@ -10,7 +10,7 @@
                {{height === 'auto' ? 'controls-TileView__item_autoHeight'}}
                {{highlightOnHover === true ? ' controls-TileView__itemContent_highlightOnHover_theme-' + theme}}
                {{backgroundColorStyle ? ' controls-TileView__itemContent_background_' + backgroundColorStyle +'_theme-' + theme}}
-               js-controls-ItemActions__measurementContainer
+               js-controls-ItemActions__swipeMeasurementContainer
                {{!!itemData.isActive() ? ' controls-TileView__item_active_theme-' + theme}}
                {{!!itemData.isSwiped() ? ' controls-TileView__item_swiped_theme-' + theme}}
                {{itemData.isHovered ? ' controls-TileView__item_hovered'}}
@@ -47,14 +47,35 @@
             <ws:if data="{{titleStyle === 'accent'}}">
                <div class="controls-TileView__title_accent_theme-{{theme}}"
                     title="{{itemData.item[itemData.displayProperty]}}">
-                  <div class="controls-TileView__title_accent_ellipsis">{{itemData.item[itemData.displayProperty]}}</div>
+                  <div class="controls-TileView__title_accent_ellipsis">
+                     <ws:if data="{{itemData.searchValue}}">
+                        <Controls.decorator:Highlight highlightedValue="{{itemData.searchValue}}">
+                           <ws:value>
+                              <ws:String>{{itemData.item[itemData.displayProperty]}}</ws:String>
+                           </ws:value>
+                        </Controls.decorator:Highlight>
+                     </ws:if>
+                     <ws:else>
+                        {{itemData.item[itemData.displayProperty]}}
+                     </ws:else>
+                  </div>
                </div>
             </ws:if>
             <ws:else>
                <div class="controls-TileView__title controls-TileView__title_theme-{{theme}} {{(titleStyle === 'onhover' || titleStyle === undefined && !hasTitle) ? 'controls-TileView__title_invisible'}}"
-                    title="{{itemData.item[itemData.displayProperty]}}">{{itemData.item[itemData.displayProperty]}}</div>
+                    title="{{itemData.item[itemData.displayProperty]}}">
+                  <ws:if data="{{itemData.searchValue}}">
+                     <Controls.decorator:Highlight highlightedValue="{{itemData.searchValue}}">
+                        <ws:value>
+                           <ws:String>{{itemData.item[itemData.displayProperty]}}</ws:String>
+                        </ws:value>
+                     </Controls.decorator:Highlight>
+                  </ws:if>
+                  <ws:else>
+                     {{itemData.item[itemData.displayProperty]}}
+                  </ws:else>
+               </div>
             </ws:else>
-
          </ws:if>
       </ws:else>
       <ws:partial if="{{!itemData.isSwiped() && (itemData.hasVisibleActions() || itemData.isEditing()) && itemData.itemActionsPosition !== 'custom'}}"

@@ -22,22 +22,29 @@ import collection = require('Types/collection');
 import { Model } from 'Types/entity';
 import {
     IEditingConfig,
-    IItemActionsTemplateConfig,
     ISwipeConfig,
     ANIMATION_STATE,
     CollectionItem
 } from 'Controls/display';
+import {IItemActionsTemplateConfig} from 'Controls/itemActions';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import {createClassListCollection} from "../Utils/CssClassList";
-import { shouldAddStickyLadderCell, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
+import { stickyLadderCellsCount, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
-const FIXED_HEADER_ZINDEX = 4;
-const STICKY_HEADER_ZINDEX = 3;
+/**
+ * При установке этих значений следует учитывать, что z-index:
+ * .controls-Grid__cell_fixed_theme-@{themeName} = 3
+ * .controls-TreeGrid__row__searchBreadCrumbs .controls-itemActionsV__container = 4
+ * .controls-itemActionsV__container = 4
+ * .controls-Grid_columnScroll_wrapper = 5
+ */
+const FIXED_HEADER_ZINDEX = 6;
+const STICKY_HEADER_ZINDEX = 5;
 
 interface IGridSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';
@@ -261,10 +268,15 @@ var
         },
 
         isFixedCell: function(params) {
-            const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isMultiHeader } = params;
+            const { multiSelectVisibility, stickyColumnsCount, columnIndex, rowIndex, isHeader, isMultiHeader, endColumn } = params;
             const
                 hasMultiSelect = multiSelectVisibility !== 'hidden',
                 columnOffset = hasMultiSelect ? 1 : 0;
+
+            if (isHeader && typeof endColumn !== 'undefined') {
+                // endColumn - конфиг GridLayout, он всегда больше на 1.
+                return endColumn - 1 <= stickyColumnsCount;
+            }
             const isCellIndexLessTheFixedIndex = columnIndex < (stickyColumnsCount + columnOffset);
             if (isMultiHeader !== undefined) {
                 return isCellIndexLessTheFixedIndex && rowIndex === 0;
@@ -272,14 +284,13 @@ var
             return isCellIndexLessTheFixedIndex;
         },
 
-
-        getHeaderZIndex: function(params) {
-            if (params.isColumnScrollVisible) {
-                return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
-            } else {
-                // Пока в таблице нет горизонтального скролла, шапка ен может быть проскролена по горизонтали.
-                return FIXED_HEADER_ZINDEX;
-            }
+        // Раньше по https://online.sbis.ru/doc/a4b0487a-4bc4-47e4-afce-3340833b1232 тут ещё была проверка на
+        // isColumnScrollVisible, но это приводило к тому, что в некоторых реестрах
+        // z-index всех столбцов формировались до установки isColumnScrollVisible=true как FIXED_HEADER_ZINDEX
+        // и т.к. они были на одном уровне, то возникал кейс по ошибке
+        // https://online.sbis.ru/opendoc.html?guid=42614e54-3ed7-41f4-9d57-a6971df66f9c
+        getHeaderZIndex(params): number {
+            return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
         },
 
         getColumnScrollCellClasses(params, theme): string {
@@ -317,7 +328,8 @@ var
             if (current.isEditing()) {
                 classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
             } else {
-                classLists.base += ` controls-Grid__row-cell-background-hover_theme-${theme}`;
+                let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
+                classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
             }
 
             if (current.columnScroll && !current.isEditing()) {
@@ -685,6 +697,7 @@ var
             this._resolvers = {};
             this._model = this._createModel(cfg);
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+                this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
                 if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
                     this._ladder = _private.prepareLadder(this);
                 }
@@ -692,7 +705,6 @@ var
                     this._nextHeaderVersion();
                 }
                 this._nextVersion();
-                this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
             }.bind(this);
             this._onGroupsExpandChangeFn = function(event, changes) {
                 this._notify('onGroupsExpandChange', changes);
@@ -799,7 +811,7 @@ var
                 this._header,
                 this._options.multiSelectVisibility !== 'hidden',
                 this._shouldAddActionsCell(),
-                this.shouldAddStickyLadderCell()
+                this.stickyLadderCellsCount()
             );
             if (columns && columns.length) {
                 this._headerModel = {
@@ -851,10 +863,10 @@ var
             }
             return result;
         },
-        _prepareHeaderColumns: function(columns, multiSelectVisibility, actionsCell, stickyLadderCell) {
+        _prepareHeaderColumns: function(columns, multiSelectVisibility, actionsCell, stickyLadderCellsCount) {
             if (columns && columns.length) {
                 this._isMultiHeader = this.isMultiHeader(columns);
-                this._headerRows = getHeaderRowsArray(columns, multiSelectVisibility, this._isMultiHeader, actionsCell, stickyLadderCell);
+                this._headerRows = getHeaderRowsArray(columns, multiSelectVisibility, this._isMultiHeader, actionsCell, stickyLadderCellsCount);
                 const headerMaxEndCellData = getHeaderMaxEndCellData(this._headerRows);
                 this._maxEndRow = headerMaxEndCellData.maxRow;
                 this._maxEndColumn = headerMaxEndCellData.maxColumn;
@@ -881,8 +893,8 @@ var
         /**
          * Проверка необходимости добавлять ячейку для лесенки
          */
-        shouldAddStickyLadderCell(): boolean {
-            return shouldAddStickyLadderCell(
+        stickyLadderCellsCount(): number {
+            return stickyLadderCellsCount(
                 this._options.columns,
                 this._options.stickyColumn,
                 this.getDragItemData());
@@ -956,7 +968,7 @@ var
             const headerColumn = {
                 column: cell,
                 index: columnIndex,
-                shadowVisibility: 'visible'
+                shadowVisibility: cell.ladderCell ? 'hidden' : 'visible'
             };
             let cellClasses = `controls-Grid__header-cell controls-Grid__header-cell_theme-${theme}` +
                 ` controls-Grid__${this._isMultiHeader ? 'multi-' : ''}header-cell_min-height_theme-${theme}` +
@@ -965,7 +977,9 @@ var
             if (this.isStickyHeader()) {
                headerColumn.zIndex = _private.getHeaderZIndex({
                   columnIndex: columnIndex,
+                  endColumn: cell.endColumn,
                   rowIndex,
+                  isHeader: true,
                   isMultiHeader: this._isMultiHeader,
                   multiSelectVisibility: this._options.multiSelectVisibility,
                   stickyColumnsCount: this._options.stickyColumnsCount,
@@ -980,7 +994,9 @@ var
             if (this._options.columnScroll) {
                 cellClasses += _private.getColumnScrollCellClasses({
                     columnIndex: columnIndex,
+                    endColumn: cell.endColumn,
                     rowIndex,
+                    isHeader: true,
                     isMultiHeader: this._isMultiHeader,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
@@ -1138,10 +1154,9 @@ var
         },
 
         setHasMoreData(hasMoreData: boolean, silent: boolean = false): boolean {
-            if (this._model.setHasMoreData(hasMoreData)) {
-                if (!silent) {
-                    this._nextModelVersion(true);
-                }
+            this._model.setHasMoreData(hasMoreData);
+            if (!silent) {
+                this._nextModelVersion(true);
             }
         },
 
@@ -1180,8 +1195,11 @@ var
             } else {
                 this._resultsColumns = columns;
             }
-            if (this.shouldAddStickyLadderCell()) {
-                this._resultsColumns = [{}].concat(this._resultsColumns);
+            let stickyCellsCount = this.stickyLadderCellsCount();
+            if (stickyCellsCount === 2) {
+                this._resultsColumns = [{}, this._resultsColumns[0], {}].concat(this._resultsColumns.slice(1));
+            } else if (stickyCellsCount === 1) {
+                this._resultsColumns = [{}, ...this._resultsColumns];
             }
             if (this._shouldAddActionsCell()) {
                 this._resultsColumns = this._resultsColumns.concat([{ isActionCell: true }]);
@@ -1325,7 +1343,7 @@ var
             const hasMultiSelect = multiSelectVisibility !== 'hidden';
             this._model.setMultiSelectVisibility(multiSelectVisibility);
             this._prepareColgroupColumns(this._columns, hasMultiSelect);
-            this._prepareHeaderColumns(this._header, hasMultiSelect, this._shouldAddActionsCell(), this.shouldAddStickyLadderCell());
+            this._prepareHeaderColumns(this._header, hasMultiSelect, this._shouldAddActionsCell(), this.stickyLadderCellsCount());
 
             this._prepareResultsColumns(this._columns, hasMultiSelect);
         },
@@ -1401,8 +1419,8 @@ var
             this._model.setEditingConfig(editingConfig);
         },
 
-        setItemPadding: function(itemPadding) {
-            this._model.setItemPadding(itemPadding);
+        setItemPadding: function(itemPadding, silent) {
+            this._model.setItemPadding(itemPadding, silent);
         },
 
         getCollapsedGroups(): Grouping.TArrayGroupId {
@@ -1515,11 +1533,23 @@ var
             current.isLastRow = (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
                                  (this.getCount() - 1 === current.index);
 
+            // Если после последней записи идет добавление новой, не нужно рисовать широкую линию-разделитель между ними.
+            const editingItemData = this.getEditingItemData();
+            if (editingItemData) {
+                let index;
+                if (this._options.editingConfig.addPosition === 'top') {
+                    index = editingItemData.index - 1;
+                } else {
+                    index = editingItemData.index;
+                }
+                current.isLastRow = current.isLastRow  && (index - 1 < current.index);
+            }
+
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
             );
 
-            const style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
+            const style = !current.style ? 'default' : current.style;
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${current.theme}
@@ -1647,6 +1677,7 @@ var
                         showEditArrow: current.showEditArrow,
                         itemPadding: current.itemPadding,
                         getLadderContentClasses: current.getLadderContentClasses,
+                        hoverBackgroundStyle: self._options.hoverBackgroundStyle || 'default',
                         getVersion: function () {
                            return _private.calcItemColumnVersion(self, current.getVersion(), this.columnIndex, this.index);
                         },
@@ -1732,15 +1763,19 @@ var
             this._nextModelVersion();
         },
 
-        setColumnScroll(columnScroll: boolean): void {
+        setColumnScroll(columnScroll: boolean, silent: boolean = false): void {
             this._options.columnScroll = columnScroll;
-            this._nextModelVersion();
+            if (!silent) {
+                this._nextModelVersion();
+            }
         },
 
         setColumnScrollVisibility(columnScrollVisibility: boolean) {
             if (!!this._options.columnScrollVisibility !== columnScrollVisibility) {
                 this._options.columnScrollVisibility = columnScrollVisibility;
-                this._headerModel?.nextVersion();
+
+                // Нужно обновить классы с z-index на всех ячейках
+                this._nextModelVersion();
             }
         },
 
@@ -2089,7 +2124,7 @@ var
         getFooterStyles(): string {
             if (GridLayoutUtil.isFullGridSupport()) {
                 const offsetForMultiSelect: number = +(this.getMultiSelectVisibility() !== 'hidden');
-                const offsetForStickyColumn: number = +(this.shouldAddStickyLadderCell());
+                const offsetForStickyColumn: number = +(this.stickyLadderCellsCount());
 
                 return GridLayoutUtil.getColumnStyles({
                     columnStart: 0,
@@ -2174,9 +2209,8 @@ var
                 return GridLayoutUtil.getColumnStyles(columnCfg);
             } else {
                 columnCfg.columnSpan = params.columnsLength;
-                if (this.shouldAddStickyLadderCell()) {
-                    columnCfg.columnSpan += 1;
-                }
+                columnCfg.columnSpan += this.stickyLadderCellsCount();
+
                 return GridLayoutUtil.getColumnStyles(columnCfg);
             }
         },

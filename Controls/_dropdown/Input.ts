@@ -9,7 +9,7 @@ import {isEqual} from 'Types/object';
 import Controller from 'Controls/_dropdown/_Controller';
 import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {IStickyPopupOptions} from 'Controls/popup';
+import {IStickyPopupOptions, InfoboxTarget} from 'Controls/popup';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
@@ -246,12 +246,17 @@ let getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * </pre>
  */
 
+interface IDropdownInputChildren {
+   infoboxTarget: InfoboxTarget;
+}
+
 export default class Input extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _defaultContentTemplate: TemplateFunction = defaultContentTemplate;
    protected _text: string = '';
    protected _hasMoreText: string = '';
    protected _selectedItems = '';
+   protected _children: IDropdownInputChildren;
 
    _beforeMount(options: IInputOptions,
                 context: object,
@@ -287,6 +292,7 @@ export default class Input extends BaseDropdown {
 
    _getMenuPopupConfig(): IStickyPopupOptions {
       return {
+         opener: this._children.infoboxTarget,
          templateOptions: {
             selectorDialogResult: this._selectorTemplateResult.bind(this)
          },
@@ -428,6 +434,10 @@ export default class Input extends BaseDropdown {
          moreText = ', ' + rk('еще') + ' ' + (items.length - 1);
       }
       return moreText;
+   }
+
+   protected _deactivated(): void {
+      this.closeMenu();
    }
 
    static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];

@@ -17,7 +17,7 @@ define(
             telepfoneFormat = inputMod.MaskFormatBuilder.getFormat('+7 (ddd)ddd-dd-dd', {
                d: '[0-9]'
             }, ''),
-            clearData = Formatter.getClearData(format, '1 . 4'),
+            clearData = Formatter.clearData(format, '1 . 4'),
             result;
 
          describe('getClearSplitValue', function() {

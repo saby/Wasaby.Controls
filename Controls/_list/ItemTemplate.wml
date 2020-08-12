@@ -2,13 +2,13 @@
    <ws:partial attr:class="{{itemData.calcCursorClasses(clickable, cursor)}}
        {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData._isSelected ?
        ' controls-ListView__itemV_withMarker controls-ListView__item__marked_' : ' controls-ListView__item__unmarked_') + itemData.style + '_theme-' + itemData.theme}}
-       {{highlightOnHover !== false && !itemData.isEditing() ? 'controls-ListView__item_highlightOnHover_' + itemData.style + '_theme_' + itemData.theme}}
+       {{highlightOnHover !== false && !itemData.isEditing() ? 'controls-ListView__item_highlightOnHover_' + itemData.hoverBackgroundStyle + '_theme_' + itemData.theme}}
        controls-ListView__item_{{itemData.style}} controls-ListView__item_{{itemData.style}}_theme-{{itemData.theme}}
        controls-ListView__item_showActions
        {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-ListView__item_active_theme-' + itemData.theme}}
        {{!!itemData.isEditing() ? ' controls-ListView__item_editing_theme-' + itemData.theme}}
        {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
-       js-controls-ItemActions__measurementContainer"
+       js-controls-ItemActions__swipeMeasurementContainer"
        attr:key="{{itemData.item.getId()}}"
        template="{{content}}"
        theme="{{itemData.theme}}"/>

@@ -125,6 +125,12 @@ const maxPercentValue = 100;
  * @demo Controls-demo/Slider/Base/Intervals/Index
  */
 
+/**
+ * @event Controls/_slider/Base#valueChanged Происходит при изменении значения слайдера.
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {number} value Новое значение.
+ */
+
 class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
@@ -168,10 +174,10 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
             if (start > end) {
                Logger.error('Slider: start of the interval must be less than end.');
             }
-            if (start <= minValue || start >= maxValue) {
+            if (start < minValue || start > maxValue) {
                Logger.error('Slider: start of the interval must be between minValue and maxValue.');
             }
-            if (end <= minValue || end >= maxValue) {
+            if (end < minValue || end > maxValue) {
                Logger.error('Slider: end of the interval must be between minValue and maxValue.');
             }
          });
