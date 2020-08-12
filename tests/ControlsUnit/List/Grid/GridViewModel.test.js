@@ -2652,9 +2652,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   columnIndex: 0
                };
                [
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', '']
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', '']
                ].forEach((expectedClasses, index) => {
                   current.columnIndex = index;
 
@@ -2682,9 +2682,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   hasMultiSelect: false
                };
                [
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', '']
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', '']
                ].forEach((expectedClasses, index) => {
                   current.columnIndex = index;
 
@@ -2712,9 +2712,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   hasMultiSelect: false
                };
                [
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default'],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default']
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default'],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default']
                ].forEach((expectedClasses, index) => {
                   current.columnIndex = index;
 
@@ -2742,9 +2742,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   hasMultiSelect: true
                };
                [
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default']
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default']
                ].forEach((expectedClasses, index) => {
                   current.columnIndex = index;
 
