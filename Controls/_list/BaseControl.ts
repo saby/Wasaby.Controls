@@ -3730,6 +3730,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (canBeMarked) {
+            if (this._options.markerVisibility !== 'hidden' && !_private.hasMarkerController(this)) {
+                this._markerController = _private.createMarkerController(this, this._options);
+            }
             this.setMarkedKey(key);
         }
         this._mouseDownItemKey = undefined;
