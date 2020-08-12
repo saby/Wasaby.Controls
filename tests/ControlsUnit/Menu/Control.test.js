@@ -560,16 +560,6 @@ define(
             assert.equal(selectedItems.length, 0);
          });
 
-         it('_getSelectorDialogOptions', function() {
-            const menuControl = getMenu();
-            const options = {
-               selectorTemplate: {}
-            };
-            const opener = {close: () => {}};
-            const selectorOptions = menuControl._getSelectorDialogOptions(opener, options, []);
-            assert.isTrue(selectorOptions.closeOnOutsideClick);
-         });
-
          it('_openSelectorDialog', function() {
             let menuOptions = Clone(defaultOptions);
             menuOptions.selectorTemplate = {
@@ -606,6 +596,7 @@ define(
             assert.isOk(actualOptions.eventHandlers.onResult);
             assert.isTrue(actualOptions.hasOwnProperty('opener'));
             assert.equal(actualOptions.opener, 'testSelectorOpener');
+            assert.isTrue(actualOptions.closeOnOutsideClick);
             assert.isTrue(opened);
 
             actualOptions.eventHandlers.onResult();
