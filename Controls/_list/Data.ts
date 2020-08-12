@@ -95,6 +95,7 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
 
          _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet> {
             const isChanged = this._dataController.update({...newOptions});
+
             if (this._options.source !== newOptions.source) {
                this._loading = true;
                return this._dataController.loadItems().then((result) => {
