@@ -1,5 +1,6 @@
 import cExtend = require('Core/core-simpleExtend');
 import {ObservableMixin, VersionableMixin, DateTime} from 'Types/entity';
+import getPeriodType = require('Core/helpers/Date/getPeriodType');
 import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
 import DateUtil = require('Controls/Utils/Date');
 import CalendarUtils from './Utils';
@@ -107,13 +108,76 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       }
    },
 
+   _hitsDisplayedRange(date: Date, index: Number): boolean {
+      //Проверяем второй элемент массива на null. Если задан null в опции displayedRanges
+      //то можно бесконечно переключать период.
+      return this._options.displayedRanges[index][0] <= date &&
+          (this._options.displayedRanges[index][1] === null || this._options.displayedRanges[index][1] >= date);
+   },
+
+   _getDisplayedRange(range, direction): [] {
+      const nextRange = dateRangeUtil.shiftPeriod(range[0], range[1], direction);
+      if (!this._options.displayedRanges) {
+         return nextRange;
+      }
+      // Берем любую из дат, т.к. нам нужно дата с точностью в год
+      const date = new Date(range[0].getFullYear(), 0);
+      const nextDate = new Date(nextRange[0].getFullYear(), 0);
+      let index;
+
+      for (let i = 0; i < this._options.displayedRanges.length; i++) {
+         if (this._hitsDisplayedRange(date, i)) {
+            index = i;
+            break;
+         }
+      }
+
+      // Проверяем год, на который переходим. Если оне не попадает в тот же массив что и year - ищем ближайших год на
+      // который можно перейти в следующем массиве
+      if (this._hitsDisplayedRange(nextDate, index)) {
+         return nextRange;
+      } else {
+         const periodType = getPeriodType(range[0], range[1]);
+         let residual;
+         // Высчитываем разницу startValue и endValue, чтобы оставить такой же промежуток
+         switch (periodType) {
+            case 'month':
+               residual = 1;
+               break;
+            case 'quarter':
+               residual = 3;
+               break;
+            case 'halfyear':
+               residual = 6;
+               break;
+            case 'year':
+               residual = 12;
+               break;
+         }
+         if (this._options.displayedRanges[index + direction]) {
+            if (direction === 1) {
+               return [
+                  new Date(this._options.displayedRanges[index + direction][0].getFullYear(), 0),
+                  new Date(this._options.displayedRanges[index + direction][0].getFullYear(), residual, 0)
+               ];
+            } else {
+               return [
+                  new Date(this._options.displayedRanges[index + direction][1].getFullYear(), 12 - residual),
+                  new Date(this._options.displayedRanges[index + direction][1].getFullYear(), 12, 0)
+               ];
+            }
+         }
+      }
+      return range;
+   },
+
    /**
     * If you select a period of several whole months, quarters, six months, or years,
     * then shift it for the same period forward.
     */
    _shiftRange(direction: number): void {
       let range = this._prepareRange();
-      range = dateRangeUtil.shiftPeriod(range[0], range[1], direction);
+      range = this._getDisplayedRange(range, direction);
       if (this._hasRanges()) {
          range = this._rangeSelected(range);
       }

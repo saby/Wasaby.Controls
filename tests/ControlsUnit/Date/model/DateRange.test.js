@@ -82,6 +82,61 @@ define([
       });
 
       describe('.shiftForward', function() {
+         [{
+            startValue: new Date(2019, 11),
+            endValue: new Date(2019, 11),
+            displayedRanges: [[new Date(2018, 0), new Date(2020, 0)]]
+         }, {
+            startValue: new Date(2020, 1),
+            endValue: new Date(2020, 1),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)]]
+         }, {
+            startValue: new Date(2020, 0),
+            endValue: new Date(2020, 0),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)], [new Date(2025, 0), new Date(2030, 0)]]
+         }, {
+            startValue: new Date(2020, 9),
+            endValue: new Date(2020, 12, 0),
+            displayedRanges: [[new Date(2020, 0), new Date(2022, 0)]]
+         }, {
+            startValue: new Date(2020, 0),
+            endValue: new Date(2022, 0),
+            displayedRanges: [[new Date(2019, 0), null]]
+         }].forEach(function (test) {
+            it(`should shift forward with displayedRanges`, function () {
+               let model = new dateRange.DateRangeModel({});
+               model.update({ startValue: test.startValue, endValue: test.endValue, displayedRanges: test.displayedRanges });
+
+               model.shiftForward();
+
+               assert.notEqual(test.startValue.getTime(), model.startValue.getTime());
+               assert.notEqual(test.endValue.getTime(), model.endValue.getTime());
+            });
+         });
+
+         [{
+            startValue: new Date(2019, 11),
+            endValue: new Date(2020, 0, 0),
+            displayedRanges: [[new Date(2018, 0), new Date(2019, 0)]]
+         }, {
+            startValue: new Date(2020, 0),
+            endValue: new Date(2021, 0),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)]]
+         }, {
+            startValue: new Date(2020, 9),
+            endValue: new Date(2020, 12, 0),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)]]
+         }].forEach(function (test) {
+            it(`should not shift forward with displayedRanges`, function () {
+               let model = new dateRange.DateRangeModel({});
+               model.update({ startValue: test.startValue, endValue: test.endValue, displayedRanges: test.displayedRanges });
+
+               model.shiftForward();
+
+               assert.equal(test.startValue.getTime(), model.startValue.getTime());
+               assert.equal(test.endValue.getTime(), model.endValue.getTime());
+            });
+         });
          [
             {
                start: new Date(2018, 0, 1),
@@ -158,6 +213,57 @@ define([
       });
 
       describe('.shiftBack', function() {
+         [{
+            startValue: new Date(2019, 7),
+            endValue: new Date(2019, 7),
+            displayedRanges: [[new Date(2019, 0), new Date(2020, 0)]]
+         }, {
+            startValue: new Date(2020, 1),
+            endValue: new Date(2020, 1),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)]]
+         }, {
+            startValue: new Date(2020, 0),
+            endValue: new Date(2020, 2, 0),
+            displayedRanges: [[new Date(2015, 0), new Date(2017, 0)], [new Date(2020, 0), new Date(2030, 0)]]
+         }, {
+            startValue: new Date(2020, 9),
+            endValue: new Date(2020, 11),
+            displayedRanges: [[new Date(2020, 0), new Date(2022, 0)]]
+         }, {
+            startValue: new Date(2020, 0),
+            endValue: new Date(2022, 0),
+            displayedRanges: [[null, new Date(2023, 0)]]
+         }].forEach(function (test) {
+            it(`should shift back with displayedRanges`, function () {
+               let model = new dateRange.DateRangeModel({});
+               model.update({ startValue: test.startValue, endValue: test.endValue, displayedRanges: test.displayedRanges });
+
+               model.shiftBack();
+
+               assert.notEqual(test.startValue.getTime(), model.startValue.getTime());
+               assert.notEqual(test.endValue.getTime(), model.endValue.getTime());
+            });
+         });
+
+         [{
+            startValue: new Date(2019, 0),
+            endValue: new Date(2019, 0),
+            displayedRanges: [[new Date(2019, 0), new Date(2019, 0)]]
+         }, {
+            startValue: new Date(2017, 0),
+            endValue: new Date(2017, 0),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)]]
+         }].forEach(function (test) {
+            it(`should not shift forward with displayedRanges`, function () {
+               let model = new dateRange.DateRangeModel({});
+               model.update({ startValue: test.startValue, endValue: test.endValue, displayedRanges: test.displayedRanges });
+
+               model.shiftBack();
+
+               assert.equal(test.startValue.getTime(), model.startValue.getTime());
+               assert.equal(test.endValue.getTime(), model.endValue.getTime());
+            });
+         });
          [
             {
                start: new Date(2018, 0, 1),
