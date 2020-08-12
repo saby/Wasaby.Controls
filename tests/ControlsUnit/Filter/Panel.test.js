@@ -68,8 +68,8 @@ define(
 
          it('historySaveMode', () => {
             const cfg = Clone(config);
-            config.orientation = 'vertical';
-            config.historySaveMode = 'favorite';
+            cfg.orientation = 'vertical';
+            cfg.historySaveMode = 'favorite';
             let filterPanel = getFilterPanel(cfg);
             filterPanel._beforeMount(cfg);
             assert.isTrue(filterPanel._historySaveMode === 'favorite');
