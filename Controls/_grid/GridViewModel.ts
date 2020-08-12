@@ -600,7 +600,7 @@ var
                 // Вспомогательный класс, вешается на ячейку. Через него задаются правильные отступы ячейке
                 // обеспечивает отсутствие "скачков" при динамической смене размера границы.
                 classLists.base += ` controls-Grid__row-cell_withRowSeparator_size-${current.rowSeparatorSize}`;
-                classLists.base += ' controls-Grid__not-rowSeparator';
+                classLists.base += ' controls-Grid__no-rowSeparator';
             } else {
                 classLists.base += ` controls-Grid__row-cell_withRowSeparator_size-${current.rowSeparatorSize}_theme-${theme}`;
                 classLists.base += ` controls-Grid__rowSeparator_size-${current.rowSeparatorSize}_theme-${theme}`;
