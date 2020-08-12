@@ -548,6 +548,7 @@ class Manager extends Control<IManagerOptions> {
     }
 
     private _notifyEvent(event: string, args: unknown[]): void {
+        // TODO: dom-нотификацию нужно удалить, после того, как избавимся от всех обработчиков dom-события.
         this._notify(event, args, {bubbling: true});
         EventBus.channel('popupManager').notify(event, args);
     }
