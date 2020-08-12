@@ -32,7 +32,7 @@ import {debounce} from 'Types/function';
 
 /**
  * Контейнер с тонким скроллом.
- * Для контрола требуется {@link Controls/_scroll/Scroll/Context context}.
+ * Для контрола требуется {@link Controls/_scroll/Context context}.
  * 
  * @remark
  * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
@@ -47,7 +47,7 @@ import {debounce} from 'Types/function';
  * @public
  * @author Красильников А.С.
  * @category Container
- * @demo Controls-demo/Container/Scroll
+ * @demo Controls-demo/Scroll/Default/Index
  *
  */
 
