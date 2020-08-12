@@ -85,6 +85,7 @@ import {IList} from "./interface/IList";
 import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { EdgeIntersectionObserver } from 'Controls/scroll';
+import { TItemKey } from 'Controls/display';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -529,7 +530,7 @@ const _private = {
         return itemsContainer.children[startChildrenIndex + index] as HTMLElement;
     },
 
-    scrollToItem(self, key, toBottom, force) {
+    scrollToItem(self, key: TItemKey, toBottom: boolean, force: boolean) {
         const scrollCallback = (index) => {
             // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
             // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
@@ -2124,7 +2125,7 @@ const _private = {
         }
     },
 
-    setMarkedKey(self: any, key: string | number): void {
+    setMarkedKey(self: any, key: TItemKey): void {
         if (self._markerController) {
             const newMarkedKey = self._markerController.calculateMarkedKey(key);
             _private.handleMarkerControllerResult(self, newMarkedKey);
@@ -3030,8 +3031,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadedItems = null;
 
         if (this._scrollController) {
-            let result = this._scrollController.getResult();
-            _private.handleScrollControllerResult(this, result);
+            if (this._options.activeElement) {
+                _private.scrollToItem(self, this._options.activeElement, false, true);
+            }
 
             this._scrollController.continueScrollToItemIfNeed();
         }
@@ -3359,7 +3361,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    scrollToItem(key: string | number, toBottom: boolean, force: boolean): void {
+    scrollToItem(key: TItemKey, toBottom: boolean, force: boolean): void {
         return _private.scrollToItem(this, key, toBottom, force);
     },
 
