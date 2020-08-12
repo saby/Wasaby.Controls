@@ -3691,6 +3691,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     setMarkedKey(key: number | string): void {
+        if (this._options.markerVisibility !== 'hidden' && !_private.hasMarkerController(this)) {
+            this._markerController = _private.createMarkerController(this, this._options);
+        }
         _private.setMarkedKey(this, key);
     },
 
