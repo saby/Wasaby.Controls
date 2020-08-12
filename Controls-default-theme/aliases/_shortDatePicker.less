@@ -23,7 +23,7 @@
 @header_text-color_shortDatePicker:                   @secondary_text-color_heading;
 @header_font-weight_shortDatePicker:                  bold;
 @header_height_shortDatePicker:                       @header_min-height_sticky;
-@header_padding-horizontal_shortDatePicker:           10px;
+@header_padding-horizontal_shortDatePicker:           12px;
 @header_background-color_shortDatePicker:             @header_background-color_sticky;
 
 
@@ -70,7 +70,7 @@
 
 // Текст
 
-@yearselector_text-color_shortDatePicker:             @link_text-color;
+@yearselector_text-color_shortDatePicker:             @primary_text-color;
 @yearselector_font-size_shortDatePicker:              @font-size_l;
 
 // Стрелки переключения
@@ -80,8 +80,13 @@
 @yearselector_arrow_icon-color_shortDatePicker:       @arrow_icon-color_shortDatePicker;
 @yearselector_arrow_hover_icon-color_shortDatePicker: @arrow_hover_icon-color_shortDatePicker;
 @yearselector_arrow_active_icon-color_shortDatePicker:@arrow_active_icon-color_shortDatePicker;
-@yearselector_arrow_width_shortDatePicker:            32px;
-@yearselector_arrow_height_shortDatePicker:           @yearselector_height_shortDatePicker;
+@yearselector_arrow_width_shortDatePicker:            22px;
+@yearselector_arrow_height_shortDatePicker:           22px; //высота минус 2 * бордер
+@yearselector_arrow_border-color_shortDatePicker:     @border-color;
+@yearselector_arrow_border-width_shortDatePicker:     1px;
+@yearselector_arrow_border-radius_shortDatePicker:    50%;
+@yearselector_arrow_margin_shortDatePicker:           4px;
+
 
 // Иконка - "домик"
 
@@ -115,8 +120,8 @@
 
 // Стрелки - элементы списка в режиме годов
 
-@arrow_icon-color_shortDatePicker:                    @link_text-color;
-@arrow_hover_icon-color_shortDatePicker:              @secondary_hover_icon-color;
+@arrow_icon-color_shortDatePicker:                    #999999;
+@arrow_hover_icon-color_shortDatePicker:              @icon-color;
 @arrow_active_icon-color_shortDatePicker:             @secondary_hover_icon-color;
 @arrow_height_shortDatePicker:                        32px;
 @arrow_icon-size_shortDatePicker:                     @icon-size_s;
