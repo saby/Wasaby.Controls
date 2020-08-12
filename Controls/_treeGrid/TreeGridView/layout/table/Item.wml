@@ -171,8 +171,5 @@
 </tr>
 
 <ws:if data="{{itemData.nodeFooters.length > 0}}">
-    <ws:partial template="wml!Controls/_treeGrid/TreeGridView/layout/common/NodeFooterChooser"
-                useNewNodeFooters="{{ itemData.useNewNodeFooters }}"
-                newFooterContentTemplate="{{ itemData.newFooterContentTemplate }}"
-                nodeFooters="{{itemData.nodeFooters}}"/>
+    <ws:partial template="{{ itemData.footerContentTemplate }}" itemData="{{ itemData }}"/>
 </ws:if>

@@ -639,7 +639,7 @@ var
 
             // todo https://online.sbis.ru/opendoc.html?guid=0649e69a-d507-4024-9f99-c70205f535ef
             current.expanderTemplate = this._options.expanderTemplate;
-            current.newFooterContentTemplate = this._options.newFooterContentTemplate;
+            current.footerContentTemplate = this._options.footerContentTemplate;
 
             if (current.item.get) {
                 current.level = current.dispItem.getLevel();
