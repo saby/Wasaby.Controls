@@ -109,13 +109,13 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
    },
 
    _hitsDisplayedRange(date: Date, index: Number): boolean {
-      //Проверяем второй элемент массива на null. Если задан null в опции displayedRanges
-      //то можно бесконечно переключать период.
+      // Проверяем второй элемент массива на null. Если задан null в опции displayedRanges
+      // то можно бесконечно переключать период.
       return this._options.displayedRanges[index][0] <= date &&
           (this._options.displayedRanges[index][1] === null || this._options.displayedRanges[index][1] >= date);
    },
 
-   _getDisplayedRange(range, direction): [] {
+   _getDisplayedRange(range, direction): [Date, Date] {
       const nextRange = dateRangeUtil.shiftPeriod(range[0], range[1], direction);
       if (!this._options.displayedRanges) {
          return nextRange;
@@ -123,49 +123,46 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       // Берем любую из дат, т.к. нам нужно дата с точностью в год
       const date = new Date(range[0].getFullYear(), 0);
       const nextDate = new Date(nextRange[0].getFullYear(), 0);
-      let index;
 
-      for (let i = 0; i < this._options.displayedRanges.length; i++) {
-         if (this._hitsDisplayedRange(date, i)) {
-            index = i;
-            break;
+      let arrayIndex;
+      const findCurrentDateArrayIndex = () => {
+         for (let index = 0; index < this._options.displayedRanges.length; index++) {
+            if (this._hitsDisplayedRange(date, index)) {
+               return index;
+            }
          }
+      };
+      arrayIndex = findCurrentDateArrayIndex();
+
+      // Проверяем год, на который переходим. Если оне не попадает в тот же массив что и текущий год - ищем ближайших
+      // год на который можно перейти в соседнем массиве
+      if (this._hitsDisplayedRange(nextDate, arrayIndex)) {
+         return nextRange;
       }
 
-      // Проверяем год, на который переходим. Если оне не попадает в тот же массив что и year - ищем ближайших год на
-      // который можно перейти в следующем массиве
-      if (this._hitsDisplayedRange(nextDate, index)) {
-         return nextRange;
-      } else {
-         const periodType = getPeriodType(range[0], range[1]);
-         let residual;
-         // Высчитываем разницу startValue и endValue, чтобы оставить такой же промежуток
-         switch (periodType) {
-            case 'month':
-               residual = 1;
-               break;
-            case 'quarter':
-               residual = 3;
-               break;
-            case 'halfyear':
-               residual = 6;
-               break;
-            case 'year':
-               residual = 12;
-               break;
-         }
-         if (this._options.displayedRanges[index + direction]) {
-            if (direction === 1) {
-               return [
-                  new Date(this._options.displayedRanges[index + direction][0].getFullYear(), 0),
-                  new Date(this._options.displayedRanges[index + direction][0].getFullYear(), residual, 0)
-               ];
-            } else {
-               return [
-                  new Date(this._options.displayedRanges[index + direction][1].getFullYear(), 12 - residual),
-                  new Date(this._options.displayedRanges[index + direction][1].getFullYear(), 12, 0)
-               ];
-            }
+      // Высчитываем разница между startValue и endValue, чтобы оставить такой же промежуток
+      const periodType = getPeriodType(range[0], range[1]);
+      const intervals = {
+         month: 1,
+         quarter: 3,
+         halfyear: 6,
+         year: 12
+      };
+      const currentInterval = intervals[periodType];
+
+      const adjacentArray = this._options.displayedRanges[arrayIndex + direction];
+
+      if (this._options.displayedRanges[arrayIndex + direction]) {
+         if (direction === 1) {
+            return [
+               new Date(adjacentArray[0].getFullYear(), 0),
+               new Date(adjacentArray[0].getFullYear(), currentInterval, 0)
+            ];
+         } else {
+            return [
+               new Date(adjacentArray[1].getFullYear(), 12 - currentInterval),
+               new Date(adjacentArray[1].getFullYear(), 12, 0)
+            ];
          }
       }
       return range;
