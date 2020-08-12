@@ -107,15 +107,6 @@ class ComboBox extends BaseDropdown {
       return loadItems(this._controller, receivedState, options.source);
    }
 
-   _beforeUpdate(options: IComboboxOptions): void {
-      const containerNode = this._getContainerNode(this._container);
-
-      if (this._width !== containerNode.offsetWidth) {
-         this._width = containerNode.offsetWidth;
-      }
-      this._controller.update(this._getControllerOptions(options));
-   }
-
    _getControllerOptions(options: IComboboxOptions): object {
       const controllerOptions = getDropdownControllerOptions(options);
       return { ...controllerOptions, ...{
@@ -141,12 +132,9 @@ class ComboBox extends BaseDropdown {
    }
 
    _getMenuPopupConfig(): IStickyPopupOptions {
-      if (!this._width) {
-         this._width = this._getContainerNode(this._container).offsetWidth;
-      }
       return {
          templateOptions: {
-            width: this._width
+            width: this._getContainerNode(this._container).offsetWidth
          },
          eventHandlers: {
             onOpen: this._onOpen.bind(this),

@@ -9,7 +9,8 @@
                           {{!_options.headerTemplate && _verticalDirection === 'top' ? 'controls-Menu__popup-reverse'}}
                           controls-Menu__popup-shadow-{{_options.typeShadow || 'default'}}_theme-{{_options.theme}}
                           {{_options.dropdownClassName}}"
-              attr:style="width: {{_options.width ? _options.width + 'px'}}"
+              attr:style="width: {{_options.width ? _options.width + 'px'}};
+                          max-width: {{_options.width ? _options.width + 'px'}}"
               icon="{{_headingIcon}}"
               caption="{{_headingCaption}}"
               headingCaption="{{!_options.headerTemplate ? _headingCaption : ''}}"
