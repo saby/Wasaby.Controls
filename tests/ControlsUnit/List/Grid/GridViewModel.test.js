@@ -1576,6 +1576,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellStyles: '',
                itemActionsPosition: undefined,
                shadowVisibility: 'visible',
+               backgroundStyle: '',
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
             headerRow = gridViewModel.getCurrentHeaderRow();
@@ -1588,6 +1589,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellContentClasses: '',
                cellStyles: 'grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: 'visible',
+               backgroundStyle: '',
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
 
@@ -1601,8 +1603,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 1,
                itemActionsPosition: undefined,
-               shadowVisibility: "visible",
-               cellContentClasses: "",
+               shadowVisibility: 'visible',
+               cellContentClasses: '',
+               backgroundStyle: '',
                cellStyles: 'grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;',
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
 
@@ -1625,7 +1628,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                sortingDirection: 'DESC',
                cellContentClasses: " controls-Grid__header-cell_justify_content_right",
                cellStyles: 'grid-column-start: 3; grid-column-end: 4; grid-row-start: 1; grid-row-end: 2;',
-               shadowVisibility: "visible",
+               shadowVisibility: 'visible',
+               backgroundStyle: '',
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
 
             assert.equal(
@@ -1644,9 +1648,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 3,
                itemActionsPosition: undefined,
-               cellContentClasses: " controls-Grid__header-cell_justify_content_right",
+               cellContentClasses: ' controls-Grid__header-cell_justify_content_right',
                cellStyles: 'grid-column-start: 4; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;',
-               shadowVisibility: "visible",
+               shadowVisibility: 'visible',
+               backgroundStyle: '',
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
 
             assert.equal(
@@ -1678,6 +1683,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             column =  headerRow.getCurrentHeaderColumn();
             assert.equal(column.shadowVisibility, 'visible');
+         });
+         
+         it('backgroundStyle on header cells with stickyLadder', () => {
+            const gridHeaderClone = gridHeader.map(function(obj) {
+               return Object.assign({}, obj);
+            });
+            gridViewModel._prepareHeaderColumns(gridHeaderClone, false, false, 1);
+
+            let headerRow = gridViewModel.getCurrentHeaderRow();
+            let column = headerRow.getCurrentHeaderColumn();
+
+            assert.equal(column.backgroundStyle, 'transparent');
+            headerRow.goToNextHeaderColumn();
+
+            column =  headerRow.getCurrentHeaderColumn();
+            assert.equal(column.backgroundStyle, '');
          });
 
          it('should not add column separator classes on action cell', function () {
@@ -1721,6 +1742,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   cellContentClasses: '',
                   cellStyles: '',
                   shadowVisibility: 'hidden',
+                  backgroundStyle: '',
                }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
          })
@@ -1736,6 +1758,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                cellContentClasses: '',
                cellStyles: 'grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2;',
                shadowVisibility: 'visible',
+               backgroundStyle: '',
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
             headerRow.goToNextHeaderColumn();
@@ -1746,9 +1769,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: gridHeaderWithColumns[0],
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 1,
-               "itemActionsPosition": undefined,
-               shadowVisibility: "visible",
-               cellContentClasses: "",
+               itemActionsPosition: undefined,
+               shadowVisibility: 'visible',
+               cellContentClasses: '',
+               backgroundStyle: '',
                cellStyles: 'grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 2;',
             }, headerRow.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
 
