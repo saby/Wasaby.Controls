@@ -2925,13 +2925,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    scrollResizeHandler(params: object): void {
-        /*if (_private.needScrollPaging(this._options.navigation)) {
-            // внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
-            // поэтому нужен таймаут
-        }*/
-    },
-
     updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
         this._shadowVisibility = shadowVisibility;
         if (this._isMounted) {
@@ -4328,9 +4321,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
             case 'canScroll':
                 this.canScrollHandler(params);
-                break;
-            case 'scrollResize':
-                this.scrollResizeHandler(params);
                 break;
             case 'scrollMove':
                 this.scrollMoveHandler(params);
