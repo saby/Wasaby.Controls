@@ -239,7 +239,7 @@ export default class Browser extends Control {
         this._isAllSelected = isAllSelected;
     }
 
-    protected _listSelectionTypeChanged(event: SyntheticEvent, selectionType: TSelectionType): void {
+    protected _listSelectionTypeForAllSelectedChanged(event: SyntheticEvent, selectionType: TSelectionType): void {
         event.stopPropagation();
         this._selectionType = selectionType;
     }
