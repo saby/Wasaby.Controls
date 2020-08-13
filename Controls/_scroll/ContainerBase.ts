@@ -324,16 +324,23 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             if (entry.target === this._children.content) {
                 newState.clientHeight = entry.contentRect.height;
                 newState.clientWidth = entry.contentRect.width;
-            } else {
-                // Иначе это поменялись размеры контента.
-                // Не можем брать размеры из события, т.к. на размеры скроллируемого контента могут влиять
-                // маргины на вложенных контейнерах. Плюс в корне скрол контейнера может лежать несколько контейнеров.
-                // newState.scrollHeight = entry.contentRect.height;
-                // newState.scrollWidth = entry.contentRect.width;
-                newState.scrollHeight = this._children.content.scrollHeight;
-                newState.scrollWidth = this._children.content.scrollWidth;
             }
         }
+
+        // Если контент был меньше скролируемой области, то его размер может не поменяться, когда меняется размер
+        // скролл контейнера.
+        // Плюс мы не можем брать размеры из события, т.к. на размеры скроллируемого контента могут влиять
+        // маргины на вложенных контейнерах. Плюс в корне скрол контейнера может лежать несколько контейнеров.
+        // Раньше scrollHeight считался следующим образом.
+        // newState.scrollHeight = entry.contentRect.height;
+        // newState.scrollWidth = entry.contentRect.width;
+        if (newState.scrollHeight === undefined) {
+            newState.scrollHeight = this._children.content.scrollHeight;
+        }
+        if (newState.scrollWidth === undefined) {
+            newState.scrollWidth = this._children.content.scrollWidth;
+        }
+
         this._onResizeContainer(newState);
     }
 

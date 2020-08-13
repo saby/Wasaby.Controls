@@ -2,6 +2,7 @@ import {default as BaseController, IDragOffset} from 'Controls/_popupTemplate/Ba
 import {IPopupItem, IPopupOptions, IPopupSizes, IPopupPosition} from 'Controls/popup';
 import {detection} from 'Env/Env';
 import * as Deferred from 'Core/Deferred';
+import * as TargetCoords from 'Controls/_popupTemplate/TargetCoords';
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 
@@ -37,6 +38,14 @@ const IPAD_MIN_WIDTH = 1024;
  */
 class DialogController extends BaseController {
     TYPE: string = 'Dialog';
+
+    constructor(): void {
+        super();
+        if (document) {
+            window.addEventListener('resize', this._resetRestrictiveContainerCoords, true);
+            window.addEventListener('scroll', this._resetRestrictiveContainerCoords, true);
+        }
+    }
 
     elementCreated(item: IDialogItem, container: HTMLDivElement): boolean {
         this._prepareConfigWithSizes(item, container);
@@ -116,7 +125,14 @@ class DialogController extends BaseController {
         delete item.startPosition;
     }
 
+    workspaceResize(): boolean {
+        this._resetRestrictiveContainerCoords();
+        return true;
+    }
+
     resizeOuter(item: IPopupItem, container: HTMLDivElement): boolean {
+        this._resetRestrictiveContainerCoords();
+
         // На ios ресайз страницы - это зум. Не реагируем на него.
         if (!detection.isMobileIOS) {
             return this._elementUpdated(item, container);
@@ -153,7 +169,7 @@ class DialogController extends BaseController {
         // After popup will be transferred to the synchronous change of coordinates,
         // we need to return the calculation of the position with the keyboard.
         // Positioning relative to body
-        item.position = DialogStrategy.getPosition(this._getWindowSize(), sizes, item);
+        item.position = DialogStrategy.getPosition(this._getRestrictiveContainerSize(item), sizes, item);
         this._fixCompatiblePosition(item);
     }
 
@@ -166,7 +182,7 @@ class DialogController extends BaseController {
             if (item.popupOptions.left !== undefined) {
                 // Calculating the left position when reducing the size of the browser window
                 const differenceWindowWidth: number =
-                    (item.popupOptions.left + item.popupOptions.width) - this._getWindowSize().width;
+                    (item.popupOptions.left + item.popupOptions.width) - this._getRestrictiveContainerSize(item).width;
                 if (differenceWindowWidth > 0) {
                     item.position.left = item.popupOptions.left - differenceWindowWidth;
                 } else {
@@ -223,15 +239,31 @@ class DialogController extends BaseController {
         item.position.left = item.popupOptions.left || defaultCoordinate;
     }
 
-    private _getWindowSize(): IWindow {
-        //TODO: https://online.sbis.ru/opendoc.html?guid=e049a729-ff28-46a4-9122-76e198ab30bd
-        return {
-            width: window.innerWidth,
-            height: window.innerHeight,
-            scrollTop: window.scrollY,
-            scrollLeft: window.scrollX
-        };
+    private _resetRestrictiveContainerCoords(): void {
+        DialogController.RestrictiveContainerCoords = {};
     }
+
+    private _getRestrictiveContainerSize(item: IDialogItem): IWindow {
+        const baseRestrictiveContainerName = '.controls-Popup__dialog-target-container';
+        const restrictiveContainers = [item.popupOptions.restrictiveContainer, baseRestrictiveContainerName, 'body'];
+        for (const restrictiveContainer of restrictiveContainers) {
+            if (restrictiveContainer) {
+                if (DialogController.RestrictiveContainerCoords[restrictiveContainer]) {
+                    return DialogController.RestrictiveContainerCoords[restrictiveContainer];
+                }
+                const restrictiveContainerNode = document.querySelector(restrictiveContainer);
+                // Если не нашли контейнер, то игнорируем опцию
+                if (!restrictiveContainerNode) {
+                    continue;
+                }
+                const targetCoords = TargetCoords.get(restrictiveContainerNode);
+                targetCoords.topScroll += targetCoords.top;
+                targetCoords.leftScroll += targetCoords.left;
+                return DialogController.RestrictiveContainerCoords[restrictiveContainer] = targetCoords;
+            }
+        }
+    }
+    private static RestrictiveContainerCoords = {};
 }
 
 export = new DialogController();

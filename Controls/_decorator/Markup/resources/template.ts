@@ -1,6 +1,3 @@
-/**
- * Created by rn.kondakov on 18.10.2018.
- */
 import { TClosure as thelpers } from 'UI/Executor';
 import validHtml = require('Core/validHtml');
 import {Logger} from 'UI/Utils';

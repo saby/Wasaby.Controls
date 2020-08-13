@@ -2,6 +2,10 @@ import BaseSelector from 'Controls/_dateRange/BaseSelector';
 import ILinkView from './interfaces/ILinkView';
 import componentTmpl = require('wml!Controls/_dateRange/DateSelector/DateSelector');
 import getOptions from 'Controls/Utils/datePopupUtils';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
+
 /**
  * Контрол позволяющий пользователю выбирать дату из календаря.
  *
@@ -41,10 +45,10 @@ import getOptions from 'Controls/Utils/datePopupUtils';
  *
  */
 
-var Component = BaseSelector.extend({
-   _template: componentTmpl,
+export default class DateSelector extends BaseSelector<IControlOptions> {
+   _template: TemplateFunction = componentTmpl;
 
-   _getPopupOptions: function(event) {
+   protected _getPopupOptions(): IStickyPopupOptions {
       const container = this._children.linkView.getPopupTarget();
       return {
          ...getOptions.getCommonOptions(this),
@@ -63,42 +67,41 @@ var Component = BaseSelector.extend({
             quantum: null
          }
       };
-   },
+   }
 
    _mouseEnterHandler(): void {
       const loadCss = (datePopup) => datePopup.loadCSS();
       this._startDependenciesTimer('Controls/datePopup', loadCss);
-   },
+   }
 
-   _onResult: function(value) {
+   protected _onResult(value: Date): void {
       this._notify('valueChanged', [value]);
       this._children.opener.close();
       this._forceUpdate();
-   },
+   }
 
-   _rangeChangedHandler: function(event, value) {
+   protected _rangeChangedHandler(event: SyntheticEvent, value: Date): void {
       this._notify('valueChanged', [value]);
-   },
+   }
 
-   shiftBack: function () {
+   shiftBack(): void {
       this._children.linkView.shiftBack();
-   },
+   }
 
-   shiftForward: function () {
+   shiftForward(): void {
       this._children.linkView.shiftForward();
    }
 
-});
+   EMPTY_CAPTIONS: object = ILinkView.EMPTY_CAPTIONS;
 
-Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
+   static getDefaultOptions(): object {
+      return ILinkView.getDefaultOptions();
+   }
 
-Component.getDefaultOptions = function() {
-   return ILinkView.getDefaultOptions();
-};
+   static getOptionTypes(): object {
+      return ILinkView.getOptionTypes();
+   }
 
-Component.getOptionTypes = function() {
-   return ILinkView.getOptionTypes();
-};
-Component._theme = ['Controls/dateRange'];
+   static _theme: string[] = ['Controls/dateRange'];
 
-export default Component;
+}

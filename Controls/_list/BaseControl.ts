@@ -64,7 +64,6 @@ import {default as ScrollController, IScrollParams} from './ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
-import InertialScrolling from './resources/utils/InertialScrolling';
 import {CssClassList} from '../Utils/CssClassList';
 import {
    FlatSelectionStrategy,
@@ -265,42 +264,41 @@ const _private = {
         }
     },
 
-    attachLoadTopTriggerToNullIfNeed(self): void {
+    supportAttachLoadTopTriggerToNull(options): boolean {
         // Поведение отложенной загрузки вверх нужно опциональное, например, для контактов
         // https://online.sbis.ru/opendoc.html?guid=f07ea1a9-743c-42e4-a2ae-8411d59bcdce
-        if (self._options.attachLoadTopTriggerToNull === false) {
-            return;
+        if (options.attachLoadTopTriggerToNull === false) {
+            return false;
         }
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
         // В случае с pages, demand и maxCount проблема дополнительной загрузки после инициализации списка отсутствует.
-        const isInfinityNavigation = _private.isInfinityNavigation(self._options.navigation);
+        const isInfinityNavigation = _private.isInfinityNavigation(options.navigation);
         if (!isInfinityNavigation) {
-            return;
+            return false;
         }
+        return true;
+    },
+
+    needAttachLoadTopTriggerToNull(self): boolean {
         const sourceController = self._sourceController;
         const hasMoreData = _private.hasMoreData(self, sourceController, 'up');
-        if (sourceController && hasMoreData && self._isMounted) {
+        return sourceController && hasMoreData;
+    },
+
+    attachLoadTopTriggerToNullIfNeed(self, options): boolean {
+        const supportAttachLoadTopTriggerToNull = _private.supportAttachLoadTopTriggerToNull(options);
+        if (!supportAttachLoadTopTriggerToNull) {
+            return false;
+        }
+        const needAttachLoadTopTriggerToNull = _private.needAttachLoadTopTriggerToNull(self);
+        if (needAttachLoadTopTriggerToNull && self._isMounted) {
             self._attachLoadTopTriggerToNull = true;
             self._needScrollToFirstItem = true;
         } else {
             self._attachLoadTopTriggerToNull = false;
         }
-        if (self._scrollController) {
-            let result = self._scrollController.update({
-                options: {
-                    ...self._options,
-                    attachLoadTopTriggerToNull: self._attachLoadTopTriggerToNull,
-                    forceInitVirtualScroll: isInfinityNavigation,
-                    collection: self.getViewModel()
-                },
-                params: {
-                    clientHeight: self._viewportSize,
-                    scrollTop: self._scrollTop,
-                    scrollHeight: self._viewSize
-                }
-            });
-            _private.handleScrollControllerResult(self, result);
-        }
+        self._updateScrollController(options);
+        return needAttachLoadTopTriggerToNull;
     },
 
     reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
@@ -428,7 +426,9 @@ const _private = {
                     if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
                         _private.checkLoadToDirectionCapability(self, filter, navigation);
                     } else if (!self._wasScrollToEnd) {
-                        _private.attachLoadTopTriggerToNullIfNeed(self);
+                        if (_private.attachLoadTopTriggerToNullIfNeed(self, cfg) && !self._isMounted) {
+                            self._hideTopTriggerUntilMount = true;
+                        }
                     }
                 });
             }).addErrback(function(error: Error) {
@@ -734,11 +734,14 @@ const _private = {
 
                 if (self._isMounted && self._scrollController) {
                     self.startBatchAdding(direction);
+                    self._scrollController.callAfterScrollStopped(() => {
+                        loadCallback(addedItems, countCurrentItems);
+                    });
+                } else {
+                    loadCallback(addedItems, countCurrentItems);
                 }
 
-                self._getInertialScrolling().callAfterScrollStopped(() => {
-                    loadCallback(addedItems, countCurrentItems);
-                });
+                
 
                 // Скрываем ошибку после успешной загрузки данных
                 _private.hideError(self);
@@ -959,10 +962,19 @@ const _private = {
             self._shouldNotResetPagingCache = true;
             _private.reload(self, self._options).addCallback(function() {
                 self._shouldNotResetPagingCache = false;
-                if (direction === 'up') {
-                    self._notify('doScroll', ['top'], { bubbling: true });
-                } else {
-                    _private.jumpToEnd(self);
+
+                /**
+                 * Если есть ошибка, то не нужно скроллить, иначе неоднозначное поведение:
+                 * иногда скролл происходит раньше, чем показана ошибка, тогда показывается ошибка внутри списка;
+                 * иногда ошибка показывается раньше скролла, тогда ошибка во весь список.
+                 * https://online.sbis.ru/opendoc.html?guid=ab2c30cd-895d-4b1f-8f71-cd0063e581d2
+                 */
+                if (!self.__error) {
+                    if (direction === 'up') {
+                        self._notify('doScroll', ['top'], { bubbling: true });
+                    } else {
+                        _private.jumpToEnd(self);
+                    }
                 }
             });
         } else if (direction === 'up') {
@@ -1824,9 +1836,12 @@ const _private = {
         return navigation && navigation.view === 'pages';
     },
 
+    isPagingNavigationVisible(hasMoreData, knownPagesCount) {
+        return knownPagesCount > 0 || hasMoreData > 0;
+    },
     updatePagingData(self, hasMoreData) {
-        self._pagingNavigationVisible = (hasMoreData > 0);
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
+        self._pagingNavigationVisible = _private.isPagingNavigationVisible(hasMoreData, self._knownPagesCount);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
@@ -2610,6 +2625,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     iWantVDOM: true,
 
     _attachLoadTopTriggerToNull: false,
+    _hideTopTriggerUntilMount: false,
     _listViewModel: null,
     _viewModelConstructor: null,
 
@@ -2659,7 +2675,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _needBottomPadding: false,
     _noDataBeforeReload: null,
-    _inertialScrolling: null,
     _checkLoadToDirectionTimeout: null,
 
     _keepScrollAfterReload: false,
@@ -2822,6 +2837,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
 
                     _private.initVisibleItemActions(self, newOptions);
+
+                    if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
+                        _private.needAttachLoadTopTriggerToNull(self)) {
+                        self._hideTopTriggerUntilMount = true;
+                    }
                     return;
                 }
                 if (receivedError) {
@@ -2899,13 +2919,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
        } else {
            return callback(undefined);
        }
-   },
-
-    _getInertialScrolling(): InertialScrolling {
-        if (!this._inertialScrolling) {
-            this._inertialScrolling = new InertialScrolling();
-        }
-        return this._inertialScrolling;
     },
 
     scrollMoveSyncHandler(params: IScrollParams): void {
@@ -2914,10 +2927,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         let result = this._scrollController?.scrollPositionChange(params);
         _private.handleScrollControllerResult(this, result);
-
-        if (detection.isMobileIOS) {
-            this._getInertialScrolling().scrollStarted();
-        }
     },
 
     scrollMoveHandler(params: unknown): void {
@@ -3041,6 +3050,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterMount() {
         this._isMounted = true;
+        this._hideTopTriggerUntilMount = false;
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
         if (this._needScrollCalculation) {
@@ -3083,9 +3093,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
 
-        if (!this._wasScrollToEnd) {
-            _private.attachLoadTopTriggerToNullIfNeed(this);
-        }
+        _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
     },
 
     _updateScrollController(newOptions) {
@@ -3698,6 +3706,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     setMarkedKey(key: number | string): void {
+        if (this._options.markerVisibility !== 'hidden' && !_private.hasMarkerController(this)) {
+            this._markerController = _private.createMarkerController(this, this._options);
+        }
         _private.setMarkedKey(this, key);
     },
 
@@ -3735,14 +3746,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
 
+        if (this._editInPlace) {
+            this._editInPlace.beginEditByClick(e, item, originalEvent);
+        }
+
         // При клике по элементу может случиться 2 события: itemClick и itemActivate.
         // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
         // порядок событий будет beforeBeginEdit -> itemClick
         // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
         // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
-        if (this._editInPlace) {
-            this._editInPlace.beginEditByClick(e, item, originalEvent);
-            this._savedItemClickArgs = e.isStopped() ? [item, originalEvent] : null;
+        if (e.isStopped()) {
+            this._savedItemClickArgs = [item, originalEvent];
         } else {
             this._notify('itemActivate', [item, originalEvent], { bubbling: true });
         }
@@ -3842,7 +3856,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const item = this._listViewModel.getItemBySourceKey(key) || itemData;
         this.setMarkedKey(key);
 
-        if (action && !action._isMenu && !action['parent@']) {
+        if (action && !action.isMenu && !action['parent@']) {
             _private.handleItemActionClick(this, action, event, item, false);
         } else {
             _private.openItemActionsMenu(this, action, event, item, false);

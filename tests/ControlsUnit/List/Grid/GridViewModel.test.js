@@ -753,6 +753,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          });
 
+         it('SetItemPadding Silent', function() {
+
+            var iv = new gridMod.GridViewModel({...cfg});
+            var result = false;
+            iv._model._nextModelVersion = function () {
+               result = true;
+            };
+            iv.setItemPadding('xs');
+            assert.isTrue(result, 'Incorrest setItemPadding result');
+
+            result = false;
+            iv.setItemPadding('xs', true);
+
+            assert.isFalse(result, 'Incorrest setItemPadding result');
+         });
+
          it('getItemDataByItem', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             let data = gridViewModel.getItemDataByItem(dummyDispitem);
@@ -1647,6 +1663,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             headerRow.resetHeaderColumns();
             assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
 
+         });
+         it('shadowVisibility on header cells with stickyLadder', () => {
+            const gridHeaderClone = gridHeader.map(function(obj) {
+               return Object.assign({}, obj);
+            });
+            gridViewModel._prepareHeaderColumns(gridHeaderClone, false, false, 1);
+
+            let headerRow = gridViewModel.getCurrentHeaderRow();
+            let column = headerRow.getCurrentHeaderColumn();
+
+            assert.equal(column.shadowVisibility, 'hidden');
+            headerRow.goToNextHeaderColumn();
+
+            column =  headerRow.getCurrentHeaderColumn();
+            assert.equal(column.shadowVisibility, 'visible');
          });
 
          it('should not add column separator classes on action cell', function () {
@@ -2621,9 +2652,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   columnIndex: 0
                };
                [
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', '']
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', '']
                ].forEach((expectedClasses, index) => {
                   current.columnIndex = index;
 
@@ -2651,9 +2682,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   hasMultiSelect: false
                };
                [
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', '']
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', '']
                ].forEach((expectedClasses, index) => {
                   current.columnIndex = index;
 
@@ -2681,9 +2712,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   hasMultiSelect: false
                };
                [
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default'],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default']
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default'],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default']
                ].forEach((expectedClasses, index) => {
                   current.columnIndex = index;
 
@@ -2711,9 +2742,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   hasMultiSelect: true
                };
                [
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null', ''],
-                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default']
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
+                  [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator controls-Grid__row-cell_withColumnSeparator', ' controls-Grid__columnSeparator_size-s_theme-default']
                ].forEach((expectedClasses, index) => {
                   current.columnIndex = index;
 
@@ -2770,7 +2801,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // fixed coll withoutColumnScroll
             assert.equal(6, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false}));
             // sticky fit coll withoutColumnScroll
-            assert.equal(6, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false, columnIndex: 1}));
+            assert.equal(5, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false, columnIndex: 1}));
          })
 
          it('updates prefix version with ladder only on add and remove', () => {

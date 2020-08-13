@@ -137,6 +137,22 @@ define([
                   new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() + 3)];
             },
             result: [new Date(2019, 0, 10), new Date(2019, 0, 15)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 9),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [3]
+            },
+            result: [new Date(2019, 0, 10), new Date(2019, 0, 12)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 13),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [7]
+            },
+            result: [new Date(2019, 0, 14), new Date(2019, 0, 20)]
          }].forEach(function (test) {
             it('should shift period with quantum forward', function () {
                let model = new dateRange.DateRangeModel();
@@ -212,6 +228,22 @@ define([
                   new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() + 3)];
             },
             result: [new Date(2019, 0, 4), new Date(2019, 0, 9)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 9),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [3]
+            },
+            result: [new Date(2019, 0, 4), new Date(2019, 0, 6)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 13),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [7]
+            },
+            result: [new Date(2018, 11, 31), new Date(2019, 0, 6)]
          }].forEach(function (test) {
             it('should shift period with quantum back', function () {
                let model = new dateRange.DateRangeModel();

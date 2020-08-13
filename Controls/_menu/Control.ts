@@ -361,7 +361,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 }) as Model[]
             });
         }
-        this._stack.open(this._getSelectorDialogOptions(this._options, selectedItems));
+        this._stack.open(this._getSelectorDialogOptions(this._stack, this._options, selectedItems));
         this._notify('moreButtonClick', [selectedItems]);
     }
 
@@ -506,7 +506,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             Math.sign(firstSegment) === Math.sign(thirdSegment);
     }
 
-    private _getSelectorDialogOptions(options: IMenuControlOptions, selectedItems: List<Model>): object {
+    private _getSelectorDialogOptions(opener: StackOpener, options: IMenuControlOptions, selectedItems: List<Model>): object {
         const selectorTemplate: ISelectorTemplate = options.selectorTemplate;
         const selectorDialogResult: Function = options.selectorDialogResult;
 
@@ -515,7 +515,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             handlers: {
                 onSelectComplete: (event, result) => {
                     selectorDialogResult(event, result);
-                    this._stack.close();
+                    opener.close();
                 }
             }
         };
@@ -525,6 +525,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             // Т.к само меню закроется после открытия стекового окна,
             // в опенер нужно положить контрол, который останется на странице.
             opener: this._options.selectorOpener,
+            closeOnOutsideClick: true,
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: options.isCompoundTemplate,
@@ -577,7 +578,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _limitHistoryCheck(item: Model): boolean {
-        return this._visibleIds.includes(item.getKey());
+        let isVisible: boolean = true;
+        if (item && item.getKey) {
+            isVisible = this._visibleIds.includes(item.getKey());
+        }
+        return isVisible;
     }
 
     private _isSelectedKeysChanged(newKeys: TSelectedKeys, oldKeys: TSelectedKeys): boolean {

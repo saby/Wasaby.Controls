@@ -596,6 +596,7 @@ define(
             assert.isOk(actualOptions.eventHandlers.onResult);
             assert.isTrue(actualOptions.hasOwnProperty('opener'));
             assert.equal(actualOptions.opener, 'testSelectorOpener');
+            assert.isTrue(actualOptions.closeOnOutsideClick);
             assert.isTrue(opened);
 
             actualOptions.eventHandlers.onResult();
@@ -662,6 +663,30 @@ define(
                item.set('parent', '1');
                isVisible = menuControl.constructor._displayFilter(hierarchyOptions, item);
                assert.isFalse(isVisible);
+            });
+         });
+
+         describe('historyFilter', () => {
+            let menuControl = getMenu();
+            menuControl._visibleIds = [2, 6, 8];
+            let itemKey;
+            const item = { getKey: () => itemKey };
+
+            it('group item', function() {
+               const isVisible = menuControl._limitHistoryCheck('group');
+               assert.isTrue(isVisible);
+            });
+
+            it('invisible item', function() {
+               itemKey = 1;
+               const isVisible = menuControl._limitHistoryCheck(item);
+               assert.isFalse(isVisible, "_visibleIds doesn't include it");
+            });
+
+            it('visible item', function() {
+               itemKey = 6;
+               const isVisible = menuControl._limitHistoryCheck(item);
+               assert.isTrue(isVisible, '_visibleIds includes it');
             });
          });
 
