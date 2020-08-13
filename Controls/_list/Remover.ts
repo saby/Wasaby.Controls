@@ -101,7 +101,7 @@ var Remover = BaseAction.extend({
         // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
         itemsDeferred = items instanceof Array
             ? Deferred.success(items)
-            : getItemsBySelection(items, this._source, this._items, this._filter, this._options.selectionType);
+            : getItemsBySelection(items, this._source, this._items, this._filter, this._options.selectionTypeForAllSelected);
 
         itemsDeferred.addCallback((items) => {
             _private.beforeItemsRemove(this, items).addCallback((result) => {
@@ -126,7 +126,7 @@ var Remover = BaseAction.extend({
 
 Remover.getDefaultOptions = function () {
     return {
-        selectionType: 'all'
+        selectionTypeForAllSelected: 'all'
     };
 };
 

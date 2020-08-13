@@ -96,7 +96,7 @@ export default class MultiSelector extends Control {
       this._listMarkedKey = this._getOperationsController(this._options).setOperationsPanelVisible(true);
    }
 
-   protected _listSelectionTypeChanged(event: SyntheticEvent, selectionType: TSelectionType): void {
+   protected _listSelectionTypeForAllSelectedChanged(event: SyntheticEvent, selectionType: TSelectionType): void {
       event.stopPropagation();
       this._selectionType = selectionType;
    }
