@@ -355,7 +355,6 @@ const _private = {
                     if (!self._shouldNotResetPagingCache) {
                         self._cachedPagingState = false;
                     }
-                    clearTimeout(self._needPagingTimeout);
 
                     if (listModel) {
                         if (self._options.groupProperty) {
@@ -1094,7 +1093,6 @@ const _private = {
                 };
                 _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPagingCtr) => {
                     self._scrollPagingCtr = scrollPagingCtr;
-                    self._pagingVisible = _private.needShowPagingByScrollSize(self, params.scrollHeight, params.clientHeight);
                 });
             }
 
@@ -2618,7 +2616,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
-    _needPagingTimeout: null,
     _shouldNotResetPagingCache: false,
 
     _itemTemplate: null,
@@ -2929,13 +2926,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     scrollResizeHandler(params: object): void {
-        if (_private.needScrollPaging(this._options.navigation)) {
+        /*if (_private.needScrollPaging(this._options.navigation)) {
             // внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
             // поэтому нужен таймаут
-            this._needPagingTimeout = setTimeout(() => {
-                this._pagingVisible = _private.needShowPagingByScrollSize(this, params.scrollHeight, params.clientHeight);
-            }, 18);
-        }
+        }*/
     },
 
     updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
@@ -2966,9 +2960,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
                 _private.getPortionedSearch(this).stopSearch();
             }
-        }
-        if (_private.needScrollPaging(this._options.navigation)) {
-            this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewportSize);
         }
         this._scrollController?.setTriggerVisibility(direction, state);
         if (state) {
@@ -3383,10 +3374,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._checkTriggerVisibilityTimeout) {
             clearTimeout(this._checkTriggerVisibilityTimeout);
-        }
-        if (this._needPagingTimeout) {
-            clearTimeout(this._needPagingTimeout);
-            this._needPagingTimeout = null;
         }
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
@@ -3998,6 +3985,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
+
+        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
+            this._pagingVisible = _private.needShowPagingByScrollSize(this,  this._viewSize, this._viewportSize);
+        }
 
         if (this._documentDragging) {
             this._insideDragging = true;
