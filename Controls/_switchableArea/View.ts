@@ -4,6 +4,7 @@ import template = require('wml!Controls/_switchableArea/View');
 import defaultItemTemplate from './ItemTpl';
 import {factory} from 'Types/chain';
 import {Logger} from 'UI/Utils';
+import {SyntheticEvent} from "UI/Vdom";
 
 export interface ISwitchableOptions extends IControlOptions{
     itemTemplate: TemplateFunction;
@@ -67,6 +68,7 @@ class View extends Control<ISwitchableOptions> {
         }
         if (this._options.selectedKey !== newOptions.selectedKey) {
             this._viewModel.updateSelectedKey(this._selectedKey);
+            this._startSwitchArea();
         }
     }
 
@@ -99,6 +101,16 @@ class View extends Control<ISwitchableOptions> {
 
         // Меняю состояние 1 раз, чтобы не вызывать лишних циклов синхронизации
         this._selectedKey = selectedKey;
+    }
+    // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
+    private _startSwitchArea(): void {
+        const eventCfg = {
+            type: 'switchArea',
+            target: this._container,
+            _bubbling: true
+        };
+
+        this._children.switchAreaDetect.start(new SyntheticEvent(null, eventCfg));
     }
 
     static getDefaultOptions(): ISwitchableOptions {
