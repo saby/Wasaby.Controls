@@ -1198,7 +1198,7 @@ const _private = {
         _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
             scrollPaging.updateScrollParams(scrollParams);
             if(self._options.pagingMode === 'numbers') {
-                const currentPage = Math.trunc(scrollParams.scrollHeight / scrollParams.clientHeight);
+                const currentPage = Math.trunc(scrollParams.scrollTop / scrollParams.clientHeight) + 1;
                 if (currentPage !== self._currentPage) {
                     self._currentPage = currentPage;
                     self._pagingCfg.selectedPage = self._currentPage;
