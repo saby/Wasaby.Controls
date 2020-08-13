@@ -77,6 +77,10 @@ class View extends Control<ISwitchableOptions> {
 
     protected _beforeUnmount(): void {
         this._viewModel = null;
+        if (this._switchAreaRegister) {
+            this._switchAreaRegister.destroy();
+            this._switchAreaRegister = null;
+        }
     }
 
     _correctSelectedKey(options: ISwitchableOptions): void {
