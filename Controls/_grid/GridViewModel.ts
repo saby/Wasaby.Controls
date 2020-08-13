@@ -966,6 +966,7 @@ var
             const headerColumn = {
                 column: cell,
                 index: columnIndex,
+                backgroundStyle: cell.ladderCell ? 'transparent' : '',
                 shadowVisibility: cell.ladderCell ? 'hidden' : 'visible'
             };
             let cellClasses = `controls-Grid__header-cell controls-Grid__header-cell_theme-${theme}` +
