@@ -69,7 +69,8 @@ class Paging extends Control<IPagingOptions> {
             this._stateForward = this._getState(config.arrowState.next || 'readonly');
             this._stateBottom = this._getState(config.arrowState.end || 'readonly');
         } else {
-            this._stateTop = this._stateBackward = this._stateForward = this._stateBottom = 'disabled';
+            this._stateTop = this._stateBackward = config.backwardEnabled ? 'normal' : 'disabled';
+            this._stateForward = this._stateBottom = config.forwardEnabled ? 'normal' : 'disabled';
         }
     }
 
