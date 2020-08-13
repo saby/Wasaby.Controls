@@ -173,6 +173,7 @@ var _private = {
         });
     },
 
+    // *
     moveItemToSiblingPosition: function (self, item, position) {
         var target = _private.getSiblingItem(self, item, position);
         return target ? self.moveItems([item], target, position) : Deferred.success();
@@ -321,16 +322,16 @@ var _private = {
 
 /**
  * Контрол для перемещения элементов списка в recordSet и dataSource.
- * 
+ *
  * @remark
  * Контрол должен располагаться в одном контейнере {@link Controls/list:DataContainer} со списком.
  * В случае использования {@link Controls/operations:Controller} для корректной обработки событий необходимо помещать Controls/list:Mover внутри Controls/operations:Controller.
- * 
- * Полезные ссылки: 
+ *
+ * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FtreeGrid%2FMover%2FBase%2FIndex">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
- * 
+ *
  * @class Controls/_list/Mover
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IMovable
@@ -382,13 +383,17 @@ var Mover = BaseAction.extend({
         }
     },
 
+    // *
     moveItemUp: function (item) {
         return _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.before);
     },
 
+    // *
     moveItemDown: function (item) {
         return _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.after);
     },
+
+    // *
     moveItems(items: []|IMoveItemsParams, target, position): Promise<any> {
         const self = this;
         const isNewLogic = !items.forEach && !items.selected;
