@@ -111,13 +111,15 @@ var
 
             return version;
         },
+
+        // TODO нужна проверка, что в таблице добавлена actionsColumn: this._shouldAddActionsCell()
         isActionsColumn(itemData, currentColumn, colspan) {
             return (
-                (itemData.getLastColumnIndex() === currentColumn.columnIndex ||
+                itemData.getLastColumnIndex() === currentColumn.columnIndex ||
                 (
                     colspan &&
                     currentColumn.columnIndex === (itemData.multiSelectVisibility === 'hidden' ? 0 : 1)
-                )) && itemData.itemActionsPosition !== 'custom'
+                )
             );
         },
         isDrawActions: function(itemData, currentColumn, colspan) {
@@ -1647,6 +1649,7 @@ var
             current.getClassesLadderHeading = _private.getClassesLadderHeading;
             current.isDrawActions = _private.isDrawActions;
             current.isActionsColumn = _private.isActionsColumn;
+            current.hasActionCell = self._shouldAddActionsCell();
             current.getCellStyle = (itemData, currentColumn, colspan) => _private.getCellStyle(self, itemData, currentColumn, colspan);
 
             current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
