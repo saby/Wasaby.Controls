@@ -22,6 +22,11 @@
            on:click="_onExpanderClick()"
            class="{{expanderTemplate.itemData.getExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize)}}"></div>
    </ws:expanderTemplate>
+   <ws:footerContentTemplate>
+      <ws:partial template="wml!Controls/_treeGrid/TreeGridView/layout/common/NodeFooterChooser"
+                  useNewNodeFooters="{{ footerContentTemplate.itemData.useNewNodeFooters }}"
+                  nodeFooters="{{ footerContentTemplate.itemData.nodeFooters }}"/>
+   </ws:footerContentTemplate>
    <ws:content>
       <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()"
                   on:arrowClick="_notifyHandler('arrowClick')"/>

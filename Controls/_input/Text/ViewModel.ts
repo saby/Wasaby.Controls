@@ -1,6 +1,6 @@
 import BaseViewModel from '../BaseViewModel';
 import {IInputType, ISplitValue} from '../resources/Types';
-import {textBySplitValue, hasSelectionChanged} from '../resources/Util';
+import {textBySplitValue} from '../resources/Util';
 import {IText} from 'Controls/decorator';
 
 interface IViewModelOptions {
@@ -17,7 +17,7 @@ class ViewModel extends BaseViewModel<string, IViewModelOptions> {
         return displayValue;
     }
 
-    handleInput(splitValue: ISplitValue, inputType: IInputType): boolean {
+    protected _createText(splitValue: ISplitValue, inputType: IInputType): IText {
         if (inputType === 'insert') {
             if (this._options.constraint) {
                 ViewModel._limitChars(splitValue, this._options.constraint);
@@ -27,21 +27,7 @@ class ViewModel extends BaseViewModel<string, IViewModelOptions> {
             }
         }
 
-        const text: IText = textBySplitValue(splitValue);
-        const displayValueChanged: boolean = this._displayValue !== text.value;
-        const selectionChanged: boolean = hasSelectionChanged(this._selection, text.carriagePosition);
-
-        if (displayValueChanged) {
-            this._setDisplayValue(text.value);
-        }
-        if (selectionChanged) {
-            this._setSelection(text.carriagePosition);
-        }
-        if (displayValueChanged || selectionChanged) {
-            this._nextVersion();
-        }
-
-        return displayValueChanged;
+        return  textBySplitValue(splitValue);
     }
 
     private static _limitChars(splitValue: ISplitValue, constraint: string): void {

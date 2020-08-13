@@ -1,8 +1,10 @@
 /* global define, beforeEach, afterEach, describe, it, assert, sinon */
 define([
-   'Controls/dataSource'
+   'Controls/dataSource',
+   'Controls/error'
 ], function(
-   { error: { process } }
+   { error: { process } },
+   { process: errorProcess }
 ) {
    describe('Controls/dataSource:error.process', () => {
       const popupId = '42';
@@ -22,6 +24,10 @@ define([
 
       it('is function', () => {
          assert.isFunction(process);
+      });
+
+      it('dataSource and error export the same function', () => {
+         assert.strictEqual(process, errorProcess);
       });
 
       it('does nothing for unknown error', () => {
@@ -74,6 +80,51 @@ define([
             const args = _popupHelper.openDialog.getCall(0).args[0];
             assert.include(args, viewConfig, 'openDialog called with viewConfig');
             assert.strictEqual(result, popupId, 'returns popupId');
+         });
+      });
+
+      it('calls custom post-handlers', () => {
+         const error = new Error();
+         const viewConfig = {
+            template: {},
+            options: {}
+         };
+
+         return process({
+            error,
+            postHandlers: [() => viewConfig],
+            _popupHelper
+         }).then((result) => {
+            assert.isTrue(_popupHelper.openDialog.calledOnce, 'openDialog called');
+
+            const args = _popupHelper.openDialog.getCall(0).args[0];
+            assert.include(args, viewConfig, 'openDialog called with viewConfig');
+            assert.strictEqual(result, popupId, 'returns popupId');
+         });
+      });
+
+      it('calls beforeOpenDialogCallback', () => {
+         const error = new Error();
+         const viewConfig = {
+            template: {},
+            options: {}
+         };
+         const beforeOpenDialogCallback = sinon.stub();
+
+         return process({
+            error,
+            handlers: [() => viewConfig],
+            beforeOpenDialogCallback,
+            _popupHelper
+         }).then(() => {
+            assert.isTrue(beforeOpenDialogCallback.calledOnce, 'callback called');
+
+            const result = beforeOpenDialogCallback.getCall(0).args[0];
+            assert.deepEqual(result.template, viewConfig.template, 'callback called with viewConfig');
+            assert.deepEqual(result.options, viewConfig.options, 'callback called with viewConfig');
+            assert.isTrue(
+               beforeOpenDialogCallback.calledBefore(_popupHelper.openDialog),
+               'callback called before openDialog');
          });
       });
    });

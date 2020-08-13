@@ -5,16 +5,16 @@
                     _scrollCssClass="{{_scrollCssClass}}"
                     attr:style="{{_scrollbars.scrollContainerStyles}}"
                     attr:class="controls-Scroll-Container__base controls-BlockLayout__blockGroup_theme-{{_options.theme}} controls-BlockLayout__blockGroup_theme-{{_options.theme}}
-                    {{_options.optimizeShadow ? _getOptimizeShadowClass()}}"
+                    {{ _optimizeShadowClass }}"
                     on:intersectionObserverRegister="_intersectionObserverRegisterHandler()"
                     on:intersectionObserverUnregister="_intersectionObserverUnregisterHandler()"
                     on:fixed="_stickyFixedHandler()"
                     on:stickyRegister="_stickyRegisterHandler()"
                     on:keydown="_keydownHandler()"/>
-        <ws:if data="{{_shadows.top.isEnabled && !_options.optimizeShadow}}">
+        <ws:if data="{{_shadows.top.isEnabled && !_isOptimizeShadowEnabled }}">
             <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_top {{!_shadows.top.isVisible ? ' ws-invisible'}}"></div>
         </ws:if>
-        <ws:if data="{{_shadows.bottom.isEnabled && !_options.optimizeShadow}}">
+        <ws:if data="{{_shadows.bottom.isEnabled && !_isOptimizeShadowEnabled }}">
             <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_bottom {{!_shadows.bottom.isVisible ? ' ws-invisible'}}"></div>
         </ws:if>
         <ws:if data="{{_shadows.left.isEnabled}}">

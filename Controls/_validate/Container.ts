@@ -77,7 +77,13 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
         return new Promise((resolve) => {
             const validators = this._options.validators || [];
             this.setValidationResult(null, validateConfig);
-            this._callValidators(validators, validateConfig).then(resolve);
+            this._callValidators(validators, validateConfig).then((validationResult) => {
+                const isValid = validationResult === null;
+                if (this._isOpened && isValid) {
+                    this._forceCloseInfoBox();
+                }
+                resolve(validationResult);
+            });
         });
 
     }

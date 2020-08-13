@@ -7,6 +7,7 @@ define([
    dataSource,
    { constants }
 ) {
+   const require = requirejs;
    describe('Controls/dataSource:error.Popup', () => {
       const Popup = dataSource.error.Popup;
       const fakeModules = [

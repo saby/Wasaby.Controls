@@ -30,9 +30,33 @@
 }
 
 .controls-TreeGrid__row_master-expander_size_default_theme-@{themeName},
-.controls-TreeGrid__row_masterClassic-expander_size_default_theme-@{themeName}, {
+.controls-TreeGrid__row_masterClassic-expander_size_default_theme-@{themeName} {
    padding-left: @expander_default_padding-left_treeGrid;
    padding-right: @expander_default_padding-right_treeGrid;
+}
+
+.controls-TreeGrid__row_master-expander_size_s_theme-@{themeName},
+.controls-TreeGrid__row_masterClassic-expander_size_s_theme-@{themeName} {
+   padding-left: @expander_s_padding-left_treeGrid;
+   padding-right: @expander_s_padding-right_treeGrid;
+}
+
+.controls-TreeGrid__row_master-expander_size_m_theme-@{themeName},
+.controls-TreeGrid__row_masterClassic-expander_size_m_theme-@{themeName} {
+   padding-left: @expander_m_padding-left_treeGrid;
+   padding-right: @expander_m_padding-right_treeGrid;
+}
+
+.controls-TreeGrid__row_master-expander_size_l_theme-@{themeName},
+.controls-TreeGrid__row_masterClassic-expander_size_l_theme-@{themeName} {
+   padding-left: @expander_l_padding-left_treeGrid;
+   padding-right: @expander_l_padding-right_treeGrid;
+}
+
+.controls-TreeGrid__row_master-expander_size_xl_theme-@{themeName},
+.controls-TreeGrid__row_masterClassic-expander_size_xl_theme-@{themeName} {
+   padding-left: @expander_xl_padding-left_treeGrid;
+   padding-right: @expander_xl_padding-right_treeGrid;
 }
 
 .controls-TreeGrid__row-expander_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_theme-@{themeName} {
@@ -318,7 +342,8 @@
    // При поиске в списке с горизонтальным скроллом, хлебная крошка фиксируется и растягивается,
    // стек z-index'ов для операций над записью на хлебных крошках должен начинаться с z-index хлебной крошки (фиксированной колонки).
    // https://online.sbis.ru/opendoc.html?guid=7ec6ad1a-6c9d-412d-b477-7935d81c82cc
-   z-index: 3;
+   // Значение = 4, т.к. для .controls-Grid__cell_fixed_ сделано 3
+   z-index: 4;
 }
 
 .ws-is-hover {

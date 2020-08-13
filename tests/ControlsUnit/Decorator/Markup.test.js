@@ -1,6 +1,3 @@
-/**
- * Created by rn.kondakov on 24.10.2018.
- */
 define([
    'Controls/decorator',
    'Controls/_decorator/Markup/resources/template',
@@ -221,10 +218,10 @@ define([
             assert.equal(decorator.Converter.jsonToHtml(['p', 'some text']), '<div><p>some text</p></div>');
          });
          it('escape', function() {
-            var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><&#39;'];
+            var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><&#39;&#'];
             var vdomTemplate = template({ _options: { 'value': json } }, {}, undefined, true);
-            equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;</p></div>');
-            assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><&amp;#39;');
+            equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;&amp;#</p></div>');
+            assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><&amp;#39;&amp;#');
             assert.equal(vdomTemplate[0].children[0].hprops.attributes.title, '"&amp;lt;<>');
          });
          it('one big', function() {
@@ -1052,12 +1049,12 @@ define([
          });
 
          it('email - 1', function() {
-            var parentNode = ['p', 'rn.kondakov@tensor.ru'];
+            var parentNode = ['p', 'sm.body@tensor.ru'];
             var goodResultNode = [[], ['a',
                {
-                  href: 'mailto:rn.kondakov@tensor.ru'
+                  href: 'mailto:sm.body@tensor.ru'
                },
-               'rn.kondakov@tensor.ru'
+               'sm.body@tensor.ru'
             ]];
             var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
             assert.deepEqual(goodResultNode, checkResultNode);
@@ -1076,27 +1073,27 @@ define([
          });
 
          it('email in brackets', function() {
-            var parentNode = ['p', 'text(rn.kondakov@tensor.ru)text'];
+            var parentNode = ['p', 'text(sm.body@tensor.ru)text'];
             var goodResultNode = [[], 'text(', ['a',
                {
-                  href: 'mailto:rn.kondakov@tensor.ru'
+                  href: 'mailto:sm.body@tensor.ru'
                },
-               'rn.kondakov@tensor.ru'
+               'sm.body@tensor.ru'
             ], ')text'];
             var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
             assert.deepEqual(goodResultNode, checkResultNode);
          });
 
          it('email with wrong domain', function() {
-            var parentNode = ['p', 'rn.kondakov@tensor.rux'];
-            var goodResultNode = 'rn.kondakov@tensor.rux';
+            var parentNode = ['p', 'sm.body@tensor.rux'];
+            var goodResultNode = 'sm.body@tensor.rux';
             var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
             assert.deepEqual(goodResultNode, checkResultNode);
          });
 
          it('email with an emoji', function() {
-            var parentNode = ['p', 'rn.kondakov@tensor😊.ru'];
-            var goodResultNode = 'rn.kondakov@tensor😊.ru';
+            var parentNode = ['p', 'sm.body@tensor😊.ru'];
+            var goodResultNode = 'sm.body@tensor😊.ru';
             var checkResultNode = linkDecorateUtils.wrapLinksInString(parentNode[1], parentNode);
             assert.deepEqual(goodResultNode, checkResultNode);
          });

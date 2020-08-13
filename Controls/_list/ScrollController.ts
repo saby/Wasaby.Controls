@@ -104,6 +104,10 @@ export default class ScrollController {
         return {...preparedResult, ...result}
     }
 
+    callAfterScrollStopped(callback: Function): void {
+        this._inertialScrolling.callAfterScrollStopped(callback);
+    }
+
     private updateContainerHeightsData(params: Partial<IScrollParams>):  IScrollControllerResult {
         if (this._virtualScroll && params) {
             let newParams: Partial<IContainerHeights> = {trigger: this._triggerOffset};
@@ -141,6 +145,7 @@ export default class ScrollController {
                 result = this._initVirtualScroll(options);
                 this._options.collection = options.collection;
                 this._options.needScrollCalculation = options.needScrollCalculation;
+                this._isRendering = true;
             }
             if (options.attachLoadTopTriggerToNull !== this._options.attachLoadTopTriggerToNull) {
                 this._options.attachLoadTopTriggerToNull = options.attachLoadTopTriggerToNull
@@ -149,13 +154,14 @@ export default class ScrollController {
                                                                  this._viewportHeight,
                                                                  this._options.attachLoadTopTriggerToNull);
                 }
+                this._isRendering = true;
             }
 
-            if (options.activeElement) {
+            if (options.activeElement !== this._options.activeElement) {
+                this._isRendering = true;
                 this._options.activeElement = options.activeElement;
             }
         }
-        this._isRendering = true;
         return {...result, ...this.updateContainerHeightsData(params)};
     }
 
@@ -240,7 +246,7 @@ export default class ScrollController {
                                 }
                             };
                         }
-                        if (!this._isRendering && !this._virtualScroll.rangeChanged) {
+                        if (!this._isRendering && this._virtualScroll && !this._virtualScroll.rangeChanged) {
                             this.continueScrollToItemIfNeed();
                         }
                     });

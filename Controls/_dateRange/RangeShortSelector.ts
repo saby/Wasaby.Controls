@@ -1,9 +1,11 @@
 import BaseSelector from './BaseSelector';
-import coreMerge = require('Core/core-merge');
 import {Date as WSDate} from 'Types/entity';
 import ILinkView from './interfaces/ILinkView';
 import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
-import componentTmpl = require('wml!Controls/_dateRange/RangeShortSelector/RangeShortSelector');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import coreMerge = require('Core/core-merge');
+import template = require('wml!Controls/_dateRange/RangeShortSelector/RangeShortSelector');
+import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 
 /**
  * Контрол позволяет пользователю выбрать временной период: месяц, квартал, полугодие, год. Выбор происходит с помощью панели быстрого выбора периода.
@@ -27,9 +29,6 @@ import componentTmpl = require('wml!Controls/_dateRange/RangeShortSelector/Range
  * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/LiteSelector/Index
- * @demo Controls-demo/dateRange/LiteSelector/ArrowVisibility/Index
- * @demo Controls-demo/dateRange/LiteSelector/Disabled/Index
- * @demo Controls-demo/dateRange/LiteSelector/ValueNotSpecified/Index
  *
  */
 
@@ -48,11 +47,29 @@ import componentTmpl = require('wml!Controls/_dateRange/RangeShortSelector/Range
  *
  */
 
-var Component = BaseSelector.extend({
-    _template: componentTmpl,
+interface IRangeShortSelectorOptions extends IControlOptions {
+    chooseMonths: boolean;
+    chooseQuarters: boolean;
+    chooseHalfyears: boolean;
+    popupClassName: string;
+    chooseYears: boolean;
+    checkedStart: Date;
+    checkedEnd: Date;
+    emptyCaption: string;
+    source: any;
+    monthTemplate: HTMLElement;
+    itemTemplate: HTMLElement;
+    displayedRanges: Date[];
+    stubTemplate: Function;
+    captionFormatter: Function;
+    dateConstructor: Function;
+}
 
-    _getPopupOptions: function() {
-        var className;
+export default class RangeShortSelector extends BaseSelector<IRangeShortSelectorOptions> {
+    protected _template: TemplateFunction = template;
+
+    protected _getPopupOptions(): IStickyPopupOptions {
+        let className;
         const container = this._children.linkView.getPopupTarget();
         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
             className = 'controls-DateRangeSelectorLite__picker-years-only';
@@ -63,7 +80,7 @@ var Component = BaseSelector.extend({
         return {
             opener: this,
             target: container,
-            className: className,
+            className,
             fittingMode: 'overflow',
             eventHandlers: {
                 onResult: this._onResult.bind(this)
@@ -92,35 +109,34 @@ var Component = BaseSelector.extend({
                 dateConstructor: this._options.dateConstructor
             }
         };
-    },
+    }
 
     _mouseEnterHandler(): void {
         const loadCss = ({View}) => View.loadCSS();
         this._startDependenciesTimer('Controls/shortDatePicker', loadCss);
-    },
-
-    shiftBack: function () {
-        this._children.linkView.shiftBack();
-    },
-
-    shiftForward: function () {
-       this._children.linkView.shiftForward();
     }
 
-});
+    shiftBack(): void {
+        this._children.linkView.shiftBack();
+    }
 
-Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
+    shiftForward(): void {
+        this._children.linkView.shiftForward();
+    }
 
-Component.getDefaultOptions = function () {
-    return {
-        ...IPeriodLiteDialog.getDefaultOptions(),
-        ...ILinkView.getDefaultOptions(),
-        dateConstructor: WSDate
-    };
-};
+    static getDefaultOptions(): object {
+        return {
+            ...IPeriodLiteDialog.getDefaultOptions(),
+            ...ILinkView.getDefaultOptions(),
+            dateConstructor: WSDate
+        };
+    }
 
-Component.getOptionTypes = function () {
-    return coreMerge(coreMerge({}, IPeriodLiteDialog.getOptionTypes()), ILinkView.getOptionTypes());
-};
-Component._theme = ['Controls/dateRange'];
-export default Component;
+    static getOptionTypes(): object {
+        return coreMerge(coreMerge({}, IPeriodLiteDialog.getOptionTypes()), ILinkView.getOptionTypes());
+    }
+
+    EMPTY_CAPTIONS: object = ILinkView.EMPTY_CAPTIONS;
+
+    static _theme: string[] = ['Controls/dateRange'];
+}

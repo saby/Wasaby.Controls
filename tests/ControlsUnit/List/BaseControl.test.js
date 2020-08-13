@@ -3283,6 +3283,7 @@ define([
          it('shouldnt stop event propagation if editing will start', () => {
             let stopPropagationCalled = false;
             let event = {
+               isStopped: () => stopPropagationCalled,
                stopPropagation: function() {
                   stopPropagationCalled = true;
                }
@@ -6628,21 +6629,29 @@ define([
                assert.equal(lists.BaseControl._private.calcPaging(self, hasMore, pageSize), 1);
             });
 
-            it('_pagingNavigationVisible', () => {
-               let updatePagingData = lists.BaseControl._private.updatePagingData;
-               let self = {
-                  _knownPagesCount: 1,
-                  _currentPageSize: 5,
-                  _currentPage: 1,
-               }
-               updatePagingData(self, 0);
-               assert.equal(self._pagingNavigationVisible, false, 'paging should not be visible');
-               updatePagingData(self, 10);
-               assert.equal(self._pagingNavigationVisible, true, 'paging should be visible');
-               updatePagingData(self, false);
-               assert.equal(self._pagingNavigationVisible, false, 'paging should not be visible');
-               updatePagingData(self, true);
-               assert.equal(self._pagingNavigationVisible, true, 'paging should be visible');
+            it('isPagingNavigationVisible', () => {
+               let isPagingNavigationVisible = lists.BaseControl._private.isPagingNavigationVisible;
+
+               // Известно общее количество записей, записей 0
+               let result = isPagingNavigationVisible(0, 0);
+               assert.isFalse(result, 'paging should not be visible');
+
+               // Известно общее количество записей, записей 10
+               result = isPagingNavigationVisible(10, 2);
+               assert.isTrue(result, 'paging should be visible');
+
+               // Неизвестно общее количество записей, записей, известно текущее количество страниц = 0, hasMore = false
+               result = isPagingNavigationVisible(false, 0);
+               assert.isFalse(result, 'paging should not be visible');
+
+               // Неизвестно общее количество записей, записей, известно текущее количество страниц = 2, hasMore = false
+               result = isPagingNavigationVisible(false, 2);
+               assert.isTrue(result, 'paging should not be visible');
+
+               // Неизвестно общее количество записей, записей, известно текущее количество страниц = 2, hasMore = true
+               result = isPagingNavigationVisible(true, 2);
+               assert.isTrue(result, 'paging should not be visible');
+
             });
 
             describe('getPagingLabelData', function() {
@@ -7069,7 +7078,10 @@ define([
                let isStopped = false;
                let isCheckbox = false;
 
-               const e = { stopPropagation() { isStopped = true; } };
+               const e = {
+                  isStopped: () => isStopped,
+                  stopPropagation() { isStopped = true; }
+               };
 
                const originalEvent = {
                   target: {
