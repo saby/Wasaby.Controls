@@ -7,48 +7,55 @@ import {SbisService} from 'Types/source';
 import {IItems} from 'Controls/interface';
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
+import {getFontWidth} from 'Controls/Utils/getFontWidth';
 
 import TabButtonsTpl = require('wml!Controls/_tabs/FlexButtons/FlexButtons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 
 export default class Base extends Control<ITabsButtonsOptions> {
 
-    protected _getIndexOfLastTab(items: RecordSet, displayProperty: string, containerWidth: number = 200): number {
+    protected _getIndexOfLastTab(items: RecordSet, displayProperty: string, containerWidth: number = 200): Promise<number> {
         // находим индекс последней уместившейся вкладки с учетом текста, отступов и разделителей.
         let width = 0;
         let indexLast = 0;
-        const arrWidth = this._getWidthOfElements(items, displayProperty);
-
-        //здесь учесть еще... из утилиты
-        while (width < containerWidth && indexLast !== items.getRawData().length) {
-            width += arrWidth[indexLast];
-            indexLast++;
-        }
-        indexLast -= 2;
-        return indexLast;
-    }
-
-    protected _getWidthOfElement(item: string): number {
-        // ширина элемента
-        return 31 + 26;
-    }
-
-    protected _getWidthOfElements(items: RecordSet, displayProperty: string): number[] {
-        // получаем массив ширин элементов
-        let width = 0;
-        const arrWidth = [];
-        items.forEach((item) => {
-            const widthOfEl = this._getWidthOfElement(item[displayProperty]);
-            arrWidth.push(widthOfEl);
-            width += widthOfEl;
+        return this._getWidthOfElements(items, displayProperty).then((res) => {
+            const arrWidth = res;
+            //здесь учесть еще... из утилиты
+            while (width < containerWidth && indexLast !== items.getRawData().length) {
+                width += arrWidth[indexLast];
+                indexLast++;
+            }
+            indexLast -= 2;
+            return indexLast;
         });
-        return arrWidth;
+    }
+
+    protected _getWidthOfElement(item: string): Promise<number> {
+        // ширина элемента
+
+        return getFontWidth(item, 'l').then((res) => {
+            const width = res + 26;
+            return width;
+        });
+    }
+
+    protected _getWidthOfElements(items: RecordSet, displayProperty: string): Promise<number[]> {
+        const arrItems = items.getRawData();
+        const promises = [];
+        for (let i = 0; i < arrItems.length; i++) {
+            promises.push(this._getWidthOfElement(arrItems[i][displayProperty]));
+        }
+        return Promise.all(promises).then((res) => {
+            return res;
+        });
     }
 
     private _deleteHiddenItems(items: RecordSet): void {
-        this._lastIndex = this._getIndexOfLastTab(items, this._displayProperty, this._containerWidth);
-        const rawData = items.getRawData().slice(0, this._lastIndex + 1);
-        items.setRawData(rawData);
+        this._getIndexOfLastTab(items, this._displayProperty, this._containerWidth).then((res) => {
+            this._lastIndex = res;
+            const rawData = items.getRawData().slice(0, this._lastIndex + 1);
+            items.setRawData(rawData);
+        });
     }
 
 
