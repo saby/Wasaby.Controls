@@ -195,9 +195,9 @@ export default class Browser extends Control {
         this._isAllSelected = isAllSelected;
     }
 
-    protected listSelectionTypeForAllSelectedChanged(event: SyntheticEvent, selectionType: TSelectionType): void {
+    protected _listSelectionTypeForAllSelectedChanged(event: SyntheticEvent, selectionType: TSelectionType): void {
         event.stopPropagation();
-        this._listSelectionTypeForAll = selectionType;
+        this._selectionType = selectionType;
     }
 
     protected _itemOpenHandler(newCurrentRoot: Key, items: RecordSet, dataRoot: Key = null): void {
