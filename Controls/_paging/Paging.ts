@@ -64,14 +64,16 @@ class Paging extends Control<IPagingOptions> {
 
     private _initArrowDefaultStates(config: IPagingOptions): void {
         if (config.arrowState) {
-            this._stateTop = this._getState(config.arrowState.begin || 'visible');
-            this._stateBackward = this._getState(config.arrowState.prev || 'visible');
-            this._stateForward = this._getState(config.arrowState.next || 'visible');
-            this._stateBottom = this._getState(config.arrowState.end || 'visible');
+            this._stateTop = this._getState(config.arrowState.begin || 'readonly');
+            this._stateBackward = this._getState(config.arrowState.prev || 'readonly');
+            this._stateForward = this._getState(config.arrowState.next || 'readonly');
+            this._stateBottom = this._getState(config.arrowState.end || 'readonly');
+        } else {
+            this._stateTop = this._stateBackward = this._stateForward = this._stateBottom = 'disabled';
         }
     }
 
-    private _getState(state: TArrowStateVisibility): string {
+    private _getState(state: TArrowStateVisibility): TButtonState {
         return (state === 'visible') ? 'normal' : 'disabled';
     }
 
