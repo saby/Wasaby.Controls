@@ -267,12 +267,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         if (Object.keys(this._state).length === 0) {
             this._updateState(this._getFullStateFromDOM());
         }
-        // Если нет скролла, то и заголовки незачем обновлять
-        const isInitializing = Object.keys(this._oldState).length === 0;
-        const hasScroll = this._state.clientHeight !== this._state.scrollHeight;
-        if (!isInitializing && hasScroll) {
-            this._registrars.scrollStateChanged.startOnceTarget(component, {...this._state},{...this._oldState});
-        }
+        this._registrars.scrollStateChanged.startOnceTarget(component, {...this._state},{...this._oldState});
     }
 
     _onResizeContainer(newState: IScrollState): void {
