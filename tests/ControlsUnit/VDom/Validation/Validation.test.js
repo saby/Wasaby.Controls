@@ -217,5 +217,19 @@ define([
             done(error);
          });
       });
+      it('closeInfobox by submit ', (done) => {
+         let validCtrl = new validateMod.Container();
+         let Controller = new validateMod.ControllerClass();
+         validCtrl._isOpened = true;
+         validCtrl._validationResult = true;
+         Controller._validates.push(validCtrl);
+         Controller.submit().then(() => {
+            assert.strictEqual(validCtrl._isOpened, false);
+            Controller.destroy();
+            done();
+         }).catch((error) => {
+            done(error);
+         });
+      });
    });
 });
