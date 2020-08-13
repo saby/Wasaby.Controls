@@ -737,6 +737,7 @@ const _private = {
                                 return Promise.resolve(afterActionCallback);
                             });
                         },
+                        isPagingVisible: self._pagingVisible,
                         /**
                          * Позиция шаблона ошибки относительно списка.
                          * Зависит от направления подгрузки данных.
@@ -1642,6 +1643,7 @@ const _private = {
             if (errorConfig && config.templateOptions) {
                 errorConfig.options.action = config.templateOptions.action;
                 errorConfig.options.showInDirection = config.templateOptions.showInDirection;
+                errorConfig.options.isPagingVisible = config.templateOptions.isPagingVisible;
             }
             _private.showError(self, errorConfig);
             return {
