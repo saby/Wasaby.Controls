@@ -1768,7 +1768,7 @@ var
         },
 
         setColumnScrollVisibility(columnScrollVisibility: boolean) {
-            if (!!this._options.columnScrollVisibility !== columnScrollVisibility) {
+            if (this._options && !!this._options.columnScrollVisibility !== columnScrollVisibility) {
                 this._options.columnScrollVisibility = columnScrollVisibility;
 
                 // Нужно обновить классы с z-index на всех ячейках
