@@ -10,7 +10,6 @@ define('Controls/Application',
       'UI/Base',
       'Controls/scroll',
       'Core/helpers/getResourceUrl',
-      'Controls/decorator',
       'Controls/Application/SettingsController',
       'Controls/Utils/DOMUtil',
       'css!theme?Controls/Application/oldCss'
@@ -56,7 +55,6 @@ define('Controls/Application',
       UIBase,
       scroll,
       getResourceUrl,
-      decorator,
       SettingsController,
       DOMUtils) {
       'use strict';
