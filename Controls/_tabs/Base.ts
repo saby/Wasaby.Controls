@@ -14,20 +14,76 @@ import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 
 export default class Base extends Control<ITabsButtonsOptions> {
 
+    protected _template: TemplateFunction = TabButtonsTpl;
+    protected _defaultItemTemplate: TemplateFunction = ItemTemplate;
+    private _itemsOrder: number[];
+    private _lastRightOrder: number;
+    private _items: RecordSet;
+    private _crudWrapper: CrudWrapper;
+    protected _lastIndex: number = 0;
+    protected _displayProperty: string = 'title';
+    protected _containerWidth: number;
+    protected _originalSource: RecordSet;
+
     protected _getIndexOfLastTab(items: RecordSet, displayProperty: string, containerWidth: number = 200): Promise<number> {
         // находим индекс последней уместившейся вкладки с учетом текста, отступов и разделителей.
         let width = 0;
         let indexLast = 0;
         return this._getWidthOfElements(items, displayProperty).then((res) => {
             const arrWidth = res;
-            //здесь учесть еще... из утилиты
+            // здесь учесть еще... из утилиты
             while (width < containerWidth && indexLast !== items.getRawData().length) {
                 width += arrWidth[indexLast];
                 indexLast++;
             }
+            /* Нужно, если хотя бы одна вкладка с учетом сокращения не влезла - показывалась кнопка еще.
+            Тогда осуществляем проверку на свободное пространство. Если оно больше, чем минимум ширины вкладки + кнопка еще, то позволяем последней вкладке сокращаться.
+            Если меньше, то берем на одну вкладку меньше.
+          */
             indexLast -= 2;
+
+            if (indexLast === arrWidth.length - 1) {
+                return indexLast;
+            }
+
+            const currentWidth = arrWidth.reduce((sum, current) => {
+                return sum + current;
+            }, 0);
+
+            const widthMore = 36;
+            const minWidth = 26 + 26;
+            if (indexLast === arrWidth.length - 2) {
+                const width = currentWidth - arrWidth[arrWidth.length - 1] + minWidth;
+                if (width < containerWidth) {
+                    indexLast++;
+                    return indexLast;
+                } else {
+                    indexLast = this.getLastIndex(indexLast, arrWidth, currentWidth, containerWidth);
+                }
+            }
+
+            if (indexLast < arrWidth.length - 2) {
+                indexLast = this.getLastIndex(indexLast, arrWidth, currentWidth, containerWidth);
+            }
             return indexLast;
         });
+    }
+
+    private getLastIndex(lastIndex: number, arrWidth: number[], currentWidth: number, containerWidth: number): number {
+        let i = arrWidth.length - 1;
+        let indexLast = lastIndex;
+        let width = currentWidth;
+        while (i !== lastIndex) {
+            width = width - arrWidth[i];
+            i--;
+        }
+        width = width + 36 + 26 + 26;
+        indexLast++;
+        while (width > containerWidth) {
+            indexLast--;
+            width = width - arrWidth[lastIndex];
+        }
+        return indexLast;
     }
 
     protected _getWidthOfElement(item: string): Promise<number> {
@@ -57,18 +113,6 @@ export default class Base extends Control<ITabsButtonsOptions> {
             items.setRawData(rawData);
         });
     }
-
-
-    protected _template: TemplateFunction = TabButtonsTpl;
-    protected _defaultItemTemplate: TemplateFunction = ItemTemplate;
-    private _itemsOrder: number[];
-    private _lastRightOrder: number;
-    private _items: RecordSet;
-    private _crudWrapper: CrudWrapper;
-    protected _lastIndex: number = 0;
-    protected _displayProperty: string = 'title';
-    protected _containerWidth: number;
-    protected _originalSource: RecordSet;
 
     protected _beforeMount(options: ITabsButtonsOptions,
                            context: object,
@@ -161,6 +205,9 @@ export default class Base extends Control<ITabsButtonsOptions> {
             classes.push('controls-Tabs__item_canShrink');
         } else {
             classes.push('controls-Tabs__item_notShrink');
+        }
+        if (index === this._lastIndex) {
+            classes.push('controls-Tabs__item_shrinkMinWidth');
         }
         return classes.join(' ');
     }
