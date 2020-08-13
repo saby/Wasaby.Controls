@@ -165,9 +165,9 @@
 .controls-PeriodLiteDialog__year-prev_theme-@{themeName},
 .controls-PeriodLiteDialog__year-next_theme-@{themeName} {
    font-size: @yearselector_arrow_icon-size_shortDatePicker;
-   height: @yearselector_arrow_height_shortDatePicker;
-   width: @yearselector_arrow_width_shortDatePicker;
-   line-height: @yearselector_arrow_height_shortDatePicker - @item_border-thickness_shortDatePicker;
+   height: @yearselector_arrow_height_shortDatePicker - 2 * @yearselector_arrow_border-width_shortDatePicker;
+   width: @yearselector_arrow_width_shortDatePicker - 2 * @yearselector_arrow_border-width_shortDatePicker;
+   line-height: @yearselector_arrow_height_shortDatePicker;
 
    border: @yearselector_arrow_border-width_shortDatePicker solid @yearselector_arrow_border-color_shortDatePicker;
    border-radius: @yearselector_arrow_border-radius_shortDatePicker;
