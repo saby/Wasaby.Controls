@@ -124,12 +124,6 @@ var Remover = BaseAction.extend({
     }
 });
 
-Remover.getDefaultOptions = function () {
-    return {
-        selectionTypeForAllSelected: 'all'
-    };
-};
-
 Remover.contextTypes = function () {
     return {
         dataOptions: dataOptions
