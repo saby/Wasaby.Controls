@@ -1886,6 +1886,7 @@ const _private = {
             model: self._listViewModel,
             selectedKeys: options.selectedKeys,
             excludedKeys: options.excludedKeys,
+            searchValue: options.searchValue,
             strategy
         });
     },
@@ -1895,6 +1896,7 @@ const _private = {
            model: self._listViewModel,
            selectedKeys: newOptions.selectedKeys,
            excludedKeys: newOptions.excludedKeys,
+           searchValue: newOptions.searchValue,
            strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
         });
     },
@@ -1975,6 +1977,20 @@ const _private = {
       }
 
         // для связи с контроллером ПМО
+        let selectionType = 'all';
+        if (result.isAllSelected && self._options.nodeProperty && self._options.searchValue) {
+            let onlyCrumbsInItems = true;
+            self._listViewModel.each((item) => {
+                if (onlyCrumbsInItems) {
+                    onlyCrumbsInItems = item['[Controls/_display/BreadcrumbsItem]'];
+                }
+            });
+
+            if (!onlyCrumbsInItems) {
+                selectionType = 'leaf';
+            }
+        }
+        self._notify('listSelectionTypeForAllSelectedChanged', [selectionType], {bubbling: true});
         self._notify('listSelectedKeysCountChanged', [result.selectedCount, result.isAllSelected], {bubbling: true});
     },
 
