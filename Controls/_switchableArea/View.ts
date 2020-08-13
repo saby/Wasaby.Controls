@@ -5,6 +5,7 @@ import defaultItemTemplate from './ItemTpl';
 import {factory} from 'Types/chain';
 import {Logger} from 'UI/Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {RegisterClass} from 'Controls/event';
 
 export interface ISwitchableOptions extends IControlOptions{
     itemTemplate: TemplateFunction;
@@ -55,10 +56,12 @@ class View extends Control<ISwitchableOptions> {
     protected _template: TemplateFunction = template;
     protected _viewModel: any; //TODO: заменить, когда переведем ViewModel на ts
     protected _selectedKey: number | string = null;
+    protected _switchAreaRegister: RegisterClass;
 
     protected _beforeMount(options: ISwitchableOptions): void {
         this._correctSelectedKey(options);
         this._viewModel = new ViewModel(options.items, this._selectedKey);
+        this._switchAreaRegister = new RegisterClass({register: 'switchArea'});
     }
 
     protected _beforeUpdate(newOptions: ISwitchableOptions): void {
@@ -110,7 +113,7 @@ class View extends Control<ISwitchableOptions> {
             _bubbling: true
         };
 
-        this._children.switchAreaDetect.start(new SyntheticEvent(null, eventCfg));
+        this._switchAreaRegister.start(new SyntheticEvent(null, eventCfg));
     }
 
     static getDefaultOptions(): ISwitchableOptions {
