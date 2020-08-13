@@ -622,7 +622,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     static getDefaultOptions(): IStickyHeaderOptions {
         return {
             //TODO: https://online.sbis.ru/opendoc.html?guid=a5acb7b5-dce5-44e6-aa7a-246a48612516
-            fixedZIndex: 3,
+            fixedZIndex: 2,
             shadowVisibility: SHADOW_VISIBILITY.visible,
             backgroundVisible: true,
             backgroundStyle: BACKGROUND_STYLE.DEFAULT,
