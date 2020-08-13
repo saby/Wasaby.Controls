@@ -1664,6 +1664,21 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(0, headerRow.curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
 
          });
+         it('shadowVisibility on header cells with stickyLadder', () => {
+            const gridHeaderClone = gridHeader.map(function(obj) {
+               return Object.assign({}, obj);
+            });
+            gridViewModel._prepareHeaderColumns(gridHeaderClone, false, false, 1);
+
+            let headerRow = gridViewModel.getCurrentHeaderRow();
+            let column = headerRow.getCurrentHeaderColumn();
+
+            assert.equal(column.shadowVisibility, 'hidden');
+            headerRow.goToNextHeaderColumn();
+
+            column =  headerRow.getCurrentHeaderColumn();
+            assert.equal(column.shadowVisibility, 'visible');
+         });
 
          it('should not add column separator classes on action cell', function () {
             const gridHeaderClone = gridHeader.map(function(obj) {
@@ -2786,7 +2801,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // fixed coll withoutColumnScroll
             assert.equal(6, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false}));
             // sticky fit coll withoutColumnScroll
-            assert.equal(6, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false, columnIndex: 1}));
+            assert.equal(5, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false, columnIndex: 1}));
          })
 
          it('updates prefix version with ladder only on add and remove', () => {

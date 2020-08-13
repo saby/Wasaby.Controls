@@ -22,11 +22,11 @@ import collection = require('Types/collection');
 import { Model } from 'Types/entity';
 import {
     IEditingConfig,
-    IItemActionsTemplateConfig,
     ISwipeConfig,
     ANIMATION_STATE,
     CollectionItem
 } from 'Controls/display';
+import {IItemActionsTemplateConfig} from 'Controls/itemActions';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
@@ -36,6 +36,13 @@ import {IHeaderCell} from './interface/IHeaderCell';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
+/**
+ * При установке этих значений следует учитывать, что z-index:
+ * .controls-Grid__cell_fixed_theme-@{themeName} = 3
+ * .controls-TreeGrid__row__searchBreadCrumbs .controls-itemActionsV__container = 4
+ * .controls-itemActionsV__container = 4
+ * .controls-Grid_columnScroll_wrapper = 5
+ */
 const FIXED_HEADER_ZINDEX = 6;
 const STICKY_HEADER_ZINDEX = 5;
 
@@ -277,14 +284,13 @@ var
             return isCellIndexLessTheFixedIndex;
         },
 
-
-        getHeaderZIndex: function(params) {
-            if (params.isColumnScrollVisible) {
-                return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
-            } else {
-                // Пока в таблице нет горизонтального скролла, шапка ен может быть проскролена по горизонтали.
-                return FIXED_HEADER_ZINDEX;
-            }
+        // Раньше по https://online.sbis.ru/doc/a4b0487a-4bc4-47e4-afce-3340833b1232 тут ещё была проверка на
+        // isColumnScrollVisible, но это приводило к тому, что в некоторых реестрах
+        // z-index всех столбцов формировались до установки isColumnScrollVisible=true как FIXED_HEADER_ZINDEX
+        // и т.к. они были на одном уровне, то возникал кейс по ошибке
+        // https://online.sbis.ru/opendoc.html?guid=42614e54-3ed7-41f4-9d57-a6971df66f9c
+        getHeaderZIndex(params): number {
+            return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
         },
 
         getColumnScrollCellClasses(params, theme): string {
@@ -960,7 +966,7 @@ var
             const headerColumn = {
                 column: cell,
                 index: columnIndex,
-                shadowVisibility: 'visible'
+                shadowVisibility: cell.ladderCell ? 'hidden' : 'visible'
             };
             let cellClasses = `controls-Grid__header-cell controls-Grid__header-cell_theme-${theme}` +
                 ` controls-Grid__${this._isMultiHeader ? 'multi-' : ''}header-cell_min-height_theme-${theme}` +
@@ -1146,10 +1152,9 @@ var
         },
 
         setHasMoreData(hasMoreData: boolean, silent: boolean = false): boolean {
-            if (this._model.setHasMoreData(hasMoreData)) {
-                if (!silent) {
-                    this._nextModelVersion(true);
-                }
+            this._model.setHasMoreData(hasMoreData);
+            if (!silent) {
+                this._nextModelVersion(true);
             }
         },
 

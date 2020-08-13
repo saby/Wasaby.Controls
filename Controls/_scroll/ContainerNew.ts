@@ -139,9 +139,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._paging = new PagingModel();
         }
 
+        this._adjustContentMarginsForBlockRender();
+
         super._afterMount();
 
-        this._adjustContentMarginsForBlockRender();
         this._stickyHeaderController.init(this._container);
     }
 
@@ -175,7 +176,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             if (!this._options.optimizeShadow) {
                 this._shadows.updateScrollState(this._state);
             }
-            this._scrollbars.updateScrollState(this._state);
+            this._scrollbars.updateScrollState(this._state, this._container);
             this._paging?.update(this._state);
             this._stickyHeaderController.setCanScroll(this._state.canVerticalScroll);
             this._scrollCssClass = this._getScrollContainerCssClass(this._options);

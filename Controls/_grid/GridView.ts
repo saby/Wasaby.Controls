@@ -340,7 +340,7 @@ var
                 this._listModel.setStickyColumnsCount(newCfg.stickyColumnsCount);
                 this._columnScrollController?.setStickyColumnsCount(newCfg.stickyColumnsCount, true);
             }
-            if (this._options.multiSelectVisibility !== newCfg.stickyColumnsCount) {
+            if (this._options.multiSelectVisibility !== newCfg.multiSelectVisibility) {
                 this._columnScrollController?.setMultiSelectVisibility(newCfg.multiSelectVisibility, true);
             }
 
@@ -428,7 +428,8 @@ var
 
             // Для предотвращения скролла одной записи в таблице с экшнами.
             // _options._needBottomPadding почему-то иногда не работает.
-            if (this._options.itemActionsPosition === 'outside' &&
+            if (this._listModel.getCount() && 
+                this._options.itemActionsPosition === 'outside' &&
                 !this._options._needBottomPadding &&
                 this._options.resultsPosition !== 'bottom') {
                 classList = classList.add(`controls-GridView__footer__itemActionsV_outside_theme-${this._options.theme}`);

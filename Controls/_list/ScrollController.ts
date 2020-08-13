@@ -153,6 +153,7 @@ export default class ScrollController {
     }
 
     afterMount(container: HTMLElement, triggers: IScrollTriggers): void {
+        this._isRendering = false;
         this._isMounted = true;
         this._setContainer(container);
         if (this._container) {
@@ -178,6 +179,7 @@ export default class ScrollController {
             this._initVirtualScroll(options);
             this._options.collection = options.collection;
             this._options.needScrollCalculation = options.needScrollCalculation;
+            this._isRendering = true;
         }
 
         if (this._indicatorState) {
@@ -185,14 +187,15 @@ export default class ScrollController {
                 this._callbacks.changeIndicatorState(true, this._indicatorState);
             }, LOADING_INDICATOR_SHOW_TIMEOUT);
         }
-        if (options.activeElement) {
+        if (options.activeElement !== this._options.activeElement) {
             this._options.activeElement = options.activeElement;
+            this._isRendering = true;
         }
         if (this._options.attachLoadTopTriggerToNull !== options.attachLoadTopTriggerToNull) {
             this._options.attachLoadTopTriggerToNull = options.attachLoadTopTriggerToNull;
             this._updateTriggerOffset(this._viewHeight, this._viewportHeight);
+            this._isRendering = true;
         }
-        this._isRendering = true;
     }
 
     registerObserver(): void {
@@ -671,7 +674,7 @@ export default class ScrollController {
      * которые могут вызваться в произвольный момент времени
      */
     private _doAfterRender(callback: Function): void {
-        if (this._isRendering || this._virtualScroll.rangeChanged) {
+        if (this._isRendering || this._virtualScroll && this._virtualScroll.rangeChanged) {
             if (this._afterRenderCallbacks) {
                 this._afterRenderCallbacks.push(callback);
             } else {
