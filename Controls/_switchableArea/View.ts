@@ -4,7 +4,7 @@ import template = require('wml!Controls/_switchableArea/View');
 import defaultItemTemplate from './ItemTpl';
 import {factory} from 'Types/chain';
 import {Logger} from 'UI/Utils';
-import {SyntheticEvent} from "UI/Vdom";
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 export interface ISwitchableOptions extends IControlOptions{
     itemTemplate: TemplateFunction;
