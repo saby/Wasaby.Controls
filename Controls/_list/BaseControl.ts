@@ -1912,7 +1912,6 @@ const _private = {
                     declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
                 }),
                 rootId: options.root,
-                searchValue: options.searchValue,
                 items
             };
         } else {
