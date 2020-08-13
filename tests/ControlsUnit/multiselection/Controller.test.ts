@@ -59,7 +59,6 @@ describe('Controls/_multiselection/Controller', () => {
          const expectedResult = {
             isAllSelected: false,
             selectedCount: 1,
-            selectionType: 'all',
             selectedKeysDiff: {
                keys: [1],
                added: [1],
@@ -105,7 +104,6 @@ describe('Controls/_multiselection/Controller', () => {
          const expectedResult = {
             isAllSelected: false,
             selectedCount: 1,
-            selectionType: 'all',
             selectedKeysDiff: {
                keys: [2],
                added: [2],
@@ -139,8 +137,7 @@ describe('Controls/_multiselection/Controller', () => {
                keys: []
             },
             selectedCount: 0,
-            isAllSelected: false,
-            selectionType: 'all'
+            isAllSelected: false
          });
          assert.isFalse(model.getItemBySourceKey(1).isSelected());
          assert.isFalse(model.getItemBySourceKey(2).isSelected());
@@ -166,8 +163,7 @@ describe('Controls/_multiselection/Controller', () => {
                keys: []
             },
             selectedCount: 0,
-            isAllSelected: false,
-            selectionType: 'all'
+            isAllSelected: false
          });
       });
    });
@@ -195,7 +191,6 @@ describe('Controls/_multiselection/Controller', () => {
       const expectedResult = {
          isAllSelected: true,
          selectedCount: 3,
-         selectionType: 'all',
          selectedKeysDiff: {
             keys: [null],
             added: [null],
@@ -214,7 +209,6 @@ describe('Controls/_multiselection/Controller', () => {
       const expectedResult = {
          isAllSelected: true,
          selectedCount: 3,
-         selectionType: 'all',
          selectedKeysDiff: {
             keys: [null],
             added: [null],
@@ -235,7 +229,6 @@ describe('Controls/_multiselection/Controller', () => {
       const expectedResult = {
          isAllSelected: false,
          selectedCount: 0,
-         selectionType: 'all',
          selectedKeysDiff: {
             keys: [],
             added: [],
@@ -282,8 +275,7 @@ describe('Controls/_multiselection/Controller', () => {
             keys: []
          },
          selectedCount: 4,
-         isAllSelected: true,
-         selectionType: 'all'
+         isAllSelected: true
       });
 
       assert.isTrue(model.getItemBySourceKey(1).isSelected());
@@ -296,7 +288,6 @@ describe('Controls/_multiselection/Controller', () => {
       const expectedResult = {
          isAllSelected: false,
          selectedCount: 0,
-         selectionType: 'all',
          selectedKeysDiff: {
             keys: [],
             added: [],
@@ -331,7 +322,6 @@ describe('Controls/_multiselection/Controller', () => {
       const expectedResult = {
          isAllSelected: false,
          selectedCount: 1,
-         selectionType: 'all',
          selectedKeysDiff: {
             keys: [1],
             added: [],

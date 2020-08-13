@@ -72,6 +72,7 @@ export interface ISelectionControllerOptions {
    excludedKeys: TKeys;
    strategy?: ISelectionStrategy;
    strategyOptions?: ITreeSelectionStrategyOptions;
+   searchValue?: string;
 }
 
 /**
@@ -88,7 +89,6 @@ export interface ITreeSelectionStrategyOptions {
    hierarchyRelation: relation.Hierarchy;
    rootId: TKey;
    items: RecordSet;
-   searchValue: string;
 }
 
 /**
@@ -119,7 +119,6 @@ export interface ISelectionControllerResult {
    excludedKeysDiff: ISelectionDifference;
    selectedCount: number;
    isAllSelected: boolean;
-   selectionType: TSelectionType;
 }
 
 /**

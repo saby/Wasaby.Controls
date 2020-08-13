@@ -2,7 +2,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import { relation, Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
-import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection, TSelectionType } from 'Controls/interface';
+import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
 import { Controller as SourceController } from 'Controls/source';
 import ISelectionStrategy from './ISelectionStrategy';
 import { IEntryPath, ITreeSelectionStrategyOptions } from '../interface';
@@ -27,7 +27,6 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    private _nodesSourceControllers: Map<string, SourceController>;
    private _rootId: TKey;
    private _items: RecordSet;
-   private _searchValue: string;
 
    constructor(options: ITreeSelectionStrategyOptions) {
       this.update(options);
@@ -40,7 +39,6 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._nodesSourceControllers = options.nodesSourceControllers;
       this._rootId = options.rootId;
       this._items = options.items;
-      this._searchValue = options.searchValue;
    }
 
    setItems(items: RecordSet): void {
@@ -136,39 +134,50 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
-   getSelectionForModel(selection: ISelection, limit?: number, items?: Model[]): Map<boolean|null, Model[]> {
-      const selectedItems = this._getSelectionMap();
+   getSelectionForModel(
+       selection: ISelection,
+       limit?: number,
+       items?: Model[],
+       searchValue?: string
+   ): Map<boolean|null, Model[]> {
+      const selectedItems = new Map();
+      // IE не поддерживает инициализацию конструктором
+      selectedItems.set(true, []);
+      selectedItems.set(false, []);
+      selectedItems.set(null, []);
+
       const selectedKeysWithEntryPath = this._mergeEntryPath(selection.selected);
       const processingItems = items ? items : this._items;
-      const isAllSelectedInSearchMode = this._isAllSelectedInSearchMode(selection);
-      let isOnlyNodesInItems = true;
 
-      if (isAllSelectedInSearchMode) {
-         isOnlyNodesInItems = this._isOnlyNodesInItems(processingItems);
+      let doNotSelectNodes = false;
+      if (searchValue) {
+         let isOnlyNodesInItems = true;
+
+         processingItems.forEach((item) => {
+            if (isOnlyNodesInItems) {
+               isOnlyNodesInItems = this._isNode(item);
+            }
+         });
+
+         doNotSelectNodes = this._isAllSelected(selection, this._rootId) && !isOnlyNodesInItems;
       }
 
       processingItems.forEach((item) => {
-         const itemId = item.getKey();
+         const itemId: TKey = item.getKey();
          const parentId = this._getParentId(itemId);
-         let isSelected = !selection.excluded.includes(itemId) &&
-                          (selection.selected.includes(itemId) || this._isAllSelected(selection, parentId));
-         let isNode = false;
+         const isNode = this._isNode(item);
+         let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
+             this._isAllSelected(selection, parentId));
 
-         if (this._selectAncestors || this._searchValue) {
-            isNode = this._isNode(item);
+         if (this._selectAncestors && isNode) {
+            isSelected = this._getStateNode(itemId, isSelected, {
+               selected: selectedKeysWithEntryPath,
+               excluded: selection.excluded
+            });
          }
 
-         if (isNode) {
-            if (this._selectAncestors && !isAllSelectedInSearchMode) {
-               isSelected = this._getStateNode(itemId, isSelected, {
-                  selected: selectedKeysWithEntryPath,
-                  excluded: selection.excluded
-               });
-            }
-
-            if (isSelected && isAllSelectedInSearchMode && !isOnlyNodesInItems) {
-               isSelected = null;
-            }
+         if (isSelected && isNode && doNotSelectNodes) {
+            isSelected = null;
          }
 
          selectedItems.get(isSelected).push(item);
@@ -235,12 +244,6 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
 
       return isAllSelected;
-   }
-
-   getSelectionType(selection: ISelection): TSelectionType {
-      const isAllSelectionInSearchMode = this._isAllSelectedInSearchMode(selection);
-      const isOnlyNodesInItems = this._isOnlyNodesInItems(this._items);
-      return isAllSelectionInSearchMode && !isOnlyNodesInItems ? 'leaf' : 'all';
    }
 
    private _unselectParentNodes(selection: ISelection, parentId: TKey): void {
@@ -562,31 +565,5 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
     */
    private _isNode(item: Model): boolean {
       return this._hierarchyRelation.isNode(item) !== LEAF;
-   }
-
-   private _getSelectionMap(): Map<boolean|null, Model[]> {
-      const selectedItems = new Map();
-      // IE не поддерживает инициализацию конструктором
-      selectedItems.set(true, []);
-      selectedItems.set(false, []);
-      selectedItems.set(null, []);
-
-      return selectedItems;
-   }
-
-   private _isAllSelectedInSearchMode(selection: ISelection): boolean {
-      return !!(this._isAllSelected(selection, this._rootId) && this._searchValue);
-   }
-
-   private _isOnlyNodesInItems(items: RecordSet|Model[]): boolean {
-      let isOnlyNodesInItems = true;
-
-      items.forEach((item) => {
-         if (isOnlyNodesInItems) {
-            isOnlyNodesInItems = this._isNode(item);
-         }
-      });
-
-      return isOnlyNodesInItems;
    }
 }
