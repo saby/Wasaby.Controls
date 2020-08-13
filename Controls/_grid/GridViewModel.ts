@@ -38,10 +38,12 @@ import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
 /**
  * При установке этих значений следует учитывать, что z-index:
+ * stickyHeader default fixedZIndex = 3
  * .controls-Grid__cell_fixed_theme-@{themeName} = 3
  * .controls-TreeGrid__row__searchBreadCrumbs .controls-itemActionsV__container = 4
  * .controls-itemActionsV__container = 4
  * .controls-Grid_columnScroll_wrapper = 5
+ * GroupTemplate в Grid fixedZIndex = 6
  */
 const FIXED_HEADER_ZINDEX = 6;
 const STICKY_HEADER_ZINDEX = 5;
