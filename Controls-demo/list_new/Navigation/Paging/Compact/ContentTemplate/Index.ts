@@ -10,7 +10,7 @@ export default class extends Control {
     protected _count: number;
 
     protected _beforeMount(): void {
-        this._count = 100;
+        this._count = 99;
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: this._dataArray
