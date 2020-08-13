@@ -120,6 +120,13 @@ class View extends Control<ISwitchableOptions> {
         this._switchAreaRegister.start(new SyntheticEvent(null, eventCfg));
     }
 
+    private _registerHandler(event: SyntheticEvent, registerType: string, component, callback, config): void {
+        this._switchAreaRegister.register(event, registerType, component, callback, config);
+    }
+    protected _unregisterHandler(event: SyntheticEvent, registerType: string, component, config): void {
+        this._switchAreaRegister.unregister(event, component, config);
+    }
+
     static getDefaultOptions(): ISwitchableOptions {
         return {
             itemTemplate: defaultItemTemplate
