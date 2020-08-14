@@ -4,7 +4,7 @@ import BaseOpener, {IBaseOpenerOptions, ILoadDependencies} from 'Controls/_popup
 import getZIndex = require('Controls/Utils/getZIndex');
 import {DefaultOpenerFinder} from 'UI/Focus';
 import {IInfoBoxPopupOptions, IInfoBoxOpener} from 'Controls/_popup/interface/IInfoBoxOpener';
-
+import {Control} from 'UI/Base';
 /**
  * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ see more}.
  * @remark
@@ -24,6 +24,7 @@ const INFOBOX_HIDE_DELAY = 300;
 const INFOBOX_SHOW_DELAY = 300;
 const POPUP_CONTROLLER = 'Controls/popupTemplate:InfoBoxController';
 const Z_INDEX_STEP = 10;
+const MIN_INTERVAL = 10;
 
 // Default popup configuration
 const DEFAULT_CONFIG = {
@@ -48,11 +49,23 @@ interface IInfoBoxOpenerOptions extends IInfoBoxPopupOptions, IBaseOpenerOptions
 class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpener {
     readonly '[Controls/_popup/interface/IInfoBoxOpener]': boolean;
     _style: number = null;
+    private _target: HTMLElement | EventTarget | Control<{}, void>;
+    private _timerId: number;
+
+    protected _afterMount(): void {
+        this._timerId = setInterval(() => {
+            if (this._target.closest('.ws-hidden')) {
+                this.close(0);
+                clearInterval(this._timerId);
+            }
+        }, MIN_INTERVAL);
+    }
 
     _beforeUnmount(): void {
         this.close(0);
+        clearInterval(this._timerId);
     }
-
+// TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
     open(cfg: IInfoBoxPopupOptions): void {
         // Only one popup can be opened
         if (this.isOpened()) {
@@ -176,7 +189,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
 
     private static _open(callback: Function, cfg: IInfoBoxPopupOptions): void {
         InfoBox._clearTimeout();
-
+        this._target = cfg.target;
         const newCfg: IInfoBoxOpenerOptions = InfoBox._getInfoBoxConfig(cfg);
         if (newCfg.showDelay > 0) {
             openId = setTimeout(() => {
