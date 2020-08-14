@@ -1886,6 +1886,7 @@ const _private = {
             model: self._listViewModel,
             selectedKeys: options.selectedKeys,
             excludedKeys: options.excludedKeys,
+            searchValue: options.searchValue,
             strategy
         });
     },
@@ -1895,6 +1896,7 @@ const _private = {
            model: self._listViewModel,
            selectedKeys: newOptions.selectedKeys,
            excludedKeys: newOptions.excludedKeys,
+           searchValue: newOptions.searchValue,
            strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
         });
     },
@@ -1975,6 +1977,20 @@ const _private = {
       }
 
         // для связи с контроллером ПМО
+        let selectionType = 'all';
+        if (result.isAllSelected && self._options.nodeProperty && self._options.searchValue) {
+            let onlyCrumbsInItems = true;
+            self._listViewModel.each((item) => {
+                if (onlyCrumbsInItems) {
+                    onlyCrumbsInItems = item['[Controls/_display/BreadcrumbsItem]'];
+                }
+            });
+
+            if (!onlyCrumbsInItems) {
+                selectionType = 'leaf';
+            }
+        }
+        self._notify('listSelectionTypeForAllSelectedChanged', [selectionType], {bubbling: true});
         self._notify('listSelectedKeysCountChanged', [result.selectedCount, result.isAllSelected], {bubbling: true});
     },
 
@@ -2046,7 +2062,7 @@ const _private = {
             event.preventDefault();
             const newMarkedKey = self._markerController.moveMarkerToNext();
             _private.handleMarkerControllerResult(self, newMarkedKey);
-            _private.scrollToItem(self, newMarkedKey);
+            _private.scrollToItem(self, newMarkedKey, false, true);
         }
     },
 
@@ -3531,7 +3547,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _onItemClick(e, item, originalEvent) {
+    _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
             /*
@@ -3555,7 +3571,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
         // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
         if (e.isStopped()) {
-            this._savedItemClickArgs = [item, originalEvent];
+            this._savedItemClickArgs = [item, originalEvent, columnIndex];
         } else {
             this._notify('itemActivate', [item, originalEvent], { bubbling: true });
         }
@@ -3779,10 +3795,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
         if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (!this._options._keyDownHandler || !this._options._keyDownHandler(event))) {
             const key = event.nativeEvent.keyCode;
-            const dontStop = key === 33
-                || key === 34
-                || key === 35
-                || key === 36;
+            const dontStop = key === 17 // Ctrl
+                || key === 33 // PageUp
+                || key === 34 // PageDown
+                || key === 35 // End
+                || key === 36;// Home
             keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },

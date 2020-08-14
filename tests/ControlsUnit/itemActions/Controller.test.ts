@@ -1313,7 +1313,7 @@ describe('Controls/_itemActions/Controller', () => {
                 assert.isEmpty(unexpectedActions);
             });
 
-            it('should collect non-"showed" item actions when item is swiped', () => {
+            it('should collect non-"showed" or non-toolbar item actions when item is swiped', () => {
                 const localItemActions: IItemAction[] = [
                     {
                         id: 1,
@@ -1324,7 +1324,7 @@ describe('Controls/_itemActions/Controller', () => {
                     {
                         id: 5,
                         title: 'Documentation',
-                        showType: TItemActionShowType.TOOLBAR,
+                        showType: TItemActionShowType.MENU_TOOLBAR,
                         parent: 4
                     },
                     {
@@ -1369,7 +1369,11 @@ describe('Controls/_itemActions/Controller', () => {
                 // @ts-ignore
                 assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
                 // @ts-ignore
-                assert.deepEqual(config.templateOptions.source.data[0], localItemActions[3]);
+                assert.deepEqual(config.templateOptions.source.data[0], localItemActions[1],
+                    'Non-toolbar options should be shown in menu');
+                // @ts-ignore
+                assert.deepEqual(config.templateOptions.source.data[1], localItemActions[3],
+                    'Non-showed options should be shown in menu');
             });
         });
 
