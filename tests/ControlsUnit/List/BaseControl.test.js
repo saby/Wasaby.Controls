@@ -7171,7 +7171,39 @@ define([
             baseControl._beforeMount(cfg);
          });
       });
-
+      describe('_afterMount', () => {
+         let stubScrollToItem;
+         beforeEach(() => {
+            stubScrollToItem = sinon.stub(lists.BaseControl._private, 'scrollToItem');
+         });
+         afterEach(() => {
+            stubScrollToItem.restore();
+         });
+         it('scroll to active element aftermount', async () => {
+            const cfg = {
+               viewName: 'Controls/List/ListView',
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               source: source,
+               navigation: {
+                  view: 'infinity'
+               },
+               virtualScrollConfig: {
+                  pageSize: 100
+               },
+               activeElement: 4
+            };
+            let scrolledToItem = false;
+            const baseControl = new lists.BaseControl(cfg);
+            baseControl._container = {};
+            baseControl.saveOptions(cfg);
+            stubScrollToItem.callsFake(() => {
+               scrolledToItem = true;
+            });
+            await baseControl._beforeMount(cfg);
+            baseControl._afterMount(cfg);
+         });
+      });
       describe('_private.createEditingData()', () => {
          let stubUpdateItemActions;
          let baseControl;

@@ -203,15 +203,14 @@ class Popup extends Control<IPopupControlOptions> {
         }
     }
 
-    protected _showIndicatorHandler(event: Event): string {
+    protected _showIndicatorHandler(event: Event, config: object = {}): string {
         // Вернул для индикаторов, вызванных из кода
-        const args = this._prepareEventArs(event, arguments);
-        const config = args[0];
+        event.stopPropagation();
         if (typeof config === 'object') {
             config.popupId = this._options.id;
         }
         // catch showIndicator and add popupId property for Indicator.
-        return this._notify('showIndicator', args, {bubbling: true}) as string;
+        return this._notify('showIndicator', [config], {bubbling: true}) as string;
     }
 
     protected _registerPendingHandler(event: Event): string {
