@@ -16,7 +16,7 @@
               headingCaption="{{!_options.headerTemplate ? _headingCaption : ''}}"
               iconSize="{{_options.iconSize}}"
               dropdownClassName="{{_options.dropdownClassName}}"
-              headerContentTemplate="{{headerContentTemplate}}"
+              headerContentTemplate="{{headerContentTemplate || _headerTemplate}}"
               footerContentTemplate="{{_options.footerContentTemplate || _options.footerTemplate}}"
               footerItemData="{{_options.footerItemData}}"
               closeButtonVisibility="{{_closeButtonVisibility}}"
