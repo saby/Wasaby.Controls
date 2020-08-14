@@ -36,6 +36,7 @@
     <!-- Не нужно ренднрить контент ячейки, если это не ячейка с colspanTemplate-->
     <ws:partial template="{{ renderSeparatedColumnContent !== false ? currentColumn.template : 'Controls/grid:ColumnTemplate' }}"
                 editArrowTemplate="{{editArrowTemplate}}"
+                itemActionsClass="{{itemActionsClass}}"
                 itemActionsTemplate="{{itemActionsTemplate}}"
                 attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                             {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
@@ -285,8 +286,5 @@
 </ws:else>
 
 <ws:if data="{{itemData.nodeFooters.length > 0}}">
-   <ws:partial template="wml!Controls/_treeGrid/TreeGridView/layout/common/NodeFooterChooser"
-               newFooterContentTemplate="{{ itemData.newFooterContentTemplate }}"
-               useNewNodeFooters="{{ itemData.useNewNodeFooters }}"
-               nodeFooters="{{itemData.nodeFooters}}"/>
+   <ws:partial template="{{ itemData.footerContentTemplate }}" itemData="{{ itemData }}"/>
 </ws:if>

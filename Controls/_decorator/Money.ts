@@ -98,7 +98,9 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
             return options.tooltip;
         }
 
-        return this._parsedNumber.number;
+        return this._isDisplayFractionPath(this._parsedNumber.fraction, options.showEmptyDecimals)
+            ? this._parsedNumber.number
+            : this._parsedNumber.integer;
     }
 
     private _changeState(options: IMoneyOptions, useLogging: boolean): boolean {
