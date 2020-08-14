@@ -128,7 +128,12 @@ export default class ErrorController {
                 return this._getDefault(_config);
             }
 
-            _config.error.processed = true;
+            /**
+             * Обработчик может вернуть флаг processed === false в том случае,
+             * когда он точно знает, что его ошибку нужно обработать всегда,
+             * даже если она была обработана ранее
+             */
+            _config.error.processed = handlerResult.processed !== false;
             return {
                 status: handlerResult.status,
                 mode: handlerResult.mode || _config.mode,

@@ -64,7 +64,7 @@
 }
 
 .controls-Grid_columnScroll_wrapper {
-   z-index: 5;
+   z-index: 4;
    position: sticky;
 }
 
@@ -763,8 +763,7 @@
 
    // Нужен отдельный стек z-index, иначе при скролле колонок из-за transform опции оказываются ниже данных таблицы и неправильно обрабатывается ховер
    // https://online.sbis.ru/opendoc.html?guid=6059b335-dad3-4458-b022-0260680d5c27
-   // Значение = 4, т.к. для .controls-Grid__cell_fixed_ сделано 3
-   z-index: 4;
+   z-index: 1;
 
    pointer-events: none;
    .controls-itemActionsV {

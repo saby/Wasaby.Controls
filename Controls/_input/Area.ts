@@ -374,7 +374,7 @@ Area.getDefaultOptions = function () {
 
     defaultOptions.minLines = 1;
     defaultOptions.newLineKey = 'enter';
-    defaultOptions.optimizeShadow = true;
+    defaultOptions.optimizeShadow = false;
 
     return defaultOptions;
 };
