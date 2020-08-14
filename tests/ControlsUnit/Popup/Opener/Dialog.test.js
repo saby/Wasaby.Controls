@@ -69,8 +69,10 @@ define(
             assert.equal(position.top, 390);
             assert.equal(position.left, 860);
 
-            windowData.topScroll = 80;
-            windowData.leftScroll = 20;
+            windowData.topScroll = 70;
+            windowData.leftScroll = 5;
+            windowData.top = 10;
+            windowData.left = 15;
             position = DialogStrategy.getPosition(windowData, sizes, { popupOptions: {} });
             assert.equal(position.top, 470);
             assert.equal(position.left, 880);
