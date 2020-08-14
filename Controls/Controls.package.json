@@ -40,4 +40,10 @@
     "Controls/controls-utils.package.js"
   ],
   "extendsTo": "online-superbundle.package.js"
+}, {
+  "include": [
+    "Controls/buttons",
+    "Controls/input"
+  ],
+  "extendsTo": "page-superbundle.package.js"
 }]
