@@ -25,7 +25,20 @@
   "output": "controls-utils.package.js"
 }, {
   "include": [
-    "Controls/buttons"
+    "Controls/buttons",
+    "Controls/error",
+    "Controls/popup",
+    "Controls/LoadingIndicator",
+    "Controls/context",
+    "Controls/event",
+    "Controls/decorator",
+    "Controls/scroll",
+    "Controls/dragnDrop"
+  ],
+  "includePackages": [
+    "Controls/controls-application.package.js",
+    "Controls/controls-container-async.package.js",
+    "Controls/controls-utils.package.js"
   ],
   "extendsTo": "online-superbundle.package.js"
 }]
