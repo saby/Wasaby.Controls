@@ -16,7 +16,7 @@
               headingCaption="{{!_options.headerTemplate ? _headingCaption : ''}}"
               iconSize="{{_options.iconSize}}"
               dropdownClassName="{{_options.dropdownClassName}}"
-              headerContentTemplate="{{_headerTemplate}}"
+              headerContentTemplate="{{headerContentTemplate}}"
               footerContentTemplate="{{_options.footerContentTemplate || _options.footerTemplate}}"
               footerItemData="{{_options.footerItemData}}"
               closeButtonVisibility="{{_closeButtonVisibility}}"
@@ -91,6 +91,13 @@
       </ws:partial>
    </ws:partial>
 </ws:if>
+<ws:else data="{{_headerTemplate}}">
+   <ws:partial template="menuPopup">
+      <ws:headerContentTemplate>
+         <ws:partial template="{{_headerTemplate}}" multiSelect="{{_options.multiSelect}}"/>
+      </ws:headerContentTemplate>
+   </ws:partial>
+</ws:else>
 <ws:else>
    <ws:partial template="menuPopup" />
 </ws:else>
