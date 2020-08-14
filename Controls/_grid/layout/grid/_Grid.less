@@ -851,9 +851,19 @@
    fill: @edit-arrow_icon-color_grid;
    width: @edit-arrow_icon-size_grid;
    min-width: @edit-arrow_icon-size_grid;
-   height: @item_text-height_l_grid;
-   display: inline-block;
-   line-height: 1;
+   display: inline-flex;
+   align-items: baseline;
+}
+
+.controls-Grid__editArrow-blur_style-default_background_theme-default:before, 
+.controls-Grid__editArrow_style-default_background_theme-default:before, 
+.controls-Grid__editArrow-wrapper_theme-default:before {
+   content: '\200b';
+   font-size: @item_max-font-size_grid;
+}
+.controls-Grid__editArrow-icon_theme-@{themeName} {
+   height: @edit-arrow_icon-size_grid;
+   width: @edit-arrow_icon-size_grid;
 }
 
 .controls-Grid__editArrow_style-default_background_theme-@{themeName} {
