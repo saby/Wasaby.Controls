@@ -3032,7 +3032,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._scrollController) {
             if (this._options.activeElement) {
-                _private.scrollToItem(self, this._options.activeElement, false, true);
+                _private.scrollToItem(this, this._options.activeElement, false, true);
             }
 
             this._scrollController.continueScrollToItemIfNeed();

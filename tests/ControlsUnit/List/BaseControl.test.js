@@ -7182,7 +7182,7 @@ define([
          afterEach(() => {
             stubScrollToItem.restore();
          });
-         it('scroll to active element aftermount', (done) => {
+         it('scroll to active element aftermount', async () => {
             const cfg = {
                viewName: 'Controls/List/ListView',
                keyProperty: 'id',
@@ -7196,13 +7196,14 @@ define([
                },
                activeElement: 4
             };
+            let scrolledToItem = false;
             const baseControl = new lists.BaseControl(cfg);
             baseControl._container = {};
             baseControl.saveOptions(cfg);
-            baseControl._beforeMount(cfg);
             stubScrollToItem.callsFake(() => {
-               done();
+               scrolledToItem = true;
             });
+            await baseControl._beforeMount(cfg);
             baseControl._afterMount(cfg);
          });
       });

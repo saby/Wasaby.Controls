@@ -81,8 +81,6 @@ export default class ScrollController {
     // Сущность управляющая инерционным скроллингом на мобильных устройствах
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
 
-    private _preparedResult: IScrollControllerResult = {};
-
     protected _options: any;
 
     constructor(options: any) {
@@ -92,16 +90,13 @@ export default class ScrollController {
                 ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
             }
         }
-        this._preparedResult = this._initVirtualScroll(options);
+        this._initVirtualScroll(options);
     }
 
-    getResult(result: IScrollControllerResult = {}) {
-        if (result.placeholders) {
-            this._placeholders = result.placeholders;
+    private savePlaceholders(placeholders: IPlaceholders = null): void {
+        if (placeholders) {
+            this._placeholders = placeholders;
         }
-        const preparedResult = this._preparedResult;
-        this._preparedResult = {};
-        return {...preparedResult, ...result}
     }
 
     callAfterScrollStopped(callback: Function): void {
@@ -120,10 +115,10 @@ export default class ScrollController {
                 this._viewHeight = params.scrollHeight;
             }
             this._virtualScroll.applyContainerHeightsData(newParams);
-            return  this.getResult({
+            return  {
                 triggerOffset: this.getTriggerOffset(this._viewHeight,
                                                      this._viewportHeight,
-                                                     this._options.attachLoadTopTriggerToNull)});
+                                                     this._options.attachLoadTopTriggerToNull)};
         } else {
             return {};
         }
@@ -239,6 +234,7 @@ export default class ScrollController {
                                     this._completeScrollToItem = () => {
                                         this._fakeScroll = true;
                                         scrollCallback(index);
+                                        this.savePlaceholders(rangeShiftResult.placeholders);
                                         resolve({ placeholders: rangeShiftResult.placeholders });
                                     }
                                 }
@@ -305,7 +301,7 @@ export default class ScrollController {
                 true,
                 options.needScrollCalculation
             );
-
+            this.savePlaceholders(rangeShiftResult.placeholders);
             return {
                     placeholders: rangeShiftResult.placeholders,
                     activeElement: options.activeElement,
@@ -364,9 +360,9 @@ export default class ScrollController {
      */
     scrollPositionChange(params: IScrollParams, virtual: boolean): IScrollControllerResult {
         if (virtual) {
-            return this.getResult(this.virtualScrollPositionChanged(params));
+            return this.virtualScrollPositionChanged(params);
         } else {
-            return this.getResult(this.scrollPositionChanged(params));
+            return this.scrollPositionChanged(params);
         }
     }
 
@@ -407,6 +403,7 @@ export default class ScrollController {
             if (!this._isRendering) {
                 this.completeVirtualScrollIfNeed();
             }
+            this.savePlaceholders(rangeShiftResult.placeholders);
             return {placeholders: rangeShiftResult.placeholders};
         }
     }
@@ -433,7 +430,8 @@ export default class ScrollController {
                         const rangeShiftResult = this._virtualScroll.shiftRange(direction);
                         this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                             this._options.needScrollCalculation);
-                        resolve(this.getResult({placeholders: rangeShiftResult.placeholders}));
+                        this.savePlaceholders(rangeShiftResult.placeholders);
+                        resolve({placeholders: rangeShiftResult.placeholders});
                     });
                 } else {
                     resolve(null);
@@ -478,7 +476,8 @@ export default class ScrollController {
 
         this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
             this._options.needScrollCalculation);
-        return this.getResult({...result, placeholders: rangeShiftResult.placeholders });
+        this.savePlaceholders(rangeShiftResult.placeholders);
+        return {...result, placeholders: rangeShiftResult.placeholders };
     }
 
     /**
@@ -493,13 +492,14 @@ export default class ScrollController {
             const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length, forcedShift);
             this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                 this._options.needScrollCalculation);
-            return this.getResult({ placeholders: rangeShiftResult.placeholders });
+            this.savePlaceholders(rangeShiftResult.placeholders);
+            return { placeholders: rangeShiftResult.placeholders };
         }
     }
 
     handleResetItems(): IScrollControllerResult {
         let result = this._initVirtualScroll(this._options);
-        return this.getResult(result);
+        return result;
     }
 
 
