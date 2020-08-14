@@ -33,11 +33,11 @@ import {debounce} from 'Types/function';
 /**
  * Контейнер с тонким скроллом.
  * Для контрола требуется {@link Controls/_scroll/Context context}.
- * 
+ *
  * @remark
  * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
  * Для корректной работы внутри WS3 необходимо поместить контрол в контроллер Controls/dragnDrop:Compound, который обеспечит работу функционала Drag-n-Drop.
- * 
+ *
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
  *
@@ -1009,6 +1009,7 @@ let
 
       _scrollbarTaken() {
          if (this._showScrollbarOnHover && (this._displayState.canScroll || this._displayState.canHorizontalScroll)) {
+            this._children.scrollBar?.setScrollPosition(this._scrollTop);
             this._notify('scrollbarTaken', [], { bubbling: true });
          }
       },
