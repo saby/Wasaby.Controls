@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/Tile/ImageFit/ImageFit';
-import {Gadgets} from '../DataHelpers/DataCatalog';
+import {items} from './DataCatalog';
 import {HierarchicalMemory} from 'Types/source';
 
 export default class extends Control {
@@ -11,9 +11,12 @@ export default class extends Control {
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
             parentProperty: 'parent',
-            data: Gadgets.getData()
+            data: items
         });
     }
-
+    protected _imageUrlResolver(width: number, height: number, url: string) {
+        const [name, extension] = url.split('.');
+        return `${name}${width}${height}.${extension}`;
+    }
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

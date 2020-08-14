@@ -1,8 +1,32 @@
 <div class="controlsDemo__wrapper">
+   <h6>contain</h6>
    <Controls.tile:View
       tileMode="static"
       displayProperty="title"
       imageFit="contain"
+      tileHeight="300"
+      imageUrlResolver="{{_imageUrlResolver}}"
+      imageWidthProperty="imageWidth"
+      imageHeightProperty="imageHeight"
+      imageProperty="image"
+      keyProperty="id"
+      source="{{_viewSource}}">
+      <ws:itemTemplate>
+         <ws:partial
+            template="Controls/tile:ItemTemplate"
+            scope="{{itemTemplate}}"
+            hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
+      </ws:itemTemplate>
+   </Controls.tile:View>
+   <h5>cover</h5>
+   <Controls.tile:View
+      tileMode="static"
+      displayProperty="title"
+      imageFit="cover"
+      tileHeight="150"
+      imageUrlResolver="{{_imageUrlResolver}}"
+      imageWidthProperty="imageWidth"
+      imageHeightProperty="imageHeight"
       imageProperty="image"
       keyProperty="id"
       source="{{_viewSource}}">
@@ -10,7 +34,8 @@
          <ws:partial
             itemWidth="{{200}}"
             template="Controls/tile:ItemTemplate"
-            hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
+            scope="{{itemTemplate}}"
+            hasTitle="{{false}}"/>
       </ws:itemTemplate>
    </Controls.tile:View>
 </div>

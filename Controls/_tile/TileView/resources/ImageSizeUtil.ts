@@ -48,23 +48,23 @@ export function getImageSize(
 
         if (imageHeightNumber) {
             if (imageDeltaW > tileDeltaW && imageDeltaW < scaledTileDeltaW) {
-                height = imageHeightNumber * NORMALIZE_IMAGE_COEFFICIENT;
+                height = Math.floor(tileHeightNumber * NORMALIZE_IMAGE_COEFFICIENT);
                 width = 0;
             } else if (tileDeltaW < scaledImageDeltaW) {
                 height = 0;
-                width = tileWidthNumber * SCALE_PREVIEW_SIZE_MULTIPLIER;
+                width = Math.floor(tileWidthNumber * SCALE_PREVIEW_SIZE_MULTIPLIER);
                 unsetWidth = imageDeltaW > tileDeltaW;
             } else if (imageDeltaW < scaledTileDeltaW) {
-                height = tileHeightNumber * SCALE_PREVIEW_SIZE_MULTIPLIER;
+                height = Math.floor(tileHeightNumber * SCALE_PREVIEW_SIZE_MULTIPLIER);
                 width = 0;
             } else {
-                height = imageHeightNumber * NORMALIZE_IMAGE_COEFFICIENT;
+                height = Math.floor(tileHeightNumber * NORMALIZE_IMAGE_COEFFICIENT);
                 width = 0;
             }
         }
     } else {
-        height = imageHeight || tileHeight;
-        width = imageWidth || tileWidth;
+        height = tileHeight;
+        width = tileWidth;
     }
 
     return {
