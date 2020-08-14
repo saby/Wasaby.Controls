@@ -21,6 +21,11 @@
                                        markerVisibility="{{_markerVisibility}}"
                                        itemsReadyCallback="{{_itemsReadyCallback}}"
                                        on:markedKeyChanged="_markedKeyChanged()">
+        <ws:searchBreadCrumbsItemTemplate>
+            <ws:partial template="{{ 'Controls/treeGrid:SearchBreadCrumbsItemTemplate' }}"
+                    highlightOnHover="{{false}}"
+                    marker="{{false}}"/>
+        </ws:searchBreadCrumbsItemTemplate>
     </Controls.deprecatedList:Container>
 
     <Controls.event:Listener event="inputKeydown" on:inputKeydown="_inputKeydown()"/>
