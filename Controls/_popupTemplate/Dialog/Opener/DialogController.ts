@@ -2,7 +2,6 @@ import {default as BaseController, IDragOffset} from 'Controls/_popupTemplate/Ba
 import {IPopupItem, IPopupOptions, IPopupSizes, IPopupPosition} from 'Controls/popup';
 import {detection} from 'Env/Env';
 import * as Deferred from 'Core/Deferred';
-import * as TargetCoords from 'Controls/_popupTemplate/TargetCoords';
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 
@@ -38,14 +37,6 @@ const IPAD_MIN_WIDTH = 1024;
  */
 class DialogController extends BaseController {
     TYPE: string = 'Dialog';
-
-    constructor(): void {
-        super();
-        if (document) {
-            window.addEventListener('resize', this._resetRestrictiveContainerCoords, true);
-            window.addEventListener('scroll', this._resetRestrictiveContainerCoords, true);
-        }
-    }
 
     elementCreated(item: IDialogItem, container: HTMLDivElement): boolean {
         this._prepareConfigWithSizes(item, container);
@@ -125,14 +116,8 @@ class DialogController extends BaseController {
         delete item.startPosition;
     }
 
-    workspaceResize(): boolean {
-        this._resetRestrictiveContainerCoords();
-        return true;
-    }
-
     resizeOuter(item: IPopupItem, container: HTMLDivElement): boolean {
-        this._resetRestrictiveContainerCoords();
-
+        this._resetRootContainerCoords();
         // На ios ресайз страницы - это зум. Не реагируем на него.
         if (!detection.isMobileIOS) {
             return this._elementUpdated(item, container);
@@ -239,31 +224,9 @@ class DialogController extends BaseController {
         item.position.left = item.popupOptions.left || defaultCoordinate;
     }
 
-    private _resetRestrictiveContainerCoords(): void {
-        DialogController.RestrictiveContainerCoords = {};
-    }
-
     private _getRestrictiveContainerSize(item: IDialogItem): IWindow {
-        const baseRestrictiveContainerName = '.controls-Popup__dialog-target-container';
-        const restrictiveContainers = [item.popupOptions.restrictiveContainer, baseRestrictiveContainerName, 'body'];
-        for (const restrictiveContainer of restrictiveContainers) {
-            if (restrictiveContainer) {
-                if (DialogController.RestrictiveContainerCoords[restrictiveContainer]) {
-                    return DialogController.RestrictiveContainerCoords[restrictiveContainer];
-                }
-                const restrictiveContainerNode = document.querySelector(restrictiveContainer);
-                // Если не нашли контейнер, то игнорируем опцию
-                if (!restrictiveContainerNode) {
-                    continue;
-                }
-                const targetCoords = TargetCoords.get(restrictiveContainerNode);
-                targetCoords.topScroll += targetCoords.top;
-                targetCoords.leftScroll += targetCoords.left;
-                return DialogController.RestrictiveContainerCoords[restrictiveContainer] = targetCoords;
-            }
-        }
+        return BaseController.getRootContainerCoords(item, '.controls-Popup__dialog-target-container');
     }
-    private static RestrictiveContainerCoords = {};
 }
 
 export = new DialogController();
