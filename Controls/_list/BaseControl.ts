@@ -1126,10 +1126,6 @@ const _private = {
             scrollParams,
             pagingCfgTrigger: (cfg) => {
                 self._pagingCfg = cfg;
-                if (self._pagingCfg.showDigits) {
-                    self._pagingCfg.pagesCount = self._currentPageSize;
-                    self._pagingCfg.selectedPage = self._currentPage;
-                }
                 self._forceUpdate();
             }
         };
@@ -1196,13 +1192,6 @@ const _private = {
     updateScrollPagingButtons(self, scrollParams) {
         _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
             scrollPaging.updateScrollParams(scrollParams);
-            if (self._options.navigation.viewConfig.pagingMode === 'numbers') {
-                const currentPage = Math.round(scrollParams.scrollTop / scrollParams.clientHeight) + 1;
-                if (currentPage !== self._currentPage) {
-                    self._currentPage = currentPage;
-                    self._pagingCfg.selectedPage = self._currentPage;
-                }
-            }
         });
     },
 
