@@ -356,7 +356,11 @@ var ModuleClass = cExtend.extend({
          const actualMask: string = this._mask || mask;
          // Если дата имеет тип ДатаВремя, то при передачи на клиент она будет сконвертирована в часовой пояс клиента.
          // На сервере отрендерим дату в том же часовом поясе.
-         if (constants.isServerSide && instanceOfModule(value, 'Types/entity:DateTime')) {
+         // По факту тут проврка на DateTime.
+         // instanceOfModule(value, 'Types/entity:DateTime') не подходит т.к. Date и Time наследуются от DateTime,
+         // и проверка на 'Types/entity:DateTime' возвращает true для всех этих типов.
+         if (constants.isServerSide &&
+             !(instanceOfModule(value, 'Types/entity:Date') || instanceOfModule(value, 'Types/entity:Time'))) {
             const tzOffset: number = DateTime.getClientTimezoneOffset();
             dateString = formatter.date(value, actualMask, tzOffset);
          } else {
