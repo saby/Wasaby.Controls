@@ -25,7 +25,6 @@
   "output": "controls-utils.package.js"
 }, {
   "include": [
-    "Controls/buttons",
     "Controls/error",
     "Controls/popup",
     "Controls/LoadingIndicator",
