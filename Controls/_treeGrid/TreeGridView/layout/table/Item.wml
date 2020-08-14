@@ -53,12 +53,13 @@
               {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}
               {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
               {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-              {{ colspan ? 'controls-Grid__row-cell_colspaned'}}
               {{ marker !== false ? currentColumn.classList.marked }}
               controls-TreeGrid__row js-controls-ItemActions__swipeMeasurementContainer"
             style="{{ currentColumn.tableCellStyles }}"
             colspan="{{(colspan === false && !!colspanLength) ? (currentColumn.columnIndex === (itemData.hasMultiSelect ? 1 : 0) ? colspanLength : 1) : itemData.getColspanFor((itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex == 0) ? 'multiSelectColumn' : (colspan || colspanCurrentNode ? 'node'))}}">
-            <div class="controls-TreeGridView__row-cell_innerWrapper {{ currentColumn.classList.relativeCellWrapper }} {{itemData.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}">
+            <div class="controls-TreeGridView__row-cell_innerWrapper {{ currentColumn.classList.relativeCellWrapper }}
+                        {{ colspan || (itemData.columns.length === (itemData.hasMultiSelect ? 2 : 1)) ? 'controls-Grid__table__relative-cell-wrapper_soloCell' }}
+                        {{itemData.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}">
                 <!-- Маркер активной записи -->
                 <ws:if data="{{ marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0 }}">
                     <div class="{{itemData.getMarkerClasses()}}"></div>
