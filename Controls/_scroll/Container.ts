@@ -1009,6 +1009,7 @@ let
 
       _scrollbarTaken() {
          if (this._showScrollbarOnHover && (this._displayState.canScroll || this._displayState.canHorizontalScroll)) {
+             // Обновляем позицию скроллабара, так как он появляется только при наведении на скролл контейнер
             this._children.scrollBar?.setScrollPosition(this._scrollTop);
             this._notify('scrollbarTaken', [], { bubbling: true });
          }
