@@ -1122,7 +1122,7 @@ const _private = {
     },
     createScrollPagingController(self, scrollParams) {
         const scrollPagingConfig = {
-            pagingMode: self._options.pagingMode || 'basic',
+            pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
             pagingCfgTrigger: (cfg) => {
                 self._pagingCfg = cfg;
@@ -1177,19 +1177,6 @@ const _private = {
         }
     },
 
-    scrollToBottom(): void {
-        _private.scrollPage(this, 'down');
-    },
-    scrollToTop(): void {
-        _private.scrollPage(this, 'up');
-    },
-    scrollForward(): void {
-        _private.scrollToEdge(this, 'Up');
-    },
-    scrollBackward(): void {
-        _private.scrollToEdge(this, 'Down');
-    },
-
     clearShowLoadingIndicatorTimer(self): void {
         if (self._loadingIndicatorTimer) {
             clearTimeout(self._loadingIndicatorTimer);
@@ -1209,8 +1196,8 @@ const _private = {
     updateScrollPagingButtons(self, scrollParams) {
         _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
             scrollPaging.updateScrollParams(scrollParams);
-            if(self._options.pagingMode === 'numbers') {
-                const currentPage = Math.trunc(scrollParams.scrollTop / scrollParams.clientHeight) + 1;
+            if (self._options.navigation.viewConfig.pagingMode === 'numbers') {
+                const currentPage = Math.round(scrollParams.scrollTop / scrollParams.clientHeight) + 1;
                 if (currentPage !== self._currentPage) {
                     self._currentPage = currentPage;
                     self._pagingCfg.selectedPage = self._currentPage;
@@ -1358,8 +1345,8 @@ const _private = {
     needScrollPaging(self, navigationOpt) {
         return (navigationOpt &&
             navigationOpt.view === 'infinity' &&
-            ((navigationOpt.viewConfig &&
-            navigationOpt.viewConfig.pagingMode) || self._options.pagingMode)
+            navigationOpt.viewConfig &&
+            navigationOpt.viewConfig.pagingMode
         );
     },
 

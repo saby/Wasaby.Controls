@@ -206,7 +206,7 @@
                     attr:class="controls-BaseControl__scrollPaging_theme-{{_options.theme}}"
                     contrastBackground="{{true}}"
                     scope="{{_pagingCfg}}"
-                    pagingMode="{{_options.pagingMode}}"
+                    pagingMode="{{_options.navigation.viewConfig.pagingMode}}"
                     showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
                     contentTemplate="{{_options.pagingContentTemplate}}"
                     on:onArrowClick="__onPagingArrowClick()"
