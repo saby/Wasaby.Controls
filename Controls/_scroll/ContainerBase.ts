@@ -57,6 +57,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._registrars.scrollMove = new RegisterClass({register: 'scrollMove'});
         this._scrollCssClass = this._getScrollContainerCssClass(options);
         this._registrars.listScroll = new RegisterClass({register: 'listScroll'});
+        // Регистрар не из watcher а лежал на уровне самомго скролл контейнера. Дублирует подобное событие для списков.
+        // Используется как минимум в попапах.
+        this._registrars.scroll = new RegisterClass({register: 'scroll'});
     }
 
     _afterMount(): void {
@@ -148,10 +151,13 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 this._initIntersectionObserver(triggers, component);
             }
         }
+
+        this._registrars.scroll.register(event, registerType, component, callback);
     }
 
     _unRegisterIt(e: SyntheticEvent, registerType: string, component: any): void {
         this._registrars.scrollStateChanged.unregister(e, registerType, component);
+        this._registrars.scroll.unregister(e, registerType, component);
     }
 
     // _createEdgeIntersectionObserver() {
@@ -300,13 +306,24 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 }]);
             }
 
-            if (this._oldState.verticalPosition !== this._state.verticalPosition) {
+            if (this._oldState.scrollTop !== this._state.scrollTop) {
                 this._sendByRegistrar('scrollMove', [{
                     scrollTop: this._state.scrollTop,
                     position: this._state.verticalPosition,
                     clientHeight: this._state.clientHeight,
                     scrollHeight: this._state.scrollHeight
                 }]);
+                this._sendByRegistrar(
+                    'scroll',
+                    [
+                        new SyntheticEvent(null, {
+                            type: 'scroll',
+                            target: this._children.content,
+                            currentTarget: this._children.content,
+                            _bubbling: false
+                        }),
+                        this._state.scrollTop
+                    ]);
             }
 
             this._generateCompatibleEvents();
@@ -439,7 +456,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             });
         }
 
-        if (this._state.verticalPosition !== this._oldState.verticalPosition) {
+        if (this._state.scrollTop !== this._oldState.scrollTop) {
             this._sendByListScrollRegistrar('scrollMoveSync', {
                 scrollTop: this._state.scrollTop,
                 position: this._state.verticalPosition,
