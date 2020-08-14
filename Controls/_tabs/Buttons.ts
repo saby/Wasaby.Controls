@@ -7,6 +7,8 @@ import * as cInstance from 'Core/core-instance';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {SbisService} from 'Types/source';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
 import {IItems} from 'Controls/interface';
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
 import { constants } from 'Env/Env';
@@ -84,8 +86,10 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
         }
     }
 
-    protected _onItemClick(event: Event, key: string): void {
-        this._notify('selectedKeyChanged', [key]);
+    protected _onItemClick(event: SyntheticEvent<MouseEvent>, key: string): void {
+        if (isLeftMouseButton(event)) {
+            this._notify('selectedKeyChanged', [key]);
+        }
     }
 
     protected _prepareItemClass(item: Model, index: number): string {
