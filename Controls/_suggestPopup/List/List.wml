@@ -22,9 +22,13 @@
                                        itemsReadyCallback="{{_itemsReadyCallback}}"
                                        on:markedKeyChanged="_markedKeyChanged()">
         <ws:searchBreadCrumbsItemTemplate>
-            <ws:partial template="{{ 'Controls/treeGrid:SearchBreadCrumbsItemTemplate' }}"
+            <Controls.Container.Async templateName="Controls/treeGrid:SearchBreadCrumbsItemTemplate">
+            <ws:partial template="{{ content.resolvedTemplate }}"
+                    attr:class="controls-Suggest_breadCrumbs"
                     highlightOnHover="{{false}}"
+                    scope="{{searchBreadCrumbsItemTemplate}}"
                     marker="{{false}}"/>
+            </Controls.Container.Async>
         </ws:searchBreadCrumbsItemTemplate>
     </Controls.deprecatedList:Container>
 
