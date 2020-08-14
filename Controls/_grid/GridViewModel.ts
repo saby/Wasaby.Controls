@@ -1643,7 +1643,7 @@ var
             current.getClassesLadderHeading = _private.getClassesLadderHeading;
             current.isDrawActions = _private.isDrawActions;
             current.isActionsColumn = _private.isActionsColumn;
-            current.hasActionCell = self._shouldAddActionsCell();
+            current.shouldAddActionsCell = self._shouldAddActionsCell();
             current.getCellStyle = (itemData, currentColumn, colspan) => _private.getCellStyle(self, itemData, currentColumn, colspan);
 
             current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
