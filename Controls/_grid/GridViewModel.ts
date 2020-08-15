@@ -958,6 +958,7 @@ var
             const multiSelectOffset = +hasMultiSelect;
             const headerColumn = {
                 column: cell,
+                key: (rowIndex) + '-' + (columnIndex + (hasMultiSelect ? 0 : 1)),
                 index: columnIndex,
                 backgroundStyle: cell.ladderCell ? 'transparent' : '',
                 shadowVisibility: cell.ladderCell ? 'hidden' : 'visible'
