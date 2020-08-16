@@ -53,12 +53,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
     private _timerId: number;
 
     protected _afterMount(): void {
-        this._timerId = setInterval(() => {
-            if (this._target.closest('.ws-hidden')) {
-                this.close(0);
-                clearInterval(this._timerId);
-            }
-        }, MIN_INTERVAL);
+
     }
 
     _beforeUnmount(): void {
@@ -180,6 +175,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
 
     private static _close(callback: Function, delay: number = INFOBOX_HIDE_DELAY): void {
         InfoBox._clearTimeout();
+        clearInterval(this._timerId);
         if (delay > 0) {
             closeId = setTimeout(callback, delay);
         } else {
@@ -190,6 +186,14 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
     private static _open(callback: Function, cfg: IInfoBoxPopupOptions): void {
         InfoBox._clearTimeout();
         this._target = cfg.target;
+        if (!this._timerId) {
+            this._timerId = setInterval(() => {
+                if (this._target.closest('.ws-hidden')) {
+                    this.close(0);
+                    clearInterval(this._timerId);
+                }
+            }, MIN_INTERVAL);
+        }
         const newCfg: IInfoBoxOpenerOptions = InfoBox._getInfoBoxConfig(cfg);
         if (newCfg.showDelay > 0) {
             openId = setTimeout(() => {
