@@ -53,10 +53,6 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
     private _target: HTMLElement | EventTarget | Control<{}, void>;
     private _timerId: number;
 
-    protected _afterMount(): void {
-
-    }
-
     _beforeUnmount(): void {
         this.close(0);
         clearInterval(this._timerId);
