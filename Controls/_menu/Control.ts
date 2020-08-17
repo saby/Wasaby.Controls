@@ -532,7 +532,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             eventHandlers: {
                 onResult: (result, event) => {
                     selectorDialogResult(event, result);
-                    this._stack.close();
+                    opener.close();
                 }
             }
         }, selectorTemplate.popupOptions || {});
