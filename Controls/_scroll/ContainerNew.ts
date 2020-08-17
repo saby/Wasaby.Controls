@@ -139,8 +139,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._paging = new PagingModel();
         }
 
-        this._adjustContentMarginsForBlockRender();
-
         super._afterMount();
 
         this._stickyHeaderController.init(this._container);
@@ -186,10 +184,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
         return this._scrollbars.getScrollContainerClasses();
-    }
-
-    private _adjustContentMarginsForBlockRender(): void {
-        this._scrollbars.adjustContentMarginsForBlockRender(this._children.content);
     }
 
     protected _draggingChangedHandler(event, dragging): void {
