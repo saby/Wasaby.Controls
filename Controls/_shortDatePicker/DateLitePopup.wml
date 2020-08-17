@@ -21,10 +21,14 @@
             >
                {{ _position.getFullYear() }}
             </div>
-            <div class="controls-PeriodLiteDialog__year-prev controls-PeriodLiteDialog__year-prev_theme-{{_options.theme}}"
-                 title="{[Предыдущий год]}" on:click="_changeYear (-1)"></div>
-            <div class="controls-PeriodLiteDialog__year-next controls-PeriodLiteDialog__year-next_theme-{{_options.theme}}"
-                 on:click="_changeYear (1)" title="{[Следующий год]}"></div>
+            <Controls.buttons:ArrowButton attr:class="controls-PeriodLiteDialog__year-prev_theme-{{_options.theme}}"
+                                          direction="left"
+                                          attr:title="{[Предыдущий год]}"
+                                          on:click="_changeYear (-1)"/>
+            <Controls.buttons:ArrowButton attr:class="controls-PeriodLiteDialog__year-next_theme-{{_options.theme}}"
+                                          direction="right"
+                                          attr:title="{[Следующий год]}"
+                                          on:click="_changeYear (1)"/>
          </div>
          <ws:partial
                  class="controls-PeriodLiteDialog__body controls-PeriodLiteDialog__body_theme-{{_options.theme}}

@@ -36,18 +36,13 @@
               <span class="controls-RangeShortSelector__clear controls-RangeShortSelectorLink__clear_theme-{{_options.theme}}" on:click="_clearDate()"></span>
         </ws:if>
         <ws:if data="{{ _options.prevArrowVisibility && _viewMode == 'selector'  && !_options.readOnly}}">
-            <span
-                    class="controls-RangeShortSelectorLink__prev controls-RangeShortSelectorLink__prev_theme-{{_options.theme}}
-              {{_fontColorStyle? 'controls-text-' + _fontColorStyle + '_theme-' + _options.theme }} {{ _styleClass }}"
-                    on:click="shiftBack()">
-            </span>
+            <Controls.buttons:ArrowButton direction="left"
+                                          on:click="shiftBack()"/>
         </ws:if>
         <ws:if data="{{ _options.nextArrowVisibility && _viewMode == 'selector' && !_options.readOnly}}">
-           <span
-              class="controls-RangeShortSelectorLink__next controls-RangeShortSelectorLink__next_theme-{{_options.theme}}
-              {{_fontColorStyle? 'controls-text-' + _fontColorStyle + '_theme-' + _options.theme }} {{ _styleClass }}"
-              on:click="shiftForward()">
-           </span>
+            <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__next_theme-{{_options.theme}}"
+                                          direction="right"
+                                          on:click="shiftForward()"/>
         </ws:if>
     </div>
 </div>

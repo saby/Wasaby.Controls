@@ -87,6 +87,13 @@
    height: @height_dateRangeSelector + 1px;
 }
 
+.controls-RangeShortSelectorLink__value-wrapper_theme-@{themeName}::before {
+   content: '\200b';
+   display: inline-block;
+   width: 0;
+   font-size: @arrow_icon-size_dateRangeSelector;
+}
+
 .controls-RangeShortSelectorLink__value-wrapper {
    //В разных браузерах, при нечетнром количестве пикселей при делении, разные браузеры округлят по разному.
    //Из-за этого существует разница в 1px по высоте. Увиеличил высоту контейнера на 1px и прижал к низу.
