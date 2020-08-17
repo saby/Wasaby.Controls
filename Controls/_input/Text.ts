@@ -64,6 +64,10 @@ var Text = Base.extend({
         Text.superclass._beforeMount.apply(this, arguments);
 
         _private.validateConstraint(options.constraint);
+
+        return new Promise((resolve) => {
+           require('/cdn/Punycode/1.0.0/punycode', () => resolve());
+        });
     },
 
     _beforeUpdate: function (newOptions) {
