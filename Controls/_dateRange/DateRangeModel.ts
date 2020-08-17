@@ -121,13 +121,13 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
          return nextRange;
       }
       // Берем любую из дат, т.к. нам нужно дата с точностью в год
-      const date = new Date(range[0].getFullYear(), 0);
+      const currentDate = new Date(range[0].getFullYear(), 0);
       const nextDate = new Date(nextRange[0].getFullYear(), 0);
 
       let arrayIndex;
       const findCurrentDateArrayIndex = () => {
          for (let index = 0; index < this._options.displayedRanges.length; index++) {
-            if (this._hitsDisplayedRange(date, index)) {
+            if (this._hitsDisplayedRange(currentDate, index)) {
                return index;
             }
          }
@@ -153,17 +153,17 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       const adjacentArray = this._options.displayedRanges[arrayIndex + direction];
 
       if (this._options.displayedRanges[arrayIndex + direction]) {
+         let startValue, endValue;
          if (direction === 1) {
-            return [
-               new Date(adjacentArray[0].getFullYear(), 0),
-               new Date(adjacentArray[0].getFullYear(), currentInterval, 0)
-            ];
+            const shiftForwardYear = adjacentArray[0].getFullYear();
+            startValue = new Date(shiftForwardYear, 0);
+            endValue = new Date(shiftForwardYear, currentInterval, 0);
          } else {
-            return [
-               new Date(adjacentArray[1].getFullYear(), 12 - currentInterval),
-               new Date(adjacentArray[1].getFullYear(), 12, 0)
-            ];
+            const shiftBackYear = adjacentArray[1].getFullYear();
+            startValue = new Date(shiftBackYear, 12 - currentInterval);
+            endValue = new Date(shiftBackYear, 12, 0);
          }
+         return [startValue, endValue];
       }
       return range;
    },
