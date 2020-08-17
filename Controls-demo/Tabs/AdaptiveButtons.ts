@@ -13,68 +13,55 @@ export default class TabButtonsDemo extends Control {
             rawData: [
                 {
                     id: '1',
-                    title: '1Fffffffffs',
-                    align: 'left'
+                    title: '1Fffffffffs'
                 },
                 {
                     id: '2',
-                    title: '22Fiffffffffffffffffffffles',
-                    align: 'left'
+                    title: '22Fiffffffffffffffffffffles'
                 },
                 {
                     id: '3',
-                    title: 'Filfffffffffffffffffffffffes',
-                    align: 'left'
+                    title: 'Filfffffffffffffffffffffffes'
                 },
                 {
                     id: '4',
-                    title: 'Filffffffffffffffffffffes',
-                    align: 'left'
+                    title: 'Filffffffffffffffffffffes'
                 },
                 {
                     id: '5',
-                    title: 'Files',
-                    align: 'left'
+                    title: 'Files'
                 },
                 {
                     id: '6',
-                    title: 'Fiffffffffffffffles',
-                    align: 'left'
+                    title: 'Fiffffffffffffffles'
                 },
                 {
                     id: '7',
-                    title: 'Files',
-                    align: 'left'
+                    title: 'Files'
                 },
                 {
                     id: '8',
-                    title: 'Fi4444les',
-                    align: 'left'
+                    title: 'Fi4444les'
                 },
                 {
                     id: '9',
-                    title: 'Fi4444les  44444',
-                    align: 'left'
+                    title: 'Fi4444les  44444'
                 },
                 {
                     id: '10',
-                    title: 'Fi222les',
-                    align: 'left'
+                    title: 'Fi222les'
                 },
                 {
                     id: '11',
-                    title: 'Files',
-                    align: 'left'
+                    title: 'Files'
                 },
                 {
                     id: '12',
-                    title: 'Fi4444444444les',
-                    align: 'left'
+                    title: 'Fi4444444444les'
                 },
                 {
                     id: '13',
-                    title: 'F 44444444iles',
-                    align: 'left'
+                    title: 'F 44444444iles'
                 }
             ]
         });

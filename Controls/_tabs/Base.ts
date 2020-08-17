@@ -183,18 +183,15 @@ export default class Base extends Control<ITabsButtonsOptions> {
         const classes: string[] = ['controls-Tabs__item controls-Tabs__item_theme_' + options.theme];
 
         const itemAlign: string = item.get('align');
-        const align: string = itemAlign ? itemAlign : 'right';
+        const align: string = this._align;
 
         const isLastItem: boolean = order === this._lastRightOrder;
 
         classes.push(`controls-Tabs__item_align_${align} ` +
             `controls-Tabs__item_align_${align}_theme_${options.theme}`);
-        if (order === 1 || isLastItem) {
-            classes.push('controls-Tabs__item_extreme controls-Tabs__item_extreme_theme_' + options.theme);
-        }
-        if (order === 1) {
+        if (this._align === 'left' && index === 0) {
             classes.push('controls-Tabs__item_extreme_first controls-Tabs__item_extreme_first_theme_' + options.theme);
-        } else if (isLastItem) {
+        } else if (this._align === 'right' && index === this._lastIndex) {
             classes.push('controls-Tabs__item_extreme_last controls-Tabs__item_extreme_last_theme_' + options.theme);
         } else {
             classes.push('controls-Tabs__item_default controls-Tabs__item_default_theme_' + options.theme);
