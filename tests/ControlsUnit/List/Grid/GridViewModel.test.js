@@ -2720,6 +2720,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(expected.default, gridMod.GridViewModel._private.getRelativeCellWrapperClasses(itemData, false, true));
             assert.equal(expected.default, gridMod.GridViewModel._private.getRelativeCellWrapperClasses(itemData, true, false));
             assert.equal(expected.fixesIE, gridMod.GridViewModel._private.getRelativeCellWrapperClasses(itemData, true, true));
+         });
       });
 
       describe('grid separators', () => {
