@@ -1355,11 +1355,19 @@ const _private = {
                 _private.handleSelectionControllerResult(self, result);
             }
 
-            // Когда action=remove значит были скрыты или удалены элементы
-            // Если элементы скрылись, то для них нужно сбросить состояние marked,
-            // чтобы при их показе не было лишнего маркера
-            if (action === IObservable.ACTION_REMOVE && _private.hasMarkerController(self)) {
-                _private.getMarkerController(self).resetMarkedState(removedItems);
+            if (_private.hasMarkerController(self)) {
+                // Когда action=remove значит были скрыты или удалены элементы
+                // Если элементы скрылись, то для них нужно сбросить состояние marked,
+                // чтобы при их показе не было лишнего маркера
+                if (action === IObservable.ACTION_REMOVE) {
+                    _private.getMarkerController(self).resetMarkedState(removedItems);
+                }
+
+                // Если элемент был пересоздан, то сперва сработает remove и с элемента уберется выделение,
+                // а потом сработает add и для элемента нужно восстановить выделение
+                if (action === IObservable.ACTION_ADD) {
+                    _private.getMarkerController(self).restoreMarker();
+                }
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
