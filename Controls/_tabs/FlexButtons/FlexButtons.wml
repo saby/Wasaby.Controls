@@ -1,24 +1,28 @@
 <div class="controls-Tabs controls-Tabs_theme_{{_options.theme}}">
     <div class="controls-Tabs-wrapper" style="align-items: baseline">
 
+        <ws:template name="tabsMore">
+            <div class="controls-Tabs__more_theme_{{_options.theme}} controls-Tabs__more_align_{{align}}_theme_{{_options.theme}}" >Еще...</div>
+        </ws:template>
+
+
         <div class="controls-Tabs__wrapper__items" style="{{_options.align === 'left' ?  'order: 1' : 'order: 3'}}">
             <ws:for data="index, item in _items">
                 <div attr:class="{{_prepareItemClass(item, index)}}"
-
-                     attr:title="{{ item[_options.displayProperty] }}"
-                     on:mousedown="_onItemClick(item.get(_options.keyProperty))">
+                     attr:title="{{ item[_options.displayProperty] }}">
                     <ws:if data="{{ _options.align === 'right' && index === 0 && _lastIndex < _originalSource.getRawData().length - 1 }}">
-                        <div class="controls-Tabs__more_theme_{{_options.theme}} controls-Tabs__more_align_{{_options.align}}_theme_{{_options.theme}}" >Еще...</div>
+                        <ws:partial template="tabsMore" align="right"/>
                     </ws:if>
                     <ws:partial
                             attr:class="controls-Tabs__itemClickableArea controls-Tabs__itemClickableArea_theme_{{_options.theme}} {{_prepareItemSelectedClass(item)}}"
-                            template="{{ _getTemplate(_options.itemTemplate, item, _options.itemTemplateProperty) || _defaultItemTemplate}}"
+                            template="{{_defaultItemTemplate}}"
                             selected="{{item[_options.keyProperty] === _options.selectedKey}}"
                             displayProperty="{{_options.displayProperty}}"
                             keyProperty="{{_options.keyProperty}}"
-                            item="{{item}}"/>
+                            item="{{item}}"
+                            on:mousedown="_onItemClick(item.get(_options.keyProperty))"/>
                     <ws:if data="{{ _options.align === 'left' && index === _lastIndex && _lastIndex < _originalSource.getRawData().length - 1 }}">
-                            <div class="controls-Tabs__more_theme_{{_options.theme}} controls-Tabs__more_align_{{_options.align}}_theme_{{_options.theme}}" >Еще...</div>
+                        <ws:partial template="tabsMore" align="left"/>
                     </ws:if>
                     <ws:if data="{{item.get('contentTab')}}">
                         <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_theme_{{_options.theme}}
@@ -35,4 +39,5 @@
             </ws:if>
         </div>
     </div>
+
 </div>
