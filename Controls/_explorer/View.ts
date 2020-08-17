@@ -548,11 +548,6 @@ var
          const isSearchViewMode = cfg.viewMode === 'search';
          const isRootChanged = cfg.root !== this._options.root;
 
-         //todo: после доработки стандарта, убрать флаг _isGoingFront по задаче: https://online.sbis.ru/opendoc.html?guid=ffa683fa-0b8e-4faa-b3e2-a4bb39671029
-         if (this._isGoingFront && this._options.hasOwnProperty('root') && !isRootChanged) {
-            this._isGoingFront = false;
-         }
-
          /*
          * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.
          * Чтобы список мог восстановить позицию скрола по отмеченой записи, она должна быть в наборе данных.
