@@ -36,15 +36,8 @@ import {IHeaderCell} from './interface/IHeaderCell';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 
-/**
- * При установке этих значений следует учитывать, что z-index:
- * .controls-Grid__cell_fixed_theme-@{themeName} = 3
- * .controls-TreeGrid__row__searchBreadCrumbs .controls-itemActionsV__container = 4
- * .controls-itemActionsV__container = 4
- * .controls-Grid_columnScroll_wrapper = 5
- */
-const FIXED_HEADER_ZINDEX = 6;
-const STICKY_HEADER_ZINDEX = 5;
+const FIXED_HEADER_ZINDEX = 4;
+const STICKY_HEADER_ZINDEX = 3;
 
 interface IGridSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';
@@ -284,13 +277,13 @@ var
             return isCellIndexLessTheFixedIndex;
         },
 
-        // Раньше по https://online.sbis.ru/doc/a4b0487a-4bc4-47e4-afce-3340833b1232 тут ещё была проверка на
-        // isColumnScrollVisible, но это приводило к тому, что в некоторых реестрах
-        // z-index всех столбцов формировались до установки isColumnScrollVisible=true как FIXED_HEADER_ZINDEX
-        // и т.к. они были на одном уровне, то возникал кейс по ошибке
-        // https://online.sbis.ru/opendoc.html?guid=42614e54-3ed7-41f4-9d57-a6971df66f9c
-        getHeaderZIndex(params): number {
-            return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+        getHeaderZIndex: function(params) {
+            if (params.isColumnScrollVisible) {
+                return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+            } else {
+                // Пока в таблице нет горизонтального скролла, шапка ен может быть проскролена по горизонтали.
+                return FIXED_HEADER_ZINDEX;
+            }
         },
 
         getColumnScrollCellClasses(params, theme): string {
@@ -965,7 +958,9 @@ var
             const multiSelectOffset = +hasMultiSelect;
             const headerColumn = {
                 column: cell,
+                key: (rowIndex) + '-' + (columnIndex + (hasMultiSelect ? 0 : 1)),
                 index: columnIndex,
+                backgroundStyle: cell.ladderCell ? 'transparent' : '',
                 shadowVisibility: cell.ladderCell ? 'hidden' : 'visible'
             };
             let cellClasses = `controls-Grid__header-cell controls-Grid__header-cell_theme-${theme}` +
@@ -1622,8 +1617,10 @@ var
                 let result = '';
                 if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
+                    const hasHeader = !!self.getHeader();
+                    const hasTopResults = self.getResultsPosition() === 'top';
                     if (!hasMainCell) {
-                        result += ' controls-Grid__row-cell__ladder-spacing_theme-' + current.theme;
+                        result += ` controls-Grid__row-cell__ladder-spacing${hasHeader ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}_theme-${current.theme}`;
                     }
                 }
                 return result;
@@ -1768,7 +1765,7 @@ var
         },
 
         setColumnScrollVisibility(columnScrollVisibility: boolean) {
-            if (!!this._options.columnScrollVisibility !== columnScrollVisibility) {
+            if (this._options && !!this._options.columnScrollVisibility !== columnScrollVisibility) {
                 this._options.columnScrollVisibility = columnScrollVisibility;
 
                 // Нужно обновить классы с z-index на всех ячейках

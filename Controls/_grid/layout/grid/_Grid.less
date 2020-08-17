@@ -64,7 +64,7 @@
 }
 
 .controls-Grid_columnScroll_wrapper {
-   z-index: 5;
+   z-index: 4;
    position: sticky;
 }
 
@@ -406,6 +406,21 @@
 }
 .controls-Grid__row-cell__ladder-spacing_theme-@{themeName} {
    top: @item_line-height_l_grid !important;
+   height: 0;
+}
+
+.controls-Grid__row-cell__ladder-spacing_withHeader_theme-@{themeName} {
+   top: @item_line-height_l_grid + @header_cell_min-height_grid !important;
+   height: 0;
+}
+
+.controls-Grid__row-cell__ladder-spacing_withResults_theme-@{themeName} {
+   top: @item_line-height_l_grid + @results_cell_min-height_grid !important;
+   height: 0;
+}
+
+.controls-Grid__row-cell__ladder-spacing_withHeader_withResults_theme-@{themeName} {
+   top: @item_line-height_l_grid + @header_cell_min-height_grid + @results_cell_min-height_grid !important;
    height: 0;
 }
 .controls-Grid__cell-content-wrapper_ladder {
@@ -763,8 +778,7 @@
 
    // Нужен отдельный стек z-index, иначе при скролле колонок из-за transform опции оказываются ниже данных таблицы и неправильно обрабатывается ховер
    // https://online.sbis.ru/opendoc.html?guid=6059b335-dad3-4458-b022-0260680d5c27
-   // Значение = 4, т.к. для .controls-Grid__cell_fixed_ сделано 3
-   z-index: 4;
+   z-index: 1;
 
    pointer-events: none;
    .controls-itemActionsV {
@@ -839,6 +853,7 @@
    background: linear-gradient(90deg, rgba(240,245,251,0), @item_hover_background-color_list);
 }
 
+.controls-Grid__editArrow-blur_style-masterClassic_background_theme-@{themeName},
 .controls-Grid__editArrow-blur_style-master_background_theme-@{themeName} {
    background: linear-gradient(90deg, rgba(240,245,251,0), @master_item_hover_background-color_list);
 }
@@ -850,9 +865,19 @@
    fill: @edit-arrow_icon-color_grid;
    width: @edit-arrow_icon-size_grid;
    min-width: @edit-arrow_icon-size_grid;
+   display: inline-flex;
+   align-items: baseline;
+}
+
+.controls-Grid__editArrow-blur_style-default_background_theme-default:before, 
+.controls-Grid__editArrow_style-default_background_theme-default:before, 
+.controls-Grid__editArrow-wrapper_theme-default:before {
+   content: '\200b';
+   font-size: @item_max-font-size_grid;
+}
+.controls-Grid__editArrow-icon_theme-@{themeName} {
    height: @edit-arrow_icon-size_grid;
-   display: inline-block;
-   line-height: 1;
+   width: @edit-arrow_icon-size_grid;
 }
 
 .controls-Grid__editArrow_style-default_background_theme-@{themeName} {

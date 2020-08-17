@@ -244,9 +244,17 @@ let
 
            if (!isEqual(oldDisplayState, displayState)) {
                self._displayState = displayState;
-               self._stickyHeaderController.setCanScroll(displayState.canScroll);
                if (oldDisplayState.canScroll !== displayState.canScroll) {
-                   _private._updateScrollbar(self);
+                   self._stickyHeaderController.setCanScroll(displayState.canScroll).then(() => {
+
+                       // Заголовки обновляются асинхронно отложенно пачкой, т.к. для их рассчетов снимается
+                       // position: sticky. Скроллбар мы можем обновить только после того, как рассчитали заголовки.
+                       self._headersHeight.top =
+                           self._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed);
+                       self._headersHeight.bottom =
+                           self._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
+                       _private._updateScrollbar(self);
+                   });
                }
            }
        },
@@ -327,13 +335,17 @@ let
 
       notifyScrollEvents(self, scrollTop) {
          self._notify('scroll', [scrollTop]);
-         const eventCfg = {
-             type: 'scroll',
-             target: self._children.content,
-             currentTarget: self._children.content,
-             _bubbling: false
-         };
-         self._children.scrollDetect.start(new SyntheticEvent(null, eventCfg), scrollTop);
+         // Перед уничтожением скролл контейнера уничтожается dragnDrop/Container, который нотифает событие
+         // окончания драга, в этот момент scrollDetect (как и scrollWatcher) уже уничтожен.
+         if (self._children.scrollDetect) {
+            const eventCfg = {
+            type: 'scroll',
+            target: self._children.content,
+            currentTarget: self._children.content,
+            _bubbling: false
+            };
+            self._children.scrollDetect.start(new SyntheticEvent(null, eventCfg), scrollTop);
+         }
       },
 
        calcCanScroll(scrollType: string, self: Control): boolean {

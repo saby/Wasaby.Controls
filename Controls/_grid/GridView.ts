@@ -428,7 +428,7 @@ var
 
             // Для предотвращения скролла одной записи в таблице с экшнами.
             // _options._needBottomPadding почему-то иногда не работает.
-            if (this._listModel.getCount() && 
+            if ((this._listModel.getCount() || this._listModel.getEditingItemData()) && 
                 this._options.itemActionsPosition === 'outside' &&
                 !this._options._needBottomPadding &&
                 this._options.resultsPosition !== 'bottom') {
