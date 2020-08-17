@@ -88,6 +88,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _afterUpdate(oldOptions?: IContainerBaseOptions): void {
         this._observeContentSize();
         this._unobserveDeleted();
+        if (!this._resizeObserverSupported) {
+            this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
+        }
     }
 
     _beforeUnmount(): void {
@@ -464,7 +467,22 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 scrollHeight: this._state.scrollHeight
             });
 
-            if (this._scrollMoveTimer) {
+            this._sendScrollMoveAsync();
+        }
+
+        if (this._state.canVerticalScroll !== this._oldState.canVerticalScroll) {
+            this._sendByListScrollRegistrar(
+                this._state.canVerticalScroll ? 'canScroll' : 'cantScroll',
+                {
+                    clientHeight: this._state.clientHeight,
+                    scrollHeight: this._state.scrollHeight,
+                    viewPortRect: this._state.viewPortRect
+                });
+        }
+    }
+
+    _sendScrollMoveAsync(): void {
+        if (this._scrollMoveTimer) {
                 clearTimeout(this._scrollMoveTimer);
             }
 
@@ -477,17 +495,6 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 });
                 this._scrollMoveTimer = null;
             }, 0);
-        }
-
-        if (this._state.canVerticalScroll !== this._oldState.canVerticalScroll) {
-            this._sendByListScrollRegistrar(
-                this._state.canVerticalScroll ? 'canScroll' : 'cantScroll',
-                {
-                    clientHeight: this._state.clientHeight,
-                    scrollHeight: this._state.scrollHeight,
-                    viewPortRect: this._state.viewPortRect
-                });
-        }
     }
 
     _onRegisterNewListScrollComponent(component: any): void {
