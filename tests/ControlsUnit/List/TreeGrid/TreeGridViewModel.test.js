@@ -98,6 +98,7 @@ define(['Controls/treeGrid',
          treeGrid.ViewModel.superclass.getItemDataByItem = function() {
             return {
                item: {},
+               isFullGridSupport: () => false,
                getCurrentColumn: function() {
                   return {
                      classList: {

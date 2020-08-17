@@ -1709,7 +1709,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             column =  headerRow.getCurrentHeaderColumn();
             assert.equal(column.shadowVisibility, 'visible');
          });
-         
+
          it('backgroundStyle on header cells with stickyLadder', () => {
             const gridHeaderClone = gridHeader.map(function(obj) {
                return Object.assign({}, obj);
@@ -1741,7 +1741,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             headerRow.goToNextHeaderColumn();
 
             column =  headerRow.getCurrentHeaderColumn();
-            assert.equal(column.key, '0-1');  
+            assert.equal(column.key, '0-1');
 
             headerRow.resetHeaderColumns();
             viewModel._options.multiSelectVisibility = 'hidden';
@@ -1754,7 +1754,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             headerRow.goToNextHeaderColumn();
 
             column =  headerRow.getCurrentHeaderColumn();
-            assert.equal(column.key, '0-2');  
+            assert.equal(column.key, '0-2');
          });
 
          it('should not add column separator classes on action cell', function () {
@@ -2704,6 +2704,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(checkboxCell.colSpan, 1);
          });
 
+         it('getRelativeCellWrapperClasses', () => {
+            const itemData = { theme: 'default', columns: [{}] };
+            const expected = {
+               default: 'controls-Grid__table__relative-cell-wrapper controls-Grid__table__relative-cell-wrapper_rowSeparator-s_theme-default',
+               fixesIE: 'controls-Grid__table__relative-cell-wrapper controls-Grid__table__relative-cell-wrapper_rowSeparator-s_theme-default controls-Grid__table__relative-cell-wrapper_singleCell'
+            };
+            assert.equal(expected.default, gridMod.GridViewModel._private.getRelativeCellWrapperClasses(itemData));
+            assert.equal(expected.default, gridMod.GridViewModel._private.getRelativeCellWrapperClasses(itemData, true, false));
+            assert.equal(expected.fixesIE, gridMod.GridViewModel._private.getRelativeCellWrapperClasses(itemData, false, true));
+            assert.equal(expected.fixesIE, gridMod.GridViewModel._private.getRelativeCellWrapperClasses(itemData, true, true));
+
+            itemData.columns = [{}, {}, {}];
+            assert.equal(expected.default, gridMod.GridViewModel._private.getRelativeCellWrapperClasses(itemData));
+            assert.equal(expected.default, gridMod.GridViewModel._private.getRelativeCellWrapperClasses(itemData, false, true));
+            assert.equal(expected.default, gridMod.GridViewModel._private.getRelativeCellWrapperClasses(itemData, true, false));
+            assert.equal(expected.fixesIE, gridMod.GridViewModel._private.getRelativeCellWrapperClasses(itemData, true, true));
       });
 
       describe('grid separators', () => {
