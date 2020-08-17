@@ -113,17 +113,6 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
-    adjustContentMarginsForBlockRender(container: HTMLElement): void {
-        if (!this._overflowHidden && this._styleHideScrollbar) {
-            const computedStyle = ScrollbarsModel._getComputedStyle(container);
-            const marginRight = parseInt(computedStyle.marginRight, 10);
-            // Удаляем в 6100
-            this._scrollContainerStyles =this._styleHideScrollbar.replace(/-?[1-9]\d*/g, (found) => {
-                return parseInt(found, 10) + marginRight;
-            });
-        }
-    }
-
     get scrollContainerStyles() {
         return !this._overflowHidden ? this._scrollContainerStyles : '';
     }
@@ -179,10 +168,6 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     }
     get vertical(): ScrollbarModel {
         return this._models.vertical;
-    }
-
-    static _getComputedStyle(element: HTMLElement): CSSStyleDeclaration {
-        return getComputedStyle(element);
     }
 
 }
