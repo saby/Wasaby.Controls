@@ -1081,8 +1081,10 @@ const _private = {
         const scrollPagingConfig = {
             scrollParams,
             pagingCfgTrigger: (cfg) => {
-                self._pagingCfg = cfg;
-                self._forceUpdate();
+                if (!isEqual(self._pagingCfg, cfg)) {
+                    self._pagingCfg = cfg;
+                    self._forceUpdate();
+                }
             }
         };
         return Promise.resolve(new ScrollPagingController(scrollPagingConfig));
@@ -2923,6 +2925,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _viewResize(): void {
+        if (!this._mounted) {
+            return;
+        }
+
         if (this._scrollController) {
             this._scrollController.viewResize(this._container);
         }
@@ -2959,10 +2965,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._loadedItems = null;
 
-        if (this._scrollController) {
-            this._scrollController.afterMount(container, this._children);
-        }
-
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
         // TODO https://online.sbis.ru/opendoc.html?guid=3042889b-181c-47ec-b036-a7e24c323f5f
         if (this._selectionController) {
@@ -2987,6 +2989,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
         _private.checkNeedAttachLoadTopTriggerToNull(this, this._options);
+
+        if (this._scrollController) {
+            this._scrollController.afterMount(container, this._children);
+        }
     },
 
     _updateScrollController(newOptions) {
@@ -4105,7 +4111,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: any): void {
-        if (this._scrollController) {
+        if (this._scrollController && !this._attachLoadTopTriggerToNull) {
             this._scrollController.observeScroll(eventName, params);
         }
     },
