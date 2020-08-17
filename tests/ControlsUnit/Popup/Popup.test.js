@@ -43,13 +43,18 @@ define(
          });
          it('_showIndicatorHandler', () => {
             const Popup = new PopupClass.default();
+            let config = '';
+            let promise = '';
             let stopPropagation = () => {
             };
             Popup._notify = (eventName, eventArgs, eventOptions) => {
-               assert.equal(eventArgs[0], 'config');
-               assert.equal(eventArgs[1], 'promise');
+               config = eventArgs[0];
+               promise = eventArgs[1];
             };
             Popup._showIndicatorHandler({ event: 'event', stopPropagation }, 'config', 'promise');
+            assert.equal(config, 'config');
+            assert.equal(promise, 'promise');
+            Popup.destroy();
          });
       });
    }
