@@ -833,8 +833,10 @@ define([
             });
 
             it('check search value', function() {
+               var curVersion = lvm.getVersion();
                lvm.setSearchValue('test');
                assert.equal(lvm.getItemDataByItem(lvm._display.at(0)).searchValue, 'test');
+               assert.equal(lvm.getVersion(), curVersion + 1);
                lvm.setSearchValue(null);
             });
          });
