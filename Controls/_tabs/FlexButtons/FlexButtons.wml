@@ -1,39 +1,45 @@
 <div class="controls-Tabs controls-Tabs_theme_{{_options.theme}}">
-    <div class="controls-Tabs-wrapper">
-        <ws:for data="index, item in _items">
-            <div attr:class="{{_prepareItemClass(item, index)}}"
-                 attr:style="{{_prepareItemOrder(index)}} "
-                 attr:title="{{ item[_options.displayProperty] }}"
-                 on:mousedown="_onItemClick(item.get(_options.keyProperty))">
-                <ws:if data="{{ _getTemplate(_options.itemLeftTemplate, item, _options.leftTemplateProperty) }}">
-                    <ws:partial template="{{ _getTemplate(_options.itemLeftTemplate, item, _options.leftTemplateProperty) }}"
+    <div class="controls-Tabs-wrapper" style="align-items: baseline">
+
+        <div class="controls-Tabs__wrapper__items" style="{{_options.align === 'left' ?  'order: 1' : 'order: 3'}}">
+            <ws:for data="index, item in _items">
+                <div attr:class="{{_prepareItemClass(item, index)}}"
+                     attr:style="{{_prepareItemOrder(index)}} "
+                     attr:title="{{ item[_options.displayProperty] }}"
+                     on:mousedown="_onItemClick(item.get(_options.keyProperty))">
+                    <ws:if data="{{ _getTemplate(_options.itemLeftTemplate, item, _options.leftTemplateProperty) }}">
+                        <ws:partial
+                                template="{{ _getTemplate(_options.itemLeftTemplate, item, _options.leftTemplateProperty) }}"
                                 selected="{{item[_options.keyProperty] === _options.selectedKey}}"
-                                item="{{item}}" />
-                </ws:if>
-                <ws:partial
-                        attr:class="controls-Tabs__itemClickableArea controls-Tabs__itemClickableArea_theme_{{_options.theme}} {{_prepareItemSelectedClass(item)}}"
-                        template="{{ _getTemplate(_options.itemTemplate, item, _options.itemTemplateProperty) || _defaultItemTemplate}}"
-                        selected="{{item[_options.keyProperty] === _options.selectedKey}}"
-                        displayProperty="{{_options.displayProperty}}"
-                        keyProperty="{{_options.keyProperty}}"
-                        item="{{item}}"/>
-                <ws:if data="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}">
-                    <ws:partial template="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}"
+                                item="{{item}}"/>
+                    </ws:if>
+                    <ws:partial
+                            attr:class="controls-Tabs__itemClickableArea controls-Tabs__itemClickableArea_theme_{{_options.theme}} {{_prepareItemSelectedClass(item)}}"
+                            template="{{ _getTemplate(_options.itemTemplate, item, _options.itemTemplateProperty) || _defaultItemTemplate}}"
+                            selected="{{item[_options.keyProperty] === _options.selectedKey}}"
+                            displayProperty="{{_options.displayProperty}}"
+                            keyProperty="{{_options.keyProperty}}"
+                            item="{{item}}"/>
+                    <ws:if data="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}">
+                        <ws:partial
+                                template="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}"
                                 selected="{{item[_options.keyProperty] === _options.selectedKey}}"
-                                item="{{item}}" />
-                </ws:if>
-                <ws:if data="{{item.get('contentTab')}}">
-                    <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_theme_{{_options.theme}}
+                                item="{{item}}"/>
+                    </ws:if>
+                    <ws:if data="{{item.get('contentTab')}}">
+                        <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_theme_{{_options.theme}}
                             controls-Tabs__itemSeparator_align_left"></div>
-                </ws:if>
-                <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_theme_{{_options.theme}}
+                    </ws:if>
+                    <div class="controls-Tabs__itemSeparator controls-Tabs__itemSeparator_theme_{{_options.theme}}
                             controls-Tabs__itemSeparator_align_{{item.get('contentTab') ? 'right' : item.get('align') || 'right'}}"></div>
-            </div>
-        </ws:for>
+                </div>
+            </ws:for>
+        </div>
+
         <ws:if data="{{_lastIndex < _originalSource.getRawData().length - 1}}">
-                <div style="order:19">еще...</div>
-                </ws:if>
-        <div class="controls-Tabs__space controls-Tabs__space_theme_{{_options.theme}}">
+            <div class="controls-Tabs__more_theme_{{_options.theme}}" style="order: 2">Еще...</div>
+        </ws:if>
+        <div class="controls-Tabs__space controls-Tabs__space_theme_{{_options.theme}}" style="{{_options.align === 'left' ?  'order: 3' : 'order: 1'}}">
             <ws:if data="{{ _options.tabSpaceTemplate }}">
                 <ws:partial template="{{_options.tabSpaceTemplate}}" scope="{{_options}}"/>
             </ws:if>

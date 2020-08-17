@@ -24,6 +24,7 @@ export default class Base extends Control<ITabsButtonsOptions> {
     protected _displayProperty: string = 'title';
     protected _containerWidth: number;
     protected _originalSource: RecordSet;
+    protected _align: string;
 
     protected _getIndexOfLastTab(items: RecordSet, displayProperty: string, containerWidth: number = 200): Promise<number> {
         // находим индекс последней уместившейся вкладки с учетом текста, отступов и разделителей.
@@ -31,15 +32,14 @@ export default class Base extends Control<ITabsButtonsOptions> {
         let indexLast = 0;
         return this._getWidthOfElements(items, displayProperty).then((res) => {
             const arrWidth = res;
+            if (this._align === 'right') {
+                arrWidth.reverse();
+            }
             // здесь учесть еще... из утилиты
             while (width < containerWidth && indexLast !== items.getRawData().length) {
                 width += arrWidth[indexLast];
                 indexLast++;
             }
-            /* Нужно, если хотя бы одна вкладка с учетом сокращения не влезла - показывалась кнопка еще.
-            Тогда осуществляем проверку на свободное пространство. Если оно больше, чем минимум ширины вкладки + кнопка еще, то позволяем последней вкладке сокращаться.
-            Если меньше, то берем на одну вкладку меньше.
-          */
             indexLast -= 2;
 
             if (indexLast === arrWidth.length - 1) {
@@ -109,8 +109,15 @@ export default class Base extends Control<ITabsButtonsOptions> {
     private _deleteHiddenItems(items: RecordSet): void {
         this._getIndexOfLastTab(items, this._displayProperty, this._containerWidth).then((res) => {
             this._lastIndex = res;
-            const rawData = items.getRawData().slice(0, this._lastIndex + 1);
-            items.setRawData(rawData);
+            let oldRawData = items.getRawData();
+            if (this._align === 'right') {
+                oldRawData.reverse();
+            }
+            const rawData = oldRawData.slice(0, this._lastIndex + 1);
+            if (this._align === 'right') {
+                rawData.reverse();
+            }
+            this._items.setRawData(rawData);
         });
     }
 
@@ -120,6 +127,7 @@ export default class Base extends Control<ITabsButtonsOptions> {
         // для теста
         this._displayProperty = options.displayProperty;
         this._containerWidth = options.containerWidth;
+        this._align = options.align ? options.align : 'left';
 
         // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
         if (receivedState && !Base._checkHasFunction(receivedState)) {
@@ -161,8 +169,8 @@ export default class Base extends Control<ITabsButtonsOptions> {
     private _onResize(): void {
         if (this._containerWidth !== this._container.clientWidth) {
             this._containerWidth = this._container.clientWidth;
-            this._items = this._originalSource.clone();
-            this._deleteHiddenItems(this._items);
+            let items = this._originalSource.clone();
+            this._deleteHiddenItems(items);
         }
     }
     protected _onItemClick(event: Event, key: string): void {
@@ -206,7 +214,11 @@ export default class Base extends Control<ITabsButtonsOptions> {
         } else {
             classes.push('controls-Tabs__item_notShrink');
         }
-        if (index === this._lastIndex) {
+
+        if (index === this._lastIndex && this._options.align === 'left') {
+            classes.push('controls-Tabs__item_shrinkMinWidth');
+        }
+        if (index === 0 && this._options.align === 'right') {
             classes.push('controls-Tabs__item_shrinkMinWidth');
         }
         return classes.join(' ');
