@@ -203,14 +203,14 @@ class Popup extends Control<IPopupControlOptions> {
         }
     }
 
-    protected _showIndicatorHandler(event: Event, config: object = {}): string {
+    protected _showIndicatorHandler(event: Event, config: object = {}, promise?: Promise<any>): string {
         // Вернул для индикаторов, вызванных из кода
         event.stopPropagation();
         if (typeof config === 'object') {
             config.popupId = this._options.id;
         }
         // catch showIndicator and add popupId property for Indicator.
-        return this._notify('showIndicator', [config], {bubbling: true}) as string;
+        return this._notify('showIndicator', [config, promise], {bubbling: true}) as string;
     }
 
     protected _registerPendingHandler(event: Event): string {
