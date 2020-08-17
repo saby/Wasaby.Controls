@@ -184,7 +184,7 @@ class InfoBox extends BaseOpener<IInfoBoxOpenerOptions> implements IInfoBoxOpene
 
     private static _open(callback: Function, cfg: IInfoBoxPopupOptions): void {
         InfoBox._clearTimeout();
-        this._target = cfg.target;
+        this._target = cfg.target && cfg.target[0] || cfg.target;
         if (!this._timerId) {
             this._timerId = setInterval(() => {
                 if (this._target.closest('.ws-hidden')) {
