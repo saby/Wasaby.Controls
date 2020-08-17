@@ -3,8 +3,9 @@ define('Controls/Utils/getItemsBySelection', [
    'Types/entity',
    'Types/chain',
    'Core/core-clone',
-   'Core/Deferred'
-], function(source, entity, chain, cClone, Deferred) {
+   'Core/Deferred',
+   'Controls/operations'
+], function(source, entity, chain, cClone, Deferred, operations) {
    'use strict';
 
    var
@@ -13,25 +14,12 @@ define('Controls/Utils/getItemsBySelection', [
             return value !== null ? '' + value : value;
          });
       },
-      selectionToRecord = function(selection, adapter) {
-         var
-            result = new entity.Record({
-               adapter: adapter,
-               format: [
-                  { name: 'marked', type: 'array', kind: 'string' },
-                  { name: 'excluded', type: 'array', kind: 'string' },
-                  { name: 'recursive', type: 'boolean' }
-               ]
-            });
-
-         result.set('marked', prepareArray(selection.selected));
-         result.set('excluded', prepareArray(selection.excluded));
-         result.set('recursive', selection.recursive === undefined ? true : selection.recursive);
-
-         return result;
+      selectionToRecord = function(selection, adapter, type) {
+         var recursive = selection.recursive === undefined ? true : selection.recursive;
+         return operations.selectionToRecord(selection, adapter, type, recursive);
       };
 
-   return function(selection, dataSource, items, filter, limit) {
+   return function(selection, dataSource, items, filter, limit, selectionType) {
       var
          item,
          query,
@@ -52,7 +40,7 @@ define('Controls/Utils/getItemsBySelection', [
          query = new source.Query();
 
          var filterClone = filter ? cClone(filter) : {};
-         filterClone.selection = selectionToRecord(selection, 'adapter.sbis');
+         filterClone.selection = selectionToRecord(selection, 'adapter.sbis', selectionType);
          if (limit) {
             query.limit(limit);
          }

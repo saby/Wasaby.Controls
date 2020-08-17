@@ -85,6 +85,11 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             'Incorrect result "prepareGridTemplateColumns without checkbox".');
       });
       it('Footer', function() {
+         let count = 0;
+         let listModel = {
+            getCount: () => count,
+            getEditingItemData: () => null
+         }
          var
              cfg = {
                 columns: [
@@ -100,7 +105,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
              gridView = new gridMod.GridView(cfg);
 
          gridView.saveOptions(cfg);
-
+         gridView._listModel = listModel;
 
          assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default');
 
@@ -112,6 +117,36 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
 
          gridView._options.itemPadding = undefined;
          assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_default_theme-default');
+      });
+      it('Footer with itemActionsPosition outside', function() {
+         let count = 0;
+         let editingItemData = {};
+         let listModel = {
+            getCount: () => count,
+            getEditingItemData: () => editingItemData
+         }
+         var
+             cfg = {
+                columns: [
+                   { displayProperty: 'field1', template: 'column1' },
+                   { displayProperty: 'field2', template: 'column2' }
+                ],
+                itemActionsPosition: 'outside',
+                needBottomPadding: false,
+                theme
+             },
+             gridView = new gridMod.GridView(cfg);
+
+         gridView.saveOptions(cfg);
+         gridView._listModel = listModel;
+
+         assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default controls-GridView__footer__itemActionsV_outside_theme-default');
+         
+         editingItemData = null;
+         assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default');
+         
+         count = 10;
+         assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default controls-GridView__footer__itemActionsV_outside_theme-default');
       });
       it('beforeUpdate', function() {
          var

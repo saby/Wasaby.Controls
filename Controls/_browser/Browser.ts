@@ -12,6 +12,7 @@ import {RegisterClass} from 'Controls/event';
 import {default as DataControllerClass} from '../_list/Data/ControllerClass';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {error as dataSourceError} from 'Controls/dataSource';
+import {TSelectionType} from 'Controls/interface';
 
 type Key = string|number|null;
 
@@ -23,6 +24,7 @@ export default class Browser extends Control {
     protected _template: TemplateFunction = template;
     protected _notifyHandler: Function = tmplNotify;
     private _selectedKeysCount: number = null;
+    private _selectionType: TSelectionType = 'all';
     private _isAllSelected: boolean = false;
     private _operationsController: OperationsController = null;
     private _searchController: SearchController = null;
@@ -191,6 +193,11 @@ export default class Browser extends Control {
         e.stopPropagation();
         this._selectedKeysCount = count;
         this._isAllSelected = isAllSelected;
+    }
+
+    protected _listSelectionTypeForAllSelectedChanged(event: SyntheticEvent, selectionType: TSelectionType): void {
+        event.stopPropagation();
+        this._selectionType = selectionType;
     }
 
     protected _itemOpenHandler(newCurrentRoot: Key, items: RecordSet, dataRoot: Key = null): void {
