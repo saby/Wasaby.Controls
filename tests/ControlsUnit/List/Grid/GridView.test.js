@@ -87,7 +87,8 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
       it('Footer', function() {
          let count = 0;
          let listModel = {
-            getCount: () => count
+            getCount: () => count,
+            getEditingItemData: () => null
          }
          var
              cfg = {
@@ -119,8 +120,10 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
       });
       it('Footer with itemActionsPosition outside', function() {
          let count = 0;
+         let editingItemData = {};
          let listModel = {
-            getCount: () => count
+            getCount: () => count,
+            getEditingItemData: () => editingItemData
          }
          var
              cfg = {
@@ -137,7 +140,11 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
          gridView.saveOptions(cfg);
          gridView._listModel = listModel;
 
+         assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default controls-GridView__footer__itemActionsV_outside_theme-default');
+         
+         editingItemData = null;
          assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default');
+         
          count = 10;
          assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default controls-GridView__footer__itemActionsV_outside_theme-default');
       });

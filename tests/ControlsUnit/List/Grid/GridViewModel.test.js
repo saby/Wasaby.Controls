@@ -1404,12 +1404,32 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             it('with main cell', () => {
                ladderViewModel._model._curIndex = 0;
                let current = ladderViewModel.getCurrent();
-               assert.equal(current.getAdditionalLadderClasses(),'','wrong classes');
+               assert.equal(current.getAdditionalLadderClasses(), '', 'wrong classes');
             });
-            it('with main cell', () => {
+            it('without main cell', () => {
                ladderViewModel._model._curIndex = 1;
                let current = ladderViewModel.getCurrent();
-               assert.equal(current.getAdditionalLadderClasses(),' controls-Grid__row-cell__ladder-spacing_theme-default','wrong classes');
+               assert.equal(current.getAdditionalLadderClasses(), ' controls-Grid__row-cell__ladder-spacing_theme-default', 'wrong classes');
+            });
+            it('without main cell with header', () => {
+               ladderViewModel._model._curIndex = 1;
+               ladderViewModel._header = {};
+               let current = ladderViewModel.getCurrent();
+               assert.equal(current.getAdditionalLadderClasses(), ' controls-Grid__row-cell__ladder-spacing_withHeader_theme-default', 'wrong classes');
+            });
+            it('without main cell with results', () => {
+               ladderViewModel._model._curIndex = 1;
+               ladderViewModel._header = null;
+               ladderViewModel._options.resultsPosition = 'top';
+               let current = ladderViewModel.getCurrent();
+               assert.equal(current.getAdditionalLadderClasses(), ' controls-Grid__row-cell__ladder-spacing_withResults_theme-default', 'wrong classes');
+            });
+            it('without main cell with results', () => {
+               ladderViewModel._model._curIndex = 1;
+               ladderViewModel._header = {};
+               ladderViewModel._options.resultsPosition = 'top';
+               let current = ladderViewModel.getCurrent();
+               assert.equal(current.getAdditionalLadderClasses(), ' controls-Grid__row-cell__ladder-spacing_withHeader_withResults_theme-default', 'wrong classes');
             });
          });
          describe('getLadderContentClasses', () => {
@@ -1572,6 +1592,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {title : '123'},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 0,
+               key: '0-0',
                cellContentClasses: '',
                cellStyles: '',
                itemActionsPosition: undefined,
@@ -1585,6 +1606,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__header-cell-checkbox_theme-default controls-Grid__header-cell-checkbox_min-width_theme-default',
                index: 0,
+               key: '0-0',
                itemActionsPosition: undefined,
                cellContentClasses: '',
                cellStyles: 'grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2;',
@@ -1602,6 +1624,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: gridHeaderClone[0],
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 1,
+               key: '0-1',
                itemActionsPosition: undefined,
                shadowVisibility: 'visible',
                cellContentClasses: '',
@@ -1624,6 +1647,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: gridHeaderClone[1],
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 2,
+               key: '0-2',
                itemActionsPosition: undefined,
                sortingDirection: 'DESC',
                cellContentClasses: " controls-Grid__header-cell_justify_content_right",
@@ -1647,6 +1671,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: gridHeaderClone[2],
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__cell_spacingLeft_theme-default controls-Grid__cell_spacingLastCol_l_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 3,
+               key: '0-3',
                itemActionsPosition: undefined,
                cellContentClasses: ' controls-Grid__header-cell_justify_content_right',
                cellStyles: 'grid-column-start: 4; grid-column-end: 5; grid-row-start: 1; grid-row-end: 2;',
@@ -1701,6 +1726,37 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(column.backgroundStyle, '');
          });
 
+         it('key with/without multiselect', () => {
+            let opts = { ...cfg };
+            let viewModel = new gridMod.GridViewModel(opts);
+            const gridHeaderClone = gridHeader.map(function(obj) {
+               return Object.assign({}, obj);
+            });
+            viewModel._prepareHeaderColumns(gridHeaderClone, false, false, 1);
+
+            let headerRow = viewModel.getCurrentHeaderRow();
+            let column = headerRow.getCurrentHeaderColumn();
+
+            assert.equal(column.key, '0-0');
+            headerRow.goToNextHeaderColumn();
+
+            column =  headerRow.getCurrentHeaderColumn();
+            assert.equal(column.key, '0-1');  
+
+            headerRow.resetHeaderColumns();
+            viewModel._options.multiSelectVisibility = 'hidden';
+            viewModel._prepareHeaderColumns(gridHeaderClone, false, false, 1);
+
+            headerRow = viewModel.getCurrentHeaderRow();
+            column = headerRow.getCurrentHeaderColumn();
+
+            assert.equal(column.key, '0-1');
+            headerRow.goToNextHeaderColumn();
+
+            column =  headerRow.getCurrentHeaderColumn();
+            assert.equal(column.key, '0-2');  
+         });
+
          it('should not add column separator classes on action cell', function () {
             const gridHeaderClone = gridHeader.map(function(obj) {
                return Object.assign({}, obj);
@@ -1738,6 +1794,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   column: {},
                   cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__header-cell-checkbox_theme-default controls-Grid__header-cell-checkbox_min-width_theme-default',
                   index: 0,
+                  key: '0-0',
                   itemActionsPosition: undefined,
                   cellContentClasses: '',
                   cellStyles: '',
@@ -1754,6 +1811,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__header-cell-checkbox_theme-default controls-Grid__header-cell-checkbox_min-width_theme-default',
                index: 0,
+               key: '0-0',
                itemActionsPosition: undefined,
                cellContentClasses: '',
                cellStyles: 'grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2;',
@@ -1769,6 +1827,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                column: gridHeaderWithColumns[0],
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 1,
+               key: '0-1',
                itemActionsPosition: undefined,
                shadowVisibility: 'visible',
                cellContentClasses: '',

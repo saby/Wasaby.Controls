@@ -335,13 +335,17 @@ let
 
       notifyScrollEvents(self, scrollTop) {
          self._notify('scroll', [scrollTop]);
-         const eventCfg = {
-             type: 'scroll',
-             target: self._children.content,
-             currentTarget: self._children.content,
-             _bubbling: false
-         };
-         self._children.scrollDetect.start(new SyntheticEvent(null, eventCfg), scrollTop);
+         // Перед уничтожением скролл контейнера уничтожается dragnDrop/Container, который нотифает событие
+         // окончания драга, в этот момент scrollDetect (как и scrollWatcher) уже уничтожен.
+         if (self._children.scrollDetect) {
+            const eventCfg = {
+            type: 'scroll',
+            target: self._children.content,
+            currentTarget: self._children.content,
+            _bubbling: false
+            };
+            self._children.scrollDetect.start(new SyntheticEvent(null, eventCfg), scrollTop);
+         }
       },
 
        calcCanScroll(scrollType: string, self: Control): boolean {
