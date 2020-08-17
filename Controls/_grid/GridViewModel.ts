@@ -1617,8 +1617,10 @@ var
                 let result = '';
                 if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
+                    const hasHeader = !!self.getHeader();
+                    const hasTopResults = self.getResultsPosition() === 'top';
                     if (!hasMainCell) {
-                        result += ' controls-Grid__row-cell__ladder-spacing_theme-' + current.theme;
+                        result += ` controls-Grid__row-cell__ladder-spacing${hasHeader ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}_theme-${current.theme}`;
                     }
                 }
                 return result;

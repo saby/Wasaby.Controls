@@ -1404,12 +1404,32 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             it('with main cell', () => {
                ladderViewModel._model._curIndex = 0;
                let current = ladderViewModel.getCurrent();
-               assert.equal(current.getAdditionalLadderClasses(),'','wrong classes');
+               assert.equal(current.getAdditionalLadderClasses(), '', 'wrong classes');
             });
-            it('with main cell', () => {
+            it('without main cell', () => {
                ladderViewModel._model._curIndex = 1;
                let current = ladderViewModel.getCurrent();
-               assert.equal(current.getAdditionalLadderClasses(),' controls-Grid__row-cell__ladder-spacing_theme-default','wrong classes');
+               assert.equal(current.getAdditionalLadderClasses(), ' controls-Grid__row-cell__ladder-spacing_theme-default', 'wrong classes');
+            });
+            it('without main cell with header', () => {
+               ladderViewModel._model._curIndex = 1;
+               ladderViewModel._header = {};
+               let current = ladderViewModel.getCurrent();
+               assert.equal(current.getAdditionalLadderClasses(), ' controls-Grid__row-cell__ladder-spacing_withHeader_theme-default', 'wrong classes');
+            });
+            it('without main cell with results', () => {
+               ladderViewModel._model._curIndex = 1;
+               ladderViewModel._header = null;
+               ladderViewModel._options.resultsPosition = 'top';
+               let current = ladderViewModel.getCurrent();
+               assert.equal(current.getAdditionalLadderClasses(), ' controls-Grid__row-cell__ladder-spacing_withResults_theme-default', 'wrong classes');
+            });
+            it('without main cell with results', () => {
+               ladderViewModel._model._curIndex = 1;
+               ladderViewModel._header = {};
+               ladderViewModel._options.resultsPosition = 'top';
+               let current = ladderViewModel.getCurrent();
+               assert.equal(current.getAdditionalLadderClasses(), ' controls-Grid__row-cell__ladder-spacing_withHeader_withResults_theme-default', 'wrong classes');
             });
          });
          describe('getLadderContentClasses', () => {

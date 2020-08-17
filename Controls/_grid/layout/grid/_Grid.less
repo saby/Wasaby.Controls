@@ -408,6 +408,21 @@
    top: @item_line-height_l_grid !important;
    height: 0;
 }
+
+.controls-Grid__row-cell__ladder-spacing_withHeader_theme-@{themeName} {
+   top: @item_line-height_l_grid + @header_cell_min-height_grid !important;
+   height: 0;
+}
+
+.controls-Grid__row-cell__ladder-spacing_withResults_theme-@{themeName} {
+   top: @item_line-height_l_grid + @results_cell_min-height_grid !important;
+   height: 0;
+}
+
+.controls-Grid__row-cell__ladder-spacing_withHeader_withResults_theme-@{themeName} {
+   top: @item_line-height_l_grid + @header_cell_min-height_grid + @results_cell_min-height_grid !important;
+   height: 0;
+}
 .controls-Grid__cell-content-wrapper_ladder {
    align-items: baseline;
    position: absolute;
