@@ -5392,6 +5392,18 @@ define([
             lists.BaseControl._private.onListChange(baseControl, {}, 'collectionChanged', 'a', [item], null, [], 0);
             assert.isTrue(item.isMarked());
          });
+
+         it('restore marker on add', () => {
+            baseControl.setMarkedKey(1);
+            const item = baseControl.getViewModel().getItemBySourceKey(1);
+            assert.isTrue(item.isMarked());
+
+            lists.BaseControl._private.onListChange(baseControl, {}, 'collectionChanged', 'rm', [], null, [item], 0);
+            assert.isFalse(item.isMarked());
+
+            lists.BaseControl._private.onListChange(baseControl, {}, 'collectionChanged', 'a', [item], null, [], 0);
+            assert.isTrue(item.isMarked());
+         });
       });
 
       it('onCollectionChanged call selectionController methods', () => {
