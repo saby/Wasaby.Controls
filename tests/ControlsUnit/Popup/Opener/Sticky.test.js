@@ -101,18 +101,18 @@ define(
             cfg.popupOptions.target = new UIBase.Control({});
             cfg.popupOptions.target._container = '123';
             assert.equal(cfg.popupOptions.target._container,
-               StickyController._private.getTargetNode(cfg));
+               StickyController.constructor._getTargetNode(cfg));
             cfg.popupOptions.target.destroy();
 
             //Тестируем: передаем в опцию target domNode
             cfg.popupOptions.target = '222';
             assert.equal(cfg.popupOptions.target,
-               StickyController._private.getTargetNode(cfg));
+               StickyController.constructor._getTargetNode(cfg));
 
             //Тестируем: передаем не контрол и не domNode
             cfg.popupOptions.target = null;
             assert.equal(document && document.body,
-               StickyController._private.getTargetNode(cfg));
+               StickyController.constructor._getTargetNode(cfg));
          });
 
          it('Sticky updated classes', () => {
