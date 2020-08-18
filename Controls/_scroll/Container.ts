@@ -1294,6 +1294,8 @@ let
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
             this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
          }
+         // Виртуальный скролл взаимодействует только с ближайшим родительским скролл контейнером.
+         e.stopImmediatePropagation();
       },
 
       _scrollToElement(event: SyntheticEvent<Event>, { itemContainer, toBottom, force }): void {
