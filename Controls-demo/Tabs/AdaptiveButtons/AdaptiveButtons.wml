@@ -5,7 +5,7 @@
             <Controls.tabs:AdaptiveButtons
                     bind:selectedKey='SelectedKey1'
                     keyProperty="id"
-                    containerWidth="{{200}}"
+                    containerWidth="{{_containerWidth}}"
                     items="{{_items}}"
                     align="right"
             />
@@ -17,7 +17,7 @@
             <Controls.tabs:AdaptiveButtons
                     bind:selectedKey='SelectedKey1'
                     keyProperty="id"
-                    containerWidth="{{200}}"
+                    containerWidth="{{_containerWidth}}"
                     items="{{_items2}}"
                     align="left"
             />

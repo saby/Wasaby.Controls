@@ -6,13 +6,19 @@ import {Model} from 'Types/entity';
 import {SbisService} from 'Types/source';
 import {IItems} from 'Controls/interface';
 import {IAdaptiveTabs, IAdaptiveTabsOptions} from './interface/IAdaptiveTabs';
-import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import {getFontWidth} from 'Controls/Utils/getFontWidth';
 
 import TabButtonsTpl = require('wml!Controls/_tabs/FlexButtons/FlexButtons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
+import {default as Base} from './Base';
 
-export default class AdaptiveButtons extends Control<IAdaptiveTabsOptions> implements IAdaptiveTabs, IItems {
+interface IReceivedState {
+    items: RecordSet;
+    itemsOrder: number[];
+    lastRightOrder: number;
+}
+
+export default class AdaptiveButtons extends Base implements IAdaptiveTabs, IItems {
 
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
     readonly '[Controls/_interface/IItems]': boolean = true;
@@ -21,7 +27,6 @@ export default class AdaptiveButtons extends Control<IAdaptiveTabsOptions> imple
     protected _defaultItemTemplate: TemplateFunction = ItemTemplate;
     private _itemsOrder: number[];
     private _lastRightOrder: number;
-    private _items: RecordSet;
     private _crudWrapper: CrudWrapper;
     protected _lastIndex: number = 0;
     protected _displayProperty: string = 'title';
@@ -144,53 +149,25 @@ export default class AdaptiveButtons extends Control<IAdaptiveTabsOptions> imple
         this._margin = 13;
         this._minWidth = 26;
         this._paddingOfMore = 6;
-
-        // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
-        if (receivedState && !AdaptiveButtons._checkHasFunction(receivedState)) {
-            this._prepareState(receivedState);
-        } else if (options.items) {
-            const itemsData = this._prepareItems(options.items);
-            this._prepareState(itemsData);
-
-            // заполняем items
-
-        } else if (options.source) {
-            return this._initItems(options.source).then((result: IReceivedState) => {
-                this._prepareState(result);
-                return result;
+        const result = this._prepareBeforeMountItems(options, receivedState);
+        if (result) {
+            result.then(() => {
+                this._originalSource = this._items.clone();
+                this._deleteHiddenItems(this._items);
             });
+        } else {
+            this._originalSource = this._items.clone();
+            this._deleteHiddenItems(this._items);
         }
-    }
-
-    protected _afterMount(options?: IAdaptiveTabsOptions, contexts?: any): void {
-        RegisterUtil(this, 'controlResize', this._onResize.bind(this));
     }
 
     protected _beforeUpdate(newOptions: IAdaptiveTabsOptions): void {
-        if (newOptions.source && newOptions.source !== this._options.source) {
-            this._initItems(newOptions.source).then((result) => {
-                this._prepareState(result);
-            });
-        }
-        if (newOptions.items && newOptions.items !== this._options.items) {
-            const itemsData = this._prepareItems(newOptions.items);
-            this._prepareState(itemsData);
-        }
-    }
-
-    protected _beforeUnmount(): void {
-        UnregisterUtil(this, 'controlResize');
-    }
-
-    private _onResize(): void {
-        if (this._containerWidth !== this._container.clientWidth) {
+        this._prepareBeforeUpdateItems(newOptions);
+        if (newOptions.containerWidth !== this._containerWidth) {
             this._containerWidth = this._container.clientWidth;
             const items = this._originalSource.clone();
             this._deleteHiddenItems(items);
         }
-    }
-    protected _onItemClick(event: Event, key: string): void {
-        this._notify('selectedKeyChanged', [key]);
     }
 
     protected _prepareItemClass(item: Model, index: number): string {
@@ -237,112 +214,7 @@ export default class AdaptiveButtons extends Control<IAdaptiveTabsOptions> imple
         return classes.join(' ');
     }
 
-    protected _prepareItemSelectedClass(item: Model): string {
-        const classes = [];
-        const options = this._options;
-        const style = AdaptiveButtons._prepareStyle(options.style);
-        if (item.get(options.keyProperty) === options.selectedKey) {
-            classes.push(`controls-Tabs_style_${style}__item_state_selected ` +
-                `controls-Tabs_style_${style}__item_state_selected_theme_${options.theme}`);
-            classes.push('controls-Tabs__item_state_selected ' +
-                `controls-Tabs__item_state_selected_theme_${options.theme}`);
-        } else {
-            classes.push('controls-Tabs__item_state_default controls-Tabs__item_state_default_theme_' + options.theme);
-        }
-        return classes.join(' ');
-    }
-
-    protected _prepareItemOrder(index: number): string {
-        const order = this._itemsOrder[index];
-        return '-ms-flex-order:' + order + '; order:' + order;
-    }
-
-    protected _getTemplate(template: TemplateFunction, item: Model, itemTemplateProperty: string): TemplateFunction {
-        if (itemTemplateProperty) {
-            const templatePropertyByItem = item.get(itemTemplateProperty);
-            if (templatePropertyByItem) {
-                return templatePropertyByItem;
-            }
-        }
-        return template;
-    }
-
-    private _prepareItems(items: RecordSet): IReceivedState {
-        let leftOrder: number = 1;
-        let rightOrder: number = 30;
-        const itemsOrder: number[] = [];
-
-        items.each((item: Model) => {
-            if (item.get('align') === 'left') {
-                itemsOrder.push(leftOrder++);
-            } else {
-                itemsOrder.push(rightOrder++);
-            }
-        });
-
-        // save last right order
-        rightOrder--;
-        this._lastRightOrder = rightOrder;
-
-        return {
-            items,
-            itemsOrder,
-            lastRightOrder: rightOrder
-        };
-    }
-
-    private _initItems(source: SbisService): Promise<IReceivedState> {
-        this._crudWrapper = new CrudWrapper({
-            source
-        });
-        return this._crudWrapper.query({}).then((items: RecordSet) => {
-            return this._prepareItems(items);
-        });
-    }
-
-    private _prepareState(data: IReceivedState): void {
-        this._items = data.items;
-        this._originalSource = data.items.clone();
-        this._deleteHiddenItems(this._items);
-        this._itemsOrder = data.itemsOrder;
-        this._lastRightOrder = data.lastRightOrder;
-    }
-
     static _theme: string[] = ['Controls/tabs'];
-
-    static _prepareStyle(style: string): string {
-        if (style === 'default') {
-            // 'Tabs/Buttons: Используются устаревшие стили. Используйте style = primary вместо style = default'
-            return 'primary';
-        } else if (style === 'additional') {
-            // Tabs/Buttons: Используются устаревшие стили. Используйте style = secondary вместо style = additional'
-            return 'secondary';
-        } else {
-            return style;
-        }
-    }
-
-    static _checkHasFunction(receivedState: IReceivedState): boolean {
-        // Функции, передаваемые с сервера на клиент в receivedState, не могут корректно десериализоваться.
-        // Поэтому, если есть функции в receivedState, заново делаем запрос за данными.
-        // Ошибку выводит ядро
-        if (receivedState?.items?.getCount) {
-            const count = receivedState.items.getCount();
-            for (let i = 0; i < count; i++) {
-                const item = receivedState.items.at(i);
-                const value = cInstance.instanceOfModule(item, 'Types/entity:Record') ? item.getRawData() : item;
-                for (const key in value) {
-                    // При рекваере шаблона, он возвращает массив, в 0 индексе которого лежит объект с функцией
-                    if (typeof value[key] === 'function' ||
-                        value[key] instanceof Array && typeof value[key][0].func === 'function') {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
 
     static getDefaultOptions(): IAdaptiveTabsOptions {
         return {

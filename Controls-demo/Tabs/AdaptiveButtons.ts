@@ -1,12 +1,15 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {RecordSet} from 'Types/collection';
 import template = require('wml!Controls-demo/Tabs/AdaptiveButtons/AdaptiveButtons');
+import {IAdaptiveTabsOptions} from "../../Controls/_tabs/interface/IAdaptiveTabs";
+import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 
 export default class TabButtonsDemo extends Control {
     protected _template: TemplateFunction = template;
     protected SelectedKey1: string = '1';
     protected _items: RecordSet | null = null;
     protected _items2: RecordSet | null = null;
+    protected _containerWidth: number = 200;
     protected _beforeMount(): void {
         this._items = new RecordSet({
             keyProperty: 'id',
@@ -135,6 +138,19 @@ export default class TabButtonsDemo extends Control {
                 }
             ]
         });
+    }
+
+    protected _afterMount(options?: IAdaptiveTabsOptions, contexts?: any): void {
+        RegisterUtil(this, 'controlResize', this._onResize.bind(this));
+    }
+    protected _beforeUnmount(): void {
+        UnregisterUtil(this, 'controlResize');
+    }
+
+    private _onResize(): void {
+        if (this._container.clientWidth !== this._containerWidth) {
+            this._containerWidth = this._container.clientWidth;
+        }
     }
 
     static _styles: string[] = ['Controls-demo/Tabs/Buttons/Buttons', 'Controls-demo/Controls-demo'];
