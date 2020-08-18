@@ -25,6 +25,7 @@ import {TouchContextField} from 'Controls/context';
 import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
+import {TNavigationDirection} from 'Controls/_interface/INavigation';
 import { Sticky } from 'Controls/popup';
 import {editing as constEditing} from 'Controls/Constants';
 
@@ -62,7 +63,7 @@ import {IEditingOptions, EditInPlace} from '../editInPlace';
 
 import {default as ScrollController, IScrollParams} from './ScrollController';
 
-import {groupUtil} from 'Controls/dataSource';
+import {groupUtil, NewSourceController} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
 import {CssClassList} from '../Utils/CssClassList';
 import {
@@ -501,18 +502,27 @@ const _private = {
         }
     },
 
-    hasMoreData(self, sourceController, direction): boolean {
+    resolveDirectionForSourceController(direction?: 'up'|'down'): TNavigationDirection {
+        let result;
+        switch (direction) {
+            case 'up': result = 'backward'; break;
+            case 'down': result = 'forward'; break;
+        }
+        return result;
+    },
+
+    hasMoreData(self, sourceController: NewSourceController, direction: 'up' | 'down'): boolean {
         let moreDataResult = false;
 
         if (sourceController) {
             moreDataResult = self._options.getHasMoreData ?
                 self._options.getHasMoreData(sourceController, direction) :
-                sourceController.hasMoreData(direction);
+                sourceController.hasMoreData(_private.resolveDirectionForSourceController(direction));
         }
         return moreDataResult;
     },
 
-    hasMoreDataInAnyDirection(self, sourceController): boolean {
+    hasMoreDataInAnyDirection(self, sourceController: NewSourceController): boolean {
         return _private.hasMoreData(self, sourceController, 'up') ||
             _private.hasMoreData(self, sourceController, 'down');
     },
@@ -725,7 +735,7 @@ const _private = {
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
-            return self._sourceController.load(filter, self._options.sorting, direction, null, self._options.root).addCallback(function(addedItems) {
+            return self._sourceController.load(direction, null, self._options.root).addCallback(function(addedItems) {
                 // TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 // до реализации функционала и проблемы из новости делаем решение по месту:
                 // посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
@@ -1773,13 +1783,15 @@ const _private = {
         return pagingLabelData;
     },
 
-    getSourceController({source, navigation, keyProperty}: {source: ICrud, navigation: object, keyProperty: string}, queryParamsCallback): SourceController {
-        return new SourceController({
+    getSourceController(bcOptions, queryParamsCallback): NewSourceController {
+        /*return new SourceController({
             source,
             navigation,
             keyProperty,
             queryParamsCallback
-        });
+        });*/
+
+        return new NewSourceController(bcOptions);
     },
 
     checkRequiredOptions(options) {
@@ -2791,7 +2803,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (newOptions.source) {
                 self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
-                    self._sourceController.calculateState(receivedData);
+                    self._sourceController.setItems(receivedData);
                     _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                     if (newOptions.useNewModel) {

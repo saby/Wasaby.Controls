@@ -5,9 +5,13 @@ import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interfac
 import {RecordSet} from 'Types/collection';
 import {Logger} from 'UI/Utils';
 import {QueryOrderSelector, QueryWhereExpression, PrefetchProxy} from 'Types/source';
+import {CancelablePromise} from 'Types/entity';
 import {IQueryParams} from 'Controls/_interface/IQueryParams';
 import {default as groupUtil} from './GroupUtil';
 import {isEqual} from 'Types/object';
+import {TNavigationDirection} from 'Controls/_interface/INavigation';
+
+type TKey = string | number | null; // TODO общий тип
 
 export interface IControlerState {
     keyProperty: string;
@@ -48,11 +52,15 @@ export default class Controller {
     private _navigationController: NavigationController;
     private _items: RecordSet;
 
+    // TODO это свойство уберется после задачи
+    // https://online.sbis.ru/opendoc.html?guid=8b420e26-408a-4a45-9921-cc858d83a64a
+    private _loader: CancelablePromise<RecordSet>;
+
     constructor(cfg: IControllerOptions) {
         this._options = cfg;
         this._filter = cfg.filter;
     }
-    load(): Promise<RecordSet> {
+    load(direction?: TNavigationDirection, id: TKey = null): Promise<RecordSet> {
         if (this._options.source) {
             // todo можно передавать меньше опций здесь, просто из-за совместимости юзается 4 опции для групп вместо 2х
             return Controller._getFilterForCollapsedGroups(this._filter, this._options).then((filter) => {
@@ -68,16 +76,24 @@ export default class Controller {
                     params = navigationController.getQueryParams({
                         filter: params.filter,
                         sorting: params.sorting
-                    });
+                    }, id, undefined, direction);
                 }
-                return crudWrapper.query(params, this._options.keyProperty).then((result) => {
+                this._loader = crudWrapper.query(params, this._options.keyProperty).then((result) => {
                     if (result instanceof Error) {
                         if (this._options.dataLoadErrback instanceof Function) {
                             this._options.dataLoadErrback(result);
                         }
+                    } else {
+                        if (this._options.navigation) {
+                            const navigationController = this._getNavigationController(this._options.navigation);
+                            navigationController.updateQueryProperties(result, id, undefined, direction);
+                        }
                     }
                     return result;
+                }).catch((error) => {
+                    return error;
                 });
+                return this._loader;
             });
         } else {
             Logger.error('source/Controller: Source option has incorrect type');
@@ -85,8 +101,22 @@ export default class Controller {
         }
     }
 
+    hasMoreData(direction: TNavigationDirection, id: TKey = null): boolean {
+        let result = false;
+        if (this._navigationController) {
+            result = this._navigationController.hasMoreData(direction, id);
+        }
+        return result;
+    }
+
     setItems(items: RecordSet): RecordSet {
         this._items = items;
+
+        if (this._options.navigation) {
+            const navigationController = this._getNavigationController(this._options.navigation);
+            navigationController.updateQueryProperties(items);
+        }
+
         return this._items;
     }
 
@@ -137,6 +167,19 @@ export default class Controller {
                 }
             });
         }
+    }
+
+    // TODO этот метод уберется после задачи
+    //  https://online.sbis.ru/opendoc.html?guid=8b420e26-408a-4a45-9921-cc858d83a64a
+    isLoading(): boolean {
+        return this._loader && !this._loader.isReady();
+    }
+
+    cancelLoading(): void {
+        if (this._loader && !this._loader.isReady()) {
+            this._loader.cancel();
+        }
+        this._loader = null;
     }
 
     private _getCrudWrapper(sourceOption: ICrud): CrudWrapper {
