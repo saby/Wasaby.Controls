@@ -1210,148 +1210,12 @@ define([
          });
       });
 
-      it('moveMarkerToNext && moveMarkerToPrevious', async function() {
-         var
-            cfg = {
-               viewModelConstructor: lists.ListViewModel,
-               keyProperty: 'key',
-               source: new sourceLib.Memory({
-                  keyProperty: 'key',
-                  data: [{
-                     key: 1
-                  }, {
-                     key: 2
-                  }, {
-                     key: 3
-                  }]
-               }),
-               markedKey: 2
-            },
-            baseControl = new lists.BaseControl(cfg),
-            moveMarkerToNextCalled = false,
-            moveMarkerToPrevCalled = false,
-            originalScrollToItem = lists.BaseControl._private.scrollToItem,
-            originalCreateMarkerController = lists.BaseControl._private.createMarkerController;
-         lists.BaseControl._private.scrollToItem = function() {};
-         lists.BaseControl._private.createMarkerController = function() {
-            return {
-               setMarkedKey(key) { baseControl._listViewModel.setMarkedKey(key) },
-               moveMarkerToNext() { moveMarkerToNextCalled = true; },
-               moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
-               handleRemoveItems() {},
-               update() {},
-               restoreMarker() {},
-               getMarkedKey() {}
-            };
-         };
-         baseControl.saveOptions(cfg);
-         await baseControl._beforeMount(cfg);
-         assert.equal(baseControl._listViewModel.getMarkedKey(), null);
-         baseControl._onViewKeyDown({
-            target: {
-               closest: function() {
-                  return false;
-               }
-            },
-            stopImmediatePropagation: function() {
-            },
-            nativeEvent: {
-               keyCode: Env.constants.key.down
-            },
-            preventDefault: function() {
-            },
-         });
-         assert.isTrue(moveMarkerToNextCalled);
-         baseControl._onViewKeyDown({
-            target: {
-               closest: function() {
-                  return false;
-               }
-            },
-            stopImmediatePropagation: function() {
-            },
-            nativeEvent: {
-               keyCode: Env.constants.key.up
-            },
-            preventDefault: function() {
-            },
-         });
-         assert.isTrue(moveMarkerToPrevCalled);
-
-         lists.BaseControl._private.scrollToItem = originalScrollToItem;
-         lists.BaseControl._private.createMarkerController = originalCreateMarkerController;
-      });
-
-      it('moveMarker activates the control', async function() {
-         const
-            cfg = {
-               viewModelConstructor: lists.ListViewModel,
-               keyProperty: 'key',
-               source: new sourceLib.Memory({
-                  idProperty: 'key',
-                  data: [{
-                     key: 1
-                  }, {
-                     key: 2
-                  }, {
-                     key: 3
-                  }]
-               }),
-               markedKey: 2
-            },
-            baseControl = new lists.BaseControl(cfg),
-            originalScrollToItem = lists.BaseControl._private.scrollToItem,
-            originalCreateMarkerController = lists.BaseControl._private.createMarkerController;
-
-         lists.BaseControl._private.scrollToItem = function() {};
-         lists.BaseControl._private.createMarkerController = function() {
-            return {
-               setMarkedKey(key) { baseControl._listViewModel.setMarkedKey(key) },
-               moveMarkerToNext() { moveMarkerToNextCalled = true; },
-               moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
-               handleRemoveItems() {},
-               update() {},
-               restoreMarker() {},
-               getMarkedKey() {}
-            };
-         };
-
-         baseControl.saveOptions(cfg);
-         await baseControl._beforeMount(cfg);
-
-         let isActivated = false;
-         baseControl.activate = () => {
-            isActivated = true;
-         };
-
-         baseControl._mounted = true; // fake mounted for activation
-
-         baseControl._onViewKeyDown({
-            target: {
-               closest: function() {
-                  return false;
-               }
-            },
-            stopImmediatePropagation: function() {
-            },
-            nativeEvent: {
-               keyCode: Env.constants.key.down
-            },
-            preventDefault: function() {
-            },
-         });
-
-         lists.BaseControl._private.scrollToItem = originalScrollToItem;
-         lists.BaseControl._private.createMarkerController = originalCreateMarkerController;
-      });
-
       describe('moveMarker', () => {
          let cfg = {
             viewName: 'Controls/List/ListView',
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
             markerVisibility: 'visible',
-            markedKey: 1,
             selectedKeys: [1],
             excludedKeys: [],
             markedKey: 2,
@@ -1394,16 +1258,20 @@ define([
 
          it ('moveMarkerToNext', () => {
             lists.BaseControl._private.moveMarkerToNext(instance, event);
-            assert.isTrue(activateCalled);
-            assert.isTrue(preventDefaultCalled);
-            assert.isTrue(notifySpy.withArgs('markedKeyChanged', [3]).called);
+            setTimeout(() => {
+               assert.isTrue(activateCalled);
+               assert.isTrue(preventDefaultCalled);
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [3]).called);
+            }, 10);
          });
 
          it ('moveMarkerToPrev', () => {
             lists.BaseControl._private.moveMarkerToPrevious(instance, event);
-            assert.isTrue(activateCalled);
-            assert.isTrue(preventDefaultCalled);
-            assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            setTimeout(() => {
+               assert.isTrue(activateCalled);
+               assert.isTrue(preventDefaultCalled);
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            }, 10);
          });
       });
 
