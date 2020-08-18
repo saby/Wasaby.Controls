@@ -53,11 +53,6 @@ class Popup extends Control<IPopupControlOptions> {
 
     protected _isEscDown: boolean = false;
 
-    // _moduleName is assign in the callback of require.
-    // Private modules are not visible for this mechanism,
-    // _moduleName must be specified manually for them.
-    // It is necessary for checking relationship between popups.
-    protected _moduleName: string = 'Controls/_popup/Manager/Popup';
     private _resizeRegister: RegisterClass;
     private _isDragStarted: boolean;
 
@@ -334,5 +329,14 @@ class Popup extends Control<IPopupControlOptions> {
         };
     }
 }
+
+// _moduleName is assign in the callback of require.
+// Private modules are not visible for this mechanism,
+// _moduleName must be specified manually for them.
+// It is necessary for checking relationship between popups.
+// Значение теперь нужно присваивать до выполнения конструктора.
+Object.assign(Popup.prototype, {
+    _moduleName: 'Controls/_popup/Manager/Popup'
+});
 
 export default Popup;
