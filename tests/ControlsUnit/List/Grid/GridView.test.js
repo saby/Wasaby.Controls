@@ -141,10 +141,10 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
          gridView._listModel = listModel;
 
          assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default controls-GridView__footer__itemActionsV_outside_theme-default');
-         
+
          editingItemData = null;
          assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default');
-         
+
          count = 10;
          assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default controls-GridView__footer__itemActionsV_outside_theme-default');
       });
@@ -450,9 +450,10 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
          let gridView;
          let cfg;
          let contentContainer;
+         let tempCfg;
 
          beforeEach(() => {
-            const tempCfg = {
+            tempCfg = {
                multiSelectVisibility: 'visible',
                columnScroll: true,
                columns: [
@@ -644,6 +645,31 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                   assert.equal(gridView._containerSize, 125);
                   assert.equal(gridView._contentSizeForHScroll, 600);
                });
+            });
+
+            it('should update columnScrollVisibilty in model after editingItemData has changed', () => {
+               const items = new collection.RecordSet({
+                  rawData: [],
+                  keyProperty: 'id'
+               });
+               const listModel = new gridMod.GridViewModel({ ...tempCfg, items });
+               const oldOptions = { ...cfg, listModel };
+               const newOptions = {...cfg, listModel, editingItemData: {id: 1}};
+
+               gridView._beforeMount(oldOptions);
+               gridView.saveOptions(oldOptions);
+               gridView._afterMount();
+               gridView._children.columnScrollContainer = {
+                  getElementsByClassName: (selector) => selector === 'controls-Grid_columnScroll' ? [{offsetWidth: 100, scrollWidth: 200}] : null
+               };
+
+               assert.notExists(gridView._listModel.getColumnScrollVisibility());
+
+               gridView._beforeUpdate(newOptions);
+               gridView.saveOptions(newOptions);
+               gridView._afterUpdate(newOptions);
+
+               assert.isTrue(gridView._listModel.getColumnScrollVisibility());
             });
 
             it('should update column scroll sizes if options has been changed (only once per lifecycle)', () => {
