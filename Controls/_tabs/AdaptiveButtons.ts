@@ -5,14 +5,17 @@ import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {SbisService} from 'Types/source';
 import {IItems} from 'Controls/interface';
-import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
+import {IAdaptiveTabs, IAdaptiveTabsOptions} from './interface/IAdaptiveTabs';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import {getFontWidth} from 'Controls/Utils/getFontWidth';
 
 import TabButtonsTpl = require('wml!Controls/_tabs/FlexButtons/FlexButtons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 
-export default class Base extends Control<ITabsButtonsOptions> {
+export default class AdaptiveButtons extends Control<IAdaptiveTabsOptions> implements IAdaptiveTabs, IItems {
+
+    readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
+    readonly '[Controls/_interface/IItems]': boolean = true;
 
     protected _template: TemplateFunction = TabButtonsTpl;
     protected _defaultItemTemplate: TemplateFunction = ItemTemplate;
@@ -25,6 +28,10 @@ export default class Base extends Control<ITabsButtonsOptions> {
     protected _containerWidth: number;
     protected _originalSource: RecordSet;
     protected _align: string;
+    protected _margin: number;
+    protected _minWidth: number;
+    protected _widthOfMore: number;
+    protected _paddingOfMore: number;
 
     protected _getIndexOfLastTab(items: RecordSet, displayProperty: string, containerWidth: number = 200): Promise<number> {
         // находим индекс последней уместившейся вкладки с учетом текста, отступов и разделителей.
@@ -50,8 +57,7 @@ export default class Base extends Control<ITabsButtonsOptions> {
                 return sum + current;
             }, 0);
 
-            const widthMore = 36;
-            const minWidth = 26 + 26;
+            const minWidth = this._minWidth + this._margin;
             if (indexLast === arrWidth.length - 2) {
                 const width = currentWidth - arrWidth[arrWidth.length - 1] + minWidth;
                 if (width < containerWidth) {
@@ -77,7 +83,7 @@ export default class Base extends Control<ITabsButtonsOptions> {
             width = width - arrWidth[i];
             i--;
         }
-        width = width + 36 + 26 + 26;
+        width = width + this._widthOfMore + this._minWidth + this._margin + this._paddingOfMore;
         indexLast++;
         while (width > containerWidth) {
             indexLast--;
@@ -90,8 +96,14 @@ export default class Base extends Control<ITabsButtonsOptions> {
         // ширина элемента
 
         return getFontWidth(item, 'l').then((res) => {
-            const width = res + 26;
+            const width = res + 2 * this._margin;
             return width;
+        });
+    }
+    protected _getWidthOfMore(title: string = 'Еще```'): Promise<number> {
+        return getFontWidth(title, 'm').then((res) => {
+            this._widthOfMore = res;
+            return res;
         });
     }
 
@@ -107,9 +119,10 @@ export default class Base extends Control<ITabsButtonsOptions> {
     }
 
     private _deleteHiddenItems(items: RecordSet): void {
+        this._getWidthOfMore();
         this._getIndexOfLastTab(items, this._displayProperty, this._containerWidth).then((res) => {
             this._lastIndex = res;
-            let oldRawData = items.getRawData();
+            const oldRawData = items.getRawData();
             if (this._align === 'right') {
                 oldRawData.reverse();
             }
@@ -121,16 +134,19 @@ export default class Base extends Control<ITabsButtonsOptions> {
         });
     }
 
-    protected _beforeMount(options: ITabsButtonsOptions,
+    protected _beforeMount(options: IAdaptiveTabsOptions,
                            context: object,
                            receivedState: IReceivedState): void | Promise<IReceivedState> {
         // для теста
         this._displayProperty = options.displayProperty;
         this._containerWidth = options.containerWidth;
-        this._align = options.align ? options.align : 'left';
+        this._align = options.align ? options.align : 'right';
+        this._margin = 13;
+        this._minWidth = 26;
+        this._paddingOfMore = 6;
 
         // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
-        if (receivedState && !Base._checkHasFunction(receivedState)) {
+        if (receivedState && !AdaptiveButtons._checkHasFunction(receivedState)) {
             this._prepareState(receivedState);
         } else if (options.items) {
             const itemsData = this._prepareItems(options.items);
@@ -146,11 +162,11 @@ export default class Base extends Control<ITabsButtonsOptions> {
         }
     }
 
-    protected _afterMount(options?: ITabsButtonsOptions, contexts?: any): void {
+    protected _afterMount(options?: IAdaptiveTabsOptions, contexts?: any): void {
         RegisterUtil(this, 'controlResize', this._onResize.bind(this));
     }
 
-    protected _beforeUpdate(newOptions: ITabsButtonsOptions): void {
+    protected _beforeUpdate(newOptions: IAdaptiveTabsOptions): void {
         if (newOptions.source && newOptions.source !== this._options.source) {
             this._initItems(newOptions.source).then((result) => {
                 this._prepareState(result);
@@ -169,7 +185,7 @@ export default class Base extends Control<ITabsButtonsOptions> {
     private _onResize(): void {
         if (this._containerWidth !== this._container.clientWidth) {
             this._containerWidth = this._container.clientWidth;
-            let items = this._originalSource.clone();
+            const items = this._originalSource.clone();
             this._deleteHiddenItems(items);
         }
     }
@@ -179,7 +195,7 @@ export default class Base extends Control<ITabsButtonsOptions> {
 
     protected _prepareItemClass(item: Model, index: number): string {
         const order: number = this._itemsOrder[index];
-        const options: ITabsButtonsOptions = this._options;
+        const options: IAdaptiveTabsOptions = this._options;
         const classes: string[] = ['controls-Tabs__item controls-Tabs__item_theme_' + options.theme];
 
         const itemAlign: string = item.get('align');
@@ -224,7 +240,7 @@ export default class Base extends Control<ITabsButtonsOptions> {
     protected _prepareItemSelectedClass(item: Model): string {
         const classes = [];
         const options = this._options;
-        const style = Base._prepareStyle(options.style);
+        const style = AdaptiveButtons._prepareStyle(options.style);
         if (item.get(options.keyProperty) === options.selectedKey) {
             classes.push(`controls-Tabs_style_${style}__item_state_selected ` +
                 `controls-Tabs_style_${style}__item_state_selected_theme_${options.theme}`);
@@ -328,7 +344,7 @@ export default class Base extends Control<ITabsButtonsOptions> {
         return false;
     }
 
-    static getDefaultOptions(): ITabsButtonsOptions {
+    static getDefaultOptions(): IAdaptiveTabsOptions {
         return {
             style: 'primary',
             displayProperty: 'title'
