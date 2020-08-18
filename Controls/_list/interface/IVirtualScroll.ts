@@ -41,5 +41,5 @@ export type IVirtualScrollMode = 'remove' | 'hide';
 
 /**
  * @name Controls/_list/interface/IVirtualScroll#virtualScrollConfig
- * @cfg {IVirtualScrollConfig} Конфигурация виртуального скроллинга. Виртуальный скроллинг работает только при включенной {@link /doc/platform/developmentapl/interface-development/controls/list/list/navigation/ навигации}.
+ * @cfg {IVirtualScrollConfig} Конфигурация виртуального скроллинга. Виртуальный скроллинг работает только при включенной {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/navigation/ навигации}.
  */
