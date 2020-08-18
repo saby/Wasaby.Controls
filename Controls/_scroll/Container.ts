@@ -962,7 +962,12 @@ let
                        this._scrollLeftAfterDragEnd = scrollLeft;
                    }
                }
-               this._children.scrollDetect.start(event, this._scrollTop);
+               // В последнем выполнении _updateScrollState, происходящим перед разрушением контролла,
+               // например, когда выбирается конец периода в календаре и после этого оконо календаря сразу
+               // закрывается, scrollDetect может оказаться уничтоженым.
+               if (this._children.scrollDetect) {
+                   this._children.scrollDetect.start(event, this._scrollTop);
+               }
            }
        },
 
