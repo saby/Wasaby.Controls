@@ -50,7 +50,7 @@ class SliderBase extends Control<ISliderBaseOptions> {
         }
     }
 
-    _onMouseUp(event: SyntheticEvent<MouseEvent>): void {
+    _onDocumentDragEnd(event: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
             this._isDrag = false;
         }
