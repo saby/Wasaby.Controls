@@ -1666,7 +1666,7 @@ var
             current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
 
             if (!GridLayoutUtil.isFullGridSupport()) {
-                current.getRelativeCellWrapperClasses = _private.getRelativeCellWrapperClasses;
+                current.getRelativeCellWrapperClasses = _private.getRelativeCellWrapperClasses.bind(null, current);
             }
 
             current.getCurrentColumnKey = function() {
