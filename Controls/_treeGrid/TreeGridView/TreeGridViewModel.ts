@@ -93,7 +93,7 @@ var
             this._model.setRoot(root);
         },
         setParentProperty(parentProperty: string): void {
-            this._model.setParentProperty.apply(this, arguments);
+            this._model.setParentProperty(parentProperty);
             this._options.parentProperty = parentProperty;
         },
         setHasChildrenProperty(hasChildrenProperty: string): void {
