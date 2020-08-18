@@ -28,7 +28,7 @@ define('Controls/interface/IGroupedGrid', [
     * @default undefined
     * @remark
     * Подробнее о параметрах шаблона Controls/grid:GroupTemplate читайте {@link Controls/grid:GroupTemplate здесь}.
-    * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/grouping/group-template/ здесь}.
+    * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/grouping/basic/#header-group здесь}.
     * @demo Controls-demo/List/Grid/GroupPG
     * @see groupHistoryId
     * @see collapsedGroups
