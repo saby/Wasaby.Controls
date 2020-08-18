@@ -169,7 +169,3 @@
        </ws:for>
    </ws:else>
 </tr>
-
-<ws:if data="{{itemData.nodeFooters.length > 0}}">
-    <ws:partial template="{{ itemData.footerContentTemplate }}" itemData="{{ itemData }}"/>
-</ws:if>
