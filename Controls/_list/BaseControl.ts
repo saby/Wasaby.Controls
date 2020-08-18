@@ -2165,8 +2165,10 @@ const _private = {
             promise = _private.createMarkerController(self, self._options);
         }
         promise.then((controller) => {
-            const newMarkedKey = controller.calculateMarkedKey(key);
-            _private.handleMarkerControllerResult(self, newMarkedKey);
+            if (controller) {
+                const newMarkedKey = controller.calculateMarkedKey(key);
+                _private.handleMarkerControllerResult(self, newMarkedKey);
+            }
         });
     },
 
