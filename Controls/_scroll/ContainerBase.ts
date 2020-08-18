@@ -25,7 +25,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _options: IContainerBaseOptions;
 
     protected _state: IScrollState = {};
-    protected _oldState: IScrollState = null;
+    protected _oldState: IScrollState = {};
 
     private _registrars: any = [];
 
@@ -374,6 +374,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _updateState(newState: IScrollState): boolean {
         let isStateUpdated = false;
         this._oldState = {...this._state};
+        const isInitializing = Object.keys(this._oldState).length === 0;
         Object.keys(newState).forEach((key) => {
             if (this._state[key] !== newState[key]) {
                 this._state[key] = newState[key];
@@ -383,7 +384,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         if (isStateUpdated) {
             this._updateCalculatedState();
         }
-        return isStateUpdated;
+        return !isInitializing && isStateUpdated;
     }
 
     _updateCalculatedState(): void {
