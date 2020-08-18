@@ -5,7 +5,8 @@
             renderSeparatedColumnContent="{{ colspan === false }}"
             expanderIcon="none"
             marker="{{ false }}"
-            attr:class="controls-TreeGrid__row__searchBreadCrumbs {{ itemData.shouldHideColumnSeparator(colspan, isColumnScrollVisible) ? 'controls-Grid__row__searchBreadCrumbs_withoutColumnSeparator' }}"
+            attr:class="controls-TreeGrid__row__searchBreadCrumbs js-controls-ListView__notEditable
+            {{ itemData.shouldHideColumnSeparator(colspan, isColumnScrollVisible) ? 'controls-Grid__row__searchBreadCrumbs_withoutColumnSeparator' }}"
             attr:key="{{ itemData.key }}__breadcrumbs">
     <ws:colspanTemplate>
         <Controls.Container.Async templateName="Controls/breadcrumbs:Path">
