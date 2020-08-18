@@ -1,4 +1,4 @@
-import Config = require('Env/Config');
+import Config = require('EnvConfig/Config');
 import cDeferred = require('Core/Deferred');
 import {Logger} from 'UI/Utils';
 

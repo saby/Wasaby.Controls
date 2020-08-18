@@ -7,7 +7,7 @@ define(
       'Types/collection',
       'Application/Initializer',
       'Application/Env',
-      'Env/Config'
+      'EnvConfig/Config'
    ],
    function(lists, sourceLib, contexts, Deferred, collection, AppInit, AppEnv, Config) {
       describe('Container/Data', function() {
