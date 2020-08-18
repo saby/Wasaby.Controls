@@ -1081,7 +1081,7 @@ const _private = {
         const scrollPagingConfig = {
             scrollParams,
             pagingCfgTrigger: (cfg) => {
-                if (!isEqual(self._pagingCfg, cfg)) {
+                if (!self._attachLoadTopTriggerToNull && !isEqual(self._pagingCfg, cfg)) {
                     self._pagingCfg = cfg;
                     self._forceUpdate();
                 }
@@ -2925,25 +2925,22 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _viewResize(): void {
-        if (!this._mounted) {
-            return;
-        }
-
         if (this._scrollController) {
             this._scrollController.viewResize(this._container);
         }
 
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
-        if (_private.needScrollPaging(this._options.navigation)) {
-            const scrollParams = {
-                scrollHeight: this._viewSize,
-                clientHeight: this._viewPortSize,
-                scrollTop: this._scrollTop
-            };
-
-            _private.updateScrollPagingButtons(this, scrollParams);
-        }
+            if (_private.needScrollPaging(this._options.navigation)) {
+                _private.doAfterUpdate(this, () => {
+                    const scrollParams = {
+                        scrollHeight: this._viewSize,
+                        clientHeight: this._viewPortSize,
+                        scrollTop: this._scrollTop
+                    };
+                    _private.updateScrollPagingButtons(this, scrollParams);
+                });
+            }
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
     },
 
@@ -4111,7 +4108,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: any): void {
-        if (this._scrollController && !this._attachLoadTopTriggerToNull) {
+        if (this._scrollController) {
             this._scrollController.observeScroll(eventName, params);
         }
     },
