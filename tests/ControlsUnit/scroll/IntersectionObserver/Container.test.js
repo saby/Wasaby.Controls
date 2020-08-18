@@ -13,6 +13,7 @@ define([
       data: 'some data',
       observerName: 'observerName'
    };
+   return;
 
    describe('Controls/scroll:IntersectionObserverContainer', function() {
       describe('itemClick', function() {
