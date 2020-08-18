@@ -4,10 +4,11 @@ import * as cInstance from 'Core/core-instance';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {SbisService} from 'Types/source';
-import {IItems} from 'Controls/interface';
-import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
+import {ITabsButtonsOptions} from './interface/ITabsButtons';
 import { constants } from 'Env/Env';
-import {IAdaptiveTabsOptions} from "./interface/IAdaptiveTabs";
+import {IAdaptiveTabsOptions} from './interface/IAdaptiveTabs';
+import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 interface IReceivedState {
     items: RecordSet;
@@ -51,8 +52,10 @@ class Base extends Control<ITabsButtonsOptions> {
         }
     }
 
-    protected _onItemClick(event: Event, key: string): void {
-        this._notify('selectedKeyChanged', [key]);
+    protected _onItemClick(event: SyntheticEvent<MouseEvent>, key: string): void {
+        if (isLeftMouseButton(event)) {
+            this._notify('selectedKeyChanged', [key]);
+        }
     }
 
     protected _prepareItemSelectedClass(item: Model): string {
