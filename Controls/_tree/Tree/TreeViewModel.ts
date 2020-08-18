@@ -739,6 +739,9 @@ var
         setParentProperty(parentProperty: string): void {
             if (parentProperty !== this._options.parentProperty) {
                 this._options.parentProperty = parentProperty;
+                if (this._display) {
+                    this._display.setParentProperty(parentProperty);
+                }
             }
         },
         setHasChildrenProperty(hasChildrenProperty: string): void {
