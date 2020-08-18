@@ -279,13 +279,19 @@ var
             return isCellIndexLessTheFixedIndex;
         },
 
-        // Раньше по https://online.sbis.ru/doc/a4b0487a-4bc4-47e4-afce-3340833b1232 тут ещё была проверка на
-        // isColumnScrollVisible, но это приводило к тому, что в некоторых реестрах
-        // z-index всех столбцов формировались до установки isColumnScrollVisible=true как FIXED_HEADER_ZINDEX
-        // и т.к. они были на одном уровне, то возникал кейс по ошибке
-        // https://online.sbis.ru/opendoc.html?guid=42614e54-3ed7-41f4-9d57-a6971df66f9c
+        // Правки здесь выполены по задаче https://online.sbis.ru/doc/a4b0487a-4bc4-47e4-afce-3340833b1232
+        // В этом методе ОБЯЗАТЕЛЬНО нужна проверка на isColumnScrollVisible, иначе в случаях, подобно ошибке
+        // https://online.sbis.ru/opendoc.html?guid=2525593a-46ac-4223-9124-e507659cf85e ломается вёрстка
+        // в реестрах, в которых использовался тот факт, что в таблицах у всех столбцов одинаковые z-index.
+        // Для решения же ошибки https://online.sbis.ru/opendoc.html?guid=42614e54-3ed7-41f4-9d57-a6971df66f9c,
+        // сделаем перерисовку столбцов после установки isColumnScrollVisible
         getHeaderZIndex(params): number {
-            return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+            if (params.isColumnScrollVisible) {
+                return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+            } else {
+                // Пока в таблице нет горизонтального скролла, шапка ен может быть проскролена по горизонтали.
+                return FIXED_HEADER_ZINDEX;
+            }
         },
 
         getColumnScrollCellClasses(params, theme): string {
@@ -1795,6 +1801,10 @@ var
                 // Нужно обновить классы с z-index на всех ячейках
                 this._nextModelVersion();
             }
+        },
+
+        getColumnScrollVisibility(): boolean {
+            return this._options.columnScrollVisibility;
         },
 
         setLadderProperties: function(ladderProperties) {
