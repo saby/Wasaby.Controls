@@ -189,10 +189,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     private _adjustContentMarginsForBlockRender(): void {
-        let computedStyle = getComputedStyle(this._children.content);
-        let marginTop = parseInt(computedStyle.marginTop, 10);
-        let marginRight = parseInt(computedStyle.marginRight, 10);
-        this._scrollbars.adjustContentMarginsForBlockRender(marginTop, marginRight);
+        this._scrollbars.adjustContentMarginsForBlockRender(this._children.content);
     }
 
     protected _draggingChangedHandler(event, dragging): void {
@@ -268,6 +265,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _mouseenterHandler(event) {
+        // Если до mouseenter не вычисляли скроллбар, сделаем это сейчас.
+        this._scrollbars.updateScrollState(this._state);
         if (this._scrollbars.take()) {
             this._notify('scrollbarTaken', [], {bubbling: true});
         }

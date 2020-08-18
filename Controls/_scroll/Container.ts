@@ -962,7 +962,12 @@ let
                        this._scrollLeftAfterDragEnd = scrollLeft;
                    }
                }
-               this._children.scrollDetect.start(event, this._scrollTop);
+               // В последнем выполнении _updateScrollState, происходящим перед разрушением контролла,
+               // например, когда выбирается конец периода в календаре и после этого оконо календаря сразу
+               // закрывается, scrollDetect может оказаться уничтоженым.
+               if (this._children.scrollDetect) {
+                   this._children.scrollDetect.start(event, this._scrollTop);
+               }
            }
        },
 
@@ -1294,6 +1299,8 @@ let
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
             this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
          }
+         // Виртуальный скролл взаимодействует только с ближайшим родительским скролл контейнером.
+         e.stopImmediatePropagation();
       },
 
       _scrollToElement(event: SyntheticEvent<Event>, { itemContainer, toBottom, force }): void {
