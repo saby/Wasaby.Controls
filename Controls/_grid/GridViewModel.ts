@@ -26,6 +26,7 @@ import {
     ANIMATION_STATE,
     CollectionItem
 } from 'Controls/display';
+import {Logger} from 'UI/Utils';
 import {IItemActionsTemplateConfig} from 'Controls/itemActions';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
@@ -798,8 +799,14 @@ var
 
         _prepareColumns(columns: IGridColumn[]): IGridColumn[] {
             const result: IGridColumn[] = [];
-            for (let i = 0; i < columns.length; i++) {
-                result.push(this._prepareCrossBrowserColumn(columns[i]));
+            // проверка нужна, т.к. падают автотесты в разных реестрах
+            // по https://online.sbis.ru/opendoc.html?guid=058c8ec7-598b-413f-a082-59d6d67f0408.
+            if (columns) {
+                for (let i = 0; i < columns.length; i++) {
+                    result.push(this._prepareCrossBrowserColumn(columns[i]));
+                }
+            } else {
+                Logger.warn('You must set "columns" option to make grid work correctly!', this);
             }
             return result;
         },
