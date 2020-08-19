@@ -1125,8 +1125,7 @@ const _private = {
         const scrollPagingConfig = {
             scrollParams,
             pagingCfgTrigger: (cfg) => {
-                if (!self._hideTopTriggerUntilMount &&
-                    !self._needScrollToFirstItem && !isEqual(self._pagingCfg, cfg)) {
+                if (!isEqual(self._pagingCfg, cfg)) {
                     self._pagingCfg = cfg;
                     self._forceUpdate();
                 }
@@ -3092,10 +3091,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
 
         _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
-
-        if (this._scrollController) {
-            this._scrollController.afterMount(container, this._children);
-        }
     },
 
     _updateScrollController(newOptions) {
