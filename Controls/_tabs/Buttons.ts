@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 25.01.2018.
  */
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {CrudWrapper} from 'Controls/dataSource';
 import * as cInstance from 'Core/core-instance';
 import {RecordSet} from 'Types/collection';
@@ -11,10 +11,15 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
 import {IItems} from 'Controls/interface';
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
+import {ITabsButtonsTemplate, ITabsButtonsTemplateOptions} from './interface/ITabsButtonsTemplate';
 import { constants } from 'Env/Env';
 
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
+
+
+export interface ITabsOptions extends ITabsButtonsOptions, ITabsButtonsTemplateOptions {
+}
 
 /**
  * Контрол предоставляет пользователю возможность выбрать между двумя или более вкладками.
@@ -44,8 +49,9 @@ interface IReceivedState {
     lastRightOrder: number;
 }
 
-class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, IItems {
+class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, ITabsButtonsTemplate, IItems {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
+    readonly '[Controls/_tabs/interface/ITabsButtonsTemplate]': boolean = true;
     readonly '[Controls/_interface/IItems]': boolean = true;
 
     protected _template: TemplateFunction = TabButtonsTpl;
@@ -55,7 +61,7 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
     private _items: RecordSet;
     private _crudWrapper: CrudWrapper;
 
-    protected _beforeMount(options: ITabsButtonsOptions,
+    protected _beforeMount(options: ITabsOptions,
                            context: object,
                            receivedState: IReceivedState): void | Promise<IReceivedState> {
         if (receivedState) {
@@ -74,7 +80,7 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
         }
     }
 
-    protected _beforeUpdate(newOptions: ITabsButtonsOptions): void {
+    protected _beforeUpdate(newOptions: ITabsOptions): void {
         if (newOptions.source && newOptions.source !== this._options.source) {
             this._initItems(newOptions.source).then((result) => {
                 this._prepareState(result);
@@ -237,7 +243,7 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
         return false;
     }
 
-    static getDefaultOptions(): ITabsButtonsOptions {
+    static getDefaultOptions(): ITabsOptions {
         return {
             style: 'primary',
             displayProperty: 'title'
