@@ -4,6 +4,7 @@ import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import { isEqual } from 'Types/object';
 import { Map } from 'Types/shim';
+import {RecordSet} from 'Types/collection';
 
 import { saveConfig } from 'Controls/Application/SettingsController';
 import keysHandler = require('Controls/Utils/keysHandler');
@@ -280,12 +281,13 @@ const _private = {
         }
     },
 
-    afterReloadCallback: function(self, options, loadedList) {
+    afterReloadCallback: function(self, options, loadedList: RecordSet) {
         const baseControl = self._children.baseControl;
         const viewModel = baseControl && baseControl.getViewModel();
 
         if (viewModel) {
             const modelRoot = viewModel.getRoot();
+            const isMultiNavigationData = loadedList?.getMetaData().more instanceof RecordSet;
             const root = self._options.root !== undefined ? self._options.root : self._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
             if (self._updateExpandedItemsAfterReload) {
@@ -325,8 +327,15 @@ const _private = {
 
                     if (hasMoreData !== undefined) {
                         hasMore[key] = hasMoreData;
-                        _private.createSourceControllerForNode(self, key, options.source, options.navigation)
-                                .calculateState(loadedList);
+                        const nodeController = _private.createSourceControllerForNode(
+                            self,
+                            key,
+                            options.source,
+                            options.navigation
+                        );
+                        if (isMultiNavigationData) {
+                            nodeController.calculateState(loadedList);
+                        }
                     }
                 });
 
