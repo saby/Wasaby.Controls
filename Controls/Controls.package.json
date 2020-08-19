@@ -43,7 +43,17 @@
 }, {
   "include": [
     "Controls/buttons",
-    "Controls/input"
+    "Controls/input",
+    "Controls/dataSource",
+    "Controls/source"
   ],
   "extendsTo": "page-superbundle.package.js"
+}, {
+  "include": [
+    "Controls/dropdown",
+    "Controls/toolbars",
+    "Controls/tabs",
+    "Controls/Store"
+  ],
+  "extendsTo": "base-superbundle.package.js"
 }]
