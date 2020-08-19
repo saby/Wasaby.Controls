@@ -7,6 +7,7 @@ import {getFontWidth} from 'Controls/Utils/getFontWidth';
 import {SbisService} from 'Types/source';
 import {CrudWrapper} from 'Controls/dataSource';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import * as templateItem from 'wml!Controls/_tabs/Buttons/ItemTemplate';
 
 interface IReceivedState {
     items: RecordSet;
@@ -80,7 +81,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions> implements IT
         }
 
         if (newOptions.containerWidth !== this._containerWidth) {
-            this._containerWidth = this._container.clientWidth;
+            this._containerWidth = newOptions.containerWidth;
             const items = this._originalSource.clone();
             this._deleteHiddenItems(items);
         }

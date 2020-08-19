@@ -1,25 +1,35 @@
 <div class="controls-AdaptiveButtons">
+    <ws:template name="templateMore">
+        <div class="controls-AdaptiveButtons__more controls-AdaptiveButtons__more_theme_{{_options.theme}} controls-AdaptiveButtons__more_align_{{_options.align}}" >
+            <div class="controls-AdaptiveButtons__more__text controls-AdaptiveButtons__more__text_align_{{_options.align}}"
+            >
+                Еще...
+            </div>
+        </div>
+    </ws:template>
     <div class="controls-AdaptiveButtons__wrapper {{_lastIndex < _originalSource.getRawData().length - 1 ? 'controls-AdaptiveButtons__wrapper_incomplete'}} controls-AdaptiveButtons__wrapper_align_{{_options.align}}">
-    <Controls._tabs.Buttons selectedKey="{{_selectedKey}}"
-                               keyProperty="{{_options.keyProperty}}"
-                               items="{{_items}}"
-                               style="{{_options.style}}"
-                               align="{{_options.align}}"
-                               on:selectedKeyChanged="_selectedHandler()">
-
-                               <ws:tabSpaceTemplate attr:class="controls-AdaptiveButtons__wrapper_tabSpaceTemplate">
-                                    <ws:if data="{{_lastIndex < _originalSource.getRawData().length - 1}}">
-                                           <div class="controls-AdaptiveButtons__more controls-AdaptiveButtons__more_theme_{{_options.theme}} controls-AdaptiveButtons__more_align_{{_options.align}}" >
-                                                 <div class="controls-AdaptiveButtons__more__text controls-AdaptiveButtons__more__text_align_{{_options.align}}"
-                                                      style="{{_options.align === 'left' ? 'order: 1' : 'order: 2'}}">
-                                                      Еще...
-                                                  </div>
-                                                  <div class="controls-AdaptiveButtons__more__separator" style="{{_options.align === 'left' ? 'order: 2' : 'order: 1'}}"></div>
-                                           </div>
-                                           </ws:if>
-                                </ws:tabSpaceTemplate>
-
-
-         </Controls._tabs.Buttons>
+        <Controls._tabs.Buttons selectedKey="{{_selectedKey}}"
+                                keyProperty="{{_options.keyProperty}}"
+                                items="{{_items}}"
+                                style="{{_options.style}}"
+                                align="{{_options.align}}"
+                                on:selectedKeyChanged="_selectedHandler()">
+            <ws:itemTemplate>
+                <ws:partial template="wml!Controls/_tabs/Buttons/ItemTemplate"
+                            item="{{itemTemplate.item}}"
+                            attr:class="controls-AdaptiveButtons__item"
+                            displayProperty="title" />
+            </ws:itemTemplate>
+            <ws:itemRightTemplate>
+                <ws:if data="{{_lastIndex < _originalSource.getRawData().length - 1 && itemRightTemplate.index === _items.getRawData().length - 1 && _options.align === 'left'}}">
+                    <ws:partial template="templateMore" />
+                </ws:if>
+            </ws:itemRightTemplate>
+            <ws:itemLeftTemplate>
+                <ws:if data="{{_lastIndex < _originalSource.getRawData().length - 1 && itemLeftTemplate.index === 0 && _options.align === 'right'}}">
+                    <ws:partial template="templateMore" />
+                </ws:if>
+            </ws:itemLeftTemplate>
+        </Controls._tabs.Buttons>
     </div>
 </div>
