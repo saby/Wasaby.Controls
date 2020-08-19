@@ -2681,6 +2681,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                ],
                columnScroll: true
             });
+            model.setColumnScrollVisibility(true);
 
             const current = model.getCurrentResultsColumn();
             assert.equal(current.tableCellStyles, 'min-width: 101px; max-width: 101px;');
