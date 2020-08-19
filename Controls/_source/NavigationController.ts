@@ -229,7 +229,7 @@ export class NavigationController {
             !isEqual(newOptions.navigationConfig, this._navigationConfig)) {
             // при передаче новых опций все сбрасываем
             this._navigationStores.each((navigationStore) => {
-                navigationStore.destroy();
+                navigationStore.store.destroy();
             });
             this._navigationStores = new List();
             this._paramsCalculator.destroy();
@@ -274,7 +274,7 @@ export class NavigationController {
      */
     destroy(): void {
         this._navigationStores.each((navigationStore) => {
-            navigationStore.destroy();
+            navigationStore.store.destroy();
         });
         this._navigationStores = null;
         this._paramsCalculator.destroy();
