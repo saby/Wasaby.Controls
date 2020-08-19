@@ -1,21 +1,21 @@
-import {IControlOptions, TemplateFunction} from 'UI/Base';
-import {SbisService} from 'Types/source';
-import {ISingleSelectableOptions, IItemsOptions} from 'Controls/interface';
-export interface ITabsButtons {
-    readonly '[Controls/_tabs/interface/ITabsButtons]': boolean;
+import {TemplateFunction} from 'UI/Base';
+import {IItemTemplateOptions} from 'Controls/interface';
+export interface ITabsButtonsTemplate {
+    readonly '[Controls/_tabs/interface/ITabsButtonsTemplate]': boolean;
 }
 
 /**
- * Интерфейс для опций контрола вкладок.
- * @interface Controls/_tabs/interface/ITabsButtons
+ * Интерфейс для шаблонных опций контрола вкладок.
+ * @interface Controls/_tabs/interface/ITabsButtonsTemplate
  * @public
- * @author Красильников А.С.
  */
 
-export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableOptions, IItemsOptions<object> {
-    source?: SbisService;
-    style?: string;
-    displayProperty?: string;
+export interface ITabsButtonsTemplateOptions extends IItemTemplateOptions {
+    leftTemplateProperty?: string;
+    rightTemplateProperty?: string;
+    tabSpaceTemplate?: TemplateFunction;
+    itemRightTemplate?: TemplateFunction;
+    itemLeftTemplate?: TemplateFunction;
 }
 
 /**
@@ -65,158 +65,6 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  *       <Controls.buttons:Button .../>
  *       <Controls.buttons:Button .../>
  *    </div>
- * </pre>
- */
-
-/**
- * @typedef {String} Style
- * @variant primary
- * @variant secondary
- */
-
-/**
- * @name Controls/_tabs/interface/ITabsButtons#style
- * @cfg {Style} Стиль отображения вкладок.
- * @default primary
- * @remark
- * Если стандартная тема вам не подходит, вы можете переопределить переменные:
- *
- * * @border-color_Tabs-item_selected_primary
- * * @text-color_Tabs-item_selected_primary
- * * @border-color_Tabs-item_selected_secondary
- * * @text-color_Tabs-item_selected_secondary
- * @example
- * Вкладки с применением стиля 'secondary'.
- * <pre class="brush: html; highlight: [5]">
- * <Controls.tabs:Buttons
- *     bind:selectedKey='_selectedKey'
- *     keyProperty="id"
- *     source="{{_source}}"
- *     style="secondary"/>
- * </pre>
- * Вкладки с применением стиля по умолчанию.
- * <pre class="brush: html;">
- * <Controls.tabs:Buttons
- *     bind:selectedKey="_selectedKey"
- *     keyProperty="id"
- *     source="{{_source}}"/>
- * </pre>
- */
-
-/*
- * @name Controls/_tabs/interface/ITabsButtons#style
- * @cfg {Enum} Tabs buttons display style.
- * @variant primary
- * @variant secondary
- * @default primary
- * @remark
- * If the standard theme does not suit you, you can override the variables:
- * <ul>
- *     <li>@border-color_Tabs-item_selected_primary,</li>
- *     <li>@text-color_Tabs-item_selected_primary,</li>
- *     <li>@border-color_Tabs-item_selected_secondary,</li>
- *     <li>@text-color_Tabs-item_selected_secondary</li>
- * </ul>
- * @example
- * Tabs Buttons has style 'secondary'.
- * <pre>
- *    <Controls.tabs:Buttons
- *       bind:selectedKey='_selectedKey'
- *       keyProperty="id"
- *       source="{{_source}}
- *       style="secondary"
- *       .....
- *    />
- * </pre>
- * Tabs Buttons has default style.
- * <pre>
- *    <Controls.tabs:Buttons
- *       bind:selectedKey='_selectedKey'
- *       keyProperty="id"
- *       source="{{_source}}
- *    />
- * </pre>
- */
-
-/**
- * @name Controls/_tabs/interface/ITabsButtons#source
- * @cfg {Types/source:Base} Объект, реализующий ISource интерфейс для доступа к данным.
- * @default undefined
- * @remark
- * Элементу можно задать свойство align, которое определяет выравнивание вкладок.
- * Если одной из крайних вкладок надо отобразить оба разделителя, слева и справа, то используйте свойство contentTab в значении true.
- * @example
- * На вкладках будут отображаться данные из _source. Первый элемент отображается с выравниванием по левому краю, другие элементы отображаются по умолчанию - справа.
- * <pre class="brush: html; highlight: [4]">
- * <Controls.tabs:Buttons
- *     bind:selectedKey="_selectedKey"
- *     keyProperty="key"
- *     source="{{_source}}" />
- * </pre>
- * <pre class="brush: js; highlight: [5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]">
- * _selectedKey: null,
- * _source: null,
- * _beforeMount: function() {
- *    this._selectedKey: '1',
- *    this._source: new Memory({
- *       keyProperty: 'key',
- *       data: [
- *          {
- *             key: '1',
- *             title: 'Yaroslavl',
- *             align: 'left'
- *          },
- *          {
- *             key: '2',
- *             title: 'Moscow'
- *          },
- *          {
- *             key: '3',
- *             title: 'St-Petersburg'
- *          }
- *       ]
- *    });
- * }
- * </pre>
- * @see items
- */
-
-/*
- * @name Controls/_tabs/interface/ITabsButtons#source
- * @cfg {Types/source:Base} Object that implements ISource interface for data access.
- * @default undefined
- * @remark
- * The item can have an property 'align'. It's determine align of item tab.
- * If item may having both separator, you may using opion contentTab with value true.
- * @example
- * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
- * <pre>
- *    <Controls.tabs:Buttons
- *              bind:selectedKey='_selectedKey'
- *              keyProperty="key"
- *              source="{{_source}}"
- *    />
- * </pre>
- * <pre>
- *    _selectedKey: '1',
- *    _source: new Memory({
- *        keyProperty: 'key',
- *        data: [
- *        {
- *           key: '1',
- *           title: 'Yaroslavl',
- *           align: 'left'
- *        },
- *        {
- *           key: '2',
- *           title: 'Moscow'
- *        },
- *        {
- *           key: '3',
- *           title: 'St-Petersburg'
- *        }
- *        ]
- *    })
  * </pre>
  */
 
