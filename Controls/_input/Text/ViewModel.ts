@@ -6,10 +6,27 @@ import {IText} from 'Controls/decorator';
 interface IViewModelOptions {
     maxLength?: number;
     constraint?: string;
-    convertPunycode: boolean;
+    punycodeToUnicode?: (punycode: string) => string;
 }
 
 class ViewModel extends BaseViewModel<string, IViewModelOptions> {
+    private _punycodeToUnicode(punycode: string): string {
+        const start: number = ViewModel._indexPunycode(punycode);
+
+        if (start === -1) {
+            return punycode;
+        }
+
+        /**
+         * При копировании URL из поисковой строки браузера, в буфер будет помещено значение http[s]://{Punycode}/.
+         * Метод toUnicode взят из публичного ресурса, и не предназначен для преобразования такой строки. Поэтому
+         * разбиваем строку так, чтобы можно было преобразовать только часть с Punycode.
+         */
+        const urlParts: string[] = punycode.match(ViewModel.URL);
+
+        return `${urlParts[1]}${this._options.punycodeToUnicode(urlParts[2])}${urlParts[3]}`;
+    }
+
     protected _convertToDisplayValue(value: string | null): string {
         return value === null ? '' : value;
     }
@@ -20,8 +37,8 @@ class ViewModel extends BaseViewModel<string, IViewModelOptions> {
 
     protected _createText(splitValue: ISplitValue, inputType: IInputType): IText {
         if (inputType === 'insert') {
-            if (this._options.convertPunycode) {
-                splitValue.insert = ViewModel._punycodeToUnicode(splitValue.insert);
+            if (this._options.punycodeToUnicode) {
+                splitValue.insert = this._punycodeToUnicode(splitValue.insert);
             }
             if (this._options.constraint) {
                 ViewModel._limitChars(splitValue, this._options.constraint);
@@ -46,23 +63,6 @@ class ViewModel extends BaseViewModel<string, IViewModelOptions> {
     private static _limitLength(splitValue: ISplitValue, maxLength: number): void {
         const maxInsertionLength: number = maxLength - splitValue.before.length - splitValue.after.length;
         splitValue.insert = splitValue.insert.substring(0, maxInsertionLength);
-    }
-
-    private static _punycodeToUnicode(punycode: string): string {
-        const start: number = ViewModel._indexPunycode(punycode);
-
-        if (start === -1) {
-            return punycode;
-        }
-
-        /**
-         * При копировании URL из поисковой строки браузера, в буфер будет помещено значение http[s]://{Punycode}/.
-         * Метод toUnicode взят из публичного ресурса, и не предназначен для преобразования такой строки. Поэтому
-         * разбиваем строку так, чтобы можно было преобразовать только часть с Punycode.
-         */
-        const urlParts: string[] = punycode.match(ViewModel.URL);
-
-        return `${urlParts[1]}${Punycode.toUnicode(urlParts[2])}${urlParts[3]}`;
     }
 
     private static _indexPunycode(code: string): number {
