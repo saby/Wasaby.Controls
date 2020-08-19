@@ -2291,27 +2291,43 @@ define([
             lists.BaseControl._private.handleListScrollSync(ctrl, 600);
 
             assert.deepEqual({
-               backwardEnabled: true,
-               forwardEnabled: false
+                arrowState: {
+                    begin: "visible",
+                    end: "readonly",
+                    next: "readonly",
+                    prev: "visible"
+                }
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
-               backwardEnabled: true,
-               forwardEnabled: true
+                arrowState: {
+                    begin: "visible",
+                    end: "visible",
+                    next: "visible",
+                    prev: "visible"
+                }
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
             ctrl._pagingVisible = true;
             ctrl._abortSearch();
             assert.deepEqual({
-               backwardEnabled: true,
-               forwardEnabled: false
+                arrowState: {
+                    begin: "visible",
+                    end: "readonly",
+                    next: "readonly",
+                    prev: "visible"
+                }
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
-               backwardEnabled: true,
-               forwardEnabled: false
+                arrowState: {
+                    begin: "visible",
+                    end: "readonly",
+                    next: "readonly",
+                    prev: "visible"
+                }
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
             lists.BaseControl._private.getPortionedSearch(ctrl).reset();
 
@@ -2319,8 +2335,12 @@ define([
             // и еще раз доскроллили до конца, то самое время блокировать кнопки.
             lists.BaseControl._private.handleListScrollSync(ctrl, 400);
             assert.deepEqual({
-               backwardEnabled: true,
-               forwardEnabled: false
+                arrowState: {
+                    begin: "visible",
+                    end: "readonly",
+                    next: "readonly",
+                    prev: "visible"
+                }
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
 
@@ -2380,7 +2400,14 @@ define([
          lists.BaseControl._private.onScrollShow(ctrl, heightParams);
          ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
          ctrl._pagingVisible = true;
-         ctrl._pagingCfg = {};
+       ctrl._pagingCfg = {
+           arrowState: {
+               begin: 'visible',
+               prev: 'visible',
+               next: 'visible',
+               end: 'visible'
+           }
+       };
          ctrl._notify = (eventName, eventResult) => {
             if (eventName === 'updateShadowMode') {
                shadowMode = eventResult[0];
@@ -2391,7 +2418,14 @@ define([
          };
          ctrl._abortSearch();
          assert.isFalse(ctrl._showContinueSearchButton);
-         assert.deepEqual(ctrl._pagingCfg, {forwardEnabled: false});
+         assert.deepEqual(ctrl._pagingCfg, {
+             arrowState: {
+                 begin: 'visible',
+                 prev: 'visible',
+                 next: 'readonly',
+                 end: 'readonly'
+             }
+         });
          assert.deepEqual(shadowMode, {top: 'auto', bottom: 'auto'});
          assert.isTrue(iterativeSearchAborted);
       });
@@ -5379,6 +5413,18 @@ define([
 
             lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'rm', [], null, [item], 0);
             assert.isFalse(item.isMarked());
+         });
+
+         it('restore marker on add', () => {
+            baseControl.setMarkedKey(1);
+            const item = baseControl.getViewModel().getItemBySourceKey(1);
+            assert.isTrue(item.isMarked());
+
+            lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'rm', [], null, [item], 0);
+            assert.isFalse(item.isMarked());
+
+            lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'a', [item], null, [], 0);
+            assert.isTrue(item.isMarked());
          });
       });
 

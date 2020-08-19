@@ -1709,7 +1709,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             column =  headerRow.getCurrentHeaderColumn();
             assert.equal(column.shadowVisibility, 'visible');
          });
-         
+
          it('backgroundStyle on header cells with stickyLadder', () => {
             const gridHeaderClone = gridHeader.map(function(obj) {
                return Object.assign({}, obj);
@@ -1741,7 +1741,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             headerRow.goToNextHeaderColumn();
 
             column =  headerRow.getCurrentHeaderColumn();
-            assert.equal(column.key, '0-1');  
+            assert.equal(column.key, '0-1');
 
             headerRow.resetHeaderColumns();
             viewModel._options.multiSelectVisibility = 'hidden';
@@ -1754,7 +1754,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             headerRow.goToNextHeaderColumn();
 
             column =  headerRow.getCurrentHeaderColumn();
-            assert.equal(column.key, '0-2');  
+            assert.equal(column.key, '0-2');
          });
 
          it('should not add column separator classes on action cell', function () {
@@ -2704,6 +2704,30 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(checkboxCell.colSpan, 1);
          });
 
+         it('getRelativeCellWrapperClasses', () => {
+            model = new gridMod.GridViewModel({
+               ...cfg,
+               multiSelectVisibility: 'hidden',
+               columns: [{}]
+            });
+
+            const itemData = model.getCurrent();
+
+            const expected = {
+               default: 'controls-Grid__table__relative-cell-wrapper controls-Grid__table__relative-cell-wrapper_rowSeparator-s_theme-default',
+               fixesIE: 'controls-Grid__table__relative-cell-wrapper controls-Grid__table__relative-cell-wrapper_rowSeparator-s_theme-default controls-Grid__table__relative-cell-wrapper_singleCell'
+            };
+            assert.equal(expected.default, itemData.getRelativeCellWrapperClasses());
+            assert.equal(expected.default, itemData.getRelativeCellWrapperClasses(true, false));
+            assert.equal(expected.fixesIE, itemData.getRelativeCellWrapperClasses(false, true));
+            assert.equal(expected.fixesIE, itemData.getRelativeCellWrapperClasses(true, true));
+
+            itemData.columns = [{}, {}, {}];
+            assert.equal(expected.default, itemData.getRelativeCellWrapperClasses());
+            assert.equal(expected.default, itemData.getRelativeCellWrapperClasses(false, true));
+            assert.equal(expected.default, itemData.getRelativeCellWrapperClasses(true, false));
+            assert.equal(expected.fixesIE, itemData.getRelativeCellWrapperClasses(true, true));
+         });
       });
 
       describe('grid separators', () => {
@@ -2904,7 +2928,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false}));
             // sticky fit coll withoutColumnScroll
             assert.equal(4, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false, columnIndex: 1}));
-         })
+         });
 
          it('updates prefix version with ladder only on add and remove', () => {
             const model = new gridMod.GridViewModel({

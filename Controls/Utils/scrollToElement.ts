@@ -48,8 +48,8 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
          if (cInstance.instanceOfModule(component.control, 'Controls/scroll:Container') ||
              cInstance.instanceOfModule(component.control, 'Controls/scroll:_ContainerNew')) {
             return {
-               top: component.control.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.initialFixed),
-               bottom: component.control.getHeadersHeight(POSITION.bottom, TYPE_FIXED_HEADERS.initialFixed)
+               top: component.control.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.fixed),
+               bottom: component.control.getHeadersHeight(POSITION.bottom, TYPE_FIXED_HEADERS.fixed)
             };
          }
       }

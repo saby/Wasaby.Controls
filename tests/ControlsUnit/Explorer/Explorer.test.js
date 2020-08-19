@@ -476,7 +476,7 @@ define([
             instance._isGoingFront = true;
             instance.saveOptions(cfg);
             instance._beforeUpdate(cfg2);
-            assert.isFalse(instance._isGoingFront);
+            assert.isTrue(instance._isGoingFront);
          });
 
          it('changes viewMode on items set if both viewMode and root changed(tree -> search)', () => {

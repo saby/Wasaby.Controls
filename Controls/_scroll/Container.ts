@@ -33,11 +33,11 @@ import {debounce} from 'Types/function';
 /**
  * Контейнер с тонким скроллом.
  * Для контрола требуется {@link Controls/_scroll/Context context}.
- * 
+ *
  * @remark
  * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
  * Для корректной работы внутри WS3 необходимо поместить контрол в контроллер Controls/dragnDrop:Compound, который обеспечит работу функционала Drag-n-Drop.
- * 
+ *
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
  *
@@ -233,6 +233,7 @@ let
        _setScrollTop(self, value: number): void {
             // На айпаде скроллбар не строится. Чтобы изменение св-ва _scrollTop не приводило к _forceUpdate
             // его нельзя объявлять на шаблоне ( даже в ветке кода, которая не испольняется). Перевожу на сеттер.
+           //TODO: https://online.sbis.ru/opendoc.html?guid=65a30a09-0581-4506-9329-e472ea9630b5
             self._scrollTop = value;
             self._children.scrollBar?.setScrollPosition(value);
             _private.updateStates(self);
@@ -962,7 +963,12 @@ let
                        this._scrollLeftAfterDragEnd = scrollLeft;
                    }
                }
-               this._children.scrollDetect.start(event, this._scrollTop);
+               // В последнем выполнении _updateScrollState, происходящим перед разрушением контролла,
+               // например, когда выбирается конец периода в календаре и после этого оконо календаря сразу
+               // закрывается, scrollDetect может оказаться уничтоженым.
+               if (this._children.scrollDetect) {
+                   this._children.scrollDetect.start(event, this._scrollTop);
+               }
            }
        },
 
@@ -1013,6 +1019,9 @@ let
 
       _scrollbarTaken() {
          if (this._showScrollbarOnHover && (this._displayState.canScroll || this._displayState.canHorizontalScroll)) {
+             // Обновляем позицию скроллабара, так как он появляется только при наведении на скролл контейнер
+             //TODO: https://online.sbis.ru/opendoc.html?guid=65a30a09-0581-4506-9329-e472ea9630b5
+            this._children.scrollBar?.setScrollPosition(this._scrollTop);
             this._notify('scrollbarTaken', [], { bubbling: true });
          }
       },
@@ -1294,6 +1303,8 @@ let
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
             this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
          }
+         // Виртуальный скролл взаимодействует только с ближайшим родительским скролл контейнером.
+         e.stopImmediatePropagation();
       },
 
       _scrollToElement(event: SyntheticEvent<Event>, { itemContainer, toBottom, force }): void {

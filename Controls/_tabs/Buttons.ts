@@ -44,6 +44,18 @@ interface IReceivedState {
     lastRightOrder: number;
 }
 
+const isTemplate = (tmpl: any): boolean => {
+    return !!(tmpl && typeof tmpl.func === 'function' && tmpl.hasOwnProperty('internal'));
+};
+
+const isTemplateArray = (templateArray: any): boolean => {
+    return Array.isArray(templateArray) && templateArray.every((tmpl) => isTemplate(tmpl)) && templateArray.isDataArray;
+};
+
+const isTemplateObject = (tmpl: any): boolean => {
+    return isTemplate(tmpl) && tmpl.isDataArray;
+};
+
 class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, IItems {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
     readonly '[Controls/_interface/IItems]': boolean = true;
@@ -65,9 +77,9 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
             this._prepareState(itemsData);
         } else if (options.source) {
             return this._initItems(options.source).then((result: IReceivedState) => {
+                this._prepareState(result);
                 // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
                 if (!TabsButtons._checkHasFunction(result)) {
-                    this._prepareState(result);
                     return result;
                 }
             });
@@ -225,9 +237,8 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
                 const item = receivedState.items.at(i);
                 const value = cInstance.instanceOfModule(item, 'Types/entity:Record') ? item.getRawData() : item;
                 for (const key in value) {
-                    // При рекваере шаблона, он возвращает массив, в 0 индексе которого лежит объект с функцией
-                    if (typeof value[key] === 'function' ||
-                        value[key] instanceof Array && typeof value[key][0].func === 'function') {
+                    //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=225bec8b-71f5-462d-b566-0ebda961bd95
+                    if (isTemplate(value[key]) || isTemplateArray(value[key]) || isTemplateObject(value[key])) {
                         return true;
                     }
                 }

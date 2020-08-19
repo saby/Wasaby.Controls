@@ -50,7 +50,7 @@ class Previewer extends Control<IControlOptions> {
          },
          {
             id: '2',
-            buttonViewMode: 'icon',
+            viewMode: 'icon',
             icon: 'icon-Link icon-medium',
             title: 'Скопировать в буфер',
             '@parent': false,
@@ -82,7 +82,7 @@ class Previewer extends Control<IControlOptions> {
             icon: 'icon-medium icon-EmptyMessage',
             buttonStyle: 'secondary',
             showHeader: true,
-            buttonViewMode: 'link',
+            viewMode: 'link',
             iconStyle: 'secondary',
             buttonTransparent: false,
             title: 'Обсудить',

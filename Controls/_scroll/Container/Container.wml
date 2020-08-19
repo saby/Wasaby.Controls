@@ -54,11 +54,14 @@
         </ws:if>
 
         <ws:if data="{{_paging.isVisible}}">
-            <Controls.paging:Paging class="controls-Scroll__paging"
-                                    contrastBackground="{{true}}"
-                                    backwardEnabled="{{_paging.stateUp}}"
-                                    forwardEnabled="{{_paging.stateDown}}"
-                                    on:onArrowClick="_arrowClickHandler()"/>
+            <Controls.Container.Async templateName="Controls/paging:Paging">
+                <ws:partial template="{{content.resolvedTemplate}}"
+                            class="controls-Scroll__paging"
+                            contrastBackground="{{true}}"
+                            backwardEnabled="{{_paging.stateUp}}"
+                            forwardEnabled="{{_paging.stateDown}}"
+                            on:onArrowClick="_arrowClickHandler()"/>
+            </Controls.Container.Async>
         </ws:if>
     </div>
 </ws:template>
