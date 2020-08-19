@@ -742,7 +742,7 @@ const _private = {
                     loadCallback(addedItems, countCurrentItems);
                 }
 
-                
+
 
                 // Скрываем ошибку после успешной загрузки данных
                 _private.hideError(self);
@@ -1125,8 +1125,11 @@ const _private = {
         const scrollPagingConfig = {
             scrollParams,
             pagingCfgTrigger: (cfg) => {
-                self._pagingCfg = cfg;
-                self._forceUpdate();
+                if (!self._hideTopTriggerUntilMount &&
+                    !self._needScrollToFirstItem && !isEqual(self._pagingCfg, cfg)) {
+                    self._pagingCfg = cfg;
+                    self._forceUpdate();
+                }
             }
         };
         return Promise.resolve(new ScrollPagingController(scrollPagingConfig));
@@ -3022,14 +3025,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (_private.needScrollPaging(this._options.navigation)) {
-            const scrollParams = {
-                scrollHeight: this._viewSize,
-                clientHeight: this._viewportSize,
-                scrollTop: this._scrollTop
-            };
-
-            _private.updateScrollPagingButtons(this, scrollParams);
-        }
+            _private.doAfterUpdate(this, () => {
+                    const scrollParams = {
+                        scrollHeight: this._viewSize,
+                        clientHeight: this._viewportSize,
+                        scrollTop: this._scrollTop
+                    };
+                    _private.updateScrollPagingButtons(this, scrollParams);
+                });
+            }
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewportRect);
     },
 
@@ -3088,6 +3092,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
 
         _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+
+        if (this._scrollController) {
+            this._scrollController.afterMount(container, this._children);
+        }
     },
 
     _updateScrollController(newOptions) {
