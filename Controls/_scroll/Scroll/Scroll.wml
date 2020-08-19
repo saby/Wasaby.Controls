@@ -91,11 +91,14 @@
       <div class="controls-Scroll__shadow controls-Scroll__shadow_vertical controls-Scroll__shadow_right {{!_verticalShadowVisible('right') ? ' ws-invisible'}}"></div>
    </ws:if>
    <ws:if data="{{_pagingState.visible}}">
-         <Controls.paging:Paging class="controls-Scroll__paging"
-                            contrastBackground="{{true}}"
-                            backwardEnabled="{{_pagingState.stateUp}}"
-                            forwardEnabled="{{_pagingState.stateDown}}"
-                            on:onArrowClick="_arrowClickHandler()"/>
+      <Controls.Container.Async templateName="Controls/paging:Paging">
+         <ws:partial template="{{content.resolvedTemplate}}"
+                     class="controls-Scroll__paging"
+                     contrastBackground="{{true}}"
+                     backwardEnabled="{{_pagingState.stateUp}}"
+                     forwardEnabled="{{_pagingState.stateDown}}"
+                     on:onArrowClick="_arrowClickHandler()"/>
+      </Controls.Container.Async>
    </ws:if>
 
    <Controls.event:Listener listenAll="{{true}}" event="controlResize" on:controlResize="_resizeHandler()"/>
