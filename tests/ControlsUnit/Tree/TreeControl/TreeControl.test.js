@@ -929,6 +929,11 @@ define([
          assert.equal(treeControl._nodesSourceControllers.size, 2);
          assert.isTrue(treeControl._nodesSourceControllers.get(1).hasMoreData('down', 1));
          assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
+         treeControl._nodesSourceControllers.clear();
+         items.setMetaData({more: 106});
+         tree.TreeControl._private.afterReloadCallback(treeControl, treeControl._options, items);
+         assert.isFalse(treeControl._nodesSourceControllers.get(1).hasMoreData('down', 1));
+         assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
       });
 
       describe('List navigation', function() {
