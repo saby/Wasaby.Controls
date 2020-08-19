@@ -10,7 +10,6 @@ import * as isVDOMTemplate from 'Controls/Utils/isVDOMTemplate';
 import {Logger} from 'UI/Utils';
 import {DefaultOpenerFinder} from 'UI/Focus';
 import Template = require('wml!Controls/_popup/Opener/BaseOpener');
-import { error as dataSourceError } from 'Controls/dataSource';
 
 /**
  * Base Popup opener
@@ -368,9 +367,11 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
                 try {
                     requirejs.onError(error);
                 } finally {
-                    dataSourceError.process({ error }).then(() => {
-                        Logger.error('Controls/popup' + ': ' + error.message, undefined, error);
-                        reject(error);
+                    requirejs(['Controls/dataSource'], (dataSource) => {
+                        dataSource.error.process({error}).then(() => {
+                            Logger.error('Controls/popup' + ': ' + error.message, undefined, error);
+                            reject(error);
+                        });
                     });
                 }
             });
