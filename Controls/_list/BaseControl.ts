@@ -972,6 +972,9 @@ const _private = {
         return viewSize - (pagingVisible ? PAGING_PADDING : 0);
     },
     needShowPagingByScrollSize(self, viewSize: number, viewPortSize: number): boolean {
+        if (self._hideTopTriggerUntilMount || self._needScrollToFirstItem) {
+            return false;
+        }
         let result = self._pagingVisible;
 
         const proportion = (_private.calcViewSize(viewSize, result) / viewPortSize);
@@ -1081,7 +1084,8 @@ const _private = {
         const scrollPagingConfig = {
             scrollParams,
             pagingCfgTrigger: (cfg) => {
-                if (!self._attachLoadTopTriggerToNull && !isEqual(self._pagingCfg, cfg)) {
+                if (!self._hideTopTriggerUntilMount &&
+                    !self._needScrollToFirstItem && !isEqual(self._pagingCfg, cfg)) {
                     self._pagingCfg = cfg;
                     self._forceUpdate();
                 }
