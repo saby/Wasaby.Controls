@@ -306,7 +306,7 @@ var
             return result;
         },
 
-        getItemColumnCellClasses: function(current, theme, backgroundColorStyle) {
+        getItemColumnCellClasses(self, current, theme, backgroundColorStyle) {
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
             let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
@@ -321,7 +321,7 @@ var
                 classLists.base += _private.getBackgroundStyle({backgroundStyle, theme, backgroundColorStyle}, true);
             }
 
-            if (current.columnScroll) {
+            if (self._options.columnScroll && self._options.columnScrollVisibility) {
                 classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
             } else if (!checkBoxCell) {
                 classLists.base += ' controls-Grid__cell_fit';
@@ -1013,7 +1013,7 @@ var
                 cellClasses = cellClasses + ' controls-Grid__header-cell_static';
             }
 
-            if (this._options.columnScroll) {
+            if (this._options.columnScroll && this._options.columnScrollVisibility) {
                 cellClasses += _private.getColumnScrollCellClasses({
                     columnIndex: columnIndex,
                     endColumn: cell.endColumn,
@@ -1269,7 +1269,7 @@ var
                 }
             }
 
-            if (this._options.columnScroll) {
+            if (this._options.columnScroll && this._options.columnScrollVisibility) {
                 cellClasses += _private.getColumnScrollCellClasses({
                     columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility,
@@ -1676,8 +1676,6 @@ var
             current.shouldAddActionsCell = self._shouldAddActionsCell();
             current.getCellStyle = (itemData, currentColumn, colspan) => _private.getCellStyle(self, itemData, currentColumn, colspan);
 
-            current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
-
             if (!GridLayoutUtil.isFullGridSupport()) {
                 current.getRelativeCellWrapperClasses = _private.getRelativeCellWrapperClasses.bind(null, current);
             }
@@ -1718,7 +1716,7 @@ var
                         getActions: current.getActions,
                         getContents: current.getContents
                 };
-                currentColumn.classList = _private.getItemColumnCellClasses(current, current.theme, backgroundColorStyle);
+                currentColumn.classList = _private.getItemColumnCellClasses(self, current, current.theme, backgroundColorStyle);
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
                      * isColspaned добавлена как костыль для временного лечения ошибки.
