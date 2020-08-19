@@ -287,7 +287,7 @@ const _private = {
 
         if (viewModel) {
             const modelRoot = viewModel.getRoot();
-            const isMultiNavigationData = loadedList.getMetaData().more instanceof RecordSet;
+            const isMultiNavigationData = loadedList?.getMetaData().more instanceof RecordSet;
             const root = self._options.root !== undefined ? self._options.root : self._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
             if (self._updateExpandedItemsAfterReload) {
