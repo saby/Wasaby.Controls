@@ -909,6 +909,14 @@ const getMultilineLadder = () => {
                 template: 'wml!Controls-demo/grid/resources/CellTemplates/LadderMultilineName',
                 width: '300px'
             }
+        ],
+        getHeader: () => [
+            {
+                title: 'Время'
+            }, 
+            {
+                title: 'Имя'
+            }
         ]
     };
 };

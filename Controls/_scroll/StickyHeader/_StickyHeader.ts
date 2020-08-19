@@ -113,6 +113,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _cssClassName: string = null;
     private _canScroll: boolean = false;
     private _scrollState: IScrollState = {
+        verticalPosition: SCROLL_POSITION.START,
         canVerticalScroll: false
     };
     private _negativeScrollTop: boolean = false;
@@ -281,8 +282,15 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
-    protected _onScrollStateChanged(scrollState: IScrollState): void {
+    protected _onScrollStateChanged(scrollState: IScrollState, oldScrollState: IScrollState): void {
         let changed: boolean = false;
+
+        const isInitializing = Object.keys(oldScrollState).length === 0;
+        // Если нет скролла, то и заголовки незачем обновлять
+        if (isInitializing || !scrollState.canVerticalScroll) {
+            return;
+        }
+
         if (scrollState.canVerticalScroll !== this._scrollState.canVerticalScroll &&
                 this._model.fixedPosition !== this._lastFixedPosition) {
             this._forceUpdate();

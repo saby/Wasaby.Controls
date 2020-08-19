@@ -25,7 +25,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _options: IContainerBaseOptions;
 
     protected _state: IScrollState = {};
-    protected _oldState: IScrollState = null;
+    protected _oldState: IScrollState = {};
 
     private _registrars: any = [];
 
@@ -64,10 +64,6 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
         this._observeContentSize();
 
-        // Состояние может быть уже инициализировано по событиям от списков
-        if (isEmpty(this._state)) {
-            this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
-        }
         // this._createEdgeIntersectionObserver();
 
         if (detection.isMobileIOS) {
@@ -85,6 +81,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _afterUpdate(oldOptions?: IContainerBaseOptions): void {
         this._observeContentSize();
         this._unobserveDeleted();
+        if (!this._resizeObserverSupported) {
+            this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
+        }
     }
 
     _beforeUnmount(): void {
@@ -262,12 +261,11 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._updateStateAndGenerateEvents(newState);
     }
 
-    _onRegisterNewComponent(component: any): void {
-        // Возможно тут лучше не вычитывать стэйт, а дождаться когда контрол его инициализирует и после этого послать событие.
-        if (Object.keys(this._state).length === 0) {
-            this._updateState(this._getFullStateFromDOM());
+    _onRegisterNewComponent(component: Control): void {
+        // Если состояние еще не инициализировано, то компонент получит его после инициализации.
+        if (Object.keys(this._state).length !== 0) {
+            this._registrars.scrollStateChanged.startOnceTarget(component, {...this._state}, {...this._oldState});
         }
-        this._registrars.scrollStateChanged.startOnceTarget(component, {...this._state},{...this._oldState});
     }
 
     _onResizeContainer(newState: IScrollState): void {
@@ -341,7 +339,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             newState.scrollWidth = this._children.content.scrollWidth;
         }
 
-        this._onResizeContainer(newState);
+        this._updateStateAndGenerateEvents(newState);
     }
 
     _getFullStateFromDOM(): IScrollState {
@@ -359,6 +357,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _updateState(newState: IScrollState): boolean {
         let isStateUpdated = false;
         this._oldState = {...this._state};
+        const isInitializing = Object.keys(this._oldState).length === 0;
         Object.keys(newState).forEach((key) => {
             if (this._state[key] !== newState[key]) {
                 this._state[key] = newState[key];
@@ -368,7 +367,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         if (isStateUpdated) {
             this._updateCalculatedState();
         }
-        return isStateUpdated;
+        return !isInitializing && isStateUpdated;
     }
 
     _updateCalculatedState(): void {
@@ -447,19 +446,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 scrollHeight: this._state.scrollHeight
             });
 
-            if (this._scrollMoveTimer) {
-                clearTimeout(this._scrollMoveTimer);
-            }
-
-            this._scrollMoveTimer = setTimeout(() => {
-                this._sendByListScrollRegistrar('scrollMove', {
-                    scrollTop: this._state.scrollTop,
-                    position: this._state.verticalPosition,
-                    clientHeight: this._state.clientHeight,
-                    scrollHeight: this._state.scrollHeight
-                });
-                this._scrollMoveTimer = null;
-            }, 0);
+            this._sendScrollMoveAsync();
         }
 
         if (this._state.canVerticalScroll !== this._oldState.canVerticalScroll) {
@@ -473,10 +460,26 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
     }
 
+    _sendScrollMoveAsync(): void {
+        if (this._scrollMoveTimer) {
+                clearTimeout(this._scrollMoveTimer);
+            }
+
+            this._scrollMoveTimer = setTimeout(() => {
+                this._sendByListScrollRegistrar('scrollMove', {
+                    scrollTop: this._state.scrollTop,
+                    position: this._state.verticalPosition,
+                    clientHeight: this._state.clientHeight,
+                    scrollHeight: this._state.scrollHeight
+                });
+                this._scrollMoveTimer = null;
+            }, 0);
+    }
+
     _onRegisterNewListScrollComponent(component: any): void {
-        // Регистрция списков может произойти до инициализации состояния в _afterMount
-        if (isEmpty(this._state)) {
-            this._updateState(this._getFullStateFromDOM());
+        // Если состояние еще не инициализировано, то компонент получит его после инициализации.
+        if (Object.keys(this._state).length === 0) {
+            return;
         }
         this._sendByListScrollRegistrarToComponent(
             component,

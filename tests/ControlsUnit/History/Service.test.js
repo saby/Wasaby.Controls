@@ -72,7 +72,12 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env', 'UI/U
          Env.detection.retailOffline = false;
          result.then((res) => {
             assert.isTrue(res.getAll().getCount() === 0);
-            done();
+            Env.detection.retailOffline = true;
+            service.update({$_addFromData: true}).then((updateRes) => {
+               assert.isUndefined(updateRes);
+               done();
+            });
+            Env.detection.retailOffline = false;
          });
       });
 

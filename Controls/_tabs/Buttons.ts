@@ -7,8 +7,11 @@ import * as cInstance from 'Core/core-instance';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {SbisService} from 'Types/source';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
 import {IItems} from 'Controls/interface';
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
+import { constants } from 'Env/Env';
 
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
@@ -41,6 +44,18 @@ interface IReceivedState {
     lastRightOrder: number;
 }
 
+const isTemplate = (tmpl: any): boolean => {
+    return !!(tmpl && typeof tmpl.func === 'function' && tmpl.hasOwnProperty('internal'));
+};
+
+const isTemplateArray = (templateArray: any): boolean => {
+    return Array.isArray(templateArray) && templateArray.every((tmpl) => isTemplate(tmpl)) && templateArray.isDataArray;
+};
+
+const isTemplateObject = (tmpl: any): boolean => {
+    return isTemplate(tmpl) && tmpl.isDataArray;
+};
+
 class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, IItems {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
     readonly '[Controls/_interface/IItems]': boolean = true;
@@ -55,16 +70,18 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
     protected _beforeMount(options: ITabsButtonsOptions,
                            context: object,
                            receivedState: IReceivedState): void | Promise<IReceivedState> {
-        // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
-        if (receivedState && !TabsButtons._checkHasFunction(receivedState)) {
+        if (receivedState) {
             this._prepareState(receivedState);
         } else if (options.items) {
             const itemsData = this._prepareItems(options.items);
             this._prepareState(itemsData);
         } else if (options.source) {
             return this._initItems(options.source).then((result: IReceivedState) => {
-                this._prepareState(result);
-                return result;
+                // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
+                if (!TabsButtons._checkHasFunction(result)) {
+                    this._prepareState(result);
+                    return result;
+                }
             });
         }
     }
@@ -81,8 +98,10 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
         }
     }
 
-    protected _onItemClick(event: Event, key: string): void {
-        this._notify('selectedKeyChanged', [key]);
+    protected _onItemClick(event: SyntheticEvent<MouseEvent>, key: string): void {
+        if (isLeftMouseButton(event)) {
+            this._notify('selectedKeyChanged', [key]);
+        }
     }
 
     protected _prepareItemClass(item: Model, index: number): string {
@@ -211,16 +230,15 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
     static _checkHasFunction(receivedState: IReceivedState): boolean {
         // Функции, передаваемые с сервера на клиент в receivedState, не могут корректно десериализоваться.
         // Поэтому, если есть функции в receivedState, заново делаем запрос за данными.
-        // Ошибку выводит ядро
-        if (receivedState?.items?.getCount) {
+        // Если в записи есть функции, то итемы в receivedState не передаем, на клиенте перезапрашивает данные
+        if (constants.isServerSide && receivedState?.items?.getCount) {
             const count = receivedState.items.getCount();
             for (let i = 0; i < count; i++) {
                 const item = receivedState.items.at(i);
                 const value = cInstance.instanceOfModule(item, 'Types/entity:Record') ? item.getRawData() : item;
                 for (const key in value) {
-                    // При рекваере шаблона, он возвращает массив, в 0 индексе которого лежит объект с функцией
-                    if (typeof value[key] === 'function' ||
-                        value[key] instanceof Array && typeof value[key][0].func === 'function') {
+                    //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=225bec8b-71f5-462d-b566-0ebda961bd95
+                    if (isTemplate(value[key]) || isTemplateArray(value[key]) || isTemplateObject(value[key])) {
                         return true;
                     }
                 }

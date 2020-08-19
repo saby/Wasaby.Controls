@@ -14,6 +14,8 @@ import {RecordSet} from 'Types/collection';
 import * as cInstance from 'Core/core-instance';
 import {PrefetchProxy} from 'Types/source';
 import * as Merge from 'Core/core-merge';
+import {RequireHelper} from 'View/Executor/Utils';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 /**
  * Контроллер для выпадающих списков.
@@ -146,9 +148,7 @@ export default class _Controller implements IDropdownController {
    }
 
    setMenuPopupTarget(target): void {
-      if (!this.target) {
-         this.target = target;
-      }
+      this.target = target;
    }
 
    openMenu(popupOptions?: object): Promise<any> {
@@ -229,8 +229,11 @@ export default class _Controller implements IDropdownController {
                 return Promise.resolve([this._items.at(0)]);
              }
           },
-          () => {
-             if (this._menuSource) {
+          (error) => {
+             // Если не загрузился модуль меню, то просто выводим сообщение о ошибке загрузки
+             if (!RequireHelper.defined('Controls/menu')) {
+                dataSourceError.process({error});
+             } else if (this._menuSource) {
                 return openPopup();
              }
           }

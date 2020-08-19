@@ -101,6 +101,17 @@ define(
             });
          });
 
+         it('_beforeUpdate', function() {
+            let combobox = getCombobox(config);
+            let isUpdated = false;
+            combobox._controller = {
+               update: () => {isUpdated = true}
+            };
+            combobox._beforeUpdate({});
+            assert.isTrue(isUpdated);
+         });
+
+
          it('dataLoadCallback option', function() {
             let combobox = getCombobox(config);
             const result = combobox._getControllerOptions({ dataLoadCallback: 'testDataLoadCallback' });
