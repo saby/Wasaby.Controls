@@ -148,9 +148,7 @@ export default class _Controller implements IDropdownController {
    }
 
    setMenuPopupTarget(target): void {
-      if (!this.target) {
-         this.target = target;
-      }
+      this.target = target;
    }
 
    openMenu(popupOptions?: object): Promise<any> {
