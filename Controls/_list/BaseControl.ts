@@ -1082,8 +1082,11 @@ const _private = {
         const scrollPagingConfig = {
             scrollParams,
             pagingCfgTrigger: (cfg) => {
-                self._pagingCfg = cfg;
-                self._forceUpdate();
+                if (!self._hideTopTriggerUntilMount &&
+                    !self._needScrollToFirstItem && !isEqual(self._pagingCfg, cfg)) {
+                    self._pagingCfg = cfg;
+                    self._forceUpdate();
+                }
             }
         };
         return Promise.resolve(new ScrollPagingController(scrollPagingConfig));
@@ -2939,15 +2942,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
-        if (_private.needScrollPaging(this._options.navigation)) {
-            const scrollParams = {
-                scrollHeight: this._viewSize,
-                clientHeight: this._viewPortSize,
-                scrollTop: this._scrollTop
-            };
-
-            _private.updateScrollPagingButtons(this, scrollParams);
-        }
+            if (_private.needScrollPaging(this._options.navigation)) {
+                _private.doAfterUpdate(this, () => {
+                    const scrollParams = {
+                        scrollHeight: this._viewSize,
+                        clientHeight: this._viewPortSize,
+                        scrollTop: this._scrollTop
+                    };
+                    _private.updateScrollPagingButtons(this, scrollParams);
+                });
+            }
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
     },
 
@@ -2968,10 +2972,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             container.addEventListener('dragstart', this._nativeDragStart);
         }
         this._loadedItems = null;
-
-        if (this._scrollController) {
-            this._scrollController.afterMount(container, this._children);
-        }
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
         // TODO https://online.sbis.ru/opendoc.html?guid=3042889b-181c-47ec-b036-a7e24c323f5f
@@ -2997,6 +2997,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
         _private.checkNeedAttachLoadTopTriggerToNull(this, this._options);
+
+        if (this._scrollController) {
+            this._scrollController.afterMount(container, this._children);
+        }
     },
 
     _updateScrollController(newOptions) {
