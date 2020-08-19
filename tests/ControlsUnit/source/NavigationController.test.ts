@@ -3,6 +3,7 @@ import {Memory} from 'Types/source';
 import {Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {NavigationController} from 'Controls/source';
+import {CrudWrapper} from "../../../Controls/_dataSource/CrudWrapper";
 
 const dataPrev = [
     {
@@ -718,6 +719,71 @@ describe('Controls/_source/NavigationController', () => {
                 assert.equal('id', params[0].field, 'Wrong query properties');
                 assert.equal('id', params[1].field, 'Wrong query properties');
             });
+        });
+    });
+    describe('updateOptions', () => {
+        it('new navigation type', () => {
+            const nc = new NavigationController({
+                navigationType: 'position',
+                navigationConfig: {
+                    field: 'id',
+                    direction: 'bothways'
+                }
+            });
+
+            const rs = new RecordSet({
+                rawData: data,
+                keyProperty: 'id'
+            });
+
+            // апдейтим параметры -> спрашиваем -> меняем конфиг -> спрашиваем параметры опять, должны быть сброшены
+            nc.updateQueryProperties(rs);
+            let params = nc.getQueryParams({filter: {}, sorting: []}, null, {}, 'forward');
+            assert.equal(6, params.filter['id>='], 'Wrong query params');
+
+            nc.updateOptions({
+                navigationType: 'page',
+                navigationConfig: {
+                    field: 'id',
+                    direction: 'bothways'
+                }
+            });
+
+            params = nc.getQueryParams({filter: {}, sorting: []}, null, {}, 'forward');
+            assert.equal(null, params.filter['id>='], 'Wrong query params');
+
+        });
+
+        it('new navigation config', () => {
+            const nc = new NavigationController({
+                navigationType: 'position',
+                navigationConfig: {
+                    field: 'id',
+                    direction: 'bothways'
+                }
+            });
+
+            const rs = new RecordSet({
+                rawData: data,
+                keyProperty: 'id'
+            });
+
+            // апдейтим параметры -> спрашиваем -> меняем конфиг -> спрашиваем параметры опять, должны быть сброшены
+            nc.updateQueryProperties(rs);
+            let params = nc.getQueryParams({filter: {}, sorting: []}, null, {}, 'forward');
+            assert.equal(6, params.filter['id>='], 'Wrong query params');
+
+            nc.updateOptions({
+                navigationType: 'position',
+                navigationConfig: {
+                    field: 'id',
+                    direction: 'forward'
+                }
+            });
+
+            params = nc.getQueryParams({filter: {}, sorting: []}, null, {}, 'forward');
+            assert.equal(null, params.filter['id>='], 'Wrong query params');
+
         });
     });
 });

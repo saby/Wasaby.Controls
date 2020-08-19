@@ -102,7 +102,7 @@ export interface ICrudWrapperOptions {
 
 export class CrudWrapper {
 
-    private readonly _source: ICrud;
+    private _source: ICrud;
     private readonly _errorController: ErrorController;
 
     private readonly _boundPromiseCatchCallback: (error: Error) => Promise<null>;
@@ -214,6 +214,10 @@ export class CrudWrapper {
      */
     destroy(keys: number | string | number[] | string[], meta?: object): Promise<void> {
         return this._source.destroy(keys, meta).catch(this._boundPromiseCatchCallback);
+    }
+
+    updateOptions(newOptions: ICrudWrapperOptions): void {
+        this._source = newOptions.source;
     }
 
     /**
