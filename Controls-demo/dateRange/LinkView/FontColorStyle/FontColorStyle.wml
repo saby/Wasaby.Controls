@@ -37,14 +37,9 @@
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=danger</div>
         <Controls.dateRange:LinkView bind:startValue="_startValue"
-
-                                     prevArrowVisibility="{{true}}"
                                                bind:endValue="_endValue"
                                                value="{{_value}}"
-                                               fontColorStyle="{{danger}}" />
-    </div>
-    <div>
-        <Controls.buttons:Button caption="click" on:click="_click()"></Controls.buttons:Button>
+                                               fontColorStyle="danger" />
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=unaccented</div>
