@@ -972,9 +972,6 @@ const _private = {
         return viewSize - (pagingVisible ? PAGING_PADDING : 0);
     },
     needShowPagingByScrollSize(self, viewSize: number, viewPortSize: number): boolean {
-        if (self._hideTopTriggerUntilMount || self._needScrollToFirstItem) {
-            return false;
-        }
         let result = self._pagingVisible;
 
         const proportion = (_private.calcViewSize(viewSize, result) / viewPortSize);
