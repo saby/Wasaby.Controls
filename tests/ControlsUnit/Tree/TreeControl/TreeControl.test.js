@@ -932,7 +932,7 @@ define([
          treeControl._nodesSourceControllers = {};
          items.setMetaData({more: 106});
          tree.TreeControl._private.afterReloadCallback(treeControl, treeControl._options, items);
-         assert.false(treeControl._nodesSourceControllers.get(1).hasMoreData('down', 1));
+         assert.isFalse(treeControl._nodesSourceControllers.get(1).hasMoreData('down', 1));
          assert.isFalse(treeControl._nodesSourceControllers.get(2).hasMoreData('down', 2));
       });
 
