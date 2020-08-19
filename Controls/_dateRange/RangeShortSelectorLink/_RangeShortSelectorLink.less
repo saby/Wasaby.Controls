@@ -6,10 +6,10 @@
 
 .controls-RangeShortSelectorLink_theme-@{themeName} {
    height: @height_dateRangeSelector;
-   line-height: @height_dateRangeSelector;
 }
 
 .controls-RangeShortSelectorLink-wrapper {
+   height: 100%;
    width: 100%;
    display: inline-flex;
    align-items: center;
@@ -50,7 +50,7 @@
    display: flex;
 }
 
-.controls-RangeShortSelectorLink__next_theme-@{themeName} {
+.controls-RangeShortSelectorLink__arrow-next_theme-@{themeName} {
    margin-left: @yearselector_arrow_margin_shortDatePicker;
 }
 
@@ -83,25 +83,31 @@
    }
 }
 
-.controls-RangeShortSelectorLink__value-wrapper_theme-@{themeName} {
-   height: @height_dateRangeSelector + 1px;
+.controls-RangeShortSelectorLink__value-wrapper {
+   //В разных браузерах, при нечетнром количестве пикселей при делении, разные браузеры округлят по разному.
+   //Из-за этого существует разница в 1px по высоте. Увиеличил высоту контейнера на 1px и прижал к низу.
+   display: flex;
+   justify-content: flex-start;
+   align-items: baseline;
+   flex-grow: 1;
+   text-align: center;
+   height: 100%;
 }
 
 .controls-RangeShortSelectorLink__value-wrapper_theme-@{themeName}::before {
    content: '\200b';
    display: inline-block;
    width: 0;
-   font-size: @arrow_icon-size_dateRangeSelector;
+   font-size: @line-height_dateRangeSelector;
 }
 
-.controls-RangeShortSelectorLink__value-wrapper {
-   //В разных браузерах, при нечетнром количестве пикселей при делении, разные браузеры округлят по разному.
-   //Из-за этого существует разница в 1px по высоте. Увиеличил высоту контейнера на 1px и прижал к низу.
-   display: flex;
-   justify-content: end;
-   align-items: baseline;
-   flex-grow: 1;
-   text-align: center;
+.ws-is-firefox {
+   .controls-RangeShortSelectorLink__value-wrapper_theme-@{themeName}::before {
+      // Механизмы рендеринга webkit и FF/IE по-разному реализуют высоту строки.
+      // Чтобы не было прыжков между вызывающим элементом и заголовком (который выровнен по базовой линии)
+      // вычитаем 1px (чтобы в FF/IE/EDGE было так же, как chrome).
+      font-size: @line-height_dateRangeSelector - 1;
+   }
 }
 
 .controls-RangeShortSelectorLink__value-wrapper-minWidth_theme-@{themeName} {

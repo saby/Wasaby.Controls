@@ -41,7 +41,7 @@
                                           on:click="shiftBack()"/>
         </ws:if>
         <ws:if data="{{ _options.nextArrowVisibility && _viewMode == 'selector' && !_options.readOnly}}">
-            <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__next_theme-{{_options.theme}}"
+            <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__arrow-next_theme-{{_options.theme}}"
                                           direction="right"
                                           on:click="shiftForward()"/>
         </ws:if>
