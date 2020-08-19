@@ -42,19 +42,18 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions> implements IT
         const result = this._setItems(options, receivedState);
         if (result) {
             result.then((res) => {
-                this._items.forEach((item) => {
-                    item.set('align', this._align);
-                });
-                this._originalSource = this._items.clone();
-                this._deleteHiddenItems(this._items);
+                this._prepareItems();
             });
         } else {
-            this._items.forEach((item) => {
-                item.set('align', this._align);
-            });
-            this._originalSource = this._items.clone();
-            this._deleteHiddenItems(this._items);
+           this._prepareItems();
         }
+    }
+    private _prepareItems(): void {
+        this._items.forEach((item) => {
+            item.set('align', this._align);
+        });
+        this._originalSource = this._items.clone();
+        this._deleteHiddenItems(this._items);
     }
 
     private _setItems(options: ITabsAdaptiveButtonsOptions, receivedState: IReceivedState): void | Promise<RecordSet> {
