@@ -153,17 +153,21 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       const adjacentArray = this._options.displayedRanges[arrayIndex + direction];
 
       if (this._options.displayedRanges[arrayIndex + direction]) {
-         let startValue, endValue;
+         let year, startValueMonth, endValueMonth;
+         const monthsInYear = 12;
          if (direction === 1) {
-            const shiftForwardYear = adjacentArray[0].getFullYear();
-            startValue = new Date(shiftForwardYear, 0);
-            endValue = new Date(shiftForwardYear, currentInterval, 0);
+            startValueMonth = 0;
+            endValueMonth = currentInterval;
+            year = adjacentArray[0].getFullYear();
          } else {
-            const shiftBackYear = adjacentArray[1].getFullYear();
-            startValue = new Date(shiftBackYear, 12 - currentInterval);
-            endValue = new Date(shiftBackYear, 12, 0);
+            startValueMonth = monthsInYear - currentInterval;
+            endValueMonth = monthsInYear;
+            year = adjacentArray[1].getFullYear();
          }
-         return [startValue, endValue];
+         return [
+             new Date(year, startValueMonth, 1),
+             new Date(year, endValueMonth, 0)
+         ];
       }
       return range;
    },
