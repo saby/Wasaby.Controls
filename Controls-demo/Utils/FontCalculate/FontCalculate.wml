@@ -52,7 +52,7 @@
                             <ws:for data="index, symbol in _otherSymbols">
                                 <div>
                                     <span class="other-{{size}}">
-                                        {{symbol}}
+                                        <ws:partial template="{{symbol}}"/>
                                     </span>
                                 </div>
                             </ws:for>

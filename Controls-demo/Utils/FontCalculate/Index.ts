@@ -43,11 +43,6 @@ class Component extends Control<IControlOptions> {
         this._textArea = document.querySelector('textarea');
         this._setWidths();
     }
-    // Если вставить пробел в innerText элмента в браузере, он посчитает его за пустое место и удалит
-    // Добавляем две точки по краям, затем удалим их при вычислении.
-    protected _countSpaceWidth(sym, dotWidth: number): number {
-        return sym.getBoundingClientRect().width - 2 * dotWidth;
-    }
 
     private _setWidths(): void {
         const symbolsWidth = {};
@@ -87,14 +82,8 @@ class Component extends Control<IControlOptions> {
         const obj = {};
         const otherSymboldContainers = document.querySelectorAll('.other-' + size);
         for (const sym of otherSymboldContainers) {
-            if (sym.innerHTML === '. .') {
-                const spaceWidth = this._countSpaceWidth(sym, obj['.']);
-                obj[' '] = spaceWidth;
-                sym.innerText = ' |width: ' + spaceWidth;
-            } else {
-                obj[sym.innerText] = sym.getBoundingClientRect().width;
-                sym.innerText += ' |width: ' + sym.getBoundingClientRect().width;
-            }
+            obj[sym.innerText] = sym.getBoundingClientRect().width;
+            sym.innerText += ' |width: ' + sym.getBoundingClientRect().width;
         }
         return obj;
     }
@@ -135,8 +124,8 @@ class Component extends Control<IControlOptions> {
 
     private _getOtherSymbols = (): string[] => {
         return [
-            '~', '`', '!', '@', '#', '#', '$', '%', '^', '&', '*', '(', ')', '-', '=', '"', '№', ';', ':', '?', '_',
-            '+', '/', '|', ']', '[', ',', '.', '. .'
+            '&nbsp;', '~', '`', '!', '@', '#', '#', '$', '%', '^', '&', '*', '(', ')', '-', '=', '"', '№', ';', ':',
+            '?', '_', '+', '/', '|', ']', '[', ',', '.'
         ];
     }
 
