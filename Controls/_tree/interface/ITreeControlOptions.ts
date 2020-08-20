@@ -107,6 +107,8 @@ import { RecordSet } from 'Types/collection';
 /**
  * @name Controls/_tree/interface/ITreeControlOptions#nodeFooterTemplate
  * @cfg {Function} Шаблон подвала раскрытого узла дерева.
+ * @remark 
+ * В области видимости шаблона доступен объект itemData, внутри доступно свойство item - запись, под которой отрисовывается шаблон.
  * @demo Controls-demo/treeGrid/NodeFooter/NodeFooterTemplate/Index
  */
 
