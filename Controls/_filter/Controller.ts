@@ -806,10 +806,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                 if (options.useStore) {
                     const state = Store.getState();
                     _private.setFilterItems(this, state.filterSource, [], receivedState);
-                    _private.itemsReady(this, state.filter, receivedState);
+                    _private.itemsReady(this, filter, receivedState);
                 } else {
                     _private.setFilterItems(this, options.filterButtonSource, options.fastFilterSource, receivedState);
-                    _private.itemsReady(this, options.filter, receivedState);
+                    _private.itemsReady(this, filter, receivedState);
                 }
 
                 if (options.prefetchParams) {

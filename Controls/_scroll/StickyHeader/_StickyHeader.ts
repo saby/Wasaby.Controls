@@ -20,8 +20,8 @@ import Model = require('Controls/_scroll/StickyHeader/_StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/_StickyHeader/StickyHeader');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
-import {IScrollState} from '../Utils/ScrollState'
-import {SCROLL_POSITION} from '../Utils/Scroll';
+import {IScrollState} from '../Utils/ScrollState';
+import {getScrollPositionTypeByState, SCROLL_DIRECTION, SCROLL_POSITION} from '../Utils/Scroll';
 
 export const enum SHADOW_VISIBILITY {
     visible = 'visible',
@@ -61,10 +61,6 @@ export interface IStickyHeaderOptions extends IControlOptions {
  * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
  * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
  */
-
-interface IStickyHeaderContext {
-    stickyHeader: Function;
-}
 
 interface IResizeObserver {
     observe: (el: HTMLElement) => void;
@@ -113,7 +109,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _cssClassName: string = null;
     private _canScroll: boolean = false;
     private _scrollState: IScrollState = {
-        canVerticalScroll: false
+        canVerticalScroll: false,
+        verticalPosition: detection.isMobileIOS ? SCROLL_POSITION.START : null
     };
     private _negativeScrollTop: boolean = false;
     private _lastFixedPosition: string = '';
@@ -269,23 +266,55 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     protected _onScrollStateChangedOld(eventType: string, scrollState): void {
+
+        // После полного перехода на новый скролл контейнер эту функцию надо будет удалить.
+        let changed: boolean = false;
+
         if (eventType === 'canScroll') {
             this._canScroll = true;
             if (this._model.fixedPosition !== this._lastFixedPosition) {
-                this._forceUpdate();
+                changed = true;
             }
         } else if (eventType === 'cantScroll') {
             this._canScroll = false;
         } else if (eventType === 'scrollMoveSync') {
             this._negativeScrollTop = scrollState.scrollTop < 0;
         }
+
+        if (this._isMobileIOS) {
+            if (eventType === 'scrollMoveSync' || eventType === 'viewportResize' || eventType === 'scrollResize') {
+                // Пока скролл вотчер полность не инициализировался могут прилетать undefined, обнуляем их.
+                this._scrollState.scrollTop = scrollState.scrollTop || 0;
+                this._scrollState.clientHeight = scrollState.clientHeight;
+                this._scrollState.scrollHeight = scrollState.scrollHeight;
+                const verticalPosition = getScrollPositionTypeByState(this._scrollState, SCROLL_DIRECTION.VERTICAL);
+                if (verticalPosition !== this._scrollState.verticalPosition) {
+                    this._scrollState.verticalPosition = verticalPosition;
+                    // Не надо обновлять представление если заголовок не зафиксирован
+                    if (this._model.fixedPosition) {
+                        changed = true;
+                    }
+                }
+            }
+        }
+
+        if (changed) {
+            this._forceUpdate();
+        }
     }
 
-    protected _onScrollStateChanged(scrollState: IScrollState): void {
+    protected _onScrollStateChanged(scrollState: IScrollState, oldScrollState: IScrollState): void {
         let changed: boolean = false;
+
+        const isInitializing = Object.keys(oldScrollState).length === 0;
+        // Если нет скролла, то и заголовки незачем обновлять
+        if (isInitializing || !scrollState.canVerticalScroll) {
+            return;
+        }
+
         if (scrollState.canVerticalScroll !== this._scrollState.canVerticalScroll &&
                 this._model.fixedPosition !== this._lastFixedPosition) {
-            this._forceUpdate();
+            changed = true;
         }
         this._canScroll = scrollState.canVerticalScroll;
         this._negativeScrollTop = scrollState.scrollTop < 0;
@@ -546,7 +575,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 // заголовку что он зафиксирован. Обновим тень вручную что бы не было скачков.
                 fastUpdate.mutate(() => {
                     if (this._children.shadowBottom &&
-                            this._context.stickyHeader.shadowPosition.indexOf(POSITION.top) !== -1) {
+                        this._isShadowVisibleByScrollState(POSITION.bottom)) {
                         this._children.shadowBottom.classList.remove('ws-invisible');
                     }
                 });
@@ -566,21 +595,25 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
 
-        let shadowEnabled: boolean = false;
+        const shadowEnabled: boolean = this._isShadowVisibleByScrollState(shadowPosition);
 
-        if (this._scrollState.verticalPosition &&
-            (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
-            shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END)) {
-            shadowEnabled = true;
-        }
-
-        let oldShadowEnabled: boolean = this._context.stickyHeader?.shadowPosition &&
-            this._context.stickyHeader?.shadowPosition?.indexOf(fixedPosition) !== -1;
-
-        return !!((shadowEnabled || oldShadowEnabled) &&
+        return !!(shadowEnabled &&
             ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isFixed)) &&
             this._options.shadowVisibility === SHADOW_VISIBILITY.visible &&
             (this._options.mode === MODE.stackable || this._isFixed));
+    }
+
+    private _isShadowVisibleByScrollState(shadowPosition: POSITION): boolean {
+        const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
+
+        const shadowVisible: boolean = !!(this._scrollState.verticalPosition &&
+            (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
+            shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END));
+
+        const oldShadowVisible: boolean = this._context.stickyHeader?.shadowPosition &&
+            this._context.stickyHeader?.shadowPosition?.indexOf(fixedPosition) !== -1;
+
+        return shadowVisible || oldShadowVisible;
     }
 
     private _getComputedStyle(): CSSStyleDeclaration {

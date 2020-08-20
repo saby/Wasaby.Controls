@@ -56,10 +56,10 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         this._useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid;
 
         const scrollMode = options.scrollMode.toLowerCase();
-        if (scrollMode.indexOf('vertical') !== -1) {
+        if (options.scrollbarVisible && scrollMode.indexOf('vertical') !== -1) {
             this._models.vertical = new ScrollbarModel(SCROLL_DIRECTION.VERTICAL, options);
         }
-        if (scrollMode.indexOf('horizontal') !== -1) {
+        if (options.scrollbarVisible && scrollMode.indexOf('horizontal') !== -1) {
             this._models.horizontal = new ScrollbarModel(SCROLL_DIRECTION.HORIZONTAL, options);
         }
 
@@ -113,14 +113,6 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
-    adjustContentMarginsForBlockRender(marginTop, marginRight): void {
-        if (!this._overflowHidden) {
-            this._scrollContainerStyles = this._styleHideScrollbar.replace(/-?[1-9]\d*/g, function(found) {
-                return parseInt(found, 10) + marginRight;
-            });
-        }
-    }
-
     get scrollContainerStyles() {
         return !this._overflowHidden ? this._scrollContainerStyles : '';
     }
@@ -155,7 +147,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     }
     release(): boolean {
         if (this._showScrollbarOnHover) {
-            return true
+            return true;
         }
     }
     released(): boolean {
