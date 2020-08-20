@@ -77,9 +77,9 @@ class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, 
             this._prepareState(itemsData);
         } else if (options.source) {
             return this._initItems(options.source).then((result: IReceivedState) => {
+                this._prepareState(result);
                 // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
                 if (!TabsButtons._checkHasFunction(result)) {
-                    this._prepareState(result);
                     return result;
                 }
             });
