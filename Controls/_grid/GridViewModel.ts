@@ -296,7 +296,18 @@ var
         },
 
         getColumnScrollCellClasses(params, theme): string {
-           return _private.isFixedCell(params) ? ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ` ${COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT}`;
+           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : '';
+        },
+
+        /**
+         * Горизонтальный скролл строится на афтермаунте списка.
+         * При создании горизонтальный скролл считает для себя все что ему надо. В том числе и ширины фиксированной и скроллированой областей.
+         * А их он считает по селекторам, который JSSELECTORS.FIXED
+         * @param params
+         * @param theme
+         */
+        getColumnScrollCalculationCellClasses(params, theme): string {
+            return _private.isFixedCell(params) ? ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}` : ` ${COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT}`;
         },
 
         getClassesLadderHeading(itemData, theme): String {
@@ -321,8 +332,11 @@ var
                 classLists.base += _private.getBackgroundStyle({backgroundStyle, theme, backgroundColorStyle}, true);
             }
 
-            if (self._options.columnScroll && self._options.columnScrollVisibility) {
-                classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
+            if (self._options.columnScroll) {
+                classLists.columnScroll += _private.getColumnScrollCalculationCellClasses(current, theme);
+                if (self._options.columnScrollVisibility) {
+                    classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
+                }
             } else if (!checkBoxCell) {
                 classLists.base += ' controls-Grid__cell_fit';
             }
@@ -1013,8 +1027,8 @@ var
                 cellClasses = cellClasses + ' controls-Grid__header-cell_static';
             }
 
-            if (this._options.columnScroll && this._options.columnScrollVisibility) {
-                cellClasses += _private.getColumnScrollCellClasses({
+            if (this._options.columnScroll) {
+                const params = {
                     columnIndex: columnIndex,
                     endColumn: cell.endColumn,
                     rowIndex,
@@ -1022,7 +1036,11 @@ var
                     isMultiHeader: this._isMultiHeader,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
-                }, this._options.theme);
+                };
+                cellClasses += _private.getColumnScrollCalculationCellClasses(params, this._options.theme);
+                if (this._options.columnScrollVisibility) {
+                    cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
+                }
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
@@ -1269,12 +1287,16 @@ var
                 }
             }
 
-            if (this._options.columnScroll && this._options.columnScrollVisibility) {
-                cellClasses += _private.getColumnScrollCellClasses({
+            if (this._options.columnScroll) {
+                const params = {
                     columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
-                }, this._options.theme);
+                };
+                cellClasses += _private.getColumnScrollCalculationCellClasses(params, this._options.theme);
+                if (this._options.columnScrollVisibility) {
+                    cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
+                }
 
                 if (!GridLayoutUtil.isFullGridSupport()) {
                     const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
