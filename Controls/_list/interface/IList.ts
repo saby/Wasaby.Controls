@@ -167,7 +167,7 @@ export interface IList extends IItemActionsOptions {
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">демо-пример</a>
  * @default hidden
  * @remark
- * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="/doc/platform/developmentapl/service-development/service-contract/logic/list/list-iterator/">руководству разработчика</a>.
+ * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="doc/platform/developmentapl/interface-development/controls/list/list/select/#multiple-choice">руководству разработчика</a>.
  */
 
 /*ENG
@@ -252,16 +252,17 @@ export interface IList extends IItemActionsOptions {
 
 /**
  * @typedef {String} MarkerVisibility
- * @variant visible Маркер отображается всегда, даже если ключевая запись не указана.
+ * @variant visible Маркер отображается всегда, даже если не задан идентификатор элемента в опции {@link markedKey}.
  * @variant hidden Маркер всегда скрыт.
- * @variant onactivated Маркер отображается при активации списка. Например, когда пользователь отмечает запись.
+ * @variant onactivated Макер отображается при активации списка, например при клике по элементу.
  */
 
 /**
  * @name Controls/_list/interface/IList#markerVisibility
- * @cfg {MarkerVisibility} Режим отображения маркера строки.
+ * @cfg {MarkerVisibility} Режим отображения маркера активного элемента.
  * @remark
- * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">демо-пример</a>.
+ * В следующем примере маркер появляется только при активации списка.
+ * @demo Controls-demo/list_new/Marker/OnActivated/Index
  * @default onactivated
  */
 
@@ -431,12 +432,12 @@ export interface IList extends IItemActionsOptions {
  */
 
 /**
- * @event Controls/_list/interface/IList#itemSwipe Происходит при жесте "swipe" на элементе списка.
+ * @event Controls/_list/interface/IList#itemSwipe Происходит при свайпе на элементе списка.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим swipe.
  * @param {Object} nativeEvent Объект нативного события браузера.
  * @remark
- * Событие срабатывает, только если со списком ничего не происходит при жесте "swipe" (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IClickableView#itemClick itemClick}.
+ * Событие срабатывает, только если со списком ничего не происходит при свайпе (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IClickableView#itemClick itemClick}.
  */
 
 /*ENG
