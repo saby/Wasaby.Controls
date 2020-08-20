@@ -210,9 +210,11 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @event Controls/interface/IFormController#createSuccessed Происходит, когда запись создана успешно.
+    * @event Происходит, когда запись создана успешно.
+    * @name Controls/interface/IFormController#createSuccessed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Types/entity:Model} Редактируемая запись.
+    * @param {Types/entity:Model} record Редактируемая запись.
+    * @see createFailed
     */
 
    /*
@@ -222,9 +224,11 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @event Controls/interface/IFormController#createFailed Происходит, когда запись создать не удалось.
+    * @event Происходит, когда запись создать не удалось.
+    * @name Controls/interface/IFormController#createFailed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Error} Error
+    * @see createSuccessed
     */
 
    /*
@@ -234,9 +238,11 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @event Controls/interface/IFormController#readSuccessed Происходит, когда запись прочитана успешно.
+    * @event Происходит, когда запись прочитана успешно.
+    * @name Controls/interface/IFormController#readSuccessed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Types/entity:Model} Редактируемая запись.
+    * @param {Types/entity:Model} record Редактируемая запись.
+    * @see readFailed
     */
 
    /*
@@ -246,9 +252,11 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @event Controls/interface/IFormController#readFailed Происходит, когда запись прочитать не удалось.
+    * @event Происходит, когда запись прочитать не удалось.
+    * @name Controls/interface/IFormController#readFailed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Error} Error
+    * @see readSuccessed
     */
 
    /*
@@ -258,10 +266,12 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @event Controls/interface/IFormController#updateSuccessed Происходит, когда запись обновлена успешно.
+    * @event Происходит, когда запись обновлена успешно.
+    * @name Controls/interface/IFormController#updateSuccessed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Types/entity:Model} Редактируемая запись.
-    * @param {String} Ключ редактируемой записи.
+    * @param {Types/entity:Model} record Редактируемая запись.
+    * @param {String} key Ключ редактируемой записи.
+    * @see updateFailed
     */
 
    /*
@@ -272,9 +282,11 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @event Controls/interface/IFormController#updateFailed Происходит, когда обновить запись не удалось.
+    * @event Происходит, когда обновить запись не удалось.
+    * @name Controls/interface/IFormController#updateFailed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Error} Error
+    * @see updateSuccessed
     */
 
    /*
@@ -284,9 +296,11 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @event Controls/interface/IFormController#deleteSuccessed Происходит, когда запись удалена успешно.
+    * @event Происходит, когда запись удалена успешно.
+    * @name Controls/interface/IFormController#deleteSuccessed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Types/entity:Model} Редактируемая запись.
+    * @param {Types/entity:Model} record Редактируемая запись.
+    * @see deleteFailed
     */
 
    /*
@@ -296,9 +310,11 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @event Controls/interface/IFormController#deleteFailed Происходит, когда запись удалить не удалось.
+    * @event Происходит, когда запись удалить не удалось.
+    * @name Controls/interface/IFormController#deleteFailed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Error} Error
+    * @see deleteSuccessed
     */
 
    /*
@@ -308,7 +324,8 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @event Controls/interface/IFormController#isNewRecordChanged Происходит, когда запись инициализируется в источнике данных.
+    * @event Происходит, когда запись инициализируется в источнике данных.
+    * @name Controls/interface/IFormController#isNewRecordChanged
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Boolean} isNewRecord
     */
@@ -320,13 +337,15 @@ define('Controls/interface/IFormController', [
     */
 
    /**
-    * @event Controls/interface/IFormController#requestCustomUpdate Происходит перед сохранением записи.
+    * @event Происходит перед сохранением записи.
+    * @name Controls/interface/IFormController#requestCustomUpdate
+    * @remark
     * В обработчике события можно отменить  базовую логику сохранения (вернуть true) или отложить ее для выполнения пользовательских действий перед сохранением (вернуть Promise<boolean>).
     * Используется, например, для асинхронной валидации или пользовательского сохранения записи.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @example
     * Проверяет данные на сервере перед сохранением.
-    * <pre>
+    * <pre class="brush: js">
     *    _requestCustomUpdateHandler(): Promise<boolean> {
     *       return this._checkDataOnServer();
     *    }
