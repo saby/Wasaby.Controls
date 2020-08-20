@@ -1406,7 +1406,9 @@ const _private = {
                             self._addItems.push(...newItems);
                             self._addItemsIndex = newItemsIndex;
                         } else {
-                            result = self._scrollController.handleAddItems(newItemsIndex, newItems);
+                            const collectionStartIndex = self._listViewModel.getStartIndex();
+                            result = self._scrollController.handleAddItems(newItemsIndex, newItems,
+                                newItemsIndex <= collectionStartIndex ? 'up' : 'down');
                         }
 
                     }
