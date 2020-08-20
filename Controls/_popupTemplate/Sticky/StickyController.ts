@@ -284,8 +284,14 @@ class StickyController extends BaseController {
         const scrollTop = scroll?.scrollTop;
         container.style.maxHeight = item.popupOptions.maxHeight ? item.popupOptions.maxHeight + 'px' : '100vh';
         container.style.maxWidth = item.popupOptions.maxWidth ? item.popupOptions.maxWidth + 'px' : '100vw';
-        container.style.width = 'auto';
-        container.style.height = 'auto';
+
+        // Если значения явно заданы на опциях, то не сбрасываем то что на контейнере
+        if (!item.popupOptions.width) {
+            container.style.width = 'auto';
+        }
+        if (!item.popupOptions.height) {
+            container.style.height = 'auto';
+        }
 
         /* end: We remove the set values that affect the size and positioning to get the real size of the content */
 
