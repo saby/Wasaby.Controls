@@ -2139,7 +2139,11 @@ const _private = {
     },
 
     createMarkerController(self: any, options: any): Promise<MarkerController> {
-        return import('Controls/marker').then((MarkerLibrary) => {
+        if (self._markerControllerCreatingPromise) {
+            return self._markerControllerCreatingPromise;
+        }
+
+        self._markerControllerCreatingPromise = import('Controls/marker').then((MarkerLibrary) => {
             self._markerController = new MarkerLibrary.MarkerController({
                 model: self._listViewModel,
                 markerVisibility: options.markerVisibility,
@@ -2147,6 +2151,7 @@ const _private = {
             });
             return self._markerController;
         });
+        return self._markerControllerCreatingPromise;
     },
 
     updateMarkerController(self: any, options: any): Promise<void> {
@@ -2738,6 +2743,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _swipeTemplate: SwipeActionsTemplate,
 
     _markerController: null,
+    _markerControllerCreatingPromise: null,
 
     _dndListController: null,
     _dragEntity: undefined,
