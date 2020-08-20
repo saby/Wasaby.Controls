@@ -394,6 +394,7 @@ var
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
+    * @mixes Controls/_list/interface/IClickableView
     * @control
     * @public
     * @category List
