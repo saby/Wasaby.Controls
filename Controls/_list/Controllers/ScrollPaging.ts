@@ -74,9 +74,12 @@ export default class ScrollPagingController {
                 }
                 break;
             case 'numbers':
-                pagingCfg.showDigits = true;
+                arrowState.prev = 'hidden';
+                arrowState.next = 'hidden';
+                arrowState.end = 'hidden';
                 break;
         }
+        pagingCfg.pagingMode = this._options.pagingMode;
         pagingCfg.arrowState = arrowState;
         return pagingCfg;
     };

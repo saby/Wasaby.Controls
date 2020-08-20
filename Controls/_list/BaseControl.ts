@@ -1127,6 +1127,11 @@ const _private = {
             pagingCfgTrigger: (cfg) => {
                 self._pagingCfg = cfg;
                 self._forceUpdate();
+                if (self._options.navigation.viewConfig.pagingMode === 'numbers') {
+                    self._pagingCfg.pagesCount = Math.round(self._viewSize / self._viewportSize);
+                    self._pagingCfg.selectedPage = self._currentPage;
+                    self._pagingCfg.elementsCount = self._sourceController.getAllDataCount();
+                }
             }
         };
         return Promise.resolve(new ScrollPagingController(scrollPagingConfig));
@@ -1192,6 +1197,12 @@ const _private = {
     updateScrollPagingButtons(self, scrollParams) {
         _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
             scrollPaging.updateScrollParams(scrollParams);
+            if (self._options.navigation.viewConfig.pagingMode === 'numbers') {
+                const currentPage = Math.round(scrollParams.scrollTop / scrollParams.clientHeight) + 1;
+                self._currentPage = currentPage;
+                self._pagingCfg.selectedPage = self._currentPage;
+                self._pagingCfg.pagesCount = Math.round(self._viewSize / self._viewportSize);
+            }
         });
     },
 
@@ -3659,6 +3670,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.scrollToEdge(this, 'down');
                 break;
         }
+    },
+    __selectedPageChanged(e, page) {
+        this._currentPage = page;
+        const scrollParams = {
+            scrollTop: (page - 1) * this._viewportSize,
+            scrollHeight: this._viewSize,
+            clientHeight: this._viewportSize
+        };
+        this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true })
+        _private.updateScrollPagingButtons(this, scrollParams);
     },
 
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
