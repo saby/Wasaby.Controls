@@ -182,7 +182,11 @@
 /**
  * @name Controls/_grid/interface/IGridControl#columns
  * @cfg {Array.<Controls/grid:IColumn>} Описывает колонки таблицы.
- * @remark Перед отрисовкой убедитесь, что {@link Controls/display:Collection} содержит необходимые данные при изменении параметра {@link Controls/_grid/interface/IGridControl#columns columns}. При необходимости вызовите асинхронный метод "reload" перед изменением параметра {@link Controls/_grid/interface/IGridControl#columns columns}.
+ * @remark
+ * Если при отрисовске контрола данные не отображаются или выводится только их часть, то следует проверить {@link Controls/collection:RecordSet}, полученный от источника данных.
+ * Такой RecordSet должен содержать набор полей, которые заданы в конфигурации контрола в опции columns, а также сами данные для каждого поля.
+ * 
+ * Если структура данных RecordSet не соответствует изменениям columns, тогда вызовите асинхронный метод {@link Controls/grid:View#reload reload} перед изменением columns.
  * @example
  * <pre class="brush: js">
  * _columns: null,
