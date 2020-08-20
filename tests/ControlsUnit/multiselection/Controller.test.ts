@@ -337,7 +337,7 @@ describe('Controls/_multiselection/Controller', () => {
       assert.deepEqual(result, expectedResult);
    });
 
-   // T2.11 При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
+   // При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
    it('should right-swipe item on activateRightSwipe() method', () => {
       controller.activateRightSwipe(1);
       const item1 = model.getItemBySourceKey(1);

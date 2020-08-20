@@ -372,6 +372,7 @@ export default class CollectionItem<T> extends mixin<
         }
         this._$rightSwiped = swiped;
         this._nextVersion();
+        this._notifyItemChangeToOwner('rightSwiped');
     }
 
     /**
