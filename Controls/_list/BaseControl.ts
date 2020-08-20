@@ -4233,13 +4233,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     /**
-     * Обработчик, выполняемый после окончания анимации свайпа по записи
+     * Обработчик, выполняемый после окончания анимации свайпа вправо по записи
      * @param e
      * @private
      */
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'rightSwipe') {
-            _private.getItemActionsController(this).deactivateSwipe();
+            _private.getItemActionsController(this).deactivateRightSwipe();
         }
     },
 
