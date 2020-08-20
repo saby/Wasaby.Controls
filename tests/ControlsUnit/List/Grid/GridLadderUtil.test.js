@@ -63,9 +63,10 @@ define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/dis
          }];
          const resultLadder = {
             0: { date: { ladderLength: 1 } },
-            1: { date: { ladderLength: 4 } },
+            1: { date: { ladderLength: 3 } },
             2: { date: { } },
             3: { date: { } },
+            4: { date: { ladderLength: 2 } },
             5: { date: { } },
             6: { date: { ladderLength: 1 } },
             7: { date: { ladderLength: 3 } },
@@ -87,8 +88,14 @@ define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/dis
             },
             3: {
                photo: {
-                  ladderLength: 4,
-                  headingStyle: 'grid-row: span 4'
+                  ladderLength: 1,
+                  headingStyle: 'grid-row: span 1'
+               }
+            },
+            4: {
+               photo: {
+                  headingStyle: 'grid-row: span 4',
+                  ladderLength: 4
                }
             },
             5: {
