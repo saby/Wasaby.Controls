@@ -5,7 +5,7 @@
 }
 
 .controls-RangeShortSelectorLink_theme-@{themeName} {
-   height: @height_dateRangeSelector;
+   height: @height_rangeShortSelectorLink;
 }
 
 .controls-RangeShortSelectorLink-wrapper {
@@ -16,48 +16,23 @@
    justify-content: center;
 }
 
-.controls-RangeShortSelectorLink__prev::before {
-   content: "\e008 ";
-   width: 100%;
-   color: @yearselector_arrow_icon-color_shortDatePicker;
-}
-
-.controls-RangeShortSelectorLink__next::before {
-   content: "\e007";
-   width: 100%;
-   color: @yearselector_arrow_icon-color_shortDatePicker;
-}
-
-.controls-RangeShortSelectorLink__prev:hover::before,
-.controls-RangeShortSelectorLink__next:hover::before {
-   color: @yearselector_arrow_hover_icon-color_shortDatePicker;
-}
-
 .controls-RangeShortSelectorLink__clear_theme-@{themeName} {
    font-size: @arrow_icon-size_dateRangeSelector;
    width: @arrow_width_dateRangeSelector;
-}
+   color: @reset-button_icon-color_dateRangeSelector;
+   font-family: @icon_font-family_s;
 
-.controls-RangeShortSelectorLink__prev_theme-@{themeName},
-.controls-RangeShortSelectorLink__next_theme-@{themeName} {
-   font-size: @arrow_icon-size_dateRangeSelector;
-   height: @yearselector_arrow_height_shortDatePicker - 2 * @yearselector_arrow_border-width_shortDatePicker;
-   width: @yearselector_arrow_width_shortDatePicker - 2 * @yearselector_arrow_border-width_shortDatePicker;
-   line-height: @yearselector_arrow_height_shortDatePicker;
-   border: @yearselector_arrow_border-width_shortDatePicker solid @yearselector_arrow_border-color_shortDatePicker;
-   border-radius: @yearselector_arrow_border-radius_shortDatePicker;
-   align-items: center;
-   display: flex;
+   &::before {
+      line-height: @clear_line-height_rangeShortSelectorLink;
+   }
 }
 
 .controls-RangeShortSelectorLink__arrow-next_theme-@{themeName} {
-   margin-left: @yearselector_arrow_margin_shortDatePicker;
+   margin-left: @yearselector_arrow-next_margin_shortDatePicker;
 }
 
-.controls-RangeShortSelectorLink__clear {
-   display: inline-block;
-   font-weight: normal;
-   text-align: center;
+.controls-RangeShortSelectorLink__arrow-prev_theme-@{themeName} {
+   margin-left: @yearselector_arrow-prev_margin_shortDatePicker;
 }
 
 .controls-RangeShortSelectorLink__prev,
@@ -94,29 +69,11 @@
    height: 100%;
 }
 
-.controls-RangeShortSelector__clear_theme-@{themeName} {
-   color: @reset-button_icon-color_dateRangeSelector;
-   font-family: @icon_font-family_s;
-   font-size: @arrow_icon-size_dateRangeSelector;
-   width: @arrow_width_dateRangeSelector;
-}
-
-.controls-RangeShortSelector__clear {
-   cursor: pointer;
-   display: inline-block;
-   font-weight: normal;
-   text-align: center;
-
-   &::before {
-      content: "\ea27";
-   }
-}
-
 .controls-RangeShortSelectorLink__value-wrapper_theme-@{themeName}::before {
    content: '\200b';
    display: inline-block;
    width: 0;
-   font-size: @line-height_dateRangeSelector;
+   font-size: @line-height_rangeShortSelectorLink;
 }
 
 .ws-is-firefox {
@@ -124,7 +81,7 @@
       // Механизмы рендеринга webkit и FF/IE по-разному реализуют высоту строки.
       // Чтобы не было прыжков между вызывающим элементом и заголовком (который выровнен по базовой линии)
       // вычитаем 1px (чтобы в FF/IE/EDGE было так же, как chrome).
-      font-size: @line-height_dateRangeSelector - 1;
+      font-size: @line-height_rangeShortSelectorLink - 1;
    }
 }
 
@@ -136,14 +93,14 @@
    font-weight: @font-weight_dateRangeSelector;
 }
 
-.controls-RangeShortSelectorLink__clear_theme-@{themeName} {
-   color: @reset-button_icon-color_dateRangeSelector;
-   font-family: @icon_font-family_s;
-}
-
 .controls-RangeShortSelectorLink__clear {
    cursor: pointer;
-   &:before {
+   display: inline-block;
+   font-weight: normal;
+   text-align: center;
+   align-self: baseline;
+
+   &::before {
       content: "\ea27";
    }
 }

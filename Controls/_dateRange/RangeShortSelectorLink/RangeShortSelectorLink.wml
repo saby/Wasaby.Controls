@@ -34,10 +34,11 @@
            </ws:else>
         </span>
         <ws:if data="{{ _clearButtonVisible }}">
-              <span class="controls-RangeShortSelector__clear controls-RangeShortSelectorLink__clear_theme-{{_options.theme}}" on:click="_clearDate()"></span>
+              <span class="controls-RangeShortSelectorLink__clear controls-RangeShortSelectorLink__clear_theme-{{_options.theme}}" on:click="_clearDate()"></span>
         </ws:if>
         <ws:if data="{{ _options.prevArrowVisibility && _viewMode == 'selector'  && !_options.readOnly}}">
-            <Controls.buttons:ArrowButton direction="left"
+            <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__arrow-prev_theme-{{_options.theme}}"
+                                          direction="left"
                                           on:click="shiftBack()"/>
         </ws:if>
         <ws:if data="{{ _options.nextArrowVisibility && _viewMode == 'selector' && !_options.readOnly}}">
