@@ -217,48 +217,6 @@ export class Controller {
         return this._collection.find((item) => item.isSwiped());
     }
 
-    // region rightSwipe
-
-    // TODO убрать по https://online.sbis.ru/opendoc.html?guid=183d60a3-fc2e-499c-8c50-aca0462c6f3d
-    deactivateRightSwipe(): void {
-        this._collection.setSwipeAnimation(null);
-        const currentSwipedItem = this.getRightSwipeItem();
-        if (currentSwipedItem) {
-            this._setRightSwipeItem(null);
-            this._collection.nextVersion(); // Это надо тут ?
-        }
-    }
-
-    // TODO убрать по https://online.sbis.ru/opendoc.html?guid=183d60a3-fc2e-499c-8c50-aca0462c6f3d
-    getRightSwipeItem(): IItemActionsItem {
-        return this._collection.find((item) => !!item.isRightSwiped && item.isRightSwiped());
-    }
-
-    // TODO убрать по https://online.sbis.ru/opendoc.html?guid=183d60a3-fc2e-499c-8c50-aca0462c6f3d
-    private _setRightSwipeItem(key: TItemKey, silent?: boolean): void {
-        const oldSwipeItem = this.getRightSwipeItem();
-        const newSwipeItem = this._collection.getItemBySourceKey(key);
-
-        if (oldSwipeItem) {
-            oldSwipeItem.setRightSwiped(false, silent);
-        }
-        if (newSwipeItem) {
-            newSwipeItem.setRightSwiped(true, silent);
-        }
-    }
-
-    /**
-     * Устанавливает состояние элемента rightSwiped
-     * TODO убрать по https://online.sbis.ru/opendoc.html?guid=183d60a3-fc2e-499c-8c50-aca0462c6f3d
-     * @param itemKey
-     */
-    activateRightSwipe(itemKey: TItemKey): void {
-        this.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
-        this._setRightSwipeItem(itemKey);
-    }
-
-    // endregion
-
     /**
      * Собирает конфиг выпадающего меню операций
      * @param item элемент коллекции, для которого выполняется действие

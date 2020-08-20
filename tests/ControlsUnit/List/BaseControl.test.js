@@ -4271,10 +4271,12 @@ define([
                deactivateSwipe: () => {
                   deactivateSwipeCalled = true;
                },
+               getSwipeItem: () => ({ id: 1 })
+            };
+            ctrl._selectionController = {
                deactivateRightSwipe: () => {
                   deactivateRightSwipeCalled = true;
                },
-               getSwipeItem: () => ({ id: 1 }),
                getRightSwipeItem: () => ({ id: 1 })
             };
             ctrl._listViewModel = {
@@ -4363,8 +4365,6 @@ define([
             instance._listViewModel.setItems(rs, cfg);
             instance._items = rs;
 
-            // Пока что необходимо в любом случае проинициализировать ItemActionsController
-            // иначе у нас не будет работать ни swipe() ни rightSwipe()
             lists.BaseControl._private.updateItemActions(instance, instance._options);
          }
 
@@ -4397,21 +4397,21 @@ define([
 
             it('multiSelectVisibility: visible, should start animation', function() {
                initTest({multiSelectVisibility: 'visible'});
-               spyActivateRightSwipe = sinon.spy(instance._itemActionsController, 'activateRightSwipe');
+               spyActivateRightSwipe = sinon.spy(instance._selectionController, 'activateRightSwipe');
                instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
                sinon.assert.calledOnce(spyActivateRightSwipe);
             });
 
             it('multiSelectVisibility: onhover, should start animation', function() {
                initTest({multiSelectVisibility: 'onhover'});
-               spyActivateRightSwipe = sinon.spy(instance._itemActionsController, 'activateRightSwipe');
+               spyActivateRightSwipe = sinon.spy(instance._selectionController, 'activateRightSwipe');
                instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
                sinon.assert.calledOnce(spyActivateRightSwipe);
             });
 
             it('multiSelectVisibility: hidden, should not start animation', function() {
                initTest({multiSelectVisibility: 'hidden'});
-               spyActivateRightSwipe = sinon.spy(instance._itemActionsController, 'activateRightSwipe');
+               spyActivateRightSwipe = sinon.spy(instance._selectionController, 'activateRightSwipe');
                instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
                sinon.assert.notCalled(spyActivateRightSwipe);
             });

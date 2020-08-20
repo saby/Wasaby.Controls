@@ -1,12 +1,12 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
 import { Model } from 'Types/entity';
-import { CollectionItem } from 'Controls/display';
+import {ANIMATION_STATE, CollectionItem, TItemKey} from 'Controls/display';
 import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
 import {
    ISelectionControllerOptions,
    ISelectionControllerResult,
-   ISelectionDifference,
+   ISelectionDifference, ISelectionItem,
    ISelectionModel
 } from './interface';
 import clone = require('Core/core-clone');
@@ -211,6 +211,54 @@ export class Controller {
       this._updateModel(this._selection, false, records);
       return this._getResult(this._selection, this._selection);
    }
+
+   // region rightSwipe
+
+   /**
+    * Устанавливает текущее состояние свайпа записи вправо в false и отключает анимацию
+    */
+   deactivateRightSwipe(): void {
+      this._model.setSwipeAnimation(null);
+      const currentSwipedItem = this.getRightSwipeItem();
+      if (currentSwipedItem) {
+         this._setRightSwipeItem(null);
+      }
+   }
+
+   /**
+    * Получает текущий свайпнутый вправо элемент.
+    */
+   getRightSwipeItem(): ISelectionItem {
+      return this._model.find((item) => !!item.isRightSwiped && item.isRightSwiped());
+   }
+
+   /**
+    * Устанавливает текущее состояние свайпа записи вправо по её ключу
+    * @param key
+    * @private
+    */
+   private _setRightSwipeItem(key: TItemKey): void {
+      const oldSwipeItem = this.getRightSwipeItem();
+      const newSwipeItem = this._model.getItemBySourceKey(key);
+
+      if (oldSwipeItem) {
+         oldSwipeItem.setRightSwiped(false);
+      }
+      if (newSwipeItem) {
+         newSwipeItem.setRightSwiped(true);
+      }
+   }
+
+   /**
+    * Активирует анимацию записи по правому свайпу.
+    * @param itemKey
+    */
+   activateRightSwipe(itemKey: TItemKey): void {
+      this._model.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
+      this._setRightSwipeItem(itemKey);
+   }
+
+   // endregion
 
    private _clearSelection(): void {
       this._selectedKeys = [];

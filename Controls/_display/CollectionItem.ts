@@ -353,30 +353,41 @@ export default class CollectionItem<T> extends mixin<
     }
 
     /**
-     * Элемент коллеекции свайпнут вправо (состояние анимации right-swipe)
+     * Флаг, определяющий состояние свайпа вправо по записи.
+     * Используется для анимации при свайпе вправо по записи для
+     * отметки записи чекбоксом
      */
     isRightSwiped(): boolean {
         return this._$rightSwiped;
     }
 
-    setRightSwiped(swiped: boolean, silent?: boolean): void {
+    /**
+     * Устанавливает состояние свайпа вправо по записи.
+     * Используется при свайпе вправо по записи для
+     * отметки записи чекбоксом
+     */
+    setRightSwiped(swiped: boolean): void {
         if (this._$rightSwiped === swiped) {
             return;
         }
         this._$rightSwiped = swiped;
         this._nextVersion();
-        if (!silent) {
-            this._notifyItemChangeToOwner('rightSwiped');
-        }
     }
 
     /**
-     * Элемент коллекции свайпнут влево (состояние анимации open или close)
+     * Флаг, определяющий состояние свайпа влево по записи.
+     * Используется при свайпе по записи для
+     * отображения или скрытия панели опций записи
      */
     isSwiped(): boolean {
         return this._$swiped;
     }
 
+    /**
+     * Флаг, определяющий состояние свайпа влево по записи.
+     * Используется при свайпе по записи для
+     * отображения или скрытия панели опций записи
+     */
     setSwiped(swiped: boolean, silent?: boolean): void {
         if (this._$swiped === swiped) {
             return;

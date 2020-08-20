@@ -4204,8 +4204,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._notify('checkboxClick', [key, item.isSelected()]);
 
                 // Animation should be played only if checkboxes are visible.
-                if (this._options.multiSelectVisibility !== 'hidden') {
-                    _private.getItemActionsController(this).activateRightSwipe(item.getContents().getKey());
+                if (this._selectionController && this._options.multiSelectVisibility !== 'hidden') {
+                    this._selectionController.activateRightSwipe(item.getContents().getKey());
                 }
                 _private.setMarkedKey(this, key);
             }
@@ -4238,8 +4238,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
-        if (e.nativeEvent.animationName === 'rightSwipe') {
-            _private.getItemActionsController(this).deactivateRightSwipe();
+        if (this._selectionController && e.nativeEvent.animationName === 'rightSwipe') {
+            this._selectionController.deactivateRightSwipe();
         }
     },
 
