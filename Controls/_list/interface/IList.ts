@@ -167,7 +167,7 @@ export interface IList extends IItemActionsOptions {
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">демо-пример</a>
  * @default hidden
  * @remark
- * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="doc/platform/developmentapl/interface-development/controls/list/list/select/#multiple-choice">руководству разработчика</a>.
+ * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="/doc/platform/developmentapl/interface-development/controls/list/list/select/#multiple-choice">руководству разработчика</a>.
  */
 
 /*ENG
