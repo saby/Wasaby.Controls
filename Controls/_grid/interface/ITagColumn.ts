@@ -40,11 +40,11 @@ export type TTagStyle = 'info' | 'danger' | 'primary' | 'success' | 'warning' | 
 export interface ITagColumn extends IColumn {
     /**
      * @name Controls/grid:ITagColumn#tagStyleProperty
-     * @cfg {TTagStyle} Название свойства, содержащего стиль тега
+     * @cfg {String} Название свойства, содержащего стиль тега
      */
     /*
      * @name Controls/grid:ITagColumn#tagStyleProperty
-     * @cfg {TTagStyle} Name of the property that contains tag style
+     * @cfg {String} Name of the property that contains tag style
      */
-    tagStyleProperty: TTagStyle;
+    tagStyleProperty?: string;
 }

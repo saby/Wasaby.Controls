@@ -28,6 +28,9 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     // Значение выбранной колонки
     protected _currentValue: string;
 
+    // Раскрытые элементы дерева
+    protected _expandedItems: any[] = [1];
+
     constructor(cfg: IControlOptions) {
         super(cfg);
         this._tagStyleProperty = 'customProperty';
@@ -55,7 +58,7 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     ): void {
         this._currentColumnIndex = columnIndex;
         this._currentEvent = 'click';
-        this._currentValue = item.getContents().get('population');
+        this._currentValue = item.getContents().get('title');
     }
 
     /**
@@ -71,7 +74,7 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     ): void {
         this._currentColumnIndex = columnIndex;
         this._currentEvent = 'hover';
-        this._currentValue = item.getContents().get('population');
+        this._currentValue = item.getContents().get('title');
     }
 
     /**
@@ -79,14 +82,21 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
      * @private
      */
     private _getModifiedColumns(): ITagColumn[] {
-        const result: ITagColumn[] = Gadgets.getColumnsForFlat();
-        result.push({
-            displayProperty: 'country',
-            width: '150px',
-            align: 'right' as TCellAlign,
-            tagStyleProperty: this._tagStyleProperty
-        });
-        return result;
+        return Gadgets.getColumnsForFlat().map((col) => {
+            col.width = '200px';
+            return col;
+        }).concat([
+            {
+                displayProperty: 'rating',
+                width: '150px'
+            },
+            {
+                displayProperty: 'country',
+                width: '150px',
+                align: 'right' as TCellAlign,
+                tagStyleProperty: this._tagStyleProperty
+            }
+        ] as ITagColumn[]);
     }
 
     private _getModifiedData(): IData[] {

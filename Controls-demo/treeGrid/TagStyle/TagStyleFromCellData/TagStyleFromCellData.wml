@@ -10,6 +10,7 @@
             multiSelectVisibility="hidden"
             parentProperty="parent"
             nodeProperty="type"
+            bind:expandedItems="_expandedItems"
             on:tagClick="_onTagClickCustomHandler()"
             on:tagHover="_onTagHoverCustomHandler()"
     >

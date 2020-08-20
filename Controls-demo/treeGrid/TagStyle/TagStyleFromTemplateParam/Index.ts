@@ -22,6 +22,9 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     // Значение выбранной колонки
     protected _currentValue: string;
 
+    // Раскрытые элементы дерева
+    protected _expandedItems: any[] = [1];
+
     protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
         const data = this._getModifiedData().slice(0, MAXITEM);
         this._viewSource = new Memory({
@@ -46,7 +49,7 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     ): void {
         this._currentColumnIndex = columnIndex;
         this._currentEvent = 'click';
-        this._currentValue = item.getContents().get('population');
+        this._currentValue = item.getContents().get('title');
     }
 
     /**
@@ -64,7 +67,7 @@ export default class TagStyleGridDemo extends Control<IControlOptions> {
     ): void {
         this._currentColumnIndex = columnIndex;
         this._currentEvent = 'hover';
-        this._currentValue = item.getContents().get('population');
+        this._currentValue = item.getContents().get('title');
     }
 
     private _getModifiedData(): IData[] {
