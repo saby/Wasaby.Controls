@@ -576,13 +576,13 @@ define([
          assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called.');
       });
 
-/*
       it('save loaded items into the controls state', async function () {
          var
              cfg = {
                 viewName: 'Controls/List/ListView',
                 source: new sourceLib.Memory({}),
                 viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id'
              },
              loadedItems = new collection.RecordSet({
                 keyProperty: 'id',
@@ -610,11 +610,10 @@ define([
             }
          });
 
-         await ctrl.reload();
-
-         assert.deepEqual(ctrl._loadedItems, loadedItems);
+         ctrl.reload().then(() => {
+            assert.deepEqual(ctrl._loadedItems, loadedItems);
+         });
       });
-*/
 
       it('_private.checkPortionedSearchByScrollTriggerVisibility', () => {
          const self = {};

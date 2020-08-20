@@ -368,7 +368,9 @@ const _private = {
                         }
                         self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
-                        resDeferred.addCallback(() => _private.restoreModelState(self, cfg));
+                        resDeferred.addCallback(async () => {
+                            await _private.restoreModelState(self, cfg);
+                        });
 
                         if (self._sourceController) {
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));

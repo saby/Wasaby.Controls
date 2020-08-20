@@ -951,7 +951,6 @@ define([
             stubScrollToItem = undefined;
          });
 
-/*
          it('by keys', function(done) {
             var
                stopImmediateCalled = false,
@@ -1007,7 +1006,6 @@ define([
                }, 10);
             }, 10);
          });
-*/
       });
       it('TreeControl._beforeUpdate name of property', function() {
          return new Promise((resolve, reject) => {
