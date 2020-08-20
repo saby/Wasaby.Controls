@@ -68,6 +68,7 @@
       <Controls._scroll.Scroll.Scrollbar
          name="scrollBar"
          contentSize="{{_displayState.contentHeight}}"
+         getParentScrollPosition="{{_getScrollPositionCallback}}"
          attr:class="controls-Scroll__scrollbar {{!_dragging ? 'controls-Scroll__scrollbar_hidden'}}
          {{_horizontalScrollbarVisibility() ? 'controls-VScrollbar_vertical_offset'}}"
          on:positionChanged="_positionChangedHandler()"
