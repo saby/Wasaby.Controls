@@ -102,6 +102,7 @@
 
     // Решение - не панацея, проблемы которые вызывает данный хак, их описание и решение можно найти по хэштегам:
     //  + #grid_relativeCell_colspanCell
+    //  + #grid_relativeCell_checkBox_td
 
     // Ошибки
     // https://online.sbis.ru/opendoc.html?guid=25c8adb6-a789-44e3-931b-1b8d6bb0b511
@@ -183,6 +184,15 @@
 
     // #grid_relativeCell_colspanCell
     height: auto;
+  }
+
+  .controls-Grid__row-cell-checkbox_theme-@{themeName} .controls-Grid__table__relative-cell-wrapper_singleCell {
+    // При всем, описанном в #grid_relativeCell_td и #grid_relativeCell_colspanCell,
+    // не нужно ограничивать высоту ячейки под чекбокс, т.к. она должна тянуться на высоту, которую дает единственная ячейка с контентом.
+    // #grid_relativeCell_checkBox_td
+    // https://online.sbis.ru/opendoc.html?guid=a975f5c7-e503-47b8-9268-660596a37430
+
+    height: 100%;
   }
 
   .controls-Grid__table__relative-cell-wrapper_rowSeparator-s_theme-@{themeName} {
