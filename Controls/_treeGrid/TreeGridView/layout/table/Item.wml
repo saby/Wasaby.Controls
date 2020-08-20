@@ -40,7 +40,8 @@
                             {{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}} {{ cellClassName || '' }}"
                 ladderWrapper="{{currentColumn.ladderWrapper}}"
                 expanderTemplate="{{itemData.expanderTemplate}}"
-                itemData="{{currentColumn}}" />
+                itemData="{{currentColumn}}"
+                tagTemplate="{{tagTemplate}}"/>
 </ws:template>
 
 <ws:template name="COLUMN">
