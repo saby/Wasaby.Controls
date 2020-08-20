@@ -792,20 +792,10 @@ describe('Controls/_itemActions/Controller', () => {
 
         // T2.12 При вызове getSwipeItem() контроллер должен возвращать true
         // вне зависимости оттипа анимации и направления свайпа.
-        it('method getSwipeItem() should return true despite of current animation type and direction', () => {
+        it('method getSwipeItem() should return swoped item despite of current animation type and direction', () => {
             // @ts-ignore
             const item: CollectionItem<Record> = collection.getItemBySourceKey(1);
             let swipedItem: CollectionItem<Record>;
-
-            itemActionsController.activateRightSwipe(1);
-            // @ts-ignore
-            swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
-            assert.equal(swipedItem, item, 'rightSwiped() item has not been found by getSwipeItem() method');
-            itemActionsController.deactivateSwipe();
-
-            // @ts-ignore
-            swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
-            assert.equal(swipedItem, null, 'Current swiped item has not been un-swiped');
 
             itemActionsController.activateSwipe(1, 100, 50);
             // @ts-ignore
@@ -823,6 +813,22 @@ describe('Controls/_itemActions/Controller', () => {
             swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
             assert.equal(swipedItem, null, 'Current swiped item has not been un-swiped');
             assert.equal(collection.getVersion(), collectionVersion, 'Version changed.');
+        });
+
+        it('method getRightSwipeItem() should return right swiped item', () => {
+            // @ts-ignore
+            const item: CollectionItem<Record> = collection.getItemBySourceKey(1);
+            let swipedItem: CollectionItem<Record>;
+
+            itemActionsController.activateRightSwipe(1);
+            // @ts-ignore
+            swipedItem = itemActionsController.getRightSwipeItem() as CollectionItem<Record>;
+            assert.equal(swipedItem, item, 'right-swiped item has not been found by getRightSwipeItem() method');
+            itemActionsController.deactivateRightSwipe();
+
+            // @ts-ignore
+            swipedItem = itemActionsController.getRightSwipeItem() as CollectionItem<Record>;
+            assert.equal(swipedItem, null, 'Current right-swiped item has not been un-swiped');
         });
 
         // T2.13 При обновлении опций записи надо также обновлять конфиг свайпа
