@@ -178,6 +178,11 @@ var Component = Control.extend([], {
       }
       e.stopImmediatePropagation();
    },
+
+    setValidationResult(result): void {
+      this._children.validator.setValidationResult(result);
+   },
+
    _onKeyDown: function(event) {
       var key = event.nativeEvent.keyCode;
       if (key === Env.constants.key.insert && !event.nativeEvent.shiftKey && !event.nativeEvent.ctrlKey) {
