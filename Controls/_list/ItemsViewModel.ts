@@ -719,7 +719,7 @@ var ItemsViewModel = BaseViewModel.extend({
             newItems[0].getContents() &&
             newItems[0].getContents().getChanged &&
             newItems[0].getContents().getChanged().indexOf('docviewLoadingPercent') !== -1 &&
-            newItems[0].getContents().getChanged().indexOf('docviewIsLoading') !== -1;
+            newItems[0].getContents().getChanged().indexOf('docviewIsLoading') === -1;
     }
 });
 
