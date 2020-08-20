@@ -301,18 +301,23 @@ describe('Controls/list_clean/ScrollController', () => {
                 });
                 let topTriggerOffset = null;
                 let notifySaveScrollPosition = false;
+                let notifyRestoreScrollPosition = '';
                 let options = {
                     collection,
                     virtualScrollConfig: {},
                     needScrollCalculation: true,
                     attachLoadTopTriggerToNull: false,
                     useNewModel: true,
-                    notify: (eventName) => {
+                    notify: (eventName, params) => {
                         if (eventName === 'saveScrollPosition') {
                             notifySaveScrollPosition = true;
                         }
+                        if (eventName === 'restoreScrollPosition') {
+                            notifyRestoreScrollPosition = params && params[1];
+                        }
                     },
                     callbacks: {
+                        scrollPositionChanged: () => {},
                         triggerOffsetChanged: (topOffset) => {
                             topTriggerOffset = topOffset;
                         },
@@ -323,6 +328,7 @@ describe('Controls/list_clean/ScrollController', () => {
                 const controller = new ScrollController(options);
 
                 const container = {
+                    closest: () => {},
                     getElementsByClassName: () => {
                         return [{ offsetHeight: 50 }];
                     }
@@ -339,15 +345,31 @@ describe('Controls/list_clean/ScrollController', () => {
 
                 controller.itemsContainerReady(() => {
                     return {
+                        closest: () => {},
                         children: []
                     };
                 });
+                const clock = sinon.useFakeTimers();
                 controller.afterMount(container, triggers);
-                const item = items.at(0).clone();
+                let item = items.at(0).clone();
                 item.set('key', 2);
                 items.add(item, 0);
                 controller.saveScrollPosition();
+                controller.afterRender();
                 assert.isTrue(notifySaveScrollPosition);
+                assert.strictEqual(notifyRestoreScrollPosition, 'down');
+
+                controller.observeScroll('scrollMoveSync', {
+                    scrollTop: 1
+                });
+                item = items.at(0).clone();
+                item.set('key', 3);
+                items.add(item, 0);
+                controller.saveScrollPosition();
+                controller.afterRender();
+                assert.isTrue(notifySaveScrollPosition);
+                assert.strictEqual(notifyRestoreScrollPosition, 'up');
+                clock.restore();
             })
         });
     });
