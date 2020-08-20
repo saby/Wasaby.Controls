@@ -728,7 +728,8 @@ export default class ScrollController {
                 const collectionStartIndex = this._options.collection.getViewIterator ?
                     VirtualScrollController.getStartIndex(this._options.collection) :
                     this._options.collection.getStartIndex();
-                this._itemsAddedHandler(newItemsIndex, newItems, newItemsIndex <= collectionStartIndex ? 'up' : 'down');
+                this._itemsAddedHandler(newItemsIndex, newItems,
+                    newItemsIndex <= collectionStartIndex && this._lastScrollTop !== 0 ? 'up' : 'down');
             }
 
             if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
