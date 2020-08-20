@@ -202,6 +202,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         });
     }
 
+    // TODO https://online.sbis.ru/opendoc.html?guid=adc0aee9-f5c6-4221-b446-9883bc5d49db
     private _getWidthOfMoreButton(title: string = 'Еще```'): Promise<number> {
         return getFontWidth(title, 'm').then((res) => {
             this._widthOfMore = res;
