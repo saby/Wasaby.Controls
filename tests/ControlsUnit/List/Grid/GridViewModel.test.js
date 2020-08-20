@@ -2344,8 +2344,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
          it('getColumnScrollCellClasses', function() {
             const backgroundStyle = 'controls-background-default_theme-default';
-            const fixedCell = ` controls-Grid_columnScroll__fixed controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
-            const transformCell = ' controls-Grid_columnScroll__scrollable';
+            const fixedCell = ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}`;
             const params = {
                multiSelectVisibility: 'hidden',
                stickyColumnsCount: 1,
@@ -2354,9 +2353,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                isMultiHeader: false
             };
             assert.equal(fixedCell, gridMod.GridViewModel._private.getColumnScrollCellClasses(params, theme));
-            assert.equal(transformCell, gridMod.GridViewModel._private.getColumnScrollCellClasses({ ...params, columnIndex: 2 }, theme));
             assert.equal(backgroundStyle, gridMod.GridViewModel._private.getBackgroundStyle({...params, theme}));
             assert.equal(' ' + backgroundStyle, gridMod.GridViewModel._private.getBackgroundStyle({...params, theme}, true));
+         });
+
+         it('getColumnScrollCalculationCellClasses', function() {
+            const fixedCell = ` controls-Grid_columnScroll__fixed`;
+            const transformCell = ' controls-Grid_columnScroll__scrollable';
+            const params = {
+               multiSelectVisibility: 'hidden',
+               stickyColumnsCount: 1,
+               columnIndex: 0,
+               rowIndex: 0,
+               isMultiHeader: false
+            };
+            assert.equal(fixedCell, gridMod.GridViewModel._private.getColumnScrollCalculationCellClasses(params, theme));
+            assert.equal(transformCell, gridMod.GridViewModel._private.getColumnScrollCalculationCellClasses({ ...params, columnIndex: 2 }, theme));
          });
 
          it('getBottomPaddingStyles', function() {
