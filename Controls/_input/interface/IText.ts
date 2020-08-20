@@ -1,6 +1,7 @@
 export interface ITextOptions {
     constraint?: string;
     maxLength?: number;
+    convertPunycode: boolean;
     trim: number;
 }
 
@@ -22,6 +23,12 @@ export interface IText {
  * Каждый, введенный символ пользователем, фильтруется отдельно. Символ не прошедший фильтрацию в поле не добавляется.
  * Например, пользователь вставляет "1ab2cd" в поле с ограничением "[0-9]". Будет вставлено "12".
  * @demo Controls-demo/Input/Constraint/Index
+ */
+/**
+ * @name Controls/_input/interface/IText#convertPunycode
+ * @cfg {String} Нужно ли преобразовывать вводимое значения из Punycode в Unicode.
+ * @remark
+ * @demo Controls-demo/Input/ConvertPunycode/Index
  */
 /**
  * @name Controls/_input/interface/IText#maxLength
