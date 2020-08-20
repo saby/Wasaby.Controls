@@ -9,6 +9,7 @@
 
 type IScrollpagingState = 'top' | 'bottom' | 'middle';
 type TPagingMode = 'basic' | 'compact' | 'numbers';
+
 interface IScrollParams {
     clientHeight: number;
     scrollTop: number;
@@ -29,10 +30,12 @@ interface IPagingCfg {
     showDigits?: boolean;
     showEndButton?: boolean;
 }
+
 interface IScrollPagingOptions {
-    pagingMode: TPagingMode,
-    scrollParams: IScrollParams,
-    pagingCfgTrigger(IPagingCfg):void;
+    pagingMode: TPagingMode;
+    scrollParams: IScrollParams;
+
+    pagingCfgTrigger(IPagingCfg): void;
 }
 
 export default class ScrollPagingController {
@@ -42,9 +45,9 @@ export default class ScrollPagingController {
     constructor(cfg: IScrollPagingOptions) {
         this._options = cfg;
         this.updateStateByScrollParams(cfg.scrollParams);
-    };
+    }
 
-    protected updateStateByScrollParams(scrollParams): void {
+    protected updateStateByScrollParams(scrollParams: IScrollParams): void {
         const canScrollForward = scrollParams.clientHeight + scrollParams.scrollTop < scrollParams.scrollHeight;
         const canScrollBackward = scrollParams.scrollTop > 0;
         if (canScrollForward && canScrollBackward) {
@@ -54,7 +57,7 @@ export default class ScrollPagingController {
         } else if (!canScrollForward && canScrollBackward) {
             this.handleScrollBottom();
         }
-    };
+    }
 
     protected getPagingCfg(arrowState: IArrowState): IPagingCfg {
         const pagingCfg: IPagingCfg = {};
@@ -79,12 +82,14 @@ export default class ScrollPagingController {
                 arrowState.end = 'hidden';
                 break;
         }
-        pagingCfg.pagingMode = this._options.pagingMode;
+        if (this._options.pagingMode) {
+            pagingCfg.pagingMode = this._options.pagingMode;
+        }
         pagingCfg.arrowState = arrowState;
         return pagingCfg;
-    };
+    }
 
-    protected handleScrollMiddle() {
+    protected handleScrollMiddle(): void {
         if (!(this._curState === 'middle')) {
             this._options.pagingCfgTrigger(this.getPagingCfg({
                 begin: 'visible',
@@ -94,9 +99,9 @@ export default class ScrollPagingController {
             }));
             this._curState = 'middle';
         }
-    };
+    }
 
-    protected handleScrollTop() {
+    protected handleScrollTop(): void {
         if (!(this._curState === 'top')) {
             this._options.pagingCfgTrigger(this.getPagingCfg({
                 begin: 'readonly',
@@ -104,11 +109,11 @@ export default class ScrollPagingController {
                 next: 'visible',
                 end: 'visible'
             }));
-             this._curState = 'top';
+            this._curState = 'top';
         }
-    };
+    }
 
-    protected handleScrollBottom() {
+    protected handleScrollBottom(): void {
         if (!(this._curState === 'bottom')) {
             this._options.pagingCfgTrigger(this.getPagingCfg({
                 begin: 'visible',
@@ -118,17 +123,15 @@ export default class ScrollPagingController {
             }));
             this._curState = 'bottom';
         }
-    };
+    }
 
-    public updateScrollParams(scrollParams): void {
+    public updateScrollParams(scrollParams: IScrollParams): void {
         this._options.scrollParams = scrollParams;
         this.updateStateByScrollParams(scrollParams);
-    };
+    }
 
     protected destroy(): void {
         this._options = null;
-    };
+    }
 
 }
-
-

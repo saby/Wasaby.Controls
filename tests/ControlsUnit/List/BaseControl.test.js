@@ -2291,57 +2291,47 @@ define([
             lists.BaseControl._private.handleListScrollSync(ctrl, 600);
 
             assert.deepEqual({
-                arrowState: {
                     begin: "visible",
                     end: "readonly",
                     next: "readonly",
                     prev: "visible"
-                }
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
+            }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll to bottom');
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
-                arrowState: {
                     begin: "visible",
                     end: "visible",
                     next: "visible",
                     prev: "visible"
-                }
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+            }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll');
 
             ctrl._pagingVisible = true;
             ctrl._abortSearch();
             assert.deepEqual({
-                arrowState: {
                     begin: "visible",
                     end: "readonly",
                     next: "readonly",
                     prev: "visible"
-                }
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+            }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after abort search');
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
-                arrowState: {
                     begin: "visible",
                     end: "readonly",
                     next: "readonly",
                     prev: "visible"
-                }
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+            }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after abort search');
             lists.BaseControl._private.getPortionedSearch(ctrl).reset();
 
             // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
             // и еще раз доскроллили до конца, то самое время блокировать кнопки.
             lists.BaseControl._private.handleListScrollSync(ctrl, 400);
             assert.deepEqual({
-                arrowState: {
                     begin: "visible",
                     end: "readonly",
                     next: "readonly",
                     prev: "visible"
-                }
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+            }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll');
 
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);

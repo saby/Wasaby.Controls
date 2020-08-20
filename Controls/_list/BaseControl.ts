@@ -1133,7 +1133,13 @@ const _private = {
                     if (self._options.navigation.viewConfig.pagingMode === 'numbers') {
                         self._pagingCfg.pagesCount = Math.round(self._viewSize / self._viewportSize);
                         self._pagingCfg.selectedPage = self._currentPage;
-                        self._pagingCfg.elementsCount = self._sourceController.getAllDataCount();
+
+                        if (self._sourceController) {
+                            const allDataCount = self._sourceController.getAllDataCount();
+                            if (typeof allDataCount === 'number') {
+                                self._pagingCfg.elementsCount = allDataCount;
+                            }
+                        }
                     }
                 }
             }
@@ -1202,8 +1208,7 @@ const _private = {
         _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
             scrollPaging.updateScrollParams(scrollParams);
             if (self._options.navigation.viewConfig.pagingMode === 'numbers') {
-                const currentPage = Math.round(scrollParams.scrollTop / scrollParams.clientHeight) + 1;
-                self._currentPage = currentPage;
+                self._currentPage = Math.round(scrollParams.scrollTop / scrollParams.clientHeight) + 1;
                 self._pagingCfg.selectedPage = self._currentPage;
                 self._pagingCfg.pagesCount = Math.round(self._viewSize / self._viewportSize);
             }

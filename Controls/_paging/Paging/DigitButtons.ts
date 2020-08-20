@@ -11,7 +11,7 @@ export interface IDigitButtonsOptions extends IControlOptions {
 }
 
 const SUR_STANDARD_ELEMENTS_STEP = 3;
-const SUR_NUMBERS_ELEMENTS_STEP = 2;
+const SUR_NUMBERS_ELEMENTS_STEP = 1;
 
 type DigitElem = number | '...';
 
@@ -51,7 +51,14 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
             firstElem = currentDigit - SUR_NUMBERS_ELEMENTS_STEP;
             lastElem = currentDigit + SUR_NUMBERS_ELEMENTS_STEP;
         }
-
+        if (mode !== 'standard') {
+            if (currentDigit === 1) {
+                lastElem++;
+            }
+            if (currentDigit === digitsCount) {
+                firstElem--;
+            }
+        }
         if (firstElem < 1) {
             firstElem = 1;
         }
@@ -73,16 +80,24 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
             surElements = DigitButtons._getSurroundElemens(digitsCount, currentDigit, mode);
 
             if (surElements.first > 1) {
-                // если левая граничная цифра больше единицы, то единицу точно рисуем
-                drawnDigits.push(1);
+                if (mode === 'standard') {
+                    // если левая граничная цифра больше единицы, то единицу точно рисуем
+                    drawnDigits.push(1);
 
-                // если левая граничная цифра больше 3, надо рисовать многоточие (1 ... 4 5 6 [7])
-                if (surElements.first > 3) {
-                    drawnDigits.push('...');
-                    // а если равно шагу, то надо рисовать предыдущий по правилу исключения,
-                    // что многоточием не может заменяться одна цифра
-                } else if (surElements.first === 3) {
-                    drawnDigits.push(2);
+                    // если левая граничная цифра больше 3, надо рисовать многоточие (1 ... 4 5 6 [7])
+                    if (surElements.first > 3) {
+                        drawnDigits.push('...');
+                        // а если равно шагу, то надо рисовать предыдущий по правилу исключения,
+                        // что многоточием не может заменяться одна цифра
+                    } else if (surElements.first === 3) {
+                        drawnDigits.push(2);
+                    }
+                } else {
+                    if (surElements.first === 2) {
+                        drawnDigits.push(1);
+                    } else {
+                        drawnDigits.push('...');
+                    }
                 }
             }
 
@@ -93,12 +108,21 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
 
             // и рисуем правый блок аналогично левому, но в противоположную строну
             if (surElements.last < digitsCount) {
-                if (surElements.last < digitsCount - 2) {
-                    drawnDigits.push('...');
-                } else if (surElements.last < digitsCount - 1) {
-                    drawnDigits.push(digitsCount - 1);
+                if (mode === 'standard') {
+                    if (surElements.last < digitsCount - 2) {
+                        drawnDigits.push('...');
+                    } else if (surElements.last < digitsCount - 1) {
+                        drawnDigits.push(digitsCount - 1);
+                    }
+
+                    drawnDigits.push(digitsCount);
+                } else {
+                    if (surElements.last === digitsCount - 1) {
+                        drawnDigits.push(digitsCount);
+                    } else {
+                        drawnDigits.push('...');
+                    }
                 }
-                drawnDigits.push(digitsCount);
             }
         }
         return drawnDigits;
