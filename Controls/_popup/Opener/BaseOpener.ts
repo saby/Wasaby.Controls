@@ -271,6 +271,10 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
             if (popupItem) {
                 cfg._events = popupItem.popupOptions._events;
             } else {
+                // Даже если окна с переданным id нет, синхронизатор иногда считает что такой контрол у него есть
+                // (например окно с таким id только удалилось) и не вызовет на созданном окне фазу afterMount.
+                // Из-за этого открываемый инидкатор не скроется. Чищу id, если он не актуальный.
+                delete cfg.id;
                 BaseOpenerUtil.showIndicator(cfg);
             }
         }

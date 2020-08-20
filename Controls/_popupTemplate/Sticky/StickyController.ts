@@ -114,13 +114,6 @@ const _private = {
         }
     },
 
-    getTargetNode(cfg): HTMLElement {
-        if (cInstance.instanceOfModule(cfg.popupOptions.target, 'UI/Base:Control')) {
-            return cfg.popupOptions.target._container;
-        }
-        return cfg.popupOptions.target || (document && document.body);
-    },
-
     updateStickyPosition(item, position): void {
         const newStickyPosition = {
             targetPoint: position.targetPoint,
@@ -415,7 +408,7 @@ class StickyController extends BaseController {
                 leftScroll: 0
             };
         }
-        return TargetCoords.get(_private.getTargetNode(cfg));
+        return TargetCoords.get(StickyController._getTargetNode(cfg));
     }
 
     private _printTargetRemovedWarn(): void {
@@ -425,6 +418,13 @@ class StickyController extends BaseController {
     private _isTargetVisible(item): boolean {
         const targetCoords = this._getTargetCoords(item, {});
         return !!targetCoords.width;
+    }
+
+    protected static _getTargetNode(cfg): HTMLElement {
+        if (cInstance.instanceOfModule(cfg.popupOptions.target, 'UI/Base:Control')) {
+            return cfg.popupOptions.target._container;
+        }
+        return cfg.popupOptions.target || (document && document.body);
     }
 }
 

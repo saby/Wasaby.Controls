@@ -8,6 +8,7 @@
  * @includes IntersectionObserverController Controls/_scroll/IntersectionObserver/Controller
  * @includes IntersectionObserverContainer Controls/_scroll/IntersectionObserver/Container
  * @includes Group Controls/_scroll/StickyHeader/Group
+ * @includes ContainerNew Controls/_scroll/ContainerNew
  * @public
  * @author Крайнов Д.О.
  */
@@ -22,6 +23,7 @@
  * @includes IntersectionObserverController Controls/_scroll/IntersectionObserver/Controller
  * @includes IntersectionObserverContainer Controls/_scroll/IntersectionObserver/Container
  * @includes Group Controls/_scroll/StickyHeader/Group
+ * @includes ContainerNew Controls/_scroll/ContainerNew
  * @public
  * @author Крайнов Д.О.
  */

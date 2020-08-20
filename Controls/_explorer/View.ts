@@ -385,6 +385,7 @@ var
     * @mixes Controls/_interface/IFilterChanged
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/_explorer/interface/IExplorer
@@ -418,6 +419,7 @@ var
     * @mixes Controls/_interface/IFilterChanged
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/ISorting
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
@@ -545,11 +547,6 @@ var
          const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
          const isSearchViewMode = cfg.viewMode === 'search';
          const isRootChanged = cfg.root !== this._options.root;
-
-         //todo: после доработки стандарта, убрать флаг _isGoingFront по задаче: https://online.sbis.ru/opendoc.html?guid=ffa683fa-0b8e-4faa-b3e2-a4bb39671029
-         if (this._isGoingFront && this._options.hasOwnProperty('root') && !isRootChanged) {
-            this._isGoingFront = false;
-         }
 
          /*
          * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.
