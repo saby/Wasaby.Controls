@@ -49,11 +49,11 @@ const isTemplate = (tmpl: any): boolean => {
 };
 
 const isTemplateArray = (templateArray: any): boolean => {
-    return Array.isArray(templateArray) && templateArray.every((tmpl) => isTemplate(tmpl)) && templateArray.isDataArray;
+    return Array.isArray(templateArray) && templateArray.every((tmpl) => isTemplate(tmpl));
 };
 
 const isTemplateObject = (tmpl: any): boolean => {
-    return isTemplate(tmpl) && tmpl.isDataArray;
+    return isTemplate(tmpl);
 };
 
 class TabsButtons extends Control<ITabsButtonsOptions> implements ITabsButtons, IItems {
