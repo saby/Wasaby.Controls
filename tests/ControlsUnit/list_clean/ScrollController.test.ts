@@ -289,6 +289,66 @@ describe('Controls/list_clean/ScrollController', () => {
                 controller.update(options);
                 assert.strictEqual(topTriggerOffset, 0);
             });
+            it('collection change', () => {
+                const items = new RecordSet({
+                    rawData: [{
+                        key: 1
+                    }],
+                    keyProperty: 'key'
+                });
+                const collection = new Collection({
+                    collection: items
+                });
+                let topTriggerOffset = null;
+                let notifySaveScrollPosition = false;
+                let options = {
+                    collection,
+                    virtualScrollConfig: {},
+                    needScrollCalculation: true,
+                    attachLoadTopTriggerToNull: false,
+                    useNewModel: true,
+                    notify: (eventName) => {
+                        if (eventName === 'saveScrollPosition') {
+                            notifySaveScrollPosition = true;
+                        }
+                    },
+                    callbacks: {
+                        triggerOffsetChanged: (topOffset) => {
+                            topTriggerOffset = topOffset;
+                        },
+                        updateShadowMode: () => {},
+                        viewportResize: () => {}
+                    }
+                };
+                const controller = new ScrollController(options);
+
+                const container = {
+                    getElementsByClassName: () => {
+                        return [{ offsetHeight: 50 }];
+                    }
+                };
+
+                const triggers = {
+                    topVirtualScrollTrigger: {
+                        style: {}
+                    },
+                    bottomVirtualScrollTrigger: {
+                        style: {}
+                    }
+                };
+
+                controller.itemsContainerReady(() => {
+                    return {
+                        children: []
+                    };
+                });
+                controller.afterMount(container, triggers);
+                const item = items.at(0).clone();
+                item.set('key', 2);
+                items.add(item, 0);
+                controller.saveScrollPosition();
+                assert.isTrue(notifySaveScrollPosition);
+            })
         });
     });
 });

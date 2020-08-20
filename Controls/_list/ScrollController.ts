@@ -725,7 +725,10 @@ export default class ScrollController {
                         (this._options.collection.getCount() - newItems.length)
                     );
                 }
-                this._itemsAddedHandler(newItemsIndex, newItems);
+                const collectionStartIndex = this._options.collection.getViewIterator ?
+                    VirtualScrollController.getStartIndex(this._options.collection) :
+                    this._options.collection.getStartIndex();
+                this._itemsAddedHandler(newItemsIndex, newItems, newItemsIndex <= collectionStartIndex ? 'up' : 'down');
             }
 
             if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
