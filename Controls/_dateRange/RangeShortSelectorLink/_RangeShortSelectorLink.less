@@ -94,6 +94,24 @@
    height: 100%;
 }
 
+.controls-RangeShortSelector__clear_theme-@{themeName} {
+   color: @reset-button_icon-color_dateRangeSelector;
+   font-family: @icon_font-family_s;
+   font-size: @arrow_icon-size_dateRangeSelector;
+   width: @arrow_width_dateRangeSelector;
+}
+
+.controls-RangeShortSelector__clear {
+   cursor: pointer;
+   display: inline-block;
+   font-weight: normal;
+   text-align: center;
+
+   &::before {
+      content: "\ea27";
+   }
+}
+
 .controls-RangeShortSelectorLink__value-wrapper_theme-@{themeName}::before {
    content: '\200b';
    display: inline-block;
