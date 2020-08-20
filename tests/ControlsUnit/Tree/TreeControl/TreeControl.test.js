@@ -1004,8 +1004,8 @@ define([
 
                   assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
                   done();
-               }, 1);
-            }, 1);
+               }, 10);
+            }, 10);
          });
 */
       });
