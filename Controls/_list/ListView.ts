@@ -7,7 +7,6 @@ import {Logger} from 'UI/Utils';
 import ListViewTpl = require('wml!Controls/_list/ListView/ListView');
 import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
-import {isEqual} from "Types/object";
 
 const DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
 
@@ -125,7 +124,8 @@ var ListView = BaseControl.extend(
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
 
                 // Если изменить опцию модели пока ListView не построена, то они и не применятся.
-                this._listModel.setItemPadding(newOptions.itemPadding, true);
+                // TODO не работает
+                // this._listModel.setItemPadding(newOptions.itemPadding, true);
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
@@ -147,9 +147,10 @@ var ListView = BaseControl.extend(
             if (this._options.groupTemplate !== newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
             }
-            if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
+            // TODO не работает
+            /*if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
                 this._listModel.setItemPadding(newOptions.itemPadding);
-            }
+            }*/
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
 

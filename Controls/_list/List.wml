@@ -3,5 +3,6 @@
     template="{{_viewTemplate}}"
     scope="{{_options}}"
     viewName="{{_viewName}}"
+    useNewModel="{{true}}"
     viewModelConstructor="{{_viewModelConstructor}}">
 </ws:partial>

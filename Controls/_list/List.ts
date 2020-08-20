@@ -4,6 +4,8 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import ListControlTpl = require('wml!Controls/_list/List');
 import ListViewModel = require('Controls/_list/ListViewModel');
+import { Collection } from 'Controls/display';
+
 import Deferred = require('Core/Deferred');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import viewName = require('Controls/_list/ListView');
@@ -98,7 +100,7 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
     }
 
     protected _getModelConstructor(useNewModel: boolean) {
-        return !useNewModel ? ListViewModel : 'Controls/display:Collection';
+        return 'Controls/display:Collection';
     }
 
     reload(keepScroll, sourceConfig) {
