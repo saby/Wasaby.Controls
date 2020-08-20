@@ -167,31 +167,6 @@ describe('Controls/list_clean/ScrollController', () => {
 
                 assert.strictEqual(result.triggerOffset.top, 30);
             });
-            it('attachLoadTopTriggerToNull === false -> true', () => {
-                const collection = new Collection({
-                    collection: items
-                });
-                let options = {
-                    collection,
-                    virtualScrollConfig: {},
-                    needScrollCalculation: false,
-                    attachLoadTopTriggerToNull: false
-                };
-                const controller = new ScrollController(options);
-
-                let result = controller.update({
-                    options: {
-                        collection,
-                        virtualScrollConfig: {},
-                        needScrollCalculation: false,
-                        attachLoadTopTriggerToNull: true
-                    },
-                    params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
-                });
-
-
-                assert.strictEqual(result.triggerOffset.top, 0);
-            });
         });
     });
     describe('inertialScrolling', () => {
