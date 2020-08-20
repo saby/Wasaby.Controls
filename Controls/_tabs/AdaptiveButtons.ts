@@ -79,14 +79,17 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             Logger.error('Option containerWidth is undefined');
         }
         this._selectedKey = options.selectedKey;
-        const result = this._initItems(options, receivedState);
-        if (result) {
-            result.then((res) => {
+        const resultInitItems = this._initItems(options, receivedState);
+        const promiseWidthOfMoreButton = this._getWidthOfMoreButton();
+        promiseWidthOfMoreButton.then(() => {
+            if (resultInitItems) {
+                resultInitItems.then((res) => {
+                    this._prepareItems(options);
+                });
+            } else {
                 this._prepareItems(options);
-            });
-        } else {
-           this._prepareItems(options);
-        }
+            }
+        });
     }
     private _prepareItems(options: ITabsAdaptiveButtonsOptions): void {
         this._items.forEach((item) => {
@@ -222,7 +225,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     }
 
     private _splitItemsByVisibility(items: RecordSet, options: ITabsAdaptiveButtonsOptions): void {
-        this._getWidthOfMoreButton();
         this._getIndexOfLastTab(items, options).then((res) => {
             this._lastIndex = res;
             const oldRawData = items.getRawData();
