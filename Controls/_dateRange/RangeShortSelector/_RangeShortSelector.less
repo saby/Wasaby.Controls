@@ -12,12 +12,12 @@
 }
 
 .controls-DateRangeSelectorLite__picker-normal {
-   margin-top: ceil((@line-height_rangeShortSelectorLink - @item_height_shortDatePicker)/2) - 2 * @border-thickness_shortDatePicker;
+   margin-top: ceil((@line-height_rangeShortSelectorLink - @item_height_shortDatePicker)/2) - @border-thickness_shortDatePicker;
    margin-left: -(@header_padding-horizontal_shortDatePicker + @border-thickness_shortDatePicker);
 }
 
 .controls-DateRangeSelectorLite__picker-years-only {
-   margin-top: ceil((@line-height_rangeShortSelectorLink - @item_height_shortDatePicker)/2) - 2 * @item_height_shortDatePicker;
+   margin-top: ceil((@line-height_rangeShortSelectorLink - @item_height_shortDatePicker)/2) - @item_height_shortDatePicker;
 }
 
 // Механизмы рендеринга webkit и FF по-разному реализуют высоту строки.
@@ -25,10 +25,10 @@
 // добавляем к смещению popup'a 1px (чтобы в FF было так же, как chrome).
 .ws-is-firefox {
    .controls-DateRangeSelectorLite__picker-normal {
-      margin-top: ceil((@line-height_rangeShortSelectorLink - @item_height_shortDatePicker)/2) - 2 * @border-thickness_shortDatePicker + 1;
+      margin-top: ceil((@line-height_rangeShortSelectorLink - @item_height_shortDatePicker)/2) - @border-thickness_shortDatePicker + 1;
    }
 
    .controls-DateRangeSelectorLite__picker-years-only {
-      margin-top: ceil((@line-height_rangeShortSelectorLink - @item_height_shortDatePicker)/2) - 2 * @item_height_shortDatePicker + 1;
+      margin-top: ceil((@line-height_rangeShortSelectorLink - @item_height_shortDatePicker)/2) - @item_height_shortDatePicker + 1;
    }
 }
