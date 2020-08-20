@@ -645,5 +645,33 @@ define([
          assert.equal(FC._isNewRecord, false);
          FC.destroy();
       });
+
+      describe('_onCloseErrorDialog()', () => {
+         let fc;
+
+         beforeEach(() => {
+            fc = new form.Controller();
+            fc.__error = {};
+            sinon.stub(fc, '_notify');
+         });
+
+         afterEach(() => {
+            sinon.reset();
+         });
+
+         it('without record', () => {
+            fc._onCloseErrorDialog();
+            assert.isNotOk(fc.__error, 'resets viewConfig of error container');
+            assert.isTrue(fc._notify.calledOnce, 'notifies "close"');
+            assert.deepEqual(fc._notify.getCall(0).args, ['close', [], { bubbling: true }]);
+         });
+
+         it('with record', () => {
+            fc._record = {};
+            fc._onCloseErrorDialog();
+            assert.isNotOk(fc.__error, 'resets viewConfig of error container');
+            assert.isNotOk(fc._notify.called, 'does not notify "close"');
+         });
+      });
    });
 });
