@@ -806,10 +806,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                 if (options.useStore) {
                     const state = Store.getState();
                     _private.setFilterItems(this, state.filterSource, [], receivedState);
-                    _private.itemsReady(this, state.filter, receivedState);
+                    _private.itemsReady(this, filter, receivedState);
                 } else {
                     _private.setFilterItems(this, options.filterButtonSource, options.fastFilterSource, receivedState);
-                    _private.itemsReady(this, options.filter, receivedState);
+                    _private.itemsReady(this, filter, receivedState);
                 }
 
                 if (options.prefetchParams) {
@@ -821,7 +821,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                 const loadedSources = state && state.loadedSources && state.loadedSources[0];
                 if (loadedSources) {
                     return _private.resolveItems(this, loadedSources.historyId, loadedSources.filterButtonSource, loadedSources.fastFilterSource, loadedSources.historyItems).then((history) => {
-                        _private.itemsReady(this, filter, history);
+                        _private.itemsReady(this, loadedSources.filter, history);
                         if (loadedSources.historyItems && loadedSources.historyItems.length && loadedSources.historyId && loadedSources.prefetchParams) {
                             _private.processHistoryOnItemsChanged(this, loadedSources.historyItems, loadedSources);
                         }
@@ -829,7 +829,7 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
                     });
                 } else {
                     return _private.resolveItems(this, state.historyId, state.filterSource, [], options.historyItems).then((history) => {
-                        _private.itemsReady(this, filter, history);
+                        _private.itemsReady(this, state.filter, history);
                         return history;
                     });
                 }

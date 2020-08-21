@@ -289,6 +289,88 @@ describe('Controls/list_clean/ScrollController', () => {
                 controller.update(options);
                 assert.strictEqual(topTriggerOffset, 0);
             });
+            it('collection change', () => {
+                const items = new RecordSet({
+                    rawData: [{
+                        key: 1
+                    }],
+                    keyProperty: 'key'
+                });
+                const collection = new Collection({
+                    collection: items
+                });
+                let topTriggerOffset = null;
+                let notifySaveScrollPosition = false;
+                let notifyRestoreScrollPosition = '';
+                let options = {
+                    collection,
+                    virtualScrollConfig: {},
+                    needScrollCalculation: true,
+                    attachLoadTopTriggerToNull: false,
+                    useNewModel: true,
+                    notify: (eventName, params) => {
+                        if (eventName === 'saveScrollPosition') {
+                            notifySaveScrollPosition = true;
+                        }
+                        if (eventName === 'restoreScrollPosition') {
+                            notifyRestoreScrollPosition = params && params[1];
+                        }
+                    },
+                    callbacks: {
+                        scrollPositionChanged: () => {},
+                        triggerOffsetChanged: (topOffset) => {
+                            topTriggerOffset = topOffset;
+                        },
+                        updateShadowMode: () => {},
+                        viewportResize: () => {}
+                    }
+                };
+                const controller = new ScrollController(options);
+
+                const container = {
+                    closest: () => {},
+                    getElementsByClassName: () => {
+                        return [{ offsetHeight: 50 }];
+                    }
+                };
+
+                const triggers = {
+                    topVirtualScrollTrigger: {
+                        style: {}
+                    },
+                    bottomVirtualScrollTrigger: {
+                        style: {}
+                    }
+                };
+
+                controller.itemsContainerReady(() => {
+                    return {
+                        closest: () => {},
+                        children: []
+                    };
+                });
+                const clock = sinon.useFakeTimers();
+                controller.afterMount(container, triggers);
+                let item = items.at(0).clone();
+                item.set('key', 2);
+                items.add(item, 0);
+                controller.saveScrollPosition();
+                controller.afterRender();
+                assert.isTrue(notifySaveScrollPosition);
+                assert.strictEqual(notifyRestoreScrollPosition, 'down');
+
+                controller.observeScroll('scrollMoveSync', {
+                    scrollTop: 1
+                });
+                item = items.at(0).clone();
+                item.set('key', 3);
+                items.add(item, 0);
+                controller.saveScrollPosition();
+                controller.afterRender();
+                assert.isTrue(notifySaveScrollPosition);
+                assert.strictEqual(notifyRestoreScrollPosition, 'up');
+                clock.restore();
+            })
         });
     });
 });

@@ -26,12 +26,13 @@ define([
          mockPopupHelper();
       }
 
-      function getViewConfig(mode, options) {
+      function getViewConfig(mode, options = {}) {
          return {
             mode,
             options,
             template: 'template',
-            status: undefined
+            status: undefined,
+            getVersion: () => Date.now()
          };
       }
 
@@ -93,7 +94,27 @@ define([
 
             instance._beforeUpdate({ viewConfig });
 
-            assert.isDefined(instance.__viewConfig);
+            assert.isNotNull(instance.__viewConfig);
+         });
+
+         it('sets new viewConfig when it comes (deep comparison)', () => {
+            instance.__viewConfig = null;
+            instance._options.viewConfig = viewConfig;
+
+            const newConfig = getViewConfig('include', { image: '42' });
+            instance._beforeUpdate({ viewConfig: newConfig });
+
+            assert.isNotNull(instance.__viewConfig);
+            assert.strictEqual(instance.__viewConfig.options.image, '42');
+         });
+
+         it('resets viewConfig', () => {
+            instance.__viewConfig = viewConfig;
+            instance._options.viewConfig = viewConfig;
+
+            instance._beforeUpdate({ viewConfig: undefined });
+
+            assert.isNull(instance.__viewConfig);
          });
 
          it('does not set new viewConfig when options.viewConfig are equal', () => {
@@ -105,8 +126,20 @@ define([
             assert.isNull(instance.__viewConfig);
          });
 
+         it('does not set new viewConfig when options.viewConfig are equal (deep comparison)', () => {
+            instance.__viewConfig = null;
+            instance._options.viewConfig = viewConfig;
+
+            instance._beforeUpdate({ viewConfig: getViewConfig('include') });
+
+            assert.isNull(instance.__viewConfig);
+         });
+
          it('inlist mode: sets new list options when options viewConfig are equal', () => {
-            const options = { viewConfig: getViewConfig('inlist', {}), someListsOptions: 42 };
+            const options = {
+               viewConfig: getViewConfig('inlist', {}),
+               someListsOptions: 42
+            };
 
             instance.__viewConfig = viewConfig;
             instance._options.viewConfig = viewConfig;

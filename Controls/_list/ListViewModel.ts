@@ -747,7 +747,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setSearchValue: function(value) {
-        this._options.searchValue = value;
+        if (value !== this._options.searchValue) {
+            this._options.searchValue = value;
+            this._nextModelVersion();
+        }
     },
 
     __calcSelectedItem: function(display, selKey, keyProperty) {

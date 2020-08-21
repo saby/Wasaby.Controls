@@ -99,8 +99,7 @@ const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
     {id: 4, title: '50', pageSize: 50},
     {id: 5, title: '100', pageSize: 100},
     {id: 6, title: '200', pageSize: 200},
-    {id: 7, title: '500', pageSize: 500},
-    {id: 8, title: '1000', pageSize: 1000}];
+    {id: 7, title: '500', pageSize: 500}];
 
 const
     HOT_KEYS = {
@@ -737,6 +736,7 @@ const _private = {
                                 return Promise.resolve(afterActionCallback);
                             });
                         },
+                        isPagingVisible: self._pagingVisible,
                         /**
                          * Позиция шаблона ошибки относительно списка.
                          * Зависит от направления подгрузки данных.
@@ -1081,8 +1081,11 @@ const _private = {
         const scrollPagingConfig = {
             scrollParams,
             pagingCfgTrigger: (cfg) => {
-                self._pagingCfg = cfg;
-                self._forceUpdate();
+                if (!self._hideTopTriggerUntilMount &&
+                    !self._needScrollToFirstItem && !isEqual(self._pagingCfg, cfg)) {
+                    self._pagingCfg = cfg;
+                    self._forceUpdate();
+                }
             }
         };
         return Promise.resolve(new ScrollPagingController(scrollPagingConfig));
@@ -1355,11 +1358,19 @@ const _private = {
                 _private.handleSelectionControllerResult(self, result);
             }
 
-            // Когда action=remove значит были скрыты или удалены элементы
-            // Если элементы скрылись, то для них нужно сбросить состояние marked,
-            // чтобы при их показе не было лишнего маркера
-            if (action === IObservable.ACTION_REMOVE && _private.hasMarkerController(self)) {
-                _private.getMarkerController(self).resetMarkedState(removedItems);
+            if (_private.hasMarkerController(self)) {
+                // Когда action=remove значит были скрыты или удалены элементы
+                // Если элементы скрылись, то для них нужно сбросить состояние marked,
+                // чтобы при их показе не было лишнего маркера
+                if (action === IObservable.ACTION_REMOVE) {
+                    _private.getMarkerController(self).resetMarkedState(removedItems);
+                }
+
+                // Если элемент был пересоздан, то сперва сработает remove и с элемента уберется выделение,
+                // а потом сработает add и для элемента нужно восстановить выделение
+                if (action === IObservable.ACTION_ADD) {
+                    _private.getMarkerController(self).handleAddItems(newItems);
+                }
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
@@ -1642,6 +1653,7 @@ const _private = {
             if (errorConfig && config.templateOptions) {
                 errorConfig.options.action = config.templateOptions.action;
                 errorConfig.options.showInDirection = config.templateOptions.showInDirection;
+                errorConfig.options.isPagingVisible = config.templateOptions.isPagingVisible;
             }
             _private.showError(self, errorConfig);
             return {
@@ -2063,7 +2075,7 @@ const _private = {
             event.preventDefault();
             const newMarkedKey = self._markerController.moveMarkerToNext();
             _private.handleMarkerControllerResult(self, newMarkedKey);
-            _private.scrollToItem(self, newMarkedKey, false, true);
+            _private.scrollToItem(self, newMarkedKey, undefined, true);
         }
     },
 
@@ -2929,15 +2941,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const container = this._container[0] || this._container;
         this._viewSize = container.clientHeight;
-        if (_private.needScrollPaging(this._options.navigation)) {
-            const scrollParams = {
-                scrollHeight: this._viewSize,
-                clientHeight: this._viewPortSize,
-                scrollTop: this._scrollTop
-            };
-
-            _private.updateScrollPagingButtons(this, scrollParams);
-        }
+            if (_private.needScrollPaging(this._options.navigation)) {
+                _private.doAfterUpdate(this, () => {
+                    const scrollParams = {
+                        scrollHeight: this._viewSize,
+                        clientHeight: this._viewPortSize,
+                        scrollTop: this._scrollTop
+                    };
+                    _private.updateScrollPagingButtons(this, scrollParams);
+                });
+            }
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewPortRect);
     },
 
@@ -2958,10 +2971,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             container.addEventListener('dragstart', this._nativeDragStart);
         }
         this._loadedItems = null;
-
-        if (this._scrollController) {
-            this._scrollController.afterMount(container, this._children);
-        }
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
         // TODO https://online.sbis.ru/opendoc.html?guid=3042889b-181c-47ec-b036-a7e24c323f5f
@@ -2987,6 +2996,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
         _private.checkNeedAttachLoadTopTriggerToNull(this, this._options);
+
+        if (this._scrollController) {
+            this._scrollController.afterMount(container, this._children);
+        }
     },
 
     _updateScrollController(newOptions) {
@@ -4039,13 +4052,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     /**
-     * Обработчик, выполняемый после окончания анимации свайпа по записи
+     * Обработчик, выполняемый после окончания анимации свайпа вправо по записи
      * @param e
      * @private
      */
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'rightSwipe') {
-            _private.getItemActionsController(this).deactivateSwipe();
+            _private.getItemActionsController(this).deactivateRightSwipe();
         }
     },
 

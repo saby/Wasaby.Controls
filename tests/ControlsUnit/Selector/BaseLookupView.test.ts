@@ -171,13 +171,13 @@ describe('Controls/_lookup/BaseLookupView', function() {
 
    it('_determineAutoDropDown', function() {
       var lookup = new Lookup();
-
+      lookup._items = getItems(1);
       lookup._isInputVisible = function() {
          return false;
       };
       lookup._options.autoDropDown = true;
       ok(!lookup._determineAutoDropDown());
-
+      lookup._items.clear();
       lookup._isInputVisible = function() {
          return true;
       };
@@ -370,6 +370,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       let
          inputIsVisible = true,
          lookup = new Lookup();
+      lookup._items = getItems(0);
 
       lookup._isInputVisible = function() {
          return inputIsVisible;
@@ -379,6 +380,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(!lookup._isInputActive({readOnly: true}));
 
       inputIsVisible = false;
+      lookup._items = getItems(1);
       ok(!lookup._isInputActive({readOnly: false}));
       ok(!lookup._isInputActive({readOnly: true}));
    });

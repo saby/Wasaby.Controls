@@ -430,19 +430,6 @@
    box-sizing: border-box;
 }
 
-.ws-is-mobile-chrome-ios .controls-ListView__item__marked_master_theme-@{themeName},
-.ws-is-desktop-safari .controls-ListView__item__marked_master_theme-@{themeName},
-.ws-is-mobile-safari .controls-ListView__item__marked_master_theme-@{themeName},
-.ws-is-mobile-chrome-ios .controls-ListView__item__marked_masterClassic_theme-@{themeName},
-.ws-is-desktop-safari .controls-ListView__item__marked_masterClassic_theme-@{themeName},
-.ws-is-mobile-safari .controls-ListView__item__marked_masterClassic_theme-@{themeName} {
-   // ave safari 13
-   // https://online.sbis.ru/opendoc.html?guid=6d560d7a-c140-4d06-a1b6-53b326efe950
-   // иначе все position: absolute элементы внутри position: sticky
-   // начинают сроиться относительно родителя уровнем выше
-   transform: translateZ(0);
-}
-
 .controls-ListView__item__unmarked_master_theme-@{themeName} {
    font-size: @master_item_font-size_list;
 }
@@ -586,6 +573,11 @@
      &:hover {
        background-color: @item_hover_background-color_list;
      }
+   }
+   .controls-ListView__item_highlightOnHover_default_theme_@{themeName} {
+      &:hover .controls-background-default_theme-@{themeName}{
+         background-color: @item_hover_background-color_list;
+      }
    }
  }
  //TODO это должно уехать в BaseControl после задачи https://online.sbis.ru/opendoc.html?guid=92bedbf7-6038-4c1f-826e-b096b4cddd6d
