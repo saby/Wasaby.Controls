@@ -200,16 +200,15 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
 
     private _getWidthOfItem(item: string): Promise<number> {
         // ширина элемента
-        return getFontWidth(item, 'l').then((res) => {
-            return res + COUNT_OF_MARGIN * MARGIN;
+        return getFontWidth(item).then((res) => {
+            return res.l + COUNT_OF_MARGIN * MARGIN;
         });
     }
 
-    // TODO https://online.sbis.ru/opendoc.html?guid=adc0aee9-f5c6-4221-b446-9883bc5d49db
-    private _getWidthOfMoreButton(title: string = 'Еще```'): Promise<number> {
-        return getFontWidth(title, 'm').then((res) => {
-            this._widthOfMore = res;
-            return res;
+    private _getWidthOfMoreButton(title: string = 'Еще...'): Promise<number> {
+        return getFontWidth(title).then((res) => {
+            this._widthOfMore = res.m;
+            return res.m;
         });
     }
 
