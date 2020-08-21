@@ -21,38 +21,12 @@ import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
 export interface ITabsAdaptiveButtons extends ITabsButtons {
     readonly '[Controls/_tabs/ITabsAdaptiveButtons]': boolean;
 }
-
-/**
- * Интерфейс для опций контрола адаптивных вкладок.
- * @interface Controls/_tabs/ITabsAdaptiveButtons
- * @public
- * @author Бондарь А.В.
- */
-
-export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
-    align?: string;
-    containerWidth: number;
-}
-/**
- * @name Controls/_tabs/ITabsAdaptiveButtons#align
- * @cfg {String} Выравнивание вкладок по правому или левому краю.
- * @variant left Вкладки выравниваются по левому краю.
- * @variant right Вкладки выравниваются по правому краю.
- * @default right
- */
-
-/**
- * @name Controls/_tabs/ITabsAdaptiveButtons#containerWidth
- * @cfg {Number} Ширина контейнера вкладок. Необходимо указывать для правильного расчета ширины вкладок.
- */
-
 /**
  * Контрол предоставляет пользователю возможность выбрать между двумя или более адаптивными под ширину вкладками.
  *
  * @class Controls/_tabs/AdaptiveButtons
  * @extends Core/Control
  * @mixes Controls/_tabs/interface/ITabsButtons
- * @mixes Controls/tabs:ITabsAdaptiveButtonsOptions
  * @mixes Controls/interface:ISource
  * @mixes Controls/interface:IItems
  * @control
@@ -61,6 +35,25 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  * @author Бондарь А.В.
  * @demo Controls-demo/Tabs/AdaptiveButtons/Index
  */
+
+export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
+    align?: string;
+    containerWidth: number;
+}
+/**
+ * @name Controls/_tabs/AdaptiveButtons#align
+ * @cfg {String} Выравнивание вкладок по правому или левому краю.
+ * @variant left Вкладки выравниваются по левому краю.
+ * @variant right Вкладки выравниваются по правому краю.
+ * @default right
+ */
+
+/**
+ * @name Controls/_tabs/AdaptiveButtons#containerWidth
+ * @cfg {Number} Ширина контейнера вкладок. Необходимо указывать для правильного расчета ширины вкладок.
+ */
+
+
 
 class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedState> implements ITabsAdaptiveButtons {
     readonly '[Controls/_tabs/ITabsAdaptiveButtons]': boolean = true;

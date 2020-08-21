@@ -21,13 +21,6 @@ import {IHeading} from "../_spoiler/Heading";
 export interface ITabsButtonsTemplate {
     readonly '[Controls/_tabs/interface/ITabsButtonsTemplate]': boolean;
 }
-
-/**
- * Интерфейс для шаблонных опций контрола вкладок.
- * @interface Controls/_tabs/ITabsTemplateOptions
- * @public
- */
-
 export interface ITabsTemplate {
     readonly '[Controls/_tabs/ITabsTemplate]': boolean;
 }
@@ -41,7 +34,30 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
 }
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#tabSpaceTemplate
+ * Контрол предоставляет пользователю возможность выбрать между двумя или более вкладками.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FTabs%2FButtons">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_tabs.less">переменные тем оформления</a>
+ *
+ * @class Controls/_tabs/Buttons
+ * @extends Core/Control
+ * @mixes Controls/interface:ISingleSelectable
+ * @mixes Controls/interface:ISource
+ * @mixes Controls/interface:IItems
+ * @mixes Controls/_tabs/interface/ITabsButtons
+ * @mixes Controls/tabs:ITabsTemplateOptions
+ * @control
+ * @public
+ * @category List
+ * @author Красильников А.С.
+ * @demo Controls-demo/Tabs/Buttons
+ * @cssModifier controls-Tabs__item-underline_theme-{{_options.theme}} Позволяет добавить горизонтальный разделитель к прикладному контенту, чтобы расположить его перед вкладками.
+ */
+
+/**
+ * @name Controls/_tabs/Buttons#tabSpaceTemplate
  * @cfg {Content} Шаблон, отображаемый между вкладками.
  * @default undefined
  * @remark
@@ -91,7 +107,7 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
  */
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#itemTemplate
+ * @name Controls/_tabs/Buttons#itemTemplate
  * @cfg {Function} Шаблон для рендеринга.
  * @default Base template 'Controls/tabs:buttonsItemTemplate'
  * @remark
@@ -121,7 +137,7 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
  */
 
 /*
- * @name Controls/_tabs/interface/ITabsButtons#itemTemplate
+ * @name Controls/_tabs/Buttons#itemTemplate
  * @cfg {Function} Template for item render.
  * @default Base template 'Controls/tabs:buttonsItemTemplate'
  * @remark
@@ -149,7 +165,7 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
  */
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#itemTemplateProperty
+ * @name Controls/_tabs/Buttons#itemTemplateProperty
  * @cfg {String} Имя поля, которое содержит шаблон отображения элемента.
  * @default Если параметр не задан, вместо него используется itemTemplate.
  * @remark
@@ -189,7 +205,7 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
  */
 
 /*
- * @name Controls/_tabs/interface/ITabsButtons#itemTemplateProperty
+ * @name Controls/_tabs/Buttons#itemTemplateProperty
  * @cfg {String} Name of the item property that contains template for item render.
  * @default If not set, itemTemplate is used instead.
  * @remark
@@ -224,7 +240,7 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
  */
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#rightTemplateProperty
+ * @name Controls/_tabs/Buttons#rightTemplateProperty
  * @cfg {String} Имя поля, которое содержит шаблон отображения элемента, находящегося справа от основного содержимого.
  * @example
  * <pre class="brush: html; highlight: [2]">
@@ -255,7 +271,7 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
  */
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#leftTemplateProperty
+ * @name Controls/_tabs/Buttons#leftTemplateProperty
  * @cfg {String} Имя поля, которое содержит шаблон отображения элемента, находящегося слева от основного содержимого.
  * @example
  * <pre class="brush: html; highlight: [2]">
@@ -286,7 +302,7 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
  */
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#itemRightTemplate
+ * @name Controls/_tabs/Buttons#itemRightTemplate
  * @cfg {String} Шаблон элемента, находящегося справа от основного содержимого.
  * @remark
  * Базовый шаблон itemRightTemplate поддерживает следующие параметры:
@@ -327,33 +343,8 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
  * @see itemRightTemplate
  */
 
-
-
 export interface ITabsOptions extends ITabsButtonsOptions, ITabsTemplateOptions {
 }
-
-/**
- * Контрол предоставляет пользователю возможность выбрать между двумя или более вкладками.
- *
- * @remark
- * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FTabs%2FButtons">демо-пример</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_tabs.less">переменные тем оформления</a>
- *
- * @class Controls/_tabs/Buttons
- * @extends Core/Control
- * @mixes Controls/interface:ISingleSelectable
- * @mixes Controls/interface:ISource
- * @mixes Controls/interface:IItems
- * @mixes Controls/_tabs/interface/ITabsButtons
- * @mixes Controls/tabs:ITabsTemplateOptions
- * @control
- * @public
- * @category List
- * @author Красильников А.С.
- * @demo Controls-demo/Tabs/Buttons
- * @cssModifier controls-Tabs__item-underline_theme-{{_options.theme}} Позволяет добавить горизонтальный разделитель к прикладному контенту, чтобы расположить его перед вкладками.
- */
 
 interface IReceivedState {
     items: RecordSet;
