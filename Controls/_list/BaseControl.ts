@@ -37,8 +37,7 @@ import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
     CollectionItem,
     EditInPlaceController,
-    GroupItem,
-    ANIMATION_STATE
+    GroupItem
 } from 'Controls/display';
 import {
     Controller as ItemActionsController,
@@ -216,6 +215,21 @@ const _private = {
     },
 
     getItemActionsController(self): ItemActionsController {
+        // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
+        // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
+        if (self.__error || !self._listViewModel) {
+            return;
+        }
+        const editingConfig = self._listViewModel.getEditingConfig();
+        // Если нет опций записи, проперти, и тулбар для редактируемой записи выставлен в false, то не надо
+        // инициализировать контроллер
+        if (
+            (self._options && !self._options.itemActions && !self._options.itemActionsProperty) &&
+            !editingConfig?.toolbarVisibility
+        ) {
+            return;
+        }
+
         if (!self._itemActionsController) {
             self._itemActionsController = new ItemActionsController();
         }
@@ -1569,9 +1583,8 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        const menuConfig = _private
-            .getItemActionsController(self)
-            .prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
+        const itemActionsController = _private.getItemActionsController(self);
+        const menuConfig = itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
         }
@@ -1595,7 +1608,7 @@ const _private = {
             self._itemActionsMenuId = popupId;
             // Нельзя устанавливать activeItem раньше, иначе при автокликах
             // робот будет открывать меню раньше, чем оно закрылось
-            _private.getItemActionsController(self).setActiveItem(item);
+            itemActionsController.setActiveItem(item);
             RegisterUtil(self, 'scroll', self._scrollHandler.bind(self));
         });
     },
@@ -2312,18 +2325,12 @@ const _private = {
      * @private
      */
     updateItemActions(self, options: any): void {
-        // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
-        // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
-        if (self.__error || !self._listViewModel) {
-            return;
-        }
-        const editingConfig = self._listViewModel.getEditingConfig();
-        // Если нет опций записи, проперти, и тулбар для редактируемой записи выставлен в false, то не надо
-        // инициализировать контроллер
-        if (!options.itemActions && !options.itemActionsProperty && !editingConfig?.toolbarVisibility) {
+        const itemActionsController =  _private.getItemActionsController(self);
+        if (!itemActionsController) {
             return;
         }
 
+        const editingConfig = self._listViewModel.getEditingConfig();
         const editingItemData = self._listViewModel.getEditingItemData && self._listViewModel.getEditingItemData();
         const isActionsAssigned = self._listViewModel.isActionsAssigned();
         let editArrowAction: IItemAction;
@@ -2339,7 +2346,7 @@ const _private = {
             };
         }
         // Гарантированно инициализируем шаблоны, если это ещё не произошло
-        const itemActionsChangeResult = _private.getItemActionsController(self).update({
+        const itemActionsChangeResult = itemActionsController.update({
                 editingItem: editingItemData,
                 collection: self._listViewModel,
                 itemActions: options.itemActions,
@@ -4177,15 +4184,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const key = item.getContents().getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
+        const itemActionsController = _private.getItemActionsController(this);
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             _private.setMarkedKey(this, key);
-            _private.getItemActionsController(this).activateSwipe(item.getContents().getKey(), swipeContainer?.width, swipeContainer?.height);
+            itemActionsController?.activateSwipe(item.getContents().getKey(), swipeContainer?.width, swipeContainer?.height);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            const swipedItem = _private.getItemActionsController(this).getSwipeItem();
+            const swipedItem = itemActionsController?.getSwipeItem();
             if (swipedItem) {
-                _private.getItemActionsController(this).setSwipeAnimation(ANIMATION_STATE.CLOSE);
+                itemActionsController.startSwipeCloseAnimation();
                 this._listViewModel.nextVersion();
 
                 // Для сценария, когда свайпнули одну запись и потом свайпнули вправо другую запись
@@ -4204,8 +4212,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._notify('checkboxClick', [key, item.isSelected()]);
 
                 // Animation should be played only if checkboxes are visible.
-                if (this._options.multiSelectVisibility !== 'hidden') {
-                    _private.getItemActionsController(this).activateRightSwipe(item.getContents().getKey());
+                if (this._selectionController && this._options.multiSelectVisibility !== 'hidden') {
+                    this._selectionController.startItemAnimation(item.getContents().getKey());
                 }
                 _private.setMarkedKey(this, key);
             }
@@ -4222,12 +4230,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      */
     _onActionsSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'itemActionsSwipeClose') {
-            const item = _private.getItemActionsController(this).getSwipeItem();
+            const itemActionsController = _private.getItemActionsController(this);
+            const item = itemActionsController.getSwipeItem();
             if (item) {
                 if (!this._options.itemActions) {
                     this._notify('itemSwipe', [item, e]);
                 }
-                _private.getItemActionsController(this).deactivateSwipe();
+                itemActionsController.deactivateSwipe();
             }
         }
     },
@@ -4238,8 +4247,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
-        if (e.nativeEvent.animationName === 'rightSwipe') {
-            _private.getItemActionsController(this).deactivateRightSwipe();
+        if (this._selectionController && e.nativeEvent.animationName === 'rightSwipe') {
+            this._selectionController.stopItemAnimation();
         }
     },
 
