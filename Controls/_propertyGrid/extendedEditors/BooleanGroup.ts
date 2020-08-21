@@ -9,7 +9,7 @@ export interface IPropertyGridButton {
     id: string;
     tooltip: string;
     icon: string;
-    isLast?: boolean;
+    active: boolean;
 }
 
 interface IOptions extends IEditorOptions, IControlOptions {
@@ -18,21 +18,17 @@ interface IOptions extends IEditorOptions, IControlOptions {
 
 export default class BooleanGroupEditor extends Control<IOptions> implements IEditor {
     protected _template: TemplateFunction = template;
-    protected _buttons: RecordSet;
+    protected _buttons: RecordSet<IPropertyGridButton>;
     protected _stateOfButtons: [boolean, boolean, boolean, boolean];
 
     protected _beforeMount({propertyValue, buttons}: IOptions): void {
         this._stateOfButtons = propertyValue;
         this._buttons = new RecordSet({
             keyProperty: 'id',
-            rawData: buttons.map((option, index) => {
-                // @ts-ignore
-                option.active = propertyValue[index];
-                if (index === buttons.length - 1) {
-                    option.isLast = true;
-                }
-                return option;
-            })
+            rawData: buttons.map((button, index) => ({
+                ...button,
+                active: propertyValue[index]
+            }))
         });
     }
 

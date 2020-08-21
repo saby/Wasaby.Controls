@@ -19,8 +19,6 @@ export default class FlatEnumEditor extends Control implements IEditor {
 
     _beforeMount(options: IOptions): void {
         this._enum = options.propertyValue;
-
-        options.buttons[options.buttons.length - 1].isLast = true;
         this._buttons = new RecordSet({
             keyProperty: 'id',
             rawData: options.buttons
