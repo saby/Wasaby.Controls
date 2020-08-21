@@ -1,8 +1,9 @@
 import {detection} from 'Env/Env';
 
 const constants = 'Controls/Utils/FontWidthConstants/';
+const fontSizes = ['xs', 's', 'm', 'l', 'xl', '2xl', '3xl', '4xl', '5xl'];
 
-export const getFontWidth = (text, size) => {
+export const getFontWidth = (text) => {
     let browser = 'Chrome';
     if (detection.firefox) {
         browser = 'FF';
@@ -12,15 +13,19 @@ export const getFontWidth = (text, size) => {
         browser = 'IE';
     }
 
-    return loadFontWidthConstants(browser).then((fonts) => countTextWidth(text, fonts, size));
+    return loadFontWidthConstants(browser).then((fonts) => countTextWidth(text, fonts));
 };
 
-const countTextWidth = (text, font, size) => {
-    let textWidth = 0;
-    for (let i = 0; i < text.length; i++) {
-        textWidth += font[size][text[i]];
+const countTextWidth = (text, fonts) => {
+    const allSizesTextWidth = {};
+    for (const fontSize of fontSizes) {
+        let textWidth = 0;
+        for (const symbol of text) {
+            textWidth += fonts[fontSize][symbol];
+        }
+        allSizesTextWidth[fontSize] = textWidth;
     }
-    return textWidth;
+    return allSizesTextWidth;
 };
 
 const loadFontWidthConstants = (browser) => {

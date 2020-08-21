@@ -31,11 +31,11 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  *
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FMenu%2FMenu">демо-пример</a>
+ *
  * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/button/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less">переменные тем оформления dropdown</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
- *
+ * @demo Controls-demo/Buttons/Menu/Menu
  * @class Controls/_dropdown/Button
  * @extends Core/Control
  * @mixes Controls/_menu/interface/IMenuPopup

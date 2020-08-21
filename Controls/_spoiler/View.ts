@@ -23,12 +23,13 @@ import Util from './Util';
  * @demo Controls-demo/Spoiler/HeaderRight/Index
  * @demo Controls-demo/Spoiler/HeadingLeft/Index
  */
+/**
+ * @name Controls/_spoiler/IViewOptions#content
+ * @cfg {TemplateFunction} Шаблон скрываемой области.
+ * @demo Controls-demo/Spoiler/View/Content/Index
+ */
 
 export interface IViewOptions extends IHeadingOptions {
-    /**
-     * Шаблон скрываемой области.
-     * @demo Controls-demo/Spoiler/View/Content/Index
-     */
     content: TemplateFunction;
     headerContentTemplate?: TemplateFunction;
 }

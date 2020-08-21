@@ -94,16 +94,36 @@ export default class Controller {
         this._filter = filter;
     }
 
-    update(newOptions: IControllerOptions): boolean {
+    updateOptions(newOptions: IControllerOptions): boolean {
         const isFilterChanged = !isEqual(newOptions.filter, this._options.filter);
+        const isSourceChanged = newOptions.source !== this._options.source;
+        const isNavigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         if (isFilterChanged) {
             this._filter = newOptions.filter;
         }
 
+        if (isSourceChanged && this._crudWrapper) {
+            this._crudWrapper.updateOptions({source: newOptions.source});
+        }
+
+        if (isNavigationChanged) {
+            if (newOptions.navigation) {
+                if (this._navigationController)  {
+                    this._navigationController.updateOptions({
+                        navigationType: newOptions.navigation.source,
+                        navigationConfig: newOptions.navigation.sourceConfig
+                    });
+                } else {
+                    this._navigationController = this._getNavigationController(newOptions.navigation)
+                }
+            }
+
+        }
+
         const isChanged =
             isFilterChanged ||
-            !isEqual(newOptions.navigation, this._options.navigation) ||
-            newOptions.source !== this._options.source ||
+            isNavigationChanged ||
+            isSourceChanged ||
             newOptions.sorting !== this._options.sorting ||
             newOptions.keyProperty !== this._options.keyProperty ||
             newOptions.root !== this._options.root;
@@ -140,19 +160,21 @@ export default class Controller {
     }
 
     private _getCrudWrapper(sourceOption: ICrud): CrudWrapper {
-        // TODO https://online.sbis.ru/opendoc.html?guid=fbee8765-cfc2-40b7-9d0d-75655412b284
-        this._crudWrapper = new CrudWrapper({source: sourceOption});
+        if (!this._crudWrapper) {
+            this._crudWrapper = new CrudWrapper({source: sourceOption});
+        }
         return this._crudWrapper;
     }
 
     private _getNavigationController(
         navigationOption: INavigationOptionValue<INavigationSourceConfig>
     ): NavigationController {
-        // TODO https://online.sbis.ru/opendoc.html?guid=fbee8765-cfc2-40b7-9d0d-75655412b284
-        this._navigationController = new NavigationController({
-            navigationType: navigationOption.source,
-            navigationConfig: navigationOption.sourceConfig
-        });
+        if (!this._navigationController) {
+            this._navigationController = new NavigationController({
+                navigationType: navigationOption.source,
+                navigationConfig: navigationOption.sourceConfig
+            });
+        }
 
         return this._navigationController;
     }

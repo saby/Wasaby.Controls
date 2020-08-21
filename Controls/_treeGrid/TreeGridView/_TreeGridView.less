@@ -338,12 +338,20 @@
    opacity: 1;
 }
 
+.controls-TreeGrid__row__searchBreadCrumbs_colspaned .controls-Grid__row-cell__content_colspaned {
+   position: relative;
+}
+.controls-TreeGrid__breadCrumbs_colspaned {
+   position: absolute;
+   left: 0;
+   right: 0;
+}
+
 .controls-TreeGrid__row__searchBreadCrumbs .controls-itemActionsV__container {
    // При поиске в списке с горизонтальным скроллом, хлебная крошка фиксируется и растягивается,
    // стек z-index'ов для операций над записью на хлебных крошках должен начинаться с z-index хлебной крошки (фиксированной колонки).
    // https://online.sbis.ru/opendoc.html?guid=7ec6ad1a-6c9d-412d-b477-7935d81c82cc
-   // Значение = 4, т.к. для .controls-Grid__cell_fixed_ сделано 3
-   z-index: 4;
+   z-index: 3;
 }
 
 .ws-is-hover {

@@ -212,20 +212,52 @@ export class Controller {
 
     /**
      * Получает последний swiped элемент
-     * TODO убрать isRightSwiped по https://online.sbis.ru/opendoc.html?guid=183d60a3-fc2e-499c-8c50-aca0462c6f3d
      */
     getSwipeItem(): IItemActionsItem {
-        return this._collection.find((item) => item.isSwiped() || (!!item.isRightSwiped && item.isRightSwiped()));
+        return this._collection.find((item) => item.isSwiped());
+    }
+
+    // region rightSwipe
+
+    // TODO убрать по https://online.sbis.ru/opendoc.html?guid=183d60a3-fc2e-499c-8c50-aca0462c6f3d
+    deactivateRightSwipe(): void {
+        this._collection.setSwipeAnimation(null);
+        const currentSwipedItem = this.getRightSwipeItem();
+        if (currentSwipedItem) {
+            this._setRightSwipeItem(null);
+            this._collection.nextVersion(); // Это надо тут ?
+        }
+    }
+
+    // TODO убрать по https://online.sbis.ru/opendoc.html?guid=183d60a3-fc2e-499c-8c50-aca0462c6f3d
+    getRightSwipeItem(): IItemActionsItem {
+        return this._collection.find((item) => !!item.isRightSwiped && item.isRightSwiped());
+    }
+
+    // TODO убрать по https://online.sbis.ru/opendoc.html?guid=183d60a3-fc2e-499c-8c50-aca0462c6f3d
+    private _setRightSwipeItem(key: TItemKey, silent?: boolean): void {
+        const oldSwipeItem = this.getRightSwipeItem();
+        const newSwipeItem = this._collection.getItemBySourceKey(key);
+
+        if (oldSwipeItem) {
+            oldSwipeItem.setRightSwiped(false, silent);
+        }
+        if (newSwipeItem) {
+            newSwipeItem.setRightSwiped(true, silent);
+        }
     }
 
     /**
      * Устанавливает состояние элемента rightSwiped
+     * TODO убрать по https://online.sbis.ru/opendoc.html?guid=183d60a3-fc2e-499c-8c50-aca0462c6f3d
      * @param itemKey
      */
     activateRightSwipe(itemKey: TItemKey): void {
         this.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
-        this._setSwipeItem(itemKey);
+        this._setRightSwipeItem(itemKey);
     }
+
+    // endregion
 
     /**
      * Собирает конфиг выпадающего меню операций
@@ -403,7 +435,7 @@ export class Controller {
      * Если parentAction - кнопка вызова меню или parentAction не указан, то элементы фильтруются по showType.
      * Если parentAction содержит id, то элементы фильтруются по parent===id.
      * Если был сделан свайп по элементу, то возвращаются опции записи, отсутствующие в showed.
-     * @see http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BE%D0%BD%D1%82%D0%B5%D0%BA%D1%81%D1%82%D0%BD%D0%BE%D0%B5_%D0%BC%D0%B5%D0%BD%D1%8E__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html
+     * @see http://axure.tensor.ru/standarts/v7/%D1%81%D0%B2%D0%B0%D0%B9%D0%BF__version_04_.html
      * @param item
      * @param parentAction
      * @private
@@ -412,12 +444,16 @@ export class Controller {
         const actions = item.getActions();
         const allActions = actions && actions.all;
         if (allActions) {
-            // Для свайпнутой записи имеет смысл показывать в меню те опции, которые отсутствуют в showed массиве.
-            // Кроме как intersection all vs showed мы не можем знать, какие опции Measurer скрыл под кнопку "Ещё"
+            // Кроме как intersection all vs showed мы не можем знать, какие опции Measurer скрыл под кнопку "Ещё",
+            // Поэтому для свайпнутой записи имеет смысл показывать в меню те опции, которые отсутствуют в showed
+            // массиве или у которых showType MENU_TOOLBAR или MENU
             // см. https://online.sbis.ru/opendoc.html?guid=f43a6f8e-84a5-4f22-b67f-4545bf586adc
             // см. https://online.sbis.ru/opendoc.html?guid=91e7bea1-fa6c-483f-a5dc-860b084ab17a
+            // см. https://online.sbis.ru/opendoc.html?guid=b5751217-3833-441f-9eb6-53526625bc0c
             if (item.isSwiped() && parentAction.isMenu) {
-                return allActions.filter((action) => actions.showed.indexOf(action) === -1);
+                return allActions.filter((action) => (
+                    actions.showed.indexOf(action) === -1 || action.showType !== TItemActionShowType.TOOLBAR)
+                );
             }
             return allActions.filter((action) => (
                 ((!parentAction || parentAction.isMenu) && action.showType !== TItemActionShowType.TOOLBAR) ||

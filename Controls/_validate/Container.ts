@@ -47,12 +47,12 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     protected _afterMount(): void {
         // Use listener without template.
         // Some people can add style to the container of validation, and some people can add style to the content.
-        RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
+        RegisterUtil(this, 'scroll', this._scrollHandler.bind(this), {listenAll: true});
         this._notify('validateCreated', [this], {bubbling: true});
     }
 
     protected _beforeUnmount(): void {
-        UnregisterUtil(this, 'scroll');
+        UnregisterUtil(this, 'scroll', {listenAll: true});
         this._notify('validateDestroyed', [this], {bubbling: true});
         if (this._isOpened) {
             this._forceCloseInfoBox();

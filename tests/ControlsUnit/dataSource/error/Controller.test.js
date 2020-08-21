@@ -340,19 +340,37 @@ define([
       });
 
       describe('_prepareConfig()', () => {
+         beforeEach(() => {
+            createController();
+         });
+
          it('returns a config for an error', () => {
             const error = new Error();
-            const result = Controller._prepareConfig(error);
+            const result = controller._prepareConfig(error);
             assert.deepEqual(result, {
                error,
                mode: 'dialog'
             });
          });
 
+         it('returns a config for an error with preset mode', () => {
+            const error = new Error();
+            controller = new Controller({
+               viewConfig: {
+                  mode: 'include'
+               }
+            }, popupHelper);
+            const result = controller._prepareConfig(error);
+            assert.deepEqual(result, {
+               error,
+               mode: 'include'
+            });
+         });
+
          it('returns a config with default mode', () => {
             const error = new Error();
             const config = { error };
-            const result = Controller._prepareConfig(config);
+            const result = controller._prepareConfig(config);
             assert.notStrictEqual(result, config, 'must return a new object');
             assert.deepEqual(result, {
                error,
@@ -366,9 +384,46 @@ define([
                error,
                mode: 'include'
             };
-            const result = Controller._prepareConfig(config);
+            const result = controller._prepareConfig(config);
             assert.notStrictEqual(result, config, 'must return a new object');
             assert.deepEqual(result, config);
+         });
+
+         it('returns a config with the preset mode', () => {
+            const error = new Error();
+            const config = {
+               error
+            };
+            controller = new Controller({
+               viewConfig: {
+                  mode: 'include'
+               }
+            }, popupHelper);
+            const result = controller._prepareConfig(config);
+            assert.notStrictEqual(result, config, 'must return a new object');
+            assert.deepEqual(result, {
+               error,
+               mode: 'include'
+            });
+         });
+
+         it('returns a config, preset mode overrides config mode', () => {
+            const error = new Error();
+            const config = {
+               error,
+               mode: 'page'
+            };
+            controller = new Controller({
+               viewConfig: {
+                  mode: 'include'
+               }
+            }, popupHelper);
+            const result = controller._prepareConfig(config);
+            assert.notStrictEqual(result, config, 'must return a new object');
+            assert.deepEqual(result, {
+               error,
+               mode: 'include'
+            });
          });
       });
    });

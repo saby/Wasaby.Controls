@@ -85,6 +85,7 @@ import {IList} from "./interface/IList";
 import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { EdgeIntersectionObserver } from 'Controls/scroll';
+import { TItemKey } from 'Controls/display';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -101,8 +102,7 @@ const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
     {id: 4, title: '50', pageSize: 50},
     {id: 5, title: '100', pageSize: 100},
     {id: 6, title: '200', pageSize: 200},
-    {id: 7, title: '500', pageSize: 500},
-    {id: 8, title: '1000', pageSize: 1000}];
+    {id: 7, title: '500', pageSize: 500}];
 
 const
     HOT_KEYS = {
@@ -529,7 +529,7 @@ const _private = {
         return itemsContainer.children[startChildrenIndex + index] as HTMLElement;
     },
 
-    scrollToItem(self, key, toBottom, force) {
+    scrollToItem(self, key: TItemKey, toBottom: boolean, force: boolean) {
         const scrollCallback = (index) => {
             // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
             // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
@@ -740,7 +740,7 @@ const _private = {
                     loadCallback(addedItems, countCurrentItems);
                 }
 
-                
+
 
                 // Скрываем ошибку после успешной загрузки данных
                 _private.hideError(self);
@@ -776,6 +776,7 @@ const _private = {
                                 return Promise.resolve(afterActionCallback);
                             });
                         },
+                        isPagingVisible: self._pagingVisible,
                         /**
                          * Позиция шаблона ошибки относительно списка.
                          * Зависит от направления подгрузки данных.
@@ -1085,7 +1086,7 @@ const _private = {
 
             self._viewportRect = params.viewPortRect;
 
-            if (_private.needScrollPaging(self._options.navigation)) {
+            if (_private.needScrollPaging(self, self._options.navigation)) {
                 const scrollParams = {
                     scrollTop: self._scrollTop,
                     scrollHeight: params.scrollHeight,
@@ -1120,10 +1121,13 @@ const _private = {
     },
     createScrollPagingController(self, scrollParams) {
         const scrollPagingConfig = {
+            pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
             pagingCfgTrigger: (cfg) => {
-                self._pagingCfg = cfg;
-                self._forceUpdate();
+                if (!isEqual(self._pagingCfg, cfg)) {
+                    self._pagingCfg = cfg;
+                    self._forceUpdate();
+                }
             }
         };
         return Promise.resolve(new ScrollPagingController(scrollPagingConfig));
@@ -1220,7 +1224,7 @@ const _private = {
 
         self._scrollTop = scrollTop;
         self._scrollPageLocked = false;
-        if (_private.needScrollPaging(self._options.navigation)) {
+        if (_private.needScrollPaging(self, self._options.navigation)) {
             const scrollParams = {
                 scrollTop: self._scrollTop,
                 scrollHeight: self._viewSize,
@@ -1274,7 +1278,7 @@ const _private = {
     disablePagingNextButtons(self): void {
         if (self._pagingVisible) {
             self._pagingCfg = {...self._pagingCfg};
-            self._pagingCfg.forwardEnabled = false;
+            self._pagingCfg.arrowState.next = self._pagingCfg.arrowState.end = 'readonly';
         }
     },
 
@@ -1328,7 +1332,7 @@ const _private = {
         return navigationOpt && navigationOpt.view === 'infinity';
     },
 
-    needScrollPaging(navigationOpt) {
+    needScrollPaging(self, navigationOpt) {
         return (navigationOpt &&
             navigationOpt.view === 'infinity' &&
             navigationOpt.viewConfig &&
@@ -1399,7 +1403,9 @@ const _private = {
                             self._addItems.push(...newItems);
                             self._addItemsIndex = newItemsIndex;
                         } else {
-                            result = self._scrollController.handleAddItems(newItemsIndex, newItems);
+                            const collectionStartIndex = self._listViewModel.getStartIndex();
+                            result = self._scrollController.handleAddItems(newItemsIndex, newItems,
+                                newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
                         }
 
                     }
@@ -1431,11 +1437,19 @@ const _private = {
                 _private.handleSelectionControllerResult(self, result);
             }
 
-            // Когда action=remove значит были скрыты или удалены элементы
-            // Если элементы скрылись, то для них нужно сбросить состояние marked,
-            // чтобы при их показе не было лишнего маркера
-            if (action === IObservable.ACTION_REMOVE && _private.hasMarkerController(self)) {
-                _private.getMarkerController(self).resetMarkedState(removedItems);
+            if (_private.hasMarkerController(self)) {
+                // Когда action=remove значит были скрыты или удалены элементы
+                // Если элементы скрылись, то для них нужно сбросить состояние marked,
+                // чтобы при их показе не было лишнего маркера
+                if (action === IObservable.ACTION_REMOVE) {
+                    _private.getMarkerController(self).resetMarkedState(removedItems);
+                }
+
+                // Если элемент был пересоздан, то сперва сработает remove и с элемента уберется выделение,
+                // а потом сработает add и для элемента нужно восстановить выделение
+                if (action === IObservable.ACTION_ADD) {
+                    _private.getMarkerController(self).restoreMarker();
+                }
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
@@ -1719,6 +1733,7 @@ const _private = {
             if (errorConfig && config.templateOptions) {
                 errorConfig.options.action = config.templateOptions.action;
                 errorConfig.options.showInDirection = config.templateOptions.showInDirection;
+                errorConfig.options.isPagingVisible = config.templateOptions.isPagingVisible;
             }
             _private.showError(self, errorConfig);
             return {
@@ -1952,7 +1967,8 @@ const _private = {
 
     createSelectionController(self: any, options: any): SelectionController {
         if (
-           !self._listViewModel || !self._listViewModel.getCollection() || options.multiSelectVisibility === 'hidden'
+            !self._listViewModel || !self._listViewModel.getCollection()
+            || (options.multiSelectVisibility === 'hidden' && !_private.isItemsSelectionAllowed(options))
         ) {
             return null;
         }
@@ -1963,6 +1979,7 @@ const _private = {
             model: self._listViewModel,
             selectedKeys: options.selectedKeys,
             excludedKeys: options.excludedKeys,
+            searchValue: options.searchValue,
             strategy
         });
     },
@@ -1972,6 +1989,7 @@ const _private = {
            model: self._listViewModel,
            selectedKeys: newOptions.selectedKeys,
            excludedKeys: newOptions.excludedKeys,
+           searchValue: newOptions.searchValue,
            strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
         });
     },
@@ -2052,6 +2070,20 @@ const _private = {
       }
 
         // для связи с контроллером ПМО
+        let selectionType = 'all';
+        if (result.isAllSelected && self._options.nodeProperty && self._options.searchValue) {
+            let onlyCrumbsInItems = true;
+            self._listViewModel.each((item) => {
+                if (onlyCrumbsInItems) {
+                    onlyCrumbsInItems = item['[Controls/_display/BreadcrumbsItem]'];
+                }
+            });
+
+            if (!onlyCrumbsInItems) {
+                selectionType = 'leaf';
+            }
+        }
+        self._notify('listSelectionTypeForAllSelectedChanged', [selectionType], {bubbling: true});
         self._notify('listSelectedKeysCountChanged', [result.selectedCount, result.isAllSelected], {bubbling: true});
     },
 
@@ -2123,7 +2155,7 @@ const _private = {
         }
     },
 
-    setMarkedKey(self: any, key: string | number): void {
+    setMarkedKey(self: any, key: TItemKey): void {
         if (self._markerController) {
             const newMarkedKey = self._markerController.calculateMarkedKey(key);
             _private.handleMarkerControllerResult(self, newMarkedKey);
@@ -2143,7 +2175,7 @@ const _private = {
             event.preventDefault();
             const newMarkedKey = self._markerController.moveMarkerToNext();
             _private.handleMarkerControllerResult(self, newMarkedKey);
-            _private.scrollToItem(self, newMarkedKey);
+            _private.scrollToItem(self, newMarkedKey, undefined, true);
         }
     },
 
@@ -2567,7 +2599,7 @@ const _private = {
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_interface/INavigation
- @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
@@ -2987,15 +3019,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.handleScrollControllerResult(this, result);
         }
 
-        if (_private.needScrollPaging(this._options.navigation)) {
-            const scrollParams = {
-                scrollHeight: this._viewSize,
-                clientHeight: this._viewportSize,
-                scrollTop: this._scrollTop
-            };
-
-            _private.updateScrollPagingButtons(this, scrollParams);
-        }
+        if (_private.needScrollPaging(this, this._options.navigation)) {
+            _private.doAfterUpdate(this, () => {
+                    const scrollParams = {
+                        scrollHeight: this._viewSize,
+                        clientHeight: this._viewportSize,
+                        scrollTop: this._scrollTop
+                    };
+                    _private.updateScrollPagingButtons(this, scrollParams);
+                });
+            }
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewportRect);
     },
 
@@ -3022,8 +3055,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadedItems = null;
 
         if (this._scrollController) {
-            let result = this._scrollController.getResult();
-            _private.handleScrollControllerResult(this, result);
+            if (this._options.activeElement) {
+                _private.scrollToItem(this, this._options.activeElement, false, true);
+            }
 
             this._scrollController.continueScrollToItemIfNeed();
         }
@@ -3349,7 +3383,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    scrollToItem(key: string | number, toBottom: boolean, force: boolean): void {
+    scrollToItem(key: TItemKey, toBottom: boolean, force: boolean): void {
         return _private.scrollToItem(this, key, toBottom, force);
     },
 
@@ -3687,7 +3721,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _onItemClick(e, item, originalEvent) {
+    _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
             /*
@@ -3711,7 +3745,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
         // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
         if (e.isStopped()) {
-            this._savedItemClickArgs = [item, originalEvent];
+            this._savedItemClickArgs = [item, originalEvent, columnIndex];
         } else {
             this._notify('itemActivate', [item, originalEvent], { bubbling: true });
         }
@@ -3935,10 +3969,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
         if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (!this._options._keyDownHandler || !this._options._keyDownHandler(event))) {
             const key = event.nativeEvent.keyCode;
-            const dontStop = key === 33
-                || key === 34
-                || key === 35
-                || key === 36;
+            const dontStop = key === 17 // Ctrl
+                || key === 33 // PageUp
+                || key === 34 // PageDown
+                || key === 35 // End
+                || key === 36;// Home
             keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },
@@ -4181,13 +4216,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     /**
-     * Обработчик, выполняемый после окончания анимации свайпа по записи
+     * Обработчик, выполняемый после окончания анимации свайпа вправо по записи
      * @param e
      * @private
      */
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'rightSwipe') {
-            _private.getItemActionsController(this).deactivateSwipe();
+            _private.getItemActionsController(this).deactivateRightSwipe();
         }
     },
 

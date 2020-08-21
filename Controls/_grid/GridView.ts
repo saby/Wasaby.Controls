@@ -194,6 +194,7 @@ var
             _private.setGrabbing(self, false);
             self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
         },
+
         updateColumnScrollByOptions(self, oldOptions, newOptions): void {
             const columnScrollStatus = _private.actualizeColumnScroll(self, newOptions);
             if (columnScrollStatus === 'destroyed') {
@@ -203,8 +204,20 @@ var
             const stickyColumnsCountChanged = newOptions.stickyColumnsCount !== oldOptions.stickyColumnsCount;
             const multiSelectVisibilityChanged = newOptions.multiSelectVisibility !== oldOptions.multiSelectVisibility;
             const dragScrollingChanged = newOptions.dragScrolling !== oldOptions.dragScrolling;
+            let columnScrollChanged = false;
 
-            if (stickyColumnsCountChanged || multiSelectVisibilityChanged || self._columnsHaveBeenChanged) {
+            if (columnScrollStatus === 'actual') {
+                const isColumnScrollVisible = self._isColumnScrollVisible();
+                columnScrollChanged = self._listModel.getColumnScrollVisibility() !== isColumnScrollVisible;
+                if (columnScrollChanged) {
+                    self._listModel.setColumnScrollVisibility(isColumnScrollVisible);
+                }
+            }
+
+            if (columnScrollChanged ||
+                stickyColumnsCountChanged ||
+                multiSelectVisibilityChanged ||
+                self._columnsHaveBeenChanged) {
 
                 // Если горизонтльный скролл был только что создан, то он хранит актуальные размеры.
                 if (columnScrollStatus !== 'created') {
@@ -425,7 +438,7 @@ var
 
             // Для предотвращения скролла одной записи в таблице с экшнами.
             // _options._needBottomPadding почему-то иногда не работает.
-            if (this._listModel.getCount() && 
+            if ((this._listModel.getCount() || this._listModel.getEditingItemData()) &&
                 this._options.itemActionsPosition === 'outside' &&
                 !this._options._needBottomPadding &&
                 this._options.resultsPosition !== 'bottom') {

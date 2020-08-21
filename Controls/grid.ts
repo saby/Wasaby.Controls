@@ -12,6 +12,7 @@
  * @includes RowEditor Controls/grid:RowEditor
  * @includes IGridControl Controls/_grid/interface/IGridControl
  * @includes IColumn Controls/grid:IColumn
+ * @includes ITagColumn Controls/_grid/interface/ITagColumn
  * @includes IHeaderCell Controls/_grid/interface/IHeaderCell
  * @includes IPropStorage Controls/_grid/interface/IPropStorage
  * @public
@@ -71,6 +72,8 @@ export {
     TCellVerticalAlign,
     TOverflow
 } from './_grid/interface/IColumn';
+
+export {ITagColumn} from './_grid/interface/ITagColumn';
 
 export {
     THeader,

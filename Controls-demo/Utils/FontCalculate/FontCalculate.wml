@@ -1,74 +1,66 @@
 <div>
-    <Controls.dropdown:Input bind:selectedKeys="_selectedKey"
-                             on:selectedKeysChanged="_selectedKeysChangedHandler()"
-                             fontSize="2xl"
-                             keyProperty="id"
-                             displayProperty="title"
-                             source="{{_source}}"/>
     <ws:for data="index, size in _sizes">
-        <ws:if data="{{index == _selectedKey}}">
-            <div class="{{size}}-container" style="border-bottom: 1px solid #000}}">
-                <h2>{{size}} font-size</h2>
-                <div class="controlsDemo__flex controlsDemo__flex-jc-sb controls-fontsize-{{size}}_theme-default" style="justify-content: space-around">
-                    <div>
-                        <h3>Numbers</h3>
-                        <div class="controlsDemo__flex">
-                            <div>
-                                <ws:for data="index, symbol in _numSymbols">
-                                    <div>
-                                        <span class="numbers">
-                                            {{symbol}}
-                                        </span>
-                                    </div>
-                                </ws:for>
-                            </div>
+        <div class="{{size}}-container" style="border-bottom: 1px solid #000}}">
+            <h2>{{size}} font-size</h2>
+            <div class="controlsDemo__flex controlsDemo__flex-jc-sb controls-fontsize-{{size}}_theme-default" style="justify-content: space-around">
+                <div>
+                    <h3>Numbers</h3>
+                    <div class="controlsDemo__flex">
+                        <div>
+                            <ws:for data="index, symbol in _numSymbols">
+                                <div>
+                                    <span class="numbers-{{size}}">
+                                        {{symbol}}
+                                    </span>
+                                </div>
+                            </ws:for>
                         </div>
                     </div>
-                    <div class="controlsDemo__ml2">
-                        <h3>Eng</h3>
-                        <div class="controlsDemo__flex">
-                            <div>
-                                <ws:for data="index, symbol in _engStrSymbols">
-                                    <div>
-                                        <span class="eng">
-                                            {{symbol}}
-                                        </span>
-                                    </div>
-                                </ws:for>
-                            </div>
+                </div>
+                <div class="controlsDemo__ml2">
+                    <h3>Eng</h3>
+                    <div class="controlsDemo__flex">
+                        <div>
+                            <ws:for data="index, symbol in _engStrSymbols">
+                                <div>
+                                    <span class="eng-{{size}}">
+                                        {{symbol}}
+                                    </span>
+                                </div>
+                            </ws:for>
                         </div>
                     </div>
-                    <div class="controlsDemo__ml2">
-                        <h3>Ru</h3>
-                        <div class="controlsDemo__flex">
-                            <div>
-                                <ws:for data="index, symbol in _ruStrSymbols">
-                                    <div>
-                                        <span class="ru">
-                                            {{symbol}}
-                                        </span>
-                                    </div>
-                                </ws:for>
-                            </div>
+                </div>
+                <div class="controlsDemo__ml2">
+                    <h3>Ru</h3>
+                    <div class="controlsDemo__flex">
+                        <div>
+                            <ws:for data="index, symbol in _ruStrSymbols">
+                                <div>
+                                    <span class="ru-{{size}}">
+                                        {{symbol}}
+                                    </span>
+                                </div>
+                            </ws:for>
                         </div>
                     </div>
-                    <div class="controlsDemo__ml2">
-                        <h3>Other symbols</h3>
-                        <div class="controlsDemo__flex">
-                            <div>
-                                <ws:for data="index, symbol in _otherSymbols">
-                                    <div>
-                                        <span class="other">
-                                            {{symbol}}
-                                        </span>
-                                    </div>
-                                </ws:for>
-                            </div>
+                </div>
+                <div class="controlsDemo__ml2">
+                    <h3>Other symbols</h3>
+                    <div class="controlsDemo__flex">
+                        <div>
+                            <ws:for data="index, symbol in _otherSymbols">
+                                <div>
+                                    <span class="other-{{size}}">
+                                        <ws:partial template="{{symbol}}"/>
+                                    </span>
+                                </div>
+                            </ws:for>
                         </div>
                     </div>
                 </div>
             </div>
-        </ws:if>
+        </div>
     </ws:for>
-    <Controls.input:Area minLines="{{6}}" value="{{_areaInput}}" attr:style="width:400px;"></Controls.input:Area>
+    <textarea rows="50" cols="50"></textarea>
 </div>
