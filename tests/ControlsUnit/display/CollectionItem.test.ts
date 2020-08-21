@@ -425,14 +425,14 @@ describe('Controls/_display/CollectionItem', () => {
         // isSwiped() должен вернуть true, тогда и только тогда когда анимация выставлена в close/open
         it('isSwiped() should only be true when item is swiped', () => {
             item.setSwiped(true);
-            assert.isFalse(!!item.isRightSwiped(), 'Item cannot be right-swiped when animation was set to open/close');
+            assert.isFalse(!!item.isAnimatedForSelection(), 'Item cannot be right-swiped when animation was set to open/close');
             assert.isTrue(!!item.isSwiped(), 'Item should be left-swiped when animation was set to open/close');
         });
 
-        // isRightSwiped() должен вернуть true, тогда и только тогда когда анимация выставлена в right-swipe
-        it('isRightSwiped() should only be true when item is right-swiped', () => {
-            item.setRightSwiped(true);
-            assert.isTrue(!!item.isRightSwiped(), 'Item should be right-swiped when animation was set to right-swipe');
+        // isAnimatedForSelection() должен вернуть true, тогда и только тогда когда анимация выставлена в right-swipe
+        it('isAnimatedForSelection() should only be true when item is right-swiped', () => {
+            item.setAnimatedForSelection(true);
+            assert.isTrue(!!item.isAnimatedForSelection(), 'Item should be right-swiped when animation was set to right-swipe');
             assert.isFalse(!!item.isSwiped(), 'Item cannot be left-swiped when animation was set to right-swipe');
         });
     });

@@ -4260,11 +4260,11 @@ define([
 
       describe('Calling animation handlers', () => {
          let deactivateSwipeCalled;
-         let deactivateRightSwipeCalled;
+         let stopItemAnimationCalled;
          let ctrl;
          beforeEach(() => {
             deactivateSwipeCalled = false;
-            deactivateRightSwipeCalled = false;
+            stopItemAnimationCalled = false;
             const cfg = {
                viewName: 'Controls/List/ListView',
                source: source,
@@ -4307,10 +4307,10 @@ define([
                getSwipeItem: () => ({ id: 1 })
             };
             ctrl._selectionController = {
-               deactivateRightSwipe: () => {
-                  deactivateRightSwipeCalled = true;
+               stopItemAnimation: () => {
+                  stopItemAnimationCalled = true;
                },
-               getRightSwipeItem: () => ({ id: 1 })
+               getAnimatedItem: () => ({ id: 1 })
             };
             ctrl._listViewModel = {
                _isActionsAssigned: false,
@@ -4342,13 +4342,13 @@ define([
                   animationName: 'test'
                }
             });
-            assert.isFalse(deactivateRightSwipeCalled, 'right swipe should not be deactivated on every animation end');
+            assert.isFalse(stopItemAnimationCalled, 'right swipe should not be deactivated on every animation end');
             ctrl._onItemSwipeAnimationEnd({
                nativeEvent: {
                   animationName: 'rightSwipe'
                }
             });
-            assert.isTrue(deactivateRightSwipeCalled, 'right swipe should be deactivated on \'rightSwipe\' animation end');
+            assert.isTrue(stopItemAnimationCalled, 'right swipe should be deactivated on \'rightSwipe\' animation end');
          });
       });
 
@@ -4470,7 +4470,7 @@ define([
          });
 
          describe('Animation for right-swipe with or without multiselectVisibility', function() {
-            let spyActivateRightSwipe;
+            let spystartItemAnimation;
 
             before(() => {
                swipeEvent = initSwipeEvent('right');
@@ -4481,21 +4481,21 @@ define([
             });
 
             afterEach(() => {
-               spyActivateRightSwipe.restore();
+               spystartItemAnimation.restore();
             });
 
             it('multiSelectVisibility: visible, should start animation', function() {
                initTest({multiSelectVisibility: 'visible'});
-               spyActivateRightSwipe = sinon.spy(instance._selectionController, 'activateRightSwipe');
+               spystartItemAnimation = sinon.spy(instance._selectionController, 'startItemAnimation');
                instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
-               sinon.assert.calledOnce(spyActivateRightSwipe);
+               sinon.assert.calledOnce(spystartItemAnimation);
             });
 
             it('multiSelectVisibility: onhover, should start animation', function() {
                initTest({multiSelectVisibility: 'onhover'});
-               spyActivateRightSwipe = sinon.spy(instance._selectionController, 'activateRightSwipe');
+               spystartItemAnimation = sinon.spy(instance._selectionController, 'startItemAnimation');
                instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
-               sinon.assert.calledOnce(spyActivateRightSwipe);
+               sinon.assert.calledOnce(spystartItemAnimation);
             });
 
             it('multiSelectVisibility: hidden, should not start animation (controller is not created)', function() {
@@ -4522,7 +4522,7 @@ define([
             });
 
             // Свайп вправо не влияет на определение свайпа влево
-            it('setRightSwiped() should not affect isSwiped() result', () => {
+            it('setAnimatedForSelection() should not affect isSwiped() result', () => {
                initTest({
                   multiSelectVisibility: 'visible',
                   itemActions: [
@@ -4547,7 +4547,7 @@ define([
                const item = instance._listViewModel.at(0);
                instance._onItemSwipe({}, item, swipeEvent);
                assert.notExists(instance._itemActionsController.getSwipeItem());
-               assert.equal(item, instance._selectionController.getRightSwipeItem());
+               assert.equal(item, instance._selectionController.getAnimatedItem());
             });
          });
 

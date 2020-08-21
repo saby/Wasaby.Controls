@@ -217,15 +217,15 @@ export class Controller {
    /**
     * Устанавливает текущее состояние свайпа записи вправо в false и отключает анимацию
     */
-   deactivateRightSwipe(): void {
-      this._setRightSwipeItem(null);
+   stopItemAnimation(): void {
+      this._setAnimatedItem(null);
    }
 
    /**
     * Получает текущий свайпнутый вправо элемент.
     */
-   getRightSwipeItem(): ISelectionItem {
-      return this._model.find((item) => !!item.isRightSwiped && item.isRightSwiped());
+   getAnimatedItem(): ISelectionItem {
+      return this._model.find((item) => !!item.isAnimatedForSelection && item.isAnimatedForSelection());
    }
 
    /**
@@ -233,15 +233,15 @@ export class Controller {
     * @param key
     * @private
     */
-   private _setRightSwipeItem(key: TItemKey): void {
-      const oldSwipeItem = this.getRightSwipeItem();
+   private _setAnimatedItem(key: TItemKey): void {
+      const oldSwipeItem = this.getAnimatedItem();
       const newSwipeItem = this._model.getItemBySourceKey(key);
 
       if (oldSwipeItem) {
-         oldSwipeItem.setRightSwiped(false);
+         oldSwipeItem.setAnimatedForSelection(false);
       }
       if (newSwipeItem) {
-         newSwipeItem.setRightSwiped(true);
+         newSwipeItem.setAnimatedForSelection(true);
       }
    }
 
@@ -249,8 +249,8 @@ export class Controller {
     * Активирует анимацию записи по правому свайпу.
     * @param itemKey
     */
-   activateRightSwipe(itemKey: TItemKey): void {
-      this._setRightSwipeItem(itemKey);
+   startItemAnimation(itemKey: TItemKey): void {
+      this._setAnimatedItem(itemKey);
    }
 
    // endregion

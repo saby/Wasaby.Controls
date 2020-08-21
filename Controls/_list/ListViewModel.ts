@@ -111,8 +111,8 @@ const _private = {
         itemsModelCurrent.isSwiped = (): boolean => (
             itemsModelCurrent.dispItem.isSwiped !== undefined ? itemsModelCurrent.dispItem.isSwiped() : false
         );
-        itemsModelCurrent.isRightSwiped = (): boolean => (
-            itemsModelCurrent.dispItem.isRightSwiped !== undefined ? itemsModelCurrent.dispItem.isRightSwiped() : false
+        itemsModelCurrent.isAnimatedForSelection = (): boolean => (
+            itemsModelCurrent.dispItem.isAnimatedForSelection !== undefined ? itemsModelCurrent.dispItem.isAnimatedForSelection() : false
         );
         itemsModelCurrent.getContents = () => (
             itemsModelCurrent.dispItem.getContents ? itemsModelCurrent.dispItem.getContents() : null

@@ -96,7 +96,7 @@ export default class CollectionItem<T> extends mixin<
      */
     protected _$swipeAnimation: ANIMATION_STATE;
 
-    protected _$rightSwiped: boolean;
+    protected _$animatedForSelection: boolean;
 
     protected _$editingContents: T;
 
@@ -358,26 +358,24 @@ export default class CollectionItem<T> extends mixin<
     }
 
     /**
-     * Флаг, определяющий состояние свайпа вправо по записи.
-     * Используется для анимации при свайпе вправо по записи для
-     * отметки записи чекбоксом
+     * Флаг, определяющий состояние анимации записи при отметке её чекбоксом.
+     * Используется для анимации при свайпе вправо для multiSelect
      */
-    isRightSwiped(): boolean {
-        return this._$rightSwiped;
+    isAnimatedForSelection(): boolean {
+        return this._$animatedForSelection;
     }
 
     /**
-     * Устанавливает состояние свайпа вправо по записи.
-     * Используется при свайпе вправо по записи для
-     * отметки записи чекбоксом
+     * Устанавливает состояние  анимации записи при отметке её чекбоксом.
+     * Используется при свайпе вправо для multiSelect
      */
-    setRightSwiped(swiped: boolean): void {
-        if (this._$rightSwiped === swiped) {
+    setAnimatedForSelection(animated: boolean): void {
+        if (this._$animatedForSelection === animated) {
             return;
         }
-        this._$rightSwiped = swiped;
+        this._$animatedForSelection = animated;
         this._nextVersion();
-        this._notifyItemChangeToOwner('rightSwiped');
+        this._notifyItemChangeToOwner('animatedForSelection');
     }
 
     /**

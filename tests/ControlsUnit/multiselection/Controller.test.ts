@@ -337,26 +337,26 @@ describe('Controls/_multiselection/Controller', () => {
       assert.deepEqual(result, expectedResult);
    });
 
-   // При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
-   it('should right-swipe item on activateRightSwipe() method', () => {
-      controller.activateRightSwipe(1);
+   // При вызове startItemAnimation нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
+   it('should right-swipe item on startItemAnimation() method', () => {
+      controller.startItemAnimation(1);
       const item1 = model.getItemBySourceKey(1);
-      assert.isTrue(item1.isRightSwiped());
+      assert.isTrue(item1.isAnimatedForSelection());
    });
 
-   it('method getRightSwipeItem() should return right swiped item', () => {
+   it('method getAnimatedItem() should return right swiped item', () => {
       // @ts-ignore
       const item: CollectionItem<Record> = model.getItemBySourceKey(1);
       let swipedItem: ISelectionItem;
 
-      controller.activateRightSwipe(1);
+      controller.startItemAnimation(1);
       // @ts-ignore
-      swipedItem = controller.getRightSwipeItem() as CollectionItem<Record>;
-      assert.equal(swipedItem, item, 'right-swiped item has not been found by getRightSwipeItem() method');
-      controller.deactivateRightSwipe();
+      swipedItem = controller.getAnimatedItem() as CollectionItem<Record>;
+      assert.equal(swipedItem, item, 'right-swiped item has not been found by getAnimatedItem() method');
+      controller.stopItemAnimation();
 
       // @ts-ignore
-      swipedItem = controller.getRightSwipeItem() as CollectionItem<Record>;
+      swipedItem = controller.getAnimatedItem() as CollectionItem<Record>;
       assert.equal(swipedItem, null, 'Current right-swiped item has not been un-swiped');
    });
 });

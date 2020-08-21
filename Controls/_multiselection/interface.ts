@@ -19,14 +19,14 @@ export interface ISelectionItem extends ICollectionItem {
     * @public
     * @return {Boolean} состояние правого свайпа
     */
-   isRightSwiped(): boolean;
+   isAnimatedForSelection(): boolean;
    /**
     * Флаг, определяющий состояние правого свайпа по записи.
     * @param {Boolean} swiped состояние правого свайпа
     * @method
     * @public
     */
-   setRightSwiped(swiped: boolean): boolean;
+   setAnimatedForSelection(swiped: boolean): boolean;
 }
 
 /**
