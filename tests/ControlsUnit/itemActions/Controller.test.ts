@@ -1686,6 +1686,7 @@ describe('Controls/_itemActions/Controller', () => {
         it('should correctly set animation state', () => {
             const testingItem = collection.getItemBySourceKey(1);
             testingItem.setSwipeAnimation(ANIMATION_STATE.OPEN);
+            testingItem.setSwiped(true, true);
             itemActionsController.startSwipeCloseAnimation();
             assert.equal(testingItem.getSwipeAnimation(), ANIMATION_STATE.CLOSE, 'Incorrect animation state !== close');
         });
