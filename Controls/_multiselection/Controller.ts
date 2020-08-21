@@ -215,21 +215,21 @@ export class Controller {
    // region rightSwipe
 
    /**
-    * Устанавливает текущее состояние свайпа записи вправо в false и отключает анимацию
+    * Устанавливает текущее состояние анимации записи в false
     */
    stopItemAnimation(): void {
       this._setAnimatedItem(null);
    }
 
    /**
-    * Получает текущий свайпнутый вправо элемент.
+    * Получает текущий анимированный элемент.
     */
    getAnimatedItem(): ISelectionItem {
       return this._model.find((item) => !!item.isAnimatedForSelection && item.isAnimatedForSelection());
    }
 
    /**
-    * Устанавливает текущее состояние свайпа записи вправо по её ключу
+    * Устанавливает текущее состояние анимации записи по её ключу
     * @param key
     * @private
     */
@@ -246,7 +246,7 @@ export class Controller {
    }
 
    /**
-    * Активирует анимацию записи по правому свайпу.
+    * Активирует анимацию записи
     * @param itemKey
     */
    startItemAnimation(itemKey: TItemKey): void {
