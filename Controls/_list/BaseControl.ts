@@ -1123,24 +1123,21 @@ const _private = {
         }
     },
     createScrollPagingController(self, scrollParams) {
+        let elementsCount = undefined;
+        if (self._sourceController) {
+            elementsCount = self._sourceController.getAllDataCount();
+            if (typeof elementsCount !== 'number') {
+                elementsCount = undefined;
+            }
+        }
         const scrollPagingConfig = {
             pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
+            elementsCount,
             pagingCfgTrigger: (cfg) => {
                 if (!isEqual(self._pagingCfg, cfg)) {
                     self._pagingCfg = cfg;
                     self._forceUpdate();
-                    if (self._options.navigation.viewConfig.pagingMode === 'numbers') {
-                        self._pagingCfg.pagesCount = Math.round(self._viewSize / self._viewportSize);
-                        self._pagingCfg.selectedPage = self._currentPage;
-
-                        if (self._sourceController) {
-                            const allDataCount = self._sourceController.getAllDataCount();
-                            if (typeof allDataCount === 'number') {
-                                self._pagingCfg.elementsCount = allDataCount;
-                            }
-                        }
-                    }
                 }
             }
         };
@@ -1207,11 +1204,6 @@ const _private = {
     updateScrollPagingButtons(self, scrollParams) {
         _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
             scrollPaging.updateScrollParams(scrollParams);
-            if (self._options.navigation.viewConfig.pagingMode === 'numbers') {
-                self._currentPage = Math.round(scrollParams.scrollTop / scrollParams.clientHeight) + 1;
-                self._pagingCfg.selectedPage = self._currentPage;
-                self._pagingCfg.pagesCount = Math.round(self._viewSize / self._viewportSize);
-            }
         });
     },
 

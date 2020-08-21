@@ -29,11 +29,16 @@ interface IPagingCfg {
     arrowState: IArrowState;
     showDigits?: boolean;
     showEndButton?: boolean;
+    pagingMode?: string;
+    pagesCount?: number;
+    selectedPage?: number;
+    elementsCount?: number;
 }
 
 interface IScrollPagingOptions {
     pagingMode: TPagingMode;
     scrollParams: IScrollParams;
+    elementsCount: number;
 
     pagingCfgTrigger(IPagingCfg): void;
 }
@@ -80,17 +85,20 @@ export default class ScrollPagingController {
                 arrowState.prev = 'hidden';
                 arrowState.next = 'hidden';
                 arrowState.end = 'hidden';
+                pagingCfg.pagesCount = Math.round(this._options.scrollParams.scrollHeight / this._options.scrollParams.clientHeight);
+                pagingCfg.selectedPage = Math.round(this._options.scrollParams.scrollTop / this._options.scrollParams.clientHeight) + 1;
                 break;
         }
         if (this._options.pagingMode) {
             pagingCfg.pagingMode = this._options.pagingMode;
+            pagingCfg.elementsCount = this._options.elementsCount;
         }
         pagingCfg.arrowState = arrowState;
         return pagingCfg;
     }
 
     protected handleScrollMiddle(): void {
-        if (!(this._curState === 'middle')) {
+        if (!(this._curState === 'middle') || this._options.pagingMode === 'numbers') {
             this._options.pagingCfgTrigger(this.getPagingCfg({
                 begin: 'visible',
                 prev: 'visible',
