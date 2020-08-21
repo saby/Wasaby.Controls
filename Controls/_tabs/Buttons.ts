@@ -366,11 +366,11 @@ const isTemplate = (tmpl: any): boolean => {
 };
 
 const isTemplateArray = (templateArray: any): boolean => {
-    return Array.isArray(templateArray) && templateArray.every((tmpl) => isTemplate(tmpl)) && templateArray.isDataArray;
+    return Array.isArray(templateArray) && templateArray.every((tmpl) => isTemplate(tmpl));
 };
 
 const isTemplateObject = (tmpl: any): boolean => {
-    return isTemplate(tmpl) && tmpl.isDataArray;
+    return isTemplate(tmpl);
 };
 
 class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems, ITabsTemplate {
@@ -395,9 +395,9 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
             this._prepareState(itemsData);
         } else if (options.source) {
             return this._initItems(options.source).then((result: IReceivedState) => {
+                this._prepareState(result);
                 // TODO https://online.sbis.ru/opendoc.html?guid=527e3f4b-b5cd-407f-a474-be33391873d5
                 if (!TabsButtons._checkHasFunction(result)) {
-                    this._prepareState(result);
                     return result;
                 }
             });

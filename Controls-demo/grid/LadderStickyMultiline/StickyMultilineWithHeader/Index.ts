@@ -3,8 +3,8 @@ import {Memory} from 'Types/source';
 
 import {getMultilineLadder} from '../../DemoHelpers/DataCatalog';
 
-import * as Template from 'wml!Controls-demo/grid/Ladder/StickyMultilineWithHeader/StickyMultilineWithHeader';
-import { IHeader } from 'Controls-demo/types';
+import * as Template from 'wml!Controls-demo/grid/LadderStickyMultiline/StickyMultilineWithHeader/StickyMultilineWithHeader';
+import {IHeader} from 'Controls-demo/types';
 
 interface IStickyLadderColumn {
     template: string;

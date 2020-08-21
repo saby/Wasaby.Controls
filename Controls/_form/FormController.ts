@@ -781,6 +781,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     private _onCloseErrorDialog(): void {
+        this._hideError();
         if (!this._record) {
             this._notify('close', [], {bubbling: true});
         }

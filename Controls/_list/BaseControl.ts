@@ -102,8 +102,7 @@ const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
     {id: 4, title: '50', pageSize: 50},
     {id: 5, title: '100', pageSize: 100},
     {id: 6, title: '200', pageSize: 200},
-    {id: 7, title: '500', pageSize: 500},
-    {id: 8, title: '1000', pageSize: 1000}];
+    {id: 7, title: '500', pageSize: 500}];
 
 const
     HOT_KEYS = {
@@ -742,7 +741,7 @@ const _private = {
                     loadCallback(addedItems, countCurrentItems);
                 }
 
-                
+
 
                 // Скрываем ошибку после успешной загрузки данных
                 _private.hideError(self);
@@ -1088,7 +1087,7 @@ const _private = {
 
             self._viewportRect = params.viewPortRect;
 
-            if (_private.needScrollPaging(self._options.navigation)) {
+            if (_private.needScrollPaging(self, self._options.navigation)) {
                 const scrollParams = {
                     scrollTop: self._scrollTop,
                     scrollHeight: params.scrollHeight,
@@ -1124,10 +1123,13 @@ const _private = {
     },
     createScrollPagingController(self, scrollParams) {
         const scrollPagingConfig = {
+            pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
             pagingCfgTrigger: (cfg) => {
-                self._pagingCfg = cfg;
-                self._forceUpdate();
+                if (!isEqual(self._pagingCfg, cfg)) {
+                    self._pagingCfg = cfg;
+                    self._forceUpdate();
+                }
             }
         };
         return Promise.resolve(new ScrollPagingController(scrollPagingConfig));
@@ -1224,7 +1226,7 @@ const _private = {
 
         self._scrollTop = scrollTop;
         self._scrollPageLocked = false;
-        if (_private.needScrollPaging(self._options.navigation)) {
+        if (_private.needScrollPaging(self, self._options.navigation)) {
             const scrollParams = {
                 scrollTop: self._scrollTop,
                 scrollHeight: self._viewSize,
@@ -1278,7 +1280,7 @@ const _private = {
     disablePagingNextButtons(self): void {
         if (self._pagingVisible) {
             self._pagingCfg = {...self._pagingCfg};
-            self._pagingCfg.forwardEnabled = false;
+            self._pagingCfg.arrowState.next = self._pagingCfg.arrowState.end = 'readonly';
         }
     },
 
@@ -1332,7 +1334,7 @@ const _private = {
         return navigationOpt && navigationOpt.view === 'infinity';
     },
 
-    needScrollPaging(navigationOpt) {
+    needScrollPaging(self, navigationOpt) {
         return (navigationOpt &&
             navigationOpt.view === 'infinity' &&
             navigationOpt.viewConfig &&
@@ -1403,7 +1405,9 @@ const _private = {
                             self._addItems.push(...newItems);
                             self._addItemsIndex = newItemsIndex;
                         } else {
-                            result = self._scrollController.handleAddItems(newItemsIndex, newItems);
+                            const collectionStartIndex = self._listViewModel.getStartIndex();
+                            result = self._scrollController.handleAddItems(newItemsIndex, newItems,
+                                newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
                         }
 
                     }
@@ -1446,7 +1450,7 @@ const _private = {
                 // Если элемент был пересоздан, то сперва сработает remove и с элемента уберется выделение,
                 // а потом сработает add и для элемента нужно восстановить выделение
                 if (action === IObservable.ACTION_ADD) {
-                    _private.getMarkerController(self).restoreMarker();
+                    _private.getMarkerController(self).handleAddItems(newItems);
                 }
             }
         }
@@ -2597,7 +2601,7 @@ const _private = {
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_interface/INavigation
- @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
@@ -2957,7 +2961,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     scrollResizeHandler(params: object): void {
-        if (_private.needScrollPaging(this._options.navigation)) {
+        if (_private.needScrollPaging(this, this._options.navigation)) {
             // внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
             // поэтому нужен таймаут
             this._needPagingTimeout = setTimeout(() => {
@@ -2995,7 +2999,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.getPortionedSearch(this).stopSearch();
             }
         }
-        if (_private.needScrollPaging(this._options.navigation)) {
+        if (_private.needScrollPaging(this, this._options.navigation)) {
             this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewportSize);
         }
         this._scrollController?.setTriggerVisibility(direction, state);
@@ -3031,15 +3035,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.handleScrollControllerResult(this, result);
         }
 
-        if (_private.needScrollPaging(this._options.navigation)) {
-            const scrollParams = {
-                scrollHeight: this._viewSize,
-                clientHeight: this._viewportSize,
-                scrollTop: this._scrollTop
-            };
-
-            _private.updateScrollPagingButtons(this, scrollParams);
-        }
+        if (_private.needScrollPaging(this, this._options.navigation)) {
+            _private.doAfterUpdate(this, () => {
+                    const scrollParams = {
+                        scrollHeight: this._viewSize,
+                        clientHeight: this._viewportSize,
+                        scrollTop: this._scrollTop
+                    };
+                    _private.updateScrollPagingButtons(this, scrollParams);
+                });
+            }
         _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewportRect);
     },
 
@@ -4227,13 +4232,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     /**
-     * Обработчик, выполняемый после окончания анимации свайпа по записи
+     * Обработчик, выполняемый после окончания анимации свайпа вправо по записи
      * @param e
      * @private
      */
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'rightSwipe') {
-            _private.getItemActionsController(this).deactivateSwipe();
+            _private.getItemActionsController(this).deactivateRightSwipe();
         }
     },
 

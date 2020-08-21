@@ -61,7 +61,7 @@ define('Controls/interface/IGroupedGrid', [
    /**
     * @event Controls/interface/IGroupedGrid#groupExpanded Происходит при развертывании группы.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Array.<String>} changes Идентификаторы групп.
+    * @param {String} changes Идентификатор группы.
     * @demo Controls-demo/List/Grid/GroupPG
     * @see groupTemplate
     * @see collapsedGroups
@@ -73,7 +73,7 @@ define('Controls/interface/IGroupedGrid', [
    /**
     * @event Controls/interface/IGroupedGrid#groupCollapsed Происходит при сворачивании группы.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {Array.<String>} changes Идентификаторы групп.
+    * @param {String} changes Идентификатор группы.
     * @demo Controls-demo/List/Grid/GroupPG
     * @see groupTemplate
     * @see collapsedGroups

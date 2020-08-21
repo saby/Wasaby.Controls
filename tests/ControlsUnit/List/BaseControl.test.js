@@ -2291,27 +2291,43 @@ define([
             lists.BaseControl._private.handleListScrollSync(ctrl, 600);
 
             assert.deepEqual({
-               backwardEnabled: true,
-               forwardEnabled: false
+                arrowState: {
+                    begin: "visible",
+                    end: "readonly",
+                    next: "readonly",
+                    prev: "visible"
+                }
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
-               backwardEnabled: true,
-               forwardEnabled: true
+                arrowState: {
+                    begin: "visible",
+                    end: "visible",
+                    next: "visible",
+                    prev: "visible"
+                }
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
             ctrl._pagingVisible = true;
             ctrl._abortSearch();
             assert.deepEqual({
-               backwardEnabled: true,
-               forwardEnabled: false
+                arrowState: {
+                    begin: "visible",
+                    end: "readonly",
+                    next: "readonly",
+                    prev: "visible"
+                }
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
-               backwardEnabled: true,
-               forwardEnabled: false
+                arrowState: {
+                    begin: "visible",
+                    end: "readonly",
+                    next: "readonly",
+                    prev: "visible"
+                }
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
             lists.BaseControl._private.getPortionedSearch(ctrl).reset();
 
@@ -2319,8 +2335,12 @@ define([
             // и еще раз доскроллили до конца, то самое время блокировать кнопки.
             lists.BaseControl._private.handleListScrollSync(ctrl, 400);
             assert.deepEqual({
-               backwardEnabled: true,
-               forwardEnabled: false
+                arrowState: {
+                    begin: "visible",
+                    end: "readonly",
+                    next: "readonly",
+                    prev: "visible"
+                }
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
 
@@ -2380,7 +2400,14 @@ define([
          lists.BaseControl._private.onScrollShow(ctrl, heightParams);
          ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
          ctrl._pagingVisible = true;
-         ctrl._pagingCfg = {};
+       ctrl._pagingCfg = {
+           arrowState: {
+               begin: 'visible',
+               prev: 'visible',
+               next: 'visible',
+               end: 'visible'
+           }
+       };
          ctrl._notify = (eventName, eventResult) => {
             if (eventName === 'updateShadowMode') {
                shadowMode = eventResult[0];
@@ -2391,7 +2418,14 @@ define([
          };
          ctrl._abortSearch();
          assert.isFalse(ctrl._showContinueSearchButton);
-         assert.deepEqual(ctrl._pagingCfg, {forwardEnabled: false});
+         assert.deepEqual(ctrl._pagingCfg, {
+             arrowState: {
+                 begin: 'visible',
+                 prev: 'visible',
+                 next: 'readonly',
+                 end: 'readonly'
+             }
+         });
          assert.deepEqual(shadowMode, {top: 'auto', bottom: 'auto'});
          assert.isTrue(iterativeSearchAborted);
       });
@@ -4226,16 +4260,22 @@ define([
       });
 
       describe('Calling animation handlers', () => {
-         let setRightSwipedItemCalled;
+         let deactivateSwipeCalled;
+         let deactivateRightSwipeCalled;
          let ctrl;
          beforeEach(() => {
-            setRightSwipedItemCalled = false;
+            deactivateSwipeCalled = false;
+            deactivateRightSwipeCalled = false;
             ctrl = new lists.BaseControl();
             ctrl._itemActionsController = {
                deactivateSwipe: () => {
-                  setRightSwipedItemCalled = true;
+                  deactivateSwipeCalled = true;
                },
-               getSwipeItem: () => ({ id: 1 })
+               deactivateRightSwipe: () => {
+                  deactivateRightSwipeCalled = true;
+               },
+               getSwipeItem: () => ({ id: 1 }),
+               getRightSwipeItem: () => ({ id: 1 })
             };
             ctrl._listViewModel = {
                nextVersion: () => null
@@ -4248,13 +4288,13 @@ define([
                   animationName: 'test'
                }
             });
-            assert.isFalse(setRightSwipedItemCalled, 'swipe should not be deactivated on every animation end');
+            assert.isFalse(deactivateSwipeCalled, 'swipe should not be deactivated on every animation end');
             ctrl._onActionsSwipeAnimationEnd({
                nativeEvent: {
                   animationName: 'itemActionsSwipeClose'
                }
             });
-            assert.isTrue(setRightSwipedItemCalled, 'swipe should be deactivated on \'itemActionsSwipeClose\' animation end');
+            assert.isTrue(deactivateSwipeCalled, 'swipe should be deactivated on \'itemActionsSwipeClose\' animation end');
          });
 
          it('should call deactivateSwipe method on \'rightSwipe\' event', () => {
@@ -4263,13 +4303,13 @@ define([
                   animationName: 'test'
                }
             });
-            assert.isFalse(setRightSwipedItemCalled, 'swipe should not be deactivated on every animation end');
+            assert.isFalse(deactivateRightSwipeCalled, 'right swipe should not be deactivated on every animation end');
             ctrl._onItemSwipeAnimationEnd({
                nativeEvent: {
                   animationName: 'rightSwipe'
                }
             });
-            assert.isTrue(setRightSwipedItemCalled, 'swipe should be deactivated on \'rightSwipe\' animation end');
+            assert.isTrue(deactivateRightSwipeCalled, 'right swipe should be deactivated on \'rightSwipe\' animation end');
          });
       });
 
@@ -5387,6 +5427,9 @@ define([
             assert.isTrue(item.isMarked());
 
             lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'rm', [], null, [item], 0);
+            assert.isFalse(item.isMarked());
+
+            lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'a', [baseControl.getViewModel().getItemBySourceKey(2)], null, [item], 0);
             assert.isFalse(item.isMarked());
 
             lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'a', [item], null, [], 0);
