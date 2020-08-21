@@ -1086,7 +1086,7 @@ const _private = {
 
             self._viewportRect = params.viewPortRect;
 
-            if (_private.needScrollPaging(self, self._options.navigation)) {
+            if (_private.needScrollPaging(self._options.navigation)) {
                 const scrollParams = {
                     scrollTop: self._scrollTop,
                     scrollHeight: params.scrollHeight,
@@ -1224,7 +1224,7 @@ const _private = {
 
         self._scrollTop = scrollTop;
         self._scrollPageLocked = false;
-        if (_private.needScrollPaging(self, self._options.navigation)) {
+        if (_private.needScrollPaging(self._options.navigation)) {
             const scrollParams = {
                 scrollTop: self._scrollTop,
                 scrollHeight: self._viewSize,
@@ -1332,7 +1332,7 @@ const _private = {
         return navigationOpt && navigationOpt.view === 'infinity';
     },
 
-    needScrollPaging(self, navigationOpt) {
+    needScrollPaging(navigationOpt) {
         return (navigationOpt &&
             navigationOpt.view === 'infinity' &&
             navigationOpt.viewConfig &&
@@ -3019,7 +3019,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.handleScrollControllerResult(this, result);
         }
 
-        if (_private.needScrollPaging(this, this._options.navigation)) {
+        if (_private.needScrollPaging(this._options.navigation)) {
             _private.doAfterUpdate(this, () => {
                     const scrollParams = {
                         scrollHeight: this._viewSize,
