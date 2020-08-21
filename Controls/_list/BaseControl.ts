@@ -1069,6 +1069,9 @@ const _private = {
                 // чтобы не скрыть после полной загрузки, даже если не набралось на две страницы.
                 self._cachedPagingState = true;
             }
+            if (result && _private.needScrollPaging(self._options.navigation)) {
+                _private.createScrollPagingController(self, scrollParams);
+            }
         }
 
         if (self._cachedPagingState === true) {
@@ -1114,9 +1117,11 @@ const _private = {
         if (self._scrollPagingCtr) {
             callback(self._scrollPagingCtr);
         } else {
-            _private.createScrollPagingController(self, scrollParams).then((scrollPaging) => {
-                callback(scrollPaging);
-            });
+            if (self._pagingVisible) {
+                _private.createScrollPagingController(self, scrollParams).then((scrollPaging) => {
+                    callback(scrollPaging);
+                });
+            }
         }
     },
     createScrollPagingController(self, scrollParams) {

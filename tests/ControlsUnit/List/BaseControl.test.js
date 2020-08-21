@@ -2285,7 +2285,11 @@ define([
             await lists.BaseControl._private.onScrollShow(ctrl, heightParams);
             ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
 
-            assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
+            assert.isFalse(!!ctrl._scrollPagingCtr, 'ScrollPagingController was created');
+
+            ctrl._mouseEnter(null);
+            await lists.BaseControl._private.onScrollShow(ctrl, heightParams);
+            assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn`t created');
 
             // прокручиваем к низу, проверяем состояние пэйджинга
             lists.BaseControl._private.handleListScrollSync(ctrl, 600);
