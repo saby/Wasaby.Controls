@@ -3,11 +3,11 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_tabs/AdaptiveButtons/AdaptiveButtons';
 import {RecordSet} from 'Types/collection';
 import {getFontWidth} from 'Controls/Utils/getFontWidth';
-import {ICrudPlus, Memory, PrefetchProxy, SbisService} from 'Types/source';
+import {ICrudPlus, Memory, SbisService} from 'Types/source';
 import {CrudWrapper} from 'Controls/dataSource';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
-import {StickyOpener} from 'Controls/popup';
+import {Model} from 'Types/entity';
 
 const MARGIN = 13;
 const MIN_WIDTH = 26;
@@ -275,6 +275,17 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             keyProperty: 'id',
             data: this._items.getRawData()
         });
+    }
+
+    private _menuItemClickHandler(event: SyntheticEvent<Event>, item: Model): void {
+        if (this._options.align === 'left') {
+            // tslint:disable-next-line:no-unused-expression
+            this._visibleItems.getRawData().pop;
+            this._visibleItems.getRawData().push(item.getRawData());
+        } else {
+            // tslint:disable-next-line:no-unused-expression
+            this._visibleItems.getRawData().shift;
+        }
     }
 
     static getDefaultOptions(): Partial<ITabsAdaptiveButtonsOptions> {

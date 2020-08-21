@@ -13,6 +13,7 @@
             			 viewMode="link"
             			 filter="{{_filter}}"
             			 lazyItemsLoading="{{true}}"
+            			 on:menuItemActivate="_menuItemClickHandler()"
             		  />
         </div>
     </ws:template>
