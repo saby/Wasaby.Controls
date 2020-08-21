@@ -44,8 +44,9 @@ define(
                emptyText: defaultConfig.emptyText,
                emptyKey: defaultConfig.emptyKey,
                hasApplyButton: defaultConfig.hasApplyButton,
-               hasClose: true
-         });
+               hasClose: true,
+               iconSize: defaultConfig.iconSize
+            });
             let list = getList(defaultConfig);
             list._beforeMount(defaultConfig);
             assert.deepStrictEqual(list._listModel._options, expectedListModel._options);

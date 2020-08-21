@@ -48,6 +48,7 @@ var List = Control.extend({
 
     _beforeMount: function(options) {
         this._listModel = new DropdownViewModel({
+            iconSize: options.iconSize,
             items: options.items || [],
             selectedKeys: options.selectedKeys,
             keyProperty: options.keyProperty,
