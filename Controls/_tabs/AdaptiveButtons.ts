@@ -18,9 +18,6 @@ interface IReceivedState {
 }
 
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
-export interface ITabsAdaptiveButtons extends ITabsButtons {
-    readonly '[Controls/_tabs/ITabsAdaptiveButtons]': boolean;
-}
 /**
  * Контрол предоставляет пользователю возможность выбрать между двумя или более адаптивными под ширину вкладками.
  *
@@ -55,8 +52,7 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
 
 
 
-class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedState> implements ITabsAdaptiveButtons {
-    readonly '[Controls/_tabs/ITabsAdaptiveButtons]': boolean = true;
+class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedState> implements ITabsButtons {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
     protected _template: TemplateFunction = template;
     protected _lastIndex: number = 0;

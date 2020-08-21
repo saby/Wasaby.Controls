@@ -17,13 +17,6 @@ import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 
 import {IItemTemplateOptions} from 'Controls/interface';
-import {IHeading} from "../_spoiler/Heading";
-export interface ITabsButtonsTemplate {
-    readonly '[Controls/_tabs/interface/ITabsButtonsTemplate]': boolean;
-}
-export interface ITabsTemplate {
-    readonly '[Controls/_tabs/ITabsTemplate]': boolean;
-}
 
 export interface ITabsTemplateOptions extends IItemTemplateOptions {
     leftTemplateProperty?: string;
@@ -364,10 +357,9 @@ const isTemplateObject = (tmpl: any): boolean => {
     return isTemplate(tmpl);
 };
 
-class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems, ITabsTemplate {
+class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
     readonly '[Controls/_interface/IItems]': boolean = true;
-    readonly '[Controls/_tabs/ITabsTemplate]': boolean = true;
 
     protected _template: TemplateFunction = TabButtonsTpl;
     protected _defaultItemTemplate: TemplateFunction = ItemTemplate;
