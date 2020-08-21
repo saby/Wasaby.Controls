@@ -1041,6 +1041,7 @@ var
                 if (this._options.columnScrollVisibility) {
                     cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
                 }
+                // Этот костыль выпилен в 6000 по https://online.sbis.ru/opendoc.html?guid=f5e830c3-7be2-4272-9c38-594c241401cc
                 if (this._options.columnScrollVisibility && this.isStickyHeader()) {
                     cellClasses += ' controls-Grid__columnScroll_will-transform';
                 }
@@ -1300,6 +1301,7 @@ var
                 if (this._options.columnScrollVisibility) {
                     cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
                 }
+                // Этот костыль выпилен в 6000 по https://online.sbis.ru/opendoc.html?guid=f5e830c3-7be2-4272-9c38-594c241401cc
                 if (this._options.columnScrollVisibility && this.isStickyHeader()) {
                     cellClasses += ' controls-Grid__columnScroll_will-transform';
                 }
