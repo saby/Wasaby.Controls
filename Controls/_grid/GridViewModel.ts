@@ -1043,6 +1043,9 @@ var
                 if (this._options.columnScrollVisibility) {
                     cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
                 }
+                if (this._options.columnScrollVisibility && this.isStickyHeader()) {
+                    cellClasses += ' controls-Grid__columnScroll_will-transform';
+                }
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
@@ -1298,6 +1301,9 @@ var
                 cellClasses += _private.getColumnScrollCalculationCellClasses(params, this._options.theme);
                 if (this._options.columnScrollVisibility) {
                     cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
+                }
+                if (this._options.columnScrollVisibility && this.isStickyHeader()) {
+                    cellClasses += ' controls-Grid__columnScroll_will-transform';
                 }
 
                 if (!GridLayoutUtil.isFullGridSupport()) {
