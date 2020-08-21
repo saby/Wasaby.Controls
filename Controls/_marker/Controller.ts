@@ -211,6 +211,12 @@ export class Controller {
       if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
          contents = contents[(contents as any).length - 1];
       }
+
+      // Для GroupItem нет ключа, в contents хранится не Model
+      if (item['[Controls/_display/GroupItem]']) {
+         return undefined;
+      }
+
       return contents.getKey();
    }
 
