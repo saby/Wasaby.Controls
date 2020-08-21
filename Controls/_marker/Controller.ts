@@ -192,6 +192,16 @@ export class Controller {
       return newMarkedKey;
    }
 
+   /**
+    * Обработать добавление элементов
+    * @param newItems список новый элементов
+    */
+   handleAddItems(newItems: Array<CollectionItem<Model>>): void {
+      if (newItems.some((item) => this._getKey(item) === this._markedKey)) {
+         this.restoreMarker();
+      }
+   }
+
    /*
       TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
        https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
