@@ -90,6 +90,12 @@ define([
             component._children.opener = {
                close: sinon.fake()
             };
+            component._children.startValueField = {
+               setValidationResult: sinon.fake()
+            };
+            component._children.endValueField = {
+               setValidationResult: sinon.fake()
+            };
             sandbox.stub(component, '_notify');
 
             component._onResultWS3('event',startValue, endValue);
@@ -143,6 +149,12 @@ define([
             component._children = {}
             component._children.opener = {
                close: sinon.fake()
+            };
+            component._children.startValueField = {
+               setValidationResult: sinon.fake()
+            };
+            component._children.endValueField = {
+               setValidationResult: sinon.fake()
             };
             sandbox.stub(component, '_notify');
 

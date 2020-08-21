@@ -259,6 +259,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _mouseenterHandler(event) {
+        // Если до mouseenter не вычисляли скроллбар, сделаем это сейчас.
+        this._scrollbars.updateScrollState(this._state, this._container);
         if (this._scrollbars.take()) {
             this._notify('scrollbarTaken', [], {bubbling: true});
         }

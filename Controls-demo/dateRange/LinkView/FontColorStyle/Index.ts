@@ -6,11 +6,6 @@ class DemoControl extends Control<IControlOptions> {
 
     private _startValue: Date = new Date(2019, 1);
     private _endValue: Date = new Date(2019, 2, 0);
-    danger = 'danger';
-
-    _click() {
-        this.danger = 'unaccented'
-    }
 
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/dateRange/LiteSelector/LiteSelector'];
 }

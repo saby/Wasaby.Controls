@@ -45,7 +45,8 @@
                             {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}"
                 ladderWrapper="{{currentColumn.ladderWrapper}}"
                 expanderTemplate="{{itemData.expanderTemplate}}"
-                itemData="{{currentColumn}}" />
+                itemData="{{currentColumn}}"
+                tagTemplate="{{tagTemplate}}" />
 </ws:template>
 
 <ws:template name="COLUMN_CONTENT_WRAPPER">
@@ -285,7 +286,3 @@
       </ws:else>
    </div>
 </ws:else>
-
-<ws:if data="{{itemData.nodeFooters.length > 0}}">
-   <ws:partial template="{{ itemData.footerContentTemplate }}" itemData="{{ itemData }}"/>
-</ws:if>

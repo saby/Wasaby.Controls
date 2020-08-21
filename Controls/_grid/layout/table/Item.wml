@@ -72,7 +72,7 @@
                     {{ marker !== false ? currentColumn.classList.marked }}
                     controls-Grid__cell_valign_{{currentColumn.column.compatibleValign || 'top'}}
                     {{className || ''}}">
-        <div class="{{ currentColumn.classList.getRelativeCellWrapperClasses(colspan, true) }}">
+        <div class="{{ itemData.getRelativeCellWrapperClasses(colspan, true) }}">
             <ws:partial template="{{content}}" />
         </div>
     </td>

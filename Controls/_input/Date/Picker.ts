@@ -97,6 +97,10 @@ import getOptions from 'Controls/Utils/datePopupUtils';
          this._notify('valueChanged', [startValue, textValue]);
          this._children.opener.close();
          this._notify('inputCompleted', [startValue, textValue]);
+          // Сбрасываем валидацию, т.к. при выборе периода из календаря не вызывается событие valueChanged
+          // Валидация срабатывает раньше, чем значение меняется.
+          //TODO: Изменить на validate
+          this._children.input.setValidationResult(null);
       },
    });
 

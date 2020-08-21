@@ -26,6 +26,7 @@ import {
     ANIMATION_STATE,
     CollectionItem
 } from 'Controls/display';
+import {Logger} from 'UI/Utils';
 import {IItemActionsTemplateConfig} from 'Controls/itemActions';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
@@ -279,17 +280,34 @@ var
             return isCellIndexLessTheFixedIndex;
         },
 
-        // Раньше по https://online.sbis.ru/doc/a4b0487a-4bc4-47e4-afce-3340833b1232 тут ещё была проверка на
-        // isColumnScrollVisible, но это приводило к тому, что в некоторых реестрах
-        // z-index всех столбцов формировались до установки isColumnScrollVisible=true как FIXED_HEADER_ZINDEX
-        // и т.к. они были на одном уровне, то возникал кейс по ошибке
-        // https://online.sbis.ru/opendoc.html?guid=42614e54-3ed7-41f4-9d57-a6971df66f9c
+        // Правки здесь выполены по задаче https://online.sbis.ru/doc/a4b0487a-4bc4-47e4-afce-3340833b1232
+        // В этом методе ОБЯЗАТЕЛЬНО нужна проверка на isColumnScrollVisible, иначе в случаях, подобно ошибке
+        // https://online.sbis.ru/opendoc.html?guid=2525593a-46ac-4223-9124-e507659cf85e ломается вёрстка
+        // в реестрах, в которых использовался тот факт, что в таблицах у всех столбцов одинаковые z-index.
+        // Для решения же ошибки https://online.sbis.ru/opendoc.html?guid=42614e54-3ed7-41f4-9d57-a6971df66f9c,
+        // сделаем перерисовку столбцов после установки isColumnScrollVisible
         getHeaderZIndex(params): number {
-            return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+            if (params.isColumnScrollVisible) {
+                return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+            } else {
+                // Пока в таблице нет горизонтального скролла, шапка ен может быть проскролена по горизонтали.
+                return FIXED_HEADER_ZINDEX;
+            }
         },
 
         getColumnScrollCellClasses(params, theme): string {
-           return _private.isFixedCell(params) ? ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : ` ${COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT}`;
+           return _private.isFixedCell(params) ? ` controls-Grid__cell_fixed controls-Grid__cell_fixed_theme-${theme}` : '';
+        },
+
+        /**
+         * Горизонтальный скролл строится на афтермаунте списка. При создании горизонтальный скролл считает для себя все,
+         * что ему надо. В том числе и ширины фиксированной и скроллированой областей.
+         * А их он считает по селекторам COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT
+         * @param params
+         * @param theme
+         */
+        getColumnScrollCalculationCellClasses(params, theme): string {
+            return _private.isFixedCell(params) ? ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}` : ` ${COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT}`;
         },
 
         getClassesLadderHeading(itemData, theme): String {
@@ -299,7 +317,7 @@ var
             return result;
         },
 
-        getItemColumnCellClasses: function(current, theme, backgroundColorStyle) {
+        getItemColumnCellClasses(self, current, theme, backgroundColorStyle) {
             const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
             let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
@@ -314,8 +332,11 @@ var
                 classLists.base += _private.getBackgroundStyle({backgroundStyle, theme, backgroundColorStyle}, true);
             }
 
-            if (current.columnScroll) {
-                classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
+            if (self._options.columnScroll) {
+                classLists.columnScroll += _private.getColumnScrollCalculationCellClasses(current, theme);
+                if (self._options.columnScrollVisibility) {
+                    classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
+                }
             } else if (!checkBoxCell) {
                 classLists.base += ' controls-Grid__cell_fit';
             }
@@ -792,8 +813,14 @@ var
 
         _prepareColumns(columns: IGridColumn[]): IGridColumn[] {
             const result: IGridColumn[] = [];
-            for (let i = 0; i < columns.length; i++) {
-                result.push(this._prepareCrossBrowserColumn(columns[i]));
+            // проверка нужна, т.к. падают автотесты в разных реестрах
+            // по https://online.sbis.ru/opendoc.html?guid=058c8ec7-598b-413f-a082-59d6d67f0408.
+            if (columns) {
+                for (let i = 0; i < columns.length; i++) {
+                    result.push(this._prepareCrossBrowserColumn(columns[i]));
+                }
+            } else {
+                Logger.warn('You must set "columns" option to make grid work correctly!', this);
             }
             return result;
         },
@@ -1003,7 +1030,7 @@ var
             }
 
             if (this._options.columnScroll) {
-                cellClasses += _private.getColumnScrollCellClasses({
+                const params = {
                     columnIndex: columnIndex,
                     endColumn: cell.endColumn,
                     rowIndex,
@@ -1011,7 +1038,11 @@ var
                     isMultiHeader: this._isMultiHeader,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
-                }, this._options.theme);
+                };
+                cellClasses += _private.getColumnScrollCalculationCellClasses(params, this._options.theme);
+                if (this._options.columnScrollVisibility) {
+                    cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
+                }
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
@@ -1259,11 +1290,15 @@ var
             }
 
             if (this._options.columnScroll) {
-                cellClasses += _private.getColumnScrollCellClasses({
+                const params = {
                     columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility,
                     stickyColumnsCount: this._options.stickyColumnsCount
-                }, this._options.theme);
+                };
+                cellClasses += _private.getColumnScrollCalculationCellClasses(params, this._options.theme);
+                if (this._options.columnScrollVisibility) {
+                    cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
+                }
 
                 if (!GridLayoutUtil.isFullGridSupport()) {
                     const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
@@ -1665,10 +1700,8 @@ var
             current.shouldAddActionsCell = self._shouldAddActionsCell();
             current.getCellStyle = (itemData, currentColumn, colspan) => _private.getCellStyle(self, itemData, currentColumn, colspan);
 
-            current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
-
             if (!GridLayoutUtil.isFullGridSupport()) {
-                current.getRelativeCellWrapperClasses = _private.getRelativeCellWrapperClasses;
+                current.getRelativeCellWrapperClasses = _private.getRelativeCellWrapperClasses.bind(null, current);
             }
 
             current.getCurrentColumnKey = function() {
@@ -1708,7 +1741,7 @@ var
                         getActions: current.getActions,
                         getContents: current.getContents
                 };
-                currentColumn.classList = _private.getItemColumnCellClasses(current, current.theme, backgroundColorStyle);
+                currentColumn.classList = _private.getItemColumnCellClasses(self, current, current.theme, backgroundColorStyle);
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
                      * isColspaned добавлена как костыль для временного лечения ошибки.
@@ -1795,6 +1828,10 @@ var
                 // Нужно обновить классы с z-index на всех ячейках
                 this._nextModelVersion();
             }
+        },
+
+        getColumnScrollVisibility(): boolean {
+            return this._options.columnScrollVisibility;
         },
 
         setLadderProperties: function(ladderProperties) {

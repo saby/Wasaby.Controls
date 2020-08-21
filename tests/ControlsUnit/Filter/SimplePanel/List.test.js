@@ -48,7 +48,8 @@ define(
                hasApplyButton: defaultConfig.hasApplyButton,
                hasClose: true,
                theme: defaultConfig.theme,
-               node: defaultConfig.nodeProperty
+               node: defaultConfig.nodeProperty,
+              iconSize: defaultConfig.iconSize
          });
             let list = getList(defaultConfig);
             list._beforeMount(defaultConfig);
