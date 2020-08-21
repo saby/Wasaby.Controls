@@ -5855,6 +5855,15 @@ define([
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false], {bubbling: true}).called);
+         assert.isTrue(instance._listViewModel.getItemBySourceKey(1).isSelected());
+
+         notifySpy.resetHistory();
+         instance._listViewModel.getItemBySourceKey(1).setSelected(false);
+
+         cfgClone = { ...cfg, selectedKeys: [1], selectedKeysCount: 2 };
+         instance._beforeUpdate(cfgClone);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false], {bubbling: true}).called);
+         assert.isTrue(instance._listViewModel.getItemBySourceKey(1).isSelected());
       });
 
       it('_beforeUpdate with new searchValue', async function() {
