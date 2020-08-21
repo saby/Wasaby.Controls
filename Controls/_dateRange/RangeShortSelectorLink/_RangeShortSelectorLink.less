@@ -6,13 +6,14 @@
 
 .controls-RangeShortSelectorLink_theme-@{themeName} {
    height: @height_rangeShortSelectorLink;
+   line-height: @height_rangeShortSelectorLink;
 }
 
 .controls-RangeShortSelectorLink-wrapper {
    height: 100%;
    width: 100%;
    display: inline-flex;
-   align-items: center;
+   align-items: baseline;
    justify-content: center;
 }
 
@@ -21,10 +22,6 @@
    width: @arrow_width_dateRangeSelector;
    color: @reset-button_icon-color_dateRangeSelector;
    font-family: @icon_font-family_s;
-
-   &::before {
-      line-height: @clear_line-height_rangeShortSelectorLink;
-   }
 }
 
 .controls-RangeShortSelectorLink__arrow-next_theme-@{themeName} {
@@ -69,22 +66,6 @@
    height: 100%;
 }
 
-.controls-RangeShortSelectorLink__value-wrapper_theme-@{themeName}::before {
-   content: '\200b';
-   display: inline-block;
-   width: 0;
-   font-size: @line-height_rangeShortSelectorLink;
-}
-
-.ws-is-firefox {
-   .controls-RangeShortSelectorLink__value-wrapper_theme-@{themeName}::before {
-      // Механизмы рендеринга webkit и FF/IE по-разному реализуют высоту строки.
-      // Чтобы не было прыжков между вызывающим элементом и заголовком (который выровнен по базовой линии)
-      // вычитаем 1px (чтобы в FF/IE/EDGE было так же, как chrome).
-      font-size: @line-height_rangeShortSelectorLink - 1;
-   }
-}
-
 .controls-RangeShortSelectorLink__value-wrapper-minWidth_theme-@{themeName} {
    min-width: @min-width_dateRangeSelector;
 }
@@ -99,6 +80,7 @@
    font-weight: normal;
    text-align: center;
    align-self: baseline;
+   line-height: 100%;
 
    &::before {
       content: "\ea27";
