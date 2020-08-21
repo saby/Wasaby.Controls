@@ -346,17 +346,17 @@ describe('Controls/_multiselection/Controller', () => {
 
    it('method getRightSwipeItem() should return right swiped item', () => {
       // @ts-ignore
-      const item: CollectionItem<Record> = collection.getItemBySourceKey(1);
+      const item: CollectionItem<Record> = model.getItemBySourceKey(1);
       let swipedItem: ISelectionItem;
 
       controller.activateRightSwipe(1);
       // @ts-ignore
-      swipedItem = itemActionsController.getRightSwipeItem() as CollectionItem<Record>;
+      swipedItem = controller.getRightSwipeItem() as CollectionItem<Record>;
       assert.equal(swipedItem, item, 'right-swiped item has not been found by getRightSwipeItem() method');
       controller.deactivateRightSwipe();
 
       // @ts-ignore
-      swipedItem = itemActionsController.getRightSwipeItem() as CollectionItem<Record>;
+      swipedItem = controller.getRightSwipeItem() as CollectionItem<Record>;
       assert.equal(swipedItem, null, 'Current right-swiped item has not been un-swiped');
    });
 });

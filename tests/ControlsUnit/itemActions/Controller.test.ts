@@ -1682,13 +1682,10 @@ describe('Controls/_itemActions/Controller', () => {
         });
     });
 
-    describe('setSwipeAnimation(), getSwipeAnimation()', () => {
+    describe('startSwipeCloseAnimation(), getSwipeAnimation()', () => {
         it('should correctly set animation state', () => {
-            itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
-            assert.equal(itemActionsController.getSwipeAnimation(), ANIMATION_STATE.CLOSE, 'Incorrect animation state !== close');
-
-            itemActionsController.setSwipeAnimation(ANIMATION_STATE.OPEN);
-            assert.equal(itemActionsController.getSwipeAnimation(), ANIMATION_STATE.OPEN, 'Incorrect animation state !== open');
+            itemActionsController.startSwipeCloseAnimation();
+            assert.equal(collection.getSwipeAnimation(), ANIMATION_STATE.CLOSE, 'Incorrect animation state !== close');
         });
     });
 });

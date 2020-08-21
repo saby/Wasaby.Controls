@@ -37,8 +37,7 @@ import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
     CollectionItem,
     EditInPlaceController,
-    GroupItem,
-    ANIMATION_STATE
+    GroupItem
 } from 'Controls/display';
 import {
     Controller as ItemActionsController,
@@ -2332,6 +2331,7 @@ const _private = {
             return;
         }
 
+        const editingConfig = self._listViewModel.getEditingConfig();
         const editingItemData = self._listViewModel.getEditingItemData && self._listViewModel.getEditingItemData();
         const isActionsAssigned = self._listViewModel.isActionsAssigned();
         let editArrowAction: IItemAction;
@@ -4193,7 +4193,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (swipeEvent.nativeEvent.direction === 'right') {
             const swipedItem = itemActionsController?.getSwipeItem();
             if (swipedItem) {
-                itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+                itemActionsController.startSwipeCloseAnimation();
                 this._listViewModel.nextVersion();
 
                 // Для сценария, когда свайпнули одну запись и потом свайпнули вправо другую запись
