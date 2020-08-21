@@ -506,7 +506,7 @@ define(
 
             // spacingClassList
             let expectedClassList = 'controls-DropdownList__row_state_default ' +
-               'controls-SimplePanel-hierarchyItem_default_theme-default ' +
+               'controls-DropdownList__item-leftPadding_default ' +
                'controls-DropdownList__item-rightPadding_default';
             assert.equal(emptyItem.itemClassList, expectedClassList);
 
