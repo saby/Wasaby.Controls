@@ -1,7 +1,7 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
 import { Model } from 'Types/entity';
-import {ANIMATION_STATE, CollectionItem, TItemKey} from 'Controls/display';
+import { CollectionItem, TItemKey } from 'Controls/display';
 import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
 import {
    ISelectionControllerOptions,
@@ -218,11 +218,7 @@ export class Controller {
     * Устанавливает текущее состояние свайпа записи вправо в false и отключает анимацию
     */
    deactivateRightSwipe(): void {
-      this._model.setSwipeAnimation(null);
-      const currentSwipedItem = this.getRightSwipeItem();
-      if (currentSwipedItem) {
-         this._setRightSwipeItem(null);
-      }
+      this._setRightSwipeItem(null);
    }
 
    /**
@@ -254,7 +250,6 @@ export class Controller {
     * @param itemKey
     */
    activateRightSwipe(itemKey: TItemKey): void {
-      this._model.setSwipeAnimation(ANIMATION_STATE.RIGHT_SWIPE);
       this._setRightSwipeItem(itemKey);
    }
 

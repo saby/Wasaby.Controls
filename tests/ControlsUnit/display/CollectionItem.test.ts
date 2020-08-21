@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import {ANIMATION_STATE, CollectionItem} from 'Controls/display';
+import {CollectionItem} from 'Controls/display';
 import {ICollection} from "../../../Controls/_display/interface/ICollection";
 
 interface IChangedData<T> {

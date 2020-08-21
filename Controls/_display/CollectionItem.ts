@@ -12,7 +12,7 @@ import {IList} from 'Types/collection';
 import {mixin} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
-import {ICollection, ISourceCollection} from './interface/ICollection';
+import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
 
 export interface IOptions<T> {
     contents?: T;
@@ -90,6 +90,11 @@ export default class CollectionItem<T> extends mixin<
     protected _$actions: any;
 
     protected _$swiped: boolean;
+
+    /**
+     * Анимация свайпа: открытие или закрытие меню опций
+     */
+    protected _$swipeAnimation: ANIMATION_STATE;
 
     protected _$rightSwiped: boolean;
 
@@ -398,6 +403,24 @@ export default class CollectionItem<T> extends mixin<
         if (!silent) {
             this._notifyItemChangeToOwner('swiped');
         }
+    }
+
+    /**
+     * Устанавливает текущую анимацию для свайпа.
+     * Может быть, стоит объединить с _swipeConfig
+     */
+    setSwipeAnimation(animation: ANIMATION_STATE): void {
+        this._$swipeAnimation = animation;
+        this._nextVersion();
+        this._notifyItemChangeToOwner('swipeAnimation');
+    }
+
+    /**
+     * Получает еткущую анимацию для свайпа.
+     * Может быть, стоит объединить с _swipeConfig
+     */
+    getSwipeAnimation(): ANIMATION_STATE {
+        return this._$swipeAnimation;
     }
 
     isActive(): boolean {

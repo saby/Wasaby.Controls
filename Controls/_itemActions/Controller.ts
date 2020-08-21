@@ -184,7 +184,7 @@ export class Controller {
      */
     activateSwipe(itemKey: TItemKey, actionsContainerWidth: number, actionsContainerHeight: number): void {
         const item = this._collection.getItemBySourceKey(itemKey);
-        this._collection.setSwipeAnimation(ANIMATION_STATE.OPEN);
+        item.setSwipeAnimation(ANIMATION_STATE.OPEN);
         this._setSwipeItem(itemKey);
         this._collection.setActiveItem(item);
         if (this._itemActionsPosition !== 'outside') {
@@ -202,10 +202,10 @@ export class Controller {
     deactivateSwipe(): void {
         const currentSwipedItem = this.getSwipeItem();
         if (currentSwipedItem) {
+            currentSwipedItem.setSwipeAnimation(null);
             this._setSwipeItem(null);
             this._collection.setActiveItem(null);
             this._collection.setSwipeConfig(null);
-            this._collection.setSwipeAnimation(null);
             this._collection.nextVersion();
         }
     }
@@ -337,7 +337,8 @@ export class Controller {
      * Устанавливает текущее сосяние анимации в модель
      */
     startSwipeCloseAnimation(): void {
-        this._collection.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+        const swipeItem = this.getSwipeItem();
+        swipeItem.setSwipeAnimation(ANIMATION_STATE.CLOSE);
     }
 
     /**

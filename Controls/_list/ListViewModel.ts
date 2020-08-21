@@ -9,7 +9,7 @@ import { Object as EventObject } from 'Env/Event';
 import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
 import { Model } from 'Types/entity';
-import { CollectionItem, IEditingConfig, ISwipeConfig, ANIMATION_STATE } from 'Controls/display';
+import { CollectionItem, IEditingConfig, ISwipeConfig } from 'Controls/display';
 import { CssClassList } from "../Utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {IItemAction, IItemActionsTemplateConfig} from 'Controls/itemActions';
@@ -147,6 +147,7 @@ const _private = {
             itemsModelCurrent.dispItem.getItemActionPositionClasses ?
                 itemsModelCurrent.dispItem.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemPadding, theme, useNewModel) : ''
         );
+        itemsModelCurrent.getSwipeAnimation = (): string => itemsModelCurrent.dispItem.getSwipeAnimation();
     },
     getSeparatorSizes(options: IListSeparatorOptions): IListSeparatorOptions['rowSeparatorSize'] {
         return options.rowSeparatorSize ? options.rowSeparatorSize.toLowerCase() : null;
@@ -687,18 +688,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._display) {
             this._display.setSwipeConfig(config);
         }
-    },
-
-    // New Model compatibility
-    setSwipeAnimation(animation: ANIMATION_STATE): void {
-        if (this._display) {
-            this._display.setSwipeAnimation(animation);
-        }
-    },
-
-    // New Model compatibility
-    getSwipeAnimation(): ANIMATION_STATE {
-        return this._display ? this._display.getSwipeAnimation() : {};
     },
 
     // New Model compatibility

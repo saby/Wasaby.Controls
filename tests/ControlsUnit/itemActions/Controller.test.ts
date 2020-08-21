@@ -1682,10 +1682,12 @@ describe('Controls/_itemActions/Controller', () => {
         });
     });
 
-    describe('startSwipeCloseAnimation(), getSwipeAnimation()', () => {
+    describe('startSwipeCloseAnimation()', () => {
         it('should correctly set animation state', () => {
+            const testingItem = collection.getItemBySourceKey(1);
+            testingItem.setSwipeAnimation(ANIMATION_STATE.OPEN);
             itemActionsController.startSwipeCloseAnimation();
-            assert.equal(collection.getSwipeAnimation(), ANIMATION_STATE.CLOSE, 'Incorrect animation state !== close');
+            assert.equal(testingItem.getSwipeAnimation(), ANIMATION_STATE.CLOSE, 'Incorrect animation state !== close');
         });
     });
 });

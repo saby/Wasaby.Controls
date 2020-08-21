@@ -4434,9 +4434,9 @@ define([
             // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо закрыть свайп
             it('should close swipe when any record has been swiped right', () => {
                const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
-               const spySetSwipeAnimation = sinon.spy(instance._listViewModel, 'setSwipeAnimation');
-
-               instance._listViewModel.at(0).setSwiped(true, true);
+               const item = instance._listViewModel.at(0);
+               const spySetSwipeAnimation = sinon.spy(item, 'setSwipeAnimation');
+               item.setSwiped(true, true);
                instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
 
                sinon.assert.calledWith(spySetSwipeAnimation, 'close');
