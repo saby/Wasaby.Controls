@@ -151,6 +151,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
         this._optimizeShadowClass = this._getOptimizeShadowClass();
+        // TODO: Логика инициализации для поддержки разных браузеров была скопирована почти полностью
+        //  из старого скроллконейнера, нужно отрефакторить. Очень запутанно
+        this._scrollCssClass = this._getScrollContainerCssClass(options);
     }
 
     protected _afterUpdate() {
