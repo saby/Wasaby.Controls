@@ -4250,16 +4250,22 @@ define([
       });
 
       describe('Calling animation handlers', () => {
-         let setRightSwipedItemCalled;
+         let deactivateSwipeCalled;
+         let deactivateRightSwipeCalled;
          let ctrl;
          beforeEach(() => {
-            setRightSwipedItemCalled = false;
+            deactivateSwipeCalled = false;
+            deactivateRightSwipeCalled = false;
             ctrl = new lists.BaseControl();
             ctrl._itemActionsController = {
                deactivateSwipe: () => {
-                  setRightSwipedItemCalled = true;
+                  deactivateSwipeCalled = true;
                },
-               getSwipeItem: () => ({ id: 1 })
+               deactivateRightSwipe: () => {
+                  deactivateRightSwipeCalled = true;
+               },
+               getSwipeItem: () => ({ id: 1 }),
+               getRightSwipeItem: () => ({ id: 1 })
             };
             ctrl._listViewModel = {
                nextVersion: () => null
@@ -4272,13 +4278,13 @@ define([
                   animationName: 'test'
                }
             });
-            assert.isFalse(setRightSwipedItemCalled, 'swipe should not be deactivated on every animation end');
+            assert.isFalse(deactivateSwipeCalled, 'swipe should not be deactivated on every animation end');
             ctrl._onActionsSwipeAnimationEnd({
                nativeEvent: {
                   animationName: 'itemActionsSwipeClose'
                }
             });
-            assert.isTrue(setRightSwipedItemCalled, 'swipe should be deactivated on \'itemActionsSwipeClose\' animation end');
+            assert.isTrue(deactivateSwipeCalled, 'swipe should be deactivated on \'itemActionsSwipeClose\' animation end');
          });
 
          it('should call deactivateSwipe method on \'rightSwipe\' event', () => {
@@ -4287,13 +4293,13 @@ define([
                   animationName: 'test'
                }
             });
-            assert.isFalse(setRightSwipedItemCalled, 'swipe should not be deactivated on every animation end');
+            assert.isFalse(deactivateRightSwipeCalled, 'right swipe should not be deactivated on every animation end');
             ctrl._onItemSwipeAnimationEnd({
                nativeEvent: {
                   animationName: 'rightSwipe'
                }
             });
-            assert.isTrue(setRightSwipedItemCalled, 'swipe should be deactivated on \'rightSwipe\' animation end');
+            assert.isTrue(deactivateRightSwipeCalled, 'right swipe should be deactivated on \'rightSwipe\' animation end');
          });
       });
 
@@ -5411,6 +5417,9 @@ define([
             assert.isTrue(item.isMarked());
 
             lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'rm', [], null, [item], 0);
+            assert.isFalse(item.isMarked());
+
+            lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'a', [baseControl.getViewModel().getItemBySourceKey(2)], null, [item], 0);
             assert.isFalse(item.isMarked());
 
             lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'a', [item], null, [], 0);

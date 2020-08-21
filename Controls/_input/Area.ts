@@ -281,9 +281,8 @@ var Area = Text.extend({
     _minLines: null,
     _maxLines: null,
 
-    _beforeMount: function (options) {
-        Area.superclass._beforeMount.apply(this, arguments);
-
+    _syncBeforeMount: function(options): void {
+        Area.superclass._syncBeforeMount.call(this, options);
         _private.validateLines(options.minLines, options.maxLines, this);
     },
 

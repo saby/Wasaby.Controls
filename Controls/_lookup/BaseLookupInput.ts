@@ -192,7 +192,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     private _isInputActive(options: ILookupInputOptions): boolean {
-        return !options.readOnly && this._isInputVisible(options);
+        return !options.readOnly && this._isInputVisible(options) && (this._isEmpty() || options.multiSelect);
     }
 
     private _openInfoBox(event: SyntheticEvent, config: IHashMap<unknown>): void {
