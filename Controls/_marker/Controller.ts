@@ -197,7 +197,7 @@ export class Controller {
     * @param newItems список новый элементов
     */
    handleAddItems(newItems: Array<CollectionItem<Model>>): void {
-      if (newItems.some((item) => item.getContents().getKey() === this._markedKey)) {
+      if (newItems.some((item) => this._getKey(item) === this._markedKey)) {
          this.restoreMarker();
       }
    }
