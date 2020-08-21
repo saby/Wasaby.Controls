@@ -5402,6 +5402,9 @@ define([
             lists.BaseControl._private.onListChange(baseControl, {}, 'collectionChanged', 'rm', [], null, [item], 0);
             assert.isFalse(item.isMarked());
 
+            lists.BaseControl._private.onListChange(baseControl, {}, 'collectionChanged', 'a', [baseControl.getViewModel().getItemBySourceKey(2)], null, [item], 0);
+            assert.isFalse(item.isMarked());
+
             lists.BaseControl._private.onListChange(baseControl, {}, 'collectionChanged', 'a', [item], null, [], 0);
             assert.isTrue(item.isMarked());
          });
