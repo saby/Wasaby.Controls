@@ -3243,7 +3243,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateSelectionController(this, newOptions);
 
             const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
-               || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
+                || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
+                || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
             if (selectionChanged || this._modelRecreated) {
                 // handleSelectionControllerResult чтобы отправить информацию для ПМО
                 const result = _private._getSelectionController(this).setSelectedKeys(
