@@ -1450,7 +1450,7 @@ const _private = {
                 // Если элемент был пересоздан, то сперва сработает remove и с элемента уберется выделение,
                 // а потом сработает add и для элемента нужно восстановить выделение
                 if (action === IObservable.ACTION_ADD) {
-                    _private.getMarkerController(self).restoreMarker();
+                    _private.getMarkerController(self).handleAddItems(newItems);
                 }
             }
         }
