@@ -43,7 +43,7 @@ var _private = {
         const style = cfg.style === 'masterClassic' || !cfg.style ? 'default' : cfg.style;
 
         classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}_theme-${cfg.theme}`;
-        if (itemPadding.top === null || itemPadding.bottom === null) {
+        if (itemPadding.top === null && itemPadding.bottom === null) {
             classList += ` controls-ListView_${style}-padding_theme-${cfg.theme}`;
         } else {
             classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${cfg.theme}`;
