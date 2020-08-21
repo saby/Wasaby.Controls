@@ -1,9 +1,19 @@
 <div class="controls-AdaptiveButtons">
     <ws:template name="templateMore">
-        <div class="controls-AdaptiveButtons__more controls-AdaptiveButtons__more_theme_{{_options.theme}} controls-AdaptiveButtons__more_align_{{_options.align}}" >
-            <div class="controls-AdaptiveButtons__more__text controls-AdaptiveButtons__more__text_align_{{_options.align}}">
-                {[Еще]}...
-            </div>
+        <div name="menuTarget" class="controls-AdaptiveButtons__more controls-AdaptiveButtons__more_theme_{{_options.theme}} controls-AdaptiveButtons__more_align_{{_options.align}}" >
+
+            <Controls.dropdown:Button
+            			 name="menuButton"
+            			 keyProperty="{{_options.keyProperty}}"
+            			 caption="{[Еще]}..."
+            			 parentProperty="parent"
+            			 nodeProperty="@parent"
+            			 source="{{_menuSource}}"
+            			 buttonStyle="secondary"
+            			 viewMode="link"
+            			 filter="{{_filter}}"
+            			 lazyItemsLoading="{{true}}"
+            		  />
         </div>
     </ws:template>
     <div class="controls-AdaptiveButtons__wrapper {{_lastIndex < _items.getRawData().length - 1 ? 'controls-AdaptiveButtons__wrapper_incomplete'}} controls-AdaptiveButtons__wrapper_align_{{_options.align}}">

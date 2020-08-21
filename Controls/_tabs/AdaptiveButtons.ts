@@ -3,10 +3,11 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_tabs/AdaptiveButtons/AdaptiveButtons';
 import {RecordSet} from 'Types/collection';
 import {getFontWidth} from 'Controls/Utils/getFontWidth';
-import {SbisService} from 'Types/source';
+import {ICrudPlus, Memory, PrefetchProxy, SbisService} from 'Types/source';
 import {CrudWrapper} from 'Controls/dataSource';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
+import {StickyOpener} from 'Controls/popup';
 
 const MARGIN = 13;
 const MIN_WIDTH = 26;
@@ -17,7 +18,18 @@ interface IReceivedState {
     items: RecordSet;
 }
 
+export interface IMenuOptions {
+    direction: IStickyPosition;
+    targetPoint: IStickyPosition;
+    eventHandlers: IEventHandlers;
+    templateOptions: any;
+    template: string;
+    closeOnOutsideClick: boolean;
+}
+
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
+import {IStickyPosition} from "../_popup/interface/ISticky";
+import {IEventHandlers} from "../_popup/interface/IPopup";
 export interface ITabsAdaptiveButtons extends ITabsButtons {
     readonly '[Controls/_tabs/ITabsAdaptiveButtons]': boolean;
 }
@@ -72,6 +84,10 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     protected _visibleItems: RecordSet;
     protected _crudWrapper: CrudWrapper;
     protected _selectedKey: number | string;
+    protected _menuOptions: IMenuOptions;
+    protected _idOfInvisibleItems: string[] = [];
+    protected _filter: object;
+
 
     // tslint:disable-next-line:max-line-length
     protected _beforeMount(options?: ITabsAdaptiveButtonsOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
@@ -96,6 +112,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             item.set('align', options.align);
         });
         this._splitItemsByVisibility(this._items.clone(), options);
+        this._menuSource = this._createMemory();
     }
 
     private _initItems(options: ITabsAdaptiveButtonsOptions, receivedState: IReceivedState): void | Promise<RecordSet> {
@@ -225,11 +242,20 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     }
 
     private _splitItemsByVisibility(items: RecordSet, options: ITabsAdaptiveButtonsOptions): void {
+        this._idOfInvisibleItems = [];
+        this._filter = {};
         this._getIndexOfLastTab(items, options).then((res) => {
             this._lastIndex = res;
             const oldRawData = items.getRawData();
+            const keyProperty = options.keyProperty;
+
+            const oldRawData = items.getRawData();
             if (options.align === 'right') {
                 oldRawData.reverse();
+            }
+            for ( let i = this._lastIndex + 1; i < oldRawData.length; i++) {
+                this._idOfInvisibleItems.push(oldRawData[i][keyProperty]);
+                this._filter[keyProperty] = this._idOfInvisibleItems;
             }
             const rawData = oldRawData.slice(0, this._lastIndex + 1);
             // чтобы ужималась
@@ -239,6 +265,15 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             }
             this._visibleItems = items;
             this._visibleItems.setRawData(rawData);
+        });
+    }
+
+    // меню
+
+    private _createMemory(): Memory {
+        return new Memory({
+            keyProperty: 'id',
+            data: this._items.getRawData()
         });
     }
 
