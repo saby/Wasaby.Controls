@@ -416,6 +416,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 this.setScrollTop(currentScrollTop - clientHeight);
             } else if (scrollParam === 'pageDown') {
                 this.setScrollTop(currentScrollTop + clientHeight);
+            } else if (typeof scrollParam === 'number') {
+                this.setScrollTop(scrollParam);
             }
         }
     }
