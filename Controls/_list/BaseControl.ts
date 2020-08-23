@@ -1136,9 +1136,17 @@ const _private = {
         }
     },
     createScrollPagingController(self, scrollParams) {
+        let elementsCount = undefined;
+        if (self._sourceController) {
+            elementsCount = self._sourceController.getAllDataCount();
+            if (typeof elementsCount !== 'number') {
+                elementsCount = undefined;
+            }
+        }
         const scrollPagingConfig = {
             pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
+            elementsCount,
             pagingCfgTrigger: (cfg) => {
                 if (!isEqual(self._pagingCfg, cfg)) {
                     self._pagingCfg = cfg;
@@ -3684,6 +3692,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.scrollToEdge(this, 'down');
                 break;
         }
+    },
+    __selectedPageChanged(e, page) {
+        this._currentPage = page;
+        const scrollParams = {
+            scrollTop: (page - 1) * this._viewportSize,
+            scrollHeight: this._viewSize,
+            clientHeight: this._viewportSize
+        };
+        this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true })
+        _private.updateScrollPagingButtons(this, scrollParams);
     },
 
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {

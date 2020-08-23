@@ -21,6 +21,7 @@ export interface IPagingOptions extends IControlOptions {
     forwardEnabled: boolean;
     contrastBackground: boolean;
     contentTemplate?: TemplateFunction;
+    elementsCount?: number;
     arrowState: IArrowState;
     pagingMode: TPagingMode;
 }
@@ -64,14 +65,26 @@ class Paging extends Control<IPagingOptions> {
 
     private _initArrowDefaultStates(config: IPagingOptions): void {
         if (config.arrowState) {
-            this._stateTop = this._getState(config.arrowState.begin || 'readonly');
-            this._stateBackward = this._getState(config.arrowState.prev || 'readonly');
-            this._stateForward = this._getState(config.arrowState.next || 'readonly');
-            this._stateBottom = this._getState(config.arrowState.end || 'readonly');
+            if (config.pagingMode === 'numbers') {
+                if (config.selectedPage <= 1) {
+                    this._stateTop = this._getState('hidden');
+                } else {
+                    this._stateTop = this._getState('visible');
+                }
+            } else {
+                this._stateTop = this._getState(config.arrowState.begin || 'readonly');
+                this._stateBackward = this._getState(config.arrowState.prev || 'readonly');
+                this._stateForward = this._getState(config.arrowState.next || 'readonly');
+                this._stateBottom = this._getState(config.arrowState.end || 'readonly');
+            }
         } else {
             this._stateTop = this._stateBackward = config.backwardEnabled ? 'normal' : 'disabled';
             this._stateForward = this._stateBottom = config.forwardEnabled ? 'normal' : 'disabled';
         }
+    }
+
+    private _isDigit(): boolean {
+        return (this._options.showDigits || this._options.pagingMode === 'numbers');
     }
 
     private _getState(state: TArrowStateVisibility): TButtonState {

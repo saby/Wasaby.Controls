@@ -209,7 +209,7 @@
                     showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
                     contentTemplate="{{_options.pagingContentTemplate}}"
                     on:onArrowClick="__onPagingArrowClick()"
-                    on:selectedPageChanged="__pagingChangePage()"/>
+                    on:selectedPageChanged="__selectedPageChanged()"/>
             </div>
         </ws:if>
         <Controls.event:Listener
