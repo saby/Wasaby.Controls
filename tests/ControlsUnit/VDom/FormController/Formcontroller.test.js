@@ -577,7 +577,7 @@ define([
             return true;
          };
          FC._notifyToOpener = (eventName) => {
-            if ( eventName === 'updateStarted') {
+            if ( eventName === 'updatestarted') {
                update = true;
                FC.destroy();
             }
