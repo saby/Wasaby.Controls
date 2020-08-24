@@ -231,5 +231,3 @@ List._theme = ['Controls/suggest', 'Controls/suggestPopup'];
 List._private = _private;
 
 export = List;
-
-
