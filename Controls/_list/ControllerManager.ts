@@ -25,9 +25,11 @@ export default class ControllerManager<T> {
             // если промис уже есть, то просто добавляем колбэк
             if (this._loadPromise) {
                 this._loadPromise.then(() => {
-                    const result = methodCall(this._controller);
-                    if (resultHandler) {
-                        resultHandler(result);
+                    if (this._controller) {
+                        const result = methodCall(this._controller);
+                        if (resultHandler) {
+                            resultHandler(result);
+                        }
                     }
                 });
             } else {
@@ -35,9 +37,11 @@ export default class ControllerManager<T> {
                 this._loadPromise = import(libraries.MarkerController).then((library) => {
                     this._controller = this._creatingFunction(library);
 
-                    const result = methodCall(this._controller);
-                    if (resultHandler) {
-                        resultHandler(result);
+                    if (this._controller) {
+                        const result = methodCall(this._controller);
+                        if (resultHandler) {
+                            resultHandler(result);
+                        }
                     }
                 });
             }
