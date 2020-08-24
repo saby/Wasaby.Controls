@@ -52,7 +52,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
    var Component = Control.extend([], {
       _template: template,
       _proxyEvent: tmplNotify,
-      _validatePromiseResolver: null,
+      _shouldValidate: false,
 
       // _beforeMount: function(options) {
       // },
@@ -84,8 +84,9 @@ import getOptions from 'Controls/Utils/datePopupUtils';
       },
 
       _afterUpdate(): void {
-          if (this._validatePromiseResolver) {
-              this._validatePromiseResolver();
+          if (this._shouldValidate) {
+              this._shouldValidate = false;
+              this._children.input.validate();
           }
       },
 
@@ -104,13 +105,11 @@ import getOptions from 'Controls/Utils/datePopupUtils';
          this._notify('valueChanged', [startValue, textValue]);
          this._children.opener.close();
          this._notify('inputCompleted', [startValue, textValue]);
-         const validatePromise = new Promise((resolve) => {
-             this._validatePromiseResolver = resolve;
-         });
-         validatePromise.then(() => {
-             this._validatePromiseResolver = null;
-             this._children.input.validate();
-         });
+          /**
+           * Вызываем валидацию, т.к. при выборе периода из календаря не вызывается событие valueChanged
+           * Валидация срабатывает раньше, чем значение меняется, поэтому откладываем ее до _afterUpdate
+           */
+         this._shouldValidate = true;
       }
    });
 
