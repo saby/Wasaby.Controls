@@ -638,20 +638,6 @@ define(
                assert.equal(resultPopupConfig.testPopupOptions, 'testValue');
                assert.equal(resultPopupConfig.opener, 'test');
             });
-
-            it('check keyProperty option', () => {
-               dropdownController._popupOptions = { };
-               dropdownController._options.keyProperty = 'key';
-               dropdownController._source = new history.Source({});
-               let resultPopupConfig = dropdownController._getPopupOptions();
-
-               assert.equal(resultPopupConfig.templateOptions.keyProperty, 'copyOriginalId');
-
-               dropdownController._source = 'originalSource';
-               resultPopupConfig = dropdownController._getPopupOptions();
-
-               assert.equal(resultPopupConfig.templateOptions.keyProperty, 'key');
-            });
          });
 
          it('_beforeUnmount', function() {

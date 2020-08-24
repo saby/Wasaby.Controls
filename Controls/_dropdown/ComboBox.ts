@@ -115,7 +115,7 @@ class ComboBox extends BaseDropdown {
       if (this._width !== containerNode.offsetWidth) {
          this._width = containerNode.offsetWidth;
       }
-      this._historyController = new HistoryController(this._getHistoryControllerOptions(options));
+      this._historyController = new HistoryController(this._getHistoryControllerOptions(newOptions));
       this._controller.update(this._getControllerOptions(newOptions));
    }
 
