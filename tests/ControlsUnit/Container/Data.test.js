@@ -109,6 +109,7 @@ define(
                   .addCallback(() => {
                      assert.deepEqual(data._dataOptionsContext.navigation, newNavigation);
                      assert.deepEqual(data._dataOptionsContext.filter, newFilter);
+                     assert.deepEqual(data._filter, newFilter);
                      resolve();
                   })
                   .addErrback((error) => {

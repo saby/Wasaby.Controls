@@ -104,6 +104,7 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
                   } else {
                      this._dataController.updatePrefetchProxy(result);
                   }
+                  this._filter = newOptions.filter;
                   this._dataController.updateContext(this._dataOptionsContext);
                   this._loading = false;
                   return result;
