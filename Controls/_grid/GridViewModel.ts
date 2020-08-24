@@ -23,7 +23,6 @@ import { Model } from 'Types/entity';
 import {
     IEditingConfig,
     ISwipeConfig,
-    ANIMATION_STATE,
     CollectionItem
 } from 'Controls/display';
 import {Logger} from 'UI/Utils';
@@ -1044,6 +1043,10 @@ var
                 if (this._options.columnScrollVisibility) {
                     cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
                 }
+                // Этот костыль выпилен в 6000 по https://online.sbis.ru/opendoc.html?guid=f5e830c3-7be2-4272-9c38-594c241401cc
+                if (this._options.columnScrollVisibility && this.isStickyHeader()) {
+                    cellClasses += ' controls-Grid__columnScroll_will-transform';
+                }
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
@@ -1299,6 +1302,10 @@ var
                 cellClasses += _private.getColumnScrollCalculationCellClasses(params, this._options.theme);
                 if (this._options.columnScrollVisibility) {
                     cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
+                }
+                // Этот костыль выпилен в 6000 по https://online.sbis.ru/opendoc.html?guid=f5e830c3-7be2-4272-9c38-594c241401cc
+                if (this._options.columnScrollVisibility && this.isStickyHeader()) {
+                    cellClasses += ' controls-Grid__columnScroll_will-transform';
                 }
 
                 if (!GridLayoutUtil.isFullGridSupport()) {
@@ -1999,16 +2006,6 @@ var
         // New Model compatibility
         setSwipeConfig(config: ISwipeConfig): void {
             this._model.setSwipeConfig(config);
-        },
-
-        // New Model compatibility
-        getSwipeAnimation(): ANIMATION_STATE {
-            return this._model.getSwipeAnimation();
-        },
-
-        // New Model compatibility
-        setSwipeAnimation(animation: ANIMATION_STATE): void {
-            this._model.setSwipeAnimation(animation);
         },
 
         // New Model compatibility
