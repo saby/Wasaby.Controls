@@ -2128,61 +2128,41 @@ const _private = {
         return !!self._markerController;
     },
 
-    getMarkerControllerAsync(self: any, options: Object = null): Promise<MarkerController> {
-        let promise = Promise.resolve(self._markerController);
-        if (!_private.hasMarkerController(self)) {
-            promise = this.createMarkerController(self, options ? options : self._options);
+    createMarkerController(self: any, options: any, library: any): MarkerController {
+        if (options.markerVisibility === 'hidden') {
+            return null;
         }
-        return promise;
-    },
-
-    getMarkerController(self: any): MarkerController {
-        return self._markerController;
-    },
-
-    createMarkerController(self: any, options: any): Promise<MarkerController> {
-        if (self._markerControllerCreatingPromise) {
-            return self._markerControllerCreatingPromise;
-        }
-
-        self._markerControllerCreatingPromise = import('Controls/marker').then((MarkerLibrary) => {
-            self._markerController = new MarkerLibrary.MarkerController({
-                model: self._listViewModel,
-                markerVisibility: options.markerVisibility,
-                markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : undefined
-            });
-            return self._markerController;
+        return new library.MarkerController({
+            model: self._listViewModel,
+            markerVisibility: options.markerVisibility,
+            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : undefined
         });
-        return self._markerControllerCreatingPromise;
     },
 
-    updateMarkerController(self: any, options: any): Promise<void> {
-        return _private.getMarkerControllerAsync(self).then((controller) => {
-            const newMarkedKey = controller.update({
-                model: self._listViewModel,
-                markerVisibility: options.markerVisibility,
-                markedKey: options.hasOwnProperty('markedKey')
-                    ? options.markedKey
-                    : self._markerController.getMarkedKey()
-            });
-            if (newMarkedKey !== options.markedKey) {
-                self._notify('markedKeyChanged', [newMarkedKey]);
+    updateMarkerController(self: any, options: any): void {
+        self._markerControllerManager.execute(
+            (controller) => {
+                controller.update({
+                    model: self._listViewModel,
+                    markerVisibility: options.markerVisibility,
+                    markedKey: options.hasOwnProperty('markedKey')
+                        ? options.markedKey
+                        : self._markerController.getMarkedKey()
+                });
+            },
+            (newMarkedKey) => {
+                if (newMarkedKey !== options.markedKey) {
+                    self._notify('markedKeyChanged', [newMarkedKey]);
+                }
             }
-        });
+        );
     },
 
-    setMarkedKey(self: any, key: TItemKey): Promise<void> {
-        let promise = Promise.resolve(self._markerController);
-        if (self._options.markerVisibility !== 'hidden' && !_private.hasMarkerController(self)) {
-            promise = _private.createMarkerController(self, self._options);
-        }
-        promise.then((controller) => {
-            if (controller) {
-                const newMarkedKey = controller.calculateMarkedKey(key);
-                _private.handleMarkerControllerResult(self, newMarkedKey);
-            }
-        });
-        return promise;
+    setMarkedKey(self: any, key: TItemKey): void {
+        self._markerControllerManager.execute(
+            (controller) => controller.calculateMarkedKey(key),
+            (newMarkedKey) => _private.handleMarkerControllerResult(self, newMarkedKey)
+        );
     },
 
     moveMarkerToNext(self: any, event: SyntheticEvent): Promise<void> {
@@ -2744,7 +2724,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // Шаблон операций с записью для swipe
     _swipeTemplate: SwipeActionsTemplate,
 
-    _markerController: null,
+    _markerControllerManager: null,
     _markerControllerCreatingPromise: null,
 
     _dndListController: null,

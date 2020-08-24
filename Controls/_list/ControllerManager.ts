@@ -5,12 +5,12 @@ const libraries = {
 
 export default class ControllerManager<T> {
     private _controller: T;
-    // промис загрузки библиотеки, чтобы не вызвалась загрузка 2 раза, например если быстро нажать на чекбокс
+    // промис загрузки библиотеки, чтобы не вызывалась загрузка 2 раза, например если быстро нажать на чекбокс
     private _loadPromise: Promise<void>;
     // функция создания контроллера
-    private readonly _creatingFunction: () => T;
+    private readonly _creatingFunction: (library: any) => T;
 
-    constructor(createFunction: () => T) {
+    constructor(createFunction: (library: any) => T) {
         this._creatingFunction = createFunction;
     }
 
@@ -33,12 +33,18 @@ export default class ControllerManager<T> {
             } else {
                 // загружаем библиотеку, создаем контроллер и выполняем действие
                 this._loadPromise = import(libraries.MarkerController).then((library) => {
-                    this._controller = this._creatingFunction();
+                    this._controller = this._creatingFunction(library);
 
                     const result = methodCall(this._controller);
-                    resultHandler(result);
+                    if (resultHandler) {
+                        resultHandler(result);
+                    }
                 });
             }
         }
+    }
+
+    hasController(): boolean {
+        return !!this._controller;
     }
 }
