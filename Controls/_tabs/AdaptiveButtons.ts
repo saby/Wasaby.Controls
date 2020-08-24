@@ -73,6 +73,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     protected _menuSource: Memory;
     protected _filter: object;
     protected _position: number;
+    protected _selectedKey: number[] = [];
     private _fontWidthConstants: unknown;
 
     protected _beforeMount(options?: ITabsAdaptiveButtonsOptions,
@@ -169,13 +170,17 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     private _updateFilter(options: ITabsAdaptiveButtonsOptions): void {
         const arrIdOfInvisibleItems = [];
         const filter = {};
+        const keyPropertyOfLastItem = this._visibleItems.at(this._position).get(options.keyProperty);
+        // фильтруем названия неуместившихся вкладок, а так же ту которая в данный момент размещена на экране последней
         this._items.each((item) => {
-            if (this._visibleItems.getIndexByValue(options.keyProperty, item.get(options.keyProperty)) === -1) {
+            if (this._visibleItems.getIndexByValue(options.keyProperty, item.get(options.keyProperty)) === -1
+            || item.get(options.keyProperty) === keyPropertyOfLastItem) {
                 arrIdOfInvisibleItems.push(item.get(options.keyProperty));
             }
         });
         filter[options.keyProperty] = arrIdOfInvisibleItems;
         this._filter = filter;
+        this._selectedKey[0] = keyPropertyOfLastItem;
     }
 
     private _calcVisibleItems(items: RecordSet<object>, options: ITabsAdaptiveButtonsOptions): void {

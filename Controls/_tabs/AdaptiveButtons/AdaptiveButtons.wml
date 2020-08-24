@@ -12,6 +12,7 @@
                         			 buttonStyle="secondary"
                         			 viewMode="link"
                         			 filter="{{_filter}}"
+                        			 selectedKeys="{{_selectedKey}}"
                         			 lazyItemsLoading="{{true}}"
                         			 on:menuItemActivate="_menuItemClickHandler()"
                         		  />
