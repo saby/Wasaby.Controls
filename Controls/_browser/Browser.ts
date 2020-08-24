@@ -76,7 +76,7 @@ export default class Browser extends Control {
     }
 
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
-        const isChanged = this._sourceController.update(newOptions);
+        const isChanged = this._sourceController.updateOptions(newOptions);
         if (this._options.source !== newOptions.source) {
             this._loading = true;
             return this._sourceController.load().then((items) => {

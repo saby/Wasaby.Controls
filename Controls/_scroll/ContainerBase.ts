@@ -25,7 +25,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _options: IContainerBaseOptions;
 
     protected _state: IScrollState = {};
-    protected _oldState: IScrollState = null;
+    protected _oldState: IScrollState = {};
 
     private _registrars: any = [];
 
@@ -67,10 +67,6 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
         this._observeContentSize();
 
-        // Состояние может быть уже инициализировано по событиям от списков
-        if (isEmpty(this._state)) {
-            this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
-        }
         // this._createEdgeIntersectionObserver();
 
         if (detection.isMobileIOS) {
@@ -88,6 +84,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _afterUpdate(oldOptions?: IContainerBaseOptions): void {
         this._observeContentSize();
         this._unobserveDeleted();
+        if (!this._resizeObserverSupported) {
+            this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
+        }
     }
 
     _beforeUnmount(): void {
@@ -147,9 +146,6 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._registrars.listScroll.register(event, registerType, component, callback);
         if (registerType === 'listScroll') {
             this._onRegisterNewListScrollComponent(component);
-            if (triggers) {
-                this._initIntersectionObserver(triggers, component);
-            }
         }
 
         this._registrars.scroll.register(event, registerType, component, callback);
@@ -268,12 +264,11 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._updateStateAndGenerateEvents(newState);
     }
 
-    _onRegisterNewComponent(component: any): void {
-        // Возможно тут лучше не вычитывать стэйт, а дождаться когда контрол его инициализирует и после этого послать событие.
-        if (Object.keys(this._state).length === 0) {
-            this._updateState(this._getFullStateFromDOM());
+    _onRegisterNewComponent(component: Control): void {
+        // Если состояние еще не инициализировано, то компонент получит его после инициализации.
+        if (Object.keys(this._state).length !== 0) {
+            this._registrars.scrollStateChanged.startOnceTarget(component, {...this._state}, {...this._oldState});
         }
-        this._registrars.scrollStateChanged.startOnceTarget(component, {...this._state},{...this._oldState});
     }
 
     _onResizeContainer(newState: IScrollState): void {
@@ -358,7 +353,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             newState.scrollWidth = this._children.content.scrollWidth;
         }
 
-        this._onResizeContainer(newState);
+        this._updateStateAndGenerateEvents(newState);
     }
 
     _getFullStateFromDOM(): IScrollState {
@@ -376,6 +371,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _updateState(newState: IScrollState): boolean {
         let isStateUpdated = false;
         this._oldState = {...this._state};
+        const isInitializing = Object.keys(this._oldState).length === 0;
         Object.keys(newState).forEach((key) => {
             if (this._state[key] !== newState[key]) {
                 this._state[key] = newState[key];
@@ -385,7 +381,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         if (isStateUpdated) {
             this._updateCalculatedState();
         }
-        return isStateUpdated;
+        return !isInitializing && isStateUpdated;
     }
 
     _updateCalculatedState(): void {
@@ -420,6 +416,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 this.setScrollTop(currentScrollTop - clientHeight);
             } else if (scrollParam === 'pageDown') {
                 this.setScrollTop(currentScrollTop + clientHeight);
+            } else if (typeof scrollParam === 'number') {
+                this.setScrollTop(scrollParam);
             }
         }
     }
@@ -464,19 +462,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 scrollHeight: this._state.scrollHeight
             });
 
-            if (this._scrollMoveTimer) {
-                clearTimeout(this._scrollMoveTimer);
-            }
-
-            this._scrollMoveTimer = setTimeout(() => {
-                this._sendByListScrollRegistrar('scrollMove', {
-                    scrollTop: this._state.scrollTop,
-                    position: this._state.verticalPosition,
-                    clientHeight: this._state.clientHeight,
-                    scrollHeight: this._state.scrollHeight
-                });
-                this._scrollMoveTimer = null;
-            }, 0);
+            this._sendScrollMoveAsync();
         }
 
         if (this._state.canVerticalScroll !== this._oldState.canVerticalScroll) {
@@ -490,10 +476,26 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
     }
 
+    _sendScrollMoveAsync(): void {
+        if (this._scrollMoveTimer) {
+                clearTimeout(this._scrollMoveTimer);
+            }
+
+            this._scrollMoveTimer = setTimeout(() => {
+                this._sendByListScrollRegistrar('scrollMove', {
+                    scrollTop: this._state.scrollTop,
+                    position: this._state.verticalPosition,
+                    clientHeight: this._state.clientHeight,
+                    scrollHeight: this._state.scrollHeight
+                });
+                this._scrollMoveTimer = null;
+            }, 0);
+    }
+
     _onRegisterNewListScrollComponent(component: any): void {
-        // Регистрция списков может произойти до инициализации состояния в _afterMount
-        if (isEmpty(this._state)) {
-            this._updateState(this._getFullStateFromDOM());
+        // Если состояние еще не инициализировано, то компонент получит его после инициализации.
+        if (Object.keys(this._state).length === 0) {
+            return;
         }
         this._sendByListScrollRegistrarToComponent(
             component,
@@ -514,74 +516,6 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 rect: this._state.viewPortRect
             }
         );
-    }
-
-    private _initIntersectionObserver(elements, component): void {
-        if (!this._observers[component.getInstanceId()]) {
-            let eventName;
-            let curObserver: IntersectionObserver;
-
-            curObserver = new IntersectionObserver((changes) => {
-                /**
-                 * Баг IntersectionObserver на Mac OS: сallback может вызываться после отписки от слежения. Отписка происходит в
-                 * _beforeUnmount. Устанавливаем защиту.
-                 */
-                if (this._observers === null) {
-                    return;
-                }
-                // Изменения необходимо проходить с конца, чтобы сначала нотифицировать о видимости нижнего триггера
-                // Это необходимо для того, чтобы когда вся высота записей списочного контрола была меньше вьюпорта, то
-                // сначала список заполнялся бы вниз, а не вверх, при этом сохраняя положение скролла
-                for (var i = changes.length - 1; i > -1; i--) {
-                    switch (changes[i].target) {
-                        case elements.topLoadTrigger:
-                            if (changes[i].isIntersecting) {
-                                eventName = 'loadTopStart';
-                            } else {
-                                eventName = 'loadTopStop';
-                            }
-                            break;
-                        case elements.bottomLoadTrigger:
-                            if (changes[i].isIntersecting) {
-                                eventName = 'loadBottomStart';
-                            } else {
-                                eventName = 'loadBottomStop';
-                            }
-                            break;
-                        case elements.bottomVirtualScrollTrigger:
-                            if (changes[i].isIntersecting) {
-                                eventName = 'virtualPageBottomStart';
-                            } else {
-                                eventName = 'virtualPageBottomStop';
-                            }
-                            break;
-                        case elements.topVirtualScrollTrigger:
-                            if (changes[i].isIntersecting) {
-                                eventName = 'virtualPageTopStart';
-                            } else {
-                                eventName = 'virtualPageTopStop';
-                            }
-                            break;
-                    }
-                    if (eventName) {
-                        this._sendByListScrollRegistrarToComponent(component, eventName, {
-                            scrollTop: this._state.scrollTop,
-                            clientHeight: this._state.clientHeight,
-                            scrollHeight: this._state.scrollHeight
-                        });
-                        this._notify(eventName);
-                        eventName = null;
-                    }
-                }
-            }, {root: this._container});
-            curObserver.observe(elements.topLoadTrigger);
-            curObserver.observe(elements.bottomLoadTrigger);
-
-            curObserver.observe(elements.topVirtualScrollTrigger);
-            curObserver.observe(elements.bottomVirtualScrollTrigger);
-
-            this._observers[component.getInstanceId()] = curObserver;
-        }
     }
 
     _sendByListScrollRegistrar(eventType: string, params: object): void {

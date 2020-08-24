@@ -205,6 +205,11 @@ export interface INavigationOptionValue<U> {
 export interface INavigationOptions<U> {
     navigation?: INavigationOptionValue<U>;
 }
+/**
+ * @name Controls/_interface/INavigation#moveMarkerOnScrollPaging
+ * @cfg {Boolean} Когда опция установлена в значение true, то при изменении страницы с помощью кнопок навигации ("К следующей странице", "К предыдущей странице" и т.д.) <a href="/doc/platform/developmentapl/interface-development/controls/list/list/select/#marker">маркер</a> будет установлен на первую полностью видимую запись на новой странице.
+ * @default false
+ */
 
 /**
  * @name Controls/_interface/INavigation#navigation
@@ -213,14 +218,14 @@ export interface INavigationOptions<U> {
  * Подробнее о конфигурации навигации по списку читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/navigation/ руководстве разработчика}.
  * @example
  * В этом примере в списке будут отображаться 2 элемента.
- * <pre>
+ * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.list:View
  *    keyProperty="id"
  *    source="{{_source}}"
  *    navigation="{{_navigation}}" />
  * </pre>
- * <pre>
+ * <pre class="brush: js">
  * // JavaScript
  * _beforeMount: function(options) {
  *    this._source = new Memory({
@@ -253,8 +258,8 @@ export interface INavigationOptions<U> {
  */
 
 /**
- * @event Controls/_interface/INavigation#navigationParamsChanged Оповещает о смене параметров навигации.
- * 
+ * @event Происходит при изменении параметров навигации.
+ * @name Controls/_interface/INavigation#navigationParamsChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {IBaseSourceConfig} params Параметры, с которыми происходила последнаяя загрузка данных в списке.
  */

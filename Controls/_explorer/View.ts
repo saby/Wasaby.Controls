@@ -394,6 +394,7 @@ var
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
+    * @mixes Controls/_list/interface/IClickableView
     * @control
     * @public
     * @category List
@@ -547,11 +548,6 @@ var
          const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
          const isSearchViewMode = cfg.viewMode === 'search';
          const isRootChanged = cfg.root !== this._options.root;
-
-         //todo: после доработки стандарта, убрать флаг _isGoingFront по задаче: https://online.sbis.ru/opendoc.html?guid=ffa683fa-0b8e-4faa-b3e2-a4bb39671029
-         if (this._isGoingFront && this._options.hasOwnProperty('root') && !isRootChanged) {
-            this._isGoingFront = false;
-         }
 
          /*
          * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.

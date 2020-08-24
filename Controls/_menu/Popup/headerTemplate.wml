@@ -1,4 +1,5 @@
 <div class="controls-DropdownList-header
+            control-Menu__popup-header-{{_options.multiSelect ? 'multiSelect_theme-' + _options.theme}}
             control-Menu__popup-header">
    <ws:if data="{{_options.icon}}">
       <div class="controls-icon {{_options.icon}}

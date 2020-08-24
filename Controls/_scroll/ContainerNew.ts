@@ -139,8 +139,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._paging = new PagingModel();
         }
 
-        this._adjustContentMarginsForBlockRender();
-
         super._afterMount();
 
         this._stickyHeaderController.init(this._container);
@@ -153,6 +151,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
         this._optimizeShadowClass = this._getOptimizeShadowClass();
+        // TODO: Логика инициализации для поддержки разных браузеров была скопирована почти полностью
+        //  из старого скроллконейнера, нужно отрефакторить. Очень запутанно
+        this._scrollCssClass = this._getScrollContainerCssClass(options);
     }
 
     protected _afterUpdate() {
@@ -186,13 +187,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
         return this._scrollbars.getScrollContainerClasses();
-    }
-
-    private _adjustContentMarginsForBlockRender(): void {
-        let computedStyle = getComputedStyle(this._children.content);
-        let marginTop = parseInt(computedStyle.marginTop, 10);
-        let marginRight = parseInt(computedStyle.marginRight, 10);
-        this._scrollbars.adjustContentMarginsForBlockRender(marginTop, marginRight);
     }
 
     protected _draggingChangedHandler(event, dragging): void {
@@ -268,6 +262,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _mouseenterHandler(event) {
+        // Если до mouseenter не вычисляли скроллбар, сделаем это сейчас.
+        this._scrollbars.updateScrollState(this._state, this._container);
         if (this._scrollbars.take()) {
             this._notify('scrollbarTaken', [], {bubbling: true});
         }

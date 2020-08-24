@@ -262,6 +262,17 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             if (parentProperty) {
                delete resultFilter[parentProperty];
             }
+            /*
+               FIXME: https://online.sbis.ru/opendoc.html?guid=239a4b17-5429-4179-9b72-d28a707bee0b
+               Конфликт полей selection и selectionWithPath/entries, которые подмешиваются в фильтр
+               для получения метаданных, которые при завершении выбора не нужны.
+            */
+            if (resultFilter.entries) {
+                delete resultFilter.entries;
+            }
+            if (resultFilter.selectionWithPath) {
+                delete resultFilter.selectionWithPath;
+            }
             resultFilter.selection = selection;
             return resultFilter;
          },
@@ -467,7 +478,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
                items
             });
 
-            // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f 
+            // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f
             // необходимо уйти от опции selectionLoadMode и вынести загрузку
             // выбранный записей в отдельный слой.
             // здесь будет только формирование фильтра

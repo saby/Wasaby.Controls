@@ -69,8 +69,10 @@ export function getPopupHelper(): IPopupHelper {
  */
 export default class ErrorController {
     private __controller: ParkingController<ViewConfig>;
+    private _mode?: Mode;
 
     constructor(options: Config, private _popupHelper: IPopupHelper = getPopupHelper()) {
+        this._mode = options?.viewConfig?.mode;
         this.__controller = new ParkingController<ViewConfig>({
             configField: ErrorController.CONFIG_FIELD,
             ...options
@@ -117,7 +119,7 @@ export default class ErrorController {
     process<TError extends ProcessedError = ProcessedError>(
         config: HandlerConfig<TError> | TError
     ): Promise<ViewConfig | void> {
-        const _config = ErrorController._prepareConfig<TError>(config);
+        const _config = this._prepareConfig<TError>(config);
 
         if (!ErrorController._isNeedHandle(_config.error)) {
             return Promise.resolve();
@@ -181,7 +183,7 @@ export default class ErrorController {
                 return id;
             }
         };
-    };
+    }
 
     private static _isNeedHandle(error: ProcessedError & CanceledError): boolean {
         return !(
@@ -189,21 +191,29 @@ export default class ErrorController {
             error.processed ||
             error.canceled
         );
-    };
+    }
 
-    private static _prepareConfig<T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> {
+    private _prepareConfig<T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> {
+        const mode = this._mode || Mode.dialog;
+
         if (config instanceof Error) {
             return {
                 error: config,
-                mode: Mode.dialog
+                mode
             };
         }
 
-        return {
-            mode: Mode.dialog,
+        const result = {
+            mode,
             ...config
         };
-    };
+
+        if (this._mode) {
+            result.mode = this._mode;
+        }
+
+        return result;
+    }
 }
 
 // Загружаем модули обработчиков заранее, чтобы была возможность использовать их при разрыве соединения.

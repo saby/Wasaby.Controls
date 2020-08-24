@@ -182,6 +182,22 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
             root: 1
          });
          assert.isTrue(preparedFilter.searchParam === 'test');
+         filter = {
+            searchParam: 'test',
+            parent: 123,
+            entries: [],
+            selectionWithPath: []
+         };
+         source = new sourceLib.Memory();
+         selection = operations.selectionToRecord({ selected: [1, 2], excluded: [3, 4] }, source.getAdapter());
+         preparedFilter = lookupPopup.Container._private.prepareFilter({
+            filter,
+            selection,
+            searchParam: 'searchParam',
+            parentProperty: 'parent'
+         });
+         assert.isUndefined(preparedFilter.entries);
+         assert.isUndefined(preparedFilter.selectionWithPath);
       });
 
       it('prepare filter with selected node and searchParam', () => {

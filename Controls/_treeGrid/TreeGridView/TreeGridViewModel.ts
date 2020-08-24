@@ -93,7 +93,7 @@ var
             this._model.setRoot(root);
         },
         setParentProperty(parentProperty: string): void {
-            this._model.setParentProperty.apply(this, arguments);
+            this._model.setParentProperty(parentProperty);
             this._options.parentProperty = parentProperty;
         },
         setHasChildrenProperty(hasChildrenProperty: string): void {
@@ -171,6 +171,13 @@ var
             current.getPartialColspanStyles = (columnStart, columnSpan) => GridLayoutUtil.getColumnStyles({ columnStart, columnSpan });
 
             current.isLastColumn = isLastColumn;
+
+            if (!GridLayoutUtil.isFullGridSupport()) {
+                const superClassesGetter = current.getRelativeCellWrapperClasses;
+                current.getRelativeCellWrapperClasses = (colspan, fixVerticalAlignment) => {
+                    return `controls-TreeGridView__row-cell_innerWrapper ${superClassesGetter(colspan, fixVerticalAlignment)}`;
+                }
+            }
 
             if (current.isLastRow) {
                 //Проверяем, что под послдней записью нет nodeFooter'a

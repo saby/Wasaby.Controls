@@ -155,6 +155,11 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         this._rangeModel.setRange(startValue, endValue);
         this._children.opener.close();
         this._notifyInputCompleted();
+        // Сбрасываем валидацию, т.к. при выборе периода из календаря не вызывается событие valueChanged
+        // Валидация срабатывает раньше, чем значение меняется.
+        //TODO: Изменить на validate
+        this._children.startValueField.setValidationResult(null);
+        this._children.endValueField.setValidationResult(null);
     }
 
     protected _inputControlHandler(event: SyntheticEvent, value: unknown, displayValue: string, selection: ISelection): void {

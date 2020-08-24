@@ -13,8 +13,7 @@ class Component extends Control<IControlOptions> {
     private _ruStrSymbols: string[];
     private _otherSymbols: string[];
     private _sizes: string[] = ['xs', 's', 'm', 'l', 'xl', '2xl', '3xl', '4xl', '5xl'];
-    private _areaInput: string;
-    private _shouldUpdateValue: boolean = true;
+    private _textArea: HTMLElement;
 
     protected _beforeMount(): void {
         this._source = new Memory({
@@ -36,34 +35,32 @@ class Component extends Control<IControlOptions> {
         this._ruStrSymbols = this._getRuStrSymbols();
         this._otherSymbols = this._getOtherSymbols();
     }
-    protected _selectedKeysChangedHandler(): void {
-        this._shouldUpdateValue = true;
-    }
-
-    protected _shouldUpdate(): boolean {
-        return this._shouldUpdateValue;
-    }
 
     protected _afterUpdate(): void {
         this._setWidths();
-        this._shouldUpdateValue = false;
     }
     protected _afterMount(): void {
+        this._textArea = document.querySelector('textarea');
         this._setWidths();
     }
 
     private _setWidths(): void {
-        this._areaInput = JSON.stringify({
-            ...this._countEngStrWidth(),
-            ...this._countNumsWidth(),
-            ...this._countRuStrWidth(),
-            ...this._countOtherSymbolsWidth()
-        });
+        const symbolsWidth = {};
+        for (let i = 0; i < this._sizes.length; i++) {
+            const size = this._sizes[i];
+            symbolsWidth[size] = {
+                ...this._countEngStrWidth(size),
+                ...this._countNumsWidth(size),
+                ...this._countRuStrWidth(size),
+                ...this._countOtherSymbolsWidth(size)
+            };
+            this._textArea.value = JSON.stringify(symbolsWidth);
+        }
     }
 
-    private _countEngStrWidth(): object {
+    private _countEngStrWidth(size: string): object {
         const obj = {};
-        const engStrContainers = document.querySelectorAll('.eng');
+        const engStrContainers = document.querySelectorAll('.eng-' + size);
         for (const str of engStrContainers) {
             obj[str.innerText] = str.getBoundingClientRect().width;
             str.innerText += ' |width: ' + str.getBoundingClientRect().width;
@@ -71,9 +68,9 @@ class Component extends Control<IControlOptions> {
         return obj;
     }
 
-    private _countRuStrWidth(): object {
+    private _countRuStrWidth(size: string): object {
         const obj = {};
-        const ruStrContainers = document.querySelectorAll('.ru');
+        const ruStrContainers = document.querySelectorAll('.ru-' + size);
         for (const str of ruStrContainers) {
             obj[str.innerText] = str.getBoundingClientRect().width;
             str.innerText += ' |width: ' + str.getBoundingClientRect().width;
@@ -81,9 +78,9 @@ class Component extends Control<IControlOptions> {
         return obj;
     }
 
-    private _countOtherSymbolsWidth(): object {
+    private _countOtherSymbolsWidth(size: string): object {
         const obj = {};
-        const otherSymboldContainers = document.querySelectorAll('.other');
+        const otherSymboldContainers = document.querySelectorAll('.other-' + size);
         for (const sym of otherSymboldContainers) {
             obj[sym.innerText] = sym.getBoundingClientRect().width;
             sym.innerText += ' |width: ' + sym.getBoundingClientRect().width;
@@ -91,9 +88,9 @@ class Component extends Control<IControlOptions> {
         return obj;
     }
 
-    private _countNumsWidth(): object {
+    private _countNumsWidth(size: string): object {
         const obj = {};
-        const numContainers = document.querySelectorAll('.numbers');
+        const numContainers = document.querySelectorAll('.numbers-' + size);
         for (const num of numContainers) {
             obj[num.innerText] = num.getBoundingClientRect().width;
             num.innerText += ' |width: ' + num.getBoundingClientRect().width;
@@ -120,15 +117,15 @@ class Component extends Control<IControlOptions> {
         return [
             'а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о',
             'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я',
-            'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'о',
+            'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О',
             'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я'
         ];
     }
 
     private _getOtherSymbols = (): string[] => {
         return [
-            '&#32', '~', '`', '!', '@', '#', '#', '$', '%', '^', '&', '*', '(', ')', '-', '=', '"', '№', ';', ':', '?', '_',
-            '+', '/', '|', ']', '[', ','
+            '&nbsp;', '~', '`', '!', '@', '#', '#', '$', '%', '^', '&', '*', '(', ')', '-', '=', '"', '№', ';', ':',
+            '?', '_', '+', '/', '|', ']', '[', ',', '.'
         ];
     }
 

@@ -206,8 +206,11 @@
                     attr:class="controls-BaseControl__scrollPaging_theme-{{_options.theme}}"
                     contrastBackground="{{true}}"
                     scope="{{_pagingCfg}}"
+                    pagingMode="{{_options.navigation.viewConfig.pagingMode}}"
                     showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
-                    on:onArrowClick="__onPagingArrowClick()" />
+                    contentTemplate="{{_options.pagingContentTemplate}}"
+                    on:onArrowClick="__onPagingArrowClick()"
+                    on:selectedPageChanged="__selectedPageChanged()"/>
             </div>
         </ws:if>
         <Controls.event:Listener
