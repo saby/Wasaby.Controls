@@ -3985,12 +3985,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     clearSelection(): void {
-        const result = _private.getSelectionController(this).clearSelection();
+        const result = _private.getSelectionController(this)?.clearSelection();
         _private.handleSelectionControllerResult(this, result);
     },
 
     isAllSelected(): boolean {
-        return _private.getSelectionController(this).isAllSelected();
+        return _private.getSelectionController(this)?.isAllSelected();
     },
 
     _onViewKeyDown(event) {
