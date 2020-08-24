@@ -1,17 +1,18 @@
-<div attr:class="{{ item.getWrapperClasses(highlightOnHover, theme) }}">
-    <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
-        <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ item.getMultiSelectClasses(theme) }}">
-            <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}"/>
+<div attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, theme, cursor) }}">
+    <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' }}">
+        <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ (item || itemData).getMultiSelectClasses(theme) }}">
+            <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}" key="{{ (item || itemData).getContents().getKey() }}"/>
         </ws:partial>
     </ws:if>
-    <ws:if data="{{ item.shouldDisplayMarker(marker) }}">
+    <ws:if data="{{ (item || itemData).shouldDisplayMarker(marker) }}">
         <div class="controls-ListView__itemV_marker controls-ListView__itemV_marker_{{style}}_theme-{{theme}}"></div>
     </ws:if>
     <ws:if data="{{ contentTemplate }}">
-        <div attr:class="{{ item.getContentClasses(theme, style) }}">
+        <div attr:class="{{ (item || itemData).getContentClasses(theme, style) }}">
             <ws:partial
                     template="{{ contentTemplate }}"
                     item="{{ item }}"
+                    itemData="{{ itemData }}"
                     useNewModel="{{ true }}"
                     searchValue="{{ searchValue }}"
                     itemActionsTemplate="{{ itemActionsTemplate }}"
@@ -19,12 +20,12 @@
         </div>
     </ws:if>
     <ws:else>
-        <div attr:class="{{ item.getContentClasses(theme, style) }}">
-            {{ item.getContents()[item.getDisplayProperty() || 'title'] }}
+        <div attr:class="{{ (item || itemData).getContentClasses(theme, style) }}">
+            {{ (item || itemData).getContents()[displayProperty || 'title'] }}
         </div>
     </ws:else>
-    <ws:if data="{{ item.hasVisibleActions() || item.isEditing() }}">
-        <ws:if data="{{ item.isSwiped() && itemActionsPosition !== 'outside' }}">
+    <ws:if data="{{ (item || itemData).hasVisibleActions() || (item || itemData).isEditing() }}">
+        <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
             <ws:partial template="{{ swipeTemplate }}" />
         </ws:if>
         <ws:else data="{{ itemActionsPosition !== 'custom' }}">

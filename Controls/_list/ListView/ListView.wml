@@ -11,6 +11,7 @@
              theme="{{ _options.theme }}"
 
              itemTemplate="{{ _itemTemplate }}"
+             itemTemplateProperty="{{ _options.itemTemplateProperty }}"
              groupTemplate="{{ _groupTemplate }}"
 
              editingItemData="{{ _options.editingItemData }}"

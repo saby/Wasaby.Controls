@@ -1,6 +1,6 @@
 <ws:template name="ForItemTemplate">
    <ws:partial
-           template="{{ item.getItemTemplate(itemTemplate, groupTemplate) }}"
+           template="{{ item.getItemTemplate(collection.getItemTemplateProperty(), itemTemplate, groupTemplate) }}"
            item="{{ item }}"
            itemData="{{ item }}"
            multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"

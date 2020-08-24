@@ -288,7 +288,7 @@ export default class CollectionItem<T> extends mixin<
     }
 
     getMultiSelectClasses(theme): string {
-        let classes = `controls-ListView__checkbox controls-ListView__notEditable_theme-${theme}`;
+        let classes = `js-controls-ListView__notEditable controls-ListView__checkbox_theme-${theme}`;
         if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += ' controls-ListView__checkbox-onhover';
         }
@@ -416,11 +416,12 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
-    getWrapperClasses(templateHighlightOnHover: boolean = true, theme?: string): string {
+    getWrapperClasses(templateHighlightOnHover: boolean = true, theme?: string, cursor: string = 'pointer'): string {
         return `controls-ListView__itemV
             controls-ListView__item_default
             controls-ListView__item_showActions
             js-controls-ItemActions__swipeMeasurementContainer
+            controls-ListView__itemV controls-ListView__itemV_cursor-${cursor}
             ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
             ${this.isEditing() ? ` controls-ListView__item_editing_theme-${theme}` : ''}
             ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}`;
@@ -467,8 +468,9 @@ export default class CollectionItem<T> extends mixin<
         return result.length ? ` ${result.join(' ')} ` : ' ';
     }
 
-    getItemTemplate(userTemplate: TemplateFunction|string): TemplateFunction|string {
-        return userTemplate;
+    getItemTemplate(itemTemplateProperty: string, userTemplate: TemplateFunction|string): TemplateFunction|string {
+        const templateFromProperty = itemTemplateProperty ? this.getContents().get(itemTemplateProperty) : '';
+        return templateFromProperty || userTemplate;
     }
 
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {

@@ -87,6 +87,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     sort?: SortFunction<S, T> | Array<SortFunction<S, T>>;
     keyProperty?: string;
     displayProperty?: string;
+    itemTemplateProperty?: string;
     multiSelectVisibility?: string;
     leftSpacing?: string;
     rightSpacing?: string;
@@ -576,6 +577,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$displayProperty: string;
 
+    protected _$itemTemplateProperty: string;
+
     protected _$multiSelectVisibility: string;
 
     protected _$leftSpacing: string;
@@ -737,6 +740,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         // Support of 'groupingKeyCallback' option
         if (!this._$group && (options as any).groupingKeyCallback) {
             this._$group = (options as any).groupingKeyCallback;
+        }
+
+        if (options.itemTemplateProperty) {
+            this._$itemTemplateProperty = options.itemTemplateProperty;
         }
 
         this._$theme = options.theme;
@@ -2164,6 +2171,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // endregion
 
+    getItemTemplateProperty(): string {
+        return this._$itemTemplateProperty;
+    }
 
     getDisplayProperty(): string {
         return this._$displayProperty;
@@ -2194,9 +2204,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setItemsSpacings(itemPadding: {top: string, left: string, right: string}): void {
-        this._$rowSpacing = itemPadding.top;
-        this._$leftSpacing = itemPadding.left;
-        this._$rightSpacing = itemPadding.right;
+        this._$rowSpacing = itemPadding.top || 'default';
+        this._$leftSpacing = itemPadding.left || 'default';
+        this._$rightSpacing = itemPadding.right || 'default';
     }
 
     setMarkedKey(key: string|number, status: boolean): void {
@@ -3575,6 +3585,7 @@ Object.assign(Collection.prototype, {
     _$sort: null,
     _$keyProperty: '',
     _$displayProperty: '',
+    _$itemTemplateProperty: '',
     _$multiSelectVisibility: 'hidden',
     _$leftSpacing: 'default',
     _$rightSpacing: 'default',
