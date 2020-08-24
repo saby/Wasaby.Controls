@@ -170,7 +170,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         const arrIdOfInvisibleItems = [];
         const filter = {};
         this._items.each((item) => {
-            // @ts-ignore
             if (this._visibleItems.getIndexByValue(options.keyProperty, item.get(options.keyProperty)) === -1) {
                 arrIdOfInvisibleItems.push(item.get(options.keyProperty));
             }
