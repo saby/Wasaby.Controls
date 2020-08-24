@@ -213,7 +213,7 @@ var Panel = Control.extend({
       this._errorCallback = this._errorCallback.bind(this);
    },
 
-   _errorCallback(error): void {
+   _errorCallback(viewConfig: object, error): void {
       loadDataError.process({error});
    }
 });
