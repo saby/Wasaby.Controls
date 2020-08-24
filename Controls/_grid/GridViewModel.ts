@@ -764,6 +764,7 @@ var
 
         setTheme(theme: string): void {
             this._model.setTheme(theme);
+            this._options.theme = theme;
         },
 
         getTheme(): string {
