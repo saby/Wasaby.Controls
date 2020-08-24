@@ -49,7 +49,7 @@ define(
                hasClose: true,
                iconSize: defaultConfig.iconSize,
                theme: defaultConfig.theme,
-               node: defaultConfig.nodeProperty
+               nodeProperty: defaultConfig.nodeProperty
          });
             let list = getList(defaultConfig);
             list._beforeMount(defaultConfig);

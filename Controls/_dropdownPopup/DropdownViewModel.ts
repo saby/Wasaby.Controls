@@ -83,7 +83,7 @@ var _private = {
             const paddings = options.itemPadding || {};
             if (options.multiSelect && itemData.emptyText) {
                classes += ' controls-DropdownList__emptyItem-leftPadding_multiSelect';
-            } else if (!options.multiSelect && (!options.node || item.get(options.node))) {
+            } else if (!options.multiSelect && (!options.nodeProperty || item.get(options.nodeProperty))) {
                classes += ' controls-DropdownList__item-leftPadding_' + (paddings.left || 'default');
             } else if (!options.multiSelect) {
                classes += ' controls-DropdownList__hierarchyItem-leftPadding_' + (paddings.left || 'default') + '_theme-' + options.theme;
@@ -239,7 +239,6 @@ var _private = {
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             itemsModelCurrent.multiSelect = this._options.multiSelect;
             itemsModelCurrent.parentProperty = this._options.parentProperty;
-            itemsModelCurrent.nodeProperty = this._options.nodeProperty;
             itemsModelCurrent.hasClose = this._options.hasClose;
             itemsModelCurrent.hasPinned = this._options.hasIconPin && itemsModelCurrent.item.has('pinned');
             itemsModelCurrent.itemClassList = _private.getClassList(this._options, itemsModelCurrent, this.hasHierarchy());

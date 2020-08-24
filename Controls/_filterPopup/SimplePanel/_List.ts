@@ -58,7 +58,7 @@ var List = Control.extend({
             emptyKey: options.emptyKey,
             hasApplyButton: options.hasApplyButton,
             hasClose: true,
-            node: options.nodeProperty,
+            nodeProperty: options.nodeProperty,
             theme: options.theme
         });
 
