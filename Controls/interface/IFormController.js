@@ -106,7 +106,9 @@ define('Controls/interface/IFormController', [
 
    /**
     * @name Controls/interface/IFormController#errorContainer
-    * @cfg {Controls/dataSource:error.IContainerConstructor} Компонент для отображения шаблона ошибки по данным от {@link Controls/_dataSource/_error/Controller}
+    * @cfg {Controls/dataSource:error.IContainerConstructor} Компонент для отображения ошибки, он оборачивает весь контент формы.
+    * Способ отображения ошибки (диалог, вместо контента или во всю страницу) настраивается через переопределение {@link errorController}.
+    * Данную опцию следует определять, если нужно как-то изменить раскладку контента в случае ошибки, если раскладка контрола {@link Controls/_dataSource/_error/Container}, который используется по умолчанию, не устраивает.
     */
 
    /**
