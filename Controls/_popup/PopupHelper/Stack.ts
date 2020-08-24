@@ -19,7 +19,7 @@ export default class Stack extends Base {
      * @function Controls/_popup/PopupHelper/Stack#open
      * @param {PopupOptions} config Конфигурация стекового окна
      * @example
-     * <pre>
+     * <pre class="brush: js">
      *    import {StackOpener} from 'Controls/popup';
      *    ...
      *    this._stack = new StackOpener();
@@ -33,23 +33,23 @@ export default class Stack extends Base {
      * @see close
      */
 
-    /**
-     * Метод для закрытия стекового окна
-     * @function Controls/_popup/PopupHelper/Stack#close
-     * @example
-     * <pre>
-     *    import {StackOpener} from 'Controls/popup';
-     *    ...
-     *    this._stack = new StackOpener();
-     *
-     *    closeStack() {
-     *        this._stack.close();
-     *    }
-     * </pre>
-     * @see open
-     */
-
     open(popupOptions: IStackPopupOptions): void {
         return super.open(popupOptions);
     }
 }
+/**
+ * Метод для закрытия стекового окна.
+ * @name Controls/_popup/PopupHelper/Stack#close
+ * @function 
+ * @example
+ * <pre class="brush: js">
+ *    import {StackOpener} from 'Controls/popup';
+ *    ...
+ *    this._stack = new StackOpener();
+ *
+ *    closeStack() {
+ *        this._stack.close();
+ *    }
+ * </pre>
+ * @see open
+ */

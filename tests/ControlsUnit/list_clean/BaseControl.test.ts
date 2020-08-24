@@ -122,6 +122,46 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isNotNull(baseControl._selectionController);
         });
     });
+    describe('BaseControl watcher paging', () => {
+        const baseControlCfg = {
+            viewName: 'Controls/List/ListView',
+            keyProperty: 'id',
+            viewModelConstructor: ListViewModel,
+            items: new RecordSet({
+                keyProperty: 'id',
+                rawData: []
+            }),
+            navigation: {
+                view: 'infinity',
+                viewConfig: {
+                    pagingMode: 'page'
+                }
+            }
+        };
+        let baseControl;
+
+        beforeEach(() => {
+            baseControl = new BaseControl(baseControlCfg);
+        });
+
+        afterEach(() => {
+            baseControl.destroy();
+            baseControl = undefined;
+        });
+
+        it('is _pagingVisible', async () => {
+            baseControl.saveOptions(baseControlCfg);
+            await baseControl._beforeMount(baseControlCfg);
+            baseControl._beforeUpdate(baseControlCfg);
+            baseControl._afterUpdate(baseControlCfg);
+            baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
+            assert.isFalse(baseControl._pagingVisible);
+            baseControl._viewportSize = 200;
+            baseControl._viewSize = 800;
+            baseControl._mouseEnter(null);
+            assert.isTrue(baseControl._pagingVisible);
+        });
+    });
     describe('BaseControl paging', () => {
         const baseControlCfg = {
             viewName: 'Controls/List/ListView',
@@ -158,6 +198,7 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlCfg);
             baseControl._viewSize = 1000;
             baseControl._viewportSize = 400;
+            baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
@@ -189,6 +230,7 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(cfgClone);
             baseControl._viewSize = 1000;
             baseControl._viewportSize = 400;
+            baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
@@ -217,9 +259,9 @@ describe('Controls/list_clean/BaseControl', () => {
             cfgClone.navigation.viewConfig.pagingMode = 'numbers';
             baseControl.saveOptions(cfgClone);
             await baseControl._beforeMount(cfgClone);
-
             baseControl._viewSize = 1000;
             baseControl._viewportSize = 400;
+            baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
