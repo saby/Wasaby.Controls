@@ -1,18 +1,17 @@
 import {Model} from 'Types/entity';
+import { RecordSet } from 'Types/collection';
+
 import {IMovableItem} from './interface/IMovableItem';
 import {IMovableItemsCollection} from './interface/IMovableItemsCollection';
-import {TKeysSelection} from "../../_interface/ISelectionType";
+import {IMoveStrategy} from './interface/IMoveStrategy';
+
+import {RecordSetStrategy} from './strategy/RecordSetStrategy';
+import {MoveObjectStrategy, IMoveItemsParams} from './strategy/MoveObjectStrategy';
 
 enum MOVE_POSITION {
     on = 'on',
     before = 'before',
     after = 'after'
-}
-
-interface IMoveItemsParams {
-    selectedKeys: TKeysSelection;
-    excludedKeys: TKeysSelection;
-    filter: object;
 }
 
 // Что делает контроллер
@@ -26,6 +25,8 @@ interface IMoveItemsParams {
 // 2. Ещё не ясный момент - в старом контроле есть newLogic - что это за newLogic и не нужно ли её учитывать?
 export class Controller {
     _collection: IMovableItemsCollection;
+
+    _strategy: IMoveStrategy<Model[]|IMoveItemsParams>;
 
     moveItemUp(item: IMovableItem) {
         return this._moveItemToSiblingPosition(item, MOVE_POSITION.before);
@@ -51,21 +52,18 @@ export class Controller {
         return siblingItem || null;
     }
 
-    private _moveItems(items: IMovableItem[] | IMoveItemsParams, target, position): Promise<any> {
+    private _moveItems(items: RecordSet|IMoveItemsParams, target, position): Promise<any> {
         const self = this;
-        const isNewLogic = !items.forEach && !items.selected;
         if (target === undefined) {
             return Promise.resolve();
         }
-        return this._getItemsBySelection.call(this, items).addCallback(function (items) {
-            items = items.filter((item) => {
-                return _private.checkItem(self, item, target, position);
-            });
-            if (items.length) {
-                return _private.moveItems(self, items, target, position);
-            } else {
-                return Deferred.success();
-            }
-        });
+        return this.getStrategy().moveItems(items, target, position);
+    }
+
+    private getStrategy(items: RecordSet|IMoveItemsParams): IMover {
+        if (!this._strategy) {
+            this._strategy = !(items as RecordSet).forEach && !(items as RecordSet).selected ? new MoveObjectStrategy() : new RecordSetStrategy();
+        }
+        return this._strategy;
     }
 }
