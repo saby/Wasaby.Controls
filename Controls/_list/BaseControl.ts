@@ -3570,15 +3570,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._actualPagingVisible = this._pagingVisible;
 
         this._scrollToFirstItemIfNeed();
-
-        // todo для решения баги https://online.sbis.ru/opendoc.html?guid=7dfc3f92-0a1c-4ac1-abcd-4e9e6e632f7a
-        // В 6100 откатываю, чтобы проверить багу на 14 ios (iOS 14 to the public between 14 and 18 September 2020)
-        if (detection.isMobileIOS) {
-            this._container.style.transform = 'translate(0px)';
-            setTimeout(() => {
-                this._container?.style.transform = '';
-            }, 1);
-        }
     },
 
     checkTriggerVisibilityWithTimeout(): void {
