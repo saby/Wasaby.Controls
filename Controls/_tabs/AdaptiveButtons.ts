@@ -225,7 +225,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     private _getItemsWidth(items: RecordSet<object>, displayProperty: string): number[] {
         const widthArray = [];
         for (let i = 0; i < items.getCount(); i++) {
-            widthArray.push(this._getTextWidth(items.at(i).get(displayProperty)));
+            widthArray.push(this._getTextWidth(items.at(i).get(displayProperty)) + COUNT_OF_MARGIN * MARGIN);
         }
         return widthArray;
     }
