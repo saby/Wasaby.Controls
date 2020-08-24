@@ -75,6 +75,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
 
     protected _startValueValidators: Function[] = [];
     protected _endValueValidators: Function[] = [];
+    private _validatePromiseResolver;
 
     protected _beforeMount(options: IDateRangeInputOptions) {
         this._rangeModel = new DateRangeModel({dateConstructor: this._options.dateConstructor});
@@ -151,15 +152,29 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         this._onResult(startValue, endValue);
     }
 
+    protected _afterUpdate(options): void {
+        if (this._validatePromiseResolver) {
+            this._validatePromiseResolver();
+        }
+    }
+
     private _onResult(startValue: Date, endValue: Date): void {
         this._rangeModel.setRange(startValue, endValue);
         this._children.opener.close();
         this._notifyInputCompleted();
-        // Сбрасываем валидацию, т.к. при выборе периода из календаря не вызывается событие valueChanged
-        // Валидация срабатывает раньше, чем значение меняется.
-        //TODO: Изменить на validate
-        this._children.startValueField.setValidationResult(null);
-        this._children.endValueField.setValidationResult(null);
+        /**
+         * Вызываем валидацию, т.к. при выборе периода из календаря не вызывается событие valueChanged
+         * Валидация срабатывает раньше, чем значение меняется, поэтому откладываем ее до _afterUpdate
+         */
+
+        const validatePromise = new Promise((resolve) => {
+            this._validatePromiseResolver = resolve;
+        });
+        validatePromise.then(() => {
+            this._validatePromiseResolver = null;
+            this._children.startValueField.validate();
+            this._children.endValueField.validate();
+        });
     }
 
     protected _inputControlHandler(event: SyntheticEvent, value: unknown, displayValue: string, selection: ISelection): void {
