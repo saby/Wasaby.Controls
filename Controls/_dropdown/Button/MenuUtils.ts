@@ -28,7 +28,7 @@
       let offsetClassName = 'controls-MenuButton_' + (options.viewMode);
 
       if ((!options.icon || options.viewMode === 'toolButton' || options.viewMode === 'functionalButton')) {
-         const currentHeight = options.inlineHeight;
+         const currentHeight = options.inlineHeight || options.fontSize;
          offsetClassName += ('__' + currentHeight);
 
       } else if (options.icon) {

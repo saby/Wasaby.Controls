@@ -215,11 +215,11 @@ export default class Button extends BaseDropdown {
       return {
          showHeader: true,
          filter: {},
-         style: 'secondary',
+         buttonStyle: 'secondary',
          viewMode: 'button',
-         size: 'm',
+         fontSize: 'm',
          iconStyle: 'secondary',
-         transparent: true,
+         contrastBackground: false,
          lazyItemsLoading: false
       };
    }
