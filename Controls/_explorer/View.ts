@@ -178,6 +178,9 @@ var
                   self._children.treeControl.setMarkedKey(markedKey);
                   self._markerForRestoredScroll = markedKey;
                }
+               if (self._children.treeControl.isAllSelected()) {
+                  self._children.treeControl.clearSelection();
+               }
                self._isGoingBack = false;
             }
             if (self._isGoingFront) {
