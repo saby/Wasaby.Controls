@@ -10,7 +10,7 @@ import {object} from 'Types/util';
 import { constants } from 'Env/Constants';
 
 type Key = string|number|null;
-export type SelectedItems = RecordSet|List<Model>;
+export type SelectedItems = RecordSet|List<Model>|List<void>;
 
 export interface ILookupBaseControllerOptions extends IFilterOptions, ISourceOptions {
     selectedKeys: Key[];
@@ -26,7 +26,7 @@ export default class LookupBaseControllerClass {
     private _options: ILookupBaseControllerOptions;
     private _selectedKeys: Key[];
     private _sourceController: typeof SourceController;
-    private _items: RecordSet|List<Model>;
+    private _items: SelectedItems;
     private _historyServiceLoad: Promise<unknown>;
 
     constructor(options: ILookupBaseControllerOptions) {
@@ -72,7 +72,7 @@ export default class LookupBaseControllerClass {
         return updateResult;
     }
 
-    loadItems(): Promise<RecordSet | null>{
+    loadItems(): Promise<SelectedItems> {
         const options = this._options;
         const filter = {...options.filter};
         const keyProperty = options.keyProperty;
@@ -93,7 +93,7 @@ export default class LookupBaseControllerClass {
             },
             (error) => {
                 dataSourceError.process({error});
-                return null;
+                return new List();
             }
         );
     }
