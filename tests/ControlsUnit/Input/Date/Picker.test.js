@@ -69,6 +69,9 @@ define([
             component._children.opener = {
                close: sinon.fake()
             };
+            component._children.input = {
+               setValidationResult: sinon.fake()
+            };
             sandbox.stub(component, '_notify');
 
             component._onResult(value);
@@ -90,6 +93,9 @@ define([
             component._children = {}
             component._children.opener = {
                close: sinon.fake()
+            };
+            component._children.input = {
+               setValidationResult: sinon.fake()
             };
             sandbox.stub(component, '_notify');
 

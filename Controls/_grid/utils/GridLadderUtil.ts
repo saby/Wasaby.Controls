@@ -78,10 +78,6 @@ export function prepareLadder(params: IPrepareLadderParams): {} {
 
     for (idx = params.stopIndex - 1; idx >= params.startIndex; idx--) {
         const dispItem = params.display.at(idx);
-        if (dispItem.isEditing()) {
-            continue;
-        }
-
         item = dispItem.getContents();
         prevItem = idx - 1 >= params.startIndex ? params.display.at(idx - 1).getContents() : null;
 

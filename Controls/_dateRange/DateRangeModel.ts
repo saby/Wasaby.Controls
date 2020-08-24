@@ -1,5 +1,6 @@
 import cExtend = require('Core/core-simpleExtend');
 import {ObservableMixin, VersionableMixin, DateTime} from 'Types/entity';
+import getPeriodType = require('Core/helpers/Date/getPeriodType');
 import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
 import DateUtil = require('Controls/Utils/Date');
 import CalendarUtils from './Utils';
@@ -107,13 +108,77 @@ var ModuleClass = cExtend.extend([ObservableMixin.prototype, VersionableMixin], 
       }
    },
 
+   _hitsDisplayedRange(date: Date, index: Number): boolean {
+      // Проверяем второй элемент массива на null. Если задан null в опции displayedRanges
+      // то можно бесконечно переключать период.
+      return this._options.displayedRanges[index][0] <= date &&
+          (this._options.displayedRanges[index][1] === null || this._options.displayedRanges[index][1] >= date);
+   },
+
+   _getDisplayedRange(range, direction): [Date, Date] {
+      const nextRange = dateRangeUtil.shiftPeriod(range[0], range[1], direction);
+      if (!this._options.displayedRanges) {
+         return nextRange;
+      }
+      // Берем любую из дат, т.к. нам нужно дата с точностью в год
+      const currentDate = new Date(range[0].getFullYear(), 0);
+      const nextDate = new Date(nextRange[0].getFullYear(), 0);
+
+      let arrayIndex;
+      const findCurrentDateArrayIndex = () => {
+         for (let index = 0; index < this._options.displayedRanges.length; index++) {
+            if (this._hitsDisplayedRange(currentDate, index)) {
+               return index;
+            }
+         }
+      };
+      arrayIndex = findCurrentDateArrayIndex();
+
+      // Проверяем год, на который переходим. Если оне не попадает в тот же массив что и текущий год - ищем ближайших
+      // год на который можно перейти в соседнем массиве
+      if (this._hitsDisplayedRange(nextDate, arrayIndex)) {
+         return nextRange;
+      }
+
+      // Высчитываем разница между startValue и endValue, чтобы оставить такой же промежуток
+      const periodType = getPeriodType(range[0], range[1]);
+      const intervals = {
+         month: 1,
+         quarter: 3,
+         halfyear: 6,
+         year: 12
+      };
+      const currentInterval = intervals[periodType];
+
+      const adjacentArray = this._options.displayedRanges[arrayIndex + direction];
+
+      if (this._options.displayedRanges[arrayIndex + direction]) {
+         let year, startValueMonth, endValueMonth;
+         const monthsInYear = 12;
+         if (direction === 1) {
+            startValueMonth = 0;
+            endValueMonth = currentInterval;
+            year = adjacentArray[0].getFullYear();
+         } else {
+            startValueMonth = monthsInYear - currentInterval;
+            endValueMonth = monthsInYear;
+            year = adjacentArray[1].getFullYear();
+         }
+         return [
+             new Date(year, startValueMonth, 1),
+             new Date(year, endValueMonth, 0)
+         ];
+      }
+      return range;
+   },
+
    /**
     * If you select a period of several whole months, quarters, six months, or years,
     * then shift it for the same period forward.
     */
    _shiftRange(direction: number): void {
       let range = this._prepareRange();
-      range = dateRangeUtil.shiftPeriod(range[0], range[1], direction);
+      range = this._getDisplayedRange(range, direction);
       if (this._hasRanges()) {
          range = this._rangeSelected(range);
       }

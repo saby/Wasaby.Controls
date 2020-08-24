@@ -33,25 +33,23 @@ export default class Dialog extends Base {
      * </pre>
      * @see close
      */
-
-    /**
-     * Метод для закрытия диалогового окна.
-     * @name Controls/_popup/PopupHelper/Dialog#close
-     * @function
-     * @example
-     * <pre class="brush: js">
-     *    import {DialogOpener} from 'Controls/popup';
-     *    ...
-     *    this._dialog = new DialogOpener();
-     *
-     *    closeDialog() {
-     *        this._dialog.close();
-     *    }
-     * </pre>
-     * @see open
-     */
-
     open(popupOptions: IDialogPopupOptions): void {
         return super.open(popupOptions);
     }
 }
+/**
+ * Метод для закрытия диалогового окна.
+ * @name Controls/_popup/PopupHelper/Dialog#close
+ * @function
+ * @example
+ * <pre class="brush: js">
+ *    import {DialogOpener} from 'Controls/popup';
+ *    ...
+ *    this._dialog = new DialogOpener();
+ *
+ *    closeDialog() {
+ *        this._dialog.close();
+ *    }
+ * </pre>
+ * @see open
+ */
