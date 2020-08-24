@@ -30,7 +30,6 @@ describe('Controls/scroll:ContainerNew ScrollbarsModel', () => {
             const
                 state = {
                     overflowHidden: true,
-                    scrollContainerStyles: 'scrollContainerStyles',
                     styleHideScrollbar: 'styleHideScrollbar'
                 },
                 model: ScrollbarsModel = new ScrollbarsModel({
@@ -40,7 +39,6 @@ describe('Controls/scroll:ContainerNew ScrollbarsModel', () => {
 
             assert.isTrue(model._overflowHidden);
             assert.strictEqual(model._styleHideScrollbar, state.styleHideScrollbar);
-            assert.strictEqual(model._scrollContainerStyles, state.scrollContainerStyles);
         });
     });
 
@@ -65,7 +63,7 @@ describe('Controls/scroll:ContainerNew ScrollbarsModel', () => {
                 ...getScrollbarsDefaultOptions(),
                 scrollMode: SCROLL_MODE.VERTICAL
             }, state);
-           assert.equal(model.scrollContainerStyles, 'scrollContainerStyles');
+           assert.equal(model.scrollContainerStyles, 'styleHideScrollbar');
         });
     });
 
@@ -77,7 +75,6 @@ describe('Controls/scroll:ContainerNew ScrollbarsModel', () => {
             });
             assert.deepEqual(model.serializeState(), {
                 overflowHidden: false,
-                scrollContainerStyles: undefined,
                 styleHideScrollbar: undefined
             });
         });

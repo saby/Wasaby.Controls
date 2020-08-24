@@ -124,7 +124,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._scrollbars = new ScrollbarsModel(options, receivedState);
         this._stickyHeaderController = new StickyHeaderController(this);
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
-        this._optimizeShadowClass = this._getOptimizeShadowClass();
+        this._optimizeShadowClass = this._getOptimizeShadowClass(options);
 
         super._beforeMount(...arguments);
 
@@ -170,6 +170,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     _updateState(...args) {
+        const isInitializing = Object.keys(this._oldState).length === 0;
         const isUpdated: boolean = super._updateState(...args);
         if (isUpdated) {
             // Убираем старое поведение теней, новые тени сделаны через CSS, рассчеты производить более не требуется
@@ -177,7 +178,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             if (!this._options.optimizeShadow) {
                 this._shadows.updateScrollState(this._state);
             }
-            this._scrollbars.updateScrollState(this._state, this._container);
+            // При инициализации не обновляем скрол бары. Инициализируем их по напедению мышкой.
+            if (!isInitializing) {
+                this._scrollbars.updateScrollState(this._state, this._container);
+            }
             this._paging?.update(this._state);
             this._stickyHeaderController.setCanScroll(this._state.canVerticalScroll);
             this._scrollCssClass = this._getScrollContainerCssClass(this._options);
@@ -313,11 +317,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._notify('intersect', [items]);
     }
 
-    protected _getOptimizeShadowClass(): string {
-        let style = '';
+    protected _getOptimizeShadowClass(options?: IContainerOptions): string {
+        const opts:IContainerOptions = options || this._options;
+        let style: string = '';
         if (this._isOptimizeShadowEnabled) {
-            style += `controls-Scroll__background-Shadow_style-${this._options.shadowStyle}_theme-${this._options.theme} ` +
-                `controls-Scroll__background-Shadow_top-${this._shadows.top.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom.isVisibleShadowOnCSS}_style-${this._options.shadowStyle}_theme-${this._options.theme}`;
+            style += `controls-Scroll__background-Shadow_style-${opts.shadowStyle}_theme-${opts.theme} ` +
+                `controls-Scroll__background-Shadow_top-${this._shadows.top.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom.isVisibleShadowOnCSS}_style-${opts.shadowStyle}_theme-${opts.theme}`;
         }
         return style;
     }
