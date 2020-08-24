@@ -2,7 +2,19 @@
     <ws:template name="templateMore">
         <div class="controls-AdaptiveButtons__more controls-AdaptiveButtons__more_theme_{{_options.theme}} controls-AdaptiveButtons__more_align_{{_options.align}}" >
             <div class="controls-AdaptiveButtons__more__text controls-AdaptiveButtons__more__text_align_{{_options.align}}">
-                {[Еще]}...
+            <Controls.dropdown:Button
+                        			 name="menuButton"
+                        			 keyProperty="{{_options.keyProperty}}"
+                        			 caption="{[Еще]}..."
+                        			 parentProperty="parent"
+                        			 nodeProperty="@parent"
+                        			 source="{{_menuSource}}"
+                        			 buttonStyle="secondary"
+                        			 viewMode="link"
+                        			 filter="{{_filter}}"
+                        			 lazyItemsLoading="{{true}}"
+                        			 on:menuItemActivate="_menuItemClickHandler()"
+                        		  />
             </div>
         </div>
     </ws:template>

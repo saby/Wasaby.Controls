@@ -3,7 +3,8 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_tabs/AdaptiveButtons/AdaptiveButtons';
 import {RecordSet} from 'Types/collection';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
-import {SbisService} from 'Types/source';
+import {SbisService, Memory} from 'Types/source';
+import {Model} from 'Types/entity';
 import {CrudWrapper} from 'Controls/dataSource';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
@@ -69,6 +70,9 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     protected _moreButtonWidth: number;
     protected _visibleItems: RecordSet<object>;
     protected _crudWrapper: CrudWrapper;
+    protected _menuSource: Memory;
+    protected _filter: object;
+    protected _position: number;
     private _fontWidthConstants: unknown;
 
     protected _beforeMount(options?: ITabsAdaptiveButtonsOptions,
@@ -77,12 +81,13 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         if (!options.containerWidth) {
             Logger.error('Option containerWidth is undefined');
         }
-
         if (receivedState) {
             this._items = receivedState.items;
             this._fontWidthConstants = receivedState.fontWidthConstants;
             this._moreButtonWidth = this._getTextWidth(MORE_BUTTON_TEXT, 'm');
             this._calcVisibleItems(this._items, options);
+            this._menuSource = this._createMemoryForMenu(options.keyProperty);
+            this._updateFilter(options);
         } else {
             return new Promise((resolve) => {
                 loadFontWidthConstants().then((fontWidthConstants) => {
@@ -140,12 +145,38 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             this._items = items;
         });
     }
+    private _menuItemClickHandler(event: SyntheticEvent<Event>, item: Model): void {
+        item.set('isMainTab', true);
+        this._visibleItems.replace(item, this._position);
+        this._updateFilter(this._options);
+    }
 
     private _prepareItems(options: ITabsAdaptiveButtonsOptions): void {
         this._items.forEach((item) => {
             item.set('align', options.align);
         });
         this._calcVisibleItems(this._items, options);
+        this._menuSource = this._createMemoryForMenu(options.keyProperty);
+        this._updateFilter(options);
+    }
+
+    private _createMemoryForMenu(keyProperty: string): Memory {
+        return new Memory({
+            keyProperty,
+            data: this._items.getRawData()
+        });
+    }
+    private _updateFilter(options: ITabsAdaptiveButtonsOptions): void {
+        const arrIdOfInvisibleItems = [];
+        const filter = {};
+        this._items.each((item) => {
+            // @ts-ignore
+            if (this._visibleItems.getIndexByValue(options.keyProperty, item.get(options.keyProperty)) === -1) {
+                arrIdOfInvisibleItems.push(item.get(options.keyProperty));
+            }
+        });
+        filter[options.keyProperty] = arrIdOfInvisibleItems;
+        this._filter = filter;
     }
 
     private _calcVisibleItems(items: RecordSet<object>, options: ITabsAdaptiveButtonsOptions): void {
@@ -163,6 +194,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         }
         this._visibleItems = clonedItems;
         this._visibleItems.setRawData(rawData);
+        this._position = options.align === 'right' ? 0 : this._visibleItems.getCount() - 1;
     }
 
     private _getLastTabIndex(items: RecordSet<object>, options: ITabsAdaptiveButtonsOptions): number {
