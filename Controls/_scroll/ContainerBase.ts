@@ -371,7 +371,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _updateState(newState: IScrollState): boolean {
         let isStateUpdated = false;
         this._oldState = {...this._state};
-        const isInitializing = Object.keys(this._oldState).length === 0;
+
         Object.keys(newState).forEach((key) => {
             if (this._state[key] !== newState[key]) {
                 this._state[key] = newState[key];
@@ -381,7 +381,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         if (isStateUpdated) {
             this._updateCalculatedState();
         }
-        return !isInitializing && isStateUpdated;
+        return isStateUpdated;
     }
 
     _updateCalculatedState(): void {
