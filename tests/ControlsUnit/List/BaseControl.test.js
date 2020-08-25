@@ -3928,6 +3928,75 @@ define([
             ctrl._beforeUpdate(cfg);
             assert.isTrue(ctrl._editInPlace._options.readOnly);
          });
+
+         describe('activate editing row', function () {
+
+            let baseControl;
+            let cfg;
+
+            beforeEach(async () => {
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: source,
+                  keyProperty: 'id',
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  editingConfig: {
+                     item: new entity.Model({rawData: { id: 1 }})
+                  },
+                  viewModelConfig: {
+                     items: rs,
+                     keyProperty: 'id',
+                     selectedKeys: [1, 3]
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  navigation: {
+                     source: 'page',
+                     sourceConfig: {
+                        pageSize: 6,
+                        page: 0,
+                        hasMore: false
+                     },
+                     view: 'infinity',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     }
+                  },
+               };
+               baseControl = new lists.BaseControl(cfg);
+               baseControl.saveOptions(cfg);
+               await baseControl._beforeMount(cfg);
+               baseControl._editInPlace.hasPendingActivation = () => true;
+
+            });
+
+            it('activate row bu click in input', () => {
+               let wasActivatedFirstInput = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => true;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                  }
+               };
+               baseControl._afterUpdate(cfg);
+               assert.isFalse(wasActivatedFirstInput);
+            });
+
+            it('activate row by click in row', () => {
+               let wasActivatedFirstInput = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => false;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                  }
+               };
+               baseControl._afterUpdate(cfg);
+               assert.isTrue(wasActivatedFirstInput);
+            });
+         });
       });
 
       it('can\'t start drag on readonly list', function() {
