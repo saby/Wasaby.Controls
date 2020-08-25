@@ -623,5 +623,26 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._children.content.style.overflow = value;
     }
 
+    // TODO: система событий неправильно прокидывает аргументы из шаблонов, будет исправлено тут:
+    // https://online.sbis.ru/opendoc.html?guid=19d6ff31-3912-4d11-976f-40f7e205e90a
+    protected _selectedKeysChanged(event): void {
+        this._proxyEvent(event, 'selectedKeysChanged', Array.prototype.slice.call(arguments, 1));
+    }
+
+    protected _excludedKeysChanged(event): void {
+        this._proxyEvent(event, 'excludedKeysChanged', Array.prototype.slice.call(arguments, 1));
+    }
+
+    protected _itemClick(event): void {
+        return this._proxyEvent(event, 'itemClick', Array.prototype.slice.call(arguments, 1));
+    }
+
+    protected _proxyEvent(event, eventName, args): void {
+        // Forwarding bubbling events makes no sense.
+        if (!event.propagating()) {
+            return this._notify(eventName, args) || event.result;
+        }
+    }
+
     static _theme: string[] = ['Controls/scroll'];
 }
