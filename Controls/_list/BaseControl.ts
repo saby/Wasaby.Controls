@@ -2129,11 +2129,12 @@ const _private = {
 
     // region Marker
     createMarkerController(self: any, options: any, library: any): MarkerController {
-        if (options.markerVisibility === 'hidden') {
-            return null;
-        }
         if (!options) {
             options = self._options;
+        }
+
+        if (options.markerVisibility === 'hidden') {
+            return null;
         }
 
         return new library.MarkerController({
