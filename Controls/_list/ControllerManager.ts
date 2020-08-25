@@ -5,7 +5,7 @@ const libraries = {
 
 export default class ControllerManager<T> {
     private _controller: T;
-    private _loadPromise: Promise<void>;
+    private _loadPromise: Promise<T>;
     private readonly _creatingFunction: (library: any, options: any) => T;
 
     constructor(createFunction: (library: any, options: any) => T) {
@@ -41,10 +41,8 @@ export default class ControllerManager<T> {
                 });
             } else {
                 // загружаем библиотеку, создаем контроллер и выполняем действие
-                this._loadPromise = import(libraries.MarkerController).then((library) => {
-                    this._controller = this._creatingFunction(library, options);
-
-                    if (this._controller) {
+                this.createController(options).then((controller) => {
+                    if (controller) {
                         const result = methodCall(this._controller);
                         if (resultHandler) {
                             resultHandler(result);
@@ -53,6 +51,18 @@ export default class ControllerManager<T> {
                 });
             }
         }
+    }
+
+    createController(options: any): Promise<T> {
+        if (this._loadPromise) {
+            return this._loadPromise;
+        }
+
+        this._loadPromise = import(libraries.MarkerController).then((library) => {
+            this._controller = this._creatingFunction(library, options);
+            return this._controller;
+        });
+        return this._loadPromise;
     }
 
     /**

@@ -280,7 +280,7 @@ const _private = {
         return needAttachLoadTopTriggerToNull;
     },
 
-    reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
+    reload(self: any, cfg: any, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
         const navigation = cClone(cfg.navigation);
@@ -2743,7 +2743,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _swipeTemplate: SwipeActionsTemplate,
 
     _markerControllerManager: null,
-    _markerControllerCreatingPromise: null,
 
     _dndListController: null,
     _dragEntity: undefined,
@@ -2770,7 +2769,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @return {Promise}
      * @protected
      */
-    _beforeMount(newOptions, context, receivedState: IReceivedState = {}): Promise<any> {
+    _beforeMount(newOptions: any, context: any, receivedState: IReceivedState = {}): Promise<any> {
         const self = this;
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
 
@@ -2798,7 +2797,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
         const receivedError = receivedState.errorConfig;
-        let promise = Promise.resolve();
 
         const receivedData = receivedState.data;
             let viewModelConfig = {...newOptions};
@@ -2855,7 +2853,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     if ((newOptions.markerVisibility === 'visible' ||
                         (newOptions.markerVisibility === 'onactivated' && newOptions.markedKey)
                     )) {
-                        promise = _private.createMarkerController(self, newOptions);
+                        this._markerControllerManager.createController(newOptions);
                     }
 
                     if (newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
@@ -2881,7 +2879,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.needAttachLoadTopTriggerToNull(self)) {
                         self._hideTopTriggerUntilMount = true;
                     }
-                    return promise;
                 }
                 if (receivedError) {
                     if (newOptions.dataLoadErrback instanceof Function) {
@@ -3140,7 +3137,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _beforeUpdate(newOptions: any): void | Promise<void> {
+    _beforeUpdate(newOptions: any): void {
         this._updateInProgress = true;
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
         const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
@@ -3293,21 +3290,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
-                const prepareGroupsPromise = this._prepareGroups(newOptions, (collapsedGroups) => {
+                return this._prepareGroups(newOptions, (collapsedGroups) => {
                     return _private.reload(self, newOptions).addCallback(() => {
                         this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
                         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                         _private.updateInitializedItemActions(this, newOptions);
                     });
                 });
-                return Promise.all([promise, prepareGroupsPromise]);
             } else {
                 // return result here is for unit tests
-                const reloadPromise = _private.reload(self, newOptions).addCallback(() => {
+                return _private.reload(self, newOptions).addCallback(() => {
                     this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                     _private.updateInitializedItemActions(this, newOptions);
                 });
-                return Promise.all([promise, reloadPromise]);
             }
         } else {
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
@@ -3350,8 +3345,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadedItems) {
             this._shouldRestoreScrollPosition = true;
         }
-
-        return promise;
     },
 
     reloadItem(key: String, readMeta: Object, replaceItem: Boolean, reloadType = 'read'): Deferred {
@@ -3738,8 +3731,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return _private.reload(this, this._options, sourceConfig).addCallback(getData);
     },
 
-    setMarkedKey(key: number | string): Promise<void> {
-        return _private.setMarkedKey(this, key);
+    setMarkedKey(key: number | string): void {
+        _private.setMarkedKey(this, key);
     },
 
     _onGroupClick(e, groupId, baseEvent) {
@@ -3942,7 +3935,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
     },
 
-    _itemMouseUp(e, itemData, domEvent): Promise<void> | void {
+    _itemMouseUp(e: SyntheticEvent, itemData: any, domEvent: SyntheticEvent): void {
         const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
 
         // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
@@ -3963,12 +3956,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             canBeMarked = canBeMarked && this._options._needSetMarkerCallback(itemData.item, domEvent);
         }
 
-        this._mouseDownItemKey = undefined;
-        this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
-
         if (canBeMarked) {
             return this.setMarkedKey(key);
         }
+
+        this._mouseDownItemKey = undefined;
+        this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
     },
 
     _startDragNDropCallback(): void {
