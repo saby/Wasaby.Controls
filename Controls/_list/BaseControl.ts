@@ -3649,7 +3649,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._validateController);
-            this._editInPlace.prepareHtmlInput();
+
+            // После запуска редактирования нужно активировать определенное поле ввода.
+            // Если не получилось активировать поле ввода, под точкой клика (клик мимо поля ввода),
+            // то активируем первое в строке
+            if (this._editInPlace.hasPendingActivation()) {
+                const wasActivatedByClick = this._editInPlace.prepareHtmlInput();
+                let wasActivatedByEditingRow;
+                if (!wasActivatedByClick) {
+                    wasActivatedByEditingRow = this._children.listView.activateEditingRow();
+                }
+                if (wasActivatedByEditingRow || wasActivatedByClick) {
+                    this._editInPlace.activated();
+                }
+            }
+
             this._validateController.resolveSubmit();
         }
 
