@@ -75,6 +75,7 @@ import { isColumnScrollShown } from '../_grid/utils/GridColumnScrollUtil';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { POSITION, TYPE_FIXED_HEADERS } from '../_scroll/StickyHeader/Utils';
 import { MarkerController } from '../marker';
+import ControllerManager from './ControllerManager';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -437,7 +438,9 @@ const _private = {
 
     restoreModelState(self: any, options: any): void {
         self._markerControllerManager.execute(
-            (controller) => controller.restoreMarker()
+            (controller) => controller.restoreMarker(),
+            undefined,
+            options
         );
 
         if (self._selectionController) {
@@ -2136,6 +2139,10 @@ const _private = {
         if (options.markerVisibility === 'hidden') {
             return null;
         }
+        if (!options) {
+            options = self._options;
+        }
+
         return new library.MarkerController({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
@@ -2158,7 +2165,8 @@ const _private = {
                 if (newMarkedKey !== options.markedKey) {
                     self._notify('markedKeyChanged', [newMarkedKey]);
                 }
-            }
+            },
+            options
         );
     },
 
@@ -2762,7 +2770,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @return {Promise}
      * @protected
      */
-    _beforeMount(newOptions, context, receivedState: IReceivedState = {}) {
+    _beforeMount(newOptions, context, receivedState: IReceivedState = {}): Promise<any> {
         const self = this;
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
 
@@ -2778,6 +2786,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (newOptions.editingConfig) {
             _private.createEditInPlace(self, newOptions);
         }
+
+        this._markerControllerManager = new ControllerManager<MarkerController>(
+            (library, options) => _private.createMarkerController(this, options, library)
+        );
 
         return this._prepareGroups(newOptions, (collapsedGroups) => {
             return this._prepareItemsOnMount(self, newOptions, receivedState, collapsedGroups);
@@ -4003,7 +4015,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || key === 33 // PageUp
                 || key === 34 // PageDown
                 || key === 35 // End
-                || key === 36;// Home
+                || key === 36; // Home
             keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },
