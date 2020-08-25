@@ -13,6 +13,10 @@
         on:restoreScrollPosition="_restoreScrollPosition()"
         on:updatePlaceholdersSize="_updatePlaceholdersSize()"
 
+        on:selectedKeysChanged="_selectedKeysChanged()"
+        on:excludedKeysChanged="_excludedKeysChanged()"
+        on:itemClick="_itemClick()"
+
         on:itemMouseDown="_tmplNotify('itemMouseDown')"
         on:rootChanged="_tmplNotify('rootChanged')"
         on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
