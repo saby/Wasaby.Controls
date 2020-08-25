@@ -1433,17 +1433,13 @@ const _private = {
                 // Если элементы скрылись, то для них нужно сбросить состояние marked,
                 // чтобы при их показе не было лишнего маркера
                 if (action === IObservable.ACTION_REMOVE) {
-                    self._markerControllerManager.execute(
-                        (controller) => controller.resetMarkedState(removedItems)
-                    );
+                    self._markerControllerManager.getController().resetMarkedState(removedItems);
                 }
 
                 // Если элемент был пересоздан, то сперва сработает remove и с элемента уберется выделение,
                 // а потом сработает add и для элемента нужно восстановить выделение
                 if (action === IObservable.ACTION_ADD) {
-                    self._markerControllerManager.execute(
-                        (controller) => controller.handleAddItems(newItems)
-                    );
+                    self._markerControllerManager.getController().handleAddItems(newItems);
                 }
             }
         }
@@ -2124,9 +2120,7 @@ const _private = {
            case IObservable.ACTION_REPLACE:
                // Если Record изменили, то пересоздастся CollectionItem и нужно для него восстановить маркер
                if (self._markerControllerManager.hasController()) {
-                   self._markerControllerManager.execute(
-                       (controller) => controller.restoreMarker()
-                   );
+                   self._markerControllerManager.getController().restoreMarker();
                }
                break;
        }
@@ -2241,18 +2235,15 @@ const _private = {
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
     handleMarkerControllerResult(self: any, newMarkedKey: string|number): void {
-        self._markerControllerManager.execute(
-            (controller) => {
-                if (newMarkedKey !== controller.getMarkedKey()) {
-                    self._notify('markedKeyChanged', [newMarkedKey]);
-                }
+        const controller = self._markerControllerManager.getController();
+        if (newMarkedKey !== controller.getMarkedKey()) {
+            self._notify('markedKeyChanged', [newMarkedKey]);
+        }
 
-                // Если нам не передают markedKey, то на него не могут повлиять и поэтому сразу изменяем модель
-                if (!self._options.hasOwnProperty('markedKey')) {
-                    controller.setMarkedKey(newMarkedKey);
-                }
-            }
-        );
+        // Если нам не передают markedKey, то на него не могут повлиять и поэтому сразу изменяем модель
+        if (!self._options.hasOwnProperty('markedKey')) {
+            controller.setMarkedKey(newMarkedKey);
+        }
     },
 
     // endregion
@@ -3246,8 +3237,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if ((self._options.root !== newOptions.root || filterChanged) && _private._getSelectionController(this).isAllSelected(false)) {
                 const result = _private._getSelectionController(this).clearSelection();
                 _private.handleSelectionControllerResult(this, result);
-                _private.handleSelectionControllerResult(this, result);
-                _private.handleSelectionControllerResult(this, result);
             }
             _private.updateSelectionController(this, newOptions);
 
@@ -3956,7 +3945,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (canBeMarked) {
-            return this.setMarkedKey(key);
+            this.setMarkedKey(key);
         }
 
         this._mouseDownItemKey = undefined;
