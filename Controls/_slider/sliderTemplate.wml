@@ -28,7 +28,7 @@
          </ws:for>
          <Controls.dragnDrop:Container name="dragNDrop"
                                        on:documentDragEnd="_onDocumentDragEnd()"
-                                       on:dragstart="_onDragNDropHandler()"
+                                       on:dragstart="_onDragStartHandler()"
                                        on:dragmove="_onDragNDropHandler()"
                                        on:dragend="_onDragNDropHandler()">
             <div class="controls-Slider__line__wrapper_theme-{{_options.theme}}
