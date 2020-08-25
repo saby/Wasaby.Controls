@@ -302,6 +302,7 @@ define([
 
          it('promise is canceled and reset', () => {
             let isCountPromiseCanceled = false;
+            instance._getCount(selection, null, selectionCountConfig);
             instance._countPromise.cancel = () => {
                isCountPromiseCanceled = true;
             };
