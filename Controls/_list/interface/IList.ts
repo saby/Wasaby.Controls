@@ -16,7 +16,7 @@ type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|'null';
 type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'null';
 
-interface IItemPadding {
+export interface IItemPadding {
     top?: TVerticalItemPadding;
     bottom?: TVerticalItemPadding;
     left?: THorizontalItemPadding;
