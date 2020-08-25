@@ -137,6 +137,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
         if (context.ScrollData?.pagingVisible) {
             this._paging = new PagingModel();
+            this._scrollCssClass = this._getScrollContainerCssClass(options);
         }
 
         super._afterMount();
@@ -190,7 +191,11 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
-        return this._scrollbars.getScrollContainerClasses();
+        let cssClass: string = this._scrollbars.getScrollContainerClasses();
+        if (this._paging?.isVisible) {
+            cssClass += ' controls-Scroll__content_paging';
+        }
+        return cssClass;
     }
 
     protected _draggingChangedHandler(event, dragging): void {
