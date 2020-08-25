@@ -7,6 +7,8 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import {CssClassList} from '../Utils/CssClassList';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS, ColumnScroll} from './resources/ColumnScroll';
 import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/DragScroll';
+import {shouldAddActionsCell, shouldDrawColumnScroll, getAllowedSwipeType, isInLeftSwipeRange} from 'Controls/_grid/utils/GridColumnScrollUtil';
+
 import getDimensions = require("Controls/Utils/getDimensions");
 
 import * as GridViewTemplateChooser from 'wml!Controls/_grid/GridViewTemplateChooser';
@@ -27,7 +29,6 @@ import * as ColumnTpl from 'wml!Controls/_grid/layout/common/ColumnContent';
 import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
 
 import {Logger} from 'UI/Utils';
-import {shouldAddActionsCell, shouldDrawColumnScroll} from 'Controls/_grid/utils/GridColumnScrollUtil';
 import { stickyLadderCellsCount } from 'Controls/_grid/utils/GridLadderUtil';
 import {SyntheticEvent} from "Vdom/Vdom";
 
@@ -135,9 +136,7 @@ var
                             if (isOnMount && self._options.columnScrollStartPosition === 'end') {
                                 self._columnScrollController.setScrollPosition(newSizes.contentSize - newSizes.containerSize);
                             }
-                            self._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
-                            self._horizontalScrollWidth = newSizes.scrollWidth;
-                            self._containerSize = newSizes.containerSize;
+                            self._saveColumnScrollSizes(newSizes);
                             self._updateColumnScrollData();
                             self._listModel?.setColumnScrollVisibility(self._isColumnScrollVisible());
                         }, true);
@@ -228,9 +227,7 @@ var
 
                     // Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
                     self._columnScrollController.updateSizes((newSizes) => {
-                        self._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
-                        self._horizontalScrollWidth = newSizes.scrollWidth;
-                        self._containerSize = newSizes.containerSize;
+                        self._saveColumnScrollSizes(newSizes);
                         self._updateColumnScrollData();
                     }, true);
                 }
@@ -471,9 +468,7 @@ var
                 const columnScrollStatus = _private.actualizeColumnScroll(this, this._options);
                 if (columnScrollStatus === 'actual') {
                     this._columnScrollController.updateSizes((newSizes) => {
-                        this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
-                        this._horizontalScrollWidth = newSizes.scrollWidth;
-                        this._containerSize = newSizes.containerSize;
+                        this._saveColumnScrollSizes(newSizes);
                         this._updateColumnScrollData();
                     });
                 }
@@ -650,6 +645,13 @@ var
                 scrollPosition: this._horizontalScrollPosition
             });
         },
+        _saveColumnScrollSizes(newSizes): void {
+            this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
+            this._horizontalScrollWidth = newSizes.scrollWidth;
+            this._containerSize = newSizes.containerSize;
+            this._fixedColumnsWidth = newSizes.fixedColumnsWidth;
+            this._scrollableColumnsWidth = newSizes.scrollableColumnsWidth;
+        },
         _getCorrectElement(element: HTMLElement): HTMLElement {
             // В FF целью события может быть элемент #text, у которого нет метода closest, в этом случае рассматриваем как цель его родителя.
             if (element && !element.closest && element.parentElement) {
@@ -680,9 +682,7 @@ var
                 const columnScrollStatus = _private.actualizeColumnScroll(this, this._options);
                 if (columnScrollStatus === 'actual') {
                     this._columnScrollController.updateSizes((newSizes) => {
-                        this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
-                        this._horizontalScrollWidth = newSizes.scrollWidth;
-                        this._containerSize = newSizes.containerSize;
+                        this._saveColumnScrollSizes(newSizes);
                         this._updateColumnScrollData();
                     });
                 }
@@ -701,7 +701,12 @@ var
                 if (startBy === 'mouse') {
                     isGrabbing = this._dragScrollController.onViewMouseDown(e);
                 } else {
-                    isGrabbing = this._dragScrollController.onViewTouchStart(e);
+                    const touchClientX = e.nativeEvent.touches[0].clientX;
+                    if (!isInLeftSwipeRange(this._fixedColumnsWidth, this._scrollableColumnsWidth, touchClientX)) {
+                        isGrabbing = this._dragScrollController.onViewTouchStart(e);
+                    } else {
+                        this._leftSwipeCanBeStarted = true;
+                    }
                 }
                 _private.setGrabbing(this, isGrabbing);
             }
@@ -715,6 +720,9 @@ var
                     newPosition = this._dragScrollController.onViewTouchMove(e);
                 }
                 if (newPosition !== null) {
+                    if (startBy === 'touch') {
+                        this._notify('closeSwipe', []);
+                    }
                     this._columnScrollController.setScrollPosition(newPosition);
                     this._horizontalScrollPosition = this._columnScrollController.getScrollPosition();
                     this._updateColumnScrollData();
@@ -727,6 +735,7 @@ var
                     this._dragScrollController.onViewMouseUp(e);
                 } else {
                     this._dragScrollController.onViewTouchEnd(e);
+                    this._leftSwipeCanBeStarted = false;
                 }
                 _private.setGrabbing(this, false);
             }
@@ -754,9 +763,34 @@ var
         },
         _onDragScrollOverlayTouchEnd(e) {
             this._dragScrollController?.onOverlayTouchEnd(e);
+            this._leftSwipeCanBeStarted = false;
         },
         _onDragScrollOverlayMouseLeave(e) {
             this._dragScrollController?.onOverlayMouseLeave(e);
+        },
+        _onItemSwipe(event, itemData) {
+            event.stopPropagation();
+
+            if (this._isColumnScrollVisible() && this._dragScrollController) {
+                if (event.target.closest(`.${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`)) {
+                    // По фиксированной колонке допустим только свайп вправо
+                    if (event.nativeEvent.direction === 'right') {
+                        this._notify('itemSwipe', [itemData, event]);
+                    }
+                } else {
+                    // Отличие настоящего свайпа от скроллирования условное.
+                    // Если свайп берет начало от определенной области в правой границе скроллируемой
+                    // области, то это свайп, иначе - скроллирование.
+                    // В скроллируемой области допустим только левфй свайп.
+                    if (this._leftSwipeCanBeStarted && event.nativeEvent.direction === 'left') {
+                        this._notify('itemSwipe', [itemData, event]);
+                    }
+                }
+            } else {
+                this._notify('itemSwipe', [itemData, event]);
+            }
+
+            this._leftSwipeCanBeStarted = false;
         }
     });
 
