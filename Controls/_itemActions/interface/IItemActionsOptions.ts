@@ -276,10 +276,12 @@ export interface IItemActionsOptions {
     /**
      * @name Controls/_itemActions/interface/IItemActionsOptions#itemActionsVisibility
      * @cfg {TItemActionsVisibility} Настройка способа отображения опций записи
-     * @variant onhover Операции над записью отображаются при наведении на запись;
-     * @variant visible Операции над записью отображены изначально.
-     * @variant delayed Операции над записью отображаются при наведении на запись и удержании над ней курсора мыши в течение 500 мс.
+     * @variant onhover Опции записи отображаются при наведении на запись.
+     * @variant visible Опции записи отображены изначально.
+     * @variant delayed Опции записи отображаются при наведении на запись и удержании над ней курсора мыши в течение 500 мс.
+     * @remark Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
      */
+
     /*
      * @name Controls/_itemActions/interface/IItemActionsOptions#itemActionsVisibility
      * @cfg {TItemActionsVisibility} Setting of ItemActions visibility
