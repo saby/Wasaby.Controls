@@ -7,7 +7,7 @@ import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 // @ts-ignore
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 
-type LookupReceivedState = RecordSet|null;
+type LookupReceivedState = SelectedItems|null;
 
 export interface ILookupOptions extends ILookupBaseControllerOptions, IControlOptions {
     maxVisibleItems?: number;

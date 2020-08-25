@@ -259,6 +259,8 @@ import {SyntheticEvent} from "Vdom/Vdom"
                   self.setScrollTop(currentScrollTop - clientHeight);
                } else if (scrollParam === 'pageDown') {
                   self.setScrollTop(currentScrollTop + clientHeight);
+               } else if (typeof scrollParam === 'number') {
+                   self.setScrollTop(scrollParam);
                }
             }
          },

@@ -331,14 +331,15 @@ var Area = Text.extend({
          */
         const keyCode = event.nativeEvent.keyCode;
         if (keyCode >= constants.key.end && keyCode <= constants.key.down) {
-            const cursorPosition: number = this._viewModel.selection.end;
-            const beforeValue: string = this._viewModel.displayValue.substring(0, cursorPosition);
-            const afterValue: string = this._viewModel.displayValue.substring(cursorPosition);
-            const onFirstLine: boolean = beforeValue.indexOf('\n') === -1;
-            const onLastLine: boolean = afterValue.indexOf('\n') === -1;
-            if (onFirstLine) {
+            const container: HTMLElement = this._children.fakeField;
+            const textBeforeCursor: string = this._viewModel.displayValue.substring(0, this._viewModel.selection.end);
+            const cursorPosition: number = _private.calcPositionCursor(container, textBeforeCursor);
+            const firstLinePosition: number = _private.calcPositionCursor(container, '');
+            const lastLinePosition: number = container.offsetHeight;
+
+            if (cursorPosition === firstLinePosition) {
                 this._children.scroll.scrollTo(0);
-            } else if (onLastLine) {
+            } else if (cursorPosition === lastLinePosition) {
                 this._children.scroll.scrollTo(this._getField().offsetHeight);
             }
         }

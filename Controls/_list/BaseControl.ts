@@ -355,7 +355,6 @@ const _private = {
                     if (!self._shouldNotResetPagingCache) {
                         self._cachedPagingState = false;
                     }
-                    clearTimeout(self._needPagingTimeout);
 
                     if (listModel) {
                         if (self._options.groupProperty) {
@@ -1070,6 +1069,9 @@ const _private = {
                 // чтобы не скрыть после полной загрузки, даже если не набралось на две страницы.
                 self._cachedPagingState = true;
             }
+            if (result && _private.needScrollPaging(self._options.navigation)) {
+                _private.createScrollPagingController(self, scrollParams);
+            }
         }
 
         if (self._cachedPagingState === true) {
@@ -1087,7 +1089,7 @@ const _private = {
 
             self._viewportRect = params.viewPortRect;
 
-            if (_private.needScrollPaging(self, self._options.navigation)) {
+            if (_private.needScrollPaging(self._options.navigation)) {
                 const scrollParams = {
                     scrollTop: self._scrollTop,
                     scrollHeight: params.scrollHeight,
@@ -1095,7 +1097,6 @@ const _private = {
                 };
                 _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPagingCtr) => {
                     self._scrollPagingCtr = scrollPagingCtr;
-                    self._pagingVisible = _private.needShowPagingByScrollSize(self, params.scrollHeight, params.clientHeight);
                 });
             }
 
@@ -1116,15 +1117,25 @@ const _private = {
         if (self._scrollPagingCtr) {
             callback(self._scrollPagingCtr);
         } else {
-            _private.createScrollPagingController(self, scrollParams).then((scrollPaging) => {
-                callback(scrollPaging);
-            });
+            if (self._pagingVisible) {
+                _private.createScrollPagingController(self, scrollParams).then((scrollPaging) => {
+                    callback(scrollPaging);
+                });
+            }
         }
     },
     createScrollPagingController(self, scrollParams) {
+        let elementsCount = undefined;
+        if (self._sourceController) {
+            elementsCount = self._sourceController.getAllDataCount();
+            if (typeof elementsCount !== 'number') {
+                elementsCount = undefined;
+            }
+        }
         const scrollPagingConfig = {
             pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
+            elementsCount,
             pagingCfgTrigger: (cfg) => {
                 if (!isEqual(self._pagingCfg, cfg)) {
                     self._pagingCfg = cfg;
@@ -1226,7 +1237,7 @@ const _private = {
 
         self._scrollTop = scrollTop;
         self._scrollPageLocked = false;
-        if (_private.needScrollPaging(self, self._options.navigation)) {
+        if (_private.needScrollPaging(self._options.navigation)) {
             const scrollParams = {
                 scrollTop: self._scrollTop,
                 scrollHeight: self._viewSize,
@@ -1334,7 +1345,7 @@ const _private = {
         return navigationOpt && navigationOpt.view === 'infinity';
     },
 
-    needScrollPaging(self, navigationOpt) {
+    needScrollPaging(navigationOpt) {
         return (navigationOpt &&
             navigationOpt.view === 'infinity' &&
             navigationOpt.viewConfig &&
@@ -2651,7 +2662,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
-    _needPagingTimeout: null,
     _shouldNotResetPagingCache: false,
 
     _itemTemplate: null,
@@ -2961,16 +2971,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    scrollResizeHandler(params: object): void {
-        if (_private.needScrollPaging(this, this._options.navigation)) {
-            // внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
-            // поэтому нужен таймаут
-            this._needPagingTimeout = setTimeout(() => {
-                this._pagingVisible = _private.needShowPagingByScrollSize(this, params.scrollHeight, params.clientHeight);
-            }, 18);
-        }
-    },
-
     updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
         this._shadowVisibility = shadowVisibility;
         if (this._isMounted) {
@@ -2999,9 +2999,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
                 _private.getPortionedSearch(this).stopSearch();
             }
-        }
-        if (_private.needScrollPaging(this, this._options.navigation)) {
-            this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewportSize);
         }
         this._scrollController?.setTriggerVisibility(direction, state);
         if (state) {
@@ -3036,7 +3033,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.handleScrollControllerResult(this, result);
         }
 
-        if (_private.needScrollPaging(this, this._options.navigation)) {
+        if (_private.needScrollPaging(this._options.navigation)) {
             _private.doAfterUpdate(this, () => {
                     const scrollParams = {
                         scrollHeight: this._viewSize,
@@ -3244,7 +3241,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateSelectionController(this, newOptions);
 
             const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
-               || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
+                || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
+                || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
             if (selectionChanged || this._modelRecreated) {
                 // handleSelectionControllerResult чтобы отправить информацию для ПМО
                 const result = _private._getSelectionController(this).setSelectedKeys(
@@ -3418,10 +3416,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._checkTriggerVisibilityTimeout) {
             clearTimeout(this._checkTriggerVisibilityTimeout);
-        }
-        if (this._needPagingTimeout) {
-            clearTimeout(this._needPagingTimeout);
-            this._needPagingTimeout = null;
         }
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
@@ -3656,7 +3650,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._validateController);
-            this._editInPlace.prepareHtmlInput();
+
+            // После запуска редактирования нужно активировать определенное поле ввода.
+            // Если не получилось активировать поле ввода, под точкой клика (клик мимо поля ввода),
+            // то активируем первое в строке
+            if (this._editInPlace.hasPendingActivation()) {
+                const wasActivatedByClick = this._editInPlace.prepareHtmlInput();
+                let wasActivatedByEditingRow;
+                if (!wasActivatedByClick) {
+                    wasActivatedByEditingRow = this._children.listView.activateEditingRow();
+                }
+                if (wasActivatedByEditingRow || wasActivatedByClick) {
+                    this._editInPlace.activated();
+                }
+            }
+
             this._validateController.resolveSubmit();
         }
 
@@ -3677,6 +3685,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.scrollToEdge(this, 'down');
                 break;
         }
+    },
+    __selectedPageChanged(e, page) {
+        this._currentPage = page;
+        const scrollParams = {
+            scrollTop: (page - 1) * this._viewportSize,
+            scrollHeight: this._viewSize,
+            clientHeight: this._viewportSize
+        };
+        this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true })
+        _private.updateScrollPagingButtons(this, scrollParams);
     },
 
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
@@ -4035,6 +4053,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
 
+        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
+            this._pagingVisible = _private.needShowPagingByScrollSize(this,  this._viewSize, this._viewportSize);
+        }
+
         if (this._documentDragging) {
             this._insideDragging = true;
 
@@ -4373,9 +4395,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
             case 'canScroll':
                 this.canScrollHandler(params);
-                break;
-            case 'scrollResize':
-                this.scrollResizeHandler(params);
                 break;
             case 'scrollMove':
                 this.scrollMoveHandler(params);

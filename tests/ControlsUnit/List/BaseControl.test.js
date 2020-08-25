@@ -2285,63 +2285,57 @@ define([
             await lists.BaseControl._private.onScrollShow(ctrl, heightParams);
             ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
 
-            assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
+            assert.isFalse(!!ctrl._scrollPagingCtr, 'ScrollPagingController was created');
+
+            ctrl._mouseEnter(null);
+            await lists.BaseControl._private.onScrollShow(ctrl, heightParams);
+            assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn`t created');
 
             // прокручиваем к низу, проверяем состояние пэйджинга
             lists.BaseControl._private.handleListScrollSync(ctrl, 600);
 
             assert.deepEqual({
-                arrowState: {
                     begin: "visible",
                     end: "readonly",
                     next: "readonly",
                     prev: "visible"
-                }
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
+            }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll to bottom');
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
-                arrowState: {
                     begin: "visible",
                     end: "visible",
                     next: "visible",
                     prev: "visible"
-                }
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+            }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll');
 
             ctrl._pagingVisible = true;
             ctrl._abortSearch();
             assert.deepEqual({
-                arrowState: {
                     begin: "visible",
                     end: "readonly",
                     next: "readonly",
                     prev: "visible"
-                }
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+            }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after abort search');
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
-                arrowState: {
                     begin: "visible",
                     end: "readonly",
                     next: "readonly",
                     prev: "visible"
-                }
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after abort search');
+            }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after abort search');
             lists.BaseControl._private.getPortionedSearch(ctrl).reset();
 
             // Если данные не были загружены после последнего подскролла в конец (и hasMoreData все еще false),
             // и еще раз доскроллили до конца, то самое время блокировать кнопки.
             lists.BaseControl._private.handleListScrollSync(ctrl, 400);
             assert.deepEqual({
-                arrowState: {
                     begin: "visible",
                     end: "readonly",
                     next: "readonly",
                     prev: "visible"
-                }
-            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+            }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll');
 
 
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
@@ -3934,6 +3928,75 @@ define([
             cfg.readOnly = true;
             ctrl._beforeUpdate(cfg);
             assert.isTrue(ctrl._editInPlace._options.readOnly);
+         });
+
+         describe('activate editing row', function () {
+
+            let baseControl;
+            let cfg;
+
+            beforeEach(async () => {
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: source,
+                  keyProperty: 'id',
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  editingConfig: {
+                     item: new entity.Model({rawData: { id: 1 }})
+                  },
+                  viewModelConfig: {
+                     items: rs,
+                     keyProperty: 'id',
+                     selectedKeys: [1, 3]
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  navigation: {
+                     source: 'page',
+                     sourceConfig: {
+                        pageSize: 6,
+                        page: 0,
+                        hasMore: false
+                     },
+                     view: 'infinity',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     }
+                  },
+               };
+               baseControl = new lists.BaseControl(cfg);
+               baseControl.saveOptions(cfg);
+               await baseControl._beforeMount(cfg);
+               baseControl._editInPlace.hasPendingActivation = () => true;
+
+            });
+
+            it('activate row bu click in input', () => {
+               let wasActivatedFirstInput = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => true;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                  }
+               };
+               baseControl._afterUpdate(cfg);
+               assert.isFalse(wasActivatedFirstInput);
+            });
+
+            it('activate row by click in row', () => {
+               let wasActivatedFirstInput = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => false;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                  }
+               };
+               baseControl._afterUpdate(cfg);
+               assert.isTrue(wasActivatedFirstInput);
+            });
          });
       });
 
@@ -5855,6 +5918,15 @@ define([
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false], {bubbling: true}).called);
+         assert.isTrue(instance._listViewModel.getItemBySourceKey(1).isSelected());
+
+         notifySpy.resetHistory();
+         instance._listViewModel.getItemBySourceKey(1).setSelected(false);
+
+         cfgClone = { ...cfg, selectedKeys: [1], selectedKeysCount: 2 };
+         instance._beforeUpdate(cfgClone);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false], {bubbling: true}).called);
+         assert.isTrue(instance._listViewModel.getItemBySourceKey(1).isSelected());
       });
 
       it('_beforeUpdate with new searchValue', async function() {
@@ -6166,14 +6238,11 @@ define([
 
       it('_beforeUnmount', function() {
          let instance = new lists.BaseControl();
-         instance._needPagingTimeout = setTimeout(() => {}, 100);
          instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
 
          instance._beforeUnmount();
-         assert.isNull(instance._needPagingTimeout);
          assert.isNull(instance._portionedSearch);
       });
-
 
       describe('beforeUpdate', () => {
          let cfg;
