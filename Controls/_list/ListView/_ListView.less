@@ -40,6 +40,12 @@
 
 .controls-ListView_default-padding_theme-@{themeName} {
    min-height: 25px;
+   display: inline-flex;
+   align-items: baseline;
+   &:before{
+      content: '\200b';
+      font-size: @item_max-font-size_list;
+   }
 }
 
 .controls-ListView__item_default-topPadding_null_theme-@{themeName},
