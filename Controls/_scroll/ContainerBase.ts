@@ -148,7 +148,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             this._onRegisterNewListScrollComponent(component);
         }
 
-        this._registrars.scroll.register(event, registerType, component, callback);
+        this._registrars.scroll.register(event, registerType, component, callback, {listenAll: true});
     }
 
     _unRegisterIt(e: SyntheticEvent, registerType: string, component: any): void {
