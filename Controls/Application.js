@@ -153,7 +153,7 @@ define('Controls/Application',
              * Демо: https://jsfiddle.net/q7rez3v5/
              */
             /* eslint-enable */
-            this._registers.mousemove.start(ev);
+            this._children.mousemoveDetect.start(ev);
          },
          _updateClasses: function() {
             // Данный метод вызывается до построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
@@ -313,6 +313,18 @@ define('Controls/Application',
             registers.forEach((register) => {
                this._registers[register] =  new ControlsEvent.RegisterClass({register: register});
             });
+         },
+
+         _registerHandler: function(event, registerType, component, callback, config) {
+            for (var register in this._registers) {
+               this._registers[register].register(event, registerType, component, callback, config);
+            }
+         },
+
+         _unregisterHandler: function(event, registerType, component, config) {
+            for (var register in this._registers) {
+               this._registers[register].unregister(event, component, config);
+            }
          },
 
          _getResourceUrl: function(str) {
