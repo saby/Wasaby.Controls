@@ -2,7 +2,7 @@
     name="content"
     on:scroll="_scrollHandler()">
     <ws:partial
-        attr:class="controls-containerBase_userContent"
+        attr:class="controls-Scroll-containerBase_userContent"
         template="{{_options.content}}"
         scope="{{_options}}"
         on:register="_registerIt()"
