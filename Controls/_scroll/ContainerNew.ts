@@ -190,7 +190,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
-        return this._scrollbars.getScrollContainerClasses();
+        return 'controls-Scroll-Container__base-userContent ' + this._scrollbars.getScrollContainerClasses();
     }
 
     protected _draggingChangedHandler(event, dragging): void {
