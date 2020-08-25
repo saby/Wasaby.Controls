@@ -8,8 +8,6 @@ import {IOptions as ICollectionOptions} from 'Controls/_display/Collection';
 
 import {
     Controller as ItemActionsController,
-    IItemActionsCollection,
-    IItemActionsItem,
     IControllerOptions
 } from 'Controls/_itemActions/Controller';
 import {
@@ -17,6 +15,8 @@ import {
     TActionDisplayMode,
     TItemActionShowType
 } from 'Controls/_itemActions/interface/IItemAction';
+import {IItemActionsItem} from 'Controls/_itemActions/interface/IItemActionsItem';
+import {IItemActionsCollection} from 'Controls/_itemActions/interface/IItemActionsCollection';
 import * as DOMUtil from 'Controls/Utils/DOMUtil';
 
 // 3 опции будут показаны в тулбаре, 6 в контекстном меню
@@ -783,29 +783,12 @@ describe('Controls/_itemActions/Controller', () => {
             assert.equal(item.getActions().showed[0].id, 'view', 'First action should be \'editArrow\'');
         })
 
-        // T2.11 При вызове activateRightSwipe нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
-        it('should right-swipe item on activateRightSwipe() method', () => {
-            itemActionsController.activateRightSwipe(1);
-            const item1 = collection.getItemBySourceKey(1);
-            assert.isTrue(item1.isRightSwiped());
-        });
-
         // T2.12 При вызове getSwipeItem() контроллер должен возвращать true
         // вне зависимости оттипа анимации и направления свайпа.
-        it('method getSwipeItem() should return true despite of current animation type and direction', () => {
+        it('method getSwipeItem() should return swoped item despite of current animation type and direction', () => {
             // @ts-ignore
             const item: CollectionItem<Record> = collection.getItemBySourceKey(1);
             let swipedItem: CollectionItem<Record>;
-
-            itemActionsController.activateRightSwipe(1);
-            // @ts-ignore
-            swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
-            assert.equal(swipedItem, item, 'rightSwiped() item has not been found by getSwipeItem() method');
-            itemActionsController.deactivateSwipe();
-
-            // @ts-ignore
-            swipedItem = itemActionsController.getSwipeItem() as CollectionItem<Record>;
-            assert.equal(swipedItem, null, 'Current swiped item has not been un-swiped');
 
             itemActionsController.activateSwipe(1, 100, 50);
             // @ts-ignore
@@ -1313,7 +1296,7 @@ describe('Controls/_itemActions/Controller', () => {
                 assert.isEmpty(unexpectedActions);
             });
 
-            it('should collect non-"showed" item actions when item is swiped', () => {
+            it('should collect non-"showed" or non-toolbar item actions when item is swiped', () => {
                 const localItemActions: IItemAction[] = [
                     {
                         id: 1,
@@ -1324,7 +1307,7 @@ describe('Controls/_itemActions/Controller', () => {
                     {
                         id: 5,
                         title: 'Documentation',
-                        showType: TItemActionShowType.TOOLBAR,
+                        showType: TItemActionShowType.MENU_TOOLBAR,
                         parent: 4
                     },
                     {
@@ -1369,7 +1352,11 @@ describe('Controls/_itemActions/Controller', () => {
                 // @ts-ignore
                 assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
                 // @ts-ignore
-                assert.deepEqual(config.templateOptions.source.data[0], localItemActions[3]);
+                assert.deepEqual(config.templateOptions.source.data[0], localItemActions[1],
+                    'Non-toolbar options should be shown in menu');
+                // @ts-ignore
+                assert.deepEqual(config.templateOptions.source.data[1], localItemActions[3],
+                    'Non-showed options should be shown in menu');
             });
         });
 
@@ -1695,13 +1682,13 @@ describe('Controls/_itemActions/Controller', () => {
         });
     });
 
-    describe('setSwipeAnimation(), getSwipeAnimation()', () => {
+    describe('startSwipeCloseAnimation()', () => {
         it('should correctly set animation state', () => {
-            itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
-            assert.equal(itemActionsController.getSwipeAnimation(), ANIMATION_STATE.CLOSE, 'Incorrect animation state !== close');
-
-            itemActionsController.setSwipeAnimation(ANIMATION_STATE.OPEN);
-            assert.equal(itemActionsController.getSwipeAnimation(), ANIMATION_STATE.OPEN, 'Incorrect animation state !== open');
+            const testingItem = collection.getItemBySourceKey(1);
+            testingItem.setSwipeAnimation(ANIMATION_STATE.OPEN);
+            testingItem.setSwiped(true, true);
+            itemActionsController.startSwipeCloseAnimation();
+            assert.equal(testingItem.getSwipeAnimation(), ANIMATION_STATE.CLOSE, 'Incorrect animation state !== close');
         });
     });
 });

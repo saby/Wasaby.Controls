@@ -15,6 +15,8 @@ import {IQueryParams} from 'Controls/_interface/IQueryParams';
 import {TNavigationSource, IBaseSourceConfig, INavigationSourceConfig, TNavigationDirection} from 'Controls/_interface/INavigation';
 import {IHashMap} from 'Types/declarations';
 import {applied, Record} from 'Types/entity';
+import {isEqual} from 'Types/object';
+
 /**
  * Вспомогательный интерфейс для определения типа typeof object
  * @interface IType
@@ -222,6 +224,18 @@ export class NavigationController {
         return calculator.hasMoreData(store, direction);
     }
 
+    updateOptions(newOptions: INavigationControllerOptions): void {
+        if ((newOptions.navigationType !== this._navigationType) ||
+            !isEqual(newOptions.navigationConfig, this._navigationConfig)) {
+            // при передаче новых опций все сбрасываем
+            this._navigationStores.each((navigationStore) => {
+                navigationStore.store.destroy();
+            });
+            this._navigationStores = new List();
+            this._paramsCalculator.destroy();
+        }
+    }
+
     private _getStore(id: TKey): INavigationStore {
         const storeIndex = this._navigationStores.getIndexByValue('id', id);
         let resStoreItem: INavigationStoresListItem = this._navigationStores.at(storeIndex);
@@ -260,7 +274,7 @@ export class NavigationController {
      */
     destroy(): void {
         this._navigationStores.each((navigationStore) => {
-            navigationStore.destroy();
+            navigationStore.store.destroy();
         });
         this._navigationStores = null;
         this._paramsCalculator.destroy();

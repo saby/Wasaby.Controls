@@ -15,12 +15,13 @@ export interface ICollectionItem<T> {
 export interface IBaseCollection<S, T extends ICollectionItem<S>> {
     each(cb: (item: T) => void): void;
     getItemBySourceKey(key: TItemKey): T;
-    getCount(): number;
     find(predicate: (item: T) => boolean): T;
-    getItemBySourceItem?(item: S): T;
-    getNext(item: T): T;
-    getPrevious(item: T): T;
     nextVersion(): void;
+    setEventRaising(enabled: boolean, analyze?: boolean): void;
+    getCount?(): number;
+    getNext?(item: T): T;
+    getPrevious?(item: T): T;
+    getItemBySourceItem?(item: S): T;
 }
 
 export interface IStrategyCollection<T> {

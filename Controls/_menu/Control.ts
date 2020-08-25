@@ -525,13 +525,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             // Т.к само меню закроется после открытия стекового окна,
             // в опенер нужно положить контрол, который останется на странице.
             opener: this._options.selectorOpener,
+            closeOnOutsideClick: true,
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: options.isCompoundTemplate,
             eventHandlers: {
                 onResult: (result, event) => {
                     selectorDialogResult(event, result);
-                    this._stack.close();
+                    opener.close();
                 }
             }
         }, selectorTemplate.popupOptions || {});
@@ -606,7 +607,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _updateSwipeItem(newSwipedItem: CollectionItem<Model>, isSwipeLeft: boolean): void {
         const oldSwipedItem: CollectionItem<Model> = this._listModel.find(
-            (item: CollectionItem<Model>): boolean => item.isSwiped() || item.isRightSwiped());
+            (item: CollectionItem<Model>): boolean => item.isSwiped() || item.isAnimatedForSelection());
         if (isSwipeLeft && oldSwipedItem) {
             oldSwipedItem.setSwiped(false);
         }

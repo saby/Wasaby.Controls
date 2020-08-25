@@ -21,6 +21,7 @@
                 stickyProperty="{{stickyProperty}}"
                 itemData="{{itemData}}"
                 itemActionsTemplate="{{itemActionsTemplate}}"
+                itemActionsClass="{{itemActionsClass}}"
                 editArrowTemplate="{{editArrowTemplate}}"/>
     </ws:if>
     <ws:else>

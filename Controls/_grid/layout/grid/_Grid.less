@@ -64,8 +64,14 @@
 }
 
 .controls-Grid_columnScroll_wrapper {
-   z-index: 5;
+   z-index: 4;
    position: sticky;
+}
+
+/* Этот костыль выпилен в 6000 по https://online.sbis.ru/opendoc.html?guid=f5e830c3-7be2-4272-9c38-594c241401cc */
+.ws-is-desktop-safari .controls-Grid__columnScroll_will-transform,
+.ws-is-mobile-safari .controls-Grid__columnScroll_will-transform {
+   will-change: transform;
 }
 
 .controls-Grid__cell_spacing_money:after,
@@ -218,7 +224,6 @@
 // https://online.sbis.ru/opendoc.html?guid=2f994b36-59aa-49ba-8c49-d1a6c4e9084f
 // https://bugs.chromium.org/p/chromium/issues/detail?id=1103592
 .ws-is-chrome {
-   .controls-Grid__row-cell__content,
    .controls-Grid__row-cell__content_colspaned {
       height: 100%;
    }
@@ -408,6 +413,21 @@
    top: @item_line-height_l_grid !important;
    height: 0;
 }
+
+.controls-Grid__row-cell__ladder-spacing_withHeader_theme-@{themeName} {
+   top: @item_line-height_l_grid + @header_cell_min-height_grid !important;
+   height: 0;
+}
+
+.controls-Grid__row-cell__ladder-spacing_withResults_theme-@{themeName} {
+   top: @item_line-height_l_grid + @results_cell_min-height_grid !important;
+   height: 0;
+}
+
+.controls-Grid__row-cell__ladder-spacing_withHeader_withResults_theme-@{themeName} {
+   top: @item_line-height_l_grid + @header_cell_min-height_grid + @results_cell_min-height_grid !important;
+   height: 0;
+}
 .controls-Grid__cell-content-wrapper_ladder {
    align-items: baseline;
    position: absolute;
@@ -550,6 +570,9 @@
 .controls-Grid__cell_spacingLastCol_default_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_default_theme-@{themeName} {
    padding-right: @item_padding-right_default_list;
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+      right: @cell_spacing-right_m_grid;
+   }
 }
 
 .controls-Grid__cell_spacingLastCol_null_theme-@{themeName},
@@ -565,26 +588,41 @@
 .controls-Grid__cell_spacingLastCol_s_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_s_theme-@{themeName} {
    padding-right: @item_padding-right_s_list;
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+      right: @cell_spacing-right_s_grid;
+   }
 }
 
 .controls-Grid__cell_spacingLastCol_m_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_m_theme-@{themeName} {
    padding-right: @item_padding-right_m_list;
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+      right: @cell_spacing-right_m_grid;
+   }
 }
 
 .controls-Grid__cell_spacingLastCol_l_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_l_theme-@{themeName} {
    padding-right: @item_padding-right_l_list;
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+      right: @cell_spacing-right_l_grid;
+   }
 }
 
 .controls-Grid__cell_spacingLastCol_xl_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_xl_theme-@{themeName} {
    padding-right: @item_padding-right_xl_list;
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+      right: @cell_spacing-right_xl_grid;
+   }
 }
 
 .controls-Grid__cell_spacingLastCol_xxl_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_xxl_theme-@{themeName} {
    padding-right: @item_padding-right_2xl_list;
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+      right: @cell_spacing-right_2xl_grid;
+   }
 }
 
 .controls-Grid__cell_spacingBackButton_with_multiSelection_theme-@{themeName} {
@@ -638,6 +676,7 @@
    min-width: 0; //https://css-tricks.com/flexbox-truncated-text/
    flex-shrink: 1;
    box-sizing: border-box;
+   height: 100%;
 }
 
 .controls-Grid__row-cell_cursor-default {
@@ -763,8 +802,7 @@
 
    // Нужен отдельный стек z-index, иначе при скролле колонок из-за transform опции оказываются ниже данных таблицы и неправильно обрабатывается ховер
    // https://online.sbis.ru/opendoc.html?guid=6059b335-dad3-4458-b022-0260680d5c27
-   // Значение = 4, т.к. для .controls-Grid__cell_fixed_ сделано 3
-   z-index: 4;
+   z-index: 1;
 
    pointer-events: none;
    .controls-itemActionsV {
@@ -839,6 +877,7 @@
    background: linear-gradient(90deg, rgba(240,245,251,0), @item_hover_background-color_list);
 }
 
+.controls-Grid__editArrow-blur_style-masterClassic_background_theme-@{themeName},
 .controls-Grid__editArrow-blur_style-master_background_theme-@{themeName} {
    background: linear-gradient(90deg, rgba(240,245,251,0), @master_item_hover_background-color_list);
 }
@@ -850,9 +889,19 @@
    fill: @edit-arrow_icon-color_grid;
    width: @edit-arrow_icon-size_grid;
    min-width: @edit-arrow_icon-size_grid;
+   display: inline-flex;
+   align-items: baseline;
+}
+
+.controls-Grid__editArrow-blur_style-default_background_theme-default:before,
+.controls-Grid__editArrow_style-default_background_theme-default:before,
+.controls-Grid__editArrow-wrapper_theme-default:before {
+   content: '\200b';
+   font-size: @item_max-font-size_grid;
+}
+.controls-Grid__editArrow-icon_theme-@{themeName} {
    height: @edit-arrow_icon-size_grid;
-   display: inline-block;
-   line-height: 1;
+   width: @edit-arrow_icon-size_grid;
 }
 
 .controls-Grid__editArrow_style-default_background_theme-@{themeName} {

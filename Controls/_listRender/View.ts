@@ -8,18 +8,16 @@ import { Sticky } from 'Controls/popup';
 
 import {
     Collection,
-    CollectionItem,
-    ANIMATION_STATE
+    CollectionItem
 } from 'Controls/display';
 import {
     Controller as ItemActionsController,
-    TItemActionVisibilityCallback,
     TEditArrowVisibilityCallback,
     IItemAction,
     TItemActionShowType,
-    TItemActionsPosition,
     IItemActionsItem,
-    IContextMenuConfig, IShownItemAction
+    IShownItemAction,
+    IItemActionsOptions
 } from 'Controls/itemActions';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 
@@ -33,33 +31,16 @@ import { ISwipeEvent } from './Render';
 
 import template = require('wml!Controls/_listRender/View/View');
 
-export interface IViewOptions extends IControlOptions {
+export interface IViewOptions extends IItemActionsOptions, IControlOptions {
     items: RecordSet;
-
     collection: string;
     render: string;
-
-    itemActions?: any[];
-    itemActionsVisibility?: 'onhover'|'delayed'|'visible';
-    itemActionVisibilityCallback?: TItemActionVisibilityCallback;
-    itemActionsPosition?: TItemActionsPosition;
-    itemActionsProperty?: string;
     style?: string;
-    itemActionsClass?: string;
-
-    actionAlignment?: 'horizontal'|'vertical';
-    actionCaptionPosition?: 'right'|'bottom'|'none';
-
     editingConfig?: any;
-
     markerVisibility?: TVisibility;
     markedKey?: number|string;
     showEditArrow?: boolean;
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
-    /**
-     * Конфигурация для контекстного меню опции записи.
-     */
-    contextMenuConfig?: IContextMenuConfig
 }
 
 export default class View extends Control<IViewOptions> {
@@ -203,7 +184,7 @@ export default class View extends Control<IViewOptions> {
             this._itemActionsController.activateSwipe(item.getContents().getKey(), swipeContainerWidth, swipeContainerHeight);
         }
         if (swipeEvent.nativeEvent.direction === 'right' && item.isSwiped()) {
-            this._itemActionsController.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+            this._itemActionsController.startSwipeCloseAnimation();
             this._collection.nextVersion();
         }
     }
@@ -319,7 +300,7 @@ export default class View extends Control<IViewOptions> {
     }
 
     /**
-     * Получает контейнер для
+     * Получает контейнер элемента, для которого выполняется операция
      * @param item
      * @param isMenuClick
      */
@@ -424,7 +405,7 @@ export default class View extends Control<IViewOptions> {
      * Закрывает popup и снимает регистрацию его подписки на событие скролла
      * @private
      */
-    private _closePopup() {
+    private _closePopup(): void {
         if (this._itemActionsMenuId) {
             Sticky.closePopup(this._itemActionsMenuId);
             this._itemActionsController.setActiveItem(null);

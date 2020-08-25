@@ -79,9 +79,7 @@
 </ws:template>
 <ws:template name="viewTpl">
     <div class="controls-ScrollController">
-        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{!_isMounted ? 'display: none;'}}"></div>
-        <!-- Скрываем topLoadTrigger через display: none, чтобы он не срабатывал сразу после mount. Отступы ему ещё не установлены и он
-        сработает сразу после инициализации, хотя далеко не факт что это нужно. -->
+        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{_hideTopTriggerUntilMount ? 'display: none;'}}"></div>
         <ws:partial
                 attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
                 attr:style="{{_attachLoadTopTriggerToNull ? 'padding-top: 1px;'}}"
@@ -133,8 +131,7 @@
                 <ws:partial
                         template="{{ _swipeTemplate }}"
                         scope="{{ _listViewModel.getActionsTemplateConfig() }}"
-                        swipeConfig="{{ _listViewModel.getSwipeConfig() }}"
-                        animationState="{{ _listViewModel.getSwipeAnimation() }}"/>
+                        swipeConfig="{{ _listViewModel.getSwipeConfig() }}"/>
             </ws:swipeTemplate>
             <ws:tagTemplate>
                 <ws:partial template="wml!Controls/Application/TagTemplate/TagTemplate"
@@ -208,8 +205,11 @@
                     attr:class="controls-BaseControl__scrollPaging_theme-{{_options.theme}}"
                     contrastBackground="{{true}}"
                     scope="{{_pagingCfg}}"
+                    pagingMode="{{_options.navigation.viewConfig.pagingMode}}"
                     showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
-                    on:onArrowClick="__onPagingArrowClick()" />
+                    contentTemplate="{{_options.pagingContentTemplate}}"
+                    on:onArrowClick="__onPagingArrowClick()"
+                    on:selectedPageChanged="__selectedPageChanged()"/>
             </div>
         </ws:if>
         <Controls.event:Listener

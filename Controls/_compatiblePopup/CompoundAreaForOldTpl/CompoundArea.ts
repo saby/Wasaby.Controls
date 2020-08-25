@@ -403,7 +403,6 @@ var CompoundArea = CompoundContainer.extend([
    _beforeUnmount: function() {
       this.__parentFromCfg = null;
       this.__openerFromCfg = null;
-      this._parent = null;
       this._logicParent = null;
       if (this._options.popupComponent === 'recordFloatArea') {
          this.unsubscribeOnBeforeUnload();

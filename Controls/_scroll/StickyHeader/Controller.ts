@@ -119,7 +119,7 @@ class StickyHeaderController {
 
             // If the header is "replaceable", we take into account the last one after all "stackable" headers.
             if (header.mode === 'stackable') {
-                if (header.fixedInitially || type === TYPE_FIXED_HEADERS.allFixed) {
+                if (header.fixedInitially || type === TYPE_FIXED_HEADERS.allFixed || type === TYPE_FIXED_HEADERS.fixed) {
                     height += header.inst.height;
                 }
                 replaceableHeight = 0;
@@ -130,14 +130,17 @@ class StickyHeaderController {
         return height + replaceableHeight;
     }
 
-    setCanScroll(canScroll: boolean): void {
+    setCanScroll(canScroll: boolean): Promise<void> {
         if (canScroll === this._canScroll) {
-            return;
+            return Promise.resolve();
         }
+
         this._canScroll = canScroll;
         if (this._canScroll) {
-            this._registerDelayed();
+            return this._registerDelayed();
         }
+
+        return Promise.resolve();
     }
 
     registerHandler(event, data: TRegisterEventData, register: boolean): void {
@@ -295,7 +298,7 @@ class StickyHeaderController {
         const delayedHeadersCount = this._delayedHeaders.length;
 
         if (!delayedHeadersCount || !this._canScroll) {
-            return;
+            return Promise.resolve();
         }
 
         this._resetSticky();

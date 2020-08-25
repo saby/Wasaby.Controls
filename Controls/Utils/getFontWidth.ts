@@ -1,29 +1,31 @@
 import {detection} from 'Env/Env';
 
 const constants = 'Controls/Utils/FontWidthConstants/';
+const fontSizes = ['xs', 's', 'm', 'l', 'xl', '2xl', '3xl', '4xl', '5xl'];
 
-export const getFontWidth = (text, size) => {
-    let browser = 'Chrome';
-    if (detection.firefox) {
-        browser = 'FF';
-    } else if (detection.safari) {
-        browser = 'Safari';
-    } else if (detection.isIE) {
-        browser = 'IE';
-    }
-
-    return loadFontWidthConstants(browser).then((fonts) => countTextWidth(text, fonts, size));
-};
-
-const countTextWidth = (text, font, size) => {
+export const getFontWidth = (text, size, fonts) => {
     let textWidth = 0;
     for (let i = 0; i < text.length; i++) {
-        textWidth += font[size][text[i]];
+        textWidth += fonts[size][text[i]];
     }
     return textWidth;
 };
 
-const loadFontWidthConstants = (browser) => {
+const getBrowser = () => {
+    if (detection.firefox) {
+        return 'FF';
+    }
+    if (detection.safari) {
+        return 'Safari';
+    }
+    if (detection.isIE) {
+        return 'IE';
+    }
+    return 'Chrome';
+};
+
+export const loadFontWidthConstants = () => {
+    const browser = getBrowser();
     let promiseResolver;
     const module = constants + browser;
     const promise = new Promise((resolve) => {

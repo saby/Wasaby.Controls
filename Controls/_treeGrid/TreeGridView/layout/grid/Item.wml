@@ -36,15 +36,17 @@
     <!-- Не нужно ренднрить контент ячейки, если это не ячейка с colspanTemplate-->
     <ws:partial template="{{ renderSeparatedColumnContent !== false ? currentColumn.template : 'Controls/grid:ColumnTemplate' }}"
                 editArrowTemplate="{{editArrowTemplate}}"
+                itemActionsClass="{{itemActionsClass}}"
                 itemActionsTemplate="{{itemActionsTemplate}}"
                 attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                             {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
-                            {{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}
+                            {{itemData.isAnimatedForSelection() ? ' controls-ListView__item_rightSwipeAnimation'}}
                             {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
                             {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}"
                 ladderWrapper="{{currentColumn.ladderWrapper}}"
                 expanderTemplate="{{itemData.expanderTemplate}}"
-                itemData="{{currentColumn}}" />
+                itemData="{{currentColumn}}"
+                tagTemplate="{{tagTemplate}}" />
 </ws:template>
 
 <ws:template name="COLUMN_CONTENT_WRAPPER">
@@ -62,7 +64,7 @@
 
    <!-- Колонка с чекбоксами -->
    <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
-      <ws:if data="{{!itemData.dispItem.isEditing()}}">
+      <ws:if data="{{!itemData.isAdd}}">
          <ws:partial template="{{multiSelectTpl}}" attr:class="{{ itemData.multiSelectClassList }}">
             <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
                                 checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"
@@ -194,7 +196,7 @@
       <ws:if data="{{ itemData.isDrawActions(itemData, currentColumn, colspan || colspanCurrentNode) }}">
          <ws:partial template="itemActionsTemplateChooser" itemActionsContainerStyles="{{currentColumn.itemActionsGridCellStyles}}" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}_actions"/>
       </ws:if>
-      <ws:else data="{{ itemData.isActionsColumn(itemData, currentColumn, colspan || colspanCurrentNode) }}">
+      <ws:else data="{{ itemData.shouldAddActionsCell && itemData.isActionsColumn(itemData, currentColumn, colspan || colspanCurrentNode) }}">
          <div attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}_actionsStub"></div>
       </ws:else>
    </ws:if>
@@ -284,10 +286,3 @@
       </ws:else>
    </div>
 </ws:else>
-
-<ws:if data="{{itemData.nodeFooters.length > 0}}">
-   <ws:partial template="wml!Controls/_treeGrid/TreeGridView/layout/common/NodeFooterChooser"
-               newFooterContentTemplate="{{ itemData.newFooterContentTemplate }}"
-               useNewNodeFooters="{{ itemData.useNewNodeFooters }}"
-               nodeFooters="{{itemData.nodeFooters}}"/>
-</ws:if>

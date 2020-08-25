@@ -63,7 +63,8 @@ import {default as TreeItem} from './_display/TreeItem';
 export {TreeItem};
 
 export {ANIMATION_STATE} from './_display/interface/ICollection';
-export {IBaseCollection, TItemKey, ICollectionItem} from './_display/interface';
+export {ICollectionItem} from './_display/interface/ICollectionItem';
+export {IBaseCollection, TItemKey} from './_display/interface';
 
 import {default as TileCollection} from './_display/TileCollection';
 export {TileCollection};

@@ -48,6 +48,10 @@ var
         },
 
         getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
+            if (!columns) {
+                Logger.warn('You must set "columns" option to make grid work correctly!', self);
+                return '';
+            }
             let initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
             let columnsWidths: string[] = [];
             const stickyCellsCount = stickyLadderCellsCount(columns, self._options.stickyColumn, self._options.listModel.getDragItemData());
@@ -194,6 +198,7 @@ var
             _private.setGrabbing(self, false);
             self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
         },
+
         updateColumnScrollByOptions(self, oldOptions, newOptions): void {
             const columnScrollStatus = _private.actualizeColumnScroll(self, newOptions);
             if (columnScrollStatus === 'destroyed') {
@@ -203,8 +208,20 @@ var
             const stickyColumnsCountChanged = newOptions.stickyColumnsCount !== oldOptions.stickyColumnsCount;
             const multiSelectVisibilityChanged = newOptions.multiSelectVisibility !== oldOptions.multiSelectVisibility;
             const dragScrollingChanged = newOptions.dragScrolling !== oldOptions.dragScrolling;
+            let columnScrollChanged = false;
 
-            if (stickyColumnsCountChanged || multiSelectVisibilityChanged || self._columnsHaveBeenChanged) {
+            if (columnScrollStatus === 'actual') {
+                const isColumnScrollVisible = self._isColumnScrollVisible();
+                columnScrollChanged = self._listModel.getColumnScrollVisibility() !== isColumnScrollVisible;
+                if (columnScrollChanged) {
+                    self._listModel.setColumnScrollVisibility(isColumnScrollVisible);
+                }
+            }
+
+            if (columnScrollChanged ||
+                stickyColumnsCountChanged ||
+                multiSelectVisibilityChanged ||
+                self._columnsHaveBeenChanged) {
 
                 // Если горизонтльный скролл был только что создан, то он хранит актуальные размеры.
                 if (columnScrollStatus !== 'created') {
@@ -340,7 +357,7 @@ var
                 this._listModel.setStickyColumnsCount(newCfg.stickyColumnsCount);
                 this._columnScrollController?.setStickyColumnsCount(newCfg.stickyColumnsCount, true);
             }
-            if (this._options.multiSelectVisibility !== newCfg.stickyColumnsCount) {
+            if (this._options.multiSelectVisibility !== newCfg.multiSelectVisibility) {
                 this._columnScrollController?.setMultiSelectVisibility(newCfg.multiSelectVisibility, true);
             }
 
@@ -425,7 +442,8 @@ var
 
             // Для предотвращения скролла одной записи в таблице с экшнами.
             // _options._needBottomPadding почему-то иногда не работает.
-            if (this._options.itemActionsPosition === 'outside' &&
+            if ((this._listModel.getCount() || this._listModel.getEditingItemData()) &&
+                this._options.itemActionsPosition === 'outside' &&
                 !this._options._needBottomPadding &&
                 this._options.resultsPosition !== 'bottom') {
                 classList = classList.add(`controls-GridView__footer__itemActionsV_outside_theme-${this._options.theme}`);

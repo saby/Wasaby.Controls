@@ -9,13 +9,14 @@
                           {{!_options.headerTemplate && _verticalDirection === 'top' ? 'controls-Menu__popup-reverse'}}
                           controls-Menu__popup-shadow-{{_options.typeShadow || 'default'}}_theme-{{_options.theme}}
                           {{_options.dropdownClassName}}"
-              attr:style="width: {{_options.width ? _options.width + 'px'}}"
+              attr:style="width: {{_options.width ? _options.width + 'px'}};
+                          max-width: {{_options.width ? _options.width + 'px'}}"
               icon="{{_headingIcon}}"
               caption="{{_headingCaption}}"
               headingCaption="{{!_options.headerTemplate ? _headingCaption : ''}}"
               iconSize="{{_options.iconSize}}"
               dropdownClassName="{{_options.dropdownClassName}}"
-              headerContentTemplate="{{_headerTemplate}}"
+              headerContentTemplate="{{headerContentTemplate || _headerTemplate}}"
               footerContentTemplate="{{_options.footerContentTemplate || _options.footerTemplate}}"
               footerItemData="{{_options.footerItemData}}"
               closeButtonVisibility="{{_closeButtonVisibility}}"
@@ -90,6 +91,13 @@
       </ws:partial>
    </ws:partial>
 </ws:if>
+<ws:else data="{{_headerTemplate}}">
+   <ws:partial template="menuPopup">
+      <ws:headerContentTemplate>
+         <ws:partial template="{{_headerTemplate}}" multiSelect="{{_options.multiSelect}}"/>
+      </ws:headerContentTemplate>
+   </ws:partial>
+</ws:else>
 <ws:else>
    <ws:partial template="menuPopup" />
 </ws:else>

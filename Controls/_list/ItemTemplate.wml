@@ -15,7 +15,7 @@
 </ws:template>
 <ws:template name="itemContentTpl">
     <ws:if data="{{itemData.hasMultiSelect}}">
-       <ws:if data="{{!itemData.dispItem.isEditing()}}">
+       <ws:if data="{{!itemData.isAdd}}">
           <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}} controls-ListView__checkbox_theme-{{itemData.theme}}">
              <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" checkboxReadOnly="{{ itemData.isAdd || checkboxReadOnly }}"/>
           </ws:partial>
@@ -30,7 +30,7 @@
    </ws:if>
 
     <ws:if data="{{contentTemplate}}">
-        <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}">
+        <div attr:class="{{itemData.spacingClassList}}{{itemData.isAnimatedForSelection() ? ' controls-ListView__item_rightSwipeAnimation'}}">
             <ws:partial template="{{contentTemplate}}"
                         itemData="{{itemData}}"
                         itemActionsTemplate="{{itemActionsTemplate}}"
@@ -38,7 +38,7 @@
         </div>
     </ws:if>
     <ws:else>
-        <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+        <div attr:class="{{itemData.spacingClassList}}{{itemData.isAnimatedForSelection() ? ' controls-ListView__item_rightSwipeAnimation'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
 
     <ws:if data="{{itemData.hasVisibleActions() || itemData.isEditing()}}">
