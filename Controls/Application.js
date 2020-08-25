@@ -310,8 +310,9 @@ define('Controls/Application',
 
          _createRegisters: function () {
             var registers = ['scroll', 'controlResize', 'mousemove', 'mouseup', 'touchmove', 'touchend', 'mousedown'];
-            registers.forEach((register) => {
-               this._registers[register] = new ControlsEvent.RegisterClass({ register: register });
+            var _this = this;
+            registers.forEach(function(register) {
+               _this._registers[register] = new ControlsEvent.RegisterClass({ register: register });
             });
          },
 
