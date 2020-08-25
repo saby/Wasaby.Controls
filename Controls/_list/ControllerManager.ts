@@ -20,8 +20,9 @@ export default class ControllerManager<T> {
      * @param methodCall Колбэк который вызывает метод контроллера
      * @param resultHandler Колбэк который обрабатывает результат метода контроллера
      * @param options Опции для создания контроллера
+     * @param createController
      */
-    execute(methodCall: (controller: T) => any, resultHandler?: (result: any) => void, options?: any): void {
+    execute(methodCall: (controller: T) => any, resultHandler?: (result: any) => void, options?: any, createController?: boolean): void {
         // если контроллер уже создан, то загружать библиотеку не надо => нет асинхронности
         if (this._controller) {
             const result = methodCall(this._controller);
@@ -40,15 +41,17 @@ export default class ControllerManager<T> {
                     }
                 });
             } else {
-                // загружаем библиотеку, создаем контроллер и выполняем действие
-                this.createController(options).then((controller) => {
-                    if (controller) {
-                        const result = methodCall(this._controller);
-                        if (resultHandler) {
-                            resultHandler(result);
+                // загружаем библиотеку, создаем контроллер и выполняем метод
+                if (createController) {
+                    this.createController(options).then((controller) => {
+                        if (controller) {
+                            const result = methodCall(this._controller);
+                            if (resultHandler) {
+                                resultHandler(result);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
     }

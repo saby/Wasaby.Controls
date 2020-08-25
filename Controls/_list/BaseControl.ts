@@ -367,9 +367,7 @@ const _private = {
                         }
                         self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
-                        resDeferred.addCallback(async () => {
-                            await _private.restoreModelState(self, cfg);
-                        });
+                        _private.restoreModelState(self, cfg);
 
                         if (self._sourceController) {
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -440,7 +438,8 @@ const _private = {
         self._markerControllerManager.execute(
             (controller) => controller.restoreMarker(),
             undefined,
-            options
+            options,
+            !!options.markedKey
         );
 
         if (self._selectionController) {
@@ -3246,6 +3245,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._selectionController) {
             if ((self._options.root !== newOptions.root || filterChanged) && _private._getSelectionController(this).isAllSelected(false)) {
                 const result = _private._getSelectionController(this).clearSelection();
+                _private.handleSelectionControllerResult(this, result);
+                _private.handleSelectionControllerResult(this, result);
                 _private.handleSelectionControllerResult(this, result);
             }
             _private.updateSelectionController(this, newOptions);
