@@ -308,22 +308,22 @@ define('Controls/Application',
             }
          },
 
-         _createRegisters: function() {
-            var registers = ['scroll','controlResize','mousemove','mouseup','touchmove','touchend', 'mousedown'];
+         _createRegisters: function () {
+            var registers = ['scroll', 'controlResize', 'mousemove', 'mouseup', 'touchmove', 'touchend', 'mousedown'];
             registers.forEach((register) => {
-               this._registers[register] =  new ControlsEvent.RegisterClass({register: register});
+               this._registers[register] = new ControlsEvent.RegisterClass({ register: register });
             });
          },
 
-         _registerHandler: function(event, registerType, component, callback, config) {
-            for (var register in this._registers) {
-               this._registers[register].register(event, registerType, component, callback, config);
+         _registerHandler: function (event, registerType, component, callback, config) {
+            if (this._registers[registerType]) {
+               this._registers[registerType].register(event, registerType, component, callback, config);
             }
          },
 
-         _unregisterHandler: function(event, registerType, component, config) {
-            for (var register in this._registers) {
-               this._registers[register].unregister(event, component, config);
+         _unregisterHandler: function (event, registerType, component, config) {
+            if (this._registers[registerType]) {
+               this._registers[registerType].unregister(event, registerType, component, config);
             }
          },
 
