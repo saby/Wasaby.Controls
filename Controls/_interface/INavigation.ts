@@ -1,5 +1,5 @@
 /**
- * Интерфейс для поддержки навигации по спискам.
+ * Интерфейс для контролов, поддерживающих навигацию.
  *
  * @interface Controls/_interface/INavigation
  * @public
@@ -205,11 +205,6 @@ export interface INavigationOptionValue<U> {
 export interface INavigationOptions<U> {
     navigation?: INavigationOptionValue<U>;
 }
-/**
- * @name Controls/_interface/INavigation#moveMarkerOnScrollPaging
- * @cfg {Boolean} Когда опция установлена в значение true, то при изменеии страницы с помощью кнопок навигации ("К следующей странице", "К предыдущей странице" и т.д.) <a href="/doc/platform/developmentapl/interface-development/controls/list/list/select/#marker">маркер</a> будет установлен на первую полностью видимую запись на новой странице.
- * @default false
- */
 
 /**
  * @name Controls/_interface/INavigation#navigation
@@ -255,13 +250,6 @@ export interface INavigationOptions<U> {
  *    };
  * }
  * </pre>
- */
-
-/**
- * @event Происходит при изменении параметров навигации.
- * @name Controls/_interface/INavigation#navigationParamsChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {IBaseSourceConfig} params Параметры, с которыми происходила последнаяя загрузка данных в списке.
  */
 
 /*
