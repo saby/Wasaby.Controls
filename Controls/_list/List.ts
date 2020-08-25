@@ -38,6 +38,8 @@ import {default as ListControl} from 'Controls/_list/ListControl';
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  *
+ * @implements Controls/_list/interface/IListNavigation
+ *
  * @control
  * @author Авраменко А.С.
  * @public
