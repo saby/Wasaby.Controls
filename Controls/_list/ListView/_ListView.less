@@ -39,7 +39,19 @@
 }
 
 .controls-ListView_default-padding_theme-@{themeName} {
-    padding: 3px 0 4px;
+   min-height: 25px;
+   align-items: baseline;
+   display: flex;
+   width: 100%;
+   flex-shrink: 1;
+   box-sizing: border-box;
+   &:before{
+      content: '\200b';
+      font-size: @item_max-font-size_list;
+   }
+   & .controls-ListView__itemContent {
+      display: block;
+   }
 }
 
 .controls-ListView__item_default-topPadding_null_theme-@{themeName},
