@@ -45,7 +45,8 @@ const _private = {
         itemPaddingProperty: object,
         styleProperty: string,
         theme: string,
-        multiSelectVisibility: string
+        multiSelectVisibility: string,
+        rowSeparatorSize: string
     ): string {
         let classList = '';
         const itemPadding = _private.getItemPadding(itemPaddingProperty);
@@ -62,8 +63,8 @@ const _private = {
             classList += ' controls-ListView__item-leftPadding_' + (itemPadding.left || 'default').toLowerCase() + `_theme-${theme}`;
         }
 
-        if (cfg.rowSeparatorSize) {
-            classList += ` controls-ListView__rowSeparator_size-${cfg.rowSeparatorSize}_theme-${cfg.theme}`;
+        if (rowSeparatorSize) {
+            classList += ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}`;
         }
 
         return classList;
@@ -211,7 +212,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
         itemsModelCurrent.isStickedMasterItem = itemsModelCurrent._isSelected && this._isSupportStickyMarkedItem();
-        itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options.itemPadding, this._options.style, theme, this._options.multiSelectVisibility);
+        itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options.itemPadding, this._options.style, theme, this._options.multiSelectVisibility, this._options.rowSeparatorSize);
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options.itemPadding);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ?
