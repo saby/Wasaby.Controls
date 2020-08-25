@@ -153,7 +153,7 @@ define('Controls/Application',
              * Демо: https://jsfiddle.net/q7rez3v5/
              */
             /* eslint-enable */
-            this._children.mousemoveDetect.start(ev);
+            this._registers.mousemove.start(ev);
          },
          _updateClasses: function() {
             // Данный метод вызывается до построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
