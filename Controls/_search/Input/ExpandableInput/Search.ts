@@ -1,10 +1,10 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require('wml!Controls/_search/Input/ExpandableSearch/Search');
+import template = require('wml!Controls/_search/Input/ExpandableInput/Search');
 import * as tmplNotify from 'Controls/Utils/tmplNotify';
 import {ITextOptions, IBaseOptions} from 'Controls/input';
 import {IRenderOptions, IPaddingOptions, ITagOptions} from 'Controls/interface';
 
-interface IExpandableSearchOptions extends IBaseOptions, ITextOptions,
+interface IExpandableInputOptions extends IBaseOptions, ITextOptions,
     IRenderOptions, IPaddingOptions, ITagOptions {
    inlineWidth?: string;
    expanded?: boolean;
@@ -12,18 +12,18 @@ interface IExpandableSearchOptions extends IBaseOptions, ITextOptions,
 /**
  * Контрол "Разворачиваемый поиск". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса.
  *
- * @class Controls/_search/Input/ExpandableSearch/Search
+ * @class Controls/_search/Input/ExpandableInput/Search
  * @extends Core/Control
  * @author Мельникова Е.А.
  * @control
  * @public
  */
-export default class ExpandableSearch extends Control<IControlOptions> {
+export default class ExpandableInput extends Control<IControlOptions> {
    protected _expanded: boolean = false;
    protected _template: TemplateFunction = template;
    protected _tmplNotify: Function = tmplNotify;
 
-   protected _beforeMount(options: IExpandableSearchOptions): void {
+   protected _beforeMount(options: IExpandableInputOptions): void {
       this._expanded = this._getExpanded(options.expanded);
    }
 
@@ -33,7 +33,7 @@ export default class ExpandableSearch extends Control<IControlOptions> {
 
    protected _afterUpdate(): void {
       if (this._expanded) {
-         this._children.searchInput.activate();
+         this._children.searchInput.activate({enableScreenKeyboard: true});
       }
    }
 

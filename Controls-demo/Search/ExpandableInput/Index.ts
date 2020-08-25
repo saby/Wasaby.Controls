@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as MemorySourceData from 'Controls-demo/Utils/MemorySourceData';
 import {Memory} from 'Types/source';
 import * as memorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
-import controlTemplate = require('wml!Controls-demo/Search/ExpandableSearch/Index');
+import controlTemplate = require('wml!Controls-demo/Search/ExpandableInput/Index');
 
 export default class extends Control {
    protected _template: TemplateFunction = controlTemplate;

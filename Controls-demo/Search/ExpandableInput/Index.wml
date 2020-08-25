@@ -4,7 +4,7 @@
             <Controls.search:Controller searchParam="department">
                 <div>
                     <Controls.search:InputContainer>
-                        <Controls.search:ExpandableSearch bind:value="_searchValue" attr:class="controlsDemo__ml1"/>
+                        <Controls.search:ExpandableInput bind:value="_searchValue" attr:class="controlsDemo__ml1"/>
                     </Controls.search:InputContainer>
 
                     <Controls.list:Container>
