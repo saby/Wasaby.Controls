@@ -479,7 +479,7 @@ const _private = {
         }
 
         if (self._selectionController) {
-            _private._getSelectionController(self).restoreSelection();
+            _private.getSelectionController(self).restoreSelection();
         } else {
             if (options.selectedKeys && options.selectedKeys.length > 0) {
                 self._selectionController = _private.createSelectionController(self, options);
@@ -609,7 +609,7 @@ const _private = {
                 if (!self._selectionController) {
                     self._createSelectionController();
                 }
-                const result = _private._getSelectionController(self).toggleItem(toggledItemId);
+                const result = _private.getSelectionController(self).toggleItem(toggledItemId);
                 _private.handleSelectionControllerResult(self, result);
             }
             _private.moveMarkerToNext(self, event);
@@ -1453,12 +1453,12 @@ const _private = {
             if (self._selectionController) {
                 let result;
 
-                if (self._listViewModel.getCount() === 0 && _private._getSelectionController(self).isAllSelected()) {
-                    result = _private._getSelectionController(self).clearSelection();
+                if (self._listViewModel.getCount() === 0 && _private.getSelectionController(self).isAllSelected()) {
+                    result = _private.getSelectionController(self).clearSelection();
                 } else if (action === IObservable.ACTION_ADD) {
-                    result = _private._getSelectionController(self).handleAddItems(newItems);
+                    result = _private.getSelectionController(self).handleAddItems(newItems);
                 } else if (action === IObservable.ACTION_RESET || action === IObservable.ACTION_REPLACE) {
-                    result = _private._getSelectionController(self).handleResetItems();
+                    result = _private.getSelectionController(self).handleResetItems();
                 }
 
                 _private.handleSelectionControllerResult(self, result);
@@ -2011,7 +2011,7 @@ const _private = {
     },
 
     updateSelectionController(self: any, newOptions: any): void {
-        _private._getSelectionController(self).update({
+        _private.getSelectionController(self).update({
            model: self._listViewModel,
            selectedKeys: newOptions.selectedKeys,
            excludedKeys: newOptions.excludedKeys,
@@ -2029,7 +2029,7 @@ const _private = {
         }
     },
 
-    _getSelectionController(self: any): SelectionController {
+    getSelectionController(self: any): SelectionController {
         if (!self._selectionController) {
             self._selectionController = _private.createSelectionController(self, self._options);
         }
@@ -2057,7 +2057,7 @@ const _private = {
     },
 
     onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
-        const selectionController = _private._getSelectionController(this);
+        const selectionController = _private.getSelectionController(this);
         if (!selectionController) {
             return;
         }
@@ -2143,7 +2143,7 @@ const _private = {
        switch (action) {
            case IObservable.ACTION_REMOVE:
                if (self._selectionController) {
-                   selectionControllerResult = _private._getSelectionController(self).handleRemoveItems(removedItems);
+                   selectionControllerResult = _private.getSelectionController(self).handleRemoveItems(removedItems);
                }
                if (removedItemsIndex !== undefined && self._markerController) {
                    const newMarkedKey = self._markerController.handleRemoveItems(removedItemsIndex);
@@ -2464,7 +2464,7 @@ const _private = {
                     self._draggedKey = key;
                     self._startEvent = domEvent.nativeEvent;
 
-                    _private.clearSelection(self._startEvent);
+                    _private.clearSelectedText(self._startEvent);
                     if (self._startEvent && self._startEvent.target) {
                         self._startEvent.target.classList.add('controls-DragNDrop__dragTarget');
                     }
@@ -2506,7 +2506,7 @@ const _private = {
         const offset = _private.getDragOffset(moveEvent, startEvent);
         return Math.abs(offset.x) > DRAG_SHIFT_LIMIT || Math.abs(offset.y) > DRAG_SHIFT_LIMIT;
     },
-    clearSelection(event): void {
+    clearSelectedText(event): void {
         if (event.type === 'mousedown') {
             //снимаем выделение с текста иначе не будут работать клики,
             // а выделение не будет сниматься по клику из за preventDefault
@@ -3086,7 +3086,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
         // TODO https://online.sbis.ru/opendoc.html?guid=3042889b-181c-47ec-b036-a7e24c323f5f
         if (this._selectionController) {
-            const result = _private._getSelectionController(this).getResultAfterConstructor();
+            const result = _private.getSelectionController(this).getResultAfterConstructor();
             _private.handleSelectionControllerResult(this, result);
         }
 
@@ -3241,10 +3241,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._selectionController) {
-            if ((self._options.root !== newOptions.root || filterChanged) && _private._getSelectionController(this).isAllSelected(false)) {
-                const result = _private._getSelectionController(this).clearSelection();
-                _private.handleSelectionControllerResult(this, result);
-            }
             _private.updateSelectionController(this, newOptions);
 
             const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
@@ -3252,7 +3248,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
             if (selectionChanged || this._modelRecreated) {
                 // handleSelectionControllerResult чтобы отправить информацию для ПМО
-                const result = _private._getSelectionController(this).setSelectedKeys(
+                const result = _private.getSelectionController(this).setSelectedKeys(
                    newOptions.selectedKeys,
                    newOptions.excludedKeys
                 );
@@ -3719,7 +3715,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onCheckBoxClick(e, key, status, readOnly) {
         if (!readOnly) {
-            const result = _private._getSelectionController(this).toggleItem(key);
+            const result = _private.getSelectionController(this).toggleItem(key);
             _private.handleSelectionControllerResult(this, result);
             this._notify('checkboxClick', [key, status]);
         }
@@ -4010,6 +4006,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._onViewKeyDown(event);
     },
 
+    clearSelection(): void {
+        const result = _private.getSelectionController(this)?.clearSelection();
+        _private.handleSelectionControllerResult(this, result);
+    },
+
+    isAllSelected(): boolean {
+        return _private.getSelectionController(this)?.isAllSelected();
+    },
+
     _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
@@ -4228,7 +4233,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     this._createSelectionController();
                 }
                 if (this._selectionController) {
-                    const result = _private._getSelectionController(this).toggleItem(key);
+                    const result = _private.getSelectionController(this).toggleItem(key);
                     _private.handleSelectionControllerResult(this, result);
                 }
                 this._notify('checkboxClick', [key, item.isSelected()]);
