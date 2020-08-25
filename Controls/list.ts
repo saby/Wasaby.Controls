@@ -26,6 +26,7 @@
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @includes IClickableView Controls/_list/interface/IClickableView
+ * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @public
  * @author Крайнов Д.О.
  */
