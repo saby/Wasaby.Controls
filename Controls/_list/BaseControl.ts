@@ -435,13 +435,11 @@ const _private = {
     },
 
     restoreModelState(self: any, options: any): void {
-        const needCreateMarkerController = options.markerVisibility === 'visible'
-            || options.markerVisibility === 'onactivated' && options.hasOwnProperty('markedKey');
         self._markerControllerManager.execute(
             (controller) => controller.restoreMarker(),
             undefined,
             options,
-            needCreateMarkerController
+            _private.needCreateMarkerController(options)
         );
 
         if (self._selectionController) {
@@ -2130,6 +2128,7 @@ const _private = {
    },
 
     // region Marker
+
     createMarkerController(self: any, options: any, library: any): MarkerController {
         if (!options) {
             options = self._options;
@@ -2160,8 +2159,14 @@ const _private = {
                     self._notify('markedKeyChanged', [newMarkedKey]);
                 }
             },
-            options
+            options,
+            _private.needCreateMarkerController(options)
         );
+    },
+
+    needCreateMarkerController(options: any): boolean {
+        return options.markerVisibility === 'visible'
+            || options.markerVisibility === 'onactivated' && options.hasOwnProperty('markedKey');
     },
 
     setMarkedKey(self: any, key: TItemKey): void {
@@ -2842,9 +2847,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.updatePagingData(self, hasMoreData);
                     }
 
-                    if ((newOptions.markerVisibility === 'visible' ||
-                        (newOptions.markerVisibility === 'onactivated' && newOptions.markedKey)
-                    )) {
+                    if (_private.needCreateMarkerController(newOptions)) {
                         this._markerControllerManager.createController(newOptions);
                     }
 
@@ -2871,6 +2874,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.needAttachLoadTopTriggerToNull(self)) {
                         self._hideTopTriggerUntilMount = true;
                     }
+                    return;
                 }
                 if (receivedError) {
                     if (newOptions.dataLoadErrback instanceof Function) {
