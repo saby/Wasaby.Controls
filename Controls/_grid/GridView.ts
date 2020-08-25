@@ -48,6 +48,10 @@ var
         },
 
         getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
+            if (!columns) {
+                Logger.warn('You must set "columns" option to make grid work correctly!', self);
+                return '';
+            }
             let initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
             let columnsWidths: string[] = [];
             const stickyCellsCount = stickyLadderCellsCount(columns, self._options.stickyColumn, self._options.listModel.getDragItemData());
