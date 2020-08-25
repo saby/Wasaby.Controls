@@ -15,6 +15,7 @@ import {Logger} from 'UI/Utils';
 import {IItemAction, IItemActionsTemplateConfig} from 'Controls/itemActions';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
+import { IItemPadding } from './interface/IList';
 
 interface IListSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';
@@ -31,30 +32,34 @@ const _private = {
         self._startIndex = startIndex;
         self._stopIndex = stopIndex;
     },
-    getItemPadding: function(cfg) {
-        const itemPadding = cfg.itemPadding || {};
+    getItemPadding(itemPadding: IItemPadding = {}): IItemPadding {
         const normalizeValue = (side) => (itemPadding[side] || 'default').toLowerCase();
         return {
             left: normalizeValue('left'),
             right: normalizeValue('right'),
             top: normalizeValue('top'),
-            bottom: normalizeValue('bottom'),
+            bottom: normalizeValue('bottom')
         };
     },
-    getSpacingClassList: function(cfg) {
+    getSpacingClassList(
+        itemPaddingProperty: object,
+        styleProperty: string,
+        theme: string,
+        multiSelectVisibility: string
+    ): string {
         let classList = '';
-        const itemPadding = _private.getItemPadding(cfg);
-        const style = cfg.style === 'masterClassic' || !cfg.style ? 'default' : cfg.style;
+        const itemPadding = _private.getItemPadding(itemPaddingProperty);
+        const style = styleProperty === 'masterClassic' || !styleProperty ? 'default' : styleProperty;
 
-        classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}_theme-${cfg.theme}`;
-        classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${cfg.theme}`;
-        classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${cfg.theme}`;
-        classList += ` controls-ListView__item-rightPadding_${itemPadding.right}_theme-${cfg.theme}`;
+        classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}_theme-${theme}`;
+        classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${theme}`;
+        classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${theme}`;
+        classList += ` controls-ListView__item-rightPadding_${itemPadding.right}_theme-${theme}`;
 
-        if (cfg.multiSelectVisibility !== 'hidden') {
-            classList += ' controls-ListView__itemContent_withCheckboxes' + `_theme-${cfg.theme}`;
+        if (multiSelectVisibility !== 'hidden') {
+            classList += ' controls-ListView__itemContent_withCheckboxes' + `_theme-${theme}`;
         } else {
-            classList += ' controls-ListView__item-leftPadding_' + (itemPadding.left || 'default').toLowerCase() + `_theme-${cfg.theme}`;
+            classList += ' controls-ListView__item-leftPadding_' + (itemPadding.left || 'default').toLowerCase() + `_theme-${theme}`;
         }
 
         if (cfg.rowSeparatorSize) {
@@ -181,8 +186,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             this._nextModelVersion();
         }
     },
-    getItemPadding: function() {
-        return _private.getItemPadding(this._options);
+    getItemPadding(): object {
+        return _private.getItemPadding(this._options.itemPadding);
     },
     getItemDataByItem: function() {
         const self = this;
@@ -195,6 +200,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent._listViewModelCached = true;
         }
 
+        const theme = this.getDisplay() ? this.getDisplay().getTheme() : self._options.theme;
         // New Model compatibility
         _private.addNewModelCompatibilityForItem(itemsModelCurrent);
 
@@ -204,8 +210,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.markerVisibility = this._options.markerVisibility;
         itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
         itemsModelCurrent.isStickedMasterItem = itemsModelCurrent._isSelected && this._isSupportStickyMarkedItem();
-        itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
-        itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
+        itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options.itemPadding, this._options.style, theme, this._options.multiSelectVisibility);
+        itemsModelCurrent.itemPadding = _private.getItemPadding(this._options.itemPadding);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ?
             _private.getMultiSelectClassList(itemsModelCurrent, this._options.multiSelectVisibility === 'onhover') : '';
@@ -220,13 +226,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.getMarkerClasses = (): string => {
             const style = this._options.style || 'default';
             return `controls-ListView__itemV_marker
-                    controls-ListView__itemV_marker_${style}_theme-${self._options.theme}
-                    controls-ListView__itemV_marker_${style}_topPadding-${itemsModelCurrent.itemPadding.top}_theme-${self._options.theme}
-                    controls-ListView__itemV_marker_${style}_bottomPadding-${itemsModelCurrent.itemPadding.bottom}_theme-${self._options.theme}`;
+                    controls-ListView__itemV_marker_${style}_theme-${theme}
+                    controls-ListView__itemV_marker_${style}_topPadding-${itemsModelCurrent.itemPadding.top}_theme-${theme}
+                    controls-ListView__itemV_marker_${style}_bottomPadding-${itemsModelCurrent.itemPadding.bottom}_theme-${theme}`;
         };
 
         if (itemsModelCurrent.isGroup) {
-            itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, self._options.theme);
+            itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, theme);
         }
 
         if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
