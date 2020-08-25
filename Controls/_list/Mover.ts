@@ -10,6 +10,8 @@ import {ContextOptions as dataOptions} from 'Controls/context';
 import {TKeysSelection} from 'Controls/interface';
 import {Record} from 'Types/entity';
 
+import {Controller} from './Mover/Controller';
+
 const BEFORE_ITEMS_MOVE_RESULT = {
     CUSTOM: 'Custom',
     MOVE_IN_ITEMS: 'MoveInItems'
@@ -26,24 +28,47 @@ interface IMoveItemsParams {
     filter: object;
 }
 var _private = {
-    moveItems(self, items, target, position) {
-        const isNewLogic = !items.forEach && !items.selected;
-        return _private.beforeItemsMove(self, items, target, position).addCallback(function (beforeItemsMoveResult) {
-            if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS && !isNewLogic) {
-                _private.moveInItems(self, items, target, position);
-            } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
-                return _private.moveInSource(self, items, target, position).addCallback(function (moveResult) {
-                    if (!isNewLogic) {
-                        _private.moveInItems(self, items, target, position);
-                    }
-                    return moveResult;
-                });
-            }
-        }).addBoth(function (result) {
-            _private.afterItemsMove(self, items, target, position, result);
-            return result;
+
+    // @DONE
+    // moveItems(self, items, target, position) {
+    //     const isNewLogic = !items.forEach && !items.selected;
+    //     return _private.beforeItemsMove(self, items, target, position).addCallback(function (beforeItemsMoveResult) {
+    //         if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS && !isNewLogic) {
+    //             _private.moveInItems(self, items, target, position);
+    //         } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
+    //             return _private.moveInSource(self, items, target, position).addCallback(function (moveResult) {
+    //                 if (!isNewLogic) {
+    //                     _private.moveInItems(self, items, target, position);
+    //                 }
+    //                 return moveResult;
+    //             });
+    //         }
+    //     }).addBoth(function (result) {
+    //         _private.afterItemsMove(self, items, target, position, result);
+    //         return result;
+    //     });
+    // },
+
+    // @MIGRATE! Callback?
+    beforeItemsMove: function (self, items, target, position) {
+        var beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
+        return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
+    },
+
+    // @MIGRATE! Callback?
+    afterItemsMove: function (self, items, target, position, result) {
+        self._notify('afterItemsMove', [items, target, position, result]);
+
+        //According to the standard, after moving the items, you need to unselect all in the table view.
+        //The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
+        //The only way to affect the selection in the table view is to send the selectedTypeChanged event.
+        //You need a schema in which Mover will not work directly with the selection.
+        //Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
+        self._notify('selectedTypeChanged', ['unselectAll'], {
+            bubbling: true
         });
     },
+
     openMoveDialog(self, items): void {
         const isNewLogic = !items.forEach && !items.selected;
         const templateOptions = {
@@ -61,117 +86,100 @@ var _private = {
             }
         });
     },
-    beforeItemsMove: function (self, items, target, position) {
-        var beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
-        return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
-    },
-    afterItemsMove: function (self, items, target, position, result) {
-        self._notify('afterItemsMove', [items, target, position, result]);
 
-        //According to the standard, after moving the items, you need to unselect all in the table view.
-        //The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
-        //The only way to affect the selection in the table view is to send the selectedTypeChanged event.
-        //You need a schema in which Mover will not work directly with the selection.
-        //Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
-        self._notify('selectedTypeChanged', ['unselectAll'], {
-            bubbling: true
-        });
-    },
+    // moveInItems: function (self, items, target, position) {
+    //     if (position === MOVE_POSITION.on) {
+    //         _private.hierarchyMove(self, items, target);
+    //     } else {
+    //         _private.reorderMove(self, items, target, position);
+    //     }
+    // },
+    // reorderMove: function (self, items, target, position) {
+    //     var
+    //        movedIndex,
+    //        movedItem,
+    //        parentProperty = self._options.parentProperty,
+    //        targetId = _private.getIdByItem(self, target),
+    //        targetItem = _private.getModelByItem(self, targetId),
+    //        targetIndex = self._items.getIndex(targetItem);
+    //
+    //     items.forEach(function (item) {
+    //         movedItem = _private.getModelByItem(self, item);
+    //         if (movedItem) {
+    //             if (position === MOVE_POSITION.before) {
+    //                 targetIndex = self._items.getIndex(targetItem);
+    //             }
+    //
+    //             movedIndex = self._items.getIndex(movedItem);
+    //             if (movedIndex === -1) {
+    //                 self._items.add(movedItem);
+    //                 movedIndex = self._items.getCount() - 1;
+    //             }
+    //
+    //             if (parentProperty && targetItem.get(parentProperty) !== movedItem.get(parentProperty)) {
+    //                 //if the movement was in order and hierarchy at the same time, then you need to update parentProperty
+    //                 movedItem.set(parentProperty, targetItem.get(parentProperty));
+    //             }
+    //
+    //             if (position === MOVE_POSITION.after && targetIndex < movedIndex) {
+    //                 targetIndex = (targetIndex + 1) < self._items.getCount() ? targetIndex + 1 : self._items.getCount();
+    //             } else if (position === MOVE_POSITION.before && targetIndex > movedIndex) {
+    //                 targetIndex = targetIndex !== 0 ? targetIndex - 1 : 0;
+    //             }
+    //             self._items.move(movedIndex, targetIndex);
+    //         }
+    //     });
+    // },
+    //
+    // hierarchyMove: function (self, items, target) {
+    //     var targetId = _private.getIdByItem(self, target);
+    //     items.forEach(function (item) {
+    //         item = _private.getModelByItem(self, item);
+    //         if (item) {
+    //             item.set(self._options.parentProperty, targetId);
+    //         }
+    //     });
+    // },
 
-    moveInItems: function (self, items, target, position) {
-        if (position === MOVE_POSITION.on) {
-            _private.hierarchyMove(self, items, target);
-        } else {
-            _private.reorderMove(self, items, target, position);
-        }
-    },
-
-    reorderMove: function (self, items, target, position) {
-        var
-           movedIndex,
-           movedItem,
-           parentProperty = self._options.parentProperty,
-           targetId = _private.getIdByItem(self, target),
-           targetItem = _private.getModelByItem(self, targetId),
-           targetIndex = self._items.getIndex(targetItem);
-
-        items.forEach(function (item) {
-            movedItem = _private.getModelByItem(self, item);
-            if (movedItem) {
-                if (position === MOVE_POSITION.before) {
-                    targetIndex = self._items.getIndex(targetItem);
-                }
-
-                movedIndex = self._items.getIndex(movedItem);
-                if (movedIndex === -1) {
-                    self._items.add(movedItem);
-                    movedIndex = self._items.getCount() - 1;
-                }
-
-                if (parentProperty && targetItem.get(parentProperty) !== movedItem.get(parentProperty)) {
-                    //if the movement was in order and hierarchy at the same time, then you need to update parentProperty
-                    movedItem.set(parentProperty, targetItem.get(parentProperty));
-                }
-
-                if (position === MOVE_POSITION.after && targetIndex < movedIndex) {
-                    targetIndex = (targetIndex + 1) < self._items.getCount() ? targetIndex + 1 : self._items.getCount();
-                } else if (position === MOVE_POSITION.before && targetIndex > movedIndex) {
-                    targetIndex = targetIndex !== 0 ? targetIndex - 1 : 0;
-                }
-                self._items.move(movedIndex, targetIndex);
-            }
-        });
-    },
-
-    hierarchyMove: function (self, items, target) {
-        var targetId = _private.getIdByItem(self, target);
-        items.forEach(function (item) {
-            item = _private.getModelByItem(self, item);
-            if (item) {
-                item.set(self._options.parentProperty, targetId);
-            }
-        });
-    },
-
-    moveInSource: function (self, items, target, position) {
-        const targetId = _private.getIdByItem(self, target);
-        const isNewLogic = !items.forEach && !items.selected;
-        if (isNewLogic) {
-            if (self._source.call) {
-                return import('Controls/operations').then((operations) => {
-                    const sourceAdapter = self._source.getAdapter();
-                    const callFilter = {
-                        selection: operations.selectionToRecord({
-                            selected: items.selectedKeys,
-                            excluded: items.excludedKeys
-                        }, sourceAdapter), ...items.filter
-                    };
-                    return self._source.call(self._source.getBinding().move, {
-                        method: self._source.getBinding().list,
-                        filter: Record.fromObject(callFilter, sourceAdapter),
-                        folder_id: targetId
-                    });
-                });
-            }
-            return self._source.move(items.selectedKeys, targetId, {
-                position,
-                parentProperty: self._options.parentProperty
-            });
-        }
-        var
-            idArray = items.map(function (item) {
-                return _private.getIdByItem(self, item);
-            });
-
-        //If reverse sorting is set, then when we call the move on the source, we invert the position.
-        if (position !== MOVE_POSITION.on && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
-            position = position === MOVE_POSITION.after ? MOVE_POSITION.before : MOVE_POSITION.after;
-        }
-        return self._source.move(idArray, targetId, {
-            position,
-            parentProperty: self._options.parentProperty
-        });
-    },
+    // moveInSource: function (self, items, target, position) {
+    //     const targetId = _private.getIdByItem(self, target);
+    //     const isNewLogic = !items.forEach && !items.selected;
+    //     if (isNewLogic) {
+    //         if (self._source.call) {
+    //             return import('Controls/operations').then((operations) => {
+    //                 const sourceAdapter = self._source.getAdapter();
+    //                 const callFilter = {
+    //                     selection: operations.selectionToRecord({
+    //                         selected: items.selectedKeys,
+    //                         excluded: items.excludedKeys
+    //                     }, sourceAdapter), ...items.filter
+    //                 };
+    //                 return self._source.call(self._source.getBinding().move, {
+    //                     method: self._source.getBinding().list,
+    //                     filter: Record.fromObject(callFilter, sourceAdapter),
+    //                     folder_id: targetId
+    //                 });
+    //             });
+    //         }
+    //         return self._source.move(items.selectedKeys, targetId, {
+    //             position,
+    //             parentProperty: self._options.parentProperty
+    //         });
+    //     }
+    //     var
+    //         idArray = items.map(function (item) {
+    //             return _private.getIdByItem(self, item);
+    //         });
+    //
+    //     //If reverse sorting is set, then when we call the move on the source, we invert the position.
+    //     if (position !== MOVE_POSITION.on && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
+    //         position = position === MOVE_POSITION.after ? MOVE_POSITION.before : MOVE_POSITION.after;
+    //     }
+    //     return self._source.move(idArray, targetId, {
+    //         position,
+    //         parentProperty: self._options.parentProperty
+    //     });
+    // },
 
     // *
     moveItemToSiblingPosition: function (self, item, position) {
