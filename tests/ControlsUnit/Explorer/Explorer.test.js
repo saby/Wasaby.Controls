@@ -253,7 +253,8 @@ define([
          };
          explorer._children = {
             treeControl: {
-               setMarkedKey: (key) => markedKey = key
+               setMarkedKey: (key) => markedKey = key,
+               isAllSelected: () => null
             }
          };
 

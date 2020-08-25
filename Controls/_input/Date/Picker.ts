@@ -52,6 +52,7 @@ import getOptions from 'Controls/Utils/datePopupUtils';
    var Component = Control.extend([], {
       _template: template,
       _proxyEvent: tmplNotify,
+      _shouldValidate: false,
 
       // _beforeMount: function(options) {
       // },
@@ -82,6 +83,13 @@ import getOptions from 'Controls/Utils/datePopupUtils';
          this._children.opener.open(cfg);
       },
 
+      _afterUpdate(): void {
+          if (this._shouldValidate) {
+              this._shouldValidate = false;
+              this._children.input.validate();
+          }
+      },
+
       _onResultWS3: function(event, startValue) {
          this._onResult(startValue);
       },
@@ -97,11 +105,12 @@ import getOptions from 'Controls/Utils/datePopupUtils';
          this._notify('valueChanged', [startValue, textValue]);
          this._children.opener.close();
          this._notify('inputCompleted', [startValue, textValue]);
-          // Сбрасываем валидацию, т.к. при выборе периода из календаря не вызывается событие valueChanged
-          // Валидация срабатывает раньше, чем значение меняется.
-          //TODO: Изменить на validate
-          this._children.input.setValidationResult(null);
-      },
+          /**
+           * Вызываем валидацию, т.к. при выборе периода из календаря не вызывается событие valueChanged
+           * Валидация срабатывает раньше, чем значение меняется, поэтому откладываем ее до _afterUpdate
+           */
+         this._shouldValidate = true;
+      }
    });
 
    Component.getDefaultOptions = function() {

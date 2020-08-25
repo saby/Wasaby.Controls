@@ -73,9 +73,9 @@ export interface IItemActionsOptions {
      * @name Controls/_itemActions/interface/IItemActionsOptions#itemActions
      * @cfg {Array.<Controls/itemActions:IItemAction>} Конфигурация опций записи.
      * @remark
-     * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">демо-пример</a>.
-     * Для корректной работы опций записи для контрола нужно задать значение в опции {@link Controls/list:View keyProperty}.
+     * Для корректной работы опций записи для контрола нужно задать значение в опции {@link Controls/list:View#keyProperty keyProperty}.
      * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+     * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Inside/Index
      * @see itemActionsPosition
      * @see itemActionVisibilityCallback
      * @see itemActionsProperty
@@ -276,10 +276,12 @@ export interface IItemActionsOptions {
     /**
      * @name Controls/_itemActions/interface/IItemActionsOptions#itemActionsVisibility
      * @cfg {TItemActionsVisibility} Настройка способа отображения опций записи
-     * @variant onhover Операции над записью отображаются при наведении на запись;
-     * @variant visible Операции над записью отображены изначально.
-     * @variant delayed Операции над записью отображаются при наведении на запись и удержании над ней курсора мыши в течение 500 мс.
+     * @variant onhover Опции записи отображаются при наведении на запись.
+     * @variant visible Опции записи отображены изначально.
+     * @variant delayed Опции записи отображаются при наведении на запись и удержании над ней курсора мыши в течение 500 мс.
+     * @remark Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
      */
+
     /*
      * @name Controls/_itemActions/interface/IItemActionsOptions#itemActionsVisibility
      * @cfg {TItemActionsVisibility} Setting of ItemActions visibility

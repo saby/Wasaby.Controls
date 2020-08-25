@@ -3807,6 +3807,75 @@ define([
             ctrl._beforeUpdate(cfg);
             assert.isTrue(ctrl._editInPlace._options.readOnly);
          });
+
+         describe('activate editing row', function () {
+
+            let baseControl;
+            let cfg;
+
+            beforeEach(async () => {
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: source,
+                  keyProperty: 'id',
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  editingConfig: {
+                     item: new entity.Model({rawData: { id: 1 }})
+                  },
+                  viewModelConfig: {
+                     items: rs,
+                     keyProperty: 'id',
+                     selectedKeys: [1, 3]
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  navigation: {
+                     source: 'page',
+                     sourceConfig: {
+                        pageSize: 6,
+                        page: 0,
+                        hasMore: false
+                     },
+                     view: 'infinity',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     }
+                  },
+               };
+               baseControl = new lists.BaseControl(cfg);
+               baseControl.saveOptions(cfg);
+               await baseControl._beforeMount(cfg);
+               baseControl._editInPlace.hasPendingActivation = () => true;
+
+            });
+
+            it('activate row bu click in input', () => {
+               let wasActivatedFirstInput = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => true;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                  }
+               };
+               baseControl._afterUpdate(cfg);
+               assert.isFalse(wasActivatedFirstInput);
+            });
+
+            it('activate row by click in row', () => {
+               let wasActivatedFirstInput = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => false;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                  }
+               };
+               baseControl._afterUpdate(cfg);
+               assert.isTrue(wasActivatedFirstInput);
+            });
+         });
       });
 
       it('can\'t start drag on readonly list', function() {
@@ -5658,45 +5727,6 @@ define([
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
-      });
-
-      it('_beforeUpdate with new root', async function() {
-         let cfg = {
-            viewName: 'Controls/List/ListView',
-            sorting: [],
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: tree.TreeViewModel,
-            keyProperty: 'id',
-            source: source,
-            selectedKeys: [],
-            excludedKeys: [],
-            parentProperty: 'node'
-         };
-         let instance = new lists.BaseControl(cfg);
-
-         instance.saveOptions(cfg);
-         await instance._beforeMount(cfg);
-
-         const notifySpy = sinon.spy(instance, '_notify');
-
-         instance._createSelectionController();
-         let cfgClone = { ...cfg, root: 'newvalue' };
-         instance._beforeUpdate(cfgClone);
-         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
-         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
-
-         cfgClone = { ...cfg, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
-         instance._beforeUpdate(cfgClone);
-         instance.saveOptions(cfgClone);
-
-         cfgClone = { ...cfg, root: 'newvalue1', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
-         instance._beforeUpdate(cfgClone);
-         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
-         assert.isTrue(notifySpy.withArgs('excludedKeysChanged').called);
-         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
       });
 
       it('_beforeUpdate with new selectedKeys', async function() {

@@ -179,8 +179,8 @@ var Component = Control.extend([], {
       e.stopImmediatePropagation();
    },
 
-    setValidationResult(result): void {
-      this._children.validator.setValidationResult(result);
+   validate(): void {
+      this._children.validator.validate();
    },
 
    _onKeyDown: function(event) {

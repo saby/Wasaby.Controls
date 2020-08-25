@@ -773,6 +773,14 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
     },
 
+    clearSelection(): void {
+        this._children.baseControl.clearSelection();
+    },
+
+    isAllSelected(): void {
+        this._children.baseControl.isAllSelected();
+    },
+
     _onTreeViewKeyDown: function(event) {
         keysHandler(event, HOT_KEYS, _private, this);
     },
