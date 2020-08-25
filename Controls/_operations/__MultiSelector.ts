@@ -118,8 +118,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       const selection = this._getSelection(selectedKeys, excludedKeys);
       const count = counterConfigChanged ? null : options.selectedKeysCount;
       const getCountCallback = (count, isAllSelected) => {
-         const isAllSelectedOption = isAllSelected !== 'undefined ' ? isAllSelected : this._options.isAllSelected;
-         this._menuCaption = this._getMenuCaption(selection, count, isAllSelectedOption);
+         this._menuCaption = this._getMenuCaption(selection, count, isAllSelected);
          this._sizeChanged = true;
       };
       const getCountResult = this._getCount(selection, count, options.selectedCountConfig);
@@ -128,7 +127,9 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       // иначе promise порождает асинхронность и перестроение панели операций будет происходить скачками,
       // хотя можно было это сделать за одну синхронизацию
       if (getCountResult instanceof Promise) {
-         return getCountResult.then(getCountCallback);
+         return getCountResult.then((count) => {
+            getCountCallback(count, this._options.isAllSelected);
+         });
       } else {
          getCountCallback(getCountResult, options.isAllSelected);
       }
