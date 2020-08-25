@@ -435,11 +435,13 @@ const _private = {
     },
 
     restoreModelState(self: any, options: any): void {
+        const needCreateMarkerController = options.markerVisibility === 'visible'
+            || options.markerVisibility === 'onactivated' && options.hasOwnProperty('markedKey');
         self._markerControllerManager.execute(
             (controller) => controller.restoreMarker(),
             undefined,
             options,
-            !!options.markedKey
+            needCreateMarkerController
         );
 
         if (self._selectionController) {
