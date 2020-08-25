@@ -41,10 +41,13 @@
 .controls-ListView_default-padding_theme-@{themeName} {
    min-height: 25px;
    align-items: baseline;
+   display: inline-flex;
+   width: 100%;
+   flex-shrink: 1;
+   box-sizing: border-box;
    &:before{
       content: '\200b';
       font-size: @item_max-font-size_list;
-      display: inline;
    }
 }
 
