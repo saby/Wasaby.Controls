@@ -145,24 +145,6 @@ define([
             });
             assert.equal(instance._menuCaption, 'Отметить');
          });
-
-         it('isAllSelected true, _getCount returns canceled promise', async() => {
-            instance = new MultiSelector.default();
-            excludedKeys = [];
-            selectedKeys = [1];
-            selectedKeysCount = 1;
-            instance._options.isAllSelected = false;
-            instance._getCount = () => {
-               return Promise.resolve(null);
-            };
-            await instance._updateMenuCaptionByOptions({
-               selectedKeys: selectedKeys,
-               excludedKeys: excludedKeys,
-               selectedKeysCount: selectedKeysCount,
-               isAllSelected: true
-            });
-            assert.equal(instance._menuCaption, 'Отметить');
-         });
       });
       it('_getMenuSource', function() {
          let instance = new MultiSelector.default();
@@ -313,9 +295,10 @@ define([
             instance._getCount(selection, null, selectionCountConfig)
             instance._countPromise.cancel = () => {
                isCountPromiseCanceled = true;
-            }
+            };
             instance._getCount(selection, null, selectionCountConfig);
             assert.isTrue(isCountPromiseCanceled);
+            assert.isNull(instance._countPromise);
          });
       });
    });
