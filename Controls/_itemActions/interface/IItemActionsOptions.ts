@@ -73,7 +73,7 @@ export interface IItemActionsOptions {
      * @name Controls/_itemActions/interface/IItemActionsOptions#itemActions
      * @cfg {Array.<Controls/itemActions:IItemAction>} Конфигурация опций записи.
      * @remark
-     * Для корректной работы опций записи для контрола нужно задать значение в опции {@link /docs/js/Controls/list/View/options/keyProperty/ keyProperty}.
+     * Для корректной работы опций записи для контрола нужно задать значение в опции {@link Controls/list:View#keyProperty keyProperty}.
      * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
      * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Inside/Index
      * @see itemActionsPosition
