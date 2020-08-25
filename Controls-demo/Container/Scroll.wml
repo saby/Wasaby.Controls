@@ -19,7 +19,8 @@
             <h2>Scroll</h2>
             <Controls.scroll:Container attr:class="ControlsDemo-scroll_container"
                                        scrollbarVisible="{{_scrollbarVisible}}"
-                                       shadowVisible="{{_shadowVisible}}">
+                                       shadowVisible="{{_shadowVisible}}"
+                                        optimizeShadow="{{false}}">
 
                 <div>
                     <ws:for data="index in _numberOfRecords">
