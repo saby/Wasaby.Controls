@@ -1709,7 +1709,7 @@ var
             current.getRelativeCellWrapperClasses = !GridLayoutUtil.isFullGridSupport() ?
                 _private.getRelativeCellWrapperClasses.bind(null, current) :
                 () => {
-                    Logger.warn('Used table markup when full grid support. View may be displayed incorrectly!');
+                    Logger.warn('Used table markup when full grid support. View may be displayed incorrectly!', this);
                     return '';
                 };
 
