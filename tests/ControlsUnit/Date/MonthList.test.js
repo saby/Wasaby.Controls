@@ -76,7 +76,7 @@ define([
                return;
             });
             ml._extData = {
-               enrichItems: function() {
+               enrichItemsOnMount: function() {
                   return;
                }
             };
