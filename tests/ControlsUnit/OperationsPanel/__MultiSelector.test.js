@@ -146,40 +146,22 @@ define([
             assert.equal(instance._menuCaption, 'Отметить');
          });
 
-         it('isAllSelected true, _getCount returns canceled promise', () => {
+         it('isAllSelected true, _getCount returns canceled promise', async() => {
             instance = new MultiSelector.default();
             excludedKeys = [];
-            selectedKeys = [];
+            selectedKeys = [1];
             selectedKeysCount = 1;
-
+            instance._options.isAllSelected = false;
             instance._getCount = () => {
                return Promise.resolve(null);
             };
-            instance._updateMenuCaptionByOptions({
+            await instance._updateMenuCaptionByOptions({
                selectedKeys: selectedKeys,
                excludedKeys: excludedKeys,
                selectedKeysCount: selectedKeysCount,
                isAllSelected: true
             });
             assert.equal(instance._menuCaption, 'Отметить');
-         });
-
-         it('isAllSelected true, _getCount returns number', () => {
-            instance = new MultiSelector.default();
-            excludedKeys = [];
-            selectedKeys = [];
-            selectedKeysCount = 1;
-
-            instance._getCount = () => {
-               return 5;
-            };
-            instance._updateMenuCaptionByOptions({
-               selectedKeys: selectedKeys,
-               excludedKeys: excludedKeys,
-               selectedKeysCount: selectedKeysCount,
-               isAllSelected: true
-            });
-            assert.equal(instance._menuCaption, 'Отмечено: 5');
          });
       });
       it('_getMenuSource', function() {
