@@ -2152,15 +2152,13 @@ const _private = {
 
     updateMarkerController(self: any, options: any): void {
         self._markerControllerManager.execute(
-            (controller) => {
-                controller.update({
-                    model: self._listViewModel,
-                    markerVisibility: options.markerVisibility,
-                    markedKey: options.hasOwnProperty('markedKey')
-                        ? options.markedKey
-                        : controller.getMarkedKey()
-                });
-            },
+            (controller) => controller.update({
+                model: self._listViewModel,
+                markerVisibility: options.markerVisibility,
+                markedKey: options.hasOwnProperty('markedKey')
+                    ? options.markedKey
+                    : controller.getMarkedKey()
+            }),
             (newMarkedKey) => {
                 if (newMarkedKey !== options.markedKey) {
                     self._notify('markedKeyChanged', [newMarkedKey]);
