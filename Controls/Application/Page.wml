@@ -18,6 +18,8 @@
                                  key="1_2_"
                                  on:scroll="_scrollPage()"
                                  on:resize="_resizePage()"
+                                 on:register="_registerHandler()"
+                                 on:unregister="_unregisterHandler()"
                                  on:mousemove="_mousemovePage()"
                                  on:touchmove="_touchmovePage()"
                                  on:touchend="_touchendPage()"
