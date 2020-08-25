@@ -1706,10 +1706,12 @@ var
             current.shouldAddActionsCell = self._shouldAddActionsCell();
             current.getCellStyle = (itemData, currentColumn, colspan) => _private.getCellStyle(self, itemData, currentColumn, colspan);
 
-            // Удалено в версии 7000
             current.getRelativeCellWrapperClasses = !GridLayoutUtil.isFullGridSupport() ?
                 _private.getRelativeCellWrapperClasses.bind(null, current) :
-                () => '';
+                () => {
+                    Logger.warn('Used table markup when full grid support. View may be displayed incorrectly!');
+                    return '';
+                };
 
             current.getCurrentColumnKey = function() {
                 return self._columnsVersion + '_' +
