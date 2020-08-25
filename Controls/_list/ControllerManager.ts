@@ -42,7 +42,7 @@ export default class ControllerManager<T> {
                 });
             } else {
                 // загружаем библиотеку, создаем контроллер и выполняем метод
-                if (createController) {
+                if (createController !== false) {
                     this.createController(options).then((controller) => {
                         if (controller) {
                             const result = methodCall(this._controller);
