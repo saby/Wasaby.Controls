@@ -13,7 +13,7 @@ define('Controls/Application',
       'Controls/Application/SettingsController',
       'Controls/Utils/DOMUtil',
       'Controls/event',
-      'Controls/Application/TouchDetector',
+      'Controls/Application/TouchDetectorController',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -336,7 +336,7 @@ define('Controls/Application',
 
          _createTouchDetector: function() {
             this._touchDetector = new TouchDetector();
-            this._touchDetector._createContext();
+            this._touchDetector.createContext();
          },
 
          _getResourceUrl: function(str) {

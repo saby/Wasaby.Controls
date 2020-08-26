@@ -1,59 +1,34 @@
 define('Controls/Application/TouchDetector', [
    'Core/Control',
    'wml!Controls/Application/TouchDetector/TouchDetector',
-   'Env/Env',
-   'Controls/context'
+   'Controls/Application/TouchDetectorController'
 ], function(
    Control,
    template,
-   Env,
-   context
+   Controller
 ) {
    return Control.extend({
-      moveInRow: 1,
-
-      // При инициализации необходимо проставить значение, далее значение определяется в зависимости от событий
-      state: Env.compatibility.touch,
-      lastState: Env.compatibility.touch,
       _template: template,
 
-      _updateTouchObject: function() {
-         if (this.state !== this.lastState) {
-            this._touchObjectContext.setIsTouch(this.state);
-            this.lastState = this.state;
-            this._forceUpdate();
-            this._notify('changeTouchState', [this.lastState]);
-         }
-      },
-
       _beforeMount: function() {
-         this._createContext();
-      },
-
-      _createContext: function() {
-         this._touchObjectContext = new context.TouchContextField(this.state);
+         this._touchController = new Controller();
+         this._touchController.createContext();
       },
 
       touchHandler: function() {
-         this.state = true;
-         this._updateTouchObject();
-         this.moveInRow = 0;
+         this._touchController.touchHandler();
       },
 
       moveHandler: function() {
-         if (this.moveInRow > 0) {
-            this.state = false;
-            this._updateTouchObject();
-         }
-         this.moveInRow++;
+         this._touchController.moveHandler();
       },
 
       isTouch: function() {
-         return !!this.state;
+         this._touchController.isTouch();
       },
 
       getClass: function() {
-         return this.state ? 'ws-is-touch' : 'ws-is-no-touch';
+         this._touchController.getClass();
       },
 
       // Объявляем функцию, которая возвращает поля Контекста и их значения.
