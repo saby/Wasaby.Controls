@@ -540,7 +540,9 @@ const _private = {
         }
         if (markedItem) {
             self._notify('itemClick', [markedItem.getContents(), event], { bubbling: true });
-            self._notify('itemActivate', [markedItem.getContents(), event], { bubbling: true });
+            if (!event.isStopped()) {
+                self._notify('itemActivate', [markedItem.getContents(), event], {bubbling: true});
+            }
         }
     },
     spaceHandler(self, event) {
