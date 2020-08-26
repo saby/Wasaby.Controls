@@ -540,7 +540,7 @@ const _private = {
         }
         if (markedItem) {
             self._notify('itemClick', [markedItem.getContents(), event], { bubbling: true });
-            if (!event.isStopped()) {
+            if (event && !event.isStopped()) {
                 self._notify('itemActivate', [markedItem.getContents(), event], {bubbling: true});
             }
         }
