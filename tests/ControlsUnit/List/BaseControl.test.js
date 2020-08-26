@@ -3997,6 +3997,25 @@ define([
                baseControl._afterUpdate(cfg);
                assert.isTrue(wasActivatedFirstInput);
             });
+
+            it('do nothing new in listRender', () => {
+               let wasActivatedFirstInput = false;
+               let hasNoPendingActivation = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => false;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                  }
+               };
+               baseControl._editInPlace.activated = () => {
+                  hasNoPendingActivation = true;
+               };
+                baseControl._options.useNewModel = true;
+               baseControl._afterUpdate(cfg);
+               assert.isFalse(wasActivatedFirstInput);
+               assert.isTrue(hasNoPendingActivation);
+            });
          });
       });
 
