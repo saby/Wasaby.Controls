@@ -4330,6 +4330,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _onCloseSwipe() {
+        if (!this._itemActionsMenuId) {
+            _private.closeSwipe(this);
+        }
+    },
+
     // TODO: вынести в батчер?
     // при добавлении групп и листьев в деревьях, записи добавляются по одиночке, а не все разом.
     // Если обрабатывать все это по отдельности, не собирая в одну пачку, то алгоритмы виртуального скролла начинают работать некорректно
