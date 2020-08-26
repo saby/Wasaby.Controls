@@ -57,8 +57,8 @@ define([
          }).then((result) => {
             assert.isTrue(_popupHelper.openDialog.calledOnce, 'openDialog called');
             const args = _popupHelper.openDialog.getCall(0).args;
-            assert.strictEqual(args[1], opener, 'opener was passed');
-            assert.strictEqual(args[2], dialogEventHandlers, 'dialogEventHandlers were passed');
+            assert.strictEqual(args[1].opener, opener, 'opener was passed');
+            assert.strictEqual(args[1].eventHandlers, dialogEventHandlers, 'dialogEventHandlers were passed');
             assert.strictEqual(result, popupId, 'returns popupId');
          });
       });
