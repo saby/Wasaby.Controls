@@ -559,12 +559,15 @@ define([
 
       it('requestCustomUpdate isNewRecord', (done) => {
          let FC = new form.Controller();
+         const sandbox = sinon.createSandbox();
          FC._isNewRecord = true;
-         FC._notify = () => true;
+         sandbox.stub(FC, '_notify').returns(true);
          FC.update().then(() => {
             assert.equal(FC._isNewRecord, false);
+            assert.deepEqual(FC._notify.args[0], ['requestCustomUpdate', [FC._record], {bubbling: true}]);
             done();
             FC.destroy();
+            sandbox.restore();
          });
       });
       it('requestCustomUpdate', () => {
