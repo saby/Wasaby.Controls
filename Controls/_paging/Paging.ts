@@ -44,12 +44,12 @@ export interface IPagingOptions extends IControlOptions {
  */
 /**
  * @name Controls/_paging/Paging#pagesCount
- * @cfg {Boolean} Размер страницы
+ * @cfg {Number} Размер страницы
  */
 
 /**
  * @name Controls/_paging/Paging#showDigits
- * @cfg {Number} Отображать кнопки с номерами страницы.
+ * @cfg {Boolean} Отображать кнопки с номерами страницы.
  */
 /**
  * @name Controls/_paging/Paging#selectedPage
