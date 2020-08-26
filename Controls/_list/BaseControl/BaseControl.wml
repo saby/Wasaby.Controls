@@ -92,6 +92,7 @@
                 editingItemData="{{_editingItemData}}"
                 startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
                 isAdd="{{_editingItemData ? _editingItemData.isAdd : undefined}}"
+                on:closeSwipe="_onCloseSwipe()"
                 on:validateCreated="_onValidateCreated()"
                 on:validateDestroyed="_onValidateDestroyed()"
                 on:animationend="_onItemSwipeAnimationEnd()"
