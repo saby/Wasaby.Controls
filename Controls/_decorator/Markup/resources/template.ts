@@ -45,6 +45,8 @@ import {Logger} from 'UI/Utils';
       escapeVdomRegExp = /&([a-zA-Z0-9#]+)/g,
       additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
 
+   const attributesWhiteListForEscaping = ['style'];
+
    function isString(value) {
       return typeof value === 'string' || value instanceof String;
    }
@@ -112,7 +114,12 @@ import {Logger} from 'UI/Utils';
          if (isBadLinkAttribute(attributeName, sourceAttributeValue)) {
             continue;
          }
-         targetAttributes[attributeName] = markupGenerator.escape(sourceAttributeValue);
+
+         if (attributesWhiteListForEscaping.includes(attributeName)) {
+            targetAttributes[attributeName] = sourceAttributeValue;
+         } else {
+            targetAttributes[attributeName] = markupGenerator.escape(sourceAttributeValue);
+         }
       }
    }
 
