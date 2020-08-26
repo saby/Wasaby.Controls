@@ -267,6 +267,10 @@ define([
             assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><&amp;#39;&amp;#');
             assert.equal(vdomTemplate[0].children[0].hprops.attributes.title, '"&amp;lt;<>');
          });
+         it('without escape', () => {
+            const json = ['p', {style: 'background: url("source.com/param1=1&param2=2");'}];
+            equalsHtml(decorator.Converter.jsonToHtml(json), `<div><p style="background: url("source.com/param1=1&param2=2");"></p></div>`)
+         });
          it('one big', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             var html = '<div><p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p></div>';
