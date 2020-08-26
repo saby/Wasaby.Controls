@@ -1,7 +1,8 @@
 import {isFullGridSupport} from './GridLayoutUtil';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './../resources/ColumnScroll';
 
-// Процент скроллируемой области справа, свайп по которой способен привезти к открытию операций над записью
+// Процент скроллируемой области справа, свайп по которой способен привезти к открытию операций над записью.
+// Значение в соответствии со стандартом
 const PERCENT_OF_SCROLLABLE_AREA_FOR_SWIPE = 0.15;
 
 interface IShouldAddActionsCellArgs {
