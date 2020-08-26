@@ -509,10 +509,12 @@ export default class ScrollController {
                     // @ts-ignore
                     collection.setIndexes(start, stop);
                 }
-                if (start === 0) {
-                    this._notify('disableVirtualNavigation', [], { bubbling: true });
-                } else {
-                    this._notify('enableVirtualNavigation', [], { bubbling: true });
+                if (this._isMounted) {
+                    if (start === 0) {
+                        this._notify('disableVirtualNavigation', [], {bubbling: true});
+                    } else {
+                        this._notify('enableVirtualNavigation', [], {bubbling: true});
+                    }
                 }
             }
         }
