@@ -5,6 +5,7 @@ import * as GridIsEqualUtil from 'Controls/_grid/utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from 'Controls/context';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import {CssClassList} from '../Utils/CssClassList';
+import {prepareEmptyEditingColumns} from './utils/GridEmptyTemplateUtil';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS, ColumnScroll} from './resources/ColumnScroll';
 import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/DragScroll';
 import getDimensions = require("Controls/Utils/getDimensions");
@@ -329,6 +330,7 @@ var
             // https://online.sbis.ru/opendoc.html?guid=756c49a6-13da-4e54-9333-fdd7a7fb6461
             this._getFooterClasses = this._getFooterClasses.bind(this);
             this._getFooterStyles = this._getFooterStyles.bind(this);
+            this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
 
             return resultSuper;
         },
@@ -757,6 +759,20 @@ var
         },
         _onDragScrollOverlayMouseLeave(e) {
             this._dragScrollController?.onOverlayMouseLeave(e);
+        },
+        _prepareColumnsForEmptyEditingTemplate(columns, topSpacing, bottomSpacing) {
+            return prepareEmptyEditingColumns({
+                gridColumns: this._options.columns,
+                emptyTemplateSpacing: {
+                  top: topSpacing,
+                  bottom: bottomSpacing
+                },
+                isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
+                hasMultiSelect: this._options.multiSelectVisibility !== 'hidden',
+                emptyTemplateColumns: columns,
+                itemPadding: this._options.itemPadding || {},
+                theme: this._options.theme
+            });
         }
     });
 
