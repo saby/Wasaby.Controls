@@ -21,35 +21,44 @@ export default class ControllerManager<T> {
      * @param resultHandler Колбэк который обрабатывает результат метода контроллера
      * @param options Опции для создания контроллера
      * @param createController
+     * @return Promise<T>
      */
-    execute(methodCall: (controller: T) => any, resultHandler?: (result: any) => void, options?: any, createController?: boolean): void {
+    execute(
+        methodCall: (controller: T) => any,
+        resultHandler?: (result: any) => void,
+        options?: any,
+        createController?: boolean
+    ): Promise<T> {
         // если контроллер уже создан, то загружать библиотеку не надо => нет асинхронности
         if (this._controller) {
             const result = methodCall(this._controller);
             if (resultHandler) {
                 resultHandler(result);
             }
+            return Promise.resolve(this._controller);
         } else {
             // если промис уже есть, то просто добавляем колбэк
             if (this._loadPromise) {
-                this._loadPromise.then(() => {
-                    if (this._controller) {
+                return this._loadPromise.then((controller) => {
+                    if (controller) {
                         const result = methodCall(this._controller);
                         if (resultHandler) {
                             resultHandler(result);
                         }
                     }
+                    return controller;
                 });
             } else {
                 // загружаем библиотеку, создаем контроллер и выполняем метод
                 if (createController !== false) {
-                    this.createController(options).then((controller) => {
+                    return this.createController(options).then((controller) => {
                         if (controller) {
                             const result = methodCall(this._controller);
                             if (resultHandler) {
                                 resultHandler(result);
                             }
                         }
+                        return controller;
                     });
                 }
             }

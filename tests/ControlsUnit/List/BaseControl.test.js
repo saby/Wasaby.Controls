@@ -1,8 +1,7 @@
-/*
 
-/!**
+/**
  * Created by kraynovdo on 23.10.2017.
- *!/
+ */
 define([
    'Types/source',
    'Types/collection',
@@ -1267,10 +1266,11 @@ define([
          });
 
          it('moveMarkerToPrev', () => {
-            lists.BaseControl._private.moveMarkerToPrevious(instance, event);
-            assert.isTrue(activateCalled);
-            assert.isTrue(preventDefaultCalled);
-            assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            lists.BaseControl._private.moveMarkerToPrevious(instance, event).then(() => {
+               assert.isTrue(activateCalled);
+               assert.isTrue(preventDefaultCalled);
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            });
          });
       });
 
@@ -1659,36 +1659,6 @@ define([
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [6, true], {bubbling: true}).called);
       });
 
-      it('_private.setMarkedKey', () => {
-         const baseControl = {
-            _markerController: {
-               calculateMarkedKey: (key) => {
-                  assert.equal(key, 2);
-                  return key;
-               },
-               getMarkedKey: () => 2
-            },
-            _notify: () => null,
-            _options: {
-               hasOwnProperty: () => true
-            }
-         };
-
-         const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');
-         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'calculateMarkedKey');
-
-         lists.BaseControl._private.setMarkedKey(baseControl, 2);
-         assert.isFalse(setMarkedKeySpy.called);
-         assert.isFalse(scrollToItemSpy.called);
-
-         lists.BaseControl._private.setMarkedKey(baseControl, 2);
-         assert.isFalse(scrollToItemSpy.called);
-         assert.isFalse(setMarkedKeySpy.withArgs(baseControl, 2).called);
-         assert.equal(baseControl._markerController.getMarkedKey(), 2);
-
-         scrollToItemSpy.restore();
-      });
-
       it('loadToDirection up', async function() {
          const source = new sourceLib.Memory({
             keyProperty: 'id',
@@ -1832,10 +1802,10 @@ define([
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
-            /!**
+            /**
              * _beforeMount will load some items, so _loadedItems will get set. Normally, it will reset in _afterUpdate, but since we don't have lifecycle in tests,
              * we'll reset it here manually.
-             *!/
+             */
             ctrl._loadedItems = null;
 
             lists.BaseControl._private.onScrollLoadEdge(ctrl, 'down');
@@ -3028,7 +2998,7 @@ define([
          });
       });
 
-/!*
+/*
       it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
          lists.BaseControl._private.scrollToItem = () => null;
@@ -3104,7 +3074,7 @@ define([
             done();
          }, 1);
       });
-*!/
+*/
 
       it('_onCheckBoxClick', function() {
          const cfg = {
@@ -5175,7 +5145,7 @@ define([
          disableHeader();
          disableResults();
 
-         /!* Список находится в скроллконтейнере, но не личном. До списка лежит контент *!/
+         /* Список находится в скроллконтейнере, но не личном. До списка лежит контент */
          bc._isScrollShown = true;
          bc._viewportRect = {
             top: 50
@@ -5318,7 +5288,7 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
-      describe('_private.onListChange', () => {
+      describe('_private.onCollectionChanged', () => {
          let baseControl;
 
          beforeEach(async () => {
@@ -5368,11 +5338,11 @@ define([
                const item = baseControl.getViewModel().getItemBySourceKey(1);
                assert.isTrue(item.isMarked());
 
-            lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'rm', [], null, [item], 0);
-            assert.isFalse(item.isMarked());
+               lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'rm', [], null, [item], 0);
+               assert.isFalse(item.isMarked());
 
-            lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'a', [baseControl.getViewModel().getItemBySourceKey(2)], null, [item], 0);
-            assert.isFalse(item.isMarked());
+               lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'a', [baseControl.getViewModel().getItemBySourceKey(2)], null, [item], 0);
+               assert.isFalse(item.isMarked());
 
                lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'a', [item], null, [], 0);
                assert.isTrue(item.isMarked());
@@ -5381,6 +5351,7 @@ define([
       });
 
       it('onCollectionChanged call selectionController methods', () => {
+         // TODO переписать этот тест
          let clearSelectionCalled = false,
              handleAddItemsCalled = false;
 
@@ -5401,7 +5372,10 @@ define([
                getCount: () => 5,
                isActionsAssigned: function() { return this._isActionsAssigned; }
             },
-            handleSelectionControllerResult: () => {}
+            handleSelectionControllerResult: () => {},
+            _markerControllerManager: {
+               hasController: () => false
+            }
          };
          const sandbox = sinon.createSandbox();
          sandbox.replace(lists.BaseControl._private, 'updateInitializedItemActions', (self, options) => {
@@ -5584,7 +5558,10 @@ define([
                _listViewModel: {
                   getCount: () => 5
                },
-               handleSelectionControllerResult: () => {}
+               handleSelectionControllerResult: () => {},
+               _markerControllerManager: {
+                  hasController: () => false
+               }
             };
             items = [{}];
             sandbox = sinon.createSandbox();
@@ -5846,7 +5823,7 @@ define([
          let updateItemActionsCalled;
          let isDeactivateSwipeCalled;
 
-         beforeEach(() => {
+         beforeEach(async () => {
             items = new collection.RecordSet({
                keyProperty: 'id',
                rawData: data
@@ -5871,6 +5848,7 @@ define([
                source
             };
             instance = new lists.BaseControl(cfg);
+            await instance._beforeMount(cfg);
             instance.saveOptions(cfg);
             instance._viewModelConstructor = cfg.viewModelConstructor;
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
@@ -6070,7 +6048,7 @@ define([
             })
          });
 
-         assert.isNotNull(instance._markerController);
+         assert.isTrue(instance._markerControllerManager.hasController());
          assert.isNotNull(instance._selectionController);
          const item = instance._listViewModel.getItemBySourceKey(1);
          assert.isTrue(item.isMarked());
@@ -6089,7 +6067,7 @@ define([
          let cfg;
          let instance;
 
-         beforeEach(() => {
+         beforeEach(async () => {
             cfg = {
                viewName: 'Controls/List/ListView',
                viewModelConstructor: lists.ListViewModel,
@@ -6107,22 +6085,23 @@ define([
                excludedKeys: []
             };
             instance = new lists.BaseControl(cfg);
+            await instance._beforeMount(cfg);
             instance.saveOptions(cfg);
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
          });
 
          it('should create marker controller', async () => {
-            assert.isNull(instance._markerController);
-            await instance._beforeUpdate({
+            assert.isFalse(instance._markerControllerManager.hasController());
+            instance._beforeUpdate({
                ...cfg,
                markerVisibility: 'visible',
                markedKey: 1
             });
-            assert.isNotNull(instance._markerController);
+            assert.isNotNull(instance._markerControllerManager._loadPromise);
          });
 
          it('should create selection controller', async () => {
-            assert.isNull(instance._markerController);
+            assert.isNull(instance._selectionController);
             instance._items = instance._listViewModel.getItems();
             await instance._beforeUpdate({
                ...cfg,
@@ -6132,15 +6111,10 @@ define([
          });
 
          it('not should create selection controller', async () => {
-            assert.isNull(instance._markerController);
-            await instance._beforeUpdate({
-               ...cfg,
-               viewModelConstructor: null
-            });
+            await instance._beforeUpdate(cfg);
             assert.isNull(instance._selectionController);
          });
       });
-
 
       it('_getLoadingIndicatorClasses', function() {
          const theme = 'default';
@@ -6265,7 +6239,7 @@ define([
       it('_shouldShowLoadingIndicator', () => {
          const baseControl = new lists.BaseControl();
 
-         /!*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*!/
+         /*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*/
          const testCases = [
             ['beforeEmptyTemplate', 'up', true,    true],
             ['beforeEmptyTemplate', 'up', false,   true],
@@ -6989,14 +6963,6 @@ define([
                const originalEvent = {target: {}};
                const event = {};
                baseControl._mouseDownItemKey = 1;
-               baseControl._markerController = {
-                  calculateMarkedKey: function (key) {
-                     assert.equal(key, 1);
-                     setMarkedKeyIsCalled = true;
-                  },
-                  restoreMarker() {},
-                  getMarkedKey: () => undefined
-               };
 
                baseControl._scrollController = {
                   scrollToItem(key) {
@@ -7021,13 +6987,6 @@ define([
                baseControl._listViewModel.setMarkedKey(null);
                baseControlOptions.editingConfig = {};
                await mountBaseControl(baseControl, baseControlOptions);
-               baseControl._markerController = {
-                  calculateMarkedKey: function (key) {
-                     assert.equal(key, 1);
-                     setMarkedKeyIsCalled = true;
-                  },
-                  getMarkedKey: () => undefined
-               };
 
                baseControl._mouseDownItemKey = 1;
 
@@ -7429,4 +7388,3 @@ define([
       });
    });
 });
-*/

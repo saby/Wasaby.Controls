@@ -16,6 +16,7 @@ import { error as dataSourceError } from 'Controls/dataSource';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
+import { MarkerController } from '../marker';
 
 const HOT_KEYS = {
     expandMarkedItem: Env.constants.key.right,
@@ -665,8 +666,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         return this._children.baseControl.reload(keepScroll, sourceConfig);
     },
 
-    setMarkedKey: function(key) {
-        this._children.baseControl.setMarkedKey(key);
+    setMarkedKey(key: number|string): Promise<MarkerController> {
+        return this._children.baseControl.setMarkedKey(key);
     },
     scrollToItem(key: string|number, toBottom: boolean, force: boolean): void {
         this._children.baseControl.scrollToItem(key, toBottom, force);

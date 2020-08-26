@@ -1,4 +1,3 @@
-/*
 define([
    'Controls/tree',
    'Controls/treeGrid',
@@ -969,7 +968,6 @@ define([
                   keyProperty: 'id',
                   parentProperty: 'parent',
                   nodeProperty: 'type',
-                  markedKey: 1,
                   columns: [],
                   viewModelConstructor: treeGrid.ViewModel
                },
@@ -979,33 +977,35 @@ define([
             setTimeout(function () {
                assert.deepEqual([], treeGridViewModel._model._expandedItems);
 
-               lnTreeControl._onTreeViewKeyDown({
-                  stopImmediatePropagation: function() {
-                     stopImmediateCalled = true;
-                  },
-                  target: {closest() { return false; }},
-                  nativeEvent: {
-                     keyCode: Env.constants.key.right
-                  }
-               });
-               setTimeout(function () {
-                  assert.deepEqual([1], treeGridViewModel._model._expandedItems);
-
+               lnTreeControl.setMarkedKey(1).then(() => {
                   lnTreeControl._onTreeViewKeyDown({
                      stopImmediatePropagation: function() {
                         stopImmediateCalled = true;
                      },
                      target: {closest() { return false; }},
                      nativeEvent: {
-                        keyCode: Env.constants.key.left
+                        keyCode: Env.constants.key.right
                      }
                   });
-                  assert.deepEqual([], treeGridViewModel._model._expandedItems);
+                  setTimeout(function () {
+                     assert.deepEqual([1], treeGridViewModel._model._expandedItems);
 
-                  assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
-                  done();
-               }, 10);
-            }, 10);
+                     lnTreeControl._onTreeViewKeyDown({
+                        stopImmediatePropagation: function() {
+                           stopImmediateCalled = true;
+                        },
+                        target: {closest() { return false; }},
+                        nativeEvent: {
+                           keyCode: Env.constants.key.left
+                        }
+                     });
+                     assert.deepEqual([], treeGridViewModel._model._expandedItems);
+
+                     assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
+                     done();
+                  }, 1);
+               });
+            }, 1);
          });
       });
       it('TreeControl._beforeUpdate name of property', function() {
@@ -2291,4 +2291,3 @@ define([
       });
    });
 });
-*/
