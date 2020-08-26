@@ -2113,7 +2113,8 @@ const _private = {
                if (removedItemsIndex !== undefined && self._markerControllerManager.hasController()) {
                    self._markerControllerManager.execute(
                        (controller) => controller.handleRemoveItems(removedItemsIndex),
-                       (newMarkedKey) => _private.handleMarkerControllerResult(self, newMarkedKey)
+                       (newMarkedKey) => _private.handleMarkerControllerResult(self, newMarkedKey),
+                       self._options
                    );
                }
                break;
@@ -2130,8 +2131,13 @@ const _private = {
     // region Marker
 
     createMarkerController(self: any, options: any, library: any): MarkerController {
-        if (!options) {
-            options = self._options;
+        // TODO Такое случается когда попап закрывается по первому клику на запись и visibility=onactivated
+        //  то есть запускается промис загрузки библиотеки, после этого контрол дестроется и по окончанию загрузки
+        //  пытается проставиться маркер, но модель уже задестроена
+        //  Из-за этого валится ошибка в UserStatus, но при этом он правильно работает.
+        //  Там есть отображение маркера, но без BaseControl это похоже сделано
+        if (self._destroyed) {
+            return null;
         }
 
         if (options.markerVisibility === 'hidden') {
@@ -2172,7 +2178,8 @@ const _private = {
     setMarkedKey(self: any, key: TItemKey): void {
         self._markerControllerManager.execute(
             (controller) => controller.calculateMarkedKey(key),
-            (newMarkedKey) => _private.handleMarkerControllerResult(self, newMarkedKey)
+            (newMarkedKey) => _private.handleMarkerControllerResult(self, newMarkedKey),
+            self._options
         );
     },
 
@@ -2192,7 +2199,8 @@ const _private = {
             (newMarkedKey) => {
                 _private.handleMarkerControllerResult(self, newMarkedKey);
                 _private.scrollToItem(self, newMarkedKey, undefined, true);
-            }
+            },
+            self._options
         );
     },
 
@@ -2212,7 +2220,8 @@ const _private = {
             (newMarkedKey) => {
                 _private.handleMarkerControllerResult(self, newMarkedKey);
                 _private.scrollToItem(self, newMarkedKey, undefined, true);
-            }
+            },
+            self._options
         );
     },
 
@@ -2231,7 +2240,8 @@ const _private = {
 
         self._markerControllerManager.execute(
             (controller) => controller.setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset),
-            (newMarkedKey) => _private.handleMarkerControllerResult(self, newMarkedKey)
+            (newMarkedKey) => _private.handleMarkerControllerResult(self, newMarkedKey),
+            self._options
         );
 
         self._setMarkerAfterScroll = false;
