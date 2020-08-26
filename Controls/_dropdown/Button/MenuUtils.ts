@@ -32,7 +32,7 @@ import buttonLib = require('Controls/buttons');
       let offsetClassName = 'controls-MenuButton_' + (currentButtonClass.viewMode || options.viewMode);
 
       if ((!options.icon || options.viewMode === 'toolButton' || options.viewMode === 'functionalButton')) {
-         const currentHeight = buttonLib.ActualApi.actualHeight(options.size, options.inlineHeight, options.viewMode) || options.size;
+         const currentHeight = buttonLib.ActualApi.actualHeight(options.size, options.inlineHeight, options.viewMode) || (options.size || options.fontSize);
          offsetClassName += ('__' + currentHeight);
 
       } else if (options.icon) {
