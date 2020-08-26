@@ -1,32 +1,59 @@
-import {TKeysSelection} from 'Controls/interface';
-import {IMoveStrategy, BEFORE_ITEMS_MOVE_RESULT} from '../interface/IMoveStrategy';
-import {BaseStrategy, MOVE_POSITION} from './BaseStrategy';
-import {RecordSet} from "Types/collection";
+import {TKeySelection, TKeysSelection} from 'Controls/interface';
+import {IMoveStrategy, BEFORE_ITEMS_MOVE_RESULT, MOVE_POSITION, IMoveObject} from '../interface/IMoveStrategy';
+import {BaseStrategy} from './BaseStrategy';
 import {Record} from "Types/entity";
+import {DataSet} from "Types/source";
+import {IMovableItem} from "../interface/IMovableItem";
+import {TemplateFunction} from "UI/Base";
 
-export interface IMoveItemsParams {
-    selectedKeys: TKeysSelection;
-    excludedKeys: TKeysSelection;
-    filter: object;
-}
-
-export class MoveObjectStrategy extends BaseStrategy implements IMoveStrategy<IMoveItemsParams> {
-    moveItems(items: IMoveItemsParams, target, position): Promise<any> {
+export class MoveObjectStrategy extends BaseStrategy implements IMoveStrategy<IMoveObject> {
+    moveItems(items: IMoveObject, target: IMovableItem, position: MOVE_POSITION): Promise<DataSet|void> {
         if (items.selectedKeys.length) {
-            return this.moveItemsInner(items, target, position);
+            return this._moveItemsInner(items, target, position);
         }
         return Promise.resolve();
     }
 
-    protected _beforeItemsMoveResultHandler(items, target, position, result): Promise<void> {
+    /**
+     * Перемещает элементы при помощи диалога
+     * @param items
+     * @param template
+     */
+    moveItemsWithDialog(items: IMoveObject, template: TemplateFunction): void {
+        this._openMoveDialog(items, template);
+    }
+
+    /**
+     * Возвращает выбранные ключи
+     * @param items
+     */
+    protected _getSelectedKeys(items: IMoveObject): TKeysSelection {
+        return items.selectedKeys;
+    }
+
+    /**
+     * Обработчик Промиса после выполнения _beforeItemsMove
+     * @param items
+     * @param targetId
+     * @param position
+     * @param result
+     * @private
+     */
+    protected _beforeItemsMoveResultHandler(items, targetId, position, result): Promise<DataSet|void> {
         if (result !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
-            return this._moveInSource(items, target, position);
+            return this._moveInSource(items, targetId, position);
         }
         Promise.resolve();
     }
 
-    protected _moveInSource(items: IMoveItemsParams, target, position: MOVE_POSITION) {
-        const targetId = this._getIdByItem(target);
+    /**
+     * Перемещает элементы в ресурсе
+     * @param items
+     * @param targetId
+     * @param position
+     * @private
+     */
+    protected _moveInSource(items: IMoveObject, targetId: TKeySelection, position: MOVE_POSITION): Promise<DataSet|void>  {
         if (this._source.call) {
             return import('Controls/operations').then((operations) => {
                 const sourceAdapter = this._source.getAdapter();
@@ -45,7 +72,7 @@ export class MoveObjectStrategy extends BaseStrategy implements IMoveStrategy<IM
         }
         return this._source.move(items.selectedKeys, targetId, {
             position,
-            parentProperty: self._options.parentProperty
+            parentProperty: this._parentProperty
         });
     }
 }

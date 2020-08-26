@@ -1,18 +1,9 @@
 import IItemsStrategy from './IItemsStrategy';
-import CollectionItem from './CollectionItem';
-import {ICollection} from "./interface/ICollection";
+import {ICollectionItem} from "./interface/ICollectionItem";
 
 export type TItemKey = string | number;
 
-export interface ICollectionItem<T> {
-    getContents(): T;
-    getOwner(): ICollection<T, ICollectionItem<T>>;
-    setOwner(owner: ICollection<T, ICollectionItem<T>>): void;
-    getUid(): string;
-    setContents?(contents: T, silent?: boolean): void
-}
-
-export interface IBaseCollection<S, T extends ICollectionItem<S>> {
+export interface IBaseCollection<S, T extends ICollectionItem> {
     each(cb: (item: T) => void): void;
     getItemBySourceKey(key: TItemKey): T;
     find(predicate: (item: T) => boolean): T;

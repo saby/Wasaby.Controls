@@ -30,24 +30,24 @@ interface IMoveItemsParams {
 var _private = {
 
     // @DONE
-    // moveItems(self, items, target, position) {
-    //     const isNewLogic = !items.forEach && !items.selected;
-    //     return _private.beforeItemsMove(self, items, target, position).addCallback(function (beforeItemsMoveResult) {
-    //         if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS && !isNewLogic) {
-    //             _private.moveInItems(self, items, target, position);
-    //         } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
-    //             return _private.moveInSource(self, items, target, position).addCallback(function (moveResult) {
-    //                 if (!isNewLogic) {
-    //                     _private.moveInItems(self, items, target, position);
-    //                 }
-    //                 return moveResult;
-    //             });
-    //         }
-    //     }).addBoth(function (result) {
-    //         _private.afterItemsMove(self, items, target, position, result);
-    //         return result;
-    //     });
-    // },
+    moveItems(self, items, target, position) {
+        const isNewLogic = !items.forEach && !items.selected;
+        return _private.beforeItemsMove(self, items, target, position).addCallback(function (beforeItemsMoveResult) {
+            if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS && !isNewLogic) {
+                _private.moveInItems(self, items, target, position);
+            } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
+                return _private.moveInSource(self, items, target, position).addCallback(function (moveResult) {
+                    if (!isNewLogic) {
+                        _private.moveInItems(self, items, target, position);
+                    }
+                    return moveResult;
+                });
+            }
+        }).addBoth(function (result) {
+            _private.afterItemsMove(self, items, target, position, result);
+            return result;
+        });
+    },
 
     // @MIGRATE! Callback?
     beforeItemsMove: function (self, items, target, position) {
@@ -69,6 +69,7 @@ var _private = {
         });
     },
 
+    // @DONE
     openMoveDialog(self, items): void {
         const isNewLogic = !items.forEach && !items.selected;
         const templateOptions = {
@@ -87,106 +88,112 @@ var _private = {
         });
     },
 
-    // moveInItems: function (self, items, target, position) {
-    //     if (position === MOVE_POSITION.on) {
-    //         _private.hierarchyMove(self, items, target);
-    //     } else {
-    //         _private.reorderMove(self, items, target, position);
-    //     }
-    // },
-    // reorderMove: function (self, items, target, position) {
-    //     var
-    //        movedIndex,
-    //        movedItem,
-    //        parentProperty = self._options.parentProperty,
-    //        targetId = _private.getIdByItem(self, target),
-    //        targetItem = _private.getModelByItem(self, targetId),
-    //        targetIndex = self._items.getIndex(targetItem);
-    //
-    //     items.forEach(function (item) {
-    //         movedItem = _private.getModelByItem(self, item);
-    //         if (movedItem) {
-    //             if (position === MOVE_POSITION.before) {
-    //                 targetIndex = self._items.getIndex(targetItem);
-    //             }
-    //
-    //             movedIndex = self._items.getIndex(movedItem);
-    //             if (movedIndex === -1) {
-    //                 self._items.add(movedItem);
-    //                 movedIndex = self._items.getCount() - 1;
-    //             }
-    //
-    //             if (parentProperty && targetItem.get(parentProperty) !== movedItem.get(parentProperty)) {
-    //                 //if the movement was in order and hierarchy at the same time, then you need to update parentProperty
-    //                 movedItem.set(parentProperty, targetItem.get(parentProperty));
-    //             }
-    //
-    //             if (position === MOVE_POSITION.after && targetIndex < movedIndex) {
-    //                 targetIndex = (targetIndex + 1) < self._items.getCount() ? targetIndex + 1 : self._items.getCount();
-    //             } else if (position === MOVE_POSITION.before && targetIndex > movedIndex) {
-    //                 targetIndex = targetIndex !== 0 ? targetIndex - 1 : 0;
-    //             }
-    //             self._items.move(movedIndex, targetIndex);
-    //         }
-    //     });
-    // },
-    //
-    // hierarchyMove: function (self, items, target) {
-    //     var targetId = _private.getIdByItem(self, target);
-    //     items.forEach(function (item) {
-    //         item = _private.getModelByItem(self, item);
-    //         if (item) {
-    //             item.set(self._options.parentProperty, targetId);
-    //         }
-    //     });
-    // },
+    // @DONE
+    moveInItems: function (self, items, target, position) {
+        if (position === MOVE_POSITION.on) {
+            _private.hierarchyMove(self, items, target);
+        } else {
+            _private.reorderMove(self, items, target, position);
+        }
+    },
 
-    // moveInSource: function (self, items, target, position) {
-    //     const targetId = _private.getIdByItem(self, target);
-    //     const isNewLogic = !items.forEach && !items.selected;
-    //     if (isNewLogic) {
-    //         if (self._source.call) {
-    //             return import('Controls/operations').then((operations) => {
-    //                 const sourceAdapter = self._source.getAdapter();
-    //                 const callFilter = {
-    //                     selection: operations.selectionToRecord({
-    //                         selected: items.selectedKeys,
-    //                         excluded: items.excludedKeys
-    //                     }, sourceAdapter), ...items.filter
-    //                 };
-    //                 return self._source.call(self._source.getBinding().move, {
-    //                     method: self._source.getBinding().list,
-    //                     filter: Record.fromObject(callFilter, sourceAdapter),
-    //                     folder_id: targetId
-    //                 });
-    //             });
-    //         }
-    //         return self._source.move(items.selectedKeys, targetId, {
-    //             position,
-    //             parentProperty: self._options.parentProperty
-    //         });
-    //     }
-    //     var
-    //         idArray = items.map(function (item) {
-    //             return _private.getIdByItem(self, item);
-    //         });
-    //
-    //     //If reverse sorting is set, then when we call the move on the source, we invert the position.
-    //     if (position !== MOVE_POSITION.on && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
-    //         position = position === MOVE_POSITION.after ? MOVE_POSITION.before : MOVE_POSITION.after;
-    //     }
-    //     return self._source.move(idArray, targetId, {
-    //         position,
-    //         parentProperty: self._options.parentProperty
-    //     });
-    // },
+    // @DONE
+    reorderMove: function (self, items, target, position) {
+        var
+           movedIndex,
+           movedItem,
+           parentProperty = self._options.parentProperty,
+           targetId = _private.getIdByItem(self, target),
+           targetItem = _private.getModelByItem(self, targetId),
+           targetIndex = self._items.getIndex(targetItem);
 
-    // *
+        items.forEach(function (item) {
+            movedItem = _private.getModelByItem(self, item);
+            if (movedItem) {
+                if (position === MOVE_POSITION.before) {
+                    targetIndex = self._items.getIndex(targetItem);
+                }
+
+                movedIndex = self._items.getIndex(movedItem);
+                if (movedIndex === -1) {
+                    self._items.add(movedItem);
+                    movedIndex = self._items.getCount() - 1;
+                }
+
+                if (parentProperty && targetItem.get(parentProperty) !== movedItem.get(parentProperty)) {
+                    //if the movement was in order and hierarchy at the same time, then you need to update parentProperty
+                    movedItem.set(parentProperty, targetItem.get(parentProperty));
+                }
+
+                if (position === MOVE_POSITION.after && targetIndex < movedIndex) {
+                    targetIndex = (targetIndex + 1) < self._items.getCount() ? targetIndex + 1 : self._items.getCount();
+                } else if (position === MOVE_POSITION.before && targetIndex > movedIndex) {
+                    targetIndex = targetIndex !== 0 ? targetIndex - 1 : 0;
+                }
+                self._items.move(movedIndex, targetIndex);
+            }
+        });
+    },
+
+    // @DONE
+    hierarchyMove: function (self, items, target) {
+        var targetId = _private.getIdByItem(self, target);
+        items.forEach(function (item) {
+            item = _private.getModelByItem(self, item);
+            if (item) {
+                item.set(self._options.parentProperty, targetId);
+            }
+        });
+    },
+
+    // @DONE
+    moveInSource: function (self, items, target, position) {
+        const targetId = _private.getIdByItem(self, target);
+        const isNewLogic = !items.forEach && !items.selected;
+        if (isNewLogic) {
+            if (self._source.call) {
+                return import('Controls/operations').then((operations) => {
+                    const sourceAdapter = self._source.getAdapter();
+                    const callFilter = {
+                        selection: operations.selectionToRecord({
+                            selected: items.selectedKeys,
+                            excluded: items.excludedKeys
+                        }, sourceAdapter), ...items.filter
+                    };
+                    return self._source.call(self._source.getBinding().move, {
+                        method: self._source.getBinding().list,
+                        filter: Record.fromObject(callFilter, sourceAdapter),
+                        folder_id: targetId
+                    });
+                });
+            }
+            return self._source.move(items.selectedKeys, targetId, {
+                position,
+                parentProperty: self._options.parentProperty
+            });
+        }
+        var
+            idArray = items.map(function (item) {
+                return _private.getIdByItem(self, item);
+            });
+
+        //If reverse sorting is set, then when we call the move on the source, we invert the position.
+        if (position !== MOVE_POSITION.on && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
+            position = position === MOVE_POSITION.after ? MOVE_POSITION.before : MOVE_POSITION.after;
+        }
+        return self._source.move(idArray, targetId, {
+            position,
+            parentProperty: self._options.parentProperty
+        });
+    },
+
+    // @DONE
     moveItemToSiblingPosition: function (self, item, position) {
         var target = _private.getSiblingItem(self, item, position);
         return target ? self.moveItems([item], target, position) : Deferred.success();
     },
 
+    // @DONE
     getSiblingItem: function (self, item, position) {
         var
             result,
@@ -229,6 +236,7 @@ var _private = {
         }
     },
 
+    // @DONE
     checkItem: function (self, item, target, position) {
         var
             key,
@@ -253,6 +261,7 @@ var _private = {
         return true;
     },
 
+    // @DONE
     getParentsMap: function (self, id) {
         var
             item,
@@ -281,14 +290,17 @@ var _private = {
         return toMap;
     },
 
+    // @DONE
     getModelByItem: function (self, item) {
         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item : self._items.getRecordById(item);
     },
 
+    // @DONE
     getIdByItem: function (self, item) {
         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
     },
 
+    // @DONE
     getItemsBySelection(selection): Promise<Record<string, unknown>> {
         let resultSelection;
         // Support moving with mass selection.
@@ -306,6 +318,7 @@ var _private = {
         return resultSelection;
     },
 
+    // @DONE
     prepareMovedItems(self, items) {
         let result = [];
         items.forEach(function(item) {
@@ -314,6 +327,7 @@ var _private = {
         return result;
     },
 
+    // @DONE
     prepareFilter(self, filter, selection): object {
         const searchParam = self._options.searchParam;
         const root = self._options.root;
@@ -391,17 +405,17 @@ var Mover = BaseAction.extend({
         }
     },
 
-    // *
+    // @DONE
     moveItemUp: function (item) {
         return _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.before);
     },
 
-    // *
+    // @DONE
     moveItemDown: function (item) {
         return _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.after);
     },
 
-    // *
+    // @DONE
     moveItems(items: []|IMoveItemsParams, target, position): Promise<any> {
         const self = this;
         const isNewLogic = !items.forEach && !items.selected;
@@ -427,6 +441,8 @@ var Mover = BaseAction.extend({
             });
         }
     },
+
+    // @DONE
     moveItemsWithDialog(items: []|IMoveItemsParams): void {
 
         if (this._options.moveDialogTemplate) {
