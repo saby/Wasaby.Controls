@@ -13,6 +13,7 @@ import {IStickyPopupOptions} from 'Controls/popup';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
+import {Logger} from 'UI/Utils';
 
 interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
    additionalProperty?: string;
@@ -23,7 +24,6 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
    fontColorStyle?: string;
    fontSize?: string;
    showHeader?: boolean;
-   isNewOptionsUsed?: boolean;
 }
 
 /**
@@ -117,26 +117,16 @@ export default class Button extends BaseDropdown {
    }
 
    _updateState(options: IButtonOptions): void {
-      if (!options.isNewOptionsUsed) {
-         const currentButtonClass = ActualApi.styleToViewMode(options.style);
-         const oldViewModeToken = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode);
+      if (options.style) {
+         Logger.error('Опция style является устаревшей. Вместо нее используйте опции buttonStyle и fontColorStyle');
+      }
 
-         this._buttonStyleButton = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle, options.readOnly);
-         this._contrastBackgroundButton = ActualApi.contrastBackground(options);
-         this._viewModeButton = oldViewModeToken.viewMode;
-         if (typeof oldViewModeToken.contrast !== 'undefined') {
-            this._contrastBackgroundButton = oldViewModeToken.contrast;
-         }
-         this._inlineHeightButton = ActualApi.actualHeight(options.size, options.inlineHeight, this._viewModeButton);
-         this._fontColorStyleButton = ActualApi.fontColorStyle(this._buttonStyle, this._viewModeButton, options.fontColorStyle);
-         this._fontSizeButton = ActualApi.fontSize(options);
-      }  else {
-         this._fontColorStyleButton = options.fontColorStyle;
-         this._fontSizeButton = options.fontSize;
-         this._inlineHeightButton = options.inlineHeight;
-         this._buttonStyleButton = options.buttonStyle;
-         this._contrastBackgroundButton = options.contrastBackground;
-         this._viewModeButton = options.viewMode;
+      if (options.transparent) {
+         Logger.error('Опция transparent является устаревшей. Вместо нее используйте опцию contrastBackground');
+      }
+
+      if (options.size) {
+         Logger.error('Опция size является устаревшей. Вместо нее используйте опции fontSize и inlineHeight');
       }
    }
 
@@ -243,11 +233,11 @@ export default class Button extends BaseDropdown {
       return {
          showHeader: true,
          filter: {},
-         style: 'secondary',
+         buttonStyle: 'secondary',
          viewMode: 'button',
-         size: 'm',
+         fontSize: 'm',
          iconStyle: 'secondary',
-         transparent: true,
+         contrastBackground: false,
          lazyItemsLoading: false
       };
    }
