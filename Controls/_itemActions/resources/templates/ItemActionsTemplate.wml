@@ -2,12 +2,11 @@
     <div attr:class="controls-itemActionsV
         {{highlightOnHover !== false ? 'controls-itemActionsV_style_' + (style ? style : 'default') + '_theme-' + theme }}
         {{itemData.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemData.itemPadding, theme, useNewModel)}}
-        {{itemData.getItemActionClasses(itemActionsPosition, theme)}}
+        {{itemData.getItemActionClasses(itemActionsPosition, theme, itemData.isLastRow, itemData.rowSeparatorSize)}}
         {{itemData.isEditing() ? 'controls-itemActionsV_editing_theme-' + theme}}
         {{itemData.isEditing() && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
         {{itemData.isActive() && actionMenuIsShown ? 'controls-itemActionsV_visible'}}
         {{itemData.isSwiped() ? 'controls-itemActionsV_swiped'}}
-        {{itemData.isLastRow ? (itemData.rowSeparatorSize ? 'controls-itemActionsV__outside_bottom_size-' + itemData.rowSeparatorSize + '_theme-' : 'controls-itemActionsV__outside_bottom_size-default_theme-') + theme : 'controls-itemActionsV__outside_bottom_size-default_theme-' + theme}}
         {{itemData.itemActionsColumnScrollDraw ? 'controls-itemActionsV_columnScrollDraw'}}">
         <div attr:class="controls-itemActionsV__wrapper">
             <ws:partial
