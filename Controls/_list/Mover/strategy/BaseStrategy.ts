@@ -1,14 +1,20 @@
+import {TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {DataSet} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import { Dialog } from 'Controls/popup';
 import * as InstanceChecker from 'Core/core-instance';
 
-import {BEFORE_ITEMS_MOVE_RESULT, IStrategyOptions, MOVE_POSITION, TMoveItems} from '../interface/IMoveStrategy';
+import {
+    BEFORE_ITEMS_MOVE_RESULT,
+    IStrategyOptions,
+    MOVE_POSITION,
+    TMoveItem,
+    TMoveItems
+} from '../interface/IMoveStrategy';
 import {IMovableItem} from '../interface/IMovableItem';
 import {TKeySelection, TKeysSelection} from 'Controls/interface';
 import {ISource} from '../interface/IMoveStrategy';
-import {TemplateFunction} from "UI/Base";
 
 export abstract class BaseStrategy {
 
@@ -57,6 +63,12 @@ export abstract class BaseStrategy {
     protected abstract _moveInSource(items: TMoveItems, targetId: TKeySelection, position: MOVE_POSITION): Promise<DataSet|void>;
 
     protected abstract _getSelectedKeys(items: TMoveItems): TKeysSelection;
+
+    // TODO Надо понять, может ли контроллер работать с Collection и тогда может быть этот метот сократится
+    getSiblingItem(item: TMoveItem, position: MOVE_POSITION) {
+        let itemIndex = this._items.getIndex(this.getModel(item));
+        return this._items.at(position === MOVE_POSITION.before ? --itemIndex : ++itemIndex);
+    }
 
     /**
      * Получает модель по item

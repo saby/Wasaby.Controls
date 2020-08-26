@@ -1,10 +1,11 @@
+import {TemplateFunction} from 'UI/Base';
+import {Record} from 'Types/entity';
+import {DataSet} from 'Types/source';
+
 import {TKeySelection, TKeysSelection} from 'Controls/interface';
 import {IMoveStrategy, BEFORE_ITEMS_MOVE_RESULT, MOVE_POSITION, IMoveObject} from '../interface/IMoveStrategy';
 import {BaseStrategy} from './BaseStrategy';
-import {Record} from "Types/entity";
-import {DataSet} from "Types/source";
-import {IMovableItem} from "../interface/IMovableItem";
-import {TemplateFunction} from "UI/Base";
+import {IMovableItem} from '../interface/IMovableItem';
 
 export class MoveObjectStrategy extends BaseStrategy implements IMoveStrategy<IMoveObject> {
     moveItems(items: IMoveObject, target: IMovableItem, position: MOVE_POSITION): Promise<DataSet|void> {

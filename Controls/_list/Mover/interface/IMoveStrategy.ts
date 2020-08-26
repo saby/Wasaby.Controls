@@ -31,7 +31,8 @@ export interface IMoveObject {
 export type TMoveItem = Model|TKeySelection
 
 /**
- * Перемещаемые элементы. Может быть набором Моделей или Id или Объектом ISelectionObject или объектом IMoveObject
+ * @todo проверить, все ли варианты нужны
+ * Перемещаемые элементы. Может быть набором Моделей или Id или Объектом ISelectionObject, объектом IMoveObject, или TSelectionRecord
  */
 export type TMoveItems = TMoveItem[]|IMoveObject|ISelectionObject|TSelectionRecord;
 
@@ -61,4 +62,6 @@ export interface IMoveStrategy<T> {
     moveItemsWithDialog(items: T, template: TemplateFunction): void;
     getModel(item: TMoveItem): Model;
     getId(item: TMoveItem): TKeySelection;
+    // TODO Надо понять, может ли контроллер работать с Collection и тогда может быть этот метот сократится
+    getSiblingItem(item: TMoveItem, position: MOVE_POSITION);
 }

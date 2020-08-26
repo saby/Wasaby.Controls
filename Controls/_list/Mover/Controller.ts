@@ -80,7 +80,7 @@ export class Controller {
     }
 
     /**
-     * Позволяет переместить запись при помощи окна Mover
+     * Перемещает запись при помощи окна Mover
      * @param items
      */
     moveItemsWithDialog(items: TMoveItems): void {
@@ -93,27 +93,25 @@ export class Controller {
         }
     }
 
+    /**
+     * Перемещает запись к ближайшей позиции
+     * @param item
+     * @param position
+     * @private
+     */
     private _moveItemToSiblingPosition (item: TMoveItem, position: MOVE_POSITION): Promise<void> {
         const target = this._getSiblingItem(item, position);
         return target ? this.moveItems([item], target, position) : Promise.resolve();
     }
 
     /**
-     * @todo пока работать не будет. надо обсудить, мы работаем с RecordSet или можем работать с Collection
      * Получает элемент к которому мы перемещаем текущий элемент
      * @param item текущий элемент
      * @param position позиция (направление перемещения)
      * @private
      */
     private _getSiblingItem(item: TMoveItem, position: MOVE_POSITION): IMovableItem {
-        let siblingItem: IMovableItem;
-        const collectionItem = this._collection.getItemBySourceItem(this._getStrategy([item]).getId(item));
-        if (position === MOVE_POSITION.before) {
-            siblingItem = this._collection.getPrevious(collectionItem);
-        } else {
-            siblingItem = this._collection.getNext(collectionItem);
-        }
-        return siblingItem || null;
+        return this._getStrategy([item]).getSiblingItem(item, position);
     }
 
     /**

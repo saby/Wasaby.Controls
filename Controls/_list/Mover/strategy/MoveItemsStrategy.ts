@@ -1,6 +1,9 @@
 import {Model} from 'Types/entity';
 import {DataSet} from 'Types/source';
 
+// TODO Надо понять, может ли контроллер работать с Collection и тогда может быть этот метот сократится
+import * as TreeItemsUtil from 'Controls/_list/resources/utils/TreeItemsUtil';
+
 import * as getItemsBySelection from 'Controls/Utils/getItemsBySelection';
 import {TKeySelection, TKeysSelection, TSelectionRecord} from 'Controls/interface';
 
@@ -8,7 +11,7 @@ import {
     IMoveStrategy,
     BEFORE_ITEMS_MOVE_RESULT,
     MOVE_POSITION,
-    TMoveItems
+    TMoveItems, TMoveItem
 } from '../interface/IMoveStrategy';
 import {IMovableItem} from '../interface/IMovableItem';
 import {BaseStrategy} from './BaseStrategy';
@@ -38,6 +41,36 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
         this._getItemsBySelection(items).then((itemsBySelection) => {
             this._openMoveDialog(this._prepareMovedItems(itemsBySelection), template);
         });
+    }
+
+    // TODO Надо понять, может ли контроллер работать с Collection и тогда может быть этот метот сократится
+    getSiblingItem(item: TMoveItem, position: MOVE_POSITION) {
+        //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
+        //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
+        //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
+        //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
+        //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
+        if (this._parentProperty) {
+            const display = TreeItemsUtil.getDefaultDisplayTree(this._items, {
+                keyProperty: this._keyProperty,
+                parentProperty: this._parentProperty,
+                nodeProperty: this._nodeProperty
+            }, {});
+            if (this._root) {
+                display.setRoot(this._root)
+            }
+            const itemFromProjection = display.getItemBySourceItem(this.getModel(item));
+            const siblingItem = display[position === MOVE_POSITION.before ? 'getPrevious' : 'getNext'](itemFromProjection);
+            return siblingItem ? siblingItem.getContents() : null;
+            // TODO Возможно пригодится вот этот код вместо верхнего
+            // const collectionItem = this._collection.getItemBySourceItem(this._getStrategy([item]).getId(item));
+            //         if (position === MOVE_POSITION.before) {
+            //             siblingItem = this._collection.getPrevious(collectionItem);
+            //         } else {
+            //             siblingItem = this._collection.getNext(collectionItem);
+            //         }
+        }
+        return super.getSiblingItem(item, position);
     }
 
     /**
@@ -93,7 +126,7 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
      * @param items
      * @private
      */
-    private _prepareMovedItems(items: TMoveItems) {
+    private _prepareMovedItems(items: TMoveItems): TMoveItems {
         let result = [];
         items.forEach((item) => result.push(this.getId(item)));
         return result;
@@ -243,38 +276,4 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
 
         return resultFilter;
     }
-
-    // TODO Надо понять, может ли контроллер работать с Collection
-    // getSiblingItem: function (self, item, position) {
-    //         var
-    //             result,
-    //             display,
-    //             itemIndex,
-    //             siblingItem,
-    //             itemFromProjection;
-    //
-    //         //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
-    //         //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
-    //         //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
-    //         //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
-    //         //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
-    //         if (self._options.parentProperty) {
-    //             display = TreeItemsUtil.getDefaultDisplayTree(self._items, {
-    //                 keyProperty: self._keyProperty,
-    //                 parentProperty: self._options.parentProperty,
-    //                 nodeProperty: self._options.nodeProperty
-    //             });
-    //             if (self._options.root) {
-    //                 display.setRoot(self._options.root)
-    //             }
-    //             itemFromProjection = display.getItemBySourceItem(_private.getModelByItem(self, item));
-    //             siblingItem = display[position === MOVE_POSITION.before ? 'getPrevious' : 'getNext'](itemFromProjection);
-    //             result = siblingItem ? siblingItem.getContents() : null;
-    //         } else {
-    //             itemIndex = self._items.getIndex(_private.getModelByItem(self, item));
-    //             result = self._items.at(position === MOVE_POSITION.before ? --itemIndex : ++itemIndex);
-    //         }
-    //
-    //         return result;
-    //     },
 }
