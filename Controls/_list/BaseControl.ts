@@ -3658,13 +3658,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // Если не получилось активировать поле ввода, под точкой клика (клик мимо поля ввода),
             // то активируем первое в строке
             if (this._editInPlace.hasPendingActivation()) {
-                const wasActivatedByClick = this._editInPlace.prepareHtmlInput();
-                let wasActivatedByEditingRow;
-                if (!wasActivatedByClick) {
-                    wasActivatedByEditingRow = this._children.listView.activateEditingRow();
-                }
-                if (wasActivatedByEditingRow || wasActivatedByClick) {
+                // Совместимость с ListRender, он не использует EditingRow. Удалить при полном переходе.
+                if (this._options.useNewModel) {
                     this._editInPlace.activated();
+                } else {
+                    const wasActivatedByClick = this._editInPlace.prepareHtmlInput();
+                    let wasActivatedByEditingRow;
+                    if (!wasActivatedByClick) {
+                        wasActivatedByEditingRow = this._children.listView.activateEditingRow();
+                    }
+                    if (wasActivatedByEditingRow || wasActivatedByClick) {
+                        this._editInPlace.activated();
+                    }
                 }
             }
 
