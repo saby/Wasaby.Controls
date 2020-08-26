@@ -443,7 +443,9 @@ export default class ScrollController {
     }
 
     updateItemsHeights(itemsHeights: IItemsHeights) {
-        this._virtualScroll.updateItemsHeights(itemsHeights);
+        if (this._virtualScroll) {
+            this._virtualScroll.updateItemsHeights(itemsHeights);
+        }
     }
 
     /**
