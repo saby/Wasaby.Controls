@@ -69,7 +69,6 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _verticalDirection: string = 'bottom';
     protected _horizontalDirection: string = 'right';
     protected _applyButtonVisible: boolean = false;
-    protected _closeButtonVisible: boolean = false;
     protected _selectedItems: Model[] = null;
 
     protected _beforeMount(options: IMenuPopupOptions): Promise<void>|void {
@@ -79,7 +78,6 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         this._setCloseButtonVisibility(options);
         this._prepareHeaderConfig(options);
         this._setItemPadding(options);
-        this._closeButtonVisible = this._itemPadding?.right === 'menu-close';
 
         if (options.searchParam) {
             return mStubs.require(SEARCH_DEPS);
