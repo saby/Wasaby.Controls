@@ -60,21 +60,20 @@
     width: @item_clickableArea-size_outside_itemActions;
     height: @item_clickableArea-size_outside_itemActions;
   }
-}
+    &.controls-itemActionsV__outside_bottom_size-default_theme-@{themeName} {
+        bottom: -@height_outside_itemActions;
+    }
 
-.controls-itemActionsV__outside_bottom_size-default_theme-@{themeName} {
-    bottom: -@height_outside_itemActions;
-}
-
-.controls-Grid__row_last {
-    .controls-itemActionsV__outside_bottom_size-s_theme-@{themeName} {
+    &.controls-itemActionsV__outside_bottom_size-s_theme-@{themeName} {
         bottom: -@height_outside_itemActions + @item-separator_s_thickness_list;
     }
 
-    .controls-itemActionsV__outside_bottom_size-l_theme-@{themeName} {
+    &.controls-itemActionsV__outside_bottom_size-l_theme-@{themeName} {
         bottom: -@height_outside_itemActions + @item-separator_l_thickness_list;
     }
 }
+
+
 
 .controls-itemActionsV_outside-spacing_theme-@{themeName} {
   height: @height_outside_itemActions;
