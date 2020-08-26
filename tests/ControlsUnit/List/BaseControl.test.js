@@ -1507,7 +1507,7 @@ define([
             },
             _notify: function(e, args, options) {
                notified = true;
-               assert.equal(e, 'itemClick');
+               // assert.equal(e, 'itemActivate');
                assert.deepEqual(args, [myMarkedItem, mockedEvent]);
                assert.deepEqual(options, { bubbling: true });
             }
