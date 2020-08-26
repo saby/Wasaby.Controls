@@ -13,7 +13,8 @@
               class="controls-Scroll__content controls-BlockLayout__blockGroup_theme-{{_options.theme}}
                         {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
                         {{_displayState.hasScroll ? 'controls-Scroll__content_possibleScroll'}}
-                        {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' :
+                        {{_useNativeScrollbar ? _options.scrollMode === 'verticalHorizontal' ? 'controls-Scroll__scroll_verticalHorizontal' :
+                         'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' :
                          _classTypeScroll}}
                         {{_overflowScrolling ? 'controls-Scroll__content-overflowScrolling'}}"
               on:controlResize="_resizeHandler()"
