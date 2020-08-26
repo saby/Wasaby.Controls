@@ -50,12 +50,12 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
     }
 
     protected _onOpen(): void {
+        RegisterUtil(this, 'scroll', this._handleScroll.bind(this));
         this._isOpened = true;
         this._notify('dropDownOpen');
     }
 
     protected _onClose(): void {
-        RegisterUtil(this, 'scroll', this._handleScroll.bind(this));
         this._isOpened = false;
         this._controller.handleClose();
         this._notify('dropDownClose');
