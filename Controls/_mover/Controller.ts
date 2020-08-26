@@ -4,7 +4,6 @@ import {TemplateFunction} from 'UI/Base';
 import {ISelectionObject} from 'Controls/interface';
 
 import {IMovableItem} from './interface/IMovableItem';
-import {IMovableItemsCollection} from './interface/IMovableItemsCollection';
 import {IMoveStrategy, IStrategyOptions, TMoveItem, TMoveItems} from './interface/IMoveStrategy';
 
 import {MoveItemsStrategy} from './strategy/MoveItemsStrategy';
@@ -17,18 +16,32 @@ enum MOVE_POSITION {
     after = 'after'
 }
 
-export interface IControllerOptions extends IStrategyOptions {
-    moveDialogTemplate: TemplateFunction;
-}
+// todo раздели интерфейсы
+export interface IControllerOptions extends IStrategyOptions {}
 
-// Что делает контроллер
-// Меняет местами запись в плоской модели
-// Меняет местами запись в деревянной модели
-// Позволяет переместить запись при помощи окна Mover
-// Позволяет мереместиь запись относительно указанного элемента
+/**
+ * Контроллер для перемещения элементов списка в recordSet и dataSource.
+ *
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FtreeGrid%2FMover%2FBase%2FIndex">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
+ *
+ * @class Controls/_mover/Controller
+ * @control
+ * @public
+ * @author Аверкиев П.А
+ */
+
+/*
+ * Сontroller to move the list items in recordSet and dataSource.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Demo examples</a>.
+ * @class Controls/_mover/Controller
+ * @control
+ * @public
+ * @author Аверкиев П.А
+ */
 export class Controller {
-    // @todo пока работать не будет. надо обсудить
-    _collection: IMovableItemsCollection;
 
     _strategy: IMoveStrategy<TMoveItems>;
 
@@ -37,17 +50,25 @@ export class Controller {
     _strategyOptions: IStrategyOptions;
 
     constructor(options: IControllerOptions) {
+        this.update(options);
+    }
+
+    update(options: IControllerOptions) {
         this._moveDialogTemplate = options.moveDialogTemplate
-        this._strategyOptions.items = options.items; // Возможно, поменяется на collection
-        this._strategyOptions.keyProperty = options.keyProperty;
-        this._strategyOptions.moveDialogOptions = options.moveDialogOptions;
-        this._strategyOptions.sortingOrder = options.sortingOrder;
-        this._strategyOptions.source = options.source;
-        this._strategyOptions.filter = options.filter;
-        this._strategyOptions.nodeProperty = options.nodeProperty;
-        this._strategyOptions.parentProperty = options.parentProperty;
-        this._strategyOptions.root = options.root;
-        this._strategyOptions.searchParam = options.searchParam;
+        this._strategyOptions = {
+            items: options.items, // Возможно, поменяется на collection
+            keyProperty: options.keyProperty,
+            moveDialogOptions: options.moveDialogOptions,
+            sortingOrder: options.sortingOrder,
+            source: options.source,
+            filter: options.filter,
+            nodeProperty: options.nodeProperty,
+            parentProperty: options.parentProperty,
+            root: options.root,
+            searchParam: options.searchParam,
+            beforeItemsMove: options.beforeItemsMove,
+            afterItemsMove: options.afterItemsMove
+        }
     }
 
     /**

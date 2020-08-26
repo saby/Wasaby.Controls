@@ -3,13 +3,13 @@ import {Confirmation} from 'Controls/popup';
 import {TKeysSelection, ISelectionObject} from 'Controls/interface';
 
 /**
- * Базовый класс action'a, на основе которого создаются другие action'ы. Не подходит для самостоятельного использования.
+ * Валидатор записей для перемещения/удаления
  *
- * @class Controls/_list/BaseAction
+ * @class Controls/_mover/Validator
  * @extends Core/Control
  * @control
  * @public
- * @author Герасимов А.М.
+ * @author Аверкиев П.А.
  */
 
 export class ItemsValidator {
@@ -20,7 +20,7 @@ export class ItemsValidator {
      * При необходимости метод нужно вызывать вручную из наследника.
      *
      * @function
-     * @name Controls/_list/Validator#validate
+     * @name Controls/_mover/Validator#validate
      */
     static validate(items: ISelectionObject|TKeysSelection): boolean {
         let resultValidate: boolean = true;

@@ -1,7 +1,7 @@
 import {Model} from 'Types/entity';
 import {DataSet} from 'Types/source';
 
-// TODO Надо понять, может ли контроллер работать с Collection и тогда может быть этот метот сократится
+// TODO Это похоже, только для дерева
 import * as TreeItemsUtil from 'Controls/_list/resources/utils/TreeItemsUtil';
 
 import * as getItemsBySelection from 'Controls/Utils/getItemsBySelection';
@@ -43,7 +43,7 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
         });
     }
 
-    // TODO Надо понять, может ли контроллер работать с Collection и тогда может быть этот метот сократится
+    // TODO Это похоже, только для дерева
     getSiblingItem(item: TMoveItem, position: MOVE_POSITION) {
         //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
         //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
@@ -59,16 +59,14 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
             if (this._root) {
                 display.setRoot(this._root)
             }
-            const itemFromProjection = display.getItemBySourceItem(this.getModel(item));
-            const siblingItem = display[position === MOVE_POSITION.before ? 'getPrevious' : 'getNext'](itemFromProjection);
+            const collectionItem = display.getItemBySourceItem(this.getModel(item));
+            let siblingItem;
+            if (position === MOVE_POSITION.before) {
+                siblingItem = display.getPrevious(collectionItem);
+            } else {
+                siblingItem = display.getNext(collectionItem);
+            }
             return siblingItem ? siblingItem.getContents() : null;
-            // TODO Возможно пригодится вот этот код вместо верхнего
-            // const collectionItem = this._collection.getItemBySourceItem(this._getStrategy([item]).getId(item));
-            //         if (position === MOVE_POSITION.before) {
-            //             siblingItem = this._collection.getPrevious(collectionItem);
-            //         } else {
-            //             siblingItem = this._collection.getNext(collectionItem);
-            //         }
         }
         return super.getSiblingItem(item, position);
     }

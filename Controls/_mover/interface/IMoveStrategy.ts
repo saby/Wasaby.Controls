@@ -1,4 +1,4 @@
-import {TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {BindingMixin, DataSet, ICrudPlus, IData, IRpc} from 'Types/source';
 import {ISelectionObject, TKeySelection, TKeysSelection, TSelectionRecord} from 'Controls/interface';
 import {Model} from 'Types/entity';
@@ -41,6 +41,8 @@ export type TMoveItems = TMoveItem[]|IMoveObject|ISelectionObject|TSelectionReco
  */
 export interface ISource extends IData, IRpc, ICrudPlus, BindingMixin {}
 
+// @mixes Controls/interface/IMovable
+// @mixes Controls/_interface/IHierarchy
 export interface ITreeStrategyOptions {
     root: string;
     parentProperty: string;
@@ -49,12 +51,24 @@ export interface ITreeStrategyOptions {
     searchParam: string;
 }
 
-export interface IStrategyOptions extends ITreeStrategyOptions {
+export interface IMoveDialogOptions {
+    /**
+     * Необходим для moverDialog
+     */
+    opener: Control<IControlOptions, unknown> | null;
+    moveDialogOptions?: any; //@todo Разобрать опции для шаблона moveDialog
+    moveDialogTemplate?: TemplateFunction;
+}
+
+export interface IStrategyOptions extends ITreeStrategyOptions, IMoveDialogOptions {
     source: ISource;
     sortingOrder: string;
-    items: RecordSet; // @todo Может быть заменится на collection ?
+    items: RecordSet;
     keyProperty: string;
-    moveDialogOptions: any; //@todo Разобрать опции для шаблона moveDialog
+    // @todo Как избавиться от колбека?
+    beforeItemsMove: (items: TMoveItems, target: IMovableItem, position: MOVE_POSITION) => Promise<any>;
+    // @todo Как избавиться от колбека?
+    afterItemsMove: (items: TMoveItems, target, position: MOVE_POSITION, result) => void;
 }
 
 export interface IMoveStrategy<T> {

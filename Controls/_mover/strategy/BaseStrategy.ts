@@ -6,7 +6,7 @@ import { Dialog } from 'Controls/popup';
 import * as InstanceChecker from 'Core/core-instance';
 
 import {
-    BEFORE_ITEMS_MOVE_RESULT,
+    BEFORE_ITEMS_MOVE_RESULT, IMoveDialogOptions,
     IStrategyOptions,
     MOVE_POSITION,
     TMoveItem,
@@ -34,7 +34,7 @@ export abstract class BaseStrategy {
 
     protected _searchParam: string;
 
-    protected _moveDialogOptions: any;
+    protected _moveDialogOptions: IMoveDialogOptions;
 
     protected _root: string;
 
@@ -52,7 +52,11 @@ export abstract class BaseStrategy {
         this._items = options.items;
         this._keyProperty = options.keyProperty;
         this._searchParam = options.searchParam;
-        this._moveDialogOptions = options.moveDialogOptions;
+        this._moveDialogOptions = {
+            moveDialogOptions: options.moveDialogOptions,
+            moveDialogTemplate: options.moveDialogTemplate,
+            opener: options.opener
+        }
         this._root = options.root;
     }
 
@@ -64,7 +68,6 @@ export abstract class BaseStrategy {
 
     protected abstract _getSelectedKeys(items: TMoveItems): TKeysSelection;
 
-    // TODO Надо понять, может ли контроллер работать с Collection и тогда может быть этот метот сократится
     getSiblingItem(item: TMoveItem, position: MOVE_POSITION) {
         let itemIndex = this._items.getIndex(this.getModel(item));
         return this._items.at(position === MOVE_POSITION.before ? --itemIndex : ++itemIndex);
@@ -124,10 +127,11 @@ export abstract class BaseStrategy {
             movedItems: this._getSelectedKeys(items),
             source: this._source,
             keyProperty: this._keyProperty,
-            ...this._moveDialogOptions
+            ...this._moveDialogOptions.moveDialogOptions
         };
 
         Dialog.openPopup({
+            opener: this._moveDialogOptions.opener,
             templateOptions,
             closeOnOutsideClick: true,
             template,

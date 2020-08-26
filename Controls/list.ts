@@ -69,8 +69,6 @@ import {default as View} from 'Controls/_list/List';
 import BaseAction from 'Controls/_list/BaseAction';
 import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatorTemplate');
 import ContinueSearchTemplate = require('wml!Controls/_list/resources/ContinueSearchTemplate');
-import Mover = require('Controls/_list/Mover');
-import Remover = require('Controls/_list/Remover');
 import {default as DataContainer} from 'Controls/_list/Data';
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
@@ -97,6 +95,9 @@ import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
 import {default as ScrollController} from './_list/ScrollController';
 import {IList} from './_list/interface/IList';
 import IListNavigation from './_list/interface/IListNavigation';
+
+import {default as Mover} from 'Controls/_list/Mover';
+import Remover = require('Controls/_list/Remover');
 
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 
