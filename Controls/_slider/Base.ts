@@ -211,7 +211,6 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
 
    protected _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
       if (!this._options.readOnly) {
-         this._isDrag = true;
          this._value = this._getValue(event);
          this._setValue(this._value);
          this._children.dragNDrop.startDragNDrop(this._children.point, event);
