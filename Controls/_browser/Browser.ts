@@ -84,6 +84,7 @@ export default class Browser extends Control {
                 } else {
                     this._dataController.updatePrefetchProxy(result);
                 }
+                this._filter = newOptions.filter;
                 this._dataController.updateContext(this._dataOptionsContext);
                 this._loading = false;
                 this._groupHistoryId = newOptions.groupHistoryId;
