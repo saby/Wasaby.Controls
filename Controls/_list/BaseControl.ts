@@ -75,7 +75,7 @@ import { isColumnScrollShown } from '../_grid/utils/GridColumnScrollUtil';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { POSITION, TYPE_FIXED_HEADERS } from '../_scroll/StickyHeader/Utils';
 import { MarkerController } from '../marker';
-import ControllerManager from './ControllerManager';
+import ControllerManager, { ControllerLibrary } from './ControllerManager';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -442,13 +442,12 @@ const _private = {
             _private.needCreateMarkerController(options)
         );
 
-        if (self._selectionController) {
-            _private.getSelectionController(self).restoreSelection();
-        } else {
-            if (options.selectedKeys && options.selectedKeys.length > 0) {
-                self._selectionController = _private.createSelectionController(self, options);
-            }
-        }
+        self._selectionControllerManager.execute(
+            (controller) => controller.restoreSelection(),
+            undefined,
+            options,
+            _private.needCreateSelectionController(options)
+        );
     },
 
     resolveIndicatorStateAfterReload(self, list, navigation): void {
@@ -569,14 +568,16 @@ const _private = {
         }
 
         if (toggledItemId) {
+            let selectionCtrlPromise = Promise.resolve();
             if (self._options.hasOwnProperty('selectedKeys')) {
-                if (!self._selectionController) {
-                    self._createSelectionController();
-                }
-                const result = _private.getSelectionController(self).toggleItem(toggledItemId);
-                _private.handleSelectionControllerResult(self, result);
+                selectionCtrlPromise = self._selectionControllerManager.execute(
+                    (controller) => controller.toggleItem(toggledItemId),
+                    (result) => _private.handleSelectionControllerResult(self, result),
+                    self._options
+                );
             }
-            _private.moveMarkerToNext(self, event);
+            const moveMarkerPromise = _private.moveMarkerToNext(self, event);
+            return Promise.all([selectionCtrlPromise, moveMarkerPromise]);
         }
     },
     prepareFooter(self, navigation, sourceController) {
@@ -1414,15 +1415,16 @@ const _private = {
                 }
             }
 
-            if (self._selectionController) {
+            if (self._selectionControllerManager.hasController()) {
+                const controller = self._selectionControllerManager.getController();
                 let result;
 
-                if (self._listViewModel.getCount() === 0 && _private.getSelectionController(self).isAllSelected()) {
-                    result = _private.getSelectionController(self).clearSelection();
+                if (self._listViewModel.getCount() === 0 && controller.isAllSelected()) {
+                    result = controller.clearSelection();
                 } else if (action === IObservable.ACTION_ADD) {
-                    result = _private.getSelectionController(self).handleAddItems(newItems);
+                    result = controller.handleAddItems(newItems);
                 } else if (action === IObservable.ACTION_RESET || action === IObservable.ACTION_REPLACE) {
-                    result = _private.getSelectionController(self).handleResetItems();
+                    result = controller.handleResetItems();
                 }
 
                 _private.handleSelectionControllerResult(self, result);
@@ -1956,7 +1958,11 @@ const _private = {
 
     // region Multiselection
 
-    createSelectionController(self: any, options: any): SelectionController {
+    needCreateSelectionController(options: any): boolean {
+        return !!(options.selectedKeys && options.selectedKeys.length > 0);
+    },
+
+    createSelectionController(self: any, options: any, library: any): SelectionController {
         if (
             !self._listViewModel || !self._listViewModel.getCollection()
             || (options.multiSelectVisibility === 'hidden' && !_private.isItemsSelectionAllowed(options))
@@ -1964,9 +1970,9 @@ const _private = {
             return null;
         }
 
-        const strategy = this.createSelectionStrategy(options, self._listViewModel.getCollection());
+        const strategy = this.createSelectionStrategy(options, library, self._listViewModel.getCollection());
 
-        return new SelectionController({
+        return new library.SelectionController({
             model: self._listViewModel,
             selectedKeys: options.selectedKeys,
             excludedKeys: options.excludedKeys,
@@ -1975,30 +1981,28 @@ const _private = {
         });
     },
 
-    updateSelectionController(self: any, newOptions: any): void {
-        _private.getSelectionController(self).update({
-           model: self._listViewModel,
-           selectedKeys: newOptions.selectedKeys,
-           excludedKeys: newOptions.excludedKeys,
-           searchValue: newOptions.searchValue,
-           strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
-        });
+    updateSelectionController(self: any, newOptions: any): Promise<SelectionController> {
+        return self._selectionControllerManager.execute(
+            (controller) => controller.update({
+                model: self._listViewModel,
+                selectedKeys: newOptions.selectedKeys,
+                excludedKeys: newOptions.excludedKeys,
+                searchValue: newOptions.searchValue,
+                strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
+            }),
+            undefined,
+            newOptions,
+            _private.needCreateSelectionController(newOptions)
+        );
     },
 
-    createSelectionStrategy(options: any, items: RecordSet): ISelectionStrategy {
+    createSelectionStrategy(options: any, library: any, items: RecordSet): ISelectionStrategy {
         const strategyOptions = this.getSelectionStrategyOptions(options, items);
         if (options.parentProperty) {
-            return new TreeSelectionStrategy(strategyOptions);
+            return new library.TreeSelectionStrategy(strategyOptions);
         } else {
-            return new FlatSelectionStrategy(strategyOptions);
+            return new library.FlatSelectionStrategy(strategyOptions);
         }
-    },
-
-    getSelectionController(self: any): SelectionController {
-        if (!self._selectionController) {
-            self._selectionController = _private.createSelectionController(self, self._options);
-        }
-        return self._selectionController;
     },
 
     getSelectionStrategyOptions(options: any, items: RecordSet): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
@@ -2021,44 +2025,45 @@ const _private = {
         }
     },
 
-    onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
-        const selectionController = _private.getSelectionController(this);
-        if (!selectionController) {
-            return;
-        }
+    onSelectedTypeChanged(typeName: string, limit: number|undefined): Promise<void> {
+        return this._selectionControllerManager.execute(
+            (controller) => {
+                let result;
+                controller.setLimit(limit);
 
-        let result;
-        selectionController.setLimit(limit);
+                switch (typeName) {
+                    case 'selectAll':
+                        result = controller.selectAll();
+                        break;
+                    case 'unselectAll':
+                        result = controller.unselectAll();
+                        break;
+                    case 'toggleAll':
+                        result = controller.toggleAll();
+                        break;
+                }
 
-        switch (typeName) {
-            case 'selectAll':
-                result = selectionController.selectAll();
-                break;
-            case 'unselectAll':
-                result = selectionController.unselectAll();
-                break;
-            case 'toggleAll':
-                result = selectionController.toggleAll();
-                break;
-        }
-
-        _private.handleSelectionControllerResult(this, result);
+                return result;
+            },
+            (result) => _private.handleSelectionControllerResult(this, result),
+            this._options
+        );
    },
 
     handleSelectionControllerResult(self: any, result: ISelectionControllerResult): void {
-      if (!result) {
-         return;
-      }
+        if (!result) {
+           return;
+        }
 
-      const selectedDiff = result.selectedKeysDiff;
-      if (selectedDiff.added.length || selectedDiff.removed.length) {
+        const selectedDiff = result.selectedKeysDiff;
+        if (selectedDiff.added.length || selectedDiff.removed.length) {
           self._notify('selectedKeysChanged', [selectedDiff.keys, selectedDiff.added, selectedDiff.removed]);
-      }
+        }
 
-      const excludedDiff = result.excludedKeysDiff;
-      if (excludedDiff.added.length || excludedDiff.removed.length) {
+        const excludedDiff = result.excludedKeysDiff;
+        if (excludedDiff.added.length || excludedDiff.removed.length) {
           self._notify('excludedKeysChanged', [excludedDiff.keys, excludedDiff.added, excludedDiff.removed]);
-      }
+        }
 
         // для связи с контроллером ПМО
         let selectionType = 'all';
@@ -2100,6 +2105,7 @@ const _private = {
             _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
         }
     },
+
     onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
         // подписываемся на рекордсет, чтобы следить какие элементы будут удалены
         // при подписке на модель событие remove летит еще и при скрытии элементов
@@ -2107,8 +2113,8 @@ const _private = {
        let selectionControllerResult;
        switch (action) {
            case IObservable.ACTION_REMOVE:
-               if (self._selectionController) {
-                   selectionControllerResult = _private.getSelectionController(self).handleRemoveItems(removedItems);
+               if (self._selectionControllerManager.hasController()) {
+                   selectionControllerResult = self._selectionControllerManager.getController().handleRemoveItems(removedItems);
                }
                if (removedItemsIndex !== undefined && self._markerControllerManager.hasController()) {
                    self._markerControllerManager.execute(
@@ -2731,7 +2737,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _draggingEntity: null,
     _draggingTargetItem: null,
 
-    _selectionController: null,
+    _selectionControllerManager: null,
     _itemActionsController: null,
     _prevRootId: null,
 
@@ -2760,7 +2766,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _draggedKey: null,
     _validateController: null,
 
-    constructor(options) {
+    constructor(options: any): any {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
         this._validateController = new ControllerClass();
@@ -2777,7 +2783,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @protected
      */
     _beforeMount(newOptions: any, context: any, receivedState: IReceivedState = {}): Promise<any> {
-        const self = this;
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
 
         _private.checkDeprecated(newOptions);
@@ -2790,15 +2795,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadTriggerVisibility = {};
 
         if (newOptions.editingConfig) {
-            _private.createEditInPlace(self, newOptions);
+            _private.createEditInPlace(this, newOptions);
         }
 
         this._markerControllerManager = new ControllerManager<MarkerController>(
+            ControllerLibrary.MarkerController,
             (library, options) => _private.createMarkerController(this, options, library)
+        );
+        this._selectionControllerManager = new ControllerManager<SelectionController>(
+            ControllerLibrary.MultiselectionController,
+            ((library, options) => _private.createSelectionController(this, options, library))
         );
 
         return this._prepareGroups(newOptions, (collapsedGroups) => {
-            return this._prepareItemsOnMount(self, newOptions, receivedState, collapsedGroups);
+            return this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups);
         });
     },
 
@@ -2856,13 +2866,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const hasMoreData = self._items.getMetaData().more;
                     _private.updatePagingData(self, hasMoreData);
                 }
-                let promise;
+
+                let createControllersPromise = Promise.resolve([]);
                 if (_private.needCreateMarkerController(newOptions)) {
-                    promise = this._markerControllerManager.createController(newOptions);
+                    createControllersPromise = Promise.all([
+                        createControllersPromise,
+                        self._markerControllerManager.createController(newOptions)
+                    ]);
                 }
 
-                if (newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
-                    self._selectionController = _private.createSelectionController(self, newOptions);
+                if (_private.needCreateSelectionController(newOptions)) {
+                    createControllersPromise = Promise.all([
+                        createControllersPromise,
+                        self._selectionControllerManager.createController(newOptions)
+                    ]);
                 }
 
                 if (newOptions.serviceDataLoadCallback instanceof Function) {
@@ -2884,7 +2901,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     _private.needAttachLoadTopTriggerToNull(self)) {
                     self._hideTopTriggerUntilMount = true;
                 }
-                return promise;
+                return createControllersPromise;
             }
             if (receivedError) {
                 if (newOptions.dataLoadErrback instanceof Function) {
@@ -3102,8 +3119,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
         // TODO https://online.sbis.ru/opendoc.html?guid=3042889b-181c-47ec-b036-a7e24c323f5f
-        if (this._selectionController) {
-            const result = _private.getSelectionController(this).getResultAfterConstructor();
+        if (this._selectionControllerManager.hasController()) {
+            const result = this._selectionControllerManager.getController().getResultAfterConstructor();
             _private.handleSelectionControllerResult(this, result);
         }
 
@@ -3143,7 +3160,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _beforeUpdate(newOptions: any): void {
+    _beforeUpdate(newOptions: any): Promise<[]> {
         this._updateInProgress = true;
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
         const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
@@ -3249,27 +3266,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader = new GroupingLoader({});
         }
 
-        _private.updateMarkerController(this, newOptions);
+        const updateMarkerCtrlPromise = _private.updateMarkerController(this, newOptions);
 
-        if (this._selectionController) {
-            _private.updateSelectionController(this, newOptions);
-
-            const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
-                || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
-                || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
-            if (selectionChanged || this._modelRecreated) {
-                // handleSelectionControllerResult чтобы отправить информацию для ПМО
-                const result = _private.getSelectionController(this).setSelectedKeys(
-                   newOptions.selectedKeys,
-                   newOptions.excludedKeys
-                );
-                _private.handleSelectionControllerResult(this, result);
-            }
-        } else {
-            // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
-            if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
-                this._selectionController = _private.createSelectionController(this, newOptions);
-            }
+        let updateSelectionCtrlPromise = Promise.resolve(null);
+        const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
+            || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
+            || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
+        if (selectionChanged || this._modelRecreated) {
+            updateSelectionCtrlPromise = _private.updateSelectionController(this, newOptions).then(
+                (controller) => {
+                    // handleSelectionControllerResult чтобы отправить информацию для ПМО
+                    const result = controller.setSelectedKeys(newOptions.selectedKeys, newOptions.excludedKeys);
+                    _private.handleSelectionControllerResult(this, result);
+                }
+            );
         }
 
         if (this._editInPlace) {
@@ -3347,6 +3357,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadedItems) {
             this._shouldRestoreScrollPosition = true;
         }
+
+        return Promise.all([updateMarkerCtrlPromise, updateSelectionCtrlPromise]);
     },
 
     reloadItem(key: String, readMeta: Object, replaceItem: Boolean, reloadType = 'read'): Deferred {
@@ -3724,11 +3736,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return emptyTemplate && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     },
 
-    _onCheckBoxClick(e, key, status, readOnly) {
+    _onCheckBoxClick(
+        e: SyntheticEvent,
+        key: string|number,
+        status: boolean|null,
+        readOnly: boolean
+    ): Promise<SelectionController>|void {
         if (!readOnly) {
-            const result = _private.getSelectionController(this).toggleItem(key);
-            _private.handleSelectionControllerResult(this, result);
             this._notify('checkboxClick', [key, status]);
+            return this._selectionControllerManager.execute(
+                (controller) => controller.toggleItem(key),
+                (result) => _private.handleSelectionControllerResult(this, result),
+                this._options
+            );
         }
     },
 
@@ -4016,12 +4036,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     clearSelection(): void {
-        const result = _private.getSelectionController(this)?.clearSelection();
-        _private.handleSelectionControllerResult(this, result);
+        if (this._selectionControllerManager.hasController()) {
+            const result = this._selectionControllerManager.getController().clearSelection();
+            _private.handleSelectionControllerResult(this, result);
+        }
     },
 
     isAllSelected(): boolean {
-        return _private.getSelectionController(this)?.isAllSelected();
+        if (this._selectionControllerManager.hasController()) {
+            return this._selectionControllerManager.getController().isAllSelected();
+        }
+        return false;
     },
 
     _onViewKeyDown(event) {
@@ -4156,10 +4181,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             (!itemActionsMenuId || this._options.itemActionsVisibility === 'visible');
     },
 
-    _createSelectionController(): void {
-        this._selectionController = _private.createSelectionController(this, this._options);
-    },
-
     _getLoadingIndicatorClasses(state?: string): string {
         const hasItems = !!this._items && !!this._items.getCount();
         const indicatorState = state || this._loadingIndicatorState;
@@ -4212,7 +4233,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @param swipeEvent
      * @private
      */
-    _onItemSwipe(e: SyntheticEvent<Event>, item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {
+    _onItemSwipe(e: SyntheticEvent<Event>, item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): Promise<[]> {
         if (item instanceof GroupItem) {
             return;
         }
@@ -4220,6 +4241,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const key = item.getContents().getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
+
+        let resultPromise = Promise.resolve([]);
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             _private.setMarkedKey(this, key);
@@ -4233,16 +4256,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 // Для сценария, когда свайпнули одну запись и потом свайпнули вправо другую запись
                 if (swipedItem !== item) {
-                    _private.setMarkedKey(this, key);
+                    const setMarkedKeyPromise = _private.setMarkedKey(this, key);
+                    resultPromise = Promise.all([resultPromise, setMarkedKeyPromise]);
                 }
             } else {
                 // After the right swipe the item should get selected.
-                if (!this._selectionController && _private.isItemsSelectionAllowed(this._options)) {
-                    this._createSelectionController();
-                }
-                if (this._selectionController) {
-                    const result = _private.getSelectionController(this).toggleItem(key);
-                    _private.handleSelectionControllerResult(this, result);
+                if (_private.isItemsSelectionAllowed(this._options)) {
+                    const selectionCtrlPromise = this._selectionControllerManager.execute(
+                        (controller) => controller.toggleItem(key),
+                        (result) => _private.handleSelectionControllerResult(this, result),
+                        this._options
+                    );
+                    resultPromise = Promise.all([resultPromise, selectionCtrlPromise]);
                 }
                 this._notify('checkboxClick', [key, item.isSelected()]);
 
@@ -4250,12 +4275,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 if (this._options.multiSelectVisibility !== 'hidden') {
                     _private.getItemActionsController(this).activateRightSwipe(item.getContents().getKey());
                 }
-                _private.setMarkedKey(this, key);
+                const setMarkedKeyPromise = _private.setMarkedKey(this, key);
+                resultPromise = Promise.all([resultPromise, setMarkedKeyPromise]);
             }
         }
         if (!this._options.itemActions && item.isSwiped()) {
             this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
         }
+        return resultPromise;
     },
 
     /**

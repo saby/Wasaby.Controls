@@ -1,15 +1,18 @@
 
-const libraries = {
-    MarkerController: 'Controls/marker'
-};
+export enum ControllerLibrary {
+    MarkerController = 'Controls/marker',
+    MultiselectionController = 'Controls/multiselection'
+}
 
 export default class ControllerManager<T> {
     private _controller: T;
     private _loadPromise: Promise<T>;
     private readonly _creatingFunction: (library: any, options: any) => T;
+    private readonly _controllerLibrary: ControllerLibrary;
 
-    constructor(createFunction: (library: any, options: any) => T) {
+    constructor(controllerLibrary: ControllerLibrary, createFunction: (library: any, options: any) => T) {
         this._creatingFunction = createFunction;
+        this._controllerLibrary = controllerLibrary;
     }
 
     /**
@@ -29,37 +32,35 @@ export default class ControllerManager<T> {
         options?: any,
         createController?: boolean
     ): Promise<T> {
+        const executeMethod = () => {
+            if (this._controller) {
+                const result = methodCall(this._controller);
+                if (resultHandler) {
+                    resultHandler(result);
+                }
+            }
+        };
+
         // если контроллер уже создан, то загружать библиотеку не надо => нет асинхронности
         if (this._controller) {
-            const result = methodCall(this._controller);
-            if (resultHandler) {
-                resultHandler(result);
-            }
+            executeMethod();
             return Promise.resolve(this._controller);
         } else {
             // если промис уже есть, то просто добавляем колбэк
             if (this._loadPromise) {
                 return this._loadPromise.then((controller) => {
-                    if (controller) {
-                        const result = methodCall(this._controller);
-                        if (resultHandler) {
-                            resultHandler(result);
-                        }
-                    }
+                    executeMethod();
                     return controller;
                 });
             } else {
                 // загружаем библиотеку, создаем контроллер и выполняем метод
                 if (createController !== false) {
                     return this.createController(options).then((controller) => {
-                        if (controller) {
-                            const result = methodCall(this._controller);
-                            if (resultHandler) {
-                                resultHandler(result);
-                            }
-                        }
+                        executeMethod();
                         return controller;
                     });
+                } else {
+                    return Promise.resolve(null);
                 }
             }
         }
@@ -70,7 +71,7 @@ export default class ControllerManager<T> {
             return this._loadPromise;
         }
 
-        this._loadPromise = import(libraries.MarkerController).then((library) => {
+        this._loadPromise = import(this._controllerLibrary).then((library) => {
             this._controller = this._creatingFunction(library, options);
             return this._controller;
         });

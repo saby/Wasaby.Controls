@@ -1408,28 +1408,26 @@ define([
 
       it('spaceHandler', async function() {
          var
-             cfg = {
-                viewModelConstructor: lists.ListViewModel,
-                markerVisibility: 'visible',
-                keyProperty: 'key',
-                multiSelectVisibility: 'visible',
-                selectedKeys: [],
-                excludedKeys: [],
-                selectedKeysCount: 0,
-                source: new sourceLib.Memory({
-                   keyProperty: 'key',
-                   data: [{
-                      key: 1
-                   }, {
-                      key: 2
-                   }, {
-                      key: 3
-                   }]
-                }),
-                selectedKeys: [],
-                excludedKeys: []
-             },
-             baseControl = new lists.BaseControl(cfg);
+            cfg = {
+               viewModelConstructor: lists.ListViewModel,
+               markerVisibility: 'visible',
+               keyProperty: 'key',
+               multiSelectVisibility: 'visible',
+               selectedKeys: [],
+               excludedKeys: [],
+               selectedKeysCount: 0,
+               source: new sourceLib.Memory({
+                  keyProperty: 'key',
+                  data: [{
+                     key: 1
+                  }, {
+                     key: 2
+                  }, {
+                     key: 3
+                  }]
+               }),
+            },
+            baseControl = new lists.BaseControl(cfg);
 
          const event = {
             preventDefault: () => {}
@@ -1445,17 +1443,17 @@ define([
          baseControl._loadingIndicatorState = null;
          sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
          const notifySpy = sinon.spy(baseControl, '_notify');
-         lists.BaseControl._private.spaceHandler(baseControl, event);
+         await lists.BaseControl._private.spaceHandler(baseControl, event);
          assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).called);
 
          baseControl.getViewModel()._markedKey = 5;
-         lists.BaseControl._private.spaceHandler(baseControl, event);
+         await lists.BaseControl._private.spaceHandler(baseControl, event);
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged', [[1], [], []]).called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false]).called);
 
          notifySpy.resetHistory();
          baseControl._options.multiSelectVisibility = 'hidden';
-         lists.BaseControl._private.spaceHandler(baseControl, event);
+         await lists.BaseControl._private.spaceHandler(baseControl, event);
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('listSelectedKeysCountChanged').called);
 
@@ -1515,18 +1513,18 @@ define([
                source: lnSource,
                keyProperty: 'id',
                viewModelConstructor: lists.ListViewModel,
-               selectedKeys: [1],
+               selectedKeys: [],
                excludedKeys: []
             },
             baseControl = new lists.BaseControl(lnCfg);
 
 
-         baseControl.saveOptions(lnCfg);
          await baseControl._beforeMount(lnCfg);
-         baseControl._createSelectionController();
+         baseControl.saveOptions(lnCfg);
+         await baseControl._beforeUpdate({...lnCfg, selectedKeys: [1]});
 
          assert.isTrue(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
-         baseControl._beforeUpdate({...lnCfg, selectedKeys: []});
+         await baseControl._beforeUpdate({...lnCfg, selectedKeys: [2]});
          assert.isFalse(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
       });
 
@@ -1593,22 +1591,6 @@ define([
             baseControl.saveOptions(lnCfg);
             await baseControl._beforeMount(lnCfg);
          });
-         it('should init SelectionController', () => {
-            controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
-            assert.isNotNull(controller);
-
-            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
-            assert.isNull(controller);
-
-            baseControl._listViewModel = null;
-            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
-            assert.isNull(controller);
-         });
-
-         it('should init selection controller even when multiselectVisibility===\'null\'', () => {
-            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: null });
-            assert.isNotNull(controller);
-         });
       });
 
       it('_private.onSelectedTypeChanged', async function() {
@@ -1630,30 +1612,31 @@ define([
 
          const onSelectedTypeChanged = lists.BaseControl._private.onSelectedTypeChanged.bind(baseControl);
 
-         baseControl.saveOptions(lnCfg);
          await baseControl._beforeMount(lnCfg);
+         baseControl.saveOptions(lnCfg);
+         await baseControl._beforeUpdate({ ...lnCfg, selectedKeys: [1] });
 
          const notifySpy = sinon.spy(baseControl, '_notify');
 
-         onSelectedTypeChanged('selectAll', undefined);
+         await onSelectedTypeChanged('selectAll', undefined);
          assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [6, true], {bubbling: true}).called);
 
          notifySpy.resetHistory();
-         onSelectedTypeChanged('selectAll', 3);
+         await onSelectedTypeChanged('selectAll', 3);
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [3, true], {bubbling: true}).called);
 
          notifySpy.resetHistory();
-         onSelectedTypeChanged('unselectAll', undefined);
+         await onSelectedTypeChanged('unselectAll', undefined);
          assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
 
          notifySpy.resetHistory();
-         onSelectedTypeChanged('toggleAll', undefined);
+         await onSelectedTypeChanged('toggleAll', undefined);
          assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [6, true], {bubbling: true}).called);
@@ -4327,59 +4310,49 @@ define([
                sinon.assert.notCalled(spyActivateRightSwipe);
             });
 
-            it('should not create selection controller when isItemsSelectionAllowed returns false', () => {
+            it('should not create selection controller when isItemsSelectionAllowed returns false', async () => {
                initTest({multiSelectVisibility: 'hidden'});
-               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
-               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
-               sinon.assert.notCalled(stubCreateSelectionController);
-               stubCreateSelectionController.restore();
+               await instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               assert.isFalse(instance._selectionControllerManager.hasController());
             });
 
-            it('should create selection controller when isItemsSelectionAllowed returns true', () => {
+            it('should create selection controller when isItemsSelectionAllowed returns true', async () => {
                initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
-               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
-               instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
-               sinon.assert.calledOnce(stubCreateSelectionController);
-               stubCreateSelectionController.restore();
+               await instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+               assert.isTrue(instance._selectionControllerManager.hasController());
             });
 
             // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо закрыть свайп
             it('should close swipe when any record has been swiped right', () => {
                initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
-               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
                const spySetSwipeAnimation = sinon.spy(instance._itemActionsController, 'setSwipeAnimation');
 
                instance._listViewModel.at(0).setSwiped(true, true);
                instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
 
                sinon.assert.calledWith(spySetSwipeAnimation, 'close');
-               stubCreateSelectionController.restore();
                spySetSwipeAnimation.restore();
             });
 
             // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо переместить маркер
             it('should change marker when any other record has been swiped right', () => {
                initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
-               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
                const spySetMarkedKey = sinon.spy(lists.BaseControl._private, 'setMarkedKey');
                instance._listViewModel.at(0).setSwiped(true, true);
                instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
 
                sinon.assert.calledOnce(spySetMarkedKey);
-               stubCreateSelectionController.restore();
                spySetMarkedKey.restore();
             });
 
             // Если Активирован свайп на одной записи и свайпнули по той же записи, не надо вызывать установку маркера
             it('should deactivate swipe when any other record has been swiped right', () => {
                initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
-               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
                const spySetMarkedKey = sinon.spy(lists.BaseControl._private, 'setMarkedKey');
                instance._listViewModel.at(0).setSwiped(true, true);
                instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
 
                sinon.assert.notCalled(spySetMarkedKey);
-               stubCreateSelectionController.restore();
                spySetMarkedKey.restore();
             });
          });
@@ -5350,65 +5323,6 @@ define([
          });
       });
 
-      it('onCollectionChanged call selectionController methods', () => {
-         // TODO переписать этот тест
-         let clearSelectionCalled = false,
-             handleAddItemsCalled = false;
-
-         const self = {
-            _options: {
-               root: 5
-            },
-            _prevRootId: 5,
-            _selectionController: {
-               isAllSelected: () => true,
-               clearSelection: () => { clearSelectionCalled = true },
-               handleAddItems: (items) => {
-                  handleAddItemsCalled = true;
-               }
-            },
-            _listViewModel: {
-               _isActionsAssigned: false,
-               getCount: () => 5,
-               isActionsAssigned: function() { return this._isActionsAssigned; }
-            },
-            handleSelectionControllerResult: () => {},
-            _markerControllerManager: {
-               hasController: () => false
-            }
-         };
-         const sandbox = sinon.createSandbox();
-         sandbox.replace(lists.BaseControl._private, 'updateInitializedItemActions', (self, options) => {
-            handleinitItemActionsCalled = true;
-         });
-
-         lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged');
-         assert.isFalse(clearSelectionCalled);
-         assert.isFalse(handleAddItemsCalled);
-
-         self._listViewModel.getCount = () => 0;
-         lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged');
-         assert.isTrue(clearSelectionCalled);
-         assert.isFalse(handleAddItemsCalled);
-
-         clearSelectionCalled = false;
-         self._selectionController.isAllSelected = () => false;
-         lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged');
-         assert.isFalse(clearSelectionCalled);
-         assert.isFalse(handleAddItemsCalled);
-
-         clearSelectionCalled = false;
-         lists.BaseControl._private.onCollectionChanged(self, null, '');
-         assert.isFalse(clearSelectionCalled);
-         assert.isFalse(handleAddItemsCalled);
-
-         lists.BaseControl._private.onCollectionChanged(self, null, 'collectionChanged', 'a', 'items');
-         assert.isFalse(clearSelectionCalled);
-         assert.isTrue(handleAddItemsCalled);
-
-         sandbox.restore();
-      });
-
       it('should fire "drawItems" with new collection if source item has changed', async function() {
          var
             cfg = {
@@ -5549,16 +5463,9 @@ define([
                   root: 5
                },
                _prevRootId: 5,
-               _selectionController: {
-                  isAllSelected: () => true,
-                  clearSelection: () => {},
-                  handleReset: (items, prevRoot, rootChanged) => {},
-                  handleAddItems: (items) => {}
+               _selectionControllerManager: {
+                  hasController: () => false
                },
-               _listViewModel: {
-                  getCount: () => 5
-               },
-               handleSelectionControllerResult: () => {},
                _markerControllerManager: {
                   hasController: () => false
                }
@@ -5723,14 +5630,13 @@ define([
          };
          let instance = new lists.BaseControl(cfg);
 
-         instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
+         instance.saveOptions(cfg);
 
          const notifySpy = sinon.spy(instance, '_notify');
 
-         instance._createSelectionController();
          let cfgClone = { ...cfg, selectedKeys: [1] };
-         instance._beforeUpdate(cfgClone);
+         await instance._beforeUpdate(cfgClone);
 
          // нам ключи пришли в опциях и мы не должны их нотифаить
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
@@ -5742,7 +5648,7 @@ define([
          instance._listViewModel.getItemBySourceKey(1).setSelected(false);
 
          cfgClone = { ...cfg, selectedKeys: [1], selectedKeysCount: 2 };
-         instance._beforeUpdate(cfgClone);
+         await instance._beforeUpdate(cfgClone);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false], {bubbling: true}).called);
          assert.isTrue(instance._listViewModel.getItemBySourceKey(1).isSelected());
       });
@@ -6092,27 +5998,30 @@ define([
 
          it('should create marker controller', async () => {
             assert.isFalse(instance._markerControllerManager.hasController());
-            instance._beforeUpdate({
+            await instance._beforeUpdate({
                ...cfg,
                markerVisibility: 'visible',
                markedKey: 1
             });
             assert.isNotNull(instance._markerControllerManager._loadPromise);
+            assert.isTrue(instance._markerControllerManager.hasController());
          });
 
          it('should create selection controller', async () => {
-            assert.isNull(instance._selectionController);
+            assert.isFalse(instance._selectionControllerManager.hasController());
             instance._items = instance._listViewModel.getItems();
             await instance._beforeUpdate({
                ...cfg,
                selectedKeys: [1]
             });
-            assert.isNotNull(instance._selectionController);
+            assert.isNotNull(instance._selectionControllerManager._loadPromise);
+            assert.isTrue(instance._selectionControllerManager.hasController());
          });
 
          it('not should create selection controller', async () => {
             await instance._beforeUpdate(cfg);
-            assert.isNull(instance._selectionController);
+            assert.isFalse(instance._selectionControllerManager.hasController());
+            assert.isUndefined(instance._selectionControllerManager._loadPromise);
          });
       });
 
