@@ -455,15 +455,13 @@ export default class CollectionItem<T> extends mixin<
         if (itemActionsPosition !== 'outside') {
             result.push(classes);
         }
-        if (!useNewModel) {
-            const themedPositionClassCompile = (position) => (
-                `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
-            );
-            if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
-                result.push(themedPositionClassCompile('top'));
-            } else if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
-                result.push(themedPositionClassCompile('bottom'));
-            }
+        const themedPositionClassCompile = (position) => (
+            `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
+        );
+        if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
+            result.push(themedPositionClassCompile('top'));
+        } else if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
+            result.push(themedPositionClassCompile('bottom'));
         }
         return result.length ? ` ${result.join(' ')} ` : ' ';
     }

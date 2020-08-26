@@ -16,6 +16,7 @@
 
              editingItemData="{{ _options.editingItemData }}"
              isAdd="{{ _options.isAdd }}"
+             itemActionsPosition="{{ _options.itemActionsPosition }}"
              itemActionsTemplate="{{ _options.itemActionsTemplate }}"
              itemActionsClass="{{ _options.itemActionsClass }}"
              swipeTemplate="{{ _options.swipeTemplate }}"

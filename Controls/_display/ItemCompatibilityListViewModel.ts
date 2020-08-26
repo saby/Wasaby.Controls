@@ -70,7 +70,7 @@ export class ItemCompatibilityListViewModel implements IItemCompatibilityListVie
     }
 
     get itemPadding() {
-        return {}; // todo
+        return this.getItemPadding(); // todo
     }
 
     get rowSeparatorSize() {
