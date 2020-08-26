@@ -1,4 +1,4 @@
-define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/display'], function(Util, Collection, Display) {
+define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/display', 'Env/Env'], function(Util, Collection, Display, Env) {
 
    describe('Controls/_grid/GridLadderUtil', function() {
       it('isSupportLadder', function() {
@@ -31,6 +31,9 @@ define(['Controls/_grid/utils/GridLadderUtil', 'Types/collection', 'Controls/dis
          assert.strictEqual(Util.stickyLadderCellsCount([{ title: 'photo', stickyProperty: 'photo' }]), 1);
          assert.strictEqual(Util.stickyLadderCellsCount([{ title: 'photo', stickyProperty: ['date', 'time'] }]), 2);
          assert.strictEqual(Util.stickyLadderCellsCount([{ title: 'photo', stickyProperty: 'photo' }], undefined, {}), 0);
+         Env.detection.isIE = true;
+         assert.strictEqual(Util.stickyLadderCellsCount([{ title: 'photo', stickyProperty: ['date', 'time'] }]), 0);
+         Env.detection.isIE = false;
       });
       it('prepareLadder', function() {
          const date1 = new Date(2017, 00, 01);

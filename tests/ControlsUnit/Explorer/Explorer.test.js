@@ -241,7 +241,7 @@ define([
       });
 
       it('itemsSetCallback', function() {
-         let markedKey = '';
+         let markedKey = '', clearSelectionCalled = false;
          const cfg = {};
          const explorer = new explorerMod.View(cfg);
          explorer.saveOptions(cfg);
@@ -253,7 +253,9 @@ define([
          };
          explorer._children = {
             treeControl: {
-               setMarkedKey: (key) => markedKey = key
+               setMarkedKey: (key) => markedKey = key,
+               isAllSelected: () => true,
+               clearSelection: () => clearSelectionCalled = true
             }
          };
 
@@ -263,7 +265,9 @@ define([
          assert.strictEqual(markedKey, 'test');
          assert.strictEqual(explorer._markerForRestoredScroll, 'test');
          assert.isFalse(explorer._isGoingBack);
+         assert.isTrue(clearSelectionCalled);
 
+         clearSelectionCalled = false;
          explorer._isGoingFront = true;
          explorer._root = 'test';
          explorer._restoredMarkedKeys = {
@@ -274,6 +278,7 @@ define([
 
          assert.strictEqual(markedKey, null);
          assert.isFalse(explorer._isGoingFront);
+         assert.isFalse(clearSelectionCalled);
       });
 
       it('setViewMode', function() {
