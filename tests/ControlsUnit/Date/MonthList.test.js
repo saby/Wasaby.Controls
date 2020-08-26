@@ -75,14 +75,18 @@ define([
             sinon.replace(ml, '_updateSource', () => {
                return;
             });
+            let result = false;
             ml._extData = {
                enrichItems: function() {
-                  return;
+                  return {
+                     catch: function () {
+                        result = true;
+                     }
+                  };
                }
             };
-            sandBox.stub(ml._extData, 'enrichItems');
             ml._beforeMount({});
-            sinon.assert.calledOnce(ml._extData.enrichItems);
+            assert.isTrue(result);
             sandBox.restore();
          });
          it('with receivedState', function() {
@@ -483,10 +487,12 @@ define([
             displayedDates: [],
             options: {
                source: {
-                  query:function (data) {
-                     return new Promise(function(resolve) {
-                        resolve(data);
-                     });
+                  query:function () {
+                     return {
+                        then: function () {
+                           return;
+                        }
+                     }
                   }
                }
             },
@@ -508,10 +514,12 @@ define([
             displayedDates: [],
             options: {
                source: {
-                  query:function (data) {
-                     return new Promise(function(resolve) {
-                        resolve(data);
-                     });
+                  query:function () {
+                     return {
+                        then: function () {
+                           return;
+                        }
+                     }
                   }
                }
             },
@@ -533,10 +541,12 @@ define([
             displayedDates: [(new Date(2019, 0)).getTime(), 123],
             options: {
                source: {
-                  query:function (data) {
-                     return new Promise(function(resolve) {
-                        resolve(data);
-                     });
+                  query:function () {
+                     return {
+                        then: function () {
+                           return;
+                        }
+                     }
                   }
                }
             },
@@ -558,10 +568,12 @@ define([
             displayedDates: [(new Date(2019, 0)).getTime(), 123],
             options: {
                source: {
-                  query:function (data) {
-                     return new Promise(function(resolve) {
-                        resolve(data);
-                     });
+                  query:function () {
+                     return {
+                        then: function () {
+                           return;
+                        }
+                     }
                   }
                }
             },
@@ -569,14 +581,25 @@ define([
             date: new Date(2019, 0)
          }].forEach(function(test) {
             it(test.title, function() {
-               const
-                  sandbox = sinon.createSandbox(),
-                  component = calendarTestUtils.createComponent(
-                     calendar.MonthList, coreMerge(test.options, config, { preferSource: true })
-                  );
-
+               const sandbox = sinon.createSandbox();
+               const component = calendarTestUtils.createComponent(calendar.MonthList);
+               sinon.replace(component, '_updateSource', () => {
+                  return;
+               });
+               let result = false;
+               component._extData = {
+                  enrichItems: function() {
+                     return {
+                        catch: function () {
+                           result = true;
+                        }
+                     };
+                  }
+               };
+               component._beforeMount(coreMerge(test.options, config, { preferSource: true }));
                sandbox.stub(component, '_enrichItemsDebounced');
                component._displayedDates = test.displayedDates;
+               component._options = test.options;
                component._intersectHandler(null, test.entries);
                assert.deepEqual(component._displayedDates, test.resultDisplayedDates);
                sandbox.restore();
