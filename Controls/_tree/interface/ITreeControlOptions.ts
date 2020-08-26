@@ -190,8 +190,7 @@ import { RecordSet } from 'Types/collection';
  * @name Controls/_tree/interface/ITreeControlOptions#expanderVisibility
  * @cfg {ExpanderVisibility} Режим отображения элемента развертывания узла {@link Controls/treeGrid:View дерева}.
  * @default visible
- * @remark
- * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FExtendedPG">демо-пример</a>.
+ * @demo Controls-demo/treeGrid/Expander/HasChildren/Index
  * @see expandedItems
  * @see expandByItemClick
  */
