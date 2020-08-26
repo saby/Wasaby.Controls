@@ -863,6 +863,7 @@ let
        },
 
        _stickyHeaderFixedCallback(position: POSITION): void {
+          // После того, как заголовки зафиксировались нужно пересчитать отображение скроллбара и теней.
           this._forceUpdate();
        },
 
