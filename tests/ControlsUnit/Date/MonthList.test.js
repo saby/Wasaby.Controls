@@ -118,6 +118,34 @@ define([
             sinon.assert.called(control._scrollToDate);
             sandbox.restore();
          });
+
+         it('should not reset lastPositionFromOptions if positionToScroll is different', function() {
+            let
+                sandbox = sinon.createSandbox(),
+                control = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 1, 1) });
+
+            sandbox.stub(control, '_canScroll').returns([true]);
+            sandbox.stub(control, '_scrollToDate').returns([true]);
+            control._positionToScroll = new Date(2017, 1, 1);
+            control._lastPositionFromOptions = new Date(2017, 2, 1);
+            control._updateScrollAfterViewModification(false);
+            assert.notEqual(control._positionToScroll, null);
+            sandbox.restore();
+         });
+
+         it('should reset lastPositionFromOptions if positionToScroll is not different', function() {
+            let
+                sandbox = sinon.createSandbox(),
+                control = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 1, 1) });
+
+            sandbox.stub(control, '_canScroll').returns([true]);
+            sandbox.stub(control, '_scrollToDate').returns([true]);
+            control._positionToScroll = new Date(2017, 1, 1);
+            control._lastPositionFromOptions = new Date(2017, 1, 1);
+            control._updateScrollAfterViewModification(false);
+            assert.equal(control._positionToScroll, null);
+            sandbox.restore();
+         });
       });
 
       describe('_beforeUpdate', function() {
