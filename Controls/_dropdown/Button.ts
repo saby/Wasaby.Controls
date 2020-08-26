@@ -128,18 +128,6 @@ export default class Button extends BaseDropdown {
       if (options.size) {
          Logger.error('Опция size является устаревшей. Вместо нее используйте опции fontSize и inlineHeight');
       }
-      const currentButtonClass = ActualApi.styleToViewMode(options.style);
-      const oldViewModeToken = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode);
-
-      this._buttonStyleButton = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle, options.readOnly);
-      this._contrastBackgroundButton = ActualApi.contrastBackground(options);
-      this._viewModeButton = oldViewModeToken.viewMode;
-      if (typeof oldViewModeToken.contrast !== 'undefined') {
-         this._contrastBackgroundButton = oldViewModeToken.contrast;
-      }
-      this._inlineHeightButton = ActualApi.actualHeight(options.size, options.inlineHeight, this._viewModeButton);
-      this._fontColorStyleButton = ActualApi.fontColorStyle(this._buttonStyle, this._viewModeButton, options.fontColorStyle);
-      this._fontSizeButton = ActualApi.fontSize(options);
    }
 
    _dataLoadCallback(items): void {
