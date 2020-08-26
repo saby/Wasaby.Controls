@@ -42,7 +42,6 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
     collection: Collection<Record>;
     activeElement: string | number;
     _triggerPositionCoefficient: number;
-    _notify: (eventName: string, args?: unknown[], options?: { bubbling?: boolean }) => unknown;
     forceInitVirtualScroll: boolean;
     attachLoadTopTriggerToNull: boolean;
 }
@@ -343,11 +342,6 @@ export default class ScrollController {
                 } else {
                     // @ts-ignore
                     collection.setIndexes(start, stop);
-                }
-                if (start === 0) {
-                    this._notify('disableVirtualNavigation', [], { bubbling: true });
-                } else {
-                    this._notify('enableVirtualNavigation', [], { bubbling: true });
                 }
             }
         }
