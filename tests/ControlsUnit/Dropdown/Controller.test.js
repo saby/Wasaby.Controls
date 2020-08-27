@@ -595,7 +595,8 @@ define(
                };
                dropdownController = getDropdownController(newConfig);
                dropdownController._sourceController = {
-                  hasMoreData: () => {}
+                  hasMoreData: () => {
+                  }
                };
             });
 
@@ -604,7 +605,7 @@ define(
                   opener: 'test'
                };
                const resultPopupConfig = dropdownController._getPopupOptions();
-               assert.deepEqual(resultPopupConfig.fittingMode,  {
+               assert.deepEqual(resultPopupConfig.fittingMode, {
                   vertical: 'adaptive',
                   horizontal: 'overflow'
                });
@@ -638,6 +639,7 @@ define(
                assert.equal(resultPopupConfig.testPopupOptions, 'testValue');
                assert.equal(resultPopupConfig.opener, 'test');
             });
+         });
 
          it('_beforeUnmount', function() {
             let isCanceled = false, opened = true;
