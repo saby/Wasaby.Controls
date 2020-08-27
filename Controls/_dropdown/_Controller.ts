@@ -420,6 +420,7 @@ export default class _Controller implements IDropdownController {
              undefined,
          hasMoreButton: this._sourceController.hasMoreData('down')
       };
+      delete baseConfig.theme;
       const config = {
          templateOptions: Object.assign(baseConfig, templateOptions),
          template: 'Controls/menu:Popup',
