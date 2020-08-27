@@ -1751,9 +1751,6 @@ var
                 };
                 currentColumn.classList = _private.getItemColumnCellClasses(self, current, current.theme, backgroundColorStyle);
 
-                if (current.itemPadding.right) {
-                    currentColumn.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${current.theme}`;
-                }
 
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
@@ -1761,7 +1758,9 @@ var
                      * После закрытия можно удалить здесь и из шаблонов.
                      * https://online.sbis.ru/opendoc.html?guid=4230f8f0-7fd1-4018-bd8c-08d703af3899
                      */
-                    columnData.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${current.theme}`;
+                    if (columnData.index === current.columns.length - 1) {
+                        columnData.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${current.theme}`;
+                    }
                     return columnData.classList.padding;
                 };
                 currentColumn.column = current.columns[current.columnIndex];
