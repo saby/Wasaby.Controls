@@ -226,8 +226,12 @@
    background-color: @readonly_color;
 }
 
-.controls-Grid__row-cell_theme-@{themeName} {
+.controls-Grid__row-cell_default_min_height-theme-@{themeName} {
    min-height: @cell_min-height_grid;
+}
+
+.controls-Grid__row-cell_small_min_height-theme-@{themeName} {
+   min-height: @cell_small-min-height_grid;
 }
 
 .controls-Grid__row-cell__content_colspaned {
@@ -334,7 +338,7 @@
    .controls-BaseControl_showActions_delayed .controls-Grid__row:hover {
       > .controls-itemActionsV__container,
       > .controls-Grid__row-cell,
-      > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper,
+      > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper,
       > .controls-Grid__row-cell .controls-Grid__row-cell__content {
          > .controls-itemActionsV {
             transition: opacity 500ms step-end;
@@ -347,7 +351,7 @@
    .controls-BaseControl_showActions_delayed .controls-Grid__row:hover {
       > .controls-itemActionsV__container,
       > .controls-Grid__row-cell,
-      > .controls-Grid__row-cell .controls-Grid__table__relative-cell-wrapper,
+      > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper,
       > .controls-Grid__row-cell .controls-Grid__row-cell__content {
          > .controls-itemActionsV {
             opacity: 1;

@@ -1,5 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
-import {BaseViewModel, ItemsUtil, ListViewModel} from 'Controls/list';
+import {BaseViewModel, ItemsUtil, ListViewModel, createClassListCollection} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import {isStickySupport} from 'Controls/scroll';
 import * as LadderWrapper from 'wml!Controls/_grid/LadderWrapper';
@@ -30,7 +30,6 @@ import {IItemActionsTemplateConfig} from 'Controls/itemActions';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
-import {createClassListCollection} from "../Utils/CssClassList";
 import { stickyLadderCellsCount, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
 import { ItemsEntity } from 'Controls/dragnDrop';
@@ -324,7 +323,12 @@ var
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
             // Стиль колонки
-            classLists.base += `controls-Grid__row-cell controls-Grid__row-cell_theme-${theme} controls-Grid__cell_${style} controls-Grid__row-cell_${style}_theme-${theme}`;
+            if (current.itemPadding.top === 'null' && current.itemPadding.bottom === 'null') {
+                classLists.base += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
+            } else {
+                classLists.base += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
+            }
+            classLists.base += `controls-Grid__row-cell controls-Grid__cell_${style} controls-Grid__row-cell_${style}_theme-${theme}`;
             _private.prepareSeparatorClasses(current, classLists, theme);
 
             if (backgroundColorStyle) {

@@ -10,7 +10,7 @@ import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
 import { Model } from 'Types/entity';
 import { CollectionItem, IEditingConfig, ISwipeConfig } from 'Controls/display';
-import { CssClassList } from "../Utils/CssClassList";
+import { CssClassList } from "./resources/utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {IItemAction, IItemActionsTemplateConfig} from 'Controls/itemActions';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
@@ -53,8 +53,12 @@ const _private = {
         const style = styleProperty === 'masterClassic' || !styleProperty ? 'default' : styleProperty;
 
         classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}_theme-${theme}`;
-        classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${theme}`;
-        classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${theme}`;
+        if (itemPadding.top === 'null' && itemPadding.bottom === 'null') {
+            classList += `controls-ListView_default-padding_theme-${theme}`;
+        } else {
+            classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${theme}`;
+            classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${theme}`;
+        }
         classList += ` controls-ListView__item-rightPadding_${itemPadding.right}_theme-${theme}`;
 
         if (multiSelectVisibility !== 'hidden') {
