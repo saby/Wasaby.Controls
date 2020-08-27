@@ -362,7 +362,7 @@ define('Controls/Application',
             this._globalpopup.openInfoBoxHandler(event, config);
          },
 
-         _openDialogHandler: function(event, templ, templateOptions, opener = null) {
+         _openDialogHandler: function(event, templ, templateOptions, opener) {
             this._globalpopup.openDialogHandler(event, templ, templateOptions, opener);
          },
 
