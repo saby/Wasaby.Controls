@@ -4,6 +4,7 @@ import {Model} from 'Types/entity';
 
 import {Controller as MoverController, IControllerOptions, TMoveItems, MOVE_POSITION, MOVE_TYPE, TMoveItem} from 'Controls/mover';
 import {DataSet} from "Types/source";
+import {TKeySelection} from "../_interface/ISelectionType";
 
 /**
  * Контрол для перемещения элементов списка в recordSet и dataSource.
@@ -45,7 +46,7 @@ import {DataSet} from "Types/source";
  */
 
 export default class Mover extends Control {
-    private _controller: MoverController;
+    protected _controller: MoverController;
 
     protected _beforeMount(options, context) {
         this._updateMoveController(options, context);
@@ -55,37 +56,35 @@ export default class Mover extends Control {
         this._updateMoveController(options, context);
     }
 
-    moveItemUp(item) {
+    moveItemUp(item): Promise<DataSet|void> {
         return this._moveItemToSiblingPosition(item, MOVE_POSITION.before);
     }
 
-    moveItemDown(item) {
+    moveItemDown(item): Promise<DataSet|void> {
         return this._moveItemToSiblingPosition(item, MOVE_POSITION.after);
     }
 
-    moveItems(items: TMoveItems, target: Model, position: MOVE_POSITION): Promise<DataSet|void> {
+    moveItems(items: TMoveItems, target: Model|TKeySelection, position: MOVE_POSITION): Promise<DataSet|void> {
         if (target === undefined) {
             return Promise.resolve();
         }
         return this._controller.getItems(items, target, position).then((selectedItems: TMoveItems) => {
             if (this._controller.getSelectedKeys(selectedItems).length) {
                 const both = (result) => {
-                    this._afterItemsMove(items, target, position, result);
+                    this._afterItemsMove(selectedItems, target, position, result);
                     return result;
                 }
-                return this._beforeItemsMove(items, target, position).then((moveType: MOVE_TYPE) => (
-                    this._controller.moveItems(items, target, position, moveType).then((result) => both(result))
-                ))
-                    .catch((result: Error) => {
-                        Logger.warn(result.message, this);
-                    });
+                return this._beforeItemsMove(selectedItems, target, position)
+                    .then((moveType: MOVE_TYPE) => (
+                        this._controller.moveItems(selectedItems, target, position, moveType).then((result) => both(result))
+                    ));
             }
             return Promise.resolve();
         });
     }
 
-    moveItemsWithDialog(items: TMoveItems): void {
-        this._controller.moveItemsWithDialog(items);
+    moveItemsWithDialog(items: TMoveItems): Promise<string> {
+        return this._controller.moveItemsWithDialog(items);
     }
 
     /**
@@ -94,7 +93,7 @@ export default class Mover extends Control {
      * @param target
      * @private
      */
-    private _moveDialogOnResultHandler(items: TMoveItems, target: Model) {
+    private _moveDialogOnResultHandler(items: TMoveItems, target: Model): void {
         this.moveItems(items, target, MOVE_POSITION.on);
     }
 
@@ -141,7 +140,7 @@ export default class Mover extends Control {
             root: options.root,
             filter: context.dataOptions?.filter,
             searchParam: options.searchParam,
-            sortingOrder: options.searchParam,
+            sortingOrder: options.sortingOrder,
             nodeProperty: options.nodeProperty,
             parentProperty: options.parentProperty
         }

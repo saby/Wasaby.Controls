@@ -2,7 +2,7 @@ import {Model} from 'Types/entity';
 import {DataSet} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {Logger} from 'UI/Utils';
-import {ISelectionObject, TKeysSelection} from 'Controls/interface';
+import {ISelectionObject, TKeySelection, TKeysSelection} from 'Controls/interface';
 import {Dialog} from 'Controls/popup';
 
 import {
@@ -77,6 +77,9 @@ export class Controller {
             root: options.root,
             searchParam: options.searchParam
         }
+        if (this._strategy) {
+            this._strategy.update(options);
+        }
     }
 
     /**
@@ -86,18 +89,18 @@ export class Controller {
      * @param position
      * @param moveType
      */
-    moveItems(items: TMoveItems, target: Model, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void> {
+    moveItems(items: TMoveItems, target: Model|TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void> {
         if (target === undefined) {
             return Promise.resolve();
         }
-        return this._getStrategy(items).moveItems(items, target.getKey(), position, moveType);
+        return this._getStrategy(items).moveItems(items, target, position, moveType);
     }
 
     /**
      * Перемещает запись вверх
      * @param item
      */
-    moveItemUp(item: TMoveItem) {
+    moveItemUp(item: TMoveItem): Promise<DataSet|void> {
         return this._moveItemToSiblingPosition(item, MOVE_POSITION.before);
     }
 
@@ -105,7 +108,7 @@ export class Controller {
      * Перемещает запись вниз
      * @param item
      */
-    moveItemDown(item: TMoveItem) {
+    moveItemDown(item: TMoveItem): Promise<DataSet|void> {
         return this._moveItemToSiblingPosition(item, MOVE_POSITION.after);
     }
 
@@ -113,16 +116,17 @@ export class Controller {
      * Перемещает запись при помощи окна Mover
      * @param items
      */
-    moveItemsWithDialog(items: TMoveItems): void {
+    moveItemsWithDialog(items: TMoveItems): Promise<string> {
         if (this._dialogOptions.template) {
             if (ItemsValidator.validate(items)) {
-                this._getStrategy(items).getItems(items).then((selectedItems) => (
+                return this._getStrategy(items).getItems(items).then((selectedItems) => (
                     this._openMoveDialog(selectedItems)
                 ));
             }
         } else {
             Logger.warn('Mover: Can\'t call moveItemsWithDialog! moveDialogTemplate option, is undefined', this);
         }
+        return Promise.resolve(undefined);
     }
 
     /**
@@ -132,8 +136,8 @@ export class Controller {
      * @param target
      * @param position
      */
-    getItems(items: TMoveItems, target: Model, position: MOVE_POSITION): Promise<TMoveItems> {
-        return this._getStrategy(items).getItems(items, target.getKey(), position);
+    getItems(items: TMoveItems, target: Model|TKeySelection, position: MOVE_POSITION): Promise<TMoveItems> {
+        return this._getStrategy(items).getItems(items, target, position);
     }
 
     /**
@@ -161,7 +165,7 @@ export class Controller {
      * @param items
      * @private
      */
-    private _openMoveDialog(items: TMoveItems): void {
+    private _openMoveDialog(items: TMoveItems): Promise<string> {
         const templateOptions = {
             movedItems: this._getStrategy(items).getSelectedKeys(items),
             source: this._source,
@@ -173,7 +177,7 @@ export class Controller {
             this._dialogOptions.onResultHandler = this._moveDialogOnResultHandler.bind(this);
         }
 
-        Dialog.openPopup({
+        return Dialog.openPopup({
             opener: this._dialogOptions.opener,
             templateOptions,
             closeOnOutsideClick: true,

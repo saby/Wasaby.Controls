@@ -30,6 +30,32 @@ export abstract class BaseStrategy {
     protected _root: string;
 
     constructor(options: IStrategyOptions) {
+        this.update(options);
+    }
+
+    /**
+     * Основной метод перемещения записей в указанную позицию
+     * @param items
+     * @param targetId
+     * @param position
+     * @param moveType
+     */
+    abstract moveItems(items: TMoveItems, targetId: TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void>;
+
+    /**
+     * Перемещает записи в ресурсе
+     * @param items
+     * @param targetId
+     * @param position
+     * @private
+     */
+    protected abstract _moveInSource(items: TMoveItems, targetId: TKeySelection, position: MOVE_POSITION): Promise<DataSet|void>;
+
+    /**
+     * Обновляет опции в стратегии, если вдруг что-то поменялось
+     * @param options
+     */
+    update(options: IStrategyOptions) {
         this._parentProperty = options.parentProperty;
         this._nodeProperty = options.nodeProperty;
         this._sortingOrder = options.sortingOrder;
@@ -41,11 +67,11 @@ export abstract class BaseStrategy {
         this._root = options.root;
     }
 
-
-    abstract moveItems(items: TMoveItems, targetId: TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void>;
-
-    protected abstract _moveInSource(items: TMoveItems, targetId: TKeySelection, position: MOVE_POSITION): Promise<DataSet|void>;
-
+    /**
+     * Получает ближайшую соседнюю запись по заданному направлению
+     * @param item
+     * @param position
+     */
     getSiblingItem(item: TMoveItem, position: MOVE_POSITION): Model {
         let itemIndex = this._items.getIndex(this.getModel(item));
         return this._items.at(position === MOVE_POSITION.before ? --itemIndex : ++itemIndex);

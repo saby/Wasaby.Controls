@@ -2,6 +2,7 @@ import {DataSet} from 'Types/source';
 import {ISelectionObject, TKeySelection, TKeysSelection, TSelectionRecord} from 'Controls/interface';
 import {Model} from 'Types/entity';
 import {IMoveObject} from './IMoveObject';
+import {IStrategyOptions} from "./IStrategyOptions";
 
 /**
  * @typedef {Controls/interface:TKeySelection|Types/entity:Model} TMoveItem
@@ -64,13 +65,18 @@ export enum MOVE_POSITION {
  */
 export interface IMoveStrategy<T> {
     /**
+     * Обновляет параметры стратегии при их изменении в контроллере
+     * @param options
+     */
+    update(options: IStrategyOptions)
+    /**
      * Позволяет переместить запись относительно указанного элемента
      * @param items
-     * @param targetId
+     * @param target
      * @param position
      * @param moveType
      */
-    moveItems(items: T, targetId: TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void>;
+    moveItems(items: T, target: Model|TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void>;
 
     /**
      * Получает Model записи

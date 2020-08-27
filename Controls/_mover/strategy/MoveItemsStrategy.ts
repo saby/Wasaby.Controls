@@ -18,7 +18,8 @@ import {BaseStrategy} from './BaseStrategy';
 const DEFAULT_SORTING_ORDER = 'asc';
 
 export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Model[]> {
-    moveItems(items: TMoveItems, targetId: TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void> {
+    moveItems(items: TMoveItems, target: Model|TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void> {
+        const targetId = this.getId(target);
         if (moveType === MOVE_TYPE.MOVE_IN_ITEMS) {
             this._moveInItems(items, targetId, position);
         } else if (moveType !== MOVE_TYPE.CUSTOM) {
@@ -37,15 +38,14 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
      * @param position
      * @private
      */
-    getItems(items: TMoveItems, target?: Model, position?: MOVE_POSITION): Promise<TMoveItems> {
+    getItems(items: TMoveItems, target?: Model|TKeySelection, position?: MOVE_POSITION): Promise<TMoveItems> {
         if (!target && !position) {
             return this._getItemsBySelection(items);
         }
         return this._getItemsBySelection(items)
             .then((selectedItems: TMoveItems) => (
-                selectedItems.filter((item) => this._checkItem(item, target, position))
-            ))
-            .then((selectedItems: TMoveItems) => this._prepareMovedItems(selectedItems));
+                selectedItems.filter((item) => this._checkItem(item, this.getModel(target), position))
+            ));
     }
 
     // tree
@@ -81,7 +81,7 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
      * @param items
      */
     getSelectedKeys(items: TKeysSelection): TKeysSelection {
-        return items;
+        return this._getItemsKeys(items);
     }
 
     /**
@@ -109,7 +109,7 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
      * @param items
      * @private
      */
-    private _prepareMovedItems(items: TMoveItems): TMoveItems {
+    private _getItemsKeys(items: TMoveItems): TMoveItems {
         let result = [];
         items.forEach((item) => result.push(this.getId(item)));
         return result;

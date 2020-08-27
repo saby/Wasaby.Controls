@@ -1,4 +1,4 @@
-import {Control, IControlOptions} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {TMoveItems} from './IMoveStrategy';
 
@@ -45,13 +45,13 @@ export interface IMoveDialogOptions {
     templateOptions?: object;
     /**
      * @name Controls/_mover/interface/IMoveDialogOption#template
-     * @cfg {String} Путь к шаблону диалога
+     * @cfg {String|UI/Base:TemplateFunction} Путь к шаблону диалога
      */
     /*
      * @name Controls/_mover/interface/IMoveDialogOption#template
-     * @cfg {String} dialog template path
+     * @cfg {String|UI/Base:TemplateFunction} dialog template path
      */
-    template?: string;
+    template?: string|TemplateFunction;
     /**
      * @name Controls/_mover/interface/IMoveDialogOption#onResultHandler
      * @cfg {TOnResultHandler} Обработчик результата перемещения в диалоге

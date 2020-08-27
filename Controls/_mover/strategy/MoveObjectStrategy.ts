@@ -1,4 +1,4 @@
-import {Record} from 'Types/entity';
+import {Record, Model} from 'Types/entity';
 import {BindingMixin, DataSet, ICrudPlus, IData, IRpc} from 'Types/source';
 
 import {TKeySelection, TKeysSelection} from 'Controls/interface';
@@ -11,7 +11,8 @@ import {BaseStrategy} from './BaseStrategy';
 import {IMoveObject} from '../interface/IMoveObject';
 
 export class MoveObjectStrategy extends BaseStrategy implements IMoveStrategy<IMoveObject> {
-    moveItems(items: TMoveItems, targetId: TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void> {
+    moveItems(items: TMoveItems, target: Model|TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void> {
+        const targetId = this.getId(target);
         if (items.selectedKeys.length && moveType !== MOVE_TYPE.CUSTOM) {
             return this._moveInSource(items, targetId, position);
         }
