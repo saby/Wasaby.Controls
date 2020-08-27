@@ -1758,7 +1758,7 @@ var
                      * После закрытия можно удалить здесь и из шаблонов.
                      * https://online.sbis.ru/opendoc.html?guid=4230f8f0-7fd1-4018-bd8c-08d703af3899
                      */
-                    if (columnData.index === current.columns.length - 1) {
+                    if (columnData.columnIndex === current.columns.length - 1) {
                         columnData.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${current.theme}`;
                     }
                     return columnData.classList.padding;

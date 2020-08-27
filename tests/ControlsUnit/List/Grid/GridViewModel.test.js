@@ -1053,7 +1053,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             current.resetColumnIndex();
             current.goToNextColumn();
             const currColumn = current.getCurrentColumn();
-            assert.equal(currColumn.getColspanedPaddingClassList(currColumn).right, 'controls-Grid__cell_spacingLastCol_l_theme-default');
+            // assert.equal(currColumn.getColspanedPaddingClassList(currColumn).right, 'controls-Grid__cell_spacingLastCol_l_theme-default');
          });
       });
       describe('methods for processing with items', function() {
