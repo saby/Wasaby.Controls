@@ -44,14 +44,14 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         searchParam: options.searchParam,
         minSearchLength: options.minSearchLength,
         searchDelay: options.searchDelay,
-        searchValueTrim: options.searchValueTrim
+        searchValueTrim: options.searchValueTrim,
+        theme: options.theme
     }, ...controlConfig};
     return  {
         lazyItemsLoading: options.lazyItemsLoading,
         navigation: options.navigation,
         menuOptions,
         openerControl: options.openerControl,
-        readOnly: options.readOnly,
-        theme: options.theme
+        readOnly: options.readOnly
     };
 }
