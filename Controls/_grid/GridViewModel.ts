@@ -324,7 +324,12 @@ var
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
             // Стиль колонки
-            classLists.base += `controls-Grid__row-cell controls-Grid__row-cell_theme-${theme} controls-Grid__cell_${style} controls-Grid__row-cell_${style}_theme-${theme}`;
+            if (current.itemPadding.top === 'null' && current.itemPadding.bottom === 'null') {
+                classLists.base += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
+            } else {
+                classLists.base += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
+            }
+            classLists.base += `controls-Grid__row-cell controls-Grid__cell_${style} controls-Grid__row-cell_${style}_theme-${theme}`;
             _private.prepareSeparatorClasses(current, classLists, theme);
 
             if (backgroundColorStyle) {
