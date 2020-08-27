@@ -107,6 +107,7 @@ define(
             combobox._controller = {
                update: () => {isUpdated = true}
             };
+            combobox._container = ['test'];
             combobox._beforeUpdate({});
             assert.isTrue(isUpdated);
          });

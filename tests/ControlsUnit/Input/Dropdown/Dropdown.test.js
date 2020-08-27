@@ -405,6 +405,23 @@ define(
                assert.include(result.menuOptions.popupClassName, 'controls-DropdownList__margin');
             });
 
+            it('check keyProperty option', () => {
+               ddl._options.source = new history.Source({});
+               let result = ddl._getControllerOptions({
+                  keyProperty: 'key'
+               });
+
+               assert.equal(result.templateOptions.keyProperty, 'copyOriginalId');
+
+               ddl._options.source = 'originalSource';
+               result = ddl._getControllerOptions({
+                  keyProperty: 'key'
+               });
+
+               assert.equal(result.templateOptions.keyProperty, 'key');
+            });
+         });
+
             it('popupClassName with header', () => {
                const result = ddl._getControllerOptions({
                   nodeFooterTemplate: 'testNodeFooterTemplate',
