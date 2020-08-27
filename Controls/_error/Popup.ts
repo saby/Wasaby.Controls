@@ -88,6 +88,7 @@ export default class Popup implements IPopupHelper {
             return popup.Dialog.openPopup({
                 template: config.template,
                 templateOptions: config.options,
+                modal: true,
                 ...dialogOptions
             });
         });

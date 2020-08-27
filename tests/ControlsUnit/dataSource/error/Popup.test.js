@@ -145,6 +145,7 @@ define([
                assert.strictEqual(cfg.options, viewConfig.templateOptions, 'openPopup() called with options');
                assert.strictEqual(cfg.opener, opener, 'openPopup() called with opener');
                assert.strictEqual(cfg.eventHandlers, eventHandlers, 'openPopup() called with event handlers');
+               assert.strictEqual(cfg.modal, true, 'modal is true by default');
             });
          });
 

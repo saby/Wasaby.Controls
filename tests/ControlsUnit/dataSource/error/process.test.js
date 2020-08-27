@@ -13,8 +13,8 @@ define([
       beforeEach(() => {
          _popupHelper = {
             preloadPopup: sinon.stub(),
-            openConfirmation: sinon.stub().returns(Promise.resolve()),
-            openDialog: sinon.stub().returns(Promise.resolve(popupId))
+            openConfirmation: sinon.stub().resolves(),
+            openDialog: sinon.stub().resolves(popupId),
          };
       });
 
