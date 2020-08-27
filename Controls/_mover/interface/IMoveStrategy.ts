@@ -1,11 +1,12 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {BindingMixin, DataSet, ICrudPlus, IData, IRpc} from 'Types/source';
 import {ISelectionObject, TKeySelection, TKeysSelection, TSelectionRecord} from 'Controls/interface';
 import {Model} from 'Types/entity';
-import {IMovableItem} from './IMovableItem';
 import {RecordSet} from "Types/collection";
 
-export enum BEFORE_ITEMS_MOVE_RESULT {
+/**
+ * Необходимо для обратной совместимости со старой логикой
+ */
+export enum MOVE_TYPE {
     CUSTOM = 'Custom',
     MOVE_IN_ITEMS = 'MoveInItems'
 }
@@ -51,31 +52,31 @@ export interface ITreeStrategyOptions {
     searchParam: string;
 }
 
-export interface IMoveDialogOptions {
-    /**
-     * Необходим для moverDialog
-     */
-    opener: Control<IControlOptions, unknown> | null;
-    moveDialogOptions?: any; //@todo Разобрать опции для шаблона moveDialog
-    moveDialogTemplate?: TemplateFunction;
-}
-
-export interface IStrategyOptions extends ITreeStrategyOptions, IMoveDialogOptions {
+export interface IStrategyOptions extends ITreeStrategyOptions {
     source: ISource;
     sortingOrder: string;
     items: RecordSet;
     keyProperty: string;
-    // @todo Как избавиться от колбека?
-    beforeItemsMove: (items: TMoveItems, target: IMovableItem, position: MOVE_POSITION) => Promise<any>;
-    // @todo Как избавиться от колбека?
-    afterItemsMove: (items: TMoveItems, target, position: MOVE_POSITION, result) => void;
 }
 
 export interface IMoveStrategy<T> {
-    moveItems(items: T, target: IMovableItem, position): Promise<DataSet|void>;
-    moveItemsWithDialog(items: T, template: TemplateFunction): void;
+    moveItems(items: T, targetId: TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void>;
     getModel(item: TMoveItem): Model;
     getId(item: TMoveItem): TKeySelection;
-    // TODO Надо понять, может ли контроллер работать с Collection и тогда может быть этот метот сократится
-    getSiblingItem(item: TMoveItem, position: MOVE_POSITION);
+    /**
+     * Ищет ближайших соседей для текущего item
+     * @param item
+     * @param position
+     */
+    getSiblingItem(item: TMoveItem, position: MOVE_POSITION): Model;
+    /**
+     * Получает промис со списком выделенных записей
+     * Единственный способ избавиться от коллбека - вынести сейчас этот метод в публичные. Он не понадобится,
+     * когда получится избавиться от старой логики.
+     * @param items
+     * @param target
+     * @param position
+     * @private
+     */
+    getSelectedItems(items: TMoveItems, target?: Model, position?: MOVE_POSITION): Promise<TMoveItems>;
 }

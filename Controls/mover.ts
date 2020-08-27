@@ -7,4 +7,4 @@
  */
 
 export {Controller, IControllerOptions} from 'Controls/_mover/Controller';
-export {TMoveItems} from 'Controls/_mover/interface/IMoveStrategy';
+export {TMoveItems, MOVE_POSITION, MOVE_TYPE, TMoveItem} from 'Controls/_mover/interface/IMoveStrategy';

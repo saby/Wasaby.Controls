@@ -1,50 +1,30 @@
-import {TemplateFunction} from 'UI/Base';
 import {Record} from 'Types/entity';
 import {DataSet} from 'Types/source';
 
-import {TKeySelection, TKeysSelection} from 'Controls/interface';
-import {IMoveStrategy, BEFORE_ITEMS_MOVE_RESULT, MOVE_POSITION, IMoveObject} from '../interface/IMoveStrategy';
+import {TKeySelection} from 'Controls/interface';
+import {
+    IMoveStrategy,
+    MOVE_TYPE,
+    MOVE_POSITION,
+    IMoveObject,
+    TMoveItems
+} from '../interface/IMoveStrategy';
 import {BaseStrategy} from './BaseStrategy';
-import {IMovableItem} from '../interface/IMovableItem';
 
 export class MoveObjectStrategy extends BaseStrategy implements IMoveStrategy<IMoveObject> {
-    moveItems(items: IMoveObject, target: IMovableItem, position: MOVE_POSITION): Promise<DataSet|void> {
-        if (items.selectedKeys.length) {
-            return this._moveItemsInner(items, target, position);
+    moveItems(items: TMoveItems, targetId: TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void> {
+        if (items.selectedKeys.length && moveType !== MOVE_TYPE.CUSTOM) {
+            return this._moveInSource(items, targetId, position);
         }
         return Promise.resolve();
     }
 
     /**
-     * Перемещает элементы при помощи диалога
-     * @param items
-     * @param template
-     */
-    moveItemsWithDialog(items: IMoveObject, template: TemplateFunction): void {
-        this._openMoveDialog(items, template);
-    }
-
-    /**
-     * Возвращает выбранные ключи
+     * Метод, необходимый для получения совместимости со старой логикой.
      * @param items
      */
-    protected _getSelectedKeys(items: IMoveObject): TKeysSelection {
-        return items.selectedKeys;
-    }
-
-    /**
-     * Обработчик Промиса после выполнения _beforeItemsMove
-     * @param items
-     * @param targetId
-     * @param position
-     * @param result
-     * @private
-     */
-    protected _beforeItemsMoveResultHandler(items, targetId, position, result): Promise<DataSet|void> {
-        if (result !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
-            return this._moveInSource(items, targetId, position);
-        }
-        Promise.resolve();
+    getSelectedItems(items: TMoveItems): Promise<TMoveItems> {
+        return Promise.resolve(items?.selectedKeys);
     }
 
     /**

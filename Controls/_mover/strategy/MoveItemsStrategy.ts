@@ -9,47 +9,51 @@ import {TKeySelection, TKeysSelection, TSelectionRecord} from 'Controls/interfac
 
 import {
     IMoveStrategy,
-    BEFORE_ITEMS_MOVE_RESULT,
+    MOVE_TYPE,
     MOVE_POSITION,
     TMoveItems, TMoveItem
 } from '../interface/IMoveStrategy';
-import {IMovableItem} from '../interface/IMovableItem';
 import {BaseStrategy} from './BaseStrategy';
-import {TemplateFunction} from "UI/Base";
 
 
 const DEFAULT_SORTING_ORDER = 'asc';
 
 export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Model[]> {
-    moveItems(items: TMoveItems, target: IMovableItem, position: MOVE_POSITION): Promise<DataSet|void> {
-        return this._getItemsBySelection(items)
-            .then((itemsBySelection) => {
-                itemsBySelection = itemsBySelection.filter((item) => this._checkItem(item, target?.getContents(), position));
-                if (itemsBySelection.length) {
-                    return this._moveItemsInner(itemsBySelection, target, position);
-                }
-                return Promise.resolve();
+    moveItems(items: TMoveItems, targetId: TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void> {
+        if (moveType === MOVE_TYPE.MOVE_IN_ITEMS) {
+            this._moveInItems(items, targetId, position);
+        } else if (moveType !== MOVE_TYPE.CUSTOM) {
+            return this._moveInSource(items, targetId, position).then((moveResult) => {
+                this._moveInItems(items, targetId, position);
+                return moveResult;
             });
+        }
+        return Promise.resolve();
     }
 
     /**
-     * Перемещает элементы при помощи диалога
+     * Возвращает выделенные элементы
      * @param items
-     * @param template
+     * @param target
+     * @param position
+     * @private
      */
-    moveItemsWithDialog(items: TMoveItems, template: TemplateFunction): void {
-        this._getItemsBySelection(items).then((itemsBySelection) => {
-            this._openMoveDialog(this._prepareMovedItems(itemsBySelection), template);
-        });
+    getSelectedItems(items: TMoveItems, target?: Model, position?: MOVE_POSITION): Promise<TMoveItems> {
+        if (!target && !position) {
+            return this._getItemsBySelection(items);
+        }
+        return this._getItemsBySelection(items).then((itemsBySelection: TMoveItems) => (
+            itemsBySelection.filter((item) => this._checkItem(item, target, position))
+        ));
     }
 
     // TODO Это похоже, только для дерева
-    getSiblingItem(item: TMoveItem, position: MOVE_POSITION) {
+    getSiblingItem(item: TMoveItem, position: MOVE_POSITION): Model {
         //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
         //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
         //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
         //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
-        //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
+        //Для плоского списка мо_moveItemsInnerжно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
         if (this._parentProperty) {
             const display = TreeItemsUtil.getDefaultDisplayTree(this._items, {
                 keyProperty: this._keyProperty,
@@ -72,34 +76,6 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
     }
 
     /**
-     * Возвращает выбранные ключи
-     * @param items
-     */
-    protected _getSelectedKeys(items: TMoveItems): TKeysSelection {
-        return items;
-    }
-
-    /**
-     * Обработчик Промиса после выполнения _beforeItemsMove
-     * @param items
-     * @param targetId
-     * @param position
-     * @param result
-     * @private
-     */
-    protected _beforeItemsMoveResultHandler(items, targetId, position, result): Promise<DataSet|void> {
-        if (result === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
-            this._moveInItems(items, targetId, position);
-        } else if (result !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
-            return this._moveInSource(items, targetId, position).then((moveResult) => {
-                this._moveInItems(items, targetId, position);
-                return moveResult;
-            });
-        }
-        return Promise.resolve();
-    }
-
-    /**
      * Перемещает элементы в ресурсе
      * @param items
      * @param targetId
@@ -119,15 +95,22 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
         });
     }
 
-    /**
-     * Возвращает список Id если был передан список Model
-     * @param items
-     * @private
-     */
-    private _prepareMovedItems(items: TMoveItems): TMoveItems {
-        let result = [];
-        items.forEach((item) => result.push(this.getId(item)));
-        return result;
+    private _getItemsBySelection(items: TMoveItems): Promise<TMoveItems> {
+            let resultSelection;
+            // Support moving with mass selection.
+            // Full transition to selection will be made by:
+            // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+            (items as TSelectionRecord).recursive = false;
+
+        if (items instanceof Array) {
+            resultSelection = Promise.resolve(items);
+        } else {
+            // TODO Это похоже, только для дерева
+            const filter = this._prepareFilter(this._filter, items);
+            resultSelection = getItemsBySelection(items, this._source, this._items, filter);
+        }
+
+        return resultSelection;
     }
 
     private _moveInItems(items: Model[], targetId: TKeySelection, position: MOVE_POSITION): void {
@@ -181,25 +164,6 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
                 item.set(this._parentProperty, targetId);
             }
         });
-    }
-
-    // TODO Это похоже, только для дерева
-    private _getItemsBySelection(items: TMoveItems): Promise<TMoveItems> {
-        let resultSelection;
-        // Support moving with mass selection.
-        // Full transition to selection will be made by:
-        // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-        (items as TSelectionRecord).recursive = false;
-
-        if (items instanceof Array) {
-            resultSelection = Promise.resolve(items);
-        } else {
-            // TODO Это похоже, только для дерева
-            const filter = this._prepareFilter(this._filter, items);
-            resultSelection = getItemsBySelection(items, this._source, this._items, filter);
-        }
-
-        return resultSelection;
     }
 
     /**

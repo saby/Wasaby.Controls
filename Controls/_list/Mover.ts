@@ -1,7 +1,9 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control} from 'UI/Base';
 import {Logger} from 'UI/Utils';
+import {Model} from 'Types/entity';
 
-import {Controller as MoverController, IControllerOptions, TMoveItems} from 'Controls/mover';
+import {Controller as MoverController, IControllerOptions, TMoveItems, MOVE_POSITION, MOVE_TYPE, TMoveItem} from 'Controls/mover';
+import {DataSet} from "Types/source";
 
 /**
  * Контрол для перемещения элементов списка в recordSet и dataSource.
@@ -54,29 +56,52 @@ export default class Mover extends Control {
     }
 
     moveItemUp(item) {
-        this._controller.moveItemUp(item);
+        return this._moveItemToSiblingPosition(item, MOVE_POSITION.before);
     }
 
     moveItemDown(item) {
-        this._controller.moveItemDown(item);
+        return this._moveItemToSiblingPosition(item, MOVE_POSITION.after);
     }
 
-    moveItems(items: TMoveItems, target, position): Promise<any> {
-        return this._controller.moveItems(items, target, position);
+    moveItems(items: TMoveItems, target: Model, position: MOVE_POSITION): Promise<DataSet|void> {
+        if (target === undefined) {
+            return Promise.resolve();
+        }
+        return this._controller.getSelectedItems(items, target, position).then((selectedItems: TMoveItems) => {
+            if (selectedItems.length) {
+                const both = (result) => {
+                    this._afterItemsMove(items, target, position, result);
+                    return result;
+                }
+                return this._beforeItemsMove(items, target, position).then((moveType: MOVE_TYPE) => (
+                    this._controller.moveItems(items, target?.getKey(), position, moveType).then((result) => both(result))
+                ))
+                    .catch((result: MOVE_TYPE) => both(result));
+            }
+            return Promise.resolve();
+        });
     }
 
     moveItemsWithDialog(items: TMoveItems): void {
         this._controller.moveItemsWithDialog(items);
     }
 
-    // @todo Как избавиться от колбека?
-    protected _beforeItemsMove(items, target, position) {
+    /**
+     * Обработчик перемещения при помощи диалога в HOC
+     * @param items
+     * @param target
+     * @private
+     */
+    private _moveDialogOnResultHandler(items: TMoveItems, target: Model) {
+        this.moveItems(items, target.getKey(), MOVE_POSITION.on);
+    }
+
+    private _beforeItemsMove(items, target, position): Promise<string> {
         const beforeItemsMoveResult = this._notify('beforeItemsMove', [items, target, position]);
         return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Promise.resolve(beforeItemsMoveResult);
     }
 
-    // @todo Как избавиться от колбека?
-    protected _afterItemsMove(items, target, position, result) {
+    private _afterItemsMove(items, target, position, result): void {
         this._notify('afterItemsMove', [items, target, position, result]);
 
         //According to the standard, after moving the items, you need to unselect all in the table view.
@@ -89,9 +114,23 @@ export default class Mover extends Control {
         });
     }
 
+    /**
+     * Перемещает запись относительно ближайшего соседа
+     * @param item
+     * @param position
+     * @private
+     */
+    private _moveItemToSiblingPosition(item: TMoveItem, position: MOVE_POSITION): Promise<DataSet|void> {
+        const target = this._controller.getSiblingItem(item, position);
+        return target ? this.moveItems([item], target, position) : Promise.resolve();
+    }
+
+    /**
+     * @param options
+     * @param context
+     * @private
+     */
     private _updateMoveController(options, context) {
-        const beforeItemsMove = this._beforeItemsMove.bind(this);
-        const afterItemsMove = this._afterItemsMove.bind(this);
         const _options: IControllerOptions = {
             items: context.dataOptions?.items,
             source: options.source || context.dataOptions?.source,
@@ -102,17 +141,20 @@ export default class Mover extends Control {
             searchParam: options.searchParam,
             sortingOrder: options.searchParam,
             nodeProperty: options.nodeProperty,
-            parentProperty: options.parentProperty,
-            opener: this,
-            beforeItemsMove,
-            afterItemsMove
+            parentProperty: options.parentProperty
         }
         if (options.moveDialogTemplate) {
+            _options.dialog = {
+                opener: this,
+                eventHandlers: {
+                    onResult: this._moveDialogOnResultHandler.bind(this)
+                }
+            };
             if (options.moveDialogTemplate.templateName) {
-                _options.moveDialogTemplate = options.moveDialogTemplate.templateName;
-                _options.moveDialogOptions = options.moveDialogTemplate.templateOptions;
+                _options.dialog.template = options.moveDialogTemplate.templateName;
+                _options.dialog.templateOptions = options.moveDialogTemplate.templateOptions;
             } else {
-                _options.moveDialogTemplate = options.moveDialogTemplate;
+                _options.dialog.template = options.moveDialogTemplate;
                 Logger.warn('Mover: Wrong type of moveDialogTemplate option, use object notation instead of template function', this);
             }
         }
