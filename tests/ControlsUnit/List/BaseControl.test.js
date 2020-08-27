@@ -3947,7 +3947,23 @@ define([
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
                baseControl._editInPlace.hasPendingActivation = () => true;
+            });
 
+            it('after mount with started editing', () => {
+               let wasActivatedFirstInput = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => false;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                     return true;
+                  }
+               };
+               baseControl._container = {};
+               baseControl._scrollController = null;
+               baseControl._afterMount(cfg);
+               assert.isTrue(wasActivatedFirstInput);
+               assert.isFalse(baseControl._editInPlace._shouldActivateRow);
             });
 
             it('activate row bu click in input', () => {
