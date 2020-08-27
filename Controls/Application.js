@@ -13,6 +13,7 @@ define('Controls/Application',
       'Controls/Application/SettingsController',
       'Controls/Utils/DOMUtil',
       'Controls/event',
+      'Controls/Application/TouchDetectorController',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -58,7 +59,8 @@ define('Controls/Application',
       getResourceUrl,
       SettingsController,
       DOMUtils,
-      ControlsEvent) {
+      ControlsEvent,
+      TouchDetector) {
       'use strict';
 
       var _private;
@@ -105,7 +107,8 @@ define('Controls/Application',
 
          _getChildContext: function() {
             return {
-               ScrollData: this._scrollData
+               ScrollData: this._scrollData,
+               isTouch: this._touchObjectContext
             };
          },
 
@@ -131,6 +134,8 @@ define('Controls/Application',
          },
          _mousemovePage: function(ev) {
             this._registers.mousemove.start(ev);
+            this._touchDetector.moveHandler();
+            this._updateClasses();
          },
          _mouseupPage: function(ev) {
             this._registers.mouseup.start(ev);
@@ -155,11 +160,16 @@ define('Controls/Application',
             /* eslint-enable */
             this._registers.mousemove.start(ev);
          },
+
+         _touchStartPage: function() {
+            this._touchDetector.touchHandler();
+            this._updateClasses();
+         },
          _updateClasses: function() {
             // Данный метод вызывается до построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
             // поэтому сами детектим touch с помощью compatibility
-            if (this._children.touchDetector) {
-               this._touchClass = this._children.touchDetector.getClass();
+            if (this._touchDetector) {
+               this._touchClass = this._touchDetector.getClass();
             } else {
                this._touchClass = Env.compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch';
             }
@@ -177,10 +187,6 @@ define('Controls/Application',
 
          _dragEndHandler: function() {
             this._dragClass = 'ws-is-no-drag';
-            this._updateClasses();
-         },
-
-         _changeTouchStateHandler: function() {
             this._updateClasses();
          },
 
@@ -266,6 +272,7 @@ define('Controls/Application',
             SettingsController.setController(cfg.settingsController);
 
             this._createRegisters();
+            this._createTouchDetector();
          },
 
          _afterMount: function() {
@@ -326,6 +333,11 @@ define('Controls/Application',
             if (this._registers[registerType]) {
                this._registers[registerType].unregister(event, registerType, component, config);
             }
+         },
+
+         _createTouchDetector: function() {
+            this._touchDetector = new TouchDetector();
+            this._touchObjectContext = this._touchDetector.createContext();
          },
 
          _getResourceUrl: function(str) {
