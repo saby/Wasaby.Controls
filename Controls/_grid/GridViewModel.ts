@@ -1750,6 +1750,11 @@ var
                         getContents: current.getContents
                 };
                 currentColumn.classList = _private.getItemColumnCellClasses(self, current, current.theme, backgroundColorStyle);
+
+                if (current.itemPadding.right) {
+                    currentColumn.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${current.theme}`;
+                }
+
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
                      * isColspaned добавлена как костыль для временного лечения ошибки.
