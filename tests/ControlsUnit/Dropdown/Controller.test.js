@@ -741,8 +741,7 @@ define(
             });
          });
 
-         let historySource,
-            dropdownController;
+         let historySource;
          describe('history', ()=> {
             beforeEach(function() {
                let resultItems, testEvent;
