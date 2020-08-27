@@ -63,7 +63,7 @@ var TreeTileViewModel = TreeViewModel.extend({
             current.zoomCoefficient = hoveredItem.zoomCoefficient;
         }
 
-        current = cMerge(current, this.getTileItemData());
+        current = cMerge(current, this.getTileItemData(dispItem));
         if (current.dispItem.isNode && current.dispItem.isNode()) {
             current.itemsHeight = this._options.nodesHeight || current.itemsHeight;
         }
@@ -93,8 +93,8 @@ var TreeTileViewModel = TreeViewModel.extend({
         return (itemData.item.get && itemData.item.get(itemData.displayProperty) || itemData.scalingMode !== 'none')
             && (!!itemData.isActive() || !!itemData.isSwiped() || !!itemData.isHovered);
     },
-    getTileItemData: function () {
-        var opts = this._tileModel.getTileItemData();
+    getTileItemData: function (dispItem) {
+        var opts = this._tileModel.getTileItemData(dispItem);
         opts.defaultFolderWidth = DEFAULT_FOLDER_WIDTH;
         if (this._options.tileSize) {
             opts.tileSize = this._options.tileSize;

@@ -2,7 +2,8 @@ import {ListViewModel} from 'Controls/list';
 import cMerge = require('Core/core-merge');
 import {Logger} from 'UI/Utils';
 import {object} from 'Types/util';
-import {getImageUrl, getImageSize, IMAGE_FIT} from './resources/ImageSizeUtil';
+import {Model} from 'Types/entity';
+import {getImageUrl, getImageSize, getImageClasses, IMAGE_FIT} from './resources/imageUtil';
 
 const DEFAULT_ITEM_WIDTH = 250;
 const DEFAULT_ITEM_HEIGHT = 200;
@@ -64,9 +65,9 @@ var TileViewModel = ListViewModel.extend({
         return current;
     },
 
-    getCurrent: function () {
+    getCurrent: function (dispItem) {
         var current = TileViewModel.superclass.getCurrent.apply(this, arguments);
-        current = cMerge(current, this.getTileItemData());
+        current = cMerge(current, this.getTileItemData(dispItem));
         return current;
     },
 
@@ -84,31 +85,42 @@ var TileViewModel = ListViewModel.extend({
         return tileSizes;
     },
 
-    getImageData(itemWidth: number, itemData: Record<string, any>): {url: string, unsetWidth: boolean} {
+    getImageData(itemWidth: number,
+                 itemData: Record<string, any>,
+                 item: Model): {url: string, class: string} {
         const {
             itemsHeight,
             tileMode,
-            item,
             imageHeightProperty,
             imageWidthProperty,
             imageUrlResolver,
             imageProperty,
             imageFit} = itemData;
-        const imageHeight = item.get(imageHeightProperty);
-        const imageWidth = item.get(imageWidthProperty);
+        const imageHeight = item.get(imageHeightProperty) && Number(item.get(imageHeightProperty));
+        const imageWidth = item.get(imageWidthProperty) && Number(item.get(imageWidthProperty));
         let baseUrl = item.get(imageProperty);
-        const sizes = getImageSize(itemWidth, itemsHeight, tileMode, imageHeight, imageWidth, imageFit);
-        if (imageFit === 'cover') {
-            baseUrl = getImageUrl(sizes.width, sizes.height, baseUrl, imageUrlResolver);
+        if (imageHeight && imageWidth) {
+            const sizes = getImageSize(
+                Number(itemWidth),
+                Number(itemsHeight),
+                tileMode,
+                imageHeight,
+                imageWidth,
+                imageFit);
+            if (imageUrlResolver) {
+                baseUrl = imageUrlResolver(sizes.width, sizes.height, baseUrl);
+            } else {
+                baseUrl = getImageUrl(sizes.width, sizes.height, baseUrl);
+            }
         }
         return {
             url: baseUrl,
-            unsetWidth: sizes.unsetWidth
+            class: getImageClasses(imageFit)
         };
     },
 
-    getTileItemData: function () {
-        const resultData =  {
+    getTileItemData: function (dispItem): Record<string, any> {
+        const resultData: Record<string, any> =  {
             displayProperty: this._options.displayProperty,
             tileMode: this._tileMode,
             itemsHeight: this._itemsHeight,
@@ -118,12 +130,20 @@ var TileViewModel = ListViewModel.extend({
             itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT,
             imageHeightProperty: this._options.imageHeightProperty,
             imageWidthProperty: this._options.imageWidthProperty,
-            getImageData: this.getImageData,
             imageFit: this._options.imageFit,
             imageUrlResolver: this._options.imageUrlResolver
         };
         if (this._options.tileSize) {
             resultData.getTileSizes = this.getTileSizes;
+        }
+        const itemContents = dispItem?.getContents();
+        if (itemContents instanceof Model) {
+            const itemWidth = itemContents.get(this._options.itemWidthProperty);
+            resultData.imageData = this.getImageData(
+                itemWidth,
+                resultData,
+                itemContents
+            );
         }
         return resultData;
     },

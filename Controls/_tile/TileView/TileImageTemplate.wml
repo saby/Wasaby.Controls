@@ -1,5 +1,5 @@
 <ws:template name="imageTpl">
-   <img attr:class="controls-TileView__image" src="{{itemData.getImageData(width || itemData.defaultItemWidth, itemData).url}}"/>
+   <img attr:class="controls-TileView__image {{itemData.imageData.class}}" src="{{itemData.imageData.url}}"/>
 </ws:template>
 
 <ws:template name="imageWrapperTpl">
