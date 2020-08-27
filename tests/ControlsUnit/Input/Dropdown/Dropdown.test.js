@@ -4,9 +4,10 @@ define(
       'Core/core-clone',
       'Types/source',
       'Types/collection',
-      'Controls/popup'
+      'Controls/popup',
+      'Controls/history'
    ],
-   (dropdown, Clone, sourceLib, collection, popup) => {
+   (dropdown, Clone, sourceLib, collection, popup, history) => {
       describe('Input/Dropdown', () => {
          let items = [
             {
@@ -394,6 +395,7 @@ define(
 
          describe('controller options', function() {
             const ddl = getDropdown(config);
+            ddl._beforeMount(config);
 
             it('check options', () => {
                const result = ddl._getControllerOptions({
@@ -402,25 +404,25 @@ define(
 
                assert.equal(result.menuOptions.nodeFooterTemplate, 'testNodeFooterTemplate');
                assert.isOk(result.menuOptions.selectorOpener);
-               assert.include(result.menuOptions.popupClassName, 'controls-DropdownList__margin');
+               assert.include(result.menuOptions.className, 'controls-DropdownList__margin');
             });
 
             it('check keyProperty option', () => {
-               ddl._options.source = new history.Source({});
                let result = ddl._getControllerOptions({
-                  keyProperty: 'key'
+                  keyProperty: 'key',
+                  source: new history.Source({})
                });
 
-               assert.equal(result.templateOptions.keyProperty, 'copyOriginalId');
+               assert.equal(result.menuOptions.keyProperty, 'copyOriginalId');
 
                ddl._options.source = 'originalSource';
                result = ddl._getControllerOptions({
-                  keyProperty: 'key'
+                  keyProperty: 'key',
+                  source: 'originalSource'
                });
 
-               assert.equal(result.templateOptions.keyProperty, 'key');
+               assert.equal(result.menuOptions.keyProperty, 'key');
             });
-         });
 
             it('popupClassName with header', () => {
                const result = ddl._getControllerOptions({
@@ -428,7 +430,7 @@ define(
                   headerContentTemplate: 'template'
                });
 
-               assert.include(result.menuOptions.popupClassName, 'controls-DropdownList__margin-head');
+               assert.include(result.menuOptions.className, 'controls-DropdownList__margin-head');
             });
 
             it('popupClassName with multiSelect', () => {
@@ -437,7 +439,7 @@ define(
                   multiSelect: true
                });
 
-               assert.include(result.menuOptions.popupClassName, 'controls-DropdownList_multiSelect__margin');
+               assert.include(result.menuOptions.className, 'controls-DropdownList_multiSelect__margin');
             });
          });
 
