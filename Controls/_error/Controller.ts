@@ -126,17 +126,16 @@ export default class ErrorController {
         }
 
         return this.__controller.process(_config).then((handlerResult: ViewConfig | void) => {
-            if (!handlerResult) {
-                return this._getDefault(_config);
-            }
-
             /**
              * Ошибка может быть уже обработана, если в соседние контролы прилетела одна ошибка от родителя.
-             * Тогда сработают два контроллера с функцией проверки на processed - _isNeedHandle,
-             * потом уже сработают эти два then, в которых выставится processed = true, но нет проверки на processed.
+             * Проверяем, обработана ли ошибка каким-то из контроллеров.
              */
             if (!ErrorController._isNeedHandle(_config.error)) {
-                return Promise.resolve();
+                return;
+            }
+
+            if (!handlerResult) {
+                return this._getDefault(_config);
             }
 
             /**
