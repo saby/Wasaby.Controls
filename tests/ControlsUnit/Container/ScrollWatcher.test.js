@@ -429,6 +429,9 @@ define([
          registrarMock.startOnceTarget = function(control) {
             notifyingResult = control.getInstanceId();
          };
+         ins._virtualNavigationRegistrar = {
+            unregister: sinon.fake()
+         };
          let triggersMock = {
             topLoadTrigger: 'topLoad',
             bottomLoadTrigger: 'bottomLoad',
