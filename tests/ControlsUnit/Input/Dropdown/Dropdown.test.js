@@ -112,6 +112,38 @@ define(
             assert.isFalse(isKeysChanged);
          });
 
+         it('_private::getNewItems', function() {
+            let ddl = getDropdown(config);
+            let curItems = new collection.RecordSet({
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '2',
+                     title: 'Запись 2'
+                  }, {
+                     id: '3',
+                     title: 'Запись 3'
+                  }]
+               }),
+               selectedItems = new collection.RecordSet({
+                  rawData: [{
+                     id: '1',
+                     title: 'Запись 1'
+                  }, {
+                     id: '9',
+                     title: 'Запись 9'
+                  }, {
+                     id: '10',
+                     title: 'Запись 10'
+                  }]
+               });
+            let newItems = [selectedItems.at(1), selectedItems.at(2)];
+            let result = ddl._getNewItems(curItems, selectedItems, 'id');
+
+            assert.deepEqual(newItems, result);
+         });
+
          it('_handleMouseDown', () => {
             let isOpened = false;
             let ddl = getDropdown(config);
@@ -132,7 +164,13 @@ define(
             let ddl = getDropdown(config);
             ddl._controller = {
                setMenuPopupTarget: () => { target = 'test'; },
-               openMenu: (popupConfig) => { actualOptions = popupConfig; return Promise.resolve(); }
+               openMenu: (popupConfig) => { actualOptions = popupConfig; return Promise.resolve(); },
+               setFilter: () => {}
+            };
+
+            ddl._historyController = {
+               getPreparedFilter: ()=> {},
+               getPreparedSource: ()=> {}
             };
 
             ddl.openMenu();
@@ -207,21 +245,17 @@ define(
                selectedItems = new collection.RecordSet({
                   keyProperty: 'id',
                   rawData: [{
-                     id: '1',
-                     title: 'Запись 1'
-                  },
-                  {
-                     id: '9',
-                     title: 'Запись 9'
-                  },
-                  {
-                     id: '10',
-                     title: 'Запись 10'
-                  }]
+                        id: '9',
+                        title: 'Запись 9'
+                     },
+                     {
+                        id: '10',
+                        title: 'Запись 10'
+                     }]
                });
             ddl._controller._items = curItems;
             ddl._controller._source = config.source;
-            let newItems = [ {
+            let newItems = [{
                id: '9',
                title: 'Запись 9'
             },
@@ -240,8 +274,7 @@ define(
             {
                id: '3',
                title: 'Запись 3'
-            }
-            ];
+            }];
 
             ddl._selectorTemplateResult('selectorResult', selectedItems);
             assert.deepEqual(newItems, ddl._controller._items.getRawData());
@@ -321,21 +354,18 @@ define(
                }),
                selectedItems = new collection.RecordSet({
                   keyProperty: 'id',
-                  rawData: [{
-                     id: '1',
-                     title: 'Запись 1'
-                  },
-                  {
-                     id: '9',
-                     title: 'Запись 9'
-                  },
-                  {
-                     id: '10',
-                     title: 'Запись 10'
-                  }]
+                  rawData: [
+                     {
+                        id: '9',
+                        title: 'Запись 9'
+                     },
+                     {
+                        id: '10',
+                        title: 'Запись 10'
+                     }]
                });
             ddl._controller._items = curItems;
-            let newItems = [ {
+            let newItems = [{
                id: '9',
                title: 'Запись 9'
             },
@@ -370,10 +400,27 @@ define(
                   nodeFooterTemplate: 'testNodeFooterTemplate'
                });
 
-               assert.equal(result.nodeFooterTemplate, 'testNodeFooterTemplate');
-               assert.isOk(result.selectorOpener);
-               assert.include(result.popupClassName, 'controls-DropdownList__margin');
+               assert.equal(result.menuOptions.nodeFooterTemplate, 'testNodeFooterTemplate');
+               assert.isOk(result.menuOptions.selectorOpener);
+               assert.include(result.menuOptions.popupClassName, 'controls-DropdownList__margin');
             });
+
+            it('check keyProperty option', () => {
+               ddl._options.source = new history.Source({});
+               let result = ddl._getControllerOptions({
+                  keyProperty: 'key'
+               });
+
+               assert.equal(result.templateOptions.keyProperty, 'copyOriginalId');
+
+               ddl._options.source = 'originalSource';
+               result = ddl._getControllerOptions({
+                  keyProperty: 'key'
+               });
+
+               assert.equal(result.templateOptions.keyProperty, 'key');
+            });
+         });
 
             it('popupClassName with header', () => {
                const result = ddl._getControllerOptions({
@@ -381,7 +428,7 @@ define(
                   headerContentTemplate: 'template'
                });
 
-               assert.include(result.popupClassName, 'controls-DropdownList__margin-head');
+               assert.include(result.menuOptions.popupClassName, 'controls-DropdownList__margin-head');
             });
 
             it('popupClassName with multiSelect', () => {
@@ -390,7 +437,7 @@ define(
                   multiSelect: true
                });
 
-               assert.include(result.popupClassName, 'controls-DropdownList_multiSelect__margin');
+               assert.include(result.menuOptions.popupClassName, 'controls-DropdownList_multiSelect__margin');
             });
          });
 
