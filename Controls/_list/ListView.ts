@@ -103,11 +103,14 @@ var ListView = BaseControl.extend(
             }
             if (newOptions.listModel) {
                 this._listModel = newOptions.listModel;
-                this._listModel.subscribe('onListChange', this._onListChangeFnc);
 
-                // Если изменить опцию модели пока ListView не построена, то они и не применятся.
-                // TODO не работает
-                // this._listModel.setItemPadding(newOptions.itemPadding, true);
+                if (newOptions.useNewModel) {
+                    this._listModel.subscribe('onCollectionChange', this._onListChangeFnc);
+                } else {
+                    this._listModel.subscribe('onListChange', this._onListChangeFnc);
+                    // Если изменить опцию модели пока ListView не построена, то они и не применятся.
+                    this._listModel.setItemPadding(newOptions.itemPadding, true);
+                }
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },

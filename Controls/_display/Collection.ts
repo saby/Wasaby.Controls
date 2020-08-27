@@ -92,6 +92,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     leftSpacing?: string;
     rightSpacing?: string;
     rowSpacing?: string;
+    rowSeparatorSize?: string;
     theme?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
@@ -591,6 +592,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$searchValue: string;
 
+    protected _$rowSeparatorSize: string;
+
     protected _$editingConfig: IEditingConfig;
 
     protected _$virtualScrolling: boolean;
@@ -751,6 +754,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$collapsedGroups = options.collapsedGroups;
 
         this._$groupProperty = options.groupProperty;
+
+        if (options.rowSeparatorSize) {
+            this._$rowSeparatorSize = options.rowSeparatorSize;
+        }
 
         if (!this._$collection) {
             throw new Error(`${this._moduleName}: source collection is empty`);
@@ -2189,6 +2196,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             });
         });
         return result;
+    }
+
+    getRowSeparatorSize(): string {
+        return this._$rowSeparatorSize;
+    }
+
+    setRowSeparatorSize(rowSeparatorSize: string): void {
+        this._$rowSeparatorSize = rowSeparatorSize;
+        this._nextVersion();
     }
 
     getMultiSelectVisibility(): string {

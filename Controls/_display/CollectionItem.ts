@@ -424,7 +424,8 @@ export default class CollectionItem<T> extends mixin<
             controls-ListView__itemV controls-ListView__itemV_cursor-${cursor}
             ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
             ${this.isEditing() ? ` controls-ListView__item_editing_theme-${theme}` : ''}
-            ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}`;
+            ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}
+            ${templateHighlightOnHover && this.isActive() ? ` controls-ListView__item_active_theme-${theme}` : ''}`;
     }
 
     getItemActionClasses(itemActionsPosition: string, theme?: string): string {
@@ -432,7 +433,9 @@ export default class CollectionItem<T> extends mixin<
     }
 
     getContentClasses(theme: string, style: string = 'default'): string {
-        return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}`;
+        const rowSeparatorSize = this.getOwner().getRowSeparatorSize();
+        return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
+        ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}`;
     }
 
     /**
