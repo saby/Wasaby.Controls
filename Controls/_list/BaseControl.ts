@@ -388,7 +388,7 @@ const _private = {
                         }
                         self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
-                        _private.restoreModelState(self, cfg);
+                        _private.initializeState(self, cfg);
 
                         if (self._sourceController) {
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -455,11 +455,11 @@ const _private = {
         return resDeferred;
     },
 
-    restoreModelState(self: any, options: any): void {
+    initializeState(self: any, options: any): void {
         if (_private.hasMarkerController(self)) {
             _private.getMarkerController(self).restoreMarker();
         } else {
-            if (options.markerVisibility !== 'hidden') {
+            if (_private.needCreateMarkerController(options)) {
                 self._markerController = _private.createMarkerController(self, options);
             }
         }
@@ -467,7 +467,7 @@ const _private = {
         if (self._selectionController) {
             _private.getSelectionController(self).restoreSelection();
         } else {
-            if (options.selectedKeys && options.selectedKeys.length > 0) {
+            if (_private.needCreateSelectionController(options)) {
                 self._selectionController = _private.createSelectionController(self, options);
             }
         }
@@ -1981,6 +1981,10 @@ const _private = {
 
     // region Multiselection
 
+    needCreateSelectionController(options: {multiSelectVisibility: string, selectedKeys: string[]}): boolean {
+        return options.multiSelectVisibility !== 'hidden' && options.selectedKeys && options.selectedKeys.length > 0;
+    },
+
     createSelectionController(self: any, options: any): SelectionController {
         if (
             !self._listViewModel || !self._listViewModel.getCollection()
@@ -2131,7 +2135,14 @@ const _private = {
             _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
         }
     },
-    onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
+
+    onItemsChanged(
+        self: any,
+        action: string,
+        removedItems: Model[],
+        removedItemsIndex: number,
+        newItems: Model[]
+    ): void {
         // подписываемся на рекордсет, чтобы следить какие элементы будут удалены
         // при подписке на модель событие remove летит еще и при скрытии элементов
 
@@ -2149,7 +2160,7 @@ const _private = {
            case IObservable.ACTION_REPLACE:
                // Если Record изменили, то пересоздастся CollectionItem и нужно для него восстановить маркер
                if (_private.hasMarkerController(self)) {
-                   _private.getMarkerController(self).restoreMarker();
+                   _private.getMarkerController(self).handleReplaceItems(newItems);
                }
                break;
        }
@@ -2157,6 +2168,11 @@ const _private = {
    },
 
     // region Marker
+
+    needCreateMarkerController(options: { markerVisibility: string, markedKey: string|number }): boolean {
+        return options.markerVisibility === 'visible' ||
+            options.markerVisibility === 'onactivated' && options.hasOwnProperty('markedKey');
+    },
 
     createMarkerController(self: any, options: any): MarkerController {
         return new MarkerController({
@@ -2860,13 +2876,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.updatePagingData(self, hasMoreData);
                     }
 
-                    if ((newOptions.markerVisibility === 'visible' ||
-                        (newOptions.markerVisibility === 'onactivated' && newOptions.markedKey)
-                    )) {
+                    if (_private.needCreateMarkerController(newOptions)) {
                         self._markerController = _private.createMarkerController(self, newOptions);
                     }
 
-                    if (newOptions.selectedKeys && newOptions.selectedKeys.length !== 0) {
+                    if (_private.needCreateSelectionController(newOptions)) {
                         self._selectionController = _private.createSelectionController(self, newOptions);
                     }
 
@@ -3258,7 +3272,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasMarkerController(this)) {
             _private.updateMarkerController(this, newOptions);
         } else {
-            if (newOptions.markerVisibility !== 'hidden') {
+            if (_private.needCreateMarkerController(newOptions)) {
                 this._markerController = _private.createMarkerController(self, newOptions);
             }
         }
@@ -3283,7 +3297,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         } else {
             // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
-            if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
+            if (_private.needCreateSelectionController(newOptions)) {
                 this._selectionController = _private.createSelectionController(this, newOptions);
             }
         }
@@ -3933,8 +3947,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.closeActionsMenu(this, currentPopup);
     },
 
-    _onItemsChanged(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
-        _private.onItemsChanged(this, action, removedItems, removedItemsIndex);
+    _onItemsChanged(
+        event: SyntheticEvent,
+        action: string,
+        newItems: Model[],
+        newItemsIndex: number,
+        removedItems: Model[],
+        removedItemsIndex: number
+    ): void {
+        _private.onItemsChanged(this, action, removedItems, removedItemsIndex, newItems);
     },
 
     _itemMouseDown(event, itemData, domEvent) {

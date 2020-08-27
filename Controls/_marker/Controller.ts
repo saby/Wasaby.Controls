@@ -193,7 +193,7 @@ export class Controller {
    }
 
    /**
-    * Обработать добавление элементов
+    * Обработать добавление элементов в модель
     * @param newItems список новый элементов
     */
    handleAddItems(newItems: Array<CollectionItem<Model>>): void {
@@ -202,6 +202,15 @@ export class Controller {
       }
    }
 
+   /**
+    * Обработать замену элементов в RecordSet
+    * @param items список новых элементов
+    */
+   handleReplaceItems(items: Model[]): void {
+      if (items.some((item) => item.getKey() === this._markedKey)) {
+         this.restoreMarker();
+      }
+   }
    /*
       TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
        https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
