@@ -2111,9 +2111,9 @@ const _private = {
                 self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
 
                 if (result.placeholders.top > 0) {
-                    this._notify('enableVirtualNavigation', [], { bubbling: true });
+                    self._notify('enableVirtualNavigation', [], { bubbling: true });
                 } else {
-                    this._notify('disableVirtualNavigation', [], { bubbling: true });
+                    self._notify('disableVirtualNavigation', [], { bubbling: true });
                 }
             }
             if (result.activeElement) {
