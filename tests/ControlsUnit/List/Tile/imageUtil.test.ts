@@ -40,16 +40,21 @@ describe('tileImageUtil', () => {
                 assert.isTrue(imageSizesTall.width === 0);
                 assert.isTrue(imageSizesTall.height === 450);
             });
+            it('image is wider then tile, but not wider scaled tile ', () => {
+                const imageSizesTall = getImageSize(200, 200, 'static', 200, 250, 'cover');
+                assert.isTrue(imageSizesTall.width === 0);
+                assert.isTrue(imageSizesTall.height === 220);
+            });
         });
         describe('none and contain image fit', () => {
             it('returns image original sizes', () => {
-                const imageSizesTall = getImageSize(200, 300, 'static', 1, 1, 'contain');
-                assert.isTrue(imageSizesTall.width === 1);
-                assert.isTrue(imageSizesTall.height === 1);
+                const imageSizes = getImageSize(200, 300, 'static', 1, 1, 'contain');
+                assert.isTrue(imageSizes.width === 1);
+                assert.isTrue(imageSizes.height === 1);
 
-                const imageSizesTall = getImageSize(200, 300, 'static', 1, 1, 'none');
-                assert.isTrue(imageSizesTall.width === 1);
-                assert.isTrue(imageSizesTall.height === 1);
+                const imageSizes = getImageSize(200, 300, 'static', 1, 1, 'none');
+                assert.isTrue(imageSizes.width === 1);
+                assert.isTrue(imageSizes.height === 1);
             });
         })
     });
