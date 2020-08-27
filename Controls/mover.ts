@@ -6,5 +6,6 @@
  * @author Аверкиев П.А.
  */
 
-export {Controller, IControllerOptions} from 'Controls/_mover/Controller';
+export {Controller} from 'Controls/_mover/Controller';
+export {IControllerOptions} from 'Controls/_mover/interface/IControllerOptions';
 export {TMoveItems, MOVE_POSITION, MOVE_TYPE, TMoveItem} from 'Controls/_mover/interface/IMoveStrategy';

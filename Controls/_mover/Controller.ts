@@ -1,15 +1,12 @@
 import {Model} from 'Types/entity';
+import {DataSet} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {Logger} from 'UI/Utils';
-import * as InstanceChecker from 'Core/core-instance';
-import {ISelectionObject, TKeySelection} from 'Controls/interface';
+import {ISelectionObject, TKeysSelection} from 'Controls/interface';
 import {Dialog} from 'Controls/popup';
-import {Control, IControlOptions} from 'UI/Base';
 
 import {
     IMoveStrategy,
-    ISource,
-    IStrategyOptions,
     MOVE_POSITION,
     TMoveItem,
     TMoveItems
@@ -18,34 +15,11 @@ import {
 import {MoveItemsStrategy} from './strategy/MoveItemsStrategy';
 import {MoveObjectStrategy} from './strategy/MoveObjectStrategy';
 import {ItemsValidator} from './ItemsValidator';
+import {IMoveDialogOptions} from './interface/IMoveDialogOptions';
+import {IControllerOptions} from './interface/IControllerOptions';
+import {IStrategyOptions, TSource} from './interface/IStrategyOptions';
 
-interface IMoveDialogOptions {
-    /**
-     * Необходим для moverDialog
-     */
-    opener: Control<IControlOptions, unknown> | null;
-    /**
-     * Опции для шаблона диалога
-     */
-    templateOptions?: object;
-    /**
-     * Название шаблона диалога
-     */
-    template?: string;
-    /**
-     * Обработчики событий диалога
-     */
-    eventHandlers?: {
-        onResult?: (target) => void;
-    }
-}
 
-/**
- * Интерфейс контроллера
- */
-export interface IControllerOptions extends IStrategyOptions {
-    dialog?: IMoveDialogOptions
-}
 
 /**
  * Контроллер для перемещения элементов списка в recordSet и dataSource.
@@ -79,7 +53,7 @@ export class Controller {
 
     private _items: RecordSet;
 
-    private _source: ISource;
+    private _source: TSource;
 
     private _keyProperty: string;
 
@@ -112,7 +86,7 @@ export class Controller {
      * @param position
      * @param moveType
      */
-    moveItems(items: TMoveItems, target: Model, position: MOVE_POSITION, moveType?: string): Promise<any> {
+    moveItems(items: TMoveItems, target: Model, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void> {
         if (target === undefined) {
             return Promise.resolve();
         }
@@ -142,8 +116,8 @@ export class Controller {
     moveItemsWithDialog(items: TMoveItems): void {
         if (this._dialogOptions.template) {
             if (ItemsValidator.validate(items)) {
-                this._getStrategy(items).getSelectedItems(items).then((selectedItems) => (
-                    this._openMoveDialog(this._prepareMovedItems(selectedItems))
+                this._getStrategy(items).getItems(items).then((selectedItems) => (
+                    this._openMoveDialog(selectedItems)
                 ));
             }
         } else {
@@ -158,8 +132,17 @@ export class Controller {
      * @param target
      * @param position
      */
-    getSelectedItems(items: TMoveItems, target: Model, position: MOVE_POSITION): Promise<TMoveItems> {
-        return this._getStrategy(items).getSelectedItems(items, target.getKey(), position);
+    getItems(items: TMoveItems, target: Model, position: MOVE_POSITION): Promise<TMoveItems> {
+        return this._getStrategy(items).getItems(items, target.getKey(), position);
+    }
+
+    /**
+     * Получает ключи выделенных записей
+     * Метод необходим для совместимости с HOC
+     * @param items
+     */
+    getSelectedKeys(items: TMoveItems): TKeysSelection {
+        return this._getStrategy(items).getSelectedKeys(items);
     }
 
     /**
@@ -180,17 +163,14 @@ export class Controller {
      */
     private _openMoveDialog(items: TMoveItems): void {
         const templateOptions = {
-            movedItems: items,
+            movedItems: this._getStrategy(items).getSelectedKeys(items),
             source: this._source,
             keyProperty: this._keyProperty,
             ...this._dialogOptions.templateOptions
         };
 
-        if (!this._dialogOptions.eventHandlers) {
-            this._dialogOptions.eventHandlers = {};
-        }
-        if (!this._dialogOptions.eventHandlers.onResult) {
-            this._dialogOptions.eventHandlers.onResult = this._moveDialogOnResultHandler.bind(this);
+        if (!this._dialogOptions.onResultHandler) {
+            this._dialogOptions.onResultHandler = this._moveDialogOnResultHandler.bind(this);
         }
 
         Dialog.openPopup({
@@ -198,19 +178,12 @@ export class Controller {
             templateOptions,
             closeOnOutsideClick: true,
             template: this._dialogOptions.template,
-            eventHandlers: this._dialogOptions.eventHandlers
+            eventHandlers: {
+                onResult: (target: Model) => (
+                    this._dialogOptions.onResultHandler(items, target)
+                )
+            }
         });
-    }
-
-    /**
-     * Возвращает список Id если был передан список Model
-     * @param items
-     * @private
-     */
-    private _prepareMovedItems(items: TMoveItems): TMoveItems {
-        let result = [];
-        items.forEach((item) => result.push(this._getId(item)));
-        return result;
     }
 
     /**
@@ -219,8 +192,8 @@ export class Controller {
      * @param target
      * @private
      */
-    private _moveDialogOnResultHandler(items: TMoveItems, target: Model) {
-        this.moveItems(items, target.getKey(), MOVE_POSITION.on);
+    private _moveDialogOnResultHandler(items: TMoveItems, target: Model): Promise<DataSet|void> {
+        return this.moveItems(items, target.getKey(), MOVE_POSITION.on);
     }
 
     /**
@@ -229,7 +202,7 @@ export class Controller {
      * @param position
      * @private
      */
-    private _moveItemToSiblingPosition (item: TMoveItem, position: MOVE_POSITION): Promise<void> {
+    private _moveItemToSiblingPosition (item: TMoveItem, position: MOVE_POSITION): Promise<DataSet|void> {
         const target = this.getSiblingItem(item, position);
         return target ? this.moveItems([item], target, position) : Promise.resolve();
     }
@@ -246,15 +219,5 @@ export class Controller {
                 new MoveItemsStrategy(this._strategyOptions);
         }
         return this._strategy;
-    }
-
-    /**
-     * Получает ключ по item
-     * Item может быть или Model или ключом
-     * Еслит Model, то идёт попытка получить ключ по _keyProperty
-     * @param item
-     */
-    private _getId(item: Model|TKeySelection): TKeySelection {
-        return InstanceChecker.instanceOfModule(item, 'Types/entity:Model') ? (item as Model).get(this._keyProperty) : item as TKeySelection;
     }
 }

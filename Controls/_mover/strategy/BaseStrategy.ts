@@ -4,13 +4,10 @@ import {RecordSet} from 'Types/collection';
 import * as InstanceChecker from 'Core/core-instance';
 
 import {
-    IStrategyOptions,
-    MOVE_POSITION,
-    TMoveItem,
-    TMoveItems
+    MOVE_POSITION, TMoveItem, TMoveItems
 } from '../interface/IMoveStrategy';
 import {TKeySelection} from 'Controls/interface';
-import {ISource} from '../interface/IMoveStrategy';
+import {IStrategyOptions, TSource} from '../interface/IStrategyOptions';
 
 export abstract class BaseStrategy {
 
@@ -20,7 +17,7 @@ export abstract class BaseStrategy {
 
     protected _sortingOrder: string;
 
-    protected _source: ISource;
+    protected _source: TSource;
 
     protected _filter: any;
 
@@ -43,6 +40,7 @@ export abstract class BaseStrategy {
         this._searchParam = options.searchParam;
         this._root = options.root;
     }
+
 
     abstract moveItems(items: TMoveItems, targetId: TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void>;
 

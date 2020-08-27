@@ -1,17 +1,16 @@
 import {Model} from 'Types/entity';
-import {DataSet} from 'Types/source';
+import {DataSet, ICrudPlus} from 'Types/source';
 
-// TODO Это похоже, только для дерева
+// tree
 import * as TreeItemsUtil from 'Controls/_list/resources/utils/TreeItemsUtil';
 
 import * as getItemsBySelection from 'Controls/Utils/getItemsBySelection';
-import {TKeySelection, TKeysSelection, TSelectionRecord} from 'Controls/interface';
+import {ISelectionObject, TKeySelection, TKeysSelection, TSelectionRecord} from 'Controls/interface';
 
 import {
     IMoveStrategy,
     MOVE_TYPE,
-    MOVE_POSITION,
-    TMoveItems, TMoveItem
+    MOVE_POSITION, TMoveItems, TMoveItem
 } from '../interface/IMoveStrategy';
 import {BaseStrategy} from './BaseStrategy';
 
@@ -38,16 +37,18 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
      * @param position
      * @private
      */
-    getSelectedItems(items: TMoveItems, target?: Model, position?: MOVE_POSITION): Promise<TMoveItems> {
+    getItems(items: TMoveItems, target?: Model, position?: MOVE_POSITION): Promise<TMoveItems> {
         if (!target && !position) {
             return this._getItemsBySelection(items);
         }
-        return this._getItemsBySelection(items).then((itemsBySelection: TMoveItems) => (
-            itemsBySelection.filter((item) => this._checkItem(item, target, position))
-        ));
+        return this._getItemsBySelection(items)
+            .then((selectedItems: TMoveItems) => (
+                selectedItems.filter((item) => this._checkItem(item, target, position))
+            ))
+            .then((selectedItems: TMoveItems) => this._prepareMovedItems(selectedItems));
     }
 
-    // TODO Это похоже, только для дерева
+    // tree
     getSiblingItem(item: TMoveItem, position: MOVE_POSITION): Model {
         //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
         //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
@@ -76,6 +77,14 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
     }
 
     /**
+     * Возвращает выбранные ключи
+     * @param items
+     */
+    getSelectedKeys(items: TKeysSelection): TKeysSelection {
+        return items;
+    }
+
+    /**
      * Перемещает элементы в ресурсе
      * @param items
      * @param targetId
@@ -89,10 +98,21 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
         if (position !== MOVE_POSITION.on && this._sortingOrder !== DEFAULT_SORTING_ORDER) {
             position = position === MOVE_POSITION.after ? MOVE_POSITION.before : MOVE_POSITION.after;
         }
-        return this._source.move(idArray, targetId, {
+        return (this._source as ICrudPlus).move(idArray, targetId, {
             position,
             parentProperty: this._parentProperty
         });
+    }
+
+    /**
+     * Возвращает список Id если был передан список Model
+     * @param items
+     * @private
+     */
+    private _prepareMovedItems(items: TMoveItems): TMoveItems {
+        let result = [];
+        items.forEach((item) => result.push(this.getId(item)));
+        return result;
     }
 
     private _getItemsBySelection(items: TMoveItems): Promise<TMoveItems> {
@@ -105,7 +125,7 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
         if (items instanceof Array) {
             resultSelection = Promise.resolve(items);
         } else {
-            // TODO Это похоже, только для дерева
+            // tree
             const filter = this._prepareFilter(this._filter, items);
             resultSelection = getItemsBySelection(items, this._source, this._items, filter);
         }
@@ -140,7 +160,7 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
                     movedIndex = this._items.getCount() - 1;
                 }
 
-                // TODO Это похоже, только для дерева
+                // tree
                 if (this._parentProperty && targetItem.get(this._parentProperty) !== movedItem.get(this._parentProperty)) {
                     //if the movement was in order and hierarchy at the same time, then you need to update parentProperty
                     movedItem.set(this._parentProperty, targetItem.get(this._parentProperty));
@@ -156,8 +176,8 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
         });
     }
 
-    // TODO Это похоже, только для дерева
-    private _hierarchyMove(items: Model[], targetId: TKeySelection) {
+    // tree
+    private _hierarchyMove(items: Model[], targetId: TKeySelection): void {
         items.forEach((item) => {
             item = this.getModel(item);
             if (item) {
@@ -167,15 +187,15 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
     }
 
     /**
-     * TODO Это похоже, только для дерева
      * Проверяет, является ли элемент перемещаемым?
      * Для дерева проверяет содержится ли элемент в RecordSet
+     * tree
      * @param item
      * @param target
      * @param position
      * @private
      */
-    private _checkItem(item, target: Model, position) {
+    private _checkItem(item: TMoveItem, target: Model, position: MOVE_POSITION): boolean {
         let key;
         let parentsMap;
         const movedItem = this.getModel(item);
@@ -195,8 +215,8 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
     }
 
     /**
-     * TODO Это похоже, только для дерева
      * Получает ключи родителей по _parentProperty и из getMetaData
+     * tree
      * @param item
      */
     private _getParentsMap(item: Model): TKeysSelection {
@@ -225,13 +245,13 @@ export class MoveItemsStrategy extends BaseStrategy implements IMoveStrategy<Mod
         return result;
     }
 
-    // TODO Это похоже, только для дерева
-    private _prepareFilter(filter, selection): object {
+    // tree
+    private _prepareFilter(filter: {[p: string]: any}, selection: ISelectionObject): object {
         const searchParam = this._searchParam;
         const root = this._root;
         let resultFilter = filter;
 
-        if (searchParam && !selection.selected.includes(root)) {
+        if (searchParam && selection.selected.indexOf(root) === -1) {
             resultFilter = {...filter};
             delete resultFilter[searchParam];
         }

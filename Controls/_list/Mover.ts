@@ -67,16 +67,18 @@ export default class Mover extends Control {
         if (target === undefined) {
             return Promise.resolve();
         }
-        return this._controller.getSelectedItems(items, target, position).then((selectedItems: TMoveItems) => {
-            if (selectedItems.length) {
+        return this._controller.getItems(items, target, position).then((selectedItems: TMoveItems) => {
+            if (this._controller.getSelectedKeys(selectedItems).length) {
                 const both = (result) => {
                     this._afterItemsMove(items, target, position, result);
                     return result;
                 }
                 return this._beforeItemsMove(items, target, position).then((moveType: MOVE_TYPE) => (
-                    this._controller.moveItems(items, target?.getKey(), position, moveType).then((result) => both(result))
+                    this._controller.moveItems(items, target, position, moveType).then((result) => both(result))
                 ))
-                    .catch((result: MOVE_TYPE) => both(result));
+                    .catch((result: Error) => {
+                        Logger.warn(result.message, this);
+                    });
             }
             return Promise.resolve();
         });
@@ -93,7 +95,7 @@ export default class Mover extends Control {
      * @private
      */
     private _moveDialogOnResultHandler(items: TMoveItems, target: Model) {
-        this.moveItems(items, target.getKey(), MOVE_POSITION.on);
+        this.moveItems(items, target, MOVE_POSITION.on);
     }
 
     private _beforeItemsMove(items, target, position): Promise<string> {
@@ -146,9 +148,7 @@ export default class Mover extends Control {
         if (options.moveDialogTemplate) {
             _options.dialog = {
                 opener: this,
-                eventHandlers: {
-                    onResult: this._moveDialogOnResultHandler.bind(this)
-                }
+                onResultHandler: this._moveDialogOnResultHandler.bind(this)
             };
             if (options.moveDialogTemplate.templateName) {
                 _options.dialog.template = options.moveDialogTemplate.templateName;

@@ -1,16 +1,44 @@
-import {BindingMixin, DataSet, ICrudPlus, IData, IRpc} from 'Types/source';
+import {DataSet} from 'Types/source';
 import {ISelectionObject, TKeySelection, TKeysSelection, TSelectionRecord} from 'Controls/interface';
 import {Model} from 'Types/entity';
-import {RecordSet} from "Types/collection";
+import {IMoveObject} from './IMoveObject';
 
 /**
- * Необходимо для обратной совместимости со старой логикой
+ * @typedef {Controls/interface:TKeySelection|Types/entity:Model} TMoveItem
+ * @description
+ * Перемещаемый элемент. Может быть Моделью или Id
+ * @see Controls/interface:TKeySelection
+ */
+export type TMoveItem = Model|TKeySelection
+
+
+/**
+ * @typedef {Array<TMoveItem>|Controls/_mover/interface/IMoveObject|Controls/interface:TSelectionRecord|Controls/interface:ISelectionObject} TMoveItems
+ * @description
+ * Перемещаемые элементы. Может быть набором Моделей или Id или Объектом ISelectionObject, объектом IMoveObject, или TSelectionRecord
+ * @see Controls/_mover/interface/IMoveObject
+ * @see Controls/interface:TSelectionRecord
+ * @see Controls/interface:ISelectionObject
+ * @see ISelectionObject
+ * @see TMoveItem
+ */
+export type TMoveItems = TMoveItem[]|IMoveObject|ISelectionObject|TSelectionRecord;
+
+/**
+ * @typedef {String} MOVE_POSITION
+ * @description
+ * Тип перемещения - в items/source или custom
  */
 export enum MOVE_TYPE {
     CUSTOM = 'Custom',
     MOVE_IN_ITEMS = 'MoveInItems'
 }
 
+/**
+ * @typedef {String} MOVE_POSITION
+ * @description
+ * Позиция для перемещения записи
+ */
 export enum MOVE_POSITION {
     on = 'on',
     before = 'before',
@@ -18,57 +46,51 @@ export enum MOVE_POSITION {
 }
 
 /**
- * Объект для перемещения в новой логике
+ * Интерфейс стратегии перемещения
+ * @interface Controls/_mover/interface/IStrategyOptions
+ * @mixes Controls/_interface/IMovable
+ * @mixes Controls/_interface/IHierarchy
+ * @private
+ * @author Аверкиев П.А.
  */
-export interface IMoveObject {
-    selectedKeys: TKeysSelection;
-    excludedKeys: TKeysSelection;
-    filter: object;
-}
 
-/**
- * Перемещаемый элемент. Может быть Моделью или Id
+/*
+ * Move strategy interface
+ * @interface Controls/_mover/interface/IStrategyOptions
+ * @mixes Controls/_interface/IMovable
+ * @mixes Controls/_interface/IHierarchy
+ * @private
+ * @author Аверкиев П.А.
  */
-export type TMoveItem = Model|TKeySelection
-
-/**
- * @todo проверить, все ли варианты нужны
- * Перемещаемые элементы. Может быть набором Моделей или Id или Объектом ISelectionObject, объектом IMoveObject, или TSelectionRecord
- */
-export type TMoveItems = TMoveItem[]|IMoveObject|ISelectionObject|TSelectionRecord;
-
-/**
- * Ресурс данных, внутри которго происходит перемещение. Обладает свойствами Crud, Binding, RPC, Data
- */
-export interface ISource extends IData, IRpc, ICrudPlus, BindingMixin {}
-
-// @mixes Controls/interface/IMovable
-// @mixes Controls/_interface/IHierarchy
-export interface ITreeStrategyOptions {
-    root: string;
-    parentProperty: string;
-    nodeProperty: string;
-    filter: any;
-    searchParam: string;
-}
-
-export interface IStrategyOptions extends ITreeStrategyOptions {
-    source: ISource;
-    sortingOrder: string;
-    items: RecordSet;
-    keyProperty: string;
-}
-
 export interface IMoveStrategy<T> {
-    moveItems(items: T, targetId: TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void>;
-    getModel(item: TMoveItem): Model;
-    getId(item: TMoveItem): TKeySelection;
     /**
-     * Ищет ближайших соседей для текущего item
+     * Позволяет переместить запись относительно указанного элемента
+     * @param items
+     * @param targetId
+     * @param position
+     * @param moveType
+     */
+    moveItems(items: T, targetId: TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void>;
+
+    /**
+     * Получает Model записи
+     * @param item
+     */
+    getModel(item: TMoveItem): Model;
+
+    /**
+     * Получает key записи
+     * @param item
+     */
+    getId(item: TMoveItem): TKeySelection;
+
+    /**
+     * Получает элемент, к которому производится перемещение
      * @param item
      * @param position
      */
     getSiblingItem(item: TMoveItem, position: MOVE_POSITION): Model;
+
     /**
      * Получает промис со списком выделенных записей
      * Единственный способ избавиться от коллбека - вынести сейчас этот метод в публичные. Он не понадобится,
@@ -78,5 +100,11 @@ export interface IMoveStrategy<T> {
      * @param position
      * @private
      */
-    getSelectedItems(items: TMoveItems, target?: Model, position?: MOVE_POSITION): Promise<TMoveItems>;
+    getItems(items: TMoveItems, target?: Model, position?: MOVE_POSITION): Promise<TMoveItems>;
+
+    /**
+     * Запрос ключей выбранных записей
+     * @param items
+     */
+    getSelectedKeys(items: TMoveItems): TKeysSelection;
 }
