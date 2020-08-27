@@ -24,11 +24,11 @@ define('Controls/Application/TouchDetector', [
       },
 
       isTouch: function() {
-         this._touchController.isTouch();
+         return this._touchController.isTouch();
       },
 
       getClass: function() {
-         this._touchController.getClass();
+         return this._touchController.getClass();
       },
 
       // Объявляем функцию, которая возвращает поля Контекста и их значения.
