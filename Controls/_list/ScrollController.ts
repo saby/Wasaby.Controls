@@ -184,7 +184,9 @@ export default class ScrollController {
 
         if (this._indicatorState) {
             this._indicatorTimeout = setTimeout(() => {
-                this._callbacks.changeIndicatorState(true, this._indicatorState);
+                if (this._indicatorState) {
+                    this._callbacks.changeIndicatorState(true, this._indicatorState);
+                }
             }, LOADING_INDICATOR_SHOW_TIMEOUT);
         }
         if (options.activeElement !== this._options.activeElement) {
