@@ -30,6 +30,14 @@
     display: table-header-group;
   }
 
+  .controls-GridView__emptyTemplate{
+    display: table-row;
+  }
+
+  .controls-GridView__emptyTemplate__cell {
+    display: table-cell;
+  }
+
   .controls-Grid__header-cell {
     position: relative;
     top: 0;
@@ -75,10 +83,6 @@
     position: static;
   }
 
-  .controls-GridViewV__itemsContainer {
-    display: table-row-group;
-  }
-
   .controls-Grid__row {
     display: table-row;
   }
@@ -111,9 +115,13 @@
     height: 0;
   }
 
-  .controls-Grid__row-cell
-  .controls-Grid__row-cell_theme-@{themeName} {
-    height: @cell_min-height_grid;
+  .controls-Grid__row-cell {
+    .controls-Grid__row-cell_default_min_height-theme-@{themeName} {
+      height: @cell_min-height_grid;
+    }
+    .controls-Grid__row-cell_small_min_height-theme-@{themeName} {
+      height: @cell_small-min-height_grid;
+    }
   }
 
   // default

@@ -12,6 +12,8 @@ define('Controls/Application',
       'Core/helpers/getResourceUrl',
       'Controls/Application/SettingsController',
       'Controls/Utils/DOMUtil',
+      'Controls/event',
+      'Controls/Application/TouchDetectorController',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -56,7 +58,9 @@ define('Controls/Application',
       scroll,
       getResourceUrl,
       SettingsController,
-      DOMUtils) {
+      DOMUtils,
+      ControlsEvent,
+      TouchDetector) {
       'use strict';
 
       var _private;
@@ -99,14 +103,17 @@ define('Controls/Application',
 
          _dragClass: 'ws-is-no-drag',
 
+         _registers: {},
+
          _getChildContext: function() {
             return {
-               ScrollData: this._scrollData
+               ScrollData: this._scrollData,
+               isTouch: this._touchObjectContext
             };
          },
 
          _scrollPage: function(ev) {
-            this._children.scrollDetect.start(ev);
+            this._registers.scroll.start(ev);
          },
 
          _resizeBody: function(ev) {
@@ -120,22 +127,24 @@ define('Controls/Application',
          },
 
          _resizePage: function(ev) {
-            this._children.resizeDetect.start(ev);
+            this._registers.controlResize.start(ev);
          },
          _mousedownPage: function(ev) {
-            this._children.mousedownDetect.start(ev);
+            this._registers.mousedown.start(ev);
          },
          _mousemovePage: function(ev) {
-            this._children.mousemoveDetect.start(ev);
+            this._registers.mousemove.start(ev);
+            this._touchDetector.moveHandler();
+            this._updateClasses();
          },
          _mouseupPage: function(ev) {
-            this._children.mouseupDetect.start(ev);
+            this._registers.mouseup.start(ev);
          },
          _touchmovePage: function(ev) {
-            this._children.touchmoveDetect.start(ev);
+            this._registers.touchmove.start(ev);
          },
          _touchendPage: function(ev) {
-            this._children.touchendDetect.start(ev);
+            this._registers.touchend.start(ev);
          },
          _mouseleavePage: function(ev) {
             /* eslint-disable */
@@ -149,13 +158,18 @@ define('Controls/Application',
              * Демо: https://jsfiddle.net/q7rez3v5/
              */
             /* eslint-enable */
-            this._children.mousemoveDetect.start(ev);
+            this._registers.mousemove.start(ev);
+         },
+
+         _touchStartPage: function() {
+            this._touchDetector.touchHandler();
+            this._updateClasses();
          },
          _updateClasses: function() {
             // Данный метод вызывается до построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
             // поэтому сами детектим touch с помощью compatibility
-            if (this._children.touchDetector) {
-               this._touchClass = this._children.touchDetector.getClass();
+            if (this._touchDetector) {
+               this._touchClass = this._touchDetector.getClass();
             } else {
                this._touchClass = Env.compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch';
             }
@@ -173,10 +187,6 @@ define('Controls/Application',
 
          _dragEndHandler: function() {
             this._dragClass = 'ws-is-no-drag';
-            this._updateClasses();
-         },
-
-         _changeTouchStateHandler: function() {
             this._updateClasses();
          },
 
@@ -260,6 +270,9 @@ define('Controls/Application',
             this._updateThemeClass(cfg);
 
             SettingsController.setController(cfg.settingsController);
+
+            this._createRegisters();
+            this._createTouchDetector();
          },
 
          _afterMount: function() {
@@ -269,6 +282,12 @@ define('Controls/Application',
             // везде, где есть visualViewport
             if (this._isIOS13()) {
                window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
+            }
+         },
+
+         _beforeUnmount: function () {
+            for (var register in this._registers) {
+               this._registers[register].destroy();
             }
          },
 
@@ -294,6 +313,31 @@ define('Controls/Application',
                }
                elements[0].textContent = this._options.title;
             }
+         },
+
+         _createRegisters: function () {
+            var registers = ['scroll', 'controlResize', 'mousemove', 'mouseup', 'touchmove', 'touchend', 'mousedown'];
+            var _this = this;
+            registers.forEach(function(register) {
+               _this._registers[register] = new ControlsEvent.RegisterClass({ register: register });
+            });
+         },
+
+         _registerHandler: function (event, registerType, component, callback, config) {
+            if (this._registers[registerType]) {
+               this._registers[registerType].register(event, registerType, component, callback, config);
+            }
+         },
+
+         _unregisterHandler: function (event, registerType, component, config) {
+            if (this._registers[registerType]) {
+               this._registers[registerType].unregister(event, registerType, component, config);
+            }
+         },
+
+         _createTouchDetector: function() {
+            this._touchDetector = new TouchDetector();
+            this._touchObjectContext = this._touchDetector.createContext();
          },
 
          _getResourceUrl: function(str) {

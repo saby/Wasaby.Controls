@@ -129,7 +129,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 this._extData.updateData(receivedState);
             } else {
                 const displayedDates = this._getDisplayedRanges(normalizedPosition, options.virtualPageSize, options.viewMode);
-                return this._extData.enrichItems(displayedDates);
+                return this._extData.enrichItems(displayedDates).catch((error: Error) => this._errorHandler(error));
             }
         }
     }
@@ -391,8 +391,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 if (notResetPositionToScroll) {
                     this._forceUpdate();
                 } else {
+                    if (+this._lastPositionFromOptions === +this._positionToScroll) {
+                        this._lastPositionFromOptions = null;
+                    }
                     this._positionToScroll = null;
-                    this._lastPositionFromOptions = null;
                 }
             }
         }

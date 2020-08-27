@@ -4,7 +4,7 @@ import {DataSet, ICrudPlus} from 'Types/source';
 // tree
 import * as TreeItemsUtil from 'Controls/_list/resources/utils/TreeItemsUtil';
 
-import * as getItemsBySelection from 'Controls/Utils/getItemsBySelection';
+import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 import {ISelectionObject, TKeySelection, TKeysSelection, TSelectionRecord} from 'Controls/interface';
 
 import {

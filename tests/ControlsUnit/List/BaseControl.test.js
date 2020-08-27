@@ -738,7 +738,7 @@ define([
          ctrl._portionedSearch.continueSearch();
          await loadPromise;
          assert.isTrue(ctrl._portionedSearchInProgress);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
@@ -749,7 +749,7 @@ define([
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
          assert.isFalse(ctrl._portionedSearchInProgress);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.isFalse(ctrl._listViewModel.getHasMoreData());
       });
 
@@ -811,7 +811,7 @@ define([
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
          ladingIndicatorTimer = ctrl._loadingIndicatorTimer;
          assert.isTrue(ctrl._portionedSearchInProgress);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.isNull(ctrl._loadingIndicatorTimer);
 
          let loadingIndicatorTimer = setTimeout(() => {});
@@ -1016,12 +1016,12 @@ define([
          // Up trigger became visible, no changes to indicator
          ctrl.triggerVisibilityChangedHandler('up', true);
          assert.isNotNull(ctrl._loadingIndicatorState);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
 
          // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
-         assert.isTrue(ctrl._showContinueSearchButton);
+         assert.isTrue(ctrl._showContinueSearchButtonDirection === 'down');
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
@@ -2142,14 +2142,14 @@ define([
 
          it('depend on portionedSearch', () => {
             control._sourceController._hasMoreData = {up: false, down: true};
-            control._showContinueSearchButton = true;
+            control._showContinueSearchButtonDirection = 'down';
             updateShadowModeHandler.call(control, event, {
                top: 0,
                bottom: 0
             });
             assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
 
-            control._showContinueSearchButton = false;
+            control._showContinueSearchButtonDirection = 'up';
             updateShadowModeHandler.call(control, event, {
                top: 0,
                bottom: 0
@@ -2411,14 +2411,14 @@ define([
             }
          };
          ctrl._abortSearch();
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.deepEqual(ctrl._pagingCfg, {
-             arrowState: {
-                 begin: 'visible',
-                 prev: 'visible',
-                 next: 'readonly',
-                 end: 'readonly'
-             }
+            arrowState: {
+               begin: 'visible',
+               prev: 'visible',
+               next: 'readonly',
+               end: 'readonly'
+            }
          });
          assert.deepEqual(shadowMode, {top: 'auto', bottom: 'auto'});
          assert.isTrue(iterativeSearchAborted);
@@ -3968,7 +3968,23 @@ define([
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
                baseControl._editInPlace.hasPendingActivation = () => true;
+            });
 
+            it('after mount with started editing', () => {
+               let wasActivatedFirstInput = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => false;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                     return true;
+                  }
+               };
+               baseControl._container = {};
+               baseControl._scrollController = null;
+               baseControl._afterMount(cfg);
+               assert.isTrue(wasActivatedFirstInput);
+               assert.isFalse(baseControl._editInPlace._shouldActivateRow);
             });
 
             it('activate row bu click in input', () => {
@@ -3995,6 +4011,25 @@ define([
                };
                baseControl._afterUpdate(cfg);
                assert.isTrue(wasActivatedFirstInput);
+            });
+
+            it('do nothing new in listRender', () => {
+               let wasActivatedFirstInput = false;
+               let hasNoPendingActivation = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => false;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                  }
+               };
+               baseControl._editInPlace.activated = () => {
+                  hasNoPendingActivation = true;
+               };
+                baseControl._options.useNewModel = true;
+               baseControl._afterUpdate(cfg);
+               assert.isFalse(wasActivatedFirstInput);
+               assert.isTrue(hasNoPendingActivation);
             });
          });
       });
@@ -5940,6 +5975,45 @@ define([
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
+      });
+
+      it('_beforeUpdate with new filter', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: tree.TreeViewModel,
+            keyProperty: 'id',
+            source: source,
+            selectedKeys: [],
+            excludedKeys: [],
+            parentProperty: 'node'
+         };
+         let instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         const notifySpy = sinon.spy(instance, '_notify');
+
+         instance._createSelectionController();
+         let cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue' };
+         instance._beforeUpdate(cfgClone);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+
+         cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
+         instance._beforeUpdate(cfgClone);
+         instance.saveOptions(cfgClone);
+
+         cfgClone = { ...cfg, filter: { id: 'newvalue1' }, root: 'newvalue1', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
+         instance._beforeUpdate(cfgClone);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
       });
 
       it('_beforeUpdate with new selectedKeys', async function() {

@@ -1,4 +1,4 @@
-<div class="{{ _gridViewClasses }}" style="{{ _gridViewStyles }}">
+<table class="{{ _gridViewClasses }}" style="{{ _gridViewStyles }}">
 
     <!-- Настройка ширин колонок для табличной вёрстки -->
     <ws:if data="{{ !_isFullGridSupport }}">
@@ -31,7 +31,7 @@
     </ws:if>
 
 
-    <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
+    <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer">
         <ws:partial template="wml!Controls/_list/resources/For"
                     listModel="{{_listModel}}"
                     itemTemplate="{{_itemTemplate}}"
@@ -50,7 +50,7 @@
                 <ws:partial template="wml!Controls/_grid/_editArrowTemplate"></ws:partial>
             </ws:editArrowTemplate>
         </ws:partial>
-    </div>
+    </tbody>
 
 
     <!-- Отступ под последней записью вслучае, если в таблице есть операции над записью "вне строки" -->
@@ -96,6 +96,6 @@
             </td>
         </tr>
     </ws:else>
-</div>
+</table>
 
 

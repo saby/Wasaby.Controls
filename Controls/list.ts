@@ -26,6 +26,7 @@
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @includes IClickableView Controls/_list/interface/IClickableView
+ * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @public
  * @author Крайнов Д.О.
  */
@@ -95,6 +96,8 @@ import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
 import {default as ScrollController} from './_list/ScrollController';
 import {IList} from './_list/interface/IList';
 import IListNavigation from './_list/interface/IListNavigation';
+import { CssClassList, createClassListCollection} from 'Controls/_list/resources/utils/CssClassList';
+import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 
 import {default as Mover} from 'Controls/_list/Mover';
 import Remover = require('Controls/_list/Remover');
@@ -135,6 +138,9 @@ export {
     BaseControl,
     ScrollEmitter,
     SearchItemsUtil,
+    CssClassList,
+    createClassListCollection,
+    getItemsBySelection,
     ItemsView,
     ItemsViewModel,
     LoadingIndicatorTemplate,
