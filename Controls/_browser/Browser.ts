@@ -76,6 +76,16 @@ export default class Browser extends Control {
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
         const isChanged = this._dataController.update({...newOptions});
 
+        this._operationsController.update(newOptions);
+        if (newOptions.hasOwnProperty('markedKey')) {
+            this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
+        }
+
+        this._searchController.update(
+            this._getSearchControllerOptions(newOptions),
+            {dataOptions: this._dataOptionsContext}
+        );
+
         if (this._options.source !== newOptions.source) {
             this._loading = true;
             return this._dataController.loadItems().then((result) => {
@@ -96,11 +106,6 @@ export default class Browser extends Control {
             this._dataController.updateContext(this._dataOptionsContext);
             this._groupHistoryId = newOptions.groupHistoryId;
         }
-        this._operationsController.update(newOptions);
-        this._searchController.update(
-            this._getSearchControllerOptions(newOptions),
-            {dataOptions: this._dataOptionsContext}
-        );
     }
 
     protected _beforeUnmount(): void {

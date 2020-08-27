@@ -2510,6 +2510,26 @@ const _private = {
                 self._savedItemClickArgs = null;
             }
         }
+    },
+    activateEditingRow(self) {
+        // После запуска редактирования нужно активировать определенное поле ввода.
+        // Если не получилось активировать поле ввода, под точкой клика (клик мимо поля ввода),
+        // то активируем первое в строке
+        if (self._editInPlace.hasPendingActivation()) {
+            // Совместимость с ListRender, он не использует EditingRow. Удалить при полном переходе.
+            if (self._options.useNewModel) {
+                self._editInPlace.activated();
+            } else {
+                const wasActivatedByClick = self._editInPlace.prepareHtmlInput();
+                let wasActivatedByEditingRow;
+                if (!wasActivatedByClick) {
+                    wasActivatedByEditingRow = self._children.listView.activateEditingRow();
+                }
+                if (wasActivatedByEditingRow || wasActivatedByClick) {
+                    self._editInPlace.activated();
+                }
+            }
+        }
     }
 };
 
@@ -2990,6 +3010,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._editInPlace.registerFormOperation(this._validateController);
             this._editInPlace.updateViewModel(this._listViewModel);
             this._editInPlace.setErrorContainer(this._children.errorContainer);
+            _private.activateEditingRow(this);
         }
 
         // для связи с контроллером ПМО
@@ -3132,6 +3153,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._selectionController) {
+            if (filterChanged && _private.getSelectionController(this).isAllSelected(false)) {
+                const result = _private.getSelectionController(this).clearSelection();
+                _private.handleSelectionControllerResult(this, result);
+            }
             _private.updateSelectionController(this, newOptions);
 
             const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
@@ -3484,26 +3509,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._validateController);
-
-            // После запуска редактирования нужно активировать определенное поле ввода.
-            // Если не получилось активировать поле ввода, под точкой клика (клик мимо поля ввода),
-            // то активируем первое в строке
-            if (this._editInPlace.hasPendingActivation()) {
-                // Совместимость с ListRender, он не использует EditingRow. Удалить при полном переходе.
-                if (this._options.useNewModel) {
-                    this._editInPlace.activated();
-                } else {
-                    const wasActivatedByClick = this._editInPlace.prepareHtmlInput();
-                    let wasActivatedByEditingRow;
-                    if (!wasActivatedByClick) {
-                        wasActivatedByEditingRow = this._children.listView.activateEditingRow();
-                    }
-                    if (wasActivatedByEditingRow || wasActivatedByClick) {
-                        this._editInPlace.activated();
-                    }
-                }
-            }
-
+            _private.activateEditingRow(this);
             this._validateController.resolveSubmit();
         }
 
