@@ -29,7 +29,7 @@ import { Sticky } from 'Controls/popup';
 import {editing as constEditing} from 'Controls/Constants';
 
 // Utils imports
-import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
+import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import uDimension = require('Controls/Utils/getDimensions');
@@ -63,7 +63,7 @@ import {default as ScrollController, IScrollParams} from './ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
-import {CssClassList} from '../Utils/CssClassList';
+import {CssClassList} from './resources/utils/CssClassList';
 import {
    FlatSelectionStrategy,
    TreeSelectionStrategy,
