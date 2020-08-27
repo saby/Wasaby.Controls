@@ -107,7 +107,8 @@ define('Controls/Application',
 
          _getChildContext: function() {
             return {
-               ScrollData: this._scrollData
+               ScrollData: this._scrollData,
+               isTouch: this._touchObjectContext
             };
          },
 
@@ -336,7 +337,7 @@ define('Controls/Application',
 
          _createTouchDetector: function() {
             this._touchDetector = new TouchDetector();
-            this._touchDetector.createContext();
+            this._touchObjectContext = this._touchDetector.createContext();
          },
 
          _getResourceUrl: function(str) {

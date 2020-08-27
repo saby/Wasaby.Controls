@@ -11,8 +11,9 @@ class TouchDetectorController {
 
     private _moveInRow: number = 1;
 
-    createContext(): void {
+    createContext(): object {
         this._touchObjectContext = new TouchContextField(this._state);
+        return this._touchObjectContext;
     }
 
     private _updateTouchObject(): void {
