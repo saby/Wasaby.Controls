@@ -734,6 +734,9 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                contentContainer.getBoundingClientRect = () => ({
                   left: 0
                });
+               gridView._children.columnScrollContainer.getBoundingClientRect = () => ({
+                  left: 0
+               });
 
 
                gridView.saveOptions(cfg);
