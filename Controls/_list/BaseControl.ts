@@ -3275,9 +3275,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (selectionChanged || this._modelRecreated) {
             updateSelectionCtrlPromise = _private.updateSelectionController(this, newOptions).then(
                 (controller) => {
-                    // handleSelectionControllerResult чтобы отправить информацию для ПМО
-                    const result = controller.setSelectedKeys(newOptions.selectedKeys, newOptions.excludedKeys);
-                    _private.handleSelectionControllerResult(this, result);
+                    if (controller) {
+                        // handleSelectionControllerResult чтобы отправить информацию для ПМО
+                        const result = controller.setSelectedKeys(newOptions.selectedKeys, newOptions.excludedKeys);
+                        _private.handleSelectionControllerResult(this, result);
+                    }
                 }
             );
         }
