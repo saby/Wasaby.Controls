@@ -1268,7 +1268,7 @@ const _private = {
             },
             searchStopCallback: () => {
                 self._portionedSearchInProgress = false;
-                self._showContinueSearchButton = true;
+                self._showContinueSearchButtonDirection = self._loadingState || 'down';
                 self._sourceController.cancelLoading();
                 _private.hideIndicator(self);
 
@@ -1278,13 +1278,13 @@ const _private = {
             },
             searchResetCallback: () => {
                 self._portionedSearchInProgress = false;
-                self._showContinueSearchButton = false;
+                self._showContinueSearchButtonDirection = null;
             },
             searchContinueCallback: () => {
                 const direction = _private.hasMoreData(self, self._sourceController, 'up') ? 'up' : 'down';
 
                 self._portionedSearchInProgress = true;
-                self._showContinueSearchButton = false;
+                self._showContinueSearchButtonDirection = null;
                 _private.loadToDirectionIfNeed(self, direction);
             },
             searchAbortCallback: () => {
@@ -1336,22 +1336,25 @@ const _private = {
         }
     },
 
-    allowLoadMoreByPortionedSearch(self): boolean {
-        return !self._showContinueSearchButton && _private.getPortionedSearch(self).shouldSearch();
+    allowLoadMoreByPortionedSearch(self, direction: 'up'|'down'): boolean {
+        return (!self._showContinueSearchButtonDirection || self._showContinueSearchButtonDirection !== direction) &&
+                _private.getPortionedSearch(self).shouldSearch();
     },
 
     updateShadowMode(self, shadowVisibility: {up: boolean, down: boolean}): void {
         const itemsCount = self._listViewModel && self._listViewModel.getCount();
         const hasMoreData = (direction) => _private.hasMoreData(self, self._sourceController, direction);
         const showShadowByNavigation = _private.needShowShadowByNavigation(self._options.navigation, itemsCount);
-        const showShadowByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self);
+        const showShadowUpByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self, 'up');
+        const showShadowDownByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self, 'down');
 
         self._notify('updateShadowMode', [{
             top: (shadowVisibility?.up ||
-                showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
+                showShadowByNavigation &&
+                showShadowUpByPortionedSearch && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
             bottom: (shadowVisibility?.down ||
                 showShadowByNavigation &&
-                showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
+                showShadowDownByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
     },
 
@@ -2731,7 +2734,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _portionedSearch: null,
     _portionedSearchInProgress: null,
-    _showContinueSearchButton: false,
+    _showContinueSearchButtonDirection: null,
 
     _draggingItem: null,
     _draggingEntity: null,
