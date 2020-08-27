@@ -139,6 +139,7 @@ export default class Browser extends Control {
 
     _itemsReadyCallbackHandler(items): void {
         if (this._items !== items) {
+            this._dataController.setItems(null);
             this._items = this._dataController.setItems(items);
             this._dataController.updateContext(this._dataOptionsContext);
         }
