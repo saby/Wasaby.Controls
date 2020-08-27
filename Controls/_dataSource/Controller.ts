@@ -35,10 +35,10 @@ export interface IControllerOptions {
     root: string;
 
     // for grouping
-    groupProperty: string;
-    groupingKeyCallback: Function;
-    groupHistoryId: string;
-    historyIdCollapsedGroups: string;
+    groupProperty?: string;
+    groupingKeyCallback?: Function;
+    groupHistoryId?: string;
+    historyIdCollapsedGroups?: string;
 }
 
 export default class Controller {
