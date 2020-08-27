@@ -9,44 +9,43 @@ type CssClassListChain = {
     classList: ClassListObject;
     add(className: string, shouldAdd?: boolean): CssClassListChain;
     compile(classListObject?: ClassListObject): string;
-}
-
+};
 
 type ClassListObject = {
     [key: string]: boolean;
-}
+};
 
 class StaticCssClassList {
-    
+
     static add(className: string, shouldAdd: boolean = true): CssClassListChain {
         let classList: ClassListObject;
-        
+
         /// @ts-ignore
         classList = this.classList || {};
-        
+
         classList[className] = shouldAdd;
-        
+
         return {
             classList,
             add: StaticCssClassList.add.bind({classList}),
             compile: StaticCssClassList.compile.bind({classList})
         };
     }
-    
+
     static compile(classList: ClassListObject = {}): string {
         let
             classListString = '',
             classListObj: ClassListObject;
-        
+
         /// @ts-ignore
         classListObj = this.classList || classList;
-        
+
         for (let className in classListObj) {
             if (classListObj[className] !== false) {
                 classListString += `${className} `
             }
         }
-        
+
         return classListString.trim();
     }
 }
@@ -91,13 +90,13 @@ class StaticCssClassList {
  * @author Авраменко А.С.
  */
 class CssClassList {
-    
+
     private _classList: ClassListObject;
-    
+
     constructor(classList: ClassListObject = {}) {
         this._classList = { ...classList };
     }
-    
+
     /**
      * Adds class expression in class list, can be chained.
      * @param {String} className Name of class
@@ -109,7 +108,7 @@ class CssClassList {
         this._classList[className] = shouldAdd;
         return this;
     }
-    
+
     /**
      * Adds class expression in class list given by chain.
      * @param {String} className Name of class
@@ -121,7 +120,7 @@ class CssClassList {
     static add(className: string, shouldAdd: boolean = true): CssClassListChain {
         return StaticCssClassList.add(className, shouldAdd);
     }
-    
+
     /**
      * Returns class list.
      * Adds class only if the value of its key in class list object is true.
@@ -130,9 +129,9 @@ class CssClassList {
      * @public
      */
     getClassList(): ClassListObject {
-        return {...this._classList}
+        return {...this._classList};
     }
-    
+
     /**
      * Clears class list, can be chained
      * @return {CssClassList}
@@ -142,7 +141,7 @@ class CssClassList {
         this._classList = {};
         return this;
     }
-    
+
     /**
      * Compiles class list object to string, can be only last in chain.
      * Adds class only if the value of its key in class list object is true.
@@ -152,7 +151,7 @@ class CssClassList {
     compile(): string {
         return StaticCssClassList.compile(this._classList);
     }
-    
+
     /**
      * Compiles class list object to string, can be only last in chain.
      * Static variant of function.
@@ -167,7 +166,6 @@ class CssClassList {
         return StaticCssClassList.compile(classList);
     }
 }
-
 
 function getAll(classListCollection: Record<string, string>): string {
     let classes = '';
@@ -196,4 +194,4 @@ function createClassListCollection(...classListNames: string[]) {
 export {
     CssClassList,
     createClassListCollection
-}
+};
