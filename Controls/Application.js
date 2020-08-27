@@ -354,7 +354,7 @@ define('Controls/Application',
             }
          },
 
-         _popupBeforeDestroyedHandler(event, popupCfg, popupList, popupContainer) {
+         _popupBeforeDestroyedHandler: function(event, popupCfg, popupList, popupContainer) {
             this._globalpopup.popupBeforeDestroyedHandler(event, popupCfg, popupList, popupContainer);
          },
 
