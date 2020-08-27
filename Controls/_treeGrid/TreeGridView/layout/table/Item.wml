@@ -40,7 +40,8 @@
                             {{itemData.isRightSwiped() ? ' controls-ListView__item_rightSwipeAnimation'}} {{ cellClassName || '' }}"
                 ladderWrapper="{{currentColumn.ladderWrapper}}"
                 expanderTemplate="{{itemData.expanderTemplate}}"
-                itemData="{{currentColumn}}" />
+                itemData="{{currentColumn}}"
+                tagTemplate="{{tagTemplate}}"/>
 </ws:template>
 
 <ws:template name="COLUMN">
@@ -73,7 +74,7 @@
 
                 <!-- Контент колонки с чекбоксом -->
                 <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
-                    <ws:if data="{{!itemData.dispItem.isEditing()}}">
+                    <ws:if data="{{!itemData.isAdd}}">
                         <div class="{{ currentColumn.classList.padding.getAll() }} {{ cellClassName || '' }}">
                             <ws:partial template="{{multiSelectTpl}}" attr:class="{{ itemData.multiSelectClassList }}">
                                 <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"

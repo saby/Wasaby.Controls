@@ -178,6 +178,9 @@ var
                   self._children.treeControl.setMarkedKey(markedKey);
                   self._markerForRestoredScroll = markedKey;
                }
+               if (self._children.treeControl.isAllSelected()) {
+                  self._children.treeControl.clearSelection();
+               }
                self._isGoingBack = false;
             }
             if (self._isGoingFront) {
@@ -394,6 +397,7 @@ var
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
+    * @mixes Controls/_list/interface/IClickableView
     * @control
     * @public
     * @category List

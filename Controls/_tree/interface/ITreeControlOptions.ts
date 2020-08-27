@@ -107,6 +107,8 @@ import { RecordSet } from 'Types/collection';
 /**
  * @name Controls/_tree/interface/ITreeControlOptions#nodeFooterTemplate
  * @cfg {Function} Шаблон подвала раскрытого узла дерева.
+ * @remark 
+ * В области видимости шаблона доступен объект itemData, внутри доступно свойство item - запись, под которой отрисовывается шаблон.
  * @demo Controls-demo/treeGrid/NodeFooter/NodeFooterTemplate/Index
  */
 
@@ -188,8 +190,7 @@ import { RecordSet } from 'Types/collection';
  * @name Controls/_tree/interface/ITreeControlOptions#expanderVisibility
  * @cfg {ExpanderVisibility} Режим отображения элемента развертывания узла {@link Controls/treeGrid:View дерева}.
  * @default visible
- * @remark
- * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FExtendedPG">демо-пример</a>.
+ * @demo Controls-demo/treeGrid/Expander/HasChildren/Index
  * @see expandedItems
  * @see expandByItemClick
  */

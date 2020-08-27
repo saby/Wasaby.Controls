@@ -6,6 +6,22 @@
    width: 100%;
    position: relative;
 }
+
+.controls-GridView__emptyTemplate {
+   display: contents;
+}
+
+.controls-GridView__emptyTemplate__cell {
+   display: flex;
+   align-items: baseline;
+   color: @label_text-color;
+   cursor: pointer;
+}
+
+.controls-GridView__emptyTemplate__checkBoxCell {
+   min-width: @click-area_width_checkbox;
+}
+
 .controls-Grid_dragging_process {
    .controls-Grid__row-ladder-cell {
       display: none;
@@ -66,6 +82,12 @@
 .controls-Grid_columnScroll_wrapper {
    z-index: 4;
    position: sticky;
+}
+
+/* Этот костыль выпилен в 6000 по https://online.sbis.ru/opendoc.html?guid=f5e830c3-7be2-4272-9c38-594c241401cc */
+.ws-is-desktop-safari .controls-Grid__columnScroll_will-transform,
+.ws-is-mobile-safari .controls-Grid__columnScroll_will-transform {
+   will-change: transform;
 }
 
 .controls-Grid__cell_spacing_money:after,
@@ -564,7 +586,7 @@
 .controls-Grid__cell_spacingLastCol_default_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_default_theme-@{themeName} {
    padding-right: @item_padding-right_default_list;
-   .controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
       right: @cell_spacing-right_m_grid;
    }
 }
@@ -582,7 +604,7 @@
 .controls-Grid__cell_spacingLastCol_s_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_s_theme-@{themeName} {
    padding-right: @item_padding-right_s_list;
-   .controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
       right: @cell_spacing-right_s_grid;
    }
 }
@@ -590,7 +612,7 @@
 .controls-Grid__cell_spacingLastCol_m_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_m_theme-@{themeName} {
    padding-right: @item_padding-right_m_list;
-   .controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
       right: @cell_spacing-right_m_grid;
    }
 }
@@ -598,7 +620,7 @@
 .controls-Grid__cell_spacingLastCol_l_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_l_theme-@{themeName} {
    padding-right: @item_padding-right_l_list;
-   .controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
       right: @cell_spacing-right_l_grid;
    }
 }
@@ -606,7 +628,7 @@
 .controls-Grid__cell_spacingLastCol_xl_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_xl_theme-@{themeName} {
    padding-right: @item_padding-right_xl_list;
-   .controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
       right: @cell_spacing-right_xl_grid;
    }
 }
@@ -614,7 +636,7 @@
 .controls-Grid__cell_spacingLastCol_xxl_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_xxl_theme-@{themeName} {
    padding-right: @item_padding-right_2xl_list;
-   .controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
+   &.controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
       right: @cell_spacing-right_2xl_grid;
    }
 }

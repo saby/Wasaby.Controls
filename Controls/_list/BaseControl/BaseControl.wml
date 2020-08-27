@@ -92,6 +92,7 @@
                 editingItemData="{{_editingItemData}}"
                 startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
                 isAdd="{{_editingItemData ? _editingItemData.isAdd : undefined}}"
+                on:closeSwipe="_onCloseSwipe()"
                 on:validateCreated="_onValidateCreated()"
                 on:validateDestroyed="_onValidateDestroyed()"
                 on:animationend="_onItemSwipeAnimationEnd()"
@@ -210,7 +211,7 @@
                     showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
                     contentTemplate="{{_options.pagingContentTemplate}}"
                     on:onArrowClick="__onPagingArrowClick()"
-                    on:selectedPageChanged="__pagingChangePage()"/>
+                    on:selectedPageChanged="__selectedPageChanged()"/>
             </div>
         </ws:if>
         <Controls.event:Listener

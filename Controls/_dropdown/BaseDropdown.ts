@@ -24,10 +24,6 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
 
     abstract openMenu(popupOptions?: IStickyPopupOptions): void;
 
-    protected _afterMount(options?: IControlOptions, contexts?: object): void {
-        RegisterUtil(this, 'scroll', this._handleScroll.bind(this));
-    }
-
     protected _handleKeyDown(event): void {
         if (event.nativeEvent.keyCode === constants.key.esc && this._isOpened) {
             this._controller.closeMenu();
@@ -54,6 +50,7 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
     }
 
     protected _onOpen(): void {
+        RegisterUtil(this, 'scroll', this._handleScroll.bind(this));
         this._isOpened = true;
         this._notify('dropDownOpen');
     }

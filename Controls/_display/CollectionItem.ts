@@ -94,6 +94,8 @@ export default class CollectionItem<T> extends mixin<
 
     protected _$swiped: boolean;
 
+    protected _$rightSwiped: boolean;
+
     protected _$editingContents: T;
 
     protected _$active: boolean;
@@ -357,14 +359,25 @@ export default class CollectionItem<T> extends mixin<
      * Элемент коллеекции свайпнут вправо (состояние анимации right-swipe)
      */
     isRightSwiped(): boolean {
-        return this._$swiped && this.getOwner().getSwipeAnimation() === ANIMATION_STATE.RIGHT_SWIPE;
+        return this._$rightSwiped;
+    }
+
+    setRightSwiped(swiped: boolean, silent?: boolean): void {
+        if (this._$rightSwiped === swiped) {
+            return;
+        }
+        this._$rightSwiped = swiped;
+        this._nextVersion();
+        if (!silent) {
+            this._notifyItemChangeToOwner('rightSwiped');
+        }
     }
 
     /**
      * Элемент коллекции свайпнут влево (состояние анимации open или close)
      */
     isSwiped(): boolean {
-        return this._$swiped && this.getOwner().getSwipeAnimation() !== ANIMATION_STATE.RIGHT_SWIPE;
+        return this._$swiped;
     }
 
     setSwiped(swiped: boolean, silent?: boolean): void {
@@ -428,8 +441,21 @@ export default class CollectionItem<T> extends mixin<
             ${templateHighlightOnHover && this.isActive() ? ` controls-ListView__item_active_theme-${theme}` : ''}`;
     }
 
-    getItemActionClasses(itemActionsPosition: string, theme?: string): string {
-        return `controls-itemActionsV_${itemActionsPosition}_theme-${theme}`;
+    getItemActionClasses(itemActionsPosition: string, theme?: string, isLastRow?: boolean, rowSeparatorSize?: string): string {
+        let itemActionClasses = `controls-itemActionsV_${itemActionsPosition}_theme-${theme}`;
+        if (itemActionsPosition === 'outside') {
+            const defaultSize = ` controls-itemActionsV__outside_bottom_size-default_theme-${theme}`;
+            if (isLastRow) {
+                if (rowSeparatorSize) {
+                    itemActionClasses += ` controls-itemActionsV__outside_bottom_size-${rowSeparatorSize}_theme-${theme}`;
+                } else {
+                    itemActionClasses += defaultSize;
+                }
+            } else {
+                itemActionClasses += defaultSize;
+            }
+        }
+        return itemActionClasses;
     }
 
     getContentClasses(theme: string, style: string = 'default'): string {

@@ -601,6 +601,8 @@ let
              fixedCallback: this._stickyHeaderFixedCallback.bind(this)
          });
 
+         this._getScrollPositionCallback = this._getScrollPositionCallback.bind(this);
+
          if (receivedState) {
             _private.updateDisplayState(this, receivedState.displayState);
             this._styleHideScrollbar = receivedState.styleHideScrollbar || ScrollWidthUtil.calcStyleHideScrollbar(options.scrollMode);
@@ -826,6 +828,19 @@ let
          this._stickyHeaderController.destroy();
       },
 
+       // Если курсор мыши сразу наведен на область со скроллконтейенером в момент его построения
+       // (к примеру клик по записи открывает окно со скроллом, курсор сразу находится над скроллируемой областью),
+       // то скроллбар в этот момент еще не инициализирован, т.к. состояние, отвечающее за условие построения,
+       // высчитывается после маунта,а между маунтом и обработчиком события mouseenter еще не прошел цикл синхронизации.
+       // Если скроллконтейнеру в этот момент (сразу после маунта) установили скроллтоп из кода, то контейнер не может
+       // сообщить скроллбару о новой позиции, т.к. скроллбар еще не успел построиться.
+       // Добавляю геттер текущей позиции скролла, который скроллбар дернет в момент своего построения.
+       // Код можно убрать после перевода работы скроллбара с сеттера на опции после выполнения задачи
+       // TODO: https://online.sbis.ru/opendoc.html?guid=65a30a09-0581-4506-9329-e472ea9630b5
+       _getScrollPositionCallback(): void {
+          return this._scrollTop;
+       },
+
       _shadowVisible(position: POSITION) {
          const stickyController = this._stickyHeaderController;
          const fixed: boolean = stickyController?.hasFixed(position);
@@ -848,9 +863,8 @@ let
        },
 
        _stickyHeaderFixedCallback(position: POSITION): void {
-          if (!detection.isMobileIOS) {
-              this._forceUpdate();
-          }
+           // После того, как заголовки зафиксировались нужно пересчитать отображение скроллбара и теней.
+          this._forceUpdate();
        },
 
       _updateShadowMode(event, shadowVisibleObject): void {

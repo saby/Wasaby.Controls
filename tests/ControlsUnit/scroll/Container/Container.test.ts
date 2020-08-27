@@ -16,7 +16,7 @@ describe('Controls/scroll:_ContainerNew', () => {
         it('should initialize by default', () => {
             const component = createComponent(_ContainerNew, {});
 
-            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden');
+            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll-ContainerBase__scroll_vertical');
         });
     });
 
@@ -46,7 +46,7 @@ describe('Controls/scroll:_ContainerNew', () => {
             };
             component._scrollbars._scrollContainerStyles = '';
             component._updateState(state);
-            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden');
+            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll-ContainerBase__scroll_vertical');
         });
         it('should update _scrollCssClass, scrollMode: "verticalHorizontal"', () => { // controls-Scroll-ContainerBase__scroll_vertical
             const component = createComponent(_ContainerNew, {scrollMode: 'verticalHorizontal'});
@@ -60,7 +60,7 @@ describe('Controls/scroll:_ContainerNew', () => {
             };
             component._scrollbars._scrollContainerStyles = '';
             component._updateState(state);
-            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden');
+            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll-ContainerBase__scroll_verticalHorizontal');
         });
     });
 

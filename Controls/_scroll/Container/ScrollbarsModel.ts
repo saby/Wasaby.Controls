@@ -12,7 +12,6 @@ import {SCROLL_MODE} from './Type';
 interface ISerializeState {
     overflowHidden: boolean;
     styleHideScrollbar: string;
-    scrollContainerStyles: string;
 }
 
 export default class ScrollbarsModel extends mixin<VersionableMixin>(VersionableMixin) implements IVersionable {
@@ -29,7 +28,6 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
 
     private _models: object = {};
     private _canScroll: boolean = false;
-    private _scrollContainerStyles: string;
     private _overflowHidden: boolean;
     private _styleHideScrollbar: string;
 
@@ -42,14 +40,9 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             this._overflowHidden = receivedState.overflowHidden;
             this._styleHideScrollbar = receivedState.styleHideScrollbar ||
                 ScrollWidthUtil.calcStyleHideScrollbar(options.scrollMode);
-            this._scrollContainerStyles = receivedState.scrollContainerStyles;
         } else {
             this._overflowHidden = ScrollHeightFixUtil.calcHeightFix();
             this._styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(options.scrollMode);
-
-            if (this._styleHideScrollbar === '') {
-                this._scrollContainerStyles = '';
-            }
         }
 
         // На мобильных устройствах используется нативный скролл, на других платформенный.
@@ -68,8 +61,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     serializeState(): ISerializeState {
         return {
             overflowHidden: this._overflowHidden,
-            styleHideScrollbar: this._styleHideScrollbar,
-            scrollContainerStyles: this._scrollContainerStyles
+            styleHideScrollbar: this._styleHideScrollbar
         };
     }
 
@@ -114,7 +106,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     }
 
     get scrollContainerStyles() {
-        return !this._overflowHidden ? this._scrollContainerStyles : '';
+        return !this._overflowHidden ? this._styleHideScrollbar : '';
     }
 
     getScrollContainerClasses(): string {
@@ -123,7 +115,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             css += ' controls-Scroll__content_auto';
         } else {
             css += ' controls-Scroll__content_hideNativeScrollbar';
-            if (this._overflowHidden || this._scrollContainerStyles === undefined) {
+            if (this._overflowHidden) {
                 css += ' controls-Scroll__content_hidden';
             } else {
                 css += this._options.scrollMode === SCROLL_MODE.VERTICAL ?

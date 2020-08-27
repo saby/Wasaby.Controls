@@ -102,8 +102,7 @@ const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
     {id: 4, title: '50', pageSize: 50},
     {id: 5, title: '100', pageSize: 100},
     {id: 6, title: '200', pageSize: 200},
-    {id: 7, title: '500', pageSize: 500},
-    {id: 8, title: '1000', pageSize: 1000}];
+    {id: 7, title: '500', pageSize: 500}];
 
 const
     HOT_KEYS = {
@@ -356,7 +355,6 @@ const _private = {
                     if (!self._shouldNotResetPagingCache) {
                         self._cachedPagingState = false;
                     }
-                    clearTimeout(self._needPagingTimeout);
 
                     if (listModel) {
                         if (self._options.groupProperty) {
@@ -467,7 +465,7 @@ const _private = {
         }
 
         if (self._selectionController) {
-            _private._getSelectionController(self).restoreSelection();
+            _private.getSelectionController(self).restoreSelection();
         } else {
             if (options.selectedKeys && options.selectedKeys.length > 0) {
                 self._selectionController = _private.createSelectionController(self, options);
@@ -597,7 +595,7 @@ const _private = {
                 if (!self._selectionController) {
                     self._createSelectionController();
                 }
-                const result = _private._getSelectionController(self).toggleItem(toggledItemId);
+                const result = _private.getSelectionController(self).toggleItem(toggledItemId);
                 _private.handleSelectionControllerResult(self, result);
             }
             _private.moveMarkerToNext(self, event);
@@ -1071,6 +1069,9 @@ const _private = {
                 // чтобы не скрыть после полной загрузки, даже если не набралось на две страницы.
                 self._cachedPagingState = true;
             }
+            if (result && _private.needScrollPaging(self._options.navigation)) {
+                _private.createScrollPagingController(self, scrollParams);
+            }
         }
 
         if (self._cachedPagingState === true) {
@@ -1088,7 +1089,7 @@ const _private = {
 
             self._viewportRect = params.viewPortRect;
 
-            if (_private.needScrollPaging(self, self._options.navigation)) {
+            if (_private.needScrollPaging(self._options.navigation)) {
                 const scrollParams = {
                     scrollTop: self._scrollTop,
                     scrollHeight: params.scrollHeight,
@@ -1096,7 +1097,6 @@ const _private = {
                 };
                 _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPagingCtr) => {
                     self._scrollPagingCtr = scrollPagingCtr;
-                    self._pagingVisible = _private.needShowPagingByScrollSize(self, params.scrollHeight, params.clientHeight);
                 });
             }
 
@@ -1117,15 +1117,25 @@ const _private = {
         if (self._scrollPagingCtr) {
             callback(self._scrollPagingCtr);
         } else {
-            _private.createScrollPagingController(self, scrollParams).then((scrollPaging) => {
-                callback(scrollPaging);
-            });
+            if (self._pagingVisible) {
+                _private.createScrollPagingController(self, scrollParams).then((scrollPaging) => {
+                    callback(scrollPaging);
+                });
+            }
         }
     },
     createScrollPagingController(self, scrollParams) {
+        let elementsCount = undefined;
+        if (self._sourceController) {
+            elementsCount = self._sourceController.getAllDataCount();
+            if (typeof elementsCount !== 'number') {
+                elementsCount = undefined;
+            }
+        }
         const scrollPagingConfig = {
             pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
+            elementsCount,
             pagingCfgTrigger: (cfg) => {
                 if (!isEqual(self._pagingCfg, cfg)) {
                     self._pagingCfg = cfg;
@@ -1227,7 +1237,7 @@ const _private = {
 
         self._scrollTop = scrollTop;
         self._scrollPageLocked = false;
-        if (_private.needScrollPaging(self, self._options.navigation)) {
+        if (_private.needScrollPaging(self._options.navigation)) {
             const scrollParams = {
                 scrollTop: self._scrollTop,
                 scrollHeight: self._viewSize,
@@ -1335,7 +1345,7 @@ const _private = {
         return navigationOpt && navigationOpt.view === 'infinity';
     },
 
-    needScrollPaging(self, navigationOpt) {
+    needScrollPaging(navigationOpt) {
         return (navigationOpt &&
             navigationOpt.view === 'infinity' &&
             navigationOpt.viewConfig &&
@@ -1406,7 +1416,9 @@ const _private = {
                             self._addItems.push(...newItems);
                             self._addItemsIndex = newItemsIndex;
                         } else {
-                            result = self._scrollController.handleAddItems(newItemsIndex, newItems);
+                            const collectionStartIndex = self._listViewModel.getStartIndex();
+                            result = self._scrollController.handleAddItems(newItemsIndex, newItems,
+                                newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
                         }
 
                     }
@@ -1427,12 +1439,12 @@ const _private = {
             if (self._selectionController) {
                 let result;
 
-                if (self._listViewModel.getCount() === 0 && _private._getSelectionController(self).isAllSelected()) {
-                    result = _private._getSelectionController(self).clearSelection();
+                if (self._listViewModel.getCount() === 0 && _private.getSelectionController(self).isAllSelected()) {
+                    result = _private.getSelectionController(self).clearSelection();
                 } else if (action === IObservable.ACTION_ADD) {
-                    result = _private._getSelectionController(self).handleAddItems(newItems);
+                    result = _private.getSelectionController(self).handleAddItems(newItems);
                 } else if (action === IObservable.ACTION_RESET || action === IObservable.ACTION_REPLACE) {
-                    result = _private._getSelectionController(self).handleResetItems();
+                    result = _private.getSelectionController(self).handleResetItems();
                 }
 
                 _private.handleSelectionControllerResult(self, result);
@@ -1449,7 +1461,7 @@ const _private = {
                 // Если элемент был пересоздан, то сперва сработает remove и с элемента уберется выделение,
                 // а потом сработает add и для элемента нужно восстановить выделение
                 if (action === IObservable.ACTION_ADD) {
-                    _private.getMarkerController(self).restoreMarker();
+                    _private.getMarkerController(self).handleAddItems(newItems);
                 }
             }
         }
@@ -1986,7 +1998,7 @@ const _private = {
     },
 
     updateSelectionController(self: any, newOptions: any): void {
-        _private._getSelectionController(self).update({
+        _private.getSelectionController(self).update({
            model: self._listViewModel,
            selectedKeys: newOptions.selectedKeys,
            excludedKeys: newOptions.excludedKeys,
@@ -2004,7 +2016,7 @@ const _private = {
         }
     },
 
-    _getSelectionController(self: any): SelectionController {
+    getSelectionController(self: any): SelectionController {
         if (!self._selectionController) {
             self._selectionController = _private.createSelectionController(self, self._options);
         }
@@ -2032,7 +2044,7 @@ const _private = {
     },
 
     onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
-        const selectionController = _private._getSelectionController(this);
+        const selectionController = _private.getSelectionController(this);
         if (!selectionController) {
             return;
         }
@@ -2118,7 +2130,7 @@ const _private = {
        switch (action) {
            case IObservable.ACTION_REMOVE:
                if (self._selectionController) {
-                   selectionControllerResult = _private._getSelectionController(self).handleRemoveItems(removedItems);
+                   selectionControllerResult = _private.getSelectionController(self).handleRemoveItems(removedItems);
                }
                if (removedItemsIndex !== undefined && self._markerController) {
                    const newMarkedKey = self._markerController.handleRemoveItems(removedItemsIndex);
@@ -2445,7 +2457,7 @@ const _private = {
                     self._draggedKey = key;
                     self._startEvent = domEvent.nativeEvent;
 
-                    _private.clearSelection(self._startEvent);
+                    _private.clearSelectedText(self._startEvent);
                     if (self._startEvent && self._startEvent.target) {
                         self._startEvent.target.classList.add('controls-DragNDrop__dragTarget');
                     }
@@ -2487,7 +2499,7 @@ const _private = {
         const offset = _private.getDragOffset(moveEvent, startEvent);
         return Math.abs(offset.x) > DRAG_SHIFT_LIMIT || Math.abs(offset.y) > DRAG_SHIFT_LIMIT;
     },
-    clearSelection(event): void {
+    clearSelectedText(event): void {
         if (event.type === 'mousedown') {
             //снимаем выделение с текста иначе не будут работать клики,
             // а выделение не будет сниматься по клику из за preventDefault
@@ -2604,6 +2616,7 @@ const _private = {
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
+ * @implements Controls/_list/interface/IListNavigation
  * @control
  * @private
  * @author Авраменко А.С.
@@ -2649,7 +2662,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
-    _needPagingTimeout: null,
     _shouldNotResetPagingCache: false,
 
     _itemTemplate: null,
@@ -2959,16 +2971,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    scrollResizeHandler(params: object): void {
-        if (_private.needScrollPaging(this, this._options.navigation)) {
-            // внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
-            // поэтому нужен таймаут
-            this._needPagingTimeout = setTimeout(() => {
-                this._pagingVisible = _private.needShowPagingByScrollSize(this, params.scrollHeight, params.clientHeight);
-            }, 18);
-        }
-    },
-
     updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
         this._shadowVisibility = shadowVisibility;
         if (this._isMounted) {
@@ -2997,9 +2999,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
                 _private.getPortionedSearch(this).stopSearch();
             }
-        }
-        if (_private.needScrollPaging(this, this._options.navigation)) {
-            this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewportSize);
         }
         this._scrollController?.setTriggerVisibility(direction, state);
         if (state) {
@@ -3034,7 +3033,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.handleScrollControllerResult(this, result);
         }
 
-        if (_private.needScrollPaging(this, this._options.navigation)) {
+        if (_private.needScrollPaging(this._options.navigation)) {
             _private.doAfterUpdate(this, () => {
                     const scrollParams = {
                         scrollHeight: this._viewSize,
@@ -3080,7 +3079,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
         // TODO https://online.sbis.ru/opendoc.html?guid=3042889b-181c-47ec-b036-a7e24c323f5f
         if (this._selectionController) {
-            const result = _private._getSelectionController(this).getResultAfterConstructor();
+            const result = _private.getSelectionController(this).getResultAfterConstructor();
             _private.handleSelectionControllerResult(this, result);
         }
 
@@ -3235,17 +3234,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._selectionController) {
-            if ((self._options.root !== newOptions.root || filterChanged) && _private._getSelectionController(this).isAllSelected(false)) {
-                const result = _private._getSelectionController(this).clearSelection();
-                _private.handleSelectionControllerResult(this, result);
-            }
             _private.updateSelectionController(this, newOptions);
 
             const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
-               || !isEqual(self._options.excludedKeys, newOptions.excludedKeys);
+                || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
+                || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
             if (selectionChanged || this._modelRecreated) {
                 // handleSelectionControllerResult чтобы отправить информацию для ПМО
-                const result = _private._getSelectionController(this).setSelectedKeys(
+                const result = _private.getSelectionController(this).setSelectedKeys(
                    newOptions.selectedKeys,
                    newOptions.excludedKeys
                 );
@@ -3416,10 +3412,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._checkTriggerVisibilityTimeout) {
             clearTimeout(this._checkTriggerVisibilityTimeout);
-        }
-        if (this._needPagingTimeout) {
-            clearTimeout(this._needPagingTimeout);
-            this._needPagingTimeout = null;
         }
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
@@ -3654,7 +3646,26 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._validateController);
-            this._editInPlace.prepareHtmlInput();
+
+            // После запуска редактирования нужно активировать определенное поле ввода.
+            // Если не получилось активировать поле ввода, под точкой клика (клик мимо поля ввода),
+            // то активируем первое в строке
+            if (this._editInPlace.hasPendingActivation()) {
+                // Совместимость с ListRender, он не использует EditingRow. Удалить при полном переходе.
+                if (this._options.useNewModel) {
+                    this._editInPlace.activated();
+                } else {
+                    const wasActivatedByClick = this._editInPlace.prepareHtmlInput();
+                    let wasActivatedByEditingRow;
+                    if (!wasActivatedByClick) {
+                        wasActivatedByEditingRow = this._children.listView.activateEditingRow();
+                    }
+                    if (wasActivatedByEditingRow || wasActivatedByClick) {
+                        this._editInPlace.activated();
+                    }
+                }
+            }
+
             this._validateController.resolveSubmit();
         }
 
@@ -3676,6 +3687,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
         }
     },
+    __selectedPageChanged(e, page) {
+        this._currentPage = page;
+        const scrollParams = {
+            scrollTop: (page - 1) * this._viewportSize,
+            scrollHeight: this._viewSize,
+            clientHeight: this._viewportSize
+        };
+        this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true })
+        _private.updateScrollPagingButtons(this, scrollParams);
+    },
 
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
         // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
@@ -3692,7 +3713,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onCheckBoxClick(e, key, status, readOnly) {
         if (!readOnly) {
-            const result = _private._getSelectionController(this).toggleItem(key);
+            const result = _private.getSelectionController(this).toggleItem(key);
             _private.handleSelectionControllerResult(this, result);
             this._notify('checkboxClick', [key, status]);
         }
@@ -3983,6 +4004,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._onViewKeyDown(event);
     },
 
+    clearSelection(): void {
+        const result = _private.getSelectionController(this)?.clearSelection();
+        _private.handleSelectionControllerResult(this, result);
+    },
+
+    isAllSelected(): boolean {
+        return _private.getSelectionController(this)?.isAllSelected();
+    },
+
     _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
@@ -4032,6 +4062,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
+
+        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
+            this._pagingVisible = _private.needShowPagingByScrollSize(this,  this._viewSize, this._viewportSize);
+        }
 
         if (this._documentDragging) {
             this._insideDragging = true;
@@ -4196,7 +4230,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     this._createSelectionController();
                 }
                 if (this._selectionController) {
-                    const result = _private._getSelectionController(this).toggleItem(key);
+                    const result = _private.getSelectionController(this).toggleItem(key);
                     _private.handleSelectionControllerResult(this, result);
                 }
                 this._notify('checkboxClick', [key, item.isSelected()]);
@@ -4231,13 +4265,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     /**
-     * Обработчик, выполняемый после окончания анимации свайпа по записи
+     * Обработчик, выполняемый после окончания анимации свайпа вправо по записи
      * @param e
      * @private
      */
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'rightSwipe') {
-            _private.getItemActionsController(this).deactivateSwipe();
+            _private.getItemActionsController(this).deactivateRightSwipe();
         }
     },
 
@@ -4296,6 +4330,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onListDeactivated: function() {
+        if (!this._itemActionsMenuId) {
+            _private.closeSwipe(this);
+        }
+    },
+
+    _onCloseSwipe() {
         if (!this._itemActionsMenuId) {
             _private.closeSwipe(this);
         }
@@ -4371,9 +4411,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
             case 'canScroll':
                 this.canScrollHandler(params);
-                break;
-            case 'scrollResize':
-                this.scrollResizeHandler(params);
                 break;
             case 'scrollMove':
                 this.scrollMoveHandler(params);

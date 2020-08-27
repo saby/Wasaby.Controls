@@ -100,12 +100,14 @@ export interface IPreviewer {
  */
 
 /**
+ * @function
  * @name Controls/_popup/interface/IPreviewer#close
  * @description Метод для закрытия всплывающего окна.
  * @remark Используется для закрытия окна, если опция {@link trigger} установлена в значении demand
  */
 
 /**
+ * @function
  * @name Controls/_popup/interface/IPreviewer#open
  * @description Метод для открытия всплывающего окна.
  * @remark Используется для открытия окна, если опция {@link trigger} установлена в значении demand
