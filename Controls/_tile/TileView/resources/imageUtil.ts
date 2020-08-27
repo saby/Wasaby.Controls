@@ -21,7 +21,7 @@ export function getImageUrl(
     if (urlResolver) {
         return urlResolver(imageWidth, imageHeight, baseUrl);
     } else {
-        return `/previewer/r/${imageWidth ? imageWidth + '/' : ''}${imageHeight}/${baseUrl}`;
+        return `/previewer/r/${imageWidth ? imageWidth + '/' : ''}${imageHeight ? imageHeight + '/' : ''}${baseUrl}`;
     }
 }
 
@@ -33,15 +33,13 @@ export function getImageSize(
     imageWidth: number,
     imageFit: string
 ): IImageSize {
-    let width = tileWidth;
-    let height = tileHeight;
+    let width = imageWidth;
+    let height = imageHeight;
     if (imageFit !== IMAGE_FIT.NONE) {
         const tileDeltaW = tileWidth / tileHeight;
         const imageDeltaW = imageWidth / imageHeight;
         const scaledTileDeltaW = tileDeltaW * DEFAULT_SCALE_COEFFICIENT;
         const scaledImageDeltaW = imageDeltaW * DEFAULT_SCALE_COEFFICIENT;
-        width = tileWidth;
-        height = tileHeight;
 
         if (imageHeight) {
             if (imageFit === IMAGE_FIT.COVER) {
@@ -58,9 +56,6 @@ export function getImageSize(
                     height = Math.floor(tileHeight * NORMALIZE_IMAGE_COEFFICIENT);
                     width = 0;
                 }
-            } else if (imageFit === IMAGE_FIT.CONTAIN) {
-                width = Math.floor(imageWidth * DEFAULT_SCALE_COEFFICIENT);
-                height = Math.floor(imageHeight * DEFAULT_SCALE_COEFFICIENT);
             }
         }
     }

@@ -2,6 +2,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
    'use strict';
 
    describe('Controls/_tile/TreeTileView/TreeTileViewModel', function() {
+      const urlResolver = () => {};
       var
          treeTileViewModel = new TreeTileViewModel({
             tileMode: 'static',
@@ -11,6 +12,10 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             parentProperty: 'parent',
             nodeProperty: 'parent@',
             displayProperty: 'title',
+            imageWidthProperty: 'imageWidth',
+            imageHeightProperty: 'imageHeight',
+            imageFit: 'cover',
+            imageUrlResolver: urlResolver,
             groupingKeyCallback: function(item) {
                return item.get('group');
             },
@@ -213,7 +218,11 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             itemsHeight: 200,
             defaultShadowVisibility: 'visible',
             tileMode: 'dynamic',
-            displayProperty: 'title'
+            displayProperty: 'title',
+            imageWidthProperty: 'imageWidth',
+            imageHeightProperty: 'imageHeight',
+            imageFit: 'cover',
+            imageUrlResolver: urlResolver
          });
       });
       it('isScaled', function() {
