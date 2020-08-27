@@ -10,6 +10,16 @@
     </div>
 </ws:template>
 
+<ws:template name="continueSearch">
+    <ws:partial template="{{_options.continueSearchTemplate}}">
+        <ws:contentTemplate>
+            <div class="controls-BaseControl__continueSearch_caption" on:click="_continueSearch()">
+                {[Продолжить поиск]}
+            </div>
+        </ws:contentTemplate>
+    </ws:partial>
+</ws:template>
+
 <ws:template name="pagingTpl">
     <ws:if data="{{_pagingLabelData}}">
         <ws:if data="{{_options.navigation.viewConfig.totalInfo === 'extended'}}">
@@ -178,6 +188,10 @@
          on:touchstart="_initItemActions(_options)">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
 
+        <ws:if data="{{_showContinueSearchButtonDirection === 'up'}}">
+            <ws:partial template="continueSearch"/>
+        </ws:if>
+
         <ws:if data="{{_listViewModel}}">
 
             <ws:partial if="{{ _shouldShowLoadingIndicator('beforeEmptyTemplate') }}" template="loadingIndicator"/>
@@ -192,14 +206,8 @@
 
         <ws:partial if="{{ _shouldShowLoadingIndicator('afterList') }}" template="loadingIndicator"/>
 
-        <ws:if data="{{_showContinueSearchButton}}">
-            <ws:partial template="{{_options.continueSearchTemplate}}">
-                <ws:contentTemplate>
-                    <div class="controls-BaseControl__continueSearch_caption" on:click="_continueSearch()">
-                        {[Продолжить поиск]}
-                    </div>
-                </ws:contentTemplate>
-            </ws:partial>
+        <ws:if data="{{_showContinueSearchButtonDirection === 'down'}}">
+            <ws:partial template="continueSearch"/>
         </ws:if>
 
         <ws:if data="{{_pagingVisible}}">
