@@ -1,7 +1,9 @@
 <Controls.popupTemplate:Stack on:selectedKeysChanged="_selectedKeysChanged()" headingCaption="{{_options.headingCaption}}">
     <ws:headerContentTemplate>
         <div>
-            <Controls.tabs:Buttons source="{{_tabSource}}" keyProperty="id" bind:selectedKey="_selectedTab" attr:class="ControlsDemo-FlatListSelectorWithTabs-tabs"/>
+            <div class="ControlsDemo-FlatListSelectorWithTabs-tabs">
+                <Controls.tabs:Buttons source="{{_tabSource}}" keyProperty="id" bind:selectedKey="_selectedTab"/>
+            </div>
             <ws:if data="{{_options.multiSelect && _selectionChanged}}">
                 <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{[Выбрать]}" on:click="_closeSelectorBind()"/>
             </ws:if>
