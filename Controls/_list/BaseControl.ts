@@ -3255,6 +3255,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._selectionController) {
+            if (filterChanged && _private.getSelectionController(this).isAllSelected(false)) {
+                const result = _private.getSelectionController(this).clearSelection();
+                _private.handleSelectionControllerResult(this, result);
+            }
             _private.updateSelectionController(this, newOptions);
 
             const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
