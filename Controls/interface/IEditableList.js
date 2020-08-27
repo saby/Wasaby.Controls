@@ -34,8 +34,8 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {Enum} AddPositionOption
-    * @variant top В начале списка.
-    * @variant bottom В конце списка.
+    * @variant top В начале.
+    * @variant bottom В конце.
     */
 
    /*
@@ -52,7 +52,8 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
     * Когда кнопки не отображаются, аналогичные действия выполняются с помощью {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/keys/ клавиш}.
-    * @property {AddPositionOption} [addPosition=bottom] Позиция редактирования по месту.
+    * @property {AddPositionOption} [addPosition=bottom] Позиция добавления по месту.
+    * В корне списка, в группе (когда включена группировка) или в рамках узла (для иерархических списков).
     * Если в контроле включена {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/grouping/ группировка} элементов, тогда в модели нового элемента необходимо задать поле с группой.
     * @property {Types/entity:Model} [item=undefined] Элемент, который будет запущен на редактирование при первой отрисовке контрола.
     * 
@@ -560,6 +561,7 @@ define('Controls/interface/IEditableList', [
     * @param {ItemEditOptions} options Параметры добавления.
     * @returns {Core/Deferred}
     * @remark
+    * Чтобы задать позицию добавления элемента, установите значение для параметра {@link Controls/interface/IEditableList/EditingConfig.typedef addPosition}.
     * Если вы не передадите параметры, будет вызван метод {@link Types/source:ICrud#create create} источника списка, и результат будет добавлен в список.
     * @demo Controls-demo/list_new/EditInPlace/AddItem/Index
     * @example

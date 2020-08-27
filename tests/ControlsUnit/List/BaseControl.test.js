@@ -738,7 +738,7 @@ define([
          ctrl._portionedSearch.continueSearch();
          await loadPromise;
          assert.isTrue(ctrl._portionedSearchInProgress);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
@@ -749,7 +749,7 @@ define([
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
          assert.isFalse(ctrl._portionedSearchInProgress);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.isFalse(ctrl._listViewModel.getHasMoreData());
       });
 
@@ -811,7 +811,7 @@ define([
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
          ladingIndicatorTimer = ctrl._loadingIndicatorTimer;
          assert.isTrue(ctrl._portionedSearchInProgress);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.isNull(ctrl._loadingIndicatorTimer);
 
          let loadingIndicatorTimer = setTimeout(() => {});
@@ -1016,12 +1016,12 @@ define([
          // Up trigger became visible, no changes to indicator
          ctrl.triggerVisibilityChangedHandler('up', true);
          assert.isNotNull(ctrl._loadingIndicatorState);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
 
          // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
-         assert.isTrue(ctrl._showContinueSearchButton);
+         assert.isTrue(ctrl._showContinueSearchButtonDirection === 'down');
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
@@ -2142,14 +2142,14 @@ define([
 
          it('depend on portionedSearch', () => {
             control._sourceController._hasMoreData = {up: false, down: true};
-            control._showContinueSearchButton = true;
+            control._showContinueSearchButtonDirection = 'down';
             updateShadowModeHandler.call(control, event, {
                top: 0,
                bottom: 0
             });
             assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
 
-            control._showContinueSearchButton = false;
+            control._showContinueSearchButtonDirection = 'up';
             updateShadowModeHandler.call(control, event, {
                top: 0,
                bottom: 0
@@ -2411,14 +2411,14 @@ define([
             }
          };
          ctrl._abortSearch();
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.deepEqual(ctrl._pagingCfg, {
-             arrowState: {
-                 begin: 'visible',
-                 prev: 'visible',
-                 next: 'readonly',
-                 end: 'readonly'
-             }
+            arrowState: {
+               begin: 'visible',
+               prev: 'visible',
+               next: 'readonly',
+               end: 'readonly'
+            }
          });
          assert.deepEqual(shadowMode, {top: 'auto', bottom: 'auto'});
          assert.isTrue(iterativeSearchAborted);
@@ -3969,7 +3969,23 @@ define([
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
                baseControl._editInPlace.hasPendingActivation = () => true;
+            });
 
+            it('after mount with started editing', () => {
+               let wasActivatedFirstInput = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => false;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                     return true;
+                  }
+               };
+               baseControl._container = {};
+               baseControl._scrollController = null;
+               baseControl._afterMount(cfg);
+               assert.isTrue(wasActivatedFirstInput);
+               assert.isFalse(baseControl._editInPlace._shouldActivateRow);
             });
 
             it('activate row bu click in input', () => {

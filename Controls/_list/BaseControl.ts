@@ -1254,7 +1254,7 @@ const _private = {
             },
             searchStopCallback: () => {
                 self._portionedSearchInProgress = false;
-                self._showContinueSearchButton = true;
+                self._showContinueSearchButtonDirection = self._loadingState || 'down';
                 self._sourceController.cancelLoading();
                 _private.hideIndicator(self);
 
@@ -1264,13 +1264,13 @@ const _private = {
             },
             searchResetCallback: () => {
                 self._portionedSearchInProgress = false;
-                self._showContinueSearchButton = false;
+                self._showContinueSearchButtonDirection = null;
             },
             searchContinueCallback: () => {
                 const direction = _private.hasMoreData(self, self._sourceController, 'up') ? 'up' : 'down';
 
                 self._portionedSearchInProgress = true;
-                self._showContinueSearchButton = false;
+                self._showContinueSearchButtonDirection = null;
                 _private.loadToDirectionIfNeed(self, direction);
             },
             searchAbortCallback: () => {
@@ -1322,22 +1322,25 @@ const _private = {
         }
     },
 
-    allowLoadMoreByPortionedSearch(self): boolean {
-        return !self._showContinueSearchButton && _private.getPortionedSearch(self).shouldSearch();
+    allowLoadMoreByPortionedSearch(self, direction: 'up'|'down'): boolean {
+        return (!self._showContinueSearchButtonDirection || self._showContinueSearchButtonDirection !== direction) &&
+                _private.getPortionedSearch(self).shouldSearch();
     },
 
     updateShadowMode(self, shadowVisibility: {up: boolean, down: boolean}): void {
         const itemsCount = self._listViewModel && self._listViewModel.getCount();
         const hasMoreData = (direction) => _private.hasMoreData(self, self._sourceController, direction);
         const showShadowByNavigation = _private.needShowShadowByNavigation(self._options.navigation, itemsCount);
-        const showShadowByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self);
+        const showShadowUpByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self, 'up');
+        const showShadowDownByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self, 'down');
 
         self._notify('updateShadowMode', [{
             top: (shadowVisibility?.up ||
-                showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
+                showShadowByNavigation &&
+                showShadowUpByPortionedSearch && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
             bottom: (shadowVisibility?.down ||
                 showShadowByNavigation &&
-                showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
+                showShadowDownByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
     },
 
@@ -2599,6 +2602,26 @@ const _private = {
                 self._savedItemClickArgs = null;
             }
         }
+    },
+    activateEditingRow(self) {
+        // После запуска редактирования нужно активировать определенное поле ввода.
+        // Если не получилось активировать поле ввода, под точкой клика (клик мимо поля ввода),
+        // то активируем первое в строке
+        if (self._editInPlace.hasPendingActivation()) {
+            // Совместимость с ListRender, он не использует EditingRow. Удалить при полном переходе.
+            if (self._options.useNewModel) {
+                self._editInPlace.activated();
+            } else {
+                const wasActivatedByClick = self._editInPlace.prepareHtmlInput();
+                let wasActivatedByEditingRow;
+                if (!wasActivatedByClick) {
+                    wasActivatedByEditingRow = self._children.listView.activateEditingRow();
+                }
+                if (wasActivatedByEditingRow || wasActivatedByClick) {
+                    self._editInPlace.activated();
+                }
+            }
+        }
     }
 };
 
@@ -2704,7 +2727,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _portionedSearch: null,
     _portionedSearchInProgress: null,
-    _showContinueSearchButton: false,
+    _showContinueSearchButtonDirection: null,
 
     _draggingItem: null,
     _draggingEntity: null,
@@ -3087,6 +3110,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._editInPlace.registerFormOperation(this._validateController);
             this._editInPlace.updateViewModel(this._listViewModel);
             this._editInPlace.setErrorContainer(this._children.errorContainer);
+            _private.activateEditingRow(this);
         }
 
         // для связи с контроллером ПМО
@@ -3646,26 +3670,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._validateController);
-
-            // После запуска редактирования нужно активировать определенное поле ввода.
-            // Если не получилось активировать поле ввода, под точкой клика (клик мимо поля ввода),
-            // то активируем первое в строке
-            if (this._editInPlace.hasPendingActivation()) {
-                // Совместимость с ListRender, он не использует EditingRow. Удалить при полном переходе.
-                if (this._options.useNewModel) {
-                    this._editInPlace.activated();
-                } else {
-                    const wasActivatedByClick = this._editInPlace.prepareHtmlInput();
-                    let wasActivatedByEditingRow;
-                    if (!wasActivatedByClick) {
-                        wasActivatedByEditingRow = this._children.listView.activateEditingRow();
-                    }
-                    if (wasActivatedByEditingRow || wasActivatedByClick) {
-                        this._editInPlace.activated();
-                    }
-                }
-            }
-
+            _private.activateEditingRow(this);
             this._validateController.resolveSubmit();
         }
 
