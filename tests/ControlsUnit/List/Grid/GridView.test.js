@@ -696,6 +696,115 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             });
          });
 
+         describe('itemActions on touch device', () => {
+            let wasSwipeInited;
+            let wasSwipeClosed;
+            let swipeDirection;
+
+            const createTouchStartEvent = (touches) => ({
+               preventDefault: () => {},
+               nativeEvent: {
+                  touches: touches.map((t) => ({
+                     clientX: t
+                  }))
+               },
+               target: {
+                  closest: () => null
+               }
+            });
+
+            const createSwipeEvent = (direction, isFixed) => ({
+               stopPropagation: () => {},
+               nativeEvent: { direction },
+               target: {
+                  closest: () => isFixed
+               }
+            });
+
+            beforeEach(async() => {
+               wasSwipeInited = false;
+               wasSwipeClosed = false;
+
+               contentContainer.querySelector = (selector) => selector === '.controls-Grid_columnScroll__fixed:nth-child(2)' ? {
+                  getBoundingClientRect: () => ({
+                     left: 25
+                  }),
+                  offsetWidth: 25
+               } : null;
+               contentContainer.getBoundingClientRect = () => ({
+                  left: 0
+               });
+               gridView._children.columnScrollContainer.getBoundingClientRect = () => ({
+                  left: 0
+               });
+
+
+               gridView.saveOptions(cfg);
+               await gridView._afterMount();
+               gridView._notify = (eName, args) => {
+                  if (eName === 'itemSwipe') {
+                     wasSwipeInited = true;
+                     const event = args[1];
+                     swipeDirection = event.nativeEvent.direction;
+                  } else if (eName === 'closeSwipe') {
+                     wasSwipeClosed = true;
+                  }
+               };
+            });
+
+            // -->
+            describe('right swipe', () => {
+               it('on fixed area', () => {
+                  gridView._startDragScrolling(createTouchStartEvent([30]), 'touch');
+                  gridView._onItemSwipe(createSwipeEvent('right', true));
+
+                  assert.isTrue(wasSwipeInited);
+                  assert.equal(swipeDirection, 'right');
+                  assert.isFalse(gridView._leftSwipeCanBeStarted);
+               });
+               it('on scrollable area, out of available area for swipe', () => {
+                  gridView._startDragScrolling(createTouchStartEvent([55]), 'touch');
+                  gridView._onItemSwipe(createSwipeEvent('right', false));
+
+                  assert.isFalse(wasSwipeInited);
+                  assert.isFalse(gridView._leftSwipeCanBeStarted);
+               });
+               it('on scrollable area, into available area for swipe', () => {
+                  gridView._startDragScrolling(createTouchStartEvent([98]), 'touch');
+                  gridView._onItemSwipe(createSwipeEvent('right', false));
+
+                  assert.isFalse(wasSwipeInited);
+                  assert.isFalse(gridView._leftSwipeCanBeStarted);
+               });
+            });
+
+            // <--
+            describe('left swipe', () => {
+               it('on fixed area', () => {
+                  gridView._startDragScrolling(createTouchStartEvent([30]), 'touch');
+                  gridView._onItemSwipe(createSwipeEvent('left', true));
+
+                  assert.isFalse(wasSwipeInited);
+                  assert.isFalse(gridView._leftSwipeCanBeStarted);
+               });
+               it('on scrollable area, out of available area for swipe', () => {
+                  gridView._startDragScrolling(createTouchStartEvent([55]), 'touch');
+                  gridView._onItemSwipe(createSwipeEvent('left', false));
+
+                  assert.isFalse(wasSwipeInited);
+                  assert.isFalse(gridView._leftSwipeCanBeStarted);
+               });
+               it('on scrollable area, into available area for swipe', () => {
+                  gridView._startDragScrolling(createTouchStartEvent([98]), 'touch');
+                  gridView._onItemSwipe(createSwipeEvent('left', false));
+
+                  assert.isTrue(wasSwipeInited);
+                  assert.equal(swipeDirection, 'left');
+                  assert.isFalse(gridView._leftSwipeCanBeStarted);
+               });
+            });
+         });
+
          it('mounting with option startScrollPosition === end', () => {
             const testCfg = { ...cfg, columnScrollStartPosition: 'end' };
             gridView._beforeMount(testCfg);

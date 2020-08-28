@@ -42,7 +42,6 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
     collection: Collection<Record>;
     activeElement: string | number;
     _triggerPositionCoefficient: number;
-    _notify: (eventName: string, args?: unknown[], options?: { bubbling?: boolean }) => unknown;
     forceInitVirtualScroll: boolean;
     attachLoadTopTriggerToNull: boolean;
 }
@@ -443,7 +442,9 @@ export default class ScrollController {
     }
 
     updateItemsHeights(itemsHeights: IItemsHeights) {
-        this._virtualScroll.updateItemsHeights(itemsHeights);
+        if (this._virtualScroll) {
+            this._virtualScroll.updateItemsHeights(itemsHeights);
+        }
     }
 
     /**

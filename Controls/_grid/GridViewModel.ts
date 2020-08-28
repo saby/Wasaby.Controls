@@ -1,5 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
-import {BaseViewModel, ItemsUtil, ListViewModel} from 'Controls/list';
+import {BaseViewModel, ItemsUtil, ListViewModel, createClassListCollection} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import {isStickySupport} from 'Controls/scroll';
 import * as LadderWrapper from 'wml!Controls/_grid/LadderWrapper';
@@ -31,7 +31,6 @@ import {IItemActionsTemplateConfig} from 'Controls/itemActions';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
-import {createClassListCollection} from "../Utils/CssClassList";
 import { stickyLadderCellsCount, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
 import { ItemsEntity } from 'Controls/dragnDrop';
@@ -1709,9 +1708,12 @@ var
             current.shouldAddActionsCell = self._shouldAddActionsCell();
             current.getCellStyle = (itemData, currentColumn, colspan) => _private.getCellStyle(self, itemData, currentColumn, colspan);
 
-            if (!GridLayoutUtil.isFullGridSupport()) {
-                current.getRelativeCellWrapperClasses = _private.getRelativeCellWrapperClasses.bind(null, current);
-            }
+            current.getRelativeCellWrapperClasses = !GridLayoutUtil.isFullGridSupport() ?
+                _private.getRelativeCellWrapperClasses.bind(null, current) :
+                () => {
+                    Logger.warn('Used table markup when full grid support. View may be displayed incorrectly!', this);
+                    return '';
+                };
 
             current.getCurrentColumnKey = function() {
                 return self._columnsVersion + '_' +

@@ -29,7 +29,7 @@ import { Sticky } from 'Controls/popup';
 import {editing as constEditing} from 'Controls/Constants';
 
 // Utils imports
-import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
+import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import uDimension = require('Controls/Utils/getDimensions');
@@ -64,7 +64,7 @@ import {default as ScrollController, IScrollParams} from './ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
 import {IDirection} from './interface/IVirtualScroll';
-import {CssClassList} from '../Utils/CssClassList';
+import {CssClassList} from './resources/utils/CssClassList';
 import {
    FlatSelectionStrategy,
    TreeSelectionStrategy,
@@ -465,7 +465,7 @@ const _private = {
         }
 
         if (self._selectionController) {
-            _private._getSelectionController(self).restoreSelection();
+            _private.getSelectionController(self).restoreSelection();
         } else {
             if (options.selectedKeys && options.selectedKeys.length > 0) {
                 self._selectionController = _private.createSelectionController(self, options);
@@ -595,7 +595,7 @@ const _private = {
                 if (!self._selectionController) {
                     self._createSelectionController();
                 }
-                const result = _private._getSelectionController(self).toggleItem(toggledItemId);
+                const result = _private.getSelectionController(self).toggleItem(toggledItemId);
                 _private.handleSelectionControllerResult(self, result);
             }
             _private.moveMarkerToNext(self, event);
@@ -1254,7 +1254,7 @@ const _private = {
             },
             searchStopCallback: () => {
                 self._portionedSearchInProgress = false;
-                self._showContinueSearchButton = true;
+                self._showContinueSearchButtonDirection = self._loadingState || 'down';
                 self._sourceController.cancelLoading();
                 _private.hideIndicator(self);
 
@@ -1264,13 +1264,13 @@ const _private = {
             },
             searchResetCallback: () => {
                 self._portionedSearchInProgress = false;
-                self._showContinueSearchButton = false;
+                self._showContinueSearchButtonDirection = null;
             },
             searchContinueCallback: () => {
                 const direction = _private.hasMoreData(self, self._sourceController, 'up') ? 'up' : 'down';
 
                 self._portionedSearchInProgress = true;
-                self._showContinueSearchButton = false;
+                self._showContinueSearchButtonDirection = null;
                 _private.loadToDirectionIfNeed(self, direction);
             },
             searchAbortCallback: () => {
@@ -1322,22 +1322,25 @@ const _private = {
         }
     },
 
-    allowLoadMoreByPortionedSearch(self): boolean {
-        return !self._showContinueSearchButton && _private.getPortionedSearch(self).shouldSearch();
+    allowLoadMoreByPortionedSearch(self, direction: 'up'|'down'): boolean {
+        return (!self._showContinueSearchButtonDirection || self._showContinueSearchButtonDirection !== direction) &&
+                _private.getPortionedSearch(self).shouldSearch();
     },
 
     updateShadowMode(self, shadowVisibility: {up: boolean, down: boolean}): void {
         const itemsCount = self._listViewModel && self._listViewModel.getCount();
         const hasMoreData = (direction) => _private.hasMoreData(self, self._sourceController, direction);
         const showShadowByNavigation = _private.needShowShadowByNavigation(self._options.navigation, itemsCount);
-        const showShadowByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self);
+        const showShadowUpByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self, 'up');
+        const showShadowDownByPortionedSearch = _private.allowLoadMoreByPortionedSearch(self, 'down');
 
         self._notify('updateShadowMode', [{
             top: (shadowVisibility?.up ||
-                showShadowByNavigation && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
+                showShadowByNavigation &&
+                showShadowUpByPortionedSearch && itemsCount && hasMoreData('up')) ? 'visible' : 'auto',
             bottom: (shadowVisibility?.down ||
                 showShadowByNavigation &&
-                showShadowByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
+                showShadowDownByPortionedSearch && itemsCount && hasMoreData('down')) ? 'visible' : 'auto'
         }], {bubbling: true});
     },
 
@@ -1439,12 +1442,12 @@ const _private = {
             if (self._selectionController) {
                 let result;
 
-                if (self._listViewModel.getCount() === 0 && _private._getSelectionController(self).isAllSelected()) {
-                    result = _private._getSelectionController(self).clearSelection();
+                if (self._listViewModel.getCount() === 0 && _private.getSelectionController(self).isAllSelected()) {
+                    result = _private.getSelectionController(self).clearSelection();
                 } else if (action === IObservable.ACTION_ADD) {
-                    result = _private._getSelectionController(self).handleAddItems(newItems);
+                    result = _private.getSelectionController(self).handleAddItems(newItems);
                 } else if (action === IObservable.ACTION_RESET || action === IObservable.ACTION_REPLACE) {
-                    result = _private._getSelectionController(self).handleResetItems();
+                    result = _private.getSelectionController(self).handleResetItems();
                 }
 
                 _private.handleSelectionControllerResult(self, result);
@@ -1998,7 +2001,7 @@ const _private = {
     },
 
     updateSelectionController(self: any, newOptions: any): void {
-        _private._getSelectionController(self).update({
+        _private.getSelectionController(self).update({
            model: self._listViewModel,
            selectedKeys: newOptions.selectedKeys,
            excludedKeys: newOptions.excludedKeys,
@@ -2016,7 +2019,7 @@ const _private = {
         }
     },
 
-    _getSelectionController(self: any): SelectionController {
+    getSelectionController(self: any): SelectionController {
         if (!self._selectionController) {
             self._selectionController = _private.createSelectionController(self, self._options);
         }
@@ -2044,7 +2047,7 @@ const _private = {
     },
 
     onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
-        const selectionController = _private._getSelectionController(this);
+        const selectionController = _private.getSelectionController(this);
         if (!selectionController) {
             return;
         }
@@ -2109,6 +2112,12 @@ const _private = {
         if (self._isMounted) {
             if (result.placeholders) {
                 self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
+
+                if (result.placeholders.top > 0) {
+                    self._notify('enableVirtualNavigation', [], { bubbling: true });
+                } else {
+                    self._notify('disableVirtualNavigation', [], { bubbling: true });
+                }
             }
             if (result.activeElement) {
                 self._notify('activeElementChanged', [result.activeElement]);
@@ -2130,7 +2139,7 @@ const _private = {
        switch (action) {
            case IObservable.ACTION_REMOVE:
                if (self._selectionController) {
-                   selectionControllerResult = _private._getSelectionController(self).handleRemoveItems(removedItems);
+                   selectionControllerResult = _private.getSelectionController(self).handleRemoveItems(removedItems);
                }
                if (removedItemsIndex !== undefined && self._markerController) {
                    const newMarkedKey = self._markerController.handleRemoveItems(removedItemsIndex);
@@ -2457,7 +2466,7 @@ const _private = {
                     self._draggedKey = key;
                     self._startEvent = domEvent.nativeEvent;
 
-                    _private.clearSelection(self._startEvent);
+                    _private.clearSelectedText(self._startEvent);
                     if (self._startEvent && self._startEvent.target) {
                         self._startEvent.target.classList.add('controls-DragNDrop__dragTarget');
                     }
@@ -2499,7 +2508,7 @@ const _private = {
         const offset = _private.getDragOffset(moveEvent, startEvent);
         return Math.abs(offset.x) > DRAG_SHIFT_LIMIT || Math.abs(offset.y) > DRAG_SHIFT_LIMIT;
     },
-    clearSelection(event): void {
+    clearSelectedText(event): void {
         if (event.type === 'mousedown') {
             //снимаем выделение с текста иначе не будут работать клики,
             // а выделение не будет сниматься по клику из за preventDefault
@@ -2599,6 +2608,26 @@ const _private = {
                 self._savedItemClickArgs = null;
             }
         }
+    },
+    activateEditingRow(self) {
+        // После запуска редактирования нужно активировать определенное поле ввода.
+        // Если не получилось активировать поле ввода, под точкой клика (клик мимо поля ввода),
+        // то активируем первое в строке
+        if (self._editInPlace.hasPendingActivation()) {
+            // Совместимость с ListRender, он не использует EditingRow. Удалить при полном переходе.
+            if (self._options.useNewModel) {
+                self._editInPlace.activated();
+            } else {
+                const wasActivatedByClick = self._editInPlace.prepareHtmlInput();
+                let wasActivatedByEditingRow;
+                if (!wasActivatedByClick) {
+                    wasActivatedByEditingRow = self._children.listView.activateEditingRow();
+                }
+                if (wasActivatedByEditingRow || wasActivatedByClick) {
+                    self._editInPlace.activated();
+                }
+            }
+        }
     }
 };
 
@@ -2616,6 +2645,7 @@ const _private = {
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
+ * @implements Controls/_list/interface/IListNavigation
  * @control
  * @private
  * @author Авраменко А.С.
@@ -2703,7 +2733,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _portionedSearch: null,
     _portionedSearchInProgress: null,
-    _showContinueSearchButton: false,
+    _showContinueSearchButtonDirection: null,
 
     _draggingItem: null,
     _draggingEntity: null,
@@ -3078,7 +3108,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Если контроллер был создан в beforeMount, то нужно для панели операций занотифаить кол-во выбранных элементов
         // TODO https://online.sbis.ru/opendoc.html?guid=3042889b-181c-47ec-b036-a7e24c323f5f
         if (this._selectionController) {
-            const result = _private._getSelectionController(this).getResultAfterConstructor();
+            const result = _private.getSelectionController(this).getResultAfterConstructor();
             _private.handleSelectionControllerResult(this, result);
         }
 
@@ -3086,6 +3116,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._editInPlace.registerFormOperation(this._validateController);
             this._editInPlace.updateViewModel(this._listViewModel);
             this._editInPlace.setErrorContainer(this._children.errorContainer);
+            _private.activateEditingRow(this);
         }
 
         // для связи с контроллером ПМО
@@ -3233,8 +3264,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._selectionController) {
-            if ((self._options.root !== newOptions.root || filterChanged) && _private._getSelectionController(this).isAllSelected(false)) {
-                const result = _private._getSelectionController(this).clearSelection();
+            if (filterChanged && _private.getSelectionController(this).isAllSelected(false)) {
+                const result = _private.getSelectionController(this).clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
             _private.updateSelectionController(this, newOptions);
@@ -3244,7 +3275,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
             if (selectionChanged || this._modelRecreated) {
                 // handleSelectionControllerResult чтобы отправить информацию для ПМО
-                const result = _private._getSelectionController(this).setSelectedKeys(
+                const result = _private.getSelectionController(this).setSelectedKeys(
                    newOptions.selectedKeys,
                    newOptions.excludedKeys
                 );
@@ -3649,7 +3680,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._editInPlace) {
             this._editInPlace.registerFormOperation(this._validateController);
-            this._editInPlace.prepareHtmlInput();
+            _private.activateEditingRow(this);
             this._validateController.resolveSubmit();
         }
 
@@ -3697,7 +3728,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onCheckBoxClick(e, key, status, readOnly) {
         if (!readOnly) {
-            const result = _private._getSelectionController(this).toggleItem(key);
+            const result = _private.getSelectionController(this).toggleItem(key);
             _private.handleSelectionControllerResult(this, result);
             this._notify('checkboxClick', [key, status]);
         }
@@ -3988,6 +4019,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._onViewKeyDown(event);
     },
 
+    clearSelection(): void {
+        const result = _private.getSelectionController(this)?.clearSelection();
+        _private.handleSelectionControllerResult(this, result);
+    },
+
+    isAllSelected(): boolean {
+        return _private.getSelectionController(this)?.isAllSelected();
+    },
+
     _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
@@ -4205,7 +4245,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     this._createSelectionController();
                 }
                 if (this._selectionController) {
-                    const result = _private._getSelectionController(this).toggleItem(key);
+                    const result = _private.getSelectionController(this).toggleItem(key);
                     _private.handleSelectionControllerResult(this, result);
                 }
                 this._notify('checkboxClick', [key, item.isSelected()]);
@@ -4305,6 +4345,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onListDeactivated: function() {
+        if (!this._itemActionsMenuId) {
+            _private.closeSwipe(this);
+        }
+    },
+
+    _onCloseSwipe() {
         if (!this._itemActionsMenuId) {
             _private.closeSwipe(this);
         }

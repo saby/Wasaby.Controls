@@ -16,7 +16,7 @@ type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|'null';
 type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'null';
 
-interface IItemPadding {
+export interface IItemPadding {
     top?: TVerticalItemPadding;
     bottom?: TVerticalItemPadding;
     left?: THorizontalItemPadding;
@@ -445,7 +445,7 @@ export interface IList extends IItemActionsOptions {
  * @event Происходит при свайпе на элементе списка.
  * @name Controls/_list/interface/IList#itemSwipe
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим swipe.
+ * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим свайп.
  * @param {Object} nativeEvent Объект нативного события браузера.
  * @remark
  * Событие происходит, только если со списком ничего не происходит при свайпе (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IClickableView#itemClick itemClick}.

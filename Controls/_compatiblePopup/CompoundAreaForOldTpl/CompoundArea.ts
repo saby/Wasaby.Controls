@@ -1115,7 +1115,7 @@ var CompoundArea = CompoundContainer.extend([
             if (visible !== prevVisible) {
                // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
                // стреляя событием onAfterVisibilityChange
-               self._notifyCompound('onAfterVisibilityChange', visible);
+               self._notifyCompound('onAfterVisibilityChange', visible, prevVisible);
             }
          };
 

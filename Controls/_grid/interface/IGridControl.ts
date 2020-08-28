@@ -112,7 +112,7 @@
  * Для одноуровневого заголовка первый объект массива задаёт конфигурацию для первой ячейки.
  * Условно ячейки заголовка нумеруются слева направо.
  * Для многоуровневого заголовка порядок объектов массива не соответствует конфигурируемой ячейке.
- * Подробнее о работе с заголовком таблицы читайтет <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/header/">здесь</a>.
+ * Подробнее о работе с заголовком таблицы читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/header/">здесь</a>.
  * @demo Controls-demo/grid/Header/Default/Index
  * @example
  * Пример 1. Для первой ячейки задаём пользовательский шаблон.
