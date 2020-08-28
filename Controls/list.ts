@@ -99,7 +99,10 @@ import IListNavigation from './_list/interface/IListNavigation';
 import { CssClassList, createClassListCollection} from 'Controls/_list/resources/utils/CssClassList';
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 
-import {default as Mover} from 'Controls/_list/Mover';
+
+import {Move}  from 'Controls/_list/Controllers/Move';
+import * as Mover from 'Controls/_list/Mover';
+
 import Remover = require('Controls/_list/Remover');
 
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
@@ -118,6 +121,7 @@ export {
     ItemTemplate,
     View,
     BaseAction,
+    Move,
     Mover,
     Remover,
     DataContainer,
