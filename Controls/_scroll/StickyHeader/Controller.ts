@@ -142,6 +142,17 @@ class StickyHeaderController {
         return Promise.resolve();
     }
 
+    setShadowVisibility(isTopShadowVisible: boolean, isBottomShadowVisible: boolean): void {
+        this._isTopShadowVisible = isTopShadowVisible;
+        this._isBottomShadowVisible = isBottomShadowVisible;
+        for (const headerId of this._fixedHeadersStack[POSITION.top]) {
+            this._headers[headerId].inst.updateShadowVisibility(isTopShadowVisible);
+        }
+        for (const headerId of this._fixedHeadersStack[POSITION.bottom]) {
+            this._headers[headerId].inst.updateShadowVisibility(isBottomShadowVisible);
+        }
+    }
+
     registerHandler(event, data: TRegisterEventData, register: boolean): void {
         const promise = this._register(data, register, true);
         this._clearOffsetCache();
@@ -272,6 +283,7 @@ class StickyHeaderController {
                 ]);
             }
         }
+        // Спилить после того ак удалим старый скролл контейнер. Используется только там.
         this._callFixedCallback(position);
     }
 

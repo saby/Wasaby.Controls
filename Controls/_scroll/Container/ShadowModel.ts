@@ -126,6 +126,11 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
         return isChanged;
     }
 
+    isStickyHeadersShadowsEnabled(): boolean {
+        return (this._options[`${this._position}ShadowVisibility`] === SHADOW_VISIBILITY.VISIBLE ||
+            (this._isShadowEnable() && this._canScrollByScrollState()));
+    }
+
     private _canScrollByScrollState(): boolean {
         return this._scrollState[`can${upperDirection[this._direction]}Scroll`]
     }
