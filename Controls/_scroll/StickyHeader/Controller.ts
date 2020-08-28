@@ -136,7 +136,7 @@ class StickyHeaderController {
         }
 
         this._canScroll = canScroll;
-        if (this._canScroll) {
+        if (this._canScroll && this._initialized) {
             return this._registerDelayed();
         }
 
