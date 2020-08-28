@@ -36,7 +36,7 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
     }
 
     get isVisible(): boolean {
-        return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && this._canScroll)
+        return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && this._canScroll);
     }
 
     get position(): number {
