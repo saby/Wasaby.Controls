@@ -90,6 +90,22 @@ describe('Controls/browser:Browser', () => {
                 deepStrictEqual(browser._searchController._dataOptions.filter, filter);
             });
 
+            it('filter in searchController updated', async () => {
+                const options = getBrowserOptions();
+                const filter = {
+                    testField: 'newFilterValue'
+                };
+                options.filter = filter;
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+
+                browser._filter = {
+                    testField: 'oldFilterValue'
+                };
+                browser._beforeUpdate(options);
+                deepStrictEqual(browser._searchController._filter, filter);
+            });
+
         });
 
         describe('operationsController', () => {
