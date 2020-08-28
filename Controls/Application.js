@@ -375,7 +375,7 @@ define('Controls/Application',
          },
 
          _openDialogHandler: function(event, templ, templateOptions, opener) {
-            this._globalpopup.openDialogHandler(event, templ, templateOptions, opener);
+            return this._globalpopup.openDialogHandler(event, templ, templateOptions, opener);
          },
 
          _closeInfoBoxHandler: function(event, delay) {
@@ -387,7 +387,7 @@ define('Controls/Application',
          },
 
          _openPreviewerHandler: function(event, config, type) {
-            this._globalpopup.openPreviewerHandler(event, config, type);
+            return this._globalpopup.openPreviewerHandler(event, config, type);
          },
 
          _cancelPreviewerHandler: function(event, action) {
@@ -395,7 +395,7 @@ define('Controls/Application',
          },
 
          _isPreviewerOpenedHandler: function(event) {
-            this._globalpopup.isPreviewerOpenedHandler(event);
+            return this._globalpopup.isPreviewerOpenedHandler(event);
          },
 
          _closePreviewerHandler: function(event, type) {
