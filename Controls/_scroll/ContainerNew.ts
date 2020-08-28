@@ -198,7 +198,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         return cssClass;
     }
 
-    protected _draggingChangedHandler(event, dragging): void {
+    protected _draggingChangedHandler(event: SyntheticEvent, scrollbarOrientation: string, dragging: boolean): void {
         this._dragging = dragging;
 
         // if (!dragging && typeof this._scrollTopAfterDragEnd !== 'undefined') {
