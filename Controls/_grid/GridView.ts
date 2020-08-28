@@ -1,10 +1,9 @@
 import {TemplateFunction} from 'UI/Base';
-import {ListView} from 'Controls/list';
+import {ListView, CssClassList} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import * as GridIsEqualUtil from 'Controls/_grid/utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from 'Controls/context';
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import {CssClassList} from '../Utils/CssClassList';
 import {prepareEmptyEditingColumns} from './utils/GridEmptyTemplateUtil';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS, ColumnScroll} from './resources/ColumnScroll';
 import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/DragScroll';
@@ -13,7 +12,8 @@ import {shouldAddActionsCell, shouldDrawColumnScroll, getAllowedSwipeType, isInL
 import getDimensions = require("Controls/Utils/getDimensions");
 
 import * as GridViewTemplateChooser from 'wml!Controls/_grid/GridViewTemplateChooser';
-import * as GridTemplate from 'wml!Controls/_grid/layout/common/GridView';
+import * as GridTemplate from 'wml!Controls/_grid/layout/grid/GridView';
+import * as TableTemplate from 'wml!Controls/_grid/layout/table/GridView';
 
 import * as GridHeader from 'wml!Controls/_grid/layout/grid/Header';
 import * as TableHeader from 'wml!Controls/_grid/layout/table/Header';
@@ -79,9 +79,22 @@ var
         },
 
         setBaseTemplates(self: GridView, isFullGridSupport: boolean): void {
-            self._gridTemplate = GridTemplate;
             self._baseHeaderTemplate = isFullGridSupport ? GridHeader : TableHeader;
             self._baseResultsTemplate = isFullGridSupport ? GridResults : TableResults;
+
+            // Несмотря на то, что шаблон грида и таблицы отличается тольок типом тегов блока-обертки
+            // (div или table), использовать один шаблон нельзя.
+            // На этапе построения страницы браузер не воспринимает стили элементов и считает верстку
+            // div[display: table]>tr>td>div невалидной, т.к. tr не может лежать вне таблицы.
+            // Дальнейшее поведение разнится от браузера к браузеру:
+            // Chrome кладет невалидную верстку рядом с валидной, div[display: table], tr>td>div;
+            // IE вырезает невалидное, div[display: table]>div
+            // Эта особенность касается только тех случаев, когда верстка смешана изначально,
+            // если "находу" вставить tr в div, браузер пропустит проверки и принудительно вставит tr.
+            // Таким образом, ошибка будет заметна только при оживлении серверной верстки:
+            // с сервера прилетела верстка -> браузер поменял ее и отобразил -> верстка с сервера отличается
+            // от клиентской -> сгененрировалась новая верстка.
+            self._gridTemplate = isFullGridSupport ? GridTemplate : TableTemplate;
         },
 
         setHoveredCell(self, item, nativeEvent): void {
@@ -703,8 +716,11 @@ var
                 if (startBy === 'mouse') {
                     isGrabbing = this._dragScrollController.onViewMouseDown(e);
                 } else {
+                    // clientX - координата относительно документа, чтобы получить координату
+                    // относиттельно начала списка, нужно учесть отступ самого списка
                     const touchClientX = e.nativeEvent.touches[0].clientX;
-                    if (!isInLeftSwipeRange(this._fixedColumnsWidth, this._scrollableColumnsWidth, touchClientX)) {
+                    const containerLeft = this._children.columnScrollContainer.getBoundingClientRect().left;
+                    if (!isInLeftSwipeRange(this._fixedColumnsWidth, this._scrollableColumnsWidth, touchClientX - containerLeft)) {
                         isGrabbing = this._dragScrollController.onViewTouchStart(e);
                     } else {
                         this._leftSwipeCanBeStarted = true;

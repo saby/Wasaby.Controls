@@ -43,6 +43,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     private _infoboxOpened: boolean = false;
     private _needSetFocusInInput: boolean = false;
     private _suggestState: boolean = false;
+    private _subscribedOnResizeEvent: boolean = false;
     protected _maxVisibleItems: number = 0;
     protected _listOfDependentOptions: string[];
 
@@ -86,14 +87,16 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         if (!this._isInputActive(newOptions)) {
             this.closeSuggest();
         }
+
+        this._subscribeOnResizeEvent(newOptions);
     }
 
     protected _afterMount(options: ILookupInputOptions): void {
-        RegisterUtil(this, 'controlResize', this._resize.bind(this));
-
         if (!this._isEmpty()) {
             this._calculateSizes(options);
         }
+
+        this._subscribeOnResizeEvent(options);
     }
 
     protected _beforeUnmount(): void {
@@ -317,6 +320,13 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
     private _isShowCollection(): boolean {
         return !this._isEmpty() && !!(this._maxVisibleItems || this._options.readOnly);
+    }
+
+    private _subscribeOnResizeEvent(options: ILookupInputOptions): void {
+        if (!this._subscribedOnResizeEvent && this._isNeedCalculatingSizes(options)) {
+            RegisterUtil(this, 'controlResize', this._resize);
+            this._subscribedOnResizeEvent = true;
+        }
     }
 
     closeSuggest(): void {
