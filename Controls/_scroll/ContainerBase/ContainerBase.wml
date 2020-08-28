@@ -7,6 +7,7 @@
         scope="{{_options}}"
         on:register="_registerIt()"
         on:unregister="_unRegisterIt()"
+        on:doScroll="_doScrollHandler()"
 
         on:scrollToElement="_scrollToElement()"
         on:saveScrollPosition="_saveScrollPosition()"

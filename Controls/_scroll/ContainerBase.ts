@@ -402,6 +402,11 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }, KEYBOARD_SHOWING_DURATION);
     }
 
+    protected _doScrollHandler(e: SyntheticEvent<null>, scrollParam: number): void {
+        this._doScroll(scrollParam);
+        e.stopPropagation();
+    }
+
     protected _doScroll(scrollParam) {
         if (scrollParam === 'top') {
             this.setScrollTop(0);
