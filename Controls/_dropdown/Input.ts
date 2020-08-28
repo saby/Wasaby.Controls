@@ -288,15 +288,15 @@ export default class Input extends BaseDropdown {
                  'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') +
              ' theme_' + options.theme,
          caption: options.caption || this._text ,
-         allowPin: false,
-         selectedItemsChangedCallback: this._prepareDisplayState.bind(this)
+         allowPin: false
       };
       const controllerOptions = getDropdownControllerOptions(options, inputConfig);
       return { ...controllerOptions, ...{
          filter: this._historyController.getPreparedFilter(),
          source: this._historyController.getPreparedSource(),
          openerControl: this,
-         dataLoadCallback: this._dataLoadCallback
+         dataLoadCallback: this._dataLoadCallback,
+         selectedItemsChangedCallback: this._prepareDisplayState.bind(this)
       } };
    }
 

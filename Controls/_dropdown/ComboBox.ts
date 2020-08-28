@@ -130,7 +130,6 @@ class ComboBox extends BaseDropdown {
          close: this._onClose,
          open: this._onOpen,
          allowPin: false,
-         selectedItemsChangedCallback: this._setText,
          targetPoint: this._targetPoint,
          itemPadding: {
             right: 'menu-xs',
@@ -142,7 +141,8 @@ class ComboBox extends BaseDropdown {
             filter: this._historyController.getPreparedFilter(),
             source: this._historyController.getPreparedSource(),
             openerControl: this,
-            dataLoadCallback: options.dataLoadCallback
+            dataLoadCallback: options.dataLoadCallback,
+            selectedItemsChangedCallback: this._setText,
          }
       };
    }
