@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-    <div class="controlsDemo__wrapper controlsDemo__grid-itemActions-noHighlight-inside">
+    <div class="controlsDemo__wrapper controlsDemo__grid-itemActions-noHighlight-inside" style="max-width: 930px">
         <h3>Inside</h3>
         <Controls.grid:View
                 keyProperty="id"
@@ -9,7 +9,7 @@
 
         </Controls.grid:View>
     </div>
-    <div class="controlsDemo__wrapper controlsDemo__grid-itemActions-noHighlight-outside">
+    <div class="controlsDemo__wrapper controlsDemo__grid-itemActions-noHighlight-outside" style="max-width: 930px">
         <h3>Outside</h3>
         <Controls.grid:View
                 keyProperty="id"
