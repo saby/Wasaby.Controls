@@ -5,7 +5,8 @@ define([
    describe('Controls/popup:Global', () => {
       it('Opening and closing of the infobox.', () => {
          let ctrl = new popup.Global({});
-         ctrl._private.getPopupConfig = config => (new Deferred()).callback(config);
+         ctrl._globalController = new popup.GlobalController();
+         ctrl._globalController.getPopupConfig = config => (new Deferred()).callback(config);
          let event1 = {
             target: 1
          };
