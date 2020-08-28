@@ -160,6 +160,10 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._viewSize = 800;
             baseControl._mouseEnter(null);
             assert.isTrue(baseControl._pagingVisible);
+            await BaseControl._private.onScrollHide(baseControl);
+            assert.isFalse(baseControl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
+            BaseControl._private.handleListScrollSync(baseControl, 200);
+            assert.isTrue(baseControl._pagingVisible);
         });
     });
     describe('BaseControl paging', () => {
@@ -286,4 +290,61 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.equal(baseControl._scrollPagingCtr._options.scrollParams.scrollTop,400);
         });
     });
+    describe('BaseControl enterHandler', ()=>{
+        it('is enterHandler', function() {
+            let notified = false;
+            let notifiedCount = 0;// Количество событий
+            BaseControl._private.enterHandler({
+                _options: {
+                    useNewModel: false
+                },
+                getViewModel: function() {
+                    return {
+                        getMarkedItem: function() {
+                            return null;
+                        }
+                    };
+                },
+                _notify: function(e, item, options) {
+                    notified = true;
+                }
+            });
+            assert.isFalse(notified);
+            assert.isFalse(!!notifiedCount);
+
+            const myMarkedItem = { qwe: 123 };
+            const mockedEvent = {
+                target: 'myTestTarget',
+                isStopped: function() {
+                    return false;
+                }
+            };
+
+            BaseControl._private.enterHandler({
+                _options: {
+                    useNewModel: false
+                },
+                getViewModel: function() {
+                    return {
+                        getMarkedItem: function() {
+                            return {
+                                getContents: function() {
+                                    return myMarkedItem;
+                                }
+                            };
+                        }
+                    };
+                },
+                _notify: function(e, args, options) {
+                    notified = true;
+                    notifiedCount++;
+                    assert.isTrue(e === 'itemClick' || e === 'itemActivate');
+                    assert.deepEqual(args, [myMarkedItem, mockedEvent]);
+                    assert.deepEqual(options, { bubbling: true });
+                }
+            }, mockedEvent);
+            assert.isTrue(notified);
+            assert.isTrue(notifiedCount === 2);
+        });
+    })
 });

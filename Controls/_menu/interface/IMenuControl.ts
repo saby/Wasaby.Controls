@@ -1,7 +1,7 @@
 import {TemplateFunction} from 'UI/Base';
 import {IMenuBaseOptions} from './IMenuBase';
 import {ISourceOptions, INavigationOptions, IFilterOptions, ISelectorDialogOptions} from 'Controls/interface';
-import {IItemAction} from 'Controls/itemActions';
+import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import {Stack} from 'Controls/popup';
 
 export type TKey = string|number|null;
@@ -12,6 +12,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     root?: TKey;
     selectorOpener?: Stack;
     itemActions?: IItemAction[];
+    itemActionVisibilityCallback?: TItemActionVisibilityCallback;
     dataLoadCallback: Function;
     selectorDialogResult: Function;
 }

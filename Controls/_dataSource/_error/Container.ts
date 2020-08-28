@@ -156,10 +156,12 @@ export default class Container extends Control<IContainerConfig> implements ICon
      * @param config Конфигурация с шаблоном диалога и опциями для этого шаблона.
      */
     private _openDialog(config: Config): Promise<void> {
-        this._closeDialog();
-
-        return this._popupHelper.openDialog(config, this, {
-            onClose: () => this._onDialogClosed()
+        return this._popupHelper.openDialog(config, {
+            id: this._popupId,
+            opener: this,
+            eventHandlers: {
+                onClose: () => this._onDialogClosed()
+            }
         }).then((popupId) => {
             if (popupId) {
                 this._popupId = popupId;
