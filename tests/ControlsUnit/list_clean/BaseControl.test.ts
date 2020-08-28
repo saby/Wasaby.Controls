@@ -160,6 +160,10 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._viewSize = 800;
             baseControl._mouseEnter(null);
             assert.isTrue(baseControl._pagingVisible);
+            await BaseControl._private.onScrollHide(baseControl);
+            assert.isFalse(baseControl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
+            BaseControl._private.handleListScrollSync(baseControl, 200);
+            assert.isTrue(baseControl._pagingVisible);
         });
     });
     describe('BaseControl paging', () => {
