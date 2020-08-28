@@ -47,6 +47,10 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
         return this._contentSize;
     }
 
+    updateOptions(options: IScrollbarsOptions): void {
+        this._options = options;
+    }
+
     updateScrollState(scrollState: IScrollState): boolean {
         let changed = false;
         const canScroll = canScrollByState(scrollState, this._direction);
