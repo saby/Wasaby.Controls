@@ -18,11 +18,11 @@ define([
          };
          let result = [];
 
-         ctrl._openInfoBox = () => {
+         ctrl._globalController.openInfoBox = () => {
             result.push('open');
          };
 
-         ctrl._closeInfoBox = () => {
+         ctrl._globalController.closeInfoBox = () => {
             result.push('close');
          };
 
