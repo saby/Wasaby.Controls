@@ -170,6 +170,7 @@ define(
             it('The header is fixed, but there should be no shadow', function() {
                inst._scrollState.verticalPosition = 'end';
                inst._isFixed = true;
+               inst._isShadowVisibleByController = true;
                inst._model.fixedPosition = 'top';
                inst._options.fixedZIndex = 1;
                inst._options.content = TemplateUtil.content;
@@ -188,6 +189,7 @@ define(
             it('The header is fixed, the shadow should be', function() {
                inst._scrollState.verticalPosition = 'start';
                inst._isFixed = true;
+               inst._isShadowVisibleByController = true;
                inst._model.fixedPosition = 'bottom';
                inst._options.fixedZIndex = 2;
                inst._options.position = 'bottom';
