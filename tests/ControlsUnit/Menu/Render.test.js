@@ -153,6 +153,12 @@ define(
                assert.equal(renderOptions.listModel.getCollection().at(0).get('parent'), null);
             });
 
+            it('check nodeProperty', function() {
+               menuRender.addEmptyItem(renderOptions.listModel, {...renderOptions, nodeProperty: 'node'});
+               assert.equal(renderOptions.listModel.getCount(), 1);
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('node'), false);
+            });
+
             it('check selected empty item', function() {
                renderOptions.selectedKeys = [];
                menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
