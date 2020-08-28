@@ -6,7 +6,6 @@ import {descriptor, Model} from 'Types/entity';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 // @ts-ignore
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
-import * as Clone from 'Core/core-clone';
 import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
 
 type LookupReceivedState = SelectedItems|null;
