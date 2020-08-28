@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Global/Global');
-import * as GlobalController from './GlobalController';
+import GlobalController from './GlobalController';
 
 /**
  * @class Controls/_popup/Global
