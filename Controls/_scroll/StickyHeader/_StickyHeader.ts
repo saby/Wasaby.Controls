@@ -42,26 +42,6 @@ export interface IStickyHeaderOptions extends IControlOptions {
     backgroundStyle: string;
 }
 
-/**
- * Ensures that content sticks to the top of the parent container when scrolling down.
- * Occurs at the moment of intersection of the upper part of the content and the parent container.
- *
- * @private
- * @extends Core/Control
- * @class Controls/_scroll/StickyHeader
- */
-
-/**
- * @name Controls/_scroll/StickyHeader#content
- * @cfg {Function} Sticky header content.
- */
-
-/**
- * @event Controls/_scroll/StickyHeader#fixed Change the fixation state.
- * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
- * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
- */
-
 interface IResizeObserver {
     observe: (el: HTMLElement) => void;
     unobserve: (el: HTMLElement) => void;
