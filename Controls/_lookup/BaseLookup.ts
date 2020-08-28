@@ -6,6 +6,8 @@ import {descriptor, Model} from 'Types/entity';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 // @ts-ignore
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
+import * as Clone from 'Core/core-clone';
+import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
 
 type LookupReceivedState = SelectedItems|null;
 
@@ -45,9 +47,10 @@ export default abstract class
     }
 
     protected _beforeUpdate(newOptions: ILookupOptions): Promise<SelectedItems>|void|boolean {
+        const oldSelectedkeys = Clone(this._lookupController.getSelectedKeys());
         const updateResult = this._lookupController.update(newOptions);
         const updateResultCallback = () => {
-            this._afterItemsChanged();
+            this._afterItemsChanged(oldSelectedkeys);
         };
 
         if (updateResult instanceof Promise) {
@@ -63,19 +66,22 @@ export default abstract class
     }
 
     protected _updateItems(items: RecordSet|List<Model>): void {
+        const oldSelectedkeys = Clone(this._lookupController.getSelectedKeys());
         this._lookupController.setItems(items);
-        this._afterItemsChanged();
+        this._afterItemsChanged(oldSelectedkeys);
     }
 
     protected _addItem(item: Model): void {
+        const oldSelectedkeys = Clone(this._lookupController.getSelectedKeys());
         if (this._lookupController.addItem(item)) {
-            this._afterItemsChanged();
+            this._afterItemsChanged(oldSelectedkeys);
         }
     }
 
     protected _removeItem(item: Model): void {
+        const oldSelectedkeys = Clone(this._lookupController.getSelectedKeys());
         if (this._lookupController.removeItem(item)) {
-            this._afterItemsChanged();
+            this._afterItemsChanged(oldSelectedkeys);
         }
     }
 
@@ -92,19 +98,20 @@ export default abstract class
     }
 
     protected _selectCallback(event: SyntheticEvent, result: SelectedItems): void {
+        const oldSelectedkeys = Clone(this._lookupController.getSelectedKeys());
         const selectResult =
             this._notify('selectorCallback', [this._lookupController.getItems(), result]) ||
             result;
         this._lookupController.setItemsAndSaveToHistory(selectResult as SelectedItems);
-        this._afterItemsChanged();
+        this._afterItemsChanged(oldSelectedkeys);
         if (this._options.value) {
             this._notify('valueChanged', ['']);
         }
     }
 
-    private _afterItemsChanged(): void {
+    private _afterItemsChanged(oldSelectedkeys: string[]): void {
         this._itemsChanged(this._items = this._lookupController.getItems());
-        this._notifyChanges();
+        this._notifyChanges(oldSelectedkeys);
     }
 
     private _setItems(items: SelectedItems): void {
@@ -112,9 +119,11 @@ export default abstract class
         this._lookupController.setItems(items);
     }
 
-    private _notifyChanges(): void {
+    private _notifyChanges(oldSelectedkeys: string[]): void {
         const controller = this._lookupController;
-        this._notify('selectedKeysChanged', [controller.getSelectedKeys()]);
+        const newSelectedkeys = controller.getSelectedKeys();
+        const selectedKeysDiff = ArrayUtil.getArrayDifference(oldSelectedkeys, newSelectedkeys);
+        this._notify('selectedKeysChanged', [newSelectedkeys, selectedKeysDiff.added, selectedKeysDiff.removed]);
         this._notify('itemsChanged', [controller.getItems()]);
         this._notify('textValueChanged', [controller.getTextValue()]);
     }
