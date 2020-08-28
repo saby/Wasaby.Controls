@@ -10,7 +10,7 @@ import {isEqual} from 'Types/object';
 import { IObservable } from 'Types/collection';
 import { Model } from 'Types/entity';
 import { CollectionItem, IEditingConfig, ISwipeConfig } from 'Controls/display';
-import { CssClassList } from "../Utils/CssClassList";
+import { CssClassList } from "./resources/utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {IItemAction, IItemActionsTemplateConfig} from 'Controls/itemActions';
 import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
@@ -149,9 +149,9 @@ const _private = {
         };
         itemsModelCurrent.isEditing = (): boolean => itemsModelCurrent.dispItem.isEditing();
         itemsModelCurrent.isMarked = (): boolean => itemsModelCurrent.dispItem.isMarked();
-        itemsModelCurrent.getItemActionClasses = (itemActionsPosition: string, theme?: string): string => (
+        itemsModelCurrent.getItemActionClasses = (itemActionsPosition: string, theme?: string, isLastRow?: boolean, rowSeparatorSize?: string): string => (
             itemsModelCurrent.dispItem.getItemActionClasses ?
-                itemsModelCurrent.dispItem.getItemActionClasses(itemActionsPosition, theme) : ''
+                itemsModelCurrent.dispItem.getItemActionClasses(itemActionsPosition, theme, isLastRow, rowSeparatorSize) : ''
         );
         itemsModelCurrent.getItemActionPositionClasses = (itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string, useNewModel?: boolean): string => (
             itemsModelCurrent.dispItem.getItemActionPositionClasses ?
@@ -250,7 +250,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             if (this._draggingItemData && this._draggingItemData.key === itemsModelCurrent.key) {
                 itemsModelCurrent.isDragging = true;
             }
-            if (dragItems.indexOf(itemsModelCurrent.key) !== -1) {
+            if (dragItems.indexOf(itemsModelCurrent.key) !== -1 && this._draggingItemData) {
                 itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetPosition : false;
             }
             if (this._draggingItemData && this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {

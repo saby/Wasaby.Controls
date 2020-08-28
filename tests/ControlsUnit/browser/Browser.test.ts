@@ -24,7 +24,8 @@ function getBrowserOptions(): object {
             keyProperty: 'id',
             data: browserData
         }),
-        searchParam: 'name'
+        searchParam: 'name',
+        filter: {}
     };
 }
 
@@ -87,6 +88,20 @@ describe('Controls/browser:Browser', () => {
 
                 browser._beforeUpdate(options);
                 deepStrictEqual(browser._searchController._dataOptions.filter, filter);
+            });
+
+        });
+
+        describe('operationsController', () => {
+
+            it('listMarkedKey is updated by markedKey in options', async () => {
+                const options = getBrowserOptions();
+                options.markedKey = 'testMarkedKey';
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser._beforeUpdate(options);
+
+                deepStrictEqual(browser._operationsController._savedListMarkedKey, 'testMarkedKey');
             });
 
         });

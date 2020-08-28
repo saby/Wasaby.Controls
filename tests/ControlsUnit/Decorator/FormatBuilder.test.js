@@ -1,12 +1,12 @@
 define(
    [
-      'Controls/input'
+      'Controls/decorator'
    ],
-   function(input) {
+   function(decorator) {
       'use strict';
 
-      describe('Controls.input:MaskFormatBuilder', function() {
-         const MaskFormatBuilder = input.MaskFormatBuilder;
+      describe('Controls.decorator:MaskFormatBuilder', function() {
+         const MaskFormatBuilder = decorator.FormatBuilder;
 
          it('PAIR_DELIMITERS', function() {
             assert.equal(MaskFormatBuilder.PAIR_DELIMITERS, '(){}[]⟨⟩<>\'\'""«»„“‘’””');

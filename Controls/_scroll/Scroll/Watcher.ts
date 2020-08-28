@@ -5,7 +5,7 @@
  */
 import Control = require('Core/Control');
 import template = require('wml!Controls/_scroll/Scroll/Watcher/Watcher');
-import {Registrar}  from 'Controls/event';
+import {RegisterClass, Registrar} from 'Controls/event';
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import {SyntheticEvent} from "Vdom/Vdom"
 
@@ -303,6 +303,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
 
             this._forceUpdate = function() {};
             this._registrar = new Registrar({register: 'listScroll'});
+            this._virtualNavigationRegistrar = new RegisterClass({register: 'virtualNavigation'});
          },
 
          _afterMount: function() {
@@ -330,6 +331,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
 
                _private.onRegisterNewComponent(this, _private.getDOMContainer(this._container), component, this._canObserver);
             }
+            this._virtualNavigationRegistrar.register(event, registerType, component, callback);
          },
 
          _doScrollHandler: function(e: SyntheticEvent<null>, scrollParam) {
@@ -380,6 +382,14 @@ import {SyntheticEvent} from "Vdom/Vdom"
             }
          },
 
+         _enableVirtualNavigationHandler(): void {
+            this._virtualNavigationRegistrar.start(true);
+         },
+
+         _disableVirtualNavigationHandler(): void {
+            this._virtualNavigationRegistrar.start(false);
+         },
+
          _unRegisterIt: function(event, registerType, component) {
             if (registerType === 'listScroll') {
                this._registrar.unregister(event, component);
@@ -388,6 +398,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
                   delete(this._observers[component.getInstanceId()]);
                }
             }
+            this._virtualNavigationRegistrar.unregister(event, registerType, component);
          },
 
          _beforeUnmount: function() {
