@@ -294,6 +294,8 @@ define('Controls/Application',
             for (var register in this._registers) {
                this._registers[register].destroy();
             }
+
+            this._globalpopup.registerGlobalPopupEmpty();
          },
 
          _beforeUpdate: function(cfg) {
