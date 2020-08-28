@@ -126,6 +126,14 @@ export default class ErrorController {
         }
 
         return this.__controller.process(_config).then((handlerResult: ViewConfig | void) => {
+            /**
+             * Ошибка может быть уже обработана, если в соседние контролы прилетела одна ошибка от родителя.
+             * Проверяем, обработана ли ошибка каким-то из контроллеров.
+             */
+            if (!ErrorController._isNeedHandle(_config.error)) {
+                return;
+            }
+
             if (!handlerResult) {
                 return this._getDefault(_config);
             }

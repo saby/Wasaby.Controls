@@ -58,6 +58,7 @@
                        selectorTemplate="{{_options.selectorTemplate}}"
                        isCompoundTemplate="{{_options.isCompoundTemplate}}"
                        itemActions="{{_options.itemActions}}"
+                       itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
                        keyProperty="{{_options.keyProperty}}"
                        displayProperty="{{_options.displayProperty}}"
                        emptyText="{{_options.emptyText}}"

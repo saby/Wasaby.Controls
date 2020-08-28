@@ -112,6 +112,11 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
        * @default top
        */
 
+      /*
+       * @name Controls/_scroll/StickyHeader#fixedZIndex
+       * @cfg {Number} Устанавливает z-index у прилипающего заголовка
+      */
+
       /**
        * @event Controls/_scroll/StickyHeader#fixed Происходит при изменении состояния фиксации.
        * @param {Vdom/Vdom:SyntheticEvent} event Дескриптор события.
