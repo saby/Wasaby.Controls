@@ -149,14 +149,14 @@ export default class Button extends BaseDropdown {
          headingCaption: options.caption,
          headingIcon: options.icon,
          headingIconSize: options.iconSize,
-         dataLoadCallback: this._dataLoadCallback.bind(this),
          className: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
          hasIconPin: this._hasIconPin
       };
       const controllerOptions = getDropdownControllerOptions(options, buttonConfig);
       return { ...controllerOptions, ...{
             filter: this._historyController.getPreparedFilter(),
-            source: this._historyController.getPreparedSource()
+            source: this._historyController.getPreparedSource(),
+            dataLoadCallback: this._dataLoadCallback.bind(this)
          }
       };
    }

@@ -280,7 +280,6 @@ export default class Input extends BaseDropdown {
    _getControllerOptions(options: IInputOptions): object {
       const inputConfig = {
          keyProperty: this._historyController.hasHistory(options) ? 'copyOriginalId' : options.keyProperty,
-         dataLoadCallback: this._dataLoadCallback,
          selectorOpener: this,
          selectedKeys: options.selectedKeys || [],
          className: options.popupClassName || ((options.showHeader ||
@@ -290,13 +289,14 @@ export default class Input extends BaseDropdown {
              ' theme_' + options.theme,
          caption: options.caption || this._text ,
          allowPin: false,
-         selectedItemsChangedCallback: this._prepareDisplayState.bind(this),
+         selectedItemsChangedCallback: this._prepareDisplayState.bind(this)
       };
       const controllerOptions = getDropdownControllerOptions(options, inputConfig);
       return { ...controllerOptions, ...{
          filter: this._historyController.getPreparedFilter(),
          source: this._historyController.getPreparedSource(),
-         openerControl: this
+         openerControl: this,
+         dataLoadCallback: this._dataLoadCallback
       } };
    }
 

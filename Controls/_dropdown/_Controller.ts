@@ -76,10 +76,10 @@ export default class _Controller implements IDropdownController {
          this.updateItems(items);
          sourceController.calculateState(this._items);
 
-         this._updateSelectedItems(this._options.menuOptions.emptyText, this._options.menuOptions.selectedKeys,
-             this._options.menuOptions.keyProperty, this._options.menuOptions.selectedItemsChangedCallback);
-         if (this._options.menuOptions.dataLoadCallback) {
-            this._options.menuOptions.dataLoadCallback(this._items);
+         this._updateSelectedItems(this._options.menuOptions.emptyText, this._options.selectedKeys,
+             this._options.menuOptions.keyProperty, this._options.selectedItemsChangedCallback);
+         if (this._options.dataLoadCallback) {
+            this._options.dataLoadCallback(this._items);
          }
 
          return sourceController;
@@ -116,9 +116,9 @@ export default class _Controller implements IDropdownController {
          } else {
             return this.reload();
          }
-      } else if (newOptions.menuOptions.selectedKeys !== oldOptions.menuOptions.selectedKeys && this._items) {
-         this._updateSelectedItems(newOptions.menuOptions.emptyText, newOptions.menuOptions.selectedKeys,
-             newOptions.menuOptions.keyProperty, newOptions.menuOptions.selectedItemsChangedCallback);
+      } else if (newOptions.selectedKeys !== oldOptions.selectedKeys && this._items) {
+         this._updateSelectedItems(newOptions.menuOptions.emptyText, newOptions.selectedKeys,
+             newOptions.menuOptions.keyProperty, newOptions.selectedItemsChangedCallback);
       }
    }
 
@@ -266,8 +266,8 @@ export default class _Controller implements IDropdownController {
    }
 
    private _loadError(error: Error): void {
-      if (this._options.menuOptions.dataLoadErrback) {
-         this._options.menuOptions.dataLoadErrback(error);
+      if (this._options.dataLoadErrback) {
+         this._options.dataLoadErrback(error);
       }
       this._loadItemsPromise = null;
       this._createMenuSource(error);
@@ -284,15 +284,15 @@ export default class _Controller implements IDropdownController {
       return this._getSourceController(options).then(
           (sourceController) => {
              return sourceController.load(options.filter).addCallback((items) => {
-                if (options.menuOptions.dataLoadCallback) {
-                   options.menuOptions.dataLoadCallback(items);
+                if (options.dataLoadCallback) {
+                   options.dataLoadCallback(items);
                 }
                 this.updateItems(items);
                 this._updateSelectedItems(
                     options.menuOptions.emptyText,
-                    options.menuOptions.selectedKeys,
+                    options.selectedKeys,
                     options.menuOptions.keyProperty,
-                    options.menuOptions.selectedItemsChangedCallback);
+                    options.selectedItemsChangedCallback);
                 return items;
              }).addErrback((error) => {
                 this._loadError(error);

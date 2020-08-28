@@ -123,7 +123,6 @@ class ComboBox extends BaseDropdown {
       const comboBoxConfig = {
          keyProperty: this._historyController.hasHistory(options) ? 'copyOriginalId' : options.keyProperty,
          selectedKeys: [options.selectedKey],
-         dataLoadCallback: options.dataLoadCallback,
          marker: false,
          className: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup')
              + ' controls-ComboBox-popup_theme-' + options.theme,
@@ -142,7 +141,8 @@ class ComboBox extends BaseDropdown {
       return { ...controllerOptions, ...{
             filter: this._historyController.getPreparedFilter(),
             source: this._historyController.getPreparedSource(),
-            openerControl: this
+            openerControl: this,
+            dataLoadCallback: options.dataLoadCallback
          }
       };
    }

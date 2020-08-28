@@ -3,11 +3,8 @@ import {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdown
 export default function getDropdownControllerOptions(options: IDropdownControllerOptions, controlConfig): IDropdownControllerOptions {
     const menuOptions = { ...{
         keyProperty: options.keyProperty,
-        selectedKeys: options.selectedKeys,
         emptyText: options.emptyText,
         itemActions: options.itemActions,
-        selectedItemsChangedCallback: options.selectedItemsChangedCallback,
-        dataLoadErrback: options.dataLoadErrback,
         allowPin: options.allowPin,
         width: options.width,
         className: options.popupClassName,
@@ -52,6 +49,9 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         menuOptions,
         openerControl: options.openerControl,
         readOnly: options.readOnly,
+        selectedKeys: options.selectedKeys,
+        selectedItemsChangedCallback: options.selectedItemsChangedCallback,
+        dataLoadErrback: options.dataLoadErrback,
         theme: options.theme
     };
 }
