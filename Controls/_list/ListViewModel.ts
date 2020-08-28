@@ -54,7 +54,7 @@ const _private = {
 
         classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}_theme-${theme}`;
         if (itemPadding.top === 'null' && itemPadding.bottom === 'null') {
-            classList += `controls-ListView_default-padding_theme-${theme}`;
+            classList += ` controls-ListView_default-padding_theme-${theme}`;
         } else {
             classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${theme}`;
             classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${theme}`;
