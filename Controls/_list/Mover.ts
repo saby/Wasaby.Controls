@@ -5,7 +5,7 @@ import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySele
 import {Logger} from 'UI/Utils';
 import {ContextOptions as dataOptions} from 'Controls/context';
 
-import {Move} from './Controllers/Move';
+import {MoveController} from './Controllers/MoveController';
 import {IMoveObject, MOVE_POSITION, MOVE_TYPE, TMoveItems} from './interface/IMoveObject';
 import {IMoveOptions} from './interface/IMoveOptions';
 import {Model} from "Types/entity";
@@ -158,7 +158,7 @@ var _private = {
             self._filter = controllerOptions.filter;
         }
         if (!self._controller) {
-            self._controller = new Move(controllerOptions);
+            self._controller = new MoveController(controllerOptions);
         } else {
             self._controller.update(controllerOptions);
         }
@@ -375,7 +375,7 @@ var Mover = Control.extend({
             return this._controller.moveItemsWithDialog(items);
         } else {
             if (this._options.moveDialogTemplate) {
-                if (Move.validate(_private.createMoveObject(this, items))) {
+                if (MoveController.validate(_private.createMoveObject(this, items))) {
                     return _private.getItemsBySelection.call(this, items).addCallback((items: []) => (
                         this._controller.openMoveDialog(items, _private.prepareMovedItems(this, items))
                     ));

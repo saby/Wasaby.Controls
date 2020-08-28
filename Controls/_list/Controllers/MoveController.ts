@@ -25,7 +25,7 @@ import * as TreeItemsUtil from "../resources/utils/TreeItemsUtil";
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
  *
- * @class Controls/_mover/Move
+ * @class Controls/_mover/MoveController
  * @control
  * @public
  * @author Аверкиев П.А
@@ -39,7 +39,7 @@ import * as TreeItemsUtil from "../resources/utils/TreeItemsUtil";
  * @public
  * @author Аверкиев П.А
  */
-export class Move {
+export class MoveController {
 
     protected _dialogOptions: IMoveDialogOptions;
 
@@ -64,7 +64,7 @@ export class Move {
      * При необходимости метод нужно вызывать вручную из наследника.
      *
      * @function
-     * @name Controls/_list/Controllers/Move#validate
+     * @name Controls/_list/Controllers/MoveController#validate
      */
     static validate(items: IMoveObject): boolean {
         let resultValidate: boolean = true;
@@ -136,7 +136,7 @@ export class Move {
      */
     moveItemsWithDialog(items: IMoveObject): Promise<string> {
         if (this._dialogOptions.template) {
-            if (Move.validate(items)) {
+            if (MoveController.validate(items)) {
                 return this.openMoveDialog(items, items.selectedKeys)
             }
         } else {

@@ -99,10 +99,6 @@ import IListNavigation from './_list/interface/IListNavigation';
 import { CssClassList, createClassListCollection} from 'Controls/_list/resources/utils/CssClassList';
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 
-
-import {Move}  from 'Controls/_list/Controllers/Move';
-import * as Mover from 'Controls/_list/Mover';
-
 import Remover = require('Controls/_list/Remover');
 
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
@@ -113,6 +109,11 @@ import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/I
 import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeAction');
 import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
 
+export {MoveController}  from 'Controls/_list/Controllers/MoveController';
+export {IMoveObject, MOVE_POSITION, TMoveItems}  from 'Controls/_list/interface/IMoveObject';
+export {IMoveOptions}  from 'Controls/_list/interface/IMoveOptions';
+import * as Mover from 'Controls/_list/Mover';
+
 export {
     AddButton,
     Container,
@@ -121,7 +122,6 @@ export {
     ItemTemplate,
     View,
     BaseAction,
-    Move,
     Mover,
     Remover,
     DataContainer,
