@@ -155,6 +155,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // TODO: Логика инициализации для поддержки разных браузеров была скопирована почти полностью
         //  из старого скроллконейнера, нужно отрефакторить. Очень запутанно
         this._scrollCssClass = this._getScrollContainerCssClass(options);
+        this._scrollbars.updateOptions(options);
+        this._shadows.updateOptions(options);
     }
 
     protected _afterUpdate() {
