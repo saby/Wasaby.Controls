@@ -47,10 +47,9 @@ export default abstract class
     }
 
     protected _beforeUpdate(newOptions: ILookupOptions): Promise<SelectedItems>|void|boolean {
-        const oldSelectedkeys = Clone(this._lookupController.getSelectedKeys());
         const updateResult = this._lookupController.update(newOptions);
         const updateResultCallback = () => {
-            this._afterItemsChanged(oldSelectedkeys);
+            this._afterItemsChanged();
         };
 
         if (updateResult instanceof Promise) {
@@ -66,22 +65,19 @@ export default abstract class
     }
 
     protected _updateItems(items: RecordSet|List<Model>): void {
-        const oldSelectedkeys = Clone(this._lookupController.getSelectedKeys());
         this._lookupController.setItems(items);
-        this._afterItemsChanged(oldSelectedkeys);
+        this._afterItemsChanged();
     }
 
     protected _addItem(item: Model): void {
-        const oldSelectedkeys = Clone(this._lookupController.getSelectedKeys());
         if (this._lookupController.addItem(item)) {
-            this._afterItemsChanged(oldSelectedkeys);
+            this._afterItemsChanged();
         }
     }
 
     protected _removeItem(item: Model): void {
-        const oldSelectedkeys = Clone(this._lookupController.getSelectedKeys());
         if (this._lookupController.removeItem(item)) {
-            this._afterItemsChanged(oldSelectedkeys);
+            this._afterItemsChanged();
         }
     }
 
@@ -98,20 +94,19 @@ export default abstract class
     }
 
     protected _selectCallback(event: SyntheticEvent, result: SelectedItems): void {
-        const oldSelectedkeys = Clone(this._lookupController.getSelectedKeys());
         const selectResult =
             this._notify('selectorCallback', [this._lookupController.getItems(), result]) ||
             result;
         this._lookupController.setItemsAndSaveToHistory(selectResult as SelectedItems);
-        this._afterItemsChanged(oldSelectedkeys);
+        this._afterItemsChanged();
         if (this._options.value) {
             this._notify('valueChanged', ['']);
         }
     }
 
-    private _afterItemsChanged(oldSelectedkeys: string[]): void {
+    private _afterItemsChanged(): void {
         this._itemsChanged(this._items = this._lookupController.getItems());
-        this._notifyChanges(oldSelectedkeys);
+        this._notifyChanges();
     }
 
     private _setItems(items: SelectedItems): void {
@@ -119,10 +114,10 @@ export default abstract class
         this._lookupController.setItems(items);
     }
 
-    private _notifyChanges(oldSelectedkeys: string[]): void {
+    private _notifyChanges(): void {
         const controller = this._lookupController;
         const newSelectedkeys = controller.getSelectedKeys();
-        const selectedKeysDiff = ArrayUtil.getArrayDifference(oldSelectedkeys, newSelectedkeys);
+        const selectedKeysDiff = ArrayUtil.getArrayDifference(this._options.selectedKeys, newSelectedkeys);
         this._notify('selectedKeysChanged', [newSelectedkeys, selectedKeysDiff.added, selectedKeysDiff.removed]);
         this._notify('itemsChanged', [controller.getItems()]);
         this._notify('textValueChanged', [controller.getTextValue()]);
