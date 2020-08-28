@@ -56,12 +56,12 @@ define(
 
          let config = {
             menuOptions: {
-               selectedKeys: [2],
                keyProperty: 'id',
                emptyText: true,
                nodeProperty: 'node',
                itemTemplateProperty: 'itemTemplate'
             },
+            selectedKeys: [2],
             source: new sourceLib.Memory({
                keyProperty: 'id',
                data: items
@@ -71,9 +71,9 @@ define(
          let configLazyLoad = {
             menuOptions: {
                lazyItemsLoading: true,
-               selectedKeys: [2],
                keyProperty: 'id',
             },
+            selectedKeys: [2],
             source: new sourceLib.Memory({
                keyProperty: 'id',
                data: items
@@ -160,9 +160,9 @@ define(
                return new Promise((resolve) => {
                   dropdownController.update({
                      menuOptions: {
-                        selectedKeys: [2],
                         keyProperty: 'id',
                      },
+                     selectedKeys: [2],
                      source: new sourceLib.Memory({
                         keyProperty: 'id',
                         data: updatedItems
@@ -182,10 +182,10 @@ define(
                dropdownController._sourceController = { isLoading: () => true };
                dropdownController.update({
                   menuOptions: {
-                     selectedKeys: [2],
                      keyProperty: 'id',
                      lazyItemsLoading: true,
                   },
+                  selectedKeys: [2],
                   source: new sourceLib.Memory({
                      keyProperty: 'id',
                      data: updatedItems
@@ -203,9 +203,9 @@ define(
                return new Promise((resolve) => {
                   dropdownController.update({
                      menuOptions: {
-                        selectedKeys: [3],
                         keyProperty: 'id',
                      },
+                     selectedKeys: [3],
                      source: new sourceLib.Memory({
                         keyProperty: 'id',
                         data: updatedItems
@@ -226,9 +226,9 @@ define(
                };
                dropdownController.update({
                   menuOptions: {
-                     selectedKeys: [2],
                      keyProperty: 'id'
                   },
+                  selectedKeys: [2],
                   source: new sourceLib.Memory({
                      keyProperty: 'id',
                      data: updatedItems
@@ -241,8 +241,8 @@ define(
             it('change filter', (done) => {
                let configFilter = clone(config),
                   selectedItems = [];
-               configFilter.menuOptions.selectedKeys = ['2'];
-               configFilter.menuOptions.selectedItemsChangedCallback = function(items) {
+               configFilter.selectedKeys = ['2'];
+               configFilter.selectedItemsChangedCallback = function(items) {
                   selectedItems = items;
                };
 
@@ -270,7 +270,7 @@ define(
             it('without loaded items', () => {
                let configItems = clone(config),
                   selectedItems = [];
-               configItems.menuOptions.selectedItemsChangedCallback = function(items) {
+               configItems.selectedItemsChangedCallback = function(items) {
                   selectedItems = items;
                };
                dropdownController._items = null;
@@ -279,7 +279,7 @@ define(
                   keyProperty: 'id',
                   data: items
                });
-               newConfig.menuOptions.selectedKeys = ['4'];
+               newConfig.selectedKeys = ['4'];
                return dropdownController.update(newConfig).then(function() {
                   assert.equal(selectedItems.length, 1);
                });
@@ -296,9 +296,9 @@ define(
                dropdownController.update({
                   menuOptions: {
                      lazyItemsLoading: true,
-                     selectedKeys: [2],
                      keyProperty: 'id'
                   },
+                  selectedKeys: [2],
                   source: new sourceLib.Memory({
                      keyProperty: 'id',
                      data: items
@@ -311,10 +311,9 @@ define(
                dropdownController.update({
                   menuOptions: {
                      lazyItemsLoading: true,
-                     selectedKeys: [2],
                      keyProperty: 'id'
                   },
-
+                  selectedKeys: [2],
                   source: new sourceLib.Memory({
                      keyProperty: 'id',
                      data: items
@@ -333,10 +332,10 @@ define(
                dropdownController._items = itemsRecords.clone();
                dropdownController.update({
                   menuOptions: {
-                     selectedKeys: [6],
-                     keyProperty: 'id',
-                     selectedItemsChangedCallback: selectedItemsChangedCallback
+                     keyProperty: 'id'
                   },
+                  selectedItemsChangedCallback: selectedItemsChangedCallback,
+                  selectedKeys: [6],
                   filter: config.filter
                });
                assert.deepEqual(selectedItems[0].getRawData(), items[5]);
@@ -502,7 +501,7 @@ define(
 
          it('_private::loadItems', () => {
             const controllerConfig = { ...config };
-            controllerConfig.menuOptions.dataLoadCallback = function(loadedItems) {
+            controllerConfig.dataLoadCallback = function(loadedItems) {
                const item = new entity.Record({
                   rawData: {
                      id: '9',
@@ -724,7 +723,7 @@ define(
          });
 
          it('_private::getSourceController', function() {
-            config.menuOptions.dataLoadCallback = null;
+            config.dataLoadCallback = null;
             let dropdownController = getDropdownController(config);
             dropdownController.setItems(configLazyLoad.items);
             assert.isOk(dropdownController._sourceController);
@@ -776,9 +775,9 @@ define(
                let selectedItems;
                dropdownController._options = {
                   menuOptions: {
-                     selectedKeys: [2],
-                     keyProperty: 'id',
+                     keyProperty: 'id'
                   },
+                  selectedKeys: [2],
                   source: historySource,
                   filter: {},
                   notifySelectedItemsChanged: (d) => {

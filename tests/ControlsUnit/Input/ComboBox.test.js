@@ -118,7 +118,7 @@ define(
             combobox._beforeMount(config);
             const result = combobox._getControllerOptions({ dataLoadCallback: 'testDataLoadCallback' });
 
-            assert.equal(result.menuOptions.dataLoadCallback, 'testDataLoadCallback');
+            assert.equal(result.dataLoadCallback, 'testDataLoadCallback');
          });
 
          it('_getMenuPopupConfig', () => {
