@@ -1248,6 +1248,9 @@ const _private = {
     }, SCROLLMOVE_DELAY, true),
 
     handleListScrollSync(self, scrollTop) {
+        if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
+            self._pagingVisible = _private.needShowPagingByScrollSize(self,  self._viewSize, self._viewportSize);
+        }
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
