@@ -740,6 +740,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
              this._$keyProperty = (options as any).idProperty;
         }
 
+        if (options.groupProperty) {
+            this._$groupProperty = options.groupProperty;
+            this._$group = (item) => {
+                return item.get(this._$groupProperty);
+            };
+        }
+
         // Support of 'groupingKeyCallback' option
         if (!this._$group && (options as any).groupingKeyCallback) {
             this._$group = (options as any).groupingKeyCallback;
@@ -752,8 +759,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$theme = options.theme;
 
         this._$collapsedGroups = options.collapsedGroups;
-
-        this._$groupProperty = options.groupProperty;
 
         if (options.rowSeparatorSize) {
             this._$rowSeparatorSize = options.rowSeparatorSize;
