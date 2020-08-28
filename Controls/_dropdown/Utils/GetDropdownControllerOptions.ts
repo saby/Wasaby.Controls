@@ -5,6 +5,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         keyProperty: options.keyProperty,
         emptyText: options.emptyText,
         itemActions: options.itemActions,
+        itemActionVisibilityCallback: options.itemActionVisibilityCallback,
         allowPin: options.allowPin,
         width: options.width,
         className: options.popupClassName,
