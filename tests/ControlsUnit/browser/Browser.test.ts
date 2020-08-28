@@ -103,7 +103,7 @@ describe('Controls/browser:Browser', () => {
                     testField: 'oldFilterValue'
                 };
                 browser._options.source = options.source;
-                browser._dataController.updateOptions = () => { return true; };
+                browser._sourceController.updateOptions = () => { return true; };
                 browser._beforeUpdate(options);
                 deepStrictEqual(browser._searchController._options.filter, filter);
             });
