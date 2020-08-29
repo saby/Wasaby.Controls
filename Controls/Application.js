@@ -13,6 +13,7 @@ define('Controls/Application',
       'Controls/Application/SettingsController',
       'Controls/Utils/DOMUtil',
       'Controls/event',
+      'UI/HotKeys',
       'Controls/Application/TouchDetectorController',
       'css!theme?Controls/Application/oldCss'
    ],
@@ -60,6 +61,7 @@ define('Controls/Application',
       SettingsController,
       DOMUtils,
       ControlsEvent,
+      HotKeys,
       TouchDetector) {
       'use strict';
 
@@ -355,6 +357,10 @@ define('Controls/Application',
                   }
                }
             }
+         },
+
+         _keyDownHandler: function(event) {
+            return HotKeys.dispatcherHandler(event);
          }
       });
 

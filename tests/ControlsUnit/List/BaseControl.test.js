@@ -1484,7 +1484,12 @@ define([
          assert.isFalse(notified);
 
          var myMarkedItem = { qwe: 123 };
-         var mockedEvent = { target: 'myTestTarget' };
+          var mockedEvent = {
+              target: 'myTestTarget',
+              isStopped: function() {
+                  return true;
+              }
+          };
          // With marker
          lists.BaseControl._private.enterHandler({
             _options: {
@@ -2343,8 +2348,6 @@ define([
             await lists.BaseControl._private.onScrollHide(ctrl);
             assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
             assert.isFalse(ctrl._cachedPagingState, 'Wrong state _cachedPagingState after scrollHide');
-
-            lists.BaseControl._private.handleListScrollSync(ctrl, 200);
 
             setTimeout(function() {
                assert.isFalse(ctrl._pagingVisible);

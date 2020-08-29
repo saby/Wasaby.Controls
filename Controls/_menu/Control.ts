@@ -168,6 +168,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
 
         if (rootChanged || sourceChanged || filterChanged) {
+            this._closeSubMenu();
             result = this._loadItems(newOptions).then(() => {
                 this._notifyResizeAfterRender = true;
             });
