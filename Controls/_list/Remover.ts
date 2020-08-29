@@ -1,7 +1,7 @@
 import BaseAction from 'Controls/_list/BaseAction';
 import Deferred = require('Core/Deferred');
 import {ContextOptions as dataOptions} from 'Controls/context';
-import {Remove} from './Controllers/Remove';
+import {RemoveController} from './Controllers/RemoveController';
 
 let _private = {
     beforeItemsRemove: function (self, items) {
@@ -28,7 +28,7 @@ let _private = {
     updateDataOptions: function (self, dataOptions) {
         if (dataOptions) {
             if (!self._controller) {
-                self._controller = new Remove(dataOptions.source, dataOptions.items, dataOptions.filter);
+                self._controller = new RemoveController(dataOptions.source, dataOptions.items, dataOptions.filter);
             } else {
                 self._controller.update(dataOptions.source, dataOptions.items, dataOptions.filter);
             }
@@ -92,7 +92,7 @@ const Remover = BaseAction.extend({
                                 this._notify('dataError', [{ error: removeResult }]);
                             });
                         }
-                        return (this._controller as Remove).removeItems(selectedItems)
+                        return (this._controller as RemoveController).removeItems(selectedItems)
                             .then((removeResult) => both(result))
                             .catch((removeResult) => both(result))
                     }
