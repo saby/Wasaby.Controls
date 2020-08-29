@@ -110,7 +110,7 @@ import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/
 import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
 
 export {MoveController}  from 'Controls/_list/Controllers/MoveController';
-export {IMoveObject, MOVE_POSITION, TMoveItems}  from 'Controls/_list/interface/IMoveObject';
+export {IMoveObject, MOVE_TYPE, MOVE_POSITION, TMoveItems}  from 'Controls/_list/interface/IMoveObject';
 export {IMoveOptions}  from 'Controls/_list/interface/IMoveOptions';
 import * as Mover from 'Controls/_list/Mover';
 

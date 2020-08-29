@@ -14,9 +14,9 @@ import {BindingMixin, ICrudPlus, IData, IRpc} from "Types/source";
 export type TSource = IData|IRpc|ICrudPlus|BindingMixin;
 
 export interface ITreeStrategyOptions {
-    root: string;
-    parentProperty: string;
-    nodeProperty: string;
+    root?: string;
+    parentProperty?: string;
+    nodeProperty?: string;
     filter?: any;
 }
 
