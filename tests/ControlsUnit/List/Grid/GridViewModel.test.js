@@ -1917,10 +1917,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                property: ''
             };
             assert.equal('grid-column-start: 1; grid-column-end: 6;', gridViewModel.getFooterStyles());
-            gridViewModel._model._draggingItemData = {}
+            gridViewModel._model._draggingItem = {}
             assert.equal('grid-column-start: 1; grid-column-end: 5;', gridViewModel.getFooterStyles());
             gridViewModel._options.stickyColumn = undefined;
-            gridViewModel._model._draggingItemData = undefined;
+            gridViewModel._model._draggingItem = undefined;
          });
 
          it('is multiheader', function() {

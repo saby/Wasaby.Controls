@@ -26,6 +26,11 @@ export default class ColumnsCollectionItem<T> extends CollectionItem<T> {
         this._$column = column;
         this._nextVersion();
     }
+
+    get index(): number {
+        return this.getOwner().getIndex(this);
+    }
+
     getWrapperClasses(templateHighlightOnHover: boolean = true, theme?: 'string', cursor: string|boolean = 'pointer'): string {
         let result: string = super.getWrapperClasses.apply(this, arguments);
         result += ' controls-ColumnsView__itemV';
@@ -34,8 +39,8 @@ export default class ColumnsCollectionItem<T> extends CollectionItem<T> {
         }
         return result;
     }
-    getContentClasses(): string {
 
+    getContentClasses(): string {
         // Тут должен быть вызов метода суперкласса, НО нам не нужны почти все классы, которые он предлагает
         return ' controls-ColumnsView__itemContent';
     }

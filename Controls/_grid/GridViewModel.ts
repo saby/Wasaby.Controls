@@ -2112,7 +2112,7 @@ var
         setDraggedItems(draggedItem: IFlatItemData, dragEntity: ItemsEntity): void {
             this._model.setDraggedItems(draggedItem, dragEntity);
         },
-        setDragPosition(position: IDragPosition): void {
+        setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
             this._model.setDragPosition(position);
         },
         resetDraggedItems(): void {
@@ -2123,16 +2123,8 @@ var
             this._model.setDragTargetPosition(position);
         },
 
-        getDragTargetPosition: function() {
-            return this._model.getDragTargetPosition();
-        },
-
         setDragEntity: function(entity) {
             this._model.setDragEntity(entity);
-        },
-
-        getDragEntity: function() {
-            return this._model.getDragEntity();
         },
 
         setDragItemData: function(itemData) {
@@ -2147,7 +2139,7 @@ var
             return this._model.getDragItemData();
         },
 
-        getPrevDragPosition(): IDragPosition {
+        getPrevDragPosition(): IDragPosition<CollectionItem<Model>> {
             return this._model.getPrevDragPosition();
         },
 

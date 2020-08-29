@@ -1,40 +1,33 @@
 import { IDragPosition, TKey, TPosition } from './interface';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { ItemsEntity } from 'Controls/dragnDrop';
-import { CollectionItem, Collection } from 'Controls/display';
+import { CollectionItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { ISelectionObject } from 'Controls/interface';
 
-export interface IFlatModel {
-   setDraggedItems(dragItemData, dragEntity: ItemsEntity): void;
-   setDragPosition(position: IDragPosition): void;
+export interface IModel {
+   setDraggedItems(draggedItem: TKey, draggedItems: Array<string | number>): void;
+   setDragPosition(position: IDragPosition<CollectionItem<Model>>): void;
    resetDraggedItems(): void;
 
-   getItemDataByItem(item: CollectionItem<Model>): any;
    getItemBySourceKey(key: TKey): CollectionItem<Model>;
 
    getIndexByKey(key: TKey): number;
-}
-
-export interface IFlatItemData {
-   isDragging: boolean;
-   index: number;
-   item: Model;
-   key: TKey;
-   dispItem: CollectionItem<Model>;
+   getIndex(item: CollectionItem<Model>): number;
 }
 
 export default class FlatController {
-   protected _draggingItemData: IFlatItemData;
-   protected _model: IFlatModel;
-   private _dragPosition: IDragPosition;
+   protected _draggableItem: CollectionItem<Model>;
+   protected _model: IModel;
+   private _dragPosition: IDragPosition<CollectionItem<Model>>;
    private _entity: ItemsEntity;
+   private _startIndex: number;
 
-   constructor(model: IFlatModel) {
+   constructor(model: IModel) {
       this._model = model;
    }
 
-   update(model: IFlatModel): void {
+   update(model: IModel): void {
       this._model = model;
    }
 
@@ -46,30 +39,22 @@ export default class FlatController {
    setDraggedItems(entity: ItemsEntity, draggedItem: CollectionItem<Model> = null): void {
       this._entity = entity;
 
-      // TODO нужно доработать совместимость между старой и новой моделями.
-      //  Сейчас drag-n-drop в новой модели поддерживает только перетаскивание элемента в другой список.
-      //  Например, Задачи/В работе в режиме плитки перетаскивание в папку.
-      if (draggedItem) {
-         if (this._model.getItemDataByItem) {
-            this._draggingItemData = this._model.getItemDataByItem(draggedItem);
-            // это перетаскиваемый элемент, поэтому чтобы на него навесился нужный css класс isDragging = true
-            this._draggingItemData.isDragging = true;
-         } else {
-            this._model.setDraggedItems(draggedItem, entity);
-            return;
-         }
-      }
-
-      this._model.setDraggedItems(this._draggingItemData, entity);
+      this._draggableItem = draggedItem;
+      this._startIndex = this._getIndex(draggedItem);
+      this._model.setDraggedItems(this._draggableItem.getContents().getKey(), entity.getItems());
    }
 
-   setDragPosition(position: IDragPosition): void {
+   setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
+      if (this._dragPosition === position) {
+         return;
+      }
+
       this._dragPosition = position;
       this._model.setDragPosition(position);
    }
 
    endDrag(): void {
-      this._draggingItemData = null;
+      this._draggableItem = null;
       this._dragPosition = null;
       this._entity = null;
       this._model.resetDraggedItems();
@@ -79,7 +64,7 @@ export default class FlatController {
       return !!this._entity;
    }
 
-   getDragPosition(): IDragPosition {
+   getDragPosition(): IDragPosition<CollectionItem<Model>> {
       return this._dragPosition;
    }
 
@@ -87,40 +72,47 @@ export default class FlatController {
       return this._entity;
    }
 
-   // This is incompatible with new model
-   calculateDragPosition(targetItemData: IFlatItemData|CollectionItem<Model>, position?: TPosition): IDragPosition {
+   calculateDragPosition(targetItem: CollectionItem<Model>, position?: TPosition): IDragPosition<CollectionItem<Model>> {
       let prevIndex = -1;
 
       // If you hover on a record that is being dragged, then the position should not change.
-      if (this._draggingItemData && this._draggingItemData.index === targetItemData.index) {
-         return null;
+      if (this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
+         return this._dragPosition;
       }
 
       if (this._dragPosition) {
          prevIndex = this._dragPosition.index;
-      } else if (this._draggingItemData) {
-         prevIndex = this._draggingItemData.index;
+      } else if (this._draggableItem) {
+         prevIndex = this._startIndex;
       }
 
+      const targetIndex = this._getIndex(targetItem);
       if (prevIndex === -1) {
          position = 'before';
-      } else if (targetItemData.index > prevIndex) {
+      } else if (targetIndex > prevIndex) {
          position = 'after';
-      } else if (targetItemData.index < prevIndex) {
+      } else if (targetIndex < prevIndex) {
          position = 'before';
-      } else if (targetItemData.index === prevIndex) {
+      } else if (targetIndex === prevIndex) {
          position = this._dragPosition.position === 'after' ? 'before' : 'after';
       }
 
       return {
-         index: targetItemData.index,
-         item: targetItemData.item,
-         data: targetItemData,
-         position: position
+         index: targetIndex,
+         dispItem: targetItem,
+         position
       };
    }
 
-   static canStartDragNDrop(canStartDragNDropOption: boolean|Function, event: SyntheticEvent<MouseEvent>, isTouch: boolean): boolean {
+   protected _getIndex(item: CollectionItem<Model>): number {
+      return this._model.getIndex(item);
+   }
+
+   static canStartDragNDrop(
+       canStartDragNDropOption: boolean|Function,
+       event: SyntheticEvent<MouseEvent>,
+       isTouch: boolean
+   ): boolean {
       return (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption())
          && !event.nativeEvent.button && !event.target.closest('.controls-DragNDrop__notDraggable') && !isTouch;
    }
@@ -135,7 +127,7 @@ export default class FlatController {
     * @param selection
     * @param dragKey
     */
-   static getSelectionForDragNDrop(model: IFlatModel, selection: ISelectionObject, dragKey: TKey): ISelectionObject {
+   static getSelectionForDragNDrop(model: IModel, selection: ISelectionObject, dragKey: TKey): ISelectionObject {
       const allSelected = selection.selected.indexOf(null) !== -1;
 
       const selected = [...selection.selected];
@@ -143,8 +135,10 @@ export default class FlatController {
          selected.push(dragKey);
       }
 
-      // TODO по идее элементы должны быть уже упорядочены в multiselection https://online.sbis.ru/opendoc.html?guid=4a6d3f0f-6eb9-4d35-85ae-683922a57f98
-      // Тогда если перетаскиваемый элемент не выбран, то его нужно будет вставить на "свое" место, исходя из его индекса в списке
+      // TODO по идее элементы должны быть уже упорядочены в multiselection
+      //  https://online.sbis.ru/opendoc.html?guid=4a6d3f0f-6eb9-4d35-85ae-683922a57f98
+      // Тогда если перетаскиваемый элемент не выбран,
+      // то его нужно будет вставить на "свое" место, исходя из его индекса в списке
       this._sortKeys(model, selected);
 
       const excluded = [...selection.excluded];
@@ -154,8 +148,8 @@ export default class FlatController {
       }
 
       return {
-         selected: selected,
-         excluded: excluded,
+         selected,
+         excluded,
          recursive: false
       };
    }
@@ -167,10 +161,10 @@ export default class FlatController {
     * @param keys
     * @private
     */
-   private static _sortKeys(model: IFlatModel, keys: Array<number|string>): void {
+   private static _sortKeys(model: IModel, keys: Array<number|string>): void {
       keys.sort((a, b) => {
          const indexA = model.getIndexByKey(a),
-            indexB = model.getIndexByKey(b);
+               indexB = model.getIndexByKey(b);
          return indexA > indexB ? 1 : -1;
       });
    }

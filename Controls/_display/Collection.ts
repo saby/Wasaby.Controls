@@ -720,6 +720,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
+    protected _dragStrategy: Function = DragStrategy;
+
     constructor(options: IOptions<S, T>) {
         super(options);
         SerializableMixin.call(this);
@@ -2136,30 +2138,26 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // region Drag-N-Drop
 
-    setDraggedItems(draggedItem: T, dragEntity: ItemsEntity): void {
-        // TODO dnd когда будет выполнен полный переход на новую модель,
-        // то можно будет передать только нужные параметры(ключ аватара и список перетаскиваемых ключей)
-        const avatarKey = draggedItem.getContents().getKey();
-        const avatarStartIndex = this.getIndexByKey(avatarKey);
+    setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
+        const avatarStartIndex = this.getIndexByKey(avatarItemKey);
 
-        this.appendStrategy(DragStrategy, {
-            draggedItemsKeys: dragEntity.getItems(),
-            avatarItemKey: avatarKey,
+        this.appendStrategy(this._dragStrategy, {
+            draggedItemsKeys,
+            avatarItemKey,
             avatarIndex: avatarStartIndex
         });
     }
 
-    setDragPosition(position: IDragPosition): void {
-        const strategy = this.getStrategyInstance(DragStrategy) as DragStrategy<unknown>;
+    setDragPosition(position: IDragPosition<T>): void {
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
         if (strategy && position) {
-            // TODO dnd в старой модели передается куда вставлять относительно этого индекса
-            strategy.avatarIndex = position.index;
+            strategy.setAvatarPosition(position.index, position.position);
             this.nextVersion();
         }
     }
 
     resetDraggedItems(): void {
-        this.removeStrategy(DragStrategy);
+        this.removeStrategy(this._dragStrategy);
     }
 
     // endregion
