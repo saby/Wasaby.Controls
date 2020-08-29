@@ -8,7 +8,7 @@ import * as InstanceChecker from 'Core/core-instance';
 import * as rk from 'i18n!*';
 
 import {IMoveDialogOptions} from '../interface/IMoveDialogOptions';
-import {IMoveOptions, TSource} from '../interface/IMoveOptions';
+import {IMoveControllerOptions, TSource} from '../interface/IMoveControllerOptions';
 import {IMoveObject,
     MOVE_POSITION,
     MOVE_TYPE,
@@ -43,48 +43,34 @@ export class MoveController {
 
     protected _dialogOptions: IMoveDialogOptions;
 
+    // пока контроллер не умеет работать с source для перемещения записей относиетльно друг друга
     private _items: RecordSet;
 
+    // Ресурс, в котором производится смена мест
     private _source: TSource;
 
+    // Имя свойства, хранящего ключ записи
     private _keyProperty: string;
 
+    // Имя свойства, хранящего ключ родителя в дереве
     protected _parentProperty: string;
 
+    // Имя свойства, хранящего флаг узла в дереве
     protected _nodeProperty: string;
 
-    protected _filter: any;
-
+    // Корень дерева для создания display при поиске ближайших записей
     protected _root: string;
 
-    /**
-     * Производит проверку переданных параметров. Если массив значений пуст, возвращает false и выводит окно с текстом, иначе возвращает true.
-     *
-     * @remark
-     * При необходимости метод нужно вызывать вручную из наследника.
-     *
-     * @function
-     * @name Controls/_list/Controllers/MoveController#validate
-     */
-    static validate(items: IMoveObject): boolean {
-        let resultValidate: boolean = true;
-
-        if (items.selectedKeys && !items.selectedKeys.length) {
-            resultValidate = false;
-            Confirmation.openPopup({
-                type: 'ok',
-                message: rk('Нет записей для обработки команды')
-            });
-        }
-
-        return resultValidate;
-    }
-
-    constructor(options: IMoveOptions) {
+    constructor(options: IMoveControllerOptions) {
         this.update(options);
     }
 
-    update(options: IMoveOptions): void {
+    /**
+     * Обновляет параметры контроллера
+     * @function Controls/_list/Controllers/MoveController#moveItems
+     * @param {Controls/_list/interface/IMoveControllerOptions} options
+     */
+    update(options: IMoveControllerOptions): void {
         this._dialogOptions = options.dialog;
         this._items = options.items;
         this._keyProperty = options.keyProperty;
@@ -98,11 +84,30 @@ export class MoveController {
     }
 
     /**
-     * Позволяет переместить запись относительно указанного элемента
-     * @param items
-     * @param target
-     * @param position
-     * @param moveType
+     * Перемещает переданные элементы относительно указанного целевого элемента.
+     * @function Controls/_list/Controllers/MoveController#moveItems
+     * @param {Controls/_list/interface/IMoveObject} items Элементы для перемещения.
+     * @param {Types/entity:Model|Controls/interface:TKeySelection} target Целевой элемент перемещения.
+     * @param {Controls/_list/interface/IMoveObject/MOVE_POSITION.typedef} position Положение перемещения.
+     * @param {String} moveType
+     * @returns {Promise} Отложенный результат перемещения.
+     * @remark
+     * В зависимости от аргумента 'position' элементы могут быть перемещены до, после или на указанный целевой элемент.
+     * @see moveItemUp
+     * @see moveItemDown
+     */
+
+    /*
+     * Moves the transferred items relative to the specified target item.
+     * @function Controls/_list/Controllers/MoveController#moveItems
+     * @param {Controls/_list/interface/IMoveObject} items Items to be moved.
+     * @param {Types/entity:Model|Controls/interface:TKeySelection} target Target item to move.
+     * @param {Controls/_list/interface/IMoveObject/MOVE_POSITION.typedef} position Position to move.
+     * @returns {Core/Deferred} Deferred with the result of the move.
+     * @remark
+     * Depending on the 'position' argument, elements can be moved before, after or on the specified target item.
+     * @see moveItemUp
+     * @see moveItemDown
      */
     moveItems(items: IMoveObject, target: Model|TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void> {
         if (target === undefined) {
@@ -115,24 +120,70 @@ export class MoveController {
     }
 
     /**
-     * Перемещает запись вверх
-     * @param item
+     * Перемещает один элемент вверх.
+     * @function Controls/_list/Controllers/MoveController#moveItemUp
+     * @param {Controls/_list/interface/IMoveObject/TMoveItem.typedef} item Элемент перемещения.
+     * @returns {Promise} Отложенный результат перемещения.
+     * @see moveItemDown
+     * @see moveItems
+     */
+
+    /*
+     * Move one item up.
+     * @function Controls/_list/Controllers/MoveController#moveItemUp
+     * @param {Controls/_list/interface/IMoveObject/TMoveItem.typedef} The item to be moved.
+     * @returns {Promise} Deferred with the result of the move.
+     * @see moveItemDown
+     * @see moveItems
      */
     moveItemUp(item: TMoveItem): Promise<DataSet|void> {
         return this._moveItemToSiblingPosition(item, MOVE_POSITION.before);
     }
 
     /**
-     * Перемещает запись вниз
-     * @param item
+     * Перемещает один элемент вниз.
+     * @function Controls/_list/Controllers/MoveController#moveItemDown
+     * @param {Controls/_list/interface/IMoveObject/TMoveItem.typedef} item Элемент перемещения.
+     * @returns {Promise} Отложенный результат перемещения.
+     * @see moveItemUp
+     * @see moveItems
+     */
+
+    /*
+     * Move one item down.
+     * @function Controls/_list/Controllers/MoveController#moveItemDown
+     * @param {Controls/_list/interface/IMoveObject/TMoveItem.typedef} item The item to be moved.
+     * @returns {Promise} Deferred with the result of the move.
+     * @see moveItemUp
+     * @see moveItems
      */
     moveItemDown(item: TMoveItem): Promise<DataSet|void> {
         return this._moveItemToSiblingPosition(item, MOVE_POSITION.after);
     }
 
     /**
-     * Перемещает запись при помощи окна Mover
-     * @param items
+     * Перемещение переданных элементов с предварительным выбором родительского узла с помощью диалогового окна.
+     * @function Controls/_list/Controllers/MoveController#moveItemsWithDialog
+     * @param {Controls/_list/interface/IMoveObject} items Элементы для перемещения.
+     * @remark
+     * Компонент, указанный в опции {Controls/_list/interface/IMoveDialogOptions#template dialog.template}, будет использоваться в качестве шаблона для диалога перемещения.
+     * Для того, чтобы получить управление над результатом перемещения, необходимо использовать опцию
+     * {Controls/_list/interface/IMoveDialogOptions#template dialog.onResultHandler}
+     * @see moveItemUp
+     * @see moveItemDown
+     * @see moveItems
+     */
+
+    /*
+     * Move the transferred items with the pre-selection of the parent node using the dialog.
+     * @function Controls/_list/Controllers/MoveController#moveItemsWithDialog
+     * @param {Controls/_list/interface/IMoveObject} items Items to be moved.
+     * @remark
+     * The component specified in the {Controls/_list/interface/IMoveDialogOptions#template dialog.template} option will be used as a template for the move dialog.
+     * To get control over the result of moving, please use {Controls/_list/interface/IMoveDialogOptions#template dialog.onResultHandler} option
+     * @see moveItemUp
+     * @see moveItemDown
+     * @see moveItems
      */
     moveItemsWithDialog(items: IMoveObject): Promise<string> {
         if (this._dialogOptions.template) {
@@ -143,22 +194,6 @@ export class MoveController {
             Logger.warn('Mover: MoveDialogTemplate option is undefined', this);
         }
         return Promise.resolve(undefined);
-    }
-
-    /**
-     * Метод, необходимый для получения совместимости со старой логикой.
-     * @param items
-     */
-    getItems(items: IMoveObject): Promise<IMoveObject> {
-        return Promise.resolve(items);
-    }
-
-    /**
-     * Возвращает выбранные ключи
-     * @param items
-     */
-    getSelectedKeys(items: IMoveObject): TKeysSelection {
-        return items.selectedKeys;
     }
 
     /**
@@ -198,8 +233,9 @@ export class MoveController {
 
     /**
      * Открывает диалог перемещения
-     * @param items
-     * @param selectedKeys
+     * Метод сделан публичным для совместимости с HOC
+     * @param {Controls/_list/interface/IMoveObject/TMoveItem.typedef} items
+     * @param {Controls/interface:TKeysSelection} selectedKeys
      * @private
      */
     openMoveDialog(items: TMoveItems, selectedKeys: TKeysSelection): Promise<string> {
@@ -287,6 +323,7 @@ export class MoveController {
      * Item может быть или Model или ключом
      * Еслит ключ, то идёт попытка получить модель из списка _items
      * @param item
+     * @private
      */
     private _getModel(item: Model|TKeySelection): Model {
         return InstanceChecker.instanceOfModule(item, 'Types/entity:Model') ? item as Model : this._items.getRecordById(item as TKeySelection);
@@ -297,8 +334,31 @@ export class MoveController {
      * Item может быть или Model или ключом
      * Еслит Model, то идёт попытка получить ключ по _keyProperty
      * @param item
+     * @private
      */
     private _getId(item: Model|TKeySelection): TKeySelection {
         return InstanceChecker.instanceOfModule(item, 'Types/entity:Model') ? (item as Model).get(this._keyProperty) : item as TKeySelection;
+    }
+
+    /**
+     * Производит проверку переданных параметров. Если массив значений пуст, возвращает false и выводит окно с текстом, иначе возвращает true.
+     * Метод сделан публичным для совместимости с HOC
+     *
+     * @function
+     * @name Controls/_list/Controllers/MoveController#validate
+     * @private
+     */
+    static validate(items: IMoveObject): boolean {
+        let resultValidate: boolean = true;
+
+        if (items.selectedKeys && !items.selectedKeys.length) {
+            resultValidate = false;
+            Confirmation.openPopup({
+                type: 'ok',
+                message: rk('Нет записей для обработки команды')
+            });
+        }
+
+        return resultValidate;
     }
 }

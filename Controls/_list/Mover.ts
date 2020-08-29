@@ -7,7 +7,7 @@ import {ContextOptions as dataOptions} from 'Controls/context';
 
 import {MoveController} from './Controllers/MoveController';
 import {IMoveObject, MOVE_POSITION, MOVE_TYPE, TMoveItems} from './interface/IMoveObject';
-import {IMoveOptions} from './interface/IMoveOptions';
+import {IMoveControllerOptions} from './interface/IMoveControllerOptions';
 import {Model} from "Types/entity";
 
 const DEFAULT_SORTING_ORDER = 'asc';
@@ -129,7 +129,7 @@ var _private = {
     },
 
     updateDataOptions: function (self, newOptions, contextDataOptions) {
-        let controllerOptions: IMoveOptions = {
+        let controllerOptions: IMoveControllerOptions = {
             parentProperty: newOptions.parentProperty,
             nodeProperty: newOptions.nodeProperty,
             root: newOptions.root,
@@ -138,7 +138,7 @@ var _private = {
         if (newOptions.moveDialogTemplate) {
             controllerOptions.dialog = {
                 opener: self,
-                onResultHandler: _private.moveDialogOnResultHandler.bind(self)
+                onResultHandler: newOptions.onResultHandler || _private.moveDialogOnResultHandler.bind(self)
             };
             if (newOptions.moveDialogTemplate.templateName) {
                 controllerOptions.dialog.template = newOptions.moveDialogTemplate.templateName;

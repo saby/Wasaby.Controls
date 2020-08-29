@@ -1,6 +1,5 @@
-import {ISelectionObject, TKeySelection, TKeysSelection, TSelectionRecord} from 'Controls/interface';import {Model} from "Types/entity";
-
-
+import {Model} from 'Types/entity';
+import {ISelectionObject, TKeySelection, TKeysSelection, TSelectionRecord} from 'Controls/interface';
 
 /**
  * @typedef {String} MOVE_POSITION
@@ -30,7 +29,6 @@ export enum MOVE_POSITION {
  * @see Controls/interface:TKeySelection
  */
 export type TMoveItem = Model|TKeySelection
-
 
 /**
  * @typedef {Array<TMoveItem>|Controls/_list/interface/IMoveObject|Controls/interface:TSelectionRecord|Controls/interface:ISelectionObject} TMoveItems

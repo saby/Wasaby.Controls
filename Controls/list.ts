@@ -27,6 +27,9 @@
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
+ * @includes IMoveObject Controls/_list/interface/IMoveObject
+ * @includes IMoveDialogOptions Controls/_list/interface/IMoveDialogOptions
+ * @includes IMoveControllerOptions Controls/_list/interface/IMoveControllerOptions
  * @public
  * @author Крайнов Д.О.
  */
@@ -58,7 +61,10 @@
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
- * @public
+ * @includes IMoveObject Controls/_list/interface/IMoveObject
+ * @includes IMoveDialogOptions Controls/_list/interface/IMoveDialogOptions
+ * @includes IMoveControllerOptions Controls/_list/interface/IMoveControllerOptions
+ * * @public
  * @author Крайнов Д.О.
  */
 import AddButton = require('Controls/_list/AddButton');
@@ -111,7 +117,7 @@ import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTe
 
 export {MoveController}  from 'Controls/_list/Controllers/MoveController';
 export {IMoveObject, MOVE_TYPE, MOVE_POSITION, TMoveItems}  from 'Controls/_list/interface/IMoveObject';
-export {IMoveOptions}  from 'Controls/_list/interface/IMoveOptions';
+export {IMoveControllerOptions}  from 'Controls/_list/interface/IMoveControllerOptions';
 import * as Mover from 'Controls/_list/Mover';
 
 export {

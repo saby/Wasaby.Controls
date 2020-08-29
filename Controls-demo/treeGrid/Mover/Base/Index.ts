@@ -5,7 +5,7 @@ import {DataSet, HierarchicalMemory} from 'Types/source';
 import {Gadgets} from '../../DemoHelpers/DataCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { TExpandOrColapsItems } from 'Controls-demo/types';
-import {MoveController, IMoveOptions, MOVE_POSITION, TMoveItems} from 'Controls/list';
+import {MoveController, IMoveControllerOptions, MOVE_POSITION, TMoveItems} from 'Controls/list';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -59,7 +59,7 @@ export default class extends Control {
     }
 
     private _setMoverOptions() {
-        const moverCgf: IMoveOptions = {
+        const moverCgf: IMoveControllerOptions = {
             parentProperty: 'parent',
             root: null,
             nodeProperty: 'type',

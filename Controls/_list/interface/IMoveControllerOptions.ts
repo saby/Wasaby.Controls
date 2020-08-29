@@ -13,17 +13,9 @@ import {BindingMixin, ICrudPlus, IData, IRpc} from "Types/source";
  */
 export type TSource = IData|IRpc|ICrudPlus|BindingMixin;
 
-export interface ITreeStrategyOptions {
-    root?: string;
-    parentProperty?: string;
-    nodeProperty?: string;
-    filter?: any;
-}
-
 /**
  * Интерфейс опций контроллера
- * @interface Controls/_list/interface/IMoveOptions
- * @mixes Controls/_interface/IMovable
+ * @interface Controls/_list/interface/IMoveControllerOptions
  * @mixes Controls/_interface/IHierarchy
  * @public
  * @author Аверкиев П.А.
@@ -31,15 +23,14 @@ export interface ITreeStrategyOptions {
 
 /*
  * Move controller options interface
- * @interface Controls/_list/interface/IMoveOptions
- * @mixes Controls/_interface/IMovable
+ * @interface Controls/_list/interface/IMoveControllerOptions
  * @mixes Controls/_interface/IHierarchy
  * @public
  * @author Аверкиев П.А.
  */
-export interface IMoveOptions extends ITreeStrategyOptions {
+export interface IMoveControllerOptions {
     /**
-     * @name Controls/_list/interface/IMoveOptions#keyProperty
+     * @name Controls/_list/interface/IMoveControllerOptions#keyProperty
      * @cfg {String} Имя свойства, содержащего идентификатор элемента коллекции
      */
     /*
@@ -48,7 +39,7 @@ export interface IMoveOptions extends ITreeStrategyOptions {
      */
     keyProperty?: string;
     /**
-     * @name Controls/_list/interface/IMoveOptions#source
+     * @name Controls/_list/interface/IMoveControllerOptions#source
      * @cfg {TSource} Ресурс, в котором производится перемещение
      */
     /*
@@ -57,7 +48,7 @@ export interface IMoveOptions extends ITreeStrategyOptions {
      */
     source?: TSource;
     /**
-     * @name Controls/_list/interface/IMoveOptions#items
+     * @name Controls/_list/interface/IMoveControllerOptions#items
      * @cfg {Types/collection:RecordSet} Список, в котором производится перемещение согласно старой логике
      */
     /*
@@ -66,12 +57,23 @@ export interface IMoveOptions extends ITreeStrategyOptions {
      */
     items?: RecordSet;
     /**
-     * @name Controls/_list/interface/IMoveOptions#dialog
+     * @name Controls/_list/interface/IMoveControllerOptions#dialog
      * @cfg {Controls/_list/interface/IMoveDialogOptions} опции диалога перемещения
      */
     /*
-     * @name Controls/_list/interface/IMoveOptions#dialog
+     * @name Controls/_list/interface/IMoveControllerOptions#dialog
      * @cfg {Controls/_list/interface/IMoveDialogOptions} move dialog options
      */
     dialog?: IMoveDialogOptions
+    /**
+     * @name Controls/_list/interface/IMoveControllerOptions#root
+     * @cfg {Controls/_list/interface/IMoveDialogOptions} Корень дерева для создания Collection при поиске ближайших записей
+     */
+    /*
+     * @name Controls/_list/interface/IMoveControllerOptions#root
+     * @cfg {Controls/_list/interface/IMoveDialogOptions} Tree root to create Collection while finding siblings
+     */
+    root?: string;
+    parentProperty?: string;
+    nodeProperty?: string;
 }
