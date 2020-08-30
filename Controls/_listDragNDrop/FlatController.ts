@@ -41,7 +41,9 @@ export default class FlatController {
 
       this._draggableItem = draggedItem;
       this._startIndex = this._getIndex(draggedItem);
-      this._model.setDraggedItems(this._draggableItem.getContents().getKey(), entity.getItems());
+
+      const draggableItemKey = !draggedItem ? null : draggedItem.getContents().getKey();
+      this._model.setDraggedItems(draggableItemKey, entity.getItems());
    }
 
    setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {

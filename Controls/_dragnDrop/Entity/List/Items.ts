@@ -1,6 +1,6 @@
-import Entity from '../../Entity';
+import ItemsEntity from '../Items';
 
-export default class Items extends Entity {
+export default class Items extends ItemsEntity {
    protected getMainText(): string {
       return null;
    }

@@ -2109,8 +2109,8 @@ var
             this._model.setSelectedItems(items, selected);
         },
 
-        setDraggedItems(draggedItem: IFlatItemData, dragEntity: ItemsEntity): void {
-            this._model.setDraggedItems(draggedItem, dragEntity);
+        setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
+            this._model.setDraggedItems(avatarItemKey, draggedItemsKeys);
         },
         setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
             this._model.setDragPosition(position);

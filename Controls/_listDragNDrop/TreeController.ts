@@ -1,4 +1,4 @@
-import FlatController, { IFlatItemData, IModel } from './FlatController';
+import FlatController, { IModel } from './FlatController';
 import { IDragPosition, IOffset, TPosition } from './interface';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { TreeItem } from 'Controls/display';
@@ -8,17 +8,12 @@ const DRAG_MAX_OFFSET = 10,
       EXPAND_ON_DRAG_DELAY = 1000;
 
 export interface ITreeModel extends IModel {
-   getPrevDragPosition(): IDragPosition;
-
-   calculateDragTargetPosition(itemData: TreeItem<Model>, position: TPosition): IDragPosition;
-   getItemDataByItem(item: TreeItem<Model>): TreeItem<Model>;
-
-   getExpandedItems(): object[];
+   getPrevDragPosition(): IDragPosition<TreeItem<Model>>;
 }
 
 export default class TreeController extends FlatController {
    protected _model: ITreeModel;
-   protected _draggingItem: TreeItem<Model>;
+   protected _draggableItem: TreeItem<Model>;
    private _itemOnWhichStartCountDown: TreeItem<Model>;
    private _timeoutForExpandOnDrag: NodeJS.Timeout;
 
@@ -46,11 +41,11 @@ export default class TreeController extends FlatController {
    }
 
    calculateDragPositionRelativeNode(
-       itemData: TreeItem<Model>,
+       targetItem: TreeItem<Model>,
        event: SyntheticEvent<MouseEvent>,
        targetElement: EventTarget
-   ): IDragPosition {
-      if (this._draggingItem && this._draggingItem === itemData) {
+   ): IDragPosition<TreeItem<Model>> {
+      if (this._draggableItem && this._draggableItem === targetItem) {
          return null;
       }
 
@@ -66,29 +61,28 @@ export default class TreeController extends FlatController {
          } else {
             position = 'on';
          }
-         dragPosition = this.calculateDragPosition(itemData, position);
+         dragPosition = this.calculateDragPosition(targetItem, position);
       }
 
       return dragPosition;
    }
 
-   calculateDragPosition(targetItem: TreeItem<Model>, position: TPosition): IDragPosition {
+   calculateDragPosition(targetItem: TreeItem<Model>, position: TPosition): IDragPosition<TreeItem<Model>> {
       // Если перетаскиваем лист на узел, то позиция может быть только 'on'
       // Если нет перетаскиваемого элемента, то значит мы перетаскивам в папку другого реестра
-      if (!this._draggingItem || !this._draggingItem.isNode() && targetItem.isNode()) {
+      if (!this._draggableItem || !this._draggableItem.isNode() && targetItem.isNode()) {
          position = 'on';
       }
 
       let result;
 
-      if (this._draggingItem && this._draggingItem === targetItem) {
+      if (this._draggableItem && this._draggableItem === targetItem) {
          result = this._model.getPrevDragPosition() || null;
       } else if (targetItem.isNode()) {
          result = {
             index: this._getIndex(targetItem),
             position: position ? position : 'on',
-            item: targetItem.getContents(),
-            data: targetItem
+            dispItem: targetItem
          };
       } else {
          result = super.calculateDragPosition(targetItem);
@@ -99,7 +93,7 @@ export default class TreeController extends FlatController {
 
    startCountDownForExpandNode(item: TreeItem<Model>, expandNode: Function): void {
       if (!this._itemOnWhichStartCountDown && item.isNode()
-            && this._draggingItem !== item) {
+            && this._draggableItem !== item) {
          this._clearTimeoutForExpandOnDrag();
          this._itemOnWhichStartCountDown = item;
          this._setTimeoutForExpandOnDrag(item, expandNode);

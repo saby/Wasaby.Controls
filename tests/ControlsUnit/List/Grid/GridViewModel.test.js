@@ -146,13 +146,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('setDragTargetPosition', function() {
             var dragTargetPosition = {};
             gridViewModel.setDragTargetPosition(dragTargetPosition);
-            assert.equal(gridViewModel.getDragTargetPosition(), dragTargetPosition);
+            assert.equal(gridViewModel._model._dragTargetPosition, dragTargetPosition);
          });
 
          it('setDragEntity', function() {
             var dragEntity = {};
             gridViewModel.setDragEntity(dragEntity);
-            assert.equal(gridViewModel.getDragEntity(), dragEntity);
+            assert.equal(gridViewModel._model._dragEntity, dragEntity);
          });
 
          it('setDragItemData', function() {
@@ -1073,7 +1073,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
-                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
+                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
                   'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
@@ -1917,10 +1917,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                property: ''
             };
             assert.equal('grid-column-start: 1; grid-column-end: 6;', gridViewModel.getFooterStyles());
-            gridViewModel._model._draggingItem = {}
+            gridViewModel._model._draggingItemData = {}
             assert.equal('grid-column-start: 1; grid-column-end: 5;', gridViewModel.getFooterStyles());
             gridViewModel._options.stickyColumn = undefined;
-            gridViewModel._model._draggingItem = undefined;
+            gridViewModel._model._draggingItemData = undefined;
          });
 
          it('is multiheader', function() {

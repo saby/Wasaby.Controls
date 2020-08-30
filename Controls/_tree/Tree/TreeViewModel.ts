@@ -674,13 +674,6 @@ var
             return version;
         },
 
-        setDraggedItems(draggedItem: ITreeItemData, dragEntity: ItemsEntity): void {
-            this.setDragItemData(draggedItem);
-            this.setDragEntity(dragEntity);
-        },
-        setDragPosition(position: IDragPosition): void {
-            this.setDragTargetPosition(position);
-        },
         resetDraggedItems(): void {
             this._dragEntity = null;
             this._draggingItemData = null;
@@ -692,11 +685,11 @@ var
             var item;
 
             if (entity) {
-                //Collapse all the nodes that we move.
+                // Collapse all the nodes that we move.
                 entity.getItems().forEach(function(id) {
                     item = this.getItemById(id, this.getKeyProperty());
 
-                    //Not all of the moved items can be in the current recordSet
+                    // Not all of the moved items can be in the current recordSet
                     if (item) {
                         this.toggleExpanded(item, false);
                     }
@@ -710,17 +703,13 @@ var
                 itemData.index = this._display.getIndex(itemData.dispItem);
             }
         },
-        setDragItemData: function(itemDragData) {
-            var getVersionOrigin;
-
-            //Displays the movable item as closed
+        setDragItemData(itemDragData: any): void {
+            // Displays the movable item as closed
             if (itemDragData) {
                 itemDragData.isExpanded = false;
 
-                getVersionOrigin = itemDragData.getVersion;
-                itemDragData.getVersion = function() {
-                    return getVersionOrigin() + '_LEVEL_' + itemDragData.level;
-                };
+                const getVersionOrigin = itemDragData.getVersion;
+                itemDragData.getVersion = () => getVersionOrigin() + '_LEVEL_' + itemDragData.level;
             }
             TreeViewModel.superclass.setDragItemData.apply(this, arguments);
         },
@@ -728,15 +717,15 @@ var
         setDragTargetPosition: function(targetPosition) {
             if (targetPosition && targetPosition.position === 'on') {
 
-                //When an item is moved to a folder, the fake record should be displayed at the previous position.
-                //If do not display the fake entry, there will be a visual jump of the interface.
+                // When an item is moved to a folder, the fake record should be displayed at the previous position.
+                // If do not display the fake entry, there will be a visual jump of the interface.
                 this._setPrevDragTargetPosition(targetPosition);
             } else {
                 this._prevDragTargetPosition = null;
 
-                //The fake item must be displayed at the correct level.
+                // The fake item must be displayed at the correct level.
                 if (this._draggingItemData && targetPosition) {
-                    this._draggingItemData.level = targetPosition.data.level;
+                    this._draggingItemData.level = targetPosition.dispItem.getLevel();
                 }
             }
             TreeViewModel.superclass.setDragTargetPosition.apply(this, arguments);

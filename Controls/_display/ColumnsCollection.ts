@@ -3,14 +3,14 @@ import ColumnsCollectionItem from './ColumnsCollectionItem';
 
 import {IOptions as ICollectionItemOptions} from './ColumnsCollectionItem';
 import { IDragPosition } from '../listDragNDrop';
-import ColumnsDrag from './itemsStrategy/ColumnsDrag';
+import ColumnsDragStrategy from './itemsStrategy/ColumnsDrag';
 
 export default class ColumnsCollection<
     S,
     T extends ColumnsCollectionItem<S> = ColumnsCollectionItem<S>
 > extends Collection<S, T> {
     protected _$columnProperty: string;
-    protected _dragStrategy: Function = ColumnsDrag;
+    protected _dragStrategy: Function = ColumnsDragStrategy;
 
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
