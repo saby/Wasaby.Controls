@@ -85,7 +85,7 @@ const Remover = BaseAction.extend({
                 .addCallback((result) => {
                     if (result !== false) {
                         const both = (removeResult) => {
-                            return _private.afterItemsRemove(this, items, removeResult).then((eventResult) => {
+                            return _private.afterItemsRemove(this, selectedItems, removeResult).then((eventResult) => {
                                 if (eventResult === false || !(removeResult instanceof Error)) {
                                     return;
                                 }
@@ -93,8 +93,8 @@ const Remover = BaseAction.extend({
                             });
                         }
                         return (this._controller as RemoveController).removeItems(selectedItems)
-                            .then((removeResult) => both(result))
-                            .catch((removeResult) => both(result))
+                            .then((removeResult) => both(removeResult))
+                            .catch((removeResult) => both(removeResult))
                     }
                 })
         ));

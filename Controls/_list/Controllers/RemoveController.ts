@@ -4,6 +4,8 @@ import { IHashMap } from 'Types/declarations';
 import { ISelectionObject, TKeysSelection, TSelectionRecord, TSelectionType } from 'Controls/interface';
 import { getItemsBySelection } from '../resources/utils/getItemsBySelection';
 
+
+
 /**
  * Контроллер для удаления элементов списка в recordSet и dataSource.
  *
@@ -157,9 +159,9 @@ export class RemoveController {
      * @see afterItemsRemove
      * @see beforeItemsRemove
      */
-    removeItems(items: TKeysSelection): Promise<void> {
+    removeItems(items: TKeysSelection): Promise<TKeysSelection> {
         return this.getSelectedItems(items).then((selectedItems: TKeysSelection) => (
-            this._removeFromSource(selectedItems).then(() => (
+            this._removeFromSource(selectedItems).then((result) => (
                 this._removeFromItems(selectedItems)
             ))
         ));
@@ -193,7 +195,7 @@ export class RemoveController {
         return this._source.destroy(items);
     }
 
-    private _removeFromItems(items: TKeysSelection): void {
+    private _removeFromItems(items: TKeysSelection): TKeysSelection {
         let item;
         this._items.setEventRaising(false, true);
         for (let i = 0; i < items.length; i++) {
@@ -203,5 +205,6 @@ export class RemoveController {
             }
         }
         this._items.setEventRaising(true, true);
+        return items;
     }
 }
