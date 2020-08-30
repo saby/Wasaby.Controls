@@ -2,7 +2,6 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
-import { spy } from 'sinon';
 import { DndTreeController} from 'Controls/listDragNDrop';
 import { RecordSet } from 'Types/collection';
 import { ItemsEntity } from 'Controls/dragnDrop';
@@ -183,9 +182,9 @@ describe('Controls/_listDragNDrop/TreeController', () => {
    });
 
    describe('startCountDownForExpandNode', () => {
-      let expandNodeCalled = false, nodeItemData;
+      let expandNodeCalled = false, nodeDispItem;
       const expandNode = (itemData) => {
-         assert.equal(itemData, nodeItemData);
+         assert.equal(itemData, nodeDispItem);
          expandNodeCalled = true;
       };
 
@@ -197,32 +196,29 @@ describe('Controls/_listDragNDrop/TreeController', () => {
       });
 
       it('hover on not node', () => {
-         nodeItemData = model.getItemBySourceKey(6);
-         controller.startCountDownForExpandNode(nodeItemData, expandNode);
+         nodeDispItem = model.getItemBySourceKey(6);
+         controller.startCountDownForExpandNode(nodeDispItem, expandNode);
          assert.isFalse(expandNodeCalled);
       });
 
       it('hover on expanded node', () => {
          // раскрыли узел
-         const nodeItem = model.getItemBySourceKey(1);
-         model.toggleExpanded(nodeItem, true);
-         nodeItemData = model.getItemDataByItem(nodeItem);
-         assert.isTrue(nodeItemData.isExpanded);
+         nodeDispItem = model.getItemBySourceKey(1);
+         model.toggleExpanded(nodeDispItem, true);
+         assert.isTrue(model.getItemDataByItem(nodeDispItem).isExpanded);
 
          // навели на развернутый узел
-         nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
-         controller.startCountDownForExpandNode(nodeItem, expandNode);
+         controller.startCountDownForExpandNode(nodeDispItem, expandNode);
          assert.isTrue(expandNodeCalled);
       });
 
       it('hover on node', () => {
-         nodeItemData = model.getItemBySourceKey(1);
-         controller.startCountDownForExpandNode(nodeItemData, expandNode);
+         nodeDispItem = model.getItemBySourceKey(1);
+         controller.startCountDownForExpandNode(nodeDispItem, expandNode);
          assert.isTrue(expandNodeCalled);
-
          expandNodeCalled = false;
 
-         controller.startCountDownForExpandNode(nodeItemData, expandNode);
+         controller.startCountDownForExpandNode(nodeDispItem, expandNode);
          assert.isFalse(expandNodeCalled, 'Hover on same node');
       });
 
