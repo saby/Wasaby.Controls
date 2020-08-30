@@ -2,7 +2,7 @@ import Collection, {ItemsFactory} from './Collection';
 import ColumnsCollectionItem from './ColumnsCollectionItem';
 
 import {IOptions as ICollectionItemOptions} from './ColumnsCollectionItem';
-import { IDragPosition } from '../listDragNDrop';
+import { IDragPosition } from 'Controls/listDragNDrop';
 import ColumnsDragStrategy from './itemsStrategy/ColumnsDrag';
 
 export default class ColumnsCollection<

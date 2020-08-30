@@ -5,6 +5,7 @@ import Deferred = require('Core/Deferred');
 import { isEqual } from 'Types/object';
 import { Map } from 'Types/shim';
 import {RecordSet} from 'Types/collection';
+import { Model } from 'Types/entity';
 
 import { saveConfig } from 'Controls/Application/SettingsController';
 import keysHandler = require('Controls/Utils/keysHandler');
@@ -14,10 +15,9 @@ import { DndTreeController } from 'Controls/listDragNDrop';
 import { Controller as SourceController } from 'Controls/source';
 import { error as dataSourceError } from 'Controls/dataSource';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
+import { TreeItem } from 'Controls/display';
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
-import { TreeItem } from '../display';
-import { Model } from 'wasaby-cli/store/_repos/saby-types/Types/entity';
 
 const HOT_KEYS = {
     expandMarkedItem: Env.constants.key.right,

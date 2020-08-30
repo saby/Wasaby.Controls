@@ -185,7 +185,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
    describe('startCountDownForExpandNode', () => {
       let expandNodeCalled = false, nodeItemData;
       const expandNode = (itemData) => {
-         assert.equal(itemData, nodeItemData.dispItem);
+         assert.equal(itemData, nodeItemData);
          expandNodeCalled = true;
       };
 
@@ -212,7 +212,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
          // навели на развернутый узел
          nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
          controller.startCountDownForExpandNode(nodeItem, expandNode);
-         assert.isFalse(expandNodeCalled);
+         assert.isTrue(expandNodeCalled);
       });
 
       it('hover on node', () => {

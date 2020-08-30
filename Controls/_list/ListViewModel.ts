@@ -13,10 +13,10 @@ import { CollectionItem, IEditingConfig, ISwipeConfig, ANIMATION_STATE } from 'C
 import { CssClassList } from "./resources/utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {IItemAction, IItemActionsTemplateConfig} from 'Controls/itemActions';
-import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
+import { IDragPosition } from 'Controls/listDragNDrop';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import { IItemPadding } from './interface/IList';
-import { ItemsEntity } from '../dragnDrop';
+import { ItemsEntity } from 'Controls/dragnDrop';
 
 interface IListSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';

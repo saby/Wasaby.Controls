@@ -1,5 +1,3 @@
-import { assert } from "chai";
-
 /**
  * Created by kraynovdo on 17.11.2017.
  */

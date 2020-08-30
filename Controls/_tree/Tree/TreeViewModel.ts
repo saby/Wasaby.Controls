@@ -5,8 +5,7 @@ import { RecordSet, IObservable } from 'Types/collection';
 import { isEqual } from 'Types/object';
 import { TemplateFunction } from 'UI/Base';
 
-import { IDragPosition, ITreeItemData } from 'Controls/listDragNDrop';
-import { ItemsEntity } from 'Controls/dragnDrop';
+import { IDragPosition } from 'Controls/listDragNDrop';
 import {Logger} from 'UI/Utils';
 import { TreeChildren, TreeItem } from 'Controls/display';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
