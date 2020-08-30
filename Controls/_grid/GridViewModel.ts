@@ -847,13 +847,21 @@ var
 
         _setHeader: function(columns) {
             this._header = columns;
+            if (!this.isDrawHeaderWithEmptyList()) {
+                return;
+            } else {
+                this._createHeaderModel();
+            }
+        },
+
+        _createHeaderModel() {
             this._prepareHeaderColumns(
                 this._header,
                 this._options.multiSelectVisibility !== 'hidden',
                 this._shouldAddActionsCell(),
                 this.stickyLadderCellsCount()
             );
-            if (columns && columns.length) {
+            if (this._header && this._header.length) {
                 this._headerModel = {
                     isStickyHeader: this.isStickyHeader.bind(this),
                     getCurrentHeaderColumn: this.getCurrentHeaderColumn.bind(this),
@@ -869,6 +877,11 @@ var
             } else {
                 this._headerModel = null;
             }
+        },
+
+        setHeaderInEmptyListVisible(newVisibility) {
+            this.headerInEmptyListVisible = newVisibility;
+            this.setHeader(this._header, true);
         },
 
         _nextHeaderVersion(): void {
