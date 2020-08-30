@@ -13,7 +13,7 @@ import {Model} from 'Types/entity';
 // @TODO Если убрать отсюда шаблон, то operationPanel перестаёт получать события
 //   selectedTypeChanged даже от MultiSelect
 //  https://online.sbis.ru/doc/0445b971-8675-42ef-b2bc-e68d7f82e0ac
-import * as Template from 'wml1Controls/_list/Mover/Mover';
+import * as Template from 'wml!Controls/_list/Mover/Mover';
 
 const DEFAULT_SORTING_ORDER = 'asc';
 
