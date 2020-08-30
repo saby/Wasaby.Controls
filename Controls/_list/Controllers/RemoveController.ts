@@ -43,7 +43,7 @@ export class RemoveController {
 
     /**
      * Обновляет поля контроллера
-     * @function Controls/_list/controllers/RemoveController#update
+     * @function Controls/_list/Controllers/RemoveController#update
      * @param {Types/source:ICrud} source
      * @param {Types/collection:RecordSet} items
      * @param {Types/declarations:HashMap} filter
@@ -51,7 +51,7 @@ export class RemoveController {
      */
     /*
      * Updates controller properties
-     * @function Controls/_list/controllers/RemoveController#update
+     * @function Controls/_list/Controllers/RemoveController#update
      * @param {Types/source:ICrud} source
      * @param {Types/collection:RecordSet} items
      * @param {Types/declarations:HashMap} filter

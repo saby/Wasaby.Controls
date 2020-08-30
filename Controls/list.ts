@@ -25,7 +25,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
- * @includes RemoveController Controls/_list/controllers/RemoveController
+ * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @public
@@ -57,7 +57,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
- * @includes RemoveController Controls/_list/controllers/RemoveController
+ * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @public
@@ -161,4 +161,4 @@ export {
     SwipeTemplate
 };
 
-export {RemoveController} from 'Controls/_list/controllers/RemoveController';
+export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
