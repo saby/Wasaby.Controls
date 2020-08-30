@@ -24,7 +24,6 @@ export enum ANIMATION_STATE {
     RIGHT_SWIPE = 'right-swipe'
 }
 
-
 /*
  * Интерфейс коллекции, по которому CollectionItem обращается к Collection
  *

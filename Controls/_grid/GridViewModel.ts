@@ -32,8 +32,7 @@ import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScro
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import { stickyLadderCellsCount, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
-import { ItemsEntity } from 'Controls/dragnDrop';
-import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
+import { IDragPosition } from 'Controls/listDragNDrop';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -2116,10 +2115,10 @@ var
             this._model.setSelectedItems(items, selected);
         },
 
-        setDraggedItems(draggedItem: IFlatItemData, dragEntity: ItemsEntity): void {
-            this._model.setDraggedItems(draggedItem, dragEntity);
+        setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
+            this._model.setDraggedItems(avatarItemKey, draggedItemsKeys);
         },
-        setDragPosition(position: IDragPosition): void {
+        setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
             this._model.setDragPosition(position);
         },
         resetDraggedItems(): void {
@@ -2130,16 +2129,8 @@ var
             this._model.setDragTargetPosition(position);
         },
 
-        getDragTargetPosition: function() {
-            return this._model.getDragTargetPosition();
-        },
-
         setDragEntity: function(entity) {
             this._model.setDragEntity(entity);
-        },
-
-        getDragEntity: function() {
-            return this._model.getDragEntity();
         },
 
         setDragItemData: function(itemData) {
@@ -2154,7 +2145,7 @@ var
             return this._model.getDragItemData();
         },
 
-        getPrevDragPosition(): IDragPosition {
+        getPrevDragPosition(): IDragPosition<CollectionItem<Model>> {
             return this._model.getPrevDragPosition();
         },
 

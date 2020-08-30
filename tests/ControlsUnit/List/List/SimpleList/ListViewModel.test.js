@@ -637,7 +637,7 @@ define([
             assert.isUndefined(item.dragTargetPosition);
             assert.isUndefined(item.isDragging);
 
-            lvm.setDraggedItems(dragItemData, dragEntity);
+            lvm.setDraggedItems(dragItemData.key, dragEntity.items);
             lvm.setMarkedKey(2, true);
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.isTrue(item.isDragging);
@@ -721,25 +721,28 @@ define([
          });
 
          it('setDragTargetPosition', function() {
-            assert.equal(lvm.getDragTargetPosition(), null);
+            assert.equal(lvm._dragTargetPosition, null);
             lvm.setDragTargetPosition(target);
-            assert.equal(lvm.getDragTargetPosition(), target);
+            assert.equal(lvm._dragTargetPosition, target);
             lvm.setDragTargetPosition(null);
-            assert.equal(lvm.getDragTargetPosition(), null);
+            assert.equal(lvm._dragTargetPosition, null);
          });
 
          it('setDragEntity', function() {
-            assert.equal(lvm.getDragEntity(), null);
+            assert.equal(lvm._dragEntity, null);
             lvm.setDragEntity(dragEntity);
-            assert.equal(lvm.getDragEntity(), dragEntity);
+            assert.equal(lvm._dragEntity, dragEntity);
             lvm.setDragEntity(null);
-            assert.equal(lvm.getDragEntity(), null);
+            assert.equal(lvm._dragEntity, null);
          });
 
          it('setDragItemData', function() {
             assert.equal(lvm.getDragItemData(), null);
             lvm.setDragItemData(dragItemData);
             assert.equal(lvm.getDragItemData(), dragItemData);
+            // Это нужно обязательно проверить, так как если не проставить isDragging,
+            // то на перетаскиваемый элемент не повесится нужный css класс
+            assert.isTrue(dragItemData.isDragging);
             lvm.setDragItemData(null);
             assert.equal(lvm.getDragItemData(), null);
          });
@@ -765,7 +768,7 @@ define([
             });
 
             it('without dragItemData', function() {
-               lvm.setDraggedItems(dragItemData, dragEntity);
+               lvm.setDraggedItems(dragItemData.key, dragEntity.items);
                lvm.setDragTargetPosition(null);
 
                current = lvm.getItemDataByItem(lvm.at(0));
@@ -788,7 +791,7 @@ define([
 
             it('with dragTarget', function() {
                dragItemData = lvm.getItemDataByItem(lvm.at(1));
-               lvm.setDraggedItems(dragItemData, dragEntity);
+               lvm.setDraggedItems(dragItemData.key, dragEntity.items);
 
                // move up
                lvm.setDragPosition({

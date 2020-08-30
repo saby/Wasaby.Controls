@@ -85,6 +85,7 @@ import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { EdgeIntersectionObserver } from 'Controls/scroll';
 import { TItemKey } from 'Controls/display';
+import { ItemsEntity } from '../dragnDrop';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -2472,25 +2473,32 @@ const _private = {
             // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
             // количество записей будет отдавать selectionController
             // https://online.sbis.ru/opendoc.html?guid=b93db75c-6101-4eed-8625-5ec86657080e
-            getItemsBySelection(selection, self._options.source, recordSet, self._options.filter, LIMIT_DRAG_SELECTION).addCallback((items) => {
-                const dragStartResult = self._notify('dragStart', [items, key]);
-                if (dragStartResult) {
-                    if (self._options.dragControlId) {
-                        dragStartResult.dragControlId = self._options.dragControlId;
+            getItemsBySelection(selection, self._options.source, recordSet, self._options.filter, LIMIT_DRAG_SELECTION)
+                .addCallback((items) => {
+                    let dragStartResult = self._notify('dragStart', [items, key]);
+
+                    if (dragStartResult === undefined) {
+                        // Чтобы для работы dnd было достаточно опции itemsDragNDrop=true
+                        dragStartResult = new ItemsEntity({items});
                     }
 
-                    self._dragEntity = dragStartResult;
-                    self._draggedKey = key;
-                    self._startEvent = domEvent.nativeEvent;
+                    if (dragStartResult) {
+                        if (self._options.dragControlId) {
+                            dragStartResult.dragControlId = self._options.dragControlId;
+                        }
 
-                    _private.clearSelectedText(self._startEvent);
-                    if (self._startEvent && self._startEvent.target) {
-                        self._startEvent.target.classList.add('controls-DragNDrop__dragTarget');
+                        self._dragEntity = dragStartResult;
+                        self._draggedKey = key;
+                        self._startEvent = domEvent.nativeEvent;
+
+                        _private.clearSelectedText(self._startEvent);
+                        if (self._startEvent && self._startEvent.target) {
+                            self._startEvent.target.classList.add('controls-DragNDrop__dragTarget');
+                        }
+
+                        self._registerMouseMove();
+                        self._registerMouseUp();
                     }
-
-                    self._registerMouseMove();
-                    self._registerMouseUp();
-                }
             });
         }
     },
@@ -4573,7 +4581,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
                 const draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
-                this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
+                this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection.dispItem);
             } else if (dragEnterResult === true) {
                 this._dndListController.setDraggedItems(dragObject.entity);
             }
@@ -4583,9 +4591,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _processItemMouseEnterWithDragNDrop(itemData): void {
         let dragPosition;
         if (this._dndListController.isDragging()) {
-            dragPosition = this._dndListController.calculateDragPosition(itemData);
+            dragPosition = this._dndListController.calculateDragPosition(this._options.useNewModel ? itemData : itemData.dispItem);
             if (dragPosition) {
-                const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.item, dragPosition.position]);
+                const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
                 if (changeDragTarget !== false) {
                     this._dndListController.setDragPosition(dragPosition);
                 }
@@ -4599,7 +4607,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._insideDragging && this._dndListController) {
             const targetPosition = this._dndListController.getDragPosition();
             if (targetPosition) {
-                dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+                dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.dispItem.getContents(), targetPosition.position]);
             }
 
             // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
