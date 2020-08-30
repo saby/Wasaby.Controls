@@ -741,8 +741,7 @@ var
                 } else if (this._draggingItemData) {
                     this._prevDragTargetPosition = {
                         index: this._draggingItemData.index,
-                        item: this._draggingItemData.item,
-                        data: this._draggingItemData,
+                        dispItem: this._draggingItemData.dispItem,
                         position: this._draggingItemData.index > targetPosition.index ? 'after' : 'before'
                     };
                 }

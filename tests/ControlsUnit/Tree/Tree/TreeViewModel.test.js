@@ -869,7 +869,7 @@ define([
                      position: 'on'
                   });
 
-                  assert.equal(tvm._prevDragTargetPosition.data.key, '567');
+                  assert.equal(tvm._prevDragTargetPosition.dispItem.getContents().getKey(), '567');
                   assert.equal(tvm._prevDragTargetPosition.position, 'after');
                });
 
