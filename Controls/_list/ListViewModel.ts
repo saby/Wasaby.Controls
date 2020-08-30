@@ -462,7 +462,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     // region DnD
 
     setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
-        if (Number.isInteger(avatarItemKey)) {
+        if (avatarItemKey !== undefined && avatarItemKey !== null) {
             const dispItem = this.getItemBySourceKey(avatarItemKey);
             const itemData = this.getItemDataByItem(dispItem);
             this.setDragItemData(itemData);
@@ -501,7 +501,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return this._draggingItemData;
     },
 
-    setDragTargetPosition(position: IDragPosition): void {
+    setDragTargetPosition(position: IDragPosition<CollectionItem<Model>>): void {
         this._dragTargetPosition = position;
         this._nextModelVersion(true);
     },

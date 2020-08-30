@@ -596,8 +596,7 @@ var
         },
 
         getItemDataByItem: function(dispItem) {
-            var
-                current = TreeViewModel.superclass.getItemDataByItem.apply(this, arguments);
+            const current = TreeViewModel.superclass.getItemDataByItem.apply(this, arguments);
 
             if (current._treeViewModelCached) {
                 return current;
@@ -658,6 +657,16 @@ var
             if (current.item.get) {
                 _private.setNodeFooterIfNeed(this, current);
             }
+
+            const originalGetVersion = current.getVersion;
+            current.getVersion = () => {
+                let version = originalGetVersion();
+                if (current.dragTargetNode) {
+                    version = 'DRAGTARGETNODE_' + version;
+                }
+                return version;
+            };
+
             return current;
         },
 
@@ -672,13 +681,9 @@ var
 
             return version;
         },
-
         resetDraggedItems(): void {
-            this._dragEntity = null;
-            this._draggingItemData = null;
-            this._dragTargetPosition = null;
             this._prevDragTargetPosition = null;
-            this._nextModelVersion(true);
+            TreeViewModel.superclass.resetDraggedItems.apply(this, arguments);
         },
         setDragEntity: function(entity) {
             var item;
