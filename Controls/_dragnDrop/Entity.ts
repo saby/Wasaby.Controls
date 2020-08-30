@@ -1,3 +1,5 @@
+import Control = require('Core/Control');
+
 /**
  * Базовый класс, от которого наследуется объект перемещения.
  * Объект можно любым образом кастомизировать, записав туда любые необходимые данные.
@@ -23,10 +25,11 @@
     * @category DragNDrop
 */
 
-export default class Entity {
+export default class Entity extends Control {
     protected _options: object;
 
     constructor(options: object) {
+        super();
         this._options = options;
     }
 
