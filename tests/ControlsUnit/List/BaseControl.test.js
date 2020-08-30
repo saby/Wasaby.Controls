@@ -4127,7 +4127,9 @@ define([
                      keyProperty: 'id'
                   }),
                   keyProperty: 'key'
-               })
+               }),
+               _registerMouseMove: () => null,
+               _registerMouseUp: () => null
             },
             domEvent = {
                nativeEvent: {},
