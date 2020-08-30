@@ -2349,8 +2349,6 @@ define([
             assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
             assert.isFalse(ctrl._cachedPagingState, 'Wrong state _cachedPagingState after scrollHide');
 
-            lists.BaseControl._private.handleListScrollSync(ctrl, 200);
-
             setTimeout(function() {
                assert.isFalse(ctrl._pagingVisible);
             }, 100);

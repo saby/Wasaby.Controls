@@ -80,12 +80,14 @@ define([
          it('should update value from true to false and should not register waiting headers', function() {
             sinon.stub(component, '_registerDelayed');
             component.setCanScroll(false);
+            component._initialized = true;
             assert.isFalse(component._canScroll);
             sinon.assert.notCalled(component._registerDelayed);
          });
          it('should update value from false to true and register waiting headers', function() {
             sinon.stub(component, '_registerDelayed');
             component._canScroll = false;
+            component._initialized = true;
             component.setCanScroll(true);
             assert.isTrue(component._canScroll);
             sinon.assert.called(component._registerDelayed);
