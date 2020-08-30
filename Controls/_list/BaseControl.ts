@@ -2470,7 +2470,7 @@ const _private = {
                 .addCallback((items) => {
                     let dragStartResult = self._notify('dragStart', [items, key]);
 
-                    if (!dragStartResult && dragStartResult !== false) {
+                    if (dragStartResult === undefined) {
                         // Чтобы для работы dnd было достаточно опции itemsDragNDrop=true
                         dragStartResult = new ItemsEntity({items});
                     }
