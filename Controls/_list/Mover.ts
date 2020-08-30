@@ -8,7 +8,12 @@ import {ContextOptions as dataOptions} from 'Controls/context';
 import {MoveController} from './Controllers/MoveController';
 import {IMoveObject, MOVE_POSITION, MOVE_TYPE, TMoveItems} from './interface/IMoveObject';
 import {IMoveControllerOptions} from './interface/IMoveControllerOptions';
-import {Model} from "Types/entity";
+import {Model} from 'Types/entity';
+
+// @TODO Если убрать отсюда шаблон, то operationPanel перестаёт получать события
+//   selectedTypeChanged даже от MultiSelect
+//  https://online.sbis.ru/doc/0445b971-8675-42ef-b2bc-e68d7f82e0ac
+import * as Template from 'wml1Controls/_list/Mover/Mover';
 
 const DEFAULT_SORTING_ORDER = 'asc';
 
@@ -333,6 +338,7 @@ var Mover = Control.extend({
     _controller: null,
     _moveDialogTemplate: null,
     _moveDialogOptions: null,
+    _template: Template,
     _beforeMount: function (options, context) {
         _private.updateDataOptions(this, options, context.dataOptions);
     },
