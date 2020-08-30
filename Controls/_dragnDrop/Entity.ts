@@ -27,7 +27,6 @@ export default class Entity {
     protected _options: object;
 
     constructor(options: object) {
-        super(options);
         this._options = options;
     }
 
