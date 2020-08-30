@@ -157,8 +157,7 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
     protected _createItemsOrder(): number[] {
         const items = this._getItems();
         return Drag.sortItems<S, T>(items, {
-            avatarIndex: this._options.avatarIndex,
-            avatarOffset: this._options.offset
+            avatarIndex: this._options.avatarIndex
         });
     }
 

@@ -185,7 +185,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
    describe('startCountDownForExpandNode', () => {
       let expandNodeCalled = false, nodeItemData;
       const expandNode = (itemData) => {
-         assert.equal(itemData, nodeItemData);
+         assert.equal(itemData, nodeItemData.dispItem);
          expandNodeCalled = true;
       };
 
