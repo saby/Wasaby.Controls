@@ -38,6 +38,8 @@ class StickyHeaderController {
     private _resizeHandlerDebounced: Function;
     private _container: HTMLElement;
     private _options: IStickyHeaderController = {};
+    private _isTopShadowVisible: boolean = false;
+    private _isBottomShadowVisible: boolean = false;
 
     // TODO: Избавиться от передачи контрола доработав логику ResizeObserverUtil
     // https://online.sbis.ru/opendoc.html?guid=4091b62e-cca4-45d8-834b-324f3b441892
@@ -174,6 +176,9 @@ class StickyHeaderController {
             // то положение заголовков рассчитается по событию ресайза или в хуке _afterMount.
             // Невидимые заголовки нельзя обсчитать, потому что нельзя узнать их размеры и положение.
             this._delayedHeaders.push(data);
+
+            data.inst.updateShadowVisibility(data.position === POSITION.top ?
+                this._isTopShadowVisible : this._isBottomShadowVisible);
 
             this._observeStickyHeader(data);
             if (!isHidden(data.container) && this._initialized && this._canScroll) {
