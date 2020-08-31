@@ -13,10 +13,9 @@ import { CollectionItem, IEditingConfig, ISwipeConfig } from 'Controls/display';
 import { CssClassList } from "./resources/utils/CssClassList";
 import {Logger} from 'UI/Utils';
 import {IItemAction, IItemActionsTemplateConfig} from 'Controls/itemActions';
-import { IDragPosition } from 'Controls/listDragNDrop';
+import { IDragPosition, IFlatItemData } from 'Controls/listDragNDrop';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import { IItemPadding } from './interface/IList';
-import { ItemsEntity } from 'Controls/dragnDrop';
 
 interface IListSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';
@@ -464,23 +463,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(false, 'activeItemChanged');
     },
 
-    // region DnD
-
-    setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
-        if (avatarItemKey !== undefined && avatarItemKey !== null) {
-            const dispItem = this.getItemBySourceKey(avatarItemKey);
-            const itemData = this.getItemDataByItem(dispItem);
-            this.setDragItemData(itemData);
-        }
-
-        const entity = new ItemsEntity({items: draggedItemsKeys});
-        this.setDragEntity(entity);
+    setDraggedItems(draggedItem: IFlatItemData, dragEntity): void {
+        this.setDragItemData(draggedItem);
+        this.setDragEntity(dragEntity);
     },
-
-    setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
+    setDragPosition(position: IDragPosition): void {
         this.setDragTargetPosition(position);
     },
-
     resetDraggedItems(): void {
         this._dragEntity = null;
         this._draggingItemData = null;
@@ -488,30 +477,30 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(true);
     },
 
-    setDragEntity(entity: ItemsEntity): void {
+    setDragEntity: function(entity) {
         if (this._dragEntity !== entity) {
             this._dragEntity = entity;
             this._nextModelVersion(true);
         }
     },
-
-    setDragItemData(itemData: any): void {
-        this._draggingItemData = itemData;
-        if (this._draggingItemData) {
-            this._draggingItemData.isDragging = true;
-        }
+    getDragEntity: function() {
+        return this._dragEntity;
     },
 
-    getDragItemData(): void {
+    setDragItemData: function(itemData) {
+        this._draggingItemData = itemData;
+    },
+    getDragItemData: function() {
         return this._draggingItemData;
     },
 
-    setDragTargetPosition(position: IDragPosition<CollectionItem<Model>>): void {
+    setDragTargetPosition: function(position) {
         this._dragTargetPosition = position;
         this._nextModelVersion(true);
     },
-
-    // endregion
+    getDragTargetPosition: function() {
+        return this._dragTargetPosition;
+    },
 
     setSwipeItem: function(itemData) {
         if (!this._swipeItem || !itemData || itemData.item !== this._swipeItem.item) {

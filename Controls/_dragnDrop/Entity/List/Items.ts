@@ -1,19 +1,21 @@
-import ItemsEntity from '../Items';
+import Entity = require('Controls/_dragnDrop/Entity/Items');
+   
 
-export default class Items extends ItemsEntity {
-   protected getMainText(): string {
-      return null;
-   }
+   export = Entity.extend({
+      getMainText: function() {
+         return null;
+      },
 
-   protected getLogo(): string {
-      return null;
-   }
+      getLogo: function() {
+         return null;
+      },
 
-   protected getAdditionalText(): string {
-      return null;
-   }
+      getAdditionalText: function() {
+         return null;
+      },
 
-   protected getImage(): string {
-      return null;
-   }
-}
+      getImage: function() {
+         return null;
+      }
+   });
+
