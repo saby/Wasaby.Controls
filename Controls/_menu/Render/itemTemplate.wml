@@ -16,7 +16,7 @@
       <div class="controls-Menu__content_baseline">
          <ws:if data="{{marker !== false && treeItem.isSelected() &&
                   (!itemData.multiSelect || itemData.isEmptyItem || itemData.isFixedItem)}}">
-            <div class="controls-Menu__row_selected_theme-{{_options.theme}}
+            <div class="controls-Menu__row_selected controls-Menu__row_selected_theme-{{_options.theme}}
                         controls-Menu__content_{{additionalTextTemplate ? 'padding'}}_theme-{{_options.theme}}"></div>
          </ws:if>
          <ws:if data="{{(multiSelectTpl || itemData.multiSelectTpl) && (itemData.multiSelect || multiSelect) && !itemData.isFixedItem}}">
