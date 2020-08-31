@@ -31,7 +31,7 @@ export class Controller {
    update(options: IOptions): TKey {
       if (this._model !== options.model) {
          this._model = options.model;
-         this.restoreMarker();
+         this.initializeModel();
       }
       this._markerVisibility = options.markerVisibility;
 
@@ -100,7 +100,7 @@ export class Controller {
    /**
     * Проставляет заново маркер в модели
     */
-   restoreMarker(): void {
+   initializeModel(): void {
       const item = this._model.getItemBySourceKey(this._markedKey);
       if (item) {
          item.setMarked(true);
@@ -198,7 +198,7 @@ export class Controller {
     */
    handleAddItems(newItems: Array<CollectionItem<Model>>): void {
       if (newItems.some((item) => this._getKey(item) === this._markedKey)) {
-         this.restoreMarker();
+         this.initializeModel();
       }
    }
 
@@ -208,9 +208,10 @@ export class Controller {
     */
    handleReplaceItems(items: Model[]): void {
       if (items.some((item) => item.getKey() === this._markedKey)) {
-         this.restoreMarker();
+         this.initializeModel();
       }
    }
+
    /*
       TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
        https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13

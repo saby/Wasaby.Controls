@@ -88,7 +88,7 @@ export class Controller {
     * Проставляет выбранные элементы в модели
     * @remark Не уведомляет о изменениях в модели
     */
-   restoreSelection(): void {
+   initializeModel(): void {
       // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
       this._strategy.setItems(this._model.getCollection());
       this._updateModel(this._selection, true);

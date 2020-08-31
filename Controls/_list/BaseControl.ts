@@ -361,23 +361,23 @@ const _private = {
                             self._groupingLoader.resetLoadedGroups(listModel);
                         }
 
-                    if (self._items) {
-                       self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
-                    }
-                    // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
-                    if (self._options.useNewModel) {
-                        // TODO restore marker + maybe should recreate the model completely
-                        // instead of assigning items
-                        // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
-                        const modelCollection = listModel.getCollection();
-                        listModel.setCompatibleReset(true);
-                        modelCollection.setMetaData(list.getMetaData());
-                        modelCollection.assign(list);
-                        listModel.setCompatibleReset(false);
-                        self._items = listModel.getCollection();
-                    } else {
-                        listModel.setItems(list, cfg);
-                        self._items = listModel.getItems();
+                        if (self._items) {
+                           self._items.unsubscribe('onCollectionChange', self._onItemsChanged);
+                        }
+                        // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
+                        if (self._options.useNewModel) {
+                            // TODO restore marker + maybe should recreate the model completely
+                            // instead of assigning items
+                            // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
+                            const modelCollection = listModel.getCollection();
+                            listModel.setCompatibleReset(true);
+                            modelCollection.setMetaData(list.getMetaData());
+                            modelCollection.assign(list);
+                            listModel.setCompatibleReset(false);
+                            self._items = listModel.getCollection();
+                        } else {
+                            listModel.setItems(list, cfg);
+                            self._items = listModel.getItems();
 
                             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
                             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
@@ -457,7 +457,7 @@ const _private = {
 
     initializeState(self: any, options: any): void {
         if (_private.hasMarkerController(self)) {
-            _private.getMarkerController(self).restoreMarker();
+            _private.getMarkerController(self).initializeModel();
         } else {
             if (_private.needCreateMarkerController(options)) {
                 self._markerController = _private.createMarkerController(self, options);
@@ -465,7 +465,7 @@ const _private = {
         }
 
         if (self._selectionController) {
-            _private.getSelectionController(self).restoreSelection();
+            _private.getSelectionController(self).initializeModel();
         } else {
             if (_private.needCreateSelectionController(options)) {
                 self._selectionController = _private.createSelectionController(self, options);

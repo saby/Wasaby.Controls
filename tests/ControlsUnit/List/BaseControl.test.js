@@ -1240,7 +1240,7 @@ define([
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
                update() {},
-               restoreMarker() {},
+               initializeModel() {},
                getMarkedKey() {}
             };
          };
@@ -1311,7 +1311,7 @@ define([
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
                update() {},
-               restoreMarker() {},
+               initializeModel() {},
                getMarkedKey() {}
             };
          };
@@ -3253,7 +3253,7 @@ define([
             setSelectedKeys: () => null,
             handleAddItems: () => null,
             handleResetItems: () => null,
-            restoreSelection: () => null
+            initializeModel: () => null
          };
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
@@ -7193,7 +7193,7 @@ define([
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
                      },
-                     restoreMarker() {},
+                     initializeModel() {},
                      getMarkedKey: () => undefined
                   };
 
