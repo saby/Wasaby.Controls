@@ -90,7 +90,7 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
 
         let style: string;
         if (this._direction === SCROLL_DIRECTION.VERTICAL) {
-            style = `top: ${offsets.top || 0}px; bottom: ${offsets.top || 0}ps;`;
+            style = `top: ${offsets.top || 0}px; bottom: ${offsets.bottom || 0}ps;`;
         } else {
             style = `left: ${offsets.left || 0}px; right: ${offsets.right || 0}ps;`;
         }
