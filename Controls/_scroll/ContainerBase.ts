@@ -24,8 +24,12 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _container: HTMLElement = null;
     protected _options: IContainerBaseOptions;
 
-    protected _state: IScrollState = {};
+    protected _state: IScrollState = {
+        scrollTop: 0,
+        scrollLeft: 0
+    };
     protected _oldState: IScrollState = {};
+    protected _isStateInitialized: boolean = false;
 
     private _registrars: any = [];
 
@@ -266,7 +270,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     _onRegisterNewComponent(component: Control): void {
         // Если состояние еще не инициализировано, то компонент получит его после инициализации.
-        if (Object.keys(this._state).length !== 0) {
+        if (this._isStateInitialized) {
             this._registrars.scrollStateChanged.startOnceTarget(component, {...this._state}, {...this._oldState});
         }
     }
@@ -378,9 +382,12 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 isStateUpdated = true;
             }
         }, newState);
+
         if (isStateUpdated) {
             this._updateCalculatedState();
         }
+
+        this._isStateInitialized = true;
         return isStateUpdated;
     }
 
@@ -499,7 +506,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     _onRegisterNewListScrollComponent(component: any): void {
         // Если состояние еще не инициализировано, то компонент получит его после инициализации.
-        if (Object.keys(this._state).length === 0) {
+        if (!this._isStateInitialized) {
             return;
         }
         this._sendByListScrollRegistrarToComponent(
