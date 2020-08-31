@@ -39,7 +39,7 @@ export class RemoveController {
     private _filter: IHashMap<any>;
     private _selectionType: TSelectionType
 
-    constructor(source: ICrud, items: RecordSet, filter: IHashMap<any>, selectionType: TSelectionType) {
+    constructor(source: ICrud, items: RecordSet, filter: IHashMap<any>, selectionType?: TSelectionType) {
         this.update(source, items, filter, selectionType);
     }
 
@@ -59,7 +59,7 @@ export class RemoveController {
      * @param {Types/declarations:HashMap} filter
      * @param {Controls/interface:TSelectionType} selectionType
      */
-    update(source: ICrud, items: RecordSet, filter: IHashMap<any>, selectionType: TSelectionType): void {
+    update(source: ICrud, items: RecordSet, filter: IHashMap<any>, selectionType?: TSelectionType): void {
         this._source = source;
         this._items = items;
         this._filter = filter
@@ -69,7 +69,7 @@ export class RemoveController {
     /**
      * Удаляет элементы из источника данных по идентификаторам элементов коллекции.
      * @function Controls/interface/IRemovable#removeItems
-     * @param {Controls/interface:TKeysSelection} items Массив элементов для удаления.
+     * @param {Controls/interface:TKeysSelection|Controls/interface:ISelectionObject} items Массив элементов для удаления.
      * @returns {Promise}
      * @example
      * В следующем примере показано, как удалить элементы из списка после клика по кнопке.
@@ -116,7 +116,7 @@ export class RemoveController {
     /*
      * Removes items from the data source by identifiers of the items in the collection.
      * @function Controls/interface/IRemovable#removeItems
-     * @param {Controls/interface:TKeysSelection} items Array of items to be removed.
+     * @param {Controls/interface:TKeysSelection|Controls/interface:ISelectionObject} items Array of items to be removed.
      * @returns {Promise}
      * @example
      * The following example shows how to remove items from list after click on the button.
@@ -159,7 +159,7 @@ export class RemoveController {
      * @see afterItemsRemove
      * @see beforeItemsRemove
      */
-    removeItems(items: TKeysSelection): Promise<TKeysSelection> {
+    removeItems(items: TKeysSelection|ISelectionObject): Promise<TKeysSelection> {
         return this.getSelectedItems(items).then((selectedItems: TKeysSelection) => (
             this._removeFromSource(selectedItems).then((result) => (
                 this._removeFromItems(selectedItems)
