@@ -104,7 +104,7 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
         }
     }
 
-    protected _getModelConstructor() {
+    protected _getModelConstructor(): string|Function {
         return 'Controls/display:Collection';
     }
 
