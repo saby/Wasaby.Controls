@@ -10,10 +10,12 @@ import {
 } from 'Controls/interface';
 import {NewSourceController} from 'Controls/dataSource';
 import ControllerClass from './ControllerClass';
+import {descriptor} from 'Types/entity';
 
 export interface ISearchControllerOptions extends IControlOptions,
    ISourceOptions, IFilterOptions, INavigationOptions<INavigationSourceConfig>, ISearchOptions {
       sourceController: NewSourceController;
+      searchValue?: string;
 }
 
 export default class SearchController extends Control<ISearchControllerOptions> {
@@ -29,10 +31,20 @@ export default class SearchController extends Control<ISearchControllerOptions> 
       this._getControllerClass().reset().then();
    }
 
+   protected _beforeUpdate(options?: ISearchControllerOptions): void {
+      this._getControllerClass().update(options);
+   }
+
    private _getControllerClass(): ControllerClass {
       if (!this._controllerClass) {
          this._controllerClass = new ControllerClass(this._options);
       }
       return this._controllerClass;
+   }
+
+   static getOptionTypes(): Record<string, Function> {
+      return {
+         searchValue: descriptor(String)
+      };
    }
 }
