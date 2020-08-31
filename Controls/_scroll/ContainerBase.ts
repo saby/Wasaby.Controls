@@ -248,7 +248,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
      * @function Controls/_scroll/Container#scrollToBottom
      */
     scrollToBottom() {
-        this.setScrollTop(this._state.scrollHeight - this._state.clientHeight + this._topPlaceholderSize);
+        this.setScrollTop(
+            this._children.content.scrollHeight - this._children.content.clientHeight + this._topPlaceholderSize);
     }
 
     /**
