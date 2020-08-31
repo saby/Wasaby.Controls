@@ -9,6 +9,7 @@ const DEFAULT_ITEM_WIDTH = 250;
 const DEFAULT_ITEM_HEIGHT = 200;
 const ITEM_COMPRESSION_COEFFICIENT = 0.7;
 const DEFAULT_SCALE_COEFFICIENT = 1.5;
+const DEFAULT_WIDTH_PROPORTION = 1;
 
 const TILE_SIZES = {
     s: {
@@ -82,12 +83,12 @@ var TileViewModel = ListViewModel.extend({
     ): number {
         const imageHeight = imageHeightProperty && Number(item.get(imageHeightProperty));
         const imageWidth = imageWidthProperty && Number(item.get(imageWidthProperty));
-        let widthProportion = 1;
+        let widthProportion = DEFAULT_WIDTH_PROPORTION;
         let resultWidth = null;
         if (imageHeight && imageWidth && tileMode === 'dynamic') {
-            widthProportion = imageWidth / imageHeight;
-            widthProportion = Math.max(ITEM_COMPRESSION_COEFFICIENT, widthProportion);
-            widthProportion = Math.min(DEFAULT_SCALE_COEFFICIENT, widthProportion);
+            const imageProportion = imageWidth / imageHeight;
+            widthProportion = Math.min(DEFAULT_SCALE_COEFFICIENT,
+                              Math.max(ITEM_COMPRESSION_COEFFICIENT, imageProportion));
         } else {
             return itemWidth;
         }
