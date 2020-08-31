@@ -1770,13 +1770,17 @@ var
                         getContents: current.getContents
                 };
                 currentColumn.classList = _private.getItemColumnCellClasses(self, current, current.theme, backgroundColorStyle);
+
+
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
                      * isColspaned добавлена как костыль для временного лечения ошибки.
                      * После закрытия можно удалить здесь и из шаблонов.
                      * https://online.sbis.ru/opendoc.html?guid=4230f8f0-7fd1-4018-bd8c-08d703af3899
                      */
-                    columnData.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${current.theme}`;
+                    if (isColspaned) {
+                        columnData.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${current.theme}`;
+                    }
                     return columnData.classList.padding;
                 };
                 currentColumn.column = current.columns[current.columnIndex];
