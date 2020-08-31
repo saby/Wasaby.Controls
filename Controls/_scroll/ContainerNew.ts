@@ -351,8 +351,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         const bottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
         this._scrollbars.setOffsets({ top: top, bottom: bottom });
         this._shadows.setStickyFixed(
-            this._stickyHeaderController.hasFixed(POSITION.TOP),
-            this._stickyHeaderController.hasFixed(POSITION.BOTTOM));
+            this._stickyHeaderController.hasFixed(POSITION.TOP) && this._stickyHeaderController.hasShadowVisible(POSITION.TOP),
+            this._stickyHeaderController.hasFixed(POSITION.BOTTOM) && this._stickyHeaderController.hasShadowVisible(POSITION.BOTTOM));
         this._notify('fixed', [top, bottom]);
     }
 
