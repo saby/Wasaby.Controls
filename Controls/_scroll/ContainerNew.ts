@@ -118,6 +118,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _isOptimizeShadowEnabled: boolean;
     protected _optimizeShadowClass: string;
+    protected _needUpdateContentSize: boolean = false;
 
     _beforeMount(options: IContainerOptions, context, receivedState) {
         this._shadows = new ShadowsModel(options);
@@ -154,7 +155,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._optimizeShadowClass = this._getOptimizeShadowClass();
         // TODO: Логика инициализации для поддержки разных браузеров была скопирована почти полностью
         //  из старого скроллконейнера, нужно отрефакторить. Очень запутанно
-        this._scrollCssClass = this._getScrollContainerCssClass(options);
+        this._updateScrollContainerPaigingSccClass(options);
         this._scrollbars.updateOptions(options);
         this._shadows.updateOptions(options);
     }
@@ -162,6 +163,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _afterUpdate() {
         super._afterUpdate(...arguments);
         this._stickyHeaderController.updateContainer(this._container);
+        if (this._needUpdateContentSize) {
+            this._needUpdateContentSize = false;
+            this._updateStateAndGenerateEvents({ scrollHeight: this._children.content.scrollHeight });
+        }
     }
 
     _beforeUnmount(): void {
@@ -192,9 +197,17 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
                 this._shadows.top.isStickyHeadersShadowsEnabled(),
                 this._shadows.bottom.isStickyHeadersShadowsEnabled());
 
-            this._scrollCssClass = this._getScrollContainerCssClass(this._options);
+            this._updateScrollContainerPaigingSccClass(this._options);
         }
         return isUpdated;
+    }
+
+    protected _updateScrollContainerPaigingSccClass(options: IContainerOptions) {
+        const scrollCssClass = this._getScrollContainerCssClass(this._options);
+        if (this._scrollCssClass !== scrollCssClass) {
+            this._scrollCssClass = scrollCssClass;
+            this._needUpdateContentSize = true;
+        }
     }
 
     protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
