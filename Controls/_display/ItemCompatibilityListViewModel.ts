@@ -9,19 +9,8 @@ import {Logger} from 'UI/Utils';
 export interface IItemCompatibilityListViewModel {
     calcCursorClasses(clickable: boolean, cursor: string): string;
     item: {};
-    theme: string;
-    style: string;
-    hoverBackgroundStyle: string;
-    isDragging: boolean;
-    hasMultiSelect: boolean;
-    multiSelectClassList: string;
     key: string|number;
-    isAdd: boolean;
-    spacingClassList: string;
-    itemActionsPosition: string;
     isStickedMasterItem: boolean;
-    itemPadding: {};
-    rowSeparatorSize: string;
 }
 
 export class ItemCompatibilityListViewModel implements IItemCompatibilityListViewModel {
@@ -30,7 +19,7 @@ export class ItemCompatibilityListViewModel implements IItemCompatibilityListVie
     }
 
     get key() {
-        return this.getContents().getKey(); // todo
+        return this.getContents().getKey();
     }
 
     get isStickedMasterItem() {
