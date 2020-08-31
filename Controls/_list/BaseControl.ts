@@ -4581,7 +4581,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
                 const draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
-                this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection.dispItem);
+                this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
             } else if (dragEnterResult === true) {
                 this._dndListController.setDraggedItems(dragObject.entity);
             }
