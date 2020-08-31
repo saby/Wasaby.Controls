@@ -173,7 +173,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     _updateState(...args) {
-        const isInitializing = Object.keys(this._oldState).length === 0;
         const isUpdated: boolean = super._updateState(...args);
         if (isUpdated) {
             // Убираем старое поведение теней, новые тени сделаны через CSS, рассчеты производить более не требуется
@@ -182,7 +181,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
                 this._shadows.updateScrollState(this._state);
             }
             // При инициализации не обновляем скрол бары. Инициализируем их по напедению мышкой.
-            if (!isInitializing) {
+            if (this._isStateInitialized) {
                 this._scrollbars.updateScrollState(this._state, this._container);
             }
 
