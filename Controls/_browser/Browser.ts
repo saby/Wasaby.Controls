@@ -75,20 +75,16 @@ export default class Browser extends Control {
 
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
         const isChanged = this._dataController.update({...newOptions});
+        let methodResult;
 
         this._operationsController.update(newOptions);
         if (newOptions.hasOwnProperty('markedKey')) {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
 
-        this._searchController.update(
-            this._getSearchControllerOptions(newOptions),
-            {dataOptions: this._dataOptionsContext}
-        );
-
         if (this._options.source !== newOptions.source) {
             this._loading = true;
-            return this._dataController.loadItems().then((result) => {
+            methodResult = this._dataController.loadItems().then((result) => {
                 if (!this._items) {
                     this._items = this._dataController.setItems(result);
                 } else {
@@ -106,6 +102,13 @@ export default class Browser extends Control {
             this._dataController.updateContext(this._dataOptionsContext);
             this._groupHistoryId = newOptions.groupHistoryId;
         }
+
+        this._searchController.update(
+            this._getSearchControllerOptions(newOptions),
+            {dataOptions: this._dataOptionsContext}
+        );
+
+        return methodResult;
     }
 
     protected _beforeUnmount(): void {
