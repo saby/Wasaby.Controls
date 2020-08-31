@@ -152,7 +152,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     }
 
     get isVisible(): boolean {
-        return !this._useNativeScrollbar;
+        return !this._useNativeScrollbar && this._showScrollbarOnHover;
     }
 
     get horizontal(): ScrollbarModel {
