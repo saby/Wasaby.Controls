@@ -15,6 +15,7 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
+ * @includes Remover Controls/_list/interface/IRemover
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
@@ -25,6 +26,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @public
@@ -47,6 +49,7 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
+ * @includes Remover Controls/_list/interface/IRemover
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
@@ -56,6 +59,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @public
@@ -158,3 +162,6 @@ export {
     _swipeActionTemplate,
     SwipeTemplate
 };
+
+export {IRemover} from 'Controls/_list/interface/IRemover';
+export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
