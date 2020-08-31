@@ -1,5 +1,3 @@
-import {Logger} from 'UI/Utils';
-
 /**
  * Слой совместимости с ListViewModel для элемента коллекции
  * @private
