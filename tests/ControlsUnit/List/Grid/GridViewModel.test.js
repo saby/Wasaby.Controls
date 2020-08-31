@@ -146,13 +146,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('setDragTargetPosition', function() {
             var dragTargetPosition = {};
             gridViewModel.setDragTargetPosition(dragTargetPosition);
-            assert.equal(gridViewModel._model._dragTargetPosition, dragTargetPosition);
+            assert.equal(gridViewModel.getDragTargetPosition(), dragTargetPosition);
          });
 
          it('setDragEntity', function() {
             var dragEntity = {};
             gridViewModel.setDragEntity(dragEntity);
-            assert.equal(gridViewModel._model._dragEntity, dragEntity);
+            assert.equal(gridViewModel.getDragEntity(), dragEntity);
          });
 
          it('setDragItemData', function() {
@@ -1079,7 +1079,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
-                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems',
+                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
                   'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],

@@ -2,6 +2,7 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
+import { spy } from 'sinon';
 import { DndTreeController} from 'Controls/listDragNDrop';
 import { RecordSet } from 'Types/collection';
 import { ItemsEntity } from 'Controls/dragnDrop';
@@ -77,39 +78,40 @@ describe('Controls/_listDragNDrop/TreeController', () => {
 
    describe('calculateDragPosition', () => {
       it('hover on dragged item', () => {
-         const item = model.getItemBySourceKey(5);
-         let newPosition = controller.calculateDragPosition(item);
+         let newPosition = controller.calculateDragPosition({ index: 1 });
          assert.isNull(newPosition);
 
          const position = { index: 0, position: 'on', data: { level: 1} };
          controller.setDragPosition(position);
 
-         newPosition = controller.calculateDragPosition(item);
+         newPosition = controller.calculateDragPosition({ index: 1 });
          assert.equal(newPosition.index, 1);
          assert.equal(newPosition.position, 'after');
       });
 
       it('move to another list', () => {
-         const nodeItemData = model.getItemBySourceKey(1);
+         const nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
          const anotherController = new DndTreeController(model);
 
          const position = anotherController.calculateDragPosition(nodeItemData, 'before');
          assert.deepEqual(position, {
-            index: 0,
+            index: nodeItemData.index,
             position: 'on',
-            dispItem: nodeItemData
+            item: nodeItemData.item,
+            data: nodeItemData
          });
       });
 
       describe('hover on node', () => {
          it('not pass position', () => {
-            const nodeItemData = model.getItemBySourceKey(1);
+            const nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
 
             const newPosition = controller.calculateDragPosition(nodeItemData);
             assert.deepEqual(newPosition, {
-               index: 0,
+               index: nodeItemData.index,
                position: 'on',
-               dispItem: nodeItemData
+               item: nodeItemData.item,
+               data: nodeItemData
             });
          });
 
@@ -119,13 +121,14 @@ describe('Controls/_listDragNDrop/TreeController', () => {
             model.toggleExpanded(nodeItem, true);
             const nodeItemData = model.getItemDataByItem(nodeItem);
 
-            assert.isTrue(nodeItemData.isExpanded );
+            assert.isTrue(nodeItemData.isExpanded);
 
-            const newPosition = controller.calculateDragPosition(nodeItem, 'before');
+            const newPosition = controller.calculateDragPosition(nodeItemData, 'before');
             assert.deepEqual(newPosition, {
                index: nodeItemData.index,
                position: 'before',
-               dispItem: nodeItem
+               item: nodeItemData.item,
+               data: nodeItemData
             });
          });
 
@@ -142,13 +145,14 @@ describe('Controls/_listDragNDrop/TreeController', () => {
             assert.isTrue(nodeItemData.isExpanded);
 
             // считаем позицию при наведении на следующий узел
-            const targetNodeData = model.getItemBySourceKey(2);
+            const targetNodeData = model.getItemDataByItem(model.getItemBySourceKey(2));
             const newPosition = controller.calculateDragPosition(targetNodeData, 'before');
 
             assert.deepEqual(newPosition, {
-               index: 1,
+               index: targetNodeData.index,
                position: 'before',
-               dispItem: targetNodeData
+               item: targetNodeData.item,
+               data: targetNodeData
             });
          });
       });
@@ -170,21 +174,22 @@ describe('Controls/_listDragNDrop/TreeController', () => {
             }
          };
 
-         const targetNodeData = model.getItemBySourceKey(1);
+         const targetNodeData = model.getItemDataByItem(model.getItemBySourceKey(1));
          const position = controller.calculateDragPositionRelativeNode(targetNodeData, event, event.target);
 
          assert.deepEqual(position, {
-            index: 0,
+            index: targetNodeData.index,
             position: 'before',
-            dispItem: targetNodeData
+            item: targetNodeData.item,
+            data: targetNodeData
          });
       });
    });
 
    describe('startCountDownForExpandNode', () => {
-      let expandNodeCalled = false, nodeDispItem;
+      let expandNodeCalled = false, nodeItemData;
       const expandNode = (itemData) => {
-         assert.equal(itemData, nodeDispItem);
+         assert.equal(itemData, nodeItemData);
          expandNodeCalled = true;
       };
 
@@ -196,29 +201,32 @@ describe('Controls/_listDragNDrop/TreeController', () => {
       });
 
       it('hover on not node', () => {
-         nodeDispItem = model.getItemBySourceKey(6);
-         controller.startCountDownForExpandNode(nodeDispItem, expandNode);
+         nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(6));
+         controller.startCountDownForExpandNode(nodeItemData, expandNode);
          assert.isFalse(expandNodeCalled);
       });
 
       it('hover on expanded node', () => {
          // раскрыли узел
-         nodeDispItem = model.getItemBySourceKey(1);
-         model.toggleExpanded(nodeDispItem, true);
-         assert.isTrue(model.getItemDataByItem(nodeDispItem).isExpanded);
+         const nodeItem = model.getItemBySourceKey(1);
+         model.toggleExpanded(nodeItem, true);
+         nodeItemData = model.getItemDataByItem(nodeItem);
+         assert.isTrue(nodeItemData.isExpanded);
 
          // навели на развернутый узел
-         controller.startCountDownForExpandNode(nodeDispItem, expandNode);
-         assert.isTrue(expandNodeCalled);
+         nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
+         controller.startCountDownForExpandNode(nodeItemData, expandNode);
+         assert.isFalse(expandNodeCalled);
       });
 
       it('hover on node', () => {
-         nodeDispItem = model.getItemBySourceKey(1);
-         controller.startCountDownForExpandNode(nodeDispItem, expandNode);
+         nodeItemData = model.getItemDataByItem(model.getItemBySourceKey(1));
+         controller.startCountDownForExpandNode(nodeItemData, expandNode);
          assert.isTrue(expandNodeCalled);
+
          expandNodeCalled = false;
 
-         controller.startCountDownForExpandNode(nodeDispItem, expandNode);
+         controller.startCountDownForExpandNode(nodeItemData, expandNode);
          assert.isFalse(expandNodeCalled, 'Hover on same node');
       });
 
@@ -228,7 +236,7 @@ describe('Controls/_listDragNDrop/TreeController', () => {
 
          controller.startDrag(1, new ItemsEntity( { items: [5] } ));
 
-         controller.startCountDownForExpandNode(controller._draggableItem, expandNode);
+         controller.startCountDownForExpandNode(controller._draggingItemData, expandNode);
          assert.isFalse(expandNodeCalled);
       });
    });

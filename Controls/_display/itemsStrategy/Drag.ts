@@ -2,12 +2,12 @@ import CollectionItem from '../CollectionItem';
 import GroupItem from '../GroupItem';
 import Collection from '../Collection';
 import { mixin } from 'Types/util';
-import { DestroyableMixin, Model } from 'Types/entity';
+import { DestroyableMixin } from 'Types/entity';
 import IItemsStrategy, { IOptions as IItemsStrategyOptions } from '../IItemsStrategy';
 
 type TKey = string|number;
 
-interface IOptions<S extends Model, T extends CollectionItem<S>> extends IItemsStrategyOptions<S, T> {
+interface IOptions<S, T extends CollectionItem<S>> extends IItemsStrategyOptions<S, T> {
     source: IItemsStrategy<S, T>;
     display: Collection<S, T>;
 
@@ -20,7 +20,7 @@ interface ISortOptions {
     avatarIndex: number;
 }
 
-export default class Drag<S extends Model, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
+export default class Drag<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     DestroyableMixin
 >(
     DestroyableMixin
@@ -49,17 +49,7 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
         return this._options;
     }
 
-    setAvatarPosition(avatarIndex: number, position: string): void {
-        // TODO dnd нужно переписать сортировку, чтобы она работала аналогично Mover::move
-        if (this._options.avatarIndex === avatarIndex) {
-            const offset = position === 'before' ? -1 : 1;
-            if (avatarIndex > 0) {
-                avatarIndex += offset;
-            } else {
-                avatarIndex++;
-            }
-        }
-
+    set avatarIndex(avatarIndex: number) {
         this._options.avatarIndex = avatarIndex;
         this.invalidate();
     }
@@ -175,14 +165,10 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
         return [this._avatarItem].concat(filteredItems);
     }
 
-    protected _getProtoItem(): T {
-        return this.source.items.find((item) =>
+    protected _createAvatarItem(): T {
+        const protoItem = this.source.items.find((item) =>
             !(item instanceof GroupItem) && item.getContents().getKey() === this._options.avatarItemKey
         );
-    }
-
-    protected _createAvatarItem(): T {
-        const protoItem = this._getProtoItem();
         return this._createItem(protoItem?.getContents());
     }
 
@@ -201,7 +187,7 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
         const itemsCount = items.length;
 
         const itemsOrder = new Array(itemsCount - 1);
-        for (let i = 1; i < itemsCount; i++) {
+        for (let i = 1; i <= itemsCount - 1; i++) {
             itemsOrder[i - 1] = i;
         }
 

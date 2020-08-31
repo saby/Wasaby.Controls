@@ -4126,9 +4126,7 @@ define([
                      keyProperty: 'id'
                   }),
                   keyProperty: 'key'
-               }),
-               _registerMouseMove: () => null,
-               _registerMouseUp: () => null
+               })
             },
             domEvent = {
                nativeEvent: {},
@@ -4165,15 +4163,9 @@ define([
       it('_processItemMouseEnterWithDragNDrop', () => {
          const ctrl = new lists.BaseControl({});
          const dragEntity = { entity: 'entity' },
-               itemData = {
-                  dispItem: {
-                     getContents: () => {}
-                  }
-               },
+               itemData = { itemData: 'itemData' },
                dragPosition = {
-                  dispItem: {
-                     getContents: () => {}
-                  },
+                  item: { item: 'item' },
                   position: 'after'
                };
 
@@ -4189,7 +4181,7 @@ define([
                return dragEntity;
             },
             calculateDragPosition(item) {
-               assert.deepEqual(item, itemData.dispItem);
+               assert.deepEqual(item, itemData);
                return dragPosition;
             },
             setDragPosition(position) {
@@ -4202,7 +4194,7 @@ define([
             notifyCalled = true;
             assert.equal(eventName, 'changeDragTarget');
             assert.deepEqual(args[0], dragEntity);
-            assert.equal(args[1], dragPosition.dispItem.getContents());
+            assert.deepEqual(args[1], { item: 'item' });
             assert.equal(args[2], 'after');
             return notifyResult;
          };
@@ -4353,13 +4345,7 @@ define([
             endDrag() {
                dragEnded = true;
             },
-            getDragPosition: () => {
-               return {
-                  dispItem: {
-                     getContents: () => {}
-                  }
-               };
-            }
+            getDragPosition: () => { return {}; }
          };
          ctrl._documentDragEnd();
          assert.isTrue(dragEnded);
@@ -7641,7 +7627,7 @@ define([
          });
 
          it('drag start', () => {
-            baseControl._dragStart({ entity: new dragNDrop.ItemsEntity({items: [1]}) }, 1);
+            baseControl._dragStart({ entity: baseControl._dragEntity }, baseControl._draggedKey);
             assert.isNotNull(baseControl._dndListController);
             assert.isNotNull(baseControl._dndListController.getDragEntity());
          });
@@ -7670,13 +7656,7 @@ define([
          it('drag end', () => {
             baseControl._dndListController = {
                endDrag: () => undefined,
-               getDragPosition: () => {
-                  return {
-                     dispItem: {
-                        getContents: () => {}
-                     }
-                  };
-               }
+               getDragPosition: () => { return {}; }
             };
 
             baseControl._insideDragging = true;

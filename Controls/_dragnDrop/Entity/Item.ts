@@ -1,13 +1,11 @@
-import Entity from '../Entity';
+import Entity = require('Controls/_dragnDrop/Entity');
+      
 
-interface IItemOptions {
-    item: any;
-}
+      var Item = Entity.extend({
+         getItem: function() {
+            return this._options.item;
+         }
+      });
 
-export default class Item extends Entity {
-    protected _options: IItemOptions;
-
-    getItem(): any {
-        return this._options.item;
-    }
-}
+      export = Item;
+   
