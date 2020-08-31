@@ -2,12 +2,17 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(T
    'use strict';
 
    describe('Controls/_tile/TileView/TileViewModel', function() {
+      const urlResolver = () => '';
       var
          tileViewModel = new TileViewModel({
             tileMode: 'static',
             itemsHeight: 300,
             imageProperty: 'image',
             keyProperty: 'id',
+            imageWidthProperty: 'imageWidth',
+            imageHeightProperty: 'imageHeight',
+            imageFit: 'cover',
+            imageUrlResolver: urlResolver,
             items: new collection.RecordSet({
                rawData: [{
                   'id': 1
@@ -71,7 +76,11 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(T
             defaultItemWidth: 250,
             defaultShadowVisibility: 'visible',
             itemCompressionCoefficient: 0.7,
-            displayProperty: 'title'
+            displayProperty: 'title',
+            imageWidthProperty: 'imageWidth',
+            imageHeightProperty: 'imageHeight',
+            imageFit: 'cover',
+            imageUrlResolver: urlResolver,
          });
       });
 
