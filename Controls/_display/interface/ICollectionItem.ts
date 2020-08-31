@@ -1,10 +1,10 @@
-import {IInstantiable, IVersionable, Record} from 'Types/entity';
+import {IInstantiable, IVersionable, Model} from 'Types/entity';
 import {ICollection} from "./ICollection";
 
 
 export interface ICollectionItem extends IInstantiable, IVersionable {
-    getOwner(): ICollection<Record, ICollectionItem>;
-    setOwner(owner: ICollection<Record, ICollectionItem>): void;
+    getOwner(): ICollection<Model, ICollectionItem>;
+    setOwner(owner: ICollection<Model, ICollectionItem>): void;
 
     /**
      * Получить пердставление текущего элемента
@@ -12,6 +12,7 @@ export interface ICollectionItem extends IInstantiable, IVersionable {
      * @public
      * @return {Types/entity:Model} Опции записи
      */
-    getContents(): Record;
-    setContents(contents: Record, silent?: boolean);
+    getContents(): Model;
+    setContents(contents: Model, silent?: boolean);
+    getUid(): string;
 }

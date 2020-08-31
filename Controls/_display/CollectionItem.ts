@@ -13,6 +13,7 @@ import {mixin} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
 import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
+import {ICollectionItem} from './interface/ICollectionItem';
 
 export interface IOptions<T> {
     contents?: T;
@@ -60,7 +61,7 @@ export default class CollectionItem<T> extends mixin<
     OptionsToPropertyMixin,
     InstantiableMixin,
     SerializableMixin
-) implements IInstantiable, IVersionable, ICollectionItemStyled {
+) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled {
 
     // region IInstantiable
 
