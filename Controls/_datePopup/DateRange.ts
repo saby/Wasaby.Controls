@@ -4,7 +4,7 @@ import {date as formatDate} from 'Types/formatter';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import EventProxy from './Mixin/EventProxy';
 import {DateRangeModel, Utils as DateControlsUtils, dateRangeQuantum as quantumUtils} from 'Controls/dateRange';
-import proxyModelEvents from 'Controls/Utils/proxyModelEvents';
+import {proxyModelEvents} from 'Controls/eventUtils';
 import {MonthModel} from 'Controls/calendar';
 import {Base as dateUtils} from 'Controls/dateUtils';
 import datePopupUtils from './Utils';

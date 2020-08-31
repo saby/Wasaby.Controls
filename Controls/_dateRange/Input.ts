@@ -1,7 +1,7 @@
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IDateRangeValidators, IDateRangeValidatorsOptions} from 'Controls/interface';
-import proxyModelEvents from 'Controls/Utils/proxyModelEvents';
+import {proxyModelEvents} from 'Controls/eventUtils';
 import DateRangeModel from './DateRangeModel';
 import {Range, Popup as PopupUtil} from 'Controls/dateUtils';
 import {StringValueConverter, IDateTimeMask, ISelection} from 'Controls/input';
