@@ -91,4 +91,40 @@ describe('Controls/lookup:Input', () => {
 
     });
 
+    describe('_notifyChanges', () => {
+
+        it('item added', async () => {
+            const lookup = await getBaseLookup();
+            let added, deleted;
+            lookup._options.selectedKeys = [1];
+            lookup._lookupController.getSelectedKeys = () => { return [1, 3]};
+            lookup._notify = (action, data) => {
+                if (action === 'selectedKeysChanged') {
+                    added = data[1];
+                    deleted = data[2];
+                }
+            };
+            lookup._notifyChanges();
+            assert.deepEqual(added, [3]);
+            assert.deepEqual(deleted, []);
+        });
+
+        it('item deleted and added', async () => {
+            const lookup = await getBaseLookup();
+            let added, deleted;
+            lookup._options.selectedKeys = [1, 4, 5];
+            lookup._lookupController.getSelectedKeys = () => { return [1, 4, 6]};
+            lookup._notify = (action, data) => {
+                if (action === 'selectedKeysChanged') {
+                    added = data[1];
+                    deleted = data[2];
+                }
+            };
+            lookup._notifyChanges();
+            assert.deepEqual(added, [6]);
+            assert.deepEqual(deleted, [5]);
+        });
+
+    });
+
 });
