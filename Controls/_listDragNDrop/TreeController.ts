@@ -1,4 +1,4 @@
-import FlatController, { IModel } from './FlatController';
+import FlatController, { IFlatItemData, IFlatModel } from './FlatController';
 import { IDragPosition, IOffset, TPosition } from './interface';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { TreeItem } from 'Controls/display';
@@ -7,14 +7,25 @@ import { Model } from 'Types/entity';
 const DRAG_MAX_OFFSET = 10,
       EXPAND_ON_DRAG_DELAY = 1000;
 
-export interface ITreeModel extends IModel {
-   getPrevDragPosition(): IDragPosition<TreeItem<Model>>;
+export interface ITreeModel extends IFlatModel {
+   getPrevDragPosition(): IDragPosition;
+
+   calculateDragTargetPosition(itemData: ITreeItemData, position: TPosition): IDragPosition;
+   getItemDataByItem(item: TreeItem<Model>): ITreeItemData;
+
+   getExpandedItems(): object[];
+}
+
+export interface ITreeItemData extends IFlatItemData {
+   dispItem: TreeItem<Model>;
+   nodeProperty: string;
+   isExpanded: boolean;
 }
 
 export default class TreeController extends FlatController {
    protected _model: ITreeModel;
-   protected _draggableItem: TreeItem<Model>;
-   private _itemOnWhichStartCountDown: TreeItem<Model>;
+   protected _draggingItemData: ITreeItemData;
+   private _itemOnWhichStartCountDown: ITreeItemData;
    private _timeoutForExpandOnDrag: NodeJS.Timeout;
 
    constructor(model: ITreeModel) {
@@ -25,6 +36,8 @@ export default class TreeController extends FlatController {
     * Проверяет получено ли событие из узла, на который наведен элемент при drag-n-drop
     * @remark
     * Мышь считается внутри узла, если смещение от верха или от низа меньше DRAG_MAX_OFFSET
+    * Если не передать offset, то он будет посчитан
+    * @rem
     * @param event {SyntheticEvent<MouseEvent>} событие клика на узел
     * @param targetElement {EventTarget} элемент на который навели
     */
@@ -41,11 +54,11 @@ export default class TreeController extends FlatController {
    }
 
    calculateDragPositionRelativeNode(
-       targetItem: TreeItem<Model>,
+       itemData: ITreeItemData,
        event: SyntheticEvent<MouseEvent>,
        targetElement: EventTarget
-   ): IDragPosition<TreeItem<Model>> {
-      if (this._draggableItem && this._draggableItem === targetItem) {
+   ): IDragPosition {
+      if (this._draggingItemData && this._draggingItemData.key === itemData.key) {
          return null;
       }
 
@@ -61,42 +74,43 @@ export default class TreeController extends FlatController {
          } else {
             position = 'on';
          }
-         dragPosition = this.calculateDragPosition(targetItem, position);
+         dragPosition = this.calculateDragPosition(itemData, position);
       }
 
       return dragPosition;
    }
 
-   calculateDragPosition(targetItem: TreeItem<Model>, position: TPosition): IDragPosition<TreeItem<Model>> {
+   calculateDragPosition(targetItemData: ITreeItemData, position: TPosition): IDragPosition {
       // Если перетаскиваем лист на узел, то позиция может быть только 'on'
       // Если нет перетаскиваемого элемента, то значит мы перетаскивам в папку другого реестра
-      if (!this._draggableItem || !this._draggableItem.isNode() && targetItem.isNode()) {
+      if (!this._draggingItemData || !this._draggingItemData.dispItem.isNode() && targetItemData.dispItem.isNode()) {
          position = 'on';
       }
 
       let result;
 
-      if (this._draggableItem && this._draggableItem === targetItem) {
+      if (this._draggingItemData && this._draggingItemData.index === targetItemData.index) {
          result = this._model.getPrevDragPosition() || null;
-      } else if (targetItem.isNode()) {
+      } else if (targetItemData.dispItem.isNode()) {
          result = {
-            index: this._getIndex(targetItem),
+            index: targetItemData.index,
             position: position ? position : 'on',
-            dispItem: targetItem
+            item: targetItemData.item,
+            data: targetItemData
          };
       } else {
-         result = super.calculateDragPosition(targetItem);
+         result = super.calculateDragPosition(targetItemData);
       }
 
       return result;
    }
 
-   startCountDownForExpandNode(item: TreeItem<Model>, expandNode: Function): void {
-      if (!this._itemOnWhichStartCountDown && item.isNode()
-            && this._draggableItem !== item) {
+   startCountDownForExpandNode(itemData: ITreeItemData, expandNode: Function): void {
+      if (!this._itemOnWhichStartCountDown && itemData.dispItem.isNode() && !itemData.isExpanded
+            && this._draggingItemData !== itemData) {
          this._clearTimeoutForExpandOnDrag();
-         this._itemOnWhichStartCountDown = item;
-         this._setTimeoutForExpandOnDrag(item, expandNode);
+         this._itemOnWhichStartCountDown = itemData;
+         this._setTimeoutForExpandOnDrag(itemData, expandNode);
       }
    }
 
@@ -104,8 +118,8 @@ export default class TreeController extends FlatController {
       this._clearTimeoutForExpandOnDrag();
    }
 
-   private _setTimeoutForExpandOnDrag(item: TreeItem<Model>, expandNode: Function): void {
-      this._timeoutForExpandOnDrag = this._timeoutForExpand(item, expandNode);
+   private _setTimeoutForExpandOnDrag(itemData: ITreeItemData, expandNode: Function): void {
+      this._timeoutForExpandOnDrag = this._timeoutForExpand(itemData, expandNode);
    }
 
    private _clearTimeoutForExpandOnDrag(): void {
@@ -117,7 +131,7 @@ export default class TreeController extends FlatController {
    }
 
    // вынес, чтобы замокать в unit тесте и не делать паузы в unit-е
-   private _timeoutForExpand(itemData: TreeItem<Model>, expandNode: Function): NodeJS.Timeout {
+   private _timeoutForExpand(itemData: ITreeItemData, expandNode: Function): NodeJS.Timeout {
       return setTimeout(() => {
          expandNode(itemData);
       }, EXPAND_ON_DRAG_DELAY);

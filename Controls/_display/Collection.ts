@@ -1,3 +1,4 @@
+import { TemplateFunction } from 'UI/Base';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
@@ -31,6 +32,7 @@ import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import { IDragPosition } from 'Controls/listDragNDrop';
 import DragStrategy from './itemsStrategy/Drag';
+import { ItemsEntity } from 'Controls/dragnDrop';
 import {ICollection, ISourceCollection} from './interface/ICollection';
 
 // tslint:disable-next-line:ban-comma-operator
@@ -712,8 +714,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$isEditing: boolean;
 
     protected _userStrategies: Array<IUserStrategy<S, T>>;
-
-    protected _dragStrategy: Function = DragStrategy;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -2131,26 +2131,30 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // region Drag-N-Drop
 
-    setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
-        const avatarStartIndex = this.getIndexByKey(avatarItemKey);
+    setDraggedItems(draggedItem: T, dragEntity: ItemsEntity): void {
+        // TODO dnd когда будет выполнен полный переход на новую модель,
+        // то можно будет передать только нужные параметры(ключ аватара и список перетаскиваемых ключей)
+        const avatarKey = draggedItem.getContents().getKey();
+        const avatarStartIndex = this.getIndexByKey(avatarKey);
 
-        this.appendStrategy(this._dragStrategy, {
-            draggedItemsKeys,
-            avatarItemKey,
+        this.appendStrategy(DragStrategy, {
+            draggedItemsKeys: dragEntity.getItems(),
+            avatarItemKey: avatarKey,
             avatarIndex: avatarStartIndex
         });
     }
 
-    setDragPosition(position: IDragPosition<T>): void {
-        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+    setDragPosition(position: IDragPosition): void {
+        const strategy = this.getStrategyInstance(DragStrategy) as DragStrategy<unknown>;
         if (strategy && position) {
-            strategy.setAvatarPosition(position.index, position.position);
+            // TODO dnd в старой модели передается куда вставлять относительно этого индекса
+            strategy.avatarIndex = position.index;
             this.nextVersion();
         }
     }
 
     resetDraggedItems(): void {
-        this.removeStrategy(this._dragStrategy);
+        this.removeStrategy(DragStrategy);
     }
 
     // endregion

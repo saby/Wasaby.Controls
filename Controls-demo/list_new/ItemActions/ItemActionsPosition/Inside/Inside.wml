@@ -3,6 +3,5 @@
             keyProperty="id"
             source="{{_viewSource}}"
             useNewModel="{{true}}"
-            itemActions="{{_itemActions}}"
-            itemsDragNDrop="{{true}}"/>
+            itemActions="{{_itemActions}}"/>
 </div>

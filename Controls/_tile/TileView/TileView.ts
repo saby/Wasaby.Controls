@@ -182,7 +182,7 @@ var TileView = ListView.extend({
         if (
             this._options.tileScalingMode !== TILE_SCALING_MODE.NONE &&
             !isCurrentItemHovered &&
-            !this._listModel.getDragItemData() &&
+            !this._listModel.getDragEntity() &&
             _private.shouldProcessHover(this)
         ) {
             _private.clearMouseMoveTimeout(this);

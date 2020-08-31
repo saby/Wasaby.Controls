@@ -27,13 +27,13 @@
 
 import Controller = require('Controls/_dragnDrop/Controller');
 import DraggingTemplate = require('Controls/_dragnDrop/DraggingTemplate');
-import Entity from 'Controls/_dragnDrop/Entity';
-import ItemsEntity from 'Controls/_dragnDrop/Entity/Items';
-import ItemEntity from 'Controls/_dragnDrop/Entity/Item';
+import Entity = require('Controls/_dragnDrop/Entity');
+import ItemsEntity = require('Controls/_dragnDrop/Entity/Items');
+import ItemEntity = require('Controls/_dragnDrop/Entity/Item');
 
 import Compound = require('Controls/_dragnDrop/Controller/Compound');
 import DraggingTemplateWrapper = require('wml!Controls/_dragnDrop/DraggingTemplateWrapper');
-import ListItems from 'Controls/_dragnDrop/Entity/List/Items';
+import ListItems = require('Controls/_dragnDrop/Entity/List/Items');
 export {default as ResizingLine} from 'Controls/_dragnDrop/ResizingLine';
 export {default as Container, IDragObject} from 'Controls/_dragnDrop/Container';
 

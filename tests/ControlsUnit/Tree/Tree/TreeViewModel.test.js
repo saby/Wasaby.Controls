@@ -869,7 +869,7 @@ define([
                      position: 'on'
                   });
 
-                  assert.equal(tvm._prevDragTargetPosition.dispItem.getContents().getKey(), '567');
+                  assert.equal(tvm._prevDragTargetPosition.data.key, '567');
                   assert.equal(tvm._prevDragTargetPosition.position, 'after');
                });
 
@@ -883,13 +883,9 @@ define([
                tvm.setDragTargetPosition({
                   index: 1,
                   position: 'before',
-                  dispItem: {
-                     getLevel: () => 1,
-                     getContents: () => {
-                        return {
-                           getKey: () => 456
-                        };
-                     }
+                  data: {
+                     level: 1,
+                     key: 456
                   }
                });
 
@@ -900,7 +896,7 @@ define([
                   position: 'on'
                });
 
-               assert.equal(tvm._prevDragTargetPosition.dispItem.getContents().getKey(), '456');
+               assert.equal(tvm._prevDragTargetPosition.data.key, '456');
                assert.equal(tvm._prevDragTargetPosition.position, 'before');
             });
          });
