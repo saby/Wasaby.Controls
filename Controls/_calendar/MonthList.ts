@@ -36,6 +36,7 @@ interface IModuleComponentOptions extends
 }
 
 const enum ITEM_BODY_SELECTOR {
+    template = '.controls-MonthList__template',
     year = '.controls-MonthList__year-months',
     month = '.controls-MonthViewVDOM',
     day = '.controls-MonthViewVDOM__item'
@@ -458,6 +459,12 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             element = this._getElementByDate(
                 ITEM_BODY_SELECTOR.year,
                 monthListUtils.dateToId(dateUtils.getStartOfYear(date)));
+            if (!element) {
+                element = this._getElementByDate(
+                    ITEM_BODY_SELECTOR.template,
+                    monthListUtils.dateToId(dateUtils.getStartOfYear(date))
+                );
+            }
         }
         return element;
     }
