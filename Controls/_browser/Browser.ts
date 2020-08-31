@@ -77,31 +77,16 @@ export default class Browser extends Control {
 
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
         const isChanged = this._sourceController.updateOptions(newOptions);
+        let methodResult;
 
         this._operationsController.update(newOptions);
         if (newOptions.hasOwnProperty('markedKey')) {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
-
-        this._searchController.update(
-            this._getSearchControllerOptions(newOptions),
-            {dataOptions: this._dataOptionsContext}
-        );
-
-        this._operationsController.update(newOptions);
-        if (newOptions.hasOwnProperty('markedKey')) {
-            this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
-        }
-
-        this._searchController.update(
-            this._getSearchControllerOptions(newOptions),
-            {dataOptions: this._dataOptionsContext}
-        );
 
         if (this._options.source !== newOptions.source) {
             this._loading = true;
-            return this._sourceController.load().then((items) => {
-
+            methodResult = this._sourceController.load().then((items) => {
                 // для того чтобы мог посчитаться новый prefetch Source внутри
                 const newItems = this._sourceController.setItems(items);
                 if (!this._items) {
@@ -129,6 +114,13 @@ export default class Browser extends Control {
             this._dataOptionsContext.updateConsumers();
             this._groupHistoryId = newOptions.groupHistoryId;
         }
+
+        this._searchController.update(
+            this._getSearchControllerOptions(newOptions),
+            {dataOptions: this._dataOptionsContext}
+        );
+
+        return methodResult;
     }
 
     protected _beforeUnmount(): void {
