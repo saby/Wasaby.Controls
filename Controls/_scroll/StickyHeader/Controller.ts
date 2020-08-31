@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import {debounce} from 'Types/function';
 import {IFixedEventData, isHidden, POSITION, TRegisterEventData, TYPE_FIXED_HEADERS} from './Utils';
-import StickyHeader, {SHADOW_VISIBILITY} from 'Controls/_scroll/StickyHeader/_StickyHeader';
+import StickyHeader, {SHADOW_VISIBILITY} from 'Controls/_scroll/StickyHeader';
 import fastUpdate from './FastUpdate';
 import ResizeObserverUtil from 'Controls/Utils/ResizeObserverUtil';
 import {detection} from 'Env/Env';
@@ -111,8 +111,7 @@ class StickyHeaderController {
         for (let headerId of headers[position]) {
             header = this._headers[headerId];
 
-            const ignoreHeight: boolean = type === TYPE_FIXED_HEADERS.initialFixed &&
-                (!header || header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden);
+            const ignoreHeight: boolean = (!header || header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden);
             if (ignoreHeight) {
                 continue;
             }
@@ -136,7 +135,7 @@ class StickyHeaderController {
         }
 
         this._canScroll = canScroll;
-        if (this._canScroll) {
+        if (this._canScroll && this._initialized) {
             return this._registerDelayed();
         }
 

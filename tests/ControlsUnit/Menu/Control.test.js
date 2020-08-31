@@ -106,12 +106,15 @@ define(
 
          describe('_beforeUpdate', () => {
             it('source is changed', async() => {
+               let isClosed = false;
                const menuControl = getMenu();
                const newMenuOptions = { ...defaultOptions };
 
+               menuControl._closeSubMenu = () => { isClosed = true; };
                newMenuOptions.source = new source.Memory();
                await menuControl._beforeUpdate(newMenuOptions);
                assert.isTrue(menuControl._notifyResizeAfterRender);
+               assert.isTrue(isClosed);
             });
          });
 

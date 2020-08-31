@@ -1,4 +1,5 @@
 import { Control } from 'UI/Base';
+import { IBasePopupOptions } from 'Controls/popup';
 import { Handler, ViewConfig } from './Handler';
 import ErrorController, { getPopupHelper } from './Controller';
 import { IPopupHelper, PopupId } from './Popup';
@@ -9,8 +10,7 @@ import { IPopupHelper, PopupId } from './Popup';
  * - error: Error - ошибка, которую надо обработать.
  * - handlers: Function[] - необязательный; массив дополнительных обработчиков ошибки, которые вызываются перед платформенными.
  * - postHandlers: Function[] - необязательный; массив дополнительных обработчиков ошибки, которые вызываются после платформенных.
- * - opener: Control - необязательный; контрол, открывающий диалоговое окно.
- * - dialogEventHandlers: Object - необязательный; {@link Controls/popup/IBaseOpener/options/eventHandlers| обработчики событий диалогового окна}.
+ * - dialogOptions: {@link Controls/_popup/interface/IBaseOpener} - необязательный; параметры открываемого диалогового окна.
  * - beforeOpenDialogCallback: Function - необязательный; функция, в которую передаётся конфиг для показа ошибки.
  *
  * В случае обрыва соединения или недоступности сервисов ресурсы, необходимые для показа диалогового окна, могут
@@ -42,6 +42,7 @@ export interface IProcessOptions {
     handlers?: Handler[];
     opener?: Control;
     dialogEventHandlers?: Record<string, Function>;
+    dialogOptions?: IBasePopupOptions;
     postHandlers?: Handler[];
     beforeOpenDialogCallback?: (viewConfig: ViewConfig) => void;
     _popupHelper?: IPopupHelper;
@@ -53,6 +54,7 @@ export default function process(options: IProcessOptions): Promise<PopupId | voi
         handlers = [],
         opener,
         dialogEventHandlers,
+        dialogOptions,
         postHandlers = [],
         beforeOpenDialogCallback,
         _popupHelper = getPopupHelper()
@@ -73,6 +75,10 @@ export default function process(options: IProcessOptions): Promise<PopupId | voi
             beforeOpenDialogCallback(viewConfig);
         }
 
-        return _popupHelper.openDialog(viewConfig, opener, dialogEventHandlers);
+        return _popupHelper.openDialog(viewConfig, {
+            opener,
+            eventHandlers: dialogEventHandlers,
+            ...dialogOptions
+        });
     });
 }

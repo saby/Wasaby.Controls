@@ -4,7 +4,7 @@ import {Controller as SourceController} from 'Controls/source';
 import {RecordSet, List} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';
-import ToSourceModel = require('Controls/Utils/ToSourceModel');
+import {ToSourceModel} from 'Controls/_lookup/resources/ToSourceModel';
 import {isEqual} from 'Types/object';
 import {object} from 'Types/util';
 import { constants } from 'Env/Constants';
