@@ -707,13 +707,13 @@ define(
                         title: 'testTitle'
                      }]
                   });
-                  dropdownController._options.footerTemplate = null;
+                  dropdownController._options.footerContentTemplate = null;
                   dropdownController._options.emptyText = null;
                   openConfig = null;
                });
 
                it('with footer', async() => {
-                  dropdownController._options.footerTemplate = {};
+                  dropdownController._options.footerContentTemplate = {};
 
                   await dropdownController.openMenu({ testOption: 'testValue' });
                   assert.equal(openConfig.testOption, 'testValue');
