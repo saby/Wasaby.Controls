@@ -1053,7 +1053,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             current.resetColumnIndex();
             current.goToNextColumn();
             const currColumn = current.getCurrentColumn();
-            assert.equal(currColumn.getColspanedPaddingClassList(currColumn).right, 'controls-Grid__cell_spacingLastCol_l_theme-default');
+            assert.equal(currColumn.getColspanedPaddingClassList(currColumn, true).right, 'controls-Grid__cell_spacingLastCol_l_theme-default');
+         });
+         it('getColspanedPaddingClassList no padding right update', function() {
+            current.resetColumnIndex();
+            current.goToNextColumn();
+            const currColumn = current.getCurrentColumn();
+            assert.equal(currColumn.getColspanedPaddingClassList(currColumn, false).right, ' controls-Grid__cell_spacingRight_theme-default');
          });
       });
       describe('methods for processing with items', function() {
