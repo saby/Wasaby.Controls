@@ -6,6 +6,7 @@ import {descriptor, Model} from 'Types/entity';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
 // @ts-ignore
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
+import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
 
 type LookupReceivedState = SelectedItems|null;
 
@@ -114,7 +115,9 @@ export default abstract class
 
     private _notifyChanges(): void {
         const controller = this._lookupController;
-        this._notify('selectedKeysChanged', [controller.getSelectedKeys()]);
+        const newSelectedkeys = controller.getSelectedKeys();
+        const selectedKeysDiff = ArrayUtil.getArrayDifference(this._options.selectedKeys, newSelectedkeys);
+        this._notify('selectedKeysChanged', [newSelectedkeys, selectedKeysDiff.added, selectedKeysDiff.removed]);
         this._notify('itemsChanged', [controller.getItems()]);
         this._notify('textValueChanged', [controller.getTextValue()]);
     }
