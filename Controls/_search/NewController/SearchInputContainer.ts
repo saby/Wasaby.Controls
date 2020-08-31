@@ -22,7 +22,7 @@ export default class SearchInputContainer extends Control<ISearchContainerOption
       if (!this._searchDelayController) {
          this._searchDelayController = new SearchDelay({
             delayTime: this._options.delayTime,
-            minSearchValueLength: this._options.minSearchValueLength,
+            minSearchLength: this._options.minSearchValueLength,
             searchCallback: this._notifySearch,
             searchResetCallback: this._notifySearchReset
          });
