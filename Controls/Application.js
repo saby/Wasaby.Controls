@@ -14,6 +14,7 @@ define('Controls/Application',
       'Controls/Utils/DOMUtil',
       'Controls/event',
       'Controls/popup',
+      'UI/HotKeys',
       'Controls/Application/TouchDetectorController',
       'css!theme?Controls/Application/oldCss'
    ],
@@ -62,6 +63,7 @@ define('Controls/Application',
       DOMUtils,
       ControlsEvent,
       popup,
+      HotKeys,
       TouchDetector) {
       'use strict';
 
@@ -402,6 +404,10 @@ define('Controls/Application',
 
          _closePreviewerHandler: function(event, type) {
             this._globalpopup.closePreviewerHandler(event, type);
+         },
+
+         _keyDownHandler: function(event) {
+            return HotKeys.dispatcherHandler(event);
          }
       });
 
