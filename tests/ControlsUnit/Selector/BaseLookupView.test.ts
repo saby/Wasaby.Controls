@@ -208,6 +208,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
          activated = true;
       };
 
+      lookup._options.selectedKeys = [];
       lookup._onClickClearRecords();
       ok(activated);
       strictEqual(configActivate, undefined);
