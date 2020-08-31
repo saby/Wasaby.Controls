@@ -3,7 +3,7 @@ const MIN_VALUE = 3;
 
 export interface ISearchDelayOptions {
    delayTime?: number | null;
-   minSearchValueLength?: number;
+   minSearchLength?: number;
    searchCallback: (value: string) => void;
    searchResetCallback: () => void;
 }
@@ -35,17 +35,17 @@ export default class SearchDelay {
    }
 
    resolve(value: string | null): void {
-      const l = this._options.minSearchValueLength;
+      const valueLength = value ? value.length : 0;
+      const searchByValueChanged = this._options.minSearchLength !== null;
 
-      if (!l && l !== 0) { return; }
-
-      if (this._options.delayTime) {
-         this.callAfterDelay(
-            value && value.length >= l ?
-               this._options.searchCallback : this._options.searchResetCallback,
-            value);
-      } else {
-         this._options.searchCallback(value);
+      if ((searchByValueChanged && valueLength >= this._options.minSearchLength)) {
+         this.callAfterDelay(this._options.searchCallback, value);
+      } else if (searchByValueChanged || !valueLength) {
+         if (valueLength) {
+            this.callAfterDelay(this._options.searchResetCallback, value);
+         } else {
+            this._options.searchResetCallback();
+         }
       }
    }
 }
