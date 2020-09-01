@@ -2,9 +2,7 @@
    <ws:bodyTemplate>
       <Controls.popup:Manager
          popupHeaderTheme="{{_options.popupHeaderTheme}}"
-         popupSettingsController="{{_options.popupSettingsController}}"
-         on:managerPopupCreated="_popupCreatedHandler()"
-         on:managerPopupDestroyed="_popupDestroyedHandler()">
+         popupSettingsController="{{_options.popupSettingsController}}">
          <Controls.dragnDrop:Controller name="dragNDropContainer"
                                           on:dragStart="_dragStartHandler()"
                                           on:dragEnd="_dragEndHandler()">
@@ -30,7 +28,6 @@
                         on:hideIndicator="LoadingIndicator._hideHandler()"
                         on:suggestStateChanged="_suggestStateChangedHandler()"
 
-                        on:managerPopupBeforeDestroyed="_popupBeforeDestroyedHandler()"
                         on:serviceError="_openDialogHandler()"
                         on:openInfoBox="_openInfoBoxHandler()"
                         on:closeInfoBox="_closeInfoBoxHandler()"
