@@ -1,6 +1,6 @@
 define([
    'Env/Env',
-   'Controls/_scroll/StickyHeader/_StickyHeader',
+   'Controls/_scroll/StickyHeader',
    'Controls/_scroll/StickyHeader/Utils',
    'Controls/_scroll/StickyHeader/FastUpdate',
    'Controls/scroll',
@@ -33,7 +33,7 @@ define([
       options = {
       };
 
-   describe('Controls/_scroll/StickyHeader/_StickyHeader', function() {
+   describe('Controls/_scroll/StickyHeader', function() {
       describe('Initialisation', function() {
          it('should set correct header id', function() {
             const component = createComponent(StickyHeader, options);
@@ -434,11 +434,36 @@ define([
       });
 
       describe('_isShadowVisible', function() {
+         it('should show shadow', function() {
+            const component = createComponent(StickyHeader, {});
+            component._context = {};
+            component._model = { fixedPosition: 'top' };
+            component._isFixed = true;
+            component._scrollState = {
+               verticalPosition: 'middle'
+            };
+            assert.isTrue(component._isShadowVisible('bottom'));
+         });
+
+         it('should not show shadow if it disabled by controller', function() {
+            const component = createComponent(StickyHeader, {});
+            component._context = {};
+            component._model = { fixedPosition: 'top' };
+            component._isFixed = true;
+            component._scrollState = {
+               verticalPosition: 'middle'
+            };
+            component.updateShadowVisibility(false);
+            assert.isFalse(component._isShadowVisible('bottom'));
+         });
+
          it('should not show shadow displayed outside scroll container', function() {
             const component = createComponent(StickyHeader, {});
             component._context = {};
             assert.isFalse(component._isShadowVisible('top'));
          });
+
+
       });
    });
 
