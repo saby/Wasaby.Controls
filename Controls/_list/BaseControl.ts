@@ -1851,7 +1851,7 @@ const _private = {
     },
 
     isPagingNavigationVisible(hasMoreData, knownPagesCount) {
-        return knownPagesCount > 1 || hasMoreData > 5;
+        return knownPagesCount > 1 || hasMoreData > 5 || hasMoreData === true;
     },
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
