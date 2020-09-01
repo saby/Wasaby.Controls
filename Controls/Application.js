@@ -13,6 +13,7 @@ define('Controls/Application',
       'Controls/Application/SettingsController',
       'Controls/Utils/DOMUtil',
       'Controls/event',
+      'Controls/popup',
       'UI/HotKeys',
       'Controls/Application/TouchDetectorController',
       'css!theme?Controls/Application/oldCss'
@@ -61,6 +62,7 @@ define('Controls/Application',
       SettingsController,
       DOMUtils,
       ControlsEvent,
+      popup,
       HotKeys,
       TouchDetector) {
       'use strict';
@@ -273,6 +275,7 @@ define('Controls/Application',
 
             SettingsController.setController(cfg.settingsController);
 
+            this._createGlobalPopup();
             this._createRegisters();
             this._createTouchDetector();
          },
@@ -285,12 +288,16 @@ define('Controls/Application',
             if (this._isIOS13()) {
                window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
             }
+
+            this._globalpopup.registerGlobalPopup();
          },
 
          _beforeUnmount: function () {
             for (var register in this._registers) {
                this._registers[register].destroy();
             }
+
+            this._globalpopup.registerGlobalPopupEmpty();
          },
 
          _beforeUpdate: function(cfg) {
@@ -317,12 +324,16 @@ define('Controls/Application',
             }
          },
 
-         _createRegisters: function () {
+         _createRegisters: function() {
             var registers = ['scroll', 'controlResize', 'mousemove', 'mouseup', 'touchmove', 'touchend', 'mousedown'];
             var _this = this;
             registers.forEach(function(register) {
                _this._registers[register] = new ControlsEvent.RegisterClass({ register: register });
             });
+         },
+
+         _createGlobalPopup: function() {
+            this._globalpopup = new popup.GlobalController();
          },
 
          _registerHandler: function (event, registerType, component, callback, config) {
@@ -357,6 +368,42 @@ define('Controls/Application',
                   }
                }
             }
+         },
+
+         _popupBeforeDestroyedHandler: function(event, popupCfg, popupList, popupContainer) {
+            this._globalpopup.popupBeforeDestroyedHandler(event, popupCfg, popupList, popupContainer);
+         },
+
+         _openInfoBoxHandler: function(event, config) {
+            this._globalpopup.openInfoBoxHandler(event, config);
+         },
+
+         _openDialogHandler: function(event, templ, templateOptions, opener) {
+            return this._globalpopup.openDialogHandler(event, templ, templateOptions, opener);
+         },
+
+         _closeInfoBoxHandler: function(event, delay) {
+            this._globalpopup.closeInfoBoxHandler(event, delay);
+         },
+
+         _forceCloseInfoBoxHandler: function() {
+            this._globalpopup.forceCloseInfoBoxHandler();
+         },
+
+         _openPreviewerHandler: function(event, config, type) {
+            return this._globalpopup.openPreviewerHandler(event, config, type);
+         },
+
+         _cancelPreviewerHandler: function(event, action) {
+            this._globalpopup.cancelPreviewerHandler(event, action);
+         },
+
+         _isPreviewerOpenedHandler: function(event) {
+            return this._globalpopup.isPreviewerOpenedHandler(event);
+         },
+
+         _closePreviewerHandler: function(event, type) {
+            this._globalpopup.closePreviewerHandler(event, type);
          },
 
          _keyDownHandler: function(event) {
