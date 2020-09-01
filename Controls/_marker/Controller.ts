@@ -25,9 +25,16 @@ export class Controller {
    update(options: IOptions): TKey {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
+
+      const oldMarkedKey = this._markedKey;
       // calculate на случай если передали ключ элемента, который не существует,
       // или null, чтобы поставить маркер на первый элемент
       this._markedKey = this.calculateMarkedKey(options.markedKey);
+
+      if (oldMarkedKey !== this._markedKey) {
+         this._model.setMarkedKey(oldMarkedKey, false);
+      }
+
       return this._markedKey;
    }
 
