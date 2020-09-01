@@ -3639,11 +3639,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
           return Deferred.fail();
         } else {
             return this._editInPlace.beginAdd(options).then((addResult) => {
+
+                // TODO: https://online.sbis.ru/opendoc.html?guid=b8a501c1-6148-4b6a-aba8-2b2e4365ec3a
                 const addingPosition = this._options.editingConfig.addPosition === 'top' ? 0 : (this.getViewModel().getCount() - 1);
+                const isPositionInRange = addingPosition >= this.getViewModel().getStartIndex() && addingPosition < this.getViewModel().getStopIndex();
                 const targetDispItem = this.getViewModel().at(addingPosition);
                 const targetItem = targetDispItem && targetDispItem.getContents();
                 const targetItemKey = targetItem && targetItem.getKey ? targetItem.getKey() : null;
-                if (targetItemKey !== null) {
+                if (!isPositionInRange && targetItemKey !== null) {
                     return _private.scrollToItem(this, targetItemKey, false, true).then(() => Promise.resolve(addResult));
                 } else {
                     return Promise.resolve(addResult);
