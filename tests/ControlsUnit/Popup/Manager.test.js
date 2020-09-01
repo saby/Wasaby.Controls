@@ -10,9 +10,9 @@ define(
       BaseController = BaseController.default;
 
       function getManager() {
-         let Manager = new popupMod.Manager();
+         let Manager = new popupMod.ManagerClass();
          let Container = new popupMod.Container();
-         Manager._afterMount();
+         Manager.init();
          Container._afterMount();
          return Manager;
       }
