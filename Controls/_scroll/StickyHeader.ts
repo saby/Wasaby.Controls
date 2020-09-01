@@ -769,8 +769,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return !!(shadowEnabled &&
             ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isFixed)) &&
             (this._options.shadowVisibility === SHADOW_VISIBILITY.visible || this._options.shadowVisibility === SHADOW_VISIBILITY.lastVisible) &&
-            (this._options.mode === MODE.stackable || this._isFixed) &&
-            this._isShadowVisibleByController);
+            (this._options.mode === MODE.stackable || this._isFixed));
     }
 
     private _isShadowVisibleByScrollState(shadowPosition: POSITION): boolean {
@@ -778,7 +777,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         const shadowVisible: boolean = !!(this._scrollState.verticalPosition &&
             (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
-                shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END));
+                shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END) && this._isShadowVisibleByController);
 
         const oldShadowVisible: boolean = this._context?.stickyHeader?.shadowPosition &&
             this._context?.stickyHeader?.shadowPosition?.indexOf(fixedPosition) !== -1;
