@@ -12,7 +12,7 @@ define(
       function getManager() {
          let Manager = new popupMod.ManagerClass();
          let Container = new popupMod.Container();
-         Manager.init();
+         Manager.init({});
          Container._afterMount();
          return Manager;
       }
