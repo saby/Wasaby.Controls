@@ -4,6 +4,14 @@
    position: sticky;
 }
 
+// Прилипающий заголовок дергается при скролле в больших списках.
+// Устанавливаем свойство will-change для оптимизации.
+.ws-is-mac.ws-is-desktop-platform {
+   .controls-StickyHeader {
+      will-change: transform;
+   }
+}
+
 .controls-StickyHeader__observationTargetTop,
 .controls-StickyHeader__observationTargetBottom {
    // Если сверстано так, что положение скрол контейнера выражается дробными числами(например ширины элементов страницы
