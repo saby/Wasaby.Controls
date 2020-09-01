@@ -377,8 +377,6 @@ const _private = {
                         }
                         self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
-                        _private.restoreModelState(self, cfg);
-
                         if (self._sourceController) {
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                         }
@@ -2163,17 +2161,20 @@ const _private = {
         return self._markerController;
     },
 
-    needCreateMarkerController(options: IList, byOptions?: boolean): boolean {
+    needCreateMarkerController(options: IList, byOptions?: boolean, markerWasSet?: boolean): boolean {
         if (byOptions) {
-            return options.markerVisibility === 'visible'
-                || options.markerVisibility === 'onactivated' && options.markedKey !== undefined;
+            const wasActivated = options.hasOwnProperty('markedKey') && options.markedKey !== undefined || markerWasSet;
+            return options.markerVisibility === 'visible' || options.markerVisibility === 'onactivated' && wasActivated;
         } else {
             return options.markerVisibility !== 'hidden';
         }
     },
 
     applyMarkedKey(self: typeof BaseControl, options: IList): void {
-        if (_private.needCreateMarkerController(options, true)) {
+        const markerWasSet = _private.hasMarkerController(self)
+            ? !!_private.getMarkerController(self).getMarkedKey()
+            : false;
+        if (_private.needCreateMarkerController(options, true, markerWasSet)) {
             _private.getMarkerController(self, options).applyMarkedKey();
         }
     },
@@ -3760,11 +3761,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.hideIndicator(this);
     },
 
-    reload(keepScroll: boolean, sourceConfig: IBaseSourceConfig) {
+    reload(keepScroll: boolean, sourceConfig: IBaseSourceConfig): Promise<any> {
         if (keepScroll) {
             this._keepScrollAfterReload = true;
         }
-        return _private.reload(this, this._options, sourceConfig).addCallback(getData);
+        return _private.reload(this, this._options, sourceConfig)
+            .addCallback(getData)
+            .addCallback((data) => {
+                _private.restoreModelState(this, this._options);
+                return data;
+            });
     },
 
     setMarkedKey(key: number | string): void {
