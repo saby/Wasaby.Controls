@@ -5,6 +5,7 @@ import Deferred = require('Core/Deferred');
 import { isEqual } from 'Types/object';
 import { Map } from 'Types/shim';
 import {RecordSet} from 'Types/collection';
+import { Model } from 'Types/entity';
 
 import { saveConfig } from 'Controls/Application/SettingsController';
 import keysHandler = require('Controls/Utils/keysHandler');
@@ -14,6 +15,7 @@ import { DndTreeController } from 'Controls/listDragNDrop';
 import { Controller as SourceController } from 'Controls/source';
 import { error as dataSourceError } from 'Controls/dataSource';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
+import { TreeItem } from 'Controls/display';
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
 
@@ -720,16 +722,15 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
     },
 
-    _expandNodeOnDrag: function(itemData) {
-        if (!itemData.isExpanded) {
-            _private.toggleExpanded(this, itemData.dispItem);
-        }
+    _expandNodeOnDrag(dispItem: TreeItem<Model>): void {
+        _private.toggleExpanded(this, dispItem);
     },
+
     _nodeMouseMove: function(itemData, event) {
         const dndListController = this._children.baseControl.getDndListController();
-
+        const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
         const targetElement = _private.getTargetRow(event);
-        const dragTargetPosition = dndListController.calculateDragPositionRelativeNode(itemData, event, targetElement);
+        const dragTargetPosition = dndListController.calculateDragPositionRelativeNode(dispItem, event, targetElement);
 
         if (dragTargetPosition) {
             if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.item, dragTargetPosition.position]) !== false) {
@@ -745,8 +746,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             }
         }
 
-        if (dndListController.isInsideDragTargetNode(event, targetElement)) {
-            dndListController.startCountDownForExpandNode(itemData, this._expandNodeOnDrag);
+        if (!itemData.isExpanded && dndListController.isInsideDragTargetNode(event, targetElement)) {
+            dndListController.startCountDownForExpandNode(dispItem, this._expandNodeOnDrag);
         }
     },
 
