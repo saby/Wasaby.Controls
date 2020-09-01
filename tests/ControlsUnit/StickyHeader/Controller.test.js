@@ -28,7 +28,8 @@ define([
                },
                height: 10,
                resetSticky: sinon.fake(),
-               restoreSticky: sinon.fake()
+               restoreSticky: sinon.fake(),
+               updateShadowVisibility: sinon.fake()
             }
          };
       },
@@ -44,7 +45,8 @@ define([
                },
                height: 10,
                resetSticky: sinon.fake(),
-               restoreSticky: sinon.fake()
+               restoreSticky: sinon.fake(),
+               updateShadowVisibility: sinon.fake()
             },
             container: {
                getBoundingClientRect() {
@@ -80,12 +82,14 @@ define([
          it('should update value from true to false and should not register waiting headers', function() {
             sinon.stub(component, '_registerDelayed');
             component.setCanScroll(false);
+            component._initialized = true;
             assert.isFalse(component._canScroll);
             sinon.assert.notCalled(component._registerDelayed);
          });
          it('should update value from false to true and register waiting headers', function() {
             sinon.stub(component, '_registerDelayed');
             component._canScroll = false;
+            component._initialized = true;
             component.setCanScroll(true);
             assert.isTrue(component._canScroll);
             sinon.assert.called(component._registerDelayed);
@@ -287,7 +291,8 @@ define([
                         return offset;
                      },
                      resetSticky: sinon.fake(),
-                     restoreSticky: sinon.fake()
+                     restoreSticky: sinon.fake(),
+                     updateShadowVisibility: sinon.fake()
                   }
                };
                component.registerHandler(event, header, true);
@@ -536,7 +541,8 @@ define([
                   },
                   height: 10,
                   resetSticky: sinon.fake(),
-                  restoreSticky: sinon.fake()
+                  restoreSticky: sinon.fake(),
+                  updateShadowVisibility: sinon.fake()
                },
                container: {
                   getBoundingClientRect() {
@@ -551,7 +557,10 @@ define([
                   fixedPosition: 'top',
                   prevPosition: '',
                   height: 10,
-                  shadowVisible: true
+                  shadowVisible: true,
+                  inst: {
+                     updateShadowVisibility: sinon.fake()
+                  }
                });
                assert.equal(component.getHeadersHeight('top'), 0);
                assert.equal(component.getHeadersHeight('bottom'), 0);
