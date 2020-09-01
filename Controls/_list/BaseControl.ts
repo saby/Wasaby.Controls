@@ -2152,6 +2152,12 @@ const _private = {
 
     // region Marker
 
+    wasMarkerSet(self: typeof BaseControl): boolean {
+        return _private.hasMarkerController(self)
+            ? _private.getMarkerController(self).getMarkedKey() !== undefined && _private.getMarkerController(self).getMarkedKey() !== null
+            : false;
+    },
+
     hasMarkerController(self: typeof BaseControl): Boolean {
         return self._markerController;
     },
@@ -2163,9 +2169,9 @@ const _private = {
         return self._markerController;
     },
 
-    needCreateMarkerController(options: IList, byOptions?: boolean, markerWasSet?: boolean): boolean {
+    needCreateMarkerController(options: IList, byOptions?: boolean, wasMarkerSet?: boolean): boolean {
         if (byOptions) {
-            const wasActivated = options.hasOwnProperty('markedKey') && options.markedKey !== undefined || markerWasSet;
+            const wasActivated = options.hasOwnProperty('markedKey') && options.markedKey !== undefined || wasMarkerSet;
             return options.markerVisibility === 'visible' || options.markerVisibility === 'onactivated' && wasActivated;
         } else {
             return options.markerVisibility !== 'hidden';
@@ -2173,10 +2179,8 @@ const _private = {
     },
 
     applyMarkedKey(self: typeof BaseControl, options: IList): void {
-        const markerWasSet = _private.hasMarkerController(self)
-            ? !!_private.getMarkerController(self).getMarkedKey()
-            : false;
-        if (_private.needCreateMarkerController(options, true, markerWasSet)) {
+        const wasMarkerSet = _private.wasMarkerSet(self);
+        if (_private.needCreateMarkerController(options, true, wasMarkerSet)) {
             _private.getMarkerController(self, options).applyMarkedKey();
         }
     },
@@ -2190,10 +2194,8 @@ const _private = {
     },
 
     updateMarkerController(self: typeof BaseControl, options: IList): void {
-        const markerWasSet = _private.hasMarkerController(self)
-            ? _private.getMarkerController(self).getMarkedKey() !== undefined
-            : false;
-        if (_private.needCreateMarkerController(options, true, markerWasSet)) {
+        const wasMarkerSet = _private.wasMarkerSet(self);
+        if (_private.needCreateMarkerController(options, true, wasMarkerSet)) {
             const newMarkedKey = _private.getMarkerController(self).update({
                 model: self._listViewModel,
                 markerVisibility: options.markerVisibility,
