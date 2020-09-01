@@ -314,13 +314,9 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          });
          assert.isFalse(suggest._loading);
 
-         suggest._forceUpdate = () => {
-            updateForced = true;
-         };
          suggest._destroyed = true;
          suggest._searchDelay = 'testDelay';
          suggest._searchEnd();
-         assert.isFalse(updateForced);
          assert.notEqual(options.searchDelay, suggest._searchDelay);
       });
 
