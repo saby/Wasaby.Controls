@@ -437,7 +437,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
                assert.deepEqual(data[0].templateOptions.filter, suggest._filter);
             }
          };
-
+         suggest._filter = {};
          suggest._moreClick();
          assert.isTrue(isNotifyShowSelector);
       });
@@ -1018,10 +1018,14 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
             });
          suggestComponent._options.suggestTemplate = {};
 
-         let templateOptions = suggestMod._InputController._private.getTemplateOptions(suggestComponent, suggestComponent);
+         const filter = {
+            historyKeys: [1, 2, 3]
+         };
+         let templateOptions = suggestMod._InputController._private.getTemplateOptions(suggestComponent, filter);
 
          suggestComponent._notify = (items, data) => {
             assert.deepEqual(data[0], templateOptions);
+            assert.deepEqual(templateOptions.templateOptions.filter, {});
             return true;
          };
 
