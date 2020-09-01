@@ -582,7 +582,6 @@ var SuggestLayout = Control.extend({
          if (this._options.searchEndCallback) {
             this._options.searchEndCallback();
          }
-         this._forceUpdate();
       }
    },
    _searchErrback: function(error) {
