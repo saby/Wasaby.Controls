@@ -4,9 +4,9 @@
    position: sticky;
 }
 
-// Прилипающий заголовок дергается при скролле в больших списках.
-// Устанавливаем свойство will-change для оптимизации.
-.ws-is-mac.ws-is-desktop-platform {
+// Прилипающий заголовок дергается при скролле в горизонтальных списках на macOS, т.к. на корневой ноде списка висит свойство transformX.
+// Устанавливаем свойство will-change для оптимизации данного кейса.
+.ws-is-desktop-safari{
    .controls-StickyHeader {
       will-change: transform;
    }
