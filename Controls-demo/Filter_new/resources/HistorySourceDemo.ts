@@ -81,9 +81,9 @@ export default class DemoHistorySource {
     constructor(cfg: Record<string, any>) {
         this._recent = cfg.recent;
         this._historyId = cfg.historyId;
-        this._historyItemsCount = cfg.historyId === DEFAULT_DEMO_HISTORY_ID ?
+        this._historyItemsCount = cfg.historyItemsCount || (cfg.historyId === DEFAULT_DEMO_HISTORY_ID ?
             DEFAULT_HISTORY_ITEMS_COUNT :
-            MAX_HISTORY_ITEMS_COUNT;
+            MAX_HISTORY_ITEMS_COUNT);
     }
 
     query(): Promise<any> {
