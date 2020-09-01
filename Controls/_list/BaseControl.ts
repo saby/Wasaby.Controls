@@ -2191,7 +2191,7 @@ const _private = {
 
     updateMarkerController(self: typeof BaseControl, options: IList): void {
         const markerWasSet = _private.hasMarkerController(self)
-            ? !!_private.getMarkerController(self).getMarkedKey()
+            ? _private.getMarkerController(self).getMarkedKey() !== undefined
             : false;
         if (_private.needCreateMarkerController(options, true, markerWasSet)) {
             const newMarkedKey = _private.getMarkerController(self).update({
