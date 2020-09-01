@@ -102,5 +102,9 @@ export default {
             return this._manager[methodName].apply(this._manager, args || []);
         }
         return false;
+    },
+
+    notifyToManager(actionName: string, args: any[]): void {
+        this._callManager('_eventHandler', [actionName, args]);
     }
 };
