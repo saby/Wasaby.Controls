@@ -285,7 +285,7 @@ class Manager extends Control<IManagerOptions> {
         const removeDeferred = item.controller._elementDestroyed(item, container);
         this._redrawItems();
 
-        this._notifyEvent('managerPopupBeforeDestroyed', [item, this._popupItems, container]);
+        Manager._notifyEvent('managerPopupBeforeDestroyed', [item, this._popupItems, container]);
         return removeDeferred.addCallback(() => {
             this._popupItems.remove(item);
             this._removeFromParentConfig(item);
@@ -293,7 +293,7 @@ class Manager extends Control<IManagerOptions> {
             this._removeContainerItem(item, (removedItem: IPopupItem) => {
                 this._fireEventHandler(removedItem, 'onClose');
             });
-            this._notifyEvent('managerPopupDestroyed', [item, this._popupItems]);
+            Manager._notifyEvent('managerPopupDestroyed', [item, this._popupItems]);
         });
     }
 
@@ -321,7 +321,7 @@ class Manager extends Control<IManagerOptions> {
         const item = this.find(id);
         if (item) {
             if (!item.popupOptions.isCompoundTemplate) {
-                this._notifyEvent('managerPopupCreated', [item, this._popupItems]);
+                Manager._notifyEvent('managerPopupCreated', [item, this._popupItems]);
             }
         }
     }
@@ -336,7 +336,7 @@ class Manager extends Control<IManagerOptions> {
             // if it's CompoundTemplate, then compoundArea notify event, when template will ready.
             // notify this event on popupBeforePaintOnMount, cause we need synchronous reaction on created popup
             // if (!item.popupOptions.isCompoundTemplate) {
-            //     this._notify('managerPopupCreated', [item, this._popupItems], {bubbling: true});
+            //     Manager._notifyEvent('managerPopupCreated', [item, this._popupItems]);
             // }
         }
         return false;
@@ -350,7 +350,7 @@ class Manager extends Control<IManagerOptions> {
         const element = this.find(id);
         if (element) {
             element.controller._popupResizingLine(element, offset);
-            this._notifyEvent('managerPopupUpdated', [element, this._popupItems]);
+            Manager._notifyEvent('managerPopupUpdated', [element, this._popupItems]);
             return true;
         }
         return false;
@@ -361,7 +361,7 @@ class Manager extends Control<IManagerOptions> {
         if (element) {
             // при создании попапа, зарегистрируем его
             const needUpdate = element.controller._elementUpdated(element, this._getItemContainer(id));
-            this._notifyEvent('managerPopupUpdated', [element, this._popupItems]);
+            Manager._notifyEvent('managerPopupUpdated', [element, this._popupItems]);
             return !!needUpdate;
         }
         return false;
@@ -371,7 +371,7 @@ class Manager extends Control<IManagerOptions> {
         const element = this.find(id);
         if (element) {
             element.controller._elementMaximized(element, this._getItemContainer(id), state);
-            this._notifyEvent('managerPopupMaximized', [element, this._popupItems]);
+            Manager._notifyEvent('managerPopupMaximized', [element, this._popupItems]);
             return true;
         }
         return false;
@@ -545,12 +545,6 @@ class Manager extends Control<IManagerOptions> {
             return item.controller._elementAnimated(item, this._getItemContainer(id));
         }
         return false;
-    }
-
-    private _notifyEvent(event: string, args: unknown[]): void {
-        // TODO: dom-нотификацию нужно удалить, после того, как избавимся от всех обработчиков dom-события.
-        this._notify(event, args, {bubbling: true});
-        EventBus.channel('popupManager').notify(event, args);
     }
 
     private _fireEventHandler(item: IPopupItem, event: string): boolean {
@@ -783,6 +777,10 @@ class Manager extends Control<IManagerOptions> {
         if (actionResult === true) {
             this._redrawItems();
         }
+    }
+
+    private static _notifyEvent(event: string, args: unknown[]): void {
+        EventBus.channel('popupManager').notify(event, ...args);
     }
 }
 
