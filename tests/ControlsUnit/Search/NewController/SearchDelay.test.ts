@@ -60,7 +60,7 @@ describe('Controls/search:SearchDelay', () => {
       });
    });
 
-   describe('minSearchValueLength', () => {
+   describe('minValueLength', () => {
       it('should resetCallback when value is empty', () => {
          const clock = sinon.useFakeTimers({
             now, toFake: ['setTimeout', 'clearTimeout']
