@@ -3605,24 +3605,37 @@ define([
                ctrl.saveOptions(cfg);
                ctrl._container = {
                   clientHeight: 100
-               }
+               };
 
             });
 
             afterEach(() => {
                sandbox.restore();
             });
-            it('scrollToItem called on beginAdd', async () => {
+            it('scrollToItem called on beginAdd if adding item is out of range', async () => {
                await ctrl._beforeMount(cfg);
+               ctrl._listViewModel._startIndex = 2;
                ctrl._editInPlace = {
                   beginAdd: function() {
                      return Promise.resolve();
                   }
                };
                await ctrl.beginAdd({}).then(() => {
-                     assert.isTrue(scrollToItemCalled);
-                  });
+                  assert.isTrue(scrollToItemCalled);
                });
+            });
+            it('scrollToItem not called on beginAdd if adding item is in range', async () => {
+               await ctrl._beforeMount(cfg);
+               ctrl._listViewModel._startIndex = 0;
+               ctrl._editInPlace = {
+                  beginAdd: function() {
+                     return Promise.resolve();
+                  }
+               };
+               await ctrl.beginAdd({}).then(() => {
+                  assert.isFalse(scrollToItemCalled);
+               });
+            });
          });
 
          it('cancelEdit', function() {
