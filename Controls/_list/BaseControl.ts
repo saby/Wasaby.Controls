@@ -3476,12 +3476,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlace) {
             this._editInPlace.reset();
         }
-        
+
         if (this._listViewModel) {
             this._listViewModel.destroy();
         }
         this._loadTriggerVisibility = null;
-
 
         if (this._portionedSearch) {
             this._portionedSearch.destroy();
