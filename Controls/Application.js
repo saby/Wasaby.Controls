@@ -7,6 +7,7 @@ define('Controls/Application',
       'wml!Controls/Application/Page',
       'Core/BodyClasses',
       'Env/Env',
+      'Env/Event',
       'UI/Base',
       'Controls/scroll',
       'Core/helpers/getResourceUrl',
@@ -56,6 +57,7 @@ define('Controls/Application',
       template,
       cBodyClasses,
       Env,
+      EnvEvent,
       UIBase,
       scroll,
       getResourceUrl,
@@ -288,6 +290,10 @@ define('Controls/Application',
             if (this._isIOS13()) {
                window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
             }
+            var channelPopupManager = EnvEvent.Bus.channel('popupManager');
+            channelPopupManager.subscribe('managerPopupCreated', this._popupCreatedHandler, this);
+            channelPopupManager.subscribe('managerPopupDestroyed', this._popupDestroyedHandler, this);
+            channelPopupManager.subscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
 
             this._globalpopup.registerGlobalPopup();
          },
@@ -296,6 +302,10 @@ define('Controls/Application',
             for (var register in this._registers) {
                this._registers[register].destroy();
             }
+            var channelPopupManager = EnvEvent.Bus.channel('popupManager');
+            channelPopupManager.unsubscribe('managerPopupCreated', this._popupCreatedHandler, this);
+            channelPopupManager.unsubscribe('managerPopupDestroyed', this._popupDestroyedHandler, this);
+            channelPopupManager.unsubscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
 
             this._globalpopup.registerGlobalPopupEmpty();
          },
