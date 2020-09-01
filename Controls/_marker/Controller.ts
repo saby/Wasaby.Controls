@@ -14,7 +14,9 @@ export class Controller {
    private _markedKey: TKey = null;
 
    constructor(options: IOptions) {
-      this.update(options);
+      this._model = options.model;
+      this._markerVisibility = options.markerVisibility;
+      this._markedKey = this.calculateMarkedKey(options.markedKey);
    }
 
    /**
