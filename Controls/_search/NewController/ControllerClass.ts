@@ -22,8 +22,8 @@ export default class ControllerClass {
       const sourceController = this._options.sourceController;
 
       sourceController.setFilter(filter);
-      return sourceController.load().then(
-         sourceController.setItems
+      return sourceController.load().then((v) =>
+         sourceController.setItems(v)
       );
    }
 
