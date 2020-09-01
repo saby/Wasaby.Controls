@@ -377,6 +377,8 @@ const _private = {
                         }
                         self._items.subscribe('onCollectionChange', self._onItemsChanged);
 
+                        _private.restoreModelState(self, cfg);
+
                         if (self._sourceController) {
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                         }
@@ -3761,16 +3763,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.hideIndicator(this);
     },
 
-    reload(keepScroll: boolean, sourceConfig: IBaseSourceConfig): Promise<any> {
+    reload(keepScroll: boolean, sourceConfig: IBaseSourceConfig) {
         if (keepScroll) {
             this._keepScrollAfterReload = true;
         }
-        return _private.reload(this, this._options, sourceConfig)
-            .addCallback(getData)
-            .addCallback((data) => {
-                _private.restoreModelState(this, this._options);
-                return data;
-            });
+        return _private.reload(this, this._options, sourceConfig).addCallback(getData);
     },
 
     setMarkedKey(key: number | string): void {
