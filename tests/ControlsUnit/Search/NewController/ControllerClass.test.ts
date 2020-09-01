@@ -2,7 +2,7 @@ import {NewControllerClass as ControllerClass} from 'Controls/search';
 import {assert} from 'chai';
 import {NewSourceController} from 'Controls/dataSource';
 import {Memory, QueryWhereExpression} from 'Types/source';
-import {createSandbox, SinonStub} from 'sinon';
+import {createSandbox, SinonSpy} from 'sinon';
 import {IControllerOptions} from 'Controls/_dataSource/Controller';
 
 const getMemorySource = (): Memory => {
@@ -52,7 +52,7 @@ const getSourceController = (options: Partial<IControllerOptions>) => {
 const defaultOptionsControllerClass = {
    minSearchLength: 3,
    searchDelay: 50,
-   searchParam: 'test',
+   searchParam: 'testParam',
    searchValue: '',
    searchValueTrim: false,
    sourceController: getSourceController({})
@@ -70,14 +70,14 @@ describe('Controls/search:NewControllerClass', () => {
 
    let sourceController: NewSourceController;
    let controllerClass: ControllerClass;
-   let getFilterStub: SinonStub;
+   let getFilterSpy: SinonSpy;
 
    beforeEach(() => {
       sourceController = getSourceController({});
       controllerClass = getControllerClass({
          sourceController
       });
-      getFilterStub = sandbox.stub(sourceController, 'getFilter');
+      getFilterSpy = sandbox.spy(sourceController, 'setFilter');
    });
    afterEach(() => {
       sandbox.restore();
@@ -85,49 +85,41 @@ describe('Controls/search:NewControllerClass', () => {
 
    it('search method', () => {
       const filter: QueryWhereExpression<unknown> = {
-         test: 'testValue'
+         testParam: 'testValue'
       };
-      controllerClass.search('test');
+      controllerClass.search('testValue');
 
-      assert.isTrue(getFilterStub.calledWith(filter));
+      assert.isTrue(getFilterSpy.withArgs(filter).called);
    });
 
    it('search and reset', () => {
       const filter: QueryWhereExpression<unknown> = {
-         test: 'testValue'
+         testParam: 'testValue'
       };
-      controllerClass.search('test');
+      controllerClass.search('testValue');
 
-      assert.isTrue(getFilterStub.calledWith(filter));
+      assert.isTrue(getFilterSpy.withArgs(filter).called);
 
       controllerClass.reset();
 
-      assert.isTrue(getFilterStub.calledWith({}));
-      assert.isEmpty(controllerClass._searchValue);
+      assert.isTrue(getFilterSpy.withArgs({}).called);
    });
 
    it('search and update', () => {
       const filter: QueryWhereExpression<unknown> = {
-         test: 'testValue'
+         testParam: 'testValue'
       };
       const updatedFilter: QueryWhereExpression<unknown> = {
-         test: 'updatedValue'
+         testParam: 'updatedValue'
       };
-      controllerClass.search('test');
+      controllerClass.search('testValue');
 
-      assert.isTrue(getFilterStub.calledWith(filter));
+      assert.isTrue(getFilterSpy.withArgs(filter).called);
 
       controllerClass.update({
          searchValue: 'updatedValue'
       });
 
-      assert.isTrue(getFilterStub.calledWith(updatedFilter));
-   });
-
-   it('search with empty searchValue should reset', () => {
-      const filter: QueryWhereExpression<unknown> = {};
-      controllerClass.search('');
-
-      assert.isTrue(getFilterStub.calledWith(filter));
+      assert.isTrue(getFilterSpy.withArgs(updatedFilter).called);
    });
 });
