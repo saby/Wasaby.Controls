@@ -46,7 +46,9 @@ export class Controller {
     * Проставляет текущий маркер в модели
     */
    applyMarkedKey(): void {
+      // нужно вызвать для старой модели, т.к. markedKey хранится в ее состоянии
       this._model.setMarkedKey(this._markedKey, true);
+
       const item = this._model.getItemBySourceKey(this._markedKey);
       if (item) {
          item.setMarked(true);
