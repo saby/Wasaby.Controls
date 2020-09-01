@@ -76,12 +76,12 @@ function createRecordSet(data: any): RecordSet {
 }
 
 export default class DemoHistorySource {
-    protected _recent: number = null;
+    protected _$recent: number = null;
     protected _historyItemsCount: number = 1;
     protected _historyId: string = 'DEMO_HISTORY_ID';
 
     constructor(cfg: Record<string, any>) {
-        this._recent = cfg.recent;
+        this._$recent = cfg.recent;
         this._historyId = cfg.historyId;
         this._historyItemsCount = cfg.historyId === DEFAULT_DEMO_HISTORY_ID ?
             DEFAULT_HISTORY_ITEMS_COUNT :
