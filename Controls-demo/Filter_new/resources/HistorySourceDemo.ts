@@ -6,7 +6,9 @@ import {DataSet} from 'Types/source';
 
 const DEFAULT_HISTORY_ITEMS_COUNT = 3;
 const MAX_HISTORY_ITEMS_COUNT = 6;
+const EMPTY_HISTORY_ITEMS_COUNT = 0;
 const DEFAULT_DEMO_HISTORY_ID = 'DEMO_HISTORY_ID';
+const EMPTY_DEMO_HISTORY_ID = 'EMPTY-DEMO_HISTORY_ID';
 
 const pinnedData = {
     _type: 'recordset',
@@ -83,7 +85,7 @@ export default class DemoHistorySource {
         this._historyId = cfg.historyId;
         this._historyItemsCount = cfg.historyId === DEFAULT_DEMO_HISTORY_ID ?
             DEFAULT_HISTORY_ITEMS_COUNT :
-            MAX_HISTORY_ITEMS_COUNT;
+            EMPTY_DEMO_HISTORY_ID ? EMPTY_HISTORY_ITEMS_COUNT : MAX_HISTORY_ITEMS_COUNT;
     }
 
     query(): Promise<any> {
