@@ -2190,13 +2190,18 @@ const _private = {
     },
 
     updateMarkerController(self: typeof BaseControl, options: IList): void {
-        const newMarkedKey = _private.getMarkerController(self).update({
-            model: self._listViewModel,
-            markerVisibility: options.markerVisibility,
-            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markerController.getMarkedKey()
-        });
-        if (newMarkedKey !== options.markedKey) {
-            self._notify('markedKeyChanged', [newMarkedKey]);
+        const markerWasSet = _private.hasMarkerController(self)
+            ? !!_private.getMarkerController(self).getMarkedKey()
+            : false;
+        if (_private.needCreateMarkerController(options, true, markerWasSet)) {
+            const newMarkedKey = _private.getMarkerController(self).update({
+                model: self._listViewModel,
+                markerVisibility: options.markerVisibility,
+                markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markerController.getMarkedKey()
+            });
+            if (newMarkedKey !== options.markedKey) {
+                self._notify('markedKeyChanged', [newMarkedKey]);
+            }
         }
     },
 
@@ -3316,6 +3321,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
+        _private.updateMarkerController(this, newOptions);
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
@@ -3326,7 +3332,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                         _private.updateInitializedItemActions(this, newOptions);
 
-                        _private.updateMarkerController(this, newOptions);
                         _private.applyMarkedKey(this, newOptions);
                     });
                 });
@@ -3336,12 +3341,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                     _private.updateInitializedItemActions(this, newOptions);
 
-                    _private.updateMarkerController(this, newOptions);
                     _private.applyMarkedKey(this, newOptions);
                 });
             }
         } else {
-            _private.updateMarkerController(this, newOptions);
             _private.applyMarkedKey(this, newOptions);
 
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
