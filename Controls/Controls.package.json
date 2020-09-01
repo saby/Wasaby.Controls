@@ -44,8 +44,10 @@
   "include": [
     "Controls/buttons",
     "Controls/input",
+    "Controls/validate",
     "Controls/dataSource",
-    "Controls/source"
+    "Controls/source",
+    "Controls/Constants"
   ],
   "extendsTo": "page-superbundle.package.js"
 }, {
