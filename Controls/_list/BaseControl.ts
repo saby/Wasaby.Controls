@@ -1461,11 +1461,6 @@ const _private = {
                 if (action === IObservable.ACTION_ADD) {
                     _private.getMarkerController(self).handleAddItems(newItems);
                 }
-
-                // Если пересоздастся CollectionItem, то нужно для него восстановить маркер
-                if (action === IObservable.ACTION_REPLACE) {
-                    _private.getMarkerController(self).applyMarkedKey();
-                }
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
@@ -2146,6 +2141,11 @@ const _private = {
                    _private.handleMarkerControllerResult(self, newMarkedKey);
                }
                break;
+           case IObservable.ACTION_REPLACE:
+               // Если пересоздастся CollectionItem, то нужно для него восстановить маркер
+               if (_private.hasMarkerController(self)) {
+                   _private.getMarkerController(self).applyMarkedKey();
+               }
        }
        _private.handleSelectionControllerResult(self, selectionControllerResult);
    },
@@ -2163,13 +2163,17 @@ const _private = {
         return self._markerController;
     },
 
-    needMarkerController(options: IList): boolean {
-        return options.markerVisibility === 'visible'
-            || options.markerVisibility === 'onactivated' && options.markedKey !== undefined;
+    needCreateMarkerController(options: IList, byOptions?: boolean): boolean {
+        if (byOptions) {
+            return options.markerVisibility === 'visible'
+                || options.markerVisibility === 'onactivated' && options.markedKey !== undefined;
+        } else {
+            return options.markerVisibility !== 'hidden';
+        }
     },
 
     applyMarkedKey(self: typeof BaseControl, options: IList): void {
-        if (_private.needMarkerController(options)) {
+        if (_private.needCreateMarkerController(options, true)) {
             _private.getMarkerController(self, options).applyMarkedKey();
         }
     },
@@ -2194,14 +2198,14 @@ const _private = {
     },
 
     setMarkedKey(self: typeof BaseControl, key: TItemKey): void {
-        if (self._options.markerVisibility !== 'hidden') {
+        if (_private.needCreateMarkerController(self._options)) {
             const newMarkedKey = _private.getMarkerController(self).calculateMarkedKey(key);
             _private.handleMarkerControllerResult(self, newMarkedKey);
         }
     },
 
     moveMarkerToNext(self: typeof BaseControl, event: SyntheticEvent): void {
-        if (self._options.markerVisibility !== 'hidden') {
+        if (_private.needCreateMarkerController(self._options)) {
             // activate list when marker is moving. It let us press enter and open current row
             // must check mounted to avoid fails on unit tests
             if (self._mounted) {
@@ -2242,7 +2246,7 @@ const _private = {
 
     setMarkerAfterScrolling(self: typeof BaseControl, scrollTop: number): void {
         // TODO вручную обрабатывать pagedown и делать stop propagation
-        if (self._options.markerVisibility !== 'hidden') {
+        if (_private.needCreateMarkerController(self._options,)) {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);

@@ -56,6 +56,7 @@ export class Controller {
     */
    applyMarkedKey(): void {
       // нужно вызвать для старой модели, т.к. markedKey хранится в ее состоянии
+      // TODO https://online.sbis.ru/opendoc.html?guid=f38ec819-4916-46e4-9ff8-f05759202f9f
       this._model.setMarkedKey(this._markedKey, true);
 
       const item = this._model.getItemBySourceKey(this._markedKey);
