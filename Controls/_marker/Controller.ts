@@ -14,13 +14,7 @@ export class Controller {
    private _markedKey: TKey = null;
 
    constructor(options: IOptions) {
-      this._model = options.model;
-      this._markerVisibility = options.markerVisibility;
-      const markedKey = this.calculateMarkedKey(options.markedKey);
-
-      if (markedKey !== null) {
-         this.setMarkedKey(markedKey);
-      }
+      this.update(options);
    }
 
    /**
@@ -29,15 +23,12 @@ export class Controller {
     * @return {number|string} Ключ маркера
     */
    update(options: IOptions): TKey {
-      if (this._model !== options.model) {
-         this._model = options.model;
-         this.restoreMarker();
-      }
+      this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-
-      const markedKey = this.calculateMarkedKey(options.markedKey);
-      this.setMarkedKey(markedKey);
-      return markedKey;
+      // calculate на случай если передали ключ элемента, который не существует,
+      // или null, чтобы поставить маркер на первый элемент
+      this._markedKey = this.calculateMarkedKey(options.markedKey);
+      return this._markedKey;
    }
 
    /**
@@ -48,6 +39,17 @@ export class Controller {
          this._model.setMarkedKey(this._markedKey, false);
          this._model.setMarkedKey(markedKey, true);
          this._markedKey = markedKey;
+      }
+   }
+
+   /**
+    * Проставляет текущий маркер в модели
+    */
+   applyMarkedKey(): void {
+      this._model.setMarkedKey(this._markedKey, true);
+      const item = this._model.getItemBySourceKey(this._markedKey);
+      if (item) {
+         item.setMarked(true);
       }
    }
 
@@ -95,16 +97,6 @@ export class Controller {
       }
 
       return resultKey;
-   }
-
-   /**
-    * Проставляет заново маркер в модели
-    */
-   restoreMarker(): void {
-      const item = this._model.getItemBySourceKey(this._markedKey);
-      if (item) {
-         item.setMarked(true);
-      }
    }
 
    /**
@@ -198,7 +190,7 @@ export class Controller {
     */
    handleAddItems(newItems: Array<CollectionItem<Model>>): void {
       if (newItems.some((item) => this._getKey(item) === this._markedKey)) {
-         this.restoreMarker();
+         this.applyMarkedKey();
       }
    }
 

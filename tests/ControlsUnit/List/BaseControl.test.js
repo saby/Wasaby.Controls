@@ -1240,7 +1240,7 @@ define([
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
                update() {},
-               restoreMarker() {},
+               applyMarkedKey() {},
                getMarkedKey() {}
             };
          };
@@ -1311,7 +1311,7 @@ define([
                moveMarkerToPrev() { moveMarkerToPrevCalled = true; },
                handleRemoveItems() {},
                update() {},
-               restoreMarker() {},
+               applyMarkedKey() {},
                getMarkedKey() {}
             };
          };
@@ -1690,10 +1690,14 @@ define([
          const notifySpy = sinon.spy(baseControl, '_notify');
 
          lists.BaseControl._private.updateMarkerController(baseControl, cfg);
-         assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+         assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+         assert.equal(baseControl._markerController.getMarkedKey(), 1);
+
+         notifySpy.resetHistory();
 
          lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markedKey: 2 });
-         assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+         assert.isFalse(notifySpy.withArgs('markedKeyChanged', [2]).called);
+         assert.equal(baseControl._markerController.getMarkedKey(), 2);
 
          notifySpy.resetHistory();
          baseControl._listViewModel.setItems(new collection.RecordSet({
@@ -1701,7 +1705,8 @@ define([
             keyProperty: 'id'
          }));
          lists.BaseControl._private.updateMarkerController(baseControl, { ...cfg, markerVisibility: 'onactivated' });
-         assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+         assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+         assert.equal(baseControl._markerController.getMarkedKey(), 1);
       });
 
       describe('_private.createSelectionController', function() {
@@ -1792,32 +1797,31 @@ define([
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [6, true], {bubbling: true}).called);
       });
 
-      it('_private.setMarkedKey', () => {
-         const baseControl = {
-            _markerController: {
-               calculateMarkedKey: (key) => {
-                  assert.equal(key, 2);
-                  return key;
-               },
-               getMarkedKey: () => 2
+      it('_private.setMarkedKey', async () => {
+         const
+            lnSource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               markerVisibility: 'onactivated'
             },
-            _notify: () => null,
-            _options: {
-               hasOwnProperty: () => true
-            }
-         };
+            baseControl = new lists.BaseControl(lnCfg);
+
+         baseControl.saveOptions(lnCfg);
+         await baseControl._beforeMount(lnCfg);
 
          const scrollToItemSpy = sinon.spy(lists.BaseControl._private, 'scrollToItem');
-         const setMarkedKeySpy = sinon.spy(baseControl._markerController, 'calculateMarkedKey');
 
-         lists.BaseControl._private.setMarkedKey({}, 2);
-         assert.isFalse(setMarkedKeySpy.called);
-         assert.isFalse(scrollToItemSpy.called);
+         assert.isNull(baseControl._markerController);
 
          lists.BaseControl._private.setMarkedKey(baseControl, 2);
          assert.isFalse(scrollToItemSpy.called);
-         assert.isFalse(setMarkedKeySpy.withArgs(baseControl, 2).called);
-         assert.equal(baseControl._markerController.getMarkedKey(), 2);
+         assert.isTrue(baseControl._listViewModel.getItemBySourceKey(2).isMarked());
       });
 
       it('loadToDirection up', async function() {
@@ -5536,6 +5540,18 @@ define([
             lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'a', [item], null, [], 0);
             assert.isTrue(item.isMarked());
          });
+
+         it('restore marker on replace item', () => {
+            baseControl.setMarkedKey(1);
+            let item = baseControl.getViewModel().getItemBySourceKey(1);
+            assert.isTrue(item.isMarked());
+
+            item.setMarked(false);
+
+            lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged','rp', [item.getContents()], 0);
+            item = baseControl.getViewModel().getItemBySourceKey(1);
+            assert.isTrue(item.isMarked());
+         });
       });
 
       it('onCollectionChanged call selectionController methods', () => {
@@ -7193,7 +7209,7 @@ define([
                         assert.equal(key, 1);
                         setMarkedKeyIsCalled = true;
                      },
-                     restoreMarker() {},
+                     applyMarkedKey() {},
                      getMarkedKey: () => undefined
                   };
 
@@ -7573,54 +7589,6 @@ define([
 
             assert.isTrue(endDragSpy.called);
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
-         });
-
-         describe('_private.onListChange', () => {
-            let baseControl;
-
-            beforeEach(async () => {
-               const data = [
-                  {
-                     id: 1,
-                     title: 'Первый',
-                     type: 1
-                  },
-                  {
-                     id: 2,
-                     title: 'Второй',
-                     type: 2
-                  }
-               ];
-               const source = new sourceLib.Memory({
-                  keyProperty: 'id',
-                  data: data
-               });
-               const cfg = {
-                  viewName: 'Controls/List/ListView',
-                  viewModelConfig: {
-                     items: [],
-                     keyProperty: 'id'
-                  },
-                  viewModelConstructor: lists.ListViewModel,
-                  keyProperty: 'id',
-                  source: source
-               };
-               baseControl = new lists.BaseControl();
-               baseControl.saveOptions(cfg);
-               await baseControl._beforeMount(cfg);
-            });
-
-            it('restore marker for replaced item', () => {
-               baseControl.setMarkedKey(1);
-               let item = baseControl.getViewModel().getItemBySourceKey(1);
-               assert.isTrue(item.isMarked());
-
-               item.setMarked(false);
-
-               lists.BaseControl._private.onItemsChanged(baseControl, 'rp', [item.getContents()], 0);
-               item = baseControl.getViewModel().getItemBySourceKey(1);
-               assert.isTrue(item.isMarked());
-            });
          });
       });
    });
