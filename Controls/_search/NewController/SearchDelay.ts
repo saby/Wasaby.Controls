@@ -1,6 +1,3 @@
-
-const MIN_VALUE = 3;
-
 export interface ISearchDelayOptions {
    delayTime?: number | null;
    minSearchLength?: number;
@@ -16,6 +13,14 @@ export default class SearchDelay {
 
    constructor(options: ISearchDelayOptions) {
       this._options = options;
+   }
+
+   private _resolveCallback(callback: Function, value: string): void {
+      if (this._options.delayTime) {
+         this.callAfterDelay(callback, value);
+      } else {
+         callback(value);
+      }
    }
 
    clearTimer(): void {
@@ -39,10 +44,10 @@ export default class SearchDelay {
       const searchByValueChanged = this._options.minSearchLength !== null;
 
       if ((searchByValueChanged && valueLength >= this._options.minSearchLength)) {
-         this.callAfterDelay(this._options.searchCallback, value);
+         this._resolveCallback(this._options.searchCallback, value);
       } else if (searchByValueChanged || !valueLength) {
          if (valueLength) {
-            this.callAfterDelay(this._options.searchResetCallback, value);
+            this._resolveCallback(this._options.searchResetCallback, value);
          } else {
             this._options.searchResetCallback();
          }
