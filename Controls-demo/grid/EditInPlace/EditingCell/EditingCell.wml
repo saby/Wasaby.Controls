@@ -16,7 +16,7 @@
                                 multiSelectVisibility="visible"
                                 bind:selectedKeys="_selectedKeys"
                                 columns="{{_columns}}"
-                                attr:class="controlsDemo__maxWidth820">
+                                attr:class="controlsDemo__maxWidth800">
                             <ws:editingConfig>
                                 <ws:Object editOnClick="{{true}}" autoAdd="{{true}}"/>
                             </ws:editingConfig>
