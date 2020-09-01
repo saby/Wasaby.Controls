@@ -399,7 +399,7 @@ define(
                   }
                }
             }
-            Manager._mouseDownHandler(event);
+            Manager.mouseDownHandler(event);
             assert.equal(deactivatedCount, 2);
             Manager.destroy();
          });

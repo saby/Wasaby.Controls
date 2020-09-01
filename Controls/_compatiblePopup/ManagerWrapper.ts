@@ -122,16 +122,16 @@ var ManagerWrapper = Control.extend({
       this._eventRegistratorHandler('mousedownDetect', event);
       var Manager = ControllerPopup.getManager();
       if (Manager) {
-         Manager._mouseDownHandler(event);
+         Manager.mouseDownHandler(event);
       }
    },
 
     _workspaceResizePage: function (event, ...args) {
-        this._popupManager._eventHandler.apply(this._popupManager, ['workspaceResize', args]);
+        this._popupManager.eventHandler.apply(this._popupManager, ['workspaceResize', args]);
     },
 
     _pageScrolled: function (event, ...args) {
-        this._popupManager._eventHandler.apply(this._popupManager, ['pageScrolled', args]);
+        this._popupManager.eventHandler.apply(this._popupManager, ['pageScrolled', args]);
     },
 
    registerListener: function(event, registerType, component, callback) {
@@ -209,7 +209,7 @@ var ManagerWrapper = Control.extend({
       if (window) {
          this._toggleWindowHandlers(false);
       }
-      this._popupManager.destroyManager();
+      this._popupManager.destroy();
    }
 
 });

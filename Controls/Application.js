@@ -137,7 +137,7 @@ define('Controls/Application',
          },
          _mousedownPage: function(ev) {
             this._registers.mousedown.start(ev);
-            this._popupManager._mouseDownHandler(ev);
+            this._popupManager.mouseDownHandler(ev);
          },
          _mousemovePage: function(ev) {
             this._registers.mousemove.start(ev);
@@ -311,7 +311,7 @@ define('Controls/Application',
             channelPopupManager.unsubscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
 
             this._globalpopup.registerGlobalPopupEmpty();
-            this._popupManager.destroyManager();
+            this._popupManager.destroy();
          },
 
          _beforeUpdate: function(cfg) {
@@ -431,7 +431,7 @@ define('Controls/Application',
 
          _popupEventHandler: function(event, action) {
             var args = Array.prototype.slice.call(arguments, 2);
-            this._popupManager._eventHandler.apply(this._popupManager, [action, args]);
+            this._popupManager.eventHandler.apply(this._popupManager, [action, args]);
          }
       });
 

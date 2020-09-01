@@ -74,7 +74,7 @@ class Manager {
         ManagerController.setPopupHeaderTheme(options.popupHeaderTheme);
     }
 
-    protected destroyManager(): void {
+    protected destroy(): void {
         if (detection.isMobileIOS) {
             EventBus.globalChannel().unsubscribe('MobileInputFocus', this._controllerVisibilityChangeHandler);
             EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._controllerVisibilityChangeHandler);
@@ -407,7 +407,7 @@ class Manager {
         return false;
     }
 
-    protected _mouseDownHandler(event: Event): void {
+    protected mouseDownHandler(event: Event): void {
         if (this._popupItems && !this._isIgnoreActivationArea(event.target as HTMLElement)) {
             const deactivatedPopups = [];
             this._popupItems.each((item) => {
@@ -768,7 +768,7 @@ class Manager {
         }
     }
 
-    protected _eventHandler(actionName: string, args: any[]): void {
+    protected eventHandler(actionName: string, args: any[]): void {
         const actionResult = this[`_${actionName}`].apply(this, args);
         if (actionResult === true) {
             this._redrawItems();
