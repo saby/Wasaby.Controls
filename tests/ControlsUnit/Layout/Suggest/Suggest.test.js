@@ -283,6 +283,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
       it('Suggest::_searchEnd', function() {
          var suggest = new suggestMod._InputController();
          var errorFired = false;
+         let updateForced = false;
          var options = {
             searchDelay: 300,
             suggestState: true
@@ -312,6 +313,11 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
             data: new collection.RecordSet({items: [1]})
          });
          assert.isFalse(suggest._loading);
+
+         suggest._destroyed = true;
+         suggest._searchDelay = 'testDelay';
+         suggest._searchEnd();
+         assert.notEqual(options.searchDelay, suggest._searchDelay);
       });
 
       it('Suggest::_private.searchErrback', function() {
