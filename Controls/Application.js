@@ -137,6 +137,7 @@ define('Controls/Application',
          },
          _mousedownPage: function(ev) {
             this._registers.mousedown.start(ev);
+            this._popupManager.mouseDownHandler(ev);
          },
          _mousemovePage: function(ev) {
             this._registers.mousemove.start(ev);
@@ -278,11 +279,12 @@ define('Controls/Application',
             SettingsController.setController(cfg.settingsController);
 
             this._createGlobalPopup();
+            this._createPopupManager();
             this._createRegisters();
             this._createTouchDetector();
          },
 
-         _afterMount: function() {
+         _afterMount: function(cfg) {
             // Подписка через viewPort дает полную информацию про ресайз страницы, на мобильных устройствах
             // сообщает так же про изменение экрана после показа клавиатуры и/или зуме страницы.
             // Подписка на body стреляет не всегда. в 2100 включаю только для 13ios, в перспективе можно включить
@@ -296,6 +298,7 @@ define('Controls/Application',
             channelPopupManager.subscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
 
             this._globalpopup.registerGlobalPopup();
+            this._popupManager.init(cfg, this._getChildContext());
          },
 
          _beforeUnmount: function () {
@@ -308,6 +311,7 @@ define('Controls/Application',
             channelPopupManager.unsubscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
 
             this._globalpopup.registerGlobalPopupEmpty();
+            this._popupManager.destroy();
          },
 
          _beforeUpdate: function(cfg) {
@@ -332,6 +336,7 @@ define('Controls/Application',
                }
                elements[0].textContent = this._options.title;
             }
+            this._popupManager.updateOptions(this._options, this._getChildContext());
          },
 
          _createRegisters: function() {
@@ -346,13 +351,17 @@ define('Controls/Application',
             this._globalpopup = new popup.GlobalController();
          },
 
-         _registerHandler: function (event, registerType, component, callback, config) {
+         _createPopupManager: function() {
+            this._popupManager = new popup.ManagerClass();
+         },
+
+         _registerHandler: function(event, registerType, component, callback, config) {
             if (this._registers[registerType]) {
                this._registers[registerType].register(event, registerType, component, callback, config);
             }
          },
 
-         _unregisterHandler: function (event, registerType, component, config) {
+         _unregisterHandler: function(event, registerType, component, config) {
             if (this._registers[registerType]) {
                this._registers[registerType].unregister(event, registerType, component, config);
             }
@@ -418,6 +427,11 @@ define('Controls/Application',
 
          _keyDownHandler: function(event) {
             return HotKeys.dispatcherHandler(event);
+         },
+
+         _popupEventHandler: function(event, action) {
+            var args = Array.prototype.slice.call(arguments, 2);
+            this._popupManager.eventHandler.apply(this._popupManager, [action, args]);
          }
       });
 
