@@ -1849,12 +1849,12 @@ const _private = {
         return navigation && navigation.view === 'pages';
     },
 
-    isPagingNavigationVisible(hasMoreData, knownPagesCount) {
-        return knownPagesCount > 1 || hasMoreData > 5 || hasMoreData === true;
+    isPagingNavigationVisible(itemsCount, knownPagesCount) {
+        return knownPagesCount > 1 || itemsCount > 5
     },
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
-        self._pagingNavigationVisible = _private.isPagingNavigationVisible(hasMoreData, self._knownPagesCount);
+        self._pagingNavigationVisible = _private.isPagingNavigationVisible(self.getItemsCount(self), self._knownPagesCount);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];

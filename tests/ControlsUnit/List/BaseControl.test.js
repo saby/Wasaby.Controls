@@ -6800,26 +6800,14 @@ define([
 
                // Известно общее количество записей, записей 6
                result = isPagingNavigationVisible(6, 0);
-               assert.isTrue(result, 'paging should not be visible');
+               assert.isTrue(result, 'paging should be visible');
 
                // Неизвестно общее количество записей, записей, известно текущее количество страниц = 0, hasMore = false
-               result = isPagingNavigationVisible(false, 0);
+               result = isPagingNavigationVisible(4, 1);
                assert.isFalse(result, 'paging should not be visible');
 
                // Неизвестно общее количество записей, записей, известно текущее количество страниц = 1, hasMore = false
-               result = isPagingNavigationVisible(false, 1);
-               assert.isFalse(result, 'paging should not be visible');
-
-               // Неизвестно общее количество записей, записей, известно текущее количество страниц = 2, hasMore = false
-               result = isPagingNavigationVisible(false, 2);
-               assert.isTrue(result, 'paging should not be visible');
-
-               // Неизвестно общее количество записей, записей, известно текущее количество страниц = 0, hasMore = true
-               result = isPagingNavigationVisible(true, 0);
-               assert.isTrue(result, 'paging should be visible');
-
-               // Неизвестно общее количество записей, записей, известно текущее количество страниц = 2, hasMore = true
-               result = isPagingNavigationVisible(true, 2);
+               result = isPagingNavigationVisible(4, 2);
                assert.isTrue(result, 'paging should be visible');
             });
 
