@@ -8,7 +8,7 @@ export interface IControllerClassOptions extends ISearchOptions {
    searchValue?: string;
 }
 
-export default class ControllerClass {
+export default class Controller {
 
    protected _options: IControllerClassOptions = null;
 

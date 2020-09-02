@@ -1,6 +1,6 @@
-import {NewControllerClass as ControllerClass} from 'Controls/search';
+import {Controller} from 'Controls/searchNew';
 import {assert} from 'chai';
-import {NewSourceController} from 'Controls/dataSource';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {Memory, QueryWhereExpression} from 'Types/source';
 import {createSandbox, SinonSpy} from 'sinon';
 import {IControllerOptions} from 'Controls/_dataSource/Controller';
@@ -29,7 +29,7 @@ const getMemorySource = (): Memory => {
 };
 
 const getSourceController = (options: Partial<IControllerOptions>) => {
-   return new NewSourceController({
+   return new SourceController({
       dataLoadErrback: () => null,
       parentProperty: null,
       root: null,
@@ -59,7 +59,7 @@ const defaultOptionsControllerClass = {
 };
 
 const getControllerClass = (options) => {
-   return new ControllerClass({
+   return new Controller({
       ...defaultOptionsControllerClass,
       ...options
    });
@@ -68,8 +68,8 @@ const getControllerClass = (options) => {
 describe('Controls/search:NewControllerClass', () => {
    const sandbox = createSandbox();
 
-   let sourceController: NewSourceController;
-   let controllerClass: ControllerClass;
+   let sourceController: SourceController;
+   let controllerClass: Controller;
    let getFilterSpy: SinonSpy;
 
    beforeEach(() => {
