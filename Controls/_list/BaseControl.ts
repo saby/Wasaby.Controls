@@ -529,7 +529,6 @@ const _private = {
             _private.hasMoreData(self, sourceController, 'down');
     },
 
-
     getItemContainerByIndex(index: number, itemsContainer: HTMLElement): HTMLElement {
         let startChildrenIndex = 0;
 
@@ -559,13 +558,13 @@ const _private = {
             }
 
         };
-        return self._scrollController?.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
-            if (result) {
-                _private.handleScrollControllerResult(self, result);
-            }
-        });
+        return self._scrollController ?
+            self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
+                if (result) {
+                    _private.handleScrollControllerResult(self, result);
+                }
+            }) : Promise.resolve();
     },
-
     keyDownHome(self, event) {
         _private.setMarkerAfterScroll(self, event);
     },
@@ -3854,7 +3853,24 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     beginAdd(options) {
-        return this._options.readOnly ? Deferred.fail() : this._editInPlace.beginAdd(options);
+        if (this._options.readOnly) {
+          return Deferred.fail();
+        } else {
+            return this._editInPlace.beginAdd(options).then((addResult) => {
+
+                // TODO: https://online.sbis.ru/opendoc.html?guid=b8a501c1-6148-4b6a-aba8-2b2e4365ec3a
+                const addingPosition = this._options.editingConfig.addPosition === 'top' ? 0 : (this.getViewModel().getCount() - 1);
+                const isPositionInRange = addingPosition >= this.getViewModel().getStartIndex() && addingPosition < this.getViewModel().getStopIndex();
+                const targetDispItem = this.getViewModel().at(addingPosition);
+                const targetItem = targetDispItem && targetDispItem.getContents();
+                const targetItemKey = targetItem && targetItem.getKey ? targetItem.getKey() : null;
+                if (!isPositionInRange && targetItemKey !== null) {
+                    return _private.scrollToItem(this, targetItemKey, false, true).then(() => Promise.resolve(addResult));
+                } else {
+                    return Promise.resolve(addResult);
+                }
+            });
+        }
     },
 
     cancelEdit() {
