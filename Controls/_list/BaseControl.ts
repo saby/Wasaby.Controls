@@ -2059,7 +2059,7 @@ const _private = {
             return hasOwnProperty && options[optionName] !== undefined;
         }
         return hasOwnProperty;
-    }
+    },
 
     createMarkerController(self: any, options: any): MarkerController {
         return new MarkerController({
