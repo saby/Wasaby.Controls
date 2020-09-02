@@ -133,9 +133,13 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
 
          _itemsReadyCallbackHandler(items): void {
             if (this._items !== items) {
+               // FIXME setItems пересоздаёт prefetchProxy, что вызывает проблемы с повторной перезагрузкой списка
+               // FIXME в 6100 данный код переписан, и там такой проблемы нет.
+               const prefetchProxy = this._dataController._prefetchSource;
                this._dataController.setItems(null);
                this._items = this._dataController.setItems(items);
                this._dataOptionsContext.items = this._items;
+               this._dataController._prefetchSource = prefetchProxy;
                this._dataOptionsContext.updateConsumers();
             }
 
