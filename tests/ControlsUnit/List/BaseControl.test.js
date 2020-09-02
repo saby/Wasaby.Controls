@@ -2704,7 +2704,8 @@ define([
                handleResetItems: () => undefined,
                registerObserver: () => undefined,
                scrollPositionChange: () => undefined,
-               setTriggers: () => undefined
+               setTriggers: () => undefined,
+               calculateVirtualScrollHeight: () => 0
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга

@@ -424,7 +424,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             instance = new controller({pageSize: 5, segmentSize: 1}, {});
             instance.resetRange(9, 10);
             // @ts-ignore
-            instance.updateItemsHeights(generateContainer([10, 10, 10, 10, 10, 10, 10, 10, 10, 10]));
+            instance.updateItemsHeights(getItemsHeightsData([10, 10, 10, 10, 10, 10, 10, 10, 10, 10]));
         });
         it('calculateVirtualScrollHeight', () => {
             assert.equal(instance.calculateVirtualScrollHeight(), 100);
