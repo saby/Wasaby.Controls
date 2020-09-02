@@ -25,6 +25,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
    items: RecordSet;
    parentProperty?: string;
    nodeProperty?: string;
+   selectionType: TSelectionType;
 }
 /**
  * Контейнер принимает опцию selectedItems от Controls/lookupPopup:Controller и устанавливает опцию selectedKeys для дочернего списка.
@@ -226,7 +227,8 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
            parentProperty,
            nodeProperty,
            root,
-           items
+           items,
+           selectionType
         }: IFilterConfig): object {
             const selectedKeys = selection.get('marked');
             const currentRoot = root !== undefined ? root : null;
@@ -256,7 +258,9 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             // Если просто отмечают записи чекбоксами (не через панель массовых операций),
             // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
              // и запрос с searchParam в фильтре вернёт не все записи, которые есть в selection'e.
-            if (hasSearchParamInFilter && ArrayUtil.invertTypeIndexOf(selectedKeys, currentRoot) === -1 && !hasSelectedNodes) {
+            if (hasSearchParamInFilter &&
+                ArrayUtil.invertTypeIndexOf(selectedKeys, currentRoot) === -1 &&
+                (!hasSelectedNodes || selectionType === 'node')) {
                delete resultFilter[searchParam];
             }
             if (parentProperty) {
@@ -474,6 +478,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
                searchParam: options.searchParam,
                parentProperty: options.parentProperty,
                nodeProperty: options.nodeProperty,
+               selectionType: options.selectionType,
                root: options.root,
                items
             });
