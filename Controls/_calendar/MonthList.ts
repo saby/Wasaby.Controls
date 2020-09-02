@@ -456,15 +456,12 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 ITEM_BODY_SELECTOR.month, monthListUtils.dateToId(dateUtils.getStartOfMonth(date)));
         }
         if (!element) {
-            // В шаблоне может использоватсья headerTemplate, нужно подскроллить к месяцу/году под ним.
-            element = this._getElementByDate(
-                ITEM_BODY_SELECTOR.year,
-                monthListUtils.dateToId(dateUtils.getStartOfYear(date)));
+            const dateId = monthListUtils.dateToId(dateUtils.getStartOfYear(date));
+            // В шаблоне может использоваться headerTemplate, нужно подскроллить к месяцу/году под ним
+            element = this._getElementByDate(ITEM_BODY_SELECTOR.year, dateId);
             if (!element) {
-                element = this._getElementByDate(
-                    ITEM_BODY_SELECTOR.template,
-                    monthListUtils.dateToId(dateUtils.getStartOfYear(date))
-                );
+                // В случае, если используется кастомный шаблон, пытаемся подскроллить к нему
+                element = this._getElementByDate(ITEM_BODY_SELECTOR.template, dateId);
             }
         }
         return element;
