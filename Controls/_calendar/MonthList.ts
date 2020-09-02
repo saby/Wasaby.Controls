@@ -35,12 +35,12 @@ interface IModuleComponentOptions extends
     IDateConstructorOptions {
 }
 
-const enum ITEM_BODY_SELECTOR {
-    template = '.controls-MonthList__template',
-    year = '.controls-MonthList__year-months',
-    month = '.controls-MonthViewVDOM',
-    day = '.controls-MonthViewVDOM__item'
-}
+const ITEM_BODY_SELECTOR  = {
+    day: '.controls-MonthViewVDOM__item',
+    month: '.controls-MonthViewVDOM',
+    year: '.controls-MonthList__year-months',
+    mainTemplate: '.controls-MonthList__template'
+};
 
 const enum VIEW_MODE {
     month = 'month',
@@ -446,22 +446,36 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     private _findElementByDate(date: Date): HTMLElement {
-        let element: HTMLElement;
-
-        if (date.getDate() !== 1) {
-            element = this._getElementByDate(ITEM_BODY_SELECTOR.day, monthListUtils.dateToId(date));
-        }
-        if (!element && date.getMonth() !== 0) {
-            element = this._getElementByDate(
-                ITEM_BODY_SELECTOR.month, monthListUtils.dateToId(dateUtils.getStartOfMonth(date)));
-        }
-        if (!element) {
-            const dateId = monthListUtils.dateToId(dateUtils.getStartOfYear(date));
+        let element: HTMLElement | null;
+        const templates = {
+            day: {
+                condition: date.getDate() !== 1,
+                dateId: date
+            },
+            month: {
+                condition: date.getMonth() !== 0,
+                dateId: dateUtils.getStartOfMonth(date)
+            },
             // В шаблоне может использоваться headerTemplate, нужно подскроллить к месяцу/году под ним
-            element = this._getElementByDate(ITEM_BODY_SELECTOR.year, dateId);
-            if (!element) {
-                // В случае, если используется кастомный шаблон, пытаемся подскроллить к нему
-                element = this._getElementByDate(ITEM_BODY_SELECTOR.template, dateId);
+            year: {
+                condition: true,
+                dateId: dateUtils.getStartOfYear(date)
+            },
+            // В случае, если используется кастомный шаблон, пытаемся подскроллить к нему
+            mainTemplate: {
+                condition: true,
+                dateId: dateUtils.getStartOfYear(date)
+            }
+        };
+
+        for (const item in templates) {
+            const checkElement =  this._getElementByDate(
+                ITEM_BODY_SELECTOR[item],
+                monthListUtils.dateToId(templates[item].dateId)
+            );
+            if (checkElement && templates[item].condition) {
+                element = checkElement;
+                break;
             }
         }
         return element;
