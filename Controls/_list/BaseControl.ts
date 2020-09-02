@@ -976,8 +976,9 @@ const _private = {
     },
     needShowPagingByScrollSize(self, viewSize: number, viewPortSize: number): boolean {
         let result = self._pagingVisible;
-
-        const proportion = (_private.calcViewSize(viewSize, result) / viewPortSize);
+        const scrollHeight = Math.max(_private.calcViewSize(viewSize, result),
+                                      self._scrollController?.calculateVirtualScrollHeight() || 0);
+        const proportion = (scrollHeight / viewPortSize);
 
         // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
         if (!result) {

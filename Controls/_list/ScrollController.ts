@@ -865,6 +865,10 @@ export default class ScrollController {
         this._container = <HTMLElement>scrollContainer[0];
     }
 
+    calculateVirtualScrollHeight(): number {
+        return this._virtualScroll.calculateVirtualScrollHeight();
+    }
+
     static getDefaultOptions(): Partial<IOptions> {
         return {
             virtualScrollConfig: {

@@ -436,4 +436,17 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             assert.isUndefined(instance.getItemContainerByIndex(10, itemsContainer));
         });
     });
+    describe('calculateVirtualScrollHeight', () => {
+        let instance: controller;
+
+        beforeEach(() => {
+            instance = new controller({pageSize: 5, segmentSize: 1}, {});
+            instance.resetRange(9, 10);
+            // @ts-ignore
+            instance.updateItemsHeights(generateContainer([10, 10, 10, 10, 10, 10, 10, 10, 10, 10]));
+        });
+        it('calculateVirtualScrollHeight', () => {
+            assert.equal(instance.calculateVirtualScrollHeight(), 100);
+        });
+    });
 });
