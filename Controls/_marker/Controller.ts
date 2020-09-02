@@ -21,40 +21,23 @@ export class Controller {
 
    /**
     * Обновить состояние контроллера
-    * @param options
-    * @return {number|string} Ключ маркера
+    * @param model
+    * @param markerVisibility
     */
-   update(options: IOptions): TKey {
-      this._model = options.model;
-      this._markerVisibility = options.markerVisibility;
-
-      const oldMarkedKey = this._markedKey;
-      // calculate на случай если передали ключ элемента, который не существует,
-      // или null, чтобы поставить маркер на первый элемент
-      this._markedKey = this.calculateMarkedKey(options.markedKey);
-
-      if (oldMarkedKey !== this._markedKey) {
-         this._model.setMarkedKey(oldMarkedKey, false);
-      }
-
-      return this._markedKey;
-   }
-
-   /**
-    * Проставить маркер в модели
-    */
-   setMarkedKey(markedKey: TKey): void {
-      if (this._markedKey !== markedKey) {
-         this._model.setMarkedKey(this._markedKey, false);
-         this._model.setMarkedKey(markedKey, true);
-         this._markedKey = markedKey;
-      }
+   update(model: IMarkerModel, markerVisibility: TVisibility): void {
+      this._model = model;
+      this._markerVisibility = markerVisibility;
    }
 
    /**
     * Проставляет текущий маркер в модели
     */
-   applyMarkedKey(): void {
+   applyMarkedKey(newMarkedKey?: TKey): void {
+      if (newMarkedKey) {
+         this._model.setMarkedKey(this._markedKey, false);
+         this._markedKey = newMarkedKey;
+      }
+
       // нужно вызвать для старой модели, т.к. markedKey хранится в ее состоянии
       // TODO https://online.sbis.ru/opendoc.html?guid=f38ec819-4916-46e4-9ff8-f05759202f9f
       this._model.setMarkedKey(this._markedKey, true);

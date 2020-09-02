@@ -1,3 +1,4 @@
+/*
 // tslint:disable:no-empty
 // tslint:disable:no-magic-numbers
 
@@ -415,3 +416,4 @@ describe('Controls/marker/Controller', () => {
       assert.equal(result, 2);
    });
 });
+*/
