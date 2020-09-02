@@ -161,6 +161,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          // TODO 2) getState у SourceController пересоздаёт prefetchProxy,
          // TODO поэтому весь state на контекст перекладывать нельзя, иначе список перезагрузится с теми же данными
          this._filter = controllerState.filter;
+         this._dataOptionsContext.navigation = controllerState.navigation;
          this._dataOptionsContext.filter = controllerState.filter;
          this._dataOptionsContext.updateConsumers();
       }
@@ -184,8 +185,8 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    _itemsReadyCallbackHandler(items): void {
       if (this._items !== items) {
          this._items = this._sourceController.setItems(items);
-         const controllerState = this._sourceController.getState();
-         this._updateContext(controllerState);
+         this._dataOptionsContext.items = this._items;
+         this._dataOptionsContext.updateConsumers();
       }
 
       if (this._options.itemsReadyCallback) {

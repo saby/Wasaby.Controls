@@ -30,8 +30,7 @@ import {editing as constEditing} from 'Controls/Constants';
 
 // Utils imports
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
-import tmplNotify = require('Controls/Utils/tmplNotify');
-import keysHandler = require('Controls/Utils/keysHandler');
+import {tmplNotify, keysHandler} from 'Controls/eventUtils';
 import uDimension = require('Controls/Utils/getDimensions');
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
@@ -577,6 +576,9 @@ const _private = {
         }
         if (markedItem) {
             self._notify('itemClick', [markedItem.getContents(), event], { bubbling: true });
+            if (event && !event.isStopped()) {
+                self._notify('itemActivate', [markedItem.getContents(), event], {bubbling: true});
+            }
         }
     },
     spaceHandler(self, event) {
@@ -1231,6 +1233,9 @@ const _private = {
     }, SCROLLMOVE_DELAY, true),
 
     handleListScrollSync(self, scrollTop) {
+        if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
+            self._pagingVisible = _private.needShowPagingByScrollSize(self,  self._viewSize, self._viewportSize);
+        }
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
@@ -1255,7 +1260,9 @@ const _private = {
             searchStopCallback: () => {
                 self._portionedSearchInProgress = false;
                 self._showContinueSearchButtonDirection = self._loadingState || 'down';
-                self._sourceController.cancelLoading();
+                if (typeof self._sourceController.cancelLoading !== 'undefined') {
+                    self._sourceController.cancelLoading();
+                }
                 _private.hideIndicator(self);
 
                 if (self._isScrollShown) {
@@ -1275,7 +1282,9 @@ const _private = {
             },
             searchAbortCallback: () => {
                 self._portionedSearchInProgress = false;
-                self._sourceController.cancelLoading();
+                if (typeof self._sourceController.cancelLoading !== 'undefined') {
+                    self._sourceController.cancelLoading();
+                }
                 _private.hideIndicator(self);
 
                 _private.disablePagingNextButtons(self);
@@ -3463,14 +3472,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollPagingCtr.destroy();
         }
 
+        if (this._editInPlace) {
+            this._editInPlace.reset();
+        }
+
         if (this._listViewModel) {
             this._listViewModel.destroy();
         }
         this._loadTriggerVisibility = null;
-
-        if (this._editInPlace) {
-            this._editInPlace.reset();
-        }
 
         if (this._portionedSearch) {
             this._portionedSearch.destroy();

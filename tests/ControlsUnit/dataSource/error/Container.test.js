@@ -8,8 +8,8 @@ define([
 
       function mockPopupHelper(popupId) {
          instance._popupHelper = {
-            openDialog(config, opener, handlers) {
-               this._onClose = handlers && handlers.onClose;
+            openDialog(config, { eventHandlers }) {
+               this._onClose = eventHandlers && eventHandlers.onClose;
                return Promise.resolve(popupId);
             },
             closeDialog(id) {
@@ -53,16 +53,6 @@ define([
       describe('_openDialog()', function() {
          beforeEach(() => {
             createInstance();
-         });
-
-         it('closes previously opened dialog', function() {
-            sinon.spy(instance, '_closeDialog');
-            instance._popupId = 'test';
-
-            return instance._openDialog({}).then(() => {
-               assert.isTrue(instance._closeDialog.calledOnce, '_closeDialog called');
-               assert.isNotOk(instance._popupId, '_closeDialog is empty');
-            });
          });
 
          it('notifies "dialogClosed" on closing opened dialog', function() {
