@@ -185,8 +185,8 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    _itemsReadyCallbackHandler(items): void {
       if (this._items !== items) {
          this._items = this._sourceController.setItems(items);
-         const controllerState = this._sourceController.getState();
-         this._updateContext(controllerState);
+         this._dataOptionsContext.items = this._items;
+         this._dataOptionsContext.updateConsumers();
       }
 
       if (this._options.itemsReadyCallback) {
