@@ -37,11 +37,6 @@ export {default as _Search} from './_search/_Search';
 export {default as _SearchController} from './_search/_SearchController';
 export {default as ControllerClass} from './_search/ControllerClass';
 
-export {default as NewControllerClass} from './_search/NewController/ControllerClass';
-export {default as SearchInputContainer} from './_search/NewController/SearchInputContainer';
-export {default as SearchController} from './_search/NewController/SearchController';
-export {default as SearchDelay} from './_search/NewController/SearchDelay';
-
 export {
    InputContainer,
    Misspell,
