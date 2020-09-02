@@ -59,7 +59,7 @@
  * @includes PreviewerTemplate wml!Controls/_popup/Global/Global
  */
 
-export {default as Manager} from './_popup/Manager';
+export {default as ManagerClass} from './_popup/Manager';
 export {default as Container} from './_popup/Manager/Container';
 export {default as Controller} from './_popup/Manager/ManagerController';
 export {default as Global} from './_popup/Global';
