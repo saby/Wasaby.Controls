@@ -5,7 +5,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {editing} from 'Controls/Constants';
 
-const TIMEOUT2500 = 2500;
+const TIMEOUT2500 = 3500;
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
