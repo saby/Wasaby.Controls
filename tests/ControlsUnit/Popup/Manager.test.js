@@ -304,7 +304,7 @@ define(
             };
             Manager = getManager();
             var isMaximizeNotified;
-            const stub = sinon.stub(popupMod.Manager, '_notifyEvent').callsFake(function(event, args) {
+            const stub = sinon.stub(popupMod.ManagerClass, '_notifyEvent').callsFake(function(event, args) {
                isMaximizeNotified = event === 'managerPopupMaximized';
                assert.isTrue(popupOptions === args[0].popupOptions);
             });
@@ -321,7 +321,7 @@ define(
             };
             Manager = getManager();
             var isUpdateNotified;
-            const stub = sinon.stub(popupMod.Manager, '_notifyEvent').callsFake(function(event, args) {
+            const stub = sinon.stub(popupMod.ManagerClass, '_notifyEvent').callsFake(function(event, args) {
                isUpdateNotified = event === 'managerPopupUpdated';
                assert.isTrue(popupOptions === args[0].popupOptions);
             });
@@ -339,7 +339,7 @@ define(
             };
             Manager = getManager();
             var isDestroyNotified;
-            const stub = sinon.stub(popupMod.Manager, '_notifyEvent').callsFake(function(event, args) {
+            const stub = sinon.stub(popupMod.ManagerClass, '_notifyEvent').callsFake(function(event, args) {
                isDestroyNotified = event === 'managerPopupDestroyed';
                if (event === 'managerPopupDestroyed') {
                   assert.equal(args[1].getCount(), 0);
@@ -469,7 +469,7 @@ define(
             };
             Manager = getManager();
             var isCreateNotified;
-            const stub = sinon.stub(popupMod.Manager, '_notifyEvent').callsFake(function(event, args) {
+            const stub = sinon.stub(popupMod.ManagerClass, '_notifyEvent').callsFake(function(event, args) {
                isCreateNotified = event === 'managerPopupCreated';
                assert.isTrue(popupOptions === args[0].popupOptions);
             });
