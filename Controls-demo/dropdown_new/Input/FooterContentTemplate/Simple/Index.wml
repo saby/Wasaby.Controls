@@ -6,9 +6,9 @@
                                  displayProperty="title"
                                  multiSelect="{{true}}"
                                  source="{{_source}}">
-            <ws:footerTemplate>
+            <ws:footerContentTemplate>
                 footerTemplate
-            </ws:footerTemplate>
+            </ws:footerContentTemplate>
         </Controls.dropdown:Input>
     </div>
 </div>
