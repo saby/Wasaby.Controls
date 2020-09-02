@@ -469,16 +469,14 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         };
 
         for (const item in templates) {
-            const checkElement =  this._getElementByDate(
+            const element =  this._getElementByDate(
                 ITEM_BODY_SELECTOR[item],
                 monthListUtils.dateToId(templates[item].dateId)
             );
-            if (checkElement && templates[item].condition) {
-                element = checkElement;
-                break;
+            if (element && templates[item].condition) {
+                return element;
             }
         }
-        return element;
     }
 
     private _getNormalizedContainer(): HTMLElement {
