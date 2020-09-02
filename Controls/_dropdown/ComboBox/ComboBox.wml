@@ -1,5 +1,4 @@
-<div class="controls-ComboBox_theme-{{_options.theme}} controls-ComboBox-{{_options.readOnly? 'readOnly' : 'active'}}_theme-{{_options.theme}}
-            {{_isOpened ? 'controls-ComboBox__opened'}}">
+<div class=" controls-ComboBox controls-ComboBox_theme-{{_options.theme}} controls-ComboBox-{{_options.readOnly? 'readOnly' : 'active'}}_theme-{{_options.theme}} {{_isOpened ? 'controls-ComboBox__opened'}}">
    <div class="controls-ComboBox-InputRender
                {{_isOpened ? 'controls-Popup__isolatedFocusingContext'}}
                controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
