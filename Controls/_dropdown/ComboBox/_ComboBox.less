@@ -1,10 +1,9 @@
 .controls-ComboBox-InputRender {
    cursor: pointer;
-   border-style: solid;
-   box-sizing: border-box;
    display: inline-flex;
    align-items: center;
    width: 100%;
+   height: 100%;
 }
 
 .controls-ComboBox__field {
@@ -14,27 +13,30 @@
    white-space: nowrap;
 }
 
-.controls-ComboBox-InputRender_theme-@{themeName} {
+.controls-ComboBox_theme-@{themeName} {
    height: @height_combobox;
    border-width: @border-width_combobox;
+   border-style: solid;
+   box-sizing: border-box;
 }
 
-.controls-ComboBox_readOnly_theme-@{themeName} {
+.controls-ComboBox-active_theme-@{themeName} {
+   background-color: @background-color_combobox;
+   border-color: @border-color_combobox;
+
+}
+
+.controls-ComboBox-readOnly_theme-@{themeName} {
    border-color: @readonly_border-color_combobox;
    background-color: @readonly_background-color_combobox;
    cursor: default;
 }
 
-.controls-ComboBox-input_theme-@{themeName} {
-   border-color: @border-color_combobox;
-   background-color: @background-color_combobox;
-}
-
-.controls-ComboBox-input_theme-@{themeName}:hover {
+.controls-ComboBox-active_theme-@{themeName}:hover {
    border-color: @border-color_hover_combobox;
 }
 
-.controls-ComboBox-input_theme-@{themeName}:active {
+.controls-ComboBox-active_theme-@{themeName}:focus-within {
    border-color: @border-color_hover_combobox;
 }
 
