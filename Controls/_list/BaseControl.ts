@@ -2167,11 +2167,29 @@ const _private = {
 
     // region Marker
 
+    hasOption(options: any, optionName: string): boolean {
+        // todo https://online.sbis.ru/opendoc.html?guid=a2cb829c-3822-43b0-bb2e-3cd148e76a23
+        // Проблема:
+        // 1. Есть прикладной контрол, внутри которого через n количество контролов-оберток вставляется список.
+        // 2. На уровне прикладного контрола в список через bind передается опция markedKey.
+        // 3. При смене этой опции на уровне списка (отметка записи маркером при клике, notify('markedKeyChanged')) - обновляется не только список, но и прикладной контрол.
+        // 4. Далее этот прикладной контрол запускает обновление всех контролов, в которые обернут список.
+        // 5. Как выяснилось, это отнимает кучу времени (порядка 50 мс).
+        // Временное решение - проверка свойства на undefined. Получается, изначально не будет работать реактивность, а
+        // когда на прикладном уровне понадобится реактивность - они вместо undefined передадут конкретное значение.
+        const hasOwnProperty = options.hasOwnProperty(optionName);
+        const checkUndefinedValue = !!options.task1180026692;
+        if (checkUndefinedValue) {
+            return hasOwnProperty && options[optionName] !== undefined;
+        }
+        return hasOwnProperty;
+    },
+
     createMarkerController(self: any, options: any): MarkerController {
         return new MarkerController({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : undefined
+            markedKey: _private.hasOption(options, 'markedKey') ? options.markedKey : undefined
         });
     },
 
@@ -2179,7 +2197,7 @@ const _private = {
         const newMarkedKey = _private.getMarkerController(self).update({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markerController.getMarkedKey()
+            markedKey: _private.hasOption(options,'markedKey') ? options.markedKey : self._markerController.getMarkedKey()
         });
         if (newMarkedKey !== options.markedKey) {
             self._notify('markedKeyChanged', [newMarkedKey]);
@@ -2256,7 +2274,7 @@ const _private = {
         }
 
         // Если нам не передают markedKey, то на него не могут повлиять и поэтому сразу изменяем модель
-        if (!self._options.hasOwnProperty('markedKey')) {
+        if (!_private.hasOption(self._options,'markedKey')) {
             self._markerController.setMarkedKey(newMarkedKey);
         }
     },
