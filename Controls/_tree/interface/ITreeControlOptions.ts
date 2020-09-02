@@ -183,14 +183,15 @@ import { RecordSet } from 'Types/collection';
 /**
  * @typedef {String} ExpanderVisibility
  * @variant visible Всегда показывать экспандер для узлов и отступ для листьев.
- * @variant hasChildren Показывать экспандер только для узлов с дочерними элементами.
+ * @variant hasChildren Показывать экспандер только для узлов с дочерними элементами. В этом значении опция, также, отключает отступ для листьев, если в текущей папке нет записей с дочерними элементами.
  */
 
 /**
  * @name Controls/_tree/interface/ITreeControlOptions#expanderVisibility
  * @cfg {ExpanderVisibility} Режим отображения элемента развертывания узла {@link Controls/treeGrid:View дерева}.
  * @default visible
- * @demo Controls-demo/treeGrid/Expander/HasChildren/Index
+ * @demo Controls-demo/treeGrid/Expander/ExpanderIcon/Node/Index В следующем примере для контрола опция expanderVisibility установлена в значение visible.
+ * @demo Controls-demo/treeGrid/Expander/HasChildren/Index В следующем примере для контрола опция expanderVisibility установлена в значение hasChildren.
  * @see expandedItems
  * @see expandByItemClick
  */

@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/dropdown_new/Input/FooterTemplate/Index');
+import controlTemplate = require('wml!Controls-demo/dropdown_new/Input/FooterContentTemplate/Simple/Index');
 import {Memory} from 'Types/source';
 
 class SearchFlat extends Control<IControlOptions> {

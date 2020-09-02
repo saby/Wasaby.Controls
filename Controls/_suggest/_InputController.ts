@@ -99,8 +99,10 @@ var _private = {
             }
 
             _private.setFilter(self, filter, self._options);
-            _private.open(self);
 
+            if (self._historyKeys.length || self._options.autoDropDown) {
+               _private.open(self);
+            }
             return self._historyKeys;
          });
       } else {
@@ -213,9 +215,9 @@ var _private = {
       return emptyTemplate && emptyTemplate.templateName ? emptyTemplate.templateName : emptyTemplate;
    },
    updateSuggestState: function(self) {
-      var shouldSearch = _private.shouldSearch(self, self._searchValue);
+      const shouldSearch = _private.shouldSearch(self, self._searchValue);
 
-      if (self._options.historyId && self._options.autoDropDown && !shouldSearch && !self._options.suggestState) {
+      if (self._options.historyId && !shouldSearch && !self._options.suggestState) {
          _private.openWithHistory(self);
       } else if (shouldSearch || self._options.autoDropDown && !self._options.suggestState) {
          _private.setFilter(self, self._options.filter, self._options);
