@@ -1,17 +1,6 @@
 import {IMoveDialogOptions} from './IMoveDialogOptions';
-import {RecordSet} from "Types/collection";
-import {BindingMixin, ICrudPlus, IData, IRpc} from "Types/source";
-
-/**
- * @typedef {Types/source:BindingMixin|Types/source:ICrudPlus|Types/source:IRpc|Types/source:IData} TMoveSource
- * @description
- * Ресурс данных, внутри которого происходит перемещение. Обладает свойствами Crud, Binding, RPC, Data
- * @see Types/source:BindingMixin
- * @see Types/source:ICrudPlus
- * @see Types/source:IRpc
- * @see Types/source:IData
- */
-export type TSource = IData|IRpc|ICrudPlus|BindingMixin;
+import {RecordSet} from 'Types/collection';
+import {Memory, SbisService} from 'Types/source';
 
 /**
  * Интерфейс опций контроллера
@@ -46,7 +35,7 @@ export interface IMoveControllerOptions {
      * @name Controls/_list/interface/IMoveDialogOption#source
      * @cfg {TSource} Source to perform items move
      */
-    source?: TSource;
+    source?: SbisService|Memory;
     /**
      * @name Controls/_list/interface/IMoveControllerOptions#items
      * @cfg {Types/collection:RecordSet} Список, в котором производится перемещение согласно старой логике

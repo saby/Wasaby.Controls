@@ -7,7 +7,7 @@ import * as selectionToRecord from 'Controls/_operations/MultiSelector/selection
 
 import { Memory } from 'Types/source';
 
-import {IMoveControllerOptions, IMoveObject, MoveController} from 'Controls/list';
+import {IMoveControllerOptions, ISelectionObject, MoveController} from 'Controls/list';
 import { Model } from 'Types/entity';
 
 import {Confirmation, Dialog} from 'Controls/popup';
@@ -74,13 +74,13 @@ describe('Controls/_list/Controllers/MoveController', () => {
 
     it('moveItems() should move items to specified position', () => {
         let callMethodCalled = false;
-        const params: IMoveObject = {
-            selectedKeys: [1, 2, 3],
-            excludedKeys: [11],
-            filter: {
-                testProp: 'testValue'
-            }
+        const params: ISelectionObject = {
+            selected: [1, 2, 3],
+            excluded: [11]
         };
+        const filter = {
+            testProp: 'testValue'
+        }
         const bindings = {
             move: 'testMoveMethod',
             list: 'testListMethod'
@@ -96,15 +96,12 @@ describe('Controls/_list/Controllers/MoveController', () => {
             assert.equal(data.folder_id, targetId);
             assert.equal(data.filter.get('testProp'), 'testValue');
             assert.deepEqual(data.filter.get('selection').getRawData(),
-                selectionToRecord({
-                    selected: params.selectedKeys,
-                    excluded: params.excludedKeys
-                }, mover._source.getAdapter()).getRawData()
+                selectionToRecord(params, mover._source.getAdapter()).getRawData()
             );
             return Promise.resolve();
         };
 
-        return mover.moveItems(params, targetId)
+        return mover.moveItems(params, filter, targetId)
             .then(() => {
                 assert.isTrue(callMethodCalled);
             });
@@ -218,14 +215,14 @@ describe('Controls/_list/Controllers/MoveController', () => {
 
     it('moveItemsWithDialog for newLogic call moveItems', (done) => {
         const params = {
-            selectedKeys: [1, 2, 3],
-            excludedKeys: [11],
-            filter: {
-                testProp: 'testValue'
-            }
+            selected: [1, 2, 3],
+            excluded: [11]
+        };
+        const filter = {
+            testProp: 'testValue'
         };
         const stubOpenPopup = stub(Dialog, 'openPopup');
-        const stubMoveItems = stub(mover, '_moveDialogOnResultHandler');
+        const stubMoveItems = stub(mover, 'moveItems');
 
         stubMoveItems.callsFake((callingParams) => {
             assert.deepEqual(callingParams, params);
@@ -233,15 +230,15 @@ describe('Controls/_list/Controllers/MoveController', () => {
 
         // @ts-ignore
         stubOpenPopup.callsFake((openArgs) => {
-            assert.deepEqual(openArgs.templateOptions.movedItems, params.selectedKeys);
+            assert.deepEqual(openArgs.templateOptions.movedItems, params.selected);
             assert.equal(openArgs.templateOptions.source, cfg.source);
             assert.equal(openArgs.templateOptions.keyProperty, cfg.keyProperty);
             openArgs.eventHandlers.onResult(4);
-            sinonAssert.called(stubMoveItems);
             return Promise.resolve();
         });
 
-        mover.moveItemsWithDialog(params).then(() => {
+        mover.moveItemsWithDialog(params, filter).then(() => {
+            sinonAssert.called(stubMoveItems);
             stubMoveItems.restore();
             stubOpenPopup.restore();
             done();
@@ -249,12 +246,12 @@ describe('Controls/_list/Controllers/MoveController', () => {
     });
 
     it('moveItemsWithDialog with empty items', (done) => {
-        const params: IMoveObject = {
-            selectedKeys: [],
-            excludedKeys: [11],
-            filter: {
-                testProp: 'testValue'
-            }
+        const params: ISelectionObject = {
+            selected: [],
+            excluded: [11]
+        };
+        const filter = {
+            testProp: 'testValue'
         };
         const spyOpenPopup = spy(Dialog, 'openPopup');
         const stubOpenConfirmation = stub(Confirmation, 'openPopup');
@@ -262,7 +259,7 @@ describe('Controls/_list/Controllers/MoveController', () => {
         stubOpenConfirmation.callsFake((args) => {
             assert(args.message, 'Нет записей для обработки команды');
         });
-        mover.moveItemsWithDialog(params).then(() => {
+        mover.moveItemsWithDialog(params, filter).then(() => {
             sinonAssert.notCalled(spyOpenPopup);
             spyOpenPopup.restore();
             stubOpenConfirmation.restore();

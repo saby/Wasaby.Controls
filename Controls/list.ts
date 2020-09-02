@@ -29,7 +29,7 @@
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
- * @includes IMoveObject Controls/_list/interface/IMoveObject
+ * @includes ISelection Controls/_list/interface/ISelection
  * @includes IMoveDialogOptions Controls/_list/interface/IMoveDialogOptions
  * @includes IMoveControllerOptions Controls/_list/interface/IMoveControllerOptions
  * @public
@@ -65,7 +65,7 @@
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
- * @includes IMoveObject Controls/_list/interface/IMoveObject
+ * @includes ISelection Controls/_list/interface/ISelection
  * @includes IMoveDialogOptions Controls/_list/interface/IMoveDialogOptions
  * @includes IMoveControllerOptions Controls/_list/interface/IMoveControllerOptions
  * * @public
@@ -119,8 +119,7 @@ import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/I
 import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeAction');
 import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
 
-export {MoveController}  from 'Controls/_list/Controllers/MoveController';
-export {IMoveObject, MOVE_TYPE, MOVE_POSITION, TMoveItems}  from 'Controls/_list/interface/IMoveObject';
+export {MoveController, TMovePosition}  from 'Controls/_list/Controllers/MoveController';
 export {IMoveControllerOptions}  from 'Controls/_list/interface/IMoveControllerOptions';
 import * as Mover from 'Controls/_list/Mover';
 

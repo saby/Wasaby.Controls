@@ -1,15 +1,4 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {Model} from 'Types/entity';
-import {TMoveItems} from './IMoveObject';
-
-/**
- * @typedef {Function} TOnResultHandler
- * @description
- * Обработчик результата перемещения в диалоге
- * @param {Controls/_list/interface/IMoveObject/TMoveItems.typedef} items элементы, которые необходимо переместить
- * @param {Types/entity:Model} target элемент, к которому производится перемещение
- */
-type TOnResultHandler = (items: TMoveItems, target: Model) => void;
 
 /**
  * Интерфейс опций диалога перемещения
@@ -52,13 +41,4 @@ export interface IMoveDialogOptions {
      * @cfg {String|UI/Base:TemplateFunction|Control<IControlOptions, any>} dialog template path
      */
     template?: string|TemplateFunction|Control<IControlOptions, any>;
-    /**
-     * @name Controls/_list/interface/IMoveDialogOption#onResultHandler
-     * @cfg {TOnResultHandler} Обработчик результата перемещения в диалоге
-     */
-    /*
-     * @name Controls/_list/interface/IMoveDialogOption#onResultHandler
-     * @cfg {TOnResultHandler} Dialog move result handler
-     */
-    onResultHandler?: TOnResultHandler;
 }
