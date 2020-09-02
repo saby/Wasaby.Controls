@@ -1,7 +1,7 @@
-import {SearchDelay} from 'Controls/search';
+import {SearchDelay} from 'Controls/searchNew';
 import {assert} from 'chai';
 import * as sinon from 'sinon';
-import {ISearchDelayOptions} from 'Controls/_search/NewController/SearchDelay';
+import {ISearchDelayOptions} from 'Controls/_searchNew/SearchDelay';
 
 const defaultOptions = {
    searchCallback: () => null,
