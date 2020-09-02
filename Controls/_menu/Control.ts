@@ -512,7 +512,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             Math.sign(firstSegment) === Math.sign(thirdSegment);
     }
 
-    private _getSelectorDialogOptions(opener: StackOpener, options: IMenuControlOptions, selectedItems: List<Model>): object {
+    private _getSelectorDialogOptions(opener: StackOpener,
+                                      options: IMenuControlOptions,
+                                      selectedItems: List<Model>): object {
         const selectorTemplate: ISelectorTemplate = options.selectorTemplate;
         const selectorDialogResult: Function = options.selectorDialogResult;
 
