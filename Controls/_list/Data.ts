@@ -133,8 +133,10 @@ import {default as DataController, IDataOptions} from 'Controls/_list/Data/Contr
 
          _itemsReadyCallbackHandler(items): void {
             if (this._items !== items) {
+               this._dataController.setItems(null);
                this._items = this._dataController.setItems(items);
-               this._dataController.updateContext(this._dataOptionsContext);
+               this._dataOptionsContext.items = this._items;
+               this._dataOptionsContext.updateConsumers();
             }
 
             if (this._options.itemsReadyCallback) {
