@@ -1,12 +1,24 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_searchNew/Container';
 import {SyntheticEvent} from 'UI/Vdom';
-
+import {
+   IFilterOptions,
+   INavigationOptions,
+   INavigationSourceConfig,
+   ISearchOptions,
+   ISourceOptions
+} from 'Controls/interface';
+import {NewSourceController} from 'Controls/dataSource';
 import Controller from './Controller';
 import {descriptor} from 'Types/entity';
-import {ISearchContainerOptions} from './interface';
 
-export default class Container extends Control<ISearchContainerOptions> {
+export interface ISearchControllerOptions extends IControlOptions,
+   ISourceOptions, IFilterOptions, INavigationOptions<INavigationSourceConfig>, ISearchOptions {
+      sourceController: NewSourceController;
+      searchValue?: string;
+}
+
+export default class Container extends Control<ISearchControllerOptions> {
    protected _template: TemplateFunction = template;
 
    protected _controllerClass: Controller = null;
@@ -19,7 +31,7 @@ export default class Container extends Control<ISearchContainerOptions> {
       this._getControllerClass().reset().then();
    }
 
-   protected _beforeUpdate(options?: ISearchContainerOptions): void {
+   protected _beforeUpdate(options?: ISearchControllerOptions): void {
       this._getControllerClass().update(options);
    }
 
