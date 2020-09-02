@@ -3537,9 +3537,72 @@ define([
                   }
                };
                var result = ctrl.beginAdd(opt);
-               assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
-               assert.isTrue(result.isSuccessful());
+               assert.isTrue(result instanceof Promise);
+               assert.isTrue(result.isReady());
             });
+         });
+
+         describe('beginAdd(), addPosition', () => {
+            let cfg;
+            let ctrl;
+            let sandbox;
+            let scrollToItemCalled;
+            beforeEach(() => {
+               scrollToItemCalled = false;
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: source,
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: rs,
+                     keyProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  editingConfig: {
+                     addPosition: 'top'
+                  },
+                  navigation: {
+                     source: 'page',
+                     sourceConfig: {
+                        pageSize: 6,
+                        page: 0,
+                        hasMore: false
+                     },
+                     view: 'infinity',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     }
+                  }
+               };
+               sandbox = sinon.createSandbox();
+               sandbox.replace(lists.BaseControl._private, 'scrollToItem', () => {
+                  scrollToItemCalled = true;
+                  return Promise.resolve();
+               });
+               ctrl = new lists.BaseControl(cfg);
+               ctrl.saveOptions(cfg);
+               ctrl._container = {
+                  clientHeight: 100
+               }
+
+            });
+
+            afterEach(() => {
+               sandbox.restore();
+            });
+            it('scrollToItem called on beginAdd', async () => {
+               await ctrl._beforeMount(cfg);
+               ctrl._editInPlace = {
+                  beginAdd: function() {
+                     return Promise.resolve();
+                  }
+               };
+               await ctrl.beginAdd({}).then(() => {
+                     assert.isTrue(scrollToItemCalled);
+                  });
+               });
          });
 
          it('cancelEdit', function() {
