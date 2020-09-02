@@ -215,6 +215,15 @@ var CompoundArea = CompoundContainer.extend([
       EventBus.channel('popupManager').notify('managerPopupCreated', [item, popupItems]);
    },
 
+   _notifyManagerPopupDestroyed(): void {
+      const item = this._getManagerConfig();
+      const options = item?.popupOptions;
+      const event = 'onClose';
+      if (options?._events[event]) {
+         options._events[event](event, []);
+      }
+   },
+
    _getDialogClasses: function() {
       // При fixed таргета нет => совместимость определяет это окно как type === 'dialog' и использует его позиционирование
       // Но на самом диалоге такой опции нет, т.к. это опция FloatArea => в этом случае класс диалога не вешаем
@@ -1198,6 +1207,13 @@ var CompoundArea = CompoundContainer.extend([
       if (this.isDestroyed()) {
          return;
       }
+
+      // Пока попап не создан, ему на событие onInit могли позвать destroy напрямую.
+      // Хоть у попапов и нельзя destroy звать напрямую, ставлю защиту
+      if (!this._isPopupCreated) {
+         this._notifyManagerPopupDestroyed();
+      }
+
       this._trackTarget(false);
 
       // Unregister CompoundArea's inner Event/Listener, before its
