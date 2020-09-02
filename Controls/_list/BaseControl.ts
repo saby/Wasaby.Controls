@@ -30,9 +30,8 @@ import {editing as constEditing} from 'Controls/Constants';
 
 // Utils imports
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
-import tmplNotify = require('Controls/Utils/tmplNotify');
-import keysHandler = require('Controls/Utils/keysHandler');
-import uDimension = require('Controls/Utils/getDimensions');
+import {tmplNotify, keysHandler} from 'Controls/eventUtils';
+import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
     CollectionItem,
@@ -500,7 +499,6 @@ const _private = {
             _private.hasMoreData(self, sourceController, 'down');
     },
 
-
     getItemContainerByIndex(index: number, itemsContainer: HTMLElement): HTMLElement {
         let startChildrenIndex = 0;
 
@@ -530,13 +528,13 @@ const _private = {
             }
 
         };
-        return self._scrollController?.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
-            if (result) {
-                _private.handleScrollControllerResult(self, result);
-            }
-        });
+        return self._scrollController ?
+            self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
+                if (result) {
+                    _private.handleScrollControllerResult(self, result);
+                }
+            }) : Promise.resolve();
     },
-
     keyDownHome(self, event) {
         _private.setMarkerAfterScroll(self, event);
     },
@@ -2152,58 +2150,40 @@ const _private = {
 
     // region Marker
 
-    wasMarkerSet(self: typeof BaseControl): boolean {
-        return _private.hasMarkerController(self)
-            ? _private.getMarkerController(self).getMarkedKey() !== undefined && _private.getMarkerController(self).getMarkedKey() !== null
-            : false;
-    },
-
-    hasMarkerController(self: typeof BaseControl): Boolean {
-        return self._markerController;
-    },
-
-    getMarkerController(self: typeof BaseControl, options: Object = null): MarkerController {
-        if (!_private.hasMarkerController(self)) {
-            self._markerController = this.createMarkerController(self, options ? options : self._options);
+    hasOption(options: any, optionName: string): boolean {
+        // todo https://online.sbis.ru/opendoc.html?guid=a2cb829c-3822-43b0-bb2e-3cd148e76a23
+        // Проблема:
+        // 1. Есть прикладной контрол, внутри которого через n количество контролов-оберток вставляется список.
+        // 2. На уровне прикладного контрола в список через bind передается опция markedKey.
+        // 3. При смене этой опции на уровне списка (отметка записи маркером при клике, notify('markedKeyChanged')) - обновляется не только список, но и прикладной контрол.
+        // 4. Далее этот прикладной контрол запускает обновление всех контролов, в которые обернут список.
+        // 5. Как выяснилось, это отнимает кучу времени (порядка 50 мс).
+        // Временное решение - проверка свойства на undefined. Получается, изначально не будет работать реактивность, а
+        // когда на прикладном уровне понадобится реактивность - они вместо undefined передадут конкретное значение.
+        const hasOwnProperty = options.hasOwnProperty(optionName);
+        const checkUndefinedValue = !!options.task1180026692;
+        if (checkUndefinedValue) {
+            return hasOwnProperty && options[optionName] !== undefined;
         }
-        return self._markerController;
+        return hasOwnProperty;
     },
 
-    needCreateMarkerController(options: IList, byOptions?: boolean, wasMarkerSet?: boolean): boolean {
-        if (byOptions) {
-            const wasActivated = options.hasOwnProperty('markedKey') && options.markedKey !== undefined || wasMarkerSet;
-            return options.markerVisibility === 'visible' || options.markerVisibility === 'onactivated' && wasActivated;
-        } else {
-            return options.markerVisibility !== 'hidden';
-        }
-    },
-
-    applyMarkedKey(self: typeof BaseControl, options: IList): void {
-        const wasMarkerSet = _private.wasMarkerSet(self);
-        if (_private.needCreateMarkerController(options, true, wasMarkerSet)) {
-            _private.getMarkerController(self, options).applyMarkedKey();
-        }
-    },
-
-    createMarkerController(self: typeof BaseControl, options: IList): MarkerController {
+    createMarkerController(self: any, options: any): MarkerController {
         return new MarkerController({
             model: self._listViewModel,
             markerVisibility: options.markerVisibility,
-            markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : undefined
+            markedKey: _private.hasOption(options, 'markedKey') ? options.markedKey : undefined
         });
     },
 
-    updateMarkerController(self: typeof BaseControl, options: IList): void {
-        const wasMarkerSet = _private.wasMarkerSet(self);
-        if (_private.needCreateMarkerController(options, true, wasMarkerSet)) {
-            const newMarkedKey = _private.getMarkerController(self).update({
-                model: self._listViewModel,
-                markerVisibility: options.markerVisibility,
-                markedKey: options.hasOwnProperty('markedKey') ? options.markedKey : self._markerController.getMarkedKey()
-            });
-            if (newMarkedKey !== options.markedKey) {
-                self._notify('markedKeyChanged', [newMarkedKey]);
-            }
+    updateMarkerController(self: any, options: any): void {
+        const newMarkedKey = _private.getMarkerController(self).update({
+            model: self._listViewModel,
+            markerVisibility: options.markerVisibility,
+            markedKey: _private.hasOption(options,'markedKey') ? options.markedKey : self._markerController.getMarkedKey()
+        });
+        if (newMarkedKey !== options.markedKey) {
+            self._notify('markedKeyChanged', [newMarkedKey]);
         }
     },
 
@@ -2277,7 +2257,7 @@ const _private = {
         }
 
         // Если нам не передают markedKey, то на него не могут повлиять и поэтому сразу изменяем модель
-        if (!self._options.hasOwnProperty('markedKey')) {
+        if (!_private.hasOption(self._options,'markedKey')) {
             self._markerController.setMarkedKey(newMarkedKey);
         }
     },
@@ -3489,14 +3469,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollPagingCtr.destroy();
         }
 
+        if (this._editInPlace) {
+            this._editInPlace.reset();
+        }
+
         if (this._listViewModel) {
             this._listViewModel.destroy();
         }
         this._loadTriggerVisibility = null;
-
-        if (this._editInPlace) {
-            this._editInPlace.reset();
-        }
 
         if (this._portionedSearch) {
             this._portionedSearch.destroy();
@@ -3835,7 +3815,24 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     beginAdd(options) {
-        return this._options.readOnly ? Deferred.fail() : this._editInPlace.beginAdd(options);
+        if (this._options.readOnly) {
+          return Deferred.fail();
+        } else {
+            return this._editInPlace.beginAdd(options).then((addResult) => {
+
+                // TODO: https://online.sbis.ru/opendoc.html?guid=b8a501c1-6148-4b6a-aba8-2b2e4365ec3a
+                const addingPosition = this._options.editingConfig.addPosition === 'top' ? 0 : (this.getViewModel().getCount() - 1);
+                const isPositionInRange = addingPosition >= this.getViewModel().getStartIndex() && addingPosition < this.getViewModel().getStopIndex();
+                const targetDispItem = this.getViewModel().at(addingPosition);
+                const targetItem = targetDispItem && targetDispItem.getContents();
+                const targetItemKey = targetItem && targetItem.getKey ? targetItem.getKey() : null;
+                if (!isPositionInRange && targetItemKey !== null) {
+                    return _private.scrollToItem(this, targetItemKey, false, true).then(() => Promise.resolve(addResult));
+                } else {
+                    return Promise.resolve(addResult);
+                }
+            });
+        }
     },
 
     cancelEdit() {

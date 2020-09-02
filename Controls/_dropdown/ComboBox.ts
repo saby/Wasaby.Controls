@@ -12,7 +12,7 @@ import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import {IStickyPopupOptions} from 'Controls/popup';
 import * as Merge from 'Core/core-merge';
-import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
+import {isLeftMouseButton} from 'Controls/fastOpenUtils';
 import {generateStates} from 'Controls/input';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
@@ -35,13 +35,11 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @class Controls/_dropdown/ComboBox
  * @extends Core/Control
  * @implements Controls/_interface/ISource
- * @implements Controls/interface/IItemTemplate
+ * @implements Controls/_menu/interface/IMenuBase
  * @implements Controls/_interface/IFilterChanged
  * @implements Controls/_interface/ISingleSelectable
- * @implements Controls/interface/IDropdownEmptyText
  * @implements Controls/interface/IInputPlaceholder
  * @implements Controls/interface/IDropdown
- * @implements Controls/_interface/INavigation
  * @control
  * @public
  * @category Input

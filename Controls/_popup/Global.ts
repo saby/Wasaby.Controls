@@ -1,22 +1,26 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Global/Global');
 import GlobalController from './GlobalController';
+import {Bus as EventBus} from 'Env/Event';
 
 /**
  * @class Controls/_popup/Global
  * @private
  */
-
 const Global = Control.extend({
     _template: template,
 
     _afterMount() {
         this._globalController = new GlobalController();
         this._globalController.registerGlobalPopup();
+        const channelPopupManager = EventBus.channel('popupManager');
+        channelPopupManager.subscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
     },
 
     _beforeUnmount(): void {
         this._globalController.registerGlobalPopupEmpty();
+        const channelPopupManager = EventBus.channel('popupManager');
+        channelPopupManager.unsubscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
     },
 
     _openInfoBoxHandler(event, config) {
