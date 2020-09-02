@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/dropdown_new/Button/FooterTemplate/FooterTemplate';
+import * as Template from 'wml!Controls-demo/dropdown_new/Button/FooterContentTemplate/FooterTemplate';
 import {Memory} from 'Types/source';
 
 export default class extends Control {
