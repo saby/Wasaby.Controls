@@ -1854,7 +1854,7 @@ const _private = {
     },
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
-        self._pagingNavigationVisible = _private.isPagingNavigationVisible(self.getItemsCount(self), self._knownPagesCount);
+        self._pagingNavigationVisible = _private.isPagingNavigationVisible(_private.getItemsCount(self), self._knownPagesCount);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
