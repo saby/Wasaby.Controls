@@ -17,7 +17,7 @@ import {IDateConstructor, IDateConstructorOptions} from 'Controls/interface';
 import {IDayTemplate, IDayTemplateOptions} from 'Controls/interface';
 import {IntersectionObserverSyntheticEntry} from 'Controls/scroll';
 import {Base as dateUtils} from 'Controls/dateUtils';
-import getDimensions = require("Controls/Utils/getDimensions");
+import {getDimensions} from 'Controls/sizeUtils';
 import {scrollToElement} from 'Controls/scrollUtils';
 import template = require('wml!Controls/_calendar/MonthList/MonthList');
 import monthTemplate = require('wml!Controls/_calendar/MonthList/MonthTemplate');
@@ -35,11 +35,12 @@ interface IModuleComponentOptions extends
     IDateConstructorOptions {
 }
 
-const enum ITEM_BODY_SELECTOR {
-    year = '.controls-MonthList__year-months',
-    month = '.controls-MonthViewVDOM',
-    day = '.controls-MonthViewVDOM__item'
-}
+const ITEM_BODY_SELECTOR  = {
+    day: '.controls-MonthViewVDOM__item',
+    month: '.controls-MonthViewVDOM',
+    year: '.controls-MonthList__year-months',
+    mainTemplate: '.controls-MonthList__template'
+};
 
 const enum VIEW_MODE {
     month = 'month',
@@ -445,21 +446,37 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     private _findElementByDate(date: Date): HTMLElement {
-        let element: HTMLElement;
+        let element: HTMLElement | null;
+        const templates = {
+            day: {
+                condition: date.getDate() !== 1,
+                dateId: date
+            },
+            month: {
+                condition: date.getMonth() !== 0,
+                dateId: dateUtils.getStartOfMonth(date)
+            },
+            // В шаблоне может использоваться headerTemplate, нужно подскроллить к месяцу/году под ним
+            year: {
+                condition: true,
+                dateId: dateUtils.getStartOfYear(date)
+            },
+            // В случае, если используется кастомный шаблон, пытаемся подскроллить к нему
+            mainTemplate: {
+                condition: true,
+                dateId: dateUtils.getStartOfYear(date)
+            }
+        };
 
-        if (date.getDate() !== 1) {
-            element = this._getElementByDate(ITEM_BODY_SELECTOR.day, monthListUtils.dateToId(date));
+        for (const item in templates) {
+            const element =  this._getElementByDate(
+                ITEM_BODY_SELECTOR[item],
+                monthListUtils.dateToId(templates[item].dateId)
+            );
+            if (element && templates[item].condition) {
+                return element;
+            }
         }
-        if (!element && date.getMonth() !== 0) {
-            element = this._getElementByDate(
-                ITEM_BODY_SELECTOR.month, monthListUtils.dateToId(dateUtils.getStartOfMonth(date)));
-        }
-        if (!element) {
-            element = this._getElementByDate(
-                ITEM_BODY_SELECTOR.year,
-                monthListUtils.dateToId(dateUtils.getStartOfYear(date)));
-        }
-        return element;
     }
 
     private _getNormalizedContainer(): HTMLElement {

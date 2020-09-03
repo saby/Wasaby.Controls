@@ -1,4 +1,4 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions} from 'UI/Base';
 import Popup from 'Controls/_popup/Manager/Popup';
 import Container from 'Controls/_popup/Manager/Container';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
@@ -11,7 +11,6 @@ import {detection} from 'Env/Env';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as Deferred from 'Core/Deferred';
 import * as cClone from 'Core/core-clone';
-import template = require('wml!Controls/_popup/Manager/Manager');
 
 const ORIENTATION_CHANGE_DELAY = 50;
 
@@ -35,16 +34,14 @@ interface IManagerTouchContext {
     };
 }
 
-class Manager extends Control<IManagerOptions> {
-    _template: TemplateFunction = template;
+class Manager {
     _contextIsTouch: boolean = false;
     _popupItems: List<IPopupItem> = new List();
 
-    protected _beforeMount(options: IManagerOptions): void {
-        ManagerController.setPopupHeaderTheme(options.popupHeaderTheme);
-    }
 
-    protected _afterMount(options: IManagerOptions, context: IManagerTouchContext): void {
+
+    protected init(options: IManagerOptions, context: IManagerTouchContext): void {
+        ManagerController.setPopupHeaderTheme(options.popupHeaderTheme);
         this._updateContext(context);
         ManagerController.setManager(this);
         EventBus.channel('navigation').subscribe('onBeforeNavigate', this._navigationHandler.bind(this));
@@ -67,17 +64,17 @@ class Manager extends Control<IManagerOptions> {
         }
     }
 
-    protected _afterUpdate(oldOptions: IManagerOptions, context: IManagerTouchContext): void {
+    protected updateOptions(options: IManagerOptions, context: IManagerTouchContext): void {
         this._updateContext(context);
         // Theme of the popup header can be changed dynamically.
         // The option is not inherited, so in order for change option in 1 synchronization cycle,
         // we have to make an event model on ManagerController.
         // Now there are no cases where the theme changes when the popup are open,
         // so now just change the theme to afterUpdate.
-        ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
+        ManagerController.setPopupHeaderTheme(options.popupHeaderTheme);
     }
 
-    protected _beforeUnmount(): void {
+    protected destroy(): void {
         if (detection.isMobileIOS) {
             EventBus.globalChannel().unsubscribe('MobileInputFocus', this._controllerVisibilityChangeHandler);
             EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._controllerVisibilityChangeHandler);
@@ -410,7 +407,7 @@ class Manager extends Control<IManagerOptions> {
         return false;
     }
 
-    protected _mouseDownHandler(event: Event): void {
+    protected mouseDownHandler(event: Event): void {
         if (this._popupItems && !this._isIgnoreActivationArea(event.target as HTMLElement)) {
             const deactivatedPopups = [];
             this._popupItems.each((item) => {
@@ -771,8 +768,7 @@ class Manager extends Control<IManagerOptions> {
         }
     }
 
-    protected _eventHandler(event: Event, actionName: string): void {
-        const args = Array.prototype.slice.call(arguments, 2);
+    protected eventHandler(actionName: string, args: any[]): void {
         const actionResult = this[`_${actionName}`].apply(this, args);
         if (actionResult === true) {
             this._redrawItems();

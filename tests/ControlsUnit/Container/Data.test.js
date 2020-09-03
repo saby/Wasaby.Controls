@@ -241,11 +241,14 @@ define(
             let data = getDataWithConfig(options);
             await data._beforeMount(options);
 
+            const prefetchSource = data._dataOptionsContext.prefetchSource;
             const currentItems = data._items;
             const newItems = new collection.RecordSet();
 
             data._itemsReadyCallbackHandler(newItems);
             assert.isTrue(data._items === newItems);
+            assert.isTrue(data._dataOptionsContext.items === newItems);
+            assert.isTrue(data._dataOptionsContext.prefetchSource === prefetchSource);
          });
 
          it('data source options tests', function(done) {

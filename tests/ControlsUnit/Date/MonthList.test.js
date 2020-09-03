@@ -646,6 +646,9 @@ define([
             },
             returnYears = function(selector, date) {
                return selector === ITEM_BODY_SELECTOR.year ? selector : null;
+            },
+            returnMainTemplate = function(selector, date) {
+               return selector === ITEM_BODY_SELECTOR.mainTemplate ? selector : null;
             };
 
          [{
@@ -668,6 +671,10 @@ define([
             date: new Date(2020, 1, 2),
             getElementByDateStub: returnYears,
             result: ITEM_BODY_SELECTOR.year
+         }, {
+            date: new Date(2020, 1, 2),
+            getElementByDateStub: returnMainTemplate,
+            result: ITEM_BODY_SELECTOR.mainTemplate
          }].forEach(function(test, index) {
             it(`test ${index}`, function () {
                let
