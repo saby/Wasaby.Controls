@@ -280,6 +280,7 @@ define('Controls/Application',
 
             this._createGlobalPopup();
             this._createPopupManager();
+            this._popupManager.initTheme(cfg);
             this._createRegisters();
             this._createTouchDetector();
          },
