@@ -2075,7 +2075,7 @@ const _private = {
             markerVisibility: options.markerVisibility
         });
 
-        if (self._options.markedKey !== options.markedKey) {
+        if (self._options.markedKey !== options.markedKey || self._options.markerVisibility !== options.markerVisibility) {
             const markedKey = _private.getMarkerController(self).calculateMarkedKey(options.markedKey);
             _private.getMarkerController(self).setMarkedKey(markedKey);
 
