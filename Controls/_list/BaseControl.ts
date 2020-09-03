@@ -4145,9 +4145,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _changePageSize(e, key) {
+        const maxShowElementsIndex = this._currentPageSize * this._currentPage - 1;
         this._currentPageSize = PAGE_SIZE_ARRAY[key - 1].pageSize;
-        this._currentPage = 1;
-        this._applyPagingNavigationState({pageSize: this._currentPageSize});
+        this._currentPage = Math.floor(maxShowElementsIndex / this._currentPageSize) + 1;
+        const more = this._items.getMetaData().more;
+        if (typeof more !== 'boolean') {
+            const pagesSize = Math.ceil(more / this._currentPageSize);
+            if (pagesSize < this._currentPage) {
+                this._currentPage = pagesSize;
+            }
+        } else {
+            this._currentPage = 1;
+        }
+        this._applyPagingNavigationState({pageSize: this._currentPageSize, page: this._currentPage});
     },
 
     /**
