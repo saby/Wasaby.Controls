@@ -99,6 +99,16 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @demo Controls-demo/Toolbar/ItemActions/Index
      */
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
+
+    /**
+     * @name Controls/_toolbars/IToolbarOptions#menuSource
+     * @cfg {Types/source:ICrudPlus} Устанавливает источник для выпадающего меню тулбара,
+     * который задействуется непосредственно при клике на меню.
+     * Это требуется когда нужно довычислить пункты меню в момент открытия выпадающего меню,
+     * для оптимизации построения страницы на роутинге и скорости её открытия на фронте.
+     * Внимание! Для первичного построения элементов тулбара по-прежнему должна быть передана опция "source"/"items".
+     */
+    menuSource?: ICrudPlus;
 }
 
 /**
@@ -299,10 +309,15 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _setMenuItems(): void {
-        const source = this._options.source || this._getSourceForMenu();
         const menuItems = Toolbar._calcMenuItems(this._actualItems);
         this._menuItems = menuItems;
-        this._menuSource = this._createPrefetchProxy(source, menuItems);
+
+        if (this._options.menuSource) {
+            this._menuSource = this._options.menuSource;
+        } else {
+            const source = this._options.source || this._getSourceForMenu();
+            this._menuSource = this._createPrefetchProxy(source, menuItems);
+        }
     }
 
     private _setStateByItems(items: TItems, isNewOptions: boolean, source?: ICrudPlus): void {
@@ -539,7 +554,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             itemsSpacing: 'medium',
             iconSize: 'm',
             isNewOptions: false,
-            itemTemplate: defaultItemTemplate
+            itemTemplate: defaultItemTemplate,
+            menuSource: null
         };
     }
 
