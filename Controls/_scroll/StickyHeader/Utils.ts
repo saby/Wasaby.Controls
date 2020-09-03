@@ -1,11 +1,17 @@
 import {detection} from 'Env/Env';
-import getDimensions = require('Controls/Utils/getDimensions');
+import {getDimensions} from 'Controls/sizeUtils';
 
 let lastId = 0;
 
 export const enum POSITION {
     top = 'top',
     bottom = 'bottom'
+}
+
+export const enum SHADOW_VISIBILITY {
+    visible = 'visible',
+    hidden = 'hidden',
+    lastVisible = 'lastVisible'
 }
 
 /**
@@ -31,6 +37,7 @@ export type TRegisterEventData = {
    container: HTMLElement;
    position?: string;
    mode?: string;
+   shadowVisibility: SHADOW_VISIBILITY;
 };
 
 export type IFixedEventData = {

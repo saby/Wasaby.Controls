@@ -3556,8 +3556,84 @@ define([
                   }
                };
                var result = ctrl.beginAdd(opt);
-               assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
-               assert.isTrue(result.isSuccessful());
+               assert.isTrue(result instanceof Promise);
+               assert.isTrue(result.isReady());
+            });
+         });
+
+         describe('beginAdd(), addPosition', () => {
+            let cfg;
+            let ctrl;
+            let sandbox;
+            let scrollToItemCalled;
+            beforeEach(() => {
+               scrollToItemCalled = false;
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: source,
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: rs,
+                     keyProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  editingConfig: {
+                     addPosition: 'top'
+                  },
+                  navigation: {
+                     source: 'page',
+                     sourceConfig: {
+                        pageSize: 6,
+                        page: 0,
+                        hasMore: false
+                     },
+                     view: 'infinity',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     }
+                  }
+               };
+               sandbox = sinon.createSandbox();
+               sandbox.replace(lists.BaseControl._private, 'scrollToItem', () => {
+                  scrollToItemCalled = true;
+                  return Promise.resolve();
+               });
+               ctrl = new lists.BaseControl(cfg);
+               ctrl.saveOptions(cfg);
+               ctrl._container = {
+                  clientHeight: 100
+               };
+
+            });
+
+            afterEach(() => {
+               sandbox.restore();
+            });
+            it('scrollToItem called on beginAdd if adding item is out of range', async () => {
+               await ctrl._beforeMount(cfg);
+               ctrl._listViewModel._startIndex = 2;
+               ctrl._editInPlace = {
+                  beginAdd: function() {
+                     return Promise.resolve();
+                  }
+               };
+               await ctrl.beginAdd({}).then(() => {
+                  assert.isTrue(scrollToItemCalled);
+               });
+            });
+            it('scrollToItem not called on beginAdd if adding item is in range', async () => {
+               await ctrl._beforeMount(cfg);
+               ctrl._listViewModel._startIndex = 0;
+               ctrl._editInPlace = {
+                  beginAdd: function() {
+                     return Promise.resolve();
+                  }
+               };
+               await ctrl.beginAdd({}).then(() => {
+                  assert.isFalse(scrollToItemCalled);
+               });
             });
          });
 
@@ -4126,7 +4202,9 @@ define([
                      keyProperty: 'id'
                   }),
                   keyProperty: 'key'
-               })
+               }),
+               _registerMouseMove: () => null,
+               _registerMouseUp: () => null
             },
             domEvent = {
                nativeEvent: {},
@@ -4163,9 +4241,15 @@ define([
       it('_processItemMouseEnterWithDragNDrop', () => {
          const ctrl = new lists.BaseControl({});
          const dragEntity = { entity: 'entity' },
-               itemData = { itemData: 'itemData' },
+               itemData = {
+                  dispItem: {
+                     getContents: () => {}
+                  }
+               },
                dragPosition = {
-                  item: { item: 'item' },
+                  dispItem: {
+                     getContents: () => {}
+                  },
                   position: 'after'
                };
 
@@ -4181,7 +4265,7 @@ define([
                return dragEntity;
             },
             calculateDragPosition(item) {
-               assert.deepEqual(item, itemData);
+               assert.deepEqual(item, itemData.dispItem);
                return dragPosition;
             },
             setDragPosition(position) {
@@ -4194,7 +4278,7 @@ define([
             notifyCalled = true;
             assert.equal(eventName, 'changeDragTarget');
             assert.deepEqual(args[0], dragEntity);
-            assert.deepEqual(args[1], { item: 'item' });
+            assert.equal(args[1], dragPosition.dispItem.getContents());
             assert.equal(args[2], 'after');
             return notifyResult;
          };
@@ -4345,7 +4429,13 @@ define([
             endDrag() {
                dragEnded = true;
             },
-            getDragPosition: () => { return {}; }
+            getDragPosition: () => {
+               return {
+                  dispItem: {
+                     getContents: () => {}
+                  }
+               };
+            }
          };
          ctrl._documentDragEnd();
          assert.isTrue(dragEnded);
@@ -7627,7 +7717,7 @@ define([
          });
 
          it('drag start', () => {
-            baseControl._dragStart({ entity: baseControl._dragEntity }, baseControl._draggedKey);
+            baseControl._dragStart({ entity: new dragNDrop.ItemsEntity({items: [1]}) }, 1);
             assert.isNotNull(baseControl._dndListController);
             assert.isNotNull(baseControl._dndListController.getDragEntity());
          });
@@ -7656,7 +7746,13 @@ define([
          it('drag end', () => {
             baseControl._dndListController = {
                endDrag: () => undefined,
-               getDragPosition: () => { return {}; }
+               getDragPosition: () => {
+                  return {
+                     dispItem: {
+                        getContents: () => {}
+                     }
+                  };
+               }
             };
 
             baseControl._insideDragging = true;

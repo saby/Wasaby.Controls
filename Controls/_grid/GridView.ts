@@ -9,7 +9,7 @@ import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS, ColumnScroll} from './resour
 import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/DragScroll';
 import {shouldAddActionsCell, shouldDrawColumnScroll, getAllowedSwipeType, isInLeftSwipeRange} from 'Controls/_grid/utils/GridColumnScrollUtil';
 
-import getDimensions = require("Controls/Utils/getDimensions");
+import {getDimensions} from 'Controls/sizeUtils';
 
 import * as GridViewTemplateChooser from 'wml!Controls/_grid/GridViewTemplateChooser';
 import * as GridTemplate from 'wml!Controls/_grid/layout/grid/GridView';
@@ -323,7 +323,7 @@ var
             this._listModel.setBaseItemTemplateResolver(this._resolveBaseItemTemplate.bind(this));
             this._listModel.setColumnTemplate(ColumnTpl);
             this._setResultsTemplate(cfg);
-            this._listModel.headerInEmptyListVisible = cfg.headerInEmptyListVisible;
+            this._listModel.setHeaderInEmptyListVisible(cfg.headerInEmptyListVisible);
 
             // Коротко: если изменить опцию модели пока gridView не построена, то они и не применятся.
             // Подробнее: GridView управляет почти всеми состояниями модели. GridControl создает модель и отдает ее
@@ -357,6 +357,11 @@ var
             GridView.superclass._beforeUpdate.apply(this, arguments);
             const self = this;
             const isColumnsScrollChanged = this._options.columnScroll !== newCfg.columnScroll;
+            if (this._options.headerInEmptyListVisible !== newCfg.headerInEmptyListVisible) {
+                if (this._listModel) {
+                    this._listModel.setHeaderInEmptyListVisible(newCfg.headerInEmptyListVisible);
+                }
+            }
             if (this._options.resultsPosition !== newCfg.resultsPosition) {
                 if (this._listModel) {
                     this._listModel.setResultsPosition(newCfg.resultsPosition);

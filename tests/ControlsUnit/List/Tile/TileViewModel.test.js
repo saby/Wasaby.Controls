@@ -1,4 +1,4 @@
-define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(TileViewModel, collection) {
+define(['Controls/_tile/TileView/TileViewModel', 'Types/collection', 'Types/entity'], function(TileViewModel, collection, entity) {
    'use strict';
 
    describe('Controls/_tile/TileView/TileViewModel', function() {
@@ -117,5 +117,41 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(T
          assert.equal(tileViewModel.getItemPaddingClasses(), 'controls-TileView__itemPaddingContainer_spacingLeft_s_theme-default controls-TileView__itemPaddingContainer_spacingRight_null_theme-default');
       });
 
+      describe('getItemWidth', () => {
+         it('image width proportion <= 0.5', () => {
+            const tileItem = new entity.Model({
+               rawData: {
+                  id: '1',
+                  imageWidth: 100,
+                  imageHeight: 200,
+               }
+            });
+            let width = tileViewModel.getItemWidth(tileItem, 'imageHeight', 'imageWidth', 'dynamic', 200, null);
+            assert.strictEqual(width, 140);
+         });
+         it('image width proportion > 1.5', () => {
+            const tileItem = new entity.Model({
+               rawData: {
+                  id: '1',
+                  imageWidth: 300,
+                  imageHeight: 100,
+               }
+            });
+            let width = tileViewModel.getItemWidth(tileItem, 'imageHeight', 'imageWidth', 'dynamic', 200, null);
+            assert.strictEqual(width, 300);
+         });
+
+         it('returns custom minimal item width', () => {
+            const tileItem = new entity.Model({
+               rawData: {
+                  id: '1',
+                  imageWidth: 300,
+                  imageHeight: 100,
+               }
+            });
+            let width = tileViewModel.getItemWidth(tileItem, 'imageHeight', 'imageWidth', 'dynamic', 200, 400);
+            assert.strictEqual(width, 400);
+         });
+      });
    });
 });

@@ -7,12 +7,14 @@ define('Controls/Application',
       'wml!Controls/Application/Page',
       'Core/BodyClasses',
       'Env/Env',
+      'Env/Event',
       'UI/Base',
       'Controls/scroll',
       'Core/helpers/getResourceUrl',
       'Controls/Application/SettingsController',
-      'Controls/Utils/DOMUtil',
+      'Controls/sizeUtils',
       'Controls/event',
+      'Controls/popup',
       'UI/HotKeys',
       'Controls/Application/TouchDetectorController',
       'css!theme?Controls/Application/oldCss'
@@ -55,12 +57,14 @@ define('Controls/Application',
       template,
       cBodyClasses,
       Env,
+      EnvEvent,
       UIBase,
       scroll,
       getResourceUrl,
       SettingsController,
-      DOMUtils,
+      sizeUtils,
       ControlsEvent,
+      popup,
       HotKeys,
       TouchDetector) {
       'use strict';
@@ -133,6 +137,7 @@ define('Controls/Application',
          },
          _mousedownPage: function(ev) {
             this._registers.mousedown.start(ev);
+            this._popupManager.mouseDownHandler(ev);
          },
          _mousemovePage: function(ev) {
             this._registers.mousemove.start(ev);
@@ -202,7 +207,7 @@ define('Controls/Application',
             // На Ipad необходимо вызывать reflow в момент открытия окон для решения проблем с z-index-ами
             // https://online.sbis.ru/opendoc.html?guid=3f84a4bc-2973-497c-91ad-0165b5046bbc
             if (Env.detection.isMobileIOS) {
-               DOMUtils.reflow();
+               sizeUtils.DOMUtil.reflow();
             }
 
             this._changeOverflowClass();
@@ -273,11 +278,13 @@ define('Controls/Application',
 
             SettingsController.setController(cfg.settingsController);
 
+            this._createGlobalPopup();
+            this._createPopupManager();
             this._createRegisters();
             this._createTouchDetector();
          },
 
-         _afterMount: function() {
+         _afterMount: function(cfg) {
             // Подписка через viewPort дает полную информацию про ресайз страницы, на мобильных устройствах
             // сообщает так же про изменение экрана после показа клавиатуры и/или зуме страницы.
             // Подписка на body стреляет не всегда. в 2100 включаю только для 13ios, в перспективе можно включить
@@ -285,12 +292,26 @@ define('Controls/Application',
             if (this._isIOS13()) {
                window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
             }
+            var channelPopupManager = EnvEvent.Bus.channel('popupManager');
+            channelPopupManager.subscribe('managerPopupCreated', this._popupCreatedHandler, this);
+            channelPopupManager.subscribe('managerPopupDestroyed', this._popupDestroyedHandler, this);
+            channelPopupManager.subscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
+
+            this._globalpopup.registerGlobalPopup();
+            this._popupManager.init(cfg, this._getChildContext());
          },
 
          _beforeUnmount: function () {
             for (var register in this._registers) {
                this._registers[register].destroy();
             }
+            var channelPopupManager = EnvEvent.Bus.channel('popupManager');
+            channelPopupManager.unsubscribe('managerPopupCreated', this._popupCreatedHandler, this);
+            channelPopupManager.unsubscribe('managerPopupDestroyed', this._popupDestroyedHandler, this);
+            channelPopupManager.unsubscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
+
+            this._globalpopup.registerGlobalPopupEmpty();
+            this._popupManager.destroy();
          },
 
          _beforeUpdate: function(cfg) {
@@ -315,9 +336,10 @@ define('Controls/Application',
                }
                elements[0].textContent = this._options.title;
             }
+            this._popupManager.updateOptions(this._options, this._getChildContext());
          },
 
-         _createRegisters: function () {
+         _createRegisters: function() {
             var registers = ['scroll', 'controlResize', 'mousemove', 'mouseup', 'touchmove', 'touchend', 'mousedown'];
             var _this = this;
             registers.forEach(function(register) {
@@ -325,13 +347,21 @@ define('Controls/Application',
             });
          },
 
-         _registerHandler: function (event, registerType, component, callback, config) {
+         _createGlobalPopup: function() {
+            this._globalpopup = new popup.GlobalController();
+         },
+
+         _createPopupManager: function() {
+            this._popupManager = new popup.ManagerClass();
+         },
+
+         _registerHandler: function(event, registerType, component, callback, config) {
             if (this._registers[registerType]) {
                this._registers[registerType].register(event, registerType, component, callback, config);
             }
          },
 
-         _unregisterHandler: function (event, registerType, component, config) {
+         _unregisterHandler: function(event, registerType, component, config) {
             if (this._registers[registerType]) {
                this._registers[registerType].unregister(event, registerType, component, config);
             }
@@ -359,8 +389,49 @@ define('Controls/Application',
             }
          },
 
+         _popupBeforeDestroyedHandler: function(event, popupCfg, popupList, popupContainer) {
+            this._globalpopup.popupBeforeDestroyedHandler(event, popupCfg, popupList, popupContainer);
+         },
+
+         _openInfoBoxHandler: function(event, config) {
+            this._globalpopup.openInfoBoxHandler(event, config);
+         },
+
+         _openDialogHandler: function(event, templ, templateOptions, opener) {
+            return this._globalpopup.openDialogHandler(event, templ, templateOptions, opener);
+         },
+
+         _closeInfoBoxHandler: function(event, delay) {
+            this._globalpopup.closeInfoBoxHandler(event, delay);
+         },
+
+         _forceCloseInfoBoxHandler: function() {
+            this._globalpopup.forceCloseInfoBoxHandler();
+         },
+
+         _openPreviewerHandler: function(event, config, type) {
+            return this._globalpopup.openPreviewerHandler(event, config, type);
+         },
+
+         _cancelPreviewerHandler: function(event, action) {
+            this._globalpopup.cancelPreviewerHandler(event, action);
+         },
+
+         _isPreviewerOpenedHandler: function(event) {
+            return this._globalpopup.isPreviewerOpenedHandler(event);
+         },
+
+         _closePreviewerHandler: function(event, type) {
+            this._globalpopup.closePreviewerHandler(event, type);
+         },
+
          _keyDownHandler: function(event) {
             return HotKeys.dispatcherHandler(event);
+         },
+
+         _popupEventHandler: function(event, action) {
+            var args = Array.prototype.slice.call(arguments, 2);
+            this._popupManager.eventHandler.apply(this._popupManager, [action, args]);
          }
       });
 

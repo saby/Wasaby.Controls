@@ -29,6 +29,9 @@
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
+ * @includes IMoveObject Controls/_list/interface/IMoveObject
+ * @includes IMoveDialogOptions Controls/_list/interface/IMoveDialogOptions
+ * @includes IMoveControllerOptions Controls/_list/interface/IMoveControllerOptions
  * @public
  * @author Крайнов Д.О.
  */
@@ -62,7 +65,10 @@
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
- * @public
+ * @includes IMoveObject Controls/_list/interface/IMoveObject
+ * @includes IMoveDialogOptions Controls/_list/interface/IMoveDialogOptions
+ * @includes IMoveControllerOptions Controls/_list/interface/IMoveControllerOptions
+ * * @public
  * @author Крайнов Д.О.
  */
 import AddButton = require('Controls/_list/AddButton');
@@ -74,8 +80,6 @@ import {default as View} from 'Controls/_list/List';
 import BaseAction from 'Controls/_list/BaseAction';
 import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatorTemplate');
 import ContinueSearchTemplate = require('wml!Controls/_list/resources/ContinueSearchTemplate');
-import Mover = require('Controls/_list/Mover');
-import Remover = require('Controls/_list/Remover');
 import {default as DataContainer} from 'Controls/_list/Data';
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
@@ -105,6 +109,8 @@ import IListNavigation from './_list/interface/IListNavigation';
 import { CssClassList, createClassListCollection} from 'Controls/_list/resources/utils/CssClassList';
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 
+import Remover = require('Controls/_list/Remover');
+
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 
 // @deprecated
@@ -112,6 +118,11 @@ import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resourc
 import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsTemplate');
 import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeAction');
 import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
+
+export {MoveController}  from 'Controls/_list/Controllers/MoveController';
+export {IMoveObject, MOVE_TYPE, MOVE_POSITION, TMoveItems}  from 'Controls/_list/interface/IMoveObject';
+export {IMoveControllerOptions}  from 'Controls/_list/interface/IMoveControllerOptions';
+import * as Mover from 'Controls/_list/Mover';
 
 export {
     AddButton,

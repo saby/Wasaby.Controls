@@ -146,13 +146,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('setDragTargetPosition', function() {
             var dragTargetPosition = {};
             gridViewModel.setDragTargetPosition(dragTargetPosition);
-            assert.equal(gridViewModel.getDragTargetPosition(), dragTargetPosition);
+            assert.equal(gridViewModel._model._dragTargetPosition, dragTargetPosition);
          });
 
          it('setDragEntity', function() {
             var dragEntity = {};
             gridViewModel.setDragEntity(dragEntity);
-            assert.equal(gridViewModel.getDragEntity(), dragEntity);
+            assert.equal(gridViewModel._model._dragEntity, dragEntity);
          });
 
          it('setDragItemData', function() {
@@ -1053,7 +1053,13 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             current.resetColumnIndex();
             current.goToNextColumn();
             const currColumn = current.getCurrentColumn();
-            assert.equal(currColumn.getColspanedPaddingClassList(currColumn).right, 'controls-Grid__cell_spacingLastCol_l_theme-default');
+            assert.equal(currColumn.getColspanedPaddingClassList(currColumn, true).right, 'controls-Grid__cell_spacingLastCol_l_theme-default');
+         });
+         it('getColspanedPaddingClassList no padding right update', function() {
+            current.resetColumnIndex();
+            current.goToNextColumn();
+            const currColumn = current.getCurrentColumn();
+            assert.equal(currColumn.getColspanedPaddingClassList(currColumn, false).right, ' controls-Grid__cell_spacingRight_theme-default');
          });
       });
       describe('methods for processing with items', function() {
@@ -1073,7 +1079,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
-                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
+                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
                   'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
