@@ -62,6 +62,7 @@ define(
          describe('_StickyHeader', function() {
             beforeEach(function() {
                ctrl = new _StickyHeader({});
+               inst._options = _StickyHeader.getDefaultOptions();
                inst._updateStyles = ctrl._updateStyles;
                inst._updateStyle = ctrl._updateStyle;
                inst._updateShadowStyles = ctrl._updateShadowStyles;
@@ -92,7 +93,7 @@ define(
 
                inst._updateStyles();
 
-               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
+               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                   '</div>');
@@ -115,7 +116,7 @@ define(
 
                inst._updateStyles();
 
-               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: -1px;padding-top:1px;margin-top: -1px;z-index: 2;">' +
+               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position" style="top: -1px;padding-top:1px;margin-top: -1px;z-index: 2;">' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                   '</div>');
@@ -131,7 +132,7 @@ define(
 
                inst._updateStyles();
 
-               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 0px;">' +
+               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position" style="top: 0px;">' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                   '</div>');
@@ -147,7 +148,7 @@ define(
 
                inst._updateStyles();
 
-               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="bottom: 0px;">' +
+               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position" style="bottom: 0px;">' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
                   '</div>');
@@ -160,7 +161,7 @@ define(
 
                inst._updateStyles();
 
-               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 0px;">' +
+               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position" style="top: 0px;">' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
@@ -179,7 +180,7 @@ define(
 
                inst._updateStyles();
 
-               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="top: 0px;z-index: 1;">' +
+               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position" style="top: 0px;z-index: 1;">' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
                   '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
@@ -200,7 +201,7 @@ define(
 
                inst._updateStyles();
 
-               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader_position" style="bottom: 0px;z-index: 2;">' +
+               assert.equal(template(inst), '<div class="controls-StickyHeader controls-background-default_theme-default controls-StickyHeader__background controls-StickyHeader_position" style="bottom: 0px;z-index: 2;">' +
                   '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top controls-Scroll__shadow_horizontal"></div>' +
                   '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                   '<div class="controls-StickyHeader__content">testing the template</div>' +
