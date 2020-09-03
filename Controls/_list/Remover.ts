@@ -1,3 +1,4 @@
+import {CrudEntityKey} from 'Types/source';
 import BaseAction from 'Controls/_list/BaseAction';
 import Deferred = require('Core/Deferred');
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
@@ -48,6 +49,15 @@ var _private = {
             self._filter = dataOptions.filter;
             self._keyProperty = dataOptions.keyProperty;
         }
+    },
+
+    getItemsBySelection(self, items): Promise<CrudEntityKey[]> {
+        //Support removing with mass selection.
+        //Full transition to selection will be made by:
+        // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+        return items instanceof Array
+            ? Promise.resolve(items)
+            : getItemsBySelection(items, self._source, self._items, self._filter, null, self._options.selectionTypeForAllSelected);
     }
 };
 
@@ -92,34 +102,29 @@ var Remover = BaseAction.extend({
         _private.updateDataOptions(this, context.dataOptions);
     },
 
-    removeItems(items: string[]): void {
-        let itemsDeferred;
-
-        //Support removing with mass selection.
-        //Full transition to selection will be made by:
-        // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-        itemsDeferred = items instanceof Array
-            ? Deferred.success(items)
-            : getItemsBySelection(items, this._source, this._items, this._filter, null, this._options.selectionTypeForAllSelected);
-
-        itemsDeferred.addCallback((items) => {
-            _private.beforeItemsRemove(this, items).addCallback((result) => {
-                if (result !== false) {
-                    _private.removeFromSource(this, items).addCallback((result) => {
-                        _private.removeFromItems(this, items);
-                        return result;
-                    }).addBoth((result) => {
-                        _private.afterItemsRemove(this, items, result).then((eventResult) => {
-                            if (eventResult === false || !(result instanceof Error)) {
-                                return;
-                            }
-
-                            this._notify('dataError', [{ error: result }]);
-                        });
-                    });
+    removeItems(items: string[]): Promise<void> {
+        const both = (result) => {
+            return _private.afterItemsRemove(this, items, result).then((eventResult) => {
+                if (eventResult === false || !(result instanceof Error)) {
+                    return;
                 }
+
+                this._notify('dataError', [{ error: result }]);
             });
-        });
+        }
+        return _private.getItemsBySelection(this, items).then((items) => (
+            _private.beforeItemsRemove(this, items).then((result) => {
+                if (result === false) {
+                    return Promise.reject(result);
+                }
+                return _private.removeFromSource(this, items).then((result) => {
+                    _private.removeFromItems(this, items);
+                    return result;
+                })
+                    .then((result) => both(result))
+                    .catch((result) => both(result));
+            })
+        ));
     }
 });
 
