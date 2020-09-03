@@ -118,8 +118,6 @@ import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTe
 export {MoveController, TMovePosition, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
 import * as Mover from 'Controls/_list/Mover';
 
-export {IRemover} from 'Controls/_list/interface/IRemover';
-export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
 import * as Remover from 'Controls/_list/Remover';
 
 export {
