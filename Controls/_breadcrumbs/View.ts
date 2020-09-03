@@ -60,7 +60,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
 
     protected _beforeUnmount(): void {
         UnregisterUtil(this, 'scroll');
-        this._menuOpener.close();
+        this._menuOpener.destroy();
     }
 
     private _scrollHandler(): void {

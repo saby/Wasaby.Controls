@@ -31,6 +31,7 @@ export default class Sticky extends Base {
      * }
      * </pre>
      * @see close
+     * @see destroy
      */
     open(popupOptions: IStickyPopupOptions): void {
         return super.open(popupOptions);
@@ -51,4 +52,24 @@ export default class Sticky extends Base {
  * }
  * </pre>
  * @see open
+ * @see destroy
+ */
+
+/**
+ * Разрушает экземпляр класса
+ * @name Controls/_popup/PopupHelper/Sticky#destroy
+ * @function
+ * @example
+ * <pre class="brush: js">
+ *    import {StickyOpener} from 'Controls/popup';
+ *    ...
+ *    this._sticky = new StickyOpener();
+ *
+ *    _beforeUnmount() {
+ *        this._sticky.destroy();
+ *        this._sticky = null;
+ *    }
+ * </pre>
+ * @see open
+ * @see close
  */
