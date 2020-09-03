@@ -1,24 +1,22 @@
-<div class=" controls-ComboBox controls-ComboBox_theme-{{_options.theme}} controls-ComboBox-{{_options.readOnly? 'readOnly' : 'active'}}_theme-{{_options.theme}} {{_isOpened ? 'controls-ComboBox__opened'}}">
-   <div class="controls-ComboBox-InputRender
-               {{_isOpened ? 'controls-Popup__isolatedFocusingContext'}}
-               controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
-               controls-inlineheight-{{_inlineHeight}}_theme-{{_options.theme}}
-               controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}"
-        on:click="_handleClick()"
-        on:mousedown="_handleMouseDown()"
-        on:mouseenter="_handleMouseEnter()"
-        on:mouseleave="_handleMouseLeave()"
-        on:keydown="_handleKeyDown()">
-      <div class="controls-ComboBox__field controls-ComboBox__field_theme_{{_options.theme}}_margin-xs" title="{{_options.tooltip}}">
-         <ws:if data="{{_placeholder && !_value}}">
-            <div class="controls-ComboBox__placeholder_theme-{{_options.theme}}">{{_placeholder}}</div>
-         </ws:if>
-         <ws:else>
-            {{_value}}
-         </ws:else>
-      </div>
-      <span if="{{!_options.readOnly}}" class="controls-ComboBox__arrow-wrapper controls-ComboBox__arrow-wrapper_theme-{{_options.theme}}">
-         <span attr:class="controls-ComboBox__iconArrow controls-ComboBox__iconArrow_theme-{{_options.theme}} icon-{{_isOpened ? 'CollapseLight' : 'ExpandLight'}}"></span>
-      </span>
-   </div>
+<div class="controls-ComboBox controls-ComboBox_theme-{{_options.theme}} controls-ComboBox-{{_options.readOnly? 'readOnly' : 'active'}}_theme-{{_options.theme}} {{_isOpened ? 'controls-ComboBox__opened'}}
+            {{_isOpened ? 'controls-Popup__isolatedFocusingContext'}}
+            controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
+            controls-inlineheight-{{_inlineHeight}}_theme-{{_options.theme}}
+            controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}"
+     on:keydown="_handleKeyDown()"
+     on:click="_handleClick()"
+     on:mousedown="_handleMouseDown()"
+     on:mouseenter="_handleMouseEnter()"
+     on:mouseleave="_handleMouseLeave()">
+  <div class="controls-ComboBox__field controls-ComboBox__field_theme_{{_options.theme}}_margin-xs" title="{{_options.tooltip}}">
+     <ws:if data="{{_placeholder && !_value}}">
+        <div class="controls-ComboBox__placeholder_theme-{{_options.theme}}">{{_placeholder}}</div>
+     </ws:if>
+     <ws:else>
+        {{_value}}
+     </ws:else>
+  </div>
+  <span if="{{!_options.readOnly}}" class="controls-ComboBox__arrow-wrapper controls-ComboBox__arrow-wrapper_theme-{{_options.theme}}">
+     <span attr:class="controls-ComboBox__iconArrow controls-ComboBox__iconArrow_theme-{{_options.theme}} icon-{{_isOpened ? 'CollapseLight' : 'ExpandLight'}}"></span>
+  </span>
 </div>
