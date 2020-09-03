@@ -319,7 +319,10 @@ define('Controls/Application',
 
             this._globalpopup.registerGlobalPopupEmpty();
             this._popupManager.destroy();
-            this._dragnDropController.clearData.apply(this);
+            this._dragnDropController.destroy();
+
+            this._draggingTemplate = null;
+            this._draggingTemplateOptions = null;
          },
 
          _beforeUpdate: function(cfg) {
@@ -395,12 +398,14 @@ define('Controls/Application',
 
          _documentDragEnd: function(event, dragObject) {
             this._dragnDropController.documentDragEnd(dragObject);
-            this._dragnDropController.clearData.apply(this);
+            this._draggingTemplate = null;
+            this._draggingTemplateOptions = null;
             this._dragEndHandler();
          },
 
          _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
-            this._dragnDropController.updateDraggingTemplate.apply(this, [draggingTemplateOptions, draggingTemplate]);
+            this._draggingTemplate = draggingTemplate;
+            this._draggingTemplateOptions = draggingTemplateOptions;
         },
 
          _getResourceUrl: function(str) {

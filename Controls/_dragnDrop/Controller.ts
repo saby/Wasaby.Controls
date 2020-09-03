@@ -47,11 +47,12 @@ import 'Controls/_dragnDrop/DraggingTemplate';
 
         _documentDragEnd: function(event, dragObject) {
             this.controllerClass.documentDragEnd(dragObject);
-            this.controllerClass.clearData.apply(this);
+            this._clearData();
         },
 
         _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
-            this.controllerClass.updateDraggingTemplate.apply(this, [draggingTemplateOptions, draggingTemplate]);
+            this._draggingTemplate = draggingTemplate;
+            this._draggingTemplateOptions = draggingTemplateOptions;
         },
 
         _beforeMount: function() {
@@ -59,7 +60,8 @@ import 'Controls/_dragnDrop/DraggingTemplate';
         },
 
         _beforeUnmount: function() {
-            this.controllerClass.clearData.apply(this);
+            this._clearData();
+            this.controllerClass.destroy();
         },
 
         _registerHandler: function(event, registerType, component, callback, config) {
@@ -69,6 +71,11 @@ import 'Controls/_dragnDrop/DraggingTemplate';
         _unregisterHandler: function(event, registerType, component, config) {
             this.controllerClass.unregisterHandler(event, registerType, component, config);
         },
+
+        _clearData: function() {
+            this._draggingTemplateOptions = null;
+            this._draggingTemplate = null;
+        }
     });
     Controller._styles = ['Controls/dragnDrop'];
     export = Controller;

@@ -33,9 +33,10 @@ class ControllerClass {
         }
     }
 
-    clearData(): void {
-        this._draggingTemplateOptions = null;
-        this._draggingTemplate = null;
+    destroy(): void {
+        for (var register in this._registers) {
+            this._registers[register].destroy();
+        }
     }
 
     documentDragStart(dragObject): void {
@@ -46,10 +47,6 @@ class ControllerClass {
         this._registers.documentDragEnd.start(dragObject);
     }
 
-    updateDraggingTemplate(draggingTemplateOptions, draggingTemplate): void {
-        this._draggingTemplateOptions = draggingTemplateOptions;
-        this._draggingTemplate = draggingTemplate;
-    }
 }
 
 export default ControllerClass;
