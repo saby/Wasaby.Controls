@@ -317,6 +317,7 @@ var _private = {
    },
 
    getTemplateOptions(self, filter): IStackPopupOptions {
+      delete filter[HISTORY_KEYS_FIELD];
       return {
          templateOptions: {
             filter: filter,
