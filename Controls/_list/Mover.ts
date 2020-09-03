@@ -46,7 +46,7 @@ var _private = {
         }
         return _private.beforeItemsMove(self, items, target, position).addCallback(function (beforeItemsMoveResult) {
             if (useController) {
-                return self._controller.moveItems(
+                return self._controller.move(
                     _private.convertItemsToISelectionObject(items),
                     _private.extractFilter(items),
                     _private.getIdByItem(self, target),
@@ -153,8 +153,49 @@ var _private = {
     },
 
     moveItemToSiblingPosition: function (self, item, position) {
-        const target = _private.getTargetItem(item, position);
+        const target = _private.getTargetItem(self, item, position);
         return target ? self.moveItems([item], target, position) : Deferred.success();
+    },
+
+    /**
+     * Получает элемент к которому мы перемещаем текущий элемент
+     * Метод сделан публичным для совместимости с HOC
+     * @param self текущий контрол
+     * @param item текущий элемент
+     * @param position позиция (направление перемещения)
+     * @private
+     */
+    getTargetItem(self, item, position: TMovePosition): Model {
+        var
+            result,
+            display,
+            itemIndex,
+            siblingItem,
+            itemFromProjection;
+
+        //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
+        //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
+        //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
+        //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
+        //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
+        if (self._options.parentProperty) {
+            display = TreeItemsUtil.getDefaultDisplayTree(self._items, {
+                keyProperty: self._keyProperty,
+                parentProperty: self._options.parentProperty,
+                nodeProperty: self._options.nodeProperty
+            });
+            if (self._options.root) {
+                display.setRoot(self._options.root)
+            }
+            itemFromProjection = display.getItemBySourceItem(_private.getModelByItem(self, item));
+            siblingItem = display[position === TMovePosition.before ? 'getPrevious' : 'getNext'](itemFromProjection);
+            result = siblingItem ? siblingItem.getContents() : null;
+        } else {
+            itemIndex = self._items.getIndex(_private.getModelByItem(self, item));
+            result = self._items.at(position === TMovePosition.before ? --itemIndex : ++itemIndex);
+        }
+
+        return result;
     },
 
     updateDataOptions: function (self, newOptions, contextDataOptions) {
@@ -169,7 +210,7 @@ var _private = {
             self._filter = contextDataOptions.filter;
         }
         if (newOptions.moveDialogTemplate) {
-            controllerOptions.dialogOptions = {
+            controllerOptions.popupOptions = {
                 opener: self
             };
             if (newOptions.moveDialogTemplate.templateName) {
@@ -178,11 +219,11 @@ var _private = {
                     ...newOptions.moveDialogTemplate.templateOptions,
                     keyProperty: self._keyProperty
                 } as IMoverDialogTemplateOptions;
-                controllerOptions.dialogOptions.template = self._moveDialogTemplate;
-                controllerOptions.dialogOptions.templateOptions = self._moveDialogOptions;
+                controllerOptions.popupOptions.template = self._moveDialogTemplate;
+                controllerOptions.popupOptions.templateOptions = self._moveDialogOptions;
             } else {
                 self._moveDialogTemplate = newOptions.moveDialogTemplate;
-                controllerOptions.dialogOptions.template = self._moveDialogTemplate;
+                controllerOptions.popupOptions.template = self._moveDialogTemplate;
                 Logger.warn('Mover: Wrong type of moveDialogTemplate option, use object notation instead of template function', self);
             }
         }
@@ -264,7 +305,7 @@ var _private = {
             resultSelection = Deferred.success(selection);
         } else {
             const filter = _private.prepareFilter(this, this._filter, selection);
-            resultSelection = getItemsBySelection(_private.convertItemsToISelectionObject(selection), this._source, this._items, filter);
+            resultSelection = getItemsBySelection(selection, this._source, this._items, filter);
         }
 
         return resultSelection;
@@ -292,7 +333,7 @@ var _private = {
     },
 
     useController(items): boolean {
-        return !items.forEach;
+        return !items.forEach && !items.selected;
     },
 
     openMoveDialog(self, selection): Promise<void> {
@@ -314,41 +355,6 @@ var _private = {
                 }
             });
         });
-    },
-
-    /**
-     * Получает элемент к которому мы перемещаем текущий элемент
-     * Метод сделан публичным для совместимости с HOC
-     * @param item текущий элемент
-     * @param position позиция (направление перемещения)
-     * @private
-     */
-    getTargetItem(item, position: TMovePosition): Model {
-        //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
-        //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
-        //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
-        //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
-        //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
-        if (this._parentProperty) {
-            const display = TreeItemsUtil.getDefaultDisplayTree(this._items, {
-                keyProperty: this._keyProperty,
-                parentProperty: this._parentProperty,
-                nodeProperty: this._nodeProperty
-            }, {});
-            if (this._root) {
-                display.setRoot(this._root)
-            }
-            const collectionItem = display.getItemBySourceItem(this._getModel(item));
-            let siblingItem;
-            if (position === TMovePosition.before) {
-                siblingItem = display.getPrevious(collectionItem);
-            } else {
-                siblingItem = display.getNext(collectionItem);
-            }
-            return siblingItem ? siblingItem.getContents() : null;
-        }
-        let itemIndex = this._items.getIndex(this._getModel(item));
-        return this._items.at(position === TMovePosition.before ? --itemIndex : ++itemIndex);
     },
 
     convertItemsToISelectionObject(item): ISelectionObject {
@@ -461,9 +467,13 @@ var Mover = BaseAction.extend({
     moveItemsWithDialog(items: []|IMoveItemsParams): Promise<any> {
         if (this._moveDialogTemplate) {
             if (this.validate(items)) {
-                return _private.getItemsBySelection.call(this, items).addCallback((items: []) => (
-                    _private.openMoveDialog(this, items)
-                ));
+                if (_private.useController(items)) {
+                    return _private.openMoveDialog(this, items);
+                } else {
+                    return _private.getItemsBySelection.call(this, items).addCallback((items: []) => (
+                        _private.openMoveDialog(this, items)
+                    ));
+                }
             }
         } else {
             Logger.warn('Mover: Can\'t call moveItemsWithDialog! moveDialogTemplate option, is undefined', this);

@@ -1,17 +1,9 @@
 import {assert} from 'chai';
 import {stub, spy, assert as sinonAssert} from 'sinon';
-import { RecordSet } from 'Types/collection';
 
 import * as clone from 'Core/core-clone';
-import * as selectionToRecord from 'Controls/_operations/MultiSelector/selectionToRecord';
-
 import { Memory } from 'Types/source';
-
 import {IMoveControllerOptions, MoveController} from 'Controls/list';
-import { Model } from 'Types/entity';
-
-import {Confirmation, Dialog} from 'Controls/popup';
-import {ISelectionObject} from 'Controls/interface';
 
 const data = [{
     id: 1,
@@ -40,19 +32,12 @@ const data = [{
 }];
 
 describe('Controls/_list/Controllers/MoveController', () => {
-    let recordSet;
-    let mover;
+    let controller;
     let cfg: IMoveControllerOptions;
-    let stubLogger;
     let source: Memory;
 
     beforeEach(() => {
         const _data = clone(data);
-
-        recordSet = new RecordSet({
-            keyProperty: 'id',
-            rawData: _data
-        });
 
         source = new Memory({
             keyProperty: 'id',
@@ -61,210 +46,24 @@ describe('Controls/_list/Controllers/MoveController', () => {
 
         cfg = {
             parentProperty: 'folder',
-            nodeProperty: 'folder@',
-            items: recordSet, // Только с items возможно перемещение up/down
             source,
-            dialog: {
+            popupOptions: {
                 // @ts-ignore
                 template: () => ({}),
-            },
-            keyProperty: 'id'
+            }
         }
-        mover = new MoveController(cfg);
+        controller = new MoveController(cfg);
     });
 
-    it('moveItems() should move items to specified position', () => {
-        let callMethodCalled = false;
-        const params: ISelectionObject = {
-            selected: [1, 2, 3],
-            excluded: [11]
-        };
-        const filter = {
-            testProp: 'testValue'
-        }
-        const bindings = {
-            move: 'testMoveMethod',
-            list: 'testListMethod'
-        };
-        const targetId = 4;
-        mover._source.getBinding = () => {
-            return bindings;
-        };
-        mover._source.call = (methodName, data) => {
-            callMethodCalled = true;
-            assert.equal(methodName, bindings.move);
-            assert.equal(data.method, bindings.list);
-            assert.equal(data.folder_id, targetId);
-            assert.equal(data.filter.get('testProp'), 'testValue');
-            assert.deepEqual(data.filter.get('selection').getRawData(),
-                selectionToRecord(params, mover._source.getAdapter()).getRawData()
-            );
-            return Promise.resolve();
-        };
+    // Метод move() должен вызвать метод ресурса move с position before, after, on
+    it ('move() should call ICrudPlus.move() method with given position');
 
-        return mover.moveItems(params, filter, targetId)
-            .then(() => {
-                assert.isTrue(callMethodCalled);
-            });
-    });
+    // Метод move() должен вызывать метод IRpc-ресурса call с filter и selected
+    it ('move() should call IRpc.call() method with given filter');
 
-    describe('moving items up (moveItemUp) and down (moveItemDown)', () => {
-        describe('should consider sortingOrder', () => {
-            let item: Model;
+    // Метод moveWithDialog() Не должен перемещать пустые записи, должен вернуть reject
+    it ('moveWithDialog() should reject Promise when no items were given');
 
-            before(() => {
-                item = recordSet.getRecordById(3);
-            });
-
-            it ('should moveItemUp with ascending sort', () => {
-                mover.update({...cfg, sortingOrder: 'asc'});
-                mover._source.move = (items, target, options) => {
-                    assert.equal(target, 1);
-                    assert.equal(options.position, 'before');
-                    return Promise.resolve();
-                };
-                return mover.moveItemUp(item);
-            });
-
-            it ('should moveItemUp with ascending sort', () => {
-                mover.update({...cfg, sortingOrder: 'asc'});
-                mover._source.move = (items, target, options) => {
-                    assert.equal(target, 1);
-                    assert.equal(options.position, 'after');
-                    return Promise.resolve();
-                };
-                return mover.moveItemDown(item);
-            });
-
-            it ('should moveItemUp with descending sort', () => {
-                mover.update({...cfg, sortingOrder: 'desc'});
-                mover._source.move = (items, target, options) => {
-                    assert.equal(target, 1);
-                    assert.equal(options.position, 'before');
-                    return Promise.resolve();
-                };
-                return mover.moveItemUp(item);
-            });
-
-            it ('should moveItemDown with descending sort', () => {
-                mover.update({...cfg, sortingOrder: 'desc'});
-                mover._source.move = (items, target, options) => {
-                    assert.equal(target, 1);
-                    assert.equal(options.position, 'after');
-                    return Promise.resolve();
-                };
-                return mover.moveItemDown(item);
-            });
-        });
-
-        it('moveItemUp by item', () => {
-            const item = recordSet.at(2);
-            mover._source.move = (items, target, options) => {
-                assert.equal(target, 2);
-                assert.equal(options.position, 'before');
-                return Promise.resolve();
-            };
-            return mover.moveItemUp(item);
-        });
-
-        it('moveItemUp by id', () => {
-            mover._source.move = (items, target, options) => {
-                assert.equal(target, 2);
-                assert.equal(options.position, 'before');
-                return Promise.resolve();
-            };
-            return mover.moveItemUp(3);
-        });
-
-        it('moveItemUp first item', () => {
-            const item = recordSet.at(0);
-            mover._source.move = (items, target, options) => {
-                assert.equal(target, 2);
-                assert.equal(options.position, 'before');
-                return Promise.resolve();
-            };
-            return mover.moveItemUp(item);
-        });
-
-        it('moveItemDown by item', () => {
-            const item = recordSet.at(0);
-            mover._source.move = (items, target, options) => {
-                assert.equal(target, 2);
-                assert.equal(options.position, 'after');
-                return Promise.resolve();
-            };
-            return mover.moveItemDown(item);
-        });
-
-        it('moveItemDown by id', () => {
-            mover._source.move = (items, target, options) => {
-                assert.equal(target, 2);
-                assert.equal(options.position, 'after');
-                return Promise.resolve();
-            };
-            return mover.moveItemDown(1);
-        });
-
-        it('moveItemDown last item', (done) => {
-            const item = recordSet.at(4);
-            mover.moveItemDown(item).then(() => {
-                assert.equal(recordSet.at(4).getId(), item.getId());
-                done();
-            });
-        });
-    });
-
-    it('moveItemsWithDialog for newLogic call moveItems', (done) => {
-        const params = {
-            selected: [1, 2, 3],
-            excluded: [11]
-        };
-        const filter = {
-            testProp: 'testValue'
-        };
-        const stubOpenPopup = stub(Dialog, 'openPopup');
-        const stubMoveItems = stub(mover, 'moveItems');
-
-        stubMoveItems.callsFake((callingParams) => {
-            assert.deepEqual(callingParams, params);
-        });
-
-        // @ts-ignore
-        stubOpenPopup.callsFake((openArgs) => {
-            assert.deepEqual(openArgs.templateOptions.movedItems, params.selected);
-            assert.equal(openArgs.templateOptions.source, cfg.source);
-            assert.equal(openArgs.templateOptions.keyProperty, cfg.keyProperty);
-            openArgs.eventHandlers.onResult(4);
-            return Promise.resolve();
-        });
-
-        mover.moveItemsWithDialog(params, filter).then(() => {
-            sinonAssert.called(stubMoveItems);
-            stubMoveItems.restore();
-            stubOpenPopup.restore();
-            done();
-        });
-    });
-
-    it('moveItemsWithDialog with empty items', (done) => {
-        const params: ISelectionObject = {
-            selected: [],
-            excluded: [11]
-        };
-        const filter = {
-            testProp: 'testValue'
-        };
-        const spyOpenPopup = spy(Dialog, 'openPopup');
-        const stubOpenConfirmation = stub(Confirmation, 'openPopup');
-        // @ts-ignore
-        stubOpenConfirmation.callsFake((args) => {
-            assert(args.message, 'Нет записей для обработки команды');
-        });
-        mover.moveItemsWithDialog(params, filter).then(() => {
-            sinonAssert.notCalled(spyOpenPopup);
-            spyOpenPopup.restore();
-            stubOpenConfirmation.restore();
-            done();
-        });
-    });
+    // Метод moveWithDialog Должен вызывать _moveInSource и вернуть его результат
+    it ('moveWithDialog() should call _moveInSource and return its result');
 });

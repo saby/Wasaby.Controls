@@ -79,21 +79,22 @@ define([
                templateOptions: {
                   testOptions: 'testValueOfOption'
                }
-            }
+            },
+            keyProperty: 'id'
          };
          const contextOptions = {
             dataOptions: options
          };
          mover._beforeMount(options, contextOptions);
 
-         assert.equal(mover._controller._dialogOptions.template, 'testTemplateName');
-         assert.deepEqual(mover._controller._dialogOptions.templateOptions, { testOptions: 'testValueOfOption' });
+         assert.equal(mover._controller._popupOptions.template, 'testTemplateName');
+         assert.deepEqual(mover._controller._popupOptions.templateOptions, { testOptions: 'testValueOfOption', keyProperty: cfg.keyProperty });
          assert.equal(mover._source, 'testSource');
 
          stubLogger = sinon.stub(ui.Logger, 'warn');
          mover._beforeMount({ moveDialogTemplate: 'testTemplate' }, {});
          stubLogger.restore();
-         assert.equal(mover._controller._dialogOptions.template, 'testTemplate');
+         assert.equal(mover._controller._popupOptions.template, 'testTemplate');
       });
 
       it('_beforeUpdate', function() {
@@ -103,12 +104,13 @@ define([
                templateOptions: {
                   testOptions: 'testValueOfOption1'
                }
-            }
+            },
+            keyProperty: 'id'
          }, {
             dataOptions: {}
          });
 
-         assert.deepEqual(mover._controller._dialogOptions.templateOptions, { testOptions: 'testValueOfOption1'});
+         assert.deepEqual(mover._controller._popupOptions.templateOptions, { testOptions: 'testValueOfOption1', keyProperty: cfg.keyProperty});
 
          mover._beforeUpdate({
             moveDialogTemplate: {
@@ -116,12 +118,13 @@ define([
                templateOptions: {
                   testOptions: 'testValueOfOption2'
                }
-            }
+            },
+            keyProperty: 'id'
          }, {
             dataOptions: {}
          });
 
-         assert.deepEqual(mover._controller._dialogOptions.templateOptions, {testOptions: 'testValueOfOption2'});
+         assert.deepEqual(mover._controller._popupOptions.templateOptions, {testOptions: 'testValueOfOption2', keyProperty: cfg.keyProperty});
       });
 
       describe('mover methods', () => {
@@ -150,6 +153,7 @@ define([
                assert.deepEqual(openArgs.templateOptions.movedItems, items);
                assert.equal(openArgs.templateOptions.source, mover._source);
                assert.equal(openArgs.templateOptions.keyProperty, mover._keyProperty);
+               Promise.resolve(openArgs.eventHandlers.onResult(recordSet.at(3)));
             });
 
             mover.moveItemsWithDialog(items)
@@ -173,8 +177,8 @@ define([
             // @ts-ignore
             stubOpenPopup.callsFake((openArgs) => {
                assert.deepEqual(openArgs.templateOptions.movedItems, params.selectedKeys);
-               assert.equal(openArgs.templateOptions.source, mover._controller._source);
-               assert.equal(openArgs.templateOptions.keyProperty, mover._controller._keyProperty);
+               assert.equal(openArgs.templateOptions.source, mover._source);
+               assert.equal(openArgs.templateOptions.keyProperty, mover._keyProperty);
                const stubMoveItems = sinon.stub(mover, 'moveItems');
                stubMoveItems.callsFake((callingParams) => {
                   moveItemsCalled = true;
@@ -183,7 +187,7 @@ define([
                openArgs.eventHandlers.onResult(4);
                stubMoveItems.restore();
                assert.isTrue(moveItemsCalled);
-               return Promise.resolve();
+               Promise.resolve(openArgs.eventHandlers.onResult(recordSet.at(3)));
             });
 
             mover.moveItemsWithDialog(params).then(() => {
@@ -213,7 +217,7 @@ define([
             stubLogger.restore();
 
             // @ts-ignore
-            stubOpenPopup.callsFake((openArgs) => 'fake');
+            stubOpenPopup.callsFake((openArgs) => Promise.resolve(openArgs.eventHandlers.onResult(recordSet.at(3))));
 
             return new Promise((resolve) => {
                let queryFilter;
@@ -244,8 +248,9 @@ define([
             // @ts-ignore
             stubOpenPopup.callsFake((openArgs) => {
                assert.deepEqual(openArgs.templateOptions.movedItems, items);
-               assert.equal(openArgs.templateOptions.source, mover._controller._source);
-               assert.equal(openArgs.templateOptions.keyProperty, mover._controller._keyProperty);
+               assert.equal(openArgs.templateOptions.source, mover._source);
+               assert.equal(openArgs.templateOptions.keyProperty, mover._keyProperty);
+               Promise.resolve(openArgs.eventHandlers.onResult(recordSet.at(3)));
             });
 
             mover.moveItemsWithDialog(items).then(() => {
@@ -286,7 +291,7 @@ define([
                return Promise.resolve();
             };
 
-            return mover.moveItems(params, targetId)
+            return mover.moveItems(params, targetId, 'on')
                .then(() => {
                   assert.isTrue(callMethodCalled);
                });
@@ -315,8 +320,9 @@ define([
             // @ts-ignore
             stubOpenPopup.callsFake((openArgs) => {
                assert.deepEqual(openArgs.templateOptions.movedItems, movedItems);
-               assert.equal(openArgs.templateOptions.source, mover._controller._source);
-               assert.equal(openArgs.templateOptions.keyProperty, mover._controller._keyProperty);
+               assert.equal(openArgs.templateOptions.source, mover._source);
+               assert.equal(openArgs.templateOptions.keyProperty, mover._keyProperty);
+               Promise.resolve(openArgs.eventHandlers.onResult(recordSet.at(3)));
             });
             mover.moveItemsWithDialog([recordSet.at(0), recordSet.at(1), recordSet.at(2)]).then(() => {
                stubOpenPopup.restore();
@@ -640,23 +646,23 @@ define([
          it('getSiblingItem', function() {
             var siblingItem;
 
-            siblingItem = mover._controller.getSiblingItem(recordSet.getRecordById(6), 'before');
+            siblingItem = lists.Mover._private.getTargetItem(mover, recordSet.getRecordById(6), 'before');
             assert.equal(siblingItem.getId(), 3);
-            siblingItem = mover._controller.getSiblingItem(recordSet.getRecordById(6), 'after');
+            siblingItem = lists.Mover._private.getTargetItem(mover, recordSet.getRecordById(6), 'after');
             assert.isNull(siblingItem);
 
-            siblingItem = mover._controller.getSiblingItem(recordSet.getRecordById(3), 'after');
+            siblingItem = lists.Mover._private.getTargetItem(mover, recordSet.getRecordById(3), 'after');
             assert.equal(siblingItem.getId(), 6);
-            siblingItem = mover._controller.getSiblingItem(recordSet.getRecordById(3), 'before');
+            siblingItem = lists.Mover._private.getTargetItem(mover, recordSet.getRecordById(3), 'before');
             assert.equal(siblingItem.getId(), 2);
 
-            siblingItem = mover._controller.getSiblingItem(recordSet.getRecordById(1), 'after');
+            siblingItem = lists.Mover._private.getTargetItem(mover, recordSet.getRecordById(1), 'after');
             assert.equal(siblingItem.getId(), 2);
-            siblingItem = mover._controller.getSiblingItem(recordSet.getRecordById(1), 'before');
+            siblingItem = lists.Mover._private.getTargetItem(mover, recordSet.getRecordById(1), 'before');
             assert.isNull(siblingItem);
 
             mover._options.root = 1;
-            siblingItem = mover._controller.getSiblingItem(recordSet.getRecordById(4), 'after');
+            siblingItem = lists.Mover._private.getTargetItem(mover, recordSet.getRecordById(4), 'after');
             assert.equal(siblingItem.getId(), 5);
 
          });
