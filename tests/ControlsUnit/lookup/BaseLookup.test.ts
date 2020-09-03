@@ -3,9 +3,8 @@ import {ILookupOptions} from 'Controls/_lookup/BaseLookup';
 import {assert} from 'chai';
 import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
-import {stub} from 'sinon';
-import {SyntheticEvent} from 'Vdom/Vdom';
 import {RecordSet} from 'Types/collection';
+import * as sinon from 'sinon';
 
 async function getBaseLookup(options?: ILookupOptions): Promise<Lookup> {
     const lookupOptions = options || {
@@ -43,6 +42,18 @@ function getSource(): Memory {
 }
 
 describe('Controls/lookup:Input', () => {
+
+    it('paste method', async () => {
+        const lookup = await getBaseLookup();
+        const pasteStub = sinon.stub();
+        lookup._children.inputRender = {
+            paste: pasteStub
+        };
+
+        lookup.paste('test123');
+
+        assert.isTrue(pasteStub.withArgs('test123').called);
+    });
 
     describe('_beforeMount', () => {
 
