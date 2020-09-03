@@ -8,6 +8,8 @@ import {getImageUrl, getImageSize, getImageClasses, IMAGE_FIT} from './resources
 const DEFAULT_ITEM_WIDTH = 250;
 const DEFAULT_ITEM_HEIGHT = 200;
 const ITEM_COMPRESSION_COEFFICIENT = 0.7;
+const DEFAULT_SCALE_COEFFICIENT = 1.5;
+const DEFAULT_WIDTH_PROPORTION = 1;
 
 const TILE_SIZES = {
     s: {
@@ -71,6 +73,29 @@ var TileViewModel = ListViewModel.extend({
         return current;
     },
 
+    getItemWidth(
+        item: Model,
+        imageHeightProperty: string,
+        imageWidthProperty: string,
+        tileMode: string,
+        tileHeight: number,
+        itemWidth: number
+    ): number {
+        const imageHeight = imageHeightProperty && Number(item.get(imageHeightProperty));
+        const imageWidth = imageWidthProperty && Number(item.get(imageWidthProperty));
+        let widthProportion = DEFAULT_WIDTH_PROPORTION;
+        let resultWidth = null;
+        if (imageHeight && imageWidth && tileMode === 'dynamic') {
+            const imageProportion = imageWidth / imageHeight;
+            widthProportion = Math.min(DEFAULT_SCALE_COEFFICIENT,
+                              Math.max(ITEM_COMPRESSION_COEFFICIENT, imageProportion));
+        } else {
+            return itemWidth;
+        }
+        resultWidth = Math.floor(Number(tileHeight) * widthProportion);
+        return itemWidth ? Math.max(resultWidth, itemWidth) : resultWidth;
+    },
+
     getTileSizes(tileSize: string, imagePosition: string = 'top', imageViewMode: string = 'rectangle'): object {
         const sizeParams = object.clone(TILE_SIZES[tileSize]);
         const tileSizes = sizeParams[imagePosition === 'top' ? 'horizontal' : 'vertical'];
@@ -99,7 +124,7 @@ var TileViewModel = ListViewModel.extend({
         const imageHeight = item.get(imageHeightProperty) && Number(item.get(imageHeightProperty));
         const imageWidth = item.get(imageWidthProperty) && Number(item.get(imageWidthProperty));
         let baseUrl = item.get(imageProperty);
-        if (imageHeight && imageWidth) {
+        if (imageHeight && imageWidth && tileMode === 'static') {
             const sizes = getImageSize(
                 Number(itemWidth),
                 Number(itemsHeight),
@@ -138,11 +163,19 @@ var TileViewModel = ListViewModel.extend({
         }
         const itemContents = dispItem?.getContents();
         if (itemContents instanceof Model) {
-            const itemWidth = itemContents.get(this._options.itemWidthProperty);
+            const itemWidth = itemContents.get(this._options.tileWidthProperty) || this._options.tileWidth;
             resultData.imageData = this.getImageData(
                 itemWidth,
                 resultData,
                 itemContents
+            );
+            resultData.itemWidth = this.getItemWidth(
+                itemContents,
+                this._options.imageHeightProperty,
+                this._options.imageWidthProperty,
+                this._options.tileMode,
+                this._itemsHeight,
+                itemWidth
             );
         }
         return resultData;
