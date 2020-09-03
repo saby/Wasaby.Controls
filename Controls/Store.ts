@@ -147,7 +147,10 @@ class Store implements IStore {
     static getInstance(): Store {
         if (!Store.instance) {
             Store.instance = new Store();
-            Store.instance.state = {};
+            Store.instance.state = {
+                activeContext: 'global',
+                global: {}
+            };
         }
         return Store.instance;
     }
