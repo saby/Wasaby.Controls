@@ -26,7 +26,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
- * @includes RemoveController Controls/_list/Controllers/MoveController
+ * @includes MoveController Controls/_list/Controllers/MoveController
  * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
@@ -61,7 +61,7 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
- * @includes RemoveController Controls/_list/Controllers/MoveController
+ * @includes MoveController Controls/_list/Controllers/MoveController
  * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
