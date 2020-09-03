@@ -347,7 +347,7 @@ define([
                 target = recordSet.at(1),
                 result = 'custom_result';
 
-            mover._source.moveToTarget = function() {
+            mover._source.move = function() {
                return Deferred.success(result);
             };
             mover._notify = function(event, args) {
@@ -367,14 +367,14 @@ define([
 
             //Ascending sort.
             mover._options.sortingOrder = 'asc';
-            mover._source.moveToTarget = function(items, target, options) {
+            mover._source.move = function(items, target, options) {
                assert.equal(target, 2);
                assert.equal(options.position, 'before');
                return Deferred.success();
             };
             mover.moveItemUp(item);
 
-            mover._source.moveToTarget = function(items, target, options) {
+            mover._source.move = function(items, target, options) {
                assert.equal(target, 2);
                assert.equal(options.position, 'after');
                return Deferred.success();
@@ -383,14 +383,14 @@ define([
 
             //Descending sort.
             mover._options.sortingOrder = 'desc';
-            mover._source.moveToTarget = function(items, target, options) {
+            mover._source.move = function(items, target, options) {
                assert.equal(target, 2);
                assert.equal(options.position, 'after');
                return Deferred.success();
             };
             mover.moveItemUp(item);
 
-            mover._source.moveToTarget = function(items, target, options) {
+            mover._source.move = function(items, target, options) {
                assert.equal(target, 2);
                assert.equal(options.position, 'before');
                done();

@@ -83,8 +83,8 @@ export class MoveController {
     }
 
     /**
-     * Перемещает переданные элементы относительно указанного целевого элемента.
-     * @function Controls/_list/Controllers/MoveController#moveToTarget
+     * Перемещает переданные элементы относительно указанного целевого элемента или в указанную папку.
+     * @function Controls/_list/Controllers/MoveController#move
      * @param {Controls/interface:ISelectionObject} selection Элементы для перемещения.
      * @param {TFilterObject} filter Дополнительный фильтр для перемещения в папку через SbisService.
      * @param {Types/source:CrudEntityKey} targetKey Идентификатор целевой записи, относительно которой позиционируются
@@ -96,7 +96,7 @@ export class MoveController {
      * @see moveUp
      * @see moveDown
      */
-    moveToTarget(selection: ISelectionObject, filter: TFilterObject = {}, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+    move(selection: ISelectionObject, filter: TFilterObject = {}, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
         return this._moveInSource(selection, filter, targetKey, position);
     }
 
@@ -110,7 +110,7 @@ export class MoveController {
      * Для того, чтобы получить управление над результатом перемещения, необходимо использовать опцию
      * @see moveUp
      * @see moveDown
-     * @see moveToTarget
+     * @see move
      */
     moveWithDialog(selection: ISelectionObject, filter: TFilterObject = {}): Promise<void> {
         if (!this._popupOptions.template) {
