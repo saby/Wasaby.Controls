@@ -34,7 +34,6 @@ const generateErrorMessage = () => {
 
 const getFontWidthWithFonts = (font, text, size) => {
     let textWidth = 0;
-    console.log(font, text, size);
     for (let i = 0; i < text.length; i++) {
         textWidth += font[size][text[i]];
     }
