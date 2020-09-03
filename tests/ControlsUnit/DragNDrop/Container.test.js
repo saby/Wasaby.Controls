@@ -10,6 +10,14 @@ define([
          container = new dragnDrop.Controller();
       container.controllerClass = new dragnDrop.ControllerClass();
 
+      container.controllerClass._registers.documentDragStart.start = function() {
+         startDetected = true;
+      }
+
+      container.controllerClass._registers.documentDragEnd.start = function() {
+         endDetected = true;
+      }
+
       it('documentDragStart', function() {
          container._documentDragStart();
          assert.isTrue(startDetected);
