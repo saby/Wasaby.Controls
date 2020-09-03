@@ -7,7 +7,8 @@
      on:click="_handleClick()"
      on:mousedown="_handleMouseDown()"
      on:mouseenter="_handleMouseEnter()"
-     on:mouseleave="_handleMouseLeave()">
+     on:mouseleave="_handleMouseLeave()"
+     attr:ws-autofocus="{{true}}">
     <div class="controls-ComboBox-InputRender">
         <div class="controls-ComboBox__field controls-ComboBox__field_theme_{{_options.theme}}_margin-xs" title="{{_options.tooltip}}">
             <ws:if data="{{_placeholder && !_value}}">
