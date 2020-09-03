@@ -1,4 +1,4 @@
-<div class="controls-ComboBox controls-ComboBox_theme-{{_options.theme}} controls-ComboBox-{{_options.readOnly? 'readOnly' : 'active'}}_theme-{{_options.theme}} {{_isOpened ? 'controls-ComboBox__opened'}}
+<div class="controls-ComboBox controls-ComboBox_theme-{{_options.theme}} controls-ComboBox-{{_options.readOnly? 'readOnly' : 'state-' + _state}}_theme-{{_options.theme}} {{_isOpened ? 'controls-ComboBox__opened'}}
             {{_isOpened ? 'controls-Popup__isolatedFocusingContext'}}
             controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
             controls-inlineheight-{{_inlineHeight}}_theme-{{_options.theme}}
@@ -7,8 +7,7 @@
      on:click="_handleClick()"
      on:mousedown="_handleMouseDown()"
      on:mouseenter="_handleMouseEnter()"
-     on:mouseleave="_handleMouseLeave()"
-     attr:ws-autofocus="{{true}}">
+     on:mouseleave="_handleMouseLeave()">
     <div class="controls-ComboBox-InputRender">
         <div class="controls-ComboBox__field controls-ComboBox__field_theme_{{_options.theme}}_margin-xs" title="{{_options.tooltip}}">
             <ws:if data="{{_placeholder && !_value}}">
