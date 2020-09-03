@@ -2,6 +2,9 @@ import BaseAction from 'Controls/_list/BaseAction';
 import Deferred = require('Core/Deferred');
 import {ContextOptions as dataOptions} from 'Controls/context';
 import {RemoveController} from './Controllers/RemoveController';
+import {ISelectionObject, TKeysSelection, TSelectionRecord} from "../_interface/ISelectionType";
+import {getItemsBySelection} from "./resources/utils/getItemsBySelection";
+import {CrudEntityKey} from "Types/source";
 
 let _private = {
     beforeItemsRemove: function (self, items) {
@@ -25,12 +28,29 @@ let _private = {
         return Promise.resolve(afterItemsRemoveResult);
     },
 
+    getSelectedItems(self, items): Promise<CrudEntityKey[]> {
+        // Support removing with mass selection.
+        // Full transition to selection will be made by:
+        // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+        return items instanceof Array
+            ? Promise.resolve(items)
+            : getItemsBySelection(items, this._source, this._items, this._filter, null, self._options.selectionTypeForAllSelected);
+    },
+
     updateDataOptions: function (self, dataOptions) {
         if (dataOptions) {
             if (!self._controller) {
-                self._controller = new RemoveController(dataOptions.source, dataOptions.items, dataOptions.filter);
+                self._controller = new RemoveController(
+                    dataOptions.source,
+                    dataOptions.items,
+                    dataOptions.filter,
+                    dataOptions.selectionTypeForAllSelected);
             } else {
-                self._controller.update(dataOptions.source, dataOptions.items, dataOptions.filter);
+                self._controller.update(
+                    dataOptions.source,
+                    dataOptions.items,
+                    dataOptions.filter,
+                    dataOptions.selectionTypeForAllSelected);
             }
         }
     }
@@ -80,7 +100,7 @@ const Remover = BaseAction.extend({
     },
 
     removeItems(items: string[]): Promise<void> {
-        return this._controller.getSelectedItems(items).then((selectedItems) => (
+        return _private.getSelectedItems(items).then((selectedItems) => (
             _private.beforeItemsRemove(this, selectedItems)
                 .addCallback((result) => {
                     if (result !== false) {
