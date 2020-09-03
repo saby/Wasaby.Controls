@@ -5,8 +5,7 @@ import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySele
 import {Logger} from 'UI/Utils';
 import {ContextOptions as dataOptions} from 'Controls/context';
 
-import {MoveController, TMovePosition} from './Controllers/MoveController';
-import {IMoveControllerOptions} from './interface/IMoveControllerOptions';
+import {MoveController, TMovePosition, IMoveControllerOptions} from './Controllers/MoveController';
 import {Model} from 'Types/entity';
 
 
@@ -14,11 +13,11 @@ import {Model} from 'Types/entity';
 //   selectedTypeChanged даже от MultiSelect
 //  https://online.sbis.ru/doc/0445b971-8675-42ef-b2bc-e68d7f82e0ac
 import * as Template from 'wml!Controls/_list/Mover/Mover';
-import {DataSet} from "Types/source";
-import {Dialog} from "../popup";
-import * as TreeItemsUtil from "./resources/utils/TreeItemsUtil";
-import {ISelectionObject, TKeySelection, TKeysSelection, TSelectionRecord} from "../_interface/ISelectionType";
-import {IHashMap} from "WS.Core/ext/requirejs/require";
+import {Dialog} from 'Controls/popup';
+import * as TreeItemsUtil from './resources/utils/TreeItemsUtil';
+import {ISelectionObject, TKeysSelection} from 'Controls/interface';
+import {IHashMap} from 'Types/declarations';
+import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
 
 const DEFAULT_SORTING_ORDER = 'asc';
 
@@ -28,19 +27,14 @@ interface IMoveItemsParams {
     filter?: object;
 }
 
-type TMoveItem = Model|TKeySelection
-
-type TMoveItems = TMoveItem[]|IMoveItemsParams|ISelectionObject|TSelectionRecord;
-
-
 /**
  * @typedef {String} TMovePosition
  * @description
  * Тип перемещения - в items/source или custom
  */
-export enum MOVE_TYPE {
-    CUSTOM = 'Custom',
-    MOVE_IN_ITEMS = 'MoveInItems'
+const MOVE_TYPE = {
+    CUSTOM: 'Custom',
+    MOVE_IN_ITEMS: 'MoveInItems'
 }
 
 var _private = {
@@ -56,7 +50,7 @@ var _private = {
                     _private.convertItemsToISelectionObject(items),
                     _private.extractFilter(items),
                     _private.getIdByItem(self, target),
-                    position, beforeItemsMoveResult).then(afterItemsMove);
+                    position, beforeItemsMoveResult);
             }
             if (beforeItemsMoveResult === MOVE_TYPE.MOVE_IN_ITEMS) {
                 return _private.moveInItems(self, items, target, position);
@@ -159,42 +153,41 @@ var _private = {
     },
 
     moveItemToSiblingPosition: function (self, item, position) {
-        const target = _private.getSiblingItem(item, position);
+        const target = _private.getTargetItem(item, position);
         return target ? self.moveItems([item], target, position) : Deferred.success();
     },
 
     updateDataOptions: function (self, newOptions, contextDataOptions) {
-        let controllerOptions: IMoveControllerOptions = {
-            parentProperty: newOptions.parentProperty,
-            nodeProperty: newOptions.nodeProperty,
-            root: newOptions.root,
-            keyProperty: newOptions.keyProperty
+        let controllerOptions: Partial<IMoveControllerOptions> = {
+            parentProperty: newOptions.parentProperty
         };
-        if (newOptions.moveDialogTemplate) {
-            controllerOptions.dialog = {
-                opener: self
-            };
-            if (newOptions.moveDialogTemplate.templateName) {
-                self._moveDialogTemplate = newOptions.moveDialogTemplate.templateName;
-                self._moveDialogOptions = newOptions.moveDialogTemplate.templateOptions;
-                controllerOptions.dialog.template = self._moveDialogTemplate;
-                controllerOptions.dialog.templateOptions = self._moveDialogOptions;
-            } else {
-                self._moveDialogTemplate = newOptions.moveDialogTemplate;
-                controllerOptions.dialog.template = self._moveDialogTemplate;
-                Logger.warn('Mover: Wrong type of moveDialogTemplate option, use object notation instead of template function', self);
-            }
-        }
         if (contextDataOptions) {
             controllerOptions.source = newOptions.source || contextDataOptions.source;
-            controllerOptions.items = contextDataOptions.items;
-            self._items = controllerOptions.items;
+            self._items = contextDataOptions.items;
             self._source = controllerOptions.source;
             self._keyProperty = newOptions.keyProperty || contextDataOptions.keyProperty;
             self._filter = contextDataOptions.filter;
         }
+        if (newOptions.moveDialogTemplate) {
+            controllerOptions.dialogOptions = {
+                opener: self
+            };
+            if (newOptions.moveDialogTemplate.templateName) {
+                self._moveDialogTemplate = newOptions.moveDialogTemplate.templateName;
+                self._moveDialogOptions = {
+                    ...newOptions.moveDialogTemplate.templateOptions,
+                    keyProperty: self._keyProperty
+                } as IMoverDialogTemplateOptions;
+                controllerOptions.dialogOptions.template = self._moveDialogTemplate;
+                controllerOptions.dialogOptions.templateOptions = self._moveDialogOptions;
+            } else {
+                self._moveDialogTemplate = newOptions.moveDialogTemplate;
+                controllerOptions.dialogOptions.template = self._moveDialogTemplate;
+                Logger.warn('Mover: Wrong type of moveDialogTemplate option, use object notation instead of template function', self);
+            }
+        }
         if (!self._controller) {
-            self._controller = new MoveController(controllerOptions);
+            self._controller = new MoveController(controllerOptions as IMoveControllerOptions);
         } else {
             self._controller.update(controllerOptions);
         }
@@ -260,7 +253,7 @@ var _private = {
         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
     },
 
-    getItemsBySelection(selection): Promise<TMoveItems> {
+    getItemsBySelection(selection): Promise<any> {
         let resultSelection;
         // Support moving with mass selection.
         // Full transition to selection will be made by:
@@ -271,7 +264,7 @@ var _private = {
             resultSelection = Deferred.success(selection);
         } else {
             const filter = _private.prepareFilter(this, this._filter, selection);
-            resultSelection = getItemsBySelection(selection, this._source, this._items, filter);
+            resultSelection = getItemsBySelection(_private.convertItemsToISelectionObject(selection), this._source, this._items, filter);
         }
 
         return resultSelection;
@@ -302,23 +295,15 @@ var _private = {
         return !items.forEach;
     },
 
-    /**
-     * Открывает диалог перемещения
-     * @param self
-     * @param {Controls/_list/interface/ISelection/TMoveItem.typedef} selection
-     * @param {Controls/interface:TKeysSelection} selectedKeys
-     * @private
-     */
-    openMoveDialog(self, selection: TMoveItems): Promise<void|DataSet> {
-        const templateOptions = {
-            movedItems: _private.prepareMovedItems(self, selection),
-            source: self._source,
-            keyProperty: self._keyProperty,
-            ...self._moveDialogOptions
+    openMoveDialog(self, selection): Promise<void> {
+        const templateOptions: IMoverDialogTemplateOptions = {
+            ...(self._moveDialogOptions as IMoverDialogTemplateOptions),
+            movedItems: _private.useController(selection) ? selection.selectedKeys : _private.prepareMovedItems(self, selection),
+            source: self._source
         };
         return new Promise((resolve) => {
             Dialog.openPopup({
-                opener: self._dialogOptions.opener,
+                opener: self,
                 templateOptions,
                 closeOnOutsideClick: true,
                 template: self._moveDialogTemplate,
@@ -338,7 +323,7 @@ var _private = {
      * @param position позиция (направление перемещения)
      * @private
      */
-    getSiblingItem(item: TMoveItem, position: TMovePosition): Model {
+    getTargetItem(item, position: TMovePosition): Model {
         //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
         //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
         //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
@@ -366,7 +351,7 @@ var _private = {
         return this._items.at(position === TMovePosition.before ? --itemIndex : ++itemIndex);
     },
 
-    convertItemsToISelectionObject(item: TMoveItems): ISelectionObject {
+    convertItemsToISelectionObject(item): ISelectionObject {
         let selectionObject: ISelectionObject
         if (item.selected) {
             selectionObject = item;
@@ -384,7 +369,7 @@ var _private = {
         return selectionObject;
     },
 
-    extractFilter(item: TMoveItems): IHashMap<any> {
+    extractFilter(item): IHashMap<any> {
         let filter: IHashMap<any>;
         if (item.filter) {
             filter = item.filter;
@@ -474,18 +459,14 @@ var Mover = BaseAction.extend({
     },
 
     moveItemsWithDialog(items: []|IMoveItemsParams): Promise<any> {
-        if (_private.useController(items)) {
-            return this._controller.moveItemsWithDialog(_private.convertItemsToISelectionObject(items), _private.extractFilter(items));
-        } else {
-            if (this._moveDialogTemplate) {
-                if (this.validate(items)) {
-                    return _private.getItemsBySelection.call(this, items).addCallback((items: []) => (
-                        _private.openMoveDialog(this, items)
-                    ));
-                }
-            } else {
-                Logger.warn('Mover: Can\'t call moveItemsWithDialog! moveDialogTemplate option, is undefined', this);
+        if (this._moveDialogTemplate) {
+            if (this.validate(items)) {
+                return _private.getItemsBySelection.call(this, items).addCallback((items: []) => (
+                    _private.openMoveDialog(this, items)
+                ));
             }
+        } else {
+            Logger.warn('Mover: Can\'t call moveItemsWithDialog! moveDialogTemplate option, is undefined', this);
         }
         return Promise.resolve();
     }

@@ -7,10 +7,11 @@ import * as selectionToRecord from 'Controls/_operations/MultiSelector/selection
 
 import { Memory } from 'Types/source';
 
-import {IMoveControllerOptions, ISelectionObject, MoveController} from 'Controls/list';
+import {IMoveControllerOptions, MoveController} from 'Controls/list';
 import { Model } from 'Types/entity';
 
 import {Confirmation, Dialog} from 'Controls/popup';
+import {ISelectionObject} from 'Controls/interface';
 
 const data = [{
     id: 1,

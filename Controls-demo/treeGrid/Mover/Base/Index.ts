@@ -5,6 +5,7 @@ import {Gadgets} from '../../DemoHelpers/DataCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { TExpandOrColapsItems } from 'Controls-demo/types';
 import {MoveController, IMoveControllerOptions} from 'Controls/list';
+import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -43,11 +44,10 @@ export default class extends Control {
 
     protected _moveButtonClick(): void {
         if (this._selectedKeys.length) {
-            this._mover.moveItemsWithDialog({
-                selectedKeys: this._selectedKeys,
-                excludedKeys: this._excludedKeys,
-                filter: this._filter
-            }).then(() => {
+            this._mover.moveWithDialog({
+                selected: this._selectedKeys,
+                excluded: this._excludedKeys
+            }, this._filter).then(() => {
                 this._children.treeGrid.reload();
             });
         }
@@ -56,11 +56,8 @@ export default class extends Control {
     private _setMoverOptions() {
         const moverCgf: IMoveControllerOptions = {
             parentProperty: 'parent',
-            root: null,
-            nodeProperty: 'type',
             source: this._viewSource,
-            keyProperty: 'id',
-            dialog: {
+            dialogOptions: {
                 opener: this,
                 template: 'Controls/moverDialog:Template',
                 templateOptions: {
@@ -72,7 +69,7 @@ export default class extends Control {
                     nodeProperty: 'type',
                     source: this._viewSource,
                     columns: this._columns
-                }
+                } as Partial<IMoverDialogTemplateOptions>
             }
         }
         if (!this._mover) {

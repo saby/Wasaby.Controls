@@ -26,12 +26,11 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes RemoveController Controls/_list/Controllers/MoveController
+ * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
- * @includes ISelection Controls/_list/interface/ISelection
- * @includes IMoveDialogOptions Controls/_list/interface/IMoveDialogOptions
- * @includes IMoveControllerOptions Controls/_list/interface/IMoveControllerOptions
  * @public
  * @author Крайнов Д.О.
  */
@@ -62,13 +61,12 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes RemoveController Controls/_list/Controllers/MoveController
+ * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
- * @includes ISelection Controls/_list/interface/ISelection
- * @includes IMoveDialogOptions Controls/_list/interface/IMoveDialogOptions
- * @includes IMoveControllerOptions Controls/_list/interface/IMoveControllerOptions
- * * @public
+ * @public
  * @author Крайнов Д.О.
  */
 import AddButton = require('Controls/_list/AddButton');
@@ -109,8 +107,6 @@ import IListNavigation from './_list/interface/IListNavigation';
 import { CssClassList, createClassListCollection} from 'Controls/_list/resources/utils/CssClassList';
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 
-import Remover = require('Controls/_list/Remover');
-
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 
 // @deprecated
@@ -119,9 +115,12 @@ import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/I
 import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeAction');
 import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
 
-export {MoveController, TMovePosition}  from 'Controls/_list/Controllers/MoveController';
-export {IMoveControllerOptions}  from 'Controls/_list/interface/IMoveControllerOptions';
+export {MoveController, TMovePosition, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
 import * as Mover from 'Controls/_list/Mover';
+
+export {IRemover} from 'Controls/_list/interface/IRemover';
+export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
+import * as Remover from 'Controls/_list/Remover';
 
 export {
     AddButton,
@@ -172,6 +171,3 @@ export {
     _swipeActionTemplate,
     SwipeTemplate
 };
-
-export {IRemover} from 'Controls/_list/interface/IRemover';
-export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
