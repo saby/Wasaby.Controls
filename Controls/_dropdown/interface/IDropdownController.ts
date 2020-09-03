@@ -1,5 +1,5 @@
 import {Control, IControlOptions} from 'UI/Base';
-import {ISourceOptions, IFilterOptions, INavigationOptions} from 'Controls/interface';
+import {ISourceOptions, IFilterOptions, INavigationOptions, IMultiSelectableOptions} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 export type TKey = string|number|null;
@@ -22,8 +22,12 @@ export default interface IDropdownController {
     getItems(): RecordSet;
 }
 
-export interface IDropdownControllerOptions extends IControlOptions, ISourceOptions, IFilterOptions, INavigationOptions {
+export interface IDropdownControllerOptions extends IControlOptions, ISourceOptions, IFilterOptions,
+    INavigationOptions, IMultiSelectableOptions {
     lazyItemsLoading?: boolean;
     menuOptions?: object;
     openerControl: Control;
+    selectedItemsChangedCallback?: Function;
+    dataLoadErrback?: Function;
+    readOnly?: boolean;
 }
