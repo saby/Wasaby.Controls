@@ -16,11 +16,7 @@ export class Controller {
    constructor(options: IOptions) {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-      const markedKey = this.calculateMarkedKey(options.markedKey);
-
-      if (markedKey !== null) {
-         this.setMarkedKey(markedKey);
-      }
+      this._markedKey = options.markedKey;
    }
 
    /**
