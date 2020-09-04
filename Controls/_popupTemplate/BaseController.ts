@@ -221,7 +221,7 @@ abstract class BaseController {
 
     private static rootContainers = {};
 
-    static getRootContainerCoords(item: IPopupItem, baseRootSelector: string): IPopupPosition {
+    static getRootContainerCoords(item: IPopupItem, baseRootSelector: string): IPopupPosition | void {
         const getRestrictiveContainer = (popupItem: IPopupItem) => {
             if (popupItem.popupOptions.restrictiveContainer) {
                 return popupItem.popupOptions.restrictiveContainer;
@@ -238,17 +238,23 @@ abstract class BaseController {
         const restrictiveContainers = [itemRestrictiveContainer, baseRootSelector, bodySelector];
         for (const restrictiveContainer of restrictiveContainers) {
             if (restrictiveContainer) {
-                if (BaseController.rootContainers[restrictiveContainer]) {
-                    return BaseController.rootContainers[restrictiveContainer];
+                const coordsByContainer = BaseController.getCoordsByContainer(restrictiveContainer);
+                if (coordsByContainer) {
+                    return coordsByContainer;
                 }
-                const restrictiveContainerNode = document.querySelector(restrictiveContainer);
-                // Если не нашли контейнер, то игнорируем опцию
-                if (!restrictiveContainerNode) {
-                    continue;
-                }
-                const targetCoords = TargetCoords.get(restrictiveContainerNode);
-                return BaseController.rootContainers[restrictiveContainer] = targetCoords;
             }
+        }
+    }
+
+    static getCoordsByContainer(restrictiveContainer: any): IPopupPosition | void {
+        if (BaseController.rootContainers[restrictiveContainer]) {
+            return BaseController.rootContainers[restrictiveContainer];
+        }
+        const restrictiveContainerNode = document.querySelector(restrictiveContainer);
+
+        if (restrictiveContainerNode) {
+            const targetCoords = TargetCoords.get(restrictiveContainerNode);
+            return BaseController.rootContainers[restrictiveContainer] = targetCoords;
         }
     }
 }
