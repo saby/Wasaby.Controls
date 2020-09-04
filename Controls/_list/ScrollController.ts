@@ -505,7 +505,6 @@ export default class ScrollController {
         return result;
     }
 
-
     private getTriggerOffset(scrollHeight: number, viewportHeight: number, attachLoadTopTriggerToNull: boolean): {top: number, bottom: number} {
         this._triggerOffset =
             (scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *
@@ -527,6 +526,10 @@ export default class ScrollController {
                 );
                 break;
         }
+    }
+
+    calculateVirtualScrollHeight(): number {
+        return this._virtualScroll.calculateVirtualScrollHeight();
     }
 
     static getDefaultOptions(): Partial<IOptions> {
