@@ -31,6 +31,7 @@
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
+ * @includes IReloadableList Controls/_list/interface/IReloadableList
  * @public
  * @author Крайнов Д.О.
  */

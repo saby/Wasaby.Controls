@@ -3092,19 +3092,25 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._children.bottomVirtualScrollTrigger?.style.bottom = `${offset.bottom}px`;
     },
     _viewResize(): void {
-        const container = this._container[0] || this._container;
-        this._viewSize = container.clientHeight;
+        if (this._mounted) {
+            const container = this._container[0] || this._container;
+            this._viewSize = container.clientHeight;
 
-        if (this._scrollController) {
-            const itemsHeights = getItemsHeightsData(this._getItemsContainer());
-            this._scrollController.updateItemsHeights(itemsHeights);
+            if (this._scrollController) {
+                const itemsHeights = getItemsHeightsData(this._getItemsContainer());
+                this._scrollController.updateItemsHeights(itemsHeights);
 
-            let result = this._scrollController.update({ params: {scrollHeight: this._viewSize, clientHeight: this._viewportSize} });
-            _private.handleScrollControllerResult(this, result);
-        }
+                let result = this._scrollController.update({
+                    params: {
+                        scrollHeight: this._viewSize,
+                        clientHeight: this._viewportSize
+                    }
+                });
+                _private.handleScrollControllerResult(this, result);
+            }
 
-        if (_private.needScrollPaging(this._options.navigation)) {
-            _private.doAfterUpdate(this, () => {
+            if (_private.needScrollPaging(this._options.navigation)) {
+                _private.doAfterUpdate(this, () => {
                     const scrollParams = {
                         scrollHeight: this._viewSize,
                         clientHeight: this._viewportSize,
@@ -3113,7 +3119,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     _private.updateScrollPagingButtons(this, scrollParams);
                 });
             }
-        _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewportRect);
+            _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewportRect);
+        }
     },
 
     getViewModel() {

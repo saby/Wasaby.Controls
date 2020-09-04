@@ -12,9 +12,10 @@ import {constants} from 'Env/Env';
 import {ITextOptions, IValueOptions, IBaseOptions} from 'Controls/input';
 import {IFontSizeOptions} from 'Controls/interface';
 import {isEqual} from 'Types/object';
-import * as tmplNotify from 'Controls/Utils/tmplNotify';
+import {tmplNotify} from 'Controls/eventUtils';
 import {ICrudPlus} from 'Types/source';
 import {IHashMap} from 'Types/declarations';
+import InputRenderLookup = require("./BaseLookupView/InputRender");
 
 const KEY_CODE_F2 = 113;
 
@@ -46,6 +47,10 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     private _subscribedOnResizeEvent: boolean = false;
     protected _maxVisibleItems: number = 0;
     protected _listOfDependentOptions: string[];
+
+    protected _children: {
+        inputRender: typeof InputRenderLookup;
+    };
 
     protected _inheritorBeforeMount(options: ILookupInputOptions): void {
         const itemsCount = this._items.getCount();
@@ -331,6 +336,10 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
     closeSuggest(): void {
         this._suggestState = false;
+    }
+
+    paste(value: string): void {
+        this._children.inputRender.paste(value);
     }
 
     protected abstract _calculateSizes(options: ILookupInputOptions): void;
