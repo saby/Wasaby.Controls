@@ -366,7 +366,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     protected _beforeUnmount(): void {
-        this._sticky?.close();
+        this._sticky?.destroy();
         this._sticky = null;
     }
 

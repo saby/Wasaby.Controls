@@ -31,6 +31,7 @@ export default class Stack extends Base {
      *    }
      * </pre>
      * @see close
+     * @see destroy
      */
 
     open(popupOptions: IStackPopupOptions): void {
@@ -40,7 +41,7 @@ export default class Stack extends Base {
 /**
  * Метод для закрытия стекового окна.
  * @name Controls/_popup/PopupHelper/Stack#close
- * @function 
+ * @function
  * @example
  * <pre class="brush: js">
  *    import {StackOpener} from 'Controls/popup';
@@ -52,4 +53,24 @@ export default class Stack extends Base {
  *    }
  * </pre>
  * @see open
+ * @see destroy
+ */
+
+/**
+ * Разрушает экземпляр класса
+ * @name Controls/_popup/PopupHelper/Stack#destroy
+ * @function
+ * @example
+ * <pre class="brush: js">
+ *    import {StackOpener} from 'Controls/popup';
+ *    ...
+ *    this._stack = new StackOpener();
+ *
+ *    _beforeUnmount() {
+ *        this._stack.destroy();
+ *        this._stack = null;
+ *    }
+ * </pre>
+ * @see open
+ * @see close
  */

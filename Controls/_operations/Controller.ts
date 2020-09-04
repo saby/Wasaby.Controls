@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_operations/Controller/Controller');
-import tmplNotify = require('Controls/Utils/tmplNotify');
+import {tmplNotify} from 'Controls/eventUtils';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { TKeySelection as TKey } from 'Controls/interface';
 import {default as OperationsController} from 'Controls/_operations/ControllerClass';
@@ -52,7 +52,7 @@ export default class MultiSelector extends Control {
 
    protected _beforeUpdate(options): void {
       this._operationsController.update(options);
-      if (options.hasOwnProperty('markedKey')) {
+      if (options.hasOwnProperty('markedKey') && options.markedKey !== undefined) {
          this._listMarkedKey = this._getOperationsController().setListMarkedKey(options.markedKey);
       }
    }
