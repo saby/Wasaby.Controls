@@ -999,18 +999,19 @@ const _private = {
     },
 
     calcTriggerVisibility(self, scrollParams, triggerOffset, direction: 'up' | 'down'): boolean {
-        if (self._container && self._container.closest && self._container.closest('.ws-hidden')) {
-            return false;
-        }
-        if (direction === 'up') {
-            return scrollParams.scrollTop < triggerOffset;
-        } else {
-            let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
-            if (self._pagingVisible) {
-                bottomScroll -= PAGING_PADDING;
-            }
-            return bottomScroll <= triggerOffset;
-        }
+        return self._loadTriggerVisibility[direction];
+        // if (self._container && self._container.closest && self._container.closest('.ws-hidden')) {
+        //     return false;
+        // }
+        // if (direction === 'up') {
+        //     return scrollParams.scrollTop < triggerOffset;
+        // } else {
+        //     let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
+        //     if (self._pagingVisible) {
+        //         bottomScroll -= PAGING_PADDING;
+        //     }
+        //     return bottomScroll <= triggerOffset;
+        // }
     },
     calcViewSize(viewSize: number, pagingVisible: boolean): number {
         return viewSize - (pagingVisible ? PAGING_PADDING : 0);
