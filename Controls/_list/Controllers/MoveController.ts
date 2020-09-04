@@ -114,7 +114,7 @@ export class MoveController {
             Logger.error('MoveController: MoveDialogTemplate option is undefined', this);
             return Promise.reject();
         }
-        if (!MoveController._validate(selection)) {
+        if (!MoveController._validateBeforeOpenDialog(selection)) {
             return Promise.reject();
         }
         return this._openMoveDialog(selection, filter)
@@ -159,13 +159,18 @@ export class MoveController {
      * @private
      */
     private _moveInSource(selection: ISelectionObject, filter: TFilterObject = {}, targetKey: CrudEntityKey, position: TMovePosition): Promise<void>  {
-        const source: SbisService = this._source as SbisService;
+        const error: string = MoveController._validateBeforeMove(this._source, selection, filter, targetKey, position);
+        if (error) {
+            Logger.error(error);
+            return Promise.reject(new Error(error));
+        }
         /**
          * https://online.sbis.ru/opendoc.html?guid=2f35304f-4a67-45f4-a4f0-0c928890a6fc
          * При использовании ICrudPlus.move() мы не можем передать filter и folder_id, т.к. такой контракт
          * не соответствует стандартному контракту SbisService.move(). Поэтому здесь вызывается call
          */
-        if (source.call && position === TMovePosition.on) {
+        if ((this._source as SbisService).call && position === TMovePosition.on) {
+            const source: SbisService = this._source as SbisService;
             return new Promise((resolve) => {
                 import('Controls/operations').then((operations) => {
                     const sourceAdapter = source.getAdapter();
@@ -190,13 +195,41 @@ export class MoveController {
     }
 
     /**
+     * Перемещает элементы в ICrudPlus
+     * @param {TSource} source Ресурс данных
+     * @param {Controls/interface:ISelectionObject} selection Элементы для перемещения.
+     * @param {TFilterObject} filter дополнительный фильтр для перемещения в папку в SbisService.
+     * @param {Types/source:CrudEntityKey} targetKey Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
+     * @param position
+     * @private
+     */
+    private static _validateBeforeMove(
+        source: TSource,
+        selection: ISelectionObject,
+        filter: TFilterObject,
+        targetKey: CrudEntityKey,
+        position: TMovePosition): string {
+        let error: string;
+        if (!source) {
+            error = 'MoveController: Source is not set';
+        }
+        if (!selection || (!selection.selected && !selection.excluded)) {
+            error = 'MoveController: Selection type must be Controls/interface:ISelectionObject';
+        }
+        if (typeof filter !== "object") {
+            error = 'MoveController: Filter must be plain object';
+        }
+        return error;
+    }
+
+    /**
      * Производит проверку переданного объекта с идентификаторами элементов для перемещения.
      * Если список идентификаторов пуст, возвращает false и выводит окно с текстом, иначе возвращает true.
      * @function
-     * @name Controls/_list/Controllers/MoveController#_validate
+     * @name Controls/_list/Controllers/MoveController#_validateBeforeOpenDialog
      * @private
      */
-    private static _validate(selection: ISelectionObject): boolean {
+    private static _validateBeforeOpenDialog(selection: ISelectionObject): boolean {
         let resultValidate: boolean = true;
 
         if (selection.selected && !selection.selected.length) {
