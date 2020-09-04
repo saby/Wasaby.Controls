@@ -6871,20 +6871,16 @@ define([
                let isPagingNavigationVisible = lists.BaseControl._private.isPagingNavigationVisible;
 
                // Известно общее количество  записей, записей 0
-               let result = isPagingNavigationVisible(0,0);
+               let result = isPagingNavigationVisible(0);
                assert.isFalse(result, 'paging should not be visible');
 
                // Известно общее количество записей, записей 6
-               result = isPagingNavigationVisible(6, 0);
+               result = isPagingNavigationVisible(6);
                assert.isTrue(result, 'paging should be visible');
 
-               // Неизвестно общее количество записей, записей, известно текущее количество страниц = 0, hasMore = false
-               result = isPagingNavigationVisible(4, 1);
+               // Неизвестно общее количество записей, записей 5
+               result = isPagingNavigationVisible(5);
                assert.isFalse(result, 'paging should not be visible');
-
-               // Неизвестно общее количество записей, записей, известно текущее количество страниц = 1, hasMore = false
-               result = isPagingNavigationVisible(4, 2);
-               assert.isTrue(result, 'paging should be visible');
             });
 
             describe('getPagingLabelData', function() {
