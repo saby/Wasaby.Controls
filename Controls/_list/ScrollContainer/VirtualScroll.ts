@@ -611,4 +611,11 @@ export default class VirtualScroll {
 
         return sum;
     }
+
+    calculateVirtualScrollHeight(): number {
+        const {itemsHeights} = this._itemsHeightData;
+        const sum = this._getItemsHeightsSum(this._range.start, this._range.stop, itemsHeights);
+        const avgHeight = sum / (this._range.stop - this._range.start);
+        return avgHeight * itemsHeights.length;
+    }
 }
