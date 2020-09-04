@@ -2223,6 +2223,10 @@ const _private = {
             event.preventDefault();
             const newMarkedKey = self._markerController.moveMarkerToNext();
             _private.handleMarkerControllerResult(self, newMarkedKey);
+            /**
+             * Передавая в force true, видимый элемент подскролливается наверх.
+             * https://online.sbis.ru/opendoc.html?guid=6b6973b2-31cf-4447-acaf-a64d37957bc6
+             */
             _private.scrollToItem(self, newMarkedKey);
         }
     },
