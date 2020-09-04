@@ -32,6 +32,7 @@
  * @includes IMoveObject Controls/_list/interface/IMoveObject
  * @includes IMoveDialogOptions Controls/_list/interface/IMoveDialogOptions
  * @includes IMoveControllerOptions Controls/_list/interface/IMoveControllerOptions
+ * @includes IReloadableList Controls/_list/interface/IReloadableList
  * @public
  * @author Крайнов Д.О.
  */
