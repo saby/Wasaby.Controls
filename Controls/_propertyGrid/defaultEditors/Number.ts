@@ -4,6 +4,15 @@ import template = require('wml!Controls/_propertyGrid/defaultEditors/Number');
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 import IEditor from 'Controls/_propertyGrid/IEditor';
 
+/**
+ * Интерфейс опций для числового редактора.
+ *
+ * @interface Controls/_propertyGrid/defaultEditors/Number/INumberEditorOptions
+ * @extends IEditorOptions
+ * @public
+ * @author Борисов А.Н.
+ */
+
 export interface INumberEditorOptions extends IEditorOptions {
     inputConfig: {
         useGrouping: boolean;
@@ -15,11 +24,12 @@ export interface INumberEditorOptions extends IEditorOptions {
 }
 
 /**
- * Редактор для перечисляемого типа данных.
- *
- * @remark
- * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_propertyGrid.less">переменные тем оформления</a>
+ * @name Controls/_propertyGrid/defaultEditors/Number/INumberEditorOptions#inputConfig
+ * @cfg Конфигурация числового поля ввода.
+ */
+
+/**
+ * Редактор численного типа данных.
  *
  * @class Controls/_propertyGrid/defaultEditors/Number
  * @extends Core/Control
