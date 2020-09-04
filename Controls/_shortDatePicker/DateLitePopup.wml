@@ -42,6 +42,7 @@
                  monthTemplate="{{monthTemplate}}"
                  _yearHovered="{{_yearHovered}}"
                  formatDate="{{_formatDate}}"
+                 _isFullPicker="{{_isFullPicker}}"
          />
       </div>
    </ws:if>

@@ -72,6 +72,7 @@
 
 .controls-PeriodLiteDialog__vLayoutItem_theme-@{themeName} {
    border: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
+   padding: 0 @quarterly_item-padding-left_shortDatePicker;
 }
 
 .ws-is-hover {
@@ -91,8 +92,6 @@
 .controls-PeriodLiteDialog__vLayoutItem-caption_theme-@{themeName} {
    height: @item_layout_height_shortDatePicker;
    line-height: @item_layout_line-height_shortDatePicker;
-   text-align: left;
-   padding: 0 @quarterly_item-padding-left_shortDatePicker;
 }
 
 .controls-PeriodLiteDialog__item-background-hovered {
@@ -331,10 +330,6 @@
    }
 }
 
-.controls-PeriodLiteDialog-item__month-caption_theme-@{themeName} {
-   padding: 0 @quarterly_item-padding-left_shortDatePicker;
-}
-
 .controls-PeriodLiteDialog-item__checkBox {
    display: flex;
    position: absolute;
@@ -413,8 +408,10 @@
    border-top: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
    border-left: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
    border-right: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
+}
 
-   &:after {
+.controls-PeriodLiteDialog__fullPicker_theme-@{themeName} {
+   &::after {
       border-bottom: solid @separator_thickness_shortDatePicker @separator_color_shortDatePicker;
    }
 }
