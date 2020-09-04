@@ -132,6 +132,12 @@ var _private = {
       return document.activeElement;
    },
 
+   hideIndicator(self: Control): void {
+      if (self._children.indicator) {
+         self._children.indicator.hide();
+      }
+   },
+
    searchErrback: function(self, error) {
       //aborting of the search may be caused before the search start, because of the delay before searching
       if (self._loading !== null) {
@@ -143,15 +149,13 @@ var _private = {
             return new Promise(function(resolve) {
                require(['Controls/suggestPopup'], function(result) {
                   self._emptyTemplate = result.EmptyErrorTemplate;
-                  if (self._children.indicator) {
-                     self._children.indicator.hide();
-                  }
+                  _private.hideIndicator(self);
                   resolve();
                });
             });
          } else {
             if (self._children.indicator) {
-               self._children.indicator.hide();
+               _private.hideIndicator(self);
             }
          }
       }
