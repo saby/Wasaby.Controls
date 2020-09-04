@@ -216,6 +216,7 @@
                     scope="{{_pagingCfg}}"
                     pagingMode="{{_options.navigation.viewConfig.pagingMode}}"
                     showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
+                    hideBeginButton="{{_options.navigation.viewConfig.hideBeginButton}}"
                     contentTemplate="{{_options.pagingContentTemplate}}"
                     on:onArrowClick="__onPagingArrowClick()"
                     on:selectedPageChanged="__selectedPageChanged()"/>
