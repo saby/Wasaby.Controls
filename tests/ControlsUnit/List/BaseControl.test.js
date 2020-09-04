@@ -6921,6 +6921,15 @@ define([
                // Неизвестно общее количество записей, записей 5
                result = isPagingNavigationVisible(5);
                assert.isFalse(result, 'paging should not be visible');
+
+
+               // Неизвестно общее количество записей, hasMore = false
+               result = isPagingNavigationVisible(false);
+               assert.isFalse(result, 'paging should not be visible');
+
+               // Неизвестно общее количество записей, hasMore = true
+               result = isPagingNavigationVisible(true);
+               assert.isTrue(result, 'paging should not be visible');
             });
 
             describe('getPagingLabelData', function() {

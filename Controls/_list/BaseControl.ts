@@ -1854,17 +1854,17 @@ const _private = {
         return navigation && navigation.view === 'pages';
     },
 
-    /**
-     *
-     * @param itemsCount - Количество элементов
-     */
-    isPagingNavigationVisible(itemsCount) {
-        return itemsCount > PAGING_MIN_ELEMENTS_COUNT;
+    isPagingNavigationVisible(hasMoreData) {
+        /**
+         * Не получится получать количество элементов через _private.getItemsCount,
+         * так как функция возвращает количество отображаемых элементов
+         */
+        return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
     },
 
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
-        self._pagingNavigationVisible = _private.isPagingNavigationVisible(_private.getItemsCount(self));
+        self._pagingNavigationVisible = _private.isPagingNavigationVisible(hasMoreData);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
