@@ -43,8 +43,8 @@ define([
          let openTemplate;
          let openTemplateOptions;
          container._dialogOpener.open = (options) => {
-            openTemplate = options.template;
-            openTemplateOptions = options.templateOptions;
+            openTemplate = options.templateOptions.draggingTemplate;
+            openTemplateOptions = options.templateOptions.draggingTemplateOptions;
          };
          container._updateDraggingTemplate(null, draggingTemplateOptions, draggingTemplate);
          assert.equal(openTemplateOptions, draggingTemplateOptions);

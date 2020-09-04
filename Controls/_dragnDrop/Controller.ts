@@ -56,8 +56,11 @@ class Controller extends Control<IControlOptions> {
         this._dialogOpener.open({
             topPopup: true,
             opener: null,
-            template: draggingTpl,
-            templateOptions: draggingTemplateOptions,
+            template: 'Controls/dragnDrop:DraggingTemplateWrapper',
+            templateOptions: {
+                draggingTemplateOptions,
+                draggingTemplate: draggingTpl
+            },
             top: draggingTemplateOptions.position.y,
             left: draggingTemplateOptions.position.x
         });
