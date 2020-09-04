@@ -33,11 +33,22 @@ define([
 
       it('updateDraggingTemplate', function() {
          var
-            draggingTemplateOptions = 'draggingTemplateOptions',
+            draggingTemplateOptions = {
+               position: {
+                  x: 1,
+                  y: 2
+               }
+            },
             draggingTemplate = 'draggingTemplate';
+         let openTemplate;
+         let openTemplateOptions;
+         container._dialogOpener.open = (options) => {
+            openTemplate = options.template;
+            openTemplateOptions = options.templateOptions;
+         };
          container._updateDraggingTemplate(null, draggingTemplateOptions, draggingTemplate);
-         assert.equal(container._draggingTemplateOptions, draggingTemplateOptions);
-         assert.equal(container._draggingTemplate, draggingTemplate);
+         assert.equal(openTemplateOptions, draggingTemplateOptions);
+         assert.equal(openTemplate, draggingTemplate);
       });
    });
 });

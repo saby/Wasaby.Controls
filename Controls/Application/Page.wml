@@ -55,12 +55,6 @@
                      <Controls.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}" isGlobal="{{true}}">
                         <div></div>
                      </Controls.LoadingIndicator>
-
-                     <ws:if data="{{ content.draggingTemplate }}">
-                        <ws:partial template="Controls/dragnDrop:DraggingTemplateWrapper"
-                                    draggingTemplateOptions="{{content.draggingTemplateOptions}}"
-                                    draggingTemplate="{{content.draggingTemplate}}"/>
-                     </ws:if>
                   </ws:if>
                   <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
                </div>
