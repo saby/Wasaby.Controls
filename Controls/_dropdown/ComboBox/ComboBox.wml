@@ -2,12 +2,14 @@
             {{_isOpened ? 'controls-Popup__isolatedFocusingContext'}}
             controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
             controls-inlineheight-{{_inlineHeight}}_theme-{{_options.theme}}
-            controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}"
+            controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}
+            controls-ComboBox_textAlign-{{_options.textAlign}}"
      on:keydown="_handleKeyDown()"
      on:click="_handleClick()"
      on:mousedown="_handleMouseDown()"
      on:mouseenter="_handleMouseEnter()"
-     on:mouseleave="_handleMouseLeave()">
+     on:mouseleave="_handleMouseLeave()"
+     on:focusout="_deactivated()">
     <div class="controls-ComboBox-InputRender">
         <div class="controls-ComboBox__field controls-ComboBox__field_theme_{{_options.theme}}_margin-xs" title="{{_options.tooltip}}">
             <ws:if data="{{_placeholder && !_value}}">
@@ -21,4 +23,10 @@
             <span attr:class="controls-ComboBox__iconArrow controls-ComboBox__iconArrow_theme-{{_options.theme}} icon-{{_isOpened ? 'CollapseLight' : 'ExpandLight'}}"></span>
         </span>
     </div>
+    <ws:if data="{{_options.tagStyle}}">
+        <ws:partial template="wml!Controls/Application/TagTemplate/TagTemplate"
+                    tagStyle="{{_options.tagStyle}}"
+                    on:click="_notifyHandler('tagClick')"
+                    on:mouseenter="_notifyHandler('tagHover')"/>
+    </ws:if>
 </div>

@@ -218,7 +218,8 @@ class ComboBox extends BaseDropdown {
    static getDefaultOptions(): object {
       return {
          placeholder: rk('Выберите') + '...',
-         validationStatus: 'valid'
+         validationStatus: 'valid',
+         textAlign: 'left'
       };
    }
 }
