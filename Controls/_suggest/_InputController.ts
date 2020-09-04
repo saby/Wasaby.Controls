@@ -10,6 +10,7 @@ import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Stack as StackOpener, IStackPopupOptions} from 'Controls/popup';
 import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
+import * as isEmpty from 'Core/helpers/Object/isEmpty';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -138,25 +139,23 @@ var _private = {
       }
    },
 
-   searchErrback: function(self, error) {
+   searchErrback(self: Control, error: Error) {
       //aborting of the search may be caused before the search start, because of the delay before searching
       if (self._loading !== null) {
          self._loading = false;
          self._forceUpdate();
       }
-      if (!error || !error.canceled) {
-         if (!error) {
+      if (!error?.canceled) {
+         if (isEmpty(error)) {
             return new Promise(function(resolve) {
-               require(['Controls/suggestPopup'], function(result) {
+               require(['Controls/suggestPopup'], (result) => {
                   self._emptyTemplate = result.EmptyErrorTemplate;
                   _private.hideIndicator(self);
                   resolve();
                });
             });
          } else {
-            if (self._children.indicator) {
-               _private.hideIndicator(self);
-            }
+            _private.hideIndicator(self);
          }
       }
    },

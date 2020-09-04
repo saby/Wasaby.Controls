@@ -12,6 +12,7 @@ import {Source} from 'Controls/history';
 import {RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
 import { error as dataSourceError } from 'Controls/dataSource';
+import * as isEmpty from 'Core/helpers/Object/isEmpty';
 
 var SEARCH_CONTEXT_FIELD = 'searchLayoutField';
 var SEARCH_VALUE_FIELD = 'searchValue';
@@ -139,19 +140,21 @@ var _private = {
       //if query returned an error, the list should be empty
       //but if error was called by query abort (error property 'canceled'),
       //the list should not change
-      if (!error || !error.canceled) {
-         self._source = new Memory({
-            model: source.getModel(),
-            keyProperty: source.getKeyProperty()
-         });
-
-         _private.getErrorController(self).process({
-            error,
-            theme: self._options.theme,
-            mode: dataSourceError.Mode.include
-         }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
-            self._errorConfig = errorConfig;
-         });
+      if (!error?.canceled) {
+         if (isEmpty(error)) {
+            self._source = new Memory({
+               model: source.getModel(),
+               keyProperty: source.getKeyProperty()
+            });
+         } else {
+            _private.getErrorController(self).process({
+               error,
+               theme: self._options.theme,
+               mode: dataSourceError.Mode.include
+            }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
+               self._errorConfig = errorConfig;
+            });
+         }
       }
    },
 
