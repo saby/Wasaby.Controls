@@ -128,6 +128,10 @@ const DRAG_SHIFT_LIMIT = 4;
 const IE_MOUSEMOVE_FIX_DELAY = 50;
 const DRAGGING_OFFSET = 10;
 const SCROLLMOVE_DELAY = 150;
+/**
+ * Минимальное количество элементов, при которых должен отобразиться пэйджинг
+ */
+const PAGING_MIN_ELEMENTS_COUNT = 5;
 
 const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
 
@@ -1849,9 +1853,15 @@ const _private = {
         return navigation && navigation.view === 'pages';
     },
 
+    /**
+     *
+     * @param itemsCount - Количество элементов
+     * @param knownPagesCount - Количество страниц. Если страниц больше чем 1, то пэйджинг должен отобразиться.
+     */
     isPagingNavigationVisible(itemsCount, knownPagesCount) {
-        return knownPagesCount > 1 || itemsCount > 5
+        return knownPagesCount > 1 || itemsCount > PAGING_MIN_ELEMENTS_COUNT;
     },
+
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
         self._pagingNavigationVisible = _private.isPagingNavigationVisible(_private.getItemsCount(self), self._knownPagesCount);
