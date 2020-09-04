@@ -52,7 +52,7 @@ export default class MultiSelector extends Control {
 
    protected _beforeUpdate(options): void {
       this._operationsController.update(options);
-      if (options.hasOwnProperty('markedKey') && (!options.task1180057607 || options.markedKey !== undefined)) {
+      if (options.hasOwnProperty('markedKey') && options.markedKey !== undefined) {
          this._listMarkedKey = this._getOperationsController().setListMarkedKey(options.markedKey);
       }
    }

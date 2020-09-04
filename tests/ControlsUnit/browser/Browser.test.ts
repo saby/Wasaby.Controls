@@ -118,7 +118,10 @@ describe('Controls/browser:Browser', () => {
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
                 browser._beforeUpdate(options);
+                deepStrictEqual(browser._operationsController._savedListMarkedKey, 'testMarkedKey');
 
+                options.markedKey = undefined;
+                browser._beforeUpdate(options);
                 deepStrictEqual(browser._operationsController._savedListMarkedKey, 'testMarkedKey');
             });
 
