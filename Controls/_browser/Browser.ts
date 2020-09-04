@@ -78,7 +78,7 @@ export default class Browser extends Control {
         let methodResult;
 
         this._operationsController.update(newOptions);
-        if (newOptions.hasOwnProperty('markedKey')) {
+        if (newOptions.hasOwnProperty('markedKey') && (!newOptions.task1180057607 || newOptions.markedKey !== undefined)) {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
 
