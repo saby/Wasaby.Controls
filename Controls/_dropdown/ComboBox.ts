@@ -13,7 +13,7 @@ import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownCo
 import {IStickyPopupOptions} from 'Controls/popup';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/fastOpenUtils';
-import {generateStates, IRenderOptions} from 'Controls/input';
+import {generateStates} from 'Controls/input';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
    placeholder?: string;
@@ -206,7 +206,7 @@ class ComboBox extends BaseDropdown {
       return container[0] || container;
    }
 
-   private _setState(options: IRenderOptions): void {
+   private _setState(options: IComboboxOptions): void {
       if (options.borderStyle && options.validationStatus === 'valid') {
          this._state = options.borderStyle;
       } else {
