@@ -428,7 +428,7 @@ describe('Controls/list_clean/MoveController', () => {
         });
 
         // move + invalid selection
-        it ('should not move with invalid selection', () => {
+        it ('should not move "after" with invalid selection', () => {
             // Promise to get all expected results in one place
             return new Promise((resolve) => {
                 controller
@@ -444,7 +444,7 @@ describe('Controls/list_clean/MoveController', () => {
         });
 
         // move - selection
-        it ('should not move with undefined selection', () => {
+        it ('should not move "after" with undefined selection', () => {
             // Promise to get all expected results in one place
             return new Promise((resolve) => {
                 controller
@@ -460,7 +460,7 @@ describe('Controls/list_clean/MoveController', () => {
         });
 
         // move + empty selection
-        it ('should try to move after with empty selection', () => {
+        it ('should try to move "after" with empty selection', () => {
             const emptySelectionObject: ISelectionObject = {
                 selected: [],
                 excluded: []
@@ -480,7 +480,7 @@ describe('Controls/list_clean/MoveController', () => {
         });
 
         // move + selected + excluded
-        it ('should try to move after with correct selection', () => {
+        it ('should try to move "after" with correct selection', () => {
             const correctSelection: ISelectionObject = {
                 selected: [1, 3, 5, 7],
                 excluded: [3]
@@ -509,7 +509,7 @@ describe('Controls/list_clean/MoveController', () => {
         });
 
         // move - selected + excluded
-        it ('should try to move without selected keys', () => {
+        it ('should try to move "on" without selected keys', () => {
             const correctSelection: ISelectionObject = {
                 selected: [],
                 excluded: [3]
@@ -595,10 +595,7 @@ describe('Controls/list_clean/MoveController', () => {
 
         // move + invalid filter
 
-
         // move + invalid position
-
-
 
         // move - filter
 
