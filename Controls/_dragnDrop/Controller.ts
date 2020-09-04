@@ -61,8 +61,8 @@ class Controller extends Control<IControlOptions> {
                 draggingTemplateOptions,
                 draggingTemplate: draggingTpl
             },
-            top: draggingTemplateOptions.position.y,
-            left: draggingTemplateOptions.position.x
+            top: draggingTemplateOptions.position.y + draggingTemplateOptions.draggingTemplateOffset,
+            left: draggingTemplateOptions.position.x + draggingTemplateOptions.draggingTemplateOffset
         });
     }
 
