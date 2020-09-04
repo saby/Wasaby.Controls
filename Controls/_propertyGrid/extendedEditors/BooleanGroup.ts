@@ -19,10 +19,6 @@ interface IOptions extends IEditorOptions, IControlOptions {
 /**
  * Редактор для набора логических значений.
  *
- * @remark
- * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_propertyGrid.less">переменные тем оформления</a>
- *
  * @class Controls/_propertyGrid/extendedEditors/BooleanGroup
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor

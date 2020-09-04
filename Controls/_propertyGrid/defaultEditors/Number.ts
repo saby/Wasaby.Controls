@@ -4,7 +4,7 @@ import template = require('wml!Controls/_propertyGrid/defaultEditors/Number');
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 import IEditor from 'Controls/_propertyGrid/IEditor';
 
-interface INumberEditorOptions extends IEditorOptions {
+export interface INumberEditorOptions extends IEditorOptions {
     inputConfig: {
         useGrouping: boolean;
         showEmptyDecimals: boolean;
