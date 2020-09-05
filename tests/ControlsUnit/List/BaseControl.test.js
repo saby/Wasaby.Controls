@@ -2571,6 +2571,45 @@ define([
          assert.isTrue(res, 'Wrong paging state');
       });
 
+      it('needShowPagingByScrollSize with virtual scrollHeight', function() {
+         var cfg = {
+            navigation: {
+               view: 'infinity',
+               source: 'page',
+               viewConfig: {
+                  pagingMode: 'direct'
+               },
+               sourceConfig: {
+                  pageSize: 3,
+                  page: 0,
+                  hasMore: false
+               }
+            }
+         };
+         var baseControl = new lists.BaseControl(cfg);
+         baseControl._sourceController = {
+            nav: false,
+            hasMoreData: function() {
+               return this.nav;
+            }
+         };
+
+         baseControl._loadTriggerVisibility = {
+            up: true,
+            down: true
+         };
+
+         var res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
+         assert.isFalse(res, 'Wrong paging state');
+
+         baseControl._scrollController = {
+            calculateVirtualScrollHeight: () => 3000
+         }
+
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
+         assert.isTrue(res, 'Wrong paging state');
+      });
+
       it('scrollToEdge without load', function(done) {
          var rs = new collection.RecordSet({
             keyProperty: 'id',
@@ -2704,7 +2743,8 @@ define([
                handleResetItems: () => undefined,
                registerObserver: () => undefined,
                scrollPositionChange: () => undefined,
-               setTriggers: () => undefined
+               setTriggers: () => undefined,
+               calculateVirtualScrollHeight: () => 0
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
