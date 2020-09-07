@@ -11,6 +11,8 @@
         selectionTypeForAllSelected="{{_selectionType}}"
         isAllSelected="{{ _isAllSelected }}"
         listMarkedKey="{{_listMarkedKey}}"
+        markedKey="{{_listMarkedKey}}"
+        itemsReadyCallback="{{_itemsReadyCallback}}"
         on:markedKeyChanged="_markedKeyChangedHandler()"
         on:selectedTypeChanged="_selectedTypeChangedHandler()"
         on:listMarkedKeyChanged="_listMarkedKeyChangedHandler()"

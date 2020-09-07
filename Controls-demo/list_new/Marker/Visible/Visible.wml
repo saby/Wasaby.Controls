@@ -2,5 +2,7 @@
     <Controls.list:View
             keyProperty="id"
             source="{{_viewSource}}"
-            markerVisibility="visible"/>
+            markerVisibility="visible"
+            bind:markedKey="_markedKey"
+    />
 </div>

@@ -5,6 +5,8 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { TKeySelection as TKey } from 'Controls/interface';
 import {default as OperationsController} from 'Controls/_operations/ControllerClass';
 import { TSelectionType } from 'Controls/interface';
+import { Model } from 'Types/entity';
+import { RecordSet } from 'Types/Collection';
 
 /**
  * Контрол используется для организации множественного выбора.
@@ -44,9 +46,12 @@ export default class MultiSelector extends Control {
    protected _listMarkedKey: TKey = null;
    protected _notifyHandler: Function = tmplNotify;
    private _operationsController: OperationsController = null;
+   private _items: RecordSet<Model>;
+   private _itemsReadyCallback: Function;
 
    protected _beforeMount(options): void {
       this._itemOpenHandler = this._itemOpenHandler.bind(this);
+      this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
       this._operationsController = this._createOperationsController(options);
    }
 
@@ -97,6 +102,9 @@ export default class MultiSelector extends Control {
 
    protected _operationsPanelOpen(): void {
       this._listMarkedKey = this._getOperationsController(this._options).setOperationsPanelVisible(true);
+      if (this._listMarkedKey === null && this._items.getCount()) {
+         this._listMarkedKey = this._items.at(0).getKey();
+      }
    }
 
    protected _listSelectionTypeForAllSelectedChanged(event: SyntheticEvent, selectionType: TSelectionType): void {
@@ -106,6 +114,13 @@ export default class MultiSelector extends Control {
 
    protected _operationsPanelClose(): void {
       this._getOperationsController(this._options).setOperationsPanelVisible(false);
+   }
+
+   protected _itemsReadyCallbackHandler(items: RecordSet<Model>): void {
+      this._items = items;
+      if (this._options.itemsReadyCallback) {
+         this._options.itemsReadyCallback(items);
+      }
    }
 
    private _createOperationsController(options) {
