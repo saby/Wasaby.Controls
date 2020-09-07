@@ -3,9 +3,10 @@ define(
       'Controls/_popupTemplate/Dialog/Opener/DialogStrategy',
       'Controls/_popupTemplate/Dialog/Opener/DialogController',
       'Controls/_popup/Opener/Dialog',
+      'Controls/_popupTemplate/BaseController',
       'Controls/Application/SettingsController',
    ],
-   (DialogStrategy, DialogController, DialogOpener, SettingsController) => {
+   (DialogStrategy, DialogController, DialogOpener, BaseController, SettingsController) => {
       'use strict';
       const mockedSettingsController = {
          storage: {
@@ -47,6 +48,8 @@ define(
             width: 1920,
             height: 960
          };
+
+         let getRestrictiveContainer =  DialogController._getRestrictiveContainerSize;
 
          DialogController._getRestrictiveContainerSize = () => windowSize;
 
@@ -425,6 +428,27 @@ define(
                   done(e);
                }
             });
+         });
+         it('restrictive container, maximize = true', () => {
+
+            let item = {
+               popupOptions: {
+                  maximize: true
+               },
+               position: {
+                  top: 100,
+                  left: 200,
+               }
+            };
+            let bodySelector;
+            let getCoordsByContainer = BaseController.getCoordsByContainer;
+            DialogController._getRestrictiveContainerSize = getRestrictiveContainer;
+            BaseController.default.getCoordsByContainer = (selector) => {
+               bodySelector = selector;
+            };
+            DialogController._getRestrictiveContainerSize(item);
+            assert.equal(bodySelector, 'body');
+            BaseController.getRootContainerCoords = getCoordsByContainer;
          });
       });
    }

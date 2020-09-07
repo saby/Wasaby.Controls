@@ -10,8 +10,11 @@ import {Bus as EventBus} from 'Env/Event';
 const Global = Control.extend({
     _template: template,
 
-    _afterMount() {
+    _beforeMount() {
         this._globalController = new GlobalController();
+    },
+
+    _afterMount() {
         this._globalController.registerGlobalPopup();
         const channelPopupManager = EventBus.channel('popupManager');
         channelPopupManager.subscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);

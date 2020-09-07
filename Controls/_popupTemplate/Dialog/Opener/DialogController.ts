@@ -225,6 +225,9 @@ class DialogController extends BaseController {
     }
 
     private _getRestrictiveContainerSize(item: IDialogItem): IWindow {
+        if (item.popupOptions.maximize) {
+            return BaseController.getCoordsByContainer('body');
+        }
         return BaseController.getRootContainerCoords(item, '.controls-Popup__dialog-target-container');
     }
 }

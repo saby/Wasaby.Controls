@@ -10,6 +10,7 @@ import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Stack as StackOpener, IStackPopupOptions} from 'Controls/popup';
 import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
+import * as isEmpty from 'Core/helpers/Object/isEmpty';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -132,22 +133,30 @@ var _private = {
       return document.activeElement;
    },
 
-   searchErrback: function(self, error) {
+   hideIndicator(self: Control): void {
+      if (self._children.indicator) {
+         self._children.indicator.hide();
+      }
+   },
+
+   searchErrback(self: Control, error: Error) {
       //aborting of the search may be caused before the search start, because of the delay before searching
       if (self._loading !== null) {
          self._loading = false;
          self._forceUpdate();
       }
-      if (!error || !error.canceled) {
-          return new Promise(function(resolve) {
-              require(['Controls/suggestPopup'], function(result) {
+      if (!error?.canceled) {
+         if (isEmpty(error)) {
+            return new Promise(function(resolve) {
+               require(['Controls/suggestPopup'], (result) => {
                   self._emptyTemplate = result.EmptyErrorTemplate;
-                  if (self._children.indicator) {
-                     self._children.indicator.hide();
-                  }
+                  _private.hideIndicator(self);
                   resolve();
-              });
-          });
+               });
+            });
+         } else {
+            _private.hideIndicator(self);
+         }
       }
    },
    shouldSearch(self, value): boolean {
