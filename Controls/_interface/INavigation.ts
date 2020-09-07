@@ -167,7 +167,6 @@ export type TNavigationTotalInfo = 'basic' | 'extended';
  * @property {Number} maxCountValue Количество записей, когда необходимо прекратить загрузку в режиме навигации maxCount.
  * О режиме навигации maxCount вы можете посмотреть {@link Controls/_interface/INavigation/INavigationOptionValue.typedef здесь}.
  * @property {Boolean} [showEndButton=false] Видимость кнопки перехода в конец списка.
- * @property {Boolean} [hideBeginButton=false] Скрытие кнопки перехода в начало списка.
  * Когда параметр принимает значение true, кнопка отображается.
  */
 export interface INavigationViewConfig {
@@ -175,7 +174,6 @@ export interface INavigationViewConfig {
     totalInfo?: TNavigationTotalInfo;
     maxCountValue?: number;
     showEndButton?: boolean;
-    hideBeginButton?: boolean;
 }
 
 /**

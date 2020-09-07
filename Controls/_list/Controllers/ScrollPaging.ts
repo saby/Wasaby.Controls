@@ -8,7 +8,7 @@
  */
 
 type IScrollpagingState = 'top' | 'bottom' | 'middle';
-type TPagingMode = 'basic' | 'compact' | 'numbers';
+type TPagingMode = 'basic' | 'edge' | 'numbers' | 'end';
 
 interface IScrollParams {
     clientHeight: number;
@@ -69,7 +69,7 @@ export default class ScrollPagingController {
         switch (this._options.pagingMode) {
             case 'basic':
                 break;
-            case 'compact':
+            case 'edge':
                 arrowState.prev = 'hidden';
                 arrowState.next = 'hidden';
                 if (arrowState.end === 'visible') {
@@ -79,6 +79,15 @@ export default class ScrollPagingController {
                 } else if (arrowState.begin === 'visible') {
                     arrowState.begin = 'visible';
                     arrowState.end = 'hidden';
+                }
+                break;
+            case 'end':
+                arrowState.prev = 'hidden';
+                arrowState.next = 'hidden';
+                arrowState.begin = 'hidden';
+                if (arrowState.end === 'visible') {
+                    arrowState.end = 'visible';
+                    pagingCfg.showEndButton = true;
                 }
                 break;
             case 'numbers':
