@@ -103,9 +103,7 @@ class ComboBox extends BaseDropdown {
 
       generateStates(this, options);
       this._controller = new Controller(this._getControllerOptions(options));
-      return loadItems(this._controller, receivedState, options.source)?.catch((error) => {
-          dataSourceError.process({error});
-      });
+      return loadItems(this._controller, receivedState, options.source);
    }
 
    protected _beforeUpdate(newOptions: IComboboxOptions): void {

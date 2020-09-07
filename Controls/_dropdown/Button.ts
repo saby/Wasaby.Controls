@@ -104,9 +104,7 @@ export default class Button extends BaseDropdown {
       this._controller = new Controller(this._getControllerOptions(options));
 
       if (!options.lazyItemsLoading) {
-         return loadItems(this._controller, receivedState, options.source)?.catch((error) => {
-            dataSourceError.process({error});
-         });
+         return loadItems(this._controller, receivedState, options.source);
       }
    }
 
