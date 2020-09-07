@@ -41,12 +41,12 @@ var _private = {
         return Promise.resolve(afterItemsRemoveResult);
     },
 
-    updateDataOptions: function (self, dataOptions) {
-        if (dataOptions) {
-            self._items = dataOptions.items;
-            self._source = dataOptions.source;
-            self._filter = dataOptions.filter;
-            self._keyProperty = dataOptions.keyProperty;
+    updateDataOptions: function (self, newOptions, contextDataOptions) {
+        self._items = newOptions.items || contextDataOptions?.items;
+        if (contextDataOptions) {
+            self._source = contextDataOptions.source;
+            self._filter = contextDataOptions.filter;
+            self._keyProperty = contextDataOptions.keyProperty;
         }
     }
 };
@@ -85,11 +85,11 @@ var _private = {
 
 var Remover = BaseAction.extend({
     _beforeMount: function (options, context) {
-        _private.updateDataOptions(this, context.dataOptions);
+        _private.updateDataOptions(this, options, context.dataOptions);
     },
 
     _beforeUpdate: function (options, context) {
-        _private.updateDataOptions(this, context.dataOptions);
+        _private.updateDataOptions(this, options, context.dataOptions);
     },
 
     removeItems(items: string[]): void {

@@ -12,7 +12,7 @@ export function getItemsHeightsData(itemsContainer: HTMLElement): {itemsHeights:
         }
     }
 
-    for (let i = 0, len = itemsContainer.children.length; i < len; i++) {
+    for (let i = 0, len = itemsContainer.children.length - startChildrenIndex; i < len; i++) {
         const itemHeight = Math.round(
             getDimensions(itemsContainer.children[startChildrenIndex + i] as HTMLElement).height
         );
