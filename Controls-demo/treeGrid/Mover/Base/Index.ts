@@ -1,11 +1,11 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import {Model} from 'Types/entity';
 import * as Template from 'wml!Controls-demo/treeGrid/Mover/Base/Base';
-import {DataSet, HierarchicalMemory} from 'Types/source';
+import {HierarchicalMemory} from 'Types/source';
 import {Gadgets} from '../../DemoHelpers/DataCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { TExpandOrColapsItems } from 'Controls-demo/types';
-import {MoveController, IMoveControllerOptions, MOVE_POSITION, TMoveItems} from 'Controls/list';
+import {MoveController, IMoveControllerOptions} from 'Controls/list';
+import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -44,28 +44,20 @@ export default class extends Control {
 
     protected _moveButtonClick(): void {
         if (this._selectedKeys.length) {
-            this._mover.moveItemsWithDialog({
-                selectedKeys: this._selectedKeys,
-                excludedKeys: this._excludedKeys,
-                filter: this._filter
+            this._mover.moveWithDialog({
+                selected: this._selectedKeys,
+                excluded: this._excludedKeys
+            }, this._filter).then(() => {
+                this._children.treeGrid.reload();
             });
         }
-    }
-
-    private _moveDialogResultHandler(items: TMoveItems, target: Model): Promise<DataSet|void> {
-        return this._mover.moveItems(items, target.getKey(), MOVE_POSITION.on).then(() => {
-            this._children.treeGrid.reload();
-        });
     }
 
     private _setMoverOptions() {
         const moverCgf: IMoveControllerOptions = {
             parentProperty: 'parent',
-            root: null,
-            nodeProperty: 'type',
             source: this._viewSource,
-            keyProperty: 'id',
-            dialog: {
+            dialogOptions: {
                 opener: this,
                 template: 'Controls/moverDialog:Template',
                 templateOptions: {
@@ -77,8 +69,7 @@ export default class extends Control {
                     nodeProperty: 'type',
                     source: this._viewSource,
                     columns: this._columns
-                },
-                onResultHandler: this._moveDialogResultHandler.bind(this)
+                } as Partial<IMoverDialogTemplateOptions>
             }
         }
         if (!this._mover) {

@@ -26,12 +26,11 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes MoveController Controls/_list/Controllers/MoveController
+ * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
- * @includes IMoveObject Controls/_list/interface/IMoveObject
- * @includes IMoveDialogOptions Controls/_list/interface/IMoveDialogOptions
- * @includes IMoveControllerOptions Controls/_list/interface/IMoveControllerOptions
  * @includes IReloadableList Controls/_list/interface/IReloadableList
  * @public
  * @author Крайнов Д.О.
@@ -63,13 +62,12 @@
  * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes MoveController Controls/_list/Controllers/MoveController
+ * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
- * @includes IMoveObject Controls/_list/interface/IMoveObject
- * @includes IMoveDialogOptions Controls/_list/interface/IMoveDialogOptions
- * @includes IMoveControllerOptions Controls/_list/interface/IMoveControllerOptions
- * * @public
+ * @public
  * @author Крайнов Д.О.
  */
 import AddButton = require('Controls/_list/AddButton');
@@ -120,9 +118,7 @@ import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/I
 import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeAction');
 import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
 
-export {MoveController}  from 'Controls/_list/Controllers/MoveController';
-export {IMoveObject, MOVE_TYPE, MOVE_POSITION, TMoveItems}  from 'Controls/_list/interface/IMoveObject';
-export {IMoveControllerOptions}  from 'Controls/_list/interface/IMoveControllerOptions';
+export {MoveController, TMovePosition, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
 import * as Mover from 'Controls/_list/Mover';
 
 export {
