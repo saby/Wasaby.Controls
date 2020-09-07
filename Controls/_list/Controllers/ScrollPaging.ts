@@ -43,23 +43,28 @@ interface IScrollPagingOptions {
     pagingCfgTrigger(IPagingCfg): void;
 }
 
+interface IHasMoreData {
+    up: boolean;
+    down: boolean;
+}
+
 export default class ScrollPagingController {
     protected _curState: IScrollpagingState = null;
     protected _options: IScrollPagingOptions = null;
 
-    constructor(cfg: IScrollPagingOptions) {
+    constructor(cfg: IScrollPagingOptions, hasMoreData: IHasMoreData) {
         this._options = cfg;
-        this.updateStateByScrollParams(cfg.scrollParams);
+        this.updateStateByScrollParams(cfg.scrollParams, hasMoreData);
     }
 
-    protected updateStateByScrollParams(scrollParams: IScrollParams): void {
+    protected updateStateByScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData): void {
         const canScrollForward = scrollParams.clientHeight + scrollParams.scrollTop < scrollParams.scrollHeight;
         const canScrollBackward = scrollParams.scrollTop > 0;
         if (canScrollForward && canScrollBackward) {
             this.handleScrollMiddle();
-        } else if (canScrollForward && !canScrollBackward) {
+        } else if (canScrollForward && !canScrollBackward && !hasMoreData.up) {
             this.handleScrollTop();
-        } else if (!canScrollForward && canScrollBackward) {
+        } else if (!canScrollForward && canScrollBackward && !hasMoreData.down) {
             this.handleScrollBottom();
         }
     }
@@ -133,9 +138,9 @@ export default class ScrollPagingController {
         }
     }
 
-    public updateScrollParams(scrollParams: IScrollParams): void {
+    public updateScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData = {up: false, down: false}): void {
         this._options.scrollParams = scrollParams;
-        this.updateStateByScrollParams(scrollParams);
+        this.updateStateByScrollParams(scrollParams, hasMoreData);
     }
 
     protected destroy(): void {
