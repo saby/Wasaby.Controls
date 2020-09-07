@@ -145,7 +145,7 @@ import Context = require('Controls/_scroll/StickyHeader/Context');
 import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
 import Model = require('Controls/_scroll/StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/StickyHeader');
-import tmplNotify = require('Controls/Utils/tmplNotify');
+import {tmplNotify} from 'Controls/eventUtils';
 
 export enum BACKGROUND_STYLE {
     TRANSPARENT = 'transparent',
@@ -224,9 +224,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
      */
     protected _isStickySupport: boolean = isStickySupport();
 
-    // Префикс для корректной установки background
-    protected _backgroundStyle: string;
-
     protected _style: string = '';
 
     protected _isBottomShadowVisible: boolean = false;
@@ -250,7 +247,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._options = options;
         this._observeHandler = this._observeHandler.bind(this);
         this._index = getNextId();
-        this._backgroundStyle = this._options.backgroundVisible !== false ? this._options.backgroundStyle : BACKGROUND_STYLE.TRANSPARENT;
         this._scrollShadowPosition = context?.stickyHeader?.shadowPosition;
         this._updateStyles();
     }

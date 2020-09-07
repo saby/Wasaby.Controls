@@ -86,13 +86,15 @@ var Component = BaseControl.extend({
 
     _range: null,
 
+    _isFullPicker: null,
+
     // constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
     //    Component.superclass.constructor.apply(this, arguments);
     // },
 
     _beforeMount: function (options) {
-
+        this._isFullPicker = options.chooseMonths && options.chooseQuarters && options.chooseHalfyears;
         this._emptyCaption = options.emptyCaption;
         if (!this._emptyCaption) {
             if (options.chooseMonths && (options.chooseQuarters || options.chooseHalfyears)) {
@@ -263,11 +265,11 @@ var Component = BaseControl.extend({
         }
         if (this._options.chooseMonths) {
             return 'controls-PeriodLiteDialog__vLayout_theme-' + this._options.theme +
-                ' controls-PeriodLiteDialog__text-align-center controls-PeriodLiteDialog__month-list_theme-' + this._options.theme;
+                ' controls-PeriodLiteDialog__month-list_theme-' + this._options.theme;
         }
         if (this._options.chooseQuarters) {
             return 'controls-PeriodLiteDialog__vLayout_theme-' + this._options.theme +
-                ' controls-PeriodLiteDialog__text-align-center controls-PeriodLiteDialog__quarter-list_theme-' + this._options.theme;
+                ' controls-PeriodLiteDialog__quarter-list_theme-' + this._options.theme;
         }
         return '';
     },

@@ -19,7 +19,6 @@ const MORE_BUTTON_TEXT = rk('Ещё...');
 
 interface IReceivedState {
     items: RecordSet<object>;
-    fontWidthConstants: unknown;
 }
 
 /**
@@ -74,7 +73,6 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     protected _filter: object;
     protected _position: number;
     protected _selectedKey: number[] = [];
-    private _fontWidthConstants: unknown;
 
     protected _beforeMount(options?: ITabsAdaptiveButtonsOptions,
                            contexts?: object,
@@ -84,21 +82,19 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         }
         if (receivedState) {
             this._items = receivedState.items;
-            this._fontWidthConstants = receivedState.fontWidthConstants;
             this._moreButtonWidth = this._getTextWidth(MORE_BUTTON_TEXT, 'm');
             this._calcVisibleItems(this._items, options);
             this._menuSource = this._createMemoryForMenu(options.keyProperty);
             this._updateFilter(options);
         } else {
             return new Promise((resolve) => {
-                loadFontWidthConstants().then((fontWidthConstants) => {
-                    this._fontWidthConstants = fontWidthConstants;
+                loadFontWidthConstants().then((getTextWidth: Function) => {
+                    this._getTextWidth = getTextWidth;
                     const getReceivedData = (opts: ITabsAdaptiveButtonsOptions) => {
                         this._prepareItems(opts);
                         this._moreButtonWidth = this._getTextWidth(MORE_BUTTON_TEXT, 'm');
                         resolve({
-                            items: this._items,
-                            fontWidthConstants
+                            items: this._items
                         });
                     };
 
@@ -261,13 +257,13 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     private _getItemsWidth(items: RecordSet<object>, displayProperty: string): number[] {
         const widthArray = [];
         for (let i = 0; i < items.getCount(); i++) {
-            widthArray.push(this._getTextWidth(items.at(i).get(displayProperty)) + COUNT_OF_MARGIN * MARGIN);
+            widthArray.push(this._getTextWidth(items.at(i).get(displayProperty), 'l') + COUNT_OF_MARGIN * MARGIN);
         }
         return widthArray;
     }
 
     private _getTextWidth(text: string, size: string  = 'l'): number {
-       return getFontWidth(text, size, this._fontWidthConstants);
+       return getFontWidth(text, size);
     }
 
     static getDefaultOptions(): Partial<ITabsAdaptiveButtonsOptions> {
