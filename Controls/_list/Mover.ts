@@ -432,11 +432,11 @@ var Mover = BaseAction.extend({
     _moveDialogOptions: null,
     _template: Template,
     _beforeMount: function (options, context) {
-        _private.updateDataOptions(this, options, context.dataOptions);
+        _private.updateDataOptions(this, options, options);
     },
 
     _beforeUpdate: function (options, context) {
-        _private.updateDataOptions(this, options, context.dataOptions);
+        _private.updateDataOptions(this, options, options);
     },
 
     moveItemUp: function (item) {
