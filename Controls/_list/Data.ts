@@ -161,7 +161,6 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          // TODO 2) getState у SourceController пересоздаёт prefetchProxy,
          // TODO поэтому весь state на контекст перекладывать нельзя, иначе список перезагрузится с теми же данными
          this._filter = controllerState.filter;
-         this._items = controllerState.items;
          this._dataOptionsContext.navigation = controllerState.navigation;
          this._dataOptionsContext.filter = controllerState.filter;
          this._dataOptionsContext.updateConsumers();
@@ -201,6 +200,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
       // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
       this._filter = controllerState.filter;
+
       this._updateContext(controllerState);
 
       /* If filter changed, prefetchSource should return data not from cache,
@@ -221,10 +221,8 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       //then we need to create prefetchSource synchronously
 
       // для того чтобы мог посчитаться новый prefetch Source внутри
-      const newItems = this._sourceController.setItems(items);
-      if (!this._items) {
-         this._items = newItems;
-      }
+      // При фильтре создался новый набор RecordSet, надо обновить его тут
+      this._items = this._sourceController.setItems(items);
 
       const controllerState = this._sourceController.getState();
       this._updateContext(controllerState);
