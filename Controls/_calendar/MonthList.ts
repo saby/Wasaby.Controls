@@ -110,7 +110,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
 
         if (options.startPosition) {
-            Logger.warn('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
+            Logger.error('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
         }
 
         const normalizedPosition = this._normalizeDate(position, options.viewMode);
