@@ -221,11 +221,15 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
       // для того чтобы мог посчитаться новый prefetch Source внутри
       const newItems = this._sourceController.setItems(items);
+      const controllerState = this._sourceController.getState();
+
       if (!this._items) {
          this._items = newItems;
+      } else {
+         controllerState.items = this._items;
+         this._sourceController.setItems(this._items);
       }
 
-      const controllerState = this._sourceController.getState();
       this._updateContext(controllerState);
       event.stopPropagation();
    }
