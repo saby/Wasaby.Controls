@@ -41,12 +41,12 @@ var _private = {
         return Promise.resolve(afterItemsRemoveResult);
     },
 
-    updateDataOptions: function (self, newOptions, dataOptions) {
-        self._items = newOptions.items || dataOptions?.items;
-        if (dataOptions) {
-            self._source = dataOptions.source;
-            self._filter = dataOptions.filter;
-            self._keyProperty = dataOptions.keyProperty;
+    updateDataOptions: function (self, newOptions, contextDataOptions) {
+        self._items = newOptions.items || contextDataOptions?.items;
+        if (contextDataOptions) {
+            self._source = contextDataOptions.source;
+            self._filter = contextDataOptions.filter;
+            self._keyProperty = contextDataOptions.keyProperty;
         }
     }
 };
