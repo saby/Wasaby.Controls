@@ -6,7 +6,6 @@
 }
 
 .controls-ComboBox-InputRender {
-   cursor: pointer;
    display: inline-flex;
    align-items: center;
    width: 100%;
@@ -17,7 +16,9 @@
    height: @height_combobox;
    border-width: @border-thickness_inputText;
    background-color: @background-color_combobox;
+   border-style: @border-style_inputText;
    box-sizing: border-box;
+   cursor: pointer;
 }
 
 .controls-ComboBox_textAlign-left {
@@ -29,7 +30,6 @@
 }
 
 .controls-ComboBox-state-valid_theme-@{themeName} {
-   border-style: @border-style_inputText;
    border-color: @border-color_inputText;
 }
 
@@ -74,7 +74,6 @@
 }
 
 .controls-ComboBox-readOnly_theme-@{themeName} {
-   border-style: @border-style_inputText;
    border-color: @readonly_border-color_inputText;
    background-color: @readonly_background-color_combobox;
    cursor: default;
