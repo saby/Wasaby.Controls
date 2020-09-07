@@ -8,15 +8,15 @@ define([
          endDetected = false,
          startDetected = false,
          container = new dragnDrop.Controller();
-      container.controllerClass = new dragnDrop.ControllerClass();
+      container._controllerClass = new dragnDrop.ControllerClass();
 
-      container.controllerClass._registers.documentDragStart.start = function() {
+      container._controllerClass._registers.documentDragStart.start = function() {
          startDetected = true;
-      }
+      };
 
-      container.controllerClass._registers.documentDragEnd.start = function() {
+      container._controllerClass._registers.documentDragEnd.start = function() {
          endDetected = true;
-      }
+      };
 
       it('documentDragStart', function() {
          container._documentDragStart();
