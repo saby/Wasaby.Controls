@@ -80,79 +80,79 @@ define([
          assert.isNull(notifyResult, '_onItemClick should ignore preventItemEvent events');
       });
 
-      it('_beforeUpdate', function() {
-         let itemPadding = {
-            test: 'test'
-         };
-         let testData = [
-            ...data
-         ];
-         let testData2 = [
-            ...data2
-         ];
-         testData.at = function(key) {
-            return {
-               ...(testData[key]),
-               getId: function() {
-                  return this['id'];
-               }
-            }
-         }
-         testData2.at = function(key) {
-            return {
-               ...(testData2[key]),
-               getId: function() {
-                  return this['id'];
-               }
-            }
-         }
-         let itemPaddingChanged = false;
-
-         var model = new lists.ListViewModel({
-            items: testData,
-            keyProperty: 'id',
-            markedKey: null,
-            itemPadding: itemPadding
-         });
-         var cfg = {
-            listModel: model,
-            keyProperty: 'id',
-            markedKey: 2,
-            itemPadding: itemPadding
-         };
-         var lv = new lists.ListView(cfg);
-         lv.saveOptions(cfg);
-         lv._beforeMount(cfg);
-
-         lv._listModel.setMarkedKey(1);
-         assert.equal(lv._listModel.getMarkedKey(), 1);
-         lv._beforeUpdate(cfg);
-
-         model = new lists.ListViewModel({
-            items: testData2,
-            keyProperty: 'id',
-            markedKey: null,
-            itemPadding: itemPadding
-         });
-
-         cfg = {
-            listModel: model,
-            keyProperty: 'id',
-            markedKey: 2,
-            itemPadding: itemPadding
-         };
-         lv._beforeUpdate(cfg);
-         assert.equal(model, lv._listModel, 'Incorrect listModel before update');
-
-         cfg.itemPadding = {
-            test: 'test'
-         };
-         model.setItemPadding = function() {
-            itemPaddingChanged = true;
-         };
-         lv._beforeUpdate(cfg);
-         assert.isFalse(itemPaddingChanged);
-      });
+      // it('_beforeUpdate', function() {
+      //    let itemPadding = {
+      //       test: 'test'
+      //    };
+      //    let testData = [
+      //       ...data
+      //    ];
+      //    let testData2 = [
+      //       ...data2
+      //    ];
+      //    testData.at = function(key) {
+      //       return {
+      //          ...(testData[key]),
+      //          getId: function() {
+      //             return this['id'];
+      //          }
+      //       }
+      //    }
+      //    testData2.at = function(key) {
+      //       return {
+      //          ...(testData2[key]),
+      //          getId: function() {
+      //             return this['id'];
+      //          }
+      //       }
+      //    }
+      //    let itemPaddingChanged = false;
+      //
+      //    var model = new lists.ListViewModel({
+      //       items: testData,
+      //       keyProperty: 'id',
+      //       markedKey: null,
+      //       itemPadding: itemPadding
+      //    });
+      //    var cfg = {
+      //       listModel: model,
+      //       keyProperty: 'id',
+      //       markedKey: 2,
+      //       itemPadding: itemPadding
+      //    };
+      //    var lv = new lists.ListView(cfg);
+      //    lv.saveOptions(cfg);
+      //    lv._beforeMount(cfg);
+      //
+      //    lv._listModel.setMarkedKey(1);
+      //    assert.equal(lv._listModel.getMarkedKey(), 1);
+      //    lv._beforeUpdate(cfg);
+      //
+      //    model = new lists.ListViewModel({
+      //       items: testData2,
+      //       keyProperty: 'id',
+      //       markedKey: null,
+      //       itemPadding: itemPadding
+      //    });
+      //
+      //    cfg = {
+      //       listModel: model,
+      //       keyProperty: 'id',
+      //       markedKey: 2,
+      //       itemPadding: itemPadding
+      //    };
+      //    lv._beforeUpdate(cfg);
+      //    assert.equal(model, lv._listModel, 'Incorrect listModel before update');
+      //
+      //    cfg.itemPadding = {
+      //       test: 'test'
+      //    };
+      //    model.setItemPadding = function() {
+      //       itemPaddingChanged = true;
+      //    };
+      //    lv._beforeUpdate(cfg);
+      //    assert.isFalse(itemPaddingChanged);
+      // });
 
       it('should notify about resize after the list was updated with new items', function() {
          var

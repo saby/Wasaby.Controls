@@ -2142,7 +2142,8 @@ const _private = {
            case IObservable.ACTION_REPLACE:
                // Если Record изменили, то пересоздастся CollectionItem и нужно для него восстановить маркер
                if (_private.hasMarkerController(self)) {
-                   _private.getMarkerController(self).applyMarkedKey();
+                   const markerController = _private.getMarkerController(this);
+                   markerController.applyMarkedKey(markerController.getMarkedKey());
                }
                break;
        }
@@ -2268,7 +2269,7 @@ const _private = {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
-    handleMarkerControllerResult(self: typeof BaseControl, newMarkedKey: string|number): Promise<void> {
+    handleMarkerControllerResult(self: typeof BaseControl, newMarkedKey: string|number): Promise<void>|undefined {
         let resultPromise: Promise<void>;
         if (newMarkedKey !== self._markerController.getMarkedKey()) {
             resultPromise = self._notify('markedKeyChanged', [newMarkedKey]);
@@ -2837,7 +2838,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return this._prepareItemsOnMount(self, newOptions, receivedState, collapsedGroups).then(
                 (result) => {
                     if (_private.shouldProcessMarker(newOptions)) {
-                        _private.getMarkerController(self).applyMarkedKey();
+                        const markerController = _private.getMarkerController(this);
+                        markerController.applyMarkedKey(markerController.getMarkedKey());
                     }
 
                     if (self._selectionController) {
@@ -3307,11 +3309,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 const markedKey = newOptions.markedKey !== undefined
                     ? newOptions.markedKey
                     : markerController.getMarkedKey();
-                markerController.update({
+
+                const newMarkedKey = markerController.updateOptions({
                     model: this._listViewModel,
                     markerVisibility: newOptions.markerVisibility,
                     markedKey
                 });
+                markerController.applyMarkedKey(newMarkedKey);
+                _private.handleMarkerControllerResult(this, newMarkedKey);
             }
         }
 
@@ -3798,7 +3803,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (keepScroll) {
             this._keepScrollAfterReload = true;
         }
-        return _private.reload(this, this._options, sourceConfig).addCallback(getData);
+        return _private.reload(this, this._options, sourceConfig)
+            .then(getData)
+            .then((result) => {
+                    if (_private.hasMarkerController(this)) {
+                        const markerController = _private.getMarkerController(this);
+                        markerController.applyMarkedKey(markerController.getMarkedKey());
+                    }
+
+                    if (this._selectionController) {
+                        _private.getSelectionController(this).restoreSelection();
+                    }
+
+                    return result;
+                }
+            );
     },
 
     setMarkedKey(key: number | string): void {

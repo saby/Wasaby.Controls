@@ -14,7 +14,7 @@ export class Controller {
    private _markedKey: TKey = null;
 
    constructor(options: IOptions) {
-      this.update(options);
+      this.updateOptions(options);
    }
 
    /**
@@ -22,18 +22,21 @@ export class Controller {
     * @param options
     * @return {number|string} Ключ маркера
     */
-   update(options: IOptions): void {
+   updateOptions(options: IOptions): TKey {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
       this._markedKey = options.markedKey;
+
+      if (options.markerVisibility === Visibility.Visible && this._markedKey === undefined) {
+         this._markedKey = this._getFirstItemKey();
+      }
+      return this._markedKey;
    }
 
-   applyMarkedKey(newMarkedKey?: TKey): void {
-      if (newMarkedKey !== undefined) {
-         this._model.setMarkedKey(this._markedKey, false);
-         this._markedKey = newMarkedKey;
-      }
-      this._model.setMarkedKey(this._markedKey, true);
+   applyMarkedKey(newMarkedKey: TKey): void {
+      this._model.setMarkedKey(this._markedKey, false);
+      this._model.setMarkedKey(newMarkedKey, true);
+      this._markedKey = newMarkedKey;
    }
 
    /**
@@ -159,7 +162,7 @@ export class Controller {
     * Возвращает ключ первого элемента модели
     * @private
     */
-   private getFirstItemKey(): TKey {
+   private _getFirstItemKey(): TKey {
       if (!this._model.getCount()) {
          return null;
       }

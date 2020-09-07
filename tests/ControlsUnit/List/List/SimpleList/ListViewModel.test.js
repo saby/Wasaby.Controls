@@ -332,7 +332,7 @@ define([
          assert.equal(model.getValidItemForMarker(4).getContents().getId(), 3);
       });
 
-      it('Selection', function() {
+/*      it('Selection', function() {
          var cfg = {
             items: data,
             keyProperty: 'id',
@@ -350,7 +350,7 @@ define([
          assert.equal(iv._markedKey, 3, 'Incorrect _markedKey value');
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
          assert.equal(2, iv.getVersion(), 'Incorrect version appendItems');
-      });
+      });*/
 
       it('SetItemPadding Silent', function() {
          var cfg = {
@@ -375,43 +375,43 @@ define([
 
       });
 
-      it('setMarkedKey', function() {
-         const cfg = {
-            items: data,
-            keyProperty: 'id',
-            displayProperty: 'title',
-            markerVisibility: 'visible'
-         };
-
-         const model = new lists.ListViewModel(cfg);
-
-         let oldVersion = model.getVersion();
-
-         model.setMarkedKey(2, true, true);
-         assert.equal(model.getMarkedKey(), 2);
-         assert.isTrue(model.getItemBySourceKey(2).isMarked());
-         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
-
-         oldVersion = model.getVersion();
-
-         model.setMarkedKey(2, false);
-         assert.isNull(model.getMarkedKey());
-         assert.isFalse(model.getItemBySourceKey(2).isMarked());
-         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
-
-         oldVersion = model.getVersion();
-
-         model.setMarkedKey(null, false);
-         assert.isNull(model.getMarkedKey());
-         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
-
-         oldVersion = model.getVersion();
-
-         model.setMarkedKey(2, true);
-         assert.equal(model.getMarkedKey(), 2);
-         assert.isTrue(model.getItemBySourceKey(2).isMarked());
-         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
-      });
+      // it('setMarkedKey', function() {
+      //    const cfg = {
+      //       items: data,
+      //       keyProperty: 'id',
+      //       displayProperty: 'title',
+      //       markerVisibility: 'visible'
+      //    };
+      //
+      //    const model = new lists.ListViewModel(cfg);
+      //
+      //    let oldVersion = model.getVersion();
+      //
+      //    model.setMarkedKey(2, true, true);
+      //    assert.equal(model.getMarkedKey(), 2);
+      //    assert.isTrue(model.getItemBySourceKey(2).isMarked());
+      //    assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
+      //
+      //    oldVersion = model.getVersion();
+      //
+      //    model.setMarkedKey(2, false);
+      //    assert.isNull(model.getMarkedKey());
+      //    assert.isFalse(model.getItemBySourceKey(2).isMarked());
+      //    assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
+      //
+      //    oldVersion = model.getVersion();
+      //
+      //    model.setMarkedKey(null, false);
+      //    assert.isNull(model.getMarkedKey());
+      //    assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
+      //
+      //    oldVersion = model.getVersion();
+      //
+      //    model.setMarkedKey(2, true);
+      //    assert.equal(model.getMarkedKey(), 2);
+      //    assert.isTrue(model.getItemBySourceKey(2).isMarked());
+      //    assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
+      // });
 
       // TODO SetItemActions
       /*it('setItemActions should not change actions if an item does not exist in display', function() {
@@ -532,7 +532,7 @@ define([
          assert.equal(1, lv.getVersion());
       });
 
-      it('getMarkedKey', function() {
+      /*it('getMarkedKey', function() {
          var
             cfg = {
                items: data,
@@ -544,7 +544,7 @@ define([
          var lv = new lists.ListViewModel(cfg);
          lv.setMarkedKey(1);
          assert.equal(lv.getMarkedKey(), 1);
-      });
+      });*/
 
       it('setActiveItem should not change version of the model if the item is already active', function() {
          var
