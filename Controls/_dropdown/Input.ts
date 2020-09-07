@@ -14,7 +14,7 @@ import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/fastOpenUtils';
-import {Logger} from 'UI/Utils';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 interface IInputOptions extends IBaseDropdownOptions {
    fontColorStyle?: string;
@@ -269,7 +269,7 @@ export default class Input extends BaseDropdown {
       this._controller = new Controller(this._getControllerOptions(options));
 
       return loadItems(this._controller, receivedState, options.source)?.catch((error) => {
-         Logger.error('dropdown/Input:', error);
+         dataSourceError.process({error});
       });
    }
 

@@ -2,7 +2,6 @@ import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Button/Button');
 import {cssStyleGeneration} from 'Controls/_dropdown/Button/MenuUtils';
 import {tmplNotify} from 'Controls/eventUtils';
-import ActualApi from 'Controls/_buttons/ActualApi';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadItems} from 'Controls/_dropdown/Util';
@@ -14,6 +13,7 @@ import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownCo
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/fastOpenUtils';
 import {Logger} from 'UI/Utils';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
    additionalProperty?: string;
@@ -105,7 +105,7 @@ export default class Button extends BaseDropdown {
 
       if (!options.lazyItemsLoading) {
          return loadItems(this._controller, receivedState, options.source)?.catch((error) => {
-            Logger.error('dropdown/Button:', error);
+            dataSourceError.process({error});
          });
       }
    }

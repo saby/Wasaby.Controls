@@ -14,7 +14,7 @@ import {IStickyPopupOptions} from 'Controls/popup';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/fastOpenUtils';
 import {generateStates} from 'Controls/input';
-import {Logger} from 'UI/Utils';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
    placeholder?: string;
@@ -104,7 +104,7 @@ class ComboBox extends BaseDropdown {
       generateStates(this, options);
       this._controller = new Controller(this._getControllerOptions(options));
       return loadItems(this._controller, receivedState, options.source)?.catch((error) => {
-         Logger.error('dropdown/Combobox:', error);
+          dataSourceError.process({error});
       });
    }
 
