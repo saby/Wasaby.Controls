@@ -212,8 +212,8 @@ var _private = {
     },
 
     updateDataOptions: function (self, newOptions, contextDataOptions) {
+        self._items = newOptions.items || contextDataOptions?.items;
         if (contextDataOptions) {
-            self._items = contextDataOptions.items;
             self._source = newOptions.source || contextDataOptions.source;
             self._keyProperty = newOptions.keyProperty || contextDataOptions.keyProperty;
             self._filter = contextDataOptions.filter;
@@ -362,7 +362,7 @@ var Mover = BaseAction.extend({
     _moveDialogTemplate: null,
     _moveDialogOptions: null,
     _beforeMount: function (options, context) {
-        _private.updateDataOptions(this, options, options);
+        _private.updateDataOptions(this, options, context.dataOptions);
 
         if (options.moveDialogTemplate) {
             if (options.moveDialogTemplate.templateName) {
@@ -376,7 +376,7 @@ var Mover = BaseAction.extend({
     },
 
     _beforeUpdate: function (options, context) {
-        _private.updateDataOptions(this, options, options);
+        _private.updateDataOptions(this, options, context.dataOptions);
         if (options.moveDialogTemplate && options.moveDialogTemplate.templateOptions && !isEqual(this._moveDialogOptions, options.moveDialogTemplate.templateOptions)) {
            this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
         }
