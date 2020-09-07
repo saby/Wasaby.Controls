@@ -11,7 +11,7 @@
      on:mouseleave="_handleMouseLeave()"
      on:focusout="_deactivated()">
     <div class="controls-ComboBox-wrapper" tabindex="0">
-        <div class="controls-ComboBox__field controls-ComboBox__field_theme_{{_options.theme}}_margin-xs" title="{{_options.tooltip}}">
+        <div class="controls-ComboBox__field controls-ComboBox__field_theme_{{_options.theme}}_margin-xs" title="{{_options.tooltip || _value}}">
             <ws:if data="{{_placeholder && !_value}}">
                 <div class="controls-ComboBox__placeholder controls-ComboBox__placeholder_theme-{{_options.theme}}">{{_placeholder}}</div>
             </ws:if>
