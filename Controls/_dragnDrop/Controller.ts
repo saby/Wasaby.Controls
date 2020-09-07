@@ -70,7 +70,8 @@ class Controller extends Control<IControlOptions> {
         this._dialogOpener.destroy();
         this._dialogOpener = null;
     }
+
+    static _styles: string[] = ['Controls/dragnDrop'];
 }
 
-Controller._styles = ['Controls/dragnDrop'];
-export = Controller;
+export default Controller;
