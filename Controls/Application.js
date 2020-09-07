@@ -113,10 +113,6 @@ define('Controls/Application',
 
          _registers: {},
 
-         _draggingTemplateOptions: undefined,
-
-         _draggingTemplate: undefined,
-
          _getChildContext: function() {
             return {
                ScrollData: this._scrollData,
@@ -320,9 +316,6 @@ define('Controls/Application',
             this._globalpopup.registerGlobalPopupEmpty();
             this._popupManager.destroy();
             this._dragnDropController.destroy();
-
-            this._draggingTemplate = null;
-            this._draggingTemplateOptions = null;
          },
 
          _beforeUpdate: function(cfg) {
@@ -398,14 +391,11 @@ define('Controls/Application',
 
          _documentDragEnd: function(event, dragObject) {
             this._dragnDropController.documentDragEnd(dragObject);
-            this._draggingTemplate = null;
-            this._draggingTemplateOptions = null;
             this._dragEndHandler();
          },
 
          _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
-            this._draggingTemplate = draggingTemplate;
-            this._draggingTemplateOptions = draggingTemplateOptions;
+            this._dragnDropController.updateDraggingTemplate(draggingTemplateOptions, draggingTemplate);
         },
 
          _getResourceUrl: function(str) {
