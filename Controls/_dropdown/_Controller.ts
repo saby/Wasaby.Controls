@@ -56,19 +56,23 @@ export default class _Controller implements IDropdownController {
    }
 
    loadItems(): Promise<DropdownReceivedState> {
-      return new Promise((resolve) => {
-         this._loadItems(this._options).addCallback((items) => {
-            const beforeMountResult = {};
+      return new Promise((resolve, reject) => {
+         this._loadItems(this._options)
+            .addCallback((items) => {
+               const beforeMountResult = {};
 
-            if (isHistorySource(this._source)) {
-               beforeMountResult.history = this._source.getHistory();
-               beforeMountResult.items = this._source.getItems(false);
-            } else {
-               beforeMountResult.items = items;
-            }
+               if (isHistorySource(this._source)) {
+                  beforeMountResult.history = this._source.getHistory();
+                  beforeMountResult.items = this._source.getItems(false);
+               } else {
+                  beforeMountResult.items = items;
+               }
 
-            resolve(beforeMountResult);
-         });
+               resolve(beforeMountResult);
+            })
+            .addErrback((error) => {
+                reject(error);
+            });
       });
    }
 
