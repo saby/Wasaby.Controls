@@ -479,6 +479,7 @@ define('Controls/Application',
       };
 
       Page._theme = ['Controls/application'];
+      Page._styles = ['Controls/dragnDrop'];
 
       return Page;
    });
