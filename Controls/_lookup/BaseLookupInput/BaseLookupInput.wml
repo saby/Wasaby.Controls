@@ -35,6 +35,7 @@
                 size="{{_options.size}}"
                 trim="{{_options.trim}}"
                 style="{{ _options.style }}"
+                tooltip="{{_options.tooltip}}"
                 borderVisibility="{{ _options.borderVisibility }}"
                 validationStatus="{{_options.validationStatus}}"
                 fontSize="{{_options.fontSize}}"
