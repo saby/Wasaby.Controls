@@ -23,19 +23,6 @@ export default interface IApplication extends IHTML {
  * </pre>
  */
 
-/**
- * @name Controls/_interface/IApplication#meta
- * @cfg {Content} Позволяет описывать meta информацию страницы.
- * @example
- * <pre class="brush: html">
- * <ws:meta>
- *     <ws:Array>
- *         <ws:Object name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE"/>
- *     </ws:Array>
- * </ws:meta>
- * </pre>
- */
-
 /** 
  * @name Controls/_interface/IApplication#links
  * @cfg {Content} Позволяет описывать ссылки на дополнительные ресурсы, которые необходимы при загрузке страницы.
@@ -51,7 +38,7 @@ export default interface IApplication extends IHTML {
 
 /** 
  * @name Controls/_interface/IApplication#headJson
- * @deprecated Используйте одну из опций {@link scripts}, {@link meta} или {@link links}.
+ * @deprecated Используйте одну из опций: {@link scripts} или {@link links}.
  * @cfg {object} Разметка, которая будет встроена в содержимое тега head.
  * Используйте эту опцию, чтобы подключить на страницу внешние библиотеки (скрипты), стили или шрифты.
  * @remark
@@ -98,7 +85,6 @@ export type HeadJson = [string, Record<string, string>][];
 export interface IApplicationOptions extends IHTMLOptions {
     scripts?: Array<IAttributes>;
     links?: Array<IAttributes>;
-    meta?: Array<IAttributes>;
     headJson?: HeadJson;
     title?: string;
 }
