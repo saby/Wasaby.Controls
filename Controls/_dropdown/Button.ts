@@ -13,7 +13,6 @@ import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownCo
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/fastOpenUtils';
 import {Logger} from 'UI/Utils';
-import {error as dataSourceError} from 'Controls/dataSource';
 
 interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
    additionalProperty?: string;

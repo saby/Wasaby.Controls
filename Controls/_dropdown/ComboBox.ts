@@ -14,7 +14,6 @@ import {IStickyPopupOptions} from 'Controls/popup';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/fastOpenUtils';
 import {generateStates} from 'Controls/input';
-import {error as dataSourceError} from 'Controls/dataSource';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions {
    placeholder?: string;
