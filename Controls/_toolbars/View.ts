@@ -99,6 +99,16 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @demo Controls-demo/Toolbar/ItemActions/Index
      */
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
+
+    /**
+     * @name Controls/_toolbars/IToolbarOptions#menuSource
+     * @cfg {Types/source:ICrudPlus} Объект реализующий интерфейс {@link Types/source:ICrud},
+     * необходимый для работы с источником данных выпадающего меню тулбара.
+     * Данные будут загружены отложенно, при взаимодействии с меню.
+     * @link source
+     * @link items
+     */
+    menuSource?: ICrudPlus;
 }
 
 /**
@@ -299,10 +309,15 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _setMenuItems(): void {
-        const source = this._options.source || this._getSourceForMenu();
         const menuItems = Toolbar._calcMenuItems(this._actualItems);
         this._menuItems = menuItems;
-        this._menuSource = this._createPrefetchProxy(source, menuItems);
+
+        if (this._options.menuSource) {
+            this._menuSource = this._options.menuSource;
+        } else {
+            const source = this._options.source || this._getSourceForMenu();
+            this._menuSource = this._createPrefetchProxy(source, menuItems);
+        }
     }
 
     private _setStateByItems(items: TItems, source?: ICrudPlus): void {
@@ -366,7 +381,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     protected _beforeUnmount(): void {
-        this._sticky?.close();
+        this._sticky?.destroy();
         this._sticky = null;
     }
 
@@ -535,6 +550,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     static getDefaultOptions() {
         return {
+            menuSource: null,
             popupClassName: '',
             itemsSpacing: 'medium',
             iconSize: 'm',

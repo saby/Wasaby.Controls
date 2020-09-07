@@ -204,6 +204,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._sourceController.cancelLoading();
             this._sourceController = null;
         }
+
         if (this._listModel) {
             this._listModel.destroy();
             this._listModel = null;
