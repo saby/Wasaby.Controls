@@ -201,6 +201,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
       // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
       this._filter = controllerState.filter;
+
       this._updateContext(controllerState);
 
       /* If filter changed, prefetchSource should return data not from cache,
@@ -215,9 +216,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
    // TODO сейчас есть подписка на itemsChanged из поиска. По хорошему не должно быть.
    _itemsChanged(event:Event, items): void {
-      //search:Cotnroller fires two events after search: itemsChanged, filterChanged
+      //search:Controller fires two events after search: itemsChanged, filterChanged
       //on filterChanged event filter state will updated
-      //on itemChanged event prefetchSource will updated, but createPrefetchSource method work async becouse of promise,
+      //on itemChanged event prefetchSource will updated, but createPrefetchSource method work async because of promise,
       //then we need to create prefetchSource synchronously
 
       // для того чтобы мог посчитаться новый prefetch Source внутри
