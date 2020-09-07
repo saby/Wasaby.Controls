@@ -57,14 +57,18 @@ export default class ScrollPagingController {
         this.updateStateByScrollParams(cfg.scrollParams, hasMoreData);
     }
 
+    protected isHasMoreData(hasMoreData: boolean): boolean {
+        return (!hasMoreData || this._options.pagingMode !== 'compact');
+    }
+
     protected updateStateByScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData): void {
         const canScrollForward = scrollParams.clientHeight + scrollParams.scrollTop < scrollParams.scrollHeight;
         const canScrollBackward = scrollParams.scrollTop > 0;
         if (canScrollForward && canScrollBackward) {
             this.handleScrollMiddle();
-        } else if (canScrollForward && !canScrollBackward && !hasMoreData.up) {
+        } else if (canScrollForward && !canScrollBackward && this.isHasMoreData(hasMoreData.up)) {
             this.handleScrollTop();
-        } else if (!canScrollForward && canScrollBackward && !hasMoreData.down) {
+        } else if (!canScrollForward && canScrollBackward && this.isHasMoreData(hasMoreData.down)) {
             this.handleScrollBottom();
         }
     }
