@@ -1,236 +1,267 @@
-/**
- * Created by kraynovdo on 31.01.2018.
- */
-import BaseControl = require('Core/Control');
-import template = require('wml!Controls/_filterPopup/History/List');
-import Utils = require('Types/util');
-import Serializer = require('Core/Serializer');
-import * as Merge from 'Core/core-merge';
-import * as Clone from 'Core/core-clone';
-import {isEqual} from 'Types/object';
-import {HistoryUtils} from 'Controls/filter';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Collection} from 'Controls/display';
+import * as Serializer from 'Core/Serializer';
+import {HistoryUtils, IFilterItem} from 'Controls/filter';
+import * as template from 'wml!Controls/_filterPopup/History/List';
+import * as itemTemplate from 'wml!Controls/_filterPopup/History/resources/ItemTemplate';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Constants, FilterSource} from 'Controls/history';
+import {object} from 'Types/util';
+import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
-import {Constants} from 'Controls/history';
+import {isEqual} from 'Types/object';
+import {RecordSet} from 'Types/collection';
+import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
 
-var MAX_NUMBER_ITEMS = 5;
+interface IEditDialogOptions {
+    items: RecordSet;
+    editedTextValue: string;
+    isClient: boolean;
+    isFavorite: boolean;
+}
+export interface IHistoryListOptions extends IControlOptions {
+    items: RecordSet;
+    saveMode: 'pinned' | 'favorite';
+    filterItems: IFilterItem[];
+    orientation: string;
+    historyId: string;
+}
 
-   var getPropValue = Utils.object.getPropertyValue.bind(Utils);
+const MAX_NUMBER_ITEMS = 5;
 
-   var _private = {
-      getSource: function(historyId) {
-         return HistoryUtils.getHistorySource({ historyId: historyId });
-      },
+export default class HistoryList extends Control<IHistoryListOptions> {
+    protected _template: TemplateFunction = template;
+    protected _itemTemplate: TemplateFunction = itemTemplate;
+    protected _collection: Collection<Record<string, any>> = null;
+    protected _keyProperty: string = null;
+    protected _historyCount: number = null;
+    protected _arrowVisible: boolean = false;
+    protected _isMaxHeight: boolean = false;
+    protected _editItem: Model = null;
+    protected _itemsText: Record<string, string> = null;
+    protected _itemActions: IItemAction[] = null;
 
-      getItemId: function(item) {
-         let id;
-         if (item.hasOwnProperty('id')) {
-            id = getPropValue(item, 'id');
-         } else {
-            id = getPropValue(item, 'name');
-         }
-         return id;
-      },
+    protected _getItemActions(saveMode: string): IItemAction[] {
+        return [{
+            id: 0,
+            icon: saveMode === 'favorite' ? 'icon-Favorite' : 'icon-PinNull',
+            iconStyle: 'info',
+            showType: TItemActionShowType.TOOLBAR
+        }];
+    }
 
-      setObjectData: function(editItem, data) {
-         editItem.set('ObjectData', JSON.stringify(data, new Serializer().serialize));
-      },
+    protected _getCollection(items: RecordSet, keyProperty: string): Collection<Record<string, any>> {
+        return new Collection({
+            keyProperty,
+            collection: items
+        });
+    }
 
-      getStringHistoryFromItems: function(items, resetValues) {
-         var textArr = [];
-         factory(items).each(function(elem) {
-            var value = getPropValue(elem, 'value'),
-               resetValue = resetValues[_private.getItemId(elem)],
-               textValue = getPropValue(elem, 'textValue'),
-               visibility = getPropValue(elem, 'visibility');
+    protected _getSource(historyId: string): FilterSource {
+        return HistoryUtils.getHistorySource({ historyId });
+    }
 
-            if (!isEqual(value, resetValue) && (visibility === undefined || visibility) && textValue) {
-               textArr.push(textValue);
-            }
-         });
-         return textArr.join(', ');
-      },
+    protected _getHistoryCount(saveMode: string): number {
+        return saveMode === 'pinned' ? Constants.MAX_HISTORY : Constants.MAX_HISTORY_REPORTS;
+    }
 
-      mapByField: function(items: Array, field: string): object {
-         const result = {};
-         let value;
+    protected _mapByField(items: IFilterItem[], field: string): Record<string, any> {
+        const result = {};
+        let value;
 
-         factory(items).each((item) => {
-            value = getPropValue(item, field);
+        factory(items).each((item) => {
+            value = object.getPropertyValue(item, field);
 
             if (value !== undefined) {
-               result[_private.getItemId(item)] = getPropValue(item, field);
+                result[item[this._keyProperty]] = object.getPropertyValue(item, field);
             }
-         });
+        });
 
-         return result;
-      },
+        return result;
+    }
 
-      onResize: function(self) {
-         if (self._options.orientation === 'vertical') {
-            var arrowVisibility = self._arrowVisible;
-            self._arrowVisible = self._options.items.getCount() > MAX_NUMBER_ITEMS;
+    protected _setObjectData(editItem: Model, data: Record<string, any>): void {
+        editItem.set('ObjectData', JSON.stringify(data, new Serializer().serialize));
+    }
 
-            if (arrowVisibility !== self._arrowVisible) {
-               self._isMaxHeight = true;
-               self._forceUpdate();
+    protected _getStringHistoryFromItems(items: IFilterItem[], resetValues: Record<string, any>): string {
+        const textArr = [];
+        factory(items).each((elem: IFilterItem): void => {
+            const value = object.getPropertyValue(elem, 'value');
+            const resetValue = resetValues[elem[this._keyProperty]];
+            const textValue = object.getPropertyValue(elem, 'textValue');
+            const visibility = object.getPropertyValue(elem, 'visibility');
+
+            if (!isEqual(value, resetValue) && (visibility === undefined || visibility) && textValue) {
+                textArr.push(textValue);
             }
-         }
-      },
+        });
+        return textArr.join(', ');
+    }
+    // TODO удалить после перевода всех на name;
+    protected _getKeyProperty(items: RecordSet): string {
+        const firstItem = factory(items).first();
+        return firstItem.hasOwnProperty('id') ? 'id' : 'name';
+    }
 
-      minimizeHistoryItems: function(items) {
-         factory(items).each((item) => {
+    private _onResize(): void {
+        if (this._options.orientation === 'vertical') {
+            const arrowVisibility = this._arrowVisible;
+            this._arrowVisible = this._options.items.getCount() > MAX_NUMBER_ITEMS;
+
+            if (arrowVisibility !== this._arrowVisible) {
+                this._isMaxHeight = true;
+            }
+        }
+    }
+
+    protected _minimizeHistoryItems(items: IFilterItem[]): void {
+        factory(items).each((item) => {
             delete item.caption;
-         });
-      },
+        });
+    }
 
-      setLinkTextValue: function(data) {
-         data.linkText = _private.getStringHistoryFromItems(data.items, _private.mapByField(data.items, 'resetValue'));
-      },
+    protected _getEditDialogOptions(item: Model, historyId: string, savedTextValue: string): IEditDialogOptions {
+        const history = this._getSource(historyId).getDataObject(item);
+        let items = history.items || history;
 
-      getEditDialogOptions: function(self, item, historyId, savedTextValue) {
-         const history = _private.getSource(historyId).getDataObject(item);
-         let items = history.items || history;
-
-         let captionsObject = _private.mapByField(self._options.filterItems, 'caption');
-         items = factory(items).map((historyItem) => {
-            historyItem.caption = captionsObject[_private.getItemId(historyItem)];
+        const captionsObject = this._mapByField(this._options.filterItems, 'caption');
+        items = factory(items).map((historyItem: IFilterItem) => {
+            historyItem.caption = captionsObject[historyItem[this._keyProperty]];
             return historyItem;
-         }).value();
+        }).value();
 
-         return {
+        return {
             items,
             editedTextValue: savedTextValue || '',
             isClient: history.globalParams === undefined ? !!history.isClient : !!history.globalParams,
             isFavorite: item.get('pinned') || item.get('client')
-         };
-      },
+        };
+    }
 
-      deleteFavorite: function(self, data) {
-         _private.getSource(self._options.historyId).remove(self._editItem, {
+    protected _deleteFavorite(data: Record<string, any>): void {
+        this._getSource(this._options.historyId).remove(this._editItem, {
             $_favorite: true, isClient: data.isClient
-         });
+        });
 
-         self._children.stickyOpener.close();
-         self._notify('historyChanged');
-      },
+        this._children.stickyOpener.close();
+        this._notify('historyChanged');
+    }
 
-      saveFavorite: function(self, record) {
-         const editItemData = _private.getSource(self._options.historyId).getDataObject(self._editItem);
-         const ObjectData = Merge(Clone(editItemData), record.getRawData(), {rec: false});
-         _private.minimizeHistoryItems(ObjectData.items);
+    protected _saveFavorite(record: Model): void {
+        const editItemData = this._getSource(this._options.historyId).getDataObject(this._editItem);
+        const ObjectData = Merge(object.clone(editItemData), record.getRawData(), {rec: false});
+        this._minimizeHistoryItems(ObjectData.items);
 
-         _private.setObjectData(self._editItem, ObjectData);
-         _private.getSource(self._options.historyId).update(self._editItem, {
-               $_favorite: true,
-               isClient: record.get('isClient')
-         });
-         self._notify('historyChanged');
-      },
+        this._setObjectData(this._editItem, ObjectData);
+        this._getSource(this._options.historyId).update(this._editItem, {
+            $_favorite: true,
+            isClient: record.get('isClient')
+        });
+        this._notify('historyChanged');
+    }
 
-      updateFavorite(self, item, text, target): void {
-         const templateOptions = _private.getEditDialogOptions(self, item, self._options.historyId, text);
-         const popupOptions = {
+    protected _updateFavorite(item: Model, text: string, target: HTMLElement): void {
+        const templateOptions = this._getEditDialogOptions(item, this._options.historyId, text);
+        const popupOptions = {
             opener: self,
             target,
             templateOptions,
             targetPoint: {
-               vertical: 'bottom',
-               horizontal: 'left'
+                vertical: 'bottom',
+                horizontal: 'left'
             },
             direction: {
-               horizontal: 'left'
+                horizontal: 'left'
             }
-         };
-         self._children.stickyOpener.open(popupOptions);
-      },
-   };
+        };
+        this._children.stickyOpener.open(popupOptions);
+    }
 
-   var HistoryList = BaseControl.extend({
-      _template: template,
-      _historySource: null,
-      _isMaxHeight: true,
-      _itemsText: null,
-      _editItem: null,
-      _historyCount: null,
+    protected _beforeMount(options: IHistoryListOptions): void {
+        this._keyProperty = this._getKeyProperty(options.items);
+        this._collection = this._getCollection(options.items, this._keyProperty);
+        this._historyCount = this._getHistoryCount(options.saveMode);
+        this._itemsText = this._getText(options.items,
+            options.filterItems,
+            this._getSource(options.historyId));
+        this._itemActions = this._getItemActions(options.saveMode);
+    }
 
-      _beforeMount: function(options) {
-         if (options.items) {
-            this._items = options.items.clone();
-         }
-         if (options.saveMode === 'favorite') {
-             this._historyCount = Constants.MAX_HISTORY_REPORTS;
-             this._items = _private.getSource(options.historyId).getItems();
-         } else {
-            this._historyCount = Constants.MAX_HISTORY;
-         }
-         this._itemsText = this._getText(this._items, options.filterItems, _private.getSource(options.historyId));
-      },
-
-      _beforeUpdate: function(newOptions) {
-         if (!isEqual(this._options.items, newOptions.items)) {
-            this._items = newOptions.items.clone();
+    protected _beforeUpdate(newOptions: IHistoryListOptions): void {
+        if (!isEqual(this._options.items, newOptions.items)) {
             if (newOptions.saveMode === 'favorite') {
-               this._items = _private.getSource(newOptions.historyId).getItems();
+                this._collection = this._getCollection(
+                                   this._getSource(newOptions.historyId).getItems(),
+                                   this._keyProperty);
+            } else {
+                this._collection = this._getCollection(newOptions.items.clone(), this._keyProperty);
             }
-            this._itemsText = this._getText(newOptions.items, newOptions.filterItems, _private.getSource(newOptions.historyId));
-         }
-      },
+            this._itemsText = this._getText(newOptions.items,
+                                            newOptions.filterItems,
+                                            this._getSource(newOptions.historyId));
+            this._itemActions = this._getItemActions(newOptions.saveMode);
+        }
+    }
 
-      _onPinClick: function(event, item) {
-           _private.getSource(this._options.historyId).update(item, {
-               $_pinned: !item.get('pinned')
-           });
-           this._notify('historyChanged');
-      },
+    protected _onPinClick(event: SyntheticEvent<Event>, item: Model): void {
+        this._getSource(this._options.historyId).update(item, {
+            $_pinned: !item.get('pinned')
+        });
+        this._notify('historyChanged');
+    }
 
-      _onFavoriteClick: function(event, item, text) {
-         this._editItem = item;
-         _private.updateFavorite(this, item, text, event.target);
-      },
+    protected _onFavoriteClick(event: SyntheticEvent<Event>, item: Model, text: string): void {
+        this._editItem = item;
+        this._updateFavorite(item, text, event.target as HTMLElement);
+    }
 
-      _editDialogResult: function(event, data) {
-         if (data.action === 'save') {
-            _private.saveFavorite(this, data.record);
-         } else if (data.action === 'delete') {
-            _private.deleteFavorite(this, data);
-         }
-      },
+    protected _editDialogResult(event: SyntheticEvent<Event>, data: Record<string, any>): void {
+        if (data.action === 'save') {
+            this._saveFavorite(data.record);
+        } else if (data.action === 'delete') {
+            this._deleteFavorite(data);
+        }
+    }
 
-      _clickHandler: function(event, item) {
-         const history = _private.getSource(this._options.historyId).getDataObject(item);
-         this._notify('applyHistoryFilter', [history]);
-      },
+    protected _itemClickHandler(event: SyntheticEvent<Event>, item: Model): void {
+        const history = this._getSource(this._options.historyId).getDataObject(item);
+        this._notify('applyHistoryFilter', [history]);
+    }
 
-      _afterMount: function() {
-         _private.onResize(this);
-      },
+    protected _afterMount(): void {
+        this._onResize();
+    }
 
-      _afterUpdate: function() {
-         _private.onResize(this);
-      },
+    protected _afterUpdate(): void {
+        this._onResize();
+    }
 
-      _getText: function(items, filterItems, historySource) {
-         const itemsText = {};
-         // the resetValue is not stored in history, we take it from the current filter items
-         const resetValues = _private.mapByField(filterItems, 'resetValue');
+    protected _getText(
+        items: RecordSet,
+        filterItems: IFilterItem[],
+        historySource: FilterSource
+    ): Record<string, string> {
+        const itemsText = {};
+        // the resetValue is not stored in history, we take it from the current filter items
+        const resetValues = this._mapByField(filterItems, 'resetValue');
 
-         factory(items).each((item, index) => {
+        factory(items).each((item) => {
             let text = '';
             const history = historySource.getDataObject(item);
 
             if (history) {
-               text = history.linkText || _private.getStringHistoryFromItems(history.items || history, resetValues);
+                text = history.linkText || this._getStringHistoryFromItems(history.items || history, resetValues);
             }
-            itemsText[index] = text;
-         });
-         return itemsText;
-      },
+            itemsText[item.get('ObjectId')] = text;
+        });
+        return itemsText;
+    }
 
-      _clickSeparatorHandler: function() {
-         this._isMaxHeight = !this._isMaxHeight;
-         this._notify('controlResize', [], {bubbling: true});
-      }
-   });
-   HistoryList._theme = ['Controls/filterPopup'];
-   HistoryList._private = _private;
-   export = HistoryList;
+    protected _clickSeparatorHandler(): void {
+        this._isMaxHeight = !this._isMaxHeight;
+        this._notify('controlResize', [], {bubbling: true});
+    }
+
+    static _theme: string[] = ['Controls/filterPopup'];
+}

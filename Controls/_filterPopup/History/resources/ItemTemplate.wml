@@ -1,0 +1,29 @@
+<ws:template name="pinned">
+         <span title="{{rk('Открепить')}}"
+               class="icon-Pin controls-HistoryList__iconPin-active_theme-{{_options.theme}}
+                      controls-HistoryList__iconPin_theme-{{_options.theme}}"></span>
+</ws:template>
+
+<ws:template name="favorite">
+         <span class="icon-Favorite controls-HistoryList__iconPin-active controls-HistoryList__iconPin-active_theme-{{_options.theme}}'
+                     controls-HistoryList__iconPin_theme-{{_options.theme}}"></span>
+</ws:template>
+
+<ws:partial template="Controls/listRender:itemTemplateWrapper"
+            scope="{{_options}}">
+   <ws:contentTemplate>
+      <div
+         class="controls-HistoryList__itemWrapper controls-HistoryList__itemWrapper_theme-{{_options.theme}} controls-HistoryList_{{_options.orientation}}__itemWrapper_theme-{{_options.theme}}">
+         <div
+            class="controls-HistoryList__item_theme-{{_options.theme}} controls-HistoryList_{{_options.orientation}}__item_theme-{{_options.theme}}}}"
+            title="{{itemsText[item.ObjectId]}}">{{itemsText[item.ObjectId]}}
+         </div>
+         <ws:if data="{{item.getContents().get('pinned')}}">
+            <ws:partial template="pinned" text="{{itemsText[item.ObjectId]}}"/>
+         </ws:if>
+         <ws:else data="{{item.getContents().get('pinned') || item.getContents().get('client')}}">
+            <ws:partial template="favorite" text="{{itemsText[item.ObjectId]}}"/>
+         </ws:else>
+      </div>
+   </ws:contentTemplate>
+</ws:partial>

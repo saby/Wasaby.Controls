@@ -42,7 +42,6 @@ import SimplePanelEmptyItemTemplate = require('wml!Controls/_filterPopup/SimpleP
 import SimplePanelHierarchyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_HierarchyList/hierarchyItemTemplate');
 import Select = require('Controls/_filterPopup/Panel/Select');
 import Lookup = require('Controls/_filterPopup/Panel/Lookup');
-import _List = require('Controls/_filterPopup/SimplePanel/_List');
 import _HierarchyList = require('Controls/_filterPopup/SimplePanel/_HierarchyList');
 import * as SelectItemTemplate from 'wml!Controls/_filterPopup/Panel/Select/ItemTemplate';
 
@@ -54,6 +53,7 @@ export {default as Link} from 'Controls/_filterPopup/Panel/Link';
 export {default as Text} from 'Controls/_filterPopup/Panel/Text';
 export {default as Dropdown} from 'Controls/_filterPopup/Panel/Dropdown';
 export {default as AdditionalPanelTemplate} from 'Controls/_filterPopup/Panel/AdditionalParams/Render';
+export {default as _List} from 'Controls/_filterPopup/History/List';
 
 export {
    Panel,
@@ -65,7 +65,6 @@ export {
    Select,
    SelectItemTemplate,
    Lookup,
-   _List,
    _HierarchyList,
 
    _FilterPanelWrapper
