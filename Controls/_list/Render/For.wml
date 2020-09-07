@@ -1,14 +1,17 @@
-<ws:template name="ForItemTemplate">
+<ws:for data="index, item in collection.getViewIterator()">
    <ws:partial
            template="{{ item.getItemTemplate(collection.getItemTemplateProperty(), itemTemplate, groupTemplate) }}"
            item="{{ item }}"
            itemData="{{ item }}"
+           isAdd="{{ isAdd }}"
            multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
            itemActionsPosition="{{ _options.itemActionsPosition }}"
            searchValue="{{ collection.getSearchValue() }}"
            style="{{ _options.style }}"
            theme="{{ _options.theme }}"
+           multiSelectTpl="{{ multiSelectTpl }}"
 
+           attr:key="{{ keyPrefix }}-{{ item.key }}"
            attr:class="{{ collection.getViewIterator().isItemAtIndexHidden(index) ? 'controls-ListView__hiddenContainer' }}"
 
            on:click="_onItemClick(item)"
@@ -20,10 +23,7 @@
            on:mousemove="_onItemMouseMove(item)"
            on:mouseleave="_onItemMouseLeave(item)"
            on:wheel="_onItemWheel(item)"
-           on:keydown="_onItemKeyDown(item)"
-
-           multiSelectTpl="{{ multiSelectTpl }}"
-           isAdd="{{ isAdd }}">
+           on:keydown="_onItemKeyDown(item)">
       <ws:itemActionsTemplate>
          <!-- We have to support setting of "itemActionsClass" option in BaseControl and while using Controls/list:ItemTemplate -->
          <!-- Передача highlightOnHover это костыль, т.к. иначе он не виден внутри шаблона, вставляемого через ws:partial
@@ -45,9 +45,4 @@
                  itemData="{{ item }}" />
       </ws:swipeTemplate>
    </ws:partial>
-</ws:template>
-<ws:for data="index, item in collection.getViewIterator()">
-   <ws:partial
-           template="ForItemTemplate"
-           attr:key="{{ keyPrefix }}-{{ item.getUid() }}" />
 </ws:for>

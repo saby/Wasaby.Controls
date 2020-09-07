@@ -3741,11 +3741,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.setMarkedKey(this, key);
     },
 
-    _onGroupClick(e, groupId, baseEvent) {
+    _onGroupClick(e, groupId, baseEvent, dispItem) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             const collection = this._listViewModel;
-            if (this._options.groupProperty) {
-                const groupingLoader = this._groupingLoader;
+            const groupingLoader = this._groupingLoader;
+            if (this._options.useNewModel) {
+                const needExpandGroup = !dispItem.isExpanded();
+                if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
+                    const source = this._options.source;
+                    const filter = this._options.filter;
+                    const sorting = this._options.sorting;
+                    groupingLoader.loadGroup(collection, groupId, source, filter, sorting).then(() => {
+                        dispItem.setExpanded(needExpandGroup);
+                    });
+                } else {
+                    dispItem.setExpanded(needExpandGroup);
+                }
+            } else {
                 const needExpandGroup = !collection.isGroupExpanded(groupId);
                 if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
                     const source = this._options.source;
@@ -3754,10 +3766,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     groupingLoader.loadGroup(collection, groupId, source, filter, sorting).then(() => {
                         GroupingController.toggleGroup(collection, groupId);
                     });
-                    return;
+                } else {
+                    GroupingController.toggleGroup(collection, groupId);
                 }
             }
-            GroupingController.toggleGroup(collection, groupId);
         }
     },
 

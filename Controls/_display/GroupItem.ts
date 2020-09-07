@@ -21,6 +21,7 @@ export default class GroupItem<T> extends mixin<
     CollectionItem,
     ExpandableMixin
 ) {
+    readonly '[Controls/_display/GroupItem]': true;
     constructor(options?: IOptions<T>) {
         super(options);
         ExpandableMixin.call(this);

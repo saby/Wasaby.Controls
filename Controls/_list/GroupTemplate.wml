@@ -1,5 +1,6 @@
 <div attr:class="controls-ListView__itemV {{ (item || itemData.dispItem).isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-ListView__group' }}">
    <div attr:class="controls-ListView__groupContent {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}
+                    controls-ListView__groupContent_align-{{textAlign || 'left'}}
                     {{(item || itemData.dispItem).getGroupPaddingClasses(theme, 'left')}}
                     {{ !rightTemplate ? (item || itemData.dispItem).getGroupPaddingClasses(theme, 'right') }}">
       <ws:if data="{{ separator !== false && separatorVisibility !== false && textAlign !== 'left' }}">

@@ -171,6 +171,13 @@ var ListView = BaseControl.extend(
             // TODO: Убрать, preventItemEvent когда это больше не понадобится
             // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
             if (!e.preventItemEvent) {
+                if (this._options.useNewModel) {
+                    if (dispItem['[Controls/_display/GroupItem]']) {
+                        const groupItem = dispItem.getContents();
+                        this._notify('groupClick', [groupItem, e, dispItem], {bubbling: true});
+                        return;
+                    }
+                }
                 var item = dispItem.getContents();
                 this._notify('itemClick', [item, e], {bubbling: true});
             }
@@ -197,6 +204,12 @@ var ListView = BaseControl.extend(
         },
 
         _onItemMouseDown: function(event, itemData) {
+            if (this._options.useNewModel) {
+                if (itemData['[Controls/_display/GroupItem]']) {
+                    event.stopPropagation();
+                    return;
+                }
+            }
             if (itemData && itemData.isSwiped()) {
                // TODO: Сейчас на itemMouseDown список переводит фокус на fakeFocusElement и срабатывает событие listDeactivated.
                // Из-за этого события закрывается свайп, это неправильно, т.к. из-за этого становится невозможным открытие меню.
@@ -212,6 +225,12 @@ var ListView = BaseControl.extend(
         },
 
         _onItemMouseUp(e, itemData) {
+            if (this._options.useNewModel) {
+                if (itemData['[Controls/_display/GroupItem]']) {
+                    e.stopPropagation();
+                    return;
+                }
+            }
             this._notify('itemMouseUp', [itemData, e]);
         },
 

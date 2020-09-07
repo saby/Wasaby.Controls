@@ -2341,6 +2341,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$metaResults;
     }
 
+    getMetaData(): {} {
+        return this._$collection ? this._$collection.getMetaData() : {};
+    }
+
     getCollapsedGroups(): TArrayGroupKey {
         return this._$collapsedGroups;
     }

@@ -17,10 +17,14 @@ export class ItemCompatibilityListViewModel implements IItemCompatibilityListVie
     }
 
     get key() {
-        return this.getContents().getKey();
+        return this.item.getKey ? this.item.getKey() : this.item;
     }
 
     get isStickedMasterItem() {
         return false; // todo
+    }
+
+    get metaData() {
+        return this.getOwner().getMetaData();
     }
 }
