@@ -44,6 +44,7 @@ class Manager {
 
     protected initTheme(options): void {
         ManagerController.setPopupHeaderTheme(options.popupHeaderTheme);
+        ManagerController.setTheme(options.theme);
     }
 
     protected init(options: IManagerOptions, context: IManagerTouchContext): void {
