@@ -327,17 +327,9 @@ define([
          const resultNavigation = 'testNavigation';
          let upRecalculated = false;
          let downRecalculated = false;
-         sandbox.replace(lists.BaseControl._private, 'calcTriggerVisibility', (self, scrollParams, triggerOffset, direction) => {
-            if (direction === 'up') {
-               upRecalculated = true;
-            } else {
-               downRecalculated = true;
-            }
-         });
          lists.BaseControl._private.checkLoadToDirectionCapability(self, myFilter, resultNavigation);
          assert.isTrue(upRecalculated, '_loadTriggerVisibility.up has not been recalculated');
          assert.isTrue(downRecalculated, '_loadTriggerVisibility.down has not been recalculated');
-         sandbox.restore();
       });
 
       describe('_private::loadToDirectionIfNeed', () => {
@@ -2463,54 +2455,7 @@ define([
          assert.isTrue(baseControl._isScrollShown);
 
       });
-      // describe('calcTriggerVisibility', () => {
-      //    let calcTriggerVisibility = lists.BaseControl._private.calcTriggerVisibility;
-      //    it('up', () => {
-      //       let scrollParams = {
-      //          scrollTop: 0,
-      //          clientHeight: 300,
-      //          scrollHeight: 600
-      //       };
-      //       assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger should be visible');
-      //       scrollParams = {
-      //          scrollTop: 101,
-      //          clientHeight: 300,
-      //          scrollHeight: 600
-      //       };
-      //       assert.isFalse(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger shouldn\'t be visible');
-      //    });
 
-      //    it('down', () => {
-      //       let scrollParams = {
-      //          scrollTop: 300,
-      //          clientHeight: 300,
-      //          scrollHeight: 600
-      //       };
-      //       assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'down'), 'down trigger should be visible');
-      //       scrollParams = {
-      //          scrollTop: 199,
-      //          clientHeight: 300,
-      //          scrollHeight: 600
-      //       };
-      //       assert.isFalse(calcTriggerVisibility({}, scrollParams, 100, 'down'), 'down trigger shouldn\'t be visible');
-      //    });
-
-      //    it('down with paging', () => {
-      //       let scrollParams = {
-      //          scrollTop: 200,
-      //          clientHeight: 300,
-      //          scrollHeight: 600
-      //       };
-      //       assert.isTrue(calcTriggerVisibility({_pagingVisible: true}, scrollParams, 100, 'down'), 'down trigger should be visible');
-      //       scrollParams = {
-      //          scrollTop: 150,
-      //          clientHeight: 300,
-      //          scrollHeight: 600
-      //       };
-      //       assert.isFalse(calcTriggerVisibility({_pagingVisible: true}, scrollParams, 100, 'down'), 'down trigger shouldn\'t be visible');
-      //    });
-
-      // });
       it('calcViewSize', () => {
          let calcViewSize = lists.BaseControl._private.calcViewSize;
          assert.equal(calcViewSize(140, true), 100);
