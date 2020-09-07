@@ -39,7 +39,7 @@ define([
             draggingTemplate = 'draggingTemplate';
          let openTemplate;
          let openTemplateOptions;
-         container._dialogOpener.open = (options) => {
+         container._controllerClass._dialogOpener.open = (options) => {
             openTemplate = options.templateOptions.draggingTemplate;
             openTemplateOptions = options.templateOptions.draggingTemplateOptions;
          };
