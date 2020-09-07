@@ -2,7 +2,6 @@ import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Button/Button');
 import {cssStyleGeneration} from 'Controls/_dropdown/Button/MenuUtils';
 import {tmplNotify} from 'Controls/eventUtils';
-import ActualApi from 'Controls/_buttons/ActualApi';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadItems} from 'Controls/_dropdown/Util';
