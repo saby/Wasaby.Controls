@@ -362,7 +362,7 @@ var Mover = BaseAction.extend({
     _moveDialogTemplate: null,
     _moveDialogOptions: null,
     _beforeMount: function (options, context) {
-        _private.updateDataOptions(this, options, context.dataOptions);
+        _private.updateDataOptions(this, options, options);
 
         if (options.moveDialogTemplate) {
             if (options.moveDialogTemplate.templateName) {
@@ -376,7 +376,7 @@ var Mover = BaseAction.extend({
     },
 
     _beforeUpdate: function (options, context) {
-        _private.updateDataOptions(this, options, context.dataOptions);
+        _private.updateDataOptions(this, options, options);
         if (options.moveDialogTemplate && options.moveDialogTemplate.templateOptions && !isEqual(this._moveDialogOptions, options.moveDialogTemplate.templateOptions)) {
            this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
         }

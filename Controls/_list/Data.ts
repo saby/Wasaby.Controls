@@ -216,14 +216,16 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
    // TODO сейчас есть подписка на itemsChanged из поиска. По хорошему не должно быть.
    _itemsChanged(event:Event, items): void {
-      //search:Cotnroller fires two events after search: itemsChanged, filterChanged
+      //search:Controller fires two events after search: itemsChanged, filterChanged
       //on filterChanged event filter state will updated
-      //on itemChanged event prefetchSource will updated, but createPrefetchSource method work async becouse of promise,
+      //on itemChanged event prefetchSource will updated, but createPrefetchSource method work async because of promise,
       //then we need to create prefetchSource synchronously
 
       // для того чтобы мог посчитаться новый prefetch Source внутри
-      // При фильтре создался новый набор RecordSet, надо обновить его тут
-      this._items = this._sourceController.setItems(items);
+      const newItems = this._sourceController.setItems(items);
+      if (!this._items) {
+         this._items = newItems;
+      }
 
       const controllerState = this._sourceController.getState();
       this._updateContext(controllerState);
