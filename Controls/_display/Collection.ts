@@ -85,10 +85,12 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     sort?: SortFunction<S, T> | Array<SortFunction<S, T>>;
     keyProperty?: string;
     displayProperty?: string;
+    itemTemplateProperty?: string;
     multiSelectVisibility?: string;
     leftSpacing?: string;
     rightSpacing?: string;
     rowSpacing?: string;
+    rowSeparatorSize?: string;
     theme?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
@@ -574,6 +576,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$displayProperty: string;
 
+    protected _$itemTemplateProperty: string;
+
     protected _$multiSelectVisibility: string;
 
     protected _$leftSpacing: string;
@@ -585,6 +589,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$rowSpacing: string;
 
     protected _$searchValue: string;
+
+    protected _$rowSeparatorSize: string;
 
     protected _$editingConfig: IEditingConfig;
 
@@ -729,16 +735,29 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
              this._$keyProperty = (options as any).idProperty;
         }
 
+        if (options.groupProperty) {
+            this._$groupProperty = options.groupProperty;
+            this._$group = (item) => {
+                return item.get(this._$groupProperty);
+            };
+        }
+
         // Support of 'groupingKeyCallback' option
         if (!this._$group && (options as any).groupingKeyCallback) {
             this._$group = (options as any).groupingKeyCallback;
+        }
+
+        if (options.itemTemplateProperty) {
+            this._$itemTemplateProperty = options.itemTemplateProperty;
         }
 
         this._$theme = options.theme;
 
         this._$collapsedGroups = options.collapsedGroups;
 
-        this._$groupProperty = options.groupProperty;
+        if (options.rowSeparatorSize) {
+            this._$rowSeparatorSize = options.rowSeparatorSize;
+        }
 
         if (!this._$collection) {
             throw new Error(`${this._moduleName}: source collection is empty`);
@@ -2155,6 +2174,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // endregion
 
+    getItemTemplateProperty(): string {
+        return this._$itemTemplateProperty;
+    }
 
     getDisplayProperty(): string {
         return this._$displayProperty;
@@ -2172,6 +2194,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return result;
     }
 
+    getRowSeparatorSize(): string {
+        return this._$rowSeparatorSize;
+    }
+
+    setRowSeparatorSize(rowSeparatorSize: string): void {
+        this._$rowSeparatorSize = rowSeparatorSize;
+        this._nextVersion();
+    }
+
     getMultiSelectVisibility(): string {
         return this._$multiSelectVisibility;
     }
@@ -2185,9 +2216,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setItemsSpacings(itemPadding: {top: string, left: string, right: string}): void {
-        this._$rowSpacing = itemPadding.top;
-        this._$leftSpacing = itemPadding.left;
-        this._$rightSpacing = itemPadding.right;
+        this._$rowSpacing = itemPadding.top || 'default';
+        this._$leftSpacing = itemPadding.left || 'default';
+        this._$rightSpacing = itemPadding.right || 'default';
     }
 
     setMarkedKey(key: string|number, status: boolean): void {
@@ -2299,6 +2330,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getMetaResults(): {} {
         return this._$metaResults;
+    }
+
+    getMetaData(): {} {
+        return this._$collection ? this._$collection.getMetaData() : {};
     }
 
     getCollapsedGroups(): TArrayGroupKey {
@@ -3550,6 +3585,7 @@ Object.assign(Collection.prototype, {
     _$sort: null,
     _$keyProperty: '',
     _$displayProperty: '',
+    _$itemTemplateProperty: '',
     _$multiSelectVisibility: 'hidden',
     _$leftSpacing: 'default',
     _$rightSpacing: 'default',

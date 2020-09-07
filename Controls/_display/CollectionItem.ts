@@ -14,6 +14,7 @@ import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
 import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
 import {ICollectionItem} from './interface/ICollectionItem';
+import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from './ItemCompatibilityListViewModel';
 
 export interface IOptions<T> {
     contents?: T;
@@ -55,13 +56,15 @@ export default class CollectionItem<T> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     InstantiableMixin,
-    SerializableMixin
+    SerializableMixin,
+    ItemCompatibilityListViewModel
 >(
     DestroyableMixin,
     OptionsToPropertyMixin,
     InstantiableMixin,
-    SerializableMixin
-) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled {
+    SerializableMixin,
+    ItemCompatibilityListViewModel
+) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel {
 
     // region IInstantiable
 
@@ -293,7 +296,7 @@ export default class CollectionItem<T> extends mixin<
     }
 
     getMultiSelectClasses(theme): string {
-        let classes = `controls-ListView__checkbox controls-ListView__notEditable_theme-${theme}`;
+        let classes = `js-controls-ListView__notEditable controls-ListView__checkbox_theme-${theme}`;
         if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += ' controls-ListView__checkbox-onhover';
         }
@@ -460,14 +463,16 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
-    getWrapperClasses(templateHighlightOnHover: boolean = true, theme?: string): string {
+    getWrapperClasses(templateHighlightOnHover: boolean = true, theme?: string, cursor: string = 'pointer'): string {
         return `controls-ListView__itemV
             controls-ListView__item_default
             controls-ListView__item_showActions
             js-controls-ItemActions__swipeMeasurementContainer
+            controls-ListView__itemV controls-ListView__itemV_cursor-${cursor}
             ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
             ${this.isEditing() ? ` controls-ListView__item_editing_theme-${theme}` : ''}
-            ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}`;
+            ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}
+            ${templateHighlightOnHover && this.isActive() ? ` controls-ListView__item_active_theme-${theme}` : ''}`;
     }
 
     getItemActionClasses(itemActionsPosition: string, theme?: string, isLastRow?: boolean, rowSeparatorSize?: string): string {
@@ -488,7 +493,9 @@ export default class CollectionItem<T> extends mixin<
     }
 
     getContentClasses(theme: string, style: string = 'default'): string {
-        return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}`;
+        const rowSeparatorSize = this.getOwner().getRowSeparatorSize();
+        return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
+        ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}`;
     }
 
     /**
@@ -511,21 +518,20 @@ export default class CollectionItem<T> extends mixin<
         if (itemActionsPosition !== 'outside') {
             result.push(classes);
         }
-        if (!useNewModel) {
-            const themedPositionClassCompile = (position) => (
-                `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
-            );
-            if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
-                result.push(themedPositionClassCompile('top'));
-            } else if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
-                result.push(themedPositionClassCompile('bottom'));
-            }
+        const themedPositionClassCompile = (position) => (
+            `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
+        );
+        if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
+            result.push(themedPositionClassCompile('top'));
+        } else if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
+            result.push(themedPositionClassCompile('bottom'));
         }
         return result.length ? ` ${result.join(' ')} ` : ' ';
     }
 
-    getItemTemplate(userTemplate: TemplateFunction|string): TemplateFunction|string {
-        return userTemplate;
+    getItemTemplate(itemTemplateProperty: string, userTemplate: TemplateFunction|string): TemplateFunction|string {
+        const templateFromProperty = itemTemplateProperty ? this.getContents().get(itemTemplateProperty) : '';
+        return templateFromProperty || userTemplate;
     }
 
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {

@@ -489,7 +489,8 @@ describe('Controls/_display/CollectionItem', () => {
             getRowSpacing(): string { return '#rowSpacing#'; },
             getLeftSpacing(): string { return '#leftSpacing#'; },
             getRightSpacing(): string { return '#rightSpacing#'; },
-            getMultiSelectVisibility(): string { return multiSelectVisibility; }
+            getMultiSelectVisibility(): string { return multiSelectVisibility; },
+            getRowSeparatorSize: function () { return ''; }
         };
         const defaultClasses = [
             'controls-ListView__itemContent',
@@ -694,7 +695,7 @@ describe('Controls/_display/CollectionItem', () => {
         // Если новая модель, то в любом случае не считается класс, добавляющий padding
         it('getItemActionPositionClasses() should not add padding class in case of useNewModel', () => {
             const result = item.getItemActionPositionClasses('inside', null, {top: 's', bottom: 's'}, 'default', true);
-            assert.equal(result, ' controls-itemActionsV_position_bottomRight ');
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight controls-itemActionsV_padding-bottom_default_theme-default ');
         });
     })
 });
