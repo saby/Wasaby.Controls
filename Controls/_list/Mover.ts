@@ -213,6 +213,7 @@ var _private = {
             controllerOptions.popupOptions = {
                 opener: self
             };
+
             if (newOptions.moveDialogTemplate.templateName) {
                 self._moveDialogTemplate = newOptions.moveDialogTemplate.templateName;
                 self._moveDialogOptions = {
@@ -224,6 +225,9 @@ var _private = {
             } else {
                 self._moveDialogTemplate = newOptions.moveDialogTemplate;
                 controllerOptions.popupOptions.template = self._moveDialogTemplate;
+                self._moveDialogOptions = {
+                    keyProperty: self._keyProperty
+                } as IMoverDialogTemplateOptions;
                 Logger.warn('Mover: Wrong type of moveDialogTemplate option, use object notation instead of template function', self);
             }
         }
