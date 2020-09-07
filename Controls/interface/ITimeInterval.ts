@@ -62,7 +62,7 @@ interface ITimeInterval {
 
         /**
          * @name Controls/interface/ITimeInterval#value
-         * @cfg {Types/entity:TimeInterval} Значение поля.
+         * @cfg {Types/entity:applied.TimeInterval} Значение поля.
          * @demo Controls-demo/Input/TimeInterval/Base/Index
          */
         value: TimeInterval;
