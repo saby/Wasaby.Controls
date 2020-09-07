@@ -114,8 +114,9 @@ var Remover = BaseAction.extend({
         }
         return _private.getItemsBySelection(this, items).then((items) => (
             _private.beforeItemsRemove(this, items).then((result) => {
+                // если отменили удаление, то надо вернуть false
                 if (result === false) {
-                    return Promise.reject(result);
+                    return Promise.resolve(result);
                 }
                 return _private.removeFromSource(this, items).then((result) => {
                     _private.removeFromItems(this, items);
