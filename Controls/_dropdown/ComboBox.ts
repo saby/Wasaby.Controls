@@ -219,7 +219,11 @@ class ComboBox extends BaseDropdown {
       return {
          placeholder: rk('Выберите') + '...',
          validationStatus: 'valid',
-         textAlign: 'left'
+         textAlign: 'left',
+         inlineHeight: 'default',
+         fontSize: 'm',
+         fontColorStyle: 'default',
+         tooltip: ''
       };
    }
 }
