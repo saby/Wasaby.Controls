@@ -199,12 +199,13 @@ var _private = {
     },
 
     updateDataOptions: function (self, newOptions, contextDataOptions) {
+		self._items = newOptions.items || contextDataOptions?.items;
+
         let controllerOptions: Partial<IMoveControllerOptions> = {
             parentProperty: newOptions.parentProperty
         };
         if (contextDataOptions) {
-            controllerOptions.source = newOptions.source || contextDataOptions.source;
-            self._items = contextDataOptions.items;
+			controllerOptions.source = newOptions.source || contextDataOptions.source;
             self._source = controllerOptions.source;
             self._keyProperty = newOptions.keyProperty || contextDataOptions.keyProperty;
             self._filter = contextDataOptions.filter;
@@ -432,11 +433,11 @@ var Mover = BaseAction.extend({
     _moveDialogOptions: null,
     _template: Template,
     _beforeMount: function (options, context) {
-        _private.updateDataOptions(this, options, options);
+        _private.updateDataOptions(this, options, context.dataOptions);
     },
 
     _beforeUpdate: function (options, context) {
-        _private.updateDataOptions(this, options, options);
+        _private.updateDataOptions(this, options, context.dataOptions);
     },
 
     moveItemUp: function (item) {
