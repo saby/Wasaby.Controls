@@ -1,6 +1,8 @@
 /**
  * Created by kraynovdo on 13.11.2017.
  */
+import {TNavigationPagingMode} from '../../_interface/INavigation';
+
 /**
  *
  * @author Авраменко А.С.
@@ -8,7 +10,6 @@
  */
 
 type IScrollpagingState = 'top' | 'bottom' | 'middle';
-type TPagingMode = 'basic' | 'edge' | 'numbers' | 'end';
 
 interface IScrollParams {
     clientHeight: number;
@@ -36,7 +37,7 @@ interface IPagingCfg {
 }
 
 interface IScrollPagingOptions {
-    pagingMode: TPagingMode;
+    pagingMode: TNavigationPagingMode;
     scrollParams: IScrollParams;
     elementsCount: number;
 
