@@ -1,65 +1,71 @@
 import {Model, Record} from 'Types/entity';
-import {BindingMixin, DataSet, ICrudPlus, IData, IRpc} from 'Types/source';
-import {RecordSet} from 'Types/collection';
+import {SbisService, ICrudPlus} from 'Types/source';
 import {Logger} from 'UI/Utils';
-import {TKeySelection, TKeysSelection} from 'Controls/interface';
-import {Confirmation, Dialog} from 'Controls/popup';
-import * as InstanceChecker from 'Core/core-instance';
+import {ISelectionObject} from 'Controls/interface';
+import {Confirmation, Dialog, IBasePopupOptions} from 'Controls/popup';
 import * as rk from 'i18n!*';
 
-import {IMoveDialogOptions} from '../interface/IMoveDialogOptions';
-import {IMoveControllerOptions, TSource} from '../interface/IMoveControllerOptions';
-import {IMoveObject,
-    MOVE_POSITION,
-    MOVE_TYPE,
-    TMoveItem,
-    TMoveItems
-} from '../interface/IMoveObject';
-import * as TreeItemsUtil from "../resources/utils/TreeItemsUtil";
+import {IHashMap} from 'Types/declarations';
+import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
+import {CrudEntityKey} from 'Types/source';
+
+// @todo https://online.sbis.ru/opendoc.html?guid=2f35304f-4a67-45f4-a4f0-0c928890a6fc
+type TSource = SbisService|ICrudPlus;
+type TFilterObject = IHashMap<any>;
+
+/**
+ * Интерфейс опций контроллера
+ * @interface Controls/_list/interface/IMoveControllerOptions
+ * @public
+ * @author Аверкиев П.А.
+ */
+export interface IMoveControllerOptions {
+    /**
+     * @name Controls/_list/interface/IMoveControllerOptions#source
+     * @cfg {TSource} Ресурс, в котором производится перемещение
+     */
+    source: TSource;
+    /**
+     * @name Controls/_list/interface/IMoveControllerOptions#parentProperty
+     * @cfg {String} Имя поля, содержащего идентификатор родительского элемента.
+     */
+    parentProperty: string;
+    /**
+     * @name Controls/_list/interface/IMoveControllerOptions#popupOptions
+     * @cfg {Controls/popup:IBasePopupOptions} опции диалога перемещения
+     */
+    popupOptions?: IBasePopupOptions
+}
+
+/**
+ * @typedef {String} TMovePosition
+ * @description
+ * Позиция для перемещения записи
+ */
+export enum TMovePosition {
+    on = 'on',
+    before = 'before',
+    after = 'after'
+}
 
 /**
  * Контроллер для перемещения элементов списка в recordSet и dataSource.
- *
- * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FtreeGrid%2FMover%2FBase%2FIndex">демо-пример</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover/">руководство разработчика</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
  *
  * @class Controls/_mover/MoveController
  * @control
  * @public
  * @author Аверкиев П.А
  */
-
-/*
- * Controller to move the list items in recordSet and dataSource.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Demo examples</a>.
- * @class Controls/_mover/Controller
- * @control
- * @public
- * @author Аверкиев П.А
- */
 export class MoveController {
 
-    protected _dialogOptions: IMoveDialogOptions;
+    // Опции диалога перемещения записей
+    protected _popupOptions: IBasePopupOptions;
 
-    // пока контроллер не умеет работать с source для перемещения записей относиетльно друг друга
-    private _items: RecordSet;
-
-    // Ресурс, в котором производится смена мест
+    // Ресурс данных, в котором производится смена мест
     private _source: TSource;
 
-    // Имя свойства, хранящего ключ записи
-    private _keyProperty: string;
-
-    // Имя свойства, хранящего ключ родителя в дереве
+    // Имя свойства, хранящего ключ родителя в дереве, необходим для _moveInSource
     protected _parentProperty: string;
-
-    // Имя свойства, хранящего флаг узла в дереве
-    protected _nodeProperty: string;
-
-    // Корень дерева для создания display при поиске ближайших записей
-    protected _root: string;
 
     constructor(options: IMoveControllerOptions) {
         this.update(options);
@@ -71,287 +77,162 @@ export class MoveController {
      * @param {Controls/_list/interface/IMoveControllerOptions} options
      */
     update(options: IMoveControllerOptions): void {
-        this._dialogOptions = options.dialog;
-        this._items = options.items;
-        this._keyProperty = options.keyProperty;
+        this._popupOptions = options.popupOptions;
         this._source = options.source;
-        this._items = options.items;
-        this._source = options.source;
-        this._filter = options.filter;
-        this._nodeProperty = options.nodeProperty;
         this._parentProperty = options.parentProperty;
-        this._root = options.root;
     }
 
     /**
-     * Перемещает переданные элементы относительно указанного целевого элемента.
-     * @function Controls/_list/Controllers/MoveController#moveItems
-     * @param {Controls/_list/interface/IMoveObject} items Элементы для перемещения.
-     * @param {Types/entity:Model|Controls/interface:TKeySelection} target Целевой элемент перемещения.
-     * @param {Controls/_list/interface/IMoveObject/MOVE_POSITION.typedef} position Положение перемещения.
-     * @param {String} moveType
+     * Перемещает переданные элементы относительно указанного целевого элемента или в указанную папку.
+     * @function Controls/_list/Controllers/MoveController#move
+     * @param {Controls/interface:ISelectionObject} selection Элементы для перемещения.
+     * @param {TFilterObject} filter Дополнительный фильтр для перемещения в папку через SbisService.
+     * @param {Types/source:CrudEntityKey} targetKey Идентификатор целевой записи, относительно которой позиционируются
+     * перемещаемые записи или идентификатор папки, в которую происходит перемещение.
+     * @param {TMovePosition} position Положение перемещения.
      * @returns {Promise} Отложенный результат перемещения.
      * @remark
      * В зависимости от аргумента 'position' элементы могут быть перемещены до, после или на указанный целевой элемент.
-     * @see moveItemUp
-     * @see moveItemDown
+     * @see moveUp
+     * @see moveDown
      */
-
-    /*
-     * Moves the transferred items relative to the specified target item.
-     * @function Controls/_list/Controllers/MoveController#moveItems
-     * @param {Controls/_list/interface/IMoveObject} items Items to be moved.
-     * @param {Types/entity:Model|Controls/interface:TKeySelection} target Target item to move.
-     * @param {Controls/_list/interface/IMoveObject/MOVE_POSITION.typedef} position Position to move.
-     * @returns {Core/Deferred} Deferred with the result of the move.
-     * @remark
-     * Depending on the 'position' argument, elements can be moved before, after or on the specified target item.
-     * @see moveItemUp
-     * @see moveItemDown
-     */
-    moveItems(items: IMoveObject, target: Model|TKeySelection, position: MOVE_POSITION, moveType?: string): Promise<DataSet|void> {
-        if (target === undefined) {
-            return Promise.resolve();
-        }
-        if (items.selectedKeys.length && moveType !== MOVE_TYPE.CUSTOM) {
-            return this._moveInSource(items, this._getId(target), position);
-        }
-        return Promise.resolve();
-    }
-
-    /**
-     * Перемещает один элемент вверх.
-     * @function Controls/_list/Controllers/MoveController#moveItemUp
-     * @param {Controls/_list/interface/IMoveObject/TMoveItem.typedef} item Элемент перемещения.
-     * @returns {Promise} Отложенный результат перемещения.
-     * @see moveItemDown
-     * @see moveItems
-     */
-
-    /*
-     * Move one item up.
-     * @function Controls/_list/Controllers/MoveController#moveItemUp
-     * @param {Controls/_list/interface/IMoveObject/TMoveItem.typedef} The item to be moved.
-     * @returns {Promise} Deferred with the result of the move.
-     * @see moveItemDown
-     * @see moveItems
-     */
-    moveItemUp(item: TMoveItem): Promise<DataSet|void> {
-        return this._moveItemToSiblingPosition(item, MOVE_POSITION.before);
-    }
-
-    /**
-     * Перемещает один элемент вниз.
-     * @function Controls/_list/Controllers/MoveController#moveItemDown
-     * @param {Controls/_list/interface/IMoveObject/TMoveItem.typedef} item Элемент перемещения.
-     * @returns {Promise} Отложенный результат перемещения.
-     * @see moveItemUp
-     * @see moveItems
-     */
-
-    /*
-     * Move one item down.
-     * @function Controls/_list/Controllers/MoveController#moveItemDown
-     * @param {Controls/_list/interface/IMoveObject/TMoveItem.typedef} item The item to be moved.
-     * @returns {Promise} Deferred with the result of the move.
-     * @see moveItemUp
-     * @see moveItems
-     */
-    moveItemDown(item: TMoveItem): Promise<DataSet|void> {
-        return this._moveItemToSiblingPosition(item, MOVE_POSITION.after);
+    move(selection: ISelectionObject, filter: TFilterObject = {}, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+        return this._moveInSource(selection, filter, targetKey, position);
     }
 
     /**
      * Перемещение переданных элементов с предварительным выбором родительского узла с помощью диалогового окна.
-     * @function Controls/_list/Controllers/MoveController#moveItemsWithDialog
-     * @param {Controls/_list/interface/IMoveObject} items Элементы для перемещения.
-     * @remark
-     * Компонент, указанный в опции {Controls/_list/interface/IMoveDialogOptions#template dialog.template}, будет использоваться в качестве шаблона для диалога перемещения.
-     * Для того, чтобы получить управление над результатом перемещения, необходимо использовать опцию
-     * {Controls/_list/interface/IMoveDialogOptions#template dialog.onResultHandler}
-     * @see moveItemUp
-     * @see moveItemDown
-     * @see moveItems
+     * @function Controls/_list/Controllers/MoveController#moveWithDialog
+     * @param {Controls/interface:ISelectionObject} selection Элементы для перемещения.
+     * @param {TFilterObject} filter дополнительный фильтр для перемещения в SbisService.
+     * @see moveUp
+     * @see moveDown
+     * @see move
      */
-
-    /*
-     * Move the transferred items with the pre-selection of the parent node using the dialog.
-     * @function Controls/_list/Controllers/MoveController#moveItemsWithDialog
-     * @param {Controls/_list/interface/IMoveObject} items Items to be moved.
-     * @remark
-     * The component specified in the {Controls/_list/interface/IMoveDialogOptions#template dialog.template} option will be used as a template for the move dialog.
-     * To get control over the result of moving, please use {Controls/_list/interface/IMoveDialogOptions#template dialog.onResultHandler} option
-     * @see moveItemUp
-     * @see moveItemDown
-     * @see moveItems
-     */
-    moveItemsWithDialog(items: IMoveObject): Promise<string> {
-        if (this._dialogOptions.template) {
-            if (MoveController.validate(items)) {
-                return this.openMoveDialog(items, items.selectedKeys)
-            }
-        } else {
-            Logger.warn('Mover: MoveDialogTemplate option is undefined', this);
+    moveWithDialog(selection: ISelectionObject, filter: TFilterObject = {}): Promise<void> {
+        if (!this._popupOptions.template) {
+            Logger.error('MoveController: MoveDialogTemplate option is undefined', this);
+            return Promise.reject();
         }
-        return Promise.resolve(undefined);
-    }
-
-    /**
-     * Получает элемент к которому мы перемещаем текущий элемент
-     * Метод сделан публичным для совместимости с HOC
-     * @param item текущий элемент
-     * @param position позиция (направление перемещения)
-     * @private
-     */
-    getSiblingItem(item: TMoveItem, position: MOVE_POSITION): Model {
-        //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
-        //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
-        //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
-        //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
-        //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
-        if (this._parentProperty) {
-            const display = TreeItemsUtil.getDefaultDisplayTree(this._items, {
-                keyProperty: this._keyProperty,
-                parentProperty: this._parentProperty,
-                nodeProperty: this._nodeProperty
-            }, {});
-            if (this._root) {
-                display.setRoot(this._root)
-            }
-            const collectionItem = display.getItemBySourceItem(this._getModel(item));
-            let siblingItem;
-            if (position === MOVE_POSITION.before) {
-                siblingItem = display.getPrevious(collectionItem);
-            } else {
-                siblingItem = display.getNext(collectionItem);
-            }
-            return siblingItem ? siblingItem.getContents() : null;
+        if (!MoveController._validateBeforeOpenDialog(selection)) {
+            return Promise.reject();
         }
-        let itemIndex = this._items.getIndex(this._getModel(item));
-        return this._items.at(position === MOVE_POSITION.before ? --itemIndex : ++itemIndex);
+        return this._openMoveDialog(selection, filter)
     }
 
     /**
      * Открывает диалог перемещения
-     * Метод сделан публичным для совместимости с HOC
-     * @param {Controls/_list/interface/IMoveObject/TMoveItem.typedef} items
-     * @param {Controls/interface:TKeysSelection} selectedKeys
+     * @param {Controls/interface:ISelectionObject} selection Элементы для перемещения.
+     * @param {TFilterObject} filter дополнительный фильтр для перемещения в SbisService.
      * @private
      */
-    openMoveDialog(items: TMoveItems, selectedKeys: TKeysSelection): Promise<string> {
-        const templateOptions = {
-            movedItems: selectedKeys,
-            source: this._source,
-            keyProperty: this._keyProperty,
-            ...this._dialogOptions.templateOptions
+    private _openMoveDialog(selection: ISelectionObject, filter?: TFilterObject): Promise<void> {
+        const templateOptions: IMoverDialogTemplateOptions = {
+            ...(this._popupOptions.templateOptions as IMoverDialogTemplateOptions),
+            movedItems: selection.selected,
+            source: this._source
         };
 
-        if (!this._dialogOptions.onResultHandler) {
-            this._dialogOptions.onResultHandler = this._moveDialogOnResultHandler.bind(this);
-        }
-
-        return Dialog.openPopup({
-            opener: this._dialogOptions.opener,
-            templateOptions,
-            closeOnOutsideClick: true,
-            template: this._dialogOptions.template,
-            eventHandlers: {
-                onResult: (target: Model) => (
-                    this._dialogOptions.onResultHandler(items, target)
-                )
-            }
+        return new Promise((resolve) => {
+            Dialog.openPopup({
+                opener: this._popupOptions.opener,
+                templateOptions,
+                closeOnOutsideClick: true,
+                template: this._popupOptions.template,
+                eventHandlers: {
+                    onResult: (target: Model) => {
+                        // null при перемещении записей в корень
+                        const targetKey = target === null ? target : target.getKey();
+                        resolve(this._moveInSource(selection, filter, targetKey, TMovePosition.on))
+                    }
+                }
+            });
         });
     }
 
     /**
-     * Стандартный обработчик перемещения при помощи диалога
-     * @param items
-     * @param target
-     * @private
-     */
-    private _moveDialogOnResultHandler(items: TMoveItems, target: Model): Promise<DataSet|void> {
-        return this.moveItems(items, target.getKey(), MOVE_POSITION.on);
-    }
-
-    /**
-     * Перемещает запись к ближайшей позиции
-     * @param item
+     * Перемещает элементы в ICrudPlus
+     * @param {Controls/interface:ISelectionObject} selection Элементы для перемещения.
+     * @param {TFilterObject} filter дополнительный фильтр для перемещения в папку в SbisService.
+     * @param {Types/source:CrudEntityKey} targetKey Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
      * @param position
      * @private
      */
-    private _moveItemToSiblingPosition (item: TMoveItem, position: MOVE_POSITION): Promise<DataSet|void> {
-        const target = this.getSiblingItem(item, position);
-        const moveObject: IMoveObject = {
-            selectedKeys: [this._getId(item)],
-            excludedKeys: undefined,
+    private _moveInSource(selection: ISelectionObject, filter: TFilterObject = {}, targetKey: CrudEntityKey, position: TMovePosition): Promise<void>  {
+        const error: string = MoveController._validateBeforeMove(this._source, selection, filter, targetKey, position);
+        if (error) {
+            Logger.error(error);
+            return Promise.reject(new Error(error));
         }
-        return target ? this.moveItems(moveObject, target, position) : Promise.resolve();
-    }
-
-    /**
-     * Перемещает элементы в ресурсе
-     * @param items
-     * @param targetId
-     * @param position
-     * @private
-     */
-    protected _moveInSource(items: IMoveObject, targetId: TKeySelection, position: MOVE_POSITION): Promise<DataSet|void>  {
-        if ((this._source as IRpc).call) {
-            return import('Controls/operations').then((operations) => {
-                const sourceAdapter = (this._source as IData).getAdapter();
-                const callFilter = {
-                    selection: operations.selectionToRecord({
-                        selected: items.selectedKeys,
-                        excluded: items.excludedKeys
-                    }, sourceAdapter), ...items.filter
-                };
-                return (this._source as IRpc).call((this._source as BindingMixin).getBinding().move, {
-                    method: (this._source as BindingMixin).getBinding().list,
-                    filter: Record.fromObject(callFilter, sourceAdapter),
-                    folder_id: targetId
+        /**
+         * https://online.sbis.ru/opendoc.html?guid=2f35304f-4a67-45f4-a4f0-0c928890a6fc
+         * При использовании ICrudPlus.move() мы не можем передать filter и folder_id, т.к. такой контракт
+         * не соответствует стандартному контракту SbisService.move(). Поэтому здесь вызывается call
+         */
+        if ((this._source as SbisService).call && position === TMovePosition.on) {
+            const source: SbisService = this._source as SbisService;
+            return new Promise((resolve) => {
+                import('Controls/operations').then((operations) => {
+                    const sourceAdapter = source.getAdapter();
+                    const callFilter = {
+                        ...filter,
+                        selection: operations.selectionToRecord(selection, sourceAdapter)
+                    };
+                    source.call(source.getBinding().move, {
+                        method: source.getBinding().list,
+                        filter: Record.fromObject(callFilter, sourceAdapter),
+                        folder_id: targetKey
+                    }).then(() => {
+                        resolve();
+                    });
                 });
-            });
+            })
         }
-        return (this._source as ICrudPlus).move(items.selectedKeys, targetId, {
+        return this._source.move(selection.selected, targetKey, {
             position,
             parentProperty: this._parentProperty
         });
     }
 
     /**
-     * Получает модель по item
-     * Item может быть или Model или ключом
-     * Еслит ключ, то идёт попытка получить модель из списка _items
-     * @param item
+     * Перемещает элементы в ICrudPlus
+     * @param {TSource} source Ресурс данных
+     * @param {Controls/interface:ISelectionObject} selection Элементы для перемещения.
+     * @param {TFilterObject} filter дополнительный фильтр для перемещения в папку в SbisService.
+     * @param {Types/source:CrudEntityKey} targetKey Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
+     * @param position
      * @private
      */
-    private _getModel(item: Model|TKeySelection): Model {
-        return InstanceChecker.instanceOfModule(item, 'Types/entity:Model') ? item as Model : this._items.getRecordById(item as TKeySelection);
+    private static _validateBeforeMove(
+        source: TSource,
+        selection: ISelectionObject,
+        filter: TFilterObject,
+        targetKey: CrudEntityKey,
+        position: TMovePosition): string {
+        let error: string;
+        if (!source) {
+            error = 'MoveController: Source is not set';
+        }
+        if (!selection || (!selection.selected && !selection.excluded)) {
+            error = 'MoveController: Selection type must be Controls/interface:ISelectionObject';
+        }
+        if (typeof filter !== "object") {
+            error = 'MoveController: Filter must be plain object';
+        }
+        return error;
     }
 
     /**
-     * Получает ключ по item
-     * Item может быть или Model или ключом
-     * Еслит Model, то идёт попытка получить ключ по _keyProperty
-     * @param item
-     * @private
-     */
-    private _getId(item: Model|TKeySelection): TKeySelection {
-        return InstanceChecker.instanceOfModule(item, 'Types/entity:Model') ? (item as Model).get(this._keyProperty) : item as TKeySelection;
-    }
-
-    /**
-     * Производит проверку переданных параметров. Если массив значений пуст, возвращает false и выводит окно с текстом, иначе возвращает true.
-     * Метод сделан публичным для совместимости с HOC
-     *
+     * Производит проверку переданного объекта с идентификаторами элементов для перемещения.
+     * Если список идентификаторов пуст, возвращает false и выводит окно с текстом, иначе возвращает true.
      * @function
-     * @name Controls/_list/Controllers/MoveController#validate
+     * @name Controls/_list/Controllers/MoveController#_validateBeforeOpenDialog
      * @private
      */
-    static validate(items: IMoveObject): boolean {
+    private static _validateBeforeOpenDialog(selection: ISelectionObject): boolean {
         let resultValidate: boolean = true;
 
-        if (items.selectedKeys && !items.selectedKeys.length) {
+        if (selection.selected && !selection.selected.length) {
             resultValidate = false;
             Confirmation.openPopup({
                 type: 'ok',
