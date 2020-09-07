@@ -164,7 +164,13 @@ define(
 
          it('_searchEndCallback', function() {
             let
-               items = [1, 2, 3],
+               items = new collection.RecordSet({
+                  rawData: [
+                     { id: 1 },
+                     { id: 2 },
+                     { id: 3 }
+                  ]
+               }),
                suggestList = new suggestPopup.ListContainer();
 
             suggestList._suggestListOptions = {

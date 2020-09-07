@@ -2194,7 +2194,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const item = this.getItemBySourceKey(key);
         if (item) {
             item.setMarked(status);
-            this.nextVersion();
         }
     }
 

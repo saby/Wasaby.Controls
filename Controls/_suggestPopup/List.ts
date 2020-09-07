@@ -212,6 +212,9 @@ var List = Control.extend({
 
       if (result) {
          this._items = result.data;
+         if (this._markedKey === null && this._items.getCount()) {
+            this._markedKey = this._items.at(0).getKey();
+         }
       }
    },
 

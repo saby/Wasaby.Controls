@@ -269,6 +269,9 @@ export default class Browser extends Control {
 
     protected _operationsPanelOpen(): void {
         this._listMarkedKey = this._getOperationsController().setOperationsPanelVisible(true);
+        if (this._listMarkedKey === null && this._items.getCount()) {
+            this._listMarkedKey = this._items.at(0).getKey();
+        }
     }
 
     protected _operationsPanelClose(): void {

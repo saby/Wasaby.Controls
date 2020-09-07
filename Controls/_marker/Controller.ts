@@ -1,5 +1,5 @@
 import {getDimensions as uDimension} from 'Controls/sizeUtils';
-import { IMarkerModel, IOptions, TKey, TVisibility, Visibility } from './interface';
+import { IMarkerModel, IOptions, TKey, TVisibility} from './interface';
 import { CollectionItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 
@@ -11,7 +11,7 @@ import { Model } from 'Types/entity';
 export class Controller {
    private _model: IMarkerModel;
    private _markerVisibility: TVisibility;
-   private _markedKey: TKey = null;
+   private _markedKey: TKey;
 
    constructor(options: IOptions) {
       this.updateOptions(options);
@@ -22,19 +22,16 @@ export class Controller {
     * @param options
     * @return {number|string} Ключ маркера
     */
-   updateOptions(options: IOptions): TKey {
+   updateOptions(options: IOptions): void {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
       this._markedKey = options.markedKey;
-
-      if (options.markerVisibility === Visibility.Visible && this._markedKey === undefined) {
-         this._markedKey = this._getFirstItemKey();
-      }
-      return this._markedKey;
    }
 
    applyMarkedKey(newMarkedKey: TKey): void {
-      this._model.setMarkedKey(this._markedKey, false);
+      if (this._markedKey !== newMarkedKey) {
+         this._model.setMarkedKey(this._markedKey, false);
+      }
       this._model.setMarkedKey(newMarkedKey, true);
       this._markedKey = newMarkedKey;
    }
@@ -136,7 +133,7 @@ export class Controller {
     */
    handleAddItems(newItems: Array<CollectionItem<Model>>): void {
       if (newItems.some((item) => this._getKey(item) === this._markedKey)) {
-         this.applyMarkedKey();
+         this.applyMarkedKey(this._markedKey);
       }
    }
 

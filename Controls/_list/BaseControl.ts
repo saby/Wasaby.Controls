@@ -3323,13 +3323,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     ? newOptions.markedKey
                     : markerController.getMarkedKey();
 
-                const newMarkedKey = markerController.updateOptions({
+                markerController.updateOptions({
                     model: this._listViewModel,
                     markerVisibility: newOptions.markerVisibility,
                     markedKey
                 });
-                markerController.applyMarkedKey(newMarkedKey);
-                _private.handleMarkerControllerResult(this, newMarkedKey);
+                markerController.applyMarkedKey(markedKey);
             }
         }
 

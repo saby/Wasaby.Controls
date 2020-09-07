@@ -7,6 +7,7 @@
         selectionTypeForAllSelected="{{_selectionType}}"
         isAllSelected="{{ _isAllSelected }}"
         listMarkedKey="{{ _listMarkedKey }}"
+        markedKey="{{ _listMarkedKey }}"
         dataLoadCallback="{{_dataLoadCallback}}"
         afterSetItemsOnReloadCallback="{{_afterSetItemsOnReloadCallback}}"
         deepReload="{{_deepReload}}"
