@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dragnDrop/Controller/Controller');
+import ControllerClass from './ControllerClass';
 import 'Controls/_dragnDrop/DraggingTemplate';
 import {DialogOpener} from 'Controls/popup';
 import {IDragObject} from './Container';
