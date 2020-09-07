@@ -14,6 +14,7 @@ export default {
     _container: null,
     _indicator: null,
     _popupHeaderTheme: undefined,
+    _theme: undefined,
     _popupSettingsController: undefined,
     setManager(manager: Control): void {
         this._manager = manager;
@@ -29,6 +30,14 @@ export default {
     },
     getPopupHeaderTheme(): string {
         return this._popupHeaderTheme;
+    },
+
+    setTheme(themeName: string): void {
+        this._theme = themeName;
+    },
+
+    getTheme(): string {
+        return this._theme;
     },
 
     // Регистрируем индикатор, лежащий в application.
