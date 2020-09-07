@@ -49,7 +49,7 @@ export enum TMovePosition {
 }
 
 /**
- * Контроллер для перемещения элементов списка в recordSet и dataSource.
+ * Контроллер для перемещения элементов списка.
  *
  * @class Controls/_mover/MoveController
  * @control
@@ -68,15 +68,15 @@ export class MoveController {
     protected _parentProperty: string;
 
     constructor(options: IMoveControllerOptions) {
-        this.update(options);
+        this.updateOptions(options);
     }
 
     /**
      * Обновляет параметры контроллера
-     * @function Controls/_list/Controllers/MoveController#moveItems
+     * @function Controls/_list/Controllers/MoveController#updateOptions
      * @param {Controls/_list/interface/IMoveControllerOptions} options
      */
-    update(options: IMoveControllerOptions): void {
+    updateOptions(options: IMoveControllerOptions): void {
         this._popupOptions = options.popupOptions;
         this._source = options.source;
         this._parentProperty = options.parentProperty;

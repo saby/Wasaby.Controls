@@ -234,7 +234,7 @@ var _private = {
         if (!self._controller) {
             self._controller = new MoveController(controllerOptions as IMoveControllerOptions);
         } else {
-            self._controller.update(controllerOptions);
+            self._controller.updateOptions(controllerOptions);
         }
     },
 

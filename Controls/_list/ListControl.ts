@@ -4,6 +4,10 @@ import BaseControl = require('Controls/_list/BaseControl');
 import {saveConfig} from 'Controls/Application/SettingsController';
 import Deferred = require('Core/Deferred');
 import {isEqual} from 'Types/object';
+import {ISelectionObject} from "../_interface/ISelectionType";
+import {CrudEntityKey} from "Types/source";
+import {TMovePosition} from "./Controllers/MoveController";
+import {IMovableView} from './interface/IMovableView';
 
 /**
  * Plain list control with custom item template. Can load data from data source.
@@ -21,13 +25,14 @@ import {isEqual} from 'Types/object';
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/interface/IEditableList
+ * @mixes Controls/_list/interface/IMovableView
  * @control
  * @private
  * @author Авраменко А.С.
  * @category List
  */
 
-export default class ListControl extends Control/** @lends Controls/_list/ListControl.prototype */{
+export default class ListControl extends Control/** @lends Controls/_list/ListControl.prototype */ implements IMovableView {
     protected _template: TemplateFunction = ListControlTpl;
     protected _children: { baseControl: Control };
     _beforeUpdate(cfg) {
@@ -61,6 +66,27 @@ export default class ListControl extends Control/** @lends Controls/_list/ListCo
     scrollToItem(key: string|number, toBottom: boolean, force: boolean): void {
         return this._children.baseControl.scrollToItem(key, toBottom, force);
     }
+
+    // region mover
+
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+        return this._children.baseControl.moveItems(selection, targetKey, position);
+    }
+
+    moveItemUp(selectedKey: CrudEntityKey): Promise<void> {
+        return this._children.baseControl.moveItemUp(selectedKey);
+    }
+
+    moveItemDown(selectedKey: CrudEntityKey): Promise<void> {
+        return this._children.baseControl.moveItemDown(selectedKey);
+    }
+
+    moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.moveItemsWithDialog(selection);
+    }
+
+    // endregion mover
+
     static getDefaultOptions () {
         return {
             uniqueKeys: true
