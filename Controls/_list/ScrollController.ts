@@ -42,7 +42,6 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
     collection: Collection<Record>;
     activeElement: string | number;
     _triggerPositionCoefficient: number;
-    _notify: (eventName: string, args?: unknown[], options?: { bubbling?: boolean }) => unknown;
     forceInitVirtualScroll: boolean;
     attachLoadTopTriggerToNull: boolean;
 }
@@ -506,7 +505,6 @@ export default class ScrollController {
         return result;
     }
 
-
     private getTriggerOffset(scrollHeight: number, viewportHeight: number, attachLoadTopTriggerToNull: boolean): {top: number, bottom: number} {
         this._triggerOffset =
             (scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *
@@ -528,6 +526,10 @@ export default class ScrollController {
                 );
                 break;
         }
+    }
+
+    calculateVirtualScrollHeight(): number {
+        return this._virtualScroll.calculateVirtualScrollHeight();
     }
 
     static getDefaultOptions(): Partial<IOptions> {

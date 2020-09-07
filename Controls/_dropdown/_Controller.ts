@@ -223,7 +223,7 @@ export default class _Controller implements IDropdownController {
       return this.loadDependencies().then(
           () => {
              const count = this._items.getCount();
-             if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerTemplate)) {
+             if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerContentTemplate)) {
                 this._createMenuSource(this._items);
                 this._isOpened = true;
                 return openPopup();
@@ -441,7 +441,7 @@ export default class _Controller implements IDropdownController {
 
       if (isTemplateChanged('headTemplate') ||
           isTemplateChanged('itemTemplate') ||
-          isTemplateChanged('footerTemplate')) {
+          isTemplateChanged('footerContentTemplate')) {
          return true;
       }
    }
@@ -457,7 +457,7 @@ export default class _Controller implements IDropdownController {
    private _loadMenuTemplates(options: object): Promise<any> {
       if (!this._loadMenuTempPromise) {
          let templatesToLoad = ['Controls/menu'];
-         let templates = ['headTemplate', 'itemTemplate', 'footerTemplate'];
+         let templates = ['headTemplate', 'itemTemplate', 'footerContentTemplate'];
          templates.forEach((template) => {
             if (typeof options[template] === 'string') {
                templatesToLoad.push(options[template]);
@@ -512,7 +512,7 @@ export default class _Controller implements IDropdownController {
          allowPin: this._options.allowPin && this._hasHistory(this._options),
          keyProperty: isHistorySource(this._source) ? 'copyOriginalId' : baseConfig.keyProperty,
          headerTemplate: this._options.headTemplate || this._options.headerTemplate,
-         footerContentTemplate: this._options.footerContentTemplate || this._options.footerTemplate,
+         footerContentTemplate: this._options.footerContentTemplate,
          items: this._items,
          source: this._menuSource,
          filter: this._filter,

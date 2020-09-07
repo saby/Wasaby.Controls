@@ -85,6 +85,22 @@ define(
             });
          });
 
+         it('filter and navigation changed', async () => {
+            const dataOptions = {source: source, keyProperty: 'id'};
+            const data = getDataWithConfig(dataOptions);
+            data._dataOptionsContext = new contexts.ContextOptions();
+
+            const newNavigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}};
+            const newFilter = {title: 'Ivan'};
+            await data._beforeMount(dataOptions);
+            data.saveOptions(dataOptions);
+            data._beforeUpdate({source: source, idProperty: 'id', filter: newFilter, navigation: newNavigation});
+
+            assert.deepEqual(data._dataOptionsContext.navigation, newNavigation);
+            assert.deepEqual(data._dataOptionsContext.filter, newFilter);
+            assert.deepEqual(data._filter, newFilter);
+         });
+
          it('source and filter/navigation changed', async () => {
             const dataOptions = {source: source, keyProperty: 'id'};
             const data = getDataWithConfig(dataOptions);
@@ -105,6 +121,7 @@ define(
                filter: newFilter
             });
             assert.isUndefined(data._dataOptionsContext.navigation);
+            assert.deepStrictEqual(data._filter, newFilter);
 
             return new Promise((resolve, reject) => {
                loadDef
@@ -225,11 +242,14 @@ define(
             let data = getDataWithConfig(options);
             await data._beforeMount(options);
 
+            const prefetchSource = data._dataOptionsContext.prefetchSource;
             const currentItems = data._items;
             const newItems = new collection.RecordSet();
 
             data._itemsReadyCallbackHandler(newItems);
             assert.isTrue(data._items === newItems);
+            assert.isTrue(data._dataOptionsContext.items === newItems);
+            assert.isTrue(data._dataOptionsContext.prefetchSource === prefetchSource);
          });
 
          it('data source options tests', function(done) {

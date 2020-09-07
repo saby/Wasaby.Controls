@@ -135,6 +135,12 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
    _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet> {
       const isChanged = this._sourceController.updateOptions(newOptions);
+
+      // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+      if (isChanged) {
+         this._filter = newOptions.filter;
+      }
+
       if (this._options.source !== newOptions.source) {
          this._loading = true;
          return this._sourceController.load().then((items) => {
@@ -146,9 +152,6 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
             }
 
             const controllerState = this._sourceController.getState();
-
-            // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-            this._filter = controllerState.filter;
             this._updateContext(controllerState);
 
             this._loading = false;
@@ -157,10 +160,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       } else if (isChanged) {
          const controllerState = this._sourceController.getState();
 
-         // TODO 1) filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-         // TODO 2) getState у SourceController пересоздаёт prefetchProxy,
+         // TODO getState у SourceController пересоздаёт prefetchProxy,
          // TODO поэтому весь state на контекст перекладывать нельзя, иначе список перезагрузится с теми же данными
-         this._filter = controllerState.filter;
+         this._dataOptionsContext.navigation = controllerState.navigation;
          this._dataOptionsContext.filter = controllerState.filter;
          this._dataOptionsContext.updateConsumers();
       }
@@ -184,8 +186,8 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    _itemsReadyCallbackHandler(items): void {
       if (this._items !== items) {
          this._items = this._sourceController.setItems(items);
-         const controllerState = this._sourceController.getState();
-         this._updateContext(controllerState);
+         this._dataOptionsContext.items = this._items;
+         this._dataOptionsContext.updateConsumers();
       }
 
       if (this._options.itemsReadyCallback) {

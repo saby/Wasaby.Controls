@@ -85,6 +85,16 @@ define([
       describe('process()', function() {
          let error;
 
+         const addHandlerPromise =
+            () => new Promise(resolve => controller.addHandler(resolve));
+
+         const addFailHandlerCheck =
+            () => {
+               const handler = sinon.stub();
+               controller.addHandler(handler);
+               return () => assert.isFalse(handler.called);
+            };
+
          beforeEach(function() {
             createController();
             error = new Error('test error');
@@ -97,32 +107,37 @@ define([
             error = null;
          });
 
-         const addHandlerPromise =
-            () => new Promise(resolve => controller.addHandler(resolve));
-
-         const addFailHandler =
-            () => controller.addHandler(() => assert.fail('handler should not be called'));
-
          it('calls registered handler', function() {
             const handlerPromise = addHandlerPromise();
             return controller.process(error).then(() => handlerPromise);
          });
 
          it('doesn\'t call handler with processed error', function() {
-            addFailHandler();
+            const checkHandler = addFailHandlerCheck();
             error.processed = true;
-            return controller.process(error);
+            return controller.process(error).then(checkHandler);
+         });
+
+         it('doesn\'t process error twice asynchronously', function() {
+            controller.addHandler(sinon.stub().returns({}));
+            return Promise.all([
+               controller.process(error),
+               controller.process(error)
+            ]).then(([first, second]) => {
+               assert.isDefined(first);
+               assert.isUndefined(second);
+            });
          });
 
          it('doesn\'t call handler with canceled error', function() {
-            addFailHandler();
+            const checkHandler = addFailHandlerCheck();
             error.canceled = true;
-            return controller.process(error);
+            return controller.process(error).then(checkHandler);
          });
 
          it('doesn\'t call handlers with Abort error', function() {
-            addFailHandler();
-            return controller.process(new Transport.fetch.Errors.Abort('test page'));
+            const checkHandler = addFailHandlerCheck();
+            return controller.process(new Transport.fetch.Errors.Abort('test page')).then(checkHandler);
          });
 
          it('calls handler with current args', function() {
@@ -152,8 +167,8 @@ define([
                template: 'test',
                options: {}
             }));
-            addFailHandler();
-            return controller.process(error);
+            const checkHandler = addFailHandlerCheck();
+            return controller.process(error).then(checkHandler);
          });
 
          it('returns current handler result', function() {
@@ -222,9 +237,11 @@ define([
             controller.addHandler(() => Promise.resolve(viewConfig));
 
             // Обработчик #5 не должен выполняться.
-            addFailHandler();
+            const checkHandler = addFailHandlerCheck();
 
             return controller.process(error).then((result) => {
+               checkHandler();
+
                assert.deepEqual(viewConfig, {
                   mode: result.mode,
                   template: result.template,
@@ -251,9 +268,10 @@ define([
             ];
 
             // Обработчик #3 не должен выполняться.
-            addFailHandler();
+            const checkHandler = addFailHandlerCheck();
 
             return controller.process(error).then((viewConfig) => {
+               checkHandler();
                assert.isUndefined(viewConfig, 'returns undefined');
                assert.isNotOk(popupHelper.openConfirmation.called, 'openConfirmation not called');
 
@@ -275,9 +293,10 @@ define([
             ];
 
             // Обработчик #3 не должен выполняться.
-            addFailHandler();
+            const checkHandler = addFailHandlerCheck();
 
             return controller.process(error).then((viewConfig) => {
+               checkHandler();
                assert.isUndefined(viewConfig, 'returns undefined');
                assert.isNotOk(popupHelper.openConfirmation.called, 'openConfirmation not called');
 

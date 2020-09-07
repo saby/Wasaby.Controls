@@ -738,7 +738,7 @@ define([
          ctrl._portionedSearch.continueSearch();
          await loadPromise;
          assert.isTrue(ctrl._portionedSearchInProgress);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
          assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
@@ -749,7 +749,7 @@ define([
          loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
          await loadPromise;
          assert.isFalse(ctrl._portionedSearchInProgress);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.isFalse(ctrl._listViewModel.getHasMoreData());
       });
 
@@ -811,7 +811,7 @@ define([
          await lists.BaseControl._private.loadToDirection(ctrl, 'down');
          ladingIndicatorTimer = ctrl._loadingIndicatorTimer;
          assert.isTrue(ctrl._portionedSearchInProgress);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.isNull(ctrl._loadingIndicatorTimer);
 
          let loadingIndicatorTimer = setTimeout(() => {});
@@ -1016,12 +1016,12 @@ define([
          // Up trigger became visible, no changes to indicator
          ctrl.triggerVisibilityChangedHandler('up', true);
          assert.isNotNull(ctrl._loadingIndicatorState);
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
 
          // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
-         assert.isTrue(ctrl._showContinueSearchButton);
+         assert.isTrue(ctrl._showContinueSearchButtonDirection === 'down');
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
@@ -1484,7 +1484,12 @@ define([
          assert.isFalse(notified);
 
          var myMarkedItem = { qwe: 123 };
-         var mockedEvent = { target: 'myTestTarget' };
+          var mockedEvent = {
+              target: 'myTestTarget',
+              isStopped: function() {
+                  return true;
+              }
+          };
          // With marker
          lists.BaseControl._private.enterHandler({
             _options: {
@@ -2142,14 +2147,14 @@ define([
 
          it('depend on portionedSearch', () => {
             control._sourceController._hasMoreData = {up: false, down: true};
-            control._showContinueSearchButton = true;
+            control._showContinueSearchButtonDirection = 'down';
             updateShadowModeHandler.call(control, event, {
                top: 0,
                bottom: 0
             });
             assert.deepEqual({top: 'auto', bottom: 'auto'}, control.lastNotifiedArguments[0]);
 
-            control._showContinueSearchButton = false;
+            control._showContinueSearchButtonDirection = 'up';
             updateShadowModeHandler.call(control, event, {
                top: 0,
                bottom: 0
@@ -2344,8 +2349,6 @@ define([
             assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
             assert.isFalse(ctrl._cachedPagingState, 'Wrong state _cachedPagingState after scrollHide');
 
-            lists.BaseControl._private.handleListScrollSync(ctrl, 200);
-
             setTimeout(function() {
                assert.isFalse(ctrl._pagingVisible);
             }, 100);
@@ -2411,14 +2414,14 @@ define([
             }
          };
          ctrl._abortSearch();
-         assert.isFalse(ctrl._showContinueSearchButton);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.deepEqual(ctrl._pagingCfg, {
-             arrowState: {
-                 begin: 'visible',
-                 prev: 'visible',
-                 next: 'readonly',
-                 end: 'readonly'
-             }
+            arrowState: {
+               begin: 'visible',
+               prev: 'visible',
+               next: 'readonly',
+               end: 'readonly'
+            }
          });
          assert.deepEqual(shadowMode, {top: 'auto', bottom: 'auto'});
          assert.isTrue(iterativeSearchAborted);
@@ -2568,6 +2571,45 @@ define([
          assert.isTrue(res, 'Wrong paging state');
       });
 
+      it('needShowPagingByScrollSize with virtual scrollHeight', function() {
+         var cfg = {
+            navigation: {
+               view: 'infinity',
+               source: 'page',
+               viewConfig: {
+                  pagingMode: 'direct'
+               },
+               sourceConfig: {
+                  pageSize: 3,
+                  page: 0,
+                  hasMore: false
+               }
+            }
+         };
+         var baseControl = new lists.BaseControl(cfg);
+         baseControl._sourceController = {
+            nav: false,
+            hasMoreData: function() {
+               return this.nav;
+            }
+         };
+
+         baseControl._loadTriggerVisibility = {
+            up: true,
+            down: true
+         };
+
+         var res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
+         assert.isFalse(res, 'Wrong paging state');
+
+         baseControl._scrollController = {
+            calculateVirtualScrollHeight: () => 3000
+         }
+
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 1000, 800);
+         assert.isTrue(res, 'Wrong paging state');
+      });
+
       it('scrollToEdge without load', function(done) {
          var rs = new collection.RecordSet({
             keyProperty: 'id',
@@ -2701,7 +2743,8 @@ define([
                handleResetItems: () => undefined,
                registerObserver: () => undefined,
                scrollPositionChange: () => undefined,
-               setTriggers: () => undefined
+               setTriggers: () => undefined,
+               calculateVirtualScrollHeight: () => 0
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга
@@ -3554,8 +3597,84 @@ define([
                   }
                };
                var result = ctrl.beginAdd(opt);
-               assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
-               assert.isTrue(result.isSuccessful());
+               assert.isTrue(result instanceof Promise);
+               assert.isTrue(result.isReady());
+            });
+         });
+
+         describe('beginAdd(), addPosition', () => {
+            let cfg;
+            let ctrl;
+            let sandbox;
+            let scrollToItemCalled;
+            beforeEach(() => {
+               scrollToItemCalled = false;
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: source,
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: rs,
+                     keyProperty: 'id'
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  editingConfig: {
+                     addPosition: 'top'
+                  },
+                  navigation: {
+                     source: 'page',
+                     sourceConfig: {
+                        pageSize: 6,
+                        page: 0,
+                        hasMore: false
+                     },
+                     view: 'infinity',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     }
+                  }
+               };
+               sandbox = sinon.createSandbox();
+               sandbox.replace(lists.BaseControl._private, 'scrollToItem', () => {
+                  scrollToItemCalled = true;
+                  return Promise.resolve();
+               });
+               ctrl = new lists.BaseControl(cfg);
+               ctrl.saveOptions(cfg);
+               ctrl._container = {
+                  clientHeight: 100
+               };
+
+            });
+
+            afterEach(() => {
+               sandbox.restore();
+            });
+            it('scrollToItem called on beginAdd if adding item is out of range', async () => {
+               await ctrl._beforeMount(cfg);
+               ctrl._listViewModel._startIndex = 2;
+               ctrl._editInPlace = {
+                  beginAdd: function() {
+                     return Promise.resolve();
+                  }
+               };
+               await ctrl.beginAdd({}).then(() => {
+                  assert.isTrue(scrollToItemCalled);
+               });
+            });
+            it('scrollToItem not called on beginAdd if adding item is in range', async () => {
+               await ctrl._beforeMount(cfg);
+               ctrl._listViewModel._startIndex = 0;
+               ctrl._editInPlace = {
+                  beginAdd: function() {
+                     return Promise.resolve();
+                  }
+               };
+               await ctrl.beginAdd({}).then(() => {
+                  assert.isFalse(scrollToItemCalled);
+               });
             });
          });
 
@@ -3969,7 +4088,23 @@ define([
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
                baseControl._editInPlace.hasPendingActivation = () => true;
+            });
 
+            it('after mount with started editing', () => {
+               let wasActivatedFirstInput = false;
+
+               baseControl._editInPlace.prepareHtmlInput = () => false;
+               baseControl._children.listView = {
+                  activateEditingRow: () => {
+                     wasActivatedFirstInput = true;
+                     return true;
+                  }
+               };
+               baseControl._container = {};
+               baseControl._scrollController = null;
+               baseControl._afterMount(cfg);
+               assert.isTrue(wasActivatedFirstInput);
+               assert.isFalse(baseControl._editInPlace._shouldActivateRow);
             });
 
             it('activate row bu click in input', () => {
@@ -5866,6 +6001,45 @@ define([
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
+      });
+
+      it('_beforeUpdate with new filter', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: tree.TreeViewModel,
+            keyProperty: 'id',
+            source: source,
+            selectedKeys: [],
+            excludedKeys: [],
+            parentProperty: 'node'
+         };
+         let instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         const notifySpy = sinon.spy(instance, '_notify');
+
+         instance._createSelectionController();
+         let cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue' };
+         instance._beforeUpdate(cfgClone);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+
+         cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
+         instance._beforeUpdate(cfgClone);
+         instance.saveOptions(cfgClone);
+
+         cfgClone = { ...cfg, filter: { id: 'newvalue1' }, root: 'newvalue1', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
+         instance._beforeUpdate(cfgClone);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
       });
 
       it('_beforeUpdate with new selectedKeys', async function() {

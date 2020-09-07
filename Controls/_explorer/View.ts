@@ -1,9 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_explorer/View/View');
-import tmplNotify = require('Controls/Utils/tmplNotify');
-import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import cInstance = require('Core/core-instance');
-import keysHandler = require('Controls/Utils/keysHandler');
+import {tmplNotify, keysHandler} from 'Controls/eventUtils';
 import randomId = require('Core/helpers/Number/randomId');
 import {SearchGridViewModel, SearchView, TreeGridView, ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
 import {factory} from 'Types/chain';
@@ -711,8 +709,7 @@ var
          let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();
          this._notifyHandler(e, 'arrowClick', item);
       },
-      _notifyHandler: tmplNotify,
-      _applyHighlighter: applyHighlighter
+      _notifyHandler: tmplNotify
    });
 
    Explorer._private = _private;

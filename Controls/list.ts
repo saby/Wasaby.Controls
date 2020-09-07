@@ -27,6 +27,7 @@
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
+ * @includes IReloadableList Controls/_list/interface/IReloadableList
  * @public
  * @author Крайнов Д.О.
  */
@@ -98,6 +99,8 @@ import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
 import {default as ScrollController} from './_list/ScrollController';
 import {IList} from './_list/interface/IList';
 import IListNavigation from './_list/interface/IListNavigation';
+import { CssClassList, createClassListCollection} from 'Controls/_list/resources/utils/CssClassList';
+import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 
@@ -135,6 +138,9 @@ export {
     BaseControl,
     ScrollEmitter,
     SearchItemsUtil,
+    CssClassList,
+    createClassListCollection,
+    getItemsBySelection,
     ItemsView,
     ItemsViewModel,
     LoadingIndicatorTemplate,

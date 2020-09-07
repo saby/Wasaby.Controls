@@ -1,8 +1,7 @@
 import BaseAction from 'Controls/_list/BaseAction';
 import Deferred = require('Core/Deferred');
-import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
+import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 import {ContextOptions as dataOptions} from 'Controls/context';
-import {error as dataSourceError} from 'Controls/dataSource';
 
 var _private = {
     removeFromSource: function (self, items) {
@@ -55,13 +54,13 @@ var _private = {
 /**
  * Контрол для удаления элементов списка в recordSet и dataSource.
  * Контрол должен располагаться в том же контейнере (см. {@link Controls/list:DataContainer}), что и список.
- * 
+ *
  * @remark
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FRemove">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/remover/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
- * 
+ *
  * @class Controls/_list/Remover
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IRemovable

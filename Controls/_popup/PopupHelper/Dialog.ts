@@ -32,6 +32,7 @@ export default class Dialog extends Base {
      *    }
      * </pre>
      * @see close
+     * @see destroy
      */
     open(popupOptions: IDialogPopupOptions): void {
         return super.open(popupOptions);
@@ -52,4 +53,24 @@ export default class Dialog extends Base {
  *    }
  * </pre>
  * @see open
+ * @see destroy
+ */
+
+/**
+ * Разрушает экземпляр класса
+ * @name Controls/_popup/PopupHelper/Dialog#destroy
+ * @function
+ * @example
+ * <pre class="brush: js">
+ *    import {DialogOpener} from 'Controls/popup';
+ *    ...
+ *    this._dialog = new DialogOpener();
+ *
+ *    _beforeUnmount() {
+ *        this._dialog.destroy();
+ *        this._dialog = null;
+ *    }
+ * </pre>
+ * @see open
+ * @see close
  */

@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Button/Button');
 import {cssStyleGeneration} from 'Controls/_dropdown/Button/MenuUtils';
-import * as tmplNotify from 'Controls/Utils/tmplNotify';
+import {tmplNotify} from 'Controls/eventUtils';
 import ActualApi from 'Controls/_buttons/ActualApi';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -12,7 +12,7 @@ import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {IStickyPopupOptions} from 'Controls/popup';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
-import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
+import {isLeftMouseButton} from 'Controls/fastOpenUtils';
 import {Logger} from 'UI/Utils';
 
 interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
@@ -40,6 +40,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @extends Core/Control
  * @mixes Controls/_menu/interface/IMenuPopup
  * @mixes Controls/_menu/interface/IMenuControl
+ * @mixes Controls/_menu/interface/IMenuBase
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/interface/IDropdown

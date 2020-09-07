@@ -90,6 +90,24 @@ describe('Controls/browser:Browser', () => {
                 deepStrictEqual(browser._searchController._dataOptions.filter, filter);
             });
 
+            it('filter in searchController updated', async () => {
+                const options = getBrowserOptions();
+                const filter = {
+                    testField: 'newFilterValue'
+                };
+                options.filter = filter;
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+
+                browser._filter = {
+                    testField: 'oldFilterValue'
+                };
+                browser._options.source = options.source;
+                browser._sourceController.updateOptions = () => { return true; };
+                browser._beforeUpdate(options);
+                deepStrictEqual(browser._searchController._options.filter, filter);
+            });
+
         });
 
         describe('operationsController', () => {
@@ -100,7 +118,10 @@ describe('Controls/browser:Browser', () => {
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
                 browser._beforeUpdate(options);
+                deepStrictEqual(browser._operationsController._savedListMarkedKey, 'testMarkedKey');
 
+                options.markedKey = undefined;
+                browser._beforeUpdate(options);
                 deepStrictEqual(browser._operationsController._savedListMarkedKey, 'testMarkedKey');
             });
 

@@ -24,7 +24,6 @@ import {error as dataSourceError} from 'Controls/dataSource';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
 import {StackOpener} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
-import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 /**
  * Контрол меню.
@@ -35,6 +34,7 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_menu/interface/IMenuControl
+ * @mixes Controls/_menu/interface/IMenuBase
  * @demo Controls-demo/Menu/Control/Source/Index
  * @control
  * @category Popup
@@ -70,6 +70,18 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
  * });
  * this._selectedKeys = [1, 3];
  * </pre>
+ */
+
+/**
+ * @name Controls/_menu/Control#selectedKeys
+ * @cfg {Array.<Number|String>} Массив ключей выбранных элементов.
+ * @demo Controls-demo/Menu/Control/SelectedKeys/Index
+ */
+
+/**
+ * @name Controls/_menu/Control#root
+ * @cfg {Number|String|null} Идентификатор корневого узла.
+ * @demo Controls-demo/Menu/Control/Root/Index
  */
 
 /**
@@ -168,6 +180,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
 
         if (rootChanged || sourceChanged || filterChanged) {
+            this._closeSubMenu();
             result = this._loadItems(newOptions).then(() => {
                 this._notifyResizeAfterRender = true;
             });
@@ -191,6 +204,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             this._sourceController.cancelLoading();
             this._sourceController = null;
         }
+
         if (this._listModel) {
             this._listModel.destroy();
             this._listModel = null;

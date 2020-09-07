@@ -31,7 +31,7 @@
 import Container = require('Controls/_scroll/Container');
 import ContainerNew from 'Controls/_scroll/ContainerNew';
 import Watcher = require('Controls/_scroll/Scroll/Watcher');
-import StickyHeader = require('Controls/_scroll/StickyHeader');
+export {default as StickyHeader} from 'Controls/_scroll/StickyHeader';
 import _Scrollbar = require('Controls/_scroll/Scroll/Scrollbar');
 import _scrollContext = require('Controls/_scroll/Scroll/Context');
 import _stickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
@@ -42,6 +42,7 @@ import EdgeIntersectionObserver from 'Controls/_scroll/IntersectionObserver/Edge
 import EdgeIntersectionObserverContainer from 'Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer';
 import IntersectionObserverSyntheticEntry from 'Controls/_scroll/IntersectionObserver/SyntheticEntry';
 import _ContainerBase from 'Controls/_scroll/ContainerBase';
+import VirtualScrollContainer from 'Controls/_scroll/VirtualScrollContainer';
 
 import Group from 'Controls/_scroll/StickyHeader/Group';
 import {isStickySupport, getNextId as getNextStickyId, getOffset as getStickyOffset} from 'Controls/_scroll/StickyHeader/Utils';
@@ -52,7 +53,6 @@ export {
    Container,
    ContainerNew as _ContainerNew,
    Watcher,
-   StickyHeader,
    _Scrollbar,
    _scrollContext,
    _stickyHeaderContext,
@@ -68,5 +68,6 @@ export {
    EdgeIntersectionObserver,
    EdgeIntersectionObserverContainer,
    IntersectionObserverSyntheticEntry,
+   VirtualScrollContainer,
    _ContainerBase
 };

@@ -1,5 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
-import {BaseViewModel, ItemsUtil, ListViewModel} from 'Controls/list';
+import {BaseViewModel, ItemsUtil, ListViewModel, createClassListCollection} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import {isStickySupport} from 'Controls/scroll';
 import * as LadderWrapper from 'wml!Controls/_grid/LadderWrapper';
@@ -31,7 +31,6 @@ import {IItemActionsTemplateConfig} from 'Controls/itemActions';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
-import {createClassListCollection} from "../Utils/CssClassList";
 import { stickyLadderCellsCount, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
 import { ItemsEntity } from 'Controls/dragnDrop';
@@ -844,13 +843,21 @@ var
 
         _setHeader: function(columns) {
             this._header = columns;
+            if (!this.isDrawHeaderWithEmptyList()) {
+                return;
+            } else {
+                this._createHeaderModel();
+            }
+        },
+
+        _createHeaderModel() {
             this._prepareHeaderColumns(
                 this._header,
                 this._options.multiSelectVisibility !== 'hidden',
                 this._shouldAddActionsCell(),
                 this.stickyLadderCellsCount()
             );
-            if (columns && columns.length) {
+            if (this._header && this._header.length) {
                 this._headerModel = {
                     isStickyHeader: this.isStickyHeader.bind(this),
                     getCurrentHeaderColumn: this.getCurrentHeaderColumn.bind(this),
@@ -866,6 +873,11 @@ var
             } else {
                 this._headerModel = null;
             }
+        },
+
+        setHeaderInEmptyListVisible(newVisibility) {
+            this.headerInEmptyListVisible = newVisibility;
+            this.setHeader(this._header, true);
         },
 
         _nextHeaderVersion(): void {
@@ -1754,13 +1766,17 @@ var
                         getContents: current.getContents
                 };
                 currentColumn.classList = _private.getItemColumnCellClasses(self, current, current.theme, backgroundColorStyle);
+
+
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
                      * isColspaned добавлена как костыль для временного лечения ошибки.
                      * После закрытия можно удалить здесь и из шаблонов.
                      * https://online.sbis.ru/opendoc.html?guid=4230f8f0-7fd1-4018-bd8c-08d703af3899
                      */
-                    columnData.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${current.theme}`;
+                    if (isColspaned) {
+                        columnData.classList.padding.right = `controls-Grid__cell_spacingLastCol_${current.itemPadding.right}_theme-${current.theme}`;
+                    }
                     return columnData.classList.padding;
                 };
                 currentColumn.column = current.columns[current.columnIndex];

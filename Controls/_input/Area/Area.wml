@@ -37,6 +37,7 @@
                         template="{{_field.template}}"
                         wasActionUser="{{_wasActionUser}}"
                         value="{{_viewModel.displayValue}}"
+                        isBrowserPlatform="{{_isBrowserPlatform}}"
                         hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
                         isEdge="{{_isEdge}}"/>
          </ws:else>

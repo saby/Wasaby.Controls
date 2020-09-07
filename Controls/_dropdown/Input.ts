@@ -13,7 +13,7 @@ import {IStickyPopupOptions, InfoboxTarget} from 'Controls/popup';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
-import {isLeftMouseButton} from 'Controls/Utils/FastOpen';
+import {isLeftMouseButton} from 'Controls/fastOpenUtils';
 
 interface IInputOptions extends IBaseDropdownOptions {
    fontColorStyle?: string;
@@ -41,6 +41,8 @@ let getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @extends Core/Control
  * @mixes Controls/_menu/interface/IMenuPopup
  * @mixes Controls/_menu/interface/IMenuControl
+ * @mixes Controls/_menu/interface/IMenuBase
+ * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/_interface/IFilterChanged
@@ -391,7 +393,7 @@ export default class Input extends BaseDropdown {
 
    protected _selectorResult(data): void {
       this._controller.handleSelectorResult(data);
-      this._selectedItemsChangedHandler(data);
+      this._selectedItemsChangedHandler(factory(data).toArray());
    }
 
    protected _selectorTemplateResult(event, selectedItems): void {

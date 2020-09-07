@@ -3,7 +3,7 @@ import * as template from 'wml!Controls/_browser/resources/BrowserTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ControllerClass as OperationsController} from 'Controls/operations';
 import {ControllerClass as SearchController} from 'Controls/search';
-import tmplNotify = require('Controls/Utils/tmplNotify');
+import {tmplNotify} from 'Controls/eventUtils';
 import {RecordSet} from 'Types/collection';
 
 import {ContextOptions} from 'Controls/context';
@@ -77,31 +77,16 @@ export default class Browser extends Control {
 
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
         const isChanged = this._sourceController.updateOptions(newOptions);
+        let methodResult;
 
         this._operationsController.update(newOptions);
-        if (newOptions.hasOwnProperty('markedKey')) {
+        if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
-
-        this._searchController.update(
-            this._getSearchControllerOptions(newOptions),
-            {dataOptions: this._dataOptionsContext}
-        );
-
-        this._operationsController.update(newOptions);
-        if (newOptions.hasOwnProperty('markedKey')) {
-            this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
-        }
-
-        this._searchController.update(
-            this._getSearchControllerOptions(newOptions),
-            {dataOptions: this._dataOptionsContext}
-        );
 
         if (this._options.source !== newOptions.source) {
             this._loading = true;
-            return this._sourceController.load().then((items) => {
-
+            methodResult = this._sourceController.load().then((items) => {
                 // для того чтобы мог посчитаться новый prefetch Source внутри
                 const newItems = this._sourceController.setItems(items);
                 if (!this._items) {
@@ -125,10 +110,18 @@ export default class Browser extends Control {
             // TODO 2) getState у SourceController пересоздаёт prefetchProxy,
             // TODO поэтому весь state на контекст перекладывать нельзя, иначе список перезагрузится с теми же данными
             this._filter = controllerState.filter;
+            this._dataOptionsContext.navigation = controllerState.navigation;
             this._dataOptionsContext.filter = controllerState.filter;
             this._dataOptionsContext.updateConsumers();
             this._groupHistoryId = newOptions.groupHistoryId;
         }
+
+        this._searchController.update(
+            this._getSearchControllerOptions(newOptions),
+            {dataOptions: this._dataOptionsContext}
+        );
+
+        return methodResult;
     }
 
     protected _beforeUnmount(): void {
@@ -165,8 +158,8 @@ export default class Browser extends Control {
     _itemsReadyCallbackHandler(items): void {
         if (this._items !== items) {
             this._items = this._sourceController.setItems(items);
-            const controllerState = this._sourceController.getState();
-            this._updateContext(controllerState);
+            this._dataOptionsContext.items = this._items;
+            this._dataOptionsContext.updateConsumers();
         }
 
         if (this._options.itemsReadyCallback) {

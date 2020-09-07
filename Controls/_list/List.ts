@@ -7,7 +7,7 @@ import ListViewModel = require('Controls/_list/ListViewModel');
 import { Collection } from 'Controls/display';
 
 import Deferred = require('Core/Deferred');
-import tmplNotify = require('Controls/Utils/tmplNotify');
+import {tmplNotify} from 'Controls/eventUtils';
 import viewName = require('Controls/_list/ListView');
 import {default as ListControl} from 'Controls/_list/ListControl';
 

@@ -434,6 +434,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
          gridView.saveOptions(cfg);
          gridView._listModel = {
             setBaseItemTemplateResolver: () => {},
+            setHeaderInEmptyListVisible: () => {},
             setColumnTemplate: () => {},
             setColumnScroll: (opts, silent) => {calledMethods.push(['setColumnScroll', silent])},
             setColumns: (opts, silent) => {calledMethods.push(['setColumns', silent])},
@@ -732,6 +733,9 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                   offsetWidth: 25
                } : null;
                contentContainer.getBoundingClientRect = () => ({
+                  left: 0
+               });
+               gridView._children.columnScrollContainer.getBoundingClientRect = () => ({
                   left: 0
                });
 

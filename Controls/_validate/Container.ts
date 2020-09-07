@@ -271,7 +271,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
                         const event = {
                             target: this._container
                         };
-                        GlobalPopup._openInfoBoxHandler(event, cfg);
+                        GlobalPopup.openInfoBoxHandler(event, cfg);
                     }
                 });
             });
@@ -312,7 +312,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
                 const event = {
                     target: this._container
                 };
-                GlobalPopup._closeInfoBoxHandler(event, delay);
+                GlobalPopup.closeInfoBoxHandler(event, delay);
             }
         }
         this._isOpened = false;
