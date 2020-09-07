@@ -734,7 +734,7 @@ define(
                const history = {
                   pinned: [1]
                };
-               const oldItems = collection.RecordSet({
+               const oldItems = new collection.RecordSet({
                   rawData: [],
                   keyProperty: 'id'
                });
@@ -748,13 +748,13 @@ define(
 
                itemUnpinned = false;
                source = new historyMod.Source({
+                  unpinIfNotExist: false,
                   originSource: new sourceLib.Memory({
                      keyProperty: 'id',
                      data: items
                   }),
                   historySource: new historyMod.Service({
-                     historyId: 'TEST_HISTORY_ID',
-                     unpinIfNotExist: false
+                     historyId: 'TEST_HISTORY_ID'
                   }),
                   parentProperty: 'parent'
                });
