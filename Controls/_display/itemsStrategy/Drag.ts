@@ -95,24 +95,11 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
     }
 
     getDisplayIndex(index: number): number {
-        const itemsOrder = this._getItemsOrder();
-        const sourceIndex = this.source.getDisplayIndex(index);
-        const overallIndex = sourceIndex + 1;
-        const itemIndex = itemsOrder.indexOf(overallIndex);
-
-        return itemIndex === -1 ? itemsOrder.length : itemIndex;
+        return this.source.getDisplayIndex(index);
     }
 
     getCollectionIndex(index: number): number {
-        const itemsOrder = this._getItemsOrder();
-        const itemIndex = itemsOrder[index];
-
-        let sourceIndex = itemIndex - 1;
-        if (sourceIndex >= 0) {
-            sourceIndex = this.source.getCollectionIndex(sourceIndex);
-        }
-
-        return sourceIndex;
+        return this.source.getCollectionIndex(index);
     }
 
     splice(start: number, deleteCount: number, added?: S[]): T[] {
