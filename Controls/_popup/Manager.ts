@@ -38,6 +38,10 @@ class Manager {
     _contextIsTouch: boolean = false;
     _popupItems: List<IPopupItem> = new List();
 
+    constructor(options = {}) {
+        this.initTheme(options);
+    }
+
     protected initTheme(options): void {
         ManagerController.setPopupHeaderTheme(options.popupHeaderTheme);
     }

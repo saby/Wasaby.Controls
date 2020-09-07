@@ -352,8 +352,7 @@ define('Controls/Application',
          },
 
          _createPopupManager: function(cfg) {
-            this._popupManager = new popup.ManagerClass();
-            this._popupManager.initTheme(cfg);
+            this._popupManager = new popup.ManagerClass(cfg);
          },
 
          _registerHandler: function(event, registerType, component, callback, config) {
