@@ -52,7 +52,7 @@ export default class ScrollPagingController {
     protected _curState: IScrollpagingState = null;
     protected _options: IScrollPagingOptions = null;
 
-    constructor(cfg: IScrollPagingOptions, hasMoreData: IHasMoreData) {
+    constructor(cfg: IScrollPagingOptions, hasMoreData: IHasMoreData = {up: false, down: false}) {
         this._options = cfg;
         this.updateStateByScrollParams(cfg.scrollParams, hasMoreData);
     }

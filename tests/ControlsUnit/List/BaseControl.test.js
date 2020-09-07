@@ -2279,6 +2279,13 @@ define([
                      hasMore: false
                   }
                },
+               getHasMoreData: (sourceController, direction) => {
+                  const directions = {
+                     up: false,
+                     down: false
+                  };
+                  return directions[direction];
+               },
             };
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
