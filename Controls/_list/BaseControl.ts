@@ -2254,7 +2254,7 @@ const _private = {
 
     setMarkerAfterScrolling(self, scrollTop) {
         // TODO вручную обрабатывать pagedown и делать stop propagation
-        if (self._markerController) {
+        if (self._markerController && self._children.listView) {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
