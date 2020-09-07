@@ -85,9 +85,11 @@ export default class ScrollPagingController {
                 arrowState.prev = 'hidden';
                 arrowState.next = 'hidden';
                 arrowState.begin = 'hidden';
+
                 if (arrowState.end === 'visible') {
-                    arrowState.end = 'visible';
                     pagingCfg.showEndButton = true;
+                } else {
+                    arrowState.end = 'hidden';
                 }
                 break;
             case 'numbers':
