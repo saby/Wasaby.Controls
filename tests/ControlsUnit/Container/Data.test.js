@@ -105,6 +105,7 @@ define(
                filter: newFilter
             });
             assert.isUndefined(data._dataOptionsContext.navigation);
+            assert.deepStrictEqual(data._filter, newFilter);
 
             return new Promise((resolve, reject) => {
                loadDef
