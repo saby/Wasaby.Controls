@@ -79,6 +79,16 @@ var _private = {
         return result;
     },
 
+    getResetFastText: function(items) {
+        const textArr = [];
+        factory(items).each((item) => {
+            if (_private.isFrequentItem(item) && item.resetText) {
+                textArr.push(item.resetText);
+            }
+        });
+        return textArr.length ? textArr.join(', ') : rk('Все');
+    },
+
     isFrequentItem: function(item) {
       return item.viewMode === 'frequent';
     },
@@ -240,6 +250,7 @@ var _private = {
         });
         self._filterText = _private.getFilterButtonText(self, items);
         self._dateRangeItem = _private.getDateRangeItem(items);
+        self._resetFastText = _private.getResetFastText(items);
         self._displayText = {...self._displayText};
     },
 
@@ -666,6 +677,7 @@ var Filter = Control.extend({
     _dateRangeItem: null,
     _hasResetValues: true,
     _dependenciesTimer: null,
+    _resetFastText: null,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};

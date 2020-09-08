@@ -1,4 +1,4 @@
-import {ICrudPlus} from 'Types/source';
+import {ICrudPlus, ICrud} from 'Types/source';
 import {IPopupOptions} from 'Controls/popup';
 import {INavigationOptionValue} from 'Controls/interface';
 /**
@@ -69,6 +69,7 @@ import {INavigationOptionValue} from 'Controls/interface';
  * @property {String} name Имя фильтра.
  * @property {*} value Текущее значение фильтра.
  * @property {*} resetValue Значение фильтра по умолчанию.
+ * @property {String} resetText Текстовое значение, отображаемое у кнопки фильтра в случае, когда в быстром фильтре установлено значение "по-умолчанию"
  * @property {String} textValue Текстовое значение фильтра. Используется для отображения текста у кнопки фильтра.
  * @property {String} emptyText Текст пункта, значение которого является значением "по-умолчанию" для фильтра. Пункт будет добавлен в начало списка с заданным текстом.
  * @property {String|Number} emptyKey Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
@@ -601,6 +602,7 @@ export interface IFilterItem {
     id?: string;
     value: any;
     resetValue?: any;
+    resetText?: string;
     textValue: string;
     emptyText?: string;
     emptyKey?: boolean | string | number;
@@ -609,7 +611,7 @@ export interface IFilterItem {
     viewMode?: 'basic' | 'frequent' | 'extended';
     type?: 'dateRange';
     editorOptions?: {
-        source?: ICrudPlus;
+        source?: ICrudPlus | ICrud;
         keyProperty?: string;
         displayProperty?: string;
         multiSelect?: boolean;

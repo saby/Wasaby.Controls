@@ -1341,6 +1341,25 @@ define(
                sinon.assert.calledOnce(filter.View._private.loadItemsFromSource);
                sandBox.restore();
             });
+            it('getResetFastText', () => {
+               assert.isTrue(filter.View._private.getResetFastText(defaultSource) === 'Все');
+               const items = [{
+                  name: '1',
+                  resetText: 'Все состояния',
+                  viewMode: 'frequent'
+               }, {
+                  name: '2',
+                  viewMode: 'frequent'
+               }, {
+                  name: '3',
+                  resetText: 'Все операции'
+               }, {
+                  name: '4',
+                  resetText: 'Все сотрудники',
+                  viewMode: 'frequent'
+               }];
+               assert.isTrue(filter.View._private.getResetFastText(items) === 'Все состояния, Все сотрудники');
+            });
             afterEach(function() {
                Env.getStore = originalGetStore;
                Env.setStore = originalSetStore;
