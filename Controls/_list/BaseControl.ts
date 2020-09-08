@@ -73,7 +73,7 @@ import {
    SelectionController
 } from 'Controls/multiselection';
 import {getStickyHeadersHeight} from 'Controls/scroll';
-import { MarkerController, IMarkerListOptions, MarkerVisibility, TVisibility } from 'Controls/marker';
+import { MarkerController, IMarkerListOptions, Visibility, TVisibility } from 'Controls/marker';
 import { DndFlatController, DndTreeController } from 'Controls/listDragNDrop';
 
 import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
@@ -2162,7 +2162,7 @@ const _private = {
     // region Marker
 
     shouldProcessMarker(options: IMarkerListOptions): boolean {
-        return options.markerVisibility !== MarkerVisibility.Hidden;
+        return options.markerVisibility !== Visibility.Hidden;
     },
 
     hasMarkerController(self: typeof BaseControl): boolean {
@@ -3316,20 +3316,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (_private.shouldProcessMarker(newOptions)) {
-            const needUpdateController = _private.hasMarkerController(this);
             const markerController = _private.getMarkerController(this, newOptions);
-            if (needUpdateController) {
-                const markedKey = newOptions.markedKey !== undefined
-                    ? newOptions.markedKey
-                    : markerController.getMarkedKey();
+            const markedKey = newOptions.markedKey !== undefined
+                ? newOptions.markedKey
+                : markerController.getMarkedKey();
 
-                markerController.updateOptions({
-                    model: this._listViewModel,
-                    markerVisibility: newOptions.markerVisibility,
-                    markedKey
-                });
-                markerController.applyMarkedKey(markedKey);
-            }
+            markerController.updateOptions({
+                model: this._listViewModel,
+                markerVisibility: newOptions.markerVisibility,
+                markedKey
+            });
+
+            markerController.applyMarkedKey(markedKey);
         }
 
         if (this._selectionController) {

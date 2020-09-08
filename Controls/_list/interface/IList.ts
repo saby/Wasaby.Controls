@@ -12,7 +12,6 @@ import { IMarkerListOptions } from 'Controls/marker';
 
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
 
-type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|'null';
 type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'null';

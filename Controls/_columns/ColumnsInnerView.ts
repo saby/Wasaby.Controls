@@ -12,7 +12,7 @@ import {IList} from 'Controls/list';
 
 import ColumnsController from './controllers/ColumnsController';
 import * as template from 'wml!Controls/_columns/ColumnsInnerView';
-import { MarkerController, MarkerVisibility } from 'Controls/marker';
+import { MarkerController, Visibility } from 'Controls/marker';
 
 export interface IColumnsInnerViewOptions extends IList {
     columnMinWidth: number;
@@ -46,7 +46,7 @@ export default class ColumnsInnerView extends Control {
         this._resizeHandler = this._resizeHandler.bind(this);
         this._model = options.listModel;
 
-        if (options.markerVisibility !== MarkerVisibility.Visible) {
+        if (options.markerVisibility !== Visibility.Visible) {
             this._markerController = new MarkerController({
                 markerVisibility: options.markerVisibility,
                 markedKey: options.markedKey,
