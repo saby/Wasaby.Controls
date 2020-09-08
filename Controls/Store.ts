@@ -1,8 +1,14 @@
+import {getStore} from 'Application/Env';
+
+const ID = 'pageState';
+const STORE_KEY: string = 'value';
+
 interface IStore {
-    getState: Record<string, any>;
-    onPropertyChanged: (propertyName: string, callback: (propertyName: string, data: any) => void) => string;
+    getState: () => Record<string, unknown>;
+    get: (propertyName: string) => unknown;
+    onPropertyChanged: (propertyName: string, callback: (data: unknown) => void) => string;
     unsubscribe: (id: string) => void;
-    dispatch: (propertyName: string, data: any) => void;
+    dispatch: (propertyName: string, data: unknown) => void;
 }
 
 interface IStateCallback {
@@ -12,9 +18,9 @@ interface IStateCallback {
 
 interface ICtxState {
     [propetyName: string]: {
-        value: any,
+        value: unknown,
         callbacks: IStateCallback[]
-    }
+    };
 }
 
 interface IState {
@@ -28,16 +34,19 @@ const ID_SEPARATOR = '--';
  *
  */
 class Store implements IStore {
-    private constructor() { }
-
-    state: IState;
+    get(propertyName: string): unknown {
+        const state = Store._getState();
+        const activeState = state[state.activeContext];
+        return activeState ? activeState[propertyName] : undefined;
+    }
 
     /**
      * Получение текущего стейта
      */
     getState(): ICtxState {
-        const state = this.state[this.state.activeContext] || {};
-        return state as ICtxState;
+        const state = Store._getState();
+        const activeState = state[state.activeContext] || {};
+        return activeState as ICtxState;
     }
 
     /**
@@ -45,7 +54,7 @@ class Store implements IStore {
      * @param propertyName название поля в стейте
      * @param data данные
      */
-    dispatch(propertyName: string, data: any): void {
+    dispatch(propertyName: string, data: unknown): void {
         this._setValue(propertyName, data);
         this._notifySubscribers(propertyName);
     }
@@ -56,7 +65,7 @@ class Store implements IStore {
      * @param callback
      * @return {string} id колбэка, чтоб отписаться при уничтожении контрола
      */
-    onPropertyChanged(propertyName: string, callback: (propertyName: string, data: any) => void): string {
+    onPropertyChanged(propertyName: string, callback: (data: unknown) => void): string {
         return this._addCallback(propertyName, callback);
     }
 
@@ -69,33 +78,39 @@ class Store implements IStore {
     }
 
     // обновляем название актуального контекста в зависимости от урла (сейчас это делает OnlineSbisRu/_router/Router)
-    updateStoreContext(contextName): void {
-        this.state.activeContext = contextName;
-        if (!this.state[this.state.activeContext]) {
-            this.state[this.state.activeContext] = {};
+    updateStoreContext(contextName: string): void {
+        const state = Store._getState();
+        state.activeContext = contextName;
+        if (!state[state.activeContext]) {
+            state[state.activeContext] = {};
         }
     }
 
     private _hasValue(propertyName: string): boolean {
-        return this.state[this.state.activeContext].hasOwnProperty(propertyName);
+        const state = Store._getState();
+        return state[state.activeContext].hasOwnProperty(propertyName);
     }
 
-    private _setValue(propertyName: string, value: any): void {
+    private _setValue(propertyName: string, value: unknown): void {
+        const state = Store._getState();
+
         if (!this._hasValue(propertyName)) {
             this._defineProperty(propertyName);
         }
-        this.state[this.state.activeContext]['_' + propertyName].value = value;
+        state[state.activeContext]['_' + propertyName].value = value;
     }
 
     // объявление поля в стейте
     private _defineProperty(propertyName: string): void {
+        const state = Store._getState();
+
         // приватное поле с _ в котором лежит значение и колбэки
-        Object.defineProperty(this.state[this.state.activeContext], '_' + propertyName, {
+        Object.defineProperty(state[state.activeContext], '_' + propertyName, {
             value: {value: undefined, callbacks: []},
             enumerable: false
         });
         // сеттер и геттер для публичного поля
-        Object.defineProperty(this.state[this.state.activeContext], propertyName, {
+        Object.defineProperty(state[state.activeContext], propertyName, {
             set: function () {
                 // do nothing
             },
@@ -107,22 +122,25 @@ class Store implements IStore {
     }
 
     private _addCallback(propertyName: string, callbackFn: Function): string {
+        const state = Store._getState();
+
         // создадим болванку с undefined если нужно
         if (!this._hasValue(propertyName)) {
             this._defineProperty(propertyName);
         }
-        const currentCallbacks = this.state[this.state.activeContext]['_' + propertyName].callbacks;
+        const currentCallbacks = state[state.activeContext]['_' + propertyName].callbacks;
         const newCallbackId = currentCallbacks.length > 0 ?
-            currentCallbacks[currentCallbacks.length - 1].id.split(ID_SEPARATOR)[2] :
-            0;
-        const id = [this.state.activeContext, '_' + propertyName, +newCallbackId + 1].join(ID_SEPARATOR);
+            currentCallbacks[currentCallbacks.length - 1].id.split(ID_SEPARATOR)[2] : 0;
+        const id = [state.activeContext, '_' + propertyName, +newCallbackId + 1].join(ID_SEPARATOR);
         currentCallbacks.push({id, callbackFn});
         return id;
     }
 
     private _removeCallback(id: string): void {
-        const [ctxName, propertyName, index]: string[] = id.split(ID_SEPARATOR);
-        this.state[ctxName][propertyName].callbacks = this.state[ctxName][propertyName].callbacks.reduce(
+        const state = Store._getState();
+
+        const [ctxName, propertyName]: string[] = id.split(ID_SEPARATOR);
+        state[ctxName][propertyName].callbacks = state[ctxName][propertyName].callbacks.reduce(
             (acc, callbackObj) => {
                 if (callbackObj.id !== id) {
                     acc.push(callbackObj);
@@ -135,24 +153,17 @@ class Store implements IStore {
     }
 
     private _notifySubscribers(propertyName: string): void {
-        this.state[this.state.activeContext]['_' + propertyName].callbacks.forEach(
-            (callbackObject: IStateCallback) => {
-                return callbackObject.callbackFn(this.state[this.state.activeContext][propertyName]);
-            }
-        );
+        const state = Store._getState();
+        state[state.activeContext]['_' + propertyName].callbacks.forEach((
+           callbackObject: IStateCallback
+        ) => {
+            return callbackObject.callbackFn(state[state.activeContext][propertyName]);
+        });
     }
 
-    private static instance: Store;
-
-    static getInstance(): Store {
-        if (!Store.instance) {
-            Store.instance = new Store();
-            Store.instance.state = {};
-        }
-        return Store.instance;
+    static _getState(): IState {
+        return getStore<Record<string, IState>>(ID).get(STORE_KEY) || {} as IState;
     }
 }
 
-const instance = Store.getInstance();
-
-export default instance;
+export default new Store();
