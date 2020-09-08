@@ -25,6 +25,7 @@
  * @author Авраменко А.С.
  */
 
+import ControllerClass from 'Controls/_dragnDrop/ControllerClass';
 import DraggingTemplate = require('Controls/_dragnDrop/DraggingTemplate');
 import Entity from 'Controls/_dragnDrop/Entity';
 import ItemsEntity from 'Controls/_dragnDrop/Entity/Items';
@@ -38,6 +39,7 @@ export {default as ResizingLine} from 'Controls/_dragnDrop/ResizingLine';
 export {default as Container, IDragObject} from 'Controls/_dragnDrop/Container';
 
 export {
+   ControllerClass,
    DraggingTemplate,
    Entity,
    ItemsEntity,
