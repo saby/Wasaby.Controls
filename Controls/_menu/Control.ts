@@ -13,7 +13,7 @@ import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Model} from 'Types/entity';
+import {Model, relation} from 'Types/entity';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {view as constView} from 'Controls/Constants';
@@ -24,6 +24,12 @@ import {error as dataSourceError} from 'Controls/dataSource';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
 import {StackOpener} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
+import {
+    FlatSelectionStrategy, IFlatSelectionStrategyOptions,
+    ISelectionStrategy, ITreeSelectionStrategyOptions,
+    SelectionController,
+    TreeSelectionStrategy
+} from 'Controls/multiselection';
 
 /**
  * Контрол меню.
@@ -155,6 +161,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _errorController: dataSourceError.Controller;
     private _errorConfig: dataSourceError.ViewConfig|void;
     private _stack: StackOpener;
+    private _selectionController: SelectionController = null;
 
     protected _beforeMount(options: IMenuControlOptions,
                            context?: object,
@@ -165,8 +172,69 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         this._stack = new StackOpener();
         if (options.source) {
-            return this._loadItems(options);
+            return this._loadItems(options).then(() => {
+                if (options.selectedKeys && options.selectedKeys.length !== 0) {
+                    this._selectionController = this._createSelectionController(options);
+                }
+            });
         }
+    }
+
+    private _createSelectionController(options: IMenuControlOptions): SelectionController {
+        const strategy = this._createSelectionStrategy(options, this._listModel.getCollection());
+        return new SelectionController({
+            model: this._listModel,
+            selectedKeys: options.selectedKeys,
+            excludedKeys: options.excludedKeys,
+            searchValue: options.searchValue,
+            strategy
+        });
+    }
+
+    private _createSelectionStrategy(options: IMenuControlOptions, items: RecordSet): ISelectionStrategy {
+        const strategyOptions = this._getSelectionStrategyOptions(options, items);
+        if (options.parentProperty) {
+            return new TreeSelectionStrategy(strategyOptions);
+        } else {
+            return new FlatSelectionStrategy(strategyOptions);
+        }
+    }
+
+    private _getSelectionStrategyOptions(options: IMenuControlOptions, items: RecordSet): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
+        if (options.parentProperty) {
+            return {
+                nodesSourceControllers: options.nodesSourceControllers,
+                selectDescendants: options.selectDescendants,
+                selectAncestors: options.selectAncestors,
+                hierarchyRelation: new relation.Hierarchy({
+                    keyProperty: options.keyProperty || 'id',
+                    parentProperty: options.parentProperty || 'Раздел',
+                    nodeProperty: options.nodeProperty || 'Раздел@',
+                    declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
+                }),
+                rootId: options.root,
+                items
+            };
+        } else {
+            return { items };
+        }
+    }
+
+    private _getSelectionController(options?: IMenuControlOptions): SelectionController {
+        if (!this._selectionController) {
+            this._selectionController = this._createSelectionController(options || this._options);
+        }
+        return this._selectionController;
+    }
+
+    private _updateSelectionController(newOptions: any): void {
+        this._getSelectionController().update({
+            model: this._listModel,
+            selectedKeys: newOptions.selectedKeys,
+            excludedKeys: newOptions.excludedKeys,
+            searchValue: newOptions.searchValue,
+            strategyOptions: this._getSelectionStrategyOptions(newOptions, this._listModel.getCollection())
+        });
     }
 
     protected _beforeUpdate(newOptions: IMenuControlOptions): void {
@@ -186,10 +254,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             });
         }
         if (this._isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
-            this._setSelectedItems(this._listModel, newOptions.selectedKeys);
+            this._updateSelectionController(newOptions);
             this._notify('selectedItemsChanged', [this._getSelectedItems()]);
         }
-
         return result;
     }
 
@@ -299,7 +366,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         } else {
             if (this._options.multiSelect && this._selectionChanged &&
                 !this._isEmptyItem(treeItem.getContents()) && !MenuControl._isFixedItem(item)) {
-                this._changeSelection(key, treeItem);
+                this._changeSelection(key);
 
                 this._notify('selectedKeysChanged', [this._getSelectedKeys()]);
                 this._notify('selectedItemsChanged', [this._getSelectedItems()]);
@@ -547,16 +614,27 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }, selectorTemplate.popupOptions || {});
     }
 
-    private _changeSelection(key: string|number|null, treeItem: CollectionItem<Model>): void {
+    private _changeSelection(key: string|number|null): void {
+        const selectionController = this._getSelectionController();
         const selectedItems = this._listModel.getSelectedItems();
         if (selectedItems.length === 1 && MenuControl._isFixedItem(selectedItems[0].getContents())) {
-            MenuControl._selectItem(this._listModel, selectedItems[0].getContents().getKey(), false);
+            selectionController.setSelectedKeys([selectedItems[0].getContents().getKey()], this._options.excludedKeys);
         }
-        MenuControl._selectItem(this._listModel, key, !treeItem.isSelected());
+        selectionController.toggleItem(key);
+        selectionController.restoreSelection();
 
         const isEmptySelected: boolean = this._options.emptyText && !this._listModel.getSelectedItems().length;
-        MenuControl._selectItem(this._listModel, this._options.emptyKey, !!isEmptySelected );
+        if (isEmptySelected) {
+            selectionController.setSelectedKeys([this._options.emptyKey], this._options.excludedKeys);
+        }
+        this._listModel.nextVersion();
     }
+
+    /*
+        1. Нет обновления модели в методе toggleItem
+        2. Приходится вызывать метод nextVersion, чтобы в menu:Render обновились данные и отобразилась галка
+        3. Если emptyKey = null, метод setSelectedKeys применяется ко всем элементам
+    */
 
     private _getSelectedKeys(): TSelectedKeys {
         const selectedKeys: TSelectedKeys = [];
@@ -570,16 +648,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return factory(this._listModel.getSelectedItems()).map(
             (item: CollectionItem<Model>): Model => item.getContents()
         ).reverse().value();
-    }
-
-    private _getSelectedItemsByKeys(listModel: Collection<Model>, selectedKeys: TSelectedKeys): Model[] {
-        const items = [];
-        factory(selectedKeys).each((key) => {
-            if (listModel.getItemBySourceKey(key)) {
-                items.push(listModel.getItemBySourceKey(key).getContents());
-            }
-        });
-        return items;
     }
 
     private _expandedItemsFilterCheck(item: CollectionItem<Model>, index: number): boolean {
@@ -612,7 +680,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _createViewModel(items: RecordSet, options: IMenuControlOptions): void {
         this._listModel = this._getCollection(items, options);
-        this._setSelectedItems(this._listModel, options.selectedKeys);
     }
 
     private _getCollection(items: RecordSet<Model>, options: IMenuControlOptions): Collection<Model> {
@@ -658,10 +725,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const groupId: string = item.get(options.groupProperty);
         const isHistoryItem: boolean = MenuControl._isHistoryItem(item) && this._options.root === null;
         return groupId !== undefined && !isHistoryItem ? groupId : constView.hiddenGroup;
-    }
-
-    private _setSelectedItems(listModel: Collection<Model>, keys: TSelectedKeys): void {
-        listModel.setSelectedItems(this._getSelectedItemsByKeys(listModel, keys), true);
     }
 
     private _getSourceController(
@@ -905,19 +968,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return isVisible;
     }
 
-    private static _selectItem(collection: Collection<Model>, key: number|string, state: boolean): void {
-        const item: CollectionItem<Model> = collection.getItemBySourceKey(key);
-        if (item) {
-            item.setSelected(state, true);
-            collection.nextVersion();
-        }
-    }
-
     static getDefaultOptions(): object {
         return {
             selectedKeys: [],
+            excludedKeys: [],
+            emptyKey: 'notSelected',
             root: null,
-            emptyKey: null,
             moreButtonCaption: rk('Еще') + '...',
             groupTemplate,
             itemPadding: {}
