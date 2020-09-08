@@ -27,12 +27,10 @@ class DateRangeEditor extends Control<IControlOptions> {
     protected _beforeMount(options: IControlOptions): Promise<void>|void {
         this._templateName = 'Controls/dateRange:' + (options.editorMode === 'Selector' ? 'RangeSelector' : 'RangeShortSelector');
         this._fontColorStyle = options.readOnly ? 'label' : options.fontColorStyle;
+        this._reseted = isEqual(options.value, options.resetValue);
         if (options.emptyCaption) {
             this._emptyCaption = options.emptyCaption;
         } else if (options.resetValue) {
-            if (isEqual(options.value, options.resetValue)) {
-                this._reseted = true;
-            }
             return this.getCaption(options.resetValue[0], options.resetValue[1]).then((caption) => {
                 this._emptyCaption = caption;
             });
