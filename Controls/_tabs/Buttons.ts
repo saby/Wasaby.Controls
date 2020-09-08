@@ -17,10 +17,6 @@ import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 
 import {IItemTemplateOptions} from 'Controls/interface';
-import {IHeading} from "../_spoiler/Heading";
-export interface ITabsButtonsTemplate {
-    readonly '[Controls/_tabs/interface/ITabsButtonsTemplate]': boolean;
-}
 
 /**
  * Интерфейс для шаблонных опций контрола вкладок.

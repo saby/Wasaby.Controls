@@ -27,7 +27,9 @@ interface IReceivedState {
  * @public
  * @author Бондарь А.В.
  */
-
+export interface ITabsAdaptiveButtons {
+    readonly '[Controls/_tabs/ITabsAdaptiveButtons]': boolean;
+}
 export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
     align?: string;
     containerWidth: number;
@@ -61,8 +63,9 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  * @demo Controls-demo/Tabs/AdaptiveButtons/Index
  */
 
-class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedState> {
+class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedState> implements ITabsAdaptiveButtons {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
+    readonly '[Controls/_tabs/ITabsAdaptiveButtons]': boolean = true;
     protected _template: TemplateFunction = template;
     protected _lastIndex: number = 0;
     protected _items: RecordSet<object>;
