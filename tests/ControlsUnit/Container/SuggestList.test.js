@@ -68,7 +68,7 @@ define(
             });
          });
 
-         describe('_afterUpdate', () => {
+         /*describe('_afterUpdate', () => {
             var suggestList = new suggestPopup.ListContainer();
 
             suggestList._afterUpdate();
@@ -77,7 +77,7 @@ define(
             suggestList._pendingMarkerVisibility = 'visible';
             suggestList._afterUpdate();
             assert.equal(suggestList._markerVisibility, 'visible');
-         });
+         });*/
 
          it('_tabsSelectedKeyChanged', function() {
             var suggestList = new suggestPopup.ListContainer();
