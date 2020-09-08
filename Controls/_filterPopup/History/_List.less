@@ -5,6 +5,7 @@
    cursor: pointer;
    height: @history_item_height_filterPanel;
    width: 100%;
+   position: relative;
 
    &:before {
       content: "\200b";
@@ -56,8 +57,9 @@
          text-decoration: underline;
       }
 
-      .controls-HistoryList__iconPin_theme-@{themeName} {
+      .controls-itemActionsV {
          visibility: visible;
+         opacity: 1;
       }
    }
 }

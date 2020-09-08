@@ -11,7 +11,7 @@ import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {RecordSet} from 'Types/collection';
-import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
+import {IItemAction, TItemActionShowType, Controller} from 'Controls/itemActions';
 
 interface IEditDialogOptions {
     items: RecordSet;
@@ -40,6 +40,7 @@ export default class HistoryList extends Control<IHistoryListOptions> {
     protected _editItem: Model = null;
     protected _itemsText: Record<string, string> = null;
     protected _itemActions: IItemAction[] = null;
+    protected _itemActionsController: Controller = null;
 
     protected _getItemActions(saveMode: string): IItemAction[] {
         return [{
@@ -48,6 +49,25 @@ export default class HistoryList extends Control<IHistoryListOptions> {
             iconStyle: 'info',
             showType: TItemActionShowType.TOOLBAR
         }];
+    }
+
+    protected _updateItemActionsController(
+        collection: Collection<Record<string, any>>,
+        options: IHistoryListOptions
+    ): void {
+        if (!this._itemActionsController) {
+            this._itemActionsController = new Controller();
+        }
+        this._itemActionsController.update({
+            collection,
+            itemActions: this._getItemActions(options.saveMode),
+            itemActionsPosition: 'inside',
+            style: 'transparent',
+            theme: options.theme,
+            actionAlignment: 'horizontal',
+            actionCaptionPosition: 'none',
+            iconSize: 's'
+        });
     }
 
     protected _getCollection(items: RecordSet, keyProperty: string): Collection<Record<string, any>> {
@@ -185,7 +205,7 @@ export default class HistoryList extends Control<IHistoryListOptions> {
         this._itemsText = this._getText(options.items,
             options.filterItems,
             this._getSource(options.historyId));
-        this._itemActions = this._getItemActions(options.saveMode);
+        this._updateItemActionsController(this._collection, options);
     }
 
     protected _beforeUpdate(newOptions: IHistoryListOptions): void {
@@ -200,7 +220,7 @@ export default class HistoryList extends Control<IHistoryListOptions> {
             this._itemsText = this._getText(newOptions.items,
                                             newOptions.filterItems,
                                             this._getSource(newOptions.historyId));
-            this._itemActions = this._getItemActions(newOptions.saveMode);
+            this._updateItemActionsController(this._collection, newOptions);
         }
     }
 

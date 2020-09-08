@@ -9,20 +9,26 @@
 <div class="controls-HistoryList">
       <div class="controls-HistoryList__heading_theme-{{_options.theme}}">{[Ранее отбирались]}</div>
       <div class="controls-HistoryList__content_theme-{{_options.theme}} {{_isMaxHeight && _options.orientation === 'vertical' ? 'controls-HistoryList_block-maxHeight_theme-' + _options.theme : ''}}">
-         <Controls.listRender:View
+         <Controls.listRender:Render
             keyPropert="{{_keyProperty}}"
-            render="Controls/listRender:Render"
-            items="{{_options.items}}"
-            collection="Controls/display:Collection"
+            itemActionsVisibility="visible"
+            listModel="{{_collection}}"
             itemActions="{{_itemActions}}"
             on:itemClick="_itemClickHandler()"
             emptyTemplate="{{_options.emptyTemplate}}">
+            <ws:itemPadding
+               top="null"
+               left="null"
+               right="null"
+               bottom="null"
+            />
             <ws:itemTemplate>
                <ws:partial template="{{_itemTemplate}}"
                            itemsText="{{_itemsText}}"
+                           orientation="{{_options.orientation}}"
                            scope="{{itemTemplate}}"/>
             </ws:itemTemplate>
-         </Controls.listRender:View>
+         </Controls.listRender:Render>
       </div>
    <ws:if data="{{_arrowVisible}}">
       <div class="controls-FilterPanel__separator" title="{{!_isMaxHeight ? rk('Свернуть', 'ПанельФильтра') : rk('Развернуть', 'ПанельФильтра')}}">
