@@ -33,6 +33,16 @@ define(['Controls/filter'],
                assert.isFalse(rangeEditor._reseted);
             });
 
+            it('option emptyCaption and value === resetValue', () => {
+               rangeEditor._beforeMount({
+                  emptyCaption: 'testCaption',
+                  value: resetValue,
+                  resetValue
+               });
+               assert.equal(rangeEditor._emptyCaption, 'testCaption');
+               assert.isTrue(rangeEditor._reseted);
+            });
+
             it('without option emptyCaption', () => {
                return rangeEditor._beforeMount({
                   resetValue
