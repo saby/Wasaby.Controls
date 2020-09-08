@@ -5,7 +5,7 @@
                     attr:class=""
                     keyProperty="id"
                     source="{{_viewSource}}"
-                    rowSeparatorVisibility="{{true}}"
+                    rowSeparatorSize="s"
                     columns="{{_columns}}"
                     groupingKeyCallback="{{_groupingKeyCallback}}">
                 <ws:groupTemplate>

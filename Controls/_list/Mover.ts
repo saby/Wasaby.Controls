@@ -199,12 +199,13 @@ var _private = {
     },
 
     updateDataOptions: function (self, newOptions, contextDataOptions) {
+		self._items = newOptions.items || contextDataOptions?.items;
+
         let controllerOptions: Partial<IMoveControllerOptions> = {
             parentProperty: newOptions.parentProperty
         };
         if (contextDataOptions) {
-            controllerOptions.source = newOptions.source || contextDataOptions.source;
-            self._items = contextDataOptions.items;
+			controllerOptions.source = newOptions.source || contextDataOptions.source;
             self._source = controllerOptions.source;
             self._keyProperty = newOptions.keyProperty || contextDataOptions.keyProperty;
             self._filter = contextDataOptions.filter;
