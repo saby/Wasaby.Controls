@@ -1,5 +1,7 @@
-import Control = require('Core/Control');
 import template = require('wml!Controls/_masterDetail/List/List');
+import { Control, IControlOptions, TemplateFunction } from 'UI/Base';
+import { SyntheticEvent } from 'Vdom/Vdom';
+import { RecordSet } from 'Types/collection';
 
 /**
  * Контрол используют в качестве контейнера для списочного контрола, который добавлен в шаблон {@link Controls/masterDetail/Base/options/master/ master}.
@@ -18,10 +20,26 @@ import template = require('wml!Controls/_masterDetail/List/List');
  * @param {Number} key  Ключ выбранного элемента.
  */
 
-   export = Control.extend({
-      _template: template,
-      _markedKeyChangedHandler: function(event, key) {
-         this._notify('selectedMasterValueChanged', [key], {bubbling: true});
-      }
-   });
+export default class List extends Control<IControlOptions>  {
+   protected _template: TemplateFunction = template;
+   protected _markedKey: string|number = null;
 
+   protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
+      this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
+   }
+
+   protected _markedKeyChangedHandler(event: SyntheticEvent, key: string|number): void {
+      this._markedKey = key;
+      this._notify('selectedMasterValueChanged', [key], {bubbling: true});
+   }
+
+   protected _itemsReadyCallback(items: RecordSet): void {
+      if (items.getCount()) {
+         this._markedKey = items.at(0).getKey();
+      }
+
+      if (typeof this._options.itemsReadyCallback === 'function') {
+         this._options.itemsReadyCallback(items);
+      }
+   }
+}

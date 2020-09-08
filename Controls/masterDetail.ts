@@ -17,7 +17,7 @@
  */
 
 import Base from 'Controls/_masterDetail/Base';
-import List = require('Controls/_masterDetail/List');
+import List from 'Controls/_masterDetail/List';
 
 export {
    Base,

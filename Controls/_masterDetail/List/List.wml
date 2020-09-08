@@ -1,4 +1,6 @@
 <ws:partial
    on:markedKeyChanged="_markedKeyChangedHandler()"
    template="{{_options.content}}"
+   markedKey="{{_markedKey}}"
+   itemsReadyCallback="{{_itemsReadyCallback}}"
    scope="{{_options}}"/>

@@ -14,7 +14,7 @@ describe('Controls/operations:Controller', () => {
 
         it('operationsPanel is closed', () => {
             controller._listMarkedKeyChangedHandler({}, 'testKey');
-            assert.isNull(controller._listMarkedKey);
+            assert.isUndefined(controller._listMarkedKey);
         });
 
         it('operationsPanel is opened', () => {

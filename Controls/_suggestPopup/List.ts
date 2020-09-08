@@ -112,6 +112,7 @@ var List = Control.extend({
    _markerVisibility: MARKER_VISIBILITY_DEFAULT,
    _pendingMarkerVisibility: null,
    _isSuggestListEmpty: false,
+   _wasEndFirstSearch: false,
 
    _beforeMount: function(options, context) {
       this._searchEndCallback = this._searchEndCallback.bind(this);
@@ -213,10 +214,11 @@ var List = Control.extend({
       if (result) {
          this._items = result.data;
          const currentMarkerInItems = !! this._items.getRecordById(this._markedKey);
-         if (!currentMarkerInItems && this._items.getCount()) {
+         if (this._wasEndFirstSearch && !currentMarkerInItems && this._items.getCount()) {
             this._markedKey = this._items.at(0).getKey();
          }
       }
+      this._wasEndFirstSearch = true;
    },
 
    _markedKeyChanged: function(event, key) {

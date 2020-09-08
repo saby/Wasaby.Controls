@@ -28,7 +28,7 @@ export default class Browser extends Control {
     private _isAllSelected: boolean = false;
     private _operationsController: OperationsController = null;
     private _searchController: SearchController = null;
-    private _listMarkedKey: Key = null;
+    private _listMarkedKey: Key = undefined;
     private _dataOptions: object = null;
     private _previousViewMode: string = null;
     private _viewMode: string = null;

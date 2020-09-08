@@ -3,8 +3,8 @@ import {RegisterClass} from 'Controls/event';
 type Key = string|number|null;
 
 export default class OperationsController {
-    private _listMarkedKey: Key = null;
-    private _savedListMarkedKey: Key = null;
+    private _listMarkedKey: Key = undefined;
+    private _savedListMarkedKey: Key = undefined;
     private _isOperationsPanelVisible: boolean = false;
     private _selectedTypeRegister: RegisterClass = null;
     private _selectionViewModeChangedCallback: Function = null;

@@ -43,7 +43,7 @@ export default class MultiSelector extends Control {
    protected _selectedKeysCount: number|null;
    protected _selectionType: TSelectionType = 'all';
    protected _isAllSelected: boolean = false;
-   protected _listMarkedKey: TKey = null;
+   protected _listMarkedKey: TKey = undefined;
    protected _notifyHandler: Function = tmplNotify;
    private _operationsController: OperationsController = null;
    private _items: RecordSet<Model>;

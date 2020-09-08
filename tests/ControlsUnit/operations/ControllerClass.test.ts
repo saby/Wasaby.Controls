@@ -12,7 +12,7 @@ describe('Controls/operations:ControllerClass', () => {
 
         it('setListMarkedKey, operations panel is hidden', () => {
             controller.setOperationsPanelVisible(false);
-            ok(controller.setListMarkedKey('testKey') === null);
+            ok(controller.setListMarkedKey('testKey') === undefined);
         });
 
         it('setListMarkedKey, operations panel is visible', () => {
