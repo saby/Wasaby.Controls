@@ -422,7 +422,9 @@ const _private = {
 
                     // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                     if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
-                        _private.checkLoadToDirectionCapability(self, filter, navigation);
+                        if (self._isMounted) {
+                            _private.checkLoadToDirectionCapability(self, filter, navigation);
+                        }
                     } else if (!self._wasScrollToEnd) {
                         if (_private.attachLoadTopTriggerToNullIfNeed(self, cfg) && !self._isMounted) {
                             self._hideTopTriggerUntilMount = true;
@@ -1003,7 +1005,7 @@ const _private = {
             return false;
         }
         if (direction === 'up') {
-            return scrollParams.scrollTop < triggerOffset;
+            return scrollParams.scrollTop <= triggerOffset;
         } else {
             let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
             if (self._pagingVisible) {
