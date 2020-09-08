@@ -71,6 +71,7 @@
             <ws:partial template="{{ _options.emptyTemplate }}"
                         attr:class="
                         controls-GridView__emptyTemplate
+                        js-controls-GridView__emptyTemplate
                         controls-Grid__row-cell_withRowSeparator_size-{{_options.rowSeparatorSize}}
                         controls-Grid__row-cell_withRowSeparator_size-{{_options.rowSeparatorSize}}_theme-{{_options.theme}}"
                         prepareColumnsForEmptyEditingTemplate="{{ _prepareColumnsForEmptyEditingTemplate }}"
@@ -81,6 +82,7 @@
         </ws:if>
         <ws:else>
             <ws:partial template="wml!Controls/_grid/EmptyTemplate"
+                        attr:class="js-controls-GridView__emptyTemplate"
                         emptyTemplate="{{ _options.emptyTemplate }}"
                         listModel="{{ _listModel }}"
                         isFullGridSupport="{{ _isFullGridSupport }}"

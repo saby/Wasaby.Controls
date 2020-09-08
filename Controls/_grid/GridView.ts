@@ -596,7 +596,7 @@ var
         _isColumnScrollVisible(): boolean {
             if (this._columnScrollController && this._columnScrollController.isVisible()) {
                 const items = this._options.listModel.getItems();
-                return !!items && (!!items.getCount() || !!this._options.editingItemData);
+                return this._options.headerInEmptyListVisible || (!!items && (!!items.getCount() || !!this._options.editingItemData));
             } else {
                 return false;
             }

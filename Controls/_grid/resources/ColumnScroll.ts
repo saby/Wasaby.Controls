@@ -186,7 +186,9 @@ export class ColumnScroll {
         if (position === 'start' && this._shadowState[position]) {
             shadowStyles = 'left: ' + this._fixedColumnsWidth + 'px;';
         }
-        const emptyTemplate = this._scrollContainer.getElementsByClassName('controls-BaseControl__emptyTemplate')[0] as HTMLElement;
+
+        const emptyTemplate = this._scrollContainer.getElementsByClassName('js-controls-GridView__emptyTemplate')[0] as HTMLDivElement;
+
         if (emptyTemplate) {
             shadowStyles += 'height: ' + emptyTemplate.offsetTop + 'px;';
         }
@@ -362,6 +364,7 @@ export class ColumnScroll {
             // Cкролируем скроллбар при полной поддержке гридов, т.к. он лежит в трансформнутой области. При
             // table-layout скроллбар лежит вне таблицы
             newHTML +=
+                `.${this._transformSelector} .js-controls-GridView__emptyTemplate { transform: translateX(${position}px); }` +
                 `.${this._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }` +
                 `.${this._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
         } else {
