@@ -14,11 +14,11 @@
     <Controls.deprecatedList:Container scope="{{_suggestListOptions}}"
                                        name="list"
                                        content="{{_options.content}}"
+                                       markerVisibility="visible"
                                        markedKey="{{_markedKey}}"
                                        reverseList="{{_reverseList}}"
                                        navigation="{{_navigation}}"
                                        searchEndCallback="{{_searchEndCallback}}"
-                                       markerVisibility="{{_markerVisibility}}"
                                        itemsReadyCallback="{{_itemsReadyCallback}}"
                                        on:markedKeyChanged="_markedKeyChanged()">
         <ws:searchBreadCrumbsItemTemplate>

@@ -109,10 +109,8 @@ var List = Control.extend({
    _markedKey: null,
    _items: null,
    _layerName: null,
-   _markerVisibility: MARKER_VISIBILITY_DEFAULT,
-   _pendingMarkerVisibility: null,
+   _pendingMarkedKey: null,
    _isSuggestListEmpty: false,
-   _wasEndFirstSearch: false,
 
    _beforeMount: function(options, context) {
       this._searchEndCallback = this._searchEndCallback.bind(this);
@@ -133,9 +131,9 @@ var List = Control.extend({
    },
 
    _afterUpdate(): void {
-      if (this._pendingMarkerVisibility) {
-         this._markerVisibility = this._pendingMarkerVisibility;
-         this._pendingMarkerVisibility = null;
+      if (this._pendingMarkedKey) {
+         this._markedKey = this._pendingMarkedKey;
+         this._pendingMarkedKey = null;
       }
    },
 
@@ -204,21 +202,17 @@ var List = Control.extend({
          this._suggestListOptions.searchEndCallback(result, filter);
       }
 
-      if (this._suggestListOptions.searchValue && this._markerVisibility !== MARKER_VISIBILITY_AFTER_SEARCH) {
-         this._pendingMarkerVisibility = MARKER_VISIBILITY_AFTER_SEARCH;
-         // _pendingMarkerVisibility не используется в шаблоне, поэтому св-во не является реактивным
-         // и надо позвать forceUpdate
-         this._forceUpdate();
-      }
-
       if (result) {
-         this._items = result.data;
-         const currentMarkerInItems = !! this._items.getRecordById(this._markedKey);
-         if (this._wasEndFirstSearch && !currentMarkerInItems && this._items.getCount()) {
-            this._markedKey = this._items.at(0).getKey();
+         const currentMarkerInItems = !! result.data.getRecordById(this._markedKey);
+         if (this._suggestListOptions.searchValue && !currentMarkerInItems && result.data.getCount()) {
+            this._pendingMarkedKey = result.data.at(0).getKey();
+            // _pendingMarkedKey не используется в шаблоне, поэтому св-во не является реактивным
+            // и надо позвать forceUpdate
+            this._forceUpdate();
          }
+
+         this._items = result.data;
       }
-      this._wasEndFirstSearch = true;
    },
 
    _markedKeyChanged: function(event, key) {
