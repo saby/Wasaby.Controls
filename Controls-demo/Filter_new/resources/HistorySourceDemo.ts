@@ -85,7 +85,7 @@ export default class DemoHistorySource {
         this._historyId = cfg.historyId;
         this._historyItemsCount = cfg.historyId === DEFAULT_DEMO_HISTORY_ID ?
             DEFAULT_HISTORY_ITEMS_COUNT :
-            EMPTY_DEMO_HISTORY_ID ? EMPTY_HISTORY_ITEMS_COUNT : MAX_HISTORY_ITEMS_COUNT;
+            cfg.historyId === EMPTY_DEMO_HISTORY_ID ? EMPTY_HISTORY_ITEMS_COUNT : MAX_HISTORY_ITEMS_COUNT;
     }
 
     query(): Promise<any> {
