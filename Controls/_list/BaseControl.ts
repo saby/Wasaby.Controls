@@ -2717,20 +2717,12 @@ const _private = {
         return self._moveController;
     },
 
-    /**
-     * Получает элемент к которому мы перемещаем текущий элемент
-     * Метод сделан публичным для совместимости с HOC
-     * @param self текущий контрол
-     * @param item текущий элемент
-     * @param position позиция (направление перемещения)
-     * @private
-     */
-    getMoveTargetItem(self, item, position: TMovePosition): CrudEntityKey {
+    getMoveTargetItem(self: typeof BaseControl, selectedKey: CrudEntityKey, position: TMovePosition): CrudEntityKey {
         let siblingItem;
         if (position === TMovePosition.before) {
-            siblingItem = self._listViewModel.getPrevByKey(item);
+            siblingItem = self._listViewModel.getPrevByKey(selectedKey);
         } else {
-            siblingItem = self._listViewModel.getNextByKey(item);
+            siblingItem = self._listViewModel.getNextByKey(selectedKey);
         }
         return siblingItem && siblingItem.getContents && siblingItem.getContents().getKey() || null;
     },

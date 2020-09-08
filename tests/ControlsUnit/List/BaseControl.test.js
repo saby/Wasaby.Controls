@@ -7852,5 +7852,96 @@ define([
             });
          });
       });
+
+      // region Move
+
+      describe('MoveController', () => {
+         const moveController = {
+            move: () => Promise.resolve(),
+            moveWithDialog: () => Promise.resolve(),
+            updateOptions: () => {}
+         };
+         let spyMove;
+         let spyMoveWithDialog;
+         let cfg;
+         let baseControl;
+
+         beforeEach(() => {
+            const items = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: data
+            });
+            const collectionItem = {
+               getContents: () => items.at(2)
+            };
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               items,
+               source
+            };
+            baseControl = new lists.BaseControl(cfg);
+            baseControl.saveOptions(cfg);
+            baseControl._beforeMount(cfg);
+            baseControl._moveController = moveController;
+            baseControl._listViewModel._display = {
+               getCollection: () => items,
+               getItemBySourceItem: () => collectionItem,
+               getKeyProperty: () => 3,
+               getIndexByKey: () => 3,
+               at: () => collectionItem,
+               getCount: () => data.length,
+               getCollapsedGroups: () => {},
+               unsubscribe: () => {},
+               destroy: () => {}
+            };
+            spyMove = sinon.spy(moveController, 'move');
+            spyMoveWithDialog = sinon.spy(moveController, 'moveWithDialog');
+         });
+
+         afterEach(() => {
+            spyMove.restore();
+            spyMoveWithDialog.restore();
+         });
+
+         // moveItemUp вызывает moveController
+         it('moveItemUp() should call moveController', () => {
+            return baseControl.moveItemUp(2).then(() => {
+               sinon.assert.called(spyMove);
+            });
+         });
+
+         // moveItemDown вызывает moveController
+         it('moveItemDown() should call moveController', () => {
+            return baseControl.moveItemDown(2).then(() => {
+               sinon.assert.called(spyMove);
+            });
+         });
+
+         // moveItems вызывает moveController
+         it('moveItems() should call moveController', () => {
+            const selectionObject = {
+               selected: [2],
+               excluded: []
+            };
+            return baseControl.moveItems(selectionObject, 3, 'on').then(() => {
+               sinon.assert.called(spyMove);
+            });
+         });
+
+         // moveItemsWithDialog вызывает moveController
+         it('moveItemsWithDialog() should call moveController', () => {
+            const selectionObject = {
+               selected: [2],
+               excluded: []
+            };
+            return baseControl.moveItemsWithDialog(selectionObject, {anyFilter: 'anyVal'}).then(() => {
+               sinon.assert.called(spyMoveWithDialog);
+            });
+         });
+      });
+
+      // endregion Move
    });
 });
