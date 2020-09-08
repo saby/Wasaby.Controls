@@ -1090,6 +1090,8 @@ const _private = {
             // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
             self._isScrollShown = true;
 
+            self._updateSizes();
+
             self._viewportRect = params.viewPortRect;
 
             if (_private.needScrollPaging(self._options.navigation)) {
@@ -3122,7 +3124,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._isMounted = true;
         this._hideTopTriggerUntilMount = false;
         const container = this._container[0] || this._container;
-        this._viewSize = container.clientHeight;
         if (this._needScrollCalculation) {
             this._registerObserver();
             this._registerIntersectionObserver();
@@ -4381,14 +4382,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         event.stopPropagation();
     },
 
-    _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
-        this._getItemsContainer = itemsContainerGetter;
-        let itemsHeights = getItemsHeightsData(this._getItemsContainer());
+    _updateSizes(): void {
         this._viewSize = this._container.clientHeight;
         if (this._scrollController) {
+            const itemsHeights = getItemsHeightsData(this._getItemsContainer());
             this._scrollController.updateItemsHeights(itemsHeights);
-            let result = this._scrollController.update({ params: {scrollHeight: this._viewSize} });
+            const result = this._scrollController.update({ params: {scrollHeight: this._viewSize} });
             _private.handleScrollControllerResult(this, result);
+        }
+    },
+
+    _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
+        this._getItemsContainer = itemsContainerGetter;
+        if (this._isScrollShown) {
+            this._updateSizes();
         }
     },
 
