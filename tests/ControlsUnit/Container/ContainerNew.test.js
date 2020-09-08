@@ -109,7 +109,8 @@ define(
                         return Boolean(test.hasShadowVisible);
                      },
                      fixedHandler() {},
-                     getHeadersHeight() {}
+                     getHeadersHeight() {},
+                     setShadowVisibility () {}
                   };
 
                   let result;
@@ -120,6 +121,12 @@ define(
                   scroll._shadows = {
                      setStickyFixed(res) {
                         result = res;
+                     },
+                     top: {
+                        isStickyHeadersShadowsEnabled: sinon.stub().returns({ then: () => undefined })
+                     },
+                     bottom: {
+                        isStickyHeadersShadowsEnabled: sinon.stub().returns({ then: () => undefined })
                      }
                   };
                   scroll._stickyFixedHandler({}, {});
