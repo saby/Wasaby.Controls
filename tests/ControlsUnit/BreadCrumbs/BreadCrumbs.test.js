@@ -116,6 +116,23 @@ define([
             bc._dotsClick({
                currentTarget: 123,
             }, itemData);
+
+            //readOnly
+            bc._options.readOnly = true;
+
+            bc._menuOpener = {
+               open: function (openerOptions) {
+                  assert.equal(openerOptions.target, 123);
+                  assert.equal(openerOptions.templateOptions.displayProperty, 'test');
+                  assert.equal(openerOptions.templateOptions.source.data[0].readOnly, true);
+               },
+               close: function () {
+               }
+            };
+            bc._dotsClick({
+               currentTarget: 123,
+            }, itemData);
+
          });
       });
       it('_onResult', function(done) {
