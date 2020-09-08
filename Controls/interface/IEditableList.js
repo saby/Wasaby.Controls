@@ -359,10 +359,10 @@ define('Controls/interface/IEditableList', [
     * @event Controls/interface/IEditableList#beforeEndEdit Происходит перед завершением {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования} или {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавления} элемента.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
-    * @param {Boolean} willSave Параметр принимает значение true, когда сохраняются изменения редактируемого элемента.
+    * @param {Boolean} willSave Параметр принимает значение true, когда отредактированный элемент сохраняется.
     * Такое происходит в двух случаях:
     * 1. был вызыван метод {@link commitEdit}.
-    * 2. пользователь изменил данные в элементе и выполнил действие, которое приводит к сохранению изменений:
+    * 2. пользователь выполнил действие, которое приводит к сохранению:
 	*     * закрыл диалог, на котором находится список с редактируемым элементом;
 	*     * начал редактирование другого элемента по клику.
     * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавляется по месту}.
