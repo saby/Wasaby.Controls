@@ -5,6 +5,8 @@ import BaseControl = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/History/List');
 import Utils = require('Types/util');
 import Serializer = require('Core/Serializer');
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Model} from 'Types/entity';
 import * as Merge from 'Core/core-merge';
 import * as Clone from 'Core/core-clone';
 import {isEqual} from 'Types/object';
@@ -152,6 +154,7 @@ var MAX_NUMBER_ITEMS = 5;
       _itemsText: null,
       _editItem: null,
       _historyCount: null,
+      _swipeItem: '',
 
       _beforeMount: function(options) {
          if (options.items) {
@@ -193,6 +196,12 @@ var MAX_NUMBER_ITEMS = 5;
             _private.saveFavorite(this, data.record);
          } else if (data.action === 'delete') {
             _private.deleteFavorite(this, data);
+         }
+      },
+
+      _itemSwipe(event: SyntheticEvent<Event>, item: Model): void {
+         if (event.nativeEvent.direction === 'left') {
+            this._swipeItem = item.getKey();
          }
       },
 
