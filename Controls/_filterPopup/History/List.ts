@@ -154,7 +154,7 @@ var MAX_NUMBER_ITEMS = 5;
       _itemsText: null,
       _editItem: null,
       _historyCount: null,
-      _swipeItem: '',
+      _swipeItem: null,
 
       _beforeMount: function(options) {
          if (options.items) {
