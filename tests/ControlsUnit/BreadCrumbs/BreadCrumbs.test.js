@@ -116,14 +116,19 @@ define([
             bc._dotsClick({
                currentTarget: 123,
             }, itemData);
+         });
 
-            //readOnly
+         it('dots with option readOnly', function() {
+            var itemData = {
+               item: {
+                  title: '...'
+               }
+            };
             bc._options.readOnly = true;
+            bc._popupIsOpen = false;
 
             bc._menuOpener = {
                open: function (openerOptions) {
-                  assert.equal(openerOptions.target, 123);
-                  assert.equal(openerOptions.templateOptions.displayProperty, 'test');
                   assert.equal(openerOptions.templateOptions.source.data[0].readOnly, true);
                },
                close: function () {
