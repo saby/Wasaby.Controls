@@ -331,6 +331,7 @@ define(
                });
                data._itemsChanged(event, newList);
                assert.isTrue(!data._items.getRecordById(0), 'items changed instead of prefetchSource');
+               assert.isTrue(!!data._items.getRecordById(1), 'items changed instead of prefetchSource');
                assert.isTrue(propagationStopped);
                done();
             });
