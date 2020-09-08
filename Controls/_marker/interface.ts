@@ -31,5 +31,5 @@ export interface IOptions extends IListOptions {
 
 export interface IListOptions {
    markerVisibility: TVisibility;
-   markedKey: TKey;
+   markedKey?: TKey;
 }
