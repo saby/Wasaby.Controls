@@ -32,6 +32,7 @@
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IReloadableList Controls/_list/interface/IReloadableList
+ * @includes IMovableView Controls/_list/interface/IMovableView
  * @public
  * @author Крайнов Д.О.
  */
@@ -67,6 +68,7 @@
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
+ * @includes IMovableView Controls/_list/interface/IMovableView
  * @public
  * @author Крайнов Д.О.
  */
@@ -120,6 +122,8 @@ import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTe
 
 export {MoveController, TMovePosition, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
 import * as Mover from 'Controls/_list/Mover';
+
+export {IMovableView} from 'Controls/_list/interface/IMovableView';
 
 export {
     AddButton,

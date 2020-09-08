@@ -11,7 +11,7 @@ import {constants, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
-import {ICrud, Memory} from 'Types/source';
+import {ICrud, Memory, CrudEntityKey} from 'Types/source';
 import {debounce, throttle} from 'Types/function';
 import {create as diCreate} from 'Types/di';
 import {Model, relation} from 'Types/entity';
@@ -24,7 +24,7 @@ import {Logger} from 'UI/Utils';
 import {TouchContextField} from 'Controls/context';
 import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
-import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
+import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig, ISelectionObject} from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
 import {editing as constEditing} from 'Controls/Constants';
 
@@ -85,6 +85,9 @@ import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { EdgeIntersectionObserver } from 'Controls/scroll';
 import { TItemKey } from 'Controls/display';
 import { ItemsEntity } from '../dragnDrop';
+import {IMoveControllerOptions, MoveController, TMovePosition} from './Controllers/MoveController';
+import {IMoverDialogTemplateOptions} from "../_moverDialog/Template";
+import * as TreeItemsUtil from "./resources/utils/TreeItemsUtil";
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -2707,7 +2710,45 @@ const _private = {
                 }
             }
         }
-    }
+    },
+
+    getMoveController(self): MoveController {
+        const options = self._options;
+        const controllerOptions: IMoveControllerOptions = {
+            source: options.source,
+            parentProperty: options.parentProperty
+        };
+        if (options.moveDialogTemplate) {
+            if (options.moveDialogTemplate.templateName) {
+                controllerOptions.popupOptions = {
+                    template: options.moveDialogTemplate.templateName,
+                    templateOptions: {
+                        ...options.moveDialogTemplate.templateOptions,
+                        keyProperty: self._keyProperty
+                    } as IMoverDialogTemplateOptions
+                }
+            } else {
+                Logger.error('Mover: Wrong type of moveDialogTemplate option, use object notation instead of template function', self);
+            }
+        }
+
+        if (!self._moveController) {
+            self._moveController = new MoveController(controllerOptions);
+        } else {
+            self._moveController.updateOptions(controllerOptions);
+        }
+        return self._moveController;
+    },
+
+    getMoveTargetItem(self: typeof BaseControl, selectedKey: CrudEntityKey, position: TMovePosition): CrudEntityKey {
+        let siblingItem;
+        if (position === TMovePosition.before) {
+            siblingItem = self._listViewModel.getPrevByKey(selectedKey);
+        } else {
+            siblingItem = self._listViewModel.getNextByKey(selectedKey);
+        }
+        return siblingItem && siblingItem.getContents && siblingItem.getContents().getKey() || null;
+    },
 };
 
 /**
@@ -2724,6 +2765,7 @@ const _private = {
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
+ * @mixes Controls/_list/interface/IMovableView
  * @implements Controls/_list/interface/IListNavigation
  * @control
  * @private
@@ -2846,6 +2888,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _endDragNDropTimer: null, // для IE
     _draggedKey: null,
     _validateController: null,
+
+    // Контроллер для перемещения элементов списка
+    _moveController: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -4121,6 +4166,36 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     isAllSelected(): boolean {
         return _private.getSelectionController(this)?.isAllSelected();
     },
+
+    // region move
+
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+        return _private.getMoveController(this).move(selection, this._filter, targetKey, position);
+    },
+
+    moveItemUp(selectedKey: CrudEntityKey): Promise<void> {
+        const sibling = _private.getMoveTargetItem(this, selectedKey, TMovePosition.before);
+        const selection: ISelectionObject = {
+            selected: [selectedKey],
+            excluded: []
+        };
+        return _private.getMoveController(this).move(selection, {}, sibling, TMovePosition.before);
+    },
+
+    moveItemDown(selectedKey: CrudEntityKey): Promise<void> {
+        const sibling = _private.getMoveTargetItem(this, selectedKey, TMovePosition.after);
+        const selection: ISelectionObject = {
+            selected: [selectedKey],
+            excluded: []
+        };
+        return _private.getMoveController(this).move(selection, {}, sibling, TMovePosition.after);
+    },
+
+    moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
+        return _private.getMoveController(this).moveWithDialog(selection, this._options.filter);
+    },
+
+    // endregion move
 
     _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом

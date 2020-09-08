@@ -8,7 +8,7 @@ import {factory} from 'Types/chain';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import {Model} from 'Types/entity';
-import {ListView} from 'Controls/list';
+import {ListView, TMovePosition} from 'Controls/list';
 import {isEqual} from 'Types/object';
 import {
    INavigationSourceConfig,
@@ -16,6 +16,8 @@ import {
    INavigationOptionValue as INavigation
 }  from '../_interface/INavigation';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
+import {ISelectionObject} from "../_interface/ISelectionType";
+import {CrudEntityKey} from "Types/source";
 
 var
       HOT_KEYS = {
@@ -396,6 +398,7 @@ var
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IClickableView
+    * @mixes Controls/_list/interface/IMovableView
     * @control
     * @public
     * @category List
@@ -431,6 +434,7 @@ var
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
+    * @mixes Controls/_list/interface/IMovableView
     * @control
     * @public
     * @category List
@@ -705,6 +709,27 @@ var
       toggleExpanded: function(id) {
          this._children.treeControl.toggleExpanded(id);
       },
+
+      // region mover
+
+      moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+         return this._children.treeControl.moveItems(selection, targetKey, position);
+      },
+
+      moveItemUp(selectedKey: CrudEntityKey): Promise<void> {
+         return this._children.treeControl.moveItemUp(selectedKey);
+      },
+
+      moveItemDown(selectedKey: CrudEntityKey): Promise<void> {
+         return this._children.treeControl.moveItemDown(selectedKey);
+      },
+
+      moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
+         return this._children.treeControl.moveItemsWithDialog(selection);
+      },
+
+      // endregion mover
+
       _onArrowClick: function(e) {
          let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();
          this._notifyHandler(e, 'arrowClick', item);

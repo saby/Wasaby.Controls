@@ -2,10 +2,8 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import * as clone from 'Core/core-clone';
 import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
-import {MoveController} from 'Controls/list';
 
 import * as Template from 'wml!Controls-demo/List/Mover/Mover';
-import { RecordSet } from 'Types/collection';
 
 export default class Mover extends Control<IControlOptions> {
    protected _template: TemplateFunction = Template;
@@ -18,8 +16,6 @@ export default class Mover extends Control<IControlOptions> {
    protected _viewSource: Memory;
    protected _viewSourceSecond: Memory;
    protected demoItems: any;
-
-   private _movers: {[p: string]: MoveController} = {};
 
    protected _beforeMount() {
       this.demoItems = [{
@@ -38,9 +34,6 @@ export default class Mover extends Control<IControlOptions> {
       this._viewSource = this._createSource(this.demoItems);
       this._viewSourceSecond = this._createSource(this.demoItems);
       this._selectedKeys = [];
-
-      this._initMoverController('listMover', this._viewSource);
-      this._initMoverController('listSecondMover', this._viewSourceSecond);
 
       this._itemActions = this._createItemsActions('listMover');
       this._itemActionsSecond = this._createItemsActions('listSecondMover');
@@ -66,24 +59,16 @@ export default class Mover extends Control<IControlOptions> {
          icon: 'icon-ArrowUp icon-primary',
          showType: TItemActionShowType.TOOLBAR,
          handler: (item) => {
-            this._movers[moverName].moveItemUp(item.getKey());
+            this._children[moverName].moveItemUp(item.getKey());
          }
       }, {
          id: 1,
          icon: 'icon-ArrowDown icon-primary',
          showType: TItemActionShowType.TOOLBAR,
          handler: (item) => {
-            this._movers[moverName].moveItemDown(item.getKey());
+            this._children[moverName].moveItemDown(item.getKey());
          }
       }];
-   }
-
-   private _initMoverController(moverName: string, source: Memory, items: RecordSet) {
-      this._movers[moverName] = new MoveController({
-         keyProperty: 'id',
-         source,
-         items
-      });
    }
 
    static _styles: string[] = ['Controls-demo/List/Mover/Mover'];
