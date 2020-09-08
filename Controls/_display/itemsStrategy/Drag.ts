@@ -170,14 +170,16 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
 
     protected _createAvatarItem(): T {
         const protoItem = this._getProtoItem();
-        return this._createItem(protoItem?.getContents());
+        return this._createItem(protoItem);
     }
 
-    protected _createItem(contents: S): T {
+    protected _createItem(protoItem: T): T {
         const item = this.options.display.createItem({
-            contents
-        }) as unknown as T;
+            contents: protoItem?.getContents()
+        });
         item.setDragged(true, true);
+        item.setMarked(protoItem.isMarked(), true);
+        item.setSelected(protoItem.isSelected(), true);
         return item;
     }
 

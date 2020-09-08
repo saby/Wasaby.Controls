@@ -55,6 +55,10 @@ export default class FlatController {
       this._model.setDragPosition(position);
    }
 
+   getDraggableItem(): CollectionItem<Model> {
+      return this._draggableItem;
+   }
+
    endDrag(): void {
       this._draggableItem = null;
       this._dragPosition = null;
