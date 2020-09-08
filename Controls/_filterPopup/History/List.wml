@@ -14,7 +14,7 @@
       <div class="controls-HistoryList__item_theme-{{_options.theme}} controls-HistoryList_{{_options.orientation}}__item_theme-{{_options.theme}} {{item.get('pinned') || item.get('client') ? 'controls-HistoryList__item_pinned'}}"
            on:click="_clickHandler(item)" title="{{text}}">{{text}}</div>
       <ws:partial
-         attr:class="{{item.getKey() === _swipeItem ? 'controls-HistoryList__iconSwipe'}}"
+         attr:class="{{item === _swipeItem ? 'controls-HistoryList__iconSwipe'}}"
          template="{{iconTemplate}}"
          item="{{item}}"
          text="{{text}}"/>

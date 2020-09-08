@@ -200,8 +200,11 @@ var MAX_NUMBER_ITEMS = 5;
       },
 
       _itemSwipe(event: SyntheticEvent<Event>, item: Model): void {
-         if (event.nativeEvent.direction === 'left') {
-            this._swipeItem = item.getKey();
+         const direction = event.nativeEvent.direction;
+         if (direction === 'left') {
+            this._swipeItem = item;
+         } else if (direction === 'right') {
+            this._swipeItem = null;
          }
       },
 
