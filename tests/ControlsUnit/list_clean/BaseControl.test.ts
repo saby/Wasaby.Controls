@@ -200,8 +200,13 @@ describe('Controls/list_clean/BaseControl', () => {
         it('paging mode is basic', async () => {
             baseControl.saveOptions(baseControlCfg);
             await baseControl._beforeMount(baseControlCfg);
-            baseControl._viewSize = 1000;
+            baseControl._container = {
+                clientHeight: 1000
+            };
             baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return { children: [] };
+            };
             baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
@@ -232,8 +237,13 @@ describe('Controls/list_clean/BaseControl', () => {
             cfgClone.navigation.viewConfig.pagingMode = 'compact';
             baseControl.saveOptions(cfgClone);
             await baseControl._beforeMount(cfgClone);
-            baseControl._viewSize = 1000;
+            baseControl._container = {
+                clientHeight: 1000
+            };
             baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return { children: [] };
+            };
             baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
@@ -263,8 +273,13 @@ describe('Controls/list_clean/BaseControl', () => {
             cfgClone.navigation.viewConfig.pagingMode = 'numbers';
             baseControl.saveOptions(cfgClone);
             await baseControl._beforeMount(cfgClone);
-            baseControl._viewSize = 1000;
+            baseControl._container = {
+                clientHeight: 1000
+            };
             baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return { children: [] };
+            };
             baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
