@@ -36,7 +36,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
 
     protected _beforeMount(options): void {
         this._items = options.visibleItems;
-        this.addWithOverflow();
+        this._addWithOverflow();
         // Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
         this._onResult = this._onResult.bind(this);
         this._menuOpener = new StickyOpener();
@@ -44,13 +44,17 @@ class BreadCrumbsView extends Control<IControlOptions> {
     protected _beforeUpdate(newOptions): void {
         if (newOptions.visibleItems !== this._items) {
             this._items = newOptions.visibleItems;
-            this.addWithOverflow();
+            this._addWithOverflow();
         }
     }
 
-    private addWithOverflow(): void {
+    private _addWithOverflow(): void {
         if (this._items.length <= CRUMBS_COUNT) {
-            this._items.forEach((item) => item.withOverflow = true);
+            this._items.forEach((item) => {
+                if (!item.isDots) {
+                    item.withOverflow = true;
+                }
+            });
         }
     }
 
