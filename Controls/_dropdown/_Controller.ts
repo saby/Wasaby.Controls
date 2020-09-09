@@ -278,7 +278,7 @@ export default class _Controller implements IDropdownController {
       this._menuSource = new PrefetchProxy({
          target: this._source,
          data: {
-            query: items
+            query: items.clone ? items.clone() : items
          }
       });
    }
