@@ -36,10 +36,12 @@ interface IManagerTouchContext {
 
 class Manager {
     _contextIsTouch: boolean = false;
+    _dataLoaderModule: string;
     _popupItems: List<IPopupItem> = new List();
 
     constructor(options = {}) {
         this.initTheme(options);
+        this._dataLoaderModule = options.dataLoaderModule;
     }
 
     protected initTheme(options): void {
@@ -85,6 +87,15 @@ class Manager {
             EventBus.globalChannel().unsubscribe('MobileInputFocus', this._controllerVisibilityChangeHandler);
             EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._controllerVisibilityChangeHandler);
         }
+    }
+
+    loadData(dataLoaders): Promise<unknown> {
+        return new Promise((resolve) => {
+           import(this._dataLoaderModule).then((DataLoader) => {
+               const Loader = DataLoader.default || DataLoader;
+               resolve(Loader.load(dataLoaders));
+           });
+        });
     }
 
     /**
