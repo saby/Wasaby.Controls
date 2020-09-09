@@ -23,17 +23,16 @@ interface IReceivedState {
 
 /**
  * Интерфейс для опций контрола адаптивных вкладок.
- * @interface Controls/_tabs/ITabsAdaptiveButtons
+ * @interface Controls/_tabs/ITabsAdaptiveButtonsOptions
  * @public
  * @author Бондарь А.В.
  */
-
 export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
     align?: string;
     containerWidth: number;
 }
 /**
- * @name Controls/_tabs/ITabsAdaptiveButtons#align
+ * @name Controls/_tabs/ITabsAdaptiveButtonsOptions#align
  * @cfg {String} Выравнивание вкладок по правому или левому краю.
  * @variant left Вкладки выравниваются по левому краю.
  * @variant right Вкладки выравниваются по правому краю.
@@ -41,7 +40,7 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  */
 
 /**
- * @name Controls/_tabs/ITabsAdaptiveButtons#containerWidth
+ * @name Controls/_tabs/ITabsAdaptiveButtonsOptions#containerWidth
  * @cfg {Number} Ширина контейнера вкладок. Необходимо указывать для правильного расчета ширины вкладок.
  */
 
