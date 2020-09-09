@@ -666,7 +666,6 @@ var Filter = Control.extend({
     _dateRangeItem: null,
     _hasResetValues: true,
     _dependenciesTimer: null,
-    _resetFastText: null,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};
