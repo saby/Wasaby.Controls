@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/Filter_new/FilterView/Source/ResetText/ResetText';
+import * as Template from 'wml!Controls-demo/Filter_new/FilterView/EmptyText/EmptyText';
 import 'Controls-demo/Filter_new/resources/HistorySourceDemo';
 import {getItems} from 'Controls-demo/Filter_new/resources/FilterItemsStorage';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -10,10 +10,7 @@ export default class extends Control {
     protected _source: unknown[] = [];
 
     protected _beforeMount(): void {
-        this._source = getItems().map((item) => {
-            item.resetText = item.emptyText;
-            return item;
-        });
+        this._source = getItems();
     }
 
     protected _itemsChangedHandler(event: SyntheticEvent, items: unknown[]): void {

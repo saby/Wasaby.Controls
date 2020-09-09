@@ -69,7 +69,6 @@ import {INavigationOptionValue} from 'Controls/interface';
  * @property {String} name Имя фильтра.
  * @property {*} value Текущее значение фильтра.
  * @property {*} resetValue Значение фильтра по умолчанию.
- * @property {String} resetText Текстовое значение, отображаемое у кнопки фильтра в случае, когда в быстром фильтре установлено значение "по-умолчанию"
  * @property {String} textValue Текстовое значение фильтра. Используется для отображения текста у кнопки фильтра.
  * @property {String} emptyText Текст пункта, значение которого является значением "по-умолчанию" для фильтра. Пункт будет добавлен в начало списка с заданным текстом.
  * @property {String|Number} emptyKey Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
@@ -94,6 +93,21 @@ import {INavigationOptionValue} from 'Controls/interface';
  * @property {EditorOptions} editorOptions Options for editor
  * @property {FilterViewMode} viewMode Filter view mode
  * @property {Boolean} doNotSaveToHistory Flag to cancel saving filter in history
+ */
+
+/**
+ * @name Controls/_filter/View/interface/IFilterView#emptyText
+ * @default Все
+ * @cfg {String} Текстовое значение, которое будет использовано для отображения рядом с кнопкой, когда во всех фильтрах установлено значение "по-умолчанию"
+ * @demo Controls-demo/Filter_new/FilterView/EmptyText/Index
+ * @example
+ * <pre>
+ * <Controls.filter:View
+ *    source="{{_source}}"
+ *    detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
+ *    emptyText="Все состояния"
+ *    panelTemplateName="Controls/filterPopup:SimplePanel"/>
+ * </pre>
  */
 
 /**
@@ -602,7 +616,6 @@ export interface IFilterItem {
     id?: string;
     value: any;
     resetValue?: any;
-    resetText?: string;
     textValue: string;
     emptyText?: string;
     emptyKey?: boolean | string | number;
