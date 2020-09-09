@@ -99,6 +99,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
                         newItem[field] = item.get(field);
                         newItem['indentation'] = index;
                         newItem['displayProperty'] = this._options.displayProperty;
+                        newItem['readOnly'] = this._options.readOnly;
                     });
                     return newItem;
                 }),
