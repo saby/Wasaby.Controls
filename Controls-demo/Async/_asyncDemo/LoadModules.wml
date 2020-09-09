@@ -1,5 +1,5 @@
 <div>
-    <div class="ControlsDemo-AsyncDemo__column">
+    <div class="ControlsDemo-AsyncDemo__column demo-AsyncDemo__loadModule">
         <Controls.heading:Title caption="1. Асинхронная загрузка модуля (не библиотека)" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
         <div class="ControlsDemo-AsyncDemo__row">
             Асинхронно загружается модуль. После успешной загрузки меняется шаблонная опция на значение "true".
@@ -16,7 +16,7 @@
         </Controls.Container.Async>
     </div>
 
-    <div class="ControlsDemo-AsyncDemo__column">
+    <div class="ControlsDemo-AsyncDemo__column demo-AsyncDemo__loadLibrary">
         <Controls.heading:Title caption="2. Асинхронная загрузка библиотеки" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
         <div class="ControlsDemo-AsyncDemo__row">
             Асинхронно загружается библиотека. После успешной загрузки меняется шаблонная опция на значение "true".

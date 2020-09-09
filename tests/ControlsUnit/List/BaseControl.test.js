@@ -321,7 +321,10 @@ define([
             _needScrollCalculation: true,
             getViewModel: () => ({
                getCount: () => 3
-            })
+            }),
+            _container: {
+               clientHeight: 300
+            }
          };
          const myFilter = {testField: 'testValue'};
          const resultNavigation = 'testNavigation';
@@ -728,7 +731,10 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
@@ -802,7 +808,10 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          ctrl._afterMount(cfg);
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
 
@@ -867,7 +876,10 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          ctrl._afterMount(cfg);
 
          let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
@@ -1066,7 +1078,10 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
             up: false,
@@ -1890,7 +1905,10 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          ctrl._afterMount(cfg);
 
          ctrl._sourceController.load = sinon.stub()
@@ -2286,6 +2304,13 @@ define([
 
             ctrl._viewSize = 1000;
             ctrl._viewportSize = 400;
+            ctrl._container = {
+               getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+               getBoundingClientRect: function() { return {}; }
+            };
+            ctrl._getItemsContainer = () => ({
+               children: []
+            });
             // эмулируем появление скролла
             await lists.BaseControl._private.onScrollShow(ctrl, heightParams);
             ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
@@ -2309,8 +2334,8 @@ define([
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
                     begin: "visible",
-                    end: "visible",
-                    next: "visible",
+                    end: "readonly",
+                    next: "readonly",
                     prev: "visible"
             }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll');
 
@@ -2394,6 +2419,13 @@ define([
          let iterativeSearchAborted;
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
+         ctrl._getItemsContainer = () => ({
+            children: []
+         });
          lists.BaseControl._private.onScrollShow(ctrl, heightParams);
          ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
          ctrl._pagingVisible = true;
@@ -2447,6 +2479,10 @@ define([
             clientHeight: 1000
          };
          var baseControl = new lists.BaseControl(cfg);
+         baseControl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          baseControl._children = triggers;
          baseControl.saveOptions(cfg);
          baseControl._needScrollCalculation = true;
@@ -2723,6 +2759,10 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl._children = triggers;
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          // эмулируем появление скролла
          lists.BaseControl._private.onScrollShow(ctrl, heightParams);
 
@@ -6769,7 +6809,10 @@ define([
 
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
-            ctrl._container =  {getElementsByClassName: () => ([{clientHeight: 100}])};
+            ctrl._container = {
+               getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+               getBoundingClientRect: function() { return {}; }
+            };
             ctrl._afterMount(cfg);
 
             assert.isNull(ctrl._loadedItems);
@@ -7221,7 +7264,10 @@ define([
          async function mountBaseControl(control, options) {
             control.saveOptions(options);
             await control._beforeMount(options);
-            control._container =  {getElementsByClassName: () => ([ {clientHeight: 0, offsetHeight:0}])};
+            control._container =  {
+               getElementsByClassName: () => ([{ clientHeight: 0, offsetHeight: 0 }]),
+               getBoundingClientRect: function() { return {}; }
+            };
             await control._afterMount(options);
          }
 
@@ -7852,5 +7898,96 @@ define([
             });
          });
       });
+
+      // region Move
+
+      describe('MoveController', () => {
+         const moveController = {
+            move: () => Promise.resolve(),
+            moveWithDialog: () => Promise.resolve(),
+            updateOptions: () => {}
+         };
+         let spyMove;
+         let spyMoveWithDialog;
+         let cfg;
+         let baseControl;
+
+         beforeEach(() => {
+            const items = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: data
+            });
+            const collectionItem = {
+               getContents: () => items.at(2)
+            };
+            cfg = {
+               viewName: 'Controls/List/ListView',
+               keyProperty: 'id',
+               viewModelConstructor: lists.ListViewModel,
+               items,
+               source
+            };
+            baseControl = new lists.BaseControl(cfg);
+            baseControl.saveOptions(cfg);
+            baseControl._beforeMount(cfg);
+            baseControl._moveController = moveController;
+            baseControl._listViewModel._display = {
+               getCollection: () => items,
+               getItemBySourceItem: () => collectionItem,
+               getKeyProperty: () => 3,
+               getIndexByKey: () => 3,
+               at: () => collectionItem,
+               getCount: () => data.length,
+               getCollapsedGroups: () => {},
+               unsubscribe: () => {},
+               destroy: () => {}
+            };
+            spyMove = sinon.spy(moveController, 'move');
+            spyMoveWithDialog = sinon.spy(moveController, 'moveWithDialog');
+         });
+
+         afterEach(() => {
+            spyMove.restore();
+            spyMoveWithDialog.restore();
+         });
+
+         // moveItemUp вызывает moveController
+         it('moveItemUp() should call moveController', () => {
+            return baseControl.moveItemUp(2).then(() => {
+               sinon.assert.called(spyMove);
+            });
+         });
+
+         // moveItemDown вызывает moveController
+         it('moveItemDown() should call moveController', () => {
+            return baseControl.moveItemDown(2).then(() => {
+               sinon.assert.called(spyMove);
+            });
+         });
+
+         // moveItems вызывает moveController
+         it('moveItems() should call moveController', () => {
+            const selectionObject = {
+               selected: [2],
+               excluded: []
+            };
+            return baseControl.moveItems(selectionObject, 3, 'on').then(() => {
+               sinon.assert.called(spyMove);
+            });
+         });
+
+         // moveItemsWithDialog вызывает moveController
+         it('moveItemsWithDialog() should call moveController', () => {
+            const selectionObject = {
+               selected: [2],
+               excluded: []
+            };
+            return baseControl.moveItemsWithDialog(selectionObject, {anyFilter: 'anyVal'}).then(() => {
+               sinon.assert.called(spyMoveWithDialog);
+            });
+         });
+      });
+
+      // endregion Move
    });
 });

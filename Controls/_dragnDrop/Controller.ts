@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dragnDrop/Controller/Controller');
+import ControllerClass from './ControllerClass';
 import 'Controls/_dragnDrop/DraggingTemplate';
-import {DialogOpener} from 'Controls/popup';
 import {IDragObject} from './Container';
 /**
  * Контроллер обеспечивает взаимосвязь между контейнерами перемещения Controls/dragnDrop:Container.
@@ -39,36 +39,34 @@ import {IDragObject} from './Container';
 
 class Controller extends Control<IControlOptions> {
     _template: TemplateFunction = template;
-    _dialogOpener: DialogOpener = new DialogOpener();
+    _controllerClass: ControllerClass;
 
     _documentDragStart(event: Event, dragObject: IDragObject): void {
-        this._children.dragStartDetect.start(dragObject);
-        this._notify('dragStart');
+        this._controllerClass.documentDragStart(dragObject);
     }
 
     _documentDragEnd(event: Event, dragObject: IDragObject): void {
-        this._children.dragEndDetect.start(dragObject);
-        this._dialogOpener.close();
-        this._notify('dragEnd');
+        this._controllerClass.documentDragEnd(dragObject);
     }
 
     _updateDraggingTemplate(event: Event, draggingTemplateOptions: IDragObject, draggingTpl: TemplateFunction): void {
-        this._dialogOpener.open({
-            topPopup: true,
-            opener: null,
-            template: 'Controls/dragnDrop:DraggingTemplateWrapper',
-            templateOptions: {
-                draggingTemplateOptions,
-                draggingTemplate: draggingTpl
-            },
-            top: draggingTemplateOptions.position.y + draggingTemplateOptions.draggingTemplateOffset,
-            left: draggingTemplateOptions.position.x + draggingTemplateOptions.draggingTemplateOffset
-        });
+        this._controllerClass.updateDraggingTemplate(draggingTemplateOptions, draggingTpl);
+    }
+
+    _beforeMount() {
+        this._controllerClass = new ControllerClass();
     }
 
     _beforeUnmount(): void {
-        this._dialogOpener.destroy();
-        this._dialogOpener = null;
+        this._controllerClass.destroy();
+    }
+
+    _registerHandler(event: Event, registerType: string, component, callback, config): void {
+        this._controllerClass.registerHandler(event, registerType, component, callback, config);
+    }
+
+    _unregisterHandler(event: Event, registerType: string, component, config): void {
+        this._controllerClass.unregisterHandler(event, registerType, component, config);
     }
 
     static _styles: string[] = ['Controls/dragnDrop'];

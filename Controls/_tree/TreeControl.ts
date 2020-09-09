@@ -17,6 +17,9 @@ import selectionToRecord = require('Controls/_operations/MultiSelector/selection
 import { TreeItem } from 'Controls/display';
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
+import {ISelectionObject} from "../_interface/ISelectionType";
+import {CrudEntityKey} from "Types/source";
+import {TMovePosition} from "../_list/Controllers/MoveController";
 
 const HOT_KEYS = {
     expandMarkedItem: Env.constants.key.right,
@@ -500,6 +503,7 @@ const _private = {
  *
  * @class Controls/_tree/TreeControl
  * @mixes Controls/interface/IEditableList
+ * @mixes Controls/_list/interface/IMovableView
  * @extends Controls/_list/ListControl
  * @control
  * @private
@@ -698,6 +702,26 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     commitEdit: function() {
         return this._options.readOnly ? Deferred.fail() : this._children.baseControl.commitEdit();
     },
+
+    // region mover
+
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+        return this._children.baseControl.moveItems(selection, targetKey, position);
+    },
+
+    moveItemUp(selectedKey: CrudEntityKey): Promise<void> {
+        return this._children.baseControl.moveItemUp(selectedKey);
+    },
+
+    moveItemDown(selectedKey: CrudEntityKey): Promise<void> {
+        return this._children.baseControl.moveItemDown(selectedKey);
+    },
+
+    moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.moveItemsWithDialog(selection);
+    },
+
+    // endregion mover
 
     _markedKeyChangedHandler: function(event, key) {
         this._notify('markedKeyChanged', [key]);
