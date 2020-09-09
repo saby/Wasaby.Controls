@@ -3067,7 +3067,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._updateItemsHeights();
         }
         if (this._loadingIndicatorState) {
-            _private.updateIndicatorContainerHeight(this, _private.getViewRect(self), this._viewportRect);
+            _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
         }
     },
 
