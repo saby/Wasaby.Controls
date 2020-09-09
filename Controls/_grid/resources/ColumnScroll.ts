@@ -362,8 +362,13 @@ export class ColumnScroll {
             // Cкролируем скроллбар при полной поддержке гридов, т.к. он лежит в трансформнутой области. При
             // table-layout скроллбар лежит вне таблицы
             newHTML +=
-                `.${this._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }` +
-                `.${this._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
+                `.${this._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }`;
+
+            // Safari 13 считает координаты иначе, чем другие браузеры и для него не нужно делать transition.
+            if (!detection.safari || detection.safariVersion !== 13) {
+                newHTML +=
+                    `.${this._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
+            }
         } else {
             const maxTranslate = this._contentSize - this._containerSize;
             newHTML += ` .${this._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(${position - maxTranslate}px); }`;
