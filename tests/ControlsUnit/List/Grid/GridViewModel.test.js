@@ -1079,7 +1079,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
-                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
+                  'updateIndexes', 'setActiveItem', 'appendItems', 'prependItems', 'getDragTargetPosition',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
                   'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
@@ -1184,7 +1184,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   }
                }
             },
-            ladderViewModel = new gridMod.GridViewModel({
+            cfg = {
                items: new collection.RecordSet({
                   keyProperty: 'id',
                   rawData: [
@@ -1203,7 +1203,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                keyProperty: 'id',
                columns: initialColumns,
                ladderProperties: ['date']
-            });
+            },
+            ladderViewModel = new gridMod.GridViewModel(cfg);
          assert.deepEqual(ladderViewModel._ladder.ladder, resultLadder, 'Incorrect value prepared ladder.');
          assert.deepEqual(ladderViewModel._ladder.stickyLadder, resultStickyLadder, 'Incorrect value prepared stickyLadder.');
 
@@ -1236,7 +1237,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                }
             };
 
-         ladderViewModel.setItems(newItems);
+         ladderViewModel.setItems(newItems, cfg);
 
          assert.deepEqual(ladderViewModel._ladder.ladder, newResultLadder, 'Incorrect value prepared ladder after setItems.');
          assert.deepEqual(ladderViewModel._ladder.stickyLadder, newResultStickyLadder, 'Incorrect value prepared stickyLadder after setItems.');
