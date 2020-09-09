@@ -1003,17 +1003,29 @@ let
          if (!ev.nativeEvent.isTrusted) {
             let offset: number;
             const scrollTop: number = _private.getScrollTop(this, this._children.content);
+
+            const scrollSize = _private.getScrollSize(SCROLL_TYPE.VERTICAL, this._children.content);
+            const containerSize = _private.getContainerSize(SCROLL_TYPE.VERTICAL, this._children.content);
+            const scrollContainerSize = scrollSize - containerSize;
+
             if (ev.nativeEvent.which === Env.constants.key.pageDown) {
-               offset = scrollTop + this._children.content.clientHeight;
+                offset = scrollTop + this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.down) {
-               offset = scrollTop + SCROLL_BY_ARROWS;
+                offset = scrollTop + SCROLL_BY_ARROWS;
             }
             if (ev.nativeEvent.which === Env.constants.key.pageUp) {
-               offset = scrollTop - this._children.content.clientHeight;
+                offset = scrollTop - this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.up) {
-               offset = scrollTop - SCROLL_BY_ARROWS;
+                offset = scrollTop - SCROLL_BY_ARROWS;
+            }
+
+            if (offset > scrollContainerSize) {
+                offset = scrollContainerSize;
+            }
+            if (offset < 0 ) {
+                offset = 0;
             }
             if (offset !== undefined) {
                this.scrollTo(offset);
