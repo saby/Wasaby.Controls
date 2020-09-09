@@ -2172,11 +2172,11 @@ const _private = {
     getMarkerController(self: typeof BaseControl, options: IList = null): MarkerController {
         if (!_private.hasMarkerController(self)) {
             options = options ? options : self._options;
-            self._markerController = this.createMarkerController(
-                self._listViewModel,
-                options.markerVisibility,
-                options.markedKey
-            );
+            self._markerController = new MarkerController({
+                model: self._listViewModel,
+                markerVisibility: options.markerVisibility,
+                markedKey: options.markedKey
+            });
         }
         return self._markerController;
     },
@@ -2200,18 +2200,14 @@ const _private = {
         return hasOwnProperty;
     },
 
-    createMarkerController(model: any, markerVisibility: TVisibility, markedKey: string|number): MarkerController {
-        return new MarkerController({ model, markerVisibility, markedKey });
-    },
-
     setMarkedKey(self: any, key: TItemKey): void {
         if (_private.shouldProcessMarker(self._options)) {
             if (!_private.hasMarkerController(self)) {
-                self._markerController = _private.createMarkerController(
-                    self._listViewModel,
-                    self._options.markerVisibility,
-                    key
-                );
+                self._markerController = new MarkerController({
+                    model: self._listViewModel,
+                    markerVisibility: self._options.markerVisibility,
+                    markedKey: key
+                });
             }
             _private.handleMarkerControllerResult(self, key);
         }
