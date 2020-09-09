@@ -201,8 +201,11 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         let width = 0;
         let indexLast = 0;
         const arrWidth = this._getItemsWidth(items, options.displayProperty);
+        const arrTextOfItems = this._getItemsText(items, options.displayProperty);
+
         if (options.align === 'right') {
             arrWidth.reverse();
+            arrTextOfItems.reverse();
         }
         while (width < options.containerWidth && indexLast !== items.getCount()) {
             width += arrWidth[indexLast];
@@ -218,25 +221,26 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             return sum + current;
         }, 0);
 
-        const minWidth = MIN_WIDTH + MARGIN;
         if (indexLast === arrWidth.length - 2) {
+            const textOfLastTab = arrTextOfItems[arrTextOfItems.length - 1];
+            const minWidth = this._getMinWidth(textOfLastTab) + MARGIN * 2;
             const width = currentWidth - arrWidth[arrWidth.length - 1] + minWidth;
             if (width < options.containerWidth) {
                 indexLast++;
                 return indexLast;
             } else {
-                indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options.containerWidth);
+                indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options.containerWidth, arrTextOfItems);
             }
         }
 
         if (indexLast < arrWidth.length - 2) {
-            indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options.containerWidth);
+            indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options.containerWidth, arrTextOfItems);
         }
         return indexLast;
     }
 
     private _getLastVisibleItemIndex(lastIndex: number,  arrWidth: number[],
-                                     currentWidth: number, containerWidth: number): number {
+                                     currentWidth: number, containerWidth: number, arrTextOfItems: string[]): number {
         let i = arrWidth.length - 1;
         let indexLast = lastIndex;
         let width = currentWidth;
@@ -244,11 +248,14 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             width = width - arrWidth[i];
             i--;
         }
-        width = width + this._moreButtonWidth + MIN_WIDTH + MARGIN + PADDING_OF_MORE_BUTTON;
         indexLast++;
+        let currentMinWidth = this._getMinWidth(arrTextOfItems[indexLast]);
+        width = width + this._moreButtonWidth + currentMinWidth + COUNT_OF_MARGIN * MARGIN + PADDING_OF_MORE_BUTTON;
         while (width > containerWidth) {
             indexLast--;
-            width = width - arrWidth[lastIndex];
+            width = width - arrWidth[indexLast] - currentMinWidth;
+            currentMinWidth = this._getMinWidth(arrTextOfItems[indexLast]);
+            width += currentMinWidth;
         }
         return indexLast;
     }
@@ -259,6 +266,18 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             widthArray.push(this._getTextWidth(items.at(i).get(displayProperty), 'l') + COUNT_OF_MARGIN * MARGIN);
         }
         return widthArray;
+    }
+
+    private _getItemsText(items: RecordSet<object>, displayProperty: string): string[] {
+        const arrTextOfItems = [];
+        items.forEach((item) => {
+            arrTextOfItems.push(item.get(displayProperty));
+        });
+        return arrTextOfItems;
+    }
+
+    private _getMinWidth(text: string): number {
+        return this._getTextWidth(text.substring(0, 3) + '...', 'l');
     }
 
     private _getTextWidth(text: string, size: string  = 'l'): number {
