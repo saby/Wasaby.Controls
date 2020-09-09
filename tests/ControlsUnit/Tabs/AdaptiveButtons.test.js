@@ -8,8 +8,7 @@ define([
         const data = [
             {
                 id: 1,
-                title: 'Первый',
-                align: 'left'
+                title: 'Первый'
             },
             {
                 id: 2,
@@ -17,8 +16,7 @@ define([
             },
             {
                 id: 3,
-                title: 'Третий',
-                align: 'left'
+                title: 'Третий'
             }
         ];
         const items = new collection.RecordSet({
