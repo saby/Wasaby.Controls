@@ -224,11 +224,11 @@
 }
 
 /**
- * In firefox, the text baseline is 1px higher than the standard.
+ * In firefox and safari, the text baseline is 1px higher than the standard.
  * Compensate for this by reducing the indentation between the close button and the upper border by 1px.
  * Presumably the problem is in the font. Error written https://online.sbis.ru/opendoc.html?guid=1e389bc5-8be7-4394-abdd-231e3ec040a8
  */
-.ws-is-firefox {
+.ws-is-firefox, .ws-is-mobile-safari {
   .controls-InfoBoxTemplate__closeButton_theme-@{themeName} {
     top: @close-button_offset-top_infobox + 1;
   }

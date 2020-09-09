@@ -426,7 +426,9 @@ const _private = {
 
                     // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                     if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
-                        _private.checkLoadToDirectionCapability(self, filter, navigation);
+                        if (self._isMounted) {
+                            _private.checkLoadToDirectionCapability(self, filter, navigation);
+                        }
                     } else if (!self._wasScrollToEnd) {
                         if (_private.attachLoadTopTriggerToNullIfNeed(self, cfg) && !self._isMounted) {
                             self._hideTopTriggerUntilMount = true;
@@ -804,7 +806,7 @@ const _private = {
 
             const scrollParams = {
                 clientHeight: self._viewportSize,
-                scrollHeight: self._viewSize,
+                scrollHeight: _private.getViewSize(self),
                 scrollTop: self._scrollTop
             };
 
@@ -1007,7 +1009,7 @@ const _private = {
             return false;
         }
         if (direction === 'up') {
-            return scrollParams.scrollTop < triggerOffset;
+            return scrollParams.scrollTop <= triggerOffset;
         } else {
             let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
             if (self._pagingVisible) {
@@ -1048,8 +1050,8 @@ const _private = {
             };
             const scrollParams = {
                 scrollTop: self._scrollTop,
-                clientHeight: self._viewportSize,
-                scrollHeight: self._viewSize
+                clientHeight: viewportSize,
+                scrollHeight: viewSize
             };
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
@@ -1077,7 +1079,7 @@ const _private = {
                 self._cachedPagingState = true;
             }
             if (result && _private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self, scrollParams);
+                _private.createScrollPagingController(self, scrollParams, hasMoreData);
             }
         }
 
@@ -1094,7 +1096,11 @@ const _private = {
             // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
             self._isScrollShown = true;
 
+            const container = self._container[0] || self._container;
+            self._viewSize = container.clientHeight;
             self._viewportRect = params.viewPortRect;
+
+            self._updateItemsHeights();
 
             if (_private.needScrollPaging(self._options.navigation)) {
                 const scrollParams = {
@@ -1125,13 +1131,17 @@ const _private = {
             callback(self._scrollPagingCtr);
         } else {
             if (self._pagingVisible) {
-                _private.createScrollPagingController(self, scrollParams).then((scrollPaging) => {
+                const hasMoreData = {
+                    up: _private.hasMoreData(self, self._sourceController, 'up'),
+                    down: _private.hasMoreData(self, self._sourceController, 'down')
+                };
+                _private.createScrollPagingController(self, scrollParams, hasMoreData).then((scrollPaging) => {
                     callback(scrollPaging);
                 });
             }
         }
     },
-    createScrollPagingController(self, scrollParams) {
+    createScrollPagingController(self, scrollParams, hasMoreData) {
         let elementsCount = undefined;
         if (self._sourceController) {
             elementsCount = self._sourceController.getAllDataCount();
@@ -1150,7 +1160,23 @@ const _private = {
                 }
             }
         };
-        return Promise.resolve(new ScrollPagingController(scrollPagingConfig));
+        return Promise.resolve(new ScrollPagingController(scrollPagingConfig, hasMoreData));
+    },
+
+    getViewRect(self): DOMRect {
+        if (!self._viewRect) {
+            const container = self._container[0] || self._container;
+            self._viewRect = container.getBoundingClientRect();
+        }
+        return self._viewRect;
+    },
+
+    getViewSize(self): number {
+        if (!self._viewSize) {
+            const container = self._container[0] || self._container;
+            self._viewSize = container.clientHeight;
+        }
+        return self._viewSize;
     },
 
     showIndicator(self, direction: 'down' | 'up' | 'all' = 'all'): void {
@@ -1162,6 +1188,7 @@ const _private = {
         if (direction === 'all') {
             self._loadingIndicatorState = self._loadingState;
         }
+        _private.updateIndicatorContainerHeight(self, _private.getViewRect(self), self._viewportRect);
         _private.startShowLoadingIndicatorTimer(self);
     },
 
@@ -1212,7 +1239,11 @@ const _private = {
 
     updateScrollPagingButtons(self, scrollParams) {
         _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
-            scrollPaging.updateScrollParams(scrollParams);
+            const hasMoreData = {
+                up: _private.hasMoreData(self, self._sourceController, 'up'),
+                down: _private.hasMoreData(self, self._sourceController, 'down')
+            };
+            scrollPaging.updateScrollParams(scrollParams, hasMoreData);
         });
     },
 
@@ -1239,7 +1270,7 @@ const _private = {
 
     handleListScrollSync(self, scrollTop) {
         if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
-            self._pagingVisible = _private.needShowPagingByScrollSize(self,  self._viewSize, self._viewportSize);
+            self._pagingVisible = _private.needShowPagingByScrollSize(self,  _private.getViewSize(self), self._viewportSize);
         }
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
@@ -1250,7 +1281,7 @@ const _private = {
         if (_private.needScrollPaging(self._options.navigation)) {
             const scrollParams = {
                 scrollTop: self._scrollTop,
-                scrollHeight: self._viewSize,
+                scrollHeight: _private.getViewSize(self),
                 clientHeight: self._viewportSize
             };
             _private.updateScrollPagingButtons(self, scrollParams);
@@ -3033,14 +3064,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect): void {
-        const container = this._container[0] || this._container;
         this._viewportSize = viewportHeight;
         this._viewportRect = viewportRect;
-        _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), viewportRect);
-        if (this._scrollController) {
-            this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
-            let result = this._scrollController.update({ params: {clientHeight: this._viewportSize} });
-            _private.handleScrollControllerResult(this, result);
+        if (this._isScrollShown) {
+            this._updateItemsHeights();
+        }
+        if (this._loadingIndicatorState) {
+            _private.updateIndicatorContainerHeight(this, _private.getViewRect(self), this._viewportRect);
         }
     },
 
@@ -3098,31 +3128,24 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._mounted) {
             const container = this._container[0] || this._container;
             this._viewSize = container.clientHeight;
-
-            if (this._scrollController) {
-                const itemsHeights = getItemsHeightsData(this._getItemsContainer());
-                this._scrollController.updateItemsHeights(itemsHeights);
-
-                let result = this._scrollController.update({
-                    params: {
-                        scrollHeight: this._viewSize,
-                        clientHeight: this._viewportSize
-                    }
-                });
-                _private.handleScrollControllerResult(this, result);
+            this._viewRect = container.getBoundingClientRect();
+            if (this._isScrollShown) {
+                this._updateItemsHeights();
             }
 
             if (_private.needScrollPaging(this._options.navigation)) {
                 _private.doAfterUpdate(this, () => {
                     const scrollParams = {
-                        scrollHeight: this._viewSize,
+                        scrollHeight: _private.getViewSize(this),
                         clientHeight: this._viewportSize,
                         scrollTop: this._scrollTop
                     };
                     _private.updateScrollPagingButtons(this, scrollParams);
                 });
             }
-            _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewportRect);
+            if (this._loadingIndicatorState) {
+                _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
+            }
         }
     },
 
@@ -3137,13 +3160,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _afterMount() {
         this._isMounted = true;
         this._hideTopTriggerUntilMount = false;
-        const container = this._container[0] || this._container;
-        this._viewSize = container.clientHeight;
         if (this._needScrollCalculation) {
             this._registerObserver();
             this._registerIntersectionObserver();
         }
         if (this._options.itemsDragNDrop) {
+            const container = this._container[0] || this._container;
             container.addEventListener('dragstart', this._nativeDragStart);
         }
         this._loadedItems = null;
@@ -3654,7 +3676,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     checkTriggersVisibility(): void {
         const scrollParams = {
             clientHeight: this._viewportSize,
-            scrollHeight: this._viewSize,
+            scrollHeight: _private.getViewSize(this),
             scrollTop: this._scrollTop
         };
         const triggerDown = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.bottom, 'down');
@@ -3757,7 +3779,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._currentPage = page;
         const scrollParams = {
             scrollTop: (page - 1) * this._viewportSize,
-            scrollHeight: this._viewSize,
+            scrollHeight: _private.getViewSize(this),
             clientHeight: this._viewportSize
         };
         this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true })
@@ -4147,7 +4169,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._initItemActions(event, this._options);
 
         if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
-            this._pagingVisible = _private.needShowPagingByScrollSize(this,  this._viewSize, this._viewportSize);
+            this._pagingVisible = _private.needShowPagingByScrollSize(this,  _private.getViewSize(this), this._viewportSize);
         }
 
         if (this._documentDragging) {
@@ -4397,14 +4419,26 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         event.stopPropagation();
     },
 
+    _updateItemsHeights(): void {
+        if (this._scrollController) {
+            const itemsHeights = getItemsHeightsData(this._getItemsContainer());
+            this._scrollController.updateItemsHeights(itemsHeights);
+            const result = this._scrollController.update({
+                params: {
+                    scrollHeight: _private.getViewSize(this),
+                    clientHeight: this._viewportSize
+                }
+            });
+            _private.handleScrollControllerResult(this, result);
+        }
+    },
+
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
-        let itemsHeights = getItemsHeightsData(this._getItemsContainer());
-        this._viewSize = this._container.clientHeight;
-        if (this._scrollController) {
-            this._scrollController.updateItemsHeights(itemsHeights);
-            let result = this._scrollController.update({ params: {scrollHeight: this._viewSize} });
-            _private.handleScrollControllerResult(this, result);
+        if (this._isScrollShown) {
+            const container = this._container[0] || this._container;
+            this._viewSize = container.clientHeight;
+            this._updateItemsHeights();
         }
     },
 
