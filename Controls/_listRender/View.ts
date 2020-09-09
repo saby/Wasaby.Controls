@@ -489,6 +489,13 @@ export default class View extends Control<IViewOptions> {
         });
     }
 
+    destroy(): void {
+        if (this._itemActionsMenuId) {
+            this._closePopup();
+        }
+        super.destroy();
+    }
+
     /**
      * Возвращает contents записи.
      * Если запись - breadcrumbs, то берётся последняя Model из списка contents
