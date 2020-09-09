@@ -57,7 +57,7 @@
     left: -@corner_width_outside_itemActions;
   }
   & .controls-itemActionsV__action-click_size{
-    width: @item_clickableArea-size_outside_itemActions;
+    width: @item_clickableArea-size_outside_itemActions + (@item_offset_itemActions * 2);
     height: @item_clickableArea-size_outside_itemActions;
   }
 }
@@ -135,15 +135,9 @@
 }
 
 .controls-itemActionsV__action_padding_theme-@{themeName} {
-  margin: 0 @item_offset_itemActions;
+  padding: 0 @item_offset_itemActions;
 }
 
-.controls-itemActionsV_inside_theme-@{themeName} {
-  .controls-itemActionsV__action_padding_theme-@{themeName} {
-    margin: 0;
-    padding: 0 @item_offset_itemActions;
-  }
-}
 .controls-action_iconStyle_secondary_theme-@{themeName} {
   fill: @secondary_icon-color;
   color: @secondary_icon-color;
