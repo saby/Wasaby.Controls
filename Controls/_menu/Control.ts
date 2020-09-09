@@ -170,7 +170,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (options.source) {
             return this._loadItems(options).then(() => {
                 if (options.markerVisibility !== MarkerVisibility.Visible) {
-                    this._markerController = this._getMarkerController();
+                    this._markerController = this._createMarkerController(options);
                 }
             });
         }
@@ -198,7 +198,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
 
         if (this._markerController) {
-            this._markerController.update({
+            this._getMarkerController().update({
                 markerVisibility: newOptions.markerVisibility,
                 markedKey: this._getMarkedKey(this._getSelectedKeys(), newOptions.emptyKey, newOptions.multiSelect),
                 model: this._listModel
@@ -577,14 +577,17 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
+    private _createMarkerController(options: IMenuControlOptions): MarkerController {
+        return new MarkerController({
+            markerVisibility: options.markerVisibility,
+            markedKey: this._getMarkedKey(options.selectedKeys, options.emptyKey, options.multiSelect),
+            model: this._listModel
+        });
+    }
+
     private _getMarkerController(options?: IMenuControlOptions): MarkerController {
-        const menuOptions = options || this._options;
         if (!this._markerController) {
-            this._markerController = new MarkerController({
-                markerVisibility: menuOptions.markerVisibility,
-                markedKey: this._getMarkedKey(menuOptions.selectedKeys, menuOptions.emptyKey, menuOptions.multiSelect),
-                model: this._listModel
-            });
+            this._markerController = this._createMarkerController(options || this._options);
         }
         return this._markerController;
     }
