@@ -63,6 +63,35 @@ function getFewCategories(): Array<{
     ];
 }
 
+function getCursorData(): Array<{id: number, value: string, cursor?: 'default' | 'pointer', hovered: boolean}> {
+    return [
+        {
+            id: 1,
+            value: 'cursor - default, hovered - false',
+            cursor: 'default',
+            hovered: false
+        },
+        {
+            id: 2,
+            value: 'cursor - pointer, hovered - true',
+            cursor: 'pointer',
+            hovered: true
+        },
+        {
+            id: 3,
+            value: 'cursor - default, hovered - true',
+            cursor: 'default',
+            hovered: true
+        },
+        {
+            id: 4,
+            value: 'cursor - pointer, hovered - false',
+            cursor: 'pointer',
+            hovered: false
+        }
+    ];
+}
+
 function getGroupedCatalog(): Array<{
     id: number
     title: string
@@ -427,6 +456,7 @@ export {
     getContactsCatalog,
     getContactsCatalogWithActions,
     getFewCategories,
+    getCursorData,
     getGroupedCatalog,
     getGroupedCatalogWithHiddenGroup,
     getEditableCatalog,
