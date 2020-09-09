@@ -117,6 +117,28 @@ define([
                currentTarget: 123,
             }, itemData);
          });
+
+         it('dots with option readOnly', function() {
+            var itemData = {
+               item: {
+                  title: '...'
+               }
+            };
+            bc._options.readOnly = true;
+            let readOnly = false;
+
+            bc._menuOpener = {
+               open: function (openerOptions) {
+                  readOnly = openerOptions.templateOptions.source.data[0].readOnly;
+               },
+               close: function () {
+               }
+            };
+            bc._dotsClick({
+               currentTarget: 123,
+            }, itemData);
+            assert.isTrue(readOnly);
+         });
       });
       it('_onResult', function(done) {
          var args = new entity.Model({
