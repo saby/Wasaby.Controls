@@ -1,20 +1,16 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_searchNew/InputContainer';
 import {SyntheticEvent} from 'UI/Vdom';
 import SearchDelay from './SearchDelay';
+import {ISearchInputContainerOptions} from './interface';
 
-export interface ISearchContainerOptions extends IControlOptions {
-   delayTime?: number | null;
-   minSearchValueLength?: number;
-}
-
-export default class InputContainer extends Control<ISearchContainerOptions> {
+export default class InputContainer extends Control<ISearchInputContainerOptions> {
    protected _template: TemplateFunction = template;
 
    protected _value: string;
    protected _searchDelayController: SearchDelay = null;
 
-   protected _beforeMount(options?: ISearchContainerOptions): void {
+   protected _beforeMount(options?: ISearchInputContainerOptions): void {
       this._initSearchDelayController();
    }
 

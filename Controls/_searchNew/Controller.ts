@@ -1,20 +1,14 @@
-import {ISearchOptions} from 'Controls/interface';
-import {NewSourceController} from 'Controls/dataSource';
 import {QueryWhereExpression} from 'Types/source';
 import {RecordSet} from 'Types/collection';
+import {ISearchControllerOptions, ISearchController} from './interface';
 
-export interface IControllerClassOptions extends ISearchOptions {
-   sourceController: NewSourceController;
-   searchValue?: string;
-}
+export default class Controller implements ISearchController {
 
-export default class Controller {
-
-   protected _options: IControllerClassOptions = null;
+   protected _options: ISearchControllerOptions = null;
 
    protected _searchValue: string = '';
 
-   constructor(options: IControllerClassOptions) {
+   constructor(options: ISearchControllerOptions) {
       this._options = options;
    }
 
@@ -42,7 +36,7 @@ export default class Controller {
       return this._updateFilter(filter);
    }
 
-   update(options: Partial<IControllerClassOptions>): void {
+   update(options: Partial<ISearchControllerOptions>): void {
       if (options.hasOwnProperty('searchValue')) {
          if (options?.searchValue !== this._searchValue) {
             if (options.searchValue) {
