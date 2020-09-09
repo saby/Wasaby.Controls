@@ -8,6 +8,7 @@ export interface IColumnScrollOptions {
     stickyColumnsCount?: number;
     hasMultiSelect: boolean;
     needBottomPadding?: boolean;
+    isEmptyTemplateShown?: boolean;
 
     theme?: string;
     backgroundStyle?: string;
@@ -138,6 +139,12 @@ export class ColumnScroll {
         }
     }
 
+    setIsEmptyTemplateShown(newState: boolean): void {
+        if (this._options.isEmptyTemplateShown !== newState) {
+            this._options.isEmptyTemplateShown = newState;
+        }
+    }
+
     setStickyColumnsCount(newStickyColumnsCount: number, silence: boolean = false): void {
         this._setStickyColumnsCount(newStickyColumnsCount, silence, GridLayoutUtil.isFullGridSupport());
     }
@@ -187,9 +194,8 @@ export class ColumnScroll {
             shadowStyles = 'left: ' + this._fixedColumnsWidth + 'px;';
         }
 
-        const emptyTemplate = this._scrollContainer.getElementsByClassName('js-controls-GridView__emptyTemplate')[0] as HTMLDivElement;
-
-        if (emptyTemplate) {
+        if (this._options.isEmptyTemplateShown) {
+            const emptyTemplate = this._scrollContainer.getElementsByClassName('js-controls-GridView__emptyTemplate')[0] as HTMLDivElement;
             shadowStyles += 'height: ' + emptyTemplate.offsetTop + 'px;';
         }
         return shadowStyles;

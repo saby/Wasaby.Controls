@@ -3441,7 +3441,7 @@ define([
 
       });
 
-      it('_needBottomPadding after reload in beforeUpdate', async function() {
+      it('_needBottomPadding after reload in beforeUpdate', function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
             itemActionsPosition: 'outside',
@@ -3462,12 +3462,16 @@ define([
          }
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
-         await ctrl._beforeMount(cfg);
-         assert.isFalse(ctrl._needBottomPadding);
-         ctrl._beforeUpdate(cfgWithSource).addCallback(function() {
-         assert.isTrue(ctrl._needBottomPadding);
-      });
-         ctrl._afterUpdate(cfgWithSource);
+         return new Promise((resolve) => {
+            ctrl._beforeMount(cfg);
+            assert.isFalse(ctrl._needBottomPadding);
+
+            ctrl._beforeUpdate(cfgWithSource).addCallback(function() {
+               assert.isTrue(ctrl._needBottomPadding);
+               resolve();
+            });
+            ctrl._afterUpdate(cfgWithSource);
+         });
       });
 
       it('setHasMoreData after reload in beforeMount', async function() {
