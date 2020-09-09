@@ -1097,7 +1097,7 @@ const _private = {
                 self._cachedPagingState = true;
             }
             if (result && _private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self, scrollParams);
+                _private.createScrollPagingController(self, scrollParams, hasMoreData);
             }
         }
 
@@ -1149,13 +1149,17 @@ const _private = {
             callback(self._scrollPagingCtr);
         } else {
             if (self._pagingVisible) {
-                _private.createScrollPagingController(self, scrollParams).then((scrollPaging) => {
+                const hasMoreData = {
+                    up: _private.hasMoreData(self, self._sourceController, 'up'),
+                    down: _private.hasMoreData(self, self._sourceController, 'down')
+                };
+                _private.createScrollPagingController(self, scrollParams, hasMoreData).then((scrollPaging) => {
                     callback(scrollPaging);
                 });
             }
         }
     },
-    createScrollPagingController(self, scrollParams) {
+    createScrollPagingController(self, scrollParams, hasMoreData) {
         let elementsCount = undefined;
         if (self._sourceController) {
             elementsCount = self._sourceController.getAllDataCount();
@@ -1174,7 +1178,7 @@ const _private = {
                 }
             }
         };
-        return Promise.resolve(new ScrollPagingController(scrollPagingConfig));
+        return Promise.resolve(new ScrollPagingController(scrollPagingConfig, hasMoreData));
     },
 
     getViewRect(self): DOMRect {
@@ -1253,7 +1257,11 @@ const _private = {
 
     updateScrollPagingButtons(self, scrollParams) {
         _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
-            scrollPaging.updateScrollParams(scrollParams);
+            const hasMoreData = {
+                up: _private.hasMoreData(self, self._sourceController, 'up'),
+                down: _private.hasMoreData(self, self._sourceController, 'down')
+            };
+            scrollPaging.updateScrollParams(scrollParams, hasMoreData);
         });
     },
 
