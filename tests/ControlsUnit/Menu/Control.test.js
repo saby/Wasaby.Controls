@@ -292,7 +292,6 @@ define(
                };
 
                emptyMenuControl._selectionChanged = true;
-               selectedKeys = [];
                emptyMenuControl._itemClick('itemClick', item, {});
                assert.equal(selectedKeys[0], 1);
 
