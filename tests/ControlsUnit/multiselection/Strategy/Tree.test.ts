@@ -126,7 +126,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          selection = { selected: [2], excluded: [3] };
          selection = strategy.unselect(selection, [2]);
          assert.deepEqual(selection.selected, []);
-         assert.deepEqual(selection.excluded, [3]);
+         assert.deepEqual(selection.excluded, []);
 
          // выбран узел без родителей и детей
          selection = { selected: [6], excluded: [] };
