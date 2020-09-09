@@ -171,6 +171,10 @@ define('Controls/interface/IEditableList', [
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {ItemEditOptions} options Параметры редактирования.
     * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавляется по месту}.
+    * Добавление элемента происходит в следующих случаях:
+    * 1. вызов метода {@link beginAdd}.
+    * 2. после окончания редактирования последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd}).
+    * 3. после окончания редактирования только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
     * @returns {ItemEditResult}
     * @demo Controls-demo/list_new/EditInPlace/BeginEdit/Index
     * @example
@@ -304,6 +308,10 @@ define('Controls/interface/IEditableList', [
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
     * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавляется по месту}.
+    * Добавление элемента происходит в следующих случаях:
+    * 1. вызов метода {@link beginAdd}.
+    * 2. после окончания редактирования последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd}).
+    * 3. после окончания редактирования только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
     * @remark
     * Подпишитесь на событие, если необходимо что-либо сделать после начала редактирования (например, скрыть кнопку "Добавить").
     * Событие запускается, когда подготовка данных успешно завершена и возможно безопасно обновить пользовательский интерфейс.
@@ -360,12 +368,16 @@ define('Controls/interface/IEditableList', [
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
     * @param {Boolean} willSave Параметр принимает значение true, когда отредактированный элемент сохраняется.
-    * Такое происходит в двух случаях:
+    * Такое происходит в следующих случаях:
     * 1. был вызыван метод {@link commitEdit}.
     * 2. пользователь выполнил действие, которое приводит к сохранению:
 	*     * закрыл диалог, на котором находится список с редактируемым элементом;
 	*     * начал редактирование другого элемента по клику.
     * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавляется по месту}.
+    * Добавление элемента происходит в следующих случаях:
+    * 1. вызов метода {@link beginAdd}.
+    * 2. после окончания редактирования последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd}).
+    * 3. после окончания редактирования только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
     * @returns {EndEditResult}
     * @demo Controls-demo/list_new/EditInPlace/EndEdit/Index
     * @remark
@@ -430,6 +442,10 @@ define('Controls/interface/IEditableList', [
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
     * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавляется по месту}.
+    * Добавление элемента происходит в следующих случаях:
+    * 1. вызов метода {@link beginAdd}.
+    * 2. после окончания редактирования последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd}).
+    * 3. после окончания редактирования только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
     * @remark
     * Подпишитесь на событие, если необходимо что-либо сделать после завершения редактирования (например, показать кнопку "Добавить").
     * Событие запускается, когда редактирование успешно завершено и возможно безопасно обновить пользовательский интерфейс.
