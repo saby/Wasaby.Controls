@@ -125,12 +125,11 @@ define([
                }
             };
             bc._options.readOnly = true;
-            let menuIsOpen = false;
+            let readOnly = false;
 
             bc._menuOpener = {
                open: function (openerOptions) {
-                  assert.isTrue(openerOptions.templateOptions.source.data[0].readOnly);
-                  menuIsOpen = true;
+                  readOnly = openerOptions.templateOptions.source.data[0].readOnly;
                },
                close: function () {
                }
@@ -138,7 +137,7 @@ define([
             bc._dotsClick({
                currentTarget: 123,
             }, itemData);
-            assert.isTrue(menuIsOpen);
+            assert.isTrue(readOnly);
          });
       });
       it('_onResult', function(done) {
