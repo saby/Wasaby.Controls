@@ -9,6 +9,8 @@ import {
    IFontColorStyle,
    IFontColorStyleOptions
 } from 'Controls/interface';
+import {isLeftMouseButton} from 'Controls/fastOpenUtils';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * A link button that displays the period. Supports the change of periods to adjacent.
@@ -109,7 +111,10 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
       return this._children.openPopupTarget || this._container;
    }
 
-   _onClick(): void {
+   _onClick(event: SyntheticEvent): void {
+      if (!isLeftMouseButton(event)) {
+         return;
+      }
       if (!this._options.readOnly && this._options.clickable) {
          this._notify('linkClick');
       }

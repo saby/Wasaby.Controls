@@ -259,12 +259,17 @@ define([
       });
 
       describe('_onClick', function() {
+         const event = {
+            nativeEvent: {
+               button: 0
+            }
+         };
          it('should generate "linkClick" event', function() {
             const sandbox = sinon.sandbox.create(),
                component = calendarTestUtils.createComponent(dateRange.LinkView, config);
 
             sandbox.stub(component, '_notify');
-            component._onClick();
+            component._onClick(event);
 
             sinon.assert.calledWith(component._notify, 'linkClick');
             sandbox.restore();
@@ -282,7 +287,7 @@ define([
                   component = calendarTestUtils.createComponent(dateRange.LinkView, test.options);
 
                sandbox.stub(component, '_notify');
-               component._onClick();
+               component._onClick(event);
 
                sinon.assert.notCalled(component._notify);
                sandbox.restore();
