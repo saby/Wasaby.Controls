@@ -1786,7 +1786,7 @@ var
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
                 if (current.item.get) {
-                    currentColumn.column.needSearchHighlight = current.searchValue ?
+                    currentColumn.needSearchHighlight = current.searchValue ?
                         !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue) : false;
                     currentColumn.searchValue = current.searchValue;
                 }
