@@ -1027,16 +1027,16 @@ let
             if (offset < 0 ) {
                 offset = 0;
             }
-            if (offset !== undefined) {
+            if (offset !== undefined && offset !== scrollTop) {
                this.scrollTo(offset);
                ev.preventDefault();
             }
 
-            if (ev.nativeEvent.which === Env.constants.key.home) {
+            if (ev.nativeEvent.which === Env.constants.key.home && scrollTop !== 0) {
                this.scrollToTop();
                ev.preventDefault();
             }
-            if (ev.nativeEvent.which === Env.constants.key.end) {
+            if (ev.nativeEvent.which === Env.constants.key.end && scrollTop !== scrollContainerSize) {
                this.scrollToBottom();
                ev.preventDefault();
             }

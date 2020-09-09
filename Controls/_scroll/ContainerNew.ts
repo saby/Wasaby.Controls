@@ -262,16 +262,16 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             if (offset < 0 ) {
                 offset = 0;
             }
-            if (offset !== undefined) {
+            if (offset !== undefined && offset !== scrollTop) {
                 this.scrollTo(offset);
                 event.preventDefault();
             }
 
-            if (event.nativeEvent.which === constants.key.home) {
+            if (event.nativeEvent.which === constants.key.home && scrollTop !== 0) {
                 this.scrollToTop();
                 event.preventDefault();
             }
-            if (event.nativeEvent.which === constants.key.end) {
+            if (event.nativeEvent.which === constants.key.end && scrollTop !== scrollContainerHeight) {
                 this.scrollToBottom();
                 event.preventDefault();
             }
