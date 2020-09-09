@@ -1,8 +1,7 @@
 define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
    [
       'Core/Control',
-      'wml!Controls-demo/PropertyGrid/StringOrFunctionTemplate',
-      'i18n!userTemplate'
+      'wml!Controls-demo/PropertyGrid/StringOrFunctionTemplate'
    ],
    function(Control, template) {
       'use strict';
