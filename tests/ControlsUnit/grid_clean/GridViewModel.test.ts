@@ -121,7 +121,7 @@ describe('Controls/grid_clean/GridViewModel', () => {
             });
 
             it('constructor with header, empty list, setItems(items)', () => {
-                const gridViewModel = new GridViewModel({
+                const cfg = {
                     items: new RecordSet({
                         rawData: generateFlatData(0, false),
                         keyProperty: 'key'
@@ -130,13 +130,14 @@ describe('Controls/grid_clean/GridViewModel', () => {
                     columns: generateFlatSimpleColumns(),
                     multiSelectVisibility: 'hidden',
                     header: generateFlatSimpleHeader()
-                });
+                };
+                const gridViewModel = new GridViewModel(cfg);
 
                 assert.strictEqual(gridViewModel.getHeaderModel(), null);
                 gridViewModel.setItems(new RecordSet({
                     rawData: generateFlatData(itemsCount, false),
                     keyProperty: 'key'
-                }));
+                }), cfg);
                 assert.isTrue(typeof gridViewModel.getHeaderModel() === 'object');
             });
         });

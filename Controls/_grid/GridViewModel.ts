@@ -1876,7 +1876,7 @@ var
 
         setItems(items, cfg): void {
             this._model.setItems(items, cfg);
-            this._setHeader(this._options.header);
+            this._setHeader(cfg.header);
         },
 
         setItemTemplateProperty: function(itemTemplateProperty) {
