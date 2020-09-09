@@ -1,11 +1,6 @@
-export interface ISearchDelayOptions {
-   delayTime?: number | null;
-   minSearchLength?: number;
-   searchCallback: (value: string) => void;
-   searchResetCallback: () => void;
-}
+import {ISearchDelay, ISearchDelayOptions} from './interface';
 
-export default class SearchDelay {
+export default class SearchDelay implements ISearchDelay {
 
    protected _delayTimer: NodeJS.Timeout = null;
 
@@ -17,21 +12,21 @@ export default class SearchDelay {
 
    private _resolveCallback(callback: Function, value: string): void {
       if (this._options.delayTime) {
-         this.callAfterDelay(callback, value);
+         this._callAfterDelay(callback, value);
       } else {
          callback(value);
       }
    }
 
-   clearTimer(): void {
+   private _clearTimer(): void {
       if (this._delayTimer) {
          clearTimeout(this._delayTimer);
          this._delayTimer = null;
       }
    }
 
-   callAfterDelay(callback: Function, value: string): void {
-      this.clearTimer();
+   private _callAfterDelay(callback: Function, value: string): void {
+      this._clearTimer();
 
       this._delayTimer = setTimeout(() => {
          this._delayTimer = null;
@@ -41,11 +36,11 @@ export default class SearchDelay {
 
    resolve(value: string | null): void {
       const valueLength = value ? value.length : 0;
-      const searchByValueChanged = this._options.minSearchLength !== null;
+      const minSearchLength = this._options.minSearchLength !== null;
 
-      if ((searchByValueChanged && valueLength >= this._options.minSearchLength)) {
+      if (minSearchLength && valueLength >= this._options.minSearchLength) {
          this._resolveCallback(this._options.searchCallback, value);
-      } else if (searchByValueChanged || !valueLength) {
+      } else if (minSearchLength || !valueLength) {
          if (valueLength) {
             this._resolveCallback(this._options.searchResetCallback, value);
          } else {
