@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import View, {IViewOptions} from 'Controls/_listRender/View';
 import { RecordSet } from 'Types/collection';
 
-import { stub } from 'sinon';
+import { stub, assert as sinonAssert } from 'sinon';
 import {IItemActionsItem} from 'Controls/itemActions';
 
 import 'Controls/display';
@@ -208,16 +208,19 @@ describe('Controls/_listRender/View', () => {
 
         // Не показываем контекстное меню браузера, если мы должны показать кастомное меню
         it('should prevent default context menu', () => {
+            let stubOpenPopup = stub(Sticky, 'openPopup').callsFake((config: IStickyPopupOptions) => (
+                Promise.resolve('fake')
+            ));
             view._onItemContextMenu(null, item, fakeEvent);
             assert.isTrue(fakeEvent.nativeEvent.prevented);
             assert.isFalse(fakeEvent.propagating);
+            stubOpenPopup.restore();
         });
 
         // Должен устанавливать contextMenuConfig при инициализации itemActionsController
         it('should set contextMenuConfig to itemActionsController', async () => {
             let popupConfig;
-            let stubOpenPopup = stub(Sticky, 'openPopup');
-            stubOpenPopup.callsFake((config: IStickyPopupOptions) => {
+            let stubOpenPopup = stub(Sticky, 'openPopup').callsFake((config: IStickyPopupOptions) => {
                 popupConfig = config;
                 return Promise.resolve(config);
             });
@@ -230,6 +233,14 @@ describe('Controls/_listRender/View', () => {
             assert.strictEqual(view._itemActionsController.getActiveItem(), null);
             assert.strictEqual(view._itemActionsController.getSwipeItem(), null);
             stubOpenPopup.restore();
+        });
+
+        it ('should close menu on destroy', () => {
+            view._itemActionsMenuId = 'fake';
+            const stubClosePopup = stub(Sticky, 'closePopup');
+            view.destroy();
+            sinonAssert.called(stubClosePopup);
+            stubClosePopup.restore();
         });
     });
 
