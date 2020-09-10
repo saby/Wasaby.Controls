@@ -114,7 +114,6 @@ class ComboBox extends BaseDropdown {
       return { ...controllerOptions, ...{
             selectedKeys: [options.selectedKey],
             dataLoadCallback: options.dataLoadCallback,
-            marker: false,
             popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup')
                            + ' controls-ComboBox-popup_theme-' + options.theme,
             typeShadow: 'suggestionsContainer',

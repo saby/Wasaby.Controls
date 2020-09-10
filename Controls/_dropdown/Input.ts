@@ -279,6 +279,7 @@ export default class Input extends BaseDropdown {
       return { ...controllerOptions, ...{
             dataLoadCallback: this._dataLoadCallback,
             selectorOpener: this,
+            markerVisibility: 'visible',
             selectedKeys: options.selectedKeys || [],
             popupClassName: options.popupClassName || ((options.showHeader ||
                 options.headerTemplate || options.headerContentTemplate) ?

@@ -1,7 +1,7 @@
 <ws:partial template="Controls/dropdown:ItemTemplate"
             scope="{{_options}}"
             multiSelect="{{itemData.getPropValue(itemData.item, nodeProperty) ? false : multiSelect}}"
-            marker="{{itemData.getPropValue(itemData.item, nodeProperty) ? true : !multiSelect}}"
+            markerVisibility="{{itemData.getPropValue(itemData.item, nodeProperty) || !multiSelect ? 'visible'}}"
             checkBoxAlign="right"
             class="{{itemData.getPropValue(itemData.item, nodeProperty) ? 'controls-SimplePanel-folderItem_theme_' + _options.theme}}">
 </ws:partial>

@@ -169,7 +169,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         if (options.source) {
             return this._loadItems(options).then(() => {
-                if (options.markerVisibility !== MarkerVisibility.Visible) {
+                if (options.markerVisibility !== MarkerVisibility.Hidden) {
                     this._markerController = this._createMarkerController(options);
                 }
             });
@@ -198,9 +198,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
 
         if (this._markerController) {
+            const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions.emptyKey, newOptions.multiSelect);
             this._getMarkerController().update({
-                markerVisibility: newOptions.markerVisibility,
-                markedKey: this._getMarkedKey(this._getSelectedKeys(), newOptions.emptyKey, newOptions.multiSelect),
+                markerVisibility: markedKey && newOptions.markerVisibility,
+                markedKey: markedKey,
                 model: this._listModel
             });
         }
@@ -592,10 +593,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return this._markerController;
     }
 
-    private _getMarkedKey(selectedKeys: TSelectedKeys, emptyKey?: string|number, multiSelect?: boolean): string|number {
-        const markedKey = selectedKeys && selectedKeys[0];
-        const emptyMarkedKey = multiSelect && (!selectedKeys.length || selectedKeys.includes(emptyKey)) && emptyKey;
-        return emptyMarkedKey || markedKey;
+    private _getMarkedKey(selectedKeys: TSelectedKeys, emptyKey?: string|number, multiSelect?: boolean): string|number|undefined {
+        if (multiSelect) {
+            if (selectedKeys.includes(emptyKey)) {
+                return emptyKey;
+            }
+        } else {
+            return selectedKeys[0];
+        }
     }
 
     private _getSelectedKeys(): TSelectedKeys {
@@ -960,7 +965,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             emptyKey: null,
             moreButtonCaption: rk('Еще') + '...',
             groupTemplate,
-            itemPadding: {}
+            itemPadding: {},
+            markerVisibility: 'hidden'
         };
     }
 
