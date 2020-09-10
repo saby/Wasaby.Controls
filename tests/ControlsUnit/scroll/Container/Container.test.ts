@@ -1,4 +1,5 @@
 import {_ContainerNew} from 'Controls/scroll';
+import {constants} from "Env/Env";
 
 function createComponent(Component, cfg) {
     let cmp;
@@ -64,5 +65,130 @@ describe('Controls/scroll:_ContainerNew', () => {
         });
     });
 
-
+    describe('_keydownHandler', () => {
+        it('should scroll top 40px when key up', () => {
+            const component = createComponent(_ContainerNew, {});
+            const result = 960;
+            component._topPlaceholderSize = 0;
+            component._state = {
+                scrollTop: 1000
+            };
+            component._children = {
+                content: {
+                    scrollTop : 1000
+                }
+            };
+            const event = {
+                nativeEvent: {
+                    isTrusted: false,
+                    which: constants.key.up
+                },
+                preventDefault: () => {
+                    return 0;
+                }
+            };
+            component._keydownHandler(event);
+            assert.strictEqual(component._children.content.scrollTop, result);
+        });
+        it('should scroll down 40px when key down', () => {
+            const component = createComponent(_ContainerNew, {});
+            const result = 1040;
+            component._topPlaceholderSize = 0;
+            component._state = {
+                scrollTop: 1000,
+                scrollHeight: 2000,
+                clientHeight: 600
+            };
+            component._children = {
+                content: {
+                    scrollTop: 1000
+                }
+            };
+            const event = {
+                nativeEvent: {
+                    isTrusted: false,
+                    which: constants.key.down
+                },
+                preventDefault: () => {
+                    return 0;
+                }
+            };
+            component._keydownHandler(event);
+            assert.strictEqual(component._children.content.scrollTop, result);
+        });
+        it('should not scroll down 40px when key down', () => {
+            const component = createComponent(_ContainerNew, {});
+            const result = 1000;
+            component._topPlaceholderSize = 0;
+            component._state = {
+                scrollTop: 1000,
+                scrollHeight: 2000,
+                clientHeight: 1000
+            };
+            component._children = {
+                content: {
+                    scrollTop: 1000
+                }
+            };
+            const event = {
+                nativeEvent: {
+                    isTrusted: false,
+                    which: constants.key.down
+                },
+                preventDefault: () => {
+                    return 0;
+                }
+            };
+            component._keydownHandler(event);
+            assert.strictEqual(component._children.content.scrollTop, result);
+        });
+        it('should not scroll down 40px when key up', () => {
+            const component = createComponent(_ContainerNew, {});
+            const result = 0;
+            component._topPlaceholderSize = 0;
+            component._state = {
+                scrollTop: 0
+            };
+            component._children = {
+                content: {
+                    scrollTop: 0
+                }
+            };
+            const event = {
+                nativeEvent: {
+                    isTrusted: false,
+                    which: constants.key.up
+                },
+                preventDefault: () => {
+                    return 0;
+                }
+            };
+            component._keydownHandler(event);
+            assert.strictEqual(component._children.content.scrollTop, result);
+        });
+        it('should not scroll anywhere if not native keydown', () => {
+            const component = createComponent(_ContainerNew, {});
+            const result = 0;
+            component._topPlaceholderSize = 0;
+            component._state = {
+                scrollTop: 0
+            };
+            component._children = {
+                content: {
+                    scrollTop: 0
+                }
+            };
+            const event = {
+                nativeEvent: {
+                    isTrusted: true,
+                    which: constants.key.up
+                },
+                preventDefault: () => {
+                    return 0;
+                }
+            };
+            component._keydownHandler(event);
+            assert.strictEqual(component._children.content.scrollTop, result);
+        });
+    });
 });
