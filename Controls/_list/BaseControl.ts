@@ -2269,7 +2269,7 @@ const _private = {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
-            const newMarkedKey = _private.getMarkerController(self, self._options).setMarkerOnFirstVisibleItem(itemsContainer.children, verticalOffset);
+            const newMarkedKey = _private.getMarkerController(self, self._options).calculateFirstVisibleItemKey(itemsContainer.children, verticalOffset);
             _private.handleMarkerControllerResult(self, newMarkedKey);
             self._setMarkerAfterScroll = false;
         }
@@ -3324,7 +3324,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 markerController.applyMarkedKey(newOptions.markedKey);
             }
 
-            if (this._modelRecreated || this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
+            if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
                 const newMarkedKey = markerController.calculateMarkedKey();
                 _private.handleMarkerControllerResult(self, newMarkedKey);
             }

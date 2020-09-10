@@ -128,7 +128,7 @@ export class Controller {
     * @param items список HTMLElement-ов на странице
     * @param verticalOffset вертикальное смещение скролла
     */
-   setMarkerOnFirstVisibleItem(items: HTMLElement[], verticalOffset: number): TKey {
+   calculateFirstVisibleItemKey(items: HTMLElement[], verticalOffset: number): TKey {
       let firstItemIndex = this._model.getStartIndex();
       firstItemIndex += this._getFirstVisibleItemIndex(items, verticalOffset);
       firstItemIndex = Math.min(firstItemIndex, this._model.getStopIndex());
