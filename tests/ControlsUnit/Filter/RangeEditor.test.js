@@ -1,5 +1,5 @@
-define(['Controls/filter'],
-   function(filter) {
+define(['Controls/filter', 'Controls/dateRange'],
+   function(filter, dateRange) {
 
       describe('Controls/filter:DateRange', function() {
 
@@ -78,10 +78,11 @@ define(['Controls/filter'],
                }
             };
 
-            return rangeEditor._rangeChanged({}, new Date('April 17, 1995 03:24:00'), new Date('May 17, 1995 03:24:00')).then(() => {
-               assert.equal(textValue, '17.04.95 - 17.05.95');
-               assert.isFalse(rangeEditor._reseted);
-            });
+            rangeEditor._dateRangeModule = dateRange;
+
+            rangeEditor._rangeChanged({}, new Date('April 17, 1995 03:24:00'), new Date('May 17, 1995 03:24:00'));
+            assert.equal(textValue, '17.04.95 - 17.05.95');
+            assert.isFalse(rangeEditor._reseted);
          });
 
          it('_rangeChanged resetValue', () => {
@@ -93,6 +94,7 @@ define(['Controls/filter'],
                value: resetValue,
                resetValue
             });
+            rangeEditor._dateRangeModule = dateRange;
 
             rangeEditor._notify = (event, eventValue) => {
                if (event === 'rangeChanged') {
@@ -100,10 +102,9 @@ define(['Controls/filter'],
                }
             };
 
-            return rangeEditor._rangeChanged({}, null, null).then(() => {
-               assert.deepEqual(date, resetValue);
-               assert.isTrue(rangeEditor._reseted);
-            });
+            return rangeEditor._rangeChanged({}, null, null);
+            assert.deepEqual(date, resetValue);
+            assert.isTrue(rangeEditor._reseted);
          });
       });
 });
