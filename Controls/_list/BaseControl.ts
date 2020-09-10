@@ -2898,9 +2898,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _draggedKey: null,
     _validateController: null,
 
+    // Флаг, определяющий состояние pointer events для View. Необходим для обхода браузерных
+    // оптимизаций, которые игнорируют CSS анимации. Должен включаться после первого наведения мыши на controls-BaseControl
+    _pointerEventsEnabled: false,
+
     // Контроллер для перемещения элементов списка
     _moveController: null,
-
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -4263,6 +4266,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _mouseEnter(event): void {
+        this._pointerEventsEnabled = true;
+
         this._initItemActions(event, this._options);
 
         if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
