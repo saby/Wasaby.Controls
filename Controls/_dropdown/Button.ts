@@ -45,6 +45,8 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/ITooltip
  * @mixes Controls/_interface/IIcon
+ * @mixes Controls/_dropdown/interface/IFooterTemplate
+ * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/_dropdown/interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/_interface/IFontColorStyle
