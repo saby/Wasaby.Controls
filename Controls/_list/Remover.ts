@@ -95,11 +95,11 @@ var _private = {
 
 var Remover = BaseAction.extend({
     _beforeMount: function (options, context) {
-        _private.updateDataOptions(this, context.dataOptions);
+        _private.updateDataOptions(this, options);
     },
 
     _beforeUpdate: function (options, context) {
-        _private.updateDataOptions(this, context.dataOptions);
+        _private.updateDataOptions(this, options);
     },
 
     removeItems(items: string[]): Promise<void> {

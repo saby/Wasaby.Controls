@@ -1,5 +1,5 @@
 <ws:template name="DEFAULT_CONTENT">
-    <ws:if data="{{itemData.column.needSearchHighlight}}">
+    <ws:if data="{{itemData.needSearchHighlight}}">
         <Controls.decorator:Highlight highlightedValue="{{itemData.searchValue}}">
             <ws:value>
                 <ws:String>{{itemData.item[itemData.column.displayProperty]}}</ws:String>
@@ -14,7 +14,7 @@
 <div class="controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_default_theme-{{_options.theme}}
             {{itemData.classList.padding.getAll()}} {{ itemData.classList.columnContent }} controls-Grid__row-cell_cursor-{{cursor || 'pointer'}}
             {{backgroundColorStyle ? 'controls-Grid__row-cell__content_background_' + backgroundColorStyle + '_theme-' + _options.theme}}
-            {{itemData.hoverBackgroundStyle ? 'controls-Grid__item_background-hover-' + itemData.hoverBackgroundStyle  + '_theme-' + _options.theme}}">
+            {{itemData.hoverBackgroundStyle ? 'controls-Grid__item_background-hover_' + itemData.hoverBackgroundStyle  + '_theme-' + _options.theme}}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial
                 template="{{contentTemplate}}"

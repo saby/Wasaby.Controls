@@ -66,6 +66,37 @@ define([
          };
          bc._onHoveredItemChanged({}, hoveredItem);
       });
+      it('_addWithOverflow', function() {
+         //две крошки
+         let View = new crumbs.View();
+         View._items = [{
+            id: 1,
+            title: '1',
+            withOverflow: false
+         }, {
+            id: 2,
+            title: '3',
+            withOverflow: false
+         }];
+         View._addWithOverflow();
+         assert.isTrue(View._items[0].withOverflow);
+         assert.isTrue(View._items[1].withOverflow);
+
+         //крошка и точки
+         View._items = [{
+            id: 1,
+            title: '1',
+            withOverflow: false,
+            isDots: true
+         }, {
+            id: 2,
+            title: '3',
+            withOverflow: false
+         }];
+         View._addWithOverflow();
+         assert.isFalse(View._items[0].withOverflow);
+         assert.isTrue(View._items[1].withOverflow);
+      });
       describe('_onItemClick', function() {
          const mockEvent = (e) => ({...e, stopPropagation() {}});
          it('item', function() {
@@ -116,6 +147,28 @@ define([
             bc._dotsClick({
                currentTarget: 123,
             }, itemData);
+         });
+
+         it('dots with option readOnly', function() {
+            var itemData = {
+               item: {
+                  title: '...'
+               }
+            };
+            bc._options.readOnly = true;
+            let readOnly = false;
+
+            bc._menuOpener = {
+               open: function (openerOptions) {
+                  readOnly = openerOptions.templateOptions.source.data[0].readOnly;
+               },
+               close: function () {
+               }
+            };
+            bc._dotsClick({
+               currentTarget: 123,
+            }, itemData);
+            assert.isTrue(readOnly);
          });
       });
       it('_onResult', function(done) {

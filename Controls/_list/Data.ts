@@ -135,6 +135,12 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
    _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet> {
       const isChanged = this._sourceController.updateOptions(newOptions);
+
+      // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+      if (isChanged) {
+         this._filter = newOptions.filter;
+      }
+
       if (this._options.source !== newOptions.source) {
          this._loading = true;
          return this._sourceController.load().then((items) => {
@@ -146,9 +152,6 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
             }
 
             const controllerState = this._sourceController.getState();
-
-            // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-            this._filter = controllerState.filter;
             this._updateContext(controllerState);
 
             this._loading = false;
@@ -157,12 +160,11 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       } else if (isChanged) {
          const controllerState = this._sourceController.getState();
 
-         // TODO 1) filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-         // TODO 2) getState у SourceController пересоздаёт prefetchProxy,
+         // TODO getState у SourceController пересоздаёт prefetchProxy,
          // TODO поэтому весь state на контекст перекладывать нельзя, иначе список перезагрузится с теми же данными
-         this._filter = controllerState.filter;
          this._dataOptionsContext.navigation = controllerState.navigation;
          this._dataOptionsContext.filter = controllerState.filter;
+         this._dataOptionsContext.sorting = controllerState.sorting;
          this._dataOptionsContext.updateConsumers();
       }
    }
@@ -200,6 +202,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
       // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
       this._filter = controllerState.filter;
+
       this._updateContext(controllerState);
 
       /* If filter changed, prefetchSource should return data not from cache,
@@ -214,18 +217,22 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
    // TODO сейчас есть подписка на itemsChanged из поиска. По хорошему не должно быть.
    _itemsChanged(event:Event, items): void {
-      //search:Cotnroller fires two events after search: itemsChanged, filterChanged
+      //search:Controller fires two events after search: itemsChanged, filterChanged
       //on filterChanged event filter state will updated
-      //on itemChanged event prefetchSource will updated, but createPrefetchSource method work async becouse of promise,
+      //on itemChanged event prefetchSource will updated, but createPrefetchSource method work async because of promise,
       //then we need to create prefetchSource synchronously
 
       // для того чтобы мог посчитаться новый prefetch Source внутри
       const newItems = this._sourceController.setItems(items);
+      const controllerState = this._sourceController.getState();
+
       if (!this._items) {
          this._items = newItems;
+      } else {
+         controllerState.items = this._items;
+         this._sourceController.setItems(this._items);
       }
 
-      const controllerState = this._sourceController.getState();
       this._updateContext(controllerState);
       event.stopPropagation();
    }

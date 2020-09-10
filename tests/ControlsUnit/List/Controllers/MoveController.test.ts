@@ -1,272 +1,1246 @@
 import {assert} from 'chai';
-import {stub, spy, assert as sinonAssert} from 'sinon';
-import { RecordSet } from 'Types/collection';
+import {spy, stub, assert as sinonAssert} from 'sinon';
+
+import {Logger} from 'UI/Utils';
+import {Control} from 'UI/Base';
+import {IHashMap} from 'Types/declarations';
 
 import * as clone from 'Core/core-clone';
-import * as selectionToRecord from 'Controls/_operations/MultiSelector/selectionToRecord';
+import {CrudEntityKey, DataSet, Memory, SbisService} from 'Types/source';
+import {IMoveControllerOptions, MoveController, TMovePosition} from 'Controls/list';
+import {ISelectionObject} from 'Controls/interface';
+import {Confirmation, Dialog, IBasePopupOptions} from 'Controls/popup';
+import {Model, adapter, Record} from 'Types/entity';
+import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
+import {EntityKey} from "Types/_source/ICrud";
 
-import { Memory } from 'Types/source';
+const data = [
+    {
+        id: 1,
+        folder: null,
+        'folder@': true
+    },
+    {
+        id: 2,
+        folder: null,
+        'folder@': null
+    },
+    {
+        id: 3,
+        folder: null,
+        'folder@': null
+    },
+    {
+        id: 4,
+        folder: 1,
+        'folder@': true
+    },
+    {
+        id: 5,
+        folder: 1,
+        'folder@': null
+    },
+    {
+        id: 6,
+        folder: null,
+        'folder@': null
+    }
+];
 
-import {IMoveControllerOptions, IMoveObject, MoveController} from 'Controls/list';
-import { Model } from 'Types/entity';
+const sbisServiceSource: Partial<SbisService> = {
+    getAdapter(): any {
+        return new adapter.Json();
+    },
+    getBinding(): any {
+        return {
+            move: 'move',
+            list: 'list'
+        }
+    },
+    move(items: CrudEntityKey[], target: CrudEntityKey, meta?: IHashMap<any>): Promise<void> {
+        return Promise.resolve();
+    },
+    call(command: string, data?: object): Promise<DataSet> {
+        return Promise.resolve(undefined);
+    }
+}
 
-import {Confirmation, Dialog} from 'Controls/popup';
+function createFakeModel(rawData: {id: number, folder: number, 'folder@': boolean}) {
+    return new Model({
+        rawData,
+        keyProperty: 'id'
+    });
+}
 
-const data = [{
-    id: 1,
-    folder: null,
-    'folder@': true
-}, {
-    id: 2,
-    folder: null,
-    'folder@': null
-}, {
-    id: 3,
-    folder: null,
-    'folder@': null
-}, {
-    id: 4,
-    folder: 1,
-    'folder@': true
-}, {
-    id: 5,
-    folder: 1,
-    'folder@': null
-}, {
-    id: 6,
-    folder: null,
-    'folder@': null
-}];
+function resolveMoveWithDialog(controller: MoveController, selectionObject: ISelectionObject, filter: IHashMap<any>) {
+    return new Promise((resolve) => {
+        controller
+            .moveWithDialog(selectionObject, filter)
+            .then(() => resolve(true))
+            .catch(() => resolve(false));
+    })
+}
 
-describe('Controls/_list/Controllers/MoveController', () => {
-    let recordSet;
-    let mover;
+function resolveMove(
+    controller: MoveController,
+    selectionObject: ISelectionObject,
+    filter: IHashMap<any>,
+    target: CrudEntityKey,
+    position: TMovePosition) {
+    return new Promise((resolve) => {
+        controller
+            .move(selectionObject, filter, target, position)
+            .then(() => resolve(true))
+            .catch(() => resolve(false));
+    })
+}
+
+describe('Controls/list_clean/MoveController', () => {
+    let controller;
     let cfg: IMoveControllerOptions;
-    let stubLogger;
     let source: Memory;
+    let stubLoggerError: any;
+    let validPopupArgs: IBasePopupOptions;
+    let selectionObject: ISelectionObject;
 
     beforeEach(() => {
         const _data = clone(data);
 
-        recordSet = new RecordSet({
-            keyProperty: 'id',
-            rawData: _data
-        });
+        // fake opener
+        const opener = new Control({});
 
         source = new Memory({
             keyProperty: 'id',
             data: _data
         });
 
+        selectionObject = {
+            selected: [1, 3, 5, 7],
+            excluded: [3]
+        };
+
+        validPopupArgs = {
+            opener,
+            templateOptions: {
+            source,
+                movedItems: selectionObject.selected,
+                keyProperty: 'id',
+                nodeProperty: 'folder@',
+                parentProperty: 'folder',
+            } as Partial<IMoverDialogTemplateOptions>,
+            closeOnOutsideClick: true,
+            template: 'fakeTemplate'
+        };
+
         cfg = {
             parentProperty: 'folder',
-            nodeProperty: 'folder@',
-            items: recordSet, // Только с items возможно перемещение up/down
             source,
-            dialog: {
+            popupOptions: {
+                opener: validPopupArgs.opener,
+                templateOptions: {
+                    keyProperty: (validPopupArgs.templateOptions as IMoverDialogTemplateOptions).keyProperty,
+                    nodeProperty: (validPopupArgs.templateOptions as IMoverDialogTemplateOptions).nodeProperty,
+                    parentProperty: (validPopupArgs.templateOptions as IMoverDialogTemplateOptions).parentProperty
+                },
+                template: validPopupArgs.template
+            }
+        };
+
+        // to prevent throwing console error
+        stubLoggerError = stub(Logger, 'error').callsFake((message, errorPoint, errorInfo) => ({}));
+    });
+
+    afterEach(() => {
+        stubLoggerError.restore();
+    })
+
+    // Проверка параметров, переданных при инициализации
+    describe('constructor', () => {
+
+        // Передан source===undefined при перемещении методом move()
+        it('move() + source is not set/invalid', () => {
+            controller = new MoveController({...cfg, source: undefined});
+            return resolveMove(controller, selectionObject, {myProp: 'test'}, 4, TMovePosition.after)
+                .then((result: boolean) => {
+
+                    // Ожидаю, что перемещение провалится из-за того, что source не задан
+                    sinonAssert.called(stubLoggerError);
+                    assert.isFalse(result);
+                });
+        });
+
+        // Передан source===undefined при перемещении методом moveWithDialog()
+        it('moveWithDialog() + source is not set/invalid', () => {
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            controller = new MoveController({...cfg, source: undefined});
+            return resolveMoveWithDialog(controller, selectionObject, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю, что перемещение провалится из-за того, что source не задан
+                    sinonAssert.called(stubLoggerError);
+                    assert.isFalse(result);
+                    stubDialog.restore();
+                });
+        });
+
+        // Передан popupOptions без template при перемещении методом moveWithDialog()
+        it('moveWithDialog() + popupOptions.template is not set', () => {
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            controller = new MoveController({...cfg, popupOptions: {}});
+            return resolveMoveWithDialog(controller, selectionObject, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю, что перемещение провалится из-за некорректно заданного шаблона
+                    sinonAssert.called(stubLoggerError);
+                    assert.isFalse(result);
+                    stubDialog.restore();
+                });
+        });
+
+        // Все статические параметры должны соответствовать эталонам при перемещении методом moveWithDialog()
+        it('moveWithDialog() + necessary and static popupOptions', () => {
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => {
+                assert.equal(args.opener, validPopupArgs.opener, 'opener is invalid');
+                assert.deepEqual(args.templateOptions, validPopupArgs.templateOptions, 'templateOptions are invalid');
+                assert.equal(args.closeOnOutsideClick, validPopupArgs.closeOnOutsideClick, 'closeOnOutsideClick should be true');
+                assert.equal(args.template, validPopupArgs.template, 'template is not the same as passed');
+                return Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])));
+            });
+            controller = new MoveController({
+                ...cfg,
+                popupOptions: {
+                    opener: validPopupArgs.opener,
+                    templateOptions: {
+                        keyProperty: (validPopupArgs.templateOptions as IMoverDialogTemplateOptions).keyProperty,
+                        nodeProperty: (validPopupArgs.templateOptions as IMoverDialogTemplateOptions).nodeProperty,
+                        parentProperty: (validPopupArgs.templateOptions as IMoverDialogTemplateOptions).parentProperty
+                    },
+                    template: validPopupArgs.template
+                }
+            });
+            return resolveMoveWithDialog(controller, selectionObject, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    assert.isTrue(result);
+                    stubDialog.restore();
+                });
+        });
+
+        // Случай, когда movePosition === on, parentProperty === undefined, и source instanceof Memory
+        it('moveWithDialog() + _parentProperty is not set', () => {
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ))
+            controller = new MoveController({...cfg, parentProperty: undefined});
+            return resolveMoveWithDialog(controller, selectionObject, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в source
+                    assert.isFalse(result);
+                    stubDialog.restore();
+                });
+        });
+    });
+
+    // Проверка параметров, переданных при обновлении параметров
+    describe('update', () => {
+
+        // Изначально у нас не задан source, но делаем обновление и вызываем move()
+        it('move() + source set via update()', () => {
+            controller = new MoveController({...cfg, source: undefined});
+            controller.updateOptions({...cfg, source});
+            return resolveMove(controller, selectionObject, {myProp: 'test'}, 4, TMovePosition.after)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    assert.isTrue(result);
+                });
+        });
+
+        // Изначально у нас не задан source, но делаем обновление и вызываем moveWithDialog()
+        it('moveWithDialog() + source set via update', () => {
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            controller = new MoveController({...cfg, source: undefined});
+            controller.updateOptions({...cfg, source});
+            return resolveMoveWithDialog(controller, selectionObject, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    assert.isTrue(result);
+                    stubDialog.restore();
+                });
+        });
+
+        // Изначально не передан template, но делаем обновление и вызываем moveWithDialog()
+        it('moveWithDialog() + popupOptions.template set via update', () => {
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            controller = new MoveController({...cfg, popupOptions: {}});
+            controller.updateOptions({...cfg, popupOptions: { template: 'anyNewTemplate' }});
+            return resolveMoveWithDialog(controller, selectionObject, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    assert.isTrue(result);
+                    stubDialog.restore();
+                });
+        });
+
+        // Все статические параметры должны соответствовать эталонам при перемещении методом moveWithDialog()
+        it('moveWithDialog() + necessary and static popupOptions set via update', () => {
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => {
+                assert.equal(args.opener, validPopupArgs.opener, 'opener is invalid');
+                assert.deepEqual(args.templateOptions, validPopupArgs.templateOptions, 'templateOptions are invalid');
+                assert.equal(args.closeOnOutsideClick, validPopupArgs.closeOnOutsideClick, 'closeOnOutsideClick should be true');
+                assert.equal(args.template, validPopupArgs.template, 'template is not the same as passed');
+                return Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])));
+            });
+            controller = new MoveController(cfg);
+            controller.updateOptions({
+                ...cfg,
+                popupOptions: {
+                    opener: validPopupArgs.opener,
+                    templateOptions: {
+                        keyProperty: (validPopupArgs.templateOptions as IMoverDialogTemplateOptions).keyProperty,
+                        nodeProperty: (validPopupArgs.templateOptions as IMoverDialogTemplateOptions).nodeProperty,
+                        parentProperty: (validPopupArgs.templateOptions as IMoverDialogTemplateOptions).parentProperty
+                    },
+                    template: validPopupArgs.template
+                }
+            });
+            return resolveMoveWithDialog(controller, selectionObject, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    assert.isTrue(result);
+                    stubDialog.restore();
+                });
+        });
+
+        // Случай, когда movePosition === on, parentProperty === undefined, и source instanceof Memory.
+        // Но потом при обновлении все парметры выставляются корректно
+        it('moveWithDialog() + _parentProperty is set via update', () => {
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            controller = new MoveController({...cfg, parentProperty: undefined});
+            controller.updateOptions(cfg);
+            return resolveMoveWithDialog(controller, selectionObject, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    assert.isTrue(result);
+                    stubDialog.restore();
+                });
+        });
+    });
+
+    describe('SbisService', () => {
+        beforeEach(() => {
+            controller = new MoveController({...cfg, source: (sbisServiceSource as SbisService)});
+        });
+
+        // Попытка вызвать move() с невалидным selection
+        it ('should not move "after" with invalid selection', () => {
+            // @ts-ignore
+            return resolveMove(controller,['1', '2', '2'], {myProp: 'test'}, 4, TMovePosition.after)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    assert.isFalse(result);
+                });
+        });
+
+        // Попытка вызвать move() с selection===undefined
+        it ('should not move "after" with undefined selection', () => {
+            return resolveMove(controller, undefined, {myProp: 'test'}, 4, TMovePosition.after)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    assert.isFalse(result);
+                });
+        });
+
+        // Попытка вызвать move() с пустым selection
+        it ('should try to move "after" with empty selection', () => {
+            const emptySelectionObject: ISelectionObject = {
+                selected: [],
+                excluded: []
+            }
+            return resolveMove(controller, emptySelectionObject, {myProp: 'test'}, 4, TMovePosition.after)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    assert.isTrue(result);
+                });
+        });
+
+        // Попытка вызвать move() с заполненными selected[] и excluded[]
+        it ('should try to move "after" with correct selection', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [1, 3, 5, 7],
+                excluded: [3]
+            };
+
+            const stubCall = stub(sbisServiceSource, 'call')
+                .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
+                    assert.exists(data.filter, 'filter should exist');
+                    assert.deepEqual(data.filter.get('selection').get('marked'), correctSelection.selected.map((key) => `${key}`));
+                    assert.deepEqual(data.filter.get('selection').get('excluded'), correctSelection.excluded.map((key) => `${key}`));
+                    return Promise.resolve({} as DataSet);
+                });
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubCall);
+                    assert.isTrue(result);
+                    stubCall.restore();
+                });
+        });
+
+        // Попытка вызвать move() с заполненным excluded[] но с пустым selected[]
+        it ('should try to move "on" without selected keys', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [],
+                excluded: [3]
+            };
+            const stubCall = stub(sbisServiceSource, 'call')
+                .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
+                    assert.exists(data.filter, 'filter should exist');
+                    assert.deepEqual(data.filter.get('selection').get('marked'), correctSelection.selected.map((key) => `${key}`));
+                    assert.deepEqual(data.filter.get('selection').get('excluded'), correctSelection.excluded.map((key) => `${key}`));
+                    return Promise.resolve({} as DataSet);
+                });
+
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubCall);
+                    assert.isTrue(result);
+                    stubCall.restore();
+                });
+        });
+
+        // Попытка вызвать move() с заполненным selected[] но с пустым excluded[]
+        it ('should try to move without excluded keys', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [1, 3, 5, 7],
+                excluded: []
+            };
+            const stubCall = stub(sbisServiceSource, 'call')
+                .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
+                    assert.exists(data.filter, 'filter should exist');
+                    assert.deepEqual(data.filter.get('selection').get('marked'), correctSelection.selected.map((key) => `${key}`));
+                    assert.deepEqual(data.filter.get('selection').get('excluded'), correctSelection.excluded.map((key) => `${key}`));
+                    return Promise.resolve({} as DataSet);
+                });
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubCall);
+                    assert.isTrue(result);
+                    stubCall.restore();
+                });
+        });
+
+        // Попытка вызвать move() с target===undefined
+        it ('should not move to undefined target', () => {
+            const spyCall = spy(sbisServiceSource, 'call');
+            return resolveMove(controller, selectionObject, {myProp: 'test'}, undefined, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyCall);
+                    assert.isFalse(result);
+                    spyCall.restore();
+                });
+        });
+
+        // Попытка вызвать move() с некорректным filter
+        it ('should not move with incorrect filter', () => {
+            const spyCall = spy(sbisServiceSource, 'call');
+            return resolveMove(controller, selectionObject, () => {}, 4, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyCall);
+                    assert.isFalse(result);
+                    spyCall.restore();
+                });
+        });
+
+        // Попытка вызвать move() с некорректным position
+        it ('should not move to invalid position', () => {
+            const spyCall = spy(sbisServiceSource, 'call');
+            // @ts-ignore
+            return resolveMove(controller, selectionObject, {}, 4, 'incorrect')
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyCall);
+                    assert.isFalse(result);
+                    spyCall.restore();
+                });
+        });
+
+        // Попытка вызвать move() с filter===undefined
+        it ('should move with undefined filter', () => {
+            const stubCall = stub(sbisServiceSource, 'call')
+                .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
+                    assert.exists(data.filter, 'filter should exist anyway');
+                    return Promise.resolve({} as DataSet);
+                });
+            return resolveMove(controller, selectionObject, undefined, 4, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubCall);
+                    assert.isTrue(result);
+                    stubCall.restore();
+                });
+        });
+
+        // Попытка вызвать move() с target === null
+        it ('should move with target === null', () => {
+            const spyCall = spy(sbisServiceSource, 'call');
+            return resolveMove(controller, selectionObject, {}, null, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(spyCall);
+                    assert.isTrue(result);
+                    spyCall.restore();
+                });
+        });
+
+        // Попытка вызвать move() с position===undefined
+        it ('should not move to invalid position', () => {
+            const spyCall = spy(sbisServiceSource, 'call');
+            // @ts-ignore
+            return resolveMove(controller, selectionObject, {}, 4, undefined)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyCall);
+                    assert.isFalse(result);
+                    spyCall.restore();
+                });
+        });
+
+        // Попытка вызвать move() с position===on
+        it ('should move with position === TMovePosition.on', () => {
+            const spyCall = spy(sbisServiceSource, 'call');
+            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(spyCall);
+                    assert.isTrue(result);
+                    spyCall.restore();
+                });
+        });
+
+        // Попытка вызвать move() с position===after
+        it ('should move with position === TMovePosition.after', () => {
+            const spyMove = spy(sbisServiceSource, 'move');
+            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.after)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(spyMove);
+                    assert.isTrue(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с position===after
+        it ('should move with position === TMovePosition.before', () => {
+            const spyMove = spy(sbisServiceSource, 'move');
+            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.before)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(spyMove);
+                    assert.isTrue(result);
+                    spyMove.restore();
+                });
+        });
+
+        // parentProperty передаётся на backend при вызове move()
+        it ('incorrect parentProperty does not affect move() result', () => {
+            const parentProperty = {};
+            controller = new MoveController({
+                ...cfg,
                 // @ts-ignore
-                template: () => ({}),
-            },
-            keyProperty: 'id'
-        }
-        mover = new MoveController(cfg);
+                parentProperty,
+                source: (sbisServiceSource as SbisService)
+            });
+            const stubMove = stub(sbisServiceSource, 'move')
+                .callsFake((items: CrudEntityKey[], target: CrudEntityKey, meta?: IHashMap<any>) => {
+                    // @ts-ignore
+                    assert.exists(meta.parentProperty, parentProperty);
+                    return Promise.resolve();
+                });
+            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.before)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubMove);
+                    assert.isTrue(result);
+                    stubMove.restore();
+                });
+        });
+
+        // Попытка вызвать moveWithDialog() с невалидным selection
+        it ('should not move with dialog and invalid selection', () => {
+            const spyDialog = spy(Dialog, 'openPopup');
+            const spyConfirmation = spy(Confirmation, 'openPopup');
+            // @ts-ignore
+            return resolveMoveWithDialog(controller,['1', '2', '2'], {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере на этапе открытия диалога
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyConfirmation);
+                    sinonAssert.notCalled(spyDialog);
+                    assert.isFalse(result);
+                    spyDialog.restore();
+                    spyConfirmation.restore();
+                });
+        });
+
+        // Попытка вызвать moveWithDialog() с selection===undefined
+        it ('should not move with dialog and selection === undefined', () => {
+            const spyDialog = spy(Dialog, 'openPopup');
+            const spyConfirmation = spy(Confirmation, 'openPopup');
+            // @ts-ignore
+            return resolveMoveWithDialog(controller,undefined, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере на этапе открытия диалога
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyConfirmation);
+                    sinonAssert.notCalled(spyDialog);
+                    assert.isFalse(result);
+                    spyDialog.restore();
+                    spyConfirmation.restore();
+                });
+        });
+
+        // Попытка вызвать moveWithDialog() с пустым selection
+        it ('should not move with dialog and empty selection', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [],
+                excluded: [3]
+            };
+            // to prevent popup open
+            const spyDialog = spy(Dialog, 'openPopup');
+            const stubConfirmation = stub(Confirmation, 'openPopup').callsFake((args) => Promise.resolve(true));
+            // @ts-ignore
+            return resolveMoveWithDialog(controller,correctSelection, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за Confirmation, открытого в контроллере на этапе открытия диалога
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubConfirmation);
+                    sinonAssert.notCalled(spyDialog);
+                    assert.isFalse(result);
+                    spyDialog.restore();
+                    stubConfirmation.restore();
+                });
+        });
+
+        // Попытка вызвать moveWithDialog() с заполненными selected[] и excluded[]
+        it ('should try to with dialog and correct selection', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [1, 3, 5, 7],
+                excluded: [3]
+            };
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            const stubCall = stub(sbisServiceSource, 'call')
+                .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
+                    assert.exists(data.filter, 'filter should exist');
+                    assert.deepEqual(data.filter.get('selection').get('marked'), correctSelection.selected.map((key) => `${key}`));
+                    assert.deepEqual(data.filter.get('selection').get('excluded'), correctSelection.excluded.map((key) => `${key}`));
+                    return Promise.resolve({} as DataSet);
+                });
+            return resolveMoveWithDialog(controller, correctSelection, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubDialog);
+                    sinonAssert.called(stubCall);
+                    assert.isTrue(result);
+                    stubCall.restore();
+                    stubDialog.restore();
+                });
+        });
+
+        // Попытка вызвать move() с заполненным selected[] но с пустым excluded[]
+        it ('should try to move with dialog and without excluded keys', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [1, 3, 5, 7],
+                excluded: []
+            };
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            const stubCall = stub(sbisServiceSource, 'call')
+                .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
+                    assert.exists(data.filter, 'filter should exist');
+                    assert.deepEqual(data.filter.get('selection').get('marked'), correctSelection.selected.map((key) => `${key}`));
+                    assert.deepEqual(data.filter.get('selection').get('excluded'), correctSelection.excluded.map((key) => `${key}`));
+                    return Promise.resolve({} as DataSet);
+                });
+            return resolveMoveWithDialog(controller, correctSelection, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubDialog);
+                    sinonAssert.called(stubCall);
+                    assert.isTrue(result);
+                    stubCall.restore();
+                    stubDialog.restore();
+                });
+        });
+
+        // Попытка вызвать resolveMoveWithDialog() с некорректным filter
+        it ('should not move with incorrect filter', () => {
+            const spyCall = spy(sbisServiceSource, 'call');
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            return resolveMoveWithDialog(controller, selectionObject, () => {})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.called(stubDialog);
+                    sinonAssert.notCalled(spyCall);
+                    assert.isFalse(result);
+                    spyCall.restore();
+                    stubDialog.restore();
+                });
+        });
+
+        // Попытка вызвать resolveMoveWithDialog() с filter===undefined
+        it ('should move with dialog and undefined filter', () => {
+            const stubCall = stub(sbisServiceSource, 'call')
+                .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
+                    assert.exists(data.filter, 'filter should exist anyway');
+                    return Promise.resolve({} as DataSet);
+                });
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            return resolveMoveWithDialog(controller, selectionObject, undefined)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubDialog);
+                    sinonAssert.called(stubCall);
+                    assert.isTrue(result);
+                    stubCall.restore();
+                    stubDialog.restore();
+                });
+        });
+
+        // Попытка вызвать resolveMoveWithDialog() с заполненным filter
+        it ('should move with dialog and undefined filter', () => {
+            const stubCall = stub(sbisServiceSource, 'call')
+                .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
+                    assert.exists(data.filter, 'filter should exist anyway');
+                    assert.equal(data.filter.get('mother'), 'anarchy');
+                    return Promise.resolve({} as DataSet);
+                });
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            return resolveMoveWithDialog(controller, selectionObject, {mother: 'anarchy'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubDialog);
+                    sinonAssert.called(stubCall);
+                    assert.isTrue(result);
+                    stubCall.restore();
+                    stubDialog.restore();
+                });
+        });
     });
 
-    it('moveItems() should move items to specified position', () => {
-        let callMethodCalled = false;
-        const params: IMoveObject = {
-            selectedKeys: [1, 2, 3],
-            excludedKeys: [11],
-            filter: {
-                testProp: 'testValue'
+    describe('ICrudPlus', () => {
+        beforeEach(() => {
+            controller = new MoveController(cfg);
+        })
+
+        // Попытка вызвать move() с невалидным selection
+        it ('should not move "after" with invalid selection', () => {
+            // @ts-ignore
+            return resolveMove(controller,['1', '2', '2'], {myProp: 'test'}, 4, TMovePosition.after)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    assert.isFalse(result);
+                });
+        });
+
+        // Попытка вызвать move() с selection===undefined
+        it ('should not move "after" with undefined selection', () => {
+            return resolveMove(controller, undefined, {myProp: 'test'}, 4, TMovePosition.after)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    assert.isFalse(result);
+                });
+        });
+
+        // Попытка вызвать move() с пустым selection
+        it ('should try to move "after" with empty selection', () => {
+            const emptySelectionObject: ISelectionObject = {
+                selected: [],
+                excluded: []
             }
-        };
-        const bindings = {
-            move: 'testMoveMethod',
-            list: 'testListMethod'
-        };
-        const targetId = 4;
-        mover._source.getBinding = () => {
-            return bindings;
-        };
-        mover._source.call = (methodName, data) => {
-            callMethodCalled = true;
-            assert.equal(methodName, bindings.move);
-            assert.equal(data.method, bindings.list);
-            assert.equal(data.folder_id, targetId);
-            assert.equal(data.filter.get('testProp'), 'testValue');
-            assert.deepEqual(data.filter.get('selection').getRawData(),
-                selectionToRecord({
-                    selected: params.selectedKeys,
-                    excluded: params.excludedKeys
-                }, mover._source.getAdapter()).getRawData()
-            );
-            return Promise.resolve();
-        };
+            return resolveMove(controller, emptySelectionObject, {myProp: 'test'}, 4, TMovePosition.after)
+                .then((result: boolean) => {
 
-        return mover.moveItems(params, targetId)
-            .then(() => {
-                assert.isTrue(callMethodCalled);
-            });
-    });
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    assert.isTrue(result);
+                });
+        });
 
-    describe('moving items up (moveItemUp) and down (moveItemDown)', () => {
-        describe('should consider sortingOrder', () => {
-            let item: Model;
+        // Попытка вызвать move() с заполненными selected[] и excluded[]
+        it ('should try to move "after" with correct selection', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [1, 3, 5, 7],
+                excluded: [3]
+            };
 
-            before(() => {
-                item = recordSet.getRecordById(3);
-            });
-
-            it ('should moveItemUp with ascending sort', () => {
-                mover.update({...cfg, sortingOrder: 'asc'});
-                mover._source.move = (items, target, options) => {
-                    assert.equal(target, 1);
-                    assert.equal(options.position, 'before');
+            const stubMove = stub(source, 'move')
+                .callsFake((items: EntityKey | EntityKey[], target: EntityKey, meta?: IHashMap<any>) => {
+                    assert.equal(items, correctSelection.selected, 'items are not equal');
+                    assert.equal(target, 4, 'targets are not equal');
+                    assert.equal(meta.position, TMovePosition.on, 'positions are not equal');
+                    assert.equal(meta.parentProperty, cfg.parentProperty, 'parentProperties are not equal');
                     return Promise.resolve();
-                };
-                return mover.moveItemUp(item);
-            });
+                });
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+                .then((result: boolean) => {
 
-            it ('should moveItemUp with ascending sort', () => {
-                mover.update({...cfg, sortingOrder: 'asc'});
-                mover._source.move = (items, target, options) => {
-                    assert.equal(target, 1);
-                    assert.equal(options.position, 'after');
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubMove);
+                    assert.isTrue(result);
+                    stubMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с заполненным excluded[] но с пустым selected[]
+        it ('should try to move "on" without selected keys', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [],
+                excluded: [3]
+            };
+            const stubMove = stub(source, 'move')
+                .callsFake((items: EntityKey | EntityKey[], target: EntityKey, meta?: IHashMap<any>) => {
+                    assert.equal(items, correctSelection.selected, 'items are not equal');
+                    assert.equal(target, 4, 'targets are not equal');
+                    assert.equal(meta.position, TMovePosition.on, 'positions are not equal');
+                    assert.equal(meta.parentProperty, cfg.parentProperty, 'parentProperties are not equal');
                     return Promise.resolve();
-                };
-                return mover.moveItemDown(item);
-            });
+                });
 
-            it ('should moveItemUp with descending sort', () => {
-                mover.update({...cfg, sortingOrder: 'desc'});
-                mover._source.move = (items, target, options) => {
-                    assert.equal(target, 1);
-                    assert.equal(options.position, 'before');
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubMove);
+                    assert.isTrue(result);
+                    stubMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с заполненным selected[] но с пустым excluded[]
+        it ('should try to move without excluded keys', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [1, 3, 5, 7],
+                excluded: []
+            };
+            const stubMove = stub(source, 'move')
+                .callsFake((items: EntityKey | EntityKey[], target: EntityKey, meta?: IHashMap<any>) => {
+                    assert.equal(items, correctSelection.selected, 'items are not equal');
+                    assert.equal(target, 4, 'targets are not equal');
+                    assert.equal(meta.position, TMovePosition.on, 'positions are not equal');
+                    assert.equal(meta.parentProperty, cfg.parentProperty, 'parentProperties are not equal');
                     return Promise.resolve();
-                };
-                return mover.moveItemUp(item);
-            });
+                });
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+                .then((result: boolean) => {
 
-            it ('should moveItemDown with descending sort', () => {
-                mover.update({...cfg, sortingOrder: 'desc'});
-                mover._source.move = (items, target, options) => {
-                    assert.equal(target, 1);
-                    assert.equal(options.position, 'after');
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubMove);
+                    assert.isTrue(result);
+                    stubMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с target===undefined
+        it ('should not move to undefined target', () => {
+            const spyMove = spy(source, 'move');
+            return resolveMove(controller, selectionObject, {myProp: 'test'}, undefined, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyMove);
+                    assert.isFalse(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с некорректным filter
+        it ('should not move with incorrect filter', () => {
+            const spyMove = spy(source, 'move');
+            return resolveMove(controller, selectionObject, () => {}, 4, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyMove);
+                    assert.isFalse(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с некорректным position
+        it ('should not move to invalid position', () => {
+            const spyMove = spy(source, 'move');
+            // @ts-ignore
+            return resolveMove(controller, selectionObject, {}, 4, 'incorrect')
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyMove);
+                    assert.isFalse(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с filter===undefined
+        it ('should move with undefined filter', () => {
+            const spyMove = spy(source, 'move');
+            return resolveMove(controller, selectionObject, undefined, 4, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(spyMove);
+                    assert.isTrue(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с target === null
+        it ('should move with target === null', () => {
+            const spyMove = spy(source, 'move');
+            return resolveMove(controller, selectionObject, {}, null, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(spyMove);
+                    assert.isTrue(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с position===undefined
+        it ('should not move to invalid position', () => {
+            const spyMove = spy(source, 'move');
+            // @ts-ignore
+            return resolveMove(controller, selectionObject, {}, 4, undefined)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyMove);
+                    assert.isFalse(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с position===on
+        it ('should move with position === TMovePosition.on', () => {
+            const spyMove = spy(source, 'move');
+            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.on)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(spyMove);
+                    assert.isTrue(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с position===after
+        it ('should move with position === TMovePosition.after', () => {
+            const spyMove = spy(source, 'move');
+            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.after)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(spyMove);
+                    assert.isTrue(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с position===after
+        it ('should move with position === TMovePosition.before', () => {
+            const spyMove = spy(source, 'move');
+            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.before)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(spyMove);
+                    assert.isTrue(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Некорректный parentProperty вызове move()
+        it ('incorrect parentProperty does not affect move() result', () => {
+            const parentProperty = {};
+            // @ts-ignore
+            controller = new MoveController({ ...cfg, parentProperty });
+            const spyMove = spy(source, 'move');
+            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.before)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(spyMove);
+                    assert.isTrue(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Попытка вызвать moveWithDialog() с невалидным selection
+        it ('should not move with dialog and invalid selection', () => {
+            const spyDialog = spy(Dialog, 'openPopup');
+            const spyConfirmation = spy(Confirmation, 'openPopup');
+            // @ts-ignore
+            return resolveMoveWithDialog(controller,['1', '2', '2'], {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере на этапе открытия диалога
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyConfirmation);
+                    sinonAssert.notCalled(spyDialog);
+                    assert.isFalse(result);
+                    spyDialog.restore();
+                    spyConfirmation.restore();
+                });
+        });
+
+        // Попытка вызвать moveWithDialog() с selection===undefined
+        it ('should not move with dialog and selection === undefined', () => {
+            const spyDialog = spy(Dialog, 'openPopup');
+            const spyConfirmation = spy(Confirmation, 'openPopup');
+            // @ts-ignore
+            return resolveMoveWithDialog(controller,undefined, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере на этапе открытия диалога
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.notCalled(spyConfirmation);
+                    sinonAssert.notCalled(spyDialog);
+                    assert.isFalse(result);
+                    spyDialog.restore();
+                    spyConfirmation.restore();
+                });
+        });
+
+        // Попытка вызвать moveWithDialog() с пустым selection
+        it ('should not move with dialog and empty selection', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [],
+                excluded: [3]
+            };
+            // to prevent popup open
+            const spyDialog = spy(Dialog, 'openPopup');
+            const stubConfirmation = stub(Confirmation, 'openPopup').callsFake((args) => Promise.resolve(true));
+            // @ts-ignore
+            return resolveMoveWithDialog(controller,correctSelection, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за Confirmation, открытого в контроллере на этапе открытия диалога
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubConfirmation);
+                    sinonAssert.notCalled(spyDialog);
+                    assert.isFalse(result);
+                    spyDialog.restore();
+                    stubConfirmation.restore();
+                });
+        });
+
+        // Попытка вызвать moveWithDialog() с заполненными selected[] и excluded[]
+        it ('should try to with dialog and correct selection', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [1, 3, 5, 7],
+                excluded: [3]
+            };
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            const stubMove = stub(source, 'move')
+                .callsFake((items: EntityKey | EntityKey[], target: EntityKey, meta?: IHashMap<any>) => {
+                    assert.equal(items, correctSelection.selected, 'items are not equal');
+                    assert.equal(target, 4, 'targets are not equal');
+                    assert.equal(meta.position, TMovePosition.on, 'positions are not equal');
+                    assert.equal(meta.parentProperty, cfg.parentProperty, 'parentProperties are not equal');
                     return Promise.resolve();
-                };
-                return mover.moveItemDown(item);
-            });
+                });
+            return resolveMoveWithDialog(controller, correctSelection, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubDialog);
+                    sinonAssert.called(stubMove);
+                    assert.isTrue(result);
+                    stubMove.restore();
+                    stubDialog.restore();
+                });
         });
 
-        it('moveItemUp by item', () => {
-            const item = recordSet.at(2);
-            mover._source.move = (items, target, options) => {
-                assert.equal(target, 2);
-                assert.equal(options.position, 'before');
-                return Promise.resolve();
+        // Попытка вызвать move() с заполненным selected[] но с пустым excluded[]
+        it ('should try to move with dialog and without excluded keys', () => {
+            const correctSelection: ISelectionObject = {
+                selected: [1, 3, 5, 7],
+                excluded: []
             };
-            return mover.moveItemUp(item);
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            const stubMove = stub(source, 'move')
+                .callsFake((items: EntityKey | EntityKey[], target: EntityKey, meta?: IHashMap<any>) => {
+                    assert.equal(items, correctSelection.selected, 'items are not equal');
+                    assert.equal(target, 4, 'targets are not equal');
+                    assert.equal(meta.position, TMovePosition.on, 'positions are not equal');
+                    assert.equal(meta.parentProperty, cfg.parentProperty, 'parentProperties are not equal');
+                    return Promise.resolve();
+                });
+            return resolveMoveWithDialog(controller, correctSelection, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubDialog);
+                    sinonAssert.called(stubMove);
+                    assert.isTrue(result);
+                    stubMove.restore();
+                    stubDialog.restore();
+                });
         });
 
-        it('moveItemUp by id', () => {
-            mover._source.move = (items, target, options) => {
-                assert.equal(target, 2);
-                assert.equal(options.position, 'before');
-                return Promise.resolve();
-            };
-            return mover.moveItemUp(3);
+        // Попытка вызвать resolveMoveWithDialog() с некорректным filter
+        it ('should not move with incorrect filter', () => {
+            const spyMove = spy(source, 'move');
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            return resolveMoveWithDialog(controller, selectionObject, () => {})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
+                    sinonAssert.called(stubLoggerError);
+                    sinonAssert.called(stubDialog);
+                    sinonAssert.notCalled(spyMove);
+                    assert.isFalse(result);
+                    spyMove.restore();
+                    stubDialog.restore();
+                });
         });
 
-        it('moveItemUp first item', () => {
-            const item = recordSet.at(0);
-            mover._source.move = (items, target, options) => {
-                assert.equal(target, 2);
-                assert.equal(options.position, 'before');
-                return Promise.resolve();
-            };
-            return mover.moveItemUp(item);
+        // Попытка вызвать resolveMoveWithDialog() с filter===undefined
+        it ('should move with dialog and undefined filter', () => {
+            const spyMove = spy(source, 'move');
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => (
+                Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])))
+            ));
+            return resolveMoveWithDialog(controller, selectionObject, undefined)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.called(stubDialog);
+                    sinonAssert.called(spyMove);
+                    assert.isTrue(result);
+                    spyMove.restore();
+                    stubDialog.restore();
+                });
         });
 
-        it('moveItemDown by item', () => {
-            const item = recordSet.at(0);
-            mover._source.move = (items, target, options) => {
-                assert.equal(target, 2);
-                assert.equal(options.position, 'after');
-                return Promise.resolve();
-            };
-            return mover.moveItemDown(item);
-        });
-
-        it('moveItemDown by id', () => {
-            mover._source.move = (items, target, options) => {
-                assert.equal(target, 2);
-                assert.equal(options.position, 'after');
-                return Promise.resolve();
-            };
-            return mover.moveItemDown(1);
-        });
-
-        it('moveItemDown last item', (done) => {
-            const item = recordSet.at(4);
-            mover.moveItemDown(item).then(() => {
-                assert.equal(recordSet.at(4).getId(), item.getId());
-                done();
-            });
-        });
-    });
-
-    it('moveItemsWithDialog for newLogic call moveItems', (done) => {
-        const params = {
-            selectedKeys: [1, 2, 3],
-            excludedKeys: [11],
-            filter: {
-                testProp: 'testValue'
-            }
-        };
-        const stubOpenPopup = stub(Dialog, 'openPopup');
-        const stubMoveItems = stub(mover, '_moveDialogOnResultHandler');
-
-        stubMoveItems.callsFake((callingParams) => {
-            assert.deepEqual(callingParams, params);
-        });
-
-        // @ts-ignore
-        stubOpenPopup.callsFake((openArgs) => {
-            assert.deepEqual(openArgs.templateOptions.movedItems, params.selectedKeys);
-            assert.equal(openArgs.templateOptions.source, cfg.source);
-            assert.equal(openArgs.templateOptions.keyProperty, cfg.keyProperty);
-            openArgs.eventHandlers.onResult(4);
-            sinonAssert.called(stubMoveItems);
-            return Promise.resolve();
-        });
-
-        mover.moveItemsWithDialog(params).then(() => {
-            stubMoveItems.restore();
-            stubOpenPopup.restore();
-            done();
-        });
-    });
-
-    it('moveItemsWithDialog with empty items', (done) => {
-        const params: IMoveObject = {
-            selectedKeys: [],
-            excludedKeys: [11],
-            filter: {
-                testProp: 'testValue'
-            }
-        };
-        const spyOpenPopup = spy(Dialog, 'openPopup');
-        const stubOpenConfirmation = stub(Confirmation, 'openPopup');
-        // @ts-ignore
-        stubOpenConfirmation.callsFake((args) => {
-            assert(args.message, 'Нет записей для обработки команды');
-        });
-        mover.moveItemsWithDialog(params).then(() => {
-            sinonAssert.notCalled(spyOpenPopup);
-            spyOpenPopup.restore();
-            stubOpenConfirmation.restore();
-            done();
-        });
+        // move + target is out of source
+        // moveWithDialog + target is out of source
     });
 });

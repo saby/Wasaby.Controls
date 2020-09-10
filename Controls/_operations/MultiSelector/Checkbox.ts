@@ -62,4 +62,6 @@ export default class MultiSelectorCheckBox extends Control<IMultiSelectorCheckbo
 
         return result;
     }
+
+    static _theme: string[] = ['Controls/operations'];
 }

@@ -1,5 +1,5 @@
 import {Control, IControlOptions} from 'UI/Base';
-import {constants} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import IDropdownController from 'Controls/_dropdown/interface/IDropdownController';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
@@ -50,7 +50,9 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
     }
 
     protected _onOpen(): void {
-        RegisterUtil(this, 'scroll', this._handleScroll.bind(this));
+        if (!detection.isMobileIOS) {
+            RegisterUtil(this, 'scroll', this._handleScroll.bind(this));
+        }
         this._isOpened = true;
         this._notify('dropDownOpen');
     }

@@ -12,8 +12,7 @@ import {Memory} from 'Types/source';
 import {ControllerClass, Container as ValidateContainer, IValidateResult} from 'Controls/validate';
 import {IFormOperation} from 'Controls/interface';
 import {Confirmation} from 'Controls/popup';
-import CrudController from 'Controls/_form/CrudController';
-import {CRUD_EVENTS} from './Crud';
+import {default as CrudController, CRUD_EVENTS} from 'Controls/_form/CrudController';
 
 interface IFormController extends IControlOptions {
     readMetaData?: object;

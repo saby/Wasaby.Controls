@@ -34,7 +34,7 @@ var ManagerWrapper = Control.extend({
 
       this._toggleWindowHandlers(true);
 
-      this._popupManager = new ManagerClass();
+      this._popupManager = new ManagerClass(cfg);
       this._popupManager.init(cfg);
    },
 

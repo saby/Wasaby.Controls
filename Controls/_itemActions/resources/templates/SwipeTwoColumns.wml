@@ -17,5 +17,5 @@
         </ws:for>
     </div>
     <div if="{{columnIndex === 0}}" class="controls-Swipe__separator_theme-{{ theme }}
-        controls-Swipe__separator_horizontal"></div>
+        controls-Swipe__separator_horizontal_theme-{{ theme }}"></div>
 </ws:for>
