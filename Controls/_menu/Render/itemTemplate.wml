@@ -15,7 +15,7 @@
    <ws:else>
       <div class="controls-Menu__content_baseline">
          <!--Проверка isSelected будет удалена после: https://online.sbis.ru/opendoc.html?guid=dbaef61b-7b5e-4f78-9ab8-04188f3cc94e-->
-         <ws:if data="{{markerVisibility === 'visible' && (treeItem.isMarked ? treeItem.isMarked() : treeItem.isSelected()) || itemData.isFixedItem}}">
+         <ws:if data="{{(treeItem.isMarked ? treeItem.isMarked() : treeItem.isSelected()) || itemData.isFixedItem}}">
             <div class="controls-Menu__row_selected controls-Menu__row_selected_theme-{{_options.theme}}
                         controls-Menu__content_{{additionalTextTemplate ? 'padding'}}_theme-{{_options.theme}}"></div>
          </ws:if>
