@@ -8,6 +8,7 @@ import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import {getHistorySource} from 'Controls/_filter/HistoryUtils';
 import {_assignServiceFilters} from '../_search/Utils/FilterUtils';
 import {selectionToRecord} from 'Controls/operations';
+import {TKeysSelection} from 'Controls/interface';
 
 import * as clone from 'Core/core-clone';
 import * as merge from 'Core/core-merge';
@@ -18,7 +19,7 @@ import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
-import {PrefetchProxy, Rpc} from 'Types/source';
+import {PrefetchProxy, Rpc, ICrud} from 'Types/source';
 
 export interface IFilterHistoryData {
     items: IFilterItem[];
@@ -35,8 +36,14 @@ interface IFilterControllerOptions {
     fastFilterSource?: IFilterItem[];
     historyItems?: IFilterItem[];
     historyId?: string;
-    dataLoadCallback: Function;
-    dataLoadErrback: Function;
+    searchValue: string;
+    searchParam: string;
+    minSearchLength: number;
+    parentProperty: string;
+    selectedKeys: TKeysSelection;
+    excludedKeys: TKeysSelection;
+    source: ICrud;
+    selectionViewMode: string;
 }
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
@@ -50,8 +57,12 @@ export default class FilterControllerClass {
     private _filterButtonItems: IFilterItem[] = null;
     private _fastFilterItems: IFilterItem[] = null;
     private _filter: object = {};
-    private _isFilterChanged: boolean = false;
     private _storeCallbacks: string[] = [];
+
+    /* Флаг необходим, т.к. добавлять запись в историю после изменения фильтра
+   необходимо только после загрузки данных, т.к. только в ответе списочного метода
+   можно получить идентификатор закэшированных данных для этого фильтра */
+    private _isFilterChanged: boolean = false;
 
     constructor(options: IFilterControllerOptions) {
         this._options = options;
@@ -66,42 +77,39 @@ export default class FilterControllerClass {
         }
     }
 
-    resolveFilterItems(options: IFilterControllerOptions,
-                       receivedState: THistoryData): Promise<THistoryData> {
-        let state;
-        let loadedSources;
-        if (options.useStore) {
-            state = Store.getState();
-            // fixme: уберется по https://online.sbis.ru/opendoc.html?guid=8dd6dd08-820f-4298-b743-aff4ff4663e6
-            loadedSources = state && state.loadedSources && state.loadedSources[0];
+    setHistoryItems(historyItems: THistoryData): void {
+        if (this._options.useStore) {
+            const state = Store.getState();
+            this._setFilterItems(state.filterSource, [], historyItems);
+        } else {
+            this._setFilterItems(this._options.filterButtonSource, this._options.fastFilterSource, historyItems);
         }
-        if (receivedState) {
-            if (options.useStore) {
-                this._setFilterItems(state.filterSource, [], receivedState);
-            } else {
-                this._setFilterItems(options.filterButtonSource, options.fastFilterSource, receivedState);
-            }
-            this._itemsReady(this._filter, receivedState);
+        this._itemsReady(this._filter, historyItems);
 
-            if (options.prefetchParams) {
-                this._isFilterChanged = true;
-            }
-        } else if (options.useStore) {
+        if (this._options.prefetchParams) {
+            this._isFilterChanged = true;
+        }
+    }
+
+    loadHistoryItems(): Promise<THistoryData> {
+        if (this._options.useStore) {
+            const state = Store.getState();
+            const loadedSources = state && state.loadedSources && state.loadedSources[0];
             if (loadedSources) {
                 return this._resolveItemsWithHistory(loadedSources, loadedSources.filter);
             } else {
                 return this._resolveItemsWithHistory({
                     historyId: state.historyId,
                     filterButtonSource: state.filterSource,
-                    historyItems: options.historyItems
+                    historyItems: this._options.historyItems
                 }, state.filter);
             }
         } else {
-            return this._resolveItemsWithHistory(options, this._filter);
+            return this._resolveItemsWithHistory(this._options, this._filter);
         }
     }
 
-    updateOptions(newOptions: IFilterControllerOptions): void {
+    update(newOptions: IFilterControllerOptions): void | boolean {
         if (!this._options.useStore) {
             const filterButtonChanged = this._options.filterButtonSource !== newOptions.filterButtonSource;
             const fastFilterChanged = this._options.fastFilterSource !== newOptions.fastFilterSource;
@@ -133,17 +141,16 @@ export default class FilterControllerClass {
             if (newOptions.historyId !== this._options.historyId) {
                 this._crudWrapper = null;
             }
+            return filterChanged || filterButtonChanged || fastFilterChanged;
         }
         this._options = newOptions;
         this._updateFilter(this._filter, this._options);
     }
 
-    // FIXME Где оно вызывается??
     resetPrefetch(): void {
         const filter = clone(this._filter);
         this._isFilterChanged = true;
         this._setFilter(Prefetch.clearPrefetchSession(filter));
-        // TODO _private.notifyFilterChanged(this);
     }
 
     destroy(): void {
@@ -176,8 +183,6 @@ export default class FilterControllerClass {
     }
 
     setFilter(filter: object): void {
-        // Controller should stop bubbling of 'filterChanged' event, that container-control fired
-        // event.stopPropagation();
         this._setFilter(Prefetch.prepareFilter(filter, this._options.prefetchParams));
         this._updateFilter(filter, this._options);
     }
@@ -203,7 +208,7 @@ export default class FilterControllerClass {
         this._isFilterChanged = false;
     }
 
-    handleDataError(error: Error): void {
+    handleDataError(): void {
         if (this._options.historyId && this._isFilterChanged) {
             const currentAppliedHistoryItems =
                 this._getHistoryByItems(this._options.historyId, this._filterButtonItems);
@@ -215,17 +220,26 @@ export default class FilterControllerClass {
                 );
             }
         }
-        if (this._options.dataLoadErrback) {
-            this._options.dataLoadErrback(error);
-        }
     }
 
-    getState(): {filterButtonItems: IFilterItem[], fastFilterItems: IFilterItem[], filter: object} {
-        return {
-            filterButtonItems: this._filterButtonItems,
-            fastFilterItems: this._fastFilterItems,
-            filter: this._filter
-        };
+    getFilter(): object {
+        return this._filter;
+    }
+
+    getFilterButtonItems(): IFilterItem[] {
+        return this._filterButtonItems;
+    }
+
+    getFastFilterItems(): IFilterItem[] {
+        return  this._fastFilterItems;
+    }
+
+    getCalculatedFilter(config) {
+        getCalculatedFilter.apply(this, config);
+    }
+
+    saveFilterToHistory(config) {
+        saveFilterToHistory.apply(this, config);
     }
 
     private _updateFilterItems(newItems: IFilterItem[]): void {
@@ -247,7 +261,6 @@ export default class FilterControllerClass {
         this._prepareOperationsFilter(filter, options);
     }
 
-    //
     private _resolveItemsWithHistory(options: Partial<IFilterControllerOptions>,
                                      filter: object): Promise<THistoryData> {
         return this._resolveItems(options.historyId, options.filterButtonSource,
@@ -509,6 +522,7 @@ export default class FilterControllerClass {
 
         this._filterButtonItems = FilterControllerClass._getItemsByOption(filterButtonOption, historyItems);
         this._fastFilterItems = FilterControllerClass._getItemsByOption(fastFilterOption, historyItems);
+        this._setIsFastProperty(this._filterButtonItems, this._fastFilterItems);
     }
 
     private _isFilterItemsChanged(filterButtonItems: IFilterItem[], fastFilterItems: IFilterItem[]): boolean {
@@ -561,11 +575,9 @@ export default class FilterControllerClass {
             resultFilter = Prefetch.applyPrefetchFromHistory(resultFilter, history);
         }
 
-        this._setIsFastProperty(this._filterButtonItems, this._fastFilterItems);
         this._applyItemsToFilter(resultFilter, this._filterButtonItems, this._fastFilterItems);
     }
 
-    // Устанавливает фильтр из итемов
     private _applyItemsToFilter(filter: object,
                                 filterButtonItems: IFilterItem[],
                                 fastFilterItems?: IFilterItem[]): void {
@@ -696,7 +708,7 @@ export default class FilterControllerClass {
     private _observeStore(options: IFilterControllerOptions): void {
         const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
             this._setFilterItems(filterSource, [], []);
-            this._itemsReady(this, this._filter);
+            this._itemsReady(this._filter);
             // запись в историю
             this.updateFilterItems(filterSource);
         });
@@ -791,4 +803,46 @@ export default class FilterControllerClass {
         }
         return clone(items);
     }
+}
+
+function getCalculatedFilter(config) {
+    const def = new Deferred();
+    this._resolveItems(config.historyId, clone(config.filterButtonSource),
+        clone(config.fastFilterSource), config.historyItems).then((items) => {
+        let calculatedFilter;
+        try {
+            calculatedFilter = this._calculateFilterByItems(config.filter, this._filterButtonItems, this._fastFilterItems);
+
+            if (config.prefetchParams && config.historyId) {
+                const history = this._getHistoryByItems(config.historyId, this._filterButtonItems);
+
+                if (history) {
+                    calculatedFilter = Prefetch.applyPrefetchFromHistory(calculatedFilter, history.data);
+                }
+                calculatedFilter = Prefetch.prepareFilter(calculatedFilter, config.prefetchParams);
+            }
+        } catch (err) {
+            def.errback(err);
+            throw err;
+        }
+        def.callback({
+            filter: calculatedFilter,
+            historyItems: items,
+            filterButtonItems: this._filterButtonItems,
+            fastFilterItems: this._fastFilterItems
+        });
+        return items;
+    }).addErrback(function(err) {
+        def.errback(err);
+        return err;
+    });
+    return def;
+}
+
+function saveFilterToHistory(config) {
+    if (!config.historyId) {
+        throw new Error('Controls/_filter/Controller::historyId is required');
+    }
+    this._setIsFastProperty(config.filterButtonItems, config.fastFilterItems);
+    return this._addToHistory(config.filterButtonItems, config.fastFilterItems, config.historyId);
 }
