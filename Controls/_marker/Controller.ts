@@ -97,9 +97,9 @@ export class Controller {
     * @param removedItemsIndex Индекс удаленной записи в исходной коллекции (RecordSet)
     */
    calculateMarkerAfterRemove(removedItemsIndex: number): TKey {
-      // Если элемент с текущем маркером не удален, то маркер не нужно менять
+      // Если элемент с текущем маркером не удален или маркер не проставлен, то маркер не нужно менять
       const item = this._model.getItemBySourceKey(this._markedKey);
-      if (item) {
+      if (item || this._markedKey == null) {
          return this._markedKey;
       }
 
