@@ -87,6 +87,7 @@ import hoursFormat from  'Controls/_input/InputCallback/hoursFormat';
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
 import * as MaskFormatterValue from 'Controls/_input/Mask/FormatterValue';
+import {THorizontalPadding} from "./_input/interface/IPadding";
 export {IText, ITextOptions} from 'Controls/_input/interface/IText';
 export {INewLineKey, INewLineKeyOptions} from 'Controls/_input/interface/INewLineKey';
 export {IBase, IBaseOptions, TextAlign, AutoComplete} from 'Controls/_input/interface/IBase';
@@ -97,7 +98,7 @@ export {default as MobileFocusController} from 'Controls/_input/Base/MobileFocus
 export {default as AdapterMask} from 'Controls/_input/Adapter/Mask';
 export {default as isMaskFormatValid} from 'Controls/_input/Mask/isFormatValid';
 export {IBorderVisibility, IBorderVisibilityOptions, TBorderVisibility, getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes} from './_input/interface/IBorderVisibility';
-export {IPadding, IPaddingOptions, TPadding, getDefaultPaddingOptions, getOptionPaddingTypes} from './_input/interface/IBorderVisibility';
+export {IPadding, IPaddingOptions, THorizontalPadding, getDefaultPaddingOptions, getOptionPaddingTypes} from './_input/interface/IPadding';
 export * from './_input/ActualAPI';
 export {ISelection} from './_input/resources/Types';
 
