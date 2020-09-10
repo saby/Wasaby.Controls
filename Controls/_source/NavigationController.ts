@@ -233,6 +233,7 @@ export class NavigationController {
             });
             this._navigationStores = new List();
             this._paramsCalculator?.destroy();
+            this._paramsCalculator = null;
             this._navigationType = newOptions.navigationType;
             this._navigationConfig = newOptions.navigationConfig;
         }

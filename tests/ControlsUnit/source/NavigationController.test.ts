@@ -747,8 +747,7 @@ describe('Controls/_source/NavigationController', () => {
             nc.updateOptions({
                 navigationType: 'page',
                 navigationConfig: {
-                    field: 'id',
-                    direction: 'bothways'
+                    pageSize: 2
                 }
             });
 
