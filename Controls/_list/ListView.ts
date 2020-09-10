@@ -172,7 +172,12 @@ var ListView = BaseControl.extend(
                 _private.checkMarkerShouldBeVisible(this)) {
                 this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
             }
-            this._notify('controlResize', [], {bubbling: true});
+            // todo костыль до тех пор, пока не перейдем на отслеживание ресайза через нативное событие в двух основныых
+            // местах - в окнах и в scrollContainer'e.
+            // https://online.sbis.ru/opendoc.html?guid=4409ca19-6e5d-41af-b080-5431dbd8887c
+            if (this._options.notifyResizeAfterMount !== false) {
+                this._notify('controlResize', [], {bubbling: true});
+            }
         },
 
         _afterRender: function() {

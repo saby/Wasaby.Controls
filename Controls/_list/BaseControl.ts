@@ -1019,13 +1019,13 @@ const _private = {
         }
     },
 
-    calcViewSize(viewSize: number, pagingVisible: boolean): number {
-        return viewSize - (pagingVisible ? PAGING_PADDING : 0);
+    calcViewSize(viewSize: number, pagingVisible: boolean, pagingPadding: number): number {
+        return viewSize - (pagingVisible ? pagingPadding : 0);
     },
     needShowPagingByScrollSize(self, viewSize: number, viewportSize: number): boolean {
         let result = self._pagingVisible;
 
-        const scrollHeight = Math.max(_private.calcViewSize(viewSize, result),
+        const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
                                       self._scrollController?.calculateVirtualScrollHeight() || 0);
         const proportion = (scrollHeight / viewportSize);
 
@@ -2789,6 +2789,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _pagingCfg: null,
     _pagingVisible: false,
     _actualPagingVisible: false,
+    _pagingPadding: null,
 
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
@@ -3616,6 +3617,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _beforePaint(): void {
+        if (this._pagingVisible) {
+            this._updatePagingPadding();
+        }
         // todo KINGO.
         // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
         // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
@@ -4222,6 +4226,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();
         this._notify('sortingChanged', [newSorting]);
+    },
+
+    _updatePagingPadding(): void {
+        if (!this._pagingPadding) {
+            this._pagingPadding = this._children.pagingPaddingContainer.offsetHeight;
+        }
     },
 
     _mouseEnter(event): void {
