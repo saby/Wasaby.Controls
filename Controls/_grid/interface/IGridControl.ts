@@ -498,7 +498,7 @@
 
 /**
  * @event Происходит при наведении курсора мыши на ячейку таблицы.
- * @name Controls/_list/interface/IGridControl#hoveredCellChanged
+ * @name Controls/_grid/interface/IGridControl#hoveredCellChanged
  * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
  * @param {Types/entity:Record} item Элемент, на который навели курсор.
  * @param {HTMLElement} itemContainer Контейнер элемента, на который навели курсор.
