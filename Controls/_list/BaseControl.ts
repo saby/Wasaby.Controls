@@ -3324,7 +3324,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 markerController.applyMarkedKey(newOptions.markedKey);
             }
 
-            if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
+            if (this._modelRecreated || this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
                 const newMarkedKey = markerController.calculateMarkedKey();
                 _private.handleMarkerControllerResult(self, newMarkedKey);
             }

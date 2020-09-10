@@ -77,7 +77,7 @@ export class Controller {
     */
    calculateNextMarkedKey(): TKey {
       const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
-      const nextMarkedKey = this._calculateMarkedKey(index, true);
+      const nextMarkedKey = this._calculateNearbyItemKey(index, true);
       return nextMarkedKey === null ? this._markedKey : nextMarkedKey;
    }
 
@@ -87,7 +87,7 @@ export class Controller {
     */
    calculatePrevMarkedKey(): TKey {
       const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
-      const prevMarkedKey = this._calculateMarkedKey(index, false);
+      const prevMarkedKey = this._calculateNearbyItemKey(index, false);
       return prevMarkedKey === null ? this._markedKey : prevMarkedKey;
    }
 
@@ -105,11 +105,11 @@ export class Controller {
 
       let newMarkedKey;
       // Считаем ключ следующего элемента
-      newMarkedKey = this._calculateMarkedKey(removedItemsIndex, true);
+      newMarkedKey = this._calculateNearbyItemKey(removedItemsIndex, true);
 
       // Считаем ключ предыдущего элемента, если следующего нет
       if (newMarkedKey === null) {
-         newMarkedKey = this._calculateMarkedKey(removedItemsIndex, false);
+         newMarkedKey = this._calculateNearbyItemKey(removedItemsIndex, false);
       }
 
       return newMarkedKey;
@@ -172,7 +172,7 @@ export class Controller {
       return contents.getKey();
    }
 
-   private _calculateMarkedKey(index: number, next: boolean): TKey {
+   private _calculateNearbyItemKey(index: number, next: boolean): TKey {
       const limit = next ? this._model.getCount() : 0;
       let item;
       do {
