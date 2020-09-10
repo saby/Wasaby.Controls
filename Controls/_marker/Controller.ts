@@ -11,16 +11,13 @@ import { Model } from 'Types/entity';
 export class Controller {
    private _model: IMarkerModel;
    private _markerVisibility: TVisibility;
-   private _markedKey: TKey = null;
+   private _markedKey: TKey;
 
    constructor(options: IOptions) {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-      const markedKey = this.calculateMarkedKey(options.markedKey);
-
-      if (markedKey !== null) {
-         this.setMarkedKey(markedKey);
-      }
+      this._markedKey = options.markedKey;
+      this._markedKey = this.calculateMarkedKey();
    }
 
    /**
@@ -28,27 +25,39 @@ export class Controller {
     * @param options
     * @return {number|string} Ключ маркера
     */
-   update(options: IOptions): TKey {
-      if (this._model !== options.model) {
-         this._model = options.model;
-         this.restoreMarker();
-      }
+   updateOptions(options: IOptions): void {
+      this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-
-      const markedKey = this.calculateMarkedKey(options.markedKey);
-      this.setMarkedKey(markedKey);
-      return markedKey;
    }
 
-   /**
-    * Проставить маркер в модели
-    */
-   setMarkedKey(markedKey: TKey): void {
-      if (this._markedKey !== markedKey) {
+   applyMarkedKey(newMarkedKey: TKey): void {
+      if (this._markedKey !== newMarkedKey) {
          this._model.setMarkedKey(this._markedKey, false);
-         this._model.setMarkedKey(markedKey, true);
-         this._markedKey = markedKey;
       }
+      this._model.setMarkedKey(newMarkedKey, true);
+      this._markedKey = newMarkedKey;
+   }
+
+   calculateMarkedKey(): TKey {
+      const existsMarkedItem = !!this._model.getItemBySourceKey(this._markedKey);
+
+      let newMarkedKey;
+
+      if (existsMarkedItem) {
+         newMarkedKey = this._markedKey;
+      } else {
+         if (this._markerVisibility === Visibility.Visible) {
+            if (this._model.getCount()) {
+               newMarkedKey = this._getFirstItemKey();
+            } else {
+               newMarkedKey = this._markedKey;
+            }
+         } else {
+            newMarkedKey = null;
+         }
+      }
+
+      return newMarkedKey;
    }
 
    /**
@@ -59,78 +68,23 @@ export class Controller {
    }
 
    /**
-    * Если по переданному ключу не найден элемент, то возвращается ключ первого элемента или null
-    * @param key ключ элемента, на который ставится маркер
-    * @return {string|number} новый ключ маркера
-    */
-   calculateMarkedKey(key: TKey): TKey {
-      if ((key === undefined || key === null) && this._markerVisibility !== Visibility.Visible) {
-         return key;
-      }
-
-      const item = this._model.getItemBySourceKey(key);
-      if (this._markedKey === key && item) {
-         return key;
-      }
-
-      let resultKey = this._markedKey;
-      if (item) {
-         resultKey = key;
-      } else {
-         switch (this._markerVisibility) {
-            case Visibility.OnActivated:
-               // Маркер сбросим только если список не пустой и элемента с текущим маркером не найдено
-               if (this._model.getCount() > 0) {
-                  if (this._markedKey) {
-                     resultKey = this.getFirstItemKey();
-                  } else {
-                     resultKey = null;
-                  }
-               }
-               break;
-            case Visibility.Visible:
-               resultKey = this.getFirstItemKey();
-               break;
-         }
-      }
-
-      return resultKey;
-   }
-
-   /**
-    * Проставляет заново маркер в модели
-    */
-   restoreMarker(): void {
-      const item = this._model.getItemBySourceKey(this._markedKey);
-      if (item) {
-         item.setMarked(true);
-      }
-   }
-
-   /**
     * Переместить маркер на следующий элемент
     * @return ключ, на который поставлен маркер
     */
-   moveMarkerToNext(): TKey {
-      const nextItem = this._model.getNextByKey(this._markedKey);
-      if (!nextItem) {
-         return this._markedKey;
-      }
-
-      return this._getKey(nextItem);
+   calculateNextMarkedKey(): TKey {
+      const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
+      const nextMarkedKey = this._calculateMarkedKey(index, true);
+      return nextMarkedKey === null ? this._markedKey : nextMarkedKey;
    }
 
    /**
     * Переместить маркер на предыдущий элемент
     * @return ключ, на который поставлен маркер
     */
-   moveMarkerToPrev(): TKey {
-      const prevItem = this._model.getPrevByKey(this._markedKey);
-      if (!prevItem) {
-         return this._markedKey;
-      }
-
-      return this._getKey(prevItem);
+   calculatePrevMarkedKey(): TKey {
+      const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
+      const prevMarkedKey = this._calculateMarkedKey(index, false);
+      return prevMarkedKey === null ? this._markedKey : prevMarkedKey;
    }
 
    /**
@@ -138,25 +92,20 @@ export class Controller {
     * Ставит маркер на следующий элемент, при его отустствии на предыдущий, иначе сбрасывает маркер
     * @param removedItemsIndex Индекс удаленной записи в исходной коллекции (RecordSet)
     */
-   handleRemoveItems(removedItemsIndex: number): TKey {
+   calculateMarkerAfterRemove(removedItemsIndex: number): TKey {
       // Если элемент с текущем маркером не удален, то маркер не нужно менять
       const item = this._model.getItemBySourceKey(this._markedKey);
       if (item) {
          return this._markedKey;
       }
 
-      // Нам приходит индекс в исходной коллекции и его нужно перевести в индекс проекции
-      const indexInProjection = this._model.getIndexBySourceIndex(removedItemsIndex);
-      const nextItem = this._model.getNextByIndex(indexInProjection);
-      const prevItem = this._model.getPrevByIndex(indexInProjection);
-
       let newMarkedKey;
-      if (nextItem) {
-         newMarkedKey = this.calculateMarkedKey(this._getKey(nextItem));
-      } else if (prevItem) {
-         newMarkedKey = this.calculateMarkedKey(this._getKey(prevItem));
-      } else {
-         newMarkedKey = this.calculateMarkedKey(null);
+      // Считаем ключ следующего элемента
+      newMarkedKey = this._calculateMarkedKey(removedItemsIndex, true);
+
+      // Считаем ключ предыдущего элемента, если следующего нет
+      if (newMarkedKey === null) {
+         newMarkedKey = this._calculateMarkedKey(removedItemsIndex, false);
       }
 
       return newMarkedKey;
@@ -183,10 +132,9 @@ export class Controller {
       let newMarkedKey;
       const item = this._model.getValidItemForMarker(firstItemIndex);
       if (item) {
-         const itemKey = this._getKey(item);
-         newMarkedKey = this.calculateMarkedKey(itemKey);
+         newMarkedKey = this._getKey(item);
       } else {
-         newMarkedKey = this.calculateMarkedKey(null);
+         newMarkedKey = null;
       }
 
       return newMarkedKey;
@@ -196,9 +144,9 @@ export class Controller {
     * Обработать добавление элементов
     * @param newItems список новый элементов
     */
-   handleAddItems(newItems: Array<CollectionItem<Model>>): void {
+   restoreMarkedState(newItems: Array<CollectionItem<Model>>): void {
       if (newItems.some((item) => this._getKey(item) === this._markedKey)) {
-         this.restoreMarker();
+         this.applyMarkedKey(this._markedKey);
       }
    }
 
@@ -220,11 +168,26 @@ export class Controller {
       return contents.getKey();
    }
 
+   private _calculateMarkedKey(index: number, next: boolean): TKey {
+      const limit = next ? this._model.getCount() : 0;
+      let item;
+      do {
+         index += next ? 1 : -1;
+
+         if (next ? index >= limit : index < limit) {
+            return null;
+         }
+         item = this._model.at(index);
+      } while (!item?.Marked);
+
+      return item ? this._getKey(item) : null;
+   }
+
    /**
     * Возвращает ключ первого элемента модели
     * @private
     */
-   private getFirstItemKey(): TKey {
+   private _getFirstItemKey(): TKey {
       if (!this._model.getCount()) {
          return null;
       }
