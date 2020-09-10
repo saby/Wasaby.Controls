@@ -211,24 +211,38 @@ class StickyHeaderController {
             this._stickyHeaderResizeObserver.unobserve(elem);
         });
     }
-
+    private _deleteElementFromElementsHeightStack(entry): boolean {
+        if (entry.contentRect.height === 0) {
+            this._elementsHeight.forEach((item, index) => {
+                if (item.key === entry.target) {
+                    this._elementsHeight.splice(index, 1);
+                    return true;
+                }
+            });
+        }
+        return false;
+    }
     private _resizeObserverCallback(entries: any): void {
         let heightChanged = false;
         for (const entry of entries) {
             const heightEntry: IHeightEntry = this._elementsHeight.find((item: IHeightEntry) => {
                 return item.key === entry.target;
             });
-
-            if (heightEntry) {
-                if (heightEntry.value !== entry.contentRect.height) {
-                    heightEntry.value = entry.contentRect.height;
-                    heightChanged = true;
+            // Если у элемента высота ровна нулю, то удаляем его из массива высот.
+            // Так мы избавимся от утечки в _elementsHeight.
+            const isElementDeleted = this._deleteElementFromElementsHeightStack(entry);
+            if (!isElementDeleted) {
+                if (heightEntry) {
+                    if (heightEntry.value !== entry.contentRect.height) {
+                        heightEntry.value = entry.contentRect.height;
+                        heightChanged = true;
+                    }
+                } else {
+                    // ResizeObserver всегда кидает событие сразу после добавления элемента. Не будем генрировать
+                    // событие, а просто сохраним текущую высоту если это первое событие для элемента и высоту
+                    // этого элемента мы еще не сохранили.
+                    this._elementsHeight.push({key: entry.target, value: entry.contentRect.height});
                 }
-            } else {
-                // ResizeObserver всегда кидает событие сразу после добавления элемента. Не будем генрировать
-                // событие, а просто сохраним текущую высоту если это первое событие для элемента и высоту
-                // этого элемента мы еще не сохранили.
-                this._elementsHeight.push({key: entry.target, value: entry.contentRect.height});
             }
         }
         if (heightChanged) {
