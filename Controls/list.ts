@@ -15,7 +15,7 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
- * @includes Remover Controls/_list/interface/IRemover
+ * @includes IRemover Controls/_list/interface/IRemover
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
@@ -53,7 +53,7 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
- * @includes Remover Controls/_list/interface/IRemover
+ * @includes IRemover Controls/_list/interface/IRemover
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
