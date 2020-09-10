@@ -1,5 +1,5 @@
 <ws:template name="DEFAULT_CONTENT">
-    <ws:if data="{{itemData.column.needSearchHighlight}}">
+    <ws:if data="{{itemData.needSearchHighlight}}">
         <Controls.decorator:Highlight highlightedValue="{{itemData.searchValue}}">
             <ws:value>
                 <ws:String>{{itemData.item[itemData.column.displayProperty]}}</ws:String>

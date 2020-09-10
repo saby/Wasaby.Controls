@@ -945,6 +945,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                assert.equal(expectedData.keyProperty, checkedColumn.keyProperty, 'Incorrect value "keyProperty" when checking columns.');
                assert.equal(expectedData.item[expectedData.keyProperty], checkedColumn.key, 'Incorrect value "getPropValue(item, displayProperty)" when checking columns.');
                assert.equal(expectedData.template, checkedColumn.template, 'Incorrect value "template" when checking columns.');
+               assert.equal(expectedData.needSearchHighlight, checkedColumn.needSearchHighlight, 'Incorrect value "needSearchHighlight" when checking columns.');
                cAssert.isClassesEqual(checkedColumn.classList.getAll(), expectedData.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
             }
 
@@ -958,7 +959,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                columnIndex: 0,
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
-               column: {needSearchHighlight: false},
+               column: {},
+               needSearchHighlight: false,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__row-cell-background-hover-default_theme-default controls-Grid__row-cell_withRowSeparator_size-s_theme-default ' +
@@ -969,7 +971,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // check next column
             current.goToNextColumn();
             gridColumn = clone(gridColumns[0]);
-            cMerge(gridColumn, {needSearchHighlight: false});
             assert.equal(1, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
             assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "goToNextColumn()".');
             assert.isTrue(gridColumn.textOverflow === 'ellipsis', 'Incorrect value "current.textOverflow".');
@@ -978,6 +979,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
                column: gridColumn,
+               needSearchHighlight: false,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover-default_theme-default ' +
@@ -989,7 +991,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // check next column
             current.goToNextColumn();
             gridColumn = clone(gridColumns[1]);
-            cMerge(gridColumn, {needSearchHighlight: false});
             assert.equal(2, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
             assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after goToNextColumn().');
             checkBaseProperties(current.getCurrentColumn(), {
@@ -997,6 +998,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
                column: gridColumn,
+               needSearchHighlight: false,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover-default_theme-default ' +
@@ -1009,7 +1011,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // check last column
             current.goToNextColumn();
             gridColumn = clone(gridColumns[2]);
-            cMerge(gridColumn, {needSearchHighlight: false});
             assert.equal(3, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
             assert.isTrue(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "gotToNextColumn()".');
             checkBaseProperties(current.getCurrentColumn(), {
@@ -1017,6 +1018,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
                column: gridColumn,
+               needSearchHighlight: false,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover-default_theme-default ' +
@@ -1039,7 +1041,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                columnIndex: 0,
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
-               column: {needSearchHighlight: false},
+               column: {},
+               needSearchHighlight: false,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__row-cell-background-hover-default_theme-default ' +
