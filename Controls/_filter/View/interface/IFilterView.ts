@@ -1,4 +1,4 @@
-import {ICrudPlus} from 'Types/source';
+import {ICrudPlus, ICrud} from 'Types/source';
 import {IPopupOptions} from 'Controls/popup';
 import {INavigationOptionValue} from 'Controls/interface';
 /**
@@ -93,6 +93,21 @@ import {INavigationOptionValue} from 'Controls/interface';
  * @property {EditorOptions} editorOptions Options for editor
  * @property {FilterViewMode} viewMode Filter view mode
  * @property {Boolean} doNotSaveToHistory Flag to cancel saving filter in history
+ */
+
+/**
+ * @name Controls/_filter/View/interface/IFilterView#emptyText
+ * @default Все
+ * @cfg {String} Текстовое значение, которое будет использовано для отображения рядом с кнопкой, когда во всех фильтрах установлено значение "по-умолчанию"
+ * @demo Controls-demo/Filter_new/FilterView/EmptyText/Index
+ * @example
+ * <pre>
+ * <Controls.filter:View
+ *    source="{{_source}}"
+ *    detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
+ *    emptyText="Все состояния"
+ *    panelTemplateName="Controls/filterPopup:SimplePanel"/>
+ * </pre>
  */
 
 /**
@@ -609,7 +624,7 @@ export interface IFilterItem {
     viewMode?: 'basic' | 'frequent' | 'extended';
     type?: 'dateRange';
     editorOptions?: {
-        source?: ICrudPlus;
+        source?: ICrudPlus | ICrud;
         keyProperty?: string;
         displayProperty?: string;
         multiSelect?: boolean;
