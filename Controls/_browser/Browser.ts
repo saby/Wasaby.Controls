@@ -70,21 +70,18 @@ export default class Browser extends Control {
         this._dataOptionsContext = this._createContext(controllerState);
 
         if (receivedState) {
-            this._filterController.resolveFilterItems(options, receivedState.historyItems);
-            this._updateFilterState();
+            this._setFilterItems(receivedState.historyItems);
             if (isNewEnvironment()) {
                 this._setItemsAndCreateSearchController(receivedState.items, options);
             }
         } else {
-            return new Promise((resolve) => {
-                this._filterController.resolveFilterItems(options, receivedState).then((historyItems) => {
-                    this._updateFilterState();
-                    this._loadSource({...options, filter: this._filter}, controllerState).then((items) => {
-                        resolve({
-                            historyItems,
-                            items
-                        });
-                    });
+            return this._filterController.loadHistoryItems(options, receivedState).then((historyItems) => {
+                this._setFilterItems(historyItems);
+                return this._loadItems({...options, filter: this._filter}, controllerState).then((items) => {
+                    return {
+                        historyItems,
+                        items
+                    };
                 });
             });
         }
@@ -99,9 +96,12 @@ export default class Browser extends Control {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
 
-        this._filterController.updateOptions({...newOptions, searchValue: this._searchValue});
-        this._updateFilterState();
-        this._sourceController.setFilter(this._filter);
+        const isFilterOptionsChanged = this._filterController.update({...newOptions, searchValue: this._searchValue});
+
+        if (isFilterOptionsChanged) {
+            this._updateFilterAndFilterItems();
+            this._sourceController.setFilter(this._filter);
+        }
 
         if (this._options.source !== newOptions.source) {
             this._loading = true;
@@ -164,7 +164,12 @@ export default class Browser extends Control {
         this._filterController = null;
     }
 
-    private _loadSource(options, controllerState): Promise<void|RecordSet> {
+    private _setFilterItems(historyItems): void {
+        this._filterController.setHistoryItems(historyItems);
+        this._updateFilterAndFilterItems();
+    }
+
+    private _loadItems(options, controllerState): Promise<void|RecordSet> {
         return new Promise((resolve) => {
             if (options.source) {
                 this._sourceController.load().then((items) => {
@@ -206,11 +211,10 @@ export default class Browser extends Control {
     }
 
     _filterChanged(event: SyntheticEvent, filter: object): void {
-        // event && event.stopPropagation();
+        event && event.stopPropagation();
         this._filterController.setFilter(filter);
-        const filterControllerState = this._filterController.getState();
 
-        this._sourceController.setFilter(filterControllerState.filter);
+        this._sourceController.setFilter(this._filterController.getFilter());
 
         const controllerState = this._sourceController.getState();
 
@@ -253,8 +257,9 @@ export default class Browser extends Control {
 
     protected _filterItemsChanged(event: SyntheticEvent, items: IFilterItem[]): void {
         this._filterController.updateFilterItems(items);
-        this._updateFilterState();
-        this._filterChanged(event, this._filter);
+        this._updateFilterAndFilterItems();
+        this._sourceController.setFilter(this._filter);
+        this._dataOptionsContext.filter = this._filter;
         this._notify('filterChanged', [this._filter]);
     }
 
@@ -269,11 +274,10 @@ export default class Browser extends Control {
         };
     }
 
-    private _updateFilterState(): void {
-        const state = this._filterController.getState();
-        this._filter = state.filter;
-        this._filterButtonItems = state.filterButtonItems;
-        this._fastFilterItems = state.fastFilterItems;
+    private _updateFilterAndFilterItems(): void {
+        this._filter = this._filterController.getFilter();
+        this._filterButtonItems = this._filterController.getFilterButtonItems();
+        this._fastFilterItems = this._filterController.getFastFilterItems();
     }
 
     private _createContext(options?: IControlerState): typeof ContextOptions {
@@ -388,10 +392,18 @@ export default class Browser extends Control {
     _dataLoadCallback(data: RecordSet): void {
         this._filterController.handleDataLoad(data);
         this._getSearchController().handleDataLoad(data);
+
+        if (this._options.dataLoadCallback) {
+            this._options.dataLoadCallback(data);
+        }
     }
 
-    _dataLoadErrback(data: RecordSet): void {
-        this._filterController.handleDataError(data);
+    _dataLoadErrback(error: Error): void {
+        this._filterController.handleDataError();
+
+        if (this._options.dataLoadErrback) {
+            this._options.dataLoadErrback(error);
+        }
     }
 
     _afterSetItemsOnReloadCallback(): void {
@@ -400,6 +412,12 @@ export default class Browser extends Control {
 
     _misspellCaptionClick(): void {
         this._getSearchController().handleMisspellClick();
+    }
+
+    resetPrefetch(): void {
+        this._filterController.resetPrefetch();
+        this._filter = this._filterController.getFilter();
+        this._notify('filterChanged', [this._filter]);
     }
 
     static contextTypes(): object {
