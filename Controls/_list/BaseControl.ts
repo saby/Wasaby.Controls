@@ -3334,7 +3334,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._selectionController) {
-            if (filterChanged && _private.getSelectionController(this).isAllSelected(false)) {
+            const allowClearSelectionBySelectionViewMode =
+                this._options.selectionViewMode === newOptions.selectionViewMode ||
+                newOptions.selectionViewMode !== 'selected';
+
+            if (filterChanged &&
+                _private.getSelectionController(this).isAllSelected(false) &&
+                allowClearSelectionBySelectionViewMode) {
                 const result = _private.getSelectionController(this).clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
