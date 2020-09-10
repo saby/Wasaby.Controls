@@ -1452,10 +1452,9 @@ const _private = {
             }
 
             if (_private.hasMarkerController(self)) {
-                // Когда action=remove значит были скрыты или удалены элементы
-                // Если элементы скрылись, то для них нужно сбросить состояние marked,
-                // чтобы при их показе не было лишнего маркера
                 if (action === IObservable.ACTION_REMOVE) {
+                    // Если элементы скрылись, то для них нужно сбросить состояние marked,
+                    // чтобы при их показе не было лишнего маркера
                     _private.getMarkerController(self).resetMarkedState(removedItems);
 
                     const newMarkedKey = _private.getMarkerController(self).calculateMarkerAfterRemove(removedItemsIndex);
@@ -1467,8 +1466,8 @@ const _private = {
                     _private.handleMarkerControllerResult(self, newMarkedKey);
                 }
 
-                // Если элемент был пересоздан, то сперва сработает remove и с элемента уберется выделение,
-                // а потом сработает add и для элемента нужно восстановить выделение
+                // Если элемент был скрыт, то сработает remove и с элемента уберется выделение,
+                // а при показе элемента сработает add и для элемента нужно восстановить выделение
                 if (action === IObservable.ACTION_ADD) {
                     _private.getMarkerController(self).restoreMarkedState(newItems);
                 }
@@ -3323,6 +3322,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (this._options.markedKey !== newOptions.markedKey) {
                 markerController.applyMarkedKey(newOptions.markedKey);
+            }
+
+            if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
+                const newMarkedKey = markerController.calculateMarkedKey();
+                _private.handleMarkerControllerResult(self, newMarkedKey);
             }
         }
 

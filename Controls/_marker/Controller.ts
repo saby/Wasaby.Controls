@@ -53,7 +53,11 @@ export class Controller {
                newMarkedKey = this._markedKey;
             }
          } else {
-            newMarkedKey = null;
+            if (this._model.getCount()) {
+               newMarkedKey = this._markedKey;
+            } else {
+               newMarkedKey = null;
+            }
          }
       }
 
