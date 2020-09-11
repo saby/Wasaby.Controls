@@ -71,11 +71,19 @@ define([
          let View = new crumbs.View();
          View._items = [{
             id: 1,
-            title: '1',
+            item: {
+               get: () => {
+                  return 'title';
+               }
+            },
             withOverflow: false
          }, {
             id: 2,
-            title: '3',
+            item: {
+               get: () => {
+                  return '1';
+               }
+            },
             withOverflow: false
          }];
          View._addWithOverflow();
@@ -85,12 +93,20 @@ define([
          //крошка и точки
          View._items = [{
             id: 1,
-            title: '1',
+            item: {
+               get: () => {
+                  return '...';
+               }
+            },
             withOverflow: false,
             isDots: true
          }, {
             id: 2,
-            title: '3',
+            item: {
+               get: () => {
+                  return 'title';
+               }
+            },
             withOverflow: false
          }];
          View._addWithOverflow();
