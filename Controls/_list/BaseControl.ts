@@ -2872,7 +2872,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // Контроллер для перемещения элементов списка
     _moveController: null,
-
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
