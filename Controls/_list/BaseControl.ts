@@ -2239,9 +2239,6 @@ const _private = {
 
     setMarkedKey(self: any, key: TItemKey): void {
         if (self._options.markerVisibility !== MarkerVisibility.Hidden) {
-            if (!_private.hasMarkerController(self)) {
-                _private.createMarkerController(self, self._options.markerVisibility, key);
-            }
             _private.handleMarkerControllerResult(self, key);
         }
     },
@@ -2316,21 +2313,21 @@ const _private = {
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
     handleMarkerControllerResult(self: typeof BaseControl, newMarkedKey: string|number): Promise<TKey>|TKey {
+        const markerController = _private.getMarkerController(self);
+
         let eventResult: Promise<TKey>|TKey;
-        if (newMarkedKey !== self._markerController.getMarkedKey()) {
+        if (newMarkedKey !== markerController.getMarkedKey()) {
             eventResult = self._notify('markedKeyChanged', [newMarkedKey]);
         }
 
         let result = eventResult;
         if (eventResult instanceof Promise) {
-            eventResult
-                .then((key) => key !== undefined ? key : newMarkedKey)
-                .then((key) => self._markerController.applyMarkedKey(key));
+            eventResult.then((key) => markerController.applyMarkedKey(key));
         } else if (eventResult !== undefined) {
-            self._markerController.applyMarkedKey(eventResult);
+            markerController.applyMarkedKey(eventResult);
         } else {
             result = newMarkedKey;
-            self._markerController.applyMarkedKey(newMarkedKey);
+            markerController.applyMarkedKey(newMarkedKey);
         }
 
         return result;
