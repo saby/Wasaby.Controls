@@ -961,7 +961,11 @@ const _private = {
     scrollToEdge(self, direction) {
         _private.setMarkerAfterScroll(self);
         if (_private.hasMoreData(self, self._sourceController, direction)) {
-            self._sourceController.setEdgeState(direction);
+            let pagingMode = '';
+            if (self._options.navigation && self._options.navigation.viewConfig) {
+                pagingMode = self._options.navigation.viewConfig.pagingMode;
+            }
+            self._sourceController.setEdgeState(direction, pagingMode);
 
             // Если пейджинг уже показан, не нужно сбрасывать его при прыжке
             // к началу или концу, от этого прыжка его состояние не может
