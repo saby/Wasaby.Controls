@@ -17,7 +17,6 @@ export class Controller {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
       this._markedKey = options.markedKey;
-      this._markedKey = this.calculateMarkedKey();
    }
 
    /**
@@ -152,6 +151,12 @@ export class Controller {
       if (newItems.some((item) => this._getKey(item) === this._markedKey)) {
          this.applyMarkedKey(this._markedKey);
       }
+   }
+
+   destroy(): void {
+      this._markedKey = null;
+      this._markerVisibility = null;
+      this._model = null;
    }
 
    /*
