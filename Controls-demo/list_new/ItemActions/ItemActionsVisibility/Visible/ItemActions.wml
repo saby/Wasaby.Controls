@@ -3,6 +3,7 @@
             keyProperty="id"
             source="{{_viewSource}}"
             itemActions="{{_itemActions}}"
+            itemActionsBackgroundStyle="transparent"
             itemActionsVisibility="{{_itemActionsVisibility}}">
         <ws:itemTemplate>
             <ws:partial template="Controls/list:ItemTemplate">

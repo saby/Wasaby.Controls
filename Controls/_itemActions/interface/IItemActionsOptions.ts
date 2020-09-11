@@ -372,7 +372,8 @@ export interface IItemActionsOptions {
 
     /**
      * @name Controls/_itemActions/itemActions/interface/IItemActionsOptions#itemActionsBackgroundStyle
-     * @cfg {String} Префикс стиля для настройки фона панели опций записи. По умолчанию фон соответствует цвету фона hovered записи.
+     * @cfg {String} Опция, позволяющая настраивать фон панели операций над записью.
+     * @description Предустановленные варианты 'default' | 'transparent'. По умолчанию 'default' (фон соответствует цвету фона hovered записи)
      */
     /*ENG
      * @name Controls/_itemActions/itemActions/interface/IItemActionsOptions#itemActionsBackgroundStyle
