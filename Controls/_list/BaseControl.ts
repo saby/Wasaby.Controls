@@ -2218,25 +2218,6 @@ const _private = {
         return self._markerController;
     },
 
-    // TODO marker проверить без этого
-    hasOption(options: any, optionName: string): boolean {
-        // todo https://online.sbis.ru/opendoc.html?guid=a2cb829c-3822-43b0-bb2e-3cd148e76a23
-        // Проблема:
-        // 1. Есть прикладной контрол, внутри которого через n количество контролов-оберток вставляется список.
-        // 2. На уровне прикладного контрола в список через bind передается опция markedKey.
-        // 3. При смене этой опции на уровне списка (отметка записи маркером при клике, notify('markedKeyChanged')) - обновляется не только список, но и прикладной контрол.
-        // 4. Далее этот прикладной контрол запускает обновление всех контролов, в которые обернут список.
-        // 5. Как выяснилось, это отнимает кучу времени (порядка 50 мс).
-        // Временное решение - проверка свойства на undefined. Получается, изначально не будет работать реактивность, а
-        // когда на прикладном уровне понадобится реактивность - они вместо undefined передадут конкретное значение.
-        const hasOwnProperty = options.hasOwnProperty(optionName);
-        const checkUndefinedValue = !!options.task1180026692;
-        if (checkUndefinedValue) {
-            return hasOwnProperty && options[optionName] !== undefined;
-        }
-        return hasOwnProperty;
-    },
-
     setMarkedKey(self: any, key: TItemKey): void {
         if (self._options.markerVisibility !== MarkerVisibility.Hidden) {
             _private.handleNewMarkedKey(self, key);
@@ -2935,7 +2916,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                             newOptions.markerVisibility,
                             newOptions.markedKey
                         );
-                        // TODO marker нужно в в_afterMount занотифаить
+
                         const markedKey = markerController.calculateMarkedKey();
                         markerController.applyMarkedKey(markedKey);
                     }
@@ -3393,9 +3374,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const needReload = filterChanged || recreateSource || sortingChanged;
         // с маркером нужно работать если он у нас всегда виден или
-        // виден по активации и ключ передали в опциях или он уже был проставлен
+        // показывается по активации и ключ передали в опциях или он уже был проставлен
         if (newOptions.markerVisibility === MarkerVisibility.Visible
-            || newOptions.markerVisibility === MarkerVisibility.OnActivated && (newOptions.markedKey !== undefined || this._markerController?.getMarkedKey())) {
+            || newOptions.markerVisibility === MarkerVisibility.OnActivated
+                    && (newOptions.markedKey !== undefined || this._markerController?.getMarkedKey() !== undefined)) {
             let markerController;
             if (_private.hasMarkerController(this)) {
                 markerController = _private.getMarkerController(this);

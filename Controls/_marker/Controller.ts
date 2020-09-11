@@ -22,21 +22,28 @@ export class Controller {
    /**
     * Обновить состояние контроллера
     * @param options
-    * @return {number|string} Ключ маркера
     */
    updateOptions(options: IOptions): void {
       this._model = options.model;
       this._markerVisibility = options.markerVisibility;
    }
 
-   applyMarkedKey(newMarkedKey: TKey): void {
-      if (this._markedKey !== newMarkedKey) {
+   /**
+    * Применить переданный ключ к модели
+    * @param key Новый ключ
+    */
+   applyMarkedKey(key: TKey): void {
+      if (this._markedKey !== key) {
          this._model.setMarkedKey(this._markedKey, false);
       }
-      this._model.setMarkedKey(newMarkedKey, true);
-      this._markedKey = newMarkedKey;
+      this._model.setMarkedKey(key, true);
+      this._markedKey = key;
    }
 
+   /**
+    * Пересчитать ключ маркера исходя из текущего
+    * @return {TKey} Новый ключ
+    */
    calculateMarkedKey(): TKey {
       const existsMarkedItem = !!this._model.getItemBySourceKey(this._markedKey);
 
@@ -71,8 +78,8 @@ export class Controller {
    }
 
    /**
-    * Переместить маркер на следующий элемент
-    * @return ключ, на который поставлен маркер
+    * Посчитать ключ следующего элемента
+    * @return Ключ средующего элемента
     */
    calculateNextMarkedKey(): TKey {
       const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
@@ -81,8 +88,8 @@ export class Controller {
    }
 
    /**
-    * Переместить маркер на предыдущий элемент
-    * @return ключ, на который поставлен маркер
+    * Посчитать ключ предыдущего элемента
+    * @return Ключ предыдущего элемента
     */
    calculatePrevMarkedKey(): TKey {
       const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
@@ -91,8 +98,8 @@ export class Controller {
    }
 
    /**
-    * Возвращает новый ключ относительно удаленного элемента
-    * Ставит маркер на следующий элемент, при его отустствии на предыдущий, иначе сбрасывает маркер
+    * Посчитать новый ключ относительно удаленного элемента
+    * Возвращает ключ следующего элемента, при его отустствии предыдущего, иначе null
     * @param removedItemsIndex Индекс удаленной записи в исходной коллекции (RecordSet)
     */
    calculateMarkedKeyAfterRemove(removedItemsIndex: number): TKey {
@@ -123,7 +130,7 @@ export class Controller {
    }
 
    /**
-    * Устанавливает маркер на первый элемент, который полностью виден на странице
+    * Посчитать ключ элемента, который полностью виден на странице
     * @param items список HTMLElement-ов на странице
     * @param verticalOffset вертикальное смещение скролла
     */
@@ -144,8 +151,8 @@ export class Controller {
    }
 
    /**
-    * Обработать добавление элементов
-    * @param newItems список новый элементов
+    * Восстановить состояние для маркированного элемента, если он есть среди newItems
+    * @param newItems Список добавленных элементов
     */
    restoreMarkedState(newItems: Array<CollectionItem<Model>>): void {
       if (newItems.some((item) => this._getKey(item) === this._markedKey)) {
@@ -187,7 +194,7 @@ export class Controller {
             return null;
          }
          item = this._model.at(index);
-      } while (!item?.Marked);
+      } while (!item?.MarkableItem);
 
       return item ? this._getKey(item) : null;
    }

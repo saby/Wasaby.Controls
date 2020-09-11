@@ -724,7 +724,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     // endregion mover
 
     _markedKeyChangedHandler: function(event, key) {
-        this._notify('markedKeyChanged', [key]);
+        return this._notify('markedKeyChanged', [key]);
     },
 
     _draggingItemMouseMove(e, itemData, nativeEvent){
