@@ -2413,6 +2413,10 @@ const _private = {
                 }
             };
         }
+        const style = options.itemActionsBackgroundStyle ||
+            (options.itemActionsVisibility === 'visible' && 'transparent') ||
+            options.style;
+
         // Гарантированно инициализируем шаблоны, если это ещё не произошло
         const itemActionsChangeResult = itemActionsController.update({
                 editingItem: editingItemData,
@@ -2421,7 +2425,7 @@ const _private = {
                 itemActionsProperty: options.itemActionsProperty,
                 visibilityCallback: options.itemActionVisibilityCallback,
                 itemActionsPosition: options.itemActionsPosition,
-                style: options.itemActionsVisibility === 'visible' ? 'transparent' : options.style,
+                style,
                 theme: options.theme,
                 actionAlignment: options.actionAlignment,
                 actionCaptionPosition: options.actionCaptionPosition,
