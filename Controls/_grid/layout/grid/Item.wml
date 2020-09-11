@@ -5,7 +5,7 @@
                   itemActionsTemplate="{{itemActionsTemplate}}"
                   itemActionsContainerStyles="{{itemActionsContainerStyles}}"
                   highlightOnHover="{{highlightOnHover}}"
-                  attr:class="controls-Grid_columnScroll__fixed js-controls-ColumnScroll__notDraggable"
+                  attr:class="controls-Grid__itemAction js-controls-ColumnScroll__notDraggable"
                   attr:key="{{itemData.getCurrentColumnKey()}}__actions"
                   theme="{{itemData.theme}}"/>
    </ws:if>
@@ -15,7 +15,7 @@
                   itemData="{{itemData}}"
                   itemActionsContainerStyles="{{itemActionsContainerStyles}}"
                   highlightOnHover="{{highlightOnHover}}"
-                  attr:class="controls-Grid__itemAction controls-Grid_columnScroll__fixed js-controls-ColumnScroll__notDraggable"
+                  attr:class="controls-Grid__itemAction js-controls-ColumnScroll__notDraggable"
                   attr:key="{{itemData.getCurrentColumnKey()}}__actions"
                   theme="{{itemData.theme}}"/>
    </ws:else>

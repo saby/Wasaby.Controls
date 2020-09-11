@@ -285,14 +285,14 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
     },
 
-    _currentDayIntersectHandler: function (event: SyntheticEvent, entry: IntersectionObserverSyntheticEntry): void {
+    _currentDayIntersectHandler(event: SyntheticEvent, entry: IntersectionObserverSyntheticEntry): void {
         this._homeButtonVisible = !entry.nativeEntry.isIntersecting;
     },
 
-    _unregisterCurrentDayIntersectHandler: function () {
+    _unregisterCurrentDayIntersectHandler(): void {
         // Если в IntersectionObserverContainer, который сделит за сегодняшним днём, происходит событие unregister -
-        // значит текущий день точно не отображается. Делаем "Домик" видимым.
-        this._homeButtonVisible = true;
+        // значит текущий день точно не отображается. Обновляем состояние домика.
+        this._updateHomeButtonVisible();
     },
 
     _yearsRangeChanged: function (e, start, end) {
@@ -499,4 +499,5 @@ Component.getOptionTypes = function () {
     }, IDateRangeSelectable.getOptionTypes());
 };
 
+Component.default = Component;
 export = Component;
