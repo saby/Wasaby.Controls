@@ -125,7 +125,6 @@ export default class Button extends BaseDropdown {
       const controllerOptions = getDropdownControllerOptions(options);
       return { ...controllerOptions, ...{
             headerTemplate: options.headTemplate || options.headerTemplate,
-            markerVisibility: 'onactivated',
             headingCaption: options.caption,
             headingIcon: options.icon,
             headingIconSize: options.iconSize,
