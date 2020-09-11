@@ -286,7 +286,7 @@ var SourceController = cExtend.extend({
 
    setEdgeState: function(direction, pagingMode) {
       if (this._queryParamsController) {
-         this._queryParamsController.setEdgeState(direction, pagingMode);
+         this._queryParamsController.setEdgeState(direction, undefined, pagingMode);
       }
    },
 
