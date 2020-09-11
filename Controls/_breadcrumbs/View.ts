@@ -127,7 +127,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
                         }
                     },
                     templateOptions: {
-                        className: templateClassName,
+                        dropdownClassName: templateClassName,
                         source: rs,
                         itemTemplate: menuItemTemplate,
                         displayProperty: this._options.displayProperty
