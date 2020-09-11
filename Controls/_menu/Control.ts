@@ -157,6 +157,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _errorConfig: dataSourceError.ViewConfig|void;
     private _stack: StackOpener;
     private _markerController: MarkerController;
+    private _markerVisibility: string;
 
     protected _beforeMount(options: IMenuControlOptions,
                            context?: object,
@@ -169,9 +170,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         if (options.source) {
             return this._loadItems(options).then(() => {
-                if (options.markerVisibility !== MarkerVisibility.Hidden) {
-                    this._markerController = this._getMarkerController(options);
-                }
+                this._markerController = this._getMarkerController(options);
             });
         }
     }
@@ -575,8 +574,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getMarkerControllerConfig(options: IMenuControlOptions, selectedKeys?: TSelectedKeys): object {
         const markedKey = this._getMarkedKey(selectedKeys || options.selectedKeys, options.emptyKey, options.multiSelect);
+        this._markerVisibility = this._getMarkerVisibility(markedKey, options.emptyKey, options.markerVisibility);
         return {
-            markerVisibility: this._getMarkerVisibility(markedKey, options.emptyKey, options.markerVisibility),
+            markerVisibility: this._markerVisibility,
             markedKey,
             model: this._listModel
         };
