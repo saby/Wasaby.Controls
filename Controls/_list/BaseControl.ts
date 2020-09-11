@@ -4192,6 +4192,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _mouseDown(): void {
+        this._pointerEventsEnabled = true;
+    },
+
     _mouseLeave(event): void {
         if (this._documentDragging) {
             this._insideDragging = false;

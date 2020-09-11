@@ -182,6 +182,7 @@
          on:sortingChanged="_sortingChanged()"
          on:mouseenter="_mouseEnter()"
          on:mouseleave="_mouseLeave()"
+         on:mousedown="_mouseDown()"
          on:touchstart="_initItemActions(_options)">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
 
