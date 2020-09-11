@@ -3870,8 +3870,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
 
+        let eventResult = true;
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
+        } else {
+            eventResult = this._notify('itemClick', [item, originalEvent], {bubbling: true});
         }
 
         // При клике по элементу может случиться 2 события: itemClick и itemActivate.
@@ -3882,11 +3885,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (e.isStopped()) {
             this._savedItemClickArgs = [item, originalEvent, columnIndex];
         } else {
-            if (!this._editInPlace) {
-                e.stopPropagation();
-                this._notify('itemClick', [item, originalEvent], {bubbling: true});
+            if (eventResult !== false) {
+                this._notify('itemActivate', [item, originalEvent], {bubbling: true});
             }
-            this._notify('itemActivate', [item, originalEvent], {bubbling: true});
         }
     },
 
