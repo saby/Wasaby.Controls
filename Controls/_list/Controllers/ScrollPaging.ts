@@ -39,11 +39,13 @@ interface IPagingCfg {
 interface IScrollPagingOptions {
     pagingMode: TNavigationPagingMode;
     scrollParams: IScrollParams;
-    elementsCount: number;
-
-    pagingCfgTrigger(IPagingCfg): void;
+    totalElementsCount: number;
+    loadedElementsCount: number;
+    pagingCfgTrigger(cfg: IPagingCfg): void;
 }
-
+interface IPagingData {
+    totalHeight: number;
+}
 interface IHasMoreData {
     up: boolean;
     down: boolean;
@@ -52,12 +54,27 @@ interface IHasMoreData {
 export default class ScrollPagingController {
     protected _curState: IScrollpagingState = null;
     protected _options: IScrollPagingOptions = null;
-
+    protected _pagingData: IPagingData = null;
+    protected _numbersState: 'up' | 'down' = 'up';
     constructor(cfg: IScrollPagingOptions, hasMoreData: IHasMoreData = {up: false, down: false}) {
         this._options = cfg;
+        this.initializePagingData(cfg);
         this.updateStateByScrollParams(cfg.scrollParams, hasMoreData);
     }
 
+    protected initializePagingData(cfg: IScrollPagingOptions): void {
+
+        const averageElementHeight = this._options.scrollParams.scrollHeight / this._options.loadedElementsCount;
+        this._pagingData = {
+            totalHeight: averageElementHeight * this._options.totalElementsCount
+        };
+    }
+
+    setNumbersState(state: 'up' | 'down'): void {
+        if (this._options.pagingMode === 'numbers') {
+            this._numbersState = state;
+        }
+    }
     protected isHasMoreData(hasMoreData: boolean): boolean {
         return (!hasMoreData || (this._options.pagingMode !== 'edge' && this._options.pagingMode !== 'end'));
     }
@@ -108,17 +125,27 @@ export default class ScrollPagingController {
             case 'numbers':
                 arrowState.prev = 'hidden';
                 arrowState.next = 'hidden';
-                arrowState.end = 'hidden';
-                pagingCfg.pagesCount = Math.round(this._options.scrollParams.scrollHeight / this._options.scrollParams.clientHeight);
-                pagingCfg.selectedPage = Math.round(this._options.scrollParams.scrollTop / this._options.scrollParams.clientHeight) + 1;
+                arrowState.end = 'visible';
+                pagingCfg.showEndButton = true;
+                pagingCfg.pagesCount = Math.round(this._pagingData.totalHeight / this._options.scrollParams.clientHeight);
+                if (this._numbersState === 'up') {
+                    pagingCfg.selectedPage = Math.round(this._options.scrollParams.scrollTop / this._options.scrollParams.clientHeight) + 1;
+                } else {
+                    const scrollBottom = this._options.scrollParams.scrollHeight - this._options.scrollParams.scrollTop - this._options.scrollParams.clientHeight;
+                    pagingCfg.selectedPage = pagingCfg.pagesCount - Math.round(scrollBottom / this._options.scrollParams.clientHeight);
+                }
                 break;
         }
         if (this._options.pagingMode) {
             pagingCfg.pagingMode = this._options.pagingMode;
-            pagingCfg.elementsCount = this._options.elementsCount;
+            pagingCfg.elementsCount = this._options.totalElementsCount;
         }
         pagingCfg.arrowState = arrowState;
         return pagingCfg;
+    }
+
+    getScrollTopByPage() {
+
     }
 
     protected handleScrollMiddle(): void {

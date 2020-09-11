@@ -8,7 +8,7 @@
                     source="{{_viewSource}}">
                 <ws:navigation source="page" view="infinity">
                     <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
-                    <ws:viewConfig pagingMode="numbers"/>
+                    <ws:viewConfig pagingMode="numbers" showEndButton="{{true}}"/>
                 </ws:navigation>
             </Controls.list:View>
         </Controls.list:HotKeysContainer>

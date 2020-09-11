@@ -98,6 +98,10 @@ export default class ScrollController {
         }
     }
 
+    getPlaceholders(): IPlaceholders {
+        return this._placeholders;
+    }
+
     callAfterScrollStopped(callback: Function): void {
         this._inertialScrolling.callAfterScrollStopped(callback);
     }

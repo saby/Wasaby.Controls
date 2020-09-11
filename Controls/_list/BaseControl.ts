@@ -978,6 +978,9 @@ const _private = {
 
     scrollToEdge(self, direction) {
         _private.setMarkerAfterScroll(self);
+        if (self._scrollPagingCtr) {
+            self._scrollPagingCtr.setNumbersState(direction);
+        }
         if (_private.hasMoreData(self, self._sourceController, direction)) {
             self._sourceController.setEdgeState(direction);
 
@@ -1097,7 +1100,9 @@ const _private = {
                 self._cachedPagingState = true;
             }
             if (result && _private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self, scrollParams, hasMoreData);
+                _private.createScrollPagingController(self, scrollParams, hasMoreData).then((scrollPaging) => {
+                    self._scrollPagingCtr = scrollPaging;
+                });
             }
         }
 
@@ -1154,6 +1159,7 @@ const _private = {
                     down: _private.hasMoreData(self, self._sourceController, 'down')
                 };
                 _private.createScrollPagingController(self, scrollParams, hasMoreData).then((scrollPaging) => {
+                    self._scrollPagingCtr = scrollPaging;
                     callback(scrollPaging);
                 });
             }
@@ -1170,7 +1176,8 @@ const _private = {
         const scrollPagingConfig = {
             pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
-            elementsCount,
+            totalElementsCount: elementsCount,
+            loadedElementsCount: _private.getItemsCount(self),
             pagingCfgTrigger: (cfg) => {
                 if (!isEqual(self._pagingCfg, cfg)) {
                     self._pagingCfg = cfg;
@@ -1288,7 +1295,7 @@ const _private = {
 
     handleListScrollSync(self, scrollTop) {
         if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
-            self._pagingVisible = _private.needShowPagingByScrollSize(self,  _private.getViewSize(self), self._viewportSize);
+            self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
         }
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
@@ -1298,8 +1305,8 @@ const _private = {
         self._scrollPageLocked = false;
         if (_private.needScrollPaging(self._options.navigation)) {
             const scrollParams = {
-                scrollTop: self._scrollTop,
-                scrollHeight: _private.getViewSize(self),
+                scrollTop: self._scrollTop + (self._scrollController?.getPlaceholders().top || 0),
+                scrollHeight: self._scrollController?.calculateVirtualScrollHeight() || _private.getViewSize(self),
                 clientHeight: self._viewportSize
             };
             _private.updateScrollPagingButtons(self, scrollParams);
@@ -3193,9 +3200,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (_private.needScrollPaging(this._options.navigation)) {
                 _private.doAfterUpdate(this, () => {
                     const scrollParams = {
-                        scrollHeight: _private.getViewSize(this),
+                        scrollHeight: this._scrollController?.calculateVirtualScrollHeight() || _private.getViewSize(this),
                         clientHeight: this._viewportSize,
-                        scrollTop: this._scrollTop
+                        scrollTop: this._scrollTop + (this._scrollController?.getPlaceholders().top || 0)
                     };
                     _private.updateScrollPagingButtons(this, scrollParams);
                 });
@@ -3834,9 +3841,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
     __selectedPageChanged(e, page) {
         this._currentPage = page;
+        const scrollHeight = this._scrollController?.calculateVirtualScrollHeight() || _private.getViewSize(this);
+        const realNeededScrollTop = (page - 1) * this._viewportSize;
         const scrollParams = {
             scrollTop: (page - 1) * this._viewportSize,
-            scrollHeight: _private.getViewSize(this),
+            scrollHeight,
             clientHeight: this._viewportSize
         };
         this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true })
