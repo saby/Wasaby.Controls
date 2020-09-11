@@ -12,6 +12,7 @@ import menuItemTemplate = require('wml!Controls/_breadcrumbs/resources/menuItemT
 import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
 import {Record} from 'Types/entity';
 const CRUMBS_COUNT = 2;
+const MIN_COUNT_OF_LETTER = 3;
 
 /**
  * BreadCrumbs/View.
@@ -36,7 +37,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
 
     protected _beforeMount(options): void {
         this._items = options.visibleItems;
-        this._addWithOverflow();
+        this._addWithOverflow(options.displayProperty);
         // Эта функция передаётся по ссылке в Opener, так что нужно биндить this, чтобы не потерять его
         this._onResult = this._onResult.bind(this);
         this._menuOpener = new StickyOpener();
@@ -44,14 +45,15 @@ class BreadCrumbsView extends Control<IControlOptions> {
     protected _beforeUpdate(newOptions): void {
         if (newOptions.visibleItems !== this._items) {
             this._items = newOptions.visibleItems;
-            this._addWithOverflow();
+            this._addWithOverflow(newOptions.displayProperty);
         }
     }
 
-    private _addWithOverflow(): void {
+    private _addWithOverflow(displayProperty: string): void {
         if (this._items.length <= CRUMBS_COUNT) {
             this._items.forEach((item) => {
-                if (!item.isDots) {
+                //TODO remove after https://online.sbis.ru/opendoc.html?guid=d42bb751-1845-40b2-9d19-4e19dbf588a5
+                if (!item.isDots && item.get(displayProperty).length > MIN_COUNT_OF_LETTER) {
                     item.withOverflow = true;
                 }
             });
