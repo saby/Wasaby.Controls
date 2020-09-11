@@ -182,7 +182,6 @@
          on:sortingChanged="_sortingChanged()"
          on:mouseenter="_mouseEnter()"
          on:mouseleave="_mouseLeave()"
-         on:mousedown="_mouseDown()"
          on:touchstart="_initItemActions(_options)">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
 
@@ -197,9 +196,7 @@
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
 
             <ws:partial template="fullView" name="listView"
-                        attr:class="
-                        {{_isVisibleItemActions(_showActions, _itemActionsMenuId) ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionsVisibility}}
-                        controls-BaseControl__{{_pointerEventsEnabled ? 'pointer-events' : 'no-pointer-events'}}"/>
+                        attr:class="{{_isVisibleItemActions(_showActions, _itemActionsMenuId) ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionsVisibility}}"/>
 
             <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>
