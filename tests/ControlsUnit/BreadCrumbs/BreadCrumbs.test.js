@@ -88,7 +88,7 @@ define([
          }];
          View._addWithOverflow();
          assert.isTrue(View._items[0].withOverflow);
-         assert.isTrue(View._items[1].withOverflow);
+         assert.isFalse(View._items[1].withOverflow);
 
          //крошка и точки
          View._items = [{
