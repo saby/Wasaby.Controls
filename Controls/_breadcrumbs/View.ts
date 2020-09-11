@@ -53,7 +53,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
         if (this._items.length <= CRUMBS_COUNT) {
             this._items.forEach((item) => {
                 //TODO remove after https://online.sbis.ru/opendoc.html?guid=d42bb751-1845-40b2-9d19-4e19dbf588a5
-                if (!item.isDots && item.get(displayProperty).length > MIN_COUNT_OF_LETTER) {
+                if (!item.isDots && item.item.get(displayProperty).length > MIN_COUNT_OF_LETTER) {
                     item.withOverflow = true;
                 }
             });
