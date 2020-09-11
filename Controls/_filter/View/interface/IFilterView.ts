@@ -34,6 +34,7 @@ import {INavigationOptionValue} from 'Controls/interface';
  * @property {Object} navigation Конфигурация навигации по списку. Настройка навигации источника данных (страницы, смещение, положение) и представления навигации (страницы, бесконечная прокрутка и т. д.).
  * Подробнее читайте {@link Controls/_interface/INavigation#navigation здесь}.
  * @property {String} editorMode Режим отображения редактора. Принимаемые значения смотрите в документации редактора.
+ * @property {Number} minVisibleItems Минимальное количество элементов для отображения фильтра. По умолчанию фильтр с одним элементом будет скрыт.
  */
 
 /*
@@ -612,6 +613,7 @@ export interface IFilterItem {
         source?: ICrudPlus;
         keyProperty?: string;
         displayProperty?: string;
+        minVisibleItems?: number;
         multiSelect?: boolean;
         selectorTemplate?: {
             templateName: string;
