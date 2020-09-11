@@ -3876,7 +3876,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (e.isStopped()) {
             this._savedItemClickArgs = [item, originalEvent, columnIndex];
         } else {
-            this._notify('itemActivate', [item, originalEvent], { bubbling: true });
+            if (!this._editInPlace) {
+                e.stopPropagation();
+                this._notify('itemClick', [item, originalEvent], {bubbling: true});
+            }
+            this._notify('itemActivate', [item, originalEvent], {bubbling: true});
         }
     },
 
