@@ -201,11 +201,9 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         let width = 0;
         let indexLast = 0;
         const arrWidth = this._getItemsWidth(items, options.displayProperty);
-        const arrTextOfItems = this._getItemsText(items, options.displayProperty);
 
         if (options.align === 'right') {
             arrWidth.reverse();
-            arrTextOfItems.reverse();
         }
         while (width < options.containerWidth && indexLast !== items.getCount()) {
             width += arrWidth[indexLast];
@@ -222,25 +220,24 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         }, 0);
 
         if (indexLast === arrWidth.length - 2) {
-            const textOfLastTab = arrTextOfItems[arrTextOfItems.length - 1];
-            const minWidth = this._getMinWidth(textOfLastTab) + MARGIN * 2;
+            const minWidth = this._getMinWidth(this._getTextOfTabByIndex(options, items, 0)) + MARGIN * 2;
             const width = currentWidth - arrWidth[arrWidth.length - 1] + minWidth;
             if (width < options.containerWidth) {
                 indexLast++;
                 return indexLast;
             } else {
-                indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options.containerWidth, arrTextOfItems);
+                indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options, items);
             }
         }
 
         if (indexLast < arrWidth.length - 2) {
-            indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options.containerWidth, arrTextOfItems);
+            indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options, items);
         }
         return indexLast;
     }
 
     private _getLastVisibleItemIndex(lastIndex: number,  arrWidth: number[],
-                                     currentWidth: number, containerWidth: number, arrTextOfItems: string[]): number {
+                                     currentWidth: number, options: ITabsAdaptiveButtonsOptions, items: RecordSet): number {
         let i = arrWidth.length - 1;
         let indexLast = lastIndex;
         let width = currentWidth;
@@ -249,12 +246,13 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             i--;
         }
         indexLast++;
-        let currentMinWidth = this._getMinWidth(arrTextOfItems[indexLast]);
+        const currentTextOfTab = this._getTextOfTabByIndex(options, items, indexLast);
+        let currentMinWidth = this._getMinWidth(currentTextOfTab);
         width = width + this._moreButtonWidth + currentMinWidth + COUNT_OF_MARGIN * MARGIN + PADDING_OF_MORE_BUTTON;
-        while (width > containerWidth) {
+        while (width > options.containerWidth) {
             indexLast--;
             width = width - arrWidth[indexLast] - currentMinWidth;
-            currentMinWidth = this._getMinWidth(arrTextOfItems[indexLast]);
+            currentMinWidth = this._getMinWidth(this._getTextOfTabByIndex(options, items, indexLast));
             width += currentMinWidth;
         }
         return indexLast;
@@ -268,12 +266,9 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         return widthArray;
     }
 
-    private _getItemsText(items: RecordSet<object>, displayProperty: string): string[] {
-        const arrTextOfItems = [];
-        items.forEach((item) => {
-            arrTextOfItems.push(item.get(displayProperty));
-        });
-        return arrTextOfItems;
+    private _getTextOfTabByIndex(options: ITabsAdaptiveButtonsOptions, items: RecordSet, index: number): string {
+        const tab = options.align === 'right' ? items.at(items.getCount() - 1 - index) : items.at(index);
+        return tab.get(options.displayProperty);
     }
 
     private _getMinWidth(text: string): number {
