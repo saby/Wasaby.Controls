@@ -91,11 +91,11 @@ export class Controller {
    }
 
    /**
-    * Обработчк удаления элементов
+    * Возвращает новый ключ относительно удаленного элемента
     * Ставит маркер на следующий элемент, при его отустствии на предыдущий, иначе сбрасывает маркер
     * @param removedItemsIndex Индекс удаленной записи в исходной коллекции (RecordSet)
     */
-   calculateMarkerAfterRemove(removedItemsIndex: number): TKey {
+   calculateMarkedKeyAfterRemove(removedItemsIndex: number): TKey {
       // Если элемент с текущем маркером не удален или маркер не проставлен, то маркер не нужно менять
       const item = this._model.getItemBySourceKey(this._markedKey);
       if (item || this._markedKey == null) {

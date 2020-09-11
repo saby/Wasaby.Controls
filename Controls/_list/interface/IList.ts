@@ -479,6 +479,9 @@ export interface IList extends IItemActionsOptions {
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} key Ключ выбранного элемента.
  * @demo Controls-demo/List/List/BasePG
+ * @remark
+ * Из обработчика события нужно вернуть полученный ключ или новый ключ.
+ * Либо можно вернуть промис с нужным ключом.
  */
 
 /*ENG

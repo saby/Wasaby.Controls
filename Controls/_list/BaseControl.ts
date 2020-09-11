@@ -73,7 +73,7 @@ import {
     SelectionController
 } from 'Controls/multiselection';
 import {getStickyHeadersHeight} from 'Controls/scroll';
-import { MarkerController, Visibility, TVisibility as TMarkerVisibility } from 'Controls/marker';
+import { MarkerController, Visibility as MarkerVisibility, TVisibility as TMarkerVisibility, TKey } from 'Controls/marker';
 import { DndFlatController, DndTreeController } from 'Controls/listDragNDrop';
 
 import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
@@ -87,7 +87,6 @@ import { TItemKey } from 'Controls/display';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {IMoveControllerOptions, MoveController, TMovePosition} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from "../_moverDialog/Template";
-import * as TreeItemsUtil from "./resources/utils/TreeItemsUtil";
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -520,7 +519,7 @@ const _private = {
         return itemsContainer.children[startChildrenIndex + index] as HTMLElement;
     },
 
-    scrollToItem(self, key: TItemKey, toBottom: boolean, force: boolean) {
+    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean) {
         const scrollCallback = (index) => {
             // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
             // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
@@ -1491,7 +1490,7 @@ const _private = {
                     // чтобы при их показе не было лишнего маркера
                     _private.getMarkerController(self).resetMarkedState(removedItems);
 
-                    const newMarkedKey = _private.getMarkerController(self).calculateMarkerAfterRemove(removedItemsIndex);
+                    const newMarkedKey = _private.getMarkerController(self).calculateMarkedKeyAfterRemove(removedItemsIndex);
                     _private.handleMarkerControllerResult(self, newMarkedKey);
                 }
 
@@ -2239,7 +2238,7 @@ const _private = {
     },
 
     setMarkedKey(self: any, key: TItemKey): void {
-        if (self._options.markerVisibility !== Visibility.Hidden) {
+        if (self._options.markerVisibility !== MarkerVisibility.Hidden) {
             if (!_private.hasMarkerController(self)) {
                 _private.createMarkerController(self, self._options.markerVisibility, key);
             }
@@ -2248,7 +2247,7 @@ const _private = {
     },
 
     moveMarkerToNext(self: typeof BaseControl, event: SyntheticEvent): void {
-        if (self._options.markerVisibility !== Visibility.Hidden) {
+        if (self._options.markerVisibility !== MarkerVisibility.Hidden) {
             // activate list when marker is moving. It let us press enter and open current row
             // must check mounted to avoid fails on unit tests
             if (self._mounted) {
@@ -2259,21 +2258,21 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
             const newMarkedKey = _private.getMarkerController(self, self._options).calculateNextMarkedKey();
-            const promise = _private.handleMarkerControllerResult(self, newMarkedKey);
-            if (promise) {
+            const result = _private.handleMarkerControllerResult(self, newMarkedKey);
+            if (result instanceof Promise) {
                 /**
                  * Передавая в force true, видимый элемент подскролливается наверх.
                  * https://online.sbis.ru/opendoc.html?guid=6b6973b2-31cf-4447-acaf-a64d37957bc6
                  */
-                promise.then(() => _private.scrollToItem(self, newMarkedKey));
+                result.then((key) => _private.scrollToItem(self, key));
             } else {
-                _private.scrollToItem(self, newMarkedKey);
+                _private.scrollToItem(self, result);
             }
         }
     },
 
     moveMarkerToPrevious(self: any, event: SyntheticEvent): void {
-        if (self._options.markerVisibility !== Visibility.Hidden) {
+        if (self._options.markerVisibility !== MarkerVisibility.Hidden) {
             // activate list when marker is moving. It let us press enter and open current row
             // must check mounted to avoid fails on unit tests
             if (self._mounted) {
@@ -2284,11 +2283,11 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
             const newMarkedKey = _private.getMarkerController(self, self._options).calculatePrevMarkedKey();
-            const promise = _private.handleMarkerControllerResult(self, newMarkedKey);
-            if (promise) {
-                promise.then(() => _private.scrollToItem(self, newMarkedKey, undefined, true));
+            const result = _private.handleMarkerControllerResult(self, newMarkedKey);
+            if (result instanceof Promise) {
+                result.then((key) => _private.scrollToItem(self, key, true));
             } else {
-                _private.scrollToItem(self, newMarkedKey);
+                _private.scrollToItem(self, result);
             }
         }
     },
@@ -2301,7 +2300,7 @@ const _private = {
 
     setMarkerAfterScrolling(self: typeof BaseControl, scrollTop: number): void {
         // TODO вручную обрабатывать pagedown и делать stop propagation
-        if (self._options.markerVisibility !== Visibility.Hidden && self._children.listView) {
+        if (self._options.markerVisibility !== MarkerVisibility.Hidden && self._children.listView) {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
@@ -2316,19 +2315,25 @@ const _private = {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
-    handleMarkerControllerResult(self: typeof BaseControl, newMarkedKey: string|number): Promise<void>|undefined {
-        let resultPromise: Promise<void>;
+    handleMarkerControllerResult(self: typeof BaseControl, newMarkedKey: string|number): Promise<TKey>|TKey {
+        let eventResult: Promise<TKey>|TKey;
         if (newMarkedKey !== self._markerController.getMarkedKey()) {
-            resultPromise = self._notify('markedKeyChanged', [newMarkedKey]);
+            eventResult = self._notify('markedKeyChanged', [newMarkedKey]);
         }
 
-        if (resultPromise) {
-            resultPromise.then(() => self._markerController.applyMarkedKey(newMarkedKey));
+        let result = eventResult;
+        if (eventResult instanceof Promise) {
+            eventResult
+                .then((key) => key !== undefined ? key : newMarkedKey)
+                .then((key) => self._markerController.applyMarkedKey(key));
+        } else if (eventResult !== undefined) {
+            self._markerController.applyMarkedKey(eventResult);
         } else {
+            result = newMarkedKey;
             self._markerController.applyMarkedKey(newMarkedKey);
         }
 
-        return resultPromise;
+        return result;
     },
 
     // endregion
@@ -2933,6 +2938,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                             newOptions.markerVisibility,
                             newOptions.markedKey
                         );
+                        // TODO marker нужно в в_afterMount занотифаить
                         const markedKey = markerController.calculateMarkedKey();
                         markerController.applyMarkedKey(markedKey);
                     }
@@ -3204,7 +3210,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 });
             }
             if (this._loadingIndicatorState) {
-                _private.updateIndicatorContainerHeight(this, container.getBoundingClientRect(), this._viewportRect);
+                _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
             }
         }
     },
@@ -3390,7 +3396,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const needReload = filterChanged || recreateSource || sortingChanged;
         // TODO marker дополнить проверку
-        if (self._options.markerVisibility !== Visibility.Hidden) {
+        if (self._options.markerVisibility !== MarkerVisibility.Hidden) {
             let markerController;
             if (_private.hasMarkerController(this)) {
                 markerController = _private.getMarkerController(this)
@@ -3726,7 +3732,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.setRendering(false);
 
             let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
-                this._scrollController.completeVirtualScrollIfNeed();
+                                    this._scrollController.completeVirtualScrollIfNeed();
 
             if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
                 const {direction, heightDifference} = this._scrollController.getParamsToRestoreScrollPosition();
