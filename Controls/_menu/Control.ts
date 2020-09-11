@@ -170,7 +170,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (options.source) {
             return this._loadItems(options).then(() => {
                 if (options.markerVisibility !== MarkerVisibility.Hidden) {
-                    this._markerController = this._createMarkerController(options);
+                    this._markerController = this._getMarkerController(options);
                 }
             });
         }
@@ -198,12 +198,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
 
         if (this._markerController) {
-            const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions.emptyKey, newOptions.multiSelect);
-            this._getMarkerController().update({
-                markerVisibility: markedKey && newOptions.markerVisibility,
-                markedKey: markedKey,
-                model: this._listModel
-            });
+            this._getMarkerController().update(this._getMarkerControllerConfig(newOptions, this._getSelectedKeys()));
         }
 
         return result;
@@ -578,17 +573,18 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    private _createMarkerController(options: IMenuControlOptions): MarkerController {
-        return new MarkerController({
-            markerVisibility: options.markerVisibility,
-            markedKey: this._getMarkedKey(options.selectedKeys, options.emptyKey, options.multiSelect),
+    private _getMarkerControllerConfig(options: IMenuControlOptions, selectedKeys?: TSelectedKeys): object {
+        const markedKey = this._getMarkedKey(selectedKeys || options.selectedKeys, options.emptyKey, options.multiSelect);
+        return {
+            markerVisibility: this._getMarkerVisibility(markedKey, options.emptyKey, options.markerVisibility),
+            markedKey,
             model: this._listModel
-        });
+        };
     }
 
     private _getMarkerController(options?: IMenuControlOptions): MarkerController {
         if (!this._markerController) {
-            this._markerController = this._createMarkerController(options || this._options);
+            this._markerController = new MarkerController(this._getMarkerControllerConfig(options || this._options));
         }
         return this._markerController;
     }
@@ -600,6 +596,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             }
         } else {
             return selectedKeys[0];
+        }
+    }
+
+    private _getMarkerVisibility(markedKey: string|number, emptyKey: string|number, markerVisibility): string {
+        if (markedKey === emptyKey) {
+            return MarkerVisibility.Visible;
+        } else {
+            return markerVisibility;
         }
     }
 
