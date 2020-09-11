@@ -49,7 +49,7 @@ var __PopupContent = BaseLayer.extend({
       // автодополнение отобразилось вверх, если оно отобразилось вниз,
       // то при появлении клавиатуры автодополнению может не хватить места тогда оно должно будет отобразиться сверху
       const allowFixPositionOnIpad = this._reverseList ||
-                                     (document.activeElement && document.activeElement.tagName === 'INPUT');
+                                     (document && document.activeElement && document.activeElement.tagName === 'INPUT');
 
       if (this._showContent && !this._positionFixed && (!detection.isMobileIOS || allowFixPositionOnIpad)) {
          this._positionFixed = true;
