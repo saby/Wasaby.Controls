@@ -1030,6 +1030,13 @@ define([
          assert.isNotNull(ctrl._loadingIndicatorState);
          assert.isNull(ctrl._showContinueSearchButtonDirection);
 
+         const items = ctrl._items.clone();
+         ctrl._items.clear();
+         ctrl.triggerVisibilityChangedHandler('down', false);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
+         ctrl._items.assign(items);
+         ctrl._hideIndicatorOnTriggerHideDirection = 'down';
+
          // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
