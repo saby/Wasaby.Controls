@@ -398,7 +398,7 @@ var
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IClickableView
-    * @mixes Controls/_list/interface/IMovableView
+    * @mixes Controls/_list/interface/IMovableList
     * @control
     * @public
     * @category List
@@ -434,7 +434,7 @@ var
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
-    * @mixes Controls/_list/interface/IMovableView
+    * @mixes Controls/_list/interface/IMovableList
     * @control
     * @public
     * @category List

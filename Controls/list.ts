@@ -32,7 +32,7 @@
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IReloadableList Controls/_list/interface/IReloadableList
- * @includes IMovableView Controls/_list/interface/IMovableView
+ * @includes IMovableList Controls/_list/interface/IMovableList
  * @public
  * @author Крайнов Д.О.
  */
@@ -68,7 +68,7 @@
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
- * @includes IMovableView Controls/_list/interface/IMovableView
+ * @includes IMovableList Controls/_list/interface/IMovableList
  * @public
  * @author Крайнов Д.О.
  */
@@ -121,7 +121,7 @@ import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/
 import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
 
 export {MoveController, TMovePosition, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
-export {IMovableView} from 'Controls/_list/interface/IMovableView';
+export {IMovableList} from 'Controls/_list/interface/IMovableList';
 import * as Mover from 'Controls/_list/Mover';
 
 export {IRemover} from 'Controls/_list/interface/IRemover';
