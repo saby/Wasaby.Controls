@@ -8,6 +8,7 @@ export interface IColumnScrollOptions {
     stickyColumnsCount?: number;
     hasMultiSelect: boolean;
     needBottomPadding?: boolean;
+    isEmptyTemplateShown?: boolean;
 
     theme?: string;
     backgroundStyle?: string;
@@ -138,6 +139,12 @@ export class ColumnScroll {
         }
     }
 
+    setIsEmptyTemplateShown(newState: boolean): void {
+        if (this._options.isEmptyTemplateShown !== newState) {
+            this._options.isEmptyTemplateShown = newState;
+        }
+    }
+
     setStickyColumnsCount(newStickyColumnsCount: number, silence: boolean = false): void {
         this._setStickyColumnsCount(newStickyColumnsCount, silence, GridLayoutUtil.isFullGridSupport());
     }
@@ -186,8 +193,9 @@ export class ColumnScroll {
         if (position === 'start' && this._shadowState[position]) {
             shadowStyles = 'left: ' + this._fixedColumnsWidth + 'px;';
         }
-        const emptyTemplate = this._scrollContainer.getElementsByClassName('controls-BaseControl__emptyTemplate')[0] as HTMLElement;
-        if (emptyTemplate) {
+
+        if (this._options.isEmptyTemplateShown) {
+            const emptyTemplate = this._scrollContainer.getElementsByClassName('js-controls-GridView__emptyTemplate')[0] as HTMLDivElement;
             shadowStyles += 'height: ' + emptyTemplate.offsetTop + 'px;';
         }
         return shadowStyles;
@@ -362,7 +370,8 @@ export class ColumnScroll {
             // Cкролируем скроллбар при полной поддержке гридов, т.к. он лежит в трансформнутой области. При
             // table-layout скроллбар лежит вне таблицы
             newHTML +=
-                `.${this._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }`;
+                `.${this._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }` +
+                `.${this._transformSelector} .js-controls-GridView__emptyTemplate { transform: translateX(${position}px); }`;
 
             // Не верьте эмулятору в хроме! Safari (12.1, 13) считает координаты иначе, чем другие браузеры
             // и для него не нужно делать transition.
