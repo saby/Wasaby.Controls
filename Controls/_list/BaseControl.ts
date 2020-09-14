@@ -3906,11 +3906,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
 
-        this._notify('itemClick', [item, originalEvent, columnIndex], {bubbling: true});
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
         }
-
         // При клике по элементу может случиться 2 события: itemClick и itemActivate.
         // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
         // порядок событий будет beforeBeginEdit -> itemClick
@@ -3919,6 +3917,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (e.isStopped()) {
             this._savedItemClickArgs = [item, originalEvent, columnIndex];
         } else {
+            this._notify('itemClick', [item, originalEvent, columnIndex], {bubbling: true});
             this._notify('itemActivate', [item, originalEvent], {bubbling: true});
         }
     },
