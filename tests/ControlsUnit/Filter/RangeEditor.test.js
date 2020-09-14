@@ -46,7 +46,7 @@ define(['Controls/filter', 'Controls/dateRange'],
             it('without option emptyCaption', () => {
                return rangeEditor._beforeMount({
                   resetValue
-               }).then() => {
+               }).then(() => {
                   assert.equal(rangeEditor._emptyCaption, "Апрель'95");
                   assert.isFalse(rangeEditor._reseted);
                });
