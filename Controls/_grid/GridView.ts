@@ -285,7 +285,9 @@ var
                     // перерисовывается с новым набором колонок, но со старыми данными. Пример ошибки:
                     // https://online.sbis.ru/opendoc.html?guid=91de986a-8cb4-4232-b364-5de985a8ed11
                     self._doAfterReload(() => {
-                        self._listModel.setColumns(newOptions.columns);
+                        // Если не идет перезагрузка и мы обновляемся, то не нужно поднимать версию модели.
+                        // Колонки - реактивное состояние таблицы, они вызывают перерисовку.
+                        self._listModel.setColumns(newOptions.columns, !self._reloadInProgress);
                     });
                 } else {
                     self._listModel.setColumns(newOptions.columns);
