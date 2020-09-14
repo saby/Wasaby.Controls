@@ -1,4 +1,4 @@
 import { Controller as MarkerController } from 'Controls/_marker/Controller';
-import {TVisibility, TKey, Visibility} from 'Controls/_marker/interface';
+import {TVisibility, Visibility} from 'Controls/_marker/interface';
 
-export { MarkerController, TVisibility, Visibility, TKey };
+export { MarkerController, TVisibility, Visibility };

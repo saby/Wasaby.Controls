@@ -1,7 +1,8 @@
 import {getDimensions as uDimension} from 'Controls/sizeUtils';
-import { IMarkerModel, IOptions, TKey, TVisibility, Visibility } from './interface';
-import { CollectionItem } from 'Controls/display';
+import { IOptions, TVisibility, Visibility } from './interface';
+import { Collection, CollectionItem } from 'Controls/display';
 import { Model } from 'Types/entity';
+import {CrudEntityKey} from 'Types/source';
 
 /**
  * @class Controls/_marker/Controller
@@ -9,9 +10,9 @@ import { Model } from 'Types/entity';
  * @private
  */
 export class Controller {
-   private _model: IMarkerModel;
+   private _model: Collection<Model, CollectionItem<Model>>;
    private _markerVisibility: TVisibility;
-   private _markedKey: TKey;
+   private _markedKey: CrudEntityKey;
 
    constructor(options: IOptions) {
       this._model = options.model;
@@ -32,7 +33,8 @@ export class Controller {
     * Применить переданный ключ к модели
     * @param key Новый ключ
     */
-   applyMarkedKey(key: TKey): void {
+   applyMarkedKey(key: CrudEntityKey): void {
+      // TODO после перехода на новую модель, удалить setMarkedKey и работать с CollectionItem
       if (this._markedKey !== key) {
          this._model.setMarkedKey(this._markedKey, false);
       }
@@ -42,9 +44,9 @@ export class Controller {
 
    /**
     * Пересчитать ключ маркера исходя из текущего
-    * @return {TKey} Новый ключ
+    * @return {CrudEntityKey} Новый ключ
     */
-   calculateMarkedKey(): TKey {
+   calculateMarkedKey(): CrudEntityKey {
       const existsMarkedItem = !!this._model.getItemBySourceKey(this._markedKey);
 
       let newMarkedKey;
@@ -73,7 +75,7 @@ export class Controller {
    /**
     * Получить текущий ключ маркера
     */
-   getMarkedKey(): TKey {
+   getMarkedKey(): CrudEntityKey {
       return this._markedKey;
    }
 
@@ -81,9 +83,9 @@ export class Controller {
     * Посчитать ключ следующего элемента
     * @return Ключ средующего элемента
     */
-   calculateNextMarkedKey(): TKey {
+   calculateNextMarkedKey(): CrudEntityKey {
       const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
-      const nextMarkedKey = this._calculateNearbyItemKey(index, true);
+      const nextMarkedKey = this._calculateNearbyByDirectionItemKey(index, true);
       return nextMarkedKey === null ? this._markedKey : nextMarkedKey;
    }
 
@@ -91,9 +93,9 @@ export class Controller {
     * Посчитать ключ предыдущего элемента
     * @return Ключ предыдущего элемента
     */
-   calculatePrevMarkedKey(): TKey {
+   calculatePrevMarkedKey(): CrudEntityKey {
       const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
-      const prevMarkedKey = this._calculateNearbyItemKey(index, false);
+      const prevMarkedKey = this._calculateNearbyByDirectionItemKey(index, false);
       return prevMarkedKey === null ? this._markedKey : prevMarkedKey;
    }
 
@@ -102,23 +104,13 @@ export class Controller {
     * Возвращает ключ следующего элемента, при его отустствии предыдущего, иначе null
     * @param removedItemsIndex Индекс удаленной записи в исходной коллекции (RecordSet)
     */
-   calculateMarkedKeyAfterRemove(removedItemsIndex: number): TKey {
+   calculateMarkedKeyAfterRemove(removedItemsIndex: number): CrudEntityKey {
       // Если элемент с текущем маркером не удален или маркер не проставлен, то маркер не нужно менять
       const item = this._model.getItemBySourceKey(this._markedKey);
-      if (item || this._markedKey == null) {
+      if (item || this._markedKey === null || this._markedKey === undefined) {
          return this._markedKey;
       }
-
-      let newMarkedKey;
-      // Считаем ключ следующего элемента
-      newMarkedKey = this._calculateNearbyItemKey(removedItemsIndex, true);
-
-      // Считаем ключ предыдущего элемента, если следующего нет
-      if (newMarkedKey === null) {
-         newMarkedKey = this._calculateNearbyItemKey(removedItemsIndex, false);
-      }
-
-      return newMarkedKey;
+      return this._calculateNearbyItemKey(removedItemsIndex);
    }
 
    /**
@@ -134,20 +126,11 @@ export class Controller {
     * @param items список HTMLElement-ов на странице
     * @param verticalOffset вертикальное смещение скролла
     */
-   calculateFirstVisibleItemKey(items: HTMLElement[], verticalOffset: number): TKey {
+   calculateFirstVisibleItemKey(items: HTMLElement[], verticalOffset: number): CrudEntityKey {
       let firstItemIndex = this._model.getStartIndex();
       firstItemIndex += this._getFirstVisibleItemIndex(items, verticalOffset);
       firstItemIndex = Math.min(firstItemIndex, this._model.getStopIndex());
-
-      let newMarkedKey;
-      const item = this._model.getValidItemForMarker(firstItemIndex);
-      if (item) {
-         newMarkedKey = this._getKey(item);
-      } else {
-         newMarkedKey = null;
-      }
-
-      return newMarkedKey;
+      return this._calculateNearbyItemKey(firstItemIndex);
    }
 
    /**
@@ -160,6 +143,9 @@ export class Controller {
       }
    }
 
+   /**
+    * Занулить все ссылки внутри контроллера
+    */
    destroy(): void {
       this._markedKey = null;
       this._markerVisibility = null;
@@ -170,7 +156,7 @@ export class Controller {
       TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
        https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
    */
-   private _getKey(item: CollectionItem<Model>): TKey {
+   private _getKey(item: CollectionItem<Model>): CrudEntityKey {
       let contents = item.getContents();
       if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
          contents = contents[(contents as any).length - 1];
@@ -184,7 +170,30 @@ export class Controller {
       return contents.getKey();
    }
 
-   private _calculateNearbyItemKey(index: number, next: boolean): TKey {
+   /**
+    * Возвращает ключ ближайшего следующего элемента, если нет следующего, то предыдущего, а иначе null
+    * @param index Индекс элемента, к которому искать ближайший элемент
+    * @private
+    */
+   private _calculateNearbyItemKey(index: number): CrudEntityKey {
+      // Считаем ключ следующего элемента
+      let newMarkedKey = this._calculateNearbyByDirectionItemKey(index, true);
+
+      // Считаем ключ предыдущего элемента, если следующего нет
+      if (newMarkedKey === null) {
+         newMarkedKey = this._calculateNearbyByDirectionItemKey(index, false);
+      }
+
+      return newMarkedKey;
+   }
+
+   /**
+    * Возвращает ключ ближайшего элемента в направлении next
+    * @param index Индекс элемента, к которому искать ближайший элемент
+    * @param next Следующий или предыдущий
+    * @private
+    */
+   private _calculateNearbyByDirectionItemKey(index: number, next: boolean): CrudEntityKey {
       const limit = next ? this._model.getCount() : 0;
       let item;
       do {
@@ -203,7 +212,7 @@ export class Controller {
     * Возвращает ключ первого элемента модели
     * @private
     */
-   private _getFirstItemKey(): TKey {
+   private _getFirstItemKey(): CrudEntityKey {
       if (!this._model.getCount()) {
          return null;
       }

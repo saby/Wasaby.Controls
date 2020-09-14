@@ -584,18 +584,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     getIndexBySourceIndex(sourceIndex: number): number {
         return this.getDisplay().getIndexBySourceIndex(sourceIndex);
     },
-
-    getValidItemForMarker: function(index) {
-        const prevValidItemKey = this.getPreviousItem(index);
-        const nextValidItemKey = this.getNextItem(index);
-        if (nextValidItemKey !== undefined) {
-            return this.getItemBySourceKey(nextValidItemKey);
-        } else if (prevValidItemKey !== undefined) {
-            return this.getItemBySourceKey(prevValidItemKey);
-        } else {
-            return null;
-        }
-    },
     _setEditingItemData: function(itemData) {
         const data = itemData ? itemData : this._editingItemData;
         this._editingItemData = itemData;

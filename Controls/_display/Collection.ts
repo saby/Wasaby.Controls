@@ -2197,20 +2197,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    getValidItemForMarker(index: number): T {
-        const item = this.getItemBySourceIndex(index);
-
-        const nextValidItem = this.getNext(item);
-        const prevValidItem = this.getPrevious(item);
-        if (nextValidItem) {
-            return nextValidItem;
-        } else if (prevValidItem) {
-            return prevValidItem;
-        } else {
-            return null;
-        }
-    }
-
     getTheme(): string {
         return this._$theme;
     }
