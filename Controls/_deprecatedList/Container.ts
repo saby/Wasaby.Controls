@@ -141,7 +141,7 @@ var _private = {
       //but if error was called by query abort (error property 'canceled'),
       //the list should not change
       if (!error?.canceled) {
-         if (isEmpty(error)) {
+         if (isEmpty(error) || !error?.message) {
             self._source = new Memory({
                model: source.getModel(),
                keyProperty: source.getKeyProperty()

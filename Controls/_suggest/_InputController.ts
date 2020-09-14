@@ -146,7 +146,7 @@ var _private = {
          self._forceUpdate();
       }
       if (!error?.canceled) {
-         if (isEmpty(error)) {
+         if (isEmpty(error) || !error?.message) {
             return new Promise(function(resolve) {
                require(['Controls/suggestPopup'], (result) => {
                   self._emptyTemplate = result.EmptyErrorTemplate;
