@@ -260,6 +260,9 @@ define([
                   ],
                   ['p',
                      ['a', { href: 'tel:+78142332211', rel: 'nofollow' }, '+7(814)-233-22-11']
+                  ],
+                  ['p',
+                     ['a', { href: 'viber//pa?chatURI=aliceinsbiswonderland' }, 'viber//pa?chatURI=aliceinsbiswonderland']
                   ]
                ],
                goodHtml = '<div>' +
@@ -271,6 +274,7 @@ define([
                   '<p><a>upper and lower case</a></p>' +
                   '<p><iframe>base64 alert</iframe></p>' +
                   '<p><a href="tel:+78142332211" rel="nofollow">+7(814)-233-22-11</a></p>' +
+                  '<p><a>viber//pa?chatURI=aliceinsbiswonderland</a></p>' +
                   '</div>',
                checkHtml = decorator.Converter.jsonToHtml(json);
             equalsHtml(checkHtml, goodHtml);
