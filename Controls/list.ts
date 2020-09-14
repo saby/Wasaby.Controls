@@ -15,7 +15,7 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
- * @includes IRemover Controls/_list/interface/IRemover
+ * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
@@ -53,7 +53,7 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
- * @includes IRemover Controls/_list/interface/IRemover
+ * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
@@ -124,7 +124,7 @@ export {MoveController, TMovePosition, IMoveControllerOptions}  from 'Controls/_
 export {IMovableList} from 'Controls/_list/interface/IMovableList';
 import * as Mover from 'Controls/_list/Mover';
 
-export {IRemover} from 'Controls/_list/interface/IRemover';
+export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
 
 export {

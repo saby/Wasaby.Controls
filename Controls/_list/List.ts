@@ -12,6 +12,7 @@ import {ISelectionObject} from 'Controls/interface';
 import { CrudEntityKey } from 'Types/source';
 import { TMovePosition } from './Controllers/MoveController';
 import {IMovableList} from './interface/IMovableList';
+import {IRemovableList} from './interface/IRemovableList';
 
 /**
  * Контрол «Плоский список» с пользовательским шаблоном элемента. Может загружать данные из источника данных.
@@ -39,6 +40,7 @@ import {IMovableList} from './interface/IMovableList';
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_list/interface/IReloadableList
  * @mixes Controls/_list/interface/IMovableList
+ * @mixes Controls/_list/interface/IRemovableList
  *
  *
  * @mixes Controls/_list/interface/IVirtualScroll
@@ -75,6 +77,7 @@ import {IMovableList} from './interface/IMovableList';
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_list/interface/IReloadableList
  * @mixes Controls/_list/interface/IMovableList
+ * @mixes Controls/_list/interface/IRemovableList
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  *
@@ -85,7 +88,7 @@ import {IMovableList} from './interface/IMovableList';
  * @demo Controls-demo/List/List/BasePG
  */
 
-export default class List extends Control/** @lends Controls/_list/List.prototype */ implements IMovableList {
+export default class List extends Control/** @lends Controls/_list/List.prototype */ implements IMovableList, IRemovableList {
     protected _template: TemplateFunction = ListControlTpl;
     protected _viewName = viewName;
     protected _viewTemplate: unknown = ListControl;

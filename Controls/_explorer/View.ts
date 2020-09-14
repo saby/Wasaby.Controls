@@ -399,6 +399,7 @@ var
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IClickableView
     * @mixes Controls/_list/interface/IMovableList
+    * @mixes Controls/_list/interface/IRemovableList
     * @control
     * @public
     * @category List
@@ -435,6 +436,7 @@ var
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IMovableList
+    * @mixes Controls/_list/interface/IRemovableList
     * @control
     * @public
     * @category List
