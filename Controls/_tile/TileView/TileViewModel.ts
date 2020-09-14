@@ -157,7 +157,7 @@ var TileViewModel = ListViewModel.extend({
             imageWidthProperty: this._options.imageWidthProperty,
             imageFit: this._options.imageFit,
             imageUrlResolver: this._options.imageUrlResolver,
-            itemClasses: this.getItemPaddingClasses('item')
+            itemClasses: this.getItemPaddingClasses()
         };
         if (this._options.tileSize) {
             resultData.getTileSizes = this.getTileSizes;
@@ -246,8 +246,15 @@ var TileViewModel = ListViewModel.extend({
         TileViewModel.superclass.setDragEntity.apply(this, arguments);
     },
 
-    getItemPaddingClasses(type?: string = 'container'): string {
-        const classPrefix = type === 'container' ? 'itemPaddingContainer' : 'item';
+    getItemPaddingClasses(): string {
+        return this.getPaddingClasses('item');
+    },
+
+    getItemsPaddingContainerClasses(): string {
+        return this.getPaddingClasses('itemPaddingContainer');
+    },
+
+    getPaddingClasses(classPrefix: string = 'item'): string {
         const leftSpacing = this._options.itemPadding?.left || 'default';
         const rightSpacing = this._options.itemPadding?.right || 'default';
         const bottomSpacing = this._options.itemPadding?.bottom || 'default';
