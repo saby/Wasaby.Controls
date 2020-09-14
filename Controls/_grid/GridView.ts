@@ -178,7 +178,8 @@ var
                 stickyColumnsCount: options.stickyColumnsCount,
                 hasMultiSelect: options.multiSelectVisibility !== 'hidden',
                 theme: options.theme,
-                backgroundStyle: options.backgroundStyle
+                backgroundStyle: options.backgroundStyle,
+                isEmptyTemplateShown: options.needShowEmptyTemplate
             });
             const uniqueSelector = self._columnScrollController.getTransformSelector();
             self._columnScrollContainerClasses = `${COLUMN_SCROLL_JS_SELECTORS.CONTAINER} ${uniqueSelector}`;
@@ -390,6 +391,9 @@ var
             }
             if (this._options.multiSelectVisibility !== newCfg.multiSelectVisibility) {
                 this._columnScrollController?.setMultiSelectVisibility(newCfg.multiSelectVisibility, true);
+            }
+            if (this._options.needShowEmptyTemplate !== newCfg.needShowEmptyTemplate) {
+                this._columnScrollController?.setIsEmptyTemplateShown(newCfg.needShowEmptyTemplate);
             }
 
             // В зависимости от columnScroll вычисляются значения колонок для stickyHeader в методе setHeader.
@@ -610,7 +614,7 @@ var
         _isColumnScrollVisible(): boolean {
             if (this._columnScrollController && this._columnScrollController.isVisible()) {
                 const items = this._options.listModel.getItems();
-                return !!items && (!!items.getCount() || !!this._options.editingItemData);
+                return this._options.headerInEmptyListVisible || (!!items && (!!items.getCount() || !!this._options.editingItemData));
             } else {
                 return false;
             }
