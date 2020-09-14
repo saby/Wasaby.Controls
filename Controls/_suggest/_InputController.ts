@@ -146,17 +146,7 @@ var _private = {
          self._forceUpdate();
       }
       if (!error?.canceled) {
-         if (isEmpty(error) || !error?.message) {
-            return new Promise(function(resolve) {
-               require(['Controls/suggestPopup'], (result) => {
-                  self._emptyTemplate = result.EmptyErrorTemplate;
-                  _private.hideIndicator(self);
-                  resolve();
-               });
-            });
-         } else {
-            _private.hideIndicator(self);
-         }
+         _private.hideIndicator(self);
       }
    },
    shouldSearch(self, value): boolean {

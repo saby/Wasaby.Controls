@@ -319,7 +319,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.notEqual(options.searchDelay, suggest._searchDelay);
       });
 
-      it('Suggest::_private.searchErrback', async() => {
+      it('Suggest::_private.searchErrback', function() {
          var self = getComponentObject();
          var isIndicatorVisible = true;
          self._forceUpdate = function() {};
@@ -339,7 +339,7 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          assert.isFalse(self._loading);
 
          self._loading = true;
-         await suggestMod._InputController._private.searchErrback(self, {canceled: false})
+         suggestMod._InputController._private.searchErrback(self, {canceled: false})
          assert.isFalse(isIndicatorVisible);
          assert.isFalse(self._loading);
       });
