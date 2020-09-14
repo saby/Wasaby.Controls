@@ -370,12 +370,23 @@ export class ColumnScroll {
             // Cкролируем скроллбар при полной поддержке гридов, т.к. он лежит в трансформнутой области. При
             // table-layout скроллбар лежит вне таблицы
             newHTML +=
-                `.${this._transformSelector} .js-controls-GridView__emptyTemplate { transform: translateX(${position}px); }` +
                 `.${this._transformSelector} .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX(${position}px); }` +
-                `.${this._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
+                `.${this._transformSelector} .js-controls-GridView__emptyTemplate { transform: translateX(${position}px); }`;
+
+            // Не верьте эмулятору в хроме! Safari (12.1, 13) считает координаты иначе, чем другие браузеры
+            // и для него не нужно делать transition.
+            if (!detection.safari) {
+                newHTML +=
+                    `.${this._transformSelector} .controls-Grid__itemAction { transform: translateX(${position}px); }`;
+            }
         } else {
             const maxTranslate = this._contentSize - this._containerSize;
             newHTML += ` .${this._transformSelector} .controls-Grid-table-layout__itemActions__container { transform: translateX(${position - maxTranslate}px); }`;
+
+            // IE, Edge, и Yandex в WinXP нужно добавлять z-index чтобы они показались поверх других translated строк
+            if (detection.isIE || detection.isWinXP) {
+                newHTML += ` .${this._transformSelector} .controls-Grid-table-layout__itemActions__container { z-index: 1 }`;
+            }
         }
 
         if (this._stylesContainer.innerHTML !== newHTML) {

@@ -6,6 +6,25 @@ define([
    entity
 ) {
    'use strict';
+
+   const testSelectedItemsCount = 5;
+   const selectionCountConfig = {
+      rpc: {
+         call: () => {
+            return Promise.resolve({
+               getRow: () => {
+                  return {
+                     get: () => testSelectedItemsCount
+                  };
+               }
+            });
+         },
+         getAdapter: () => {
+            return new entity.adapter.Json();
+         }
+      }
+   };
+
    describe('Controls.OperationsPanel.__MultiSelector', function() {
       var eventQueue;
       function mockNotify(returnValue) {
@@ -232,6 +251,15 @@ define([
          isMenuUpdated = false;
          instance._beforeUpdate(instance._options);
          assert.isFalse(isMenuUpdated);
+
+         newOptions.isAllSelected = true;
+         newOptions.selectedKeys = [1, 2];
+         newOptions.selectedKeysCount = 0;
+         newOptions.selectedCountConfig = selectionCountConfig;
+         instance._beforeUpdate(instance._options);
+         assert.equal(instance._menuCaption, 'Отмечено: 2');
+         instance._beforeUpdate(instance._options);
+         assert.equal(instance._menuCaption, 'Отмечено: 2');
       });
       it('_afterUpdate', function() {
          var instance = new MultiSelector.default();
@@ -247,26 +275,9 @@ define([
       });
 
       describe('_getCount', () => {
-         const testSelectedItemsCount = 5;
          const selection = {
             selected: ['test'],
             excluded: []
-         };
-         const selectionCountConfig = {
-            rpc: {
-               call: () => {
-                  return Promise.resolve({
-                     getRow: () => {
-                        return {
-                           get: () => testSelectedItemsCount
-                        };
-                     }
-                  });
-               },
-               getAdapter: () => {
-                  return new entity.adapter.Json();
-               }
-            }
          };
          let instance;
 

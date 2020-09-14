@@ -1030,6 +1030,13 @@ define([
          assert.isNotNull(ctrl._loadingIndicatorState);
          assert.isNull(ctrl._showContinueSearchButtonDirection);
 
+         const items = ctrl._items.clone();
+         ctrl._items.clear();
+         ctrl.triggerVisibilityChangedHandler('down', false);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
+         ctrl._items.assign(items);
+         ctrl._hideIndicatorOnTriggerHideDirection = 'down';
+
          // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
@@ -2549,8 +2556,8 @@ define([
       });
       it('calcViewSize', () => {
          let calcViewSize = lists.BaseControl._private.calcViewSize;
-         assert.equal(calcViewSize(140, true), 100);
-         assert.equal(calcViewSize(140, false), 140);
+         assert.equal(calcViewSize(140, true, 40), 100);
+         assert.equal(calcViewSize(140, false, 40), 140);
       });
       it('needShowPagingByScrollSize', function() {
          var cfg = {
@@ -6079,6 +6086,11 @@ define([
 
          instance._createSelectionController();
          let cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue' };
+         instance._beforeUpdate(cfgClone);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+
+         cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'], selectionViewMode: 'selected'};
          instance._beforeUpdate(cfgClone);
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);

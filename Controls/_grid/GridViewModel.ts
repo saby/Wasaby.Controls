@@ -381,6 +381,9 @@ var
                 classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
             }
 
+            if (!GridLayoutUtil.isFullGridSupport() && !(current.columns.length === (current.hasMultiSelect ? 2 : 1)) && self._options.fixIEAutoHeight) {
+                classLists.base += ' controls-Grid__row-cell__autoHeight';
+            }
             return classLists;
         },
 
@@ -1786,7 +1789,7 @@ var
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
                 if (current.item.get) {
-                    currentColumn.column.needSearchHighlight = current.searchValue ?
+                    currentColumn.needSearchHighlight = current.searchValue ?
                         !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue) : false;
                     currentColumn.searchValue = current.searchValue;
                 }
@@ -1876,7 +1879,7 @@ var
 
         setItems(items, cfg): void {
             this._model.setItems(items, cfg);
-            this._setHeader(this._options.header);
+            this._setHeader(cfg.header);
         },
 
         setItemTemplateProperty: function(itemTemplateProperty) {

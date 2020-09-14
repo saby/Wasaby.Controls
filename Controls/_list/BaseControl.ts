@@ -961,7 +961,11 @@ const _private = {
     scrollToEdge(self, direction) {
         _private.setMarkerAfterScroll(self);
         if (_private.hasMoreData(self, self._sourceController, direction)) {
-            self._sourceController.setEdgeState(direction);
+            let pagingMode = '';
+            if (self._options.navigation && self._options.navigation.viewConfig) {
+                pagingMode = self._options.navigation.viewConfig.pagingMode;
+            }
+            self._sourceController.setEdgeState(direction, pagingMode);
 
             // Если пейджинг уже показан, не нужно сбрасывать его при прыжке
             // к началу или концу, от этого прыжка его состояние не может
@@ -1013,18 +1017,18 @@ const _private = {
         } else {
             let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
             if (self._pagingVisible) {
-                bottomScroll -= PAGING_PADDING;
+                bottomScroll -= self._pagingPadding || PAGING_PADDING;
             }
             return bottomScroll <= triggerOffset;
         }
     },
-    calcViewSize(viewSize: number, pagingVisible: boolean): number {
-        return viewSize - (pagingVisible ? PAGING_PADDING : 0);
+    calcViewSize(viewSize: number, pagingVisible: boolean, pagingPadding: number): number {
+        return viewSize - (pagingVisible ? pagingPadding : 0);
     },
     needShowPagingByScrollSize(self, viewSize: number, viewportSize: number): boolean {
         let result = self._pagingVisible;
 
-        const scrollHeight = Math.max(_private.calcViewSize(viewSize, result),
+        const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
                                       self._scrollController?.calculateVirtualScrollHeight() || 0);
         const proportion = (scrollHeight / viewportSize);
 
@@ -2763,6 +2767,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _pagingCfg: null,
     _pagingVisible: false,
     _actualPagingVisible: false,
+    _pagingPadding: null,
 
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
@@ -3070,7 +3075,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._updateItemsHeights();
         }
         if (this._loadingIndicatorState) {
-            _private.updateIndicatorContainerHeight(this, _private.getViewRect(self), this._viewportRect);
+            _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
         }
     },
 
@@ -3099,7 +3104,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
             _private.hideIndicator(this);
 
-            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
+            const viewModel = this.getViewModel();
+            const hasItems = viewModel && viewModel.getCount();
+            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress && hasItems) {
                 _private.getPortionedSearch(this).stopSearch();
             }
         }
@@ -3337,7 +3344,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._selectionController) {
-            if (filterChanged && _private.getSelectionController(this).isAllSelected(false)) {
+            const allowClearSelectionBySelectionViewMode =
+                this._options.selectionViewMode === newOptions.selectionViewMode ||
+                newOptions.selectionViewMode !== 'selected';
+
+            if (filterChanged &&
+                _private.getSelectionController(this).isAllSelected(false) &&
+                allowClearSelectionBySelectionViewMode) {
                 const result = _private.getSelectionController(this).clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
@@ -3587,6 +3600,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _beforePaint(): void {
+        if (this._pagingVisible) {
+            this._updatePagingPadding();
+        }
         // todo KINGO.
         // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
         // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
@@ -4163,6 +4179,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const newSorting = _private.getSortingOnChange(this._options.sorting, propName);
         event.stopPropagation();
         this._notify('sortingChanged', [newSorting]);
+    },
+
+    _updatePagingPadding(): void {
+        // Сюда может попасть из beforePaint, когда pagingVisible уже поменялся на true (стрельнуло событие от скролла),
+        // но вот сам pagingPaddingContainer отрисуется лишь в следующем цикле синхронизации
+        // https://online.sbis.ru/opendoc.html?guid=b6939810-b640-41eb-8139-b523a8df16df
+        // Поэтому дополнительно проверяем на this._children.pagingPaddingContainer
+        if (!this._pagingPadding && this._children.pagingPaddingContainer) {
+            this._pagingPadding = this._children.pagingPaddingContainer.offsetHeight;
+        }
     },
 
     _mouseEnter(event): void {
