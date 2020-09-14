@@ -3906,11 +3906,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
 
-        let eventResult = true;
+        this._notify('itemClick', [item, originalEvent, columnIndex], {bubbling: true});
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
-        } else {
-            this._notify('itemClick', [item, originalEvent], {bubbling: true});
         }
 
         // При клике по элементу может случиться 2 события: itemClick и itemActivate.
