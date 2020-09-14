@@ -199,7 +199,7 @@ var ListView = BaseControl.extend(
             // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
             if (!e.preventItemEvent) {
                 var item = dispItem.getContents();
-                this._notify('itemClick', [item, e], {bubbling: true});
+                this._notify('itemClick', [item, e]);
             }
         },
 

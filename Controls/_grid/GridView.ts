@@ -571,7 +571,7 @@ var
             // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
             if (!e.preventItemEvent) {
                 const item = dispItem.getContents();
-                this._notify('itemClick', [item, e, this._getCellIndexByEventTarget(e)], {bubbling: true});
+                this._notify('itemClick', [item, e, this._getCellIndexByEventTarget(e)]);
             }
         },
 
