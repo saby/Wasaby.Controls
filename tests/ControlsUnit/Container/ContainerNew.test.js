@@ -237,6 +237,7 @@ define(
                   scrollHeight: 200,
                   clientHeight: 100
                };
+               let result;
                scroll._state = Object.assign({}, oldState);
 
                const sandbox = sinon.createSandbox();
@@ -246,6 +247,8 @@ define(
                   updateScrollState: sinon.stub().returns(true)
                };
 
+               scroll._shadows.updateScrollState = state => result = state;
+
                sinon.stub(scroll, '_updateScrollContainerPaigingSccClass');
 
                scroll._updateState({
@@ -254,7 +257,7 @@ define(
                   clientHeight: 100
                });
 
-               assert.notStrictEqual(scroll._state, oldState);
+               assert.notStrictEqual(result, oldState);
 
                let isUpdated = scroll._updateState({
                   scrollTop: 100,
@@ -263,6 +266,7 @@ define(
                });
 
                assert.isFalse(isUpdated);
+               sandbox.restore();
             });
          });
       });
