@@ -2304,7 +2304,6 @@ const _private = {
 
     handleNewMarkedKey(self: typeof BaseControl, newMarkedKey: string|number): Promise<CrudEntityKey>|CrudEntityKey {
         const markerController = _private.getMarkerController(self);
-
         const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('markedKeyChanged', [newMarkedKey]);
 
         let result = eventResult;
@@ -3407,12 +3406,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const visibilityChangedOnVisible = this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible';
                     if (visibilityChangedOnVisible || this._modelRecreated) {
                         // Когда модель пересоздается, то возможен такой вариант:
-                        // Маркер указывает на папку, TreeModel => SearchViewModel, после пересоздания markedKey
+                        // Маркер указывает на папку, TreeModel -> SearchViewModel, после пересоздания markedKey
                         // будет указывать на хлебную крошку, но маркер не должен ставиться на нее,
                         // поэтому нужно пересчитать markedKey
                         const newMarkedKey = markerController.calculateMarkedKey();
                         if (newMarkedKey !== markerController.getMarkedKey()) {
                             _private.handleNewMarkedKey(self, newMarkedKey);
+                        } else {
+                            // Если просто пересоздалась модель, например List -> Tile,
+                            // то нужно применить текущий маркер заново
+                            markerController.applyMarkedKey(newMarkedKey);
                         }
                     }
                 }

@@ -130,7 +130,8 @@ export class Controller {
       let firstItemIndex = this._model.getStartIndex();
       firstItemIndex += this._getFirstVisibleItemIndex(items, verticalOffset);
       firstItemIndex = Math.min(firstItemIndex, this._model.getStopIndex());
-      return this._calculateNearbyItemKey(firstItemIndex);
+      const item = this._model.at(firstItemIndex);
+      return item && item.MarkableItem ? item.getContents().getKey() : this._calculateNearbyItemKey(firstItemIndex);
    }
 
    /**
