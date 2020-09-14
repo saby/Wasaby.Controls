@@ -3031,7 +3031,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
             _private.hideIndicator(this);
 
-            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
+            const viewModel = this.getViewModel();
+            const hasItems = viewModel && viewModel.getCount();
+            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress && hasItems) {
                 _private.getPortionedSearch(this).stopSearch();
             }
         }
@@ -4366,7 +4368,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _updatePagingPadding(): void {
-        if (!this._pagingPadding) {
+        // Сюда может попасть из beforePaint, когда pagingVisible уже поменялся на true (стрельнуло событие от скролла),
+        // но вот сам pagingPaddingContainer отрисуется лишь в следующем цикле синхронизации
+        // https://online.sbis.ru/opendoc.html?guid=b6939810-b640-41eb-8139-b523a8df16df
+        // Поэтому дополнительно проверяем на this._children.pagingPaddingContainer
+        if (!this._pagingPadding && this._children.pagingPaddingContainer) {
             this._pagingPadding = this._children.pagingPaddingContainer.offsetHeight;
         }
     },
