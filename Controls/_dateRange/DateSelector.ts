@@ -25,8 +25,7 @@ import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
  *
  */
 
-/**
- * ENG
+/*ENG
  * Control that allows user to select date value in calendar.
  *
  * @class Controls/_dateRange/DateSelector
