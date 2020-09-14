@@ -59,7 +59,7 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
 
         if (addItemIndex === 0) {
             return [this._options.item].concat(this.source.items);
-        } else if (addItemIndex === this.count) {
+        } else if (addItemIndex === this.count - 1) {
             return this.source.items.concat([this._options.item]);
         } else {
             return this.source.items.slice(0, addItemIndex)
@@ -86,6 +86,7 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
     }
 
     reset(): void {
+        this._addingItemIndex = undefined;
         return this.source.reset();
     }
 
@@ -122,44 +123,58 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
 
     private _getAddingItemIndex(): number {
         if (this._addingItemIndex === undefined) {
-            this._addingItemIndex = this._calculateIndex();
+            this._addingItemIndex = Add._calculateIndex<S, T>(this._options, this.source);
         }
         return this._addingItemIndex;
     }
 
-    private _calculateIndex(): number {
-        let index: number = -1;
-        const getInRange = (start, end) => this._options.addPosition === 'top' ? start : end;
-
-        // 3 варианта куда может добавляться элемент в порядке значимости:
-        // - в родителя
-        //      добавляем либо как первого ребенка, либо как последнего.
-        // - в группу
-        //      как первый элемент группы или как последний
-        // - в корень
-        //      в начало проеции либо в конец
-
-        if (this._options.item instanceof TreeItem) {
-            index = getInRange(0, this.source.count);
-        } else if (this._options.groupMethod) {
-            const groupId = this._options.groupMethod(this._options.item.contents);
-            if (this._options.addPosition === 'top') {
-                const groupIndex = this.source.items.indexOf(this.source.items.filter((item) => item.contents === groupId)[0]);
-                index = groupIndex === -1 ? 0 : groupIndex + 1;
-            } else {
-                this.source.items.forEach((item, cIndex) => {
-                    const isGroup = item instanceof GroupItem;
-                    const isBreadcrumbs = item instanceof BreadcrumbsItem;
-                    if (!isGroup && !isBreadcrumbs && this._options.groupMethod(item.contents) === groupId) {
-                        index = cIndex + 1;
-                    }
-                });
-                index = index === -1 ? this.source.count : index;
-            }
+    private static _calculateIndex<S extends Model, T extends CollectionItem<S>>(
+        options: IOptions<S, T>,
+        source: IItemsStrategy<S, T>
+    ): number {
+        if (options.item instanceof TreeItem) {
+             return Add._calculateTreeItemIndex(options.item, options, source);
+        } else if (options.groupMethod) {
+            return Add._calculateGroupedItemIndex(options.item, options, source);
         } else {
-            index = getInRange(0, this.source.count);
+            return options.addPosition === 'top' ? 0 : source.count;
         }
-        return index;
+    }
+
+    private static _calculateTreeItemIndex<S extends Model, T extends CollectionItem<S>>(
+        item: TreeItem<S>,
+        options: IOptions<S, T>,
+        source: IItemsStrategy<S, T>
+    ): number {
+        if (item.isRoot()) {
+            return options.addPosition === 'top' ? 0 : source.count;
+        }
+        return 0;
+    }
+
+    private static _calculateGroupedItemIndex<S extends Model, T extends CollectionItem<S>>(
+        item: T,
+        options: IOptions<S, T>,
+        source: IItemsStrategy<S, T>
+    ): number {
+        const groupId = options.groupMethod(item.contents);
+        if (options.addPosition === 'top') {
+            let index = -1;
+            source.items.filter((sourceItem, sourceIndex) => {
+                if (index === -1 && options.groupMethod(sourceItem.contents) === groupId) {
+                    index = sourceIndex;
+                }
+            });
+            return index === -1 ? 0 : index;
+        } else {
+            let index = source.count;
+            source.items.filter((sourceItem, sourceIndex) => {
+                if (options.groupMethod(sourceItem.contents) === groupId) {
+                    index = sourceIndex + 1;
+                }
+            });
+            return index;
+        }
     }
 
     // region SerializableMixin

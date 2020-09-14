@@ -8,6 +8,8 @@ import ItemsStrategyComposer from './itemsStrategy/Composer';
 import DirectItemsStrategy from './itemsStrategy/Direct';
 import UserItemsStrategy from './itemsStrategy/User';
 import GroupItemsStrategy from './itemsStrategy/Group';
+import DragStrategy from './itemsStrategy/Drag';
+import AddStrategy from './itemsStrategy/Add';
 import {
     DestroyableMixin,
     ObservableMixin,
@@ -31,8 +33,6 @@ import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import { IDragPosition } from 'Controls/listDragNDrop';
-import DragStrategy from './itemsStrategy/Drag';
-import AddStrategy from './itemsStrategy/Add';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
 
@@ -2433,11 +2433,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setAddingItem(item: T): void {
-        this.appendStrategy(AddStrategy, {
+        this.prependStrategy(AddStrategy, {
             item,
             addPosition: item.addPosition,
             groupMethod: this.getGroup()
-        });
+        }, GroupItemsStrategy);
     }
 
     resetAddingItem(): void {
@@ -2464,11 +2464,36 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     /**
-     * Получает еткущую анимацию для свайпа.
+     * Получает текущую анимацию для свайпа.
      * Может быть, стоит объединить с _swipeConfig
      */
     getSwipeAnimation(): ANIMATION_STATE {
         return this._swipeAnimation;
+    }
+
+    prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
+        const strategyOptions = { ...options, display: this };
+        let index = 0;
+
+        if (typeof before === 'function') {
+            this._userStrategies.forEach((strObject, strIndex) => {
+                if (strObject.strategy === before) {
+                    index = strIndex;
+                }
+            });
+        }
+
+        this._userStrategies.splice(index, 0, {
+            strategy,
+            options: strategyOptions
+        });
+
+        if (this._composer) {
+            this._composer.prepend(strategy, strategyOptions, before);
+            this._reBuild(true);
+        }
+
+        this.nextVersion();
     }
 
     appendStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object): void {

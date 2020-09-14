@@ -58,12 +58,11 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import {ISwipeEvent} from 'Controls/listRender';
 
 import {
-    IEditingOptions,
+    CONSTANTS,
     EditInPlace,
-
     EditInPlaceController as NewEditInPlaceController,
-    InputHelper as EditInPlaceInputHelper,
-    CONSTANTS
+    IEditingOptions,
+    InputHelper as EditInPlaceInputHelper
 } from '../editInPlace';
 
 import {IEditableListOption} from './interface/IEditableList';
@@ -3911,9 +3910,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const eventResult = this._notify('beforeEndEdit', [item, willSave, isAdd]);
 
                     // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
-                    if (willSave && isAdd && (!eventResult || (!(eventResult instanceof Promise) && eventResult !== CONSTANTS.CANCEL))) {
+                    const shouldUseDefaultSaving = willSave && isAdd && (
+                        !eventResult || (
+                            eventResult !== CONSTANTS.CANCEL && !(eventResult instanceof Promise)
+                        )
+                    );
+                    if (shouldUseDefaultSaving) {
                         return this._saveEditingInSource(item);
                     }
+                    return eventResult;
                 });
             };
 
@@ -4085,13 +4090,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _saveEditingInSource(item: Model) {
+    _saveEditingInSource(item: Model): Promise<void> {
         return this.getSourceController().update(item).then(() => {
-            if (this._getEditingConfig().addPosition === 'top') {
-                this._items.prepend([item]);
-            } else {
-                this._items.append([item]);
-            }
+            this._items.append([item]);
         }).catch((error: Error) => {
             return this._processEditInPlaceError(error);
         });
