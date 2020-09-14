@@ -75,6 +75,7 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection', 'Types/enti
             imageProperty: 'image',
             defaultItemWidth: 250,
             defaultShadowVisibility: 'visible',
+            itemClasses: 'controls-TileView__item_spacingLeft_default_theme-default controls-TileView__item_spacingRight_default_theme-default controls-TileView__item_spacingTop_default_theme-default controls-TileView__item_spacingBottom_default_theme-default',
             itemCompressionCoefficient: 0.7,
             displayProperty: 'title',
             imageWidthProperty: 'imageWidth',
@@ -112,9 +113,9 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection', 'Types/enti
       });
 
       it('getItemPaddingClasses', () => {
-         assert.equal(tileViewModel.getItemPaddingClasses(), 'controls-TileView__itemPaddingContainer_spacingLeft_default_theme-default controls-TileView__itemPaddingContainer_spacingRight_default_theme-default');
+         assert.equal(tileViewModel.getItemPaddingClasses(), 'controls-TileView__itemPaddingContainer_spacingLeft_default_theme-default controls-TileView__itemPaddingContainer_spacingRight_default_theme-default controls-TileView__itemPaddingContainer_spacingTop_default_theme-default controls-TileView__itemPaddingContainer_spacingBottom_default_theme-default');
          tileViewModel.setItemPadding({left: 's', right: 'null'});
-         assert.equal(tileViewModel.getItemPaddingClasses(), 'controls-TileView__itemPaddingContainer_spacingLeft_s_theme-default controls-TileView__itemPaddingContainer_spacingRight_null_theme-default');
+         assert.equal(tileViewModel.getItemPaddingClasses(), 'controls-TileView__itemPaddingContainer_spacingLeft_s_theme-default controls-TileView__itemPaddingContainer_spacingRight_null_theme-default controls-TileView__itemPaddingContainer_spacingTop_default_theme-default controls-TileView__itemPaddingContainer_spacingBottom_default_theme-default');
       });
 
       describe('getItemWidth', () => {
