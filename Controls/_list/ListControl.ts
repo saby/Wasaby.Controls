@@ -7,7 +7,7 @@ import {isEqual} from 'Types/object';
 import {ISelectionObject} from "../_interface/ISelectionType";
 import {CrudEntityKey} from "Types/source";
 import {TMovePosition} from "./Controllers/MoveController";
-import {IMovableView} from './interface/IMovableView';
+import {IMovableList} from './interface/IMovableList';
 
 /**
  * Plain list control with custom item template. Can load data from data source.
@@ -25,14 +25,14 @@ import {IMovableView} from './interface/IMovableView';
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/interface/IEditableList
- * @mixes Controls/_list/interface/IMovableView
+ * @mixes Controls/_list/interface/IMovableList
  * @control
  * @private
  * @author Авраменко А.С.
  * @category List
  */
 
-export default class ListControl extends Control/** @lends Controls/_list/ListControl.prototype */ implements IMovableView {
+export default class ListControl extends Control/** @lends Controls/_list/ListControl.prototype */ implements IMovableList {
     protected _template: TemplateFunction = ListControlTpl;
     protected _children: { baseControl: Control };
     _beforeUpdate(cfg) {
