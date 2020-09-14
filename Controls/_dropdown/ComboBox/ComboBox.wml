@@ -2,7 +2,7 @@
             {{_isOpened ? 'controls-Popup__isolatedFocusingContext'}}
             controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
             controls-inlineheight-{{_inlineHeight}}_theme-{{_options.theme}}
-            controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}
+            controls-Combobox-fontsize-{{_fontSize}}_theme-{{_options.theme}}
             controls-ComboBox_textAlign-{{_options.textAlign}}"
      title="{{_options.tooltip || _value}}"
      on:keydown="_handleKeyDown()"
