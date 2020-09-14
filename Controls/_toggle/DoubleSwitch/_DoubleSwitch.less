@@ -19,6 +19,11 @@
    font-size: @font-size_switcher;
 }
 
+.controls-DoubleSwitch__wrapper {
+   display: inline-flex;
+   width: 100%;
+}
+
 .controls-DoubleSwitch__toggle_enabled {
    cursor: pointer;
 }
@@ -50,6 +55,8 @@
 .controls-DoubleSwitch__textBlock {
    .inline-flexbox();
    .flex-direction(column);
+   flex: 1;
+   overflow: hidden;
 }
 
 .controls-DoubleSwitch__textBlock_theme-@{themeName} {
@@ -102,6 +109,7 @@
 
 .controls-DoubleSwitch__text_vertical {
    display: block;
+   .text-overflow();
 }
 
 .controls-DoubleSwitch__text_enabled_unselected_theme-@{themeName} {
