@@ -3101,7 +3101,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
             _private.hideIndicator(this);
 
-            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
+            const viewModel = this.getViewModel();
+            const hasItems = viewModel && viewModel.getCount();
+            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress && hasItems) {
                 _private.getPortionedSearch(this).stopSearch();
             }
         }
