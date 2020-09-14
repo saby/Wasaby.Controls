@@ -1,18 +1,21 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import {waitForFontLoad} from './resources/FontLoadUtil';
-import {getWidth} from 'Controls/sizeUtils';
 import {ItemsUtil} from 'Controls/list';
 import BreadCrumbsUtil from './Utils';
 import {
     IFontColorStyle,
-    IFontSize,
+    IFontSize
 } from 'Controls/interface';
 // @ts-ignore
 import * as template from 'wml!Controls/_breadcrumbs/MultilinePath/MultilinePath';
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 import {Record, Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {UnregisterUtil, RegisterUtil} from 'Controls/event';
+import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
+import {Logger} from 'UI/Utils';
+
+const ARROW_WIDTH = 16;
+const BREAD_CRUMB_MIN_WIDTH = ARROW_WIDTH + 28;
+const PADDING_RIGHT = 2;
 
 /*
  * Хлебные крошки в две строки
@@ -26,58 +29,61 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
  * @demo Controls-demo/BreadCrumbs/Multiline/Index
  */
 
-class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
+export interface IMultilinePathOptions extends IBreadCrumbsOptions {
+    containerWidth: number;
+}
+
+class MultilinePath extends Control<IMultilinePathOptions> implements IFontSize {
     readonly '[Controls/_interface/IFontSize]': boolean;
     protected _template: TemplateFunction = template;
     protected _visibleItemsFirst: Record[] = [];
     protected _visibleItemsSecond: Record[] = [];
     protected _width: number = 0;
-    protected ARROW_WIDTH: number = 0;
-    protected BREAD_CRUMB_MIN_WIDTH: number = 0;
     protected DOTS_WIDTH: number = 0;
     protected _indexEdge: number = 0;
     protected _items: Record[] = [];
+    protected _getTextWidth: Function;
 
-    protected _afterMount(options: IBreadCrumbsOptions, contexts?: object, receivedState?: void): void {
-        RegisterUtil(this, 'controlResize', this._onResize.bind(this));
-        if (this._options.items && this._options.items.length > 0) {
-            this._items = this._options.items;
-            this._width = this._container.clientWidth;
-            waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').then(() => {
-                this._initializeConstants(options.theme, options.fontSize);
-                this._calculateBreadCrumbsToDraw(this._options.items, this._width);
-                this._forceUpdate();
+    protected _beforeMount(options?: IMultilinePathOptions, contexts?: object, receivedState?: void): Promise<void> | void {
+        if (!options.containerWidth) {
+            Logger.error('Option containerWidth is undefined');
+        }
+        return new Promise((resolve) => {
+            loadFontWidthConstants().then((getTextWidth: Function) => {
+                this._getTextWidth = getTextWidth;
+                if (this._options.items && this._options.items.length > 0) {
+                    this._items = this._options.items;
+                    this._width = options.containerWidth;
+                    this._initializeConstants(options.fontSize);
+                    this._calculateBreadCrumbsToDraw(this._options.items, options);
+                }
+                resolve();
             });
-        }
+        });
     }
 
-    protected _beforeUpdate(newOptions: IBreadCrumbsOptions): void {
-        // Если тема изменилась - изменились размеры
-        if (this._options.theme !== newOptions.theme) {
-            this._initializeConstants(newOptions.theme, newOptions.fontSize);
+    protected _beforeUpdate(newOptions: IMultilinePathOptions): void {
+        if (this._options.fontSize !== newOptions.fontSize) {
+            this._initializeConstants(newOptions.fontSize);
         }
-        if (this._options.items !== newOptions.items || this._width !== this._container.clientWidth
-            || this._options.theme !== newOptions.theme) {
+        if (this._options.items !== newOptions.items || this._width !== newOptions.containerWidth
+            || this._options.fontSize !== newOptions.fontSize) {
             this._items = newOptions.items;
-            this._calculateBreadCrumbsToDraw(newOptions.items, this._width);
+            this._width = newOptions.containerWidth;
+            this._calculateBreadCrumbsToDraw(newOptions.items, this._options);
         }
     }
 
-    protected _beforeUnmount(): void {
-        UnregisterUtil(this, 'controlResize');
+    private _initializeConstants(fontSize: string): void {
+        const dotsWidth = this._getTextWidth('...', fontSize) + PADDING_RIGHT;
+        this.DOTS_WIDTH = ARROW_WIDTH + dotsWidth;
     }
 
-    private _initializeConstants(theme: string, fontSize): void {
-        this.ARROW_WIDTH = getWidth(`<span class="controls-BreadCrumbsView__arrow controls-BreadCrumbsView__arrow_theme-${theme} icon-size icon-DayForwardBsLine"></span>`);
-        const dotsWidth = getWidth(`<div class="controls-BreadCrumbsView__title  controls-BreadCrumbsView__title_theme-${theme} controls-fontsize-${fontSize}_theme-${theme} controls-BreadCrumbsView__crumb_theme-${theme}">...</div>`);
-        this.DOTS_WIDTH = this.ARROW_WIDTH + dotsWidth;
-        this.BREAD_CRUMB_MIN_WIDTH = getWidth(`<div class="controls-BreadCrumbsView__crumb_withOverflow_theme-${theme} controls-BreadCrumbsView__crumb_theme-${theme}"></div>`);
-    }
-
-    private _calculateBreadCrumbsToDraw(items: Record[], containerWidth: number): void {
+    private _calculateBreadCrumbsToDraw(items: Record[], options: IMultilinePathOptions): void {
+        const containerWidth = options.containerWidth;
         this._visibleItemsFirst = [];
         this._visibleItemsSecond = [];
-        const itemsWidth = this._getItemsWidth(items, this._options.displayProperty);
+        const itemsWidth = this._getItemsWidth(items, options);
         let shrinkItemIndex;
         let firstContainerItems = [];
 
@@ -85,7 +91,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
             // Если крошек меньше двух, располагаем их в первом контейнере
             firstContainerItems = items.map((item, index, items) => {
                 const hasArrow = index !== 0;
-                const withOverflow = itemsWidth[index] - (hasArrow ? this.ARROW_WIDTH : 0) > this.BREAD_CRUMB_MIN_WIDTH;
+                const withOverflow = itemsWidth[index] - (hasArrow ? ARROW_WIDTH : 0) > BREAD_CRUMB_MIN_WIDTH;
                 return BreadCrumbsUtil.getItemData(index, items, false, withOverflow);
             });
             this._visibleItemsFirst = firstContainerItems;
@@ -103,7 +109,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
                 firstContainerItems.push(items[i]);
             }
             // позволяем сокращаться последней папке в первом контейнере
-            if (firstContainerWidth - itemsWidth[this._indexEdge] + this.BREAD_CRUMB_MIN_WIDTH <= containerWidth) {
+            if (firstContainerWidth - itemsWidth[this._indexEdge] + BREAD_CRUMB_MIN_WIDTH <= containerWidth) {
                 firstContainerItems.push(items[this._indexEdge]);
                 this._indexEdge++;
             }
@@ -114,11 +120,11 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
                 secondContainerWidth += itemsWidth[i];
             }
             secondContainerWidth -= itemsWidth[items.length - 2];
-            secondContainerWidth += this.BREAD_CRUMB_MIN_WIDTH;
+            secondContainerWidth += BREAD_CRUMB_MIN_WIDTH;
             // если второй контейнер по ширине больше, чем доступная ширина, начинаем расчеты
             if (secondContainerWidth > containerWidth) {
                 // предпоследняя не уместилась - сразу вычитаем ее ширину
-                secondContainerWidth -= this.BREAD_CRUMB_MIN_WIDTH;
+                secondContainerWidth -= BREAD_CRUMB_MIN_WIDTH;
                 // Сначала пробуем замылить предпоследнюю крошку
                 const secondContainerItems = [];
                 // если замылить не получилось - показываем точки
@@ -130,7 +136,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
                         break;
                     } else if (this._canShrink(itemsWidth[index], secondContainerWidth, containerWidth)) {
                         shrinkItemIndex = index;
-                        secondContainerWidth -= itemsWidth[index] - this.BREAD_CRUMB_MIN_WIDTH;
+                        secondContainerWidth -= itemsWidth[index] - BREAD_CRUMB_MIN_WIDTH;
                         break;
                     } else {
                         secondContainerWidth -= itemsWidth[index];
@@ -167,25 +173,18 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
         this._indexEdge = 0;
     }
 
-    private _getItemsWidth(items: Record[], displayProperty: string): number[] {
+    private _getItemsWidth(items: Record[], options: IMultilinePathOptions): number[] {
         const itemsWidth = [];
         items.forEach((item, index) => {
-            const itemTitleWidth = getWidth(`<div class="controls-BreadCrumbsView__title  controls-BreadCrumbsView__title_theme-${this._options.theme} controls-fontsize-${this._options.fontSize}_theme-${this._options.theme} controls-BreadCrumbsView__crumb_theme-${this._options.theme}">${ItemsUtil.getPropertyValue(item, displayProperty)}</div>`);
-            const itemWidth = index !== 0 ? itemTitleWidth + this.ARROW_WIDTH : itemTitleWidth;
-            itemsWidth.push(itemWidth);
+            const itemTitleWidth = this._getTextWidth(ItemsUtil.getPropertyValue(item, options.displayProperty), options.fontSize);
+            const itemWidth = index !== 0 ? itemTitleWidth + ARROW_WIDTH : itemTitleWidth;
+            itemsWidth.push(itemWidth + PADDING_RIGHT);
         });
         return itemsWidth;
     }
 
     private _canShrink(itemWidth: number, currentWidth: number, availableWidth: number): boolean {
-        return itemWidth > this.BREAD_CRUMB_MIN_WIDTH && currentWidth - itemWidth + this.BREAD_CRUMB_MIN_WIDTH < availableWidth;
-    }
-
-    private _onResize(): void {
-        if (this._width !== this._container.clientWidth) {
-            this._width = this._container.clientWidth;
-            this._calculateBreadCrumbsToDraw(this._items, this._width);
-        }
+        return itemWidth > BREAD_CRUMB_MIN_WIDTH && currentWidth - itemWidth + BREAD_CRUMB_MIN_WIDTH < availableWidth;
     }
 
     private _itemClickHandler(e: SyntheticEvent<MouseEvent>, item: Model): void {
@@ -196,7 +195,7 @@ class MultilinePath extends Control<IBreadCrumbsOptions> implements IFontSize {
     static getDefaultOptions() {
         return {
             displayProperty: 'title',
-            fontSize: 'xs',
+            fontSize: 'xs'
         };
     }
 
