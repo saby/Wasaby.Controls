@@ -6,18 +6,17 @@ export type TVisibility = 'visible' | 'hidden' | 'onactivated';
 export enum Visibility { Visible = 'visible', Hidden = 'hidden', OnActivated = 'onactivated'}
 
 /**
- * Опции для контроллеа
+ * Опции контроллера
  * @interface Controls/_marker/IOptions
  * @public
  * @author Панихин К.А.
  */
 export interface IOptions extends IMarkerListOptions {
    model: Collection<Model, CollectionItem<Model>>;
-
 }
 
 /**
- * Опции для списка, связанные с маркером
+ * Опции для маркера списка
  * @interface Controls/_marker/interface/IMarkerListOptions
  * @public
  * @author Панихин К.А.

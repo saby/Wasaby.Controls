@@ -142,12 +142,12 @@ export class Controller {
    }
 
    /**
-    * Восстановливает состояние marked для элемента с ключом равным markedKey, если он есть среди newItems
-    * @param {Array<CollectionItem<Model>>} newItems Список добавленных элементов
+    * Восстанавливает состояние marked для элемента с ключом равным markedKey, если он есть среди items
+    * @param {Array<CollectionItem<Model>>} items Список добавленных элементов
     * @void
     */
-   restoreMarkedState(newItems: Array<CollectionItem<Model>>): void {
-      if (newItems.some((item) => this._getKey(item) === this._markedKey)) {
+   restoreMarkedState(items: Array<CollectionItem<Model>>): void {
+      if (items.some((item) => this._getKey(item) === this._markedKey)) {
          this.applyMarkedKey(this._markedKey);
       }
    }
