@@ -11,7 +11,8 @@ import {default as ListControl} from 'Controls/_list/ListControl';
 import {ISelectionObject} from 'Controls/interface';
 import { CrudEntityKey } from 'Types/source';
 import { TMovePosition } from './Controllers/MoveController';
-import {IMovableView} from './interface/IMovableView';
+import {IMovableList} from './interface/IMovableList';
+import {IRemovableList} from './interface/IRemovableList';
 
 /**
  * Контрол «Плоский список» с пользовательским шаблоном элемента. Может загружать данные из источника данных.
@@ -38,7 +39,8 @@ import {IMovableView} from './interface/IMovableView';
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_list/interface/IReloadableList
- * @mixes Controls/_list/interface/IMovableView
+ * @mixes Controls/_list/interface/IMovableList
+ * @mixes Controls/_list/interface/IRemovableList
  *
  *
  * @mixes Controls/_list/interface/IVirtualScroll
@@ -74,7 +76,8 @@ import {IMovableView} from './interface/IMovableView';
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_list/interface/IReloadableList
- * @mixes Controls/_list/interface/IMovableView
+ * @mixes Controls/_list/interface/IMovableList
+ * @mixes Controls/_list/interface/IRemovableList
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  *
@@ -85,7 +88,7 @@ import {IMovableView} from './interface/IMovableView';
  * @demo Controls-demo/List/List/BasePG
  */
 
-export default class List extends Control/** @lends Controls/_list/List.prototype */ implements IMovableView {
+export default class List extends Control/** @lends Controls/_list/List.prototype */ implements IMovableList, IRemovableList {
     protected _template: TemplateFunction = ListControlTpl;
     protected _viewName = viewName;
     protected _viewTemplate: unknown = ListControl;
@@ -159,6 +162,18 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
     }
 
     // endregion mover
+
+    // region remover
+
+    removeItems(selection: ISelectionObject): Promise<void> {
+        return this._children.listControl.removeItems(selection);
+    }
+
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+        return this._children.listControl.removeItemsWithConfirmation(selection);
+    }
+
+    // endregion remover
 
     _notifyHandler = tmplNotify;
 

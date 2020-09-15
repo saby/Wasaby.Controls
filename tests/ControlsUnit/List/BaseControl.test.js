@@ -307,42 +307,6 @@ define([
          sandbox.restore();
       });
 
-      // оказалось что нельзя доверять состоянию триггеров
-      // https://online.sbis.ru/opendoc.html?guid=e0927a79-c520-4864-8d39-d99d36767b31
-      // поэтому приходится вычислять видны ли они на экране
-      it('should recalculate triggers visibility when current up and down are not set or false', () => {
-         const self = {
-            _options: {},
-            _loadTriggerOffset: {top: 100, bottom: 100},
-            _loadTriggerVisibility: {
-               up: false,
-               down: false
-            },
-            _needScrollCalculation: true,
-            getViewModel: () => ({
-               getCount: () => 3
-            }),
-            _container: {
-               clientHeight: 300
-            }
-         };
-         const myFilter = {testField: 'testValue'};
-         const resultNavigation = 'testNavigation';
-         let upRecalculated = false;
-         let downRecalculated = false;
-         sandbox.replace(lists.BaseControl._private, 'calcTriggerVisibility', (self, scrollParams, triggerOffset, direction) => {
-            if (direction === 'up') {
-               upRecalculated = true;
-            } else {
-               downRecalculated = true;
-            }
-         });
-         lists.BaseControl._private.checkLoadToDirectionCapability(self, myFilter, resultNavigation);
-         assert.isTrue(upRecalculated, '_loadTriggerVisibility.up has not been recalculated');
-         assert.isTrue(downRecalculated, '_loadTriggerVisibility.down has not been recalculated');
-         sandbox.restore();
-      });
-
       describe('_private::loadToDirectionIfNeed', () => {
          const getInstanceMock = function() {
             return {
@@ -1029,6 +993,13 @@ define([
          ctrl.triggerVisibilityChangedHandler('up', true);
          assert.isNotNull(ctrl._loadingIndicatorState);
          assert.isNull(ctrl._showContinueSearchButtonDirection);
+
+         const items = ctrl._items.clone();
+         ctrl._items.clear();
+         ctrl.triggerVisibilityChangedHandler('down', false);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
+         ctrl._items.assign(items);
+         ctrl._hideIndicatorOnTriggerHideDirection = 'down';
 
          // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler('down', false);
@@ -2351,54 +2322,7 @@ define([
          assert.isTrue(baseControl._isScrollShown);
 
       });
-      describe('calcTriggerVisibility', () => {
-         let calcTriggerVisibility = lists.BaseControl._private.calcTriggerVisibility;
-         it('up', () => {
-            let scrollParams = {
-               scrollTop: 0,
-               clientHeight: 300,
-               scrollHeight: 600
-            };
-            assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger should be visible');
-            scrollParams = {
-               scrollTop: 101,
-               clientHeight: 300,
-               scrollHeight: 600
-            };
-            assert.isFalse(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger shouldn\'t be visible');
-         });
 
-         it('down', () => {
-            let scrollParams = {
-               scrollTop: 300,
-               clientHeight: 300,
-               scrollHeight: 600
-            };
-            assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'down'), 'down trigger should be visible');
-            scrollParams = {
-               scrollTop: 199,
-               clientHeight: 300,
-               scrollHeight: 600
-            };
-            assert.isFalse(calcTriggerVisibility({}, scrollParams, 100, 'down'), 'down trigger shouldn\'t be visible');
-         });
-
-         it('down with paging', () => {
-            let scrollParams = {
-               scrollTop: 200,
-               clientHeight: 300,
-               scrollHeight: 600
-            };
-            assert.isTrue(calcTriggerVisibility({_pagingVisible: true}, scrollParams, 100, 'down'), 'down trigger should be visible');
-            scrollParams = {
-               scrollTop: 150,
-               clientHeight: 300,
-               scrollHeight: 600
-            };
-            assert.isFalse(calcTriggerVisibility({_pagingVisible: true}, scrollParams, 100, 'down'), 'down trigger shouldn\'t be visible');
-         });
-
-      });
       it('calcViewSize', () => {
          let calcViewSize = lists.BaseControl._private.calcViewSize;
          assert.equal(calcViewSize(140, true, 40), 100);
@@ -3292,7 +3216,7 @@ define([
 
       });
 
-      it('_needBottomPadding after reload in beforeUpdate', async function() {
+      it('_needBottomPadding after reload in beforeUpdate', function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
             itemActionsPosition: 'outside',
@@ -3313,12 +3237,16 @@ define([
          }
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
-         await ctrl._beforeMount(cfg);
-         assert.isFalse(ctrl._needBottomPadding);
-         ctrl._beforeUpdate(cfgWithSource).addCallback(function() {
-         assert.isTrue(ctrl._needBottomPadding);
-      });
-         ctrl._afterUpdate(cfgWithSource);
+         return new Promise((resolve) => {
+            ctrl._beforeMount(cfg);
+            assert.isFalse(ctrl._needBottomPadding);
+
+            ctrl._beforeUpdate(cfgWithSource).addCallback(function() {
+               assert.isTrue(ctrl._needBottomPadding);
+               resolve();
+            });
+            ctrl._afterUpdate(cfgWithSource);
+         });
       });
 
       it('setHasMoreData after reload in beforeMount', async function() {
@@ -3339,13 +3267,15 @@ define([
          let ctrl = new lists.BaseControl(cfg);
          let setHasMoreDataCalled = false;
          let origSHMD = lists.BaseControl._private.setHasMoreData;
+         let origNBP = lists.BaseControl._private.needBottomPadding;
          lists.BaseControl._private.setHasMoreData = () => {
             setHasMoreDataCalled = true;
-         }
+         };
+         lists.BaseControl._private.needBottomPadding = () => false;
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          assert.isTrue(setHasMoreDataCalled);
-
+         lists.BaseControl._private.needBottomPadding = origNBP;
       });
 
       it('getUpdatedMetaData: set full metaData.more on load to direction with position navigation', () => {
@@ -3377,12 +3307,18 @@ define([
          const model = {
             getEditingItemData: function() {
                return null;
-            }
+            },
+            getDisplay: () => ({
+               getCount: () => count
+            })
          };
          const editingModel = {
             getEditingItemData: function() {
                return {};
-            }
+            },
+            getDisplay: () => ({
+               getCount: () => count
+            })
          };
 
          assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, padding is needed");
@@ -6026,6 +5962,11 @@ define([
 
          instance._createSelectionController();
          let cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue' };
+         instance._beforeUpdate(cfgClone);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+
+         cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'], selectionViewMode: 'selected'};
          instance._beforeUpdate(cfgClone);
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);

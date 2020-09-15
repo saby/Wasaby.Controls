@@ -398,7 +398,8 @@ var
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IClickableView
-    * @mixes Controls/_list/interface/IMovableView
+    * @mixes Controls/_list/interface/IMovableList
+    * @mixes Controls/_list/interface/IRemovableList
     * @control
     * @public
     * @category List
@@ -434,7 +435,8 @@ var
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
-    * @mixes Controls/_list/interface/IMovableView
+    * @mixes Controls/_list/interface/IMovableList
+    * @mixes Controls/_list/interface/IRemovableList
     * @control
     * @public
     * @category List
@@ -729,6 +731,18 @@ var
       },
 
       // endregion mover
+
+      // region remover
+
+      removeItems(selection: ISelectionObject): Promise<void> {
+         return this._children.treeControl.removeItems(selection);
+      },
+
+      removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+         return this._children.treeControl.removeItemsWithConfirmation(selection);
+      },
+
+      // endregion remover
 
       _onArrowClick: function(e) {
          let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();

@@ -306,7 +306,7 @@ export default class Browser extends Control {
 
     _getSearchControllerOptions(options): object {
         const optionsChangedCallbacks = SearchController.getStateAndOptionsChangedCallbacks(this);
-        optionsChangedCallbacks.filter = this._filter;
+        optionsChangedCallbacks.filter = this._sourceController.getFilter();
         return {...options, ...optionsChangedCallbacks};
     }
 

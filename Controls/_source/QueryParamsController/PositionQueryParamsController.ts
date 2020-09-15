@@ -338,6 +338,7 @@ class PositionQueryParamsController implements IQueryParamsController {
             // параметры direction и position будут взяты из переданных
             // опций, то есть из конфигурации navigation, что и приведет к
             // загрузке исходной страницы.
+            this._options.position = -2;
         } else if (direction === 'down') {
             this._shouldLoadLastPage = true;
         } else {

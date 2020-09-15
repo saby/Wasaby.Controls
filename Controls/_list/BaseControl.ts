@@ -87,6 +87,7 @@ import { TItemKey } from 'Controls/display';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {IMoveControllerOptions, MoveController, TMovePosition} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from "../_moverDialog/Template";
+import {RemoveController} from './Controllers/RemoveController';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -334,6 +335,14 @@ const _private = {
             // load() method may be fired with errback
             _private.setReloadingState(self, true);
             self._sourceController.load(filter, sorting, null, sourceConfig, cfg.root).addCallback(function(list) {
+                // Пока загружались данные - список мог уничтожится. Обрабатываем это.
+                // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
+                if (self._destroyed) {
+                    resDeferred.callback({
+                        data: null
+                    });
+                    return;
+                }
                 _private.setReloadingState(self, false);
                 _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
@@ -796,11 +805,8 @@ const _private = {
                 scrollTop: self._scrollTop
             };
 
-            // Состояние триггеров не всегда соответствует действительности, приходится считать самим
-            triggerVisibilityUp = self._loadTriggerVisibility.up ||
-                _private.calcTriggerVisibility(self, scrollParams, self._loadTriggerOffset.top, 'up');
-            triggerVisibilityDown = self._loadTriggerVisibility.down ||
-                _private.calcTriggerVisibility(self, scrollParams, self._loadTriggerOffset.bottom, 'down');
+            triggerVisibilityUp = self._loadTriggerVisibility.up;
+            triggerVisibilityDown = self._loadTriggerVisibility.down;
 
             // TODO Когда список становится пустым (например после поиска или смены фильтра),
             // если он находится вверху страницы, нижний загрузочный триггер может "вылететь"
@@ -990,20 +996,6 @@ const _private = {
         }
     },
 
-    calcTriggerVisibility(self, scrollParams, triggerOffset, direction: 'up' | 'down'): boolean {
-        if (self._container && self._container.closest && self._container.closest('.ws-hidden')) {
-            return false;
-        }
-        if (direction === 'up') {
-            return scrollParams.scrollTop <= triggerOffset;
-        } else {
-            let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
-            if (self._pagingVisible) {
-                bottomScroll -= self._pagingPadding || PAGING_PADDING;
-            }
-            return bottomScroll <= triggerOffset;
-        }
-    },
     calcViewSize(viewSize: number, pagingVisible: boolean, pagingPadding: number): number {
         return viewSize - (pagingVisible ? pagingPadding : 0);
     },
@@ -1043,21 +1035,10 @@ const _private = {
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
             // далее может быть два варианта. След запрос вернет данные, тогда произойдет ресайз и мы проверим еще раз
             // след. запрос не вернет данные, а скажет ЕстьЕще: false тогда решать будет условие ниже, по высоте
-            let visbilityTriggerUp = self._loadTriggerVisibility.up;
-            let visbilityTriggerDown = self._loadTriggerVisibility.down;
+            const visibilityTriggerUp = self._loadTriggerVisibility.up;
+            const visibilityTriggerDown = self._loadTriggerVisibility.down;
 
-            // TODO оказалось что нельзя доверять состоянию триггеров
-            // https://online.sbis.ru/opendoc.html?guid=e0927a79-c520-4864-8d39-d99d36767b31
-            // поэтому приходится вычислять видны ли они на экране
-            if (!visbilityTriggerUp) {
-                visbilityTriggerUp = _private.calcTriggerVisibility(self, scrollParams, self._loadTriggerOffset.top, 'up');
-            }
-
-            if (!visbilityTriggerDown && self._viewSize && self._viewportSize) {
-                visbilityTriggerDown = _private.calcTriggerVisibility(self, scrollParams, self._loadTriggerOffset.bottom, 'down');
-            }
-
-            if ((hasMoreData.up && !visbilityTriggerUp) || (hasMoreData.down && !visbilityTriggerDown)) {
+            if ((hasMoreData.up && !visibilityTriggerUp) || (hasMoreData.down && !visibilityTriggerDown)) {
                 result = true;
 
                 // Если пэйджинг был показан из-за hasMore, то запоминаем это,
@@ -1868,9 +1849,12 @@ const _private = {
             options.useNewModel
             ? EditInPlaceController.isEditing(listViewModel)
             : !!listViewModel.getEditingItemData();
+
+        const display = listViewModel ? (options.useNewModel ? listViewModel : listViewModel.getDisplay()) : null;
+        const hasVisibleItems = !!(display && display.getCount());
+
         return (
-            !!items &&
-            (!!items.getCount() || isEditing) &&
+            (hasVisibleItems || isEditing) &&
             options.itemActionsPosition === 'outside' &&
             !options.footerTemplate &&
             options.resultsPosition !== 'bottom'
@@ -2724,8 +2708,6 @@ const _private = {
 
         if (!self._moveController) {
             self._moveController = new MoveController(controllerOptions);
-        } else {
-            self._moveController.updateOptions(controllerOptions);
         }
         return self._moveController;
     },
@@ -2738,6 +2720,13 @@ const _private = {
             siblingItem = self._listViewModel.getNextByKey(selectedKey);
         }
         return siblingItem && siblingItem.getContents && siblingItem.getContents().getKey() || null;
+    },
+
+    getRemoveController(self): RemoveController {
+        if (!self._removeController) {
+            self._removeController = new RemoveController(self._options.source);
+        }
+        return self._removeController;
     }
 };
 
@@ -2755,7 +2744,7 @@ const _private = {
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
- * @mixes Controls/_list/interface/IMovableView
+ * @mixes Controls/_list/interface/IMovableList
  * @implements Controls/_list/interface/IListNavigation
  * @control
  * @private
@@ -2880,9 +2869,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _draggedKey: null,
     _validateController: null,
 
-    // Контроллер для перемещения элементов списка
+    // Контроллер для перемещения элементов из источника
     _moveController: null,
 
+    // Контроллер для удаления элементов из источника
+    _removeController: null,
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -3154,7 +3145,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
             _private.hideIndicator(this);
 
-            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
+            const viewModel = this.getViewModel();
+            const hasItems = viewModel && viewModel.getCount();
+            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress && hasItems) {
                 _private.getPortionedSearch(this).stopSearch();
             }
         }
@@ -3309,6 +3302,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
         }
 
+        if (this._removeController) {
+            this._removeController.updateOptions(newOptions);
+        }
+
+        if (this._moveController) {
+            this._moveController.updateOptions(newOptions);
+        }
+
         if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
             if (this._editInPlace && this._listViewModel.getEditingItemData()) {
                 this._editInPlace.cancelEdit();
@@ -3432,7 +3433,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._selectionController) {
-            if (filterChanged && _private.getSelectionController(this).isAllSelected(false)) {
+            const allowClearSelectionBySelectionViewMode =
+                this._options.selectionViewMode === newOptions.selectionViewMode ||
+                newOptions.selectionViewMode !== 'selected';
+
+            if (filterChanged &&
+                _private.getSelectionController(this).isAllSelected(false) &&
+                allowClearSelectionBySelectionViewMode) {
                 const result = _private.getSelectionController(this).clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
@@ -3778,8 +3785,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             scrollHeight: _private.getViewSize(this),
             scrollTop: this._scrollTop
         };
-        const triggerDown = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.bottom, 'down');
-        const triggerUp = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.top, 'up');
+        const triggerDown = this._loadTriggerVisibility.down;
+        const triggerUp = this._loadTriggerVisibility.up;
         this._scrollController.setTriggerVisibility('down', triggerDown);
         this._scrollController.setTriggerVisibility('up', triggerUp);
         if (triggerDown) {
@@ -3967,7 +3974,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
         }
-
         // При клике по элементу может случиться 2 события: itemClick и itemActivate.
         // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
         // порядок событий будет beforeBeginEdit -> itemClick
@@ -3976,7 +3982,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (e.isStopped()) {
             this._savedItemClickArgs = [item, originalEvent, columnIndex];
         } else {
-            this._notify('itemActivate', [item, originalEvent], { bubbling: true });
+            const eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], {bubbling: true});
+            if (eventResult !== false) {
+                this._notify('itemActivate', [item, originalEvent], {bubbling: true});
+            }
         }
     },
 
@@ -4249,6 +4258,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // endregion move
 
+    // region remove
+
+    removeItems(selection: ISelectionObject): Promise<void> {
+        return _private.getRemoveController(this).remove(selection);
+    },
+
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+        return _private.getRemoveController(this).removeWithConfirmation(selection);
+    },
+
+    // endregion remove
+
     _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
@@ -4297,7 +4318,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _updatePagingPadding(): void {
-        if (!this._pagingPadding) {
+        // Сюда может попасть из beforePaint, когда pagingVisible уже поменялся на true (стрельнуло событие от скролла),
+        // но вот сам pagingPaddingContainer отрисуется лишь в следующем цикле синхронизации
+        // https://online.sbis.ru/opendoc.html?guid=b6939810-b640-41eb-8139-b523a8df16df
+        // Поэтому дополнительно проверяем на this._children.pagingPaddingContainer
+        if (!this._pagingPadding && this._children.pagingPaddingContainer) {
             this._pagingPadding = this._children.pagingPaddingContainer.offsetHeight;
         }
     },

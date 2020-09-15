@@ -200,7 +200,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                },
                keyProperty: 'id'
             });
-            assert.isFalse(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'xxx'));
+            assert.isTrue(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'xxx'));
             assert.isFalse(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', ''));
             assert.isTrue(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'tes'));
          });
@@ -979,7 +979,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
                column: gridColumn,
-               needSearchHighlight: false,
+               needSearchHighlight: true,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover-default_theme-default ' +
@@ -998,7 +998,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
                column: gridColumn,
-               needSearchHighlight: false,
+               needSearchHighlight: true,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover-default_theme-default ' +
@@ -1018,7 +1018,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
                column: gridColumn,
-               needSearchHighlight: false,
+               needSearchHighlight: true,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover-default_theme-default ' +
@@ -2079,28 +2079,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
           it('_prepareColgroupColumns', function() {
-            assert.deepEqual(gridViewModel._colgroupColumns, [
-               {
-                  classes: 'controls-Grid__colgroup-column controls-Grid__colgroup-columnMultiSelect_theme-default',
-                  index: 0,
-                  style: '',
-               },
-               {
-                  classes: 'controls-Grid__colgroup-column',
-                  index: 1,
-                  style: 'width: auto;',
-               },
-               {
-                  classes: 'controls-Grid__colgroup-column',
-                  index: 2,
-                  style: 'width: auto;',
-               },
-               {
-                  classes: 'controls-Grid__colgroup-column',
-                  index: 3,
-                  style: 'width: auto;',
-               },
-            ], 'Incorrect value "_colgroupColumns" before "_prepareColgroupColumns([])" without multiselect.');
+            const originIFGS = gridViewModel.isFullGridSupport;
+            gridViewModel.isFullGridSupport = () => false;
+            assert.deepEqual(gridViewModel._colgroupColumns, undefined, 'Incorrect value "_colgroupColumns" before "_prepareColgroupColumns([])" without multiselect.');
 
             gridViewModel._prepareColgroupColumns([], false);
             assert.deepEqual([], gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns([])" without multiselect.');
@@ -2154,7 +2135,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   style: 'width: auto;',
                },
             ], 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" with multiselect.');
-         });
+             gridViewModel.isFullGridSupport = originIFGS;
+          });
 
          it('getCurrentColgroupColumn && goToNextColgroupColumn && isEndColgroupColumn && resetColgroupColumns', function () {
             assert.deepEqual({

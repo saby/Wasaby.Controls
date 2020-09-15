@@ -4,11 +4,11 @@ import {TMovePosition} from '../Controllers/MoveController';
 
 /**
  * Интерфейс контрола View, который обладает возможностью перемещения записей
- * @interface Controls/_list/interface/IMovableView
+ * @interface Controls/_list/interface/IMovableList
  * @public
  * @author Аверкиев П.А.
  */
-export interface IMovableView {
+export interface IMovableList {
     /**
      * Перемещает указанные записи в source относительно target в указанную позицию (after/before/on)
      * и возвращает результат перемещения
