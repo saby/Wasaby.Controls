@@ -98,6 +98,7 @@
                 scope="{{_options}}"
                 loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
                 _needBottomPadding="{{_needBottomPadding}}"
+                needShowEmptyTemplate="{{ __needShowEmptyTemplate(_options.emptyTemplate, _listViewModel) }}"
                 listModel="{{_listViewModel}}"
                 editingItemData="{{_editingItemData}}"
                 startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
