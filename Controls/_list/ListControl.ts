@@ -87,6 +87,18 @@ export default class ListControl extends Control/** @lends Controls/_list/ListCo
 
     // endregion mover
 
+    // region remover
+
+    removeItems(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.removeItems(selection);
+    }
+
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.removeItemsWithConfirmation(selection);
+    }
+
+    // endregion remover
+
     static getDefaultOptions () {
         return {
             uniqueKeys: true

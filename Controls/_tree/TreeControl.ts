@@ -723,6 +723,18 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
     // endregion mover
 
+    // region remover
+
+    removeItems(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.removeItems(selection);
+    },
+
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.removeItemsWithConfirmation(selection);
+    },
+
+    // endregion remover
+
     _markedKeyChangedHandler: function(event, key) {
         this._notify('markedKeyChanged', [key]);
     },

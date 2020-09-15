@@ -163,6 +163,18 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
 
     // endregion mover
 
+    // region remover
+
+    removeItems(selection: ISelectionObject): Promise<void> {
+        return this._children.listControl.removeItems(selection);
+    }
+
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+        return this._children.listControl.removeItemsWithConfirmation(selection);
+    }
+
+    // endregion remover
+
     _notifyHandler = tmplNotify;
 
     static getDefaultOptions() {
