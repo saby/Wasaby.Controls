@@ -87,7 +87,7 @@ import { TItemKey } from 'Controls/display';
 import { ItemsEntity } from '../dragnDrop';
 import {IMoveControllerOptions, MoveController, TMovePosition} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from "../_moverDialog/Template";
-import * as TreeItemsUtil from "./resources/utils/TreeItemsUtil";
+import {RemoveController} from './Controllers/RemoveController';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -2732,6 +2732,15 @@ const _private = {
         }
         return siblingItem && siblingItem.getContents && siblingItem.getContents().getKey() || null;
     },
+
+    getRemoveController(self): RemoveController {
+        if (!self._removeController) {
+            self._removeController = new RemoveController(self._options.source);
+        } else {
+            self._removeController.updateOptions(self._options.source);
+        }
+        return self._removeController;
+    }
 };
 
 /**
@@ -4190,6 +4199,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     // endregion move
+
+    // region remove
+
+    removeItems(selection: ISelectionObject): Promise<void> {
+        return _private.getRemoveController(this).remove(selection);
+    },
+
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+        return _private.getRemoveController(this).removeWithConfirmation(selection);
+    },
+
+    // endregion remove
 
     _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом

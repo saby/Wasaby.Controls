@@ -1,4 +1,4 @@
-import {TKeysSelection} from 'Controls/interface';
+import {ISelectionObject} from 'Controls/interface';
 
 /**
  * Интерфейс контрола для удаления записей
@@ -11,19 +11,30 @@ export interface IRemovableList {
     /**
      * Удаляет элементы из источника данных по идентификаторам элементов коллекции.
      * @function Controls/interface/IRemovable#removeItems
-     * @param {Controls/interface:TKeysSelection} items Массив элементов для удаления.
+     * @param {Controls/interface:ISelectionObject} items Массив элементов для удаления.
      * @returns {Promise}
-     * @see afterItemsRemove
-     * @see beforeItemsRemove
      */
 
     /*
      * Removes items from the data source by identifiers of the items in the collection.
      * @function Controls/interface/IRemovable#removeItems
-     * @param {Controls/interface:TKeysSelection} items Array of items to be removed.
+     * @param {Controls/interface:ISelectionObject} items Array of items to be removed.
      * @returns {Promise}
-     * @see afterItemsRemove
-     * @see beforeItemsRemove
      */
-    removeItems(items: TKeysSelection): Promise<void>;
+    removeItems(items: ISelectionObject): Promise<void>;
+
+    /**
+     * Удаляет с подтверждением элементы из источника данных по идентификаторам элементов коллекции.
+     * @function Controls/interface/IRemovable#removeItemsWithConfirmation
+     * @param {Controls/interface:ISelectionObject} items Массив элементов для удаления.
+     * @returns {Promise}
+     */
+
+    /*
+     * Removes items with confirmation from the data source by identifiers of the items in the collection.
+     * @function Controls/interface/IRemovable#removeItemsWithConfirmation
+     * @param {Controls/interface:ISelectionObject} items Array of items to be removed.
+     * @returns {Promise}
+     */
+    removeItemsWithConfirmation(items: ISelectionObject): Promise<void>;
 }
