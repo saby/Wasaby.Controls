@@ -1208,6 +1208,23 @@ const getEditing = () => {
                 costPrice: '3'
             }
         ],
+        getEditingAlignData: (): IEditingData[] => [
+            {
+                id: 1,
+                title: 'Очень длинный текст, с выравниванием по правому краю.',
+                description: 'Текст 1'
+            },
+            {
+                id: 2,
+                title: 'Длинный текст',
+                description: 'Текст 2'
+            },
+            {
+                id: 3,
+                title: 'Текст',
+                description: 'Текст 3'
+            }
+        ],
         getEditingValidationData: (): IEditingData[] => [
             {
                 id: '1',
@@ -1269,6 +1286,20 @@ const getEditing = () => {
                 template: 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor',
                 resultTemplate: resTpl,
                 results: 6
+            }
+        ],
+        getEditingAlignColumns: (): IColumn[] => [
+            {
+                displayProperty: 'title',
+                width: '180px',
+                template: 'wml!Controls-demo/grid/EditInPlace/Align/_cellEditor',
+                align: 'right'
+            },
+            {
+                displayProperty: 'description',
+                width: '100px',
+                template: 'wml!Controls-demo/grid/EditInPlace/Align/_cellEditor',
+                align: 'right'
             }
         ],
         getEditingColumnsValidation: () => [

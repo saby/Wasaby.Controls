@@ -445,7 +445,7 @@ define([
 
       it('beforeUnmount', () => {
          let isDestroyCall = false;
-         let dataSource = {
+         let source = {
             destroy: (id) => {
                assert.equal(id, 'id1');
                isDestroyCall = true;
@@ -453,8 +453,7 @@ define([
          };
          const createFC = () => {
             let FC = new form.Controller();
-            FC.saveOptions({ dataSource });
-            FC._source = dataSource;
+            FC.saveOptions({ source });
             FC._record = {
                getId: () => 'id1'
             };
@@ -462,7 +461,7 @@ define([
                hideIndicator () {}
             };
             return FC;
-         }
+         };
          let FC = createFC();
          FC._beforeUnmount();
          FC.destroy();
@@ -482,11 +481,12 @@ define([
       it('delete new record', () => {
          let FC = new form.Controller();
          let isDestroyCalled = false;
-         FC._source = {
+         const source = {
             destroy: () => {
                isDestroyCalled = true;
             }
          };
+         FC.saveOptions({ source });
          FC._tryDeleteNewRecord();
          assert.equal(isDestroyCalled, false);
 

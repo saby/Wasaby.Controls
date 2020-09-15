@@ -29,14 +29,14 @@ class DateRangeEditor extends Control<IControlOptions> {
         this._templateName = 'Controls/dateRange:' + (options.editorMode === 'Selector' ? 'RangeSelector' : 'RangeShortSelector');
         this._fontColorStyle = options.readOnly ? 'label' : options.fontColorStyle;
         this._reseted = isEqual(options.value, options.resetValue);
-        if (options.emptyCaption) {
-            this._emptyCaption = options.emptyCaption;
-        } else if (options.resetValue) {
-            return import('Controls/dateRange').then((dateRange) => {
-                this._dateRangeModule = dateRange;
+        return import('Controls/dateRange').then((dateRange) => {
+            this._dateRangeModule = dateRange;
+            if (options.emptyCaption) {
+                this._emptyCaption = options.emptyCaption;
+            } else if (options.resetValue) {
                 this._emptyCaption = this.getCaption(options.resetValue[0], options.resetValue[1]);
-            });
-        }
+            }
+        });
     }
 
     protected _beforeUpdate(newOptions: IControlOptions): Promise<void>|void {

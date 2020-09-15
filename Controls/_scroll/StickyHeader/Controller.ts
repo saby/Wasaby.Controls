@@ -398,9 +398,14 @@ class StickyHeaderController {
     private _getHeaderOffset(id: number, position: string) {
         const header = this._headers[id];
         if (header.offset[position] === undefined) {
-            header.offset[position] = header.inst.getOffset(this._container, position);
+            header.offset[position] = this._getHeaderOffsetByContainer(this._container, id, position);
         }
         return header.offset[position];
+    }
+
+    private _getHeaderOffsetByContainer(container: HTMLElement, id: number, position: string) {
+        const header = this._headers[id];
+        return header.inst.getOffset(container, position);
     }
 
     /**
@@ -413,13 +418,13 @@ class StickyHeaderController {
         }
     }
 
-    private _addToHeadersStack(id: number, position: string) {
+    private _addToHeadersStack(id: number, position: POSITION) {
         if (position === 'topbottom') {
             this._addToHeadersStack(id, 'top');
             this._addToHeadersStack(id, 'bottom');
             return;
         }
-        const container = this._container,
+        const
             headersStack = this._headersStack[position],
             newHeaderOffset = this._getHeaderOffset(id, position),
             headerContainerHeight = this._headers[id].container.getBoundingClientRect().height;
@@ -428,7 +433,6 @@ class StickyHeaderController {
         // Если смещение у элементов одинаковое, но у добавляемоего заголовка высота равна нулю,
         // то считаем, что добавляемый находится выше. Вставляем новый заголовок в этой позиции.
         let index = headersStack.findIndex((headerId) => {
-            const headerInst = this._headers[headerId].inst;
             const headerOffset = this._getHeaderOffset(headerId, position);
             return headerOffset > newHeaderOffset ||
                 (headerOffset === newHeaderOffset && headerContainerHeight === 0);
@@ -440,21 +444,20 @@ class StickyHeaderController {
     private _updateFixedInitially(position: POSITION): void {
         const
             container: HTMLElement = this._container,
-            headersStack: number[] = this._headersStack[position];
+            headersStack: number[] = this._headersStack[position],
+            content: HTMLCollection = container.children,
+            contentContainer: HTMLElement = position === POSITION.top ? content[0] : content[content.length - 1];
 
         let
             headersHeight: number = 0,
             headerInst: StickyHeader;
 
-        if ((position === 'top' && !container.scrollTop) ||
-            (position === 'bottom' && container.scrollTop + container.clientHeight >= container.scrollHeight)) {
-            for (let headerId: number of headersStack) {
-                headerInst = this._headers[headerId].inst;
-                if (headersHeight === this._getHeaderOffset(headerId, position)) {
-                    this._headers[headerId].fixedInitially = true;
-                }
-                headersHeight += headerInst.height;
+        for (let headerId: number of headersStack) {
+            headerInst = this._headers[headerId].inst;
+            if (headersHeight === this._getHeaderOffsetByContainer(contentContainer, headerId, position)) {
+                this._headers[headerId].fixedInitially = true;
             }
+            headersHeight += headerInst.height;
         }
     }
 

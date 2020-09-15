@@ -346,6 +346,14 @@ const _private = {
             // load() method may be fired with errback
             _private.setReloadingState(self, true);
             self._sourceController.load(filter, sorting, null, sourceConfig, cfg.root).addCallback(function(list) {
+                // Пока загружались данные - список мог уничтожится. Обрабатываем это.
+                // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
+                if (self._destroyed) {
+                    resDeferred.callback({
+                        data: null
+                    });
+                    return;
+                }
                 _private.setReloadingState(self, false);
                 _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
