@@ -732,6 +732,18 @@ var
 
       // endregion mover
 
+      // region remover
+
+      removeItems(selection: ISelectionObject): Promise<void> {
+         return this._children.treeControl.removeItems(selection);
+      },
+
+      removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+         return this._children.treeControl.removeItemsWithConfirmation(selection);
+      },
+
+      // endregion remover
+
       _onArrowClick: function(e) {
          let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();
          this._notifyHandler(e, 'arrowClick', item);
