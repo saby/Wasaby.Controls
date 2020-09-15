@@ -3175,7 +3175,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _afterMount() {
         this._isMounted = true;
         this._hideTopTriggerUntilMount = false;
-        if (this._needScrollCalculation) {
+        if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
             this._registerIntersectionObserver();
         }
