@@ -9,7 +9,6 @@
                 on:mouseenter="_onYearMouseEnter(yearHeaderTemplate.date.getFullYear())"
                 on:touchstart="_onYearMouseEnter(yearHeaderTemplate.date.getFullYear())"
                 on:mouseleave="_onYearMouseLeave()"
-                on:touchend="_onYearMouseLeave()"
                 on:touchmove="_onYearMouseLeave()"
                 on:click="_onYearClick(yearHeaderTemplate.date.getFullYear())"
                 class="controls-PeriodLiteDialog__fullYear-listElement

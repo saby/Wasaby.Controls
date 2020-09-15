@@ -143,7 +143,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._updateItemTemplate(options);
         this._updateSource(options, this._options);
         this._updateVirtualPageSize(options, this._options);
-        if (options.position !== this._displayedPosition) {
+        if (!dateUtils.isDatesEqual(options.position, this._displayedPosition)) {
             // Не инициализируем перестроение списка пока не завершится пребыбущая перерисовка.
             // https://online.sbis.ru/opendoc.html?guid=4c2ee6ae-c41d-4bc2-97e7-052963074621
             if (!this._lastPositionFromOptions) {
@@ -281,7 +281,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     protected _intersectHandler(event: SyntheticEvent, entries: IntersectionObserverSyntheticEntry[]): void {
         // Don't update if the observer is triggered after hiding the component.
-        if (!this.isVisible()) {
+        if (!this._monthListVisible()) {
             return;
         }
         for (const entry of entries) {
@@ -484,7 +484,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         return this._container.get ? this._container.get(0) : this._container;
     }
 
-    private isVisible(): boolean {
+    private _monthListVisible(): boolean {
         return this._getNormalizedContainer().offsetParent !== null;
     }
 

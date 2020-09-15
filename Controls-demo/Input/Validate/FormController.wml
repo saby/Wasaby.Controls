@@ -125,9 +125,9 @@
                      </ws:content>
                   </Controls.validate:Container>
                   <Controls.buttons:Button caption="Проверить данные" attr:style="margin: 10px 0 0 16px;" name="updateButton" on:click="_clickHandler()"
-                                                                                                                      attr:class="ControlsDemo-ValidateInfobox_submit"/>
+                                                                                                                      attr:class="ControlsDemo-ValidateInfobox_submit demo-ValidateInfobox_checkData"/>
                   <Controls.buttons:Button caption="Очистить валидацию" attr:style="margin: 10px 0 0 16px;" name="cleanValid" on:click="_cleanValid()"
-                                           attr:class="ControlsDemo-ValidateInfobox_submit"/>
+                                           attr:class="ControlsDemo-ValidateInfobox_submit demo-ValidateInfobox_clearValidate"/>
                </div>
             </div>
          </div>

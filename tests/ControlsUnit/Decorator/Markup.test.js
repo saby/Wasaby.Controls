@@ -260,6 +260,9 @@ define([
                   ],
                   ['p',
                      ['a', { href: 'tel:+78142332211', rel: 'nofollow' }, '+7(814)-233-22-11']
+                  ],
+                  ['p',
+                     ['a', { href: 'viber://pa?chatURI=aliceinsbiswonderland', rel: 'noreferrer noopener', target: '_blank' }, 'viber://pa?chatURI=aliceinsbiswonderland']
                   ]
                ],
                goodHtml = '<div>' +
@@ -271,6 +274,7 @@ define([
                   '<p><a>upper and lower case</a></p>' +
                   '<p><iframe>base64 alert</iframe></p>' +
                   '<p><a href="tel:+78142332211" rel="nofollow">+7(814)-233-22-11</a></p>' +
+                  '<p><a href="viber://pa?chatURI=aliceinsbiswonderland" rel="noreferrer noopener" target="_blank">viber://pa?chatURI=aliceinsbiswonderland</a></p>' +
                   '</div>',
                checkHtml = decorator.Converter.jsonToHtml(json);
             equalsHtml(checkHtml, goodHtml);
@@ -1195,6 +1199,18 @@ define([
                   target: '_blank'
                },
                'smb://test-perfleakps/leaks/test/30_03_19/21_06_58.zip'
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('link href starts from viber://', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer noopener',
+                  href: 'viber://pa?chatURI=aliceinsbiswonderland',
+                  target: '_blank'
+               },
+               'viber://pa?chatURI=aliceinsbiswonderland'
             ]];
             assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });

@@ -17,10 +17,6 @@ import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 
 import {IItemTemplateOptions} from 'Controls/interface';
-import {IHeading} from "../_spoiler/Heading";
-export interface ITabsButtonsTemplate {
-    readonly '[Controls/_tabs/interface/ITabsButtonsTemplate]': boolean;
-}
 
 /**
  * Интерфейс для шаблонных опций контрола вкладок.
@@ -65,7 +61,7 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
  */
 
 /*
- * @name Controls/_tabs/interface/ITabsButtons#tabSpaceTemplate
+ * @name Controls/_tabs/ITabsTemplateOptions#tabSpaceTemplate
  * @cfg {Content} Contents of the area near the tabs.
  * @default undefined
  * @remark
@@ -121,7 +117,7 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
  */
 
 /*
- * @name Controls/_tabs/interface/ITabsButtons#itemTemplate
+ * @name Controls/_tabs/ITabsTemplateOptions#itemTemplate
  * @cfg {Function} Template for item render.
  * @default Base template 'Controls/tabs:buttonsItemTemplate'
  * @remark
@@ -189,7 +185,7 @@ export interface ITabsTemplateOptions extends IItemTemplateOptions {
  */
 
 /*
- * @name Controls/_tabs/interface/ITabsButtons#itemTemplateProperty
+ * @name Controls/_tabs/ITabsTemplateOptions#itemTemplateProperty
  * @cfg {String} Name of the item property that contains template for item render.
  * @default If not set, itemTemplate is used instead.
  * @remark

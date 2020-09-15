@@ -1,22 +1,12 @@
 .controls-Explorer__Path_theme-@{themeName} {
    padding-right: @breadcrumbs_padding-right_explorer;
-   min-height:    @breadcrumbs_min-height_explorer;
+   min-height: @breadcrumbs_min-height_explorer;
 }
 
-.controls-Explorer__Path_master_theme-@{themeName}:before {
-   content: '';
-   z-index: 0;
-   width: @master_separator_thickness_list;
-   height: 100%;
-   position: absolute;
-   right: 0;
-   top: 0;
+.controls-Explorer__HeadingPath-master_theme-@{themeName} {
+   margin-right: @master_separator_thickness_list;
 }
 
-.controls-Explorer__Path_style_master_theme-@{themeName}:before {
-   background-color: @master_separator_contrast-color_list;
-}
-
-.controls-Explorer__Path_style_masterClassic_theme-@{themeName}:before {
-   background-color: @master_separator_color_list;
+.controls-Explorer__HeadingPath-masterClassic_theme-@{themeName} {
+   margin-right: @masterClassic_separator_thickness_list;
 }

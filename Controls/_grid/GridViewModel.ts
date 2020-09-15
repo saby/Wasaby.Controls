@@ -381,6 +381,9 @@ var
                 classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
             }
 
+            if (!GridLayoutUtil.isFullGridSupport() && !(current.columns.length === (current.hasMultiSelect ? 2 : 1)) && self._options.fixIEAutoHeight) {
+                classLists.base += ' controls-Grid__row-cell__autoHeight';
+            }
             return classLists;
         },
 
@@ -420,7 +423,7 @@ var
 
         isNeedToHighlight: function(item, dispProp, searchValue) {
             var itemValue = item.get(dispProp);
-            return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
+            return itemValue && searchValue;
         },
         getItemsLadderVersion(ladder) {
             let ladderVersion = '';
@@ -1786,7 +1789,7 @@ var
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
                 if (current.item.get) {
-                    currentColumn.column.needSearchHighlight = current.searchValue ?
+                    currentColumn.needSearchHighlight = current.searchValue ?
                         !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue) : false;
                     currentColumn.searchValue = current.searchValue;
                 }
@@ -1876,7 +1879,7 @@ var
 
         setItems(items, cfg): void {
             this._model.setItems(items, cfg);
-            this._setHeader(this._options.header);
+            this._setHeader(cfg.header);
         },
 
         setItemTemplateProperty: function(itemTemplateProperty) {
@@ -2350,6 +2353,10 @@ var
         // region Colgroup columns
 
         _prepareColgroupColumns(columns: IGridColumn[], hasMultiSelect: boolean): void {
+            if (this.isFullGridSupport()) {
+                this._colgroupColumns = undefined;
+                return;
+            }
 
             const colgroupColumns: IColgroupColumn[] = [];
 
