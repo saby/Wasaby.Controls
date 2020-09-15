@@ -15,6 +15,7 @@
 }
 
 .controls-Menu__popup-list {
+   height: 100%;
    position: static;
 }
 
@@ -37,7 +38,7 @@
 .controls-Menu__popup-direction-vertical-top.controls-Menu__popup-shadow-suggestionsContainer_theme-@{themeName}{
    box-shadow: @popup_box-shadow-color_menuPopup -@popup_box-shadow-offset_menuPopup 0 @popup_box-shadow-blur_menuPopup -@popup_box-shadow-offset_menuPopup,
    @popup_box-shadow-color_menuPopup @popup_box-shadow-offset_menuPopup 0 @popup_box-shadow-blur_menuPopup -@popup_box-shadow-offset_menuPopup,
-   @popup_box-shadow-color_menuPopup 0 @popup_box-shadow-offset_menuPopup @popup_box-shadow-blur_menuPopup -@popup_box-shadow-offset_menuPopup;
+   @popup_box-shadow-color_menuPopup 0 -@popup_box-shadow-offset_menuPopup @popup_box-shadow-blur_menuPopup -@popup_box-shadow-offset_menuPopup;
 }
 
 .controls-Menu__popup-direction-vertical-bottom.controls-Menu__popup-shadow-suggestionsContainer_theme-@{themeName}{
@@ -66,6 +67,7 @@
 
 .controls-Menu__popup-content {
    max-height: 100%;
+   height: 100%;
    overflow: hidden;
    display: flex;
    flex-direction: column;

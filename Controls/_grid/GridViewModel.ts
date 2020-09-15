@@ -2338,6 +2338,10 @@ var
         // region Colgroup columns
 
         _prepareColgroupColumns(columns: IGridColumn[], hasMultiSelect: boolean): void {
+            if (this.isFullGridSupport()) {
+                this._colgroupColumns = undefined;
+                return;
+            }
 
             const colgroupColumns: IColgroupColumn[] = [];
 
