@@ -1240,7 +1240,7 @@ define([
          assert.equal(baseControl.getViewModel().getItemBySourceKey(2).getVersion(), 2);
          assert.isTrue(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
          assert.equal(baseControl.getViewModel().getItemBySourceKey(3).getVersion(), 1);
-         assert.equal(baseControl.getViewModel().getVersion(), 5);
+         assert.equal(baseControl.getViewModel().getVersion(), 6);
 
          baseControl._onViewKeyDown({
             target: {
@@ -1257,7 +1257,7 @@ define([
          assert.equal(baseControl.getViewModel().getItemBySourceKey(3).getVersion(), 2);
          assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
          assert.equal(baseControl.getViewModel().getItemBySourceKey(2).getVersion(), 3);
-         assert.equal(baseControl.getViewModel().getVersion(), 6);
+         assert.equal(baseControl.getViewModel().getVersion(), 8);
       });
 
       it('moveMarker activates the control', async function() {

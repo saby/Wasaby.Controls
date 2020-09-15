@@ -2190,10 +2190,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$rightSpacing = itemPadding.right;
     }
 
-    setMarkedKey(key: string|number, status: boolean, silent?: boolean): void {
+    setMarkedKey(key: string|number, status: boolean): void {
         const item = this.getItemBySourceKey(key);
         if (item) {
-            item.setMarked(status, silent);
+            item.setMarked(status);
         }
     }
 

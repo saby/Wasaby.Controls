@@ -2209,7 +2209,7 @@ const _private = {
     getMarkerController(self: typeof BaseControl, options: IList = null): MarkerController {
         if (!_private.hasMarkerController(self)) {
             options = options ? options : self._options;
-            _private.createMarkerController(self, options.markerVisibility, options.markerVisibility);
+            _private.createMarkerController(self, options.markerVisibility, options.markedKey);
         }
         return self._markerController;
     },

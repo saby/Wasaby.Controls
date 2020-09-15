@@ -346,10 +346,9 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
      * Проставить маркер
      * @param key ключ элемента, в котором задается состояние marked
      * @param status значение marked
-     * @param silent
      */
-    setMarkedKey(key: number|string, status: boolean, silent?: boolean): void {
-        this._display.setMarkedKey(key, status, silent);
+    setMarkedKey(key: number|string, status: boolean): void {
+        this._display.setMarkedKey(key, status);
         if (status === false) {
             this._markedKey = null;
         } else {

@@ -39,9 +39,7 @@ export class Controller {
    applyMarkedKey(key: CrudEntityKey): void {
       // TODO после перехода на новую модель, удалить setMarkedKey и работать с CollectionItem
       if (this._markedKey !== key) {
-         // silent - чтобы в случае когда маркер меняем с одного элемента на другой, версию модели поднять один раз
-         const silent = key !== null && key !== undefined;
-         this._model.setMarkedKey(this._markedKey, false, silent);
+         this._model.setMarkedKey(this._markedKey, false);
       }
       this._model.setMarkedKey(key, true);
       this._markedKey = key;
