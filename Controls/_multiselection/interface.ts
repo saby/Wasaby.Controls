@@ -1,9 +1,11 @@
-import { CollectionItem, IBaseCollection, ICollectionItem } from 'Controls/display';
+import { IBaseCollection, ICollectionItem } from 'Controls/display';
 import { Model, relation } from 'Types/entity';
-import { TKeysSelection as TKeys, TSelectedKey as TKey} from 'Controls/interface';
 import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
 import { RecordSet } from 'Types/collection';
 import { Controller as SourceController } from 'Controls/source';
+import { CrudEntityKey } from 'Types/source';
+
+export type TKeys = CrudEntityKey[];
 
 /**
  * Интерфейс описывающий элемент модели, используемой в контроллере множественного выбора
@@ -30,7 +32,7 @@ export interface ISelectionItem extends ICollectionItem {
 }
 
 /**
- * Интерфейс описывающий модель, используемую в контроллере множественного выбора
+ * Интерфейс модели, используемой в контроллере множественного выбора
  *
  * @interface Controls/multiselection/ISelectionModel
  * @public
@@ -45,17 +47,6 @@ export interface ISelectionModel extends IBaseCollection<Model, ISelectionItem> 
     * @return {boolean}
     */
    getHasMoreData(): boolean;
-
-   /**
-    * Получить текущий корневой элемент
-    * @remark
-    * Верхним корневым элементом является null
-    * В плоской стратегии корневой элемент всегда null
-    * @method
-    * @public
-    * @return {CollectionItem<Model>} Данные корнего элемента
-    */
-   getRoot(): CollectionItem<Model>;
 
    /**
     * Получить список элементов
@@ -111,7 +102,7 @@ export interface ITreeSelectionStrategyOptions extends IFlatSelectionStrategyOpt
    selectDescendants: boolean;
    nodesSourceControllers?: Map<string, SourceController>;
    hierarchyRelation: relation.Hierarchy;
-   rootId: TKey;
+   rootId: CrudEntityKey;
 }
 
 /**
@@ -184,6 +175,6 @@ export interface ISelectionControllerResult {
  * Используется чтобы определить состояние узла с незагруженными детьми
  */
 export interface IEntryPath {
-   id: TKey;
-   parent: TKey;
+   id: CrudEntityKey;
+   parent: CrudEntityKey;
 }
