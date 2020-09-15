@@ -1,6 +1,5 @@
 import rk = require('i18n!Controls');
 import {descriptor} from 'Types/entity';
-import dateControlsUtils from './../Utils';
 
 /**
  * Интерфейс для визуального отображения контрола {@link Controls/dateRange:DateSelector}.
@@ -101,18 +100,7 @@ export default {
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
              * @cfg {String} Text that is used if the period is not selected.
              */
-            emptyCaption: EMPTY_CAPTIONS.NOT_SPECIFIED,
-
-            /**
-             * @name Controls/_dateRange/interfaces/ILinkView#captionFormatter
-             * @cfg {Function} Функция форматирования заголовка.
-             */
-
-            /*
-             * @name Controls/_dateRange/interfaces/ILinkView#captionFormatter
-             * @cfg {Function} Caption formatting function.
-             */
-            captionFormatter: dateControlsUtils.formatDateRangeCaption
+            emptyCaption: EMPTY_CAPTIONS.NOT_SPECIFIED
         };
     },
 
@@ -128,8 +116,7 @@ export default {
             nextArrowVisibility: descriptor(Boolean),
             prevArrowVisibility: descriptor(Boolean),
             showDeleteButton: descriptor(Boolean),
-            emptyCaption: descriptor(String),
-            captionFormatter: descriptor(Function)
+            emptyCaption: descriptor(String)
         };
     }
 };
