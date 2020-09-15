@@ -303,8 +303,8 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         if (!this._infoboxOpened) {
             this._activateLookup(false);
         }
-        this._removeItem(item);
         this._resetInputValue();
+        this._removeItem(item);
     }
 
     private _getContainer(): HTMLElement {
