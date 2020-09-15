@@ -15,7 +15,7 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
- * @includes IRemover Controls/_list/interface/IRemover
+ * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
@@ -32,7 +32,7 @@
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IReloadableList Controls/_list/interface/IReloadableList
- * @includes IMovableView Controls/_list/interface/IMovableView
+ * @includes IMovableList Controls/_list/interface/IMovableList
  * @public
  * @author Крайнов Д.О.
  */
@@ -53,7 +53,7 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
- * @includes IRemover Controls/_list/interface/IRemover
+ * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
@@ -68,7 +68,7 @@
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
- * @includes IMovableView Controls/_list/interface/IMovableView
+ * @includes IMovableList Controls/_list/interface/IMovableList
  * @public
  * @author Крайнов Д.О.
  */
@@ -121,10 +121,10 @@ import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/
 import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
 
 export {MoveController, TMovePosition, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
-export {IMovableView} from 'Controls/_list/interface/IMovableView';
+export {IMovableList} from 'Controls/_list/interface/IMovableList';
 import * as Mover from 'Controls/_list/Mover';
 
-export {IRemover} from 'Controls/_list/interface/IRemover';
+export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
 
 export {
