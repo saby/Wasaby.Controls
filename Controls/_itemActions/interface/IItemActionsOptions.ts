@@ -371,17 +371,6 @@ export interface IItemActionsOptions {
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
 
     /**
-     * @name Controls/_itemActions/itemActions/interface/IItemActionsOptions#itemActionsBackgroundStyle
-     * @cfg {String} Опция, позволяющая настраивать фон панели операций над записью.
-     * @description Предустановленные варианты 'default' | 'transparent'. По умолчанию 'default' (фон соответствует цвету фона hovered записи)
-     */
-    /*ENG
-     * @name Controls/_itemActions/itemActions/interface/IItemActionsOptions#itemActionsBackgroundStyle
-     * @cfg {String} Style prefix for configuring item actions panel background. By default it matches hovered item background
-     */
-    itemActionsBackgroundStyle?: string;
-
-    /**
      * @name Controls/_itemActions/itemActions/interface/IItemActionsOptions#itemActionsClass
      * @cfg {String} CSS класс, позволяющий задать отступы и позицию панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опциями записи} внутри элемента.
      * @default controls-itemActionsV_position_bottomRight

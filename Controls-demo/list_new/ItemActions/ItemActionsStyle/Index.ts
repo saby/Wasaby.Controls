@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IItemAction} from 'Controls/itemActions';
 import {Memory} from 'Types/source';
 
-import * as template from 'wml!Controls-demo/list_new/ItemActions/ItemActionsBackground/ItemActions';
+import * as template from 'wml!Controls-demo/list_new/ItemActions/ItemActionsStyle/ItemActions';
 
 import {getContactsCatalog as getData} from '../../DemoHelpers/DataCatalog';
 import {getActionsForContacts as getItemActions} from '../../DemoHelpers/ItemActionsCatalog';
@@ -19,5 +19,5 @@ export default class ListDelayedItemActions extends Control<IControlOptions> {
       });
    }
 
-   static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/list_new/ItemActions/ItemActionsBackground/ItemActionsBackground'];
+   static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/list_new/ItemActions/ItemActionsStyle/ItemActionsStyle'];
 }

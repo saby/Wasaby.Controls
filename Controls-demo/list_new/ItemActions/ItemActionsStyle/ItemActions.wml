@@ -1,17 +1,17 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
-    <div class="Controls-ItemActionsBackground__transparent-area">
+    <div class="ItemActionsStyle__transparent-area">
         <div>Transparent</div>
         <Controls.list:View
                 name="transparentOptions"
-                itemActionsBackgroundStyle="transparent"
                 keyProperty="id"
                 source="{{_viewSource}}"
                 itemActions="{{_itemActions}}">
             <ws:itemTemplate>
                 <ws:partial template="Controls/list:ItemTemplate"
-                            itemActionsClass="controls-itemActionsV_position_topRight">
+                            itemActionsClass="controls-itemActionsV_position_topRight"
+                            highlightOnHover="{{false}}">
                     <ws:contentTemplate>
-                        <div class="Controls-ItemActionsBackground__transparent-itemContent">
+                        <div class="ItemActionsStyle__transparent-itemContent">
                             <div class="text">{{itemTemplate.itemData.item.get('title')}}</div>
                         </div>
                     </ws:contentTemplate>
@@ -19,21 +19,21 @@
             </ws:itemTemplate>
         </Controls.list:View>
     </div>
-    <div class="Controls-ItemActionsBackground__pink-area">
+    <div class="ItemActionsStyle__pink-area">
         <div>Pink</div>
         <Controls.list:View
                 name="pinkOptions"
-                itemActionsBackgroundStyle="pink"
+                hoverBackgroundStyle="pink"
                 keyProperty="id"
                 source="{{_viewSource}}"
                 itemActions="{{_itemActions}}">
         </Controls.list:View>
     </div>
-    <div class="Controls-ItemActionsBackground__blue-area">
+    <div class="ItemActionsStyle__blue-area">
         <div>Blue</div>
         <Controls.list:View
                 name="blueOptions"
-                itemActionsBackgroundStyle="blue"
+                hoverBackgroundStyle="blue"
                 keyProperty="id"
                 source="{{_viewSource}}"
                 itemActions="{{_itemActions}}">

@@ -2416,7 +2416,6 @@ const _private = {
                 }
             };
         }
-        // Гарантированно инициализируем шаблоны, если это ещё не произошло
         const itemActionsChangeResult = itemActionsController.update({
                 editingItem: editingItemData,
                 collection: self._listViewModel,
@@ -2424,7 +2423,7 @@ const _private = {
                 itemActionsProperty: options.itemActionsProperty,
                 visibilityCallback: options.itemActionVisibilityCallback,
                 itemActionsPosition: options.itemActionsPosition,
-                style: options.itemActionsBackgroundStyle ? options.itemActionsBackgroundStyle : options.style,
+                style: options.hoverBackgroundStyle || options.style,
                 theme: options.theme,
                 actionAlignment: options.actionAlignment,
                 actionCaptionPosition: options.actionCaptionPosition,
@@ -2434,7 +2433,7 @@ const _private = {
             editArrowAction,
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
             contextMenuConfig: options.contextMenuConfig
-    });
+        });
         if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
                 self._listViewModel.resetCachedItemData(recordKey);
