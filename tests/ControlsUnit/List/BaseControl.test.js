@@ -994,6 +994,13 @@ define([
          assert.isNotNull(ctrl._loadingIndicatorState);
          assert.isNull(ctrl._showContinueSearchButtonDirection);
 
+         const items = ctrl._items.clone();
+         ctrl._items.clear();
+         ctrl.triggerVisibilityChangedHandler('down', false);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
+         ctrl._items.assign(items);
+         ctrl._hideIndicatorOnTriggerHideDirection = 'down';
+
          // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
@@ -3357,7 +3364,7 @@ define([
 
       });
 
-      it('_needBottomPadding after reload in beforeUpdate', async function() {
+      it('_needBottomPadding after reload in beforeUpdate', function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
             itemActionsPosition: 'outside',
@@ -3378,12 +3385,16 @@ define([
          }
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
-         await ctrl._beforeMount(cfg);
-         assert.isFalse(ctrl._needBottomPadding);
-         ctrl._beforeUpdate(cfgWithSource).addCallback(function() {
-         assert.isTrue(ctrl._needBottomPadding);
-      });
-         ctrl._afterUpdate(cfgWithSource);
+         return new Promise((resolve) => {
+            ctrl._beforeMount(cfg);
+            assert.isFalse(ctrl._needBottomPadding);
+
+            ctrl._beforeUpdate(cfgWithSource).addCallback(function() {
+               assert.isTrue(ctrl._needBottomPadding);
+               resolve();
+            });
+            ctrl._afterUpdate(cfgWithSource);
+         });
       });
 
       it('setHasMoreData after reload in beforeMount', async function() {
@@ -3404,13 +3415,15 @@ define([
          let ctrl = new lists.BaseControl(cfg);
          let setHasMoreDataCalled = false;
          let origSHMD = lists.BaseControl._private.setHasMoreData;
+         let origNBP = lists.BaseControl._private.needBottomPadding;
          lists.BaseControl._private.setHasMoreData = () => {
             setHasMoreDataCalled = true;
-         }
+         };
+         lists.BaseControl._private.needBottomPadding = () => false;
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          assert.isTrue(setHasMoreDataCalled);
-
+         lists.BaseControl._private.needBottomPadding = origNBP;
       });
 
       it('getUpdatedMetaData: set full metaData.more on load to direction with position navigation', () => {
@@ -3442,12 +3455,18 @@ define([
          const model = {
             getEditingItemData: function() {
                return null;
-            }
+            },
+            getDisplay: () => ({
+               getCount: () => count
+            })
          };
          const editingModel = {
             getEditingItemData: function() {
                return {};
-            }
+            },
+            getDisplay: () => ({
+               getCount: () => count
+            })
          };
 
          assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, padding is needed");
@@ -6091,6 +6110,11 @@ define([
 
          instance._createSelectionController();
          let cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue' };
+         instance._beforeUpdate(cfgClone);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+
+         cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'], selectionViewMode: 'selected'};
          instance._beforeUpdate(cfgClone);
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);

@@ -1855,9 +1855,12 @@ const _private = {
             options.useNewModel
             ? EditInPlaceController.isEditing(listViewModel)
             : !!listViewModel.getEditingItemData();
+
+        const display = listViewModel ? (options.useNewModel ? listViewModel : listViewModel.getDisplay()) : null;
+        const hasVisibleItems = !!(display && display.getCount());
+
         return (
-            !!items &&
-            (!!items.getCount() || isEditing) &&
+            (hasVisibleItems || isEditing) &&
             options.itemActionsPosition === 'outside' &&
             !options.footerTemplate &&
             options.resultsPosition !== 'bottom'
@@ -2872,7 +2875,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // Контроллер для перемещения элементов списка
     _moveController: null,
-
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -3129,7 +3131,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
             _private.hideIndicator(this);
 
-            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress) {
+            const viewModel = this.getViewModel();
+            const hasItems = viewModel && viewModel.getCount();
+            if (_private.isPortionedLoad(this) && this._portionedSearchInProgress && hasItems) {
                 _private.getPortionedSearch(this).stopSearch();
             }
         }
@@ -3367,7 +3371,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._selectionController) {
-            if (filterChanged && _private.getSelectionController(this).isAllSelected(false)) {
+            const allowClearSelectionBySelectionViewMode =
+                this._options.selectionViewMode === newOptions.selectionViewMode ||
+                newOptions.selectionViewMode !== 'selected';
+
+            if (filterChanged &&
+                _private.getSelectionController(this).isAllSelected(false) &&
+                allowClearSelectionBySelectionViewMode) {
                 const result = _private.getSelectionController(this).clearSelection();
                 _private.handleSelectionControllerResult(this, result);
             }
@@ -4229,7 +4239,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _updatePagingPadding(): void {
-        if (!this._pagingPadding) {
+        // Сюда может попасть из beforePaint, когда pagingVisible уже поменялся на true (стрельнуло событие от скролла),
+        // но вот сам pagingPaddingContainer отрисуется лишь в следующем цикле синхронизации
+        // https://online.sbis.ru/opendoc.html?guid=b6939810-b640-41eb-8139-b523a8df16df
+        // Поэтому дополнительно проверяем на this._children.pagingPaddingContainer
+        if (!this._pagingPadding && this._children.pagingPaddingContainer) {
             this._pagingPadding = this._children.pagingPaddingContainer.offsetHeight;
         }
     },

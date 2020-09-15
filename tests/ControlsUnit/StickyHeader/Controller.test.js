@@ -108,7 +108,7 @@ define([
             };
             component.init(container);
             sinon.stub(component, '_updateTopBottom');
-            
+
             return component.registerHandler(event, data, true).then(function() {
                sinon.assert.calledOnce(event.stopImmediatePropagation);
             });
@@ -591,5 +591,76 @@ define([
          });
       });
 
+      describe('_resizeObserverCallback', () => {
+         it('should push new elements to array of heights', () => {
+            const entries = [
+               {
+                  target: 0,
+                  contentRect: {
+                     height: 200
+                  }
+               },
+               {
+                  target: 1,
+                  contentRect: {
+                     height: 200
+                  }
+               }
+            ];
+            component._resizeObserverCallback(entries);
+
+            assert.equal(component._elementsHeight.length, entries.length);
+         });
+         it('should set height to element', () => {
+            const result = 200;
+            const entries = [
+               {
+                  target: 0,
+                  contentRect: {
+                     height: result
+                  }
+               }
+            ];
+            component._elementsHeight = [
+               {
+                  key: 0,
+                  value: 100
+               }
+            ];
+
+            component._resizeObserverCallback(entries);
+
+            assert.equal(component._elementsHeight[0].value, result);
+         });
+         it('should delete element if its height is 0', () => {
+            const entries = [
+               {
+                  target: 0,
+                  contentRect: {
+                     height: 0
+                  }
+               }, {
+                  target: 1,
+                  contentRect: {
+                     height: 0
+                  }
+               }
+            ];
+
+            component._elementsHeight = [
+               {
+                  key: 0,
+                  value: 100
+               }, {
+                  key: 1,
+                  value: 100
+               }
+            ];
+
+            component._resizeObserverCallback(entries);
+
+            assert.equal(component._elementsHeight.length, 0);
+         });
+      });
    });
 });
