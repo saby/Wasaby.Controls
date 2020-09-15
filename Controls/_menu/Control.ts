@@ -203,8 +203,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return { ...{
                 model: this._listModel,
                 selectedKeys: options.selectedKeys,
-                excludedKeys: options.excludedKeys,
-                searchValue: options.searchValue,
+                excludedKeys: [],
             }, ...additionalOptions
         }
     }
