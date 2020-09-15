@@ -216,8 +216,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         return this._selectionController;
     }
 
-
-
     protected _beforeUpdate(newOptions: IMenuControlOptions): void {
         const rootChanged = newOptions.root !== this._options.root;
         const sourceChanged = newOptions.source !== this._options.source;
