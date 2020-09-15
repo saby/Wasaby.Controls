@@ -66,7 +66,8 @@ define([
          container = {
             scrollTop: 0,
             scrollHeight: 100,
-            clientHeight: 100
+            clientHeight: 100,
+            children: [{}]
          };
          component._canScroll = true;
          sinon.stub(StickyHeaderUtils, 'isHidden').returns(false);
@@ -193,11 +194,11 @@ define([
             result: true,
          }, {
             position: 'top',
-            scrollTop: 10,
+            offset: 10,
             result: false,
          }, {
             position: 'bottom',
-            clientHeight: 50,
+            offset: 10,
             result: false,
          }].forEach(function(test) {
             it(`should set correct fixedInitially. position: ${test.position}`, function() {
@@ -208,9 +209,7 @@ define([
                   data = getRegisterObject(test);
 
                component.init(container);
-               component._container.scrollTop = test.scrollTop || 0;
-               component._container.scrollHeight = test.scrollHeight || 100;
-               component._container.clientHeight = test.clientHeight || 100;
+               sinon.stub(data.inst, 'getOffset').returns(test.offset || 0);
                return component.registerHandler(event, data, true).then(function() {
                   if (test.result) {
                      assert.isTrue(component._headers[data.id].fixedInitially);

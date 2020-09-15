@@ -675,7 +675,7 @@ let
       },
 
       _afterMount: function() {
-          this._stickyHeaderController.init(this._container);
+          this._stickyHeaderController.init(this._children.content);
 
          /**
           * Для определения heightFix и styleHideScrollbar может требоваться DOM, поэтому проверим
@@ -809,7 +809,7 @@ let
             this._updateStickyHeaderContext();
          }
 
-         this._stickyHeaderController.updateContainer(this._container);
+         this._stickyHeaderController.updateContainer(this._children.content);
       },
 
       _beforeUnmount(): void {
