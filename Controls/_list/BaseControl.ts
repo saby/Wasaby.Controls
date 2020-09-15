@@ -2717,8 +2717,6 @@ const _private = {
 
         if (!self._moveController) {
             self._moveController = new MoveController(controllerOptions);
-        } else {
-            self._moveController.updateOptions(controllerOptions);
         }
         return self._moveController;
     },
@@ -2736,8 +2734,6 @@ const _private = {
     getRemoveController(self): RemoveController {
         if (!self._removeController) {
             self._removeController = new RemoveController(self._options.source);
-        } else {
-            self._removeController.updateOptions(self._options.source);
         }
         return self._removeController;
     }
@@ -2882,8 +2878,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _draggedKey: null,
     _validateController: null,
 
-    // Контроллер для перемещения элементов списка
+    // Контроллер для перемещения элементов из источника
     _moveController: null,
+
+    // Контроллер для удаления элементов из источника
+    _removeController: null,
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -3287,6 +3286,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._options.rowSeparatorSize !== newOptions.rowSeparatorSize) {
             this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
+        }
+
+        if (this._removeController) {
+            this._removeController.updateOptions(newOptions);
+        }
+
+        if (this._moveController) {
+            this._moveController.updateOptions(newOptions);
         }
 
         if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
