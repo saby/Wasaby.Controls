@@ -611,12 +611,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._listModel.nextVersion();
     }
 
-    /*
-        1. Нет обновления модели в методе toggleItem
-        2. Приходится вызывать метод nextVersion, чтобы в menu:Render обновились данные и отобразилась галка
-        3. Если emptyKey = null, метод setSelectedKeys применяется ко всем элементам
-    */
-
     private _getSelectedKeys(): TSelectedKeys {
         const selectedKeys: TSelectedKeys = [];
         factory(this._listModel.getSelectedItems()).each((treeItem): void => {
