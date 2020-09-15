@@ -5,6 +5,7 @@ import { RecordSet } from 'Types/collection';
 
 /**
  * Интерфейс базового класс стратегий выбора
+ * @author Панихин К.А.
  * @public
  */
 export default interface ISelectionStrategy {

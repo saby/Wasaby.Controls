@@ -12,10 +12,10 @@ import { CrudEntityKey } from 'Types/source';
 /**
  * Стратегия выбора для иерархического списка, для работы с ним как с плоским.
  * Записи не зависимы между собой, выбор родительских узлов никак не отражается на их детей.
- * @class Controls/_operations/MultiSelector/SelectionStrategy/Tree
+ * @class Controls/_multiselection/SelectionStrategy/Tree
  * @control
- * @private
- * @author Герасимов А.М.
+ * @public
+ * @author Панихин К.А.
  */
 
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';

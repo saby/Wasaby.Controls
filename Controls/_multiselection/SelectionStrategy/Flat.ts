@@ -12,10 +12,10 @@ const ALL_SELECTION_VALUE = null;
 
 /**
  * Базовая стратегия выбора в плоском списке.
- * @class Controls/_operations/MultiSelector/SelectionStrategy/Flat
+ * @class Controls/_multiselection/SelectionStrategy/Flat
  * @control
- * @private
- * @author Герасимов А.М.
+ * @public
+ * @author Панихин К.А.
  */
 export class FlatSelectionStrategy implements ISelectionStrategy {
    private _items: RecordSet;
