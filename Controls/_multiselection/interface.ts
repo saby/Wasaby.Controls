@@ -36,7 +36,7 @@ export interface ISelectionItem extends ICollectionItem {
  * @public
  * @author Панихин К.А.
  */
-export interface ISelectionModel extends IBaseCollection<ISelectionItem> {
+export interface ISelectionModel extends IBaseCollection<Model, ISelectionItem> {
    /**
     * Проверить, можно ли загрузить еще данные
     *
@@ -106,13 +106,12 @@ export interface ISelectionControllerOptions {
  * @public
  * @author Панихин К.А.
  */
-export interface ITreeSelectionStrategyOptions {
+export interface ITreeSelectionStrategyOptions extends IFlatSelectionStrategyOptions {
    selectAncestors: boolean;
    selectDescendants: boolean;
    nodesSourceControllers?: Map<string, SourceController>;
    hierarchyRelation: relation.Hierarchy;
    rootId: TKey;
-   items: RecordSet;
 }
 
 /**
@@ -128,20 +127,55 @@ export interface IFlatSelectionStrategyOptions {
 
 /**
  * Изменения в состоянии выбранных ключей
+ * @public
  */
 export interface ISelectionDifference {
+   /**
+    * Список ключей
+    * @typedef {TKeys}
+    */
    keys: TKeys;
+
+   /**
+    * Список добавленных ключей
+    * @typedef {TKeys}
+    */
    added: TKeys;
+
+   /**
+    * Список удаленных ключей
+    * @typedef {TKeys}
+    */
    removed: TKeys;
 }
 
 /**
- * Результат метода SelectionController-а
+ * Результат метода контроллера множественного выбора
+ * @public
  */
 export interface ISelectionControllerResult {
+   /**
+    * Изменения в состоянии выбранных ключей
+    * @typedef {ISelectionDifference}
+    */
    selectedKeysDiff: ISelectionDifference;
+
+   /**
+    * Изменения в состоянии исключенных ключей
+    * @typedef {ISelectionDifference}
+    */
    excludedKeysDiff: ISelectionDifference;
+
+   /**
+    * Кол-во выбранных элементов
+    * @typedef {number}
+    */
    selectedCount: number;
+
+   /**
+    * Выбраны все записи
+    * @typedef {boolean}
+    */
    isAllSelected: boolean;
 }
 
