@@ -451,13 +451,13 @@
 
 /**
  * @typedef {String} ResultsVisibility
- * @variant hasData Отображается при наличии более 1 записи в списке.
+ * @variant hasdata Отображается при наличии более 1 записи в списке.
  * @variant visible Отображается всегда, вне зависимости от количества записей в списке.
  */
 
 /**
  * @typedef {String} HeaderVisibility
- * @variant hasData Отображается при наличии более 1 записи в списке.
+ * @variant hasdata Отображается при наличии данных в списке.
  * @variant visible Отображается всегда, вне зависимости от количества записей в списке.
  */
 
@@ -467,7 +467,7 @@
  * @demo Controls-demo/grid/Results/FromMeta/Index
  * @remark
  * Для отображения строки итогов необходимо задать значение в опции {@link resultsPosition}.
- * @default hasData
+ * @default hasdata
  * @see resultsTemplate
  * @see resultsPosition
  */
@@ -475,7 +475,7 @@
  * @name Controls/_grid/interface/IGridControl#headerVisibility
  * @cfg {HeaderVisibility} Режим отображения заголовков колонки.
  * @demo Controls-demo/grid/Header/HeaderVisibility/Index
- * @default hasData
+ * @default hasdata
  */
 
 

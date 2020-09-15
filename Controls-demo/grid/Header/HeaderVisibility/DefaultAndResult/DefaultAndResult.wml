@@ -5,7 +5,7 @@
                 source="{{_viewSource}}"
                 header="{{_header}}"
                 columns="{{_columns}}"
-                headerVisibility="hasData"
+                headerVisibility="hasdata"
                 resultsPosition="bottom"
                 resultsVisibility="visible"/>
     </Controls.scroll:Container>

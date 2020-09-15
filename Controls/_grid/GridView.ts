@@ -48,7 +48,7 @@ var
                 Logger.warn('IGridControl: Option "stickyColumn" is deprecated and removed in 19.200. Use "stickyProperty" option in the column configuration when setting up the columns.', self);
             }
             if (cfg.headerInEmptyListVisible !== undefined) {
-                Logger.warn('IGridControl: Option "headerInEmptyListVisible" is deprecated and removed in 20.7000. Use "headerVisibility={ hasData | visible }".', self);
+                Logger.warn('IGridControl: Option "headerInEmptyListVisible" is deprecated and removed in 20.7000. Use "headerVisibility={ hasdata | visible }".', self);
             }
         },
 
