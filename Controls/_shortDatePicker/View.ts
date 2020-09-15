@@ -88,7 +88,11 @@ var Component = BaseControl.extend({
 
     _isFullPicker: null,
 
-    // constructor: function() {
+    _isExpandedPopup: false,
+    _popupHeightStyle: '',
+    _popupOffset: 2,
+
+// constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
     //    Component.superclass.constructor.apply(this, arguments);
     // },
@@ -217,6 +221,17 @@ var Component = BaseControl.extend({
 
     _onYearMouseLeave: function () {
         this._yearHovered = null;
+    },
+
+    _expandPopup(): void {
+        this._isExpandedPopup = !this._isExpandedPopup;
+        if (this._isExpandedPopup) {
+            const maxHeightPopup = this._logicParent._container.style.maxHeight;
+            const topPopup = this._logicParent._container.style.top;
+            this._popupHeightStyle = `height: ${parseInt(maxHeightPopup, 10) - parseInt(topPopup, 10) - this._popupOffset}px`;
+        } else {
+            this._popupHeightStyle = '';
+        }
     },
 
     _onHomeClick: function () {
