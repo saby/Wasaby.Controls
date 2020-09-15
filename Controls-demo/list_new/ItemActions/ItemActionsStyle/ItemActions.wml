@@ -1,24 +1,4 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
-    <div class="ItemActionsStyle__transparent-area">
-        <div>Transparent</div>
-        <Controls.list:View
-                name="transparentOptions"
-                keyProperty="id"
-                source="{{_viewSource}}"
-                itemActions="{{_itemActions}}">
-            <ws:itemTemplate>
-                <ws:partial template="Controls/list:ItemTemplate"
-                            itemActionsClass="controls-itemActionsV_position_topRight"
-                            highlightOnHover="{{false}}">
-                    <ws:contentTemplate>
-                        <div class="ItemActionsStyle__transparent-itemContent">
-                            <div class="text">{{itemTemplate.itemData.item.get('title')}}</div>
-                        </div>
-                    </ws:contentTemplate>
-                </ws:partial>
-            </ws:itemTemplate>
-        </Controls.list:View>
-    </div>
     <div class="ItemActionsStyle__pink-area">
         <div>Pink</div>
         <Controls.list:View
