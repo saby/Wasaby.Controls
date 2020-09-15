@@ -109,7 +109,7 @@ export interface IBase {
 /**
  * @name Controls/_input/interface/IBase#contrastBackground
  * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
- * @default false
+ * @default true
  * @variant true Контрастный фон.
  * @variant false Фон, гармонично сочетающийся с окружением.
  * @demo Controls-demo/Input/ContrastBackground/Index
