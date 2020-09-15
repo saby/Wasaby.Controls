@@ -340,10 +340,12 @@ define([
 
       });
 
-/*
       it('setMarkedKey', function() {
          const cfg = {
-            items: data,
+            items: new collection.RecordSet({
+               rawData: data,
+               keyProperty: 'id'
+            }),
             keyProperty: 'id',
             displayProperty: 'title',
             markerVisibility: 'visible'
@@ -353,7 +355,7 @@ define([
 
          let oldVersion = model.getVersion();
 
-         model.setMarkedKey(2, true, true);
+         model.setMarkedKey(2, true);
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
@@ -367,18 +369,11 @@ define([
 
          oldVersion = model.getVersion();
 
-         model.setMarkedKey(null, false);
-         assert.isNull(model.getMarkedKey());
-         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
-
-         oldVersion = model.getVersion();
-
          model.setMarkedKey(2, true);
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
       });
-*/
 
       // TODO SetItemActions
       /*it('setItemActions should not change actions if an item does not exist in display', function() {

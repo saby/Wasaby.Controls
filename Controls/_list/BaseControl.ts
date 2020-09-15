@@ -1487,8 +1487,10 @@ const _private = {
             if (_private.hasMarkerController(self)) {
                 const markerController = _private.getMarkerController(self);
                 if (action === IObservable.ACTION_REMOVE) {
-                    // Если элементы скрылись, то для них нужно сбросить состояние marked,
-                    // чтобы при их показе не было лишнего маркера
+                    // Событие remove срабатывает также при скрытии элементов.
+                    // Когда элементы скрываются, например при сворачивании группы, у них сохраняется свое состояние.
+                    // После скрытия элементов маркер переставляется на первый элемент или сбрасывается,
+                    // поэтому на скрытых элементах нужно сбросить состояние marked
                     markerController.resetMarkedState(removedItems);
 
                     const newMarkedKey = markerController.calculateMarkedKeyAfterRemove(removedItemsIndex);
@@ -1507,7 +1509,8 @@ const _private = {
                 }
 
                 // Если элемент был скрыт, то сработает remove и с элемента уберется выделение,
-                // а при показе элемента сработает add и для элемента нужно восстановить выделение
+                // а при показе элемента сработает add и для элемента нужно восстановить выделение,
+                // если текущий markedKey указывает на него
                 if (action === IObservable.ACTION_ADD) {
                     markerController.restoreMarkedState(newItems);
                 }
@@ -2196,7 +2199,7 @@ const _private = {
                 // CollectionItem без состояния и для него нужно восстановить маркер
                 // https://online.sbis.ru/doc/03a1208c-96ef-4641-bda8-fa7c72f6ebfb
                 if (_private.hasMarkerController(self)) {
-                    const markerController = _private.getMarkerController(this);
+                    const markerController = _private.getMarkerController(self);
                     markerController.applyMarkedKey(markerController.getMarkedKey());
                 }
                 break;
@@ -2210,7 +2213,7 @@ const _private = {
         return !!self._markerController;
     },
 
-    createMarkerController(self: typeof BaseControl, markerVisibility: TMarkerVisibility, markedKey: string|number): MarkerController {
+    createMarkerController(self: typeof BaseControl, markerVisibility: TMarkerVisibility, markedKey: CrudEntityKey): MarkerController {
         self._markerController = new MarkerController({
             model: self._listViewModel,
             markerVisibility,
@@ -2302,14 +2305,16 @@ const _private = {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
-    handleNewMarkedKey(self: typeof BaseControl, newMarkedKey: string|number): Promise<CrudEntityKey>|CrudEntityKey {
+    handleNewMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey): Promise<CrudEntityKey>|CrudEntityKey {
         const markerController = _private.getMarkerController(self);
         const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('markedKeyChanged', [newMarkedKey]);
 
         let result = eventResult;
         if (eventResult instanceof Promise) {
             eventResult.then((key) => markerController.applyMarkedKey(key));
-        } else if (eventResult !== undefined) {
+        } else if (eventResult !== undefined && self._environment) {
+            // Если не был инициализирован environment, то _notify будет возвращать null,
+            // но это значение используется, чтобы сбросить маркер. Актуально для юнитов
             markerController.applyMarkedKey(eventResult);
         } else {
             result = newMarkedKey;
@@ -2345,7 +2350,7 @@ const _private = {
                 forceUpdate: () => {
                     self._forceUpdate();
                 },
-                updateMarkedKey: (key: string|number) => {
+                updateMarkedKey: (key: CrudEntityKey) => {
                     self.setMarkedKey(key);
                 },
                 updateItemActions: () => {
@@ -3066,11 +3071,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // Если при загрузке данных возникла ошибка, то ошибку надо вернуть, чтобы при оживлении на клиенте
                 // не было перезапроса за данными.
                 if (result.errorConfig || !cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
-                    return getState(result);
+                    return Promise.resolve(getState(result));
                 }
             });
         } else {
             _private.createScrollController(self, newOptions);
+            return Promise.resolve();
         }
     },
 
@@ -3916,7 +3922,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     // TODO удалить, когда будет выполнено наследование контролов (TreeControl <- BaseControl)
-    setMarkedKey(key: number | string): void {
+    setMarkedKey(key: CrudEntityKey): void {
         if (this._options.markerVisibility !== MarkerVisibility.Hidden) {
             if (_private.getMarkerController(this).getMarkedKey() !== key) {
                 _private.handleNewMarkedKey(this, key);

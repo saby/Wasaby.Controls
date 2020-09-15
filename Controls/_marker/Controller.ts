@@ -5,9 +5,10 @@ import { Model } from 'Types/entity';
 import {CrudEntityKey} from 'Types/source';
 
 /**
+ * Контроллер управляющий маркером в списке
  * @class Controls/_marker/Controller
  * @author Панихин К.А.
- * @private
+ * @public
  */
 export class Controller {
    private _model: Collection<Model, CollectionItem<Model>>;
@@ -21,8 +22,9 @@ export class Controller {
    }
 
    /**
-    * Обновить состояние контроллера
-    * @param options
+    * Обновляет состояние контроллера
+    * @param {IOptions} options Новые опции
+    * @void
     */
    updateOptions(options: IOptions): void {
       this._model = options.model;
@@ -30,20 +32,23 @@ export class Controller {
    }
 
    /**
-    * Применить переданный ключ к модели
-    * @param key Новый ключ
+    * Применяет переданный ключ
+    * @param {CrudEntityKey} key Новый ключ
+    * @void
     */
    applyMarkedKey(key: CrudEntityKey): void {
       // TODO после перехода на новую модель, удалить setMarkedKey и работать с CollectionItem
       if (this._markedKey !== key) {
-         this._model.setMarkedKey(this._markedKey, false);
+         // silent - чтобы в случае когда маркер меняем с одного элемента на другой, версию модели поднять один раз
+         const silent = key !== null && key !== undefined;
+         this._model.setMarkedKey(this._markedKey, false, silent);
       }
       this._model.setMarkedKey(key, true);
       this._markedKey = key;
    }
 
    /**
-    * Пересчитать ключ маркера исходя из текущего
+    * Высчитывает новый ключ маркера
     * @return {CrudEntityKey} Новый ключ
     */
    calculateMarkedKey(): CrudEntityKey {
@@ -62,9 +67,9 @@ export class Controller {
             }
          } else {
             if (this._model.getCount()) {
-               newMarkedKey = this._markedKey;
-            } else {
                newMarkedKey = null;
+            } else {
+               newMarkedKey = this._markedKey;
             }
          }
       }
@@ -73,36 +78,38 @@ export class Controller {
    }
 
    /**
-    * Получить текущий ключ маркера
+    * Возвращает текущий ключ маркера
+    * @return {CrudEntityKey} Текущий ключ
     */
    getMarkedKey(): CrudEntityKey {
       return this._markedKey;
    }
 
    /**
-    * Посчитать ключ следующего элемента
-    * @return Ключ средующего элемента
+    * Высчитывает ключ следующего элемента
+    * @return {CrudEntityKey} Ключ следующего элемента
     */
    calculateNextMarkedKey(): CrudEntityKey {
       const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
-      const nextMarkedKey = this._calculateNearbyByDirectionItemKey(index, true);
+      const nextMarkedKey = this._calculateNearbyByDirectionItemKey(index + 1, true);
       return nextMarkedKey === null ? this._markedKey : nextMarkedKey;
    }
 
    /**
-    * Посчитать ключ предыдущего элемента
-    * @return Ключ предыдущего элемента
+    * Высчитывает ключ предыдущего элемента
+    * @return {CrudEntityKey} Ключ предыдущего элемента
     */
    calculatePrevMarkedKey(): CrudEntityKey {
       const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
-      const prevMarkedKey = this._calculateNearbyByDirectionItemKey(index, false);
+      const prevMarkedKey = this._calculateNearbyByDirectionItemKey(index - 1, false);
       return prevMarkedKey === null ? this._markedKey : prevMarkedKey;
    }
 
    /**
-    * Посчитать новый ключ относительно удаленного элемента
-    * Возвращает ключ следующего элемента, при его отустствии предыдущего, иначе null
-    * @param removedItemsIndex Индекс удаленной записи в исходной коллекции (RecordSet)
+    * Высчитывает новый ключ относительно удаленного элемента
+    * @remark Возвращает ключ следующего элемента, при его отустствии предыдущего, иначе null
+    * @param {number} removedItemsIndex Индекс удаленной записи в коллекции
+    * @return {CrudEntityKey} Новый ключ маркера
     */
    calculateMarkedKeyAfterRemove(removedItemsIndex: number): CrudEntityKey {
       // Если элемент с текущем маркером не удален или маркер не проставлен, то маркер не нужно менять
@@ -114,17 +121,10 @@ export class Controller {
    }
 
    /**
-    * Сбросить состояние marked для переданных элементов
-    * @param items Список элементов коллекции
-    */
-   resetMarkedState(items: Array<CollectionItem<Model>>): void {
-      items.forEach((item) => item.setMarked(false, true));
-   }
-
-   /**
-    * Посчитать ключ элемента, который полностью виден на странице
-    * @param items список HTMLElement-ов на странице
-    * @param verticalOffset вертикальное смещение скролла
+    * Высчитывает ключ первого полностью видимого на странице элемента
+    * @param {HTMLElement[]} items список HTMLElement-ов на странице
+    * @param {number} verticalOffset вертикальное смещение скролла
+    * @returns {CrudEntityKey} Новый ключ маркера
     */
    calculateFirstVisibleItemKey(items: HTMLElement[], verticalOffset: number): CrudEntityKey {
       let firstItemIndex = this._model.getStartIndex();
@@ -135,8 +135,18 @@ export class Controller {
    }
 
    /**
-    * Восстановить состояние для маркированного элемента, если он есть среди newItems
-    * @param newItems Список добавленных элементов
+    * Сбрасывает состояние marked для переданных элементов
+    * @param {Array<CollectionItem<Model>>} items Список элементов коллекции
+    * @void
+    */
+   resetMarkedState(items: Array<CollectionItem<Model>>): void {
+      items.forEach((item) => item.setMarked(false, true));
+   }
+
+   /**
+    * Восстановливает состояние marked для элемента с ключом равным markedKey, если он есть среди newItems
+    * @param {Array<CollectionItem<Model>>} newItems Список добавленных элементов
+    * @void
     */
    restoreMarkedState(newItems: Array<CollectionItem<Model>>): void {
       if (newItems.some((item) => this._getKey(item) === this._markedKey)) {
@@ -145,7 +155,8 @@ export class Controller {
    }
 
    /**
-    * Занулить все ссылки внутри контроллера
+    * Зануляет все ссылки внутри контроллера
+    * @void
     */
    destroy(): void {
       this._markedKey = null;
@@ -153,10 +164,11 @@ export class Controller {
       this._model = null;
    }
 
-   /*
-      TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
-       https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-   */
+   /**
+    * @private
+    * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+    *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+    */
    private _getKey(item: CollectionItem<Model>): CrudEntityKey {
       let contents = item.getContents();
       if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
@@ -195,16 +207,15 @@ export class Controller {
     * @private
     */
    private _calculateNearbyByDirectionItemKey(index: number, next: boolean): CrudEntityKey {
-      const limit = next ? this._model.getCount() : 0;
+      const count = this._model.getCount();
       let item;
-      do {
-         index += next ? 1 : -1;
 
-         if (next ? index >= limit : index < limit) {
-            return null;
-         }
+      const indexInBounds = (i) => next ? i < count : i >= 0;
+      while (indexInBounds(index)) {
          item = this._model.at(index);
-      } while (!item?.MarkableItem);
+         if (item && item.MarkableItem) { break; }
+         index += next ? 1 : -1;
+      }
 
       return item ? this._getKey(item) : null;
    }
@@ -226,6 +237,12 @@ export class Controller {
       return firstItem.getKey();
    }
 
+   /**
+    * Возращает индекс первого полностью видимого элемента
+    * @param {HTMLElement[]} items
+    * @param {number} verticalOffset
+    * @private
+    */
    private _getFirstVisibleItemIndex(items: HTMLElement[], verticalOffset: number): number {
       const itemsCount = items.length;
       let itemsHeight = 0;

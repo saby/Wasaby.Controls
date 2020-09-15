@@ -80,7 +80,6 @@ define([
          assert.isNull(notifyResult, '_onItemClick should ignore preventItemEvent events');
       });
 
-/*
       it('_beforeUpdate', function() {
          let itemPadding = {
             test: 'test'
@@ -125,8 +124,6 @@ define([
          lv.saveOptions(cfg);
          lv._beforeMount(cfg);
 
-         lv._listModel.setMarkedKey(1);
-         assert.equal(lv._listModel.getMarkedKey(), 1);
          lv._beforeUpdate(cfg);
 
          model = new lists.ListViewModel({
@@ -154,7 +151,6 @@ define([
          lv._beforeUpdate(cfg);
          assert.isFalse(itemPaddingChanged);
       });
-*/
 
       it('should notify about resize after the list was updated with new items', function() {
          var
