@@ -10,7 +10,6 @@ export default class extends Control {
     protected _viewSource: Memory;
     protected _columns: IColumnRes[] = getEditing().getEditingAlignColumns();
     protected _items: RecordSet;
-    protected _viewModel: unknown;
 
     protected _beforeMount(): void {
         const data = getEditing().getEditingAlignData();
@@ -18,10 +17,6 @@ export default class extends Control {
             keyProperty: 'id',
             data
         });
-    }
-
-    protected _afterMount(): void {
-        this._viewModel = this._children.list._children.listControl._children.baseControl.getViewModel();
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
