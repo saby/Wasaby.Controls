@@ -319,6 +319,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     this._handleCurrentItem(treeItem, sourceEvent.currentTarget, sourceEvent.nativeEvent);
                 } else {
                     this._notify('itemClick', [item, sourceEvent]);
+                    this._getMarkerController().setMarkedKey(key);
                 }
             }
         }
@@ -590,11 +591,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getMarkedKey(selectedKeys: TSelectedKeys, emptyKey?: string|number, multiSelect?: boolean): string|number|undefined {
-        if (multiSelect) {
-            if (selectedKeys.includes(emptyKey)) {
-                return emptyKey;
-            }
-        } else {
+        const markedKey = this._markerController?.getMarkedKey();
+        if (multiSelect && selectedKeys.includes(emptyKey)) {
+            return emptyKey;
+        }
+        if (markedKey) {
+            return markedKey;
+        }
+        if (!multiSelect) {
             return selectedKeys[0];
         }
     }
