@@ -13,6 +13,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
 import {Logger} from 'UI/Utils';
 
+//TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
 const ARROW_WIDTH = 16;
 const BREAD_CRUMB_MIN_WIDTH = ARROW_WIDTH + 28;
 const PADDING_RIGHT = 2;
@@ -32,51 +33,73 @@ const PADDING_RIGHT = 2;
 export interface IMultilinePathOptions extends IBreadCrumbsOptions {
     containerWidth: number;
 }
+interface IReceivedState {
+    items: Record[];
+}
 
-class MultilinePath extends Control<IMultilinePathOptions> implements IFontSize {
+class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> implements IFontSize {
     readonly '[Controls/_interface/IFontSize]': boolean;
     protected _template: TemplateFunction = template;
     protected _visibleItemsFirst: Record[] = [];
     protected _visibleItemsSecond: Record[] = [];
     protected _width: number = 0;
-    protected DOTS_WIDTH: number = 0;
+    protected _dotsWidth: number = 0;
     protected _indexEdge: number = 0;
     protected _items: Record[] = [];
-    protected _getTextWidth: Function;
 
-    protected _beforeMount(options?: IMultilinePathOptions, contexts?: object, receivedState?: void): Promise<void> | void {
+    protected _beforeMount(options?: IMultilinePathOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
         if (!options.containerWidth) {
             Logger.error('Option containerWidth is undefined');
         }
-        return new Promise((resolve) => {
-            loadFontWidthConstants().then((getTextWidth: Function) => {
-                this._getTextWidth = getTextWidth;
-                if (this._options.items && this._options.items.length > 0) {
-                    this._items = this._options.items;
-                    this._width = options.containerWidth;
-                    this._initializeConstants(options.fontSize);
-                    this._calculateBreadCrumbsToDraw(this._options.items, options);
-                }
-                resolve();
+        if (receivedState) {
+            this._dotsWidth = this._getDotsWidth(options.fontSize);
+            this._prepareData(options);
+        } else {
+            return new Promise((resolve) => {
+                loadFontWidthConstants().then((getTextWidth: Function) => {
+                    this._getTextWidth = getTextWidth;
+                    if (options.items && options.items.length > 0) {
+                        this._dotsWidth = this._getDotsWidth(options.fontSize);
+                        this._prepareData(options);
+                    }
+                    resolve({
+                            items: this._items
+                        }
+                    );
+                });
             });
-        });
+        }
     }
 
     protected _beforeUpdate(newOptions: IMultilinePathOptions): void {
-        if (this._options.fontSize !== newOptions.fontSize) {
-            this._initializeConstants(newOptions.fontSize);
-        }
-        if (this._options.items !== newOptions.items || this._width !== newOptions.containerWidth
-            || this._options.fontSize !== newOptions.fontSize) {
+        const isItemsChanged = newOptions.items && newOptions.items !== this._options.items;
+        const isContainerWidthChanged = newOptions.containerWidth !== this._options.containerWidth;
+        const isFontSizeChanged = newOptions.fontSize !== this._options.fontSize;
+        if (isItemsChanged) {
             this._items = newOptions.items;
+        }
+        if (isContainerWidthChanged) {
             this._width = newOptions.containerWidth;
-            this._calculateBreadCrumbsToDraw(newOptions.items, this._options);
+        }
+        if (isFontSizeChanged) {
+            this._dotsWidth = this._getDotsWidth(newOptions.fontSize);
+        }
+        if (isItemsChanged || isContainerWidthChanged || isFontSizeChanged) {
+            this._calculateBreadCrumbsToDraw(newOptions.items, newOptions);
         }
     }
 
-    private _initializeConstants(fontSize: string): void {
+    private _prepareData(options: IMultilinePathOptions): void {
+        if (options.items && options.items.length > 0) {
+            this._items = options.items;
+            this._width = options.containerWidth;
+            this._calculateBreadCrumbsToDraw(options.items, options);
+        }
+    }
+
+    private _getDotsWidth(fontSize: string): number {
         const dotsWidth = this._getTextWidth('...', fontSize) + PADDING_RIGHT;
-        this.DOTS_WIDTH = ARROW_WIDTH + dotsWidth;
+        return ARROW_WIDTH + dotsWidth;
     }
 
     private _calculateBreadCrumbsToDraw(items: Record[], options: IMultilinePathOptions): void {
@@ -128,7 +151,7 @@ class MultilinePath extends Control<IMultilinePathOptions> implements IFontSize 
                 // Сначала пробуем замылить предпоследнюю крошку
                 const secondContainerItems = [];
                 // если замылить не получилось - показываем точки
-                secondContainerWidth += this.DOTS_WIDTH;
+                secondContainerWidth += this._dotsWidth;
                 let index;
                 // предпоследняя не поместилась - начинаем с пред-предпоследней
                 for (index = items.length - 3; index >= this._indexEdge; index--) {
@@ -148,7 +171,7 @@ class MultilinePath extends Control<IMultilinePathOptions> implements IFontSize 
                 }
                 // добавляем точки
                 let dotsItem = {};
-                dotsItem[this._options.displayProperty] = '...';
+                dotsItem[options.displayProperty] = '...';
 
                 secondContainerItems.push({
                     getPropValue: ItemsUtil.getPropertyValue,
@@ -181,6 +204,10 @@ class MultilinePath extends Control<IMultilinePathOptions> implements IFontSize 
             itemsWidth.push(itemWidth + PADDING_RIGHT);
         });
         return itemsWidth;
+    }
+
+    private _getTextWidth(text: string, size: string  = 'xs'): number {
+        return getFontWidth(text, size);
     }
 
     private _canShrink(itemWidth: number, currentWidth: number, availableWidth: number): boolean {
