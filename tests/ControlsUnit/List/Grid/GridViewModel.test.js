@@ -200,7 +200,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                },
                keyProperty: 'id'
             });
-            assert.isFalse(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'xxx'));
+            assert.isTrue(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'xxx'));
             assert.isFalse(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', ''));
             assert.isTrue(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'tes'));
          });
@@ -969,7 +969,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // check next column
             current.goToNextColumn();
             gridColumn = clone(gridColumns[0]);
-            cMerge(gridColumn, {needSearchHighlight: false});
+            cMerge(gridColumn, {needSearchHighlight: true});
             assert.equal(1, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
             assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "goToNextColumn()".');
             assert.isTrue(gridColumn.textOverflow === 'ellipsis', 'Incorrect value "current.textOverflow".');
@@ -989,7 +989,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // check next column
             current.goToNextColumn();
             gridColumn = clone(gridColumns[1]);
-            cMerge(gridColumn, {needSearchHighlight: false});
+            cMerge(gridColumn, {needSearchHighlight: true});
             assert.equal(2, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
             assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after goToNextColumn().');
             checkBaseProperties(current.getCurrentColumn(), {
@@ -1009,7 +1009,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // check last column
             current.goToNextColumn();
             gridColumn = clone(gridColumns[2]);
-            cMerge(gridColumn, {needSearchHighlight: false});
+            cMerge(gridColumn, {needSearchHighlight: true});
             assert.equal(3, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
             assert.isTrue(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "gotToNextColumn()".');
             checkBaseProperties(current.getCurrentColumn(), {

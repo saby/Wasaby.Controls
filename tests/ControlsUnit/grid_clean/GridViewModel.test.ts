@@ -48,7 +48,7 @@ describe('Controls/grid_clean/GridViewModel', () => {
             const currentRow = gridViewModel.getCurrent();
             let currentColumn = currentRow.getCurrentColumn();
             assert.strictEqual(currentColumn.searchValue, 'item');
-            assert.strictEqual(currentColumn.column.needSearchHighlight, false);
+            assert.strictEqual(currentColumn.column.needSearchHighlight, true);
 
             currentRow.goToNextColumn();
             currentColumn = currentRow.getCurrentColumn();
