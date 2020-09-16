@@ -12,6 +12,7 @@ class Multiline extends Control<IControlOptions> {
     protected _item: object;
     protected _info: string = '';
     protected _containerWidth: number = 500;
+    protected _containerWidth2: number = 350;
 
     protected _beforeMount(): void {
         this._items  = [

@@ -49,18 +49,19 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
 
     protected _beforeMount(options?: IMultilinePathOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
         if (!options.containerWidth) {
-            Logger.error('Option containerWidth is undefined');
-        }
-        if (receivedState) {
+            Logger.error('MultilinePath: option containerWidth is undefined', this);
+            loadFontWidthConstants().then(() => {
+                return;
+            });
+        } else if (receivedState) {
             this._dotsWidth = this._getDotsWidth(options.fontSize);
-            this._prepareData(options);
+            this._prepareData(options, options.containerWidth);
         } else {
             return new Promise((resolve) => {
                 loadFontWidthConstants().then((getTextWidth: Function) => {
-                    this._getTextWidth = getTextWidth;
                     if (options.items && options.items.length > 0) {
-                        this._dotsWidth = this._getDotsWidth(options.fontSize);
-                        this._prepareData(options);
+                        this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
+                        this._prepareData(options, options.containerWidth, getTextWidth);
                     }
                     resolve({
                             items: this._items
@@ -68,6 +69,13 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
                     );
                 });
             });
+        }
+    }
+
+    protected _afterMount(options?: IMultilinePathOptions, contexts?: any): void {
+        if (!options.containerWidth) {
+            this._dotsWidth = this._getDotsWidth(options.fontSize);
+            this._prepareData(options, this._container.clientWidth);
         }
     }
 
@@ -89,24 +97,23 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
         }
     }
 
-    private _prepareData(options: IMultilinePathOptions): void {
+    private _prepareData(options: IMultilinePathOptions, width: number, getTextWidth: Function = this._getTextWidth): void {
         if (options.items && options.items.length > 0) {
             this._items = options.items;
-            this._width = options.containerWidth;
-            this._calculateBreadCrumbsToDraw(options.items, options);
+            this._width = width;
+            this._calculateBreadCrumbsToDraw(options.items, options, getTextWidth);
         }
     }
 
-    private _getDotsWidth(fontSize: string): number {
-        const dotsWidth = this._getTextWidth('...', fontSize) + PADDING_RIGHT;
+    private _getDotsWidth(fontSize: string, getTextWidth: Function = this._getTextWidth): number {
+        const dotsWidth = getTextWidth('...', fontSize) + PADDING_RIGHT;
         return ARROW_WIDTH + dotsWidth;
     }
 
-    private _calculateBreadCrumbsToDraw(items: Record[], options: IMultilinePathOptions): void {
-        const containerWidth = options.containerWidth;
+    private _calculateBreadCrumbsToDraw(items: Record[], options: IMultilinePathOptions, getTextWidth: Function = this._getTextWidth): void {
         this._visibleItemsFirst = [];
         this._visibleItemsSecond = [];
-        const itemsWidth = this._getItemsWidth(items, options);
+        const itemsWidth = this._getItemsWidth(items, options, getTextWidth);
         let shrinkItemIndex;
         let firstContainerItems = [];
 
@@ -123,7 +130,7 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
             let firstContainerWidth = 0;
             let secondContainerWidth = 0;
             // заполняем в первый контейнер то, что помещается. Запоминаем индекс последней крошки
-            while (firstContainerWidth < containerWidth) {
+            while (firstContainerWidth < this._width) {
                 firstContainerWidth += itemsWidth[this._indexEdge];
                 this._indexEdge++;
             }
@@ -132,7 +139,7 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
                 firstContainerItems.push(items[i]);
             }
             // позволяем сокращаться последней папке в первом контейнере
-            if (firstContainerWidth - itemsWidth[this._indexEdge] + BREAD_CRUMB_MIN_WIDTH <= containerWidth) {
+            if (firstContainerWidth - itemsWidth[this._indexEdge] + BREAD_CRUMB_MIN_WIDTH <= this._width) {
                 firstContainerItems.push(items[this._indexEdge]);
                 this._indexEdge++;
             }
@@ -145,7 +152,7 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
             secondContainerWidth -= itemsWidth[items.length - 2];
             secondContainerWidth += BREAD_CRUMB_MIN_WIDTH;
             // если второй контейнер по ширине больше, чем доступная ширина, начинаем расчеты
-            if (secondContainerWidth > containerWidth) {
+            if (secondContainerWidth > this._width) {
                 // предпоследняя не уместилась - сразу вычитаем ее ширину
                 secondContainerWidth -= BREAD_CRUMB_MIN_WIDTH;
                 // Сначала пробуем замылить предпоследнюю крошку
@@ -155,9 +162,9 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
                 let index;
                 // предпоследняя не поместилась - начинаем с пред-предпоследней
                 for (index = items.length - 3; index >= this._indexEdge; index--) {
-                    if (secondContainerWidth <= containerWidth) {
+                    if (secondContainerWidth <= this._width) {
                         break;
-                    } else if (this._canShrink(itemsWidth[index], secondContainerWidth, containerWidth)) {
+                    } else if (this._canShrink(itemsWidth[index], secondContainerWidth, this._width)) {
                         shrinkItemIndex = index;
                         secondContainerWidth -= itemsWidth[index] - BREAD_CRUMB_MIN_WIDTH;
                         break;
@@ -196,10 +203,10 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
         this._indexEdge = 0;
     }
 
-    private _getItemsWidth(items: Record[], options: IMultilinePathOptions): number[] {
+    private _getItemsWidth(items: Record[], options: IMultilinePathOptions, getTextWidth: Function = this._getTextWidth): number[] {
         const itemsWidth = [];
         items.forEach((item, index) => {
-            const itemTitleWidth = this._getTextWidth(ItemsUtil.getPropertyValue(item, options.displayProperty), options.fontSize);
+            const itemTitleWidth = getTextWidth(ItemsUtil.getPropertyValue(item, options.displayProperty), options.fontSize);
             const itemWidth = index !== 0 ? itemTitleWidth + ARROW_WIDTH : itemTitleWidth;
             itemsWidth.push(itemWidth + PADDING_RIGHT);
         });

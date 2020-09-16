@@ -31,7 +31,7 @@
                                                                 items="{{_items}}"
                                                                 parentProperty="parent"
                                                                 keyProperty="id"
-                                                                containerWidth="{{350}}"
+                                                                containerWidth="{{_containerWidth2}}"
                                                                 on:itemClick="_onItemClick()"/>
                         </div>
                     </ws:bodyContentTemplate>
