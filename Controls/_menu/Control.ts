@@ -27,7 +27,8 @@ import {TKey} from 'Controls/_menu/interface/IMenuControl';
 import {
     ITreeSelectionStrategyOptions,
     SelectionController,
-    TreeSelectionStrategy
+    TreeSelectionStrategy,
+    ISelectionControllerResult
 } from 'Controls/multiselection';
 
 /**
@@ -161,6 +162,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _errorConfig: dataSourceError.ViewConfig|void;
     private _stack: StackOpener;
     private _selectionController: SelectionController = null;
+    private _excludedKeys: number[]|string[] = [];
+    private _options: IMenuControlOptions = null;
 
     protected _beforeMount(options: IMenuControlOptions,
                            context?: object,
@@ -200,10 +203,16 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getSelectionOptions(options: IMenuControlOptions, additionalOptions: object): object {
+        let selectedKeys = options.selectedKeys;
+        if (options.keyProperty === 'copyOriginalId') {
+            selectedKeys = options.selectedKeys.map((key) => {
+               return String(key);
+            });
+        }
         return { ...{
                 model: this._listModel,
-                selectedKeys: options.selectedKeys,
-                excludedKeys: [],
+                selectedKeys: selectedKeys,
+                excludedKeys: this._excludedKeys,
             }, ...additionalOptions
         }
     }
@@ -599,16 +608,23 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const selectionController = this._getSelectionController();
         const selectedItems = this._listModel.getSelectedItems();
         if (selectedItems.length === 1 && MenuControl._isFixedItem(selectedItems[0].getContents())) {
-            selectionController.setSelectedKeys([selectedItems[0].getContents().getKey()], []);
+            selectionController.setSelectedKeys([selectedItems[0].getContents().getKey()], this._excludedKeys);
         }
-        selectionController.toggleItem(key);
-        selectionController.restoreSelection();
+        let selection = selectionController.toggleItem(key);
 
-        const isEmptySelected: boolean = this._options.emptyText && !this._listModel.getSelectedItems().length;
-        if (isEmptySelected) {
-            selectionController.setSelectedKeys([this._options.emptyKey], []);
+        if (this._needUpdateEmptySelection(selection)) {
+            selection = selectionController.toggleItem(this._options.emptyKey);
         }
+        selectionController.setSelectedKeys(selection.selectedKeysDiff.keys, this._excludedKeys);
         this._listModel.nextVersion();
+    }
+
+    private _needUpdateEmptySelection(selection: ISelectionControllerResult): boolean {
+        if (this._options.emptyText) {
+            const needUnselectKey = selection.selectedCount > 1 && selection.selectedKeysDiff.keys.includes(this._options.emptyKey);
+            return !selection.selectedCount || needUnselectKey;
+        }
+        return false;
     }
 
     private _getSelectedKeys(): TSelectedKeys {
