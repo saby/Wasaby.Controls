@@ -10,20 +10,23 @@
                         			 nodeProperty="@parent"
                         			 source="{{_menuSource}}"
                         			 buttonStyle="secondary"
+                        			 displayProperty="{{_options.displayProperty}}"
                         			 viewMode="link"
                         			 filter="{{_filter}}"
                         			 selectedKeys="{{_selectedKey}}"
                         			 lazyItemsLoading="{{true}}"
                         			 on:menuItemActivate="_menuItemClickHandler()"
+                        			 on:mousedown="_onMouseDownHandler()"
                         		  />
             </div>
         </div>
     </ws:template>
     <div class="controls-AdaptiveButtons__wrapper {{_lastIndex < _items.getCount() - 1 ? 'controls-AdaptiveButtons__wrapper_incomplete'}} controls-AdaptiveButtons__wrapper_align_{{_options.align}}">
-        <Controls._tabs.Buttons selectedKey="{{_selectedKey}}"
+        <Controls._tabs.Buttons selectedKey="{{_options.selectedKey}}"
                                 keyProperty="{{_options.keyProperty}}"
                                 items="{{_visibleItems}}"
                                 style="{{_options.style}}"
+                                displayProperty="{{_options.displayProperty}}"
                                 align="{{_options.align}}"
                                 on:selectedKeyChanged="_selectedKeyHandler()">
             <ws:itemTemplate>
