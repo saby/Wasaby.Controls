@@ -278,13 +278,9 @@ const _private = {
         }
     },
 
-    updateSearchValue(self, oldOptions, newOptions): void {
-        if (newOptions.searchValue !== oldOptions.searchValue) {
-            _private.doAfterUpdate(self, () => {
-                self._listViewModel.setSearchValue(newOptions.searchValue);
-            });
-            _private.getPortionedSearch(self).reset();
-        }
+    updateSearchValue(self, searchValue): void {
+        self._listViewModel.setSearchValue(searchValue);
+        _private.getPortionedSearch(self).reset();
     },
 
     setReloadingState(self, state): void {
@@ -3455,7 +3451,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
                         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                         _private.updateInitializedItemActions(this, newOptions);
-                        _private.updateSearchValue(this, this._options, newOptions);
+                        _private.updateSearchValue(this, newOptions.searchValue);
                     });
                 });
             } else {
@@ -3463,11 +3459,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return _private.reload(self, newOptions).addCallback(() => {
                     this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                     _private.updateInitializedItemActions(this, newOptions);
-                    _private.updateSearchValue(this, this._options, newOptions);
+                    _private.updateSearchValue(this, newOptions.searchValue);
                 });
             }
         } else {
-            _private.updateSearchValue(this, this._options, newOptions);
+            _private.updateSearchValue(this, newOptions.searchValue);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
                     self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
