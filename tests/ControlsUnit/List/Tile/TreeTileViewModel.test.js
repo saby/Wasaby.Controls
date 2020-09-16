@@ -294,6 +294,9 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
          assert.isFalse(itemData.canShowActions);
          assert.isFalse(itemData.isAnimated);
          assert.isNull(itemData.zoomCoefficient);
+
+         treeTileViewModel.setDragItemData(null);
+         assert.isNull(treeTileViewModel.getDragItemData());
       });
    });
 });
