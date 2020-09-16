@@ -40,10 +40,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
         this._filterController = new FilterController(options);
 
         if (receivedState) {
-           this._filterController.setHistoryItems(receivedState);
+           this._filterController.setFilterItems(receivedState);
         } else {
-            return this._filterController.loadHistoryItems().then((historyItems) => {
-                this._filterController.setHistoryItems(historyItems);
+            return this._filterController.loadFilterItemsFromHistory().then((historyItems) => {
+                this._filterController.setFilterItems(historyItems);
                 this._updateFilterAndFilterItems();
             });
         }

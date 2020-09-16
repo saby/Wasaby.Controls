@@ -53,7 +53,7 @@ export default class Browser extends Control {
 
     protected _beforeMount(options,
                            context,
-                           receivedState): Promise<{ items: RecordSet, historyItems: IFilterItem[] }> {
+                           receivedState): Promise<{ items: RecordSet, filterItems: IFilterItem[] }> {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
@@ -70,16 +70,16 @@ export default class Browser extends Control {
         this._dataOptionsContext = this._createContext(controllerState);
 
         if (receivedState) {
-            this._setFilterItems(receivedState.historyItems);
+            this._setFilterItems(receivedState.filterItems);
             if (isNewEnvironment()) {
                 this._setItemsAndCreateSearchController(receivedState.items, options);
             }
         } else {
-            return this._filterController.loadHistoryItems(options, receivedState).then((historyItems) => {
-                this._setFilterItems(historyItems);
+            return this._filterController.loadFilterItemsFromHistory(options, receivedState).then((filterItems) => {
+                this._setFilterItems(filterItems);
                 return this._loadItems({...options, filter: this._filter}, controllerState).then((items) => {
                     return {
-                        historyItems,
+                        filterItems,
                         items
                     };
                 });
@@ -164,8 +164,8 @@ export default class Browser extends Control {
         this._filterController = null;
     }
 
-    private _setFilterItems(historyItems): void {
-        this._filterController.setHistoryItems(historyItems);
+    private _setFilterItems(filterItems): void {
+        this._filterController.setFilterItems(filterItems);
         this._updateFilterAndFilterItems();
     }
 

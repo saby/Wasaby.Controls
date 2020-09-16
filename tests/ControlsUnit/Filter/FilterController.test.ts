@@ -37,7 +37,7 @@ describe('Controls/filter:ControllerClass', () => {
         });
     });
 
-    it('loadHistoryItems', () => {
+    it('loadFilterItemsFromHistory', () => {
         const filterController = new ControllerClass({
             filterButtonSource: getFilterButtonItems(),
             historyId: 'hId'
@@ -55,7 +55,7 @@ describe('Controls/filter:ControllerClass', () => {
         ];
         sandbox.replace(filterController, '_loadHistoryItems', () => {return Promise.resolve(historyItems)});
 
-        return filterController.loadHistoryItems().then((history) => {
+        return filterController.loadFilterItemsFromHistory().then((history) => {
             assert.deepEqual(filterController.getFilterButtonItems(), [
                 {
                     id: 'testId1',
@@ -68,10 +68,6 @@ describe('Controls/filter:ControllerClass', () => {
                 }
             ]);
         });
-    });
-
-    it('setHistoryItems', () => {
-
     });
 
     it('handleDataLoad', () => {

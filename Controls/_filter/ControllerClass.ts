@@ -78,7 +78,7 @@ export default class FilterControllerClass {
         }
     }
 
-    setHistoryItems(historyItems: THistoryData): void {
+    setFilterItems(historyItems: THistoryData): void {
         if (this._options.useStore) {
             const state = Store.getState();
             this._setFilterItems(state.filterSource, [], historyItems);
@@ -93,7 +93,7 @@ export default class FilterControllerClass {
         }
     }
 
-    loadHistoryItems(): Promise<THistoryData> {
+    loadFilterItemsFromHistory(): Promise<THistoryData> {
         if (this._options.useStore) {
             const state = Store.getState();
             const loadedSources = state && state.loadedSources && state.loadedSources[0];
