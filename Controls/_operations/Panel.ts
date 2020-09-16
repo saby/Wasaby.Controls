@@ -205,15 +205,16 @@ import {error as loadDataError} from 'Controls/dataSource';
  * </pre>
  */
 
-
 var Panel = Control.extend({
    _template: template,
+   _hidePanel: false,
 
    _beforeMount(): void {
       this._errorCallback = this._errorCallback.bind(this);
    },
 
    _errorCallback(viewConfig: object, error): void {
+      this._hidePanel = true;
       loadDataError.process({error});
    }
 });
