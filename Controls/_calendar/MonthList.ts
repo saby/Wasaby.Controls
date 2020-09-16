@@ -277,7 +277,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     protected _intersectHandler(event: SyntheticEvent, entries: IntersectionObserverSyntheticEntry[]): void {
         // Don't update if the observer is triggered after hiding the component.
-        if (!this._isVisible()) {
+        if (!this._monthListVisible()) {
             return;
         }
         for (const entry of entries) {
@@ -480,7 +480,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         return this._container.get ? this._container.get(0) : this._container;
     }
 
-    private _isVisible(): boolean {
+    private _monthListVisible(): boolean {
         return this._getNormalizedContainer().offsetParent !== null;
     }
 

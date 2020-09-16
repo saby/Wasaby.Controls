@@ -96,11 +96,11 @@ export default abstract class
         const selectResult =
             this._notify('selectorCallback', [this._lookupController.getItems(), result]) ||
             result;
-        this._lookupController.setItemsAndSaveToHistory(selectResult as SelectedItems);
-        this._afterItemsChanged();
         if (this._options.value) {
             this._notify('valueChanged', ['']);
         }
+        this._lookupController.setItemsAndSaveToHistory(selectResult as SelectedItems);
+        this._afterItemsChanged();
     }
 
     private _afterItemsChanged(): void {
@@ -142,7 +142,8 @@ export default abstract class
 
     static getOptionTypes(): object {
         return {
-            multiSelect: descriptor(Boolean)
+            multiSelect: descriptor(Boolean),
+            selectedKeys: descriptor(Array)
         };
     }
 }

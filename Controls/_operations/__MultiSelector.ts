@@ -217,6 +217,10 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       });
    }
 
+   protected _beforeUnmount(): void {
+      this._cancelCountPromise();
+   }
+
    static _theme: string[] = ['Controls/operations'];
 
    static getDefaultOptions(): object {
