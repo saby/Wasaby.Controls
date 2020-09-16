@@ -7,7 +7,8 @@
                     controls-Search__resetButton_theme_{{options.theme}}_position
                     controls-Search__resetButton_theme_{{options.theme}}_color icon-Close"
              on:click="_resetClick()"
-             on:mousedown="_resetMousedown()"></div>
+             on:mousedown="_resetMousedown()"
+             attr:ws-no-focus="true"></div>
     </ws:if>
     <ws:if data="{{options.searchButtonVisible}}">
         <div class="controls-Search__button_theme-{{options.theme}} controls-Search__searchButton
