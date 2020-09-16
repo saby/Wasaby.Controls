@@ -284,9 +284,9 @@ var SourceController = cExtend.extend({
       return this._loader && !this._loader.isReady();
    },
 
-   setEdgeState: function(direction) {
+   setEdgeState: function(direction, pagingMode) {
       if (this._queryParamsController) {
-         this._queryParamsController.setEdgeState(direction);
+         this._queryParamsController.setEdgeState(direction, undefined, pagingMode);
       }
    },
 

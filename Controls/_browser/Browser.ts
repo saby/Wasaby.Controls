@@ -259,6 +259,7 @@ export default class Browser extends Control {
         this._filterController.updateFilterItems(items);
         this._updateFilterAndFilterItems();
         this._sourceController.setFilter(this._filter);
+        this._dataOptionsContext.filter = this._filter;
         this._notify('filterChanged', [this._filter]);
     }
 

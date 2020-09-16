@@ -19,6 +19,7 @@ import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
+import * as Deferred from 'Core/Deferred';
 import {PrefetchProxy, Rpc, ICrud} from 'Types/source';
 
 export interface IFilterHistoryData {
@@ -40,10 +41,10 @@ interface IFilterControllerOptions {
     searchParam: string;
     minSearchLength: number;
     parentProperty: string;
-    selectedKeys: TKeysSelection;
-    excludedKeys: TKeysSelection;
-    source: ICrud;
-    selectionViewMode: string;
+    selectedKeys?: TKeysSelection;
+    excludedKeys?: TKeysSelection;
+    source?: ICrud;
+    selectionViewMode?: string;
 }
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
@@ -84,7 +85,8 @@ export default class FilterControllerClass {
         } else {
             this._setFilterItems(this._options.filterButtonSource, this._options.fastFilterSource, historyItems);
         }
-        this._itemsReady(this._filter, historyItems);
+        this._applyItemsToFilter(Prefetch.applyPrefetchFromHistory(this._filter, historyItems),
+            this._filterButtonItems, this._fastFilterItems);
 
         if (this._options.prefetchParams) {
             this._isFilterChanged = true;
@@ -120,7 +122,7 @@ export default class FilterControllerClass {
                     filterButtonChanged ? newOptions.filterButtonSource : this._filterButtonItems,
                     fastFilterChanged ? newOptions.fastFilterSource : this._fastFilterItems);
 
-                this._itemsReady(this._filter);
+                this._applyItemsToFilter(this._filter, this._filterButtonItems, this._fastFilterItems);
             }
 
             if (filterChanged) {
@@ -153,12 +155,6 @@ export default class FilterControllerClass {
         this._setFilter(Prefetch.clearPrefetchSession(filter));
     }
 
-    destroy(): void {
-        if (this._options.useStore) {
-            this._storeCallbacks.forEach((id) => Store.unsubscribe(id));
-        }
-    }
-
     updateHistory(history: THistoryData): void {
         if (this._options.prefetchParams) {
             this._processHistoryOnItemsChanged(history.items || history, this._options);
@@ -176,8 +172,8 @@ export default class FilterControllerClass {
                     Prefetch.clearPrefetchSession(this._filter);
                 }
                 this._isFilterChanged = true;
-            } else {
-                this._processHistoryOnItemsChanged(items, this._options);
+            } else  if (this._options.historyId) {
+                this._addToHistory(this._filterButtonItems, this._fastFilterItems, this._options.historyId);
             }
         }
     }
@@ -235,11 +231,17 @@ export default class FilterControllerClass {
     }
 
     getCalculatedFilter(config) {
-        getCalculatedFilter.apply(this, config);
+        getCalculatedFilter.call(this, config);
     }
 
     saveFilterToHistory(config) {
-        saveFilterToHistory.apply(this, config);
+        saveFilterToHistory.call(this, config);
+    }
+
+    destroy(): void {
+        if (this._options.useStore) {
+            this._storeCallbacks.forEach((id) => Store.unsubscribe(id));
+        }
     }
 
     private _updateFilterItems(newItems: IFilterItem[]): void {
@@ -263,9 +265,12 @@ export default class FilterControllerClass {
 
     private _resolveItemsWithHistory(options: Partial<IFilterControllerOptions>,
                                      filter: object): Promise<THistoryData> {
-        return this._resolveItems(options.historyId, options.filterButtonSource,
-                                    options.fastFilterSource, options.historyItems).then((history) => {
-            this._itemsReady(filter, history);
+        return this._resolveHistoryItems(options.historyId, options.historyItems).then((history) => {
+            this._setFilterItems(options.filterButtonSource, options.fastFilterSource, history);
+            this._applyItemsToFilter(
+                Prefetch.applyPrefetchFromHistory(filter, history),
+                this._filterButtonItems,
+                this._fastFilterItems);
             if (options.historyItems && options.historyItems.length && options.historyId && options.prefetchParams) {
                 this._processHistoryOnItemsChanged(options.historyItems, options as IFilterControllerOptions);
             }
@@ -274,16 +279,8 @@ export default class FilterControllerClass {
     }
 
     // Получает итемы с учетом истории.
-    private _resolveItems(historyId: string,
-                          filterButtonItems: IFilterItem[],
-                          fastFilterItems: IFilterItem[],
-                          historyItems: IFilterItem[]): Promise<THistoryData> {
-        const historyItemsDef = historyItems ? Promise.resolve(historyItems) : this._loadHistoryItems(historyId);
-
-        return historyItemsDef.then((newHistoryItems) => {
-            this._setFilterItems(filterButtonItems, fastFilterItems, newHistoryItems);
-            return newHistoryItems;
-        });
+    private _resolveHistoryItems(historyId: string, historyItems: IFilterItem[]): Promise<THistoryData> {
+        return historyItems ? Promise.resolve(historyItems) : this._loadHistoryItems(historyId);
     }
 
     private _loadHistoryItems(historyId: string): Promise<THistoryData> {
@@ -460,12 +457,8 @@ export default class FilterControllerClass {
     }
 
     private _processHistoryOnItemsChanged(items: IFilterItem[], options: IFilterControllerOptions): void {
-        if (options.prefetchParams) {
-            this._processPrefetchOnItemsChanged(options, items);
-            this._isFilterChanged = true;
-        } else if (options.historyId) {
-            this._addToHistory(this._filterButtonItems, this._fastFilterItems, options.historyId);
-        }
+        this._processPrefetchOnItemsChanged(options, items);
+        this._isFilterChanged = true;
     }
 
     private _processPrefetchOnItemsChanged(options: IFilterControllerOptions,
@@ -566,16 +559,6 @@ export default class FilterControllerClass {
         if (filterButtonItems && fastFilterItems) {
             FilterControllerClass._equalItemsIterator(filterButtonItems, fastFilterItems, setTextValue);
         }
-    }
-
-    private _itemsReady(filter: object, history?: THistoryData): void {
-        let resultFilter = filter;
-
-        if (history) {
-            resultFilter = Prefetch.applyPrefetchFromHistory(resultFilter, history);
-        }
-
-        this._applyItemsToFilter(resultFilter, this._filterButtonItems, this._fastFilterItems);
     }
 
     private _applyItemsToFilter(filter: object,
@@ -708,7 +691,7 @@ export default class FilterControllerClass {
     private _observeStore(options: IFilterControllerOptions): void {
         const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
             this._setFilterItems(filterSource, [], []);
-            this._itemsReady(this._filter);
+            this._applyItemsToFilter(this._filter, this._filterButtonItems, this._fastFilterItems);
             // запись в историю
             this.updateFilterItems(filterSource);
         });
@@ -768,7 +751,7 @@ export default class FilterControllerClass {
 
     // Возвращает итемы смерженнные с историей.
     private static _getItemsByOption(option: IFilterItem[] | Function,
-                                     history: IFilterItem[]): IFilterItem[] {
+                                     history?: IFilterItem[]): IFilterItem[] {
         let result;
 
         if (option) {
@@ -807,8 +790,8 @@ export default class FilterControllerClass {
 
 function getCalculatedFilter(config) {
     const def = new Deferred();
-    this._resolveItems(config.historyId, clone(config.filterButtonSource),
-        clone(config.fastFilterSource), config.historyItems).then((items) => {
+    this._resolveHistoryItems(config.historyId, config.historyItems).then((items) => {
+        this._setFilterItems(clone(config.filterButtonSource), clone(config.fastFilterSource), items);
         let calculatedFilter;
         try {
             calculatedFilter = this._calculateFilterByItems(config.filter, this._filterButtonItems, this._fastFilterItems);
