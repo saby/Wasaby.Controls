@@ -3463,7 +3463,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 });
             }
         } else {
-            _private.updateSearchValue(this, newOptions.searchValue);
+            _private.doAfterUpdate(self, () => {
+                _private.updateSearchValue(this, newOptions.searchValue)
+            });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
                     self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
