@@ -10,7 +10,7 @@
                     searchErrback="{{_searchErrback}}"
                     emptyTemplate="{{_emptyTemplate}}"
                     source="{{_options.source}}"
-                    minSearchLength="{{_options.autoDropDown ? 0 : _options.minSearchLength}}"
+                    minSearchLength="{{(_options.autoDropDown || _options.historyId) ? 0 : _options.minSearchLength}}"
                     navigation="{{_options.navigation}}"
                     sorting="{{_options.sorting}}"
                     searchParam="{{_options.searchParam}}"
