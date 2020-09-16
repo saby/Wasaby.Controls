@@ -194,6 +194,7 @@ define([
          MultilinePathCrumbs._getItemsWidth = () => {
             return [50, 50];
          };
+         MultilinePathCrumbs._width = 100;
          MultilinePathCrumbs._calculateBreadCrumbsToDraw(items1, options1);
          assert.isTrue(MultilinePathCrumbs._visibleItemsFirst.length === 2);
          assert.isTrue(MultilinePathCrumbs._visibleItemsSecond.length === 0);
@@ -202,6 +203,7 @@ define([
          MultilinePathCrumbs._getItemsWidth = () => {
             return [100, 100, 100, 100];
          };
+         MultilinePathCrumbs._width = 350;
          MultilinePathCrumbs._calculateBreadCrumbsToDraw(items2, options2);
          assert.isTrue(MultilinePathCrumbs._visibleItemsFirst.length === 4);
          // последняя крошка сократилась, а не упала вниз.
@@ -211,6 +213,7 @@ define([
          MultilinePathCrumbs._getItemsWidth = () => {
             return [100, 100, 100, 100];
          };
+         MultilinePathCrumbs._width = 320;
          MultilinePathCrumbs._calculateBreadCrumbsToDraw(items2, options3);
          assert.isTrue(MultilinePathCrumbs._visibleItemsFirst.length === 3);
          assert.isTrue(MultilinePathCrumbs._visibleItemsSecond.length === 1);
