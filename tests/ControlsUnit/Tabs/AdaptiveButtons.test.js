@@ -60,5 +60,53 @@ define([
             const lastIndex4 = adaptiveButtons._getLastTabIndex(items, options);
             assert.equal(lastIndex4, 0);
         });
+        it('_menuItemClickHandler', function() {
+            var notifyCorrectCalled = false;
+            adaptiveButtons._notify = function(eventName) {
+                if (eventName === 'selectedKeyChanged') {
+                    notifyCorrectCalled = true;
+                }
+            };
+            let event1 = {
+                nativeEvent: {
+                    button: 1
+                }
+            };
+            adaptiveButtons._visibleItems = items;
+            adaptiveButtons._position = 0;
+            adaptiveButtons._updateFilter = () => {};
+
+            adaptiveButtons._menuItemClickHandler(event1, items.at(0));
+            assert.equal(notifyCorrectCalled, true);
+
+            adaptiveButtons.destroy();
+        });
+        it('_menuItemClickHandler', function() {
+            const buttons = new tabsMod.AdaptiveButtons();
+            var notifyCorrectCalled = false;
+            buttons._notify = function(eventName) {
+                if (eventName === 'selectedKeyChanged') {
+                    notifyCorrectCalled = true;
+                }
+            };
+            let event1 = {
+                nativeEvent: {
+                    button: 1
+                }
+            };
+            buttons._options = {
+                keyProperty: 'id'
+            };
+            buttons._visibleItems = items;
+            buttons._position = 0;
+            buttons._updateFilter = () => {};
+            buttons._items = items;
+
+
+            buttons._menuItemClickHandler(event1, items.at(0));
+            assert.equal(notifyCorrectCalled, true);
+
+            buttons.destroy();
+        });
     });
 });
