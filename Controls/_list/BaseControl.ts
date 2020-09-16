@@ -278,6 +278,15 @@ const _private = {
         }
     },
 
+    updateSearchValue(self, oldOptions, newOptions): void {
+        if (newOptions.searchValue !== oldOptions.searchValue) {
+            _private.doAfterUpdate(self, () => {
+                self._listViewModel.setSearchValue(newOptions.searchValue);
+            });
+            _private.getPortionedSearch(self).reset();
+        }
+    },
+
     setReloadingState(self, state): void {
         const view = self._children && self._children.listView;
         if (view && view.setReloadingState) {
@@ -354,9 +363,9 @@ const _private = {
                     });
                     return;
                 }
-                _private.setReloadingState(self, false);
-                _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
+                    _private.hideError(self);
+                    _private.setReloadingState(self, false);
                     if (list.getCount()) {
                         self._loadedItems = list;
                     } else {
@@ -3351,12 +3360,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setTheme(newOptions.theme);
         }
 
-        if (newOptions.searchValue !== this._options.searchValue) {
-            _private.doAfterUpdate(this, () => {
-                this._listViewModel.setSearchValue(newOptions.searchValue);
-            });
-            _private.getPortionedSearch(self).reset();
-        }
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
         }
@@ -3450,6 +3453,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
                         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                         _private.updateInitializedItemActions(this, newOptions);
+                        _private.updateSearchValue(this, this._options, newOptions);
                     });
                 });
             } else {
@@ -3457,9 +3461,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return _private.reload(self, newOptions).addCallback(() => {
                     this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                     _private.updateInitializedItemActions(this, newOptions);
+                    _private.updateSearchValue(this, this._options, newOptions);
                 });
             }
         } else {
+            _private.updateSearchValue(this, this._options, newOptions);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
                     self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
