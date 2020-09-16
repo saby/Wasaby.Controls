@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <div class="ItemActionsStyle__pink-area">
-        <div>Pink</div>
+        <div>От hoverBackgroundStyle зависит цвет hover и цвет фона itemActions</div>
         <Controls.list:View
                 name="pinkOptions"
                 hoverBackgroundStyle="pink"
@@ -9,14 +9,17 @@
                 itemActions="{{_itemActions}}">
         </Controls.list:View>
     </div>
-    <div class="ItemActionsStyle__blue-area">
-        <div>Blue</div>
+    <div class="ItemActionsStyle__transparent-area">
+        <div>Если highlightOnHover === false, то фон прозрачный независимо от hoverBackgroundStyle</div>
         <Controls.list:View
-                name="blueOptions"
-                hoverBackgroundStyle="blue"
+                name="transparentOptions"
+                hoverBackgroundStyle="pink"
                 keyProperty="id"
                 source="{{_viewSource}}"
                 itemActions="{{_itemActions}}">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/list:ItemTemplate" highlightOnHover="{{false}}"/>
+            </ws:itemTemplate>
         </Controls.list:View>
     </div>
 </div>
