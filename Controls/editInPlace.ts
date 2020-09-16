@@ -1,5 +1,3 @@
-import {Controller} from 'Controls/_editInPlace/Controller';
-
 /**
  * Библиотека, которая предоставляет редактирование по месту в коллекции
  * @library Controls/editInPlace
@@ -18,8 +16,6 @@ import {Controller} from 'Controls/_editInPlace/Controller';
  */
 
 export {default as EditInPlace, JS_SELECTORS} from './_editInPlace/EditInPlace';
-export {Controller};
-export {EditInPlace as EditInPlaceController} from './_editInPlace/new/EditInPlace';
-export {CollectionEditor} from './_editInPlace/new/CollectionEditor';
-export {CONSTANTS} from './_editInPlace/interfaces/Types';
+export {Controller} from './_editInPlace/Controller';
+export {CONSTANTS} from './_editInPlace/Types';
 export {InputActivationHelper as InputHelper} from './_editInPlace/InputActivationHelper';

@@ -59,9 +59,9 @@ import {ISwipeEvent} from 'Controls/listRender';
 import {
     CONSTANTS,
     EditInPlace,
-    EditInPlaceController as NewEditInPlaceController,
-    IEditingOptions,
-    InputHelper as EditInPlaceInputHelper
+    Controller as NewEditInPlaceController,
+    InputHelper as EditInPlaceInputHelper,
+    JS_SELECTORS
 } from '../editInPlace';
 
 import {IEditableListOption} from './interface/IEditableList';
@@ -2375,7 +2375,7 @@ const _private = {
                     _private.updateItemActions(self, self._options);
                 },
                 isDestroyed: () => self._destroyed
-            } as IEditingOptions);
+            });
         }
     },
 
@@ -2679,6 +2679,24 @@ const _private = {
             self._removeController = new RemoveController(self._options.source);
         }
         return self._removeController;
+    },
+
+    registerFormOperation(self): void {
+        const formOperationHandler = (shouldSave) => {
+            if (shouldSave) {
+                const editingItem = self._editInPlaceController.getEditingItem();
+                if (editingItem?.contents.isChanged()) {
+                    return self.commitEdit();
+                }
+            }
+            return self.cancelEdit();
+        };
+
+        self._notify('registerFormOperation', [{
+            save: formOperationHandler.bind(self, true),
+            cancel: formOperationHandler.bind(self, false),
+            isDestroyed: () => self._destroyed
+        }], {bubbling: true});
     }
 };
 
@@ -3170,6 +3188,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._editInPlace.registerFormOperation(this._validateController);
             this._editInPlace.updateViewModel(this._listViewModel);
             this._editInPlace.setErrorContainer(this._children.errorContainer);
+        }
+
+        if (this._editInPlaceController) {
+            _private.registerFormOperation(this);
         }
 
         // для связи с контроллером ПМО
@@ -3863,12 +3885,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
 
-        if (this._getEditingConfig().editOnClick) {
+        const canEditByClick = this._getEditingConfig().editOnClick && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`);
+        if (canEditByClick) {
             e.stopPropagation();
             this.beginEdit({ item }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
-                    this._forceUpdate();
                 }
                 return result;
             });
@@ -3898,6 +3920,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _getEditInPlaceController(): NewEditInPlaceController {
         if (!this._editInPlaceController) {
+            let resetValidation = () => {
+                this._validateController.setValidationResult(null);
+            };
+            resetValidation = resetValidation.bind(this);
+
             const notifyIfMount = (eName, args: unknown[], params?: {bubbling: true}) => {
                 return this._isMounted ? this._notify(eName, args, params) : undefined;
             };
@@ -3906,11 +3933,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 return new Promise((resolve) => {
                     const eventResult = notifyIfMount('beforeBeginEdit', [options, isAdd]);
-                    resolve(eventResult);
-                }).then((result) => {
+
                     // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
                     // обязательно должен случиться после события beforeBeginEdit.
                     notifyIfMount('itemClick', this._savedItemClickArgs, {bubbling: true});
+
+                    resolve(eventResult);
+                }).then((result) => {
 
                     if (result === CONSTANTS.CANCEL) {
                         if (this._savedItemClickArgs) {
@@ -3943,6 +3972,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 if (this._listViewModel.getCount() > 1) {
                     this.setMarkedKey(item.getKey());
                 }
+
+                item.subscribe('onPropertyChange', resetValidation);
                 /*
                  * TODO: KINGO
                  * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
@@ -3954,20 +3985,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             };
 
             const beforeEndCallback = (item: Model, willSave: boolean, isAdd: boolean) => {
-                return new Promise<void | {canceled: true}>((resolve) => {
-                    if (willSave) {
-                        // validation
-                        resolve();
-                    } else {
-                        resolve();
-                    }
-                }).then((result) => {
-                    if (result && result.canceled) {
-                        return result;
-                    }
+                return Promise.resolve(() => {
                     const eventResult = this._notify('beforeEndEdit', [item, willSave, isAdd]);
 
                     // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
+                    // Пользовательское сохранение потенциально может начаться только если вернули Promise
                     const shouldUseDefaultSaving = willSave && isAdd && (
                         !eventResult || (
                             eventResult !== CONSTANTS.CANCEL && !(eventResult instanceof Promise)
@@ -3975,13 +3997,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     );
                     if (shouldUseDefaultSaving) {
                         return this._saveEditingInSource(item);
+                    } else {
+                        return eventResult;
                     }
-                    return eventResult;
                 });
             };
 
             const afterEndCallback = (item: Model, isAdd: boolean) => {
                 this._notify('afterEndEdit', [item, isAdd]);
+                item.unsubscribe('onPropertyChange', resetValidation);
             };
 
             this._editInPlaceController = new NewEditInPlaceController({
@@ -4070,7 +4094,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             Promise.reject('Control is in readOnly mode.');
         }
         this.showIndicator();
-        return this._getEditInPlaceController().commit().finally(() => {
+        return this._validateController.submit().then((validationResult) => {
+            for (const key in validationResult) {
+                if (validationResult.hasOwnProperty(key) && validationResult[key]) {
+                    return Promise.resolve({ canceled: true });
+                }
+            }
+            return this._getEditInPlaceController().commit();
+        }).finally(() => {
             this.hideIndicator();
         });
     },

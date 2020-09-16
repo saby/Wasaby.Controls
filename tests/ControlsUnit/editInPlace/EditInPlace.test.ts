@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {EditInPlace} from 'Controls/_editInPlace/new/EditInPlace';
+import {Controller as EditInPlace} from 'Controls/editInPlace';
 import {CONSTANTS, TEditableCollection} from 'Controls/_editInPlace/interfaces/Types';
 import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';

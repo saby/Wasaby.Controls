@@ -1,12 +1,6 @@
 import {Model} from 'Types/entity';
 import {getWidth, hasHorizontalScroll as hasHorizontalScrollUtil} from 'Controls/sizeUtils';
 
-enum PendingInputRenderState {
-    Null,
-    PendingRender,
-    Rendering
-}
-
 const typographyStyles = [
     'fontFamily',
     'fontSize',
@@ -24,17 +18,17 @@ export class InputActivationHelper {
         clientY: number,
         item: Model
     };
-    private _pendingInputRenderState: PendingInputRenderState;
     private _shouldActivate: boolean;
 
     setClickInfo(event: MouseEvent, item: Model): void {
+        if (this._clickItemInfo && this._clickItemInfo.item === item) {
+            return;
+        }
         this._clickItemInfo = {
             clientX: event.clientX,
             clientY: event.clientY,
             item
         };
-
-        this._pendingInputRenderState = PendingInputRenderState.PendingRender;
     }
 
     shouldActivate(): void {

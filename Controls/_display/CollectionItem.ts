@@ -6,7 +6,8 @@ import {
     IVersionable,
     ObservableMixin,
     OptionsToPropertyMixin,
-    SerializableMixin
+    SerializableMixin,
+    Model
 } from 'Types/entity';
 import {IList} from 'Types/collection';
 import {mixin} from 'Types/util';
@@ -324,17 +325,15 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
-    acceptEditing(): void {
+    acceptChanges(): void {
+        (this._$contents as unknown as Model).acceptChanges();
+
         if (!this._$editing) {
             return;
         }
-        // Тут большие сомнения, что мержатся левые поля! Нало проверить, то так было всегда.
-        this._$contents.merge(this._$editingContents);
-        this._$editingContents.acceptChanges();
-    }
-
-    getEditingContents(): T | undefined {
-        return this._$editingContents;
+        // Применяем изменения на обоих моделях, т.к. редактирование записи может продолжитсься.
+        (this._$contents as unknown as Model).merge(this._$editingContents as unknown as Model);
+        (this._$editingContents as unknown as Model).acceptChanges();
     }
 
     setActions(actions: any, silent?: boolean): void {
