@@ -182,48 +182,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    private _createSelectionController(options: IMenuControlOptions): SelectionController {
-        const strategyOptions = this._getSelectionStrategyOptions(options, this._listModel.getCollection());
-        const additionOptions = {
-            strategy: new TreeSelectionStrategy(strategyOptions)
-        };
-        return new SelectionController(this._getSelectionOptions(options, additionOptions));
-    }
-
-    private _getSelectionStrategyOptions(options: IMenuControlOptions, items: RecordSet): ITreeSelectionStrategyOptions {
-        return {
-            hierarchyRelation: new relation.Hierarchy({
-                keyProperty: options.keyProperty,
-                parentProperty: options.parentProperty,
-                nodeProperty: options.nodeProperty
-            }),
-            rootId: 'fakeRoot',
-            items
-        };
-    }
-
-    private _getSelectionOptions(options: IMenuControlOptions, additionalOptions: object): object {
-        let selectedKeys = options.selectedKeys;
-        if (options.keyProperty === 'copyOriginalId') {
-            selectedKeys = options.selectedKeys.map((key) => {
-               return String(key);
-            });
-        }
-        return { ...{
-                model: this._listModel,
-                selectedKeys: selectedKeys,
-                excludedKeys: this._excludedKeys,
-            }, ...additionalOptions
-        }
-    }
-
-    private _getSelectionController(options?: IMenuControlOptions): SelectionController {
-        if (!this._selectionController) {
-            this._selectionController = this._createSelectionController(options || this._options);
-        }
-        return this._selectionController;
-    }
-
     protected _beforeUpdate(newOptions: IMenuControlOptions): void {
         const rootChanged = newOptions.root !== this._options.root;
         const sourceChanged = newOptions.source !== this._options.source;
@@ -368,6 +326,48 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 }
             }
         }
+    }
+
+    private _createSelectionController(options: IMenuControlOptions): SelectionController {
+        const strategyOptions = this._getSelectionStrategyOptions(options, this._listModel.getCollection());
+        const additionOptions = {
+            strategy: new TreeSelectionStrategy(strategyOptions)
+        };
+        return new SelectionController(this._getSelectionOptions(options, additionOptions));
+    }
+
+    private _getSelectionStrategyOptions(options: IMenuControlOptions, items: RecordSet): ITreeSelectionStrategyOptions {
+        return {
+            hierarchyRelation: new relation.Hierarchy({
+                keyProperty: options.keyProperty,
+                parentProperty: options.parentProperty,
+                nodeProperty: options.nodeProperty
+            }),
+            rootId: 'fakeRoot',
+            items
+        };
+    }
+
+    private _getSelectionOptions(options: IMenuControlOptions, additionalOptions: object): object {
+        let selectedKeys = options.selectedKeys;
+        if (options.keyProperty === 'copyOriginalId') {
+            selectedKeys = options.selectedKeys.map((key) => {
+                return String(key);
+            });
+        }
+        return { ...{
+                model: this._listModel,
+                selectedKeys: selectedKeys,
+                excludedKeys: this._excludedKeys,
+            }, ...additionalOptions
+        }
+    }
+
+    private _getSelectionController(options?: IMenuControlOptions): SelectionController {
+        if (!this._selectionController) {
+            this._selectionController = this._createSelectionController(options || this._options);
+        }
+        return this._selectionController;
     }
 
     private _pinClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
