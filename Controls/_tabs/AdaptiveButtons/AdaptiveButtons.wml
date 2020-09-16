@@ -10,6 +10,7 @@
                         			 nodeProperty="@parent"
                         			 source="{{_menuSource}}"
                         			 buttonStyle="secondary"
+                        			 displayProperty="{{_options.displayProperty}}"
                         			 viewMode="link"
                         			 filter="{{_filter}}"
                         			 selectedKeys="{{_selectedKey}}"
@@ -25,6 +26,7 @@
                                 keyProperty="{{_options.keyProperty}}"
                                 items="{{_visibleItems}}"
                                 style="{{_options.style}}"
+                                displayProperty="{{_options.displayProperty}}"
                                 align="{{_options.align}}"
                                 on:selectedKeyChanged="_selectedKeyHandler()">
             <ws:itemTemplate>
