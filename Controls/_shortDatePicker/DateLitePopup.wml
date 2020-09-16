@@ -52,15 +52,17 @@
                  _isFullPicker="{{_isFullPicker}}"
          />
       </div>
-      <div class="controls-PeriodLiteDialog__footer controls-PeriodLiteDialog__footer_theme-{{_options.theme}}">
-         <ws:if data="{{_isExpandedPopup}}">
-            <div class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-AccordionArrowUp action-hover controls-PeriodLiteDialog__AccordionArrow"
-                 on:click="_expandPopup()"></div>
-         </ws:if>
-         <ws:else>
-            <div class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-AccordionArrowDown action-hover controls-PeriodLiteDialog__AccordionArrow"
-                 on:click="_expandPopup()"></div>
-         </ws:else>
+      <div class="controls-PeriodLiteDialog__footer_theme-{{_options.theme}}">
+         <div class="controls-PeriodLiteDialog__expandButton_theme-{{_options.theme}}">
+            <ws:if data="{{_isExpandedPopup}}">
+               <div class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-AccordionArrowUp action-hover controls-PeriodLiteDialog__AccordionArrow"
+                    on:click="_expandPopup()"></div>
+            </ws:if>
+            <ws:else>
+               <div class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-AccordionArrowDown action-hover controls-PeriodLiteDialog__AccordionArrow"
+                    on:click="_expandPopup()"></div>
+            </ws:else>
+         </div>
       </div>
    </ws:if>
    <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">

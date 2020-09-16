@@ -34,6 +34,8 @@
    box-shadow: @box-shadow-color_shortDatePicker @box-shadow-size_shortDatePicker;
    color: @item_text-color_shortDatePicker;
    height: @height_shortDatePicker;
+   display: flex;
+   flex-direction: column;
 }
 
 .controls-PeriodLiteDialog__homeButton {
@@ -41,12 +43,13 @@
 }
 
 .controls-PeriodLiteDialog__footer_theme-@{themeName} {
-   height: @footer_height_shortDatePicker;
    color: @footer_arrow_color_shortDatePicker;
+   background-color: @header_background-color_shortDatePicker;
 }
 
-.controls-PeriodLiteDialog__footer {
+.controls-PeriodLiteDialog__expandButton_theme-@{themeName} {
    display: flex;
+   height: @footer_height_shortDatePicker;
    justify-content: center;
    align-items: center;
 }
@@ -177,7 +180,7 @@
 
 .controls-PeriodLiteDialog__yearWrapper_theme-@{themeName} {
    padding-bottom: @item_border-thickness_shortDatePicker;
-   background-color: @yearselector_background-color_shortDatePicker;
+   background-color: @header_background-color_shortDatePicker;
    height: @yearselector_height_shortDatePicker;
    border-top: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
    border-left: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
@@ -289,7 +292,9 @@
 
 .controls-PeriodLiteDialog__bodyWrapper {
    position: relative;
-   height: calc(100% - (2 * @item_height_shortDatePicker));
+   overflow: hidden;
+   display: flex;
+   flex-direction: column;
 }
 
 .controls-PeriodLiteDialog__bodyWrapper_theme-@{themeName} {
@@ -466,13 +471,6 @@
 
 .controls-PeriodLiteDialog__year-list_theme-@{themeName} {
    max-height: @height_shortDatePicker - (2 * @item_height_shortDatePicker);
-}
-
-.controls-PeriodLiteDialog__month-list_theme-@{themeName},
-.controls-PeriodLiteDialog__quarter-list_theme-@{themeName},
-.controls-PeriodLiteDialog__fullYear-list_theme-@{themeName} {
-   height: calc(100% - @item_height_shortDatePicker);
-   max-height: 100vh;
 }
 
 .border-top-hidden {
