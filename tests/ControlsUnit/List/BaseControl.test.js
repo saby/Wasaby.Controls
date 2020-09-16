@@ -389,6 +389,7 @@ define([
                   return shouldSearch;
                }
             };
+            self._loadedItems = new collection.RecordSet();
 
             // navigation.view !== 'infinity'
             sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);

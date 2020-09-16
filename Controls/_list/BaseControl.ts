@@ -680,7 +680,8 @@ const _private = {
             // If it’s not empty, the following page will be requested in resize event
             // handler after current items are rendered on the page.
             if (_private.needLoadNextPageAfterLoad(addedItems, listViewModel, navigation) ||
-                (self._options.task1176625749 && countCurrentItems === cnt2)) {
+                (self._options.task1176625749 && countCurrentItems === cnt2) ||
+                _private.isPortionedLoad(self, addedItems)) {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
             if (self._isMounted && self._scrollController) {
@@ -938,7 +939,7 @@ const _private = {
         const sourceController = self._sourceController;
         const hasMoreData = _private.hasMoreData(self, sourceController, direction);
         const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
-            !self._loadedItems :
+            !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems) :
             true;
         const allowLoadBySource =
             sourceController &&
