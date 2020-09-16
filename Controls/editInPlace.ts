@@ -1,4 +1,24 @@
-export {default as EditInPlace, IEditingOptions, JS_SELECTORS} from './_editInPlace/EditInPlace';
+import {Controller} from 'Controls/_editInPlace/Controller';
+
+/**
+ * Библиотека, которая предоставляет редактирование по месту в коллекции
+ * @library Controls/editInPlace
+ * @includes Controller Controls/_editInPlace/Controller
+ *
+ * @public
+ * @author Родионов Е.А.
+ */
+
+/*
+ * Library that provides edit in place for collection
+ * @library Controls/editInPlace
+ * @includes Controller Controls/_editInPlace/Controller
+ * @public
+ * @author Родионов Е.А.
+ */
+
+export {default as EditInPlace, JS_SELECTORS} from './_editInPlace/EditInPlace';
+export {Controller};
 export {EditInPlace as EditInPlaceController} from './_editInPlace/new/EditInPlace';
 export {CollectionEditor} from './_editInPlace/new/CollectionEditor';
 export {CONSTANTS} from './_editInPlace/interfaces/Types';
