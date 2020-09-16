@@ -3,10 +3,9 @@
             keyProperty="id"
             source="{{_viewSource}}"
             itemActions="{{_itemActions}}"
-            highLightOnHover="{{false}}"
             itemActionsVisibility="{{_itemActionsVisibility}}">
         <ws:itemTemplate>
-            <ws:partial template="Controls/list:ItemTemplate">
+            <ws:partial template="Controls/list:ItemTemplate" highLightOnHover="{{false}}">
                 <ws:contentTemplate>
                     <div style="padding: 3px;">
                         <div>{{itemTemplate.itemData.item.title}}</div>
