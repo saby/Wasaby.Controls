@@ -680,7 +680,8 @@ const _private = {
             // If it’s not empty, the following page will be requested in resize event
             // handler after current items are rendered on the page.
             if (_private.needLoadNextPageAfterLoad(addedItems, listViewModel, navigation) ||
-                (self._options.task1176625749 && countCurrentItems === cnt2)) {
+                (self._options.task1176625749 && countCurrentItems === cnt2) ||
+                _private.isPortionedLoad(self, addedItems)) {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
             if (self._isMounted && self._scrollController) {
@@ -938,7 +939,7 @@ const _private = {
         const sourceController = self._sourceController;
         const hasMoreData = _private.hasMoreData(self, sourceController, direction);
         const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
-            !self._loadedItems :
+            !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems) :
             true;
         const allowLoadBySource =
             sourceController &&
@@ -1305,9 +1306,11 @@ const _private = {
             searchStartCallback: () => {
                 self._portionedSearchInProgress = true;
             },
-            searchStopCallback: () => {
+            searchStopCallback: (direction?: IDirection) => {
+                const isStoppedByTimer = !direction;
+
                 self._portionedSearchInProgress = false;
-                self._showContinueSearchButtonDirection = self._loadingState || 'down';
+                self._showContinueSearchButtonDirection = isStoppedByTimer ? self._loadingState || 'down' : direction;
                 if (typeof self._sourceController.cancelLoading !== 'undefined') {
                     self._sourceController.cancelLoading();
                 }
@@ -3115,7 +3118,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const viewModel = this.getViewModel();
             const hasItems = viewModel && viewModel.getCount();
             if (_private.isPortionedLoad(this) && this._portionedSearchInProgress && hasItems) {
-                _private.getPortionedSearch(this).stopSearch();
+                _private.getPortionedSearch(this).stopSearch(direction);
             }
         }
         this._scrollController?.setTriggerVisibility(direction, state);
