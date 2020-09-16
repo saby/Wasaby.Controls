@@ -13,7 +13,7 @@ var _private = {
       const dynamicConfig = {
          target: options.target,
          opener: self,
-         actionOnScroll: detection.isMobileIOS ? 'none' : 'close',
+         actionOnScroll: (detection.isMobileIOS || detection.isMobileAndroid) ? 'none' : 'close',
          zIndex: getZIndex(self) // _vdomOnOldPage для слоя совместимости, уйдёт с удалением опции.k
       };
       opener.open({...dynamicConfig, ...self._popupOptions});
