@@ -71,13 +71,10 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
     protected _getPopupOptions(): IStickyPopupOptions {
         let className;
         const container = this._children.linkView.getPopupTarget();
-        let horizontalTargetPoint;
         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
             className = 'controls-DateRangeSelectorLite__picker-years-only';
-            horizontalTargetPoint = 'center';
         } else {
             className = 'controls-DateRangeSelectorLite__picker-normal';
-            horizontalTargetPoint = 'right';
         }
 
         return {
@@ -86,7 +83,7 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
             className,
             fittingMode: 'overflow',
             direction: {
-                horizontal: horizontalTargetPoint
+                horizontal: 'center'
             },
             targetPoint: { horizontal: 'left' },
             eventHandlers: {
