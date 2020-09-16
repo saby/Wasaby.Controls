@@ -3792,10 +3792,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.scrollPage(this, 'Up');
                 break;
             case 'Begin':
-                _private.scrollToEdge(this, 'up');
+                const resultEvent = this._notify('onArrowBeginClick', [], {bubbling: true});
+                if (resultEvent !== false) {
+                    _private.scrollToEdge(this, 'up');
+                }
                 break;
             case 'End':
-                _private.scrollToEdge(this, 'down');
+                const resultEvent = this._notify('onArrowEndClick', [], {bubbling: true});
+                if (resultEvent !== false) {
+                    _private.scrollToEdge(this, 'down');
+                }
                 break;
         }
     },
