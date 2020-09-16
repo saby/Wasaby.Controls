@@ -1,3 +1,5 @@
+import {IDirection} from '../interface/IVirtualScroll';
+
 const SEARCH_MAX_DURATION = 30 * 1000;
 const SEARCH_CONTINUED_MAX_DURATION = 2 * 60 * 1000;
 enum SEARCH_STATES {
@@ -61,11 +63,11 @@ export default class PortionedSearch<PortionedSearchOptions> {
         this._options.searchContinueCallback();
     }
 
-    stopSearch(): void {
+    stopSearch(direction?: IDirection): void {
         this._clearTimer();
 
         if (!this._isSearchContinued()) {
-            this._stopSearch();
+            this._stopSearch(direction);
         }
     }
 
@@ -98,8 +100,8 @@ export default class PortionedSearch<PortionedSearchOptions> {
         return this._getSearchState() === SEARCH_STATES.CONTINUED;
     }
 
-    private _stopSearch(): void {
+    private _stopSearch(direction?: IDirection): void {
         this._setSearchState(SEARCH_STATES.STOPPED);
-        this._options.searchStopCallback();
+        this._options.searchStopCallback(direction);
     }
 }

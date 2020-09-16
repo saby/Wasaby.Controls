@@ -328,6 +328,14 @@ const _private = {
             // load() method may be fired with errback
             _private.setReloadingState(self, true);
             self._sourceController.load(filter, sorting, null, sourceConfig, cfg.root).addCallback(function(list) {
+                // Пока загружались данные - список мог уничтожится. Обрабатываем это.
+                // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
+                if (self._destroyed) {
+                    resDeferred.callback({
+                        data: null
+                    });
+                    return;
+                }
                 _private.setReloadingState(self, false);
                 _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
@@ -1297,9 +1305,11 @@ const _private = {
             searchStartCallback: () => {
                 self._portionedSearchInProgress = true;
             },
-            searchStopCallback: () => {
+            searchStopCallback: (direction?: IDirection) => {
+                const isStoppedByTimer = !direction;
+
                 self._portionedSearchInProgress = false;
-                self._showContinueSearchButtonDirection = self._loadingState || 'down';
+                self._showContinueSearchButtonDirection = isStoppedByTimer ? self._loadingState || 'down' : direction;
                 if (typeof self._sourceController.cancelLoading !== 'undefined') {
                     self._sourceController.cancelLoading();
                 }
@@ -3107,7 +3117,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const viewModel = this.getViewModel();
             const hasItems = viewModel && viewModel.getCount();
             if (_private.isPortionedLoad(this) && this._portionedSearchInProgress && hasItems) {
-                _private.getPortionedSearch(this).stopSearch();
+                _private.getPortionedSearch(this).stopSearch(direction);
             }
         }
         this._scrollController?.setTriggerVisibility(direction, state);
