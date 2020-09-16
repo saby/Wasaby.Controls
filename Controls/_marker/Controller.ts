@@ -30,7 +30,13 @@ export class Controller {
       const modelChanged = this._model !== options.model;
       if (modelChanged) {
          this._model = options.model;
-         this.setMarkedKey(this._markedKey);
+
+         // Когда модель пересоздается, то возможен такой вариант:
+         // Маркер указывает на папку, TreeModel -> SearchViewModel, после пересоздания markedKey
+         // будет указывать на хлебную крошку, но маркер не должен ставиться на нее,
+         // поэтому нужно пересчитать markedKey
+         const markedKey = this.calculateMarkedKeyForVisible();
+         this.setMarkedKey(markedKey);
       }
       this._markerVisibility = options.markerVisibility;
    }
@@ -54,6 +60,7 @@ export class Controller {
     * @return {CrudEntityKey} Новый ключ
     */
    calculateMarkedKeyForVisible(): CrudEntityKey {
+      // TODO удалить этот метод, когда избавимся от onactivated
       const existsMarkedItem = !!this._model.getItemBySourceKey(this._markedKey);
 
       let newMarkedKey;
