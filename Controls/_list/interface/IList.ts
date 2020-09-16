@@ -630,3 +630,15 @@ export interface IList extends IItemActionsOptions {
  * @remark
  * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
  */
+
+/**
+ * @event Происходит при клике по кнопке перехода к первой странице.
+ * @name Controls/_list/interface/IList#onArrowBeginClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
+
+/**
+ * @event Происходит при клике по кнопке перехода к последней странице.
+ * @name Controls/_list/interface/IList#onArrowEndClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
