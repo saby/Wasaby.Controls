@@ -1305,9 +1305,11 @@ const _private = {
             searchStartCallback: () => {
                 self._portionedSearchInProgress = true;
             },
-            searchStopCallback: () => {
+            searchStopCallback: (direction?: IDirection) => {
+                const isStoppedByTimer = !direction;
+
                 self._portionedSearchInProgress = false;
-                self._showContinueSearchButtonDirection = self._loadingState || 'down';
+                self._showContinueSearchButtonDirection = isStoppedByTimer ? self._loadingState || 'down' : direction;
                 if (typeof self._sourceController.cancelLoading !== 'undefined') {
                     self._sourceController.cancelLoading();
                 }
@@ -3115,7 +3117,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const viewModel = this.getViewModel();
             const hasItems = viewModel && viewModel.getCount();
             if (_private.isPortionedLoad(this) && this._portionedSearchInProgress && hasItems) {
-                _private.getPortionedSearch(this).stopSearch();
+                _private.getPortionedSearch(this).stopSearch(direction);
             }
         }
         this._scrollController?.setTriggerVisibility(direction, state);
