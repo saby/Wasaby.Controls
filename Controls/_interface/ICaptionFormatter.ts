@@ -34,6 +34,6 @@ export interface ICaptionFormatterOptions {
  * @demo Controls-demo/dateRange/LiteSelector/CaptionFormatter/Index
 */
 
-export default interface IDateConstructor {
-    readonly '[Controls/_interface/IDateConstructor]': boolean;
+export default interface ICaptionFormatter {
+    readonly '[Controls/_interface/ICaptionFormatter]': boolean;
 }
