@@ -435,9 +435,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} key Ключ выбранного элемента.
  * @demo Controls-demo/List/List/BasePG
- * @remark
- * Из обработчика события нужно вернуть полученный ключ или новый ключ.
- * Либо можно вернуть промис с нужным ключом.
  */
 
 /*ENG
@@ -446,6 +443,17 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * See also <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Number} key Key of the selected item.
+ */
+
+/**
+ * @event Происходит до изменения ключа маркера.
+ * @name Controls/_list/interface/IList#beforeMarkedKeyChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Number} key Новый ключ маркера.
+ * @demo Controls-demo/List/List/BasePG
+ * @remark
+ * Из обработчика события нужно вернуть полученный ключ или новый ключ.
+ * Либо можно вернуть промис с нужным ключом.
  */
 
 /**

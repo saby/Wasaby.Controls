@@ -1467,33 +1467,32 @@ const _private = {
 
             if (_private.hasMarkerController(self)) {
                 const markerController = _private.getMarkerController(self);
-                if (action === IObservable.ACTION_REMOVE) {
-                    // Событие remove срабатывает также при скрытии элементов.
-                    // Когда элементы скрываются, например при сворачивании группы, у них сохраняется свое состояние.
-                    // После скрытия элементов маркер переставляется на первый элемент или сбрасывается,
-                    // поэтому на скрытых элементах нужно сбросить состояние marked
-                    markerController.resetMarkedState(removedItems);
 
-                    const newMarkedKey = markerController.calculateMarkedKeyAfterRemove(removedItemsIndex);
-                    if (markerController.getMarkedKey() !== newMarkedKey) {
-                        _private.handleNewMarkedKey(self, newMarkedKey);
-                    }
+                let newMarkedKey;
+                switch (action) {
+                    case IObservable.ACTION_REMOVE:
+                        newMarkedKey = markerController.onCollectionRemove(removedItemsIndex, removedItems);
+                        break;
+                    case IObservable.ACTION_RESET:
+                        // В случае когда прислали новый ключ и в _beforeUpdate вызвался reload,
+                        // новый ключ нужно применить после изменения коллекции, чтобы не было лишней перерисовки
+                        if (self._options.markedKey !== undefined
+                                && self._options.markedKey !== markerController.getMarkedKey()) {
+                            markerController.setMarkedKey(self._options.markedKey);
+                        }
+
+                        newMarkedKey = markerController.onCollectionReset();
+                        break;
+                    case IObservable.ACTION_ADD:
+                        markerController.onCollectionAdd(newItems);
+                        break;
+                    case IObservable.ACTION_REPLACE:
+                        markerController.onCollectionReplace(newItems);
+                        break;
                 }
 
-                if (action === IObservable.ACTION_RESET) {
-                    const newMarkedKey = markerController.calculateMarkedKey();
-                    if (markerController.getMarkedKey() !== newMarkedKey) {
-                        _private.handleNewMarkedKey(self, newMarkedKey);
-                    } else {
-                        markerController.applyMarkedKey(newMarkedKey);
-                    }
-                }
-
-                // Если элемент был скрыт, то сработает remove и с элемента уберется выделение,
-                // а при показе элемента сработает add и для элемента нужно восстановить выделение,
-                // если текущий markedKey указывает на него
-                if (action === IObservable.ACTION_ADD) {
-                    markerController.restoreMarkedState(newItems);
+                if (newMarkedKey !== undefined && markerController.getMarkedKey() !== newMarkedKey) {
+                    _private.changeMarkedKey(self, newMarkedKey);
                 }
             }
         }
@@ -2178,15 +2177,6 @@ const _private = {
                     selectionControllerResult = _private.getSelectionController(self).handleRemoveItems(removedItems);
                 }
                 break;
-            case IObservable.ACTION_REPLACE:
-                // Если Record заменили, например, через метод RecordSet.replace, то в таком случае создается новый
-                // CollectionItem без состояния и для него нужно восстановить маркер
-                // https://online.sbis.ru/doc/03a1208c-96ef-4641-bda8-fa7c72f6ebfb
-                if (_private.hasMarkerController(self)) {
-                    const markerController = _private.getMarkerController(self);
-                    markerController.applyMarkedKey(markerController.getMarkedKey());
-                }
-                break;
         }
         _private.handleSelectionControllerResult(self, selectionControllerResult);
     },
@@ -2225,9 +2215,9 @@ const _private = {
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
-            const newMarkedKey = _private.getMarkerController(self, self._options).calculateNextMarkedKey();
+            const newMarkedKey = _private.getMarkerController(self, self._options).getNextMarkedKey();
             if (newMarkedKey !== _private.getMarkerController(self).getMarkedKey()) {
-                const result = _private.handleNewMarkedKey(self, newMarkedKey);
+                const result = _private.changeMarkedKey(self, newMarkedKey);
                 if (result instanceof Promise) {
                     /**
                      * Передавая в force true, видимый элемент подскролливается наверх.
@@ -2252,9 +2242,9 @@ const _private = {
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
-            const newMarkedKey = _private.getMarkerController(self, self._options).calculatePrevMarkedKey();
+            const newMarkedKey = _private.getMarkerController(self, self._options).getPrevMarkedKey();
             if (newMarkedKey !== _private.getMarkerController(self).getMarkedKey()) {
-                const result = _private.handleNewMarkedKey(self, newMarkedKey);
+                const result = _private.changeMarkedKey(self, newMarkedKey);
                 if (result instanceof Promise) {
                     result.then((key) => _private.scrollToItem(self, key, true));
                 } else {
@@ -2276,9 +2266,9 @@ const _private = {
             const itemsContainer = self._children.listView.getItemsContainer();
             const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
             const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
-            const newMarkedKey = _private.getMarkerController(self, self._options).calculateFirstVisibleItemKey(itemsContainer.children, verticalOffset);
-            if (newMarkedKey !== _private.getMarkerController(self).getMarkedKey()) {
-                _private.handleNewMarkedKey(self, newMarkedKey);
+            const item = self._scrollController.getFirstVisibleRecord(itemsContainer.children, verticalOffset);
+            if (item.getKey() !== _private.getMarkerController(self).getMarkedKey()) {
+                _private.changeMarkedKey(self, item.getKey());
             }
             self._setMarkerAfterScroll = false;
         }
@@ -2289,20 +2279,26 @@ const _private = {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
-    handleNewMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey): Promise<CrudEntityKey>|CrudEntityKey {
+    changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey): Promise<CrudEntityKey>|CrudEntityKey {
         const markerController = _private.getMarkerController(self);
-        const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('markedKeyChanged', [newMarkedKey]);
+        const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey]);
 
         let result = eventResult;
         if (eventResult instanceof Promise) {
-            eventResult.then((key) => markerController.applyMarkedKey(key));
+            eventResult.then((key) => {
+                markerController.setMarkedKey(key);
+                self._notify('markedKeyChanged', [key]);
+                return key;
+            });
         } else if (eventResult !== undefined && self._environment) {
             // Если не был инициализирован environment, то _notify будет возвращать null,
             // но это значение используется, чтобы сбросить маркер. Актуально для юнитов
-            markerController.applyMarkedKey(eventResult);
+            markerController.setMarkedKey(eventResult);
+            self._notify('markedKeyChanged', [eventResult]);
         } else {
             result = newMarkedKey;
-            markerController.applyMarkedKey(newMarkedKey);
+            markerController.setMarkedKey(newMarkedKey);
+            self._notify('markedKeyChanged', [newMarkedKey]);
         }
 
         return result;
@@ -2918,8 +2914,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                             newOptions.markedKey
                         );
 
-                        const markedKey = markerController.calculateMarkedKey();
-                        markerController.applyMarkedKey(markedKey);
+                        const markedKey = markerController.calculateMarkedKeyForVisible();
+                        markerController.setMarkedKey(markedKey);
                     }
 
                     if (self._selectionController) {
@@ -3257,7 +3253,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasMarkerController(this)) {
             const newMarkedKey = _private.getMarkerController(this).getMarkedKey();
             if (newMarkedKey !== this._options.markedKey) {
-                _private.handleNewMarkedKey(this, newMarkedKey);
+                _private.changeMarkedKey(this, newMarkedKey);
             }
         }
     },
@@ -3406,25 +3402,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 markerVisibility: newOptions.markerVisibility
             });
 
-            if (!needReload) {
-                if (this._options.markedKey !== newOptions.markedKey) {
-                    markerController.applyMarkedKey(newOptions.markedKey);
-                } else {
-                    const visibilityChangedOnVisible = this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible';
-                    if (visibilityChangedOnVisible || this._modelRecreated) {
-                        // Когда модель пересоздается, то возможен такой вариант:
-                        // Маркер указывает на папку, TreeModel -> SearchViewModel, после пересоздания markedKey
-                        // будет указывать на хлебную крошку, но маркер не должен ставиться на нее,
-                        // поэтому нужно пересчитать markedKey
-                        const newMarkedKey = markerController.calculateMarkedKey();
-                        if (newMarkedKey !== markerController.getMarkedKey()) {
-                            _private.handleNewMarkedKey(self, newMarkedKey);
-                        } else {
-                            // Если просто пересоздалась модель, например List -> Tile,
-                            // то нужно применить текущий маркер заново
-                            markerController.applyMarkedKey(newMarkedKey);
-                        }
-                    }
+            if (this._options.markedKey !== newOptions.markedKey) {
+                markerController.setMarkedKey(newOptions.markedKey);
+            } else if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
+                const newMarkedKey = markerController.calculateMarkedKeyForVisible();
+                if (newMarkedKey !== markerController.getMarkedKey()) {
+                    _private.changeMarkedKey(self, newMarkedKey);
                 }
             }
         } else if (_private.hasMarkerController(this)) {
@@ -3932,7 +3915,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     setMarkedKey(key: CrudEntityKey): void {
         if (this._options.markerVisibility !== MarkerVisibility.Hidden) {
             if (_private.getMarkerController(this).getMarkedKey() !== key) {
-                _private.handleNewMarkedKey(this, key);
+                _private.changeMarkedKey(this, key);
             }
         }
     },

@@ -27,7 +27,11 @@ export class Controller {
     * @void
     */
    updateOptions(options: IOptions): void {
-      this._model = options.model;
+      const modelChanged = this._model !== options.model;
+      if (modelChanged) {
+         this._model = options.model;
+         this.setMarkedKey(this._markedKey);
+      }
       this._markerVisibility = options.markerVisibility;
    }
 
@@ -36,8 +40,8 @@ export class Controller {
     * @param {CrudEntityKey} key Новый ключ
     * @void
     */
-   applyMarkedKey(key: CrudEntityKey): void {
-      // TODO после перехода на новую модель, удалить setMarkedKey и работать с CollectionItem
+   setMarkedKey(key: CrudEntityKey): void {
+      // TODO после перехода на новую модель, удалить _model.setMarkedKey и работать с CollectionItem
       if (this._markedKey !== key) {
          this._model.setMarkedKey(this._markedKey, false);
       }
@@ -49,7 +53,7 @@ export class Controller {
     * Высчитывает новый ключ маркера
     * @return {CrudEntityKey} Новый ключ
     */
-   calculateMarkedKey(): CrudEntityKey {
+   calculateMarkedKeyForVisible(): CrudEntityKey {
       const existsMarkedItem = !!this._model.getItemBySourceKey(this._markedKey);
 
       let newMarkedKey;
@@ -87,7 +91,7 @@ export class Controller {
     * Высчитывает ключ следующего элемента
     * @return {CrudEntityKey} Ключ следующего элемента
     */
-   calculateNextMarkedKey(): CrudEntityKey {
+   getNextMarkedKey(): CrudEntityKey {
       const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
       const nextMarkedKey = this._calculateNearbyByDirectionItemKey(index + 1, true);
       return nextMarkedKey === null ? this._markedKey : nextMarkedKey;
@@ -97,59 +101,67 @@ export class Controller {
     * Высчитывает ключ предыдущего элемента
     * @return {CrudEntityKey} Ключ предыдущего элемента
     */
-   calculatePrevMarkedKey(): CrudEntityKey {
+   getPrevMarkedKey(): CrudEntityKey {
       const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
       const prevMarkedKey = this._calculateNearbyByDirectionItemKey(index - 1, false);
       return prevMarkedKey === null ? this._markedKey : prevMarkedKey;
    }
 
    /**
-    * Высчитывает новый ключ относительно удаленного элемента
+    * Обрабатывает удаления элементов из коллекции
     * @remark Возвращает ключ следующего элемента, при его отустствии предыдущего, иначе null
     * @param {number} removedItemsIndex Индекс удаленной записи в коллекции
+    * @param {Array<CollectionItem<Model>>} removedItems Удаленные элементы коллекции
     * @return {CrudEntityKey} Новый ключ маркера
     */
-   calculateMarkedKeyAfterRemove(removedItemsIndex: number): CrudEntityKey {
-      // Если элемент с текущем маркером не удален или маркер не проставлен, то маркер не нужно менять
-      const item = this._model.getItemBySourceKey(this._markedKey);
-      if (item || this._markedKey === null || this._markedKey === undefined) {
-         return this._markedKey;
-      }
-      return this._calculateNearbyItemKey(removedItemsIndex);
+   onCollectionRemove(removedItemsIndex: number, removedItems: Array<CollectionItem<Model>>): CrudEntityKey {
+      // Событие remove срабатывает также при скрытии элементов.
+      // Когда элементы скрываются, например при сворачивании группы, у них сохраняется свое состояние.
+      // После скрытия элементов маркер переставляется или сбрасывается,
+      // поэтому на скрытых элементах нужно сбросить состояние marked
+      removedItems.forEach((item) => item.setMarked(false, true));
+
+      return this._getMarkedKeyAfterRemove(removedItemsIndex);
    }
 
    /**
-    * Высчитывает ключ первого полностью видимого на странице элемента
-    * @param {HTMLElement[]} items список HTMLElement-ов на странице
-    * @param {number} verticalOffset вертикальное смещение скролла
-    * @returns {CrudEntityKey} Новый ключ маркера
-    */
-   calculateFirstVisibleItemKey(items: HTMLElement[], verticalOffset: number): CrudEntityKey {
-      let firstItemIndex = this._model.getStartIndex();
-      firstItemIndex += this._getFirstVisibleItemIndex(items, verticalOffset);
-      firstItemIndex = Math.min(firstItemIndex, this._model.getStopIndex());
-      const item = this._model.at(firstItemIndex);
-      return item && item.MarkableItem ? item.getContents().getKey() : this._calculateNearbyItemKey(firstItemIndex);
-   }
-
-   /**
-    * Сбрасывает состояние marked для переданных элементов
-    * @param {Array<CollectionItem<Model>>} items Список элементов коллекции
-    * @void
-    */
-   resetMarkedState(items: Array<CollectionItem<Model>>): void {
-      items.forEach((item) => item.setMarked(false, true));
-   }
-
-   /**
-    * Восстанавливает состояние marked для элемента с ключом равным markedKey, если он есть среди items
+    * Обрабатывает добавление элементов в коллекцию
     * @param {Array<CollectionItem<Model>>} items Список добавленных элементов
     * @void
     */
-   restoreMarkedState(items: Array<CollectionItem<Model>>): void {
-      if (items.some((item) => this._getKey(item) === this._markedKey)) {
-         this.applyMarkedKey(this._markedKey);
+   onCollectionAdd(items: Array<CollectionItem<Model>>): void {
+      // Если элемент был скрыт, то сработает remove и с элемента уберется выделение,
+      // а при показе элемента сработает add и для элемента нужно восстановить выделение,
+      // если текущий markedKey указывает на него
+      if (this._containsMarkedItem(items)) {
+         this.setMarkedKey(this._markedKey);
       }
+   }
+
+   /**
+    * Обрабатывает замену элементов в коллекции
+    * @param {Array<CollectionItem<Model>>} items Список добавленных элементов
+    * @void
+    */
+   onCollectionReplace(items: Array<CollectionItem<Model>>): void {
+      // Если Record заменили, например, через метод RecordSet.replace, то в таком случае создается новый
+      // CollectionItem без состояния и для него нужно восстановить маркер
+      // https://online.sbis.ru/doc/03a1208c-96ef-4641-bda8-fa7c72f6ebfb
+      if (this._containsMarkedItem(items)) {
+         this.setMarkedKey(this._markedKey);
+      }
+   }
+
+   /**
+    * Обрабатывает замену элементов в коллекции
+    * @return {CrudEntityKey} Новый ключ маркера
+    */
+   onCollectionReset(): CrudEntityKey {
+      const newMarkedKey = this.calculateMarkedKeyForVisible();
+      if (newMarkedKey === this._markedKey) {
+         this.setMarkedKey(newMarkedKey);
+      }
+      return newMarkedKey;
    }
 
    /**
@@ -235,23 +247,16 @@ export class Controller {
       return firstItem.getKey();
    }
 
-   /**
-    * Возращает индекс первого полностью видимого элемента
-    * @param {HTMLElement[]} items
-    * @param {number} verticalOffset
-    * @private
-    */
-   private _getFirstVisibleItemIndex(items: HTMLElement[], verticalOffset: number): number {
-      const itemsCount = items.length;
-      let itemsHeight = 0;
-      let i = 0;
-      if (verticalOffset <= 0) {
-         return 0;
+   private _getMarkedKeyAfterRemove(removedIndex: number): CrudEntityKey {
+      // Если элемент с текущем маркером не удален или маркер не проставлен, то маркер не нужно менять
+      const item = this._model.getItemBySourceKey(this._markedKey);
+      if (item || this._markedKey === null || this._markedKey === undefined) {
+         return this._markedKey;
       }
-      while (itemsHeight < verticalOffset && i < itemsCount) {
-         itemsHeight += uDimension(items[i]).height;
-         i++;
-      }
-      return i;
+      return this._calculateNearbyItemKey(removedIndex);
+   }
+
+   private _containsMarkedItem(items: Array<CollectionItem<Model>>): boolean {
+      return items.some((item) => this._getKey(item) === this._markedKey);
    }
 }
