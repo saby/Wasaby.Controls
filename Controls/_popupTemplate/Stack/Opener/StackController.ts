@@ -500,7 +500,7 @@ class StackController extends BaseController {
         }
 
         // calc with scroll, because stack popup has fixed position only on desktop and can scroll with page
-        const leftPageScroll = detection.isMobilePlatform ? 0 : rootCoords.leftScroll;
+        const leftPageScroll = detection.isMobilePlatform || detection.safari ? 0 : rootCoords.leftScroll;
         return {
             top: Math.max(rootCoords.top, 0),
             height: rootCoords.height,
