@@ -3,7 +3,7 @@ import {DestroyableMixin, SerializableMixin, ISerializableState, Model} from 'Ty
 import {mixin} from 'Types/util';
 import TreeItem from 'Controls/_display/TreeItem';
 import CollectionItem from 'Controls/_display/CollectionItem';
-
+//
 interface IOptions<S extends Model, T extends CollectionItem<S>> {
     source: IItemsStrategy<S, T>;
     item: T;
