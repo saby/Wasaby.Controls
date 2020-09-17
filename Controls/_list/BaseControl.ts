@@ -3565,6 +3565,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._listViewModel) {
+            this._items.unsubscribe('onCollectionChange', this._onItemsChanged);
             this._listViewModel.destroy();
         }
         this._loadTriggerVisibility = null;

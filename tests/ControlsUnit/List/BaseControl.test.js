@@ -6457,10 +6457,22 @@ define([
 
       it('_beforeUnmount', function() {
          let instance = new lists.BaseControl();
+
+         let unsubscribeCalled = false;
+         instance._listViewModel = {
+            destroy: () => null
+         };
+         instance._items = {
+            unsubscribe: () => {
+               unsubscribeCalled = true;
+            }
+         };
+
          instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
 
          instance._beforeUnmount();
          assert.isNull(instance._portionedSearch);
+         assert.isTrue(unsubscribeCalled);
       });
 
       describe('beforeUpdate', () => {
