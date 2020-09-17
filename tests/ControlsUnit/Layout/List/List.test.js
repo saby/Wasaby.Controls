@@ -137,28 +137,29 @@ define(['Controls/deprecatedList', 'Types/source', 'Types/collection', 'Core/Def
       });
 
       it('.searchErrback', function() {
-         var errbackCalled = false;
-         var errbackCalledWithPrefetch = false;
-         listLayout._options.searchErrback = function() {
+         let errbackCalled = false;
+         let errorProcessed = false;
+         let errorMessage = null;
+         listLayout._options.searchErrback = () => {
             errbackCalled = true;
          };
-         listLayoutWithPrefetch._options.searchErrback = function() {
-            errbackCalledWithPrefetch = true;
+         listLayout._errorController = {
+            process: (errorConfig) => {
+               errorProcessed = true;
+               errorMessage = errorConfig.error.message;
+               return Promise.resolve();
+            }
          };
-         listLayoutWithPrefetch._options.source = listSource;
 
-         deprecatedList.Container._private.searchErrback(listLayout, {canceled: true});
-         assert.isTrue(!!listLayout._source._$data);
-
-         deprecatedList.Container._private.searchErrback(listLayout, {});
-
-         assert.deepEqual(null, listLayout._source._$data);
+         deprecatedList.Container._private.searchErrback(listLayout, {canceled: true, message: 'testMessage'});
          assert.isTrue(errbackCalled);
+         assert.isFalse(errorProcessed);
+         assert.isNull(errorMessage);
 
-         deprecatedList.Container._private.searchErrback(listLayoutWithPrefetch, {});
-
-         assert.deepEqual(null, listLayoutWithPrefetch._source._$data);
-         assert.isTrue(errbackCalledWithPrefetch);
+         deprecatedList.Container._private.searchErrback(listLayout, {message: 'testError'});
+         assert.isTrue(errorProcessed);
+         assert.isTrue(errbackCalled);
+         assert.equal(errorMessage, 'testError');
       });
 
       it('_beforeMount', function() {

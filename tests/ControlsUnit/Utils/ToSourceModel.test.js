@@ -69,11 +69,11 @@ define([
             model.acceptChanges();
             assert.equal(model.isChanged(), false);
             assert.equal(list.at(0)._moduleName,  'Types/entity:Model');
-            assert.equal(ToSourceModel(list.clone(), dataSource, '', true).at(0)._moduleName, 'customModel');
+            assert.equal(ToSourceModel(list.clone(), dataSource, '').at(0)._moduleName, 'customModel');
             assert.equal(model.isChanged(), false);
 
             var prefetchSource = new sourceLib.PrefetchProxy({target: dataSource});
-            assert.equal(ToSourceModel(list.clone(), prefetchSource, '', true).at(0)._moduleName, 'customModel');
+            assert.equal(ToSourceModel(list.clone(), prefetchSource, '').at(0)._moduleName, 'customModel');
          });
 
       });

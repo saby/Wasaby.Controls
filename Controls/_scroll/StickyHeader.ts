@@ -69,24 +69,6 @@
  */
 
 /**
- * @name Controls/_scroll/StickyHeader#backgroundVisible
- * @cfg {Boolean} Устанавливает видимость фона.
- * @variant true Показать фон.
- * @variant false Не показывать.
- * @default true
- * @deprecated необходимо определить пользовательский префикс стиля или использовать backgroundStyle="transparent".
- */
-
-/*
- * @name Controls/_scroll/StickyHeader#backgroundVisible
- * @cfg {Boolean} Background visibility.
- * @variant true Show.
- * @variant false Do not show.
- * @default true
- * @deprecated you have to define custom style prefix or to use backgroundStyle="transparent"
- */
-
-/**
  * @name Controls/_scroll/StickyHeader#position
  * @cfg {String} Определяет позицию прилипания.
  * @variant top Прилипание к верхнему краю.
@@ -157,7 +139,6 @@ export interface IStickyHeaderOptions extends IControlOptions {
     mode: MODE;
     fixedZIndex: number;
     shadowVisibility: SHADOW_VISIBILITY;
-    backgroundVisible: boolean;
     backgroundStyle: string;
 }
 
@@ -621,7 +602,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         offset = getGapFixSize();
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
-        const isIosOptimizedMode = opts.fixIosTwitch && detection.isMobileIOS;
+        // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было
+        const isIosOptimizedMode = detection.isMobileIOS;
 
         if (opts.position.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
@@ -677,6 +659,13 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             }
 
             style += 'z-index: ' + opts.fixedZIndex + ';';
+        } else {
+            // При построении, заголовок не имеет z-index и позиционируется ниже контента, z-index же задается
+            // после маунта. При тупняках на странице, время на синхронизацию после маунта может быть большим,
+            // из-за чего визуально видно, как скачет содержимое. Задаем z-index сразу, значение берем относительно
+            // опции fixedZIndex, но меньше на 1, чтобы зафиксированные заголовки были выше.
+            const zIndex = opts.fixedZIndex - 1;
+            style += 'z-index: ' + zIndex + ';';
         }
 
         //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274
@@ -822,7 +811,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             //TODO: https://online.sbis.ru/opendoc.html?guid=a5acb7b5-dce5-44e6-aa7a-246a48612516
             fixedZIndex: 2,
             shadowVisibility: SHADOW_VISIBILITY.visible,
-            backgroundVisible: true,
             backgroundStyle: BACKGROUND_STYLE.DEFAULT,
             mode: MODE.replaceable,
             position: POSITION.top
@@ -836,7 +824,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 SHADOW_VISIBILITY.hidden,
                 SHADOW_VISIBILITY.lastVisible
             ]),
-            backgroundVisible: descriptor(Boolean),
             backgroundStyle: descriptor(String),
             mode: descriptor(String).oneOf([
                 MODE.replaceable,

@@ -19,7 +19,7 @@
                placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
                autocomplete="{{autoComplete}}"
                class="controls-InputBase__nativeField_theme_{{options.theme}}
-                     controls-{{controlName}}__nativeField_theme_{{options.theme}}_caret{{wasActionUser ? 'Filled' : 'Empty'}}
+                     controls-{{controlName}}__nativeField_caret{{wasActionUser ? 'Filled' : 'Empty'}}_theme_{{options.theme}}
                      {{isEdge ? 'controls-InputBase__nativeField_edge'}}
                      {{autoWidth ? 'controls-InputBase__nativeField_stretcher'}}
                      {{hidePlaceholderUsingCSS ? 'controls-InputBase__nativeField_hideCustomPlaceholder'}}"

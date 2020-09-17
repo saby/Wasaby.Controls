@@ -93,6 +93,21 @@ define(
                   done();
                });
             });
+
+            it('minVisibleItems option', (done) => {
+               const item = util.object.clone(defaultItemsConfig[0]);
+               item.minVisibleItems = item.items.getCount() + 1;
+               const item2 = util.object.clone(item);
+               item2.name = 'item2';
+               const items = new collection.RecordSet({
+                  keyProperty: 'id',
+                  rawData: [item, util.object.clone(item)]
+               });
+               filterPopup.SimplePanel._private.getItems({}, items).then((resultItems) => {
+                  assert.isTrue(resultItems.length === 1);
+                  done();
+               });
+            });
          });
 
          it('_beforeMount', function() {

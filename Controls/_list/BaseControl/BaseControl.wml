@@ -98,6 +98,7 @@
                 scope="{{_options}}"
                 loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
                 _needBottomPadding="{{_needBottomPadding}}"
+                needShowEmptyTemplate="{{ __needShowEmptyTemplate(_options.emptyTemplate, _listViewModel) }}"
                 listModel="{{_listViewModel}}"
                 editingItemData="{{_editingItemData}}"
                 startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
@@ -207,7 +208,8 @@
         </ws:if>
 
         <ws:if data="{{_pagingVisible}}">
-            <div class="controls-BaseControl_paging-Padding_theme-{{_options.theme}} {{_options.task1179362156 ? 'controls-BaseControl-hide-paging'}}">
+            <div name="pagingPaddingContainer"
+                 class="controls-BaseControl_paging-Padding_theme-{{_options.theme}} {{_options.task1179362156 ? 'controls-BaseControl-hide-paging'}}">
             </div>
             <div class="controls-BaseControl__pagingContainer {{_options.task1179362156 ? 'controls-BaseControl-hide-paging'}}">
                 <Controls.paging:Paging

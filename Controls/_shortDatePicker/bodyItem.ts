@@ -74,22 +74,18 @@ const Component = BaseControl.extend({
 
     _onQuarterMouseEnter: function (event, quarter) {
         this._quarterHovered = quarter;
-        this._forceUpdate();
     },
 
     _onQuarterMouseLeave: function () {
         this._quarterHovered = null;
-        this._forceUpdate();
     },
 
     _onHalfYearMouseEnter: function (event, halfyear) {
         this._halfyearHovered = halfyear;
-        this._forceUpdate();
     },
 
     _onHalfYearMouseLeave: function () {
         this._halfyearHovered = null;
-        this._forceUpdate();
     },
 
     _onHeaderClick: function () {

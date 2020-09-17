@@ -35,7 +35,6 @@
                     on:mouseenter="_onQuarterMouseEnter(quarter.number, _currentYear)"
                     on:touchstart="_onQuarterMouseEnter(quarter.number, _currentYear)"
                     on:mouseleave="_onQuarterMouseLeave(quarter.number)"
-                    on:touchend="_onQuarterMouseLeave(quarter.number)"
                     on:touchmove="_onQuarterMouseLeave(quarter.number)"
                >
                   {{ quarter.name }}
@@ -49,7 +48,6 @@
               on:mouseenter="_onHalfYearMouseEnter(halfYear.number)"
               on:touchstart="_onHalfYearMouseEnter(halfYear.number)"
               on:mouseleave="_onHalfYearMouseLeave()"
-              on:touchend="_onHalfYearMouseLeave()"
               on:touchmove="_onHalfYearMouseLeave()"
               title="{{ halfYear.tooltip }}"
          >

@@ -45,9 +45,13 @@ var __PopupContent = BaseLayer.extend({
          this._notify('controlResize', [], {bubbling: true});
       }
 
-      // Для Ipad'а фиксируем автодополнение, только если оно отобразилось вверх, если оно отобразилось вниз,
+      // Для Ipad'а фиксируем автодополнение, только если клавиатура уже отображается или
+      // автодополнение отобразилось вверх, если оно отобразилось вниз,
       // то при появлении клавиатуры автодополнению может не хватить места тогда оно должно будет отобразиться сверху
-      if (this._showContent && !this._positionFixed && (!detection.isMobileIOS || this._reverseList)) {
+      const allowFixPositionOnIpad = this._reverseList ||
+                                     (document && document.activeElement && document.activeElement.tagName === 'INPUT');
+
+      if (this._showContent && !this._positionFixed && (!detection.isMobileIOS || allowFixPositionOnIpad)) {
          this._positionFixed = true;
          this._notify('sendResult', [this._options.stickyPosition], {bubbling: true});
       }

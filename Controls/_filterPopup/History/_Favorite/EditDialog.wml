@@ -42,6 +42,7 @@
          <div class="controls-FavoriteEditDialog__content">
             <Controls.input:Text bind:value="_textValue"
                                  placeholder="{{_placeholder}}"
+                                 trim="{{true}}"
                                  attr:class="controls-FavoriteEditDialog__textField"/>
 
             <Controls.scroll:Container attr:class="controls-ScrollContainer__flex controls-FavoriteEditDialog__scroll">

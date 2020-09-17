@@ -150,7 +150,12 @@ var ListView = BaseControl.extend(
 
         _afterMount: function() {
             this._notify('itemsContainerReady', [this.getItemsContainer.bind(this)]);
-            this._notify('controlResize', [], {bubbling: true});
+            // todo костыль до тех пор, пока не перейдем на отслеживание ресайза через нативное событие в двух основныых
+            // местах - в окнах и в scrollContainer'e.
+            // https://online.sbis.ru/opendoc.html?guid=4409ca19-6e5d-41af-b080-5431dbd8887c
+            if (this._options.notifyResizeAfterMount !== false) {
+                this._notify('controlResize', [], {bubbling: true});
+            }
         },
 
         _afterRender: function() {
@@ -179,7 +184,7 @@ var ListView = BaseControl.extend(
                     }
                 }
                 var item = dispItem.getContents();
-                this._notify('itemClick', [item, e], {bubbling: true});
+                this._notify('itemClick', [item, e]);
             }
         },
 
@@ -284,8 +289,7 @@ var ListView = BaseControl.extend(
 ListView.getDefaultOptions = function() {
     return {
         contextMenuVisibility: true,
-        markerVisibility: 'onactivated',
-        headerInEmptyListVisible: true
+        markerVisibility: 'onactivated'
     };
 };
 ListView._theme = ['Controls/list'];

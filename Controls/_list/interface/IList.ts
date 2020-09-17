@@ -23,8 +23,6 @@ export interface IItemPadding {
     right?: THorizontalItemPadding;
 }
 
-type TPagingMode = 'basic' | 'compact' | 'numbers';
-
 export interface IList extends IItemActionsOptions {
     attachLoadTopTriggerToNull?: boolean;
     emptyTemplate?: TemplateFunction|string;
@@ -43,22 +41,9 @@ export interface IList extends IItemActionsOptions {
     itemPadding?: IItemPadding;
     nodeConfig?: INodeConfig;
 
-    pagingMode?: TPagingMode;
     pagingContentTemplate?: TemplateFunction | string;
 }
 
-/**
- * @typedef {String} PagingMode
- * @variant basic Предназначен для пейджинга в реестре с подгрузкой по скроллу.
- * @variant compact Предназначен для пейджинга с отображением одной команды прокрутки.
- * @variant numbers Предназначен для пейджинга с подсчетом записей и страниц
- */
-
-/**
- * @name Controls/_list/interface/IList#pagingMode
- * @cfg {PagingMode} Опция управляет внешним видом пэйджинга. Позволяет для каждого конкретного реестра задать внешний вид в зависимости от требований к интерфейсу.
- * @see pagingContentTemplate
- * /
 /**
  * @name Controls/_list/interface/IList#pagingContentTemplate
  * @cfg {Function} Опция управляет отображением счетчика непрочитанных сообщений
@@ -396,6 +381,19 @@ export interface IList extends IItemActionsOptions {
  */
 
 /**
+ * Возвращает список элементов.
+ * @function Controls/_list/interface/IList#getItems
+ * @return {RecordSet} Список элементов.
+ * @example
+ * <pre class="brush: js">
+ * _getItems(): RecordSet {
+ *    var list = this._children.myList;
+ *    return list.getItems();
+ * }
+ * </pre>
+ */
+
+/**
  * Прокручивает список к указанному элементу.
  * @function Controls/_list/interface/IList#scrollToItem
  * @param {String|Number} key Идентификатор элемента коллекции, к которому осуществляется прокручивание.
@@ -436,7 +434,7 @@ export interface IList extends IItemActionsOptions {
  * @param {Object} nativeEvent Объект нативного события браузера.
  * @remark
  * От события {@link Controls/_list/interface/IClickableView#itemClick itemClick} данное событие отличается следующим:
- * 
+ *
  * 1. Происходит при нажатии на любую кнопку мыши (левую, правую, среднюю);
  * 2. Происходит в момент нажатия кнопки (itemClick срабатывает уже после её отпускания).
  */
@@ -528,7 +526,7 @@ export interface IList extends IItemActionsOptions {
  * @remark
  * Активация происходит при клике по элементу.
  * Событие не происходит, если:
- * 
+ *
  * * элемент нельзя отметить маркером.
  * * при клике начинается <a href="/doc/platform/developmentapl/interface-development/controls/list/list/edit/">редактирование по месту</a>.
  */
@@ -600,7 +598,7 @@ export interface IList extends IItemActionsOptions {
  * @variant masterClassic
  * @variant detailContrast
  * @variant listItem
- * @variant stackHeader 
+ * @variant stackHeader
  */
 
 /**

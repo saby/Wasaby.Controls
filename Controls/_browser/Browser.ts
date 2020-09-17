@@ -112,6 +112,7 @@ export default class Browser extends Control {
             this._filter = controllerState.filter;
             this._dataOptionsContext.navigation = controllerState.navigation;
             this._dataOptionsContext.filter = controllerState.filter;
+            this._dataOptionsContext.sorting = controllerState.sorting;
             this._dataOptionsContext.updateConsumers();
             this._groupHistoryId = newOptions.groupHistoryId;
         }
@@ -195,11 +196,15 @@ export default class Browser extends Control {
 
         // для того чтобы мог посчитаться новый prefetch Source внутри
         const newItems = this._sourceController.setItems(items);
+        const controllerState = this._sourceController.getState();
+
         if (!this._items) {
             this._items = newItems;
+        } else {
+            controllerState.items = this._items;
+            this._sourceController.setItems(this._items);
         }
 
-        const controllerState = this._sourceController.getState();
         this._updateContext(controllerState);
     }
 
@@ -301,7 +306,7 @@ export default class Browser extends Control {
 
     _getSearchControllerOptions(options): object {
         const optionsChangedCallbacks = SearchController.getStateAndOptionsChangedCallbacks(this);
-        optionsChangedCallbacks.filter = this._filter;
+        optionsChangedCallbacks.filter = this._sourceController.getFilter();
         return {...options, ...optionsChangedCallbacks};
     }
 

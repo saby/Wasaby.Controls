@@ -384,6 +384,9 @@ var
                 classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
             }
 
+            if (!GridLayoutUtil.isFullGridSupport() && !(current.columns.length === (current.hasMultiSelect ? 2 : 1)) && self._options.fixIEAutoHeight) {
+                classLists.base += ' controls-Grid__row-cell__autoHeight';
+            }
             return classLists;
         },
 
@@ -423,7 +426,7 @@ var
 
         isNeedToHighlight: function(item, dispProp, searchValue) {
             var itemValue = item.get(dispProp);
-            return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
+            return itemValue && searchValue;
         },
         getItemsLadderVersion(ladder) {
             let ladderVersion = '';
@@ -878,8 +881,8 @@ var
             }
         },
 
-        setHeaderInEmptyListVisible(newVisibility) {
-            this.headerInEmptyListVisible = newVisibility;
+        setHeaderVisibility(newVisibility) {
+            this.headerVisibility = newVisibility;
             this.setHeader(this._header, true);
         },
 
@@ -970,7 +973,7 @@ var
          * Метод проверяет, рисовать ли header при отсутствии записей.
          */
         isDrawHeaderWithEmptyList(): boolean {
-            return this.headerInEmptyListVisible || this.isGridListNotEmpty();
+            return (this.headerVisibility === 'visible') || this.isGridListNotEmpty();
         },
 
         isGridListNotEmpty(): boolean {
@@ -1066,7 +1069,7 @@ var
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (hasMultiSelect && columnIndex === 0 && !cell.title) {
+            if (hasMultiSelect && columnIndex === 0 && !(cell.title || cell.caption)) {
                 cellClasses += ' controls-Grid__header-cell-checkbox' + `_theme-${theme}` + ` controls-Grid__header-cell-checkbox_min-width_theme-${theme}`;
 
                 // В grid-layout хлебные крошки нельзя расположить в первой ячейке, если в таблице включен множественный выбор,
@@ -1173,7 +1176,12 @@ var
                 }
             }
 
-            if (columnIndex === 0 && rowIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
+            if (
+                columnIndex === 0 && rowIndex === 0 &&
+                this._options.multiSelectVisibility !== 'hidden' &&
+                this._headerRows[rowIndex][columnIndex + 1].startColumn &&
+                !(cell.title || cell.caption)
+            ) {
                 cellStyles = GridLayoutUtil.getMultiHeaderStyles(1, 2, 1, this._maxEndRow, 0)
                 if (!GridLayoutUtil.isFullGridSupport()) {
                     headerColumn.rowSpan = this._maxEndRow - 1;
@@ -1789,7 +1797,7 @@ var
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
                 if (current.item.get) {
-                    currentColumn.column.needSearchHighlight = current.searchValue ?
+                    currentColumn.needSearchHighlight = current.searchValue ?
                         !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue) : false;
                     currentColumn.searchValue = current.searchValue;
                 }
@@ -1879,7 +1887,7 @@ var
 
         setItems(items, cfg): void {
             this._model.setItems(items, cfg);
-            this._setHeader(this._options.header);
+            this._setHeader(cfg.header);
         },
 
         setItemTemplateProperty: function(itemTemplateProperty) {
@@ -2335,6 +2343,10 @@ var
         // region Colgroup columns
 
         _prepareColgroupColumns(columns: IGridColumn[], hasMultiSelect: boolean): void {
+            if (this.isFullGridSupport()) {
+                this._colgroupColumns = undefined;
+                return;
+            }
 
             const colgroupColumns: IColgroupColumn[] = [];
 

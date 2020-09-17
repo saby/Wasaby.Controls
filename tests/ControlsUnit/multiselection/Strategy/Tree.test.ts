@@ -126,7 +126,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          selection = { selected: [2], excluded: [3] };
          selection = strategy.unselect(selection, [2]);
          assert.deepEqual(selection.selected, []);
-         assert.deepEqual(selection.excluded, [3]);
+         assert.deepEqual(selection.excluded, []);
 
          // выбран узел без родителей и детей
          selection = { selected: [6], excluded: [] };
@@ -158,6 +158,19 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          selection = strategyWithDescendantsAndAncestors.unselect(selection, [4]);
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null, 4]);
+      });
+
+      it('unselect child', () => {
+         // Снять выбор с последнего ближнего ребенка, но ребенок невыбранного ребенка выбран
+         let selection = { selected: [1, 3], excluded: [4] };
+         selection = strategyWithDescendantsAndAncestors.unselect(selection, [5]);
+         assert.deepEqual(selection.selected, [1, 3]);
+         assert.deepEqual(selection.excluded, [4, 5]);
+
+         // Снять выбор с ребенка ребенка (проверка рекурсивной проверки выбранных детей)
+         selection = strategyWithDescendantsAndAncestors.unselect(selection, [3]);
+         assert.deepEqual(selection.selected, []);
+         assert.deepEqual(selection.excluded, []);
       });
    });
 

@@ -94,6 +94,10 @@ export default class Controller {
         this._filter = filter;
     }
 
+    getFilter(): QueryWhereExpression<unknown> {
+        return this._filter;
+    }
+
     updateOptions(newOptions: IControllerOptions): boolean {
         const isFilterChanged = !isEqual(newOptions.filter, this._options.filter);
         const isSourceChanged = newOptions.source !== this._options.source;

@@ -179,7 +179,8 @@ var Component = Control.extend([], {
    },
 
    validate(): void {
-      this._children.validator.validate();
+      // Возвращаем результат валидации для совместимости со старыми формами.
+      return this._children.validator.validate();
    },
 
    _onKeyDown: function(event) {

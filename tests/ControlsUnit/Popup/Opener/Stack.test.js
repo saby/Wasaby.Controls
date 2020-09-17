@@ -283,26 +283,6 @@ define(
             popupTemplate.StackController._update = upd;
          });
 
-         it('stack maximized popup position', () => {
-            let hasMaximizePopup = StackStrategy._hasMaximizePopup({});
-            assert.equal(hasMaximizePopup, false);
-
-            StackStrategy._goUpByControlTree = () => {
-               return [
-                  {
-                     _moduleName: 'Controls/_popup/Manager/Popup',
-                     _options: {
-                        maximize: true
-                     }
-                  }
-               ];
-            };
-
-            hasMaximizePopup = StackStrategy._hasMaximizePopup({});
-            assert.equal(hasMaximizePopup, true);
-            StackStrategy._goUpByControlTree = () => [];
-         });
-
          it('stack maximized default options', () => {
             let itemConfig = {
                popupOptions: {
