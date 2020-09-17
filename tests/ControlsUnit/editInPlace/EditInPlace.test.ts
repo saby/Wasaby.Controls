@@ -234,7 +234,7 @@ describe('Controls/_editInPlace/EditInPlace', () => {
                 onBeforeBeginEdit: (options) => {
                     onBeforeBeginEditCalled = true;
                     assert.isUndefined(options.item);
-                    return collection.at(0).contents;
+                    return { item: collection.at(0).contents };
                 }
             });
 
@@ -543,7 +543,7 @@ describe('Controls/_editInPlace/EditInPlace', () => {
                 onBeforeBeginEdit: (options) => {
                     onBeforeBeginEditCalled = true;
                     assert.isUndefined(options.item);
-                    return newItem;
+                    return { item: newItem };
                 }
             });
 
