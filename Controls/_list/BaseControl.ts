@@ -343,9 +343,9 @@ const _private = {
                     });
                     return;
                 }
-                _private.setReloadingState(self, false);
-                _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
+                    _private.hideError(self);
+                    _private.setReloadingState(self, false);
                     if (list.getCount()) {
                         self._loadedItems = list;
                     } else {
@@ -3360,12 +3360,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setTheme(newOptions.theme);
         }
 
-        if (newOptions.searchValue !== this._options.searchValue) {
-            _private.doAfterUpdate(this, () => {
-                this._listViewModel.setSearchValue(newOptions.searchValue);
-            });
-            _private.getPortionedSearch(self).reset();
-        }
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
         }
@@ -3395,11 +3389,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader = new GroupingLoader({});
         }
 
-        const needReload = filterChanged || recreateSource || sortingChanged;
-
         const shouldProcessMarker = newOptions.markerVisibility === MarkerVisibility.Visible
             || newOptions.markerVisibility === MarkerVisibility.OnActivated && newOptions.markedKey !== undefined;
-
         if (shouldProcessMarker) {
             const markerController = _private.getMarkerController(this, newOptions);
             if (this._options.markedKey !== newOptions.markedKey) {
@@ -3462,7 +3453,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
-        if (needReload) {
+        if (this._options.searchValue !== newOptions.searchValue) {
+            _private.getPortionedSearch(self).reset();
+        }
+
+        if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
@@ -3471,6 +3466,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
                         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                         _private.updateInitializedItemActions(this, newOptions);
+                        this._listViewModel.setSearchValue(newOptions.searchValue);
                     });
                 });
             } else {
@@ -3478,9 +3474,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return _private.reload(self, newOptions).addCallback(() => {
                     this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                     _private.updateInitializedItemActions(this, newOptions);
+                    this._listViewModel.setSearchValue(newOptions.searchValue);
                 });
             }
         } else {
+            _private.doAfterUpdate(self, () => {
+                this._listViewModel.setSearchValue(newOptions.searchValue);
+            });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
                     self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
@@ -4933,7 +4933,8 @@ BaseControl.getDefaultOptions = function() {
         stickyHeader: true,
         virtualScrollMode: 'remove',
         filter: {},
-        itemActionsVisibility: 'onhover'
+        itemActionsVisibility: 'onhover',
+        searchValue: ''
     };
 };
 export = BaseControl;
