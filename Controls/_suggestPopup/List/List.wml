@@ -11,16 +11,16 @@
                         selectedKey="{{_suggestListOptions.tabsSelectedKey || _options.tabsOptions.selectedKey}}"/>
         </Controls.Container.Async>
     </ws:if>
-    <Controls.deprecatedList:Container scope="{{_suggestListOptions}}"
-                                       name="list"
-                                       content="{{_options.content}}"
-                                       markedKey="{{_markedKey}}"
-                                       reverseList="{{_reverseList}}"
-                                       navigation="{{_navigation}}"
-                                       searchEndCallback="{{_searchEndCallback}}"
-                                       markerVisibility="{{_markerVisibility}}"
-                                       itemsReadyCallback="{{_itemsReadyCallback}}"
-                                       on:markedKeyChanged="_markedKeyChanged()">
+    <ws:partial template="{{_options.content}}"
+                scope="{{_suggestListOptions}}"
+                name="list"
+                markedKey="{{_markedKey}}"
+                reverseList="{{_reverseList}}"
+                navigation="{{_navigation}}"
+                searchEndCallback="{{_searchEndCallback}}"
+                markerVisibility="{{_markerVisibility}}"
+                itemsReadyCallback="{{_itemsReadyCallback}}"
+                on:markedKeyChanged="_markedKeyChanged()">
         <ws:searchBreadCrumbsItemTemplate>
             <Controls.Container.Async templateName="Controls/treeGrid:SearchBreadCrumbsItemTemplate">
             <ws:partial template="{{ content.resolvedTemplate }}"
@@ -30,7 +30,7 @@
                     marker="{{false}}"/>
             </Controls.Container.Async>
         </ws:searchBreadCrumbsItemTemplate>
-    </Controls.deprecatedList:Container>
+    </ws:partial>
 
     <Controls.event:Listener event="inputKeydown" on:inputKeydown="_inputKeydown()"/>
 </div>
