@@ -288,7 +288,8 @@ class StackController extends BaseController {
 
     private _getItemPosition(item: IPopupItem): IPopupPosition {
         const targetCoords = this._getStackParentCoords(item);
-        const position = StackStrategy.getPosition(targetCoords, item);
+        const isAboveMaximizePopup: boolean = this._isAboveMaximizePopup(item);
+        const position = StackStrategy.getPosition(targetCoords, item, isAboveMaximizePopup);
         item.popupOptions.stackWidth = position.width;
         item.popupOptions.workspaceWidth = position.width;
         item.popupOptions.stackMinWidth = position.minWidth;

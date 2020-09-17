@@ -3,6 +3,8 @@ import Utils = require('Types/util');
 import oldWindowManager from 'Controls/_popupTemplate/_oldWindowManager';
 import {Controller as ManagerController, IPopupItem, IPopupPosition, IPopupSizes} from 'Controls/popup';
 import * as TargetCoords from 'Controls/_popupTemplate/TargetCoords';
+import {Control} from 'UI/Base';
+import {goUpByControlTree} from 'UI/Focus';
 
 export interface IDragOffset {
     x: number;
@@ -213,6 +215,26 @@ abstract class BaseController {
             width: Math.round(sizes?.width),
             height: Math.round(sizes?.height)
         };
+    }
+
+    protected _isAboveMaximizePopup(item: IPopupItem): boolean {
+        const openerContainer: HTMLElement = item.popupOptions?.opener?._container;
+        const parents: Control[] = this._goUpByControlTree(openerContainer);
+        const popupModuleName: string = 'Controls/_popup/Manager/Popup';
+        const oldPopupModuleName: string = 'Lib/Control/Dialog/Dialog'; // Compatible
+
+        for (let i = 0; i < parents.length; i++) {
+            if (parents[i]._moduleName ===  popupModuleName || parents[i]._moduleName === oldPopupModuleName) {
+                if (parents[i]._options.maximize) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private _goUpByControlTree(container: HTMLElement): Control[] {
+        return goUpByControlTree(container);
     }
 
     protected _resetRootContainerCoords(): void {
