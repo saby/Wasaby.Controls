@@ -132,24 +132,23 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
         options: IOptions<S, T>,
         source: IItemsStrategy<S, T>
     ): number {
+        // Индекс может расчитываться по разному в зависимости от типа элемента, но порядок должем быть таким:
+        // элемент дерева, элемент группы, элемент простого плоского списка.
+        // Для элемента дерева не важно поле группировки. Такой элемент может быть добавлен:
+        //  + в родителя, который уже находится в группе;
+        //  + в корень, тогда стратегия группировки сама создаст новую группу, если нужно.
+        // Получается, что не нужно расчитывать индексы для такого элемента, достаточно вставить в начало или конец.
+        // Если элемент дочерний, то его правильным отображением займется стратегия древовидного отображения,
+        // иначе - стратегия группировки.
+        // Для элемента группы необходимо расчитать индекс в группе. Если позиция добавления top,
+        // то запись добавляется на место первого элемента группы, иначе последнего.
         if (options.item instanceof TreeItem) {
-             return Add._calculateTreeItemIndex(options.item, options, source);
+             return options.addPosition === 'top' ? 0 : source.count;
         } else if (options.groupMethod) {
             return Add._calculateGroupedItemIndex(options.item, options, source);
         } else {
             return options.addPosition === 'top' ? 0 : source.count;
         }
-    }
-
-    private static _calculateTreeItemIndex<S extends Model, T extends CollectionItem<S>>(
-        item: TreeItem<S>,
-        options: IOptions<S, T>,
-        source: IItemsStrategy<S, T>
-    ): number {
-        if (item.isRoot()) {
-            return options.addPosition === 'top' ? 0 : source.count;
-        }
-        return 0;
     }
 
     private static _calculateGroupedItemIndex<S extends Model, T extends CollectionItem<S>>(
@@ -160,7 +159,7 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
         const groupId = options.groupMethod(item.contents);
         if (options.addPosition === 'top') {
             let index = -1;
-            source.items.filter((sourceItem, sourceIndex) => {
+            source.items.forEach((sourceItem, sourceIndex) => {
                 if (index === -1 && options.groupMethod(sourceItem.contents) === groupId) {
                     index = sourceIndex;
                 }
@@ -168,7 +167,7 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
             return index === -1 ? 0 : index;
         } else {
             let index = source.count;
-            source.items.filter((sourceItem, sourceIndex) => {
+            source.items.forEach((sourceItem, sourceIndex) => {
                 if (options.groupMethod(sourceItem.contents) === groupId) {
                     index = sourceIndex + 1;
                 }
