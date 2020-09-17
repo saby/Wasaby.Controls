@@ -1,0 +1,3 @@
+<div class="controlsDemo__wrapper">
+    <Controls.toggle:RadioButtons captions="{{_captions}}" />
+</div>

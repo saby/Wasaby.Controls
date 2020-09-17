@@ -47,6 +47,7 @@ export {default as Separator} from './_toggle/Separator';
 export {default as BigSeparator} from './_toggle/BigSeparator';
 export {IToggleGroupOptions, IToggleGroup} from './_toggle/interface/IToggleGroup';
 export {default as RadioGroup} from './_toggle/RadioGroup';
+export {default as RadioButtons} from './_toggle/RadioButtons';
 
 import ItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 import CheckboxItemTemplate = require('wml!Controls/_toggle/CheckboxGroup/resources/ItemTemplate');
