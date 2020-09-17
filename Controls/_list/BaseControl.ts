@@ -1955,12 +1955,12 @@ const _private = {
         const oldSourceCfg = oldNavigation && oldNavigation.sourceConfig ? oldNavigation.sourceConfig : {};
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
-            const eipController = this._getEditInPlaceController();
-            const isEditing = !!eipController && !!self._listViewModel && (
-                self._options.useNewModel ? EditInPlaceController.isEditing(self._listViewModel) : eipController.getEditingKey() !== undefined
+            const isEditing = !!self._editInPlaceController && !!self._listViewModel && (
+                self._options.useNewModel ? EditInPlaceController.isEditing(self._listViewModel) :
+                    self._editInPlaceController.getEditingKey() !== undefined
             );
             if (isEditing) {
-                this.cancelEdit();
+                self.cancelEdit();
             }
         }
     },
@@ -3519,6 +3519,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
+    getItems(): RecordSet {
+        return this._items;
+    },
+
     scrollToItem(key: TItemKey, toBottom: boolean, force: boolean): void {
         return _private.scrollToItem(this, key, toBottom, force);
     },
@@ -3990,7 +3994,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                     // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
                     // Пользовательское сохранение потенциально может начаться только если вернули Promise
-                    const shouldUseDefaultSaving = willSave && isAdd && (
+                    const shouldUseDefaultSaving = willSave && (isAdd || item.isChanged()) && (
                         !eventResult || (
                             eventResult !== CONSTANTS.CANCEL && !(eventResult instanceof Promise)
                         )

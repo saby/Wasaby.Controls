@@ -63,7 +63,7 @@ export default class CollectionItem<T> extends mixin<
     OptionsToPropertyMixin,
     InstantiableMixin,
     SerializableMixin
-) implements IInstantiable, IVersionable, ICollectionItem, IEditableCollectionItem, ICollectionItemStyled {
+) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IEditableCollectionItem {
 
     // region IInstantiable
 

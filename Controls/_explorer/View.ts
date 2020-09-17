@@ -18,6 +18,7 @@ import {
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import {ISelectionObject} from "../_interface/ISelectionType";
 import {CrudEntityKey} from "Types/source";
+import { RecordSet } from 'Types/collection';
 
 var
       HOT_KEYS = {
@@ -716,6 +717,10 @@ var
       reload: function(keepScroll, sourceConfig) {
          return this._children.treeControl.reload(keepScroll, sourceConfig);
       },
+      getItems(): RecordSet {
+         return this._children.treeControl.getItems();
+      },
+
       // todo removed or documented by task:
       // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
       toggleExpanded: function(id) {

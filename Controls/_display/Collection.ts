@@ -7,8 +7,8 @@ import ItemsStrategyComposer from './itemsStrategy/Composer';
 import DirectItemsStrategy from './itemsStrategy/Direct';
 import UserItemsStrategy from './itemsStrategy/User';
 import GroupItemsStrategy from './itemsStrategy/Group';
-import AddStrategy from './itemsStrategy/Add';
 import DragStrategy from './itemsStrategy/Drag';
+import AddStrategy from './itemsStrategy/Add';
 import {
     DestroyableMixin,
     ObservableMixin,
