@@ -881,8 +881,8 @@ var
             }
         },
 
-        setHeaderInEmptyListVisible(newVisibility) {
-            this.headerInEmptyListVisible = newVisibility;
+        setHeaderVisibility(newVisibility) {
+            this.headerVisibility = newVisibility;
             this.setHeader(this._header, true);
         },
 
@@ -973,7 +973,7 @@ var
          * Метод проверяет, рисовать ли header при отсутствии записей.
          */
         isDrawHeaderWithEmptyList(): boolean {
-            return this.headerInEmptyListVisible || this.isGridListNotEmpty();
+            return (this.headerVisibility === 'visible') || this.isGridListNotEmpty();
         },
 
         isGridListNotEmpty(): boolean {

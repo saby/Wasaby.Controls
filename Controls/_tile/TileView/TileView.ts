@@ -109,7 +109,7 @@ var TileView = ListView.extend({
 
     _afterMount: function () {
         this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
-        this._notify('register', ['scroll', this, this._onScroll], {bubbling: true});
+        this._notify('register', ['scroll', this, this._onScroll, {listenAll: true}], {bubbling: true});
         TileView.superclass._afterMount.apply(this, arguments);
     },
 
