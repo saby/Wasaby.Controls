@@ -39,6 +39,26 @@ define(
             assert.equal(config.sizes.width, 100);
             assert.equal(config.sizes.height, 100);
          });
+
+         it('search maximized popup', () => {
+            let BCInstacne = new BaseController();
+            let hasMaximizePopup = BCInstacne._isAboveMaximizePopup({});
+            assert.equal(hasMaximizePopup, false);
+
+            BCInstacne._goUpByControlTree = () => {
+               return [
+                  {
+                     _moduleName: 'Controls/_popup/Manager/Popup',
+                     _options: {
+                        maximize: true
+                     }
+                  }
+               ];
+            };
+
+            hasMaximizePopup = BCInstacne._isAboveMaximizePopup({});
+            assert.equal(hasMaximizePopup, true);
+         });
       });
    }
 );
