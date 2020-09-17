@@ -349,18 +349,16 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getSelectionOptions(options: IMenuControlOptions, additionalOptions: object): object {
-        let selectedKeys = options.selectedKeys;
-        if (options.keyProperty === 'copyOriginalId') {
-            selectedKeys = options.selectedKeys.map((key) => {
-                return String(key);
-            });
-        }
+        const selectedKeys = options.selectedKeys.map((key) => {
+            const item = this._listModel.getItemBySourceKey(key).getContents();
+            return MenuControl._isHistoryItem(item) ? String(key) : key;
+        });
         return { ...{
                 model: this._listModel,
-                selectedKeys: selectedKeys,
-                excludedKeys: this._excludedKeys,
+                selectedKeys,
+                excludedKeys: this._excludedKeys
             }, ...additionalOptions
-        }
+        };
     }
 
     private _getSelectionController(options?: IMenuControlOptions): SelectionController {
