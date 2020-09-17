@@ -3839,13 +3839,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.scrollPage(this, 'Up');
                 break;
             case 'Begin':
-                const resultEvent = this._notify('pagingArrowClick', ['startArrowClick'], {bubbling: true});
+                const resultEvent = this._notify('pagingArrowClick', ['Begin'], {bubbling: true});
                 if (resultEvent !== false) {
                     _private.scrollToEdge(this, 'up');
                 }
                 break;
             case 'End':
-                const resultEvent = this._notify('pagingArrowClick', ['endArrowClick'], {bubbling: true});
+                const resultEvent = this._notify('pagingArrowClick', ['End'], {bubbling: true});
                 if (resultEvent !== false) {
                     _private.scrollToEdge(this, 'down');
                 }
