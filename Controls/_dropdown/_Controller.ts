@@ -371,23 +371,25 @@ export default class _Controller implements IDropdownController {
 
    private _getUnloadedSelectedKeys(selectedKeys: string[], items: RecordSet<Model>): string[] {
       const unloadedKeys = [];
-      selectedKeys.forEach((key) => {
-         if (!items.getRecordById(key)) {
-            unloadedKeys.push(key);
-         }
-      });
+      if (selectedKeys) {
+         selectedKeys.forEach((key) => {
+            if (!items.getRecordById(key)) {
+               unloadedKeys.push(key);
+            }
+         });
+      }
       return unloadedKeys.length ? unloadedKeys : null;
    }
 
    private _loadSelectedKeys(options: IDropdownControllerOptions,
                              selectedKeys: string[],
                              items: RecordSet<Model>): Promise<RecordSet> {
-      const filter = {};
+      const filter = {...options.filter};
       filter[options.keyProperty] = selectedKeys;
       const params = {
          source: options.source,
          keyProperty: options.keyProperty,
-         filter: {...options.filter, filter}
+         filter
       };
       return this._loadItems(params).then((newItems) => {
          items.prepend(newItems);
