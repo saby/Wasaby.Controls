@@ -4603,6 +4603,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._dndListController;
     },
 
+    _isMobileIOS(): boolean {
+        return detection.isMobileIOS;
+    },
+
     _onMouseMove(event): void {
         // В яндекс браузере каким то образом пришел nativeEvent === null, после чего
         // упала ошибка в коде ниже и страница стала некликабельной. Повторить ошибку не получилось
