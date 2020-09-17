@@ -1,41 +1,25 @@
 <div class="controls-RadioButtons">
-    <ws:template name="activeButton">
+    <ws:template name="button">
         <ws:partial template="Controls/buttons:ButtonTemplate"
                     attr:class="controls-RadioButtons__button"
-                    _buttonStyle="radioButtonActive"
+                    _buttonStyle="{{buttonStyle}}"
                     _viewMode="button"
                     _fontSize="m"
                     _height="m"
-                    _fontColorStyle="white"
+                    _fontColorStyle="{{fontColorStyle}}"
                     _caption="{{itemData.get('caption')}}"/>
     </ws:template>
-    <ws:template name="inactiveButton">
-        <ws:partial template="Controls/buttons:ButtonTemplate"
-                    attr:class="controls-RadioButtons__button"
-                    _buttonStyle="radioButtonInactive"
-                    _viewMode="button"
-                    _fontSize="m"
-                    _height="m"
-                    _fontColorStyle="default"
-                    _caption="{{itemData.get('caption')}}"/>
-    </ws:template>
+
     <div class="controls-RadioButtons__wrapper">
         <ws:for data="index, itemData in _options.items">
             <div class="controls-RadioButtons__button
             {{index !== _items.length - 1 ? 'controls-RadioButtons__button_withMargin_theme-' + _options.theme}}">
-                <ws:if data="{{itemData[_options.keyProperty] === _options.selectedKey}}">
-                    <ws:partial template="activeButton"
-                                itemData="{{itemData}}"
-                                on:click="_onItemClick(itemData)"
-                    />
-                </ws:if>
-
-                <ws:else>
-                    <ws:partial template="inactiveButton"
-                                itemData="{{itemData}}"
-                                on:click="_onItemClick(itemData)"
-                    />
-                </ws:else>
+                <ws:partial template="button"
+                            itemData="{{itemData}}"
+                            buttonStyle="{{itemData[_options.keyProperty] === _options.selectedKey ? 'radioButtonActive' : 'radioButtonInactive'}}"
+                            fontColorStyle="{{itemData[_options.keyProperty] === _options.selectedKey ? 'activeButton' : 'default'}}"
+                            on:click="_onItemClick(itemData)"
+                />
             </div>
         </ws:for>
     </div>
