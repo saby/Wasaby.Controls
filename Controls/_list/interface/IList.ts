@@ -381,6 +381,19 @@ export interface IList extends IItemActionsOptions {
  */
 
 /**
+ * Возвращает список элементов.
+ * @function Controls/_list/interface/IList#getItems
+ * @return {RecordSet} Список элементов.
+ * @example
+ * <pre class="brush: js">
+ * _getItems(): RecordSet {
+ *    var list = this._children.myList;
+ *    return list.getItems();
+ * }
+ * </pre>
+ */
+
+/**
  * Прокручивает список к указанному элементу.
  * @function Controls/_list/interface/IList#scrollToItem
  * @param {String|Number} key Идентификатор элемента коллекции, к которому осуществляется прокручивание.
