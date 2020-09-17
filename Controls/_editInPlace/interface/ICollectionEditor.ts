@@ -103,10 +103,10 @@ export interface ICollectionEditor {
     /**
      * Получить редактируемый элемент
      * @method
-     * @return {CollectionItem.<Types/entity:Model>|undefined}
+     * @return {Types/entity:Model|undefined}
      * @public
      */
-    getEditingItem(): CollectionItem<Model> | undefined;
+    getEditingItem(): Model | undefined;
 
     /**
      * Получить следующий элемент коллекции, для которого доступно редактирование.

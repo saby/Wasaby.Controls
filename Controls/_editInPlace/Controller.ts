@@ -71,7 +71,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) implem
         return this._collectionEditor.getEditingKey();
     }
 
-    getEditingItem(): TEditableCollectionItem {
+    getEditingItem(): Model | undefined {
         return this._collectionEditor.getEditingItem();
     }
 
@@ -137,13 +137,13 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) implem
         }).catch((err) => {
             Logger.error(ERROR_MSG.BEFORE_BEGIN_EDIT_FAILED, this, err);
             return CONSTANTS.CANCEL;
-        }).then((result?: Model | CONSTANTS.CANCEL) => {
+        }).then((result?: { item: Model } | CONSTANTS.CANCEL) => {
             if (result === CONSTANTS.CANCEL) {
                 return {canceled: true};
             }
             let model;
-            if (result && result instanceof Model) {
-                model = result.clone();
+            if ((result && result.item) instanceof Model) {
+                model = result.item.clone();
             } else if (item && item instanceof Model) {
                 model = item.clone();
             } else {

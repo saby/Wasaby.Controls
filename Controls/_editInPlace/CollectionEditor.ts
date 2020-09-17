@@ -45,11 +45,11 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         return this._editingKey;
     }
 
-    getEditingItem(): TEditableCollectionItem {
+    getEditingItem(): Model | undefined {
         if (this._editingKey === undefined) {
             return undefined;
         }
-        return this._options.collection.getItemBySourceKey(this._editingKey);
+        return this._options.collection.getItemBySourceKey(this._editingKey).contents;
     }
 
     updateOptions(options: Partial<ICollectionEditorOptions>): void {

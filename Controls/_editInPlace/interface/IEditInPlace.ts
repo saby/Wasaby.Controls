@@ -67,11 +67,11 @@ type TBeforeCallbackBaseResult = void | CONSTANTS.CANCEL | Promise<void | CONSTA
 /**
  * @typedef {Function} TBeforeBeginEditCallback
  * @description Функция обратного вызова перед запуском редактирования.
- * @param options Набор опций для запуска редактирования. Доступные свойства: item {Types/entity:Model} - запись для которой запускается редактирование.
- * @param isAdd Флаг, принимает значение true, если запись добавляется
+ * @param {Object} options Набор опций для запуска редактирования. Доступные свойства: item {Types/entity:Model} - запись для которой запускается редактирование.
+ * @param {Boolean} isAdd Флаг, принимает значение true, если запись добавляется
  */
-type TBeforeBeginEditCallback =
-    (options: { item?: Model }, isAdd: boolean) => TBeforeCallbackBaseResult | Model | Promise<Model>;
+type TBeforeBeginEditCallback = (options: { item?: Model }, isAdd: boolean) =>
+    TBeforeCallbackBaseResult | { item?: Model } | Promise<{ item?: Model }>;
 
 /**
  * @typedef {Function} TBeforeEndEditCallback
@@ -177,10 +177,10 @@ interface IEditInPlace {
     /**
      * Получить редактируемый элемент
      * @method
-     * @return {CollectionItem.<Types/entity:Model>|undefined}
+     * @return {Types/entity:Model|undefined}
      * @public
      */
-    getEditingItem(): CollectionItem<Model> | undefined;
+    getEditingItem(): Model | undefined;
 
     /**
      * Получить следующий элемент коллекции, для которого доступно редактирование.

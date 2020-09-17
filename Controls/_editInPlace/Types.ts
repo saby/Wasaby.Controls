@@ -1,15 +1,14 @@
 import {Model} from 'Types/entity';
 import {CollectionItem} from 'Controls/display';
-import {editing as GLOBAL_EDITING_CONSTANTS} from 'Controls/Constants';
 
 /**
  * @typedef {String} CONSTANTS
  * @description Набор констант, использующихся в редактировании по месту.
  * @variant CANCEL позволяет отменить асинхронную операцию, вернув значение из функции обратного вызова до начала операции.
  */
-export const CONSTANTS  = {
-    CANCEL: GLOBAL_EDITING_CONSTANTS.CANCEL
-};
+export enum CONSTANTS {
+    CANCEL = 'Cancel'
+}
 
 /**
  * @typedef {CollectionItem.<Types/entity:Model>>} TEditableCollectionItem

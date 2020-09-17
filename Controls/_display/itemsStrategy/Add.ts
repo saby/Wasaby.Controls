@@ -3,7 +3,7 @@ import {DestroyableMixin, SerializableMixin, ISerializableState, Model} from 'Ty
 import {mixin} from 'Types/util';
 import TreeItem from 'Controls/_display/TreeItem';
 import CollectionItem from 'Controls/_display/CollectionItem';
-//
+
 interface IOptions<S extends Model, T extends CollectionItem<S>> {
     source: IItemsStrategy<S, T>;
     item: T;
@@ -12,12 +12,12 @@ interface IOptions<S extends Model, T extends CollectionItem<S>> {
 }
 
 /**
- * Стратегия-декоратор для формирования корня дерева
- * @class Controls/_display/ItemsStrategy/Root
+ * Стратегия-декоратор для отображения добавляемой записи
+ * @class Controls/_display/ItemsStrategy/Add
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/SerializableMixin
  * @implements Controls/_display/IItemsStrategy
- * @author Мальцев А.А.
+ * @author Родионов Е.А.
  * @private
  */
 export default class Add<S extends Model, T extends CollectionItem<S>> extends mixin<
@@ -60,9 +60,10 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
         } else if (addItemIndex === this.count - 1) {
             return this.source.items.concat([this._options.item]);
         } else {
-            return this.source.items.slice(0, addItemIndex)
-                .concat([this._options.item])
-                .concat(this.source.items.slice(addItemIndex, this.source.count));
+            // Важно оставить исходную коллекцию без изменений.
+            const items = this.source.items.slice();
+            items.splice(addItemIndex, 0, this._options.item);
+            return items;
         }
     }
 
