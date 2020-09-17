@@ -16,9 +16,8 @@ import {
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {VirtualScrollHideController, VirtualScrollController} from 'Controls/display';
-import { CrudEntityKey } from 'Types/source';
 import { getDimensions as uDimension } from '../sizeUtils';
-
+import { getStickyHeadersHeight } from '../scroll';
 
 export interface IScrollParams {
     clientHeight: number;
@@ -194,13 +193,17 @@ export default class ScrollController {
 
     /**
      * Возвращает первый полностью видимый элемент
-     * @param {HTMLElement[]} items список HTMLElement-ов на странице
-     * @param {number} verticalOffset вертикальное смещение скролла
+     * @param listViewContainer
+     * @param baseContainer
+     * @param scrollTop
      * @return {Model}
      */
-    getFirstVisibleRecord(items: HTMLElement[], verticalOffset: number): Model {
+    getFirstVisibleRecord(listViewContainer: any, baseContainer: any, scrollTop: number): Model {
+        const topOffset = this._getTopOffsetForItemsContainer(listViewContainer, baseContainer);
+        const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(baseContainer, 'top', 'allFixed') || 0);
+
         let firstItemIndex = this._options.collection.getStartIndex();
-        firstItemIndex += this._getFirstVisibleItemIndex(items, verticalOffset);
+        firstItemIndex += this._getFirstVisibleItemIndex(listViewContainer.children, verticalOffset);
         firstItemIndex = Math.min(firstItemIndex, this._options.collection.getStopIndex());
         const item = this._options.collection.at(firstItemIndex);
         return item.getContents();
@@ -224,6 +227,13 @@ export default class ScrollController {
             i++;
         }
         return i;
+    }
+
+    private _getTopOffsetForItemsContainer(listViewContainer: any, baseControlContainer: any): number {
+        let offsetTop = uDimension(listViewContainer.children[0], true).top;
+        const container = baseControlContainer[0] || baseControlContainer;
+        offsetTop += container.offsetTop - uDimension(container).top;
+        return offsetTop;
     }
 
     /**

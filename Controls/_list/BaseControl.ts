@@ -2267,9 +2267,7 @@ const _private = {
         // TODO вручную обрабатывать pagedown и делать stop propagation
         if (self._options.markerVisibility !== MarkerVisibility.Hidden && self._children.listView) {
             const itemsContainer = self._children.listView.getItemsContainer();
-            const topOffset = _private.getTopOffsetForItemsContainer(self, itemsContainer);
-            const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(self._container, 'top', 'allFixed') || 0);
-            const item = self._scrollController.getFirstVisibleRecord(itemsContainer.children, verticalOffset);
+            const item = self._scrollController.getFirstVisibleRecord(itemsContainer, self._container, scrollTop);
             if (item.getKey() !== _private.getMarkerController(self).getMarkedKey()) {
                 _private.changeMarkedKey(self, item.getKey());
             }
@@ -3335,6 +3333,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._updateScrollController(newOptions);
         }
 
+        if (_private.hasMarkerController(this)) {
+            _private.getMarkerController(this).updateOptions({
+                model: this._listViewModel,
+                markerVisibility: newOptions.markerVisibility
+            });
+        }
+
         if (this._dndListController) {
             this._dndListController.update(this._listViewModel, newOptions.canStartDragNDrop);
         }
@@ -3392,18 +3397,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const needReload = filterChanged || recreateSource || sortingChanged;
 
-        const shouldProcessMarkerByOptions = newOptions.markerVisibility === MarkerVisibility.Visible
+        const shouldProcessMarker = newOptions.markerVisibility === MarkerVisibility.Visible
             || newOptions.markerVisibility === MarkerVisibility.OnActivated && newOptions.markedKey !== undefined;
-        const shouldProcessMarkerByState = newOptions.markerVisibility === MarkerVisibility.OnActivated
-            && _private.hasMarkerController(this) && _private.getMarkerController(this).getMarkedKey() !== undefined;
 
-        if (shouldProcessMarkerByOptions || shouldProcessMarkerByState) {
+        if (shouldProcessMarker) {
             const markerController = _private.getMarkerController(this);
-            markerController.updateOptions({
-                model: this._listViewModel,
-                markerVisibility: newOptions.markerVisibility
-            });
-
             if (this._options.markedKey !== newOptions.markedKey) {
                 markerController.setMarkedKey(newOptions.markedKey);
             } else if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
