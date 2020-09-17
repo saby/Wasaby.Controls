@@ -159,10 +159,6 @@ export default class ScrollController {
         return {...result, ...this.updateContainerHeightsData(params)};
     }
 
-    needToSaveAndRestoreScrollPosition(): boolean {
-        return !!(this._virtualScroll && this._virtualScroll.isNeedToRestorePosition);
-    }
-
     setRendering(state: boolean) {
         this._isRendering = state;
     }
@@ -451,7 +447,16 @@ export default class ScrollController {
      * Получает параметры для восстановления скролла
      */
     getParamsToRestoreScrollPosition(): IScrollRestoreParams {
-        return  this._virtualScroll.getParamsToRestoreScroll();
+        if (this._virtualScroll && this._virtualScroll.isNeedToRestorePosition) {
+            return this._virtualScroll.getParamsToRestoreScroll();
+        } else {
+            return null;
+        }
+    }
+
+    beforeRestoreScrollPosition(): void {
+        this._fakeScroll = true;
+        this._virtualScroll.beforeRestoreScrollPosition();
     }
 
     // TODO рано убирать костыль, ждем перехода на новую модель.
