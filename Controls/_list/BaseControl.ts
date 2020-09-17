@@ -3892,7 +3892,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const canEditByClick = this._getEditingConfig().editOnClick && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`);
         if (canEditByClick) {
             e.stopPropagation();
-            this._savedItemClickArgs = [item, originalEvent, columnIndex];
             this.beginEdit({ item }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
@@ -3901,12 +3900,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             });
         } else if (this._editInPlaceController) {
             this.commitEdit();
-
-            // При клике по элементу может случиться 2 события: itemClick и itemActivate.
-            // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
-            // порядок событий будет beforeBeginEdit -> itemClick
-            // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
-            // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
+        }
+        // При клике по элементу может случиться 2 события: itemClick и itemActivate.
+        // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
+        // порядок событий будет beforeBeginEdit -> itemClick
+        // itemActivate происходит в случае активации записи. Если в списке не поддерживается редактирование, то это любой клик.
+        // Если поддерживается, то событие не произойдет если успешно запустилось редактирование записи.
+        if (e.isStopped()) {
+            this._savedItemClickArgs = [item, originalEvent, columnIndex];
+        } else {
             const eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], {bubbling: true});
             if (eventResult !== false) {
                 this._notify('itemActivate', [item, originalEvent], {bubbling: true});
@@ -3941,9 +3943,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return new Promise((resolve) => {
                 const eventResult = notifyIfMount('beforeBeginEdit', [options, isAdd]);
 
-                // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
-                // обязательно должен случиться после события beforeBeginEdit.
-                notifyIfMount('itemClick', this._savedItemClickArgs, {bubbling: true});
+                if (this._savedItemClickArgs) {
+                    // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
+                    // обязательно должен случиться после события beforeBeginEdit.
+                    notifyIfMount('itemClick', this._savedItemClickArgs, {bubbling: true});
+                }
 
                 resolve(eventResult);
             }).then((result) => {
