@@ -82,9 +82,13 @@ export default class FlatController {
       this._model.setDragPosition(position);
    }
 
-   /**
-    * Заканчивает драг'н'дроп в списке. Все записи отображаются обычным образом
-    */
+   getDraggableItem(): CollectionItem<Model> {
+      return this._draggableItem;
+   }
+
+    /**
+     * Заканчивает драг'н'дроп в списке. Все записи отображаются обычным образом
+     */
    endDrag(): void {
       this._draggableItem = null;
       this._dragPosition = null;

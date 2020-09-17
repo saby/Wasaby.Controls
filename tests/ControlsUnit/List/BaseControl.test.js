@@ -4421,10 +4421,26 @@ define([
          ctrl._nativeDragStart(fakeDragStart);
          assert.isTrue(isDefaultPrevented);
       });
-      it('_documentDragEnd', function() {
+      it('_documentDragEnd', async function() {
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: rs,
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel
+         };
          var
             dragEnded,
             ctrl = new lists.BaseControl();
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+
          ctrl._isMounted = true;
          ctrl._scrollTop = 0;
          ctrl._container = {
@@ -4452,7 +4468,12 @@ define([
                      getContents: () => {}
                   }
                };
-            }
+            },
+            getDraggableItem: () => ({
+               getContents: () => ({
+                  getKey: () => 1
+               })
+            })
          };
          ctrl._documentDragEnd();
          assert.isTrue(dragEnded);
@@ -7860,7 +7881,12 @@ define([
                         getContents: () => {}
                      }
                   };
-               }
+               },
+               getDraggableItem: () => ({
+                  getContents: () => ({
+                     getKey: () => 1
+                  })
+               })
             };
 
             baseControl._insideDragging = true;

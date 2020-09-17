@@ -2100,6 +2100,8 @@ const _private = {
     },
 
     onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
+        // TODO после dnd вызывается этот метод с параметром typeName='unselectall'.
+        //  В данном случае нам не всегда нужно создавать контроллер. Записей могло быть не выбрано.
         const selectionController = _private.getSelectionController(this);
         if (!selectionController) {
             return;
@@ -4145,8 +4147,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // При редактировании по месту маркер появляется только если в списке больше одной записи.
         // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
+        // Если идет перемещение записей, то маркер ставим после завершения перемещения
         let canBeMarked = this._mouseDownItemKey === key
-           && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
+            && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1))
+            && !this._dndListController?.isDragging();
 
         // TODO изабвиться по задаче https://online.sbis.ru/opendoc.html?guid=f7029014-33b3-4cd6-aefb-8572e42123a2
         // Колбэк передается из explorer.View, чтобы не проставлять маркер перед проваливанием в узел
@@ -4836,15 +4840,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._documentDragging = false;
 
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
+        // endDrag нужно вызывать только после события dragEnd,
+        // чтобы не было прыжков в списке, если асинхронно меняют порядок элементов
         if (this._dndListController) {
+            const draggedKey = this._dndListController.getDraggableItem().getContents().getKey();
             if (dragEndResult instanceof Promise) {
                 _private.showIndicator(this);
-                dragEndResult.addBoth(() => {
+                dragEndResult.finally(() => {
                     this._dndListController.endDrag();
+                    this.setMarkedKey(draggedKey);
                     _private.hideIndicator(this);
                 });
             } else {
                 this._dndListController.endDrag();
+                this.setMarkedKey(draggedKey);
             }
         }
     },

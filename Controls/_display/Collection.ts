@@ -2169,6 +2169,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     resetDraggedItems(): void {
+        // TODO нужно у стратегии вызвать метод reset, чтобы задестроить avatarItem и обнулить все ссылки
         this.removeStrategy(this._dragStrategy);
     }
 
