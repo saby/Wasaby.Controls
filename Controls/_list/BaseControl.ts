@@ -3410,7 +3410,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     _private.changeMarkedKey(self, newMarkedKey);
                 }
             }
-        } else if (_private.hasMarkerController(this)) {
+        } else if (_private.hasMarkerController(this) && newOptions.markerVisibility === 'hidden') {
             _private.getMarkerController(this).destroy();
             this._markerController = null;
         }
