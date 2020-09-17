@@ -98,7 +98,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    private _items: RecordSet;
    private _filter: QueryWhereExpression<any>;
 
-   _beforeMount(options: IDataOptions, context, receivedState: RecordSet|undefined): Promise<RecordSet>|void {
+   _beforeMount(options: IDataOptions, context, receivedState: RecordSet|undefined): Promise<RecordSet|Error>|void {
 
       // TODO придумать как отказаться от этого свойства
       this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
@@ -133,7 +133,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       }
    }
 
-   _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet> {
+   _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
       const isChanged = this._sourceController.updateOptions(newOptions);
 
       // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
@@ -153,7 +153,6 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
             const controllerState = this._sourceController.getState();
             this._updateContext(controllerState);
-
             this._loading = false;
             return items;
          });
