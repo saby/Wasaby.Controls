@@ -21,7 +21,7 @@ import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyH
 import {POSITION} from './Container/Type';
 
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadows {
-
+    backgroundStyle: string;
 }
 
 /**
@@ -99,7 +99,15 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  * </ul>
  */
 
+/**
+ * @name Controls/_scroll/ContainerNew#backgroundStyle
+ * @cfg {String} Определяет префикс стиля для настройки элементов которые зависят от цвета фона.
+ * @default default
+ * @demo Controls-demo/Scroll/BackgroundStyle/Index
+ */
+
 const SCROLL_BY_ARROWS = 40;
+const DEFAULT_BACKGROUND_STYLE = 'default';
 
 export default class Container extends ContainerBase<IContainerOptions> implements IScrollbars {
     readonly '[Controls/_scroll/Container/Interface/IScrollbars]': boolean = true;
@@ -358,7 +366,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         const opts:IContainerOptions = options || this._options;
         let style: string = '';
         if (this._isOptimizeShadowEnabled) {
-            style += `controls-Scroll__background-Shadow_style-${opts.shadowStyle}_theme-${opts.theme} ` +
+            style += `controls-Scroll__background-Shadow_style-${opts.backgroundStyle}_theme-${opts.theme} ` +
                 `controls-Scroll__background-Shadow_top-${this._shadows.top.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom.isVisibleShadowOnCSS}_style-${opts.shadowStyle}_theme-${opts.theme}`;
         }
         return style;
@@ -403,6 +411,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             topShadowVisibility: SHADOW_VISIBILITY.AUTO,
             bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
             shadowStyle: 'default',
+            backgroundStyle: DEFAULT_BACKGROUND_STYLE,
             scrollMode: 'vertical',
             optimizeShadow: true
         };
