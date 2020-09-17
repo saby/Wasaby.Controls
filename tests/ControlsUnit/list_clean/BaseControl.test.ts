@@ -377,6 +377,9 @@ describe('Controls/list_clean/BaseControl', () => {
         //     baseControl._listViewModel.destroy = () => {
         //         modelDestroyed = true;
         //     };
+        //     baseControl._items = {
+        //         unsubscribe: () => true
+        //     };
         //     baseControl._beforeUnmount();
         //     assert.isTrue(eipReset, 'editInPlace is not reset');
         //     assert.isTrue(modelDestroyed, 'model is not destroyed');

@@ -1230,19 +1230,22 @@ const getEditing = () => {
                 id: '1',
                 email: 'semen@gmail.com',
                 required: '89069953970',
-                length: '1234'
+                length: '1234',
+                title: 'title'
             },
             {
                 id: '2',
                 email: 'artem@gmail.com',
                 required: '89069953970',
-                length: '123'
+                length: '123',
+                title: 'title'
             },
             {
                 id: '3',
                 email: 'oleg@gmail.com',
                 required: '89069953970',
-                length: 'hello'
+                length: 'hello',
+                title: 'title'
             }
         ],
         getEditingColumns: (): IColumn[] => [
@@ -1314,6 +1317,11 @@ const getEditing = () => {
                 displayProperty: 'length',
                 width: 'max-content',
                 template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorDate'
+            },
+            {
+                displayProperty: 'title',
+                width: 'max-content',
+                template: 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorTitle'
             }
         ],
         getEditingHeaderValidations: (): IHeader[] => [
@@ -1325,6 +1333,9 @@ const getEditing = () => {
             },
             {
                 title: 'Length'
+            },
+            {
+                title: 'Title'
             }
         ],
         getDecoratedEditingData: (): IEditingData[] => [

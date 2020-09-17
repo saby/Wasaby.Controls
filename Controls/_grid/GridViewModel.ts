@@ -881,8 +881,8 @@ var
             }
         },
 
-        setHeaderInEmptyListVisible(newVisibility) {
-            this.headerInEmptyListVisible = newVisibility;
+        setHeaderVisibility(newVisibility) {
+            this.headerVisibility = newVisibility;
             this.setHeader(this._header, true);
         },
 
@@ -973,7 +973,7 @@ var
          * Метод проверяет, рисовать ли header при отсутствии записей.
          */
         isDrawHeaderWithEmptyList(): boolean {
-            return this.headerInEmptyListVisible || this.isGridListNotEmpty();
+            return (this.headerVisibility === 'visible') || this.isGridListNotEmpty();
         },
 
         isGridListNotEmpty(): boolean {
@@ -1069,7 +1069,7 @@ var
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (hasMultiSelect && columnIndex === 0 && !cell.title) {
+            if (hasMultiSelect && columnIndex === 0 && !(cell.title || cell.caption)) {
                 cellClasses += ' controls-Grid__header-cell-checkbox' + `_theme-${theme}` + ` controls-Grid__header-cell-checkbox_min-width_theme-${theme}`;
 
                 // В grid-layout хлебные крошки нельзя расположить в первой ячейке, если в таблице включен множественный выбор,
@@ -1176,7 +1176,12 @@ var
                 }
             }
 
-            if (columnIndex === 0 && rowIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
+            if (
+                columnIndex === 0 && rowIndex === 0 &&
+                this._options.multiSelectVisibility !== 'hidden' &&
+                this._headerRows[rowIndex][columnIndex + 1].startColumn &&
+                !(cell.title || cell.caption)
+            ) {
                 cellStyles = GridLayoutUtil.getMultiHeaderStyles(1, 2, 1, this._maxEndRow, 0)
                 if (!GridLayoutUtil.isFullGridSupport()) {
                     headerColumn.rowSpan = this._maxEndRow - 1;
