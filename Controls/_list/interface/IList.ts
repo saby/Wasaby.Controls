@@ -632,13 +632,14 @@ export interface IList extends IItemActionsOptions {
  */
 
 /**
- * @event Происходит при клике по кнопке перехода к первой странице.
- * @name Controls/_list/interface/IList#onArrowBeginClick
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @typedef {String} PagingArrowClick
+ * @variant startArrowClick Клик по кнопке перехода к первой странице.
+ * @variant endArrowClick Клик по кнопке перехода к последней странице.
  */
 
 /**
- * @event Происходит при клике по кнопке перехода к последней странице.
- * @name Controls/_list/interface/IList#onArrowEndClick
+ * @event Происходит при клике по кнопкам перехода к первой и последней странице.
+ * @name Controls/_list/interface/IList#pagingArrowClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {PagingArrowClick} arrowClick.
  */
