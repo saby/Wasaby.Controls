@@ -25,9 +25,9 @@ import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
 import {StackOpener} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
 import {
-    ITreeSelectionStrategyOptions,
+    FlatSelectionStrategy, IFlatSelectionStrategyOptions,
+    TreeSelectionStrategy, ITreeSelectionStrategyOptions,
     SelectionController,
-    TreeSelectionStrategy,
     ISelectionControllerResult
 } from 'Controls/multiselection';
 
@@ -331,21 +331,26 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _createSelectionController(options: IMenuControlOptions): SelectionController {
         const strategyOptions = this._getSelectionStrategyOptions(options, this._listModel.getCollection());
         const additionOptions = {
-            strategy: new TreeSelectionStrategy(strategyOptions)
+            strategy: options.parentProperty ? new TreeSelectionStrategy(strategyOptions) :
+                new FlatSelectionStrategy(strategyOptions)
         };
         return new SelectionController(this._getSelectionOptions(options, additionOptions));
     }
 
-    private _getSelectionStrategyOptions(options: IMenuControlOptions, items: RecordSet): ITreeSelectionStrategyOptions {
-        return {
-            hierarchyRelation: new relation.Hierarchy({
-                keyProperty: options.keyProperty,
-                parentProperty: options.parentProperty,
-                nodeProperty: options.nodeProperty
-            }),
-            rootId: 'fakeRoot',
-            items
-        };
+    private _getSelectionStrategyOptions(options: IMenuControlOptions, items: RecordSet): ITreeSelectionStrategyOptions|IFlatSelectionStrategyOptions {
+        if (options.parentProperty) {
+            return {
+                hierarchyRelation: new relation.Hierarchy({
+                    keyProperty: options.keyProperty,
+                    parentProperty: options.parentProperty,
+                    nodeProperty: options.nodeProperty
+                }),
+                rootId: 'fakeRoot',
+                items
+            };
+        } else {
+            return { items };
+        }
     }
 
     private _getSelectionOptions(options: IMenuControlOptions, additionalOptions: object): object {
