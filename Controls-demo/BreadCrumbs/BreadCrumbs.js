@@ -19,7 +19,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
          this.items = [
             {
                id: 1,
-               title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
+               title: 'название папки',
                secondTitle: 'тест1',
                parent: null
             },
