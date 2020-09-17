@@ -189,6 +189,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _openWithHistory(): void {
       let filter: QueryWhereExpression<unknown>;
 
+      function openSuggestIfNeeded(): void {
+         if (this._historyKeys.length || this._options.autoDropDown) {
+            this.open();
+         }
+      }
+
       if (!this._historyKeys) {
          this._getRecentKeys().addCallback((keys: string[]) => {
             this._historyKeys = keys || [];
@@ -200,14 +206,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
             this._setFilter(filter, this._options);
 
-            if (this._historyKeys.length || this._options.autoDropDown) {
-               this._open();
-            }
+            openSuggestIfNeeded();
             return this._historyKeys;
          });
       } else {
          this._setFilter(this._options.filter, this._options);
-         this._open();
+         openSuggestIfNeeded();
       }
    }
 
@@ -265,7 +269,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
        * 1) loaded list is empty and empty template option is doesn't set
        * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, because input field is empty and historyId options is set  */
       return !!(hasItems ||
-         (!this._options.historyId || this._searchValue || isSuggestHasTabs) && this._options.emptyTemplate);
+         (!this._options.historyId || this._searchValue || isSuggestHasTabs) &&
+         this._options.emptyTemplate && searchResult !== null);
    }
 
    private _processResultData(data: RecordSet): void {
