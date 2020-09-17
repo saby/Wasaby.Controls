@@ -11,7 +11,7 @@ import {constants, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
-import {ICrud, Memory, CrudEntityKey} from 'Types/source';
+import {CrudEntityKey, ICrud, Memory, CrudEntityKey} from 'Types/source';
 import {debounce, throttle} from 'Types/function';
 import {create as diCreate} from 'Types/di';
 import {Model, relation} from 'Types/entity';
@@ -559,8 +559,16 @@ const _private = {
         return itemsContainer.children[startChildrenIndex + index] as HTMLElement;
     },
 
-    scrollToItem(self, key: TItemKey, toBottom: boolean, force: boolean) {
+    scrollToItem(self, key: TItemKey, toBottom: boolean, force: boolean, skippedItemsCount: number) {
         const scrollCallback = (index) => {
+            // Первым элементом может оказаться группа, к ней подскрол сейчас невозможен, поэтому отыскиваем первую
+            // реальную запись и скролим именно к ней.
+            // Сам контейнер же берем учитывая количество пропущенных элементов при поиске первой записи.
+            // Ошибка: https://online.sbis.ru/opendoc.html?guid=98a3d6ac-68e3-427d-943f-b6b692800217
+            // Задача на рефакторинг: https://online.sbis.ru/opendoc.html?guid=1f9d8be3-2cec-4e3e-aace-9067b120248a
+            if (skippedItemsCount) {
+                index -= skippedItemsCount;
+            }
             // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
             // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
             // логического родителя, который отрисовывает все элементы
@@ -3778,14 +3786,39 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         });
     },
+    _findFirstItem(collection: any): { key: CrudEntityKey, skippedItemsCount: number } {
+        let item = null;
+        let itemContents = null;
+        let key = null;
+        let index = 0;
+        let skippedItemsCount = 0;
+        while (index < collection.getCount()) {
+            item = collection.at(index);
+            if (item) {
+                itemContents = item.getContents();
+                if (itemContents && itemContents.getKey) {
+                    key = itemContents.getKey();
+                    break;
+                }
+            }
+            skippedItemsCount++;
+            index++;
+        }
+        return {
+            key,
+            skippedItemsCount
+        };
+    },
     _scrollToFirstItemIfNeed(): void {
         if (this._needScrollToFirstItem) {
             this._needScrollToFirstItem = false;
-            const firstDispItem = this.getViewModel().at(0);
-            const firstItem = firstDispItem && firstDispItem.getContents();
-            const firstItemKey = firstItem && firstItem.getKey ? firstItem.getKey() : null;
-            if (firstItemKey !== null) {
-                _private.scrollToItem(this, firstItemKey, false, true);
+            // Первым элементом может оказаться группа, к ней подскрол сейчас невозможен, поэтому отыскиваем первую
+            // реальную запись и скролим именно к ней.
+            // Ошибка: https://online.sbis.ru/opendoc.html?guid=98a3d6ac-68e3-427d-943f-b6b692800217
+            // Задача на рефакторинг: https://online.sbis.ru/opendoc.html?guid=1f9d8be3-2cec-4e3e-aace-9067b120248a
+            const firstItem = this._findFirstItem(this.getViewModel());
+            if (firstItem && firstItem.key !== null) {
+                _private.scrollToItem(this, firstItem.key, false, true, firstItem.skippedItemsCount);
             }
         }
     },
