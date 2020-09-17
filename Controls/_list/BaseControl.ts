@@ -3401,7 +3401,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             || newOptions.markerVisibility === MarkerVisibility.OnActivated && newOptions.markedKey !== undefined;
 
         if (shouldProcessMarker) {
-            const markerController = _private.getMarkerController(this);
+            const markerController = _private.getMarkerController(this, newOptions);
             if (this._options.markedKey !== newOptions.markedKey) {
                 markerController.setMarkedKey(newOptions.markedKey);
             } else if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
