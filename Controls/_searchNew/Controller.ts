@@ -31,7 +31,7 @@ export default class Controller implements ISearchController {
    search(value: string): Promise<RecordSet> {
       const filter: QueryWhereExpression<unknown> = {...this._options.sourceController.getFilter()};
 
-      filter[this._options.searchParam] = this._searchValue = value;
+      filter[this._options.searchParam] = this._searchValue = this._trim(value);
 
       return this._updateFilter(filter);
    }
@@ -50,5 +50,9 @@ export default class Controller implements ISearchController {
          ...this._options,
          ...options
       };
+   }
+
+   private _trim(value: string): string {
+      return this._options.searchValueTrim && value ? value.trim() : value;
    }
 }

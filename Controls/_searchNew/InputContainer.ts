@@ -1,14 +1,14 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_searchNew/InputContainer';
 import {SyntheticEvent} from 'UI/Vdom';
-import SearchDelay from './SearchDelay';
+import SearchResolver from './SearchResolver';
 import {ISearchInputContainerOptions} from './interface';
 
 export default class InputContainer extends Control<ISearchInputContainerOptions> {
    protected _template: TemplateFunction = template;
 
    protected _value: string;
-   protected _searchDelayController: SearchDelay = null;
+   protected _searchDelayController: SearchResolver = null;
 
    protected _beforeMount(options?: ISearchInputContainerOptions): void {
       this._initSearchDelayController();
@@ -16,7 +16,7 @@ export default class InputContainer extends Control<ISearchInputContainerOptions
 
    protected _initSearchDelayController(): void {
       if (!this._searchDelayController) {
-         this._searchDelayController = new SearchDelay({
+         this._searchDelayController = new SearchResolver({
             delayTime: this._options.delayTime,
             minSearchLength: this._options.minSearchValueLength,
             searchCallback: this._notifySearch,
