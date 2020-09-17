@@ -75,10 +75,10 @@ export interface IControllerOptions {
      */
     itemActionsPosition?: TItemActionsPosition;
     /**
-     * Стиль отображения контейнера controls-itemActionsV.
-     * Варианты: 'master' | 'default' | 'transparent'
+     * Опция, позволяющая настраивать фон панели операций над записью.
+     * Предустановленные варианты 'default' | 'transparent'
      */
-    style?: 'master'|'default'|'transparent';
+    style?: string;
     /**
      * Класс для установки контейнеру controls-itemActionsV.
      * По умолчанию 'controls-itemActionsV_position_bottomRight'
