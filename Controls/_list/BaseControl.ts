@@ -2189,19 +2189,28 @@ const _private = {
         return !!self._markerController;
     },
 
-    getMarkerController(self: typeof BaseControl): MarkerController {
+    getMarkerController(self: typeof BaseControl, options: IList = null): MarkerController {
+        if (!_private.hasMarkerController(self) && self._markerControllerConstructor) {
+            options = options ? options : self._options;
+            self._markerController = new self._markerControllerConstructor({
+                model: self._listViewModel,
+                markerVisibility: options.markerVisibility,
+                markedKey: options.markedKey
+            });
+        }
         return self._markerController;
     },
 
     getMarkerControllerAsync(self: typeof BaseControl, options: IList = null): Promise<MarkerController> {
         return import('Controls/marker').then((library) => {
-            if (!_private.hasMarkerController(self)) {
+            if (!self._markerControllerConstructor) {
                 options = options ? options : self._options;
                 self._markerController = new library.MarkerController({
                     model: self._listViewModel,
                     markerVisibility: options.markerVisibility,
                     markedKey: options.markedKey
                 });
+                self._markerControllerConstructor = library.MarkerController;
             }
             return self._markerController;
         });
@@ -2863,6 +2872,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _swipeTemplate: SwipeActionsTemplate,
 
     _markerController: null,
+    _markerControllerConstructor: null,
 
     _dndListController: null,
     _dragEntity: undefined,
@@ -3396,16 +3406,24 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const shouldProcessMarker = newOptions.markerVisibility === 'visible'
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
         if (shouldProcessMarker) {
-            _private.getMarkerControllerAsync(this, newOptions).then((controller) => {
-                if (this._options.markedKey !== newOptions.markedKey) {
+            // нужно запомнить старые опции, т.к. если библиотека будет долго грузиться, опции могут уже перезаписаться
+            const oldOptions = this._options;
+            const processMarker = (controller) => {
+                if (oldOptions.markedKey !== newOptions.markedKey) {
                     controller.setMarkedKey(newOptions.markedKey);
-                } else if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
+                } else if (oldOptions.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
                     const newMarkedKey = controller.calculateMarkedKeyForVisible();
                     if (newMarkedKey !== controller.getMarkedKey()) {
                         _private.changeMarkedKey(self, newMarkedKey);
                     }
                 }
-            });
+            };
+            if (this._markerControllerConstructor) {
+                const controller = _private.getMarkerController(this, newOptions);
+                processMarker(controller);
+            } else {
+                _private.getMarkerControllerAsync(this, newOptions).then(processMarker);
+            }
         } else if (_private.hasMarkerController(this) && newOptions.markerVisibility === 'hidden') {
             _private.getMarkerController(this).destroy();
             this._markerController = null;
