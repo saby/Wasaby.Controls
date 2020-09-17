@@ -3668,7 +3668,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
-            this._scrollController.update({ params: { scrollHeight: this._container.scrollHeight } })
+            this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
             let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
