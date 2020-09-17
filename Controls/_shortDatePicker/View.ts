@@ -226,6 +226,7 @@ var Component = BaseControl.extend({
     _expandPopup(): void {
         this._isExpandedPopup = !this._isExpandedPopup;
         if (this._isExpandedPopup) {
+            // Делаем попап до конца экрана. Для этого вычитаем из размера вьюпорта смещение по Y.
             const maxHeightPopup = this._logicParent._container.style.maxHeight;
             const topPopup = this._logicParent._container.style.top;
             this._popupHeightStyle = `height: ${parseInt(maxHeightPopup, 10) - parseInt(topPopup, 10) - this._popupOffset}px`;
