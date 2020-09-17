@@ -1,18 +1,22 @@
 .controls-text-white_theme-@{themeName} {
-  color: white;
+  color: @background-color;
 }
 .controls-Button_button_style-radioButtonActive_theme-@{themeName} {
-  background-color: #7694B8;
-  border-color: #7694B8;
+  background-color: @active_background-color_radioButton;
+  border-color: @active_background-color_radioButton;
 }
 .controls-Button_button_style-radioButtonInactive_theme-@{themeName} {
-  background-color: white;
+  background-color: @background-color;
   border-color: transparent;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: @box-shadow_inactive_radioButton;
 }
 .controls-Button_button_style-radioButtonInactive_theme-@{themeName}:hover {
-  background-color: #F0F5FB;
+  background-color: @hover_background-color;
 }
-.controls-RadioButtons__margin {
-  margin-right: 12px;
+.controls-RadioButtons__button_withMargin_theme-@{themeName} {
+  margin-right: @offset_m;
+}
+.controls-RadioButtons__wrapper {
+  display: inline-flex;
+  flex-direction: row;
 }

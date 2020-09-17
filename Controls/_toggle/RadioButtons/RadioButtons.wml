@@ -1,23 +1,42 @@
 <div class="controls-RadioButtons">
-    <ws:partial template="Controls/buttons:ButtonTemplate"
-                attr:class="controls-RadioButtons__margin"
-                _buttonStyle="radioButtonActive"
-                _viewMode="button"
-                _fontSize="m"
-                _height="m"
-                _fontColorStyle="white"
-                _caption="{{_options.captions[0]}}"
-                on:click="_clickHandler()"
-                on:keypress="_keyUpHandler()"/>
+    <ws:template name="activeButton">
+        <ws:partial template="Controls/buttons:ButtonTemplate"
+                    attr:class="controls-RadioButtons__button"
+                    _buttonStyle="radioButtonActive"
+                    _viewMode="button"
+                    _fontSize="m"
+                    _height="m"
+                    _fontColorStyle="white"
+                    _caption="{{itemData.get('caption')}}"/>
+    </ws:template>
+    <ws:template name="inactiveButton">
+        <ws:partial template="Controls/buttons:ButtonTemplate"
+                    attr:class="controls-RadioButtons__button"
+                    _buttonStyle="radioButtonInactive"
+                    _viewMode="button"
+                    _fontSize="m"
+                    _height="m"
+                    _fontColorStyle="default"
+                    _caption="{{itemData.get('caption')}}"/>
+    </ws:template>
+    <div class="controls-RadioButtons__wrapper">
+        <ws:for data="index, itemData in _items">
+            <div class="controls-RadioButtons__button
+            {{index !== _items.length - 1 ? 'controls-RadioButtons__button_withMargin_theme-' + _options.theme}}">
+                <ws:if data="{{itemData[_options.keyProperty] === _options.selectedKey}}">
+                    <ws:partial template="activeButton"
+                                itemData="{{itemData}}"
+                                on:click="_onItemClick(itemData)"
+                    />
+                </ws:if>
 
-                <ws:partial template="Controls/buttons:ButtonTemplate"
-                                attr:class="controls-RadioButtons__template"
-                                _buttonStyle="radioButtonInactive"
-                                _viewMode="button"
-                                _fontSize="m"
-                                _height="m"
-                                _fontColorStyle="default"
-                                _caption="{{_options.captions[1]}}"
-                                on:click="_clickHandler()"
-                                on:keypress="_keyUpHandler()"/>
+                <ws:else>
+                    <ws:partial template="inactiveButton"
+                                itemData="{{itemData}}"
+                                on:click="_onItemClick(itemData)"
+                    />
+                </ws:else>
+            </div>
+        </ws:for>
+    </div>
 </div>

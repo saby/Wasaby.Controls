@@ -5,6 +5,7 @@
  * @includes Switch Controls/_toggle/Switch
  * @includes DoubleSwitch Controls/_toggle/DoubleSwitch
  * @includes RadioGroup Controls/_toggle/RadioGroup
+ * @includes RadioButtons Controls/_toggle/RadioButtons
  * @includes Checkbox Controls/_toggle/Checkbox
  * @includes CheckboxMarker Controls/_toggle/CheckboxMarker
  * @includes CheckboxGroup Controls/_toggle/CheckboxGroup
@@ -25,6 +26,7 @@
  * @includes Switch Controls/_toggle/Switch
  * @includes DoubleSwitch Controls/_toggle/DoubleSwitch
  * @includes RadioGroup Controls/_toggle/RadioGroup
+ * @includes RadioButtons Controls/_toggle/RadioButtons
  * @includes Checkbox Controls/_toggle/Checkbox
  * @includes CheckboxMarker Controls/_toggle/Checkbox/resources/CheckboxMarker
  * @includes CheckboxGroup Controls/_toggle/CheckboxGroup
