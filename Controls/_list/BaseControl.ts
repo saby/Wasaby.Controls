@@ -3985,7 +3985,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             };
 
             const beforeEndCallback = (item: Model, willSave: boolean, isAdd: boolean) => {
-                return Promise.resolve(() => {
+                return new Promise((resolve) => {
                     const eventResult = this._notify('beforeEndEdit', [item, willSave, isAdd]);
 
                     // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
@@ -3996,9 +3996,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         )
                     );
                     if (shouldUseDefaultSaving) {
-                        return this._saveEditingInSource(item);
+                        resolve(this._saveEditingInSource(item));
                     } else {
-                        return eventResult;
+                        resolve(eventResult);
                     }
                 });
             };
