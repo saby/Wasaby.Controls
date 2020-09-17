@@ -353,6 +353,7 @@ define([
                   return shouldSearch;
                }
             };
+            self._loadedItems = new collection.RecordSet();
 
             // navigation.view !== 'infinity'
             sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
@@ -6480,10 +6481,22 @@ define([
 
       it('_beforeUnmount', function() {
          let instance = new lists.BaseControl();
+
+         let unsubscribeCalled = false;
+         instance._listViewModel = {
+            destroy: () => null
+         };
+         instance._items = {
+            unsubscribe: () => {
+               unsubscribeCalled = true;
+            }
+         };
+
          instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
 
          instance._beforeUnmount();
          assert.isNull(instance._portionedSearch);
+         assert.isTrue(unsubscribeCalled);
       });
 
       describe('beforeUpdate', () => {
@@ -7546,7 +7559,7 @@ define([
             baseControl._beforeMount(cfg);
          });
       });
-      describe('_afterMount', () => {
+      describe('scrollToItem _afterMount', () => {
          let stubScrollToItem;
          beforeEach(() => {
             stubScrollToItem = sinon.stub(lists.BaseControl._private, 'scrollToItem');
@@ -7577,6 +7590,49 @@ define([
             });
             await baseControl._beforeMount(cfg);
             baseControl._afterMount(cfg);
+         });
+      });
+      
+      describe('_afterMount registerIntersectionObserver', () => {
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            keyProperty: 'id',
+            viewModelConstructor: lists.ListViewModel,
+            source: source,
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrollConfig: {
+               pageSize: 100
+            }
+         };
+         let baseControl;
+         let registered;
+         let registerIntersectionObserver = () => { registered = true; }
+         beforeEach(() => {
+            registered = false;
+            baseControl = new lists.BaseControl(cfg);
+            baseControl._registerIntersectionObserver = registerIntersectionObserver;
+         });
+         afterEach(() => {
+            baseControl = null;
+         });
+         it('without error', async () => {
+            
+            baseControl._container = {};
+            baseControl.saveOptions(cfg);
+            await baseControl._beforeMount(cfg);
+            baseControl._afterMount(cfg);
+            assert.isTrue(registered);
+         });
+         it('with error', async () => {
+            
+            baseControl._container = {};
+            baseControl.saveOptions(cfg);
+            await baseControl._beforeMount(cfg);
+            baseControl.__error = {};
+            baseControl._afterMount(cfg);
+            assert.isFalse(registered);
          });
       });
       describe('_private.createEditingData()', () => {
