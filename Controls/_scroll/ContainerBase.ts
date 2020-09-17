@@ -287,17 +287,17 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         const isStateUpdated = this._updateState(newState);
         if (isStateUpdated) {
             // Новое событие
-            this._sendByRegistrar('scrollStateChanged', [{...this._state}, {...this._oldState}]);
+            this._generateEvents('scrollStateChanged', [{...this._state}, {...this._oldState}]);
 
             if (this._state.scrollHeight !== this._oldState.scrollHeight) {
-                this._sendByRegistrar('scrollResize', [{
+                this._generateEvents('scrollResize', [{
                     scrollHeight: this._state.scrollHeight,
                     clientHeight: this._state.clientHeight
                 }]);
             }
 
             if (this._oldState.clientHeight !== this._state.clientHeight) {
-                this._sendByRegistrar('viewportResize', [{
+                this._generateEvents('viewportResize', [{
                     scrollHeight: this._state.scrollHeight,
                     scrollTop: this._state.scrollTop,
                     clientHeight: this._state.clientHeight,
@@ -306,13 +306,13 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             }
 
             if (this._oldState.scrollTop !== this._state.scrollTop) {
-                this._sendByRegistrar('scrollMove', [{
+                this._generateEvents('scrollMove', [{
                     scrollTop: this._state.scrollTop,
                     position: this._state.verticalPosition,
                     clientHeight: this._state.clientHeight,
                     scrollHeight: this._state.scrollHeight
                 }]);
-                this._sendByRegistrar(
+                this._generateEvents(
                     'scroll',
                     [
                         new SyntheticEvent(null, {
@@ -322,16 +322,20 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                             _bubbling: false
                         }),
                         this._state.scrollTop
-                    ]);
+                    ], false);
+                // Используем notify отдельно от _generateEvents, т.к. используются разные параметры.
+                this._notify('scroll', [this._state.scrollTop]);
             }
 
             this._generateCompatibleEvents();
         }
     }
 
-    _sendByRegistrar(eventType: string, params: object[]): void {
+    _generateEvents(eventType: string, params: object[], shouldNotify: boolean = true): void {
         this._registrars[eventType].start(...params);
-        this._notify(eventType, params);
+        if (shouldNotify) {
+            this._notify(eventType, params);
+        }
     }
 
     _resizeObserverCallback(entries: any): void {
