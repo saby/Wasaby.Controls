@@ -1,8 +1,8 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_dragnDrop/Controller/Controller');
 import 'Controls/_dragnDrop/DraggingTemplate';
-// Из-за добавления библиотеки в бандл, в оффлайн рознице возникла проблема загрузки 2 css библиотеки.
-// Т.к. темизируемых стилей нет, делаем загрузку css через import.
+// Из-за добавления библиотеки в бандл, в оффлайн рознице возникла проблема загрузки двух css библиотек.
+// Т.к. темизируемых стилей нет, делаем загрузку css через import по просьбе Колбешина.
 import 'css!Controls/dragnDrop';
       /**
        * Контроллер обеспечивает взаимосвязь между контейнерами перемещения Controls/dragnDrop:Container.
