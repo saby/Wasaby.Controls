@@ -680,7 +680,8 @@ const _private = {
             // If it’s not empty, the following page will be requested in resize event
             // handler after current items are rendered on the page.
             if (_private.needLoadNextPageAfterLoad(addedItems, listViewModel, navigation) ||
-                (self._options.task1176625749 && countCurrentItems === cnt2)) {
+                (self._options.task1176625749 && countCurrentItems === cnt2) ||
+                _private.isPortionedLoad(self, addedItems)) {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
             if (self._isMounted && self._scrollController) {
@@ -938,7 +939,7 @@ const _private = {
         const sourceController = self._sourceController;
         const hasMoreData = _private.hasMoreData(self, sourceController, direction);
         const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
-            !self._loadedItems :
+            !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems) :
             true;
         const allowLoadBySource =
             sourceController &&
@@ -3177,7 +3178,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _afterMount() {
         this._isMounted = true;
         this._hideTopTriggerUntilMount = false;
-        if (this._needScrollCalculation) {
+        if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
             this._registerIntersectionObserver();
         }
@@ -3564,6 +3565,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._listViewModel) {
+            this._items.unsubscribe('onCollectionChange', this._onItemsChanged);
             this._listViewModel.destroy();
         }
         this._loadTriggerVisibility = null;
