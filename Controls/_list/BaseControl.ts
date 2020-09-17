@@ -698,7 +698,8 @@ const _private = {
             // If it’s not empty, the following page will be requested in resize event
             // handler after current items are rendered on the page.
             if (_private.needLoadNextPageAfterLoad(addedItems, listViewModel, navigation) ||
-                (self._options.task1176625749 && countCurrentItems === cnt2)) {
+                (self._options.task1176625749 && countCurrentItems === cnt2) ||
+                _private.isPortionedLoad(self, addedItems)) {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
             if (self._isMounted && self._scrollController) {
@@ -953,7 +954,7 @@ const _private = {
         const sourceController = self._sourceController;
         const hasMoreData = _private.hasMoreData(self, sourceController, direction);
         const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
-            !self._loadedItems :
+            !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems) :
             true;
         const allowLoadBySource =
             sourceController &&
@@ -3212,7 +3213,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _afterMount() {
         this._isMounted = true;
         this._hideTopTriggerUntilMount = false;
-        if (this._needScrollCalculation) {
+        if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
             this._registerIntersectionObserver();
         }
@@ -3607,6 +3608,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._listViewModel) {
+            this._items.unsubscribe('onCollectionChange', this._onItemsChanged);
             this._listViewModel.destroy();
         }
         this._loadTriggerVisibility = null;
@@ -3837,13 +3839,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.scrollPage(this, 'Up');
                 break;
             case 'Begin':
-                const resultEvent = this._notify('onArrowBeginClick', [], {bubbling: true});
+                const resultEvent = this._notify('pagingArrowClick', ['startArrowClick'], {bubbling: true});
                 if (resultEvent !== false) {
                     _private.scrollToEdge(this, 'up');
                 }
                 break;
             case 'End':
-                const resultEvent = this._notify('onArrowEndClick', [], {bubbling: true});
+                const resultEvent = this._notify('pagingArrowClick', ['endArrowClick'], {bubbling: true});
                 if (resultEvent !== false) {
                     _private.scrollToEdge(this, 'down');
                 }
@@ -3857,7 +3859,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             scrollHeight: _private.getViewSize(this),
             clientHeight: this._viewportSize
         };
-        this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true })
+        this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true });
         _private.updateScrollPagingButtons(this, scrollParams);
     },
 
