@@ -1,6 +1,6 @@
 import {ISearchDelay, ISearchDelayOptions} from './interface';
 
-export default class SearchDelay implements ISearchDelay {
+export default class SearchResolver implements ISearchDelay {
 
    protected _delayTimer: NodeJS.Timeout = null;
 
