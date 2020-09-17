@@ -312,6 +312,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                     clientHeight: this._state.clientHeight,
                     scrollHeight: this._state.scrollHeight
                 }]);
+
+                // Используем разные аргументы в событии для совместимости со старым скроллом
                 this._generateEvent(
                     'scroll',
                     [
