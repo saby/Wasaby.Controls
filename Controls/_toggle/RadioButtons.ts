@@ -25,12 +25,7 @@ export interface IRadioButtonsOptions extends ISingleSelectableOptions, IControl
 
 class RadioButtons extends Control<IRadioButtonsOptions> {
     protected _template: TemplateFunction = template;
-    protected _items: Record[];
 
-    protected _beforeMount(options?: IRadioButtonsOptions,
-                           contexts?: object, receivedState?: void): Promise<void> | void {
-        this._items = options.items;
-    }
     protected _onItemClick(event: SyntheticEvent<Event>, item: Model): void {
         this._notify('selectedKeyChanged', [item.get(this._options.keyProperty)]);
     }
