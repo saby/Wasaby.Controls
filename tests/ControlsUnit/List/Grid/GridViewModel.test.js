@@ -1597,9 +1597,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._prepareHeaderColumns(gridHeaderClone, true);
             gridViewModel._headerRows[0][0].title = '123';
 
-            let headerRow = gridViewModel.getCurrentHeaderRow();
-            assert.deepEqual({
-               column: {title : '123'},
+            const actual = {
+               column: { title: '123' },
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 0,
                key: '0-0',
@@ -1608,10 +1607,24 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                itemActionsPosition: undefined,
                shadowVisibility: 'visible',
                backgroundStyle: '',
-            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+            };
+
+            let headerRow = gridViewModel.getCurrentHeaderRow();
+            assert.deepEqual(actual, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+
+            delete gridViewModel._headerRows[0][0].title;
+            gridViewModel._headerRows[0][0].caption = '123';
+            delete actual.column.title;
+            actual.column.caption = '123';
+            assert.deepEqual(actual, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+
+            gridViewModel._headerRows[0][0].title = '123';
+            actual.column.title = '123';
+            assert.deepEqual(actual, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
             headerRow = gridViewModel.getCurrentHeaderRow();
             delete gridViewModel._headerRows[0][0].title;
+            delete gridViewModel._headerRows[0][0].caption;
             assert.deepEqual({
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__header-cell-checkbox_theme-default controls-Grid__header-cell-checkbox_min-width_theme-default',
