@@ -1173,7 +1173,12 @@ var
                 }
             }
 
-            if (columnIndex === 0 && rowIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
+            if (
+                columnIndex === 0 && rowIndex === 0 &&
+                this._options.multiSelectVisibility !== 'hidden' &&
+                this._headerRows[rowIndex][columnIndex + 1].startColumn &&
+                !(cell.title || cell.caption)
+            ) {
                 cellStyles = GridLayoutUtil.getMultiHeaderStyles(1, 2, 1, this._maxEndRow, 0)
                 if (!GridLayoutUtil.isFullGridSupport()) {
                     headerColumn.rowSpan = this._maxEndRow - 1;
