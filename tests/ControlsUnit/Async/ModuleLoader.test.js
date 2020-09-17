@@ -126,15 +126,13 @@ define([
          });
       });
 
-      it('loadAsync faild found export control', function (done) {
+      it('loadAsync faild found export control', function () {
          var ml = new ModuleLoader();
-         ml.loadAsync('ControlsUnit/Async/TestModuleAsync:NotFound').then(function(res) {
+         return ml.loadAsync('ControlsUnit/Async/TestModuleAsync:NotFound').then(function(res) {
             assert.notEqual(res, null, 'Старое поведение, когда возвращался модуль, если е найдено свойство из библиотеки');
-            done();
          }, function (err) {
-            assert.equal(err.message, 'Couldn\'t load module ControlsUnit/Async/TestModuleFail', 'Error message is wrong');
+            assert.equal(err.message, 'У СБИС возникла проблема', 'Error message is wrong');
             assert.equal(logErrors.length, 1);
-            done();
          });
       });
 

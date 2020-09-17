@@ -10,14 +10,14 @@ class ModuleLoader {
     ): Promise<T> {
         return loadAsync<T>(name).then((res) => {
             return res;
-        }).catch((err) => {
-            IoC.resolve('ILogger').error(`Couldn't load module "${name}"`, err);
+        }).catch((error) => {
+            IoC.resolve('ILogger').error(`Couldn't load module "${name}"`, error);
 
             return new ParkingController(
                 {configField: Controller.CONFIG_FIELD}
-            ).process({err, mode: 'include'}).then((viewConfig: ViewConfig<{message: string}>) => {
+            ).process({error, mode: 'include'}).then((viewConfig: ViewConfig<{message: string}>) => {
                 if (errorCallback && typeof errorCallback === 'function') {
-                    errorCallback(viewConfig, err);
+                    errorCallback(viewConfig, error);
                 }
                 const message = viewConfig?.options?.message;
                 throw new Error(message || rk('У СБИС возникла проблема'));
@@ -28,8 +28,8 @@ class ModuleLoader {
     loadSync<T = unknown>(name: string): T {
         try {
             const loaded = loadSync<T>(name);
-            if (!loaded) {
-                return null;
+            if (loaded) {
+                return loaded;
             }
         } catch (err) {
             IoC.resolve('ILogger').error(`Couldn't load module "${name}"`, err);

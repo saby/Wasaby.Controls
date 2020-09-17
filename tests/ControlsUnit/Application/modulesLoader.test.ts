@@ -7,8 +7,6 @@ describe('Controls/Application/modulesLoader', () => {
         it('should load module', () => {
             return loadAsync('ControlsUnit/Async/TestLibraryAsync').then((res) => {
                 assert.notEqual(res, undefined, 'Module not loaded async');
-            }, () => {
-                assert.fail('Should not promise failed');
             });
         });
 
@@ -16,8 +14,6 @@ describe('Controls/Application/modulesLoader', () => {
             return loadAsync<Function>('ControlsUnit/Async/TestModuleAsync:exportFunction').then((exportFunction) => {
                 assert.notEqual(exportFunction, undefined, 'Module not loaded async');
                 assert.equal(exportFunction('test'), 'test', 'Import from module is broken');
-            }, () => {
-                assert.fail('Should not promise failed');
             });
         });
 
@@ -28,8 +24,6 @@ describe('Controls/Application/modulesLoader', () => {
             return loadAsync<Function>('ControlsUnit/Async/TestModuleAsync:exportFunction').then((exportFunction) => {
                 assert.notEqual(exportFunction, undefined, 'Module not loaded async');
                 assert.equal(exportFunction('test'), 'test', 'Import from module is broken');
-            }, () => {
-                assert.fail('Should not promise failed');
             });
         });
 
@@ -42,26 +36,20 @@ describe('Controls/Application/modulesLoader', () => {
             ).then((exportFunction) => {
                 assert.notEqual(exportFunction, undefined, 'Module not loaded async');
                 assert.equal(exportFunction('test'), 'test', 'Import from module is broken');
-            }, () => {
-                // если в юнитах упали по таймауту, то см ниже, баг в require под nodejs
-                assert.fail('Should not promise failed');
             });
             const two =  loadAsync<Function>(
                 'ControlsUnit/Async/TestModuleAsyncTwice:exportFunctionTwice'
             ).then((exportFunction) => {
                 assert.notEqual(exportFunction, undefined, 'Module not loaded async');
                 assert.equal(exportFunction('test'), 'testtest', 'Import from module is broken');
-            }, () => {
-                // если в юнитах упали по таймауту, то см ниже, баг в require под nodejs
-                assert.fail('Should not promise failed');
             });
 
             return Promise.all([one, two]);
         });
 
         it('should throw an error of module does not exist', () => {
-            return loadAsync('ControlsUnit/Async/TestModuleSyncFail').catch(err => {
-                assert.include(err.message, 'not found');
+            return loadAsync('ControlsUnit/Async/TestModuleSyncFail').catch((err) => {
+                assert.include(err.message, 'Cannot find module');
             });
         });
 
