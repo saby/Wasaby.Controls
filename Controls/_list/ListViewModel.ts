@@ -348,28 +348,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
      * @param status значение marked
      */
     setMarkedKey(key: number|string, status: boolean): void {
-        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно передать false
-        if (this._markedKey === key && status !== false) {
-            return;
-        }
-
-        const changedItems = [
-            this.getItemById(this._markedKey),
-            this.getItemById(key)
-        ];
-
-        const item = this.getItemBySourceKey(key);
-        if (item) {
-            item.setMarked(status);
-        }
-
+        this._display.setMarkedKey(key, status);
         if (status === false) {
             this._markedKey = null;
         } else {
             this._markedKey = key;
         }
-
-        this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
     },
 
     setMarkerVisibility: function(markerVisibility) {
@@ -597,18 +581,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     // для совместимости с новой моделью
     getIndexBySourceIndex(sourceIndex: number): number {
         return this.getDisplay().getIndexBySourceIndex(sourceIndex);
-    },
-
-    getValidItemForMarker: function(index) {
-        const prevValidItemKey = this.getPreviousItem(index);
-        const nextValidItemKey = this.getNextItem(index);
-        if (nextValidItemKey !== undefined) {
-            return this.getItemBySourceKey(nextValidItemKey);
-        } else if (prevValidItemKey !== undefined) {
-            return this.getItemBySourceKey(prevValidItemKey);
-        } else {
-            return null;
-        }
     },
     _setEditingItemData: function(itemData) {
         const data = itemData ? itemData : this._editingItemData;

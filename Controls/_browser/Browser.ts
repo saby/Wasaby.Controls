@@ -265,7 +265,7 @@ export default class Browser extends Control {
 
     protected _listMarkedKeyChangedHandler(event: SyntheticEvent<null>, markedKey: Key): void {
         this._listMarkedKey = this._getOperationsController().setListMarkedKey(markedKey);
-        this._notify('markedKeyChanged', [markedKey]);
+        return this._notify('markedKeyChanged', [markedKey]);
     }
 
     protected _markedKeyChangedHandler(event: SyntheticEvent<null>): void {
