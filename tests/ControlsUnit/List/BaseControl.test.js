@@ -2940,7 +2940,7 @@ define([
             }),
             cfg = {
                editingConfig: {
-                  item: new entity.Model({rawData: {id: 1}})
+                  item: new entity.Model({keyProperty: 'id', rawData: {id: 1}})
                },
                viewName: 'Controls/List/ListView',
                source: source,
