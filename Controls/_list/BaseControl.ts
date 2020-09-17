@@ -22,9 +22,8 @@ import {ControllerClass, Container as ValidateContainer} from 'Controls/validate
 import {Logger} from 'UI/Utils';
 
 import {TouchContextField} from 'Controls/context';
-import {Controller as SourceController} from 'Controls/source';
-import {error as dataSourceError} from 'Controls/dataSource';
-import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
+import {error as dataSourceError, NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
+import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig, Direction} from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
 import {editing as constEditing} from 'Controls/Constants';
 
@@ -515,7 +514,7 @@ const _private = {
         }
     },
 
-    hasMoreData(self, sourceController, direction): boolean {
+    hasMoreData(self, sourceController: SourceController, direction: Direction): boolean {
         let moreDataResult = false;
 
         if (sourceController) {
@@ -526,9 +525,27 @@ const _private = {
         return moreDataResult;
     },
 
-    hasMoreDataInAnyDirection(self, sourceController): boolean {
+    hasMoreDataInAnyDirection(self, sourceController: SourceController): boolean {
         return _private.hasMoreData(self, sourceController, 'up') ||
-            _private.hasMoreData(self, sourceController, 'down');
+               _private.hasMoreData(self, sourceController, 'down');
+    },
+
+    validateSourceControllerOptions(self, options): void {
+        const sourceControllerState = self._sourceController.getState();
+        const validate = (optionName) => {
+            if (sourceControllerState[optionName] &&
+                options[optionName] &&
+                sourceControllerState[optionName] !== options[optionName]) {
+                Logger.error(`BaseControl: It is necessary to set the ${optionName} option in one place`);
+            }
+        };
+        const optionsToValidate = ['source', 'navigation', 'sorting'];
+
+        optionsToValidate.forEach(validate);
+    },
+
+    getAllDataCount(self): number|undefined {
+       return self._listViewModel.getCollection().getMetaData().more;
     },
 
     getItemContainerByIndex(index: number, itemsContainer: HTMLElement): HTMLElement {
@@ -639,8 +656,8 @@ const _private = {
         }
 
         if (self._shouldDrawFooter) {
-            loadedDataCount = sourceController.getLoadedDataCount();
-            allDataCount = sourceController.getAllDataCount();
+            loadedDataCount = self._listViewModel.getCount();
+            allDataCount = _private.getAllDataCount(self);
             if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
                 self._loadMoreCaption = allDataCount - loadedDataCount;
             } else {
@@ -751,7 +768,7 @@ const _private = {
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
-            return self._sourceController.load(filter, self._options.sorting, direction, null, self._options.root).addCallback(function(addedItems) {
+            return self._sourceController.load(direction, self._options.root).addCallback(function(addedItems) {
                 // TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 // до реализации функционала и проблемы из новости делаем решение по месту:
                 // посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
@@ -1169,7 +1186,7 @@ const _private = {
     createScrollPagingController(self, scrollParams, hasMoreData) {
         let elementsCount = undefined;
         if (self._sourceController) {
-            elementsCount = self._sourceController.getAllDataCount();
+            elementsCount = _private.getAllDataCount(self);
             if (typeof elementsCount !== 'number') {
                 elementsCount = undefined;
             }
@@ -1882,12 +1899,17 @@ const _private = {
         return pagingLabelData;
     },
 
-    getSourceController({source, navigation, keyProperty}: {source: ICrud, navigation: object, keyProperty: string}, queryParamsCallback): SourceController {
+    getSourceController(options): SourceController {
         return new SourceController({
-            source,
-            navigation,
-            keyProperty,
-            queryParamsCallback
+            source: options.source,
+            navigation: options.navigation,
+            keyProperty: options.keyProperty,
+            filter: options.filter,
+            sorting: options.sorting,
+            parentProperty: options.parentProperty,
+            root: options.root,
+            groupProperty: options.groupProperty,
+            dataLoadErrback: options.dataLoadErrback
         });
     },
 
@@ -2853,6 +2875,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _selectionController: null,
     _itemActionsController: null,
+    _sourceController: null,
     _prevRootId: null,
 
     _notifyHandler: tmplNotify,
@@ -2913,6 +2936,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.createEditInPlace(self, newOptions);
         }
 
+        if (newOptions.sourceController) {
+            self._sourceController = newOptions.sourceController;
+            _private.validateSourceControllerOptions(self, newOptions);
+        } else if (newOptions.source) {
+            self._sourceController = _private.getSourceController(newOptions);
+        }
+
         return this._prepareGroups(newOptions, (collapsedGroups) => {
             return this._prepareItemsOnMount(self, newOptions, receivedState, collapsedGroups);
         });
@@ -2920,11 +2950,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
         const receivedError = receivedState.errorConfig;
-        const receivedData = receivedState.data;
-            let viewModelConfig = {...newOptions};
-            if (collapsedGroups) {
-                viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
-            }
+        let receivedData = receivedState.data;
+        let viewModelConfig = {...newOptions};
+
+        if (receivedData) {
+            self._sourceController.setItems(receivedData);
+        } else {
+            receivedData = self._sourceController.getItems();
+        }
+
+        if (collapsedGroups) {
+            viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
+        }
 
             if (newOptions.groupProperty) {
                 self._groupingLoader = new GroupingLoader({});
@@ -2956,9 +2993,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (newOptions.source) {
-                self._sourceController = _private.getSourceController(newOptions, self._notifyNavigationParamsChanged);
                 if (receivedData) {
-                    self._sourceController.calculateState(receivedData);
                     _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                     if (newOptions.useNewModel) {
@@ -3045,15 +3080,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     _private.initVisibleItemActions(self, newOptions);
 
                     // TODO Kingo.
-                    // В случае, когда в опцию источника передают PrefetchProxy
-                    // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
-                    // когда список обёрнут в DataContainer.
-                    // Т.к. и список и DataContainer из _beforeMount возвращают рекордсет
-                    // то при построении на сервере и последующем оживлении на клиенте
-                    // при сериализации это будет два разных рекордсета.
-                    // Если при загрузке данных возникла ошибка, то ошибку надо вернуть, чтобы при оживлении на клиенте
-                    // не было перезапроса за данными.
-                    if (result.errorConfig || !cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
+                    // если в опции передан sourceController, не надо из _beforeMount
+                    // возврашать полученный recordSet, иначе он будет сериализоваться
+                    // и на уровне Container/Data и на уровне BaseControl'a
+                    if (result.errorConfig || !newOptions.sourceController) {
                         return getState(result);
                     }
                 });
@@ -3194,7 +3224,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._listViewModel;
     },
 
-    getSourceController() {
+    getSourceController(): SourceController {
         return this._sourceController;
     },
 

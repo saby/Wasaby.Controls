@@ -10,8 +10,8 @@ import { saveConfig } from 'Controls/Application/SettingsController';
 import {tmplNotify, keysHandler} from 'Controls/eventUtils';
 import { MouseButtons, MouseUp } from 'Controls/fastOpenUtils';
 import { DndTreeController } from 'Controls/listDragNDrop';
-import { Controller as SourceController } from 'Controls/source';
-import { error as dataSourceError } from 'Controls/dataSource';
+import { error as dataSourceError, NewSourceController as SourceController } from 'Controls/dataSource';
+import { TKey } from 'Controls/interface';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
@@ -21,8 +21,6 @@ const HOT_KEYS = {
     collapseMarkedItem: Env.constants.key.left
 };
 
-const DRAG_MAX_OFFSET = 15;
-const EXPAND_ON_DRAG_DELAY = 1000;
 const DEFAULT_COLUMNS_VALUE = [];
 
 type TNodeSourceControllers = Map<string, SourceController>;
@@ -67,10 +65,13 @@ const _private = {
        }
        return self._nodesSourceControllers;
     },
-    createSourceController(source, navigation): SourceController {
+    createSourceController({source, navigation, filter, sorting, keyProperty}): SourceController {
         return new SourceController({
             source,
-            navigation
+            navigation,
+            filter,
+            sorting,
+            keyProperty
         });
     },
     createSourceControllerForNode(self, node, source, navigation): SourceController {
@@ -115,7 +116,6 @@ const _private = {
         }
     },
     toggleExpanded: function(self, dispItem) {
-        const filter = cClone(self._options.filter);
         const listViewModel = self._children.baseControl.getViewModel();
         const item = dispItem.getContents();
         const nodeKey = item.getId();
@@ -134,18 +134,16 @@ const _private = {
             _private.shouldLoadChildren(self, nodeKey)
         ) {
             self._children.baseControl.showIndicator();
-            filter[options.parentProperty] = nodeKey;
-            _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation)
-                .load(filter, options.sorting, null, null, nodeKey)
+            baseSourceController
+                .load('down', nodeKey)
                 .addCallbacks((list) => {
-                    listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
-                    baseSourceController.calculateState(list, null, nodeKey);
                     if (options.uniqueKeys) {
                         listViewModel.mergeItems(list);
                     } else {
                         listViewModel.appendItems(list);
                     }
                     _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+                    listViewModel.setHasMoreStorage(baseSourceController, listViewModel.getExpandedItems());
                     if (options.nodeLoadCallback) {
                         options.nodeLoadCallback(list, nodeKey);
                     }
@@ -177,10 +175,10 @@ const _private = {
         }
         return true;
     },
-    prepareHasMoreStorage(sourceControllers: Record<string, SourceController>): Record<string, boolean> {
+    prepareHasMoreStorage(controller: SourceController, expandedItems: TKey[]): Record<string, boolean> {
         const hasMore = {};
 
-        sourceControllers.forEach((controller, nodeKey) => {
+        expandedItems.forEach((nodeKey) => {
             hasMore[nodeKey] = controller.hasMoreData('down', nodeKey);
         });
 
@@ -201,33 +199,36 @@ const _private = {
     },
 
     loadMore: function(self, dispItem) {
-        const filter = cClone(self._options.filter);
         const listViewModel = self._children.baseControl.getViewModel();
         const baseSourceController = self._children.baseControl.getSourceController();
         const nodeKey = dispItem.getContents().getId();
-        const nodeSourceControllers = _private.getNodesSourceControllers(self);
 
-        filter[self._options.parentProperty] = nodeKey;
         self._children.baseControl.showIndicator();
-        nodeSourceControllers.get(nodeKey).load(filter, self._options.sorting, 'down', null, nodeKey).addCallbacks((list) => {
-            listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
-            baseSourceController.calculateState(list, 'down', nodeKey);
-            if (self._options.uniqueKeys) {
-                listViewModel.mergeItems(list);
-            } else {
-                listViewModel.appendItems(list);
-            }
-            if (self._options.dataLoadCallback) {
-                self._options.dataLoadCallback(list);
-            }
-        }, (error) => {
-            if (typeof self._options.dataLoadErrback === 'function') {
-                self._options.dataLoadErrback(error);
-            }
-            _private.processError(self, error);
-        }).addCallback(() => {
-            self._children.baseControl.hideIndicator();
-        });
+        baseSourceController.load('down', nodeKey)
+            .then((list) => {
+                listViewModel.setHasMoreStorage(
+                    _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
+                );
+                baseSourceController.calculateState(list, 'down', nodeKey);
+                if (self._options.uniqueKeys) {
+                    listViewModel.mergeItems(list);
+                } else {
+                    listViewModel.appendItems(list);
+                }
+                if (self._options.dataLoadCallback) {
+                    self._options.dataLoadCallback(list);
+                }
+                return list;
+            })
+            .catch((error) => {
+                if (typeof self._options.dataLoadErrback === 'function') {
+                    self._options.dataLoadErrback(error);
+                }
+                return _private.processError(self, error);
+            })
+            .finally(() => {
+                self._children.baseControl.hideIndicator();
+            });
     },
     onNodeRemoved: function(self, nodeId) {
         _private.clearNodeSourceController(self, nodeId);
@@ -242,7 +243,6 @@ const _private = {
         const parentProperty = cfg.parentProperty;
         const baseControl = self._children.baseControl;
         const entries = _private.getEntries(cfg.selectedKeys, cfg.excludedKeys, cfg.source);
-        const nodeSourceControllers = _private.getNodesSourceControllers(self);
 
         let expandedItemsKeys: Array[number | string | null] = [];
         let isExpandAll: boolean;
@@ -255,11 +255,9 @@ const _private = {
                     expandedItemsKeys.push(key);
                 });
             }
-            nodeSourceControllers.forEach((controller, key) => {
-                if (!expandedItemsKeys.includes(key)) {
-                    _private.clearNodeSourceController(self, key);
-                }
-            });
+            viewModel.setHasMoreStorage(
+                _private.prepareHasMoreStorage(baseControl.getSourceController(), viewModel.getExpandedItems())
+            );
         } else {
             expandedItemsKeys = cfg.expandedItems || [];
             isExpandAll = _private.isExpandAll(expandedItemsKeys);
@@ -331,9 +329,9 @@ const _private = {
                             options.source,
                             options.navigation
                         );
-                        if (isMultiNavigationData) {
-                            nodeController.calculateState(loadedList);
-                        }
+                        // if (isMultiNavigationData) {
+                        //     nodeController.calculateState(loadedList);
+                        // }
                     }
                 });
 
@@ -383,19 +381,24 @@ const _private = {
     },
 
     reloadItem: function(self, key) {
-        var viewModel = self._children.baseControl.getViewModel();
-        var filter = cClone(self._options.filter);
-        var nodes = [key !== undefined ? key : null];
-        var nodeProperty = self._options.nodeProperty;
-        var keyProperty = self._options.keyProperty;
+        const baseControl = self._children.baseControl;
+        const viewModel = baseControl.getViewModel();
+        const filter = cClone(self._options.filter);
+        const nodes = [key !== undefined ? key : null];
+        const nodeProperty = self._options.nodeProperty;
+        const keyProperty = self._options.keyProperty;
 
         filter[self._options.parentProperty] = nodes.concat(_private.getReloadableNodes(viewModel, key, keyProperty, nodeProperty));
 
-        return _private.createSourceControllerForNode(self, key, self._options.source, self._options.navigation).load(filter).addCallback(function(result) {
-            _private.applyReloadedNodes(viewModel, key, keyProperty, nodeProperty, result);
-            viewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
-            return result;
-        });
+        return _private.createSourceControllerForNode(self, key, self._options.source, self._options.navigation)
+            .load(filter)
+            .then((result) => {
+                _private.applyReloadedNodes(viewModel, key, keyProperty, nodeProperty, result);
+                viewModel.setHasMoreStorage(
+                    _private.prepareHasMoreStorage(baseControl.getSourceController(), viewModel.getExpandedItems())
+                );
+                return result;
+            });
     },
 
     getReloadableNodes: function(viewModel, nodeKey, keyProp, nodeProp) {

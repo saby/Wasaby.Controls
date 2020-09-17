@@ -3,14 +3,11 @@ import * as template from 'wml!Controls/_list/Container';
 import {ContextOptions as DataOptions} from 'Controls/context';
 import {PrefetchProxy} from 'Types/source';
 import {IFilterOptions, INavigationOptions, ISortingOptions} from 'Controls/interface';
+import {ISourceControllerState} from 'Controls/dataSource';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
-interface IDataContextOptions extends IFilterOptions, INavigationOptions<unknown>, ISortingOptions {
-    prefetchSource: PrefetchProxy;
-}
-
 interface IDataContext {
-    dataOptions: IDataContextOptions;
+    dataOptions: ISourceControllerState;
 }
 
 export default class ListContainer extends Control<IControlOptions> {
