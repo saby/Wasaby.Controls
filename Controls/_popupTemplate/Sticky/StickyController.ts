@@ -7,6 +7,7 @@ import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyContent = require('wml!Controls/_popupTemplate/Sticky/StickyContent');
 import * as cInstance from 'Core/core-instance';
 import {Logger} from 'UI/Utils';
+import {getScrollbarWidthByMeasuredBlock} from 'Controls/sizeUtils';
 
 export type TVertical = 'top' | 'bottom' | 'center';
 export type THorizontal = 'left' | 'right' | 'center';
@@ -257,7 +258,7 @@ class StickyController extends BaseController {
         const scrollTop = scroll?.scrollTop;
         container.style.maxHeight = item.popupOptions.maxHeight ? item.popupOptions.maxHeight + 'px' : '100vh';
         container.style.maxWidth = item.popupOptions.maxWidth ? item.popupOptions.maxWidth + 'px' : '100vw';
-
+        const hasScrollBeforeReset = document && (document.body.scrollHeight > document.body.clientHeight);
         // Если значения явно заданы на опциях, то не сбрасываем то что на контейнере
         if (!item.popupOptions.width) {
             container.style.width = 'auto';
@@ -265,10 +266,24 @@ class StickyController extends BaseController {
         if (!item.popupOptions.height) {
             container.style.height = 'auto';
         }
+        const hasScrollAfterReset = document && (document.body.scrollHeight > document.body.clientHeight);
 
         /* end: We remove the set values that affect the size and positioning to get the real size of the content */
 
         this.prepareConfig(item, container);
+
+        // Для ситуаций, когда скролл на боди: После сброса высоты для замеров содержимого (style.height = 'auto'),
+        // содержимое может быть настолько большим, что выходит за пределы окна браузера (maxHeight 100vh не помогает,
+        // т.к. таргет может находиться по центру, соответственно пол попапа все равно уйдет за пределы экрана).
+        // Если контент вылез за пределы - на боди появится скролл, но он пропадет, после того как мы высчитаем позицию
+        // окна (а считать будем с учетом скролла на странице) и ограничим его размеры.
+        // Если позиция идет по координате right (теоретически тоже самое для bottom), то это показ/скрытие скролла
+        // влияет на позиционирование. Компенсирую размеры скроллбара.
+        if (!hasScrollBeforeReset && hasScrollAfterReset) {
+            if (item.position.right) {
+                item.position.right += getScrollbarWidthByMeasuredBlock();
+            }
+        }
 
         /* start: Return all values to the node. Need for vdom synchronizer */
         container.style.width = width;
