@@ -288,7 +288,8 @@ export default class Input extends BaseDropdown {
             caption: options.caption || this._text ,
             allowPin: false,
             selectedItemsChangedCallback: this._prepareDisplayState.bind(this),
-            openerControl: this
+            openerControl: this,
+            loadSelectedKeys: options.loadSelectedKeys
          }
       };
    }
