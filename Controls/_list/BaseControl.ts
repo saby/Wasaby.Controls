@@ -3943,14 +3943,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
-        if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
-            /*
-             When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
-             We can't stop click on checkbox from propagating because we can only subscribe to valueChanged event and then
-             we'd be stopping the propagation of valueChanged event, not click event.
-             And even if we could stop propagation of the click event, we shouldn't do that because other components
-             can use it for their own reasons (e.g. something like TouchDetector can use it).
-             */
+        if (originalEvent.target.closest('.js-controls-ListView__checkbox') || this._onLastMouseUpWasDrag) {
+            // Если нажали на чекбокс, то это не считается нажатием на элемент. В этом случае работает событие checkboxClick
+            // Если на mouseUp, предшествующий этому клику, еще работало перетаскивание, то мы не должны нотифаить itemClick
+            this._onLastMouseUpWasDrag = false;
             e.stopPropagation();
             return;
         }
@@ -4165,6 +4161,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this.setMarkedKey(key);
         }
         this._mouseDownItemKey = undefined;
+        this._onLastMouseUpWasDrag = this._dndListController && this._dndListController.isDragging();
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
     },
 

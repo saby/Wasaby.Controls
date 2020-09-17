@@ -7087,18 +7087,18 @@ define([
             await control._afterMount(options);
          }
 
-            beforeEach(async () => {
-               baseControlOptions = {
-                  keyProperty: 'id',
-                  viewName: 'Controls/List/ListView',
-                  source: source,
-                  viewModelConstructor: lists.ListViewModel,
-                  markedKey: null
-               };
-               const _baseControl = new lists.BaseControl(baseControlOptions);
-               await mountBaseControl(_baseControl, baseControlOptions);
-               baseControl = _baseControl;
-            });
+         beforeEach(async () => {
+            baseControlOptions = {
+               keyProperty: 'id',
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewModelConstructor: lists.ListViewModel,
+               markedKey: null
+            };
+            const _baseControl = new lists.BaseControl(baseControlOptions);
+            await mountBaseControl(_baseControl, baseControlOptions);
+            baseControl = _baseControl;
+         });
 
          afterEach(async () => {
             await baseControl._beforeUnmount();
@@ -7308,7 +7308,7 @@ define([
                assert.equal(baseControl.getViewModel().getItemBySourceKey(1).getVersion(), 1);
                assert.equal(baseControl.getViewModel().getVersion(), 4);
                });
-            });
+         });
 
          describe('_onItemClick', () => {
             it('click on checkbox should not notify itemClick, but other clicks should', function() {
@@ -7382,6 +7382,31 @@ define([
                // click not on checkbox
                baseControl._onItemClick(e, item, originalEvent);
             });
+
+            it('should not notify if was drag-n-drop', () => {
+               baseControl._dndListController = {
+                  isDragging: () => true
+               };
+
+               const originalEvent = {
+                  target: {
+                     closest: () => false
+                  }
+               };
+
+               let isStopped = false;
+
+               const e = {
+                  isStopped: () => isStopped,
+                  stopPropagation() { isStopped = true; }
+               };
+
+               baseControl._itemMouseUp(e, { key: 1 }, originalEvent);
+
+               // click on checkbox
+               baseControl._onItemClick(e, { key: 1 }, originalEvent);
+               assert.isTrue(isStopped);
+            });
          });
       });
 
@@ -7444,7 +7469,7 @@ define([
             baseControl._afterMount(cfg);
          });
       });
-      
+
       describe('_afterMount registerIntersectionObserver', () => {
          const cfg = {
             viewName: 'Controls/List/ListView',
@@ -7470,7 +7495,7 @@ define([
             baseControl = null;
          });
          it('without error', async () => {
-            
+
             baseControl._container = {};
             baseControl.saveOptions(cfg);
             await baseControl._beforeMount(cfg);
@@ -7478,7 +7503,7 @@ define([
             assert.isTrue(registered);
          });
          it('with error', async () => {
-            
+
             baseControl._container = {};
             baseControl.saveOptions(cfg);
             await baseControl._beforeMount(cfg);
