@@ -99,7 +99,7 @@ type NavigationRecord = Record<{
 /**
  * Контроллер постраничной навигации.
  * @remark
- * Хранит состояние навигации INavigationOptionValue<INavigationSourceConfig> и вычисляет на его основании параметра для построения запроса Query.
+ * Хранит состояние навигации INavigationOptionValue<INavigationSourceConfig> и вычисляет на его основании параметры для построения запроса Query.
  *
  * @class Controls/source/NavigationController
  *
