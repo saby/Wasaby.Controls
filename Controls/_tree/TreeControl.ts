@@ -403,6 +403,10 @@ const _private = {
         });
     },
 
+    getItems(): RecordSet {
+        return this._children.baseControl.getItems();
+    },
+
     getReloadableNodes: function(viewModel, nodeKey, keyProp, nodeProp) {
         var nodes = [];
         _private.nodeChildsIterator(viewModel, nodeKey, nodeProp, function(elem) {
