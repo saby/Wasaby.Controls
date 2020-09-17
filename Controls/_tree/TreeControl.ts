@@ -762,6 +762,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 _private.toggleExpanded(this, dispItem);
             }
         }
+        return eventResult;
     },
 
     handleKeyDown(event): void {

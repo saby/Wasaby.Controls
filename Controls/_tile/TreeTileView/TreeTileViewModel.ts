@@ -145,12 +145,14 @@ var TreeTileViewModel = TreeViewModel.extend({
     setDragItemData(itemData: any): void {
         // Когда д-н-д начали перетаскивание увеличенной плитки, то все эти свойства сохраняются в draggedItemData.
         // Из-за этого перетаскиваемая плитка остается увеличенной с position=fixed и не меняет позицию
-        itemData.isFixed = false;
-        itemData.isHovered = false;
-        itemData.position = null;
-        itemData.canShowActions = false;
-        itemData.isAnimated = false;
-        itemData.zoomCoefficient = null;
+        if (itemData) {
+            itemData.isFixed = false;
+            itemData.isHovered = false;
+            itemData.position = null;
+            itemData.canShowActions = false;
+            itemData.isAnimated = false;
+            itemData.zoomCoefficient = null;
+        }
 
         TreeTileViewModel.superclass.setDragItemData.apply(this, arguments);
     },
