@@ -72,8 +72,7 @@ import {
     ISelectionControllerResult,
     SelectionController
 } from 'Controls/multiselection';
-import {getStickyHeadersHeight} from 'Controls/scroll';
-import { MarkerController, Visibility as MarkerVisibility, TVisibility as TMarkerVisibility} from 'Controls/marker';
+import { MarkerController, Visibility as MarkerVisibility} from 'Controls/marker';
 import { DndFlatController, DndTreeController } from 'Controls/listDragNDrop';
 
 import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
@@ -2190,25 +2189,26 @@ const _private = {
         return !!self._markerController;
     },
 
-    createMarkerController(self: typeof BaseControl, markerVisibility: TMarkerVisibility, markedKey: CrudEntityKey): MarkerController {
-        self._markerController = new MarkerController({
-            model: self._listViewModel,
-            markerVisibility,
-            markedKey
-        });
+    getMarkerController(self: typeof BaseControl): MarkerController {
         return self._markerController;
     },
 
-    getMarkerController(self: typeof BaseControl, options: IList = null): MarkerController {
-        if (!_private.hasMarkerController(self)) {
-            options = options ? options : self._options;
-            _private.createMarkerController(self, options.markerVisibility, options.markedKey);
-        }
-        return self._markerController;
+    getMarkerControllerAsync(self: typeof BaseControl, options: IList = null): Promise<MarkerController> {
+        return import('Controls/marker').then((library) => {
+            if (!_private.hasMarkerController(self)) {
+                options = options ? options : self._options;
+                self._markerController = new library.MarkerController({
+                    model: self._listViewModel,
+                    markerVisibility: options.markerVisibility,
+                    markedKey: options.markedKey
+                });
+            }
+            return self._markerController;
+        });
     },
 
     moveMarkerToNext(self: typeof BaseControl, event: SyntheticEvent): void {
-        if (self._options.markerVisibility !== MarkerVisibility.Hidden) {
+        if (self._options.markerVisibility !== 'hidden') {
             // activate list when marker is moving. It let us press enter and open current row
             // must check mounted to avoid fails on unit tests
             if (self._mounted) {
@@ -2218,24 +2218,27 @@ const _private = {
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
-            const newMarkedKey = _private.getMarkerController(self, self._options).getNextMarkedKey();
-            if (newMarkedKey !== _private.getMarkerController(self).getMarkedKey()) {
-                const result = _private.changeMarkedKey(self, newMarkedKey);
-                if (result instanceof Promise) {
-                    /**
-                     * Передавая в force true, видимый элемент подскролливается наверх.
-                     * https://online.sbis.ru/opendoc.html?guid=6b6973b2-31cf-4447-acaf-a64d37957bc6
-                     */
-                    result.then((key) => _private.scrollToItem(self, key));
-                } else {
-                    _private.scrollToItem(self, result);
+
+            _private.getMarkerControllerAsync(self).then((controller) => {
+                const newMarkedKey = controller.getNextMarkedKey();
+                if (newMarkedKey !== controller.getMarkedKey()) {
+                    const result = _private.changeMarkedKey(self, newMarkedKey);
+                    if (result instanceof Promise) {
+                        /**
+                         * Передавая в force true, видимый элемент подскролливается наверх.
+                         * https://online.sbis.ru/opendoc.html?guid=6b6973b2-31cf-4447-acaf-a64d37957bc6
+                         */
+                        result.then((key) => _private.scrollToItem(self, key));
+                    } else {
+                        _private.scrollToItem(self, result);
+                    }
                 }
-            }
+            });
         }
     },
 
     moveMarkerToPrevious(self: any, event: SyntheticEvent): void {
-        if (self._options.markerVisibility !== MarkerVisibility.Hidden) {
+        if (self._options.markerVisibility !== 'hidden') {
             // activate list when marker is moving. It let us press enter and open current row
             // must check mounted to avoid fails on unit tests
             if (self._mounted) {
@@ -2245,15 +2248,18 @@ const _private = {
             // чтобы предотвратить нативный подскролл
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
-            const newMarkedKey = _private.getMarkerController(self, self._options).getPrevMarkedKey();
-            if (newMarkedKey !== _private.getMarkerController(self).getMarkedKey()) {
-                const result = _private.changeMarkedKey(self, newMarkedKey);
-                if (result instanceof Promise) {
-                    result.then((key) => _private.scrollToItem(self, key, true));
-                } else {
-                    _private.scrollToItem(self, result);
+
+            _private.getMarkerControllerAsync(self).then((controller) => {
+                const newMarkedKey = controller.getPrevMarkedKey();
+                if (newMarkedKey !== controller.getMarkedKey()) {
+                    const result = _private.changeMarkedKey(self, newMarkedKey);
+                    if (result instanceof Promise) {
+                        result.then((key) => _private.scrollToItem(self, key, true));
+                    } else {
+                        _private.scrollToItem(self, result);
+                    }
                 }
-            }
+            });
         }
     },
 
@@ -2265,13 +2271,15 @@ const _private = {
 
     setMarkerAfterScrolling(self: typeof BaseControl, scrollTop: number): void {
         // TODO вручную обрабатывать pagedown и делать stop propagation
-        if (self._options.markerVisibility !== MarkerVisibility.Hidden && self._children.listView) {
-            const itemsContainer = self._children.listView.getItemsContainer();
-            const item = self._scrollController.getFirstVisibleRecord(itemsContainer, self._container, scrollTop);
-            if (item.getKey() !== _private.getMarkerController(self).getMarkedKey()) {
-                _private.changeMarkedKey(self, item.getKey());
-            }
-            self._setMarkerAfterScroll = false;
+        self._setMarkerAfterScroll = false;
+        if (self._options.markerVisibility !== 'hidden' && self._children.listView) {
+            _private.getMarkerControllerAsync(self).then((controller) => {
+                const itemsContainer = self._children.listView.getItemsContainer();
+                const item = self._scrollController.getFirstVisibleRecord(itemsContainer, self._container, scrollTop);
+                if (item.getKey() !== controller.getMarkedKey()) {
+                    _private.changeMarkedKey(self, item.getKey());
+                }
+            });
         }
     },
 
@@ -2905,17 +2913,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         return this._prepareGroups(newOptions, (collapsedGroups) => {
             return this._prepareItemsOnMount(self, newOptions, receivedState, collapsedGroups).then(
-                (result) => {
+                async (result) => {
                     if (newOptions.markerVisibility === 'visible'
                         || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined) {
-                        const markerController = _private.createMarkerController(
-                            this,
-                            newOptions.markerVisibility,
-                            newOptions.markedKey
-                        );
-
-                        const markedKey = markerController.calculateMarkedKeyForVisible();
-                        markerController.setMarkedKey(markedKey);
+                        await _private.getMarkerControllerAsync(this, newOptions).then((controller) => {
+                            const markedKey = controller.calculateMarkedKeyForVisible();
+                            controller.setMarkedKey(markedKey);
+                        });
                     }
 
                     if (self._selectionController) {
@@ -3389,18 +3393,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader = new GroupingLoader({});
         }
 
-        const shouldProcessMarker = newOptions.markerVisibility === MarkerVisibility.Visible
-            || newOptions.markerVisibility === MarkerVisibility.OnActivated && newOptions.markedKey !== undefined;
+        const shouldProcessMarker = newOptions.markerVisibility === 'visible'
+            || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
         if (shouldProcessMarker) {
-            const markerController = _private.getMarkerController(this, newOptions);
-            if (this._options.markedKey !== newOptions.markedKey) {
-                markerController.setMarkedKey(newOptions.markedKey);
-            } else if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
-                const newMarkedKey = markerController.calculateMarkedKeyForVisible();
-                if (newMarkedKey !== markerController.getMarkedKey()) {
-                    _private.changeMarkedKey(self, newMarkedKey);
+            _private.getMarkerControllerAsync(this, newOptions).then((controller) => {
+                if (this._options.markedKey !== newOptions.markedKey) {
+                    controller.setMarkedKey(newOptions.markedKey);
+                } else if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
+                    const newMarkedKey = controller.calculateMarkedKeyForVisible();
+                    if (newMarkedKey !== controller.getMarkedKey()) {
+                        _private.changeMarkedKey(self, newMarkedKey);
+                    }
                 }
-            }
+            });
         } else if (_private.hasMarkerController(this) && newOptions.markerVisibility === 'hidden') {
             _private.getMarkerController(this).destroy();
             this._markerController = null;
@@ -3918,10 +3923,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // TODO удалить, когда будет выполнено наследование контролов (TreeControl <- BaseControl)
     setMarkedKey(key: CrudEntityKey): void {
-        if (this._options.markerVisibility !== MarkerVisibility.Hidden) {
-            if (_private.getMarkerController(this).getMarkedKey() !== key) {
-                _private.changeMarkedKey(this, key);
-            }
+        if (this._options.markerVisibility !== 'hidden') {
+            _private.getMarkerControllerAsync(this).then((controller) => {
+                if (controller.getMarkedKey() !== key) {
+                    _private.changeMarkedKey(this, key);
+                }
+            });
         }
     },
 
