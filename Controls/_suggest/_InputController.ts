@@ -590,10 +590,6 @@ var SuggestLayout = Control.extend({
       }
    },
 
-   _searchAbort(): void {
-      _private.close(this);
-   },
-
    _searchErrback: function(error) {
       _private.searchErrback(this, error);
       if (this._options.searchErrorCallback) {
