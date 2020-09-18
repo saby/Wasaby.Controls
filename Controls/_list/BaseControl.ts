@@ -4034,6 +4034,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const afterEndCallback = (item: Model, isAdd: boolean) => {
             this._notify('afterEndEdit', [item, isAdd]);
             item.unsubscribe('onPropertyChange', resetValidation);
+            _private.updateItemActions(this, this._options);
         };
 
         this._editInPlaceInputHelper = new EditInPlaceInputHelper();
