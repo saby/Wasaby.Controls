@@ -1,6 +1,6 @@
 import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
-import {TSelectedKeys} from 'Controls/interface';
+import {TSelectedKeys, IOptions} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {Sticky as StickyOpener} from 'Controls/popup';
 import {Controller as SourceController} from 'Controls/source';
@@ -171,6 +171,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             return this._loadItems(options).then(() => {
                 if (options.markerVisibility !== MarkerVisibility.Hidden) {
                     this._markerController = this._getMarkerController(options);
+                    const markedKey = this._markerController.calculateMarkedKeyForVisible();
+                    this._markerController.setMarkedKey(markedKey);
                 }
             });
         }
@@ -198,7 +200,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
 
         if (this._markerController) {
-            this._getMarkerController().update(this._getMarkerControllerConfig(newOptions, this._getSelectedKeys()));
+            const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions.emptyKey, newOptions.multiSelect);
+            this._getMarkerController().updateOptions(this._getMarkerControllerConfig(newOptions, markedKey));
+            this._markerController.setMarkedKey(markedKey);
         }
 
         return result;
@@ -574,10 +578,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    private _getMarkerControllerConfig(options: IMenuControlOptions, selectedKeys?: TSelectedKeys): object {
-        const markedKey = this._getMarkedKey(selectedKeys || options.selectedKeys, options.emptyKey, options.multiSelect);
+    private _getMarkerControllerConfig(options: IMenuControlOptions, markedKey?: string|number): IOptions {
         return {
-            markerVisibility: this._getMarkerVisibility(markedKey, options),
+            markerVisibility: options.markerVisibility,
             markedKey,
             model: this._listModel
         };
@@ -585,29 +588,19 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getMarkerController(options?: IMenuControlOptions): MarkerController {
         if (!this._markerController) {
-            this._markerController = new MarkerController(this._getMarkerControllerConfig(options || this._options));
+            const menuOptions = options || this._options;
+            const markedKey = this._getMarkedKey(menuOptions.selectedKeys, menuOptions.emptyKey, menuOptions.multiSelect);
+            this._markerController = new MarkerController(this._getMarkerControllerConfig(menuOptions, markedKey));
         }
         return this._markerController;
     }
 
     private _getMarkedKey(selectedKeys: TSelectedKeys, emptyKey?: string|number, multiSelect?: boolean): string|number|undefined {
-        const markedKey = this._markerController?.getMarkedKey();
         if (multiSelect && selectedKeys.includes(emptyKey)) {
             return emptyKey;
         }
-        if (markedKey) {
-            return markedKey;
-        }
         if (!multiSelect) {
             return selectedKeys[0];
-        }
-    }
-
-    private _getMarkerVisibility(markedKey: string|number, options: IMenuControlOptions): string {
-        if (markedKey === options.emptyKey && options.multiSelect) {
-            return MarkerVisibility.Visible;
-        } else {
-            return options.markerVisibility;
         }
     }
 
