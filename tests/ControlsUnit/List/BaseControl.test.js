@@ -1006,6 +1006,12 @@ define([
          ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
          assert.isTrue(ctrl._showContinueSearchButtonDirection === 'down');
+
+         ctrl._loadTriggerVisibility.down = true;
+         ctrl._hideIndicatorOnTriggerHideDirection = 'down';
+         ctrl._sourceController.isLoading = () => true;
+         ctrl.triggerVisibilityChangedHandler('down', false);
+         assert.isTrue(ctrl._hideIndicatorOnTriggerHideDirection === 'down');
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
