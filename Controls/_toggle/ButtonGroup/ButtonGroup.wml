@@ -1,7 +1,7 @@
-<div class="controls-RadioButtons">
+<div class="controls-ButtonGroup">
     <ws:template name="button">
         <ws:partial template="Controls/buttons:ButtonTemplate"
-                    attr:class="controls-RadioButtons__button"
+                    attr:class="controls-ButtonGroup__button"
                     _buttonStyle="{{buttonStyle}}"
                     _viewMode="button"
                     _fontSize="m"
@@ -10,14 +10,14 @@
                     _caption="{{itemData.get('caption')}}"/>
     </ws:template>
 
-    <div class="controls-RadioButtons__wrapper">
+    <div class="controls-ButtonGroup__wrapper">
         <ws:for data="index, itemData in _options.items">
-            <div class="controls-RadioButtons__button
-            {{index !== _items.length - 1 ? 'controls-RadioButtons__button_withMargin_theme-' + _options.theme}}">
+            <div class="controls-ButtonGroup__button
+            {{index !== _items.length - 1 ? 'controls-ButtonGroup__button_withMargin_theme-' + _options.theme}}">
                 <ws:partial template="button"
                             itemData="{{itemData}}"
-                            buttonStyle="{{itemData[_options.keyProperty] === _options.selectedKey ? 'radioButtonActive' : 'radioButtonInactive'}}"
-                            fontColorStyle="{{itemData[_options.keyProperty] === _options.selectedKey ? 'activeButton' : 'default'}}"
+                            buttonStyle="{{itemData[_options.keyProperty] === _options.selectedKey ? 'buttonGroupSelected' : 'buttonGroupUnselected'}}"
+                            fontColorStyle="{{itemData[_options.keyProperty] === _options.selectedKey ? 'buttonGroupSelected' : 'default'}}"
                             on:click="_onItemClick(itemData)"
                 />
             </div>

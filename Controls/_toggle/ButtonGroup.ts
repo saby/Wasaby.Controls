@@ -1,29 +1,29 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 // @ts-ignore
-import template = require('wml!Controls/_toggle/RadioButtons/RadioButtons');
+import template = require('wml!Controls/_toggle/ButtonGroup/ButtonGroup');
 import {Record, Model} from 'Types/entity';
 import {ISingleSelectableOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
-export interface IRadioButtonsOptions extends ISingleSelectableOptions, IControlOptions {
+export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlOptions {
     items: Record[];
 }
 /**
  * Контрол представляет собой набор из нескольких взаимосвязанных между собой кнопок. Используется, когда необходимо выбрать один из нескольких параметров.
- * @class Controls/_toggle/RadioButtons
+ * @class Controls/_toggle/ButtonGroup
  * @extends Core/Control
  * @mixes Controls/_interface/ISingleSelectable
  * @control
  * @public
  * @author Бондарь А.В.
  * @category Toggle
- * @demo Controls-demo/toggle/RadioButtons/Index
+ * @demo Controls-demo/toggle/ButtonGroup/Index
  *
- * @name Controls/_toggle/RadioButtons#items
+ * @name Controls/_toggle/ButtonGroup#items
  * @cfg {Array<Record>} Данные кнопок
  */
 
-class RadioButtons extends Control<IRadioButtonsOptions> {
+class ButtonGroup extends Control<IButtonGroupOptions> {
     protected _template: TemplateFunction = template;
 
     protected _onItemClick(event: SyntheticEvent<Event>, item: Model): void {
@@ -39,4 +39,4 @@ class RadioButtons extends Control<IRadioButtonsOptions> {
     }
 }
 
-export default RadioButtons;
+export default ButtonGroup;

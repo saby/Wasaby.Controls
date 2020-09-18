@@ -1,5 +1,6 @@
-import {Control, TemplateFunction} from "UI/Base";
-import * as Template from "wml!Controls-demo/toggle/RadioButtons/RadioButtons";
+import {Control, TemplateFunction} from 'UI/Base';
+// @ts-ignore
+import * as Template from 'wml!Controls-demo/toggle/ButtonGroup/ButtonGroup';
 import {Record, Model} from 'Types/entity';
 
 export default class extends Control {
