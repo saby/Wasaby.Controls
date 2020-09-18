@@ -24,6 +24,7 @@ import {error as dataSourceError} from 'Controls/dataSource';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
 import {StackOpener} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
+import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
 
 /**
  * Контрол меню.
@@ -155,6 +156,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _errorController: dataSourceError.Controller;
     private _errorConfig: dataSourceError.ViewConfig|void;
     private _stack: StackOpener;
+    private _markerController: MarkerController;
 
     protected _beforeMount(options: IMenuControlOptions,
                            context?: object,
@@ -164,8 +166,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._limitHistoryFilter = this._limitHistoryCheck.bind(this);
 
         this._stack = new StackOpener();
+
         if (options.source) {
-            return this._loadItems(options);
+            return this._loadItems(options).then(() => {
+                if (options.markerVisibility !== MarkerVisibility.Hidden) {
+                    this._markerController = this._getMarkerController(options);
+                }
+            });
         }
     }
 
@@ -188,6 +195,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (this._isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
             this._setSelectedItems(this._listModel, newOptions.selectedKeys);
             this._notify('selectedItemsChanged', [this._getSelectedItems()]);
+        }
+
+        if (this._markerController) {
+            this._getMarkerController().update(this._getMarkerControllerConfig(newOptions, this._getSelectedKeys()));
         }
 
         return result;
@@ -308,6 +319,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     this._handleCurrentItem(treeItem, sourceEvent.currentTarget, sourceEvent.nativeEvent);
                 } else {
                     this._notify('itemClick', [item, sourceEvent]);
+                    this._getMarkerController().setMarkedKey(key);
                 }
             }
         }
@@ -556,6 +568,47 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         const isEmptySelected: boolean = this._options.emptyText && !this._listModel.getSelectedItems().length;
         MenuControl._selectItem(this._listModel, this._options.emptyKey, !!isEmptySelected );
+
+        if (isEmptySelected) {
+            this._getMarkerController().setMarkedKey(this._options.emptyKey);
+        }
+    }
+
+    private _getMarkerControllerConfig(options: IMenuControlOptions, selectedKeys?: TSelectedKeys): object {
+        const markedKey = this._getMarkedKey(selectedKeys || options.selectedKeys, options.emptyKey, options.multiSelect);
+        return {
+            markerVisibility: this._getMarkerVisibility(markedKey, options),
+            markedKey,
+            model: this._listModel
+        };
+    }
+
+    private _getMarkerController(options?: IMenuControlOptions): MarkerController {
+        if (!this._markerController) {
+            this._markerController = new MarkerController(this._getMarkerControllerConfig(options || this._options));
+        }
+        return this._markerController;
+    }
+
+    private _getMarkedKey(selectedKeys: TSelectedKeys, emptyKey?: string|number, multiSelect?: boolean): string|number|undefined {
+        const markedKey = this._markerController?.getMarkedKey();
+        if (multiSelect && selectedKeys.includes(emptyKey)) {
+            return emptyKey;
+        }
+        if (markedKey) {
+            return markedKey;
+        }
+        if (!multiSelect) {
+            return selectedKeys[0];
+        }
+    }
+
+    private _getMarkerVisibility(markedKey: string|number, options: IMenuControlOptions): string {
+        if (markedKey === options.emptyKey && options.multiSelect) {
+            return MarkerVisibility.Visible;
+        } else {
+            return options.markerVisibility;
+        }
     }
 
     private _getSelectedKeys(): TSelectedKeys {
@@ -920,7 +973,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             emptyKey: null,
             moreButtonCaption: rk('Еще') + '...',
             groupTemplate,
-            itemPadding: {}
+            itemPadding: {},
+            markerVisibility: 'onactivated'
         };
     }
 
