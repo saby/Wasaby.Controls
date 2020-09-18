@@ -147,7 +147,7 @@ export default class extends Control {
     }
 
     protected _onMarkedKeyChanged(event: SyntheticEvent<null>, newKey: string | number | null): void {
-        this._notify('markedKeyChanged', [newKey]);
+        return this._notify('markedKeyChanged', [newKey]);
     }
 
     protected _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: object, item: Record): void {
