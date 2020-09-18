@@ -1,6 +1,8 @@
 /**
  * Created by kraynovdo on 13.11.2017.
  */
+import {TNavigationPagingMode} from '../../_interface/INavigation';
+
 /**
  *
  * @author Авраменко А.С.
@@ -8,7 +10,6 @@
  */
 
 type IScrollpagingState = 'top' | 'bottom' | 'middle';
-type TPagingMode = 'basic' | 'compact' | 'numbers';
 
 interface IScrollParams {
     clientHeight: number;
@@ -36,30 +37,39 @@ interface IPagingCfg {
 }
 
 interface IScrollPagingOptions {
-    pagingMode: TPagingMode;
+    pagingMode: TNavigationPagingMode;
     scrollParams: IScrollParams;
     elementsCount: number;
 
     pagingCfgTrigger(IPagingCfg): void;
 }
 
+interface IHasMoreData {
+    up: boolean;
+    down: boolean;
+}
+
 export default class ScrollPagingController {
     protected _curState: IScrollpagingState = null;
     protected _options: IScrollPagingOptions = null;
 
-    constructor(cfg: IScrollPagingOptions) {
+    constructor(cfg: IScrollPagingOptions, hasMoreData: IHasMoreData = {up: false, down: false}) {
         this._options = cfg;
-        this.updateStateByScrollParams(cfg.scrollParams);
+        this.updateStateByScrollParams(cfg.scrollParams, hasMoreData);
     }
 
-    protected updateStateByScrollParams(scrollParams: IScrollParams): void {
+    protected isHasMoreData(hasMoreData: boolean): boolean {
+        return (!hasMoreData || (this._options.pagingMode !== 'edge' && this._options.pagingMode !== 'end'));
+    }
+
+    protected updateStateByScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData): void {
         const canScrollForward = scrollParams.clientHeight + scrollParams.scrollTop < scrollParams.scrollHeight;
         const canScrollBackward = scrollParams.scrollTop > 0;
         if (canScrollForward && canScrollBackward) {
             this.handleScrollMiddle();
-        } else if (canScrollForward && !canScrollBackward) {
+        } else if (canScrollForward && !canScrollBackward && this.isHasMoreData(hasMoreData.up)) {
             this.handleScrollTop();
-        } else if (!canScrollForward && canScrollBackward) {
+        } else if (!canScrollForward && canScrollBackward && this.isHasMoreData(hasMoreData.down)) {
             this.handleScrollBottom();
         }
     }
@@ -69,7 +79,8 @@ export default class ScrollPagingController {
         switch (this._options.pagingMode) {
             case 'basic':
                 break;
-            case 'compact':
+
+            case 'edge':
                 arrowState.prev = 'hidden';
                 arrowState.next = 'hidden';
                 if (arrowState.end === 'visible') {
@@ -81,6 +92,19 @@ export default class ScrollPagingController {
                     arrowState.end = 'hidden';
                 }
                 break;
+
+            case 'end':
+                arrowState.prev = 'hidden';
+                arrowState.next = 'hidden';
+                arrowState.begin = 'hidden';
+
+                if (arrowState.end === 'visible') {
+                    pagingCfg.showEndButton = true;
+                } else {
+                    arrowState.end = 'hidden';
+                }
+                break;
+
             case 'numbers':
                 arrowState.prev = 'hidden';
                 arrowState.next = 'hidden';
@@ -133,9 +157,9 @@ export default class ScrollPagingController {
         }
     }
 
-    public updateScrollParams(scrollParams: IScrollParams): void {
+    public updateScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData = {up: false, down: false}): void {
         this._options.scrollParams = scrollParams;
-        this.updateStateByScrollParams(scrollParams);
+        this.updateStateByScrollParams(scrollParams, hasMoreData);
     }
 
     protected destroy(): void {

@@ -200,8 +200,13 @@ describe('Controls/list_clean/BaseControl', () => {
         it('paging mode is basic', async () => {
             baseControl.saveOptions(baseControlCfg);
             await baseControl._beforeMount(baseControlCfg);
-            baseControl._viewSize = 1000;
+            baseControl._container = {
+                clientHeight: 1000
+            };
             baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
             baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
@@ -220,20 +225,26 @@ describe('Controls/list_clean/BaseControl', () => {
                 }, baseControl._pagingCfg.arrowState);
 
             BaseControl._private.handleListScrollSync(baseControl, 600);
-            assert.deepEqual( {
-                    begin: 'visible',
-                    end: 'readonly',
-                    next: 'readonly',
-                    prev: 'visible'
-                }, baseControl._pagingCfg.arrowState);
+            assert.deepEqual({
+                begin: 'visible',
+                end: 'readonly',
+                next: 'readonly',
+                prev: 'visible'
+            }, baseControl._pagingCfg.arrowState);
         });
-        it('paging mode is compact', async () => {
+
+        it('paging mode is edge', async () => {
             const cfgClone = {...baseControlCfg};
-            cfgClone.navigation.viewConfig.pagingMode = 'compact';
+            cfgClone.navigation.viewConfig.pagingMode = 'edge';
             baseControl.saveOptions(cfgClone);
             await baseControl._beforeMount(cfgClone);
-            baseControl._viewSize = 1000;
+            baseControl._container = {
+                clientHeight: 1000
+            };
             baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
             baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
@@ -244,27 +255,33 @@ describe('Controls/list_clean/BaseControl', () => {
 
             BaseControl._private.handleListScrollSync(baseControl, 200);
             assert.deepEqual({
-                    begin: 'hidden',
-                    end: 'visible',
-                    next: 'hidden',
-                    prev: 'hidden'
+                begin: 'hidden',
+                end: 'visible',
+                next: 'hidden',
+                prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
 
             BaseControl._private.handleListScrollSync(baseControl, 800);
             assert.deepEqual({
-                    begin: 'visible',
-                    end: 'hidden',
-                    next: 'hidden',
-                    prev: 'hidden'
+                begin: 'visible',
+                end: 'hidden',
+                next: 'hidden',
+                prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
         });
-        it('paging mode is numbers', async () => {
+
+        it('paging mode is end', async () => {
             const cfgClone = {...baseControlCfg};
-            cfgClone.navigation.viewConfig.pagingMode = 'numbers';
+            cfgClone.navigation.viewConfig.pagingMode = 'end';
             baseControl.saveOptions(cfgClone);
             await baseControl._beforeMount(cfgClone);
-            baseControl._viewSize = 1000;
+            baseControl._container = {
+                clientHeight: 1000
+            };
             baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
             baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
@@ -273,21 +290,58 @@ describe('Controls/list_clean/BaseControl', () => {
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-            assert.equal(baseControl._pagingCfg.pagesCount,3);
+            BaseControl._private.handleListScrollSync(baseControl, 200);
+            assert.deepEqual({
+                begin: 'hidden',
+                end: 'visible',
+                next: 'hidden',
+                prev: 'hidden'
+            }, baseControl._pagingCfg.arrowState);
+
+            BaseControl._private.handleListScrollSync(baseControl, 800);
+            assert.deepEqual({
+                begin: 'hidden',
+                end: 'hidden',
+                next: 'hidden',
+                prev: 'hidden'
+            }, baseControl._pagingCfg.arrowState);
+        });
+
+        it('paging mode is numbers', async () => {
+            const cfgClone = {...baseControlCfg};
+            cfgClone.navigation.viewConfig.pagingMode = 'numbers';
+            baseControl.saveOptions(cfgClone);
+            await baseControl._beforeMount(cfgClone);
+            baseControl._container = {
+                clientHeight: 1000
+            };
+            baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
+            baseControl._mouseEnter(null);
+
+            // эмулируем появление скролла
+            await BaseControl._private.onScrollShow(baseControl, heightParams);
+            baseControl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+
+            assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
+
+            assert.equal(baseControl._pagingCfg.pagesCount, 3);
 
             BaseControl._private.handleListScrollSync(baseControl, 100);
             assert.deepEqual({
-                    begin: 'visible',
-                    end: 'hidden',
-                    next: 'hidden',
-                    prev: 'hidden'
+                begin: 'visible',
+                end: 'hidden',
+                next: 'hidden',
+                prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
 
-            assert.equal(baseControl._currentPage,1);
+            assert.equal(baseControl._currentPage, 1);
 
             await baseControl.__selectedPageChanged(null, 2);
-            assert.equal(baseControl._currentPage,2);
-            assert.equal(baseControl._scrollPagingCtr._options.scrollParams.scrollTop,400);
+            assert.equal(baseControl._currentPage, 2);
+            assert.equal(baseControl._scrollPagingCtr._options.scrollParams.scrollTop, 400);
         });
     });
     describe('beforeUnmount', () => {
@@ -322,14 +376,17 @@ describe('Controls/list_clean/BaseControl', () => {
             };
             baseControl._listViewModel.destroy = () => {
                 modelDestroyed = true;
-            }
+            };
+            baseControl._items = {
+                unsubscribe: () => true
+            };
             baseControl._beforeUnmount();
             assert.isTrue(eipReset, 'editInPlace is not reset');
             assert.isTrue(modelDestroyed, 'model is not destroyed');
 
         });
     });
-    describe('BaseControl enterHandler', ()=>{
+    describe('BaseControl enterHandler', () => {
         it('is enterHandler', function() {
             let notified = false;
             let notifiedCount = 0;// Количество событий
@@ -351,7 +408,7 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isFalse(notified);
             assert.isFalse(!!notifiedCount);
 
-            const myMarkedItem = { qwe: 123 };
+            const myMarkedItem = {qwe: 123};
             const mockedEvent = {
                 target: 'myTestTarget',
                 isStopped: function() {
@@ -379,11 +436,11 @@ describe('Controls/list_clean/BaseControl', () => {
                     notifiedCount++;
                     assert.isTrue(e === 'itemClick' || e === 'itemActivate');
                     assert.deepEqual(args, [myMarkedItem, mockedEvent]);
-                    assert.deepEqual(options, { bubbling: true });
+                    assert.deepEqual(options, {bubbling: true});
                 }
             }, mockedEvent);
             assert.isTrue(notified);
             assert.isTrue(notifiedCount === 2);
         });
-    })
+    });
 });

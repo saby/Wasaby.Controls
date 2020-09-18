@@ -15,7 +15,6 @@
                     on:mouseenter="_onYearMouseEnter(_position.getFullYear())"
                     on:touchstart="_onYearMouseEnter(_position.getFullYear())"
                     on:mouseleave="_onYearMouseLeave()"
-                    on:touchend="_onYearMouseLeave()"
                     on:touchmove="_onYearMouseLeave()"
                     on:click="_onYearClick(_position.getFullYear())"
             >
@@ -47,13 +46,16 @@
       </div>
    </ws:if>
    <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">
-      <div class="controls-PeriodLiteDialog__years-next controls-PeriodLiteDialog__years-next_theme-{{_options.theme}}"
-           on:click="_changeYear (1)"></div>
+      <div class="controls-PeriodLiteDialog__years-next controls-PeriodLiteDialog__years-next_theme-{{_options.theme}}">
+         <Controls.buttons:ArrowButton direction="up"
+                                       on:click="_changeYear (1)"/>
+      </div>
       <Controls.calendar:MonthList
               order="desc"
               virtualPageSize="{{24}}"
               displayedRanges="{{_displayedRanges}}"
               bind:position="_position"
+              _limit="{{15}}"
          class="controls-PeriodLiteDialog__year-list controls-PeriodLiteDialog__year-list_theme-{{_options.theme}}">
          <ws:yearTemplate>
             <ws:partial template="Controls/calendar:MonthListYearTemplate">
@@ -75,7 +77,9 @@
             </ws:partial>
          </ws:yearTemplate>
       </Controls.calendar:MonthList>
-      <div class="controls-PeriodLiteDialog__years-prev controls-PeriodLiteDialog__years-prev_theme-{{_options.theme}}"
-           on:click="_changeYear (-1)"></div>
+      <div class="controls-PeriodLiteDialog__years-prev controls-PeriodLiteDialog__years-prev_theme-{{_options.theme}}">
+         <Controls.buttons:ArrowButton direction="down"
+                                       on:click="_changeYear (-1)"/>
+      </div>
    </ws:if>
 </div>

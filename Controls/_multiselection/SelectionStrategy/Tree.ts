@@ -77,6 +77,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          }
       });
 
+      if (!cloneSelection.selected.length) {
+         cloneSelection.excluded = [];
+      }
+
       return cloneSelection;
    }
 
@@ -348,6 +352,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
 
       if (this._isAllChildrenExcluded(selection, parentId) && this._selectAncestors) {
+         ArraySimpleValuesUtil.addSubArray(selection.excluded, [parentId]);
          ArraySimpleValuesUtil.removeSubArray(selection.selected, [parentId]);
       }
    }
@@ -445,9 +450,34 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return stateNode;
    }
 
+   /**
+    * Проверяем, что все дети данного узла находятся в excluded
+    * @param selection
+    * @param nodeId
+    * @private
+    */
    private _isAllChildrenExcluded(selection: ISelection, nodeId: TKey): boolean {
-      const children = this._getChildren(nodeId, this._items, this._hierarchyRelation);
-      return !children.some((item): boolean => !selection.excluded.includes(item.getKey()));
+      const childes = this._getChildren(nodeId, this._items, this._hierarchyRelation);
+
+      let result = true;
+
+      if (childes.length) {
+         for (const child of childes) {
+            if (this._getChildren(child.getKey(), this._items, this._hierarchyRelation).length > 0) {
+               result = result && this._isAllChildrenExcluded(selection, child.getKey());
+            } else {
+               result = result && selection.excluded.includes(child.getKey());
+            }
+
+            if (!result) {
+               break;
+            }
+         }
+      } else {
+         result = false;
+      }
+
+      return result;
    }
 
    private _removeChildrenIdsFromSelection(selection: ISelection, nodeId: TKey): void {

@@ -675,7 +675,7 @@ let
       },
 
       _afterMount: function() {
-          this._stickyHeaderController.init(this._container);
+          this._stickyHeaderController.init(this._children.content);
 
          /**
           * Для определения heightFix и styleHideScrollbar может требоваться DOM, поэтому проверим
@@ -809,7 +809,7 @@ let
             this._updateStickyHeaderContext();
          }
 
-         this._stickyHeaderController.updateContainer(this._container);
+         this._stickyHeaderController.updateContainer(this._children.content);
       },
 
       _beforeUnmount(): void {
@@ -1003,28 +1003,40 @@ let
          if (!ev.nativeEvent.isTrusted) {
             let offset: number;
             const scrollTop: number = _private.getScrollTop(this, this._children.content);
+
+            const scrollSize = _private.getScrollSize(SCROLL_TYPE.VERTICAL, this._children.content);
+            const containerSize = _private.getContainerSize(SCROLL_TYPE.VERTICAL, this._children.content);
+            const scrollContainerSize = scrollSize - containerSize;
+
             if (ev.nativeEvent.which === Env.constants.key.pageDown) {
-               offset = scrollTop + this._children.content.clientHeight;
+                offset = scrollTop + this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.down) {
-               offset = scrollTop + SCROLL_BY_ARROWS;
+                offset = scrollTop + SCROLL_BY_ARROWS;
             }
             if (ev.nativeEvent.which === Env.constants.key.pageUp) {
-               offset = scrollTop - this._children.content.clientHeight;
+                offset = scrollTop - this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.up) {
-               offset = scrollTop - SCROLL_BY_ARROWS;
+                offset = scrollTop - SCROLL_BY_ARROWS;
             }
-            if (offset !== undefined) {
+
+            if (offset > scrollContainerSize) {
+                offset = scrollContainerSize;
+            }
+            if (offset < 0 ) {
+                offset = 0;
+            }
+            if (offset !== undefined && offset !== scrollTop) {
                this.scrollTo(offset);
                ev.preventDefault();
             }
 
-            if (ev.nativeEvent.which === Env.constants.key.home) {
+            if (ev.nativeEvent.which === Env.constants.key.home && scrollTop !== 0) {
                this.scrollToTop();
                ev.preventDefault();
             }
-            if (ev.nativeEvent.which === Env.constants.key.end) {
+            if (ev.nativeEvent.which === Env.constants.key.end && scrollTop !== scrollContainerSize) {
                this.scrollToBottom();
                ev.preventDefault();
             }

@@ -1,6 +1,6 @@
 <div>
     <div class="ControlsDemo-AsyncDemo__buttonContainer">
-        <Controls.buttons:Button readOnly="{{false}}" fontSize="l" caption="{{buttonCaption}}" attr:class="ControlsDemo-AsyncDemo__navigationButton"
+        <Controls.buttons:Button readOnly="{{false}}" fontSize="l" caption="{{buttonCaption}}" attr:class="ControlsDemo-AsyncDemo__navigationButton demo-AsyncDemo__showHideButton"
         on:click="toggleAsync()"/>
     </div>
     <ws:if data="{{showAsync}}">

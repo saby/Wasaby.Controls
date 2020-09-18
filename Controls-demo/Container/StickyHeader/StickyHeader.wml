@@ -1,4 +1,4 @@
-<div>
+<div class="ControlsDemo-scroll">
     <h2>Scrolling and sticking headers</h2>
     <Controls.scroll:Container attr:class="ControlsDemo-scroll_with_grid">
         <div>

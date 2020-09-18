@@ -232,7 +232,10 @@ export class NavigationController {
                 navigationStore.store.destroy();
             });
             this._navigationStores = new List();
-            this._paramsCalculator.destroy();
+            this._paramsCalculator?.destroy();
+            this._paramsCalculator = null;
+            this._navigationType = newOptions.navigationType;
+            this._navigationConfig = newOptions.navigationConfig;
         }
     }
 
@@ -277,7 +280,7 @@ export class NavigationController {
             navigationStore.store.destroy();
         });
         this._navigationStores = null;
-        this._paramsCalculator.destroy();
+        this._paramsCalculator?.destroy();
         this._paramsCalculator = null;
         this._navigationType = null;
         this._navigationConfig = null;

@@ -143,10 +143,11 @@ define(['Controls/treeGrid',
                 columns: initialColumns
              });
          current = model.getCurrent();
+         const currentColumn = current.getCurrentColumn();
          checkCellClasses(current.getCurrentColumn().classList.base, itemTypes.node);
          checkCellBackgroundClass(current.getCurrentColumn('danger').classList.base, 'danger');
 
-         assert.equal(current.getCurrentColumn().getExpanderClasses, current.getExpanderClasses);
+         assert.equal(currentColumn.getExpanderClasses(currentColumn, 'l', 'hiddenNode'), current.getExpanderClasses(current, 'l', 'hiddenNode'));
          model.goToNext();
 
          current = model.getCurrent();
@@ -622,7 +623,7 @@ define(['Controls/treeGrid',
          assert.equal(itemData.dispItem, columnData.dispItem);
 
          assert.isFunction(itemData.getExpanderClasses);
-         assert.equal(itemData.getExpanderClasses, columnData.getExpanderClasses);
+         assert.equal(itemData.getExpanderClasses(itemData, 'l', 'hiddenNode'), columnData.getExpanderClasses(columnData, 'l', 'hiddenNode'));
 
          assert.isFunction(itemData.getExpanderSize);
          assert.equal(itemData.getExpanderSize, columnData.getExpanderSize);

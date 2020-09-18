@@ -3,6 +3,7 @@ import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import {Collection} from 'Controls/display';
 import {INavigationSourceConfig, IBaseSourceConfig} from 'Controls/interface';
+import {TNavigationPagingMode} from '../../_interface/INavigation';
 
 /**
  * Интерфейс для работы с контроллерами пейджинации
@@ -129,5 +130,5 @@ export interface IQueryParamsController {
      * @param direction {Direction} nav direction ('up' or 'down')
      * TODO Probably Deprecated
      */
-    setEdgeState(direction: Direction): void;
+    setEdgeState(direction: Direction, pagingMode: TNavigationPagingMode): void;
 }

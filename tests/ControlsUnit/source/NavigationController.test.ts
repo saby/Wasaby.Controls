@@ -27,17 +27,20 @@ const data = [
     {
         id : 4,
         title : 'Четвертый',
-        type: 1
+        type: 1,
+        parId: 7
     },
     {
         id : 5,
         title : 'Пятый',
-        type: 2
+        type: 2,
+        parId: 8
     },
     {
         id : 6,
         title : 'Шестой',
-        type: 2
+        type: 2,
+        parId: 9
     }
 ];
 
@@ -744,8 +747,7 @@ describe('Controls/_source/NavigationController', () => {
             nc.updateOptions({
                 navigationType: 'page',
                 navigationConfig: {
-                    field: 'id',
-                    direction: 'bothways'
+                    pageSize: 2
                 }
             });
 
@@ -776,13 +778,14 @@ describe('Controls/_source/NavigationController', () => {
             nc.updateOptions({
                 navigationType: 'position',
                 navigationConfig: {
-                    field: 'id',
+                    field: 'parId',
                     direction: 'forward'
                 }
             });
 
+            nc.updateQueryProperties(rs);
             params = nc.getQueryParams({filter: {}, sorting: []}, null, {}, 'forward');
-            assert.equal(null, params.filter['id>='], 'Wrong query params');
+            assert.equal(9, params.filter['parId>='], 'Wrong query params');
 
         });
     });

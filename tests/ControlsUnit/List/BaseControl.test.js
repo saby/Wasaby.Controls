@@ -321,7 +321,10 @@ define([
             _needScrollCalculation: true,
             getViewModel: () => ({
                getCount: () => 3
-            })
+            }),
+            _container: {
+               clientHeight: 300
+            }
          };
          const myFilter = {testField: 'testValue'};
          const resultNavigation = 'testNavigation';
@@ -386,6 +389,7 @@ define([
                   return shouldSearch;
                }
             };
+            self._loadedItems = new collection.RecordSet();
 
             // navigation.view !== 'infinity'
             sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
@@ -728,7 +732,10 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          ctrl._afterMount(cfg);
 
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
@@ -802,7 +809,10 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          ctrl._afterMount(cfg);
          ctrl._portionedSearch = lists.BaseControl._private.getPortionedSearch(ctrl);
 
@@ -867,7 +877,10 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          ctrl._afterMount(cfg);
 
          let loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
@@ -1018,6 +1031,13 @@ define([
          assert.isNotNull(ctrl._loadingIndicatorState);
          assert.isNull(ctrl._showContinueSearchButtonDirection);
 
+         const items = ctrl._items.clone();
+         ctrl._items.clear();
+         ctrl.triggerVisibilityChangedHandler('down', false);
+         assert.isNull(ctrl._showContinueSearchButtonDirection);
+         ctrl._items.assign(items);
+         ctrl._hideIndicatorOnTriggerHideDirection = 'down';
+
          // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
@@ -1066,7 +1086,10 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
             up: false,
@@ -1890,7 +1913,10 @@ define([
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          ctrl._afterMount(cfg);
 
          ctrl._sourceController.load = sinon.stub()
@@ -2286,6 +2312,13 @@ define([
 
             ctrl._viewSize = 1000;
             ctrl._viewportSize = 400;
+            ctrl._container = {
+               getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+               getBoundingClientRect: function() { return {}; }
+            };
+            ctrl._getItemsContainer = () => ({
+               children: []
+            });
             // эмулируем появление скролла
             await lists.BaseControl._private.onScrollShow(ctrl, heightParams);
             ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
@@ -2309,8 +2342,8 @@ define([
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
                     begin: "visible",
-                    end: "visible",
-                    next: "visible",
+                    end: "readonly",
+                    next: "readonly",
                     prev: "visible"
             }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll');
 
@@ -2394,6 +2427,13 @@ define([
          let iterativeSearchAborted;
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
+         ctrl._getItemsContainer = () => ({
+            children: []
+         });
          lists.BaseControl._private.onScrollShow(ctrl, heightParams);
          ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
          ctrl._pagingVisible = true;
@@ -2447,6 +2487,10 @@ define([
             clientHeight: 1000
          };
          var baseControl = new lists.BaseControl(cfg);
+         baseControl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          baseControl._children = triggers;
          baseControl.saveOptions(cfg);
          baseControl._needScrollCalculation = true;
@@ -2513,8 +2557,8 @@ define([
       });
       it('calcViewSize', () => {
          let calcViewSize = lists.BaseControl._private.calcViewSize;
-         assert.equal(calcViewSize(140, true), 100);
-         assert.equal(calcViewSize(140, false), 140);
+         assert.equal(calcViewSize(140, true, 40), 100);
+         assert.equal(calcViewSize(140, false, 40), 140);
       });
       it('needShowPagingByScrollSize', function() {
          var cfg = {
@@ -2723,6 +2767,10 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl._children = triggers;
+         ctrl._container = {
+            getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+            getBoundingClientRect: function() { return {}; }
+         };
          // эмулируем появление скролла
          lists.BaseControl._private.onScrollShow(ctrl, heightParams);
 
@@ -3401,7 +3449,7 @@ define([
 
       });
 
-      it('_needBottomPadding after reload in beforeUpdate', async function() {
+      it('_needBottomPadding after reload in beforeUpdate', function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
             itemActionsPosition: 'outside',
@@ -3422,12 +3470,16 @@ define([
          }
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
-         await ctrl._beforeMount(cfg);
-         assert.isFalse(ctrl._needBottomPadding);
-         ctrl._beforeUpdate(cfgWithSource).addCallback(function() {
-         assert.isTrue(ctrl._needBottomPadding);
-      });
-         ctrl._afterUpdate(cfgWithSource);
+         return new Promise((resolve) => {
+            ctrl._beforeMount(cfg);
+            assert.isFalse(ctrl._needBottomPadding);
+
+            ctrl._beforeUpdate(cfgWithSource).addCallback(function() {
+               assert.isTrue(ctrl._needBottomPadding);
+               resolve();
+            });
+            ctrl._afterUpdate(cfgWithSource);
+         });
       });
 
       it('setHasMoreData after reload in beforeMount', async function() {
@@ -3448,13 +3500,15 @@ define([
          let ctrl = new lists.BaseControl(cfg);
          let setHasMoreDataCalled = false;
          let origSHMD = lists.BaseControl._private.setHasMoreData;
+         let origNBP = lists.BaseControl._private.needBottomPadding;
          lists.BaseControl._private.setHasMoreData = () => {
             setHasMoreDataCalled = true;
-         }
+         };
+         lists.BaseControl._private.needBottomPadding = () => false;
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          assert.isTrue(setHasMoreDataCalled);
-
+         lists.BaseControl._private.needBottomPadding = origNBP;
       });
 
       it('getUpdatedMetaData: set full metaData.more on load to direction with position navigation', () => {
@@ -3486,12 +3540,18 @@ define([
          const model = {
             getEditingItemData: function() {
                return null;
-            }
+            },
+            getDisplay: () => ({
+               getCount: () => count
+            })
          };
          const editingModel = {
             getEditingItemData: function() {
                return {};
-            }
+            },
+            getDisplay: () => ({
+               getCount: () => count
+            })
          };
 
          assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, padding is needed");
@@ -6031,6 +6091,11 @@ define([
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
 
+         cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'], selectionViewMode: 'selected'};
+         instance._beforeUpdate(cfgClone);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+
          cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
          instance._beforeUpdate(cfgClone);
          instance.saveOptions(cfgClone);
@@ -6392,10 +6457,22 @@ define([
 
       it('_beforeUnmount', function() {
          let instance = new lists.BaseControl();
+
+         let unsubscribeCalled = false;
+         instance._listViewModel = {
+            destroy: () => null
+         };
+         instance._items = {
+            unsubscribe: () => {
+               unsubscribeCalled = true;
+            }
+         };
+
          instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
 
          instance._beforeUnmount();
          assert.isNull(instance._portionedSearch);
+         assert.isTrue(unsubscribeCalled);
       });
 
       describe('beforeUpdate', () => {
@@ -6662,7 +6739,10 @@ define([
 
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
-            ctrl._container =  {getElementsByClassName: () => ([{clientHeight: 100}])};
+            ctrl._container = {
+               getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
+               getBoundingClientRect: function() { return {}; }
+            };
             ctrl._afterMount(cfg);
 
             assert.isNull(ctrl._loadedItems);
@@ -7114,22 +7194,25 @@ define([
          async function mountBaseControl(control, options) {
             control.saveOptions(options);
             await control._beforeMount(options);
-            control._container =  {getElementsByClassName: () => ([ {clientHeight: 0, offsetHeight:0}])};
+            control._container =  {
+               getElementsByClassName: () => ([{ clientHeight: 0, offsetHeight: 0 }]),
+               getBoundingClientRect: function() { return {}; }
+            };
             await control._afterMount(options);
          }
 
-            beforeEach(async () => {
-               baseControlOptions = {
-                  keyProperty: 'id',
-                  viewName: 'Controls/List/ListView',
-                  source: source,
-                  viewModelConstructor: lists.ListViewModel,
-                  markedKey: null
-               };
-               const _baseControl = new lists.BaseControl(baseControlOptions);
-               await mountBaseControl(_baseControl, baseControlOptions);
-               baseControl = _baseControl;
-            });
+         beforeEach(async () => {
+            baseControlOptions = {
+               keyProperty: 'id',
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewModelConstructor: lists.ListViewModel,
+               markedKey: null
+            };
+            const _baseControl = new lists.BaseControl(baseControlOptions);
+            await mountBaseControl(_baseControl, baseControlOptions);
+            baseControl = _baseControl;
+         });
 
          afterEach(async () => {
             await baseControl._beforeUnmount();
@@ -7296,7 +7379,7 @@ define([
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
             });
 
-               it('should mark item if there are more then one item in list', async function () {
+            it('should mark item if there are more then one item in list', async function () {
                   baseControlOptions.markerVisibility = 'onactivated';
                   await mountBaseControl(baseControl, baseControlOptions);
                   let setMarkedKeyIsCalled = false;
@@ -7349,7 +7432,7 @@ define([
                   baseControl._itemMouseUp(event, {key: 1}, originalEvent);
                   assert.equal(setMarkedKeyIsCalled, true);
                });
-            });
+         });
 
          describe('_onItemClick', () => {
             it('click on checkbox should not notify itemClick, but other clicks should', function() {
@@ -7423,6 +7506,31 @@ define([
                // click not on checkbox
                baseControl._onItemClick(e, item, originalEvent);
             });
+
+            it('should not notify if was drag-n-drop', () => {
+               baseControl._dndListController = {
+                  isDragging: () => true
+               };
+
+               const originalEvent = {
+                  target: {
+                     closest: () => false
+                  }
+               };
+
+               let isStopped = false;
+
+               const e = {
+                  isStopped: () => isStopped,
+                  stopPropagation() { isStopped = true; }
+               };
+
+               baseControl._itemMouseUp(e, { key: 1 }, originalEvent);
+
+               // click on checkbox
+               baseControl._onItemClick(e, { key: 1 }, originalEvent);
+               assert.isTrue(isStopped);
+            });
          });
       });
 
@@ -7452,7 +7560,7 @@ define([
             baseControl._beforeMount(cfg);
          });
       });
-      describe('_afterMount', () => {
+      describe('scrollToItem _afterMount', () => {
          let stubScrollToItem;
          beforeEach(() => {
             stubScrollToItem = sinon.stub(lists.BaseControl._private, 'scrollToItem');
@@ -7483,6 +7591,49 @@ define([
             });
             await baseControl._beforeMount(cfg);
             baseControl._afterMount(cfg);
+         });
+      });
+
+      describe('_afterMount registerIntersectionObserver', () => {
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            keyProperty: 'id',
+            viewModelConstructor: lists.ListViewModel,
+            source: source,
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrollConfig: {
+               pageSize: 100
+            }
+         };
+         let baseControl;
+         let registered;
+         let registerIntersectionObserver = () => { registered = true; }
+         beforeEach(() => {
+            registered = false;
+            baseControl = new lists.BaseControl(cfg);
+            baseControl._registerIntersectionObserver = registerIntersectionObserver;
+         });
+         afterEach(() => {
+            baseControl = null;
+         });
+         it('without error', async () => {
+
+            baseControl._container = {};
+            baseControl.saveOptions(cfg);
+            await baseControl._beforeMount(cfg);
+            baseControl._afterMount(cfg);
+            assert.isTrue(registered);
+         });
+         it('with error', async () => {
+
+            baseControl._container = {};
+            baseControl.saveOptions(cfg);
+            await baseControl._beforeMount(cfg);
+            baseControl.__error = {};
+            baseControl._afterMount(cfg);
+            assert.isFalse(registered);
          });
       });
       describe('_private.createEditingData()', () => {

@@ -36,22 +36,21 @@
   ],
   "includePackages": [
     "Controls/controls-application.package.js",
-    "Controls/controls-container-async.package.js",
-    "Controls/controls-utils.package.js"
+    "Controls/controls-container-async.package.js"
   ],
   "extendsTo": "online-superbundle.package.js"
 }, {
   "include": [
     "Controls/buttons",
     "Controls/input",
-    "Controls/validate",
-    "Controls/dataSource",
-    "Controls/source",
-    "Controls/Constants",
     "Controls/dropdown",
     "Controls/toolbars",
     "Controls/tabs",
-    "Controls/Store"
+    "Controls/Store",
+    "Controls/validate",
+    "Controls/dataSource",
+    "Controls/source",
+    "Controls/Constants"
   ],
   "extendsTo": "page-superbundle.package.js"
 }]

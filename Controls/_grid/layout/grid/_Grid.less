@@ -337,7 +337,7 @@
       > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper,
       > .controls-Grid__row-cell .controls-Grid__row-cell__content {
          > .controls-itemActionsV {
-            transition: opacity 500ms step-end;
+            transition: timeout .5s;
          }
       }
    }
@@ -875,6 +875,7 @@
    min-width: 0;
    display: flex;
    justify-content: flex-end;
+   align-items: baseline;
 }
 .controls-Grid__editArrow-cellContent {
    flex-shrink:0;
@@ -907,7 +908,6 @@
    min-width: @edit-arrow_icon-size_grid;
    display: inline-flex;
    align-items: baseline;
-   align-self: baseline;
 }
 
 .controls-Grid__editArrow-blur_style-default_background_theme-default:before,

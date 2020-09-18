@@ -1,6 +1,7 @@
 import {default as BaseController, IDragOffset} from 'Controls/_popupTemplate/BaseController';
 import {IPopupItem, IPopupOptions, IPopupSizes, IPopupPosition} from 'Controls/popup';
 import {detection} from 'Env/Env';
+import {List} from 'Types/collection';
 import * as Deferred from 'Core/Deferred';
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
@@ -37,9 +38,11 @@ const IPAD_MIN_WIDTH = 1024;
  */
 class DialogController extends BaseController {
     TYPE: string = 'Dialog';
+    _dialogList: List<IDialogItem> = new List();
 
     elementCreated(item: IDialogItem, container: HTMLDivElement): boolean {
         this._prepareConfigWithSizes(item, container);
+        this._dialogList.add(item);
         return true;
     }
 
@@ -82,7 +85,8 @@ class DialogController extends BaseController {
         return true;
     }
 
-    elementDestroyed(item: IPopupItem): Promise<null> {
+    elementDestroyed(item: IDialogItem): Promise<null> {
+        this._dialogList.remove(item);
         return (new Deferred()).callback();
     }
 
@@ -224,11 +228,28 @@ class DialogController extends BaseController {
         item.position.left = item.popupOptions.left || defaultCoordinate;
     }
 
-    private _getRestrictiveContainerSize(item: IDialogItem): IWindow {
-        if (item.popupOptions.maximize) {
-            return BaseController.getCoordsByContainer('body');
+    _hasMaximizePopup(): boolean {
+        let hasMaximizePopup = false;
+        this._dialogList.each((item: IDialogItem) => {
+            if (item.popupOptions.maximize) {
+                hasMaximizePopup = true;
+            }
+        });
+        return hasMaximizePopup;
+    }
+
+    private _getRestrictiveContainerSize(item: IDialogItem): IPopupPosition {
+        // Если окно развернуто на весь экран, то оно должно строиться по позиции body.
+        // Так же если окно открывается выше окна на весь экран (задана опция topPopup,
+        // либо есть связака по опенерам), позиция должна быть так же по body.
+        const isBodyTargetContainer = item.popupOptions.maximize ||
+            (item.popupOptions.topPopup && this._hasMaximizePopup()) || this._isAboveMaximizePopup(item);
+
+        if (isBodyTargetContainer) {
+            return BaseController.getCoordsByContainer('body') as IPopupPosition;
         }
-        return BaseController.getRootContainerCoords(item, '.controls-Popup__dialog-target-container');
+        const dialogTargetContainer = '.controls-Popup__dialog-target-container';
+        return BaseController.getRootContainerCoords(item, dialogTargetContainer) as IPopupPosition;
     }
 }
 

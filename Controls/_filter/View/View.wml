@@ -33,7 +33,7 @@
             <ws:partial template="itemTemplate"
                         name="all_frequent"
                         itemName="all_frequent"
-                        text="{[Все]}"
+                        text="{{_options.emptyText}}"
                         attr:class="controls-FilterView__frequentFilter"
                         on:mousedown="_openPanel('all_frequent')"/>
          </ws:if>

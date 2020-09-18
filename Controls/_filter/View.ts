@@ -906,7 +906,8 @@ Filter.getDefaultOptions = function() {
     return {
         panelTemplateName: 'Controls/filterPopup:SimplePanel',
         alignment: 'right',
-        itemTemplate: defaultItemTemplate
+        itemTemplate: defaultItemTemplate,
+        emptyText: rk('Все')
     };
 };
 

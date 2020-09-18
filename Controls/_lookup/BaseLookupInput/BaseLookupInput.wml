@@ -6,6 +6,7 @@
             on:deactivated="_deactivated()"
             on:showSelector="_showSelector()"
             on:suggestStateChanged="_suggestStateChanged()"
+            on:valueChanged="_changeValueHandler()"
             bind:suggestState="_suggestState"
             suggestTemplate="{{_options.suggestTemplate}}"
             footerTemplate="{{_options.footerTemplate || _options.suggestFooterTemplate}}"

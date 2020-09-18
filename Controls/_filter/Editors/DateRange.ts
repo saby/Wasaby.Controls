@@ -20,6 +20,7 @@ class DateRangeEditor extends Control<IControlOptions> {
     protected _template: TemplateFunction = DateRangeTemplate;
     protected _tmplNotify: Function = tmplNotify;
     protected _templateName: string;
+    protected _dateRangeModule: Record<string, any> = null;
     protected _emptyCaption: string;
     protected _reseted: boolean = false;
     protected _fontColorStyle: string;
@@ -28,13 +29,14 @@ class DateRangeEditor extends Control<IControlOptions> {
         this._templateName = 'Controls/dateRange:' + (options.editorMode === 'Selector' ? 'RangeSelector' : 'RangeShortSelector');
         this._fontColorStyle = options.readOnly ? 'label' : options.fontColorStyle;
         this._reseted = isEqual(options.value, options.resetValue);
-        if (options.emptyCaption) {
-            this._emptyCaption = options.emptyCaption;
-        } else if (options.resetValue) {
-            return this.getCaption(options.resetValue[0], options.resetValue[1]).then((caption) => {
-                this._emptyCaption = caption;
-            });
-        }
+        return import('Controls/dateRange').then((dateRange) => {
+            this._dateRangeModule = dateRange;
+            if (options.emptyCaption) {
+                this._emptyCaption = options.emptyCaption;
+            } else if (options.resetValue) {
+                this._emptyCaption = this.getCaption(options.resetValue[0], options.resetValue[1]);
+            }
+        });
     }
 
     protected _beforeUpdate(newOptions: IControlOptions): Promise<void>|void {
@@ -44,22 +46,19 @@ class DateRangeEditor extends Control<IControlOptions> {
     }
 
     protected _rangeChanged(event: SyntheticEvent<'rangeChanged'>, startValue: Date, endValue: Date): Promise<void> {
-        return this.getCaption(startValue, endValue).then((caption) => {
-            this._notify('textValueChanged', [caption]);
-            if (!startValue && !endValue && this._options.resetValue || isEqual([startValue, endValue], this._options.resetValue)) {
-                this._notify('rangeChanged', [this._options.resetValue[0], this._options.resetValue[1]]);
-                this._reseted = true;
-            } else {
-                this._notify('rangeChanged', [startValue, endValue]);
-                this._reseted = false;
-            }
-        });
+        const caption = this.getCaption(startValue, endValue);
+        this._notify('textValueChanged', [caption]);
+        if (!startValue && !endValue && this._options.resetValue || isEqual([startValue, endValue], this._options.resetValue)) {
+            this._notify('rangeChanged', [this._options.resetValue[0], this._options.resetValue[1]]);
+            this._reseted = true;
+        } else {
+            this._notify('rangeChanged', [startValue, endValue]);
+            this._reseted = false;
+        }
     }
 
-    private getCaption(startValue, endValue) {
-        return import('Controls/dateRange').then((dateRange) => {
-            return dateRange.Utils.formatDateRangeCaption.call(null, startValue, endValue, this._options.emptyCaption);
-        });
+    private getCaption(startValue, endValue): string {
+        return this._dateRangeModule.Utils.formatDateRangeCaption(startValue, endValue, this._options.emptyCaption);
     }
 
     static getDefaultOptions() {

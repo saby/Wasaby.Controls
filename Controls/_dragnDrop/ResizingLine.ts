@@ -45,10 +45,6 @@ class ResizingLine extends Control<IControlOptions, IResizingLine> {
     protected _styleArea: string = '';
     protected _dragging: boolean = false;
 
-    protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?): Promise<> | Promise<void> | void {
-        return super._beforeMount(options, contexts, receivedState);
-    }
-
     protected _beginDragHandler(event: Event): void {
         // to disable selection while dragging
         event.preventDefault();

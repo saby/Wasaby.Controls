@@ -111,6 +111,7 @@
     // Решение - не панацея, проблемы которые вызывает данный хак, их описание и решение можно найти по хэштегам:
     //  + #grid_relativeCell_colspanCell
     //  + #grid_relativeCell_checkBox_td
+    //  + #grid_relativeCell_autoHeight_td
 
     // Ошибки
     // https://online.sbis.ru/opendoc.html?guid=25c8adb6-a789-44e3-931b-1b8d6bb0b511
@@ -122,6 +123,12 @@
   .controls-Grid__row-cell
   .controls-Grid__row-cell_theme-@{themeName} {
     height: @cell_min-height_grid;
+  }
+
+  // Все сценарии автовысоты в IE предусмотреть невозможно, для тонкой, принудительной настройки отдаем управление пользователю.
+  // #grid_relativeCell_autoHeight_td
+  .controls-Grid__row-cell__autoHeight {
+    height: auto;
   }
 
   // default

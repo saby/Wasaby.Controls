@@ -469,6 +469,7 @@
 /**
  * @name Controls/_grid/interface/IGridControl#editArrowVisibilityCallback
  * @cfg {TEditArrowVisibilityCallback} Функция обратного вызова для определения видимости кнопки открытия карточки в панели действий по свайпу для конкретной записи.
+ * @param {Controls/_itemActions/interface/IItemAction/TEditArrowVisibilityCallback.typedef} TEditArrowVisibilityCallback
  * @remark Первый и единственный аргумент - текущая запись, на которой открывается свайп.
  */
 

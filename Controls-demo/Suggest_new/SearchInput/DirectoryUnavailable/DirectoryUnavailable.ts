@@ -3,6 +3,7 @@ import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import Deferred = require('Core/Deferred');
 import {Memory} from 'Types/source';
+import { fetch } from 'Browser/Transport';
 import {_departmentsDataLong} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/DirectoryUnavailable/DirectoryUnavailable');
 import suggestTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/DirectoryUnavailable/resources/SuggestTemplate');
@@ -21,7 +22,9 @@ export default class extends Control {
       });
       this._source.query = () => {
          const def = new Deferred();
-         def.errback();
+         def.errback(new fetch.Errors.HTTP({
+            httpError: 503
+         }));
          return def;
       };
       this._navigation = {

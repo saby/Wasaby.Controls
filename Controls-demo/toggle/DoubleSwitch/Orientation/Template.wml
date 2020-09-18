@@ -8,6 +8,7 @@
         <div class="controls-text-label controls-text-label_theme-{{_options.theme}}">orientation="vertical"</div>
         <Controls.toggle:DoubleSwitch bind:value="value2"
                                       orientation="vertical"
-                                      captions="{{['Turned on', 'Turned off']}}"/>
+                                      attr:style="width: 100%"
+                                      captions="{{['Extraaaaaaaaaaaa laaaargeeeeeeeeee titleeeeeeeeeee', 'Turned off']}}"/>
     </div>
 </div>

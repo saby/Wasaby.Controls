@@ -176,7 +176,7 @@ var
                 const superClassesGetter = current.getRelativeCellWrapperClasses;
                 current.getRelativeCellWrapperClasses = (colspan, fixVerticalAlignment) => {
                     return `controls-TreeGridView__row-cell_innerWrapper ${superClassesGetter(colspan, fixVerticalAlignment)}`;
-                }
+                };
             }
 
             if (current.isLastRow) {
@@ -195,11 +195,13 @@ var
                     currentColumn = superGetCurrentColumn(backgroundColorStyle);
                 currentColumn.nodeType = current.item.get && current.item.get(current.nodeProperty);
 
-                currentColumn.getExpanderClasses = current.getExpanderClasses;
                 currentColumn.getExpanderSize = current.getExpanderSize;
 
                 currentColumn.isExpanded = current.isExpanded;
                 currentColumn.classList.base += ` controls-TreeGrid__row-cell_theme-${theme} controls-TreeGrid__row-cell_${currentColumn.style || 'default'}_theme-${theme}`;
+
+                // Экспандер выводится пользователем в произвольном месте в шаблоне колонки, где недоступна itemData строки
+                currentColumn.getExpanderClasses = (_, expanderIcon, expanderSize) => current.getExpanderClasses(current, expanderIcon, expanderSize);
 
                 if (currentColumn.nodeType) {
                     currentColumn.classList.base += ` controls-TreeGrid__row-cell__node_theme-${theme}`;

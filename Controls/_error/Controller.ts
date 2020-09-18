@@ -135,6 +135,7 @@ export default class ErrorController {
             }
 
             if (!handlerResult) {
+                _config.error.processed = true;
                 return this._getDefault(_config);
             }
 
