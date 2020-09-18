@@ -6347,9 +6347,6 @@ define([
          let instance = new lists.BaseControl();
 
          let unsubscribeCalled = false;
-         instance._listViewModel = {
-            destroy: () => null
-         };
          instance._items = {
             unsubscribe: () => {
                unsubscribeCalled = true;
