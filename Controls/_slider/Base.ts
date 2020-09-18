@@ -79,18 +79,18 @@ const maxPercentValue = 100;
  * @example
  * Слайдер с закрашенным интервалом.
  * <pre class="brush:html">
- *    <Controls.slider:Base minValue={{0}} maxValue={{100}}>
+ *    <Controls.slider:Base minValue="{{0}}" maxValue="{{100}}">
  *       <ws:intervals>
  *          <ws:Array>
  *             <ws:Object
  *                color="primary"
- *                start={{0}}
- *                end={{10}}
+ *                start="{{0}}"
+ *                end="{{10}}"
  *             </ws:Object>
  *             <ws:Object
  *                color="danger"
- *                start={{30}}
- *                end={{70}}
+ *                start="{{30}}"
+ *                end="{{70}}"
  *             </ws:Object>
  *          </ws:Array>
  *       </ws:intervals>
@@ -105,18 +105,18 @@ const maxPercentValue = 100;
  * @example
  * Colored slider.
  * <pre class="brush:html">
- *   <Controls.slider:Base minValue={{0}} maxValue={{100}}>
+ *   <Controls.slider:Base minValue="{{0}}" maxValue="{{100}}">
  *       <ws:intervals>
  *          <ws:Array>
  *             <ws:Object
  *                color="primary"
- *                start={{0}}
- *                end={{10}}
+ *                start="{{0}}"
+ *                end="{{10}}"
  *             </ws:Object>
  *             <ws:Object
  *                color="danger"
- *                start={{30}}
- *                end={{70}}
+ *                start="{{30}}"
+ *                end="{{70}}"
  *             </ws:Object>
  *          </ws:Array>
  *       </ws:intervals>
