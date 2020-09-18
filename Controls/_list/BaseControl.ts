@@ -2187,7 +2187,7 @@ const _private = {
                     self._notify('disableVirtualNavigation', [], { bubbling: true });
                 }
             }
-            if (result.activeElement) {
+            if (result.activeElement && self._items.getRecordById(result.activeElement)) {
                 self._notify('activeElementChanged', [result.activeElement]);
             }
         }
