@@ -3899,10 +3899,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.scrollPage(this, 'Up');
                 break;
             case 'Begin':
-                _private.scrollToEdge(this, 'up');
+                const resultEvent = this._notify('pagingArrowClick', ['Begin'], {bubbling: true});
+                if (resultEvent !== false) {
+                    _private.scrollToEdge(this, 'up');
+                }
                 break;
             case 'End':
-                _private.scrollToEdge(this, 'down');
+                const resultEvent = this._notify('pagingArrowClick', ['End'], {bubbling: true});
+                if (resultEvent !== false) {
+                    _private.scrollToEdge(this, 'down');
+                }
                 break;
         }
     },
@@ -3913,7 +3919,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             scrollHeight: _private.getViewSize(this),
             clientHeight: this._viewportSize
         };
-        this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true })
+        this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true });
         _private.updateScrollPagingButtons(this, scrollParams);
     },
 
