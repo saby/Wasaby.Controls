@@ -47,15 +47,11 @@
     "Controls/validate",
     "Controls/dataSource",
     "Controls/source",
-    "Controls/Constants"
-  ],
-  "extendsTo": "page-superbundle.package.js"
-}, {
-  "include": [
+    "Controls/Constants",
     "Controls/dropdown",
     "Controls/toolbars",
     "Controls/tabs",
     "Controls/Store"
   ],
-  "extendsTo": "base-superbundle.package.js"
+  "extendsTo": "page-superbundle.package.js"
 }]
