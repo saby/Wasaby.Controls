@@ -20,22 +20,12 @@ function getModulesManager(): ModulesManager {
     return modulesManager;
 }
 
-function getFromLib<T, K>(lib: T, parsedName: IParsedName): K {
-    // return library.extract(lib, parsedName);
-
-    let mod: unknown = lib;
-
-    const processed = [];
-    parsedName.path.forEach((property) => {
-        processed.push(property);
-        if (mod && typeof mod === 'object' && property in mod) {
-            mod = mod[property];
-        } else {
-            throw new Error(`Cannot find module "${processed.join('.')}" in library "${parsedName.name}"`);
-        }
-    });
-
-    return mod as K;
+function getFromLib<T>(lib: T, parsedName: IParsedName): T {
+    const mod = library.extract<T>(lib, parsedName);
+    if (mod instanceof Error) {
+        throw new Error(mod.message);
+    }
+    return mod as T;
 }
 
 function isCached(name: string): boolean {
