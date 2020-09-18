@@ -630,3 +630,16 @@ export interface IList extends IItemActionsOptions {
  * @remark
  * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
  */
+
+/**
+ * @typedef {String} ButtonName
+ * @variant Begin Кнопка "В начало".
+ * @variant End Кнопка "В конец".
+ */
+
+/**
+ * @event Происходит при клике по кнопкам перехода к первой и последней странице.
+ * @name Controls/_list/interface/IList#pagingArrowClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {ButtonName} buttonName.
+ */
