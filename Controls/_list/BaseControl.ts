@@ -2238,7 +2238,7 @@ const _private = {
                          * https://online.sbis.ru/opendoc.html?guid=6b6973b2-31cf-4447-acaf-a64d37957bc6
                          */
                         result.then((key) => _private.scrollToItem(self, key));
-                    } else {
+                    } else if (result !== undefined) {
                         _private.scrollToItem(self, result);
                     }
                 }
@@ -2264,7 +2264,7 @@ const _private = {
                     const result = _private.changeMarkedKey(self, newMarkedKey);
                     if (result instanceof Promise) {
                         result.then((key) => _private.scrollToItem(self, key, true));
-                    } else {
+                    } else if (result !== undefined) {
                         _private.scrollToItem(self, result);
                     }
                 }
@@ -2298,6 +2298,11 @@ const _private = {
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
     changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey): Promise<CrudEntityKey>|CrudEntityKey {
+        // Пока выполнялся асинхронный запрос, контрол мог быть уничтожен. Например, всплывающие окна.
+        if (self._destroyed) {
+            return undefined;
+        }
+
         const markerController = _private.getMarkerController(self);
         const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey], { bubbling: true });
 
@@ -3940,9 +3945,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     // TODO удалить, когда будет выполнено наследование контролов (TreeControl <- BaseControl)
-    setMarkedKey(key: CrudEntityKey): void {
+    setMarkedKey(key: CrudEntityKey): Promise<void>|void {
         if (this._options.markerVisibility !== 'hidden') {
-            _private.getMarkerControllerAsync(this).then((controller) => {
+            return _private.getMarkerControllerAsync(this).then((controller) => {
                 if (controller.getMarkedKey() !== key) {
                     _private.changeMarkedKey(this, key);
                 }
