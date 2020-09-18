@@ -568,28 +568,26 @@ const _private = {
     },
 
     enterHandler(self, event) {
-        let markedItem;
-        if (self._options.useNewModel) {
-            markedItem = self.getViewModel().find((item) => item.isMarked());
-        } else {
-            markedItem = self.getViewModel().getMarkedItem();
-        }
-        if (markedItem) {
-            self._notify('itemClick', [markedItem.getContents(), event], { bubbling: true });
-            if (event && !event.isStopped()) {
-                self._notify('itemActivate', [markedItem.getContents(), event], {bubbling: true});
+        if (_private.hasMarkerController(self)) {
+            const markerController = _private.getMarkerController(self);
+            const markedKey = markerController.getMarkedKey();
+            if (markedKey !== null) {
+                const markedItem = self.getItems().getRecordByKey(markedKey);
+                self._notify('itemClick', [markedItem, event], { bubbling: true });
+                if (event && !event.isStopped()) {
+                    self._notify('itemActivate', [markedItem, event], {bubbling: true});
+                }
             }
         }
     },
     spaceHandler(self, event) {
-        if (self._options.multiSelectVisibility === 'hidden') {
+        if (self._options.multiSelectVisibility === 'hidden' || self._options.markerVisibility === 'hidden') {
             return;
         }
-        const model = self.getViewModel();
-        let toggledItemId = model.getMarkedKey();
-
-        if (!model.getItemById(toggledItemId) && model.getCount()) {
-            toggledItemId = model.at(0).getContents().getId();
+        const markerController = _private.getMarkerController(self);
+        let toggledItemId = markerController.getMarkedKey();
+        if (toggledItemId === null) {
+            toggledItemId = markerController.getNextMarkedKey();
         }
 
         if (toggledItemId) {
@@ -603,6 +601,7 @@ const _private = {
             _private.moveMarkerToNext(self, event);
         }
     },
+
     prepareFooter(self, navigation, sourceController) {
         let
             loadedDataCount, allDataCount;
