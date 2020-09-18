@@ -354,9 +354,9 @@ const _private = {
                     });
                     return;
                 }
-                _private.setReloadingState(self, false);
-                _private.hideError(self);
                 _private.doAfterUpdate(self, () => {
+                    _private.hideError(self);
+                    _private.setReloadingState(self, false);
                     if (list.getCount()) {
                         self._loadedItems = list;
                     } else {
@@ -3353,12 +3353,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setTheme(newOptions.theme);
         }
 
-        if (newOptions.searchValue !== this._options.searchValue) {
-            _private.doAfterUpdate(this, () => {
-                this._listViewModel.setSearchValue(newOptions.searchValue);
-            });
-            _private.getPortionedSearch(self).reset();
-        }
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
         }
@@ -3443,6 +3437,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
+        if (this._options.searchValue !== newOptions.searchValue) {
+            _private.getPortionedSearch(self).reset();
+        }
+
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
@@ -3452,6 +3450,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
                         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                         _private.updateInitializedItemActions(this, newOptions);
+                        this._listViewModel.setSearchValue(newOptions.searchValue);
                     });
                 });
             } else {
@@ -3459,9 +3458,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return _private.reload(self, newOptions).addCallback(() => {
                     this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                     _private.updateInitializedItemActions(this, newOptions);
+                    this._listViewModel.setSearchValue(newOptions.searchValue);
                 });
             }
         } else {
+            _private.doAfterUpdate(self, () => {
+                this._listViewModel.setSearchValue(newOptions.searchValue);
+            });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
                     self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
@@ -3565,6 +3568,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 mode: dataSourceError.Mode.dialog
             });
         });
+    },
+
+    getItems(): RecordSet {
+        return this._items;
     },
 
     scrollToItem(key: TItemKey, toBottom: boolean, force: boolean): void {
@@ -3921,14 +3928,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
-        if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
-            /*
-             When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
-             We can't stop click on checkbox from propagating because we can only subscribe to valueChanged event and then
-             we'd be stopping the propagation of valueChanged event, not click event.
-             And even if we could stop propagation of the click event, we shouldn't do that because other components
-             can use it for their own reasons (e.g. something like TouchDetector can use it).
-             */
+        if (originalEvent.target.closest('.js-controls-ListView__checkbox') || this._onLastMouseUpWasDrag) {
+            // Если нажали на чекбокс, то это не считается нажатием на элемент. В этом случае работает событие checkboxClick
+            // Если на mouseUp, предшествующий этому клику, еще работало перетаскивание, то мы не должны нотифаить itemClick
+            this._onLastMouseUpWasDrag = false;
             e.stopPropagation();
             return;
         }
@@ -4143,6 +4146,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this.setMarkedKey(key);
         }
         this._mouseDownItemKey = undefined;
+        this._onLastMouseUpWasDrag = this._dndListController && this._dndListController.isDragging();
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
     },
 
@@ -4911,7 +4915,8 @@ BaseControl.getDefaultOptions = function() {
         stickyHeader: true,
         virtualScrollMode: 'remove',
         filter: {},
-        itemActionsVisibility: 'onhover'
+        itemActionsVisibility: 'onhover',
+        searchValue: ''
     };
 };
 export = BaseControl;

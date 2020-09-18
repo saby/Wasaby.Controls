@@ -1,9 +1,7 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
-import {Control} from 'UI/Base';
 import {detection} from 'Env/Env';
-import {goUpByControlTree} from 'UI/Focus';
 import {Controller, IPopupItem, IPopupPosition} from 'Controls/popup';
 
 interface IPosition {
@@ -106,14 +104,14 @@ export = {
      * @function Controls/_popupTemplate/Stack/Opener/StackController#getPosition
      * @param tCoords Coordinates of the container relative to which the panel is displayed
      * @param item Popup configuration
+     * @param isAboveMaximizePopup {Boolean}
      */
-    getPosition(tCoords, item: IPopupItem): IPosition {
+    getPosition(tCoords, item: IPopupItem, isAboveMaximizePopup: boolean = false): IPosition {
         const maxPanelWidth = this.getMaxPanelWidth();
         const width = _private.getPanelWidth(item, tCoords, maxPanelWidth);
-        const hasMaximizePopup: boolean = this._hasMaximizePopup(item);
         const position: IPosition = {
             width,
-            right: hasMaximizePopup ? 0 : tCoords.right,
+            right: isAboveMaximizePopup ? 0 : tCoords.right,
             top: tCoords.top,
             height: tCoords.height
         };
@@ -131,28 +129,6 @@ export = {
 
         return position;
     },
-
-    _hasMaximizePopup(item: IPopupItem): boolean {
-        const openerContainer: HTMLElement = item.popupOptions?.opener?._container;
-        const parents: Control[] = this._goUpByControlTree(openerContainer);
-        const popupModuleName: string = 'Controls/_popup/Manager/Popup';
-        const oldPopupModuleName: string = 'Lib/Control/Dialog/Dialog'; // Compatible
-
-        for (let i = 0; i < parents.length; i++) {
-            if (parents[i]._moduleName ===  popupModuleName || parents[i]._moduleName === oldPopupModuleName) {
-                if (parents[i]._options.maximize) {
-                    return true;
-                }
-            }
-        }
-        return false;
-
-    },
-
-    _goUpByControlTree(container: HTMLElement): Control[] {
-        return goUpByControlTree(container);
-    },
-
     /**
      * Returns the maximum possible width of popup
      * @function Controls/_popupTemplate/Stack/Opener/StackController#getMaxPanelWidth

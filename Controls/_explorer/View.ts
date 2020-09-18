@@ -18,6 +18,7 @@ import {
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import {ISelectionObject} from "../_interface/ISelectionType";
 import {CrudEntityKey} from "Types/source";
+import { RecordSet } from 'Types/collection';
 
 var
       HOT_KEYS = {
@@ -564,12 +565,12 @@ var
          * Если в момент возвращения из папки был изменен тип навигации, не нужно восстанавливать, иначе будут смешаны опции
          * курсорной и постраничной навигаций.
          * */
-         const isNavigationHasBeenChanged = !isEqual(this._options.navigation, cfg.navigation);
+         const navigationChanged = !isEqual(cfg.navigation, this._options.navigation);
 
-         if (this._isGoingBack && _private.isCursorNavigation(this._options.navigation) && !isNavigationHasBeenChanged) {
+         if (this._isGoingBack && _private.isCursorNavigation(this._options.navigation) && !navigationChanged) {
             const newRootId = _private.getRoot(this, this._options.root);
             _private.restorePositionNavigation(this, newRootId);
-         } else if (isNavigationHasBeenChanged) {
+         } else if (navigationChanged) {
             this._navigation = cfg.navigation;
          }
 
@@ -582,7 +583,17 @@ var
             // его, когда новые записи будут установлены в модель (itemsSetCallback).
             _private.setPendingViewMode(this, cfg.viewMode, cfg);
          } else if (isViewModeChanged && !this._pendingViewMode) {
-            _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
+            // Также отложенно необходимо устанавливать viewMode, если при переходе с viewMode === "search" на "table"
+            // или "tile" будет перезагрузка. Этот код нужен до тех пор, пока не будут спускаться данные сверху-вниз.
+            // https://online.sbis.ru/opendoc.html?guid=f90c96e6-032c-404c-94df-cc1b515133d6
+            const filterChanged = !isEqual(cfg.filter, this._options.filter);
+            const recreateSource = cfg.source !== this._options.source;
+            const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
+            if (filterChanged || recreateSource || sortingChanged || navigationChanged) {
+               _private.setPendingViewMode(this, cfg.viewMode, cfg);
+            } else {
+               _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
+            }
          }
 
          if (cfg.virtualScrollConfig !== this._options.virtualScrollConfig) {
@@ -706,6 +717,10 @@ var
       reload: function(keepScroll, sourceConfig) {
          return this._children.treeControl.reload(keepScroll, sourceConfig);
       },
+      getItems(): RecordSet {
+         return this._children.treeControl.getItems();
+      },
+
       // todo removed or documented by task:
       // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
       toggleExpanded: function(id) {
