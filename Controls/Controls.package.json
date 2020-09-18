@@ -44,17 +44,13 @@
     "Controls/buttons",
     "Controls/input",
     "Controls/dropdown",
+    "Controls/toolbars",
+    "Controls/tabs",
+    "Controls/Store",
     "Controls/validate",
     "Controls/dataSource",
     "Controls/source",
     "Controls/Constants"
   ],
   "extendsTo": "page-superbundle.package.js"
-}, {
-  "include": [
-    "Controls/toolbars",
-    "Controls/tabs",
-    "Controls/Store"
-  ],
-  "extendsTo": "base-superbundle.package.js"
 }]
