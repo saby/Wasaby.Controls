@@ -1,6 +1,6 @@
 <div>
     <h2>Много крошек</h2>
-    <Controls.breadcrumbs:Path attr:id="aLotOfCrumbs" items="{{items}}" keyProperty="id" containerWidth = "{{700}}"
+    <Controls.breadcrumbs:Path attr:id="aLotOfCrumbs" items="{{items}}" keyProperty="id" containerWidth = "{{_containerWidth}}"
                                     on:itemClick="_onItemClick()" />
     <h2>Одна крошка</h2>
     <Controls.breadcrumbs:Path attr:id="oneCrumb" items="{{items1}}" containerWidth = "{{500}}" on:itemClick="_onItemClick()" keyProperty="id" />
@@ -11,12 +11,14 @@
                                items="{{items}}"
                                parentProperty="parent"
                                keyProperty="id"
+                               containerWidth = "{{500}}"
                                on:arrowActivated="_onArrowActivated()"
                                on:itemClick="_onItemClick()" />
     <h2>Path with content back button</h2>
     <Controls.breadcrumbs:HeadingPath attr:id="pathContent"
                                       items="{{items}}"
                                       parentProperty="parent"
+                                      containerWidth = "{{500}}"
                                       keyProperty="id"
                                       on:itemClick="_onItemClick()">
         <ws:afterBackButtonTemplate>
@@ -28,6 +30,7 @@
                                       items="{{items4}}"
                                       parentProperty="parent"
                                       keyProperty="id"
+                                      containerWidth = "{{500}}"
                                       on:arrowActivated="_onArrowActivated()"
                                       on:itemClick="_onItemClick()" />
 

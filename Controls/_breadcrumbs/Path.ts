@@ -86,13 +86,20 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
         }
     }
     protected _beforeUpdate(newOptions: IBreadCrumbsOptions): void {
-        this._redrawIfNeed(this._options.items, newOptions.items);
-    }
-
-    private _redrawIfNeed(currentItems, newItems): void {
-        if (BreadCrumbsUtil.shouldRedraw(currentItems, newItems)) {
-            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(newItems);
-            this._viewUpdated = true;
+        const isItemsChanged = newOptions.items && newOptions.items !== this._options.items;
+        const isContainerWidthChanged = newOptions.containerWidth !== this._options.containerWidth;
+        const isFontSizeChanged = newOptions.fontSize !== this._options.fontSize;
+        if (isItemsChanged) {
+            this._items = newOptions.items;
+        }
+        if (isContainerWidthChanged) {
+            this._width = newOptions.containerWidth;
+        }
+        if (isFontSizeChanged) {
+            this._dotsWidth = this._getDotsWidth(newOptions.fontSize);
+        }
+        if (isItemsChanged || isContainerWidthChanged || isFontSizeChanged) {
+            this._calculateBreadCrumbsToDraw(newOptions.items, newOptions);
         }
     }
 
@@ -117,90 +124,9 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
     }
     private _calculateBreadCrumbsToDraw(items: Record[], options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): void {
         this._visibleItems = [];
-        const itemsWidth = this._getItemsWidth(items, options, getTextWidth);
-        let shrinkItemIndex;
-        let containerItems = [];
-        let containerWidth = 0;
-
-        if (items.length <= 2) {
-            // Если крошек меньше двух, располагаем их в контейнере
-            containerItems = items.map((item, index, items) => {
-                const hasArrow = index !== 0;
-                const withOverflow = itemsWidth[index] - (hasArrow ? ARROW_WIDTH : 0) > BREAD_CRUMB_MIN_WIDTH;
-                return BreadCrumbsUtil.getItemData(index, items, false, withOverflow);
-            });
-            this._visibleItems = containerItems;
-        } else {
-            // рассчитываем ширину контейнера, заполненного крошками
-            for (let i = 0; i < items.length; i++) {
-                containerWidth += itemsWidth[i];
-            }
-            containerWidth -= itemsWidth[items.length - 2];
-            containerWidth += BREAD_CRUMB_MIN_WIDTH;
-            // если второй контейнер по ширине больше, чем доступная ширина, начинаем расчеты
-            if (containerWidth > this._width) {
-                // предпоследняя не уместилась - сразу вычитаем ее ширину
-                containerWidth -= BREAD_CRUMB_MIN_WIDTH;
-                // Сначала пробуем замылить предпоследнюю крошку
-                const secondContainerItems = [];
-                // если замылить не получилось - показываем точки
-                containerWidth += this._dotsWidth;
-                let index;
-                // предпоследняя не поместилась - начинаем с пред-предпоследней
-                for (index = items.length - 3; index >= 0; index--) {
-                    if (containerWidth <= this._width) {
-                        break;
-                    } else if (this._canShrink(itemsWidth[index], containerWidth, this._width)) {
-                        shrinkItemIndex = index;
-                        containerWidth -= itemsWidth[index] - BREAD_CRUMB_MIN_WIDTH;
-                        break;
-                    } else {
-                        containerWidth -= itemsWidth[index];
-                    }
-                }
-                // заполняем крошками, которые влезли, второй контейнер (не считая последней)
-                for (let j = this._indexEdge; j <= index; j++) {
-                    secondContainerItems.push(BreadCrumbsUtil.getItemData(j, items, true, j === shrinkItemIndex));
-                }
-                // добавляем точки
-                let dotsItem = {};
-                dotsItem[options.displayProperty] = '...';
-
-                secondContainerItems.push({
-                    getPropValue: ItemsUtil.getPropertyValue,
-                    item: dotsItem,
-                    isDots: true,
-                    hasArrow: true
-                });
-                // добавляем последнюю папку
-                secondContainerItems.push(BreadCrumbsUtil.getItemData(items.length - 1, items, true, false));
-
-                this._visibleItems = secondContainerItems;
-
-            } else {
-                // если все остальные крошки поместились - пушим по второй контейнер
-                const secondContainerItems = [];
-                for (let j = this._indexEdge; j < items.length; j++) {
-                    secondContainerItems.push(BreadCrumbsUtil.getItemData(j, items, true, j === items.length - 2));
-                }
-                this._visibleItems = secondContainerItems;
-            }
-        }
+        this._visibleItems = BreadCrumbsUtil.calculateItemsWithDots(items, options, 0, this._width, this._dotsWidth, getTextWidth);
         this._visibleItems[0].hasArrow = false;
         this._indexEdge = 0;
-    }
-
-    private _getItemsWidth(items: Record[], options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): number[] {
-        const itemsWidth = [];
-        items.forEach((item, index) => {
-            const itemTitleWidth = getTextWidth(ItemsUtil.getPropertyValue(item, options.displayProperty), options.fontSize);
-            const itemWidth = index !== 0 ? itemTitleWidth + ARROW_WIDTH : itemTitleWidth;
-            itemsWidth.push(itemWidth + PADDING_RIGHT);
-        });
-        return itemsWidth;
-    }
-    private _canShrink(itemWidth: number, currentWidth: number, availableWidth: number): boolean {
-        return itemWidth > BREAD_CRUMB_MIN_WIDTH && currentWidth - itemWidth + BREAD_CRUMB_MIN_WIDTH < availableWidth;
     }
 
     private _itemClickHandler(e, item): void {
@@ -210,6 +136,7 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
             this._options.breadCrumbsItemClickCallback(e, item);
         }
     }
+    static _theme: string[] = ['Controls/crumbs'];
     static getDefaultOptions() {
         return {
             displayProperty: 'title',
