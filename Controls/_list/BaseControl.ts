@@ -2234,9 +2234,9 @@ const _private = {
                      * Передавая в force true, видимый элемент подскролливается наверх.
                      * https://online.sbis.ru/opendoc.html?guid=6b6973b2-31cf-4447-acaf-a64d37957bc6
                      */
-                    result.then((key) => _private.scrollToItem(self, key));
+                    result.then((key) => _private.scrollToItem(self, key, true, false));
                 } else {
-                    _private.scrollToItem(self, result);
+                    _private.scrollToItem(self, result, true, false);
                 }
             }
         }
