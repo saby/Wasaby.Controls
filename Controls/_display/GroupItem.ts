@@ -23,6 +23,8 @@ export default class GroupItem<T> extends mixin<
 ) {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
 
+    readonly MarkableItem: boolean = false;
+
     constructor(options?: IOptions<T>) {
         super(options);
         ExpandableMixin.call(this);
@@ -45,4 +47,3 @@ Object.assign(GroupItem.prototype, {
     _moduleName: 'Controls/display:GroupItem',
     _instancePrefix: 'group-item-'
 });
-

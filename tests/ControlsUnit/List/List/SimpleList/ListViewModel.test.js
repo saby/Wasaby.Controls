@@ -295,43 +295,7 @@ define([
          assert.equal(model._stopIndex, 2, 'Invalid value of "_stopIndex" after items.removeAt(0).');
       });
 
-      it('getValidItemForMarker', function() {
-         var cfg = {
-            keyProperty: 'id',
-            items: new collection.RecordSet({
-               rawData: [
-                  { id: 1, title: 'item 1', type: 1 },
-                  { id: 2, title: 'item 2', type: 1 },
-                  { id: 3, title: 'item 3', type: 1 },
-                  { id: 4, title: 'item 4', type: 2 },
-                  { id: 5, title: 'item 5', type: 2 },
-                  { id: 6, title: 'item 6', type: 3 },
-                  { id: 7, title: 'item 7', type: 4 },
-               ],
-               keyProperty: 'id'
-            }),
-            groupingKeyCallback: function(item) {
-               return item.get('type');
-            }
-         };
-         var model = new lists.ListViewModel(cfg);
-
-         model.setCollapsedGroups([2,3,4]);
-
-         /*
-            ---------- 1 ----------
-            item 1
-            item 2
-            item 3
-            ---------- 2 ----------
-            ---------- 3 ----------
-            ---------- 4 ----------
-          */
-         assert.equal(model.getValidItemForMarker(0).getContents().getId(), 1);
-         assert.equal(model.getValidItemForMarker(1).getContents().getId(), 1);
-         assert.equal(model.getValidItemForMarker(4).getContents().getId(), 3);
-      });
-
+/*
       it('Selection', function() {
          var cfg = {
             items: data,
@@ -351,6 +315,7 @@ define([
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
          assert.equal(2, iv.getVersion(), 'Incorrect version appendItems');
       });
+*/
 
       it('SetItemPadding Silent', function() {
          var cfg = {
@@ -377,7 +342,10 @@ define([
 
       it('setMarkedKey', function() {
          const cfg = {
-            items: data,
+            items: new collection.RecordSet({
+               rawData: data,
+               keyProperty: 'id'
+            }),
             keyProperty: 'id',
             displayProperty: 'title',
             markerVisibility: 'visible'
@@ -387,7 +355,7 @@ define([
 
          let oldVersion = model.getVersion();
 
-         model.setMarkedKey(2, true, true);
+         model.setMarkedKey(2, true);
          assert.equal(model.getMarkedKey(), 2);
          assert.isTrue(model.getItemBySourceKey(2).isMarked());
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
@@ -397,12 +365,6 @@ define([
          model.setMarkedKey(2, false);
          assert.isNull(model.getMarkedKey());
          assert.isFalse(model.getItemBySourceKey(2).isMarked());
-         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
-
-         oldVersion = model.getVersion();
-
-         model.setMarkedKey(null, false);
-         assert.isNull(model.getMarkedKey());
          assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
 
          oldVersion = model.getVersion();
@@ -532,7 +494,7 @@ define([
          assert.equal(1, lv.getVersion());
       });
 
-      it('getMarkedKey', function() {
+      /*it('getMarkedKey', function() {
          var
             cfg = {
                items: data,
@@ -544,7 +506,7 @@ define([
          var lv = new lists.ListViewModel(cfg);
          lv.setMarkedKey(1);
          assert.equal(lv.getMarkedKey(), 1);
-      });
+      });*/
 
       it('setActiveItem should not change version of the model if the item is already active', function() {
          var

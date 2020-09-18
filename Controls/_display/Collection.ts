@@ -38,7 +38,7 @@ import {ICollection, ISourceCollection} from './interface/ICollection';
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
-const VERSION_UPDATE_ITEM_PROPERTIES = ['editingContents', 'animated', 'canShowActions', 'expanded'];
+const VERSION_UPDATE_ITEM_PROPERTIES = ['editingContents', 'animated', 'canShowActions', 'expanded', 'marked'];
 
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
@@ -2195,21 +2195,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const item = this.getItemBySourceKey(key);
         if (item) {
             item.setMarked(status);
-            this.nextVersion();
-        }
-    }
-
-    getValidItemForMarker(index: number): T {
-        const item = this.getItemBySourceIndex(index);
-
-        const nextValidItem = this.getNext(item);
-        const prevValidItem = this.getPrevious(item);
-        if (nextValidItem) {
-            return nextValidItem;
-        } else if (prevValidItem) {
-            return prevValidItem;
-        } else {
-            return null;
         }
     }
 
