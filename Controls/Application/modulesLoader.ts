@@ -35,6 +35,7 @@ function isCached(name: string): boolean {
 /**
  * Возвращает признак, что модуль загружен
  * @param name Имя модуля в обычном (Foo/bar) или библиотечном (Foo/bar:baz) синтаксисе
+ * @protected
  */
 export function isLoaded(name: string): boolean {
     const parsedInfo: IParsedName = library.parse(name);
@@ -44,6 +45,7 @@ export function isLoaded(name: string): boolean {
 /**
  * Асинхронно загружает модуль
  * @param name Имя модуля в обычном (Foo/bar) или библиотечном (Foo/bar:baz) синтаксисе
+ * @protected
  */
 export function loadAsync<T>(name: string): Promise<T> {
     if (isLoaded(name)) {
@@ -77,6 +79,7 @@ export function loadAsync<T>(name: string): Promise<T> {
 /**
  * Возвращает загруженный модуль
  * @param name Имя модуля в обычном (Foo/bar) или библиотечном (Foo/bar:baz) синтаксисе
+ * @protected
  */
 export function loadSync<T>(name: string): T {
     const parsedInfo = library.parse(name);
