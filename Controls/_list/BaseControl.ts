@@ -3408,9 +3408,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader = new GroupingLoader({});
         }
 
+        const needReload = filterChanged || recreateSource || sortingChanged;
+
         const shouldProcessMarker = newOptions.markerVisibility === 'visible'
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
-        if (shouldProcessMarker) {
+
+        // Если будет выполнена перезагрузка, то мы на событие reset применим новый ключ
+        if (shouldProcessMarker && !needReload) {
             // нужно запомнить старые опции, т.к. если библиотека будет долго грузиться, опции могут уже перезаписаться
             const oldOptions = this._options;
             const processMarker = (controller) => {
@@ -3485,7 +3489,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.getPortionedSearch(self).reset();
         }
 
-        if (filterChanged || recreateSource || sortingChanged) {
+        if (needReload) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {

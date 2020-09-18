@@ -646,7 +646,10 @@ var
 
          const changeRoot = () => {
             _private.setRoot(this, item.getId());
-            this._isGoingFront = true;
+            // При search не должны сбросить маркер, так как он встанет на папку
+            if (this._options.viewMode !== 'search') {
+               this._isGoingFront = true;
+            }
          };
 
          // Не нужно проваливаться в папку, если должно начаться ее редактирование
