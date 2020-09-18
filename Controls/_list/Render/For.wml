@@ -22,8 +22,7 @@
            on:mouseup="_onItemMouseUp(item)"
            on:mousemove="_onItemMouseMove(item)"
            on:mouseleave="_onItemMouseLeave(item)"
-           on:wheel="_onItemWheel(item)"
-           on:keydown="_onItemKeyDown(item)">
+           on:wheel="_onItemWheel(item)">
       <ws:itemActionsTemplate>
          <!-- We have to support setting of "itemActionsClass" option in BaseControl and while using Controls/list:ItemTemplate -->
          <!-- Передача highlightOnHover это костыль, т.к. иначе он не виден внутри шаблона, вставляемого через ws:partial
