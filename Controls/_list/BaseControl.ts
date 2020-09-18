@@ -2295,7 +2295,7 @@ const _private = {
              * Передавая в force true, видимый элемент подскролливается наверх.
              * https://online.sbis.ru/opendoc.html?guid=6b6973b2-31cf-4447-acaf-a64d37957bc6
              */
-            _private.scrollToItem(self, newMarkedKey);
+            _private.scrollToItem(self, newMarkedKey, true, false);
         }
     },
 
@@ -3121,7 +3121,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     triggerVisibilityChangedHandler(direction: IDirection, state: boolean): void {
         this._loadTriggerVisibility[direction] = state;
         if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
-            _private.hideIndicator(this);
+            if (!this._sourceController.isLoading()) {
+                _private.hideIndicator(this);
+            }
 
             const viewModel = this.getViewModel();
             const hasItems = viewModel && viewModel.getCount();
@@ -3833,10 +3835,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.scrollPage(this, 'Up');
                 break;
             case 'Begin':
-                _private.scrollToEdge(this, 'up');
+                const resultEvent = this._notify('pagingArrowClick', ['Begin'], {bubbling: true});
+                if (resultEvent !== false) {
+                    _private.scrollToEdge(this, 'up');
+                }
                 break;
             case 'End':
-                _private.scrollToEdge(this, 'down');
+                const resultEvent = this._notify('pagingArrowClick', ['End'], {bubbling: true});
+                if (resultEvent !== false) {
+                    _private.scrollToEdge(this, 'down');
+                }
                 break;
         }
     },
@@ -3847,7 +3855,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             scrollHeight: _private.getViewSize(this),
             clientHeight: this._viewportSize
         };
-        this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true })
+        this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true });
         _private.updateScrollPagingButtons(this, scrollParams);
     },
 
@@ -4639,6 +4647,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     getDndListController(): DndFlatController | DndTreeController {
         return this._dndListController;
+    },
+
+    _isMobileIOS(): boolean {
+        return detection.isMobileIOS;
     },
 
     _onMouseMove(event): void {
