@@ -27,7 +27,7 @@
          showUndefined="{{true}}"
          clearButtonVisible="{{_options.clearButtonVisible}}"
          clickable="{{_options.selectionType !== 'quantum'}}"
-         tooltip="{[Показать поля ввода]}"
+         tooltip="{{ _options.selectionType !== 'quantum' ? rk('Показать поля ввода') }}"
          on:linkClick="_headerLinkClick()"
          on:rangeChanged="_onHeaderLinkRangeChanged()"
       />
