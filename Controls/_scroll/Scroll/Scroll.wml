@@ -8,7 +8,7 @@
          соответствии с блочной структурой. Набор групп определяется для каждого типа тега отдельно.
          Поэтому тег контента должен отличаться от остальных. Например подойдет span.
          https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/containers/blocks/-->
-         <div name="content"
+         <span name="content"
               style="{{_displayState.heightFix ? '' : _contentStyles}}"
               class="controls-Scroll__content controls-BlockLayout__blockGroup_theme-{{_options.theme}}
                         {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
@@ -35,7 +35,7 @@
                         on:editArrowClick="_tmplNotify('editArrowClick')"
                         on:navigationParamsChanged="_tmplNotify('navigationParamsChanged')"
                      />
-         </div>
+         </span>
       </Controls.event:Register>
    </Controls._scroll.Scroll.Watcher>
 </ws:template>

@@ -265,7 +265,6 @@ const _private = {
                     _private.clearNodeSourceController(self, key);
                 }
             });
-            viewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
         } else {
             expandedItemsKeys = cfg.expandedItems || [];
             isExpandAll = _private.isExpandAll(expandedItemsKeys);
@@ -287,6 +286,7 @@ const _private = {
 
     afterReloadCallback: function(self, options, loadedList: RecordSet) {
         const baseControl = self._children.baseControl;
+        // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         const viewModel = baseControl && baseControl.getViewModel();
 
         if (viewModel) {
@@ -302,7 +302,6 @@ const _private = {
             const modelExpandedItems = viewModel.getExpandedItems();
             const isDeepReload = _private.isDeepReload(options, self._deepReload);
 
-            // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
             if (!isDeepReload || self._needResetExpandedItems) {
                 viewModel.resetExpandedItems();
                 viewModel.setHasMoreStorage({});
@@ -402,6 +401,10 @@ const _private = {
             viewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
             return result;
         });
+    },
+
+    getItems(): RecordSet {
+        return this._children.baseControl.getItems();
     },
 
     getReloadableNodes: function(viewModel, nodeKey, keyProp, nodeProp) {
@@ -723,6 +726,18 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
     // endregion mover
 
+    // region remover
+
+    removeItems(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.removeItems(selection);
+    },
+
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.removeItemsWithConfirmation(selection);
+    },
+
+    // endregion remover
+
     _markedKeyChangedHandler: function(event, key) {
         this._notify('markedKeyChanged', [key]);
     },
@@ -788,6 +803,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 _private.toggleExpanded(this, dispItem);
             }
         }
+        return eventResult;
     },
 
     handleKeyDown(event): void {

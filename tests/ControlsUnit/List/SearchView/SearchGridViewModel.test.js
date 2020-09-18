@@ -22,7 +22,7 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
 
             var current = model.getCurrent();
             current.resetColumnIndex();
-            assert.isFalse(!!current.getCurrentColumn().needSearchHighlight);
+            assert.isTrue(!!current.getCurrentColumn().needSearchHighlight);
             assert.equal(current.getCurrentColumn().searchValue, 'tes');
 
             current.goToNextColumn();

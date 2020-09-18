@@ -674,7 +674,7 @@ define([
                assert.equal(treeControl._nodesSourceControllers.size, 1, 'Invalid value "_nodesSourceControllers" after call "treeControl.reload()".');
                assert.isFalse(isSourceControllerNode1Destroyed, 'Invalid value "isSourceControllerNode1Destroyed" after call "treeControl.reload()".');
                assert.isTrue(isSourceControllerNode2Destroyed, 'Invalid value "isSourceControllerNode2Destroyed" after call "treeControl.reload()".');
-               assert.deepEqual({1: false}, vmHasMoreStorage);
+               assert.deepEqual({}, vmHasMoreStorage);
                done();
             }, 10);
          }, 10);

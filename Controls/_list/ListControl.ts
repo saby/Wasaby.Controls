@@ -8,6 +8,7 @@ import {ISelectionObject} from "../_interface/ISelectionType";
 import {CrudEntityKey} from "Types/source";
 import {TMovePosition} from "./Controllers/MoveController";
 import {IMovableList} from './interface/IMovableList';
+import { RecordSet } from 'Types/collection';
 
 /**
  * Plain list control with custom item template. Can load data from data source.
@@ -67,6 +68,10 @@ export default class ListControl extends Control/** @lends Controls/_list/ListCo
         return this._children.baseControl.scrollToItem(key, toBottom, force);
     }
 
+    getItems(): RecordSet {
+        return this._children.baseControl.getItems();
+    }
+
     // region mover
 
     moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
@@ -86,6 +91,18 @@ export default class ListControl extends Control/** @lends Controls/_list/ListCo
     }
 
     // endregion mover
+
+    // region remover
+
+    removeItems(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.removeItems(selection);
+    }
+
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.removeItemsWithConfirmation(selection);
+    }
+
+    // endregion remover
 
     static getDefaultOptions () {
         return {

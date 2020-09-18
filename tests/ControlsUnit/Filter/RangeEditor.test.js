@@ -24,23 +24,27 @@ define(['Controls/filter', 'Controls/dateRange'],
                rangeEditor = new filter.DateRangeEditor();
             });
 
-            it('option emptyCaption', () => {
+            it('option emptyCaption', (done) => {
                rangeEditor._beforeMount({
                   emptyCaption: 'testCaption',
                   resetValue
+               }).then(() => {
+                  assert.equal(rangeEditor._emptyCaption, 'testCaption');
+                  assert.isFalse(rangeEditor._reseted);
+                  done();
                });
-               assert.equal(rangeEditor._emptyCaption, 'testCaption');
-               assert.isFalse(rangeEditor._reseted);
             });
 
-            it('option emptyCaption and value === resetValue', () => {
+            it('option emptyCaption and value === resetValue', (done) => {
                rangeEditor._beforeMount({
                   emptyCaption: 'testCaption',
                   value: resetValue,
                   resetValue
+               }).then(() => {
+                  assert.equal(rangeEditor._emptyCaption, 'testCaption');
+                  assert.isTrue(rangeEditor._reseted);
+                  done();
                });
-               assert.equal(rangeEditor._emptyCaption, 'testCaption');
-               assert.isTrue(rangeEditor._reseted);
             });
 
             it('without option emptyCaption', () => {

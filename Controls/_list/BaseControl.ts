@@ -87,7 +87,7 @@ import { TItemKey } from 'Controls/display';
 import { ItemsEntity } from '../dragnDrop';
 import {IMoveControllerOptions, MoveController, TMovePosition} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from "../_moverDialog/Template";
-import * as TreeItemsUtil from "./resources/utils/TreeItemsUtil";
+import {RemoveController} from './Controllers/RemoveController';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -346,9 +346,17 @@ const _private = {
             // load() method may be fired with errback
             _private.setReloadingState(self, true);
             self._sourceController.load(filter, sorting, null, sourceConfig, cfg.root).addCallback(function(list) {
-                _private.setReloadingState(self, false);
-                _private.hideError(self);
+                // Пока загружались данные - список мог уничтожится. Обрабатываем это.
+                // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
+                if (self._destroyed) {
+                    resDeferred.callback({
+                        data: null
+                    });
+                    return;
+                }
                 _private.doAfterUpdate(self, () => {
+                    _private.hideError(self);
+                    _private.setReloadingState(self, false);
                     if (list.getCount()) {
                         self._loadedItems = list;
                     } else {
@@ -690,7 +698,8 @@ const _private = {
             // If it’s not empty, the following page will be requested in resize event
             // handler after current items are rendered on the page.
             if (_private.needLoadNextPageAfterLoad(addedItems, listViewModel, navigation) ||
-                (self._options.task1176625749 && countCurrentItems === cnt2)) {
+                (self._options.task1176625749 && countCurrentItems === cnt2) ||
+                _private.isPortionedLoad(self, addedItems)) {
                 _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
             }
             if (self._isMounted && self._scrollController) {
@@ -945,7 +954,7 @@ const _private = {
         const sourceController = self._sourceController;
         const hasMoreData = _private.hasMoreData(self, sourceController, direction);
         const allowLoadByLoadedItems = _private.needScrollCalculation(self._options.navigation) ?
-            !self._loadedItems :
+            !self._loadedItems || _private.isPortionedLoad(self, self._loadedItems) :
             true;
         const allowLoadBySource =
             sourceController &&
@@ -1283,9 +1292,11 @@ const _private = {
             searchStartCallback: () => {
                 self._portionedSearchInProgress = true;
             },
-            searchStopCallback: () => {
+            searchStopCallback: (direction?: IDirection) => {
+                const isStoppedByTimer = !direction;
+
                 self._portionedSearchInProgress = false;
-                self._showContinueSearchButtonDirection = self._loadingState || 'down';
+                self._showContinueSearchButtonDirection = isStoppedByTimer ? self._loadingState || 'down' : direction;
                 if (typeof self._sourceController.cancelLoading !== 'undefined') {
                     self._sourceController.cancelLoading();
                 }
@@ -2716,8 +2727,6 @@ const _private = {
 
         if (!self._moveController) {
             self._moveController = new MoveController(controllerOptions);
-        } else {
-            self._moveController.updateOptions(controllerOptions);
         }
         return self._moveController;
     },
@@ -2731,6 +2740,13 @@ const _private = {
         }
         return siblingItem && siblingItem.getContents && siblingItem.getContents().getKey() || null;
     },
+
+    getRemoveController(self): RemoveController {
+        if (!self._removeController) {
+            self._removeController = new RemoveController(self._options.source);
+        }
+        return self._removeController;
+    }
 };
 
 /**
@@ -2872,8 +2888,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _draggedKey: null,
     _validateController: null,
 
-    // Контроллер для перемещения элементов списка
+    // Контроллер для перемещения элементов из источника
     _moveController: null,
+
+    // Контроллер для удаления элементов из источника
+    _removeController: null,
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -3133,7 +3152,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const viewModel = this.getViewModel();
             const hasItems = viewModel && viewModel.getCount();
             if (_private.isPortionedLoad(this) && this._portionedSearchInProgress && hasItems) {
-                _private.getPortionedSearch(this).stopSearch();
+                _private.getPortionedSearch(this).stopSearch(direction);
             }
         }
         this._scrollController?.setTriggerVisibility(direction, state);
@@ -3193,7 +3212,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _afterMount() {
         this._isMounted = true;
         this._hideTopTriggerUntilMount = false;
-        if (this._needScrollCalculation) {
+        if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
             this._registerIntersectionObserver();
         }
@@ -3279,6 +3298,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
         }
 
+        if (this._removeController) {
+            this._removeController.updateOptions(newOptions);
+        }
+
+        if (this._moveController) {
+            this._moveController.updateOptions(newOptions);
+        }
+
         if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
             if (this._editInPlace && this._listViewModel.getEditingItemData()) {
                 this._editInPlace.cancelEdit();
@@ -3326,12 +3353,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setTheme(newOptions.theme);
         }
 
-        if (newOptions.searchValue !== this._options.searchValue) {
-            _private.doAfterUpdate(this, () => {
-                this._listViewModel.setSearchValue(newOptions.searchValue);
-            });
-            _private.getPortionedSearch(self).reset();
-        }
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
         }
@@ -3416,6 +3437,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
+        if (this._options.searchValue !== newOptions.searchValue) {
+            _private.getPortionedSearch(self).reset();
+        }
+
         if (filterChanged || recreateSource || sortingChanged) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
@@ -3425,6 +3450,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
                         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                         _private.updateInitializedItemActions(this, newOptions);
+                        this._listViewModel.setSearchValue(newOptions.searchValue);
                     });
                 });
             } else {
@@ -3432,9 +3458,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return _private.reload(self, newOptions).addCallback(() => {
                     this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
                     _private.updateInitializedItemActions(this, newOptions);
+                    this._listViewModel.setSearchValue(newOptions.searchValue);
                 });
             }
         } else {
+            _private.doAfterUpdate(self, () => {
+                this._listViewModel.setSearchValue(newOptions.searchValue);
+            });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
                     self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
@@ -3540,6 +3570,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
+    getItems(): RecordSet {
+        return this._items;
+    },
+
     scrollToItem(key: TItemKey, toBottom: boolean, force: boolean): void {
         return _private.scrollToItem(this, key, toBottom, force);
     },
@@ -3580,6 +3614,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._listViewModel) {
+            this._items.unsubscribe('onCollectionChange', this._onItemsChanged);
             this._listViewModel.destroy();
         }
         this._loadTriggerVisibility = null;
@@ -3893,14 +3928,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
-        if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
-            /*
-             When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
-             We can't stop click on checkbox from propagating because we can only subscribe to valueChanged event and then
-             we'd be stopping the propagation of valueChanged event, not click event.
-             And even if we could stop propagation of the click event, we shouldn't do that because other components
-             can use it for their own reasons (e.g. something like TouchDetector can use it).
-             */
+        if (originalEvent.target.closest('.js-controls-ListView__checkbox') || this._onLastMouseUpWasDrag) {
+            // Если нажали на чекбокс, то это не считается нажатием на элемент. В этом случае работает событие checkboxClick
+            // Если на mouseUp, предшествующий этому клику, еще работало перетаскивание, то мы не должны нотифаить itemClick
+            this._onLastMouseUpWasDrag = false;
             e.stopPropagation();
             return;
         }
@@ -3908,7 +3939,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlace) {
             this._editInPlace.beginEditByClick(e, item, originalEvent);
         }
-
         // При клике по элементу может случиться 2 события: itemClick и itemActivate.
         // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
         // порядок событий будет beforeBeginEdit -> itemClick
@@ -3917,7 +3947,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (e.isStopped()) {
             this._savedItemClickArgs = [item, originalEvent, columnIndex];
         } else {
-            this._notify('itemActivate', [item, originalEvent], { bubbling: true });
+            const eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], {bubbling: true});
+            if (eventResult !== false) {
+                this._notify('itemActivate', [item, originalEvent], {bubbling: true});
+            }
         }
     },
 
@@ -4113,6 +4146,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this.setMarkedKey(key);
         }
         this._mouseDownItemKey = undefined;
+        this._onLastMouseUpWasDrag = this._dndListController && this._dndListController.isDragging();
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
     },
 
@@ -4189,6 +4223,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     // endregion move
+
+    // region remove
+
+    removeItems(selection: ISelectionObject): Promise<void> {
+        return _private.getRemoveController(this).remove(selection);
+    },
+
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+        return _private.getRemoveController(this).removeWithConfirmation(selection);
+    },
+
+    // endregion remove
 
     _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
@@ -4869,7 +4915,8 @@ BaseControl.getDefaultOptions = function() {
         stickyHeader: true,
         virtualScrollMode: 'remove',
         filter: {},
-        itemActionsVisibility: 'onhover'
+        itemActionsVisibility: 'onhover',
+        searchValue: ''
     };
 };
 export = BaseControl;

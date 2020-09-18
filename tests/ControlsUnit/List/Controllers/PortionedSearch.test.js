@@ -6,6 +6,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
       let searchReseted = false;
       let serachContinued = false;
       let searchStarted = false;
+      let stopSearchDirection = null;
       let clock;
 
       beforeEach(() => {
@@ -14,8 +15,9 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
             searchStartCallback: () => {
                searchStarted = true;
             },
-            searchStopCallback: () => {
+            searchStopCallback: (direction) => {
                searchStopped = true;
+               stopSearchDirection = direction;
             },
             searchResetCallback: () => {
                searchReseted = true;
@@ -36,6 +38,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          searchReseted = false;
          serachContinued = false;
          portionedSearchController = null;
+         stopSearchDirection = null;
       });
 
       it('startSearch', () => {
@@ -119,8 +122,9 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          clock.tick(9000);
          assert.isFalse(searchStopped);
 
-         portionedSearchController.stopSearch();
+         portionedSearchController.stopSearch('down');
          assert.isTrue(searchStopped);
+         assert.equal(stopSearchDirection, 'down');
       });
 
       it('destroy', () => {

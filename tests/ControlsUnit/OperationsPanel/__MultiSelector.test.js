@@ -321,6 +321,17 @@ define([
             assert.isTrue(isCountPromiseCanceled);
             assert.isNull(instance._countPromise);
          });
+
+         it('promise is canceled on _beforeUnmount', () => {
+            let isCountPromiseCanceled = false;
+            instance._getCount(selection, null, selectionCountConfig);
+            instance._countPromise.cancel = () => {
+               isCountPromiseCanceled = true;
+            };
+            instance._beforeUnmount();
+            assert.isTrue(isCountPromiseCanceled);
+            assert.isNull(instance._countPromise);
+         });
       });
    });
 });

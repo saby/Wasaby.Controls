@@ -48,7 +48,7 @@ describe('Controls/grid_clean/GridViewModel', () => {
             const currentRow = gridViewModel.getCurrent();
             let currentColumn = currentRow.getCurrentColumn();
             assert.strictEqual(currentColumn.searchValue, 'item');
-            assert.strictEqual(currentColumn.needSearchHighlight, false);
+            assert.strictEqual(currentColumn.needSearchHighlight, true);
 
             currentRow.goToNextColumn();
             currentColumn = currentRow.getCurrentColumn();
@@ -208,6 +208,15 @@ describe('Controls/grid_clean/GridViewModel', () => {
                 newItem.set('key', 'clone_' + newItem.getKey());
                 items.prepend([newItem]);
                 assert.strictEqual(gridViewModel.getHeaderModel().getVersion(), 1);
+            });
+
+            it('isDrawHeaderWithEmptyList', () => {
+                const items = gridViewModel.getItems();
+                items.removeAt(0);
+                items.removeAt(0);
+                assert.isFalse(gridViewModel.isDrawHeaderWithEmptyList());
+                gridViewModel.setHeaderVisibility('visible');
+                assert.isTrue(gridViewModel.isDrawHeaderWithEmptyList());
             });
         });
     });
