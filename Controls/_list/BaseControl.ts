@@ -3981,7 +3981,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 if (isAdd && !((options && options.item) instanceof Model) && !((result && result.item) instanceof Model)) {
                     return this.getSourceController().create().then((item) => {
                         if (item instanceof Model) {
-                            return item;
+                            return {item};
                         }
                         throw Error('BaseControl::create before add error! Source returned non Model.');
                     }).catch((error: Error) => {
@@ -4045,6 +4045,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             onBeforeEndEdit: beforeEndCallback.bind(this),
             onAfterEndEdit: afterEndCallback.bind(this)
         });
+    },
+
+    getEditingItem(): Model {
+        return this._editInPlaceController?.getEditingItem();
     },
 
     _startInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
