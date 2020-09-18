@@ -393,7 +393,6 @@ class FormController extends Control<IFormController, IReceivedState> {
         // до монитрования в DOM не можем сделать notify событий (которые генерируются в CrudController,
         // а стреляются с помощью FormController'а, в данном случае), поэтому будем создавать рекорд напрямую.
         return this._source.create(cfg.initValues || cfg.createMetaData).then((record: Model) => {
-            this._setRecord(record);
             this._createdInMounting = {isError: false, result: record};
 
             if (this._isMount) {
