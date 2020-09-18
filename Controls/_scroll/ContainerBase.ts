@@ -287,17 +287,17 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         const isStateUpdated = this._updateState(newState);
         if (isStateUpdated) {
             // Новое событие
-            this._generateEvent('scrollStateChanged', [{...this._state}, {...this._oldState}]);
+            this._sendByRegistrar('scrollStateChanged', [{...this._state}, {...this._oldState}]);
 
             if (this._state.scrollHeight !== this._oldState.scrollHeight) {
-                this._generateEvent('scrollResize', [{
+                this._sendByRegistrar('scrollResize', [{
                     scrollHeight: this._state.scrollHeight,
                     clientHeight: this._state.clientHeight
                 }]);
             }
 
             if (this._oldState.clientHeight !== this._state.clientHeight) {
-                this._generateEvent('viewportResize', [{
+                this._sendByRegistrar('viewportResize', [{
                     scrollHeight: this._state.scrollHeight,
                     scrollTop: this._state.scrollTop,
                     clientHeight: this._state.clientHeight,
@@ -306,15 +306,13 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             }
 
             if (this._oldState.scrollTop !== this._state.scrollTop) {
-                this._generateEvent('scrollMove', [{
+                this._sendByRegistrar('scrollMove', [{
                     scrollTop: this._state.scrollTop,
                     position: this._state.verticalPosition,
                     clientHeight: this._state.clientHeight,
                     scrollHeight: this._state.scrollHeight
                 }]);
-
-                // Используем разные аргументы в событии для совместимости со старым скроллом
-                this._generateEvent(
+                this._sendByRegistrar(
                     'scroll',
                     [
                         new SyntheticEvent(null, {
@@ -324,16 +322,16 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                             _bubbling: false
                         }),
                         this._state.scrollTop
-                    ], [ this._state.scrollTop ]);
+                    ]);
             }
 
             this._generateCompatibleEvents();
         }
     }
 
-    _generateEvent(eventType: string, params: object[], notifyParams: any[] = params): void {
+    _sendByRegistrar(eventType: string, params: object[]): void {
         this._registrars[eventType].start(...params);
-        this._notify(eventType, notifyParams);
+        this._notify(eventType, params);
     }
 
     _resizeObserverCallback(entries: any): void {
