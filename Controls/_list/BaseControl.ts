@@ -3139,7 +3139,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     triggerVisibilityChangedHandler(direction: IDirection, state: boolean): void {
         this._loadTriggerVisibility[direction] = state;
         if (!state && this._hideIndicatorOnTriggerHideDirection === direction) {
-            _private.hideIndicator(this);
+            if (!this._sourceController.isLoading()) {
+                _private.hideIndicator(this);
+            }
 
             const viewModel = this.getViewModel();
             const hasItems = viewModel && viewModel.getCount();
