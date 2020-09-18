@@ -323,7 +323,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     this._handleCurrentItem(treeItem, sourceEvent.currentTarget, sourceEvent.nativeEvent);
                 } else {
                     this._notify('itemClick', [item, sourceEvent]);
-                    this._getMarkerController().setMarkedKey(key);
+                    this._getMarkerController(this._options).setMarkedKey(key);
                 }
             }
         }
@@ -586,11 +586,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         };
     }
 
-    private _getMarkerController(options?: IMenuControlOptions): MarkerController {
+    private _getMarkerController(options: IMenuControlOptions): MarkerController {
         if (!this._markerController) {
-            const menuOptions = options || this._options;
-            const markedKey = this._getMarkedKey(menuOptions.selectedKeys, menuOptions.emptyKey, menuOptions.multiSelect);
-            this._markerController = new MarkerController(this._getMarkerControllerConfig(menuOptions, markedKey));
+            const markedKey = this._getMarkedKey(options.selectedKeys, options.emptyKey, options.multiSelect);
+            this._markerController = new MarkerController(this._getMarkerControllerConfig(options, markedKey));
         }
         return this._markerController;
     }
