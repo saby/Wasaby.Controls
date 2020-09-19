@@ -44,10 +44,16 @@ export class InputActivationHelper {
                 this._clickItemInfo = null;
                 this._shouldActivate = false;
             } else {
-                this._shouldActivate = activateRowCallback();
+                if (this._shouldActivate) {
+                    if (activateRowCallback()) {
+                        this._shouldActivate = false;
+                        this._clickItemInfo = null;
+                    }
+                }
             }
         } else if (this._shouldActivate && activateRowCallback()) {
             this._shouldActivate = false;
+            this._clickItemInfo = null;
         }
     }
 

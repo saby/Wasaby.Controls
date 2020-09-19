@@ -1942,7 +1942,7 @@ const _private = {
         if (oldSourceCfg.page !== newSourceCfg.page) {
             const isEditing = !!self._editInPlaceController && !!self._listViewModel && (
                 self._options.useNewModel ? EditInPlaceController.isEditing(self._listViewModel) :
-                    self._editInPlaceController.getEditingKey() !== undefined
+                    !!self._editInPlaceController.getEditingItem()
             );
             if (isEditing) {
                 self.cancelEdit();
@@ -3255,7 +3255,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
-            if (this._editInPlaceController && this._editInPlaceController.getEditingKey() !== undefined) {
+            if (this._editInPlaceController && this._editInPlaceController.getEditingItem()) {
                 this.cancelEdit();
             }
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -4113,7 +4113,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     cancelEdit() {
         if (this._options.readOnly) {
-            Promise.reject('Control is in readOnly mode.');
+            return Promise.reject('Control is in readOnly mode.');
         }
         this.showIndicator();
         return this._getEditInPlaceController().cancel().finally(() => {
@@ -4123,7 +4123,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     commitEdit() {
         if (this._options.readOnly) {
-            Promise.reject('Control is in readOnly mode.');
+            return Promise.reject('Control is in readOnly mode.');
         }
         this.showIndicator();
         return this._validateController.submit().then((validationResult) => {

@@ -493,7 +493,7 @@ define([
                   'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_default-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default'
                ];
             testsPrepareExpanderClasses.forEach(function(item, i) {
-               cAssert.isClassesEqual(
+               cAssert.CssClassesAssert.include(
                    tree.TreeViewModel._private.getExpanderClasses(testsPrepareExpanderClasses[i].itemData, testsPrepareExpanderClasses[i].expanderIcon, undefined),
                    testsResultPrepareExpanderClasses[i],
                    'Invalid value "getExpanderClasses(...)" for step ' + i + '.'

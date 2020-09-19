@@ -143,16 +143,16 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) implem
             }
             let model;
             if ((result && result.item) instanceof Model) {
-                model = result.item.clone();
+                model = result.item;
             } else if (item && item instanceof Model) {
-                model = item.clone();
+                model = item;
             } else {
                 Logger.error(ERROR_MSG.ITEM_MISSED, this);
                 return {canceled: true};
             }
             this._collectionEditor[isAdd ? 'add' : 'edit'](model, addPosition);
             if (this._options.onAfterBeginEdit) {
-                this._options.onAfterBeginEdit(model, isAdd);
+                this._options.onAfterBeginEdit(this._collectionEditor.getEditingItem(), isAdd);
             }
         }).finally(() => {
             this._operationsPromises.begin = null;
@@ -173,11 +173,12 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) implem
             return this._operationsPromises.end;
         }
 
-        const editingItem = this._options.collection.getItemBySourceKey(editingKey);
+        const editingItem = this._collectionEditor.getEditingItem();
+        const isAdd = this._options.collection.getItemBySourceKey(this.getEditingKey()).isAdd;
 
         this._operationsPromises.end = new Promise((resolve) => {
             if (this._options.onBeforeEndEdit) {
-                resolve(this._options.onBeforeEndEdit(editingItem.contents, commit, editingItem.isAdd));
+                resolve(this._options.onBeforeEndEdit(editingItem, commit, isAdd));
             } else {
                 resolve();
             }
@@ -189,7 +190,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) implem
                 return {canceled: true};
             }
             this._collectionEditor[commit ? 'commit' : 'cancel']();
-            this._options?.onAfterEndEdit(editingItem.contents, editingItem.isAdd);
+            this._options?.onAfterEndEdit(editingItem, isAdd);
         }).finally(() => {
             this._operationsPromises.end = null;
         }) as TAsyncOperationResult;
