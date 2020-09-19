@@ -1459,6 +1459,9 @@ const _private = {
                     if (result) {
                         _private.handleScrollControllerResult(self, result);
                     }
+
+                    // TODO: уйдет после перехода на новую модель
+                    self._scrollController.setIndicesAfterCollectionChange();
                 }
             }
 
