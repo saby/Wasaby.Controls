@@ -318,7 +318,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _isTouch(): boolean {
-        return this._context.isTouch.isTouch;
+        return this._context?.isTouch?.isTouch;
     }
 
     protected _checkBoxClick(event: SyntheticEvent<MouseEvent>): void {
