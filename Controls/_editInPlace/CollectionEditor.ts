@@ -111,10 +111,12 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         this._validateAddingItem(editingItem);
         this._editingKey = editingItem.getKey();
 
-        const collectionItem = this._options.collection.createItem({contents: editingItem});
+        const collectionItem = this._options.collection.createItem({
+            contents: editingItem,
+            isAdd: true,
+            addPosition: addPosition === 'top' ? 'top' : 'bottom'
+        });
 
-        collectionItem.isAdd = true;
-        collectionItem.addPosition = addPosition === 'top' ? 'top' : 'bottom';
         collectionItem.setEditing(true, editingItem);
         this._options.collection.setAddingItem(collectionItem);
         this._options.collection.setEditing(true);

@@ -202,6 +202,5 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) implem
         super.destroy();
         this._collectionEditor = null;
         this._options = null;
-        this._operationsPromises = null;
     }
 }
