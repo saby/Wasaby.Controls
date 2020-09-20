@@ -579,7 +579,7 @@ const _private = {
             const markerController = _private.getMarkerController(self);
             const markedKey = markerController.getMarkedKey();
             if (markedKey !== null) {
-                const markedItem = self.getItems().getRecordByKey(markedKey);
+                const markedItem = self.getItems().getRecordById(markedKey);
                 self._notify('itemClick', [markedItem, event], { bubbling: true });
                 if (event && !event.isStopped()) {
                     self._notify('itemActivate', [markedItem, event], {bubbling: true});
@@ -587,26 +587,28 @@ const _private = {
             }
         }
     },
-    spaceHandler(self, event) {
+    spaceHandler(self: typeof BaseControl, event: SyntheticEvent): Promise<void>|void {
         if (self._options.multiSelectVisibility === 'hidden' || self._options.markerVisibility === 'hidden') {
             return;
         }
-        const markerController = _private.getMarkerController(self);
-        let toggledItemId = markerController.getMarkedKey();
-        if (toggledItemId === null) {
-            toggledItemId = markerController.getNextMarkedKey();
-        }
 
-        if (toggledItemId) {
-            if (self._options.hasOwnProperty('selectedKeys')) {
-                if (!self._selectionController) {
-                    self._createSelectionController();
-                }
-                const result = _private.getSelectionController(self).toggleItem(toggledItemId);
-                _private.handleSelectionControllerResult(self, result);
+        return _private.getMarkerControllerAsync(self).then((controller) => {
+            let toggledItemId = controller.getMarkedKey();
+            if (toggledItemId === null) {
+                toggledItemId = controller.getNextMarkedKey();
             }
-            _private.moveMarkerToNext(self, event);
-        }
+
+            if (toggledItemId) {
+                if (self._options.hasOwnProperty('selectedKeys')) {
+                    if (!self._selectionController) {
+                        self._createSelectionController();
+                    }
+                    const result = _private.getSelectionController(self).toggleItem(toggledItemId);
+                    _private.handleSelectionControllerResult(self, result);
+                }
+                _private.moveMarkerToNext(self, event);
+            }
+        });
     },
 
     prepareFooter(self, navigation, sourceController) {
@@ -2223,7 +2225,7 @@ const _private = {
         });
     },
 
-    moveMarkerToNext(self: typeof BaseControl, event: SyntheticEvent): void {
+    moveMarkerToNext(self: typeof BaseControl, event: SyntheticEvent): Promise<void>|void {
         if (self._options.markerVisibility !== 'hidden') {
             // activate list when marker is moving. It let us press enter and open current row
             // must check mounted to avoid fails on unit tests
@@ -2235,7 +2237,7 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
 
-            _private.getMarkerControllerAsync(self).then((controller) => {
+            return _private.getMarkerControllerAsync(self).then((controller) => {
                 const newMarkedKey = controller.getNextMarkedKey();
                 if (newMarkedKey !== controller.getMarkedKey()) {
                     const result = _private.changeMarkedKey(self, newMarkedKey);
@@ -2253,7 +2255,7 @@ const _private = {
         }
     },
 
-    moveMarkerToPrevious(self: any, event: SyntheticEvent): void {
+    moveMarkerToPrevious(self: any, event: SyntheticEvent): Promise<void>|void {
         if (self._options.markerVisibility !== 'hidden') {
             // activate list when marker is moving. It let us press enter and open current row
             // must check mounted to avoid fails on unit tests
@@ -2265,7 +2267,7 @@ const _private = {
             // https://online.sbis.ru/opendoc.html?guid=c470de5c-4586-49b4-94d6-83fe71bb6ec0
             event.preventDefault();
 
-            _private.getMarkerControllerAsync(self).then((controller) => {
+            return _private.getMarkerControllerAsync(self).then((controller) => {
                 const newMarkedKey = controller.getPrevMarkedKey();
                 if (newMarkedKey !== controller.getMarkedKey()) {
                     const result = _private.changeMarkedKey(self, newMarkedKey);
@@ -4218,7 +4220,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseDown', [itemData.item, domEvent.nativeEvent]);
     },
 
-    _itemMouseUp(e, itemData, domEvent): void {
+    _itemMouseUp(e, itemData, domEvent): Promise<void>|void {
         const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
 
         // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
@@ -4239,12 +4241,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             canBeMarked = canBeMarked && this._options._needSetMarkerCallback(itemData.item, domEvent);
         }
 
-        if (canBeMarked) {
-            this.setMarkedKey(key);
-        }
         this._mouseDownItemKey = undefined;
         this._onLastMouseUpWasDrag = this._dndListController && this._dndListController.isDragging();
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
+
+        if (canBeMarked) {
+            return this.setMarkedKey(key);
+        }
     },
 
     _startDragNDropCallback(): void {
