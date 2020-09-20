@@ -15,7 +15,7 @@ export interface ITreeModel extends IModel {
  * Контроллер, управляющий состоянием отображением драг'н'дропа в плоском списке
  * @class Controls/_listDragNDrop/TreeController
  * @public
- * @author Аверкиев П.А
+ * @author Панихин К.А.
  */
 export default class TreeController extends FlatController {
    protected _model: ITreeModel;
