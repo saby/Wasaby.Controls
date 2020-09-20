@@ -26,6 +26,8 @@ export interface IOptions<T> {
     swiped?: boolean;
     editingContents?: T;
     owner?: ICollection<T, CollectionItem<T>>;
+    isAdd?: boolean;
+    addPosition?: 'top' | 'bottom';
 }
 
 export interface ISerializableState<T> extends IDefaultSerializableState {
@@ -127,16 +129,17 @@ export default class CollectionItem<T> extends mixin<
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
 
-    isAdd: boolean;
+    readonly isAdd: boolean;
 
-    addPosition?: 'top' | 'bottom';
+    readonly addPosition: 'top' | 'bottom';
 
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
         SerializableMixin.call(this);
         this._counters = {};
-        this.isAdd = false;
+        this.isAdd = (options && options.isAdd) || false;
+        this.addPosition = (options && options.addPosition) || 'bottom';
     }
 
     // endregion

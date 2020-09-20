@@ -87,6 +87,9 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         collectionItem.setEditing(true, editingItem);
         this._options.collection.setEditing(true);
 
+        // Перед редактированием запись и коллекция уже могут содержать изменения.
+        // Эти изменения не должны влиять на логику редактирования по месту (завершение редактирования приводит
+        // к сохранению при наличие изменений).
         editingItem.acceptChanges();
         (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
     }
@@ -98,12 +101,10 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
 
         const editingItem = item.clone();
 
-        // Раньше это разруливалось постфиксами в шаблоне, что не есть норма.
-        // Источник не всегда возвращает запись с установленным id, может вернуть undefined, а это уже нормально.
-        // Для одной, добавляемой записи мы обязаны поддержать корректную работу редактировани с пустым ключом,
-        // но пользователь обязан при сохранении наделить ее уникальным ключом, иначе мы упадем с читаемой ошибкой.
-        // таким образом мы не запрещаем редактирование добавляемой записи с пустым ключом,
-        // но запрещаем добавление в коллекцию.
+        // Попытка сохранить добавляемую запись, которой не был установлен настоящий ключ приведет к ошибке.
+        // При добавлении записи без ключа, ей выдается временный ключ для корректной работы коллекции.
+        // Это необходимо, т.к. допускается запуск добавления записи без кдюча, однако сохранить, ее невозможно,
+        // пока не установлен настоящий ключ.
         if (editingItem.getKey() === undefined) {
             editingItem.set(editingItem.getKeyProperty(), ADDING_ITEM_EMPTY_KEY);
         }
@@ -111,14 +112,19 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         this._validateAddingItem(editingItem);
         this._editingKey = editingItem.getKey();
 
-        const collectionItem = this._options.collection.createItem({contents: editingItem});
+        const collectionItem = this._options.collection.createItem({
+            contents: editingItem,
+            isAdd: true,
+            addPosition: addPosition === 'top' ? 'top' : 'bottom'
+        });
 
-        collectionItem.isAdd = true;
-        collectionItem.addPosition = addPosition === 'top' ? 'top' : 'bottom';
         collectionItem.setEditing(true, editingItem);
         this._options.collection.setAddingItem(collectionItem);
         this._options.collection.setEditing(true);
 
+        // Перед редактированием запись и коллекция уже могут содержать изменения.
+        // Эти изменения не должны влиять на логику редактирования по месту (завершение редактирования приводит
+        // к сохранению при наличие изменений).
         editingItem.acceptChanges();
         (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
     }
@@ -128,6 +134,10 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
             throw Error(ERROR_MSG.HAS_NO_EDITING);
         }
 
+        // Попытка сохранить добавляемую запись, которой не был установлен настоящий ключ приведет к ошибке.
+        // При сохранении, добавляемая запись должна иметь настоящий и уникальный ключ, а не временный.
+        // Временный ключ выдается добавляемой записи с отсутствующим ключом, т.к.
+        // допустимо запускать добавление такой записи, в отличае от сохранения.
         const collectionItem = this._options.collection.getItemBySourceKey(this._editingKey);
         if (collectionItem.isAdd && this._editingKey === ADDING_ITEM_EMPTY_KEY) {
             throw Error(ERROR_MSG.ADDING_ITEM_KEY_WAS_NOT_SET);

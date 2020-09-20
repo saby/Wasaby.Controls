@@ -2861,7 +2861,7 @@ define([
             });
             cfg = {
                editingConfig: {
-                  item: new entity.Model({rawData: { id: 1 }})
+                  item: new entity.Model({keyProperty: 'id', rawData: { id: 1 }})
                },
                viewName: 'Controls/List/ListView',
                source: source,
@@ -7051,7 +7051,7 @@ define([
                      assert.deepEqual(firedEvents, []);
                   }
                };
-               const item = {};
+               const item = baseControl.getViewModel().getItemBySourceKey(1).contents;
                const originalEvent = {
                   target: {
                      closest: () => null
