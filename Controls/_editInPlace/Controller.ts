@@ -13,9 +13,10 @@ const ERROR_MSG = {
 };
 
 /**
- * Контроллера редактирования по месту.
+ * Контроллер редактирования по месту.
  *
  * @mixes Controls/_editInPlace/interface/IEditInPlace
+ * @mixes Types/_entity/DestroyableMixin
  * @public
  * @class Controls/_editInPlace/Controller
  * @author Родионов Е.А.
@@ -25,6 +26,7 @@ const ERROR_MSG = {
  * Edit in place controller.
  *
  * @mixes Controls/_editInPlace/interface/IEditInPlace
+ * @mixes Types/_entity/DestroyableMixin
  * @public
  * @class Controls/_editInPlace/Controller
  * @author Rodionov E.

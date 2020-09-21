@@ -18,9 +18,10 @@ export const ERROR_MSG = {
 const ADDING_ITEM_EMPTY_KEY = 'ADDING_ITEM_EMPTY_KEY';
 
 /**
- * Контроллера редактирования коллекции.
+ * Контроллер редактирования коллекции.
  *
  * @mixes Controls/_editInPlace/interface/ICollectionEditor
+ * @mixes Types/_entity/DestroyableMixin
  * @private
  * @class Controls/_editInPlace/CollectionEditor
  * @author Родионов Е.А.
@@ -29,6 +30,7 @@ const ADDING_ITEM_EMPTY_KEY = 'ADDING_ITEM_EMPTY_KEY';
  * Collection editor controller.
  *
  * @mixes Controls/_editInPlace/interface/ICollectionEditor
+ * @mixes Types/_entity/DestroyableMixin
  * @private
  * @class Controls/_editInPlace/CollectionEditor
  * @author Rodionov E.

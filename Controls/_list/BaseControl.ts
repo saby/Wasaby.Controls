@@ -26,7 +26,6 @@ import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig, ISelectionObject} from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
-import {editing as constEditing} from 'Controls/Constants';
 
 // Utils imports
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
@@ -35,8 +34,9 @@ import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
     CollectionItem,
-    EditInPlaceController,
-    GroupItem
+    EditInPlaceController as NewModelEditInPlaceController,
+    GroupItem,
+    TItemKey
 } from 'Controls/display';
 import {
     Controller as ItemActionsController,
@@ -57,13 +57,11 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import {ISwipeEvent} from 'Controls/listRender';
 
 import {
-    CONSTANTS,
-    EditInPlace,
-    Controller as NewEditInPlaceController,
+    Controller as EditInPlaceController,
     InputHelper as EditInPlaceInputHelper,
+    CONSTANTS,
     JS_SELECTORS
 } from '../editInPlace';
-
 import {IEditableListOption} from './interface/IEditableList';
 
 import {default as ScrollController, IScrollParams} from './ScrollController';
@@ -91,7 +89,6 @@ import {IList} from "./interface/IList";
 import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { EdgeIntersectionObserver } from 'Controls/scroll';
-import { TItemKey } from 'Controls/display';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {IMoveControllerOptions, MoveController, TMovePosition} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from "../_moverDialog/Template";
@@ -1865,7 +1862,7 @@ const _private = {
     needBottomPadding(options, items, listViewModel) {
         const isEditing =
             options.useNewModel
-            ? EditInPlaceController.isEditing(listViewModel)
+            ? NewModelEditInPlaceController.isEditing(listViewModel)
             : !!listViewModel.getEditingItemData();
 
         const display = listViewModel ? (options.useNewModel ? listViewModel : listViewModel.getDisplay()) : null;
@@ -1949,7 +1946,7 @@ const _private = {
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
             const isEditing = !!self._editInPlaceController && !!self._listViewModel && (
-                self._options.useNewModel ? EditInPlaceController.isEditing(self._listViewModel) :
+                self._options.useNewModel ? NewModelEditInPlaceController.isEditing(self._listViewModel) :
                     !!self._editInPlaceController.getEditingItem()
             );
             if (isEditing) {
@@ -2323,48 +2320,6 @@ const _private = {
     },
 
     // endregion
-
-    createEditInPlace(self: typeof BaseControl, options: any): void {
-        if (options.editingConfig) {
-            self._editInPlace = new EditInPlace({
-                editingConfig: options.editingConfig,
-                listViewModel: self._listViewModel,
-                multiSelectVisibility: options.multiSelectVisibility,
-                errorController: self.__errorController,
-                source: self.getSourceController(),
-                useNewModel: options.useNewModel,
-                theme: self._options.theme,
-                readOnly: self._options.readOnly,
-                keyProperty: self._options.keyProperty,
-                notify: (name, args, params) => {
-                    const eventResult = self._notify(name, args, params);
-
-                    if (name === 'beforeBeginEdit') {
-                        _private.onBeforeBeginEdit(self, eventResult);
-                    }
-
-                    return eventResult;
-                },
-                forceUpdate: () => {
-                    self._forceUpdate();
-                },
-                updateMarkedKey: (key: CrudEntityKey) => {
-                    self.setMarkedKey(key);
-                },
-                updateItemActions: () => {
-                    /*
-                    * TODO: KINGO
-                    * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
-                    * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
-                    * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
-                    * _canUpdateItemsActions приведет к показу неактуальных операций.
-                    */
-                    _private.updateItemActions(self, self._options);
-                },
-                isDestroyed: () => self._destroyed
-            });
-        }
-    },
 
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
@@ -3185,12 +3140,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.handleSelectionControllerResult(this, result);
         }
 
-        if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(this._validateController);
-            this._editInPlace.updateViewModel(this._listViewModel);
-            this._editInPlace.setErrorContainer(this._children.errorContainer);
-        }
-
         if (this._editInPlaceController) {
             _private.registerFormOperation(this);
         }
@@ -3833,11 +3782,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._callbackAfterUpdate = null;
         }
 
-        if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(this._validateController);
-            this._validateController.resolveSubmit();
-        }
-
         if (this._editInPlaceController) {
             const rowActivator = this._children.listView.activateEditingRow.bind(this._children.listView);
             this._editInPlaceInputHelper.activateInput(rowActivator);
@@ -3883,7 +3827,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const noData = !listViewModel.getCount();
         const noEdit =
             this._options.useNewModel
-                ? !EditInPlaceController.isEditing(listViewModel)
+                ? !NewModelEditInPlaceController.isEditing(listViewModel)
                 : !listViewModel.getEditingItemData();
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
@@ -3985,17 +3929,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _editInPlaceController: null,
     _editInPlaceInputHelper: null,
 
-    _getEditInPlaceController(): NewEditInPlaceController {
+    _getEditInPlaceController(): EditInPlaceController {
         if (!this._editInPlaceController) {
             this._editInPlaceController = this._createEditInPlaceController();
         }
         return this._editInPlaceController;
     },
 
-    _createEditInPlaceController(): NewEditInPlaceController {
+    _createEditInPlaceController(): EditInPlaceController {
         this._editInPlaceInputHelper = new EditInPlaceInputHelper();
 
-        return new NewEditInPlaceController({
+        return new EditInPlaceController({
             collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
             onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
             onAfterBeginEdit: this._afterBeginEditCallback.bind(this),

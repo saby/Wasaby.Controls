@@ -15,7 +15,11 @@
  * @author Родионов Е.А.
  */
 
-export {default as EditInPlace, JS_SELECTORS} from './_editInPlace/EditInPlace';
+const JS_SELECTORS = {
+    NOT_EDITABLE: 'js-controls-ListView__notEditable'
+};
+
+export {JS_SELECTORS};
 export {Controller} from './_editInPlace/Controller';
 export {CONSTANTS} from './_editInPlace/Types';
 export {InputActivationHelper as InputHelper} from './_editInPlace/InputActivationHelper';
