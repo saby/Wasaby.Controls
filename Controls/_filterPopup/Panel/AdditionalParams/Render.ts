@@ -90,7 +90,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
     }
 
     protected _propertyChanged(event: Event, item: IFilterItem, property: string, value: any): void {
-        this._notify('propertyChanged', [item, property, value]);
+        this._notify('propertyChanged', [item.getRawData(), property, value]);
     }
 
     static _theme: string[] = ['Controls/filterPopup'];
