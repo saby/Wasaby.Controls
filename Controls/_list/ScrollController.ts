@@ -456,7 +456,7 @@ export default class ScrollController {
 
     // TODO рано убирать костыль, ждем перехода на новую модель.
     // https://online.sbis.ru/opendoc.html?guid=1f95ff97-c952-40ef-8d61-077e8431c4be
-    private setIndicesAfterCollectionChange(): void {
+    setIndicesAfterCollectionChange(): void {
 
         // TODO Уберется после https://online.sbis.ru/opendoc.html?guid=5ebdec7d-e95e-438d-94f8-079a17b323c6
         // На данный момент индексы в модели проставляются в двух местах: здесь и на уровне модели
@@ -499,7 +499,6 @@ export default class ScrollController {
         this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
             this._options.needScrollCalculation);
         this.savePlaceholders(rangeShiftResult.placeholders);
-        this.setIndicesAfterCollectionChange();
         return {...result, placeholders: rangeShiftResult.placeholders };
     }
 
@@ -516,14 +515,12 @@ export default class ScrollController {
             this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                 this._options.needScrollCalculation);
             this.savePlaceholders(rangeShiftResult.placeholders);
-            this.setIndicesAfterCollectionChange();
             return { placeholders: rangeShiftResult.placeholders };
         }
     }
 
     handleResetItems(): IScrollControllerResult {
         let result = this._initVirtualScroll(this._options);
-        this.setIndicesAfterCollectionChange();
         return result;
     }
 
