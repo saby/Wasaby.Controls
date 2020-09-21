@@ -7,10 +7,10 @@
                   controls-PeriodLiteDialog__currentValue_theme-{{_options.theme}}"
               on:click="_onHeaderClick()">{{_caption}}
          </div>
-         <Controls.popupTemplate:CloseButton
-                 attr:class="controls-PeriodLiteDialog__close_theme-{{_options.theme}}"
-                 viewMode="link"
-                 on:click="_onHeaderClick()"/>
+         <div class="controls-PeriodLiteDialog__close_theme-{{_options.theme}}
+                     controls-icon controls-icon_size-m_theme-{{_options.theme}}"
+              on:click="_onHeaderClick()">
+         </div>
       </div>
       <div class="controls-PeriodLiteDialog__bodyWrapper controls-PeriodLiteDialog__bodyWrapper_theme-{{_options.theme}}">
          <div class="controls-PeriodLiteDialog__yearWrapper {{_getYearWrapperCssClasses()}}
@@ -52,18 +52,18 @@
                  _isFullPicker="{{_isFullPicker}}"
          />
       </div>
-      <div class="controls-PeriodLiteDialog__footer_theme-{{_options.theme}}">
-         <div class="controls-PeriodLiteDialog__expandButton_theme-{{_options.theme}}">
-            <ws:if data="{{_isExpandedPopup}}">
-               <div class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-AccordionArrowUp action-hover controls-PeriodLiteDialog__AccordionArrow"
-                    on:click="_expandPopup()"></div>
-            </ws:if>
-            <ws:else>
-               <div class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-AccordionArrowDown action-hover controls-PeriodLiteDialog__AccordionArrow"
-                    on:click="_expandPopup()"></div>
-            </ws:else>
-         </div>
+   <ws:if data="{{_isExpandButtonVisible}}">
+      <div class="controls-PeriodLiteDialog__footer_theme-{{_options.theme}} controls-PeriodLiteDialog__expandButton_theme-{{_options.theme}}">
+         <ws:if data="{{_isExpandedPopup}}">
+            <div class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-AccordionArrowUp action-hover controls-PeriodLiteDialog__AccordionArrow"
+                 on:click="_expandPopup()"></div>
+         </ws:if>
+         <ws:else>
+            <div class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-AccordionArrowDown action-hover controls-PeriodLiteDialog__AccordionArrow"
+                 on:click="_expandPopup()"></div>
+         </ws:else>
       </div>
+   </ws:if>
    </ws:if>
    <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__years-next controls-PeriodLiteDialog__years-next_theme-{{_options.theme}}">
