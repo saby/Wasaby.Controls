@@ -12,7 +12,7 @@ class Multiline extends Control<IControlOptions> {
     protected items2 = null;
     protected items3 = null;
     protected items4 = null;
-    protected _containerWidth = 700;
+    protected _containerWidth = 1100;
     protected info = '';
     protected _arrowActivated = false;
 

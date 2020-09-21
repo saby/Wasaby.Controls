@@ -132,7 +132,6 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
         return getFontWidth(text, size);
     }
     private _calculateBreadCrumbsToDraw(items: Record[], options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): void {
-        this._visibleItems = [];
         this._visibleItems = BreadCrumbsUtil.calculateItemsWithDots(items, options, 0, this._width, this._dotsWidth, getTextWidth);
         this._visibleItems[0].hasArrow = false;
         this._indexEdge = 0;
