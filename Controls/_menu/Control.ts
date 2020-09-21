@@ -574,7 +574,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         MenuControl._selectItem(this._listModel, this._options.emptyKey, !!isEmptySelected );
 
         if (isEmptySelected) {
-            this._getMarkerController().setMarkedKey(this._options.emptyKey);
+            this._getMarkerController(this._options).setMarkedKey(this._options.emptyKey);
         }
     }
 
