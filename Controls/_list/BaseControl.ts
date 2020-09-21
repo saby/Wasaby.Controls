@@ -1694,6 +1694,16 @@ const _private = {
         if (self._itemActionsMenuId) {
             const itemActionsMenuId = self._itemActionsMenuId;
             _private.closePopup(self, currentPopup ? currentPopup.id : itemActionsMenuId);
+            // При быстром клике правой кнопкой обработчик закрытия меню и setActiveItem(null)
+            // вызывается позже, чем устанавливается новый activeItem. в результате, при попытке
+            // взаимодействия с опциями записи, может возникать ошибка, т.к. activeItem уже null.
+            // Для обхода проблемы ставим условие, что занулять active item нужно только тогда, когда
+            // закрываем самое последнее открытое меню.
+            if (!currentPopup || itemActionsMenuId === currentPopup.id) {
+                const itemActionsController = _private.getItemActionsController(self)
+                itemActionsController.setActiveItem(null);
+                itemActionsController.deactivateSwipe();
+            }
         }
     },
 
@@ -1727,11 +1737,8 @@ const _private = {
             Sticky.closePopup(id);
         }
         if (!itemActionsMenuId || (self._itemActionsMenuId && self._itemActionsMenuId === itemActionsMenuId)) {
-            self._itemActionsMenuId = null;
             UnregisterUtil(self, 'scroll');
-            const controller = _private.getItemActionsController(self);
-            controller.setActiveItem(null);
-            controller.deactivateSwipe();
+            self._itemActionsMenuId = null;
         }
     },
 
@@ -4376,7 +4383,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (detection.isMobileIOS && (scrollEvent.target === document.body || scrollEvent.target === document)) {
             return;
         }
-        _private.closePopup(this);
+        _private.closeActionsMenu(this);
     },
 
     /**
