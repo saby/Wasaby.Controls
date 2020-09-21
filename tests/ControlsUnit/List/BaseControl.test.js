@@ -2798,6 +2798,7 @@ define([
                registerObserver: () => undefined,
                scrollPositionChange: () => undefined,
                setTriggers: () => undefined,
+               setIndicesAfterCollectionChange: () => undefined,
                calculateVirtualScrollHeight: () => 0
             };
 
@@ -4895,6 +4896,7 @@ define([
             instance.saveOptions(cfg);
             instance._scrollController = {
                scrollToItem: () => {},
+               setIndicesAfterCollectionChange: () => undefined,
                handleResetItems: () => {}
             };
             instance._container = {
@@ -7414,6 +7416,7 @@ define([
                         }
                         return Promise.resolve();
                      },
+                     setIndicesAfterCollectionChange: () => undefined,
                      handleResetItems: () => {}
                   };
 
