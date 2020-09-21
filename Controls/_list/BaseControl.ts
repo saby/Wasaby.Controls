@@ -269,7 +269,9 @@ const _private = {
     supportAttachLoadTopTriggerToNull(options): boolean {
         // Поведение отложенной загрузки вверх нужно опциональное, например, для контактов
         // https://online.sbis.ru/opendoc.html?guid=f07ea1a9-743c-42e4-a2ae-8411d59bcdce
-        if (options.attachLoadTopTriggerToNull === false) {
+        // Для мобильных устройств данный функционал включать нельзя из-за инерционного скролла:
+        // https://online.sbis.ru/opendoc.html?guid=45921906-4b0e-4d72-bb80-179c076412d5
+        if (options.attachLoadTopTriggerToNull === false || detection.isMobileIOS) {
             return false;
         }
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
@@ -448,8 +450,10 @@ const _private = {
                     error,
                     dataLoadErrback: cfg.dataLoadErrback
                 }).then(function(result: ICrudResult) {
-                    if (cfg.afterReloadCallback) {
-                        cfg.afterReloadCallback(cfg);
+                    if (!self._destroyed) {
+                        if (cfg.afterReloadCallback) {
+                            cfg.afterReloadCallback(cfg);
+                        }
                     }
                     resDeferred.callback({
                         data: null,
@@ -1535,6 +1539,11 @@ const _private = {
                 // а потом сработает add и для элемента нужно восстановить выделение
                 if (action === IObservable.ACTION_ADD) {
                     _private.getMarkerController(self).handleAddItems(newItems);
+                }
+
+                // TODO костыль для 6100, в 7100 это переписано адекватно и работает
+                if (action === IObservable.ACTION_RESET) {
+                    _private.getMarkerController(self).restoreMarker();
                 }
             }
         }
@@ -3394,6 +3403,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
             if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
                 this._selectionController = _private.createSelectionController(this, newOptions);
+                // TODO перепишется в 7100 при рефакторе контроллера
+                if (this._selectionController) {
+                    const result = this._selectionController.getResultAfterConstructor();
+                    _private.handleSelectionControllerResult(this, result);
+                }
             }
         }
 
