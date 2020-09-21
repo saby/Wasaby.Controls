@@ -2,15 +2,15 @@ import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
 import { IItemAction } from 'Controls/itemActions';
 
 interface IData {
-   id: number,
-   parent: null | number,
-   title: string,
-   type: string,
-   hiddenGroup?: boolean,
-   isDocument: Boolean,
-   image: string
-   width: string | number,
-   isShadow: boolean
+   id: number;
+   parent: null | number;
+   title: string;
+   type: string;
+   hiddenGroup?: boolean;
+   isDocument: Boolean;
+   image: string;
+   width: string | number;
+   isShadow: boolean;
 }
 
 export const Gadgets = {
