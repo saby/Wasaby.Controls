@@ -20,7 +20,7 @@ class Multiline extends Control<IControlOptions> {
         this.items = [
             {
                 id: 1,
-                title: 'название папки',
+                title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
                 secondTitle: 'тест1',
                 parent: null
             },
