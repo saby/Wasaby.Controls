@@ -1100,7 +1100,6 @@ Base.getDefaultOptions = function () {
         autoComplete: 'off',
         fontSize: 'm',
         fontColorStyle: 'default',
-        contrastBackground: true,
         spellCheck: true,
         selectOnClick: false
     };
@@ -1144,4 +1143,3 @@ Base.getOptionTypes = function () {
 };
 
 export = Base;
-
