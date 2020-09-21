@@ -7,6 +7,7 @@ import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth'
 import {Record, Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import {ItemsUtil} from 'Controls/list';
+import {IMultilinePathOptions} from "./MultilinePath";
 
 //TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
 const ARROW_WIDTH = 16;
@@ -85,6 +86,14 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
             });
         }
     }
+
+    protected _afterMount(options?: IBreadCrumbsOptions, contexts?: any): void {
+        if (!options.containerWidth) {
+            this._dotsWidth = this._getDotsWidth(options.fontSize);
+            this._prepareData(options, this._container.clientWidth);
+        }
+    }
+
     protected _beforeUpdate(newOptions: IBreadCrumbsOptions): void {
         const isItemsChanged = newOptions.items && newOptions.items !== this._options.items;
         const isContainerWidthChanged = newOptions.containerWidth !== this._options.containerWidth;

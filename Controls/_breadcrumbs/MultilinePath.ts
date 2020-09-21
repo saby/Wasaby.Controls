@@ -137,4 +137,3 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
 }
 
 export default MultilinePath;
-#7694B8

@@ -18,7 +18,6 @@
     <Controls.breadcrumbs:HeadingPath attr:id="pathContent"
                                       items="{{items}}"
                                       parentProperty="parent"
-                                      containerWidth = "{{500}}"
                                       keyProperty="id"
                                       on:itemClick="_onItemClick()">
         <ws:afterBackButtonTemplate>
@@ -30,7 +29,6 @@
                                       items="{{items4}}"
                                       parentProperty="parent"
                                       keyProperty="id"
-                                      containerWidth = "{{500}}"
                                       on:arrowActivated="_onArrowActivated()"
                                       on:itemClick="_onItemClick()" />
 

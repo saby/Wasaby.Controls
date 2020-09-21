@@ -11,6 +11,7 @@ import 'wml!Controls/_breadcrumbs/HeadingPath/Back';
 import {Record, Model} from 'Types/entity';
 import {Logger} from "UI/Utils";
 import {getFontWidth, loadFontWidthConstants} from "../Utils/getFontWidth";
+import {IMultilinePathOptions} from "./MultilinePath";
 
 //TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
 const ARROW_WIDTH = 16;
@@ -162,23 +163,31 @@ class BreadCrumbsPath extends Control<IControlOptions> {
         }
     }
 
-    /*_beforeMount: function (options) {
-        if (options.items && options.items.length > 0) {
-            _private.drawItems(this, options);
+    protected _afterMount(options?: IBreadCrumbsOptions, contexts?: any): void {
+        if (!options.containerWidth) {
+            this._dotsWidth = this._getDotsWidth(options.fontSize);
+            this._drawItems(options, this._container.querySelector('.controls-BreadCrumbsView').clientWidth);
         }
-    },
-    _beforeUpdate: function (newOptions) {
+    }
 
-        if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items)) {
-            _private.drawItems(this, newOptions);
+    protected _beforeUpdate(newOptions: IBreadCrumbsOptions): void {
+        const isItemsChanged = newOptions.items && newOptions.items !== this._options.items;
+        const isContainerWidthChanged = newOptions.containerWidth !== this._options.containerWidth;
+        const isFontSizeChanged = newOptions.fontSize !== this._options.fontSize;
+        if (isItemsChanged) {
+            this._items = newOptions.items;
         }
-    },
+        if (isContainerWidthChanged) {
+            this._width = newOptions.containerWidth;
+        }
+        if (isFontSizeChanged) {
+            this._dotsWidth = this._getDotsWidth(newOptions.fontSize);
+        }
+        if (isItemsChanged || isContainerWidthChanged || isFontSizeChanged) {
+            this._drawItems(newOptions, newOptions.containerWidth);
+        }
+    }
 
-    _afterUpdate: function() {
-        if (this._viewUpdated) {
-            this._viewUpdated = false;
-        }
-    }*/
     private _drawItems(options: IBreadCrumbsOptions, width: number, getTextWidth: Function = this._getTextWidth): void {
         this._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty);
 
@@ -233,7 +242,8 @@ class BreadCrumbsPath extends Control<IControlOptions> {
             backButtonIconStyle: 'primary',
             backButtonFontColorStyle: 'secondary',
             showActionButton: true,
-            displayMode: 'default'
+            displayMode: 'default',
+            fontSize: 'xs'
         };
     }
     static _styles: string[] = ['Controls/_breadcrumbs/resources/FontLoadUtil'];
