@@ -163,6 +163,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
       it('_resizeHandler with propStorageId', () => {
          const Control = new masterDetail.Base();
          let isUpdateOffset = false;
+         Control._startResizeRegister = () => {};
          Control._updateOffsetDebounced = () => isUpdateOffset = true;
 
          Control._options = {
@@ -183,6 +184,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          const Control = new masterDetail.Base();
          let isUpdateOffset = false;
          Control._updateOffsetDebounced = () => isUpdateOffset = true;
+         Control._startResizeRegister = () => {};
 
 
          Control._container = {
