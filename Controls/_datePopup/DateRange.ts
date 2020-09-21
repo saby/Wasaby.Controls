@@ -161,6 +161,12 @@ var Component = BaseControl.extend([EventProxy], {
         return this._isStickySupport ?
             'controls-PeriodDialog-DateRangeItem__separator-sticky-support' :
             'controls-PeriodDialog-DateRangeItem__separator-not-sticky-support';
+    },
+
+    _preventEvent(event: Event): void {
+        // Отключаем скролл ленты с месяцами, если свайпнули по колонке с месяцами
+        event.preventDefault();
+        event.stopPropagation();
     }
 
 });
