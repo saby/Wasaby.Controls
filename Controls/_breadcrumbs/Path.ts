@@ -6,12 +6,8 @@ import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
 import {Record, Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';
-import {ItemsUtil} from 'Controls/list';
-import {IMultilinePathOptions} from "./MultilinePath";
 
-//TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
 const ARROW_WIDTH = 16;
-const BREAD_CRUMB_MIN_WIDTH = ARROW_WIDTH + 28;
 const PADDING_RIGHT = 2;
 
 interface IReceivedState {

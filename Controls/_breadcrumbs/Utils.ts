@@ -1,11 +1,11 @@
 import {ItemsUtil} from 'Controls/list';
 import {Record} from 'Types/entity';
-import {getFontWidth} from "../Utils/getFontWidth";
-import {IMultilinePathOptions} from "./MultilinePath";
-import {IBreadCrumbsOptions} from "./interface/IBreadCrumbs";
+import {getFontWidth} from 'Controls/Utils/getFontWidth';
+import {IMultilinePathOptions} from './MultilinePath';
+import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 
+//TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
 const ARROW_WIDTH = 16;
-const BREAD_CRUMB_MIN_WIDTH = ARROW_WIDTH + 28;
 const PADDING_RIGHT = 2;
 
 export default {
@@ -27,8 +27,8 @@ export default {
             return this.getItemData(index, items, arrow);
         });
     },
-    canShrink(itemWidth: number, currentWidth: number, availableWidth: number): boolean {
-        return itemWidth > BREAD_CRUMB_MIN_WIDTH && currentWidth - itemWidth + BREAD_CRUMB_MIN_WIDTH < availableWidth;
+    canShrink(minWidth: number, currentWidth: number, availableWidth: number): boolean {
+        return currentWidth - minWidth < availableWidth;
     },
     getTextWidth(text: string, size: string  = 'xs'): number {
         return getFontWidth(text, size);
@@ -42,10 +42,6 @@ export default {
         });
         return itemsWidth;
     },
-    getDotsWidth(fontSize: string, getTextWidth: Function = this.getTextWidth): number {
-        const dotsWidth = getTextWidth('...', fontSize) + PADDING_RIGHT;
-        return ARROW_WIDTH + dotsWidth;
-    },
     calculateItemsWithShrinkingLast(items: Record[], options: IMultilinePathOptions, width: number, getTextWidth: Function = this.getTextWidth): {visibleItems: Record[], indexEdge: number} {
         // придумать, чтобы два раза не проходился в крошках в две строки
         const itemsWidth = this.getItemsWidth(items, options, getTextWidth);
@@ -55,19 +51,18 @@ export default {
         if (items.length <= 2) {
             // Если крошек меньше двух, располагаем их в первом контейнере
             firstContainerItems = items.map((item, index, items) => {
-                const hasArrow = index !== 0;
-                const withOverflow = itemsWidth[index] - (hasArrow ? ARROW_WIDTH : 0) > BREAD_CRUMB_MIN_WIDTH;
+                const withOverflow = items[index].get(options.displayProperty).length > 3;
                 return this.getItemData(index, items, false, withOverflow);
             });
             return {
                 visibleItems: firstContainerItems,
-                indexEdge: items.length - 1
+                indexEdge: items.length
             };
         } else {
             // Если крошки занимают меньше доступной ширины, начинам расчеты
             let firstContainerWidth = 0;
             // заполняем в первый контейнер то, что помещается. Запоминаем индекс последней крошки
-            while (firstContainerWidth < width) {
+            while (firstContainerWidth < width && indexEdge < items.length) {
                 firstContainerWidth += itemsWidth[indexEdge];
                 indexEdge++;
             }
@@ -76,7 +71,8 @@ export default {
                 firstContainerItems.push(items[i]);
             }
             // позволяем сокращаться последней папке в первом контейнере
-            if (firstContainerWidth - itemsWidth[indexEdge] + BREAD_CRUMB_MIN_WIDTH <= width) {
+            const minWidthOfLastItem = this.getMinWidth(items, options, indexEdge, getTextWidth);
+            if (firstContainerWidth - itemsWidth[indexEdge] + minWidthOfLastItem <= width) {
                 firstContainerItems.push(items[indexEdge]);
                 indexEdge++;
             }
@@ -88,6 +84,12 @@ export default {
             };
         }
     },
+    getMinWidth(items: Record[], options: IBreadCrumbsOptions, index: number, getTextWidth: Function): number {
+        const text = items[index].get(options.displayProperty);
+        let textWidth = getTextWidth(text.substring(0, 3) + '...', options.fontSize) + PADDING_RIGHT;
+        textWidth = index === 0 ? textWidth : textWidth + ARROW_WIDTH;
+        return textWidth;
+    },
     calculateItemsWithDots(items: Record[], options: IBreadCrumbsOptions, indexEdge: number, width: number, dotsWidth: number, getTextWidth: Function = this.getTextWidth): Record[] {
         let secondContainerWidth = 0;
         let shrinkItemIndex;
@@ -95,35 +97,39 @@ export default {
         for (let i = indexEdge; i < items.length; i++) {
             secondContainerWidth += itemsWidth[i];
         }
+        // Сначала пробуем замылить предпоследнюю крошку
         secondContainerWidth -= itemsWidth[items.length - 2];
-        secondContainerWidth += BREAD_CRUMB_MIN_WIDTH;
+        const minWidthOfPenultimateItem = items.length > 2 ? this.getMinWidth(items, options, items.length - 2, getTextWidth) : undefined;
+        secondContainerWidth += minWidthOfPenultimateItem;
         // если второй контейнер по ширине больше, чем доступная ширина, начинаем расчеты
-        if (secondContainerWidth > width) {
-            // предпоследняя не уместилась - сразу вычитаем ее ширину
-            secondContainerWidth -= BREAD_CRUMB_MIN_WIDTH;
-            // Сначала пробуем замылить предпоследнюю крошку
+        if (secondContainerWidth > width && items.length > 2) {
+            // предпоследняя не уместилась - сразу вычитаем ее мин.ширину
+            secondContainerWidth -= minWidthOfPenultimateItem;
             const secondContainerItems = [];
             // если замылить не получилось - показываем точки
             secondContainerWidth += dotsWidth;
             let index;
-            // предпоследняя не поместилась - начинаем с пред-предпоследней
+            let currentMinWidth;
+            // предпоследняя не поместилась - начинаем с пред-предпоследней и так далее
             for (index = items.length - 3; index >= indexEdge; index--) {
+                currentMinWidth = this.getMinWidth(items, options, index, getTextWidth);
                 if (secondContainerWidth <= width) {
                     break;
-                } else if (this.canShrink(itemsWidth[index], secondContainerWidth, width)) {
+                } else if (this.canShrink(currentMinWidth, secondContainerWidth, width)) {
                     shrinkItemIndex = index;
-                    secondContainerWidth -= itemsWidth[index] - BREAD_CRUMB_MIN_WIDTH;
+                    secondContainerWidth -= itemsWidth[index] - currentMinWidth;
                     break;
                 } else {
                     secondContainerWidth -= itemsWidth[index];
                 }
             }
+            index = index === -1 && indexEdge === 0 ? 0 : index;
             // заполняем крошками, которые влезли, второй контейнер (не считая последней)
             for (let j = indexEdge; j <= index; j++) {
-                secondContainerItems.push(this.getItemData(j, items, true, j === shrinkItemIndex));
+                secondContainerItems.push(this.getItemData(j, items, true, j === index && items[j].get(options.displayProperty).length > 3));
             }
             // добавляем точки
-            let dotsItem = {};
+            const dotsItem = {};
             dotsItem[options.displayProperty] = '...';
 
             secondContainerItems.push({
@@ -141,12 +147,13 @@ export default {
             // если все остальные крошки поместились - пушим по второй контейнер
             const secondContainerItems = [];
             for (let j = indexEdge; j < items.length; j++) {
-                secondContainerItems.push(this.getItemData(j, items, true, j === items.length - 2));
+                secondContainerItems.push(this.getItemData(j, items, true, j === items.length - 2 && items[items.length - 2].get(options.displayProperty).length > 3));
+            }
+            if (secondContainerItems.length === 2) {
+                secondContainerItems[1].withOverflow = true;
             }
             return secondContainerItems;
         }
     }
-
-
 
 };

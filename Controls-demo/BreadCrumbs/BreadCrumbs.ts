@@ -72,11 +72,11 @@ class Multiline extends Control<IControlOptions> {
         });
         this.items2 = [{
             id: 1,
-            title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
+            title: '1',
             secondTitle: 'тест1'
         }, {
             id: 6,
-            title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
+            title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw Настолько длинное название папки что оно не влезет в максимальный размер 1',
             secondTitle: 'тест6'
         }].map(function (item) {
             return new Model({

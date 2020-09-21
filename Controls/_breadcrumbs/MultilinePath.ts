@@ -1,5 +1,4 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import {ItemsUtil} from 'Controls/list';
 import BreadCrumbsUtil from './Utils';
 import {
     IFontColorStyle,
@@ -15,7 +14,6 @@ import {Logger} from 'UI/Utils';
 
 //TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
 const ARROW_WIDTH = 16;
-const BREAD_CRUMB_MIN_WIDTH = ARROW_WIDTH + 28;
 const PADDING_RIGHT = 2;
 
 /*
