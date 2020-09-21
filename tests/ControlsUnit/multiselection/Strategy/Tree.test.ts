@@ -2,11 +2,10 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
-import { FlatSelectionStrategy, TreeSelectionStrategy } from 'Controls/multiselection';
-import { relation } from 'Types/entity';
+import { TreeSelectionStrategy } from 'Controls/multiselection';
+import { relation, Record } from 'Types/entity';
 import * as ListData from 'ControlsUnit/ListData';
 import { RecordSet } from 'Types/collection';
-import { Record } from "wasaby-cli/store/_repos/saby-types/Types/entity";
 
 describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
    const hierarchy = new relation.Hierarchy({
@@ -245,6 +244,20 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          selection = strategy.toggleAll(selection);
          assert.deepEqual(selection.selected, [2]);
          assert.deepEqual(selection.excluded, []);
+      });
+
+      it('toggleAll after select all by one', () => {
+         let selection = { selected: [1, 2, 3, 4, 5, 6, 7], excluded: [] };
+
+         selection = strategy.unselect(selection, [2]);
+
+         assert.deepEqual(selection.selected, [1, 3, 4, 5, 6, 7]);
+         assert.deepEqual(selection.excluded, []);
+
+         selection = strategy.toggleAll(selection);
+
+         assert.deepEqual(selection.selected, [null]);
+         assert.deepEqual(selection.excluded, [null, 1, 3, 4, 5, 6, 7]);
       });
    });
 
