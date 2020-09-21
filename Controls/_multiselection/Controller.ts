@@ -218,6 +218,8 @@ export class Controller {
           .filter((item) => !item['[Controls/_display/GroupItem]']) // TODO заменить на проверку SelectableItem
           .map((item) => {
              const contents = item.getContents();
+             // TODO getContents() должен возвращать Record
+             //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
              return contents instanceof Array ? contents[contents.length - 1] : contents;
           });
       this._updateModel(this._selection, false, records);
