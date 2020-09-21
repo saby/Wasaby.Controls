@@ -643,7 +643,7 @@ define([
          FC._source = {
             create: () => Promise.resolve(new entity.Record())
          };
-         return FC._createRecordBeforeMount({}).then(() => {
+         return FC._createRecordBeforeMount({initializingWay: 'delayedCreate'}).then(() => {
             assert.equal(FC._record, 'initModel');
             FC.destroy();
          });
