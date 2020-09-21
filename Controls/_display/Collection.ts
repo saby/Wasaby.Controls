@@ -1350,6 +1350,17 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         if (collection && collection['[Types/_collection/IList]']) {
             sourceIndex = (collection as any as IList<S>).getIndex(item);
+
+            // Если записи нет в наборе данных, то, возможно запрашивается индекс добавляемой в данный момент записи.
+            // Такой записи еще нет в наборе данных.
+            if (sourceIndex === -1 && this._$isEditing) {
+                this.each((el, index: number) => {
+                    if (el.isEditing() && el.isAdd && el.contents.getKey() === item.contents.getKey()) {
+                        sourceIndex = index;
+                    }
+                });
+                return sourceIndex;
+            }
         } else {
             let index = 0;
             (collection as IEnumerable<S>).each((value) => {
@@ -2279,8 +2290,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (this._$collection['[Types/_collection/RecordSet]']) {
             if (key !== undefined) {
                 const record = (this._$collection as unknown as RecordSet).getRecordById(key);
+
+                // Если записи нет в наборе данных, то, возможно запрашивается добавляемая в данный момент запись.
+                // Такой записи еще нет в наборе данных.
                 if (!record && this._$isEditing) {
-                    return this.find((item) => item.isEditing() && item.contents.getKey() === key);
+                    return this.find((item) => item.isEditing() && item.isAdd && item.contents.getKey() === key);
                 } else {
                     return this.getItemBySourceItem(record as unknown as S);
                 }
@@ -2445,7 +2459,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setAddingItem(item: T): void {
-        this.prependStrategy(AddStrategy, {
+        this._prependStrategy(AddStrategy, {
             item,
             addPosition: item.addPosition,
             groupMethod: this.getGroup()
@@ -2467,7 +2481,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
+    private _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
         const strategyOptions = { ...options, display: this };
         let index = 0;
 

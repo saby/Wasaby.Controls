@@ -70,7 +70,6 @@ var ListView = BaseControl.extend(
                   this._pendingRedraw = true;
                }
             };
-            this.activateEditingRow = this.activateEditingRow.bind(this);
         },
 
         _doAfterReload(callback): void {

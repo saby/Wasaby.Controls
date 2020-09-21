@@ -26,7 +26,6 @@ import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig, ISelectionObject} from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
-import {editing as constEditing} from 'Controls/Constants';
 
 // Utils imports
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
@@ -35,8 +34,9 @@ import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
     CollectionItem,
-    EditInPlaceController,
-    GroupItem
+    EditInPlaceController as NewModelEditInPlaceController,
+    GroupItem,
+    TItemKey
 } from 'Controls/display';
 import {
     Controller as ItemActionsController,
@@ -57,13 +57,11 @@ import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import {ISwipeEvent} from 'Controls/listRender';
 
 import {
-    CONSTANTS,
-    EditInPlace,
-    Controller as NewEditInPlaceController,
+    Controller as EditInPlaceController,
     InputHelper as EditInPlaceInputHelper,
+    CONSTANTS,
     JS_SELECTORS
 } from '../editInPlace';
-
 import {IEditableListOption} from './interface/IEditableList';
 
 import {default as ScrollController, IScrollParams} from './ScrollController';
@@ -91,7 +89,6 @@ import {IList} from "./interface/IList";
 import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { EdgeIntersectionObserver } from 'Controls/scroll';
-import { TItemKey } from 'Controls/display';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {IMoveControllerOptions, MoveController, TMovePosition} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from "../_moverDialog/Template";
@@ -1864,8 +1861,8 @@ const _private = {
     needBottomPadding(options, items, listViewModel) {
         const isEditing =
             options.useNewModel
-            ? EditInPlaceController.isEditing(listViewModel)
-            : !!listViewModel.getEditingItemData();
+            ? NewModelEditInPlaceController.isEditing(listViewModel)
+            : listViewModel.isEditing();
 
         const display = listViewModel ? (options.useNewModel ? listViewModel : listViewModel.getDisplay()) : null;
         const hasVisibleItems = !!(display && display.getCount());
@@ -1948,7 +1945,7 @@ const _private = {
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
             const isEditing = !!self._editInPlaceController && !!self._listViewModel && (
-                self._options.useNewModel ? EditInPlaceController.isEditing(self._listViewModel) :
+                self._options.useNewModel ? NewModelEditInPlaceController.isEditing(self._listViewModel) :
                     !!self._editInPlaceController.getEditingItem()
             );
             if (isEditing) {
@@ -2325,48 +2322,6 @@ const _private = {
 
     // endregion
 
-    createEditInPlace(self: typeof BaseControl, options: any): void {
-        if (options.editingConfig) {
-            self._editInPlace = new EditInPlace({
-                editingConfig: options.editingConfig,
-                listViewModel: self._listViewModel,
-                multiSelectVisibility: options.multiSelectVisibility,
-                errorController: self.__errorController,
-                source: self.getSourceController(),
-                useNewModel: options.useNewModel,
-                theme: self._options.theme,
-                readOnly: self._options.readOnly,
-                keyProperty: self._options.keyProperty,
-                notify: (name, args, params) => {
-                    const eventResult = self._notify(name, args, params);
-
-                    if (name === 'beforeBeginEdit') {
-                        _private.onBeforeBeginEdit(self, eventResult);
-                    }
-
-                    return eventResult;
-                },
-                forceUpdate: () => {
-                    self._forceUpdate();
-                },
-                updateMarkedKey: (key: CrudEntityKey) => {
-                    self.setMarkedKey(key);
-                },
-                updateItemActions: () => {
-                    /*
-                    * TODO: KINGO
-                    * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
-                    * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
-                    * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
-                    * _canUpdateItemsActions приведет к показу неактуальных операций.
-                    */
-                    _private.updateItemActions(self, self._options);
-                },
-                isDestroyed: () => self._destroyed
-            });
-        }
-    },
-
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
             virtualScrollConfig: options.virtualScrollConfig || {},
@@ -2393,7 +2348,6 @@ const _private = {
         }
 
         const editingConfig = self._listViewModel.getEditingConfig();
-        const editingItemData = self._listViewModel.getEditingItemData && self._listViewModel.getEditingItemData();
         const isActionsAssigned = self._listViewModel.isActionsAssigned();
         let editArrowAction: IItemAction;
         if (options.showEditArrow) {
@@ -2408,7 +2362,7 @@ const _private = {
             };
         }
         const itemActionsChangeResult = itemActionsController.update({
-                editingItem: editingItemData,
+                editingItem: self._editInPlaceController ? self._listViewModel.find((el) => el.isEditing()) : undefined,
                 collection: self._listViewModel,
                 itemActions: options.itemActions,
                 itemActionsProperty: options.itemActionsProperty,
@@ -2837,6 +2791,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._validateController = new ControllerClass();
         this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._startDragNDropCallback = this._startDragNDropCallback.bind(this);
+        this._resetValidation = this._resetValidation.bind(this);
         this._loadTriggerOffset = { top: LOAD_TRIGGER_OFFSET, bottom: LOAD_TRIGGER_OFFSET };
     },
 
@@ -3183,12 +3138,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._selectionController) {
             const result = _private.getSelectionController(this).getResultAfterConstructor();
             _private.handleSelectionControllerResult(this, result);
-        }
-
-        if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(this._validateController);
-            this._editInPlace.updateViewModel(this._listViewModel);
-            this._editInPlace.setErrorContainer(this._children.errorContainer);
         }
 
         if (this._editInPlaceController) {
@@ -3833,13 +3782,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._callbackAfterUpdate = null;
         }
 
-        if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(this._validateController);
-            this._validateController.resolveSubmit();
-        }
-
         if (this._editInPlaceController) {
-            this._editInPlaceInputHelper.activateInput(this._children.listView.activateEditingRow);
+            const rowActivator = this._children.listView.activateEditingRow.bind(this._children.listView);
+            this._editInPlaceInputHelper.activateInput(rowActivator);
         }
 
     },
@@ -3882,8 +3827,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const noData = !listViewModel.getCount();
         const noEdit =
             this._options.useNewModel
-                ? !EditInPlaceController.isEditing(listViewModel)
-                : !listViewModel.getEditingItemData();
+                ? !NewModelEditInPlaceController.isEditing(listViewModel)
+                : !(this._editInPlaceController && this._editInPlaceController.getEditingItem());
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
         const noDataBeforeReload = this._noDataBeforeReload;
@@ -3996,114 +3941,123 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _editInPlaceController: null,
     _editInPlaceInputHelper: null,
 
-    _getEditInPlaceController(): NewEditInPlaceController {
+    _getEditInPlaceController(): EditInPlaceController {
         if (!this._editInPlaceController) {
             this._editInPlaceController = this._createEditInPlaceController();
         }
         return this._editInPlaceController;
     },
 
-    _createEditInPlaceController(): NewEditInPlaceController {
-        let resetValidation = () => {
-            this._validateController.setValidationResult(null);
-        };
-        resetValidation = resetValidation.bind(this);
+    _createEditInPlaceController(): EditInPlaceController {
+        this._editInPlaceInputHelper = new EditInPlaceInputHelper();
 
-        const notifyIfMount = (eName, args: unknown[], params?: {bubbling: true}) => {
-            return this._isMounted ? this._notify(eName, args, params) : undefined;
-        };
+        return new EditInPlaceController({
+            collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
+            onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
+            onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
+            onBeforeEndEdit: this._beforeEndEditCallback.bind(this),
+            onAfterEndEdit: this._afterEndEditCallback.bind(this)
+        });
+    },
 
-        const beforeBeginCallback = (options: { item?: Model}, isAdd: boolean) => {
+    _beforeBeginEditCallback(options: { item?: Model}, isAdd: boolean) {
+        return new Promise((resolve) => {
+            // Редактирование может запуститься при построении.
+            const eventResult = this._isMounted ? this._notify('beforeBeginEdit', [options, isAdd]) : undefined;
 
-            return new Promise((resolve) => {
-                const eventResult = notifyIfMount('beforeBeginEdit', [options, isAdd]);
+            if (this._savedItemClickArgs && this._isMounted) {
+                // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
+                // обязательно должен случиться после события beforeBeginEdit.
+                this._notify('itemClick', this._savedItemClickArgs, {bubbling: true});
+            }
 
-                if (this._savedItemClickArgs) {
-                    // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
-                    // обязательно должен случиться после события beforeBeginEdit.
-                    notifyIfMount('itemClick', this._savedItemClickArgs, {bubbling: true});
+            resolve(eventResult);
+        }).then((result) => {
+
+            if (result === CONSTANTS.CANCEL) {
+                if (this._savedItemClickArgs && this._isMounted) {
+                    // Запись становится активной по клику, если не началось редактирование.
+                    // Аргументы itemClick сохранены в состояние и используются для нотификации об активации элемента.
+                    this._notify('itemActivate', this._savedItemClickArgs, {bubbling: true});
                 }
-
-                resolve(eventResult);
-            }).then((result) => {
-
-                if (result === CONSTANTS.CANCEL) {
-                    if (this._savedItemClickArgs) {
-                        // Запись становится активной по клику, если не началось редактирование.
-                        // Аргументы itemClick сохранены в состояние и используются для нотификации об активации элемента.
-                        notifyIfMount('itemActivate', this._savedItemClickArgs, {bubbling: true});
-                    }
-                    return result;
-                }
-
-                if (isAdd && !((options && options.item) instanceof Model) && !((result && result.item) instanceof Model)) {
-                    return this.getSourceController().create().then((item) => {
-                        if (item instanceof Model) {
-                            return {item};
-                        }
-                        throw Error('BaseControl::create before add error! Source returned non Model.');
-                    }).catch((error: Error) => {
-                        return this._processEditInPlaceError(error);
-                    });
-                }
-
                 return result;
-            }).finally(() => {
-                this._savedItemClickArgs = null;
-            });
-        };
+            }
 
-        const afterBeginCallback = (item: Model, isAdd: boolean) => {
-            notifyIfMount('afterBeginEdit', [item, isAdd]);
+            if (isAdd && !((options && options.item) instanceof Model) && !((result && result.item) instanceof Model)) {
+                return this.getSourceController().create().then((item) => {
+                    if (item instanceof Model) {
+                        return {item};
+                    }
+                    throw Error('BaseControl::create before add error! Source returned non Model.');
+                }).catch((error: Error) => {
+                    return this._processEditInPlaceError(error);
+                });
+            }
+
+            return result;
+        }).finally(() => {
+            this._savedItemClickArgs = null;
+        });
+    },
+
+    _afterBeginEditCallback(item: Model, isAdd: boolean): void {
+        // Редактирование может запуститься при построении.
+        if (this._isMounted) {
+            this._notify('afterBeginEdit', [item, isAdd]);
+
             if (this._listViewModel.getCount() > 1) {
                 this.setMarkedKey(item.getKey());
             }
+        }
 
-            item.subscribe('onPropertyChange', resetValidation);
-            /*
-             * TODO: KINGO
-             * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
-             * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
-             * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
-             * _canUpdateItemsActions приведет к показу неактуальных операций.
-             */
-            _private.updateItemActions(this, this._options);
-        };
+        item.subscribe('onPropertyChange', this._resetValidation);
+        /*
+         * TODO: KINGO
+         * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
+         * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
+         * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
+         * _canUpdateItemsActions приведет к показу неактуальных операций.
+         */
+        _private.updateItemActions(this, this._options);
+    },
 
-        const beforeEndCallback = (item: Model, willSave: boolean, isAdd: boolean) => {
-            return new Promise((resolve) => {
-                const eventResult = this._notify('beforeEndEdit', [item, willSave, isAdd]);
+    _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean) {
+        return Promise.resolve().then(() => {
+            if (willSave) {
+                return this._validateController.submit().then((validationResult) => {
+                    for (const key in validationResult) {
+                        if (validationResult.hasOwnProperty(key) && validationResult[key]) {
+                            return CONSTANTS.CANCEL;
+                        }
+                    }
+                });
+            }
+        }).then((result) => {
+            if (result === CONSTANTS.CANCEL) {
+                return result;
+            }
+            const eventResult = this._notify('beforeEndEdit', [item, willSave, isAdd]);
 
-                // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
-                // Пользовательское сохранение потенциально может начаться только если вернули Promise
-                const shouldUseDefaultSaving = willSave && (isAdd || item.isChanged()) && (
-                    !eventResult || (
-                        eventResult !== CONSTANTS.CANCEL && !(eventResult instanceof Promise)
-                    )
-                );
-                if (shouldUseDefaultSaving) {
-                    resolve(this._saveEditingInSource(item));
-                } else {
-                    resolve(eventResult);
-                }
-            });
-        };
+            // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
+            // Пользовательское сохранение потенциально может начаться только если вернули Promise
+            const shouldUseDefaultSaving = willSave && (isAdd || item.isChanged()) && (
+                !eventResult || (
+                    eventResult !== CONSTANTS.CANCEL && !(eventResult instanceof Promise)
+                )
+            );
 
-        const afterEndCallback = (item: Model, isAdd: boolean) => {
-            this._notify('afterEndEdit', [item, isAdd]);
-            item.unsubscribe('onPropertyChange', resetValidation);
-            _private.updateItemActions(this, this._options);
-        };
-
-        this._editInPlaceInputHelper = new EditInPlaceInputHelper();
-
-        return new NewEditInPlaceController({
-            collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
-            onBeforeBeginEdit: beforeBeginCallback.bind(this),
-            onAfterBeginEdit: afterBeginCallback.bind(this),
-            onBeforeEndEdit: beforeEndCallback.bind(this),
-            onAfterEndEdit: afterEndCallback.bind(this)
+            return shouldUseDefaultSaving ? this._saveEditingInSource(item) : eventResult;
         });
+    },
+
+    _afterEndEditCallback(item: Model, isAdd: boolean): void {
+        this._notify('afterEndEdit', [item, isAdd]);
+        item.unsubscribe('onPropertyChange', this._resetValidation);
+        _private.updateItemActions(this, this._options);
+    },
+
+    _resetValidation() {
+        this._validateController.setValidationResult(null);
     },
 
     getEditingItem(): Model {
@@ -4184,14 +4138,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return Promise.reject('Control is in readOnly mode.');
         }
         this.showIndicator();
-        return this._validateController.submit().then((validationResult) => {
-            for (const key in validationResult) {
-                if (validationResult.hasOwnProperty(key) && validationResult[key]) {
-                    return Promise.resolve({ canceled: true });
-                }
-            }
-            return this._getEditInPlaceController().commit();
-        }).finally(() => {
+        return this._getEditInPlaceController().commit().finally(() => {
             this.hideIndicator();
         });
     },

@@ -881,7 +881,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('should not add backgroundStyle when columnScroll is true and row is in editing state', () => {
             const gridViewModel = new gridMod.GridViewModel({ ...cfg, columnScroll: true});
             const current = gridViewModel.getCurrent();
-            gridViewModel._setEditingItemData(current);
+            current.isEditing = () => true;
             assert.isTrue(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll().indexOf(`controls-background-default_theme-${theme}`) === -1);
          });
 
@@ -1084,8 +1084,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setActiveItem', 'appendItems', 'prependItems',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
-                  '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
-                  'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
+                  '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', 'getMarkedKey',
+                  'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'isEditing'],
                callStackMethods = [];
 
             gridViewModel._model = {
@@ -2533,29 +2533,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             };
 
             assert.equal(gridModel.getCurrent().stickyLadder.prop.headingStyle, '123');
-         });
-
-         it('has no bottom border between last row and adding row', () => {
-            const model = new gridMod.GridViewModel({
-               ...cfg,
-               items: new collection.RecordSet({
-                  rawData: [{id: 1}, {id: 2}],
-                  keyProperty: 'id'
-               }),
-               editingConfig: {}
-            });
-
-            model.goToNext();
-            model.setHasMoreData(true);
-            assert.isTrue(model.getCurrent().isLastRow);
-
-            model.resetCachedItemData();
-            model.getEditingItemData = () => ({
-               index: 2
-            });
-            model.reset();
-            model.goToNext();
-            assert.isFalse(model.getCurrent().isLastRow);
          });
       });
 

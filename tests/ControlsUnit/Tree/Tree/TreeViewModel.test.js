@@ -694,22 +694,6 @@ define([
             assert.equal(model.getLastItem(), model.getItems().at(2));
          });
 
-         it('hasChildren should be true when an item gets added to an empty folder', function() {
-            var newItem = new entity.Record({
-               rawData: {
-                  'id': '4',
-                  'title': 'четыре',
-                  'parent': '3',
-                  'parent@': true
-               }
-            });
-            treeViewModel.setExpandedItems(['123', '234', '3']);
-            treeViewModel._editingItemData = {
-               item: newItem
-            };
-            treeViewModel._curIndex = 4;
-            assert.isTrue(treeViewModel.getCurrent().hasChildren);
-         });
 
          it('isExpandAll', function() {
             treeViewModel.setExpandedItems(['123', '234', '3']);

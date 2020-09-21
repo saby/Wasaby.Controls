@@ -14,8 +14,6 @@
              itemTemplateProperty="{{ _options.itemTemplateProperty }}"
              groupTemplate="{{ _groupTemplate }}"
 
-             editingItemData="{{ _options.editingItemData }}"
-             isAdd="{{ _options.isAdd }}"
              itemActionsPosition="{{ _options.itemActionsPosition }}"
              itemActionsTemplate="{{ _options.itemActionsTemplate }}"
              itemActionsClass="{{ _options.itemActionsClass }}"
