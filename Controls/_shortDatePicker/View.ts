@@ -146,7 +146,7 @@ var Component = BaseControl.extend({
 
     _updateIsExpandButtonVisible(options): void {
         const openerTop = options.stickyPosition.targetCoords.top;
-        const popupTop = options.stickyPosition.position.top + Math.abs(options.margins.top);
+        const popupTop = options.stickyPosition.position.top + Math.abs(options.stickyPosition.margins.top);
         this._isExpandButtonVisible = openerTop === popupTop;
     },
 
