@@ -126,6 +126,11 @@ const _private = {
         }
     },
 
+    updateMargins(item): void {
+        const margins = _private.getMargins(item);
+        item.popupOptions.templateOptions.margins = margins;
+    },
+
     getWindowWidth() {
         return window && window.innerWidth;
     },
@@ -306,6 +311,7 @@ class StickyController extends BaseController {
         item.popupOptions = _private.prepareOriginPoint(item.popupOptions);
         const popupCfg = this._getPopupConfig(item);
         _private.updateStickyPosition(item, popupCfg);
+        _private.updateMargins(item);
         item.position = {
             top: -10000,
             left: -10000,
