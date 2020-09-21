@@ -2,10 +2,11 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
-import { FlatSelectionStrategy, SelectionController, ISelectionItem } from 'Controls/multiselection';
+import { FlatSelectionStrategy, SelectionController, TreeSelectionStrategy, ISelectionItem } from 'Controls/multiselection';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
 import { SearchGridViewModel} from 'Controls/treeGrid';
+import { relation } from 'Types/entity';
 
 describe('Controls/_multiselection/Controller', () => {
    const items = new RecordSet({
@@ -148,7 +149,7 @@ describe('Controls/_multiselection/Controller', () => {
          model.setItems(new RecordSet({
             rawData: [],
             keyProperty: 'id'
-         }));
+         }), {});
 
          const result = controller.clearSelection();
          assert.deepEqual(result, {
@@ -252,7 +253,7 @@ describe('Controls/_multiselection/Controller', () => {
             { id: 4 }
          ],
          keyProperty: 'id'
-      }));
+      }), {});
 
       controller.update({
          model,
@@ -358,5 +359,117 @@ describe('Controls/_multiselection/Controller', () => {
       // @ts-ignore
       swipedItem = controller.getAnimatedItem() as CollectionItem<Record>;
       assert.equal(swipedItem, null, 'Current right-swiped item has not been un-swiped');
+   });
+
+   describe('should work with breadcrumbs', () => {
+      const items = new RecordSet({
+         rawData: [
+             {
+               id: 1,
+               parent: null,
+               nodeType: true,
+               title: 'test_node'
+            }, {
+               id: 2,
+               parent: 1,
+               nodeType: null,
+               title: 'test_leaf'
+            },
+            {
+               id: 3,
+               parent: null,
+               nodeType: true,
+               title: 'test_node'
+            }, {
+               id: 4,
+               parent: 3,
+               nodeType: null,
+               title: 'test_leaf'
+            }
+         ],
+         keyProperty: 'id'
+      });
+
+      const nodesSourceControllers = {
+         get(): object {
+            return {
+               hasMoreData(): boolean { return false; }
+            };
+         }
+      };
+
+      const hierarchy = new relation.Hierarchy({
+         keyProperty: 'id',
+         parentProperty: 'parent',
+         nodeProperty: 'nodeType'
+      });
+
+      const strategy = new TreeSelectionStrategy({
+         items,
+         selectDescendants: false,
+         selectAncestors: false,
+         hierarchyRelation: hierarchy,
+         rootId: null,
+         nodesSourceControllers
+      });
+
+      let model, controller;
+
+      beforeEach(() => {
+         model = new SearchGridViewModel({
+            items,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'nodeType',
+            columns: [{}]
+         });
+
+         controller = new SelectionController({
+            model,
+            strategy,
+            selectedKeys: [],
+            excludedKeys: []
+         });
+      });
+
+      it('handleAddItems', () => {
+         model.setItems(items, {});
+
+         controller.update({
+            model,
+            selectedKeys: [1, 3],
+            excludedKeys: [],
+            strategyOptions: {
+               items,
+               selectDescendants: false,
+               selectAncestors: false,
+               hierarchyRelation: hierarchy,
+               rootId: null,
+               nodesSourceControllers
+            }
+         });
+
+         const addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(3)];
+         const result = controller.handleAddItems(addedItems);
+         assert.deepEqual(result, {
+            selectedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: [1, 3]
+            },
+            excludedKeysDiff: {
+               added: [],
+               removed: [],
+               keys: []
+            },
+            selectedCount: 2,
+            isAllSelected: false
+         });
+
+         assert.isTrue(model.getItemBySourceKey(1).isSelected());
+         assert.isFalse(model.getItemBySourceKey(2).isSelected());
+         assert.isTrue(model.getItemBySourceKey(3).isSelected());
+         assert.isFalse(model.getItemBySourceKey(4).isSelected());
+      });
    });
 });

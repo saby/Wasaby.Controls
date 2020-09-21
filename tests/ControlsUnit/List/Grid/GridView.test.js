@@ -703,6 +703,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             let wasSwipeInited;
             let wasSwipeClosed;
             let swipeDirection;
+            let wasEventStopped;
 
             const createTouchStartEvent = (touches) => ({
                preventDefault: () => {},
@@ -717,7 +718,9 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             });
 
             const createSwipeEvent = (direction, isFixed) => ({
-               stopPropagation: () => {},
+               stopPropagation: () => {
+                  wasEventStopped = true;
+               },
                nativeEvent: { direction },
                target: {
                   closest: () => isFixed
@@ -727,6 +730,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             beforeEach(async() => {
                wasSwipeInited = false;
                wasSwipeClosed = false;
+               wasEventStopped = false;
 
                contentContainer.querySelector = (selector) => selector === '.controls-Grid_columnScroll__fixed:nth-child(2)' ? {
                   getBoundingClientRect: () => ({
@@ -804,6 +808,22 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                   assert.isTrue(wasSwipeInited);
                   assert.equal(swipeDirection, 'left');
                   assert.isFalse(gridView._leftSwipeCanBeStarted);
+               });
+               it('shouldn\'t handle top swipe', () => {
+                  gridView._startDragScrolling(createTouchStartEvent([55]), 'touch');
+                  gridView._onItemSwipe(createSwipeEvent('top', false));
+
+                  assert.isFalse(wasSwipeInited);
+                  assert.isFalse(wasEventStopped);
+                  assert.notExists(gridView._leftSwipeCanBeStarted);
+               });
+               it('shouldn\'t handle bottom swipe', () => {
+                  gridView._startDragScrolling(createTouchStartEvent([55]), 'touch');
+                  gridView._onItemSwipe(createSwipeEvent('bottom', false));
+
+                  assert.isFalse(wasSwipeInited);
+                  assert.isFalse(wasEventStopped);
+                  assert.notExists(gridView._leftSwipeCanBeStarted);
                });
             });
          });
