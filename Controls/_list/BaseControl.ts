@@ -572,7 +572,7 @@ const _private = {
             const markerController = _private.getMarkerController(self);
             const markedKey = markerController.getMarkedKey();
             if (markedKey !== null) {
-                const markedItem = self.getItems().getRecordByKey(markedKey);
+                const markedItem = self.getItems().getRecordById(markedKey);
                 self._notify('itemClick', [markedItem, event], { bubbling: true });
                 if (event && !event.isStopped()) {
                     self._notify('itemActivate', [markedItem, event], {bubbling: true});
