@@ -1536,6 +1536,11 @@ const _private = {
                 if (action === IObservable.ACTION_ADD) {
                     _private.getMarkerController(self).handleAddItems(newItems);
                 }
+
+                // TODO костыль для 6100, в 7100 это переписано адекватно и работает
+                if (action === IObservable.ACTION_RESET) {
+                    _private.getMarkerController(self).restoreMarker();
+                }
             }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
