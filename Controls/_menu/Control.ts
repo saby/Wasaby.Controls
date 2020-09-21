@@ -200,8 +200,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
 
         if (this._markerController) {
+            this._markerController.updateOptions(this._getMarkerControllerConfig(newOptions));
             const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions.emptyKey, newOptions.multiSelect);
-            this._markerController.updateOptions(this._getMarkerControllerConfig(newOptions, markedKey));
             this._markerController.setMarkedKey(markedKey);
         }
 
