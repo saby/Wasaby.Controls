@@ -4019,7 +4019,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
              * Событие всплывается для того, чтобы в listRender:TileView срабатывал обработчик события itemClick
              * https://online.sbis.ru/opendoc.html?guid=edc3fc25-35f5-44a7-9932-9cca8cb4c30f
              */
-            if (!originalEvent._bubbling) {
+            if (!e._bubbling) {
                 eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], {bubbling: true});
             }
             if (eventResult !== false) {
