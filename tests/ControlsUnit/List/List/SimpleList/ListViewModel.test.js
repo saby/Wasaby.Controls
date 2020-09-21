@@ -173,6 +173,57 @@ define([
             assert.isTrue(model.isShouldBeDrawnItem(itemSticky)); // curent index 0, strartIndex 1. item isn't in range but should render as master sticky
       });
 
+      describe('_getEndIndexForReset', () => {
+         it('sticky item out of range', () => {
+            const data = [
+               { id: '0', title: '0' },
+               { id: '1', title: '1' },
+               { id: '2', title: '2' },
+               { id: '3', title: '3' },
+               { id: '4', title: '4' }];
+            const cfg = {
+               items: new collection.RecordSet({
+                  rawData: data,
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title',
+               style: 'master',
+               supportVirtualScroll: true
+            };
+            const model = new lists.ListViewModel(cfg);
+            model.setMarkedKey(3, true);
+            model._stopIndex = 2;
+            const result = model._getEndIndexForReset();
+            assert.equal(result, 4, 'sticky item must be shown');
+            
+         });
+         it('sticky item in range', () => {
+            const data = [
+               { id: '0', title: '0' },
+               { id: '1', title: '1' },
+               { id: '2', title: '2' },
+               { id: '3', title: '3' },
+               { id: '4', title: '4' }];
+            const cfg = {
+               items: new collection.RecordSet({
+                  rawData: data,
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title',
+               style: 'master',
+               supportVirtualScroll: true
+            };
+            const model = new lists.ListViewModel(cfg);
+            model.setMarkedKey(1, true);
+            model._stopIndex = 2;
+            const result = model._getEndIndexForReset();
+            assert.equal(result, 2, 'sticky item is in range, so end index === stop index');
+            
+         });
+         
+      });
 
       it('markItemReloaded', () => {
          var
