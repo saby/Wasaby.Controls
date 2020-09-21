@@ -91,6 +91,7 @@ var Component = BaseControl.extend({
     _isExpandedPopup: false,
     _popupHeightStyle: '',
     _popupOffset: 2,
+    _isExpandButtonVisible: true,
 
 // constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
@@ -131,6 +132,7 @@ var Component = BaseControl.extend({
 
     _beforeUpdate: function (options) {
         // this._caption = _private._getCaption(options);
+        this._updateIsExpandButtonVisible(options);
     },
 
     /**
@@ -140,6 +142,12 @@ var Component = BaseControl.extend({
     setYear: function (year) {
         this._position = new this._options.dateConstructor(year, 0, 1);
         this._notify('yearChanged', [year]);
+    },
+
+    _updateIsExpandButtonVisible(options): void {
+        const openerTop = options.stickyPosition.targetCoords.top;
+        const popupTop = options.stickyPosition.position.top + Math.abs(options.margins.top);
+        this._isExpandButtonVisible = openerTop === popupTop;
     },
 
     _dateToDataString(date) {
@@ -226,10 +234,9 @@ var Component = BaseControl.extend({
     _expandPopup(): void {
         this._isExpandedPopup = !this._isExpandedPopup;
         if (this._isExpandedPopup) {
-            // Делаем попап до конца экрана. Для этого вычитаем из размера вьюпорта смещение по Y.
-            const maxHeightPopup = this._logicParent._container.style.maxHeight;
-            const topPopup = this._logicParent._container.style.top;
-            this._popupHeightStyle = `height: ${parseInt(maxHeightPopup, 10) - parseInt(topPopup, 10) - this._popupOffset}px`;
+            const maxHeightPopup = this._options.stickyPosition.position.maxHeight;
+            const topPopup = this._options.stickyPosition.position.top;
+            this._popupHeightStyle = `height: ${maxHeightPopup - topPopup - this._popupOffset}px`;
         } else {
             this._popupHeightStyle = '';
         }
