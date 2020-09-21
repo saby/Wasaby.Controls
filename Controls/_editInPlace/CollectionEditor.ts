@@ -1,8 +1,8 @@
 import {DestroyableMixin, Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
-import {ICollectionEditor, ICollectionEditorOptions} from './interface/ICollectionEditor';
-import {TEditableCollectionItem, TKey} from './Types';
+import {TEditableCollectionItem, TKey, TAddPosition} from './Types';
 import {mixin} from 'Types/util';
+import {Collection} from 'Controls/display';
 
 export const ERROR_MSG = {
     ADDING_ITEM_KEY_WAS_NOT_SET: 'Adding item key was not set. Key is required. You can set the key ' +
@@ -17,25 +17,19 @@ export const ERROR_MSG = {
 
 const ADDING_ITEM_EMPTY_KEY = 'ADDING_ITEM_EMPTY_KEY';
 
+export interface ICollectionEditorOptions {
+    collection: Collection<Model>;
+}
+
 /**
  * Контроллер редактирования коллекции.
  *
- * @mixes Controls/_editInPlace/interface/ICollectionEditor
  * @mixes Types/_entity/DestroyableMixin
  * @private
  * @class Controls/_editInPlace/CollectionEditor
  * @author Родионов Е.А.
  */
-/*
- * Collection editor controller.
- *
- * @mixes Controls/_editInPlace/interface/ICollectionEditor
- * @mixes Types/_entity/DestroyableMixin
- * @private
- * @class Controls/_editInPlace/CollectionEditor
- * @author Rodionov E.
- */
-export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) implements ICollectionEditor {
+export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) {
     private _options: ICollectionEditorOptions;
     private _editingKey: TKey;
 
@@ -46,10 +40,12 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         }
     }
 
-    getEditingKey(): TKey {
-        return this._editingKey;
-    }
-
+    /**
+     * Получить редактируемый элемент
+     * @method
+     * @return {Types/entity:Model|undefined}
+     * @public
+     */
     getEditingItem(): Model | undefined {
         if (this._editingKey === undefined) {
             return undefined;
@@ -67,6 +63,15 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         return true;
     }
 
+    /**
+     * Обновить опции контроллера.
+     * @method
+     * @param {Partial.<ICollectionEditorOptions>} newOptions Новые опции.
+     * @void
+     *
+     * @public
+     * @remark Все поля в новых опциях не являются обязательными, таким образом, есть возможность выборочного обновления.
+     */
     updateOptions(newOptions: Partial<ICollectionEditorOptions>): void {
         const combinedOptions = {...this._options, ...newOptions};
         if (this._validateOptions(combinedOptions)) {
@@ -74,6 +79,13 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         }
     }
 
+    /**
+     * Запустить редактирование переданного элемента.
+     * @method
+     * @param {Types/entity:Model} item Элемент для редактирования
+     * @void
+     * @public
+     */
     edit(item: Model): void {
         if (typeof this._editingKey !== 'undefined') {
             throw Error(ERROR_MSG.EDITING_IS_ALREADY_RUNNING);
@@ -96,7 +108,15 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
     }
 
-    add(item: Model, addPosition?: 'top' | 'bottom'): void {
+    /**
+     * Начать добавление переданного элемента.
+     * @method
+     * @param {Types/entity:Model} item Элемент для добавления
+     * @param {TAddPosition} addPosition позиция добавляемого элемента
+     * @void
+     * @public
+     */
+    add(item: Model, addPosition?: TAddPosition): void {
         if (typeof this._editingKey !== 'undefined') {
             throw Error(ERROR_MSG.EDITING_IS_ALREADY_RUNNING);
         }
@@ -131,6 +151,12 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
     }
 
+    /**
+     * Завершить редактирование элемента и сохранить изменения.
+     * @method
+     * @void
+     * @public
+     */
     commit(): void {
         if (this._editingKey === undefined) {
             throw Error(ERROR_MSG.HAS_NO_EDITING);
@@ -153,6 +179,12 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
     }
 
+    /**
+     * Завершить редактирование элемента и отменить изменения.
+     * @method
+     * @void
+     * @public
+     */
     cancel(): void {
         if (this._editingKey === undefined) {
             throw Error(ERROR_MSG.HAS_NO_EDITING);
@@ -167,10 +199,22 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
     }
 
+    /**
+     * Получить следующий элемент коллекции, для которого доступно редактирование.
+     * @method
+     * @return {CollectionItem.<Types/entity:Model>|undefined}
+     * @public
+     */
     getNextEditableItem(): TEditableCollectionItem {
         return this._getNextEditableItem('after');
     }
 
+    /**
+     * Получить предыдущий элемент коллекции, для которого доступно редактирование.
+     * @method
+     * @return {CollectionItem.<Types/entity:Model>|undefined}
+     * @public
+     */
     getPrevEditableItem(): TEditableCollectionItem {
         return this._getNextEditableItem('before');
     }

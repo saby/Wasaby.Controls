@@ -1,6 +1,6 @@
 import {Model} from 'Types/entity';
 import {Collection, CollectionItem} from 'Controls/display';
-import {TKey, CONSTANTS, TAddPosition} from '../Types';
+import {CONSTANTS, TAddPosition} from '../Types';
 
 /**
  * Интерфейс опций контроллера редактирования по месту.
@@ -165,14 +165,6 @@ interface IEditInPlace {
      * @remark Завершение редактирования может быть отменено. Для этого из функции обратного вызова IEditInPlaceOptions.onBeforeEndEdit необхобимо вернуть константу отмены.
      */
     cancel(): TOperationPromise;
-
-    /**
-     * Получить ключ редактируемого элемента
-     * @method
-     * @return {TKey|Undefined}
-     * @public
-     */
-    getEditingKey(): TKey;
 
     /**
      * Получить редактируемый элемент

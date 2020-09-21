@@ -1,7 +1,7 @@
 import {Model, DestroyableMixin} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import {IEditInPlace, IEditInPlaceOptions, TAsyncOperationResult} from './interface/IEditInPlace';
-import {CONSTANTS, TEditableCollectionItem, TKey} from './Types';
+import {CONSTANTS, TEditableCollectionItem} from './Types';
 import {CollectionEditor} from './CollectionEditor';
 import {mixin} from 'Types/util';
 
@@ -69,10 +69,6 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) implem
         }
     }
 
-    getEditingKey(): TKey {
-        return this._collectionEditor.getEditingKey();
-    }
-
     getEditingItem(): Model | undefined {
         return this._collectionEditor.getEditingItem();
     }
@@ -103,13 +99,12 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) implem
 
     // tslint:disable-next-line:max-line-length
     private _endPreviousAndBeginEdit(item: Model | undefined, isAdd: boolean, addPosition?: 'top' | 'bottom'): TAsyncOperationResult {
-        const editingKey = this._collectionEditor.getEditingKey();
+        const editingItem = this.getEditingItem();
 
-        if (editingKey !== undefined && item && editingKey === item.getKey()) {
+        if (editingItem && item && editingItem.getKey() === item.getKey()) {
             return Promise.resolve();
-        } else if (editingKey !== undefined) {
-            const editingItem = this._options.collection.getItemBySourceKey(editingKey);
-            return this._endEdit(editingItem.contents.isChanged()).then((result) => {
+        } else if (editingItem) {
+            return this._endEdit(editingItem.isChanged()).then((result) => {
                 if (result && result.canceled) {
                     return result;
                 }
@@ -122,7 +117,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) implem
 
     // TODO: Должен возвращать один промис, если вызвали несколько раз подряд
     private _beginEdit(item: Model | undefined, isAdd: boolean, addPosition?: 'top' | 'bottom'): TAsyncOperationResult {
-        if (this._collectionEditor.getEditingKey() !== undefined) {
+        if (this.getEditingItem()) {
             return Promise.resolve({canceled: true});
         }
 
@@ -165,9 +160,9 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) implem
 
     // TODO: Должен возвращать один промис, если вызвали несколько раз подряд
     private _endEdit(commit: boolean): TAsyncOperationResult {
-        const editingKey = this._collectionEditor.getEditingKey();
+        const editingItem = this.getEditingItem();
 
-        if (editingKey === undefined) {
+        if (!editingItem) {
             return Promise.resolve();
         }
 
@@ -175,8 +170,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) implem
             return this._operationsPromises.end;
         }
 
-        const editingItem = this._collectionEditor.getEditingItem();
-        const isAdd = this._options.collection.getItemBySourceKey(this.getEditingKey()).isAdd;
+        const isAdd = this._options.collection.getItemBySourceKey(this.getEditingItem().getKey()).isAdd;
 
         this._operationsPromises.end = new Promise((resolve) => {
             if (this._options.onBeforeEndEdit) {

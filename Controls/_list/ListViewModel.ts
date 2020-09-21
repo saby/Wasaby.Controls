@@ -274,6 +274,23 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return itemData.isStickedMasterItem || itemData.isGroup;
     },
 
+    _getEndIndexForReset(): number {
+        const endIndex = ListViewModel.superclass._getEndIndexForReset.apply(this);
+        if (this._isSupportStickyItem()) {
+            // Если поддерживается stiky элементы, то конечный индекс не должен совпадать с stopIndex,
+            // а должен отображаться застиканный элемент, если он находится за пределами диапазона.
+            let idx = endIndex;
+            const count = this._display.getCount();
+            while (idx < count) {
+                const itemData = this.getItemDataByItem(this._display.at(idx));
+                if (this._isStickedItem(itemData)) {
+                    return ++idx;
+                }
+                idx++;
+            }
+        }
+        return endIndex;
+    },
     _getCurIndexForReset(startIndex: number): number {
         if (this._isSupportStickyItem() && startIndex > 0) {
             // Если поддерживается sticky элементов, то индекс не просто нужно сбросить на 0, а взять индекс ближайшего
