@@ -2612,7 +2612,7 @@ describe('Controls/_display/Collection', () => {
                 i++;
             });
             display.setSelectedItemsAll(true);
-            assert.strictEqual(i, 1);
+            assert.strictEqual(i, 8);
         });
     });
 
