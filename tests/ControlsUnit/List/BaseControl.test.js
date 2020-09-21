@@ -4734,7 +4734,8 @@ define([
                },
                markedKey: null,
                viewModelConstructor: lists.ListViewModel,
-               source: source
+               source: source,
+               keyProperty: 'id'
             };
             instance = new lists.BaseControl(cfg);
             item =  item = {
@@ -4876,7 +4877,8 @@ define([
             const fake = {
                _itemActionsController: {
                   prepareActionsMenuConfig: (item, clickEvent, action, self, isContextMenu) => ({}),
-                  setActiveItem: (_item) => { }
+                  setActiveItem: (_item) => {},
+                  deactivateSwipe: () => {}
                },
                _itemActionsMenuId: 'fake',
                _scrollHandler: () => {},
@@ -5171,6 +5173,10 @@ define([
                _itemActionsMenuId: 'fake',
                _notify: (eventName, args) => {
                   lastFiredEvent = {eventName, args};
+               },
+               _itemActionsController: {
+                  setActiveItem: (_item) => { },
+                  deactivateSwipe: () => {}
                }
             };
             lists.BaseControl._private.closePopup(self);

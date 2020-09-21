@@ -1665,15 +1665,6 @@ const _private = {
         if (self._itemActionsMenuId) {
             const itemActionsMenuId = self._itemActionsMenuId;
             _private.closePopup(self, currentPopup ? currentPopup.id : itemActionsMenuId);
-            // При быстром клике правой кнопкой обработчик закрытия меню и setActiveItem(null)
-            // вызывается позже, чем устанавливается новый activeItem. в результате, при попытке
-            // взаимодействия с опциями записи, может возникать ошибка, т.к. activeItem уже null.
-            // Для обхода проблемы ставим условие, что занулять ItemAction нужно только тогда, когда
-            // закрываем самое последнее открытое меню.
-            if (!currentPopup || itemActionsMenuId === currentPopup.id) {
-                self._listViewModel.setActiveItem(null);
-                _private.getItemActionsController(self).deactivateSwipe();
-            }
         }
     },
 
@@ -1707,8 +1698,11 @@ const _private = {
             Sticky.closePopup(id);
         }
         if (!itemActionsMenuId || (self._itemActionsMenuId && self._itemActionsMenuId === itemActionsMenuId)) {
-            UnregisterUtil(self, 'scroll');
             self._itemActionsMenuId = null;
+            UnregisterUtil(self, 'scroll');
+            const controller = _private.getItemActionsController(self);
+            controller.setActiveItem(null);
+            controller.deactivateSwipe();
         }
     },
 
