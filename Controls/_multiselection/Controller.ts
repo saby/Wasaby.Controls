@@ -216,7 +216,10 @@ export class Controller {
    handleAddItems(addedItems: Array<CollectionItem<Model>>): ISelectionControllerResult {
       const records = addedItems
           .filter((item) => !item['[Controls/_display/GroupItem]']) // TODO заменить на проверку SelectableItem
-          .map((item) => item.getContents());
+          .map((item) => {
+             const contents = item.getContents();
+             return contents instanceof Array ? contents[contents.length - 1] : contents;
+          });
       this._updateModel(this._selection, false, records);
       return this._getResult(this._selection, this._selection);
    }
