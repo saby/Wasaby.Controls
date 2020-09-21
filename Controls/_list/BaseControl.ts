@@ -455,8 +455,10 @@ const _private = {
                     error,
                     dataLoadErrback: cfg.dataLoadErrback
                 }).then(function(result: ICrudResult) {
-                    if (cfg.afterReloadCallback) {
-                        cfg.afterReloadCallback(cfg);
+                    if (!self._destroyed) {
+                        if (cfg.afterReloadCallback) {
+                            cfg.afterReloadCallback(cfg);
+                        }
                     }
                     resDeferred.callback({
                         data: null,
