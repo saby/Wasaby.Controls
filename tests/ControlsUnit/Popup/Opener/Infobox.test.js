@@ -14,11 +14,14 @@ define(
                   position: 'tl'
                }
             };
+            let sandbox = sinon.createSandbox();
+            sandbox.stub(popupTemplate.InfoBoxController._private, 'updateMargins');
             popupTemplate.InfoBoxController.getDefaultConfig(item);
             assert.equal(item.position.top, -10000);
             assert.equal(item.position.left, -10000);
             assert.equal(item.position.right, undefined);
             assert.equal(item.position.bottom, undefined);
+            sandbox.restore();
          });
          it('InfoBoxController: elementCreated', () => {
             let container = {

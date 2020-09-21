@@ -317,6 +317,8 @@ define(
                   height: 60
                }
             };
+            let sandbox = sinon.createSandbox();
+            sandbox.stub(StickyController._private, 'updateMargins');
             StickyController.getDefaultConfig(item);
             assert.equal(item.position.width, item.popupOptions.width);
             assert.equal(item.position.height, item.popupOptions.height);
@@ -325,6 +327,7 @@ define(
             assert.equal(item.position.left, -10000);
             assert.equal(item.position.top, -10000);
             assert.equal(item.position.position, 'fixed');
+            sandbox.restore();
          });
 
 
