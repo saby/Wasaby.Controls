@@ -234,6 +234,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 dateConstructor: options.dateConstructor
             });
             this._extDataLastVersion = this._extData.getVersion();
+            this._enrichItems();
         }
     }
     private _updateVirtualPageSize(options: IModuleComponentOptions, oldOptions?: IModuleComponentOptions): void {
