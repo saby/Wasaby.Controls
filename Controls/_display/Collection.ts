@@ -1331,6 +1331,17 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         if (collection && collection['[Types/_collection/IList]']) {
             sourceIndex = (collection as any as IList<S>).getIndex(item);
+
+            // Если записи нет в наборе данных, то, возможно запрашивается индекс добавляемой в данный момент записи.
+            // Такой записи еще нет в наборе данных.
+            if (sourceIndex === -1 && this._$isEditing) {
+                this.each((el, index: number) => {
+                    if (el.isEditing() && el.isAdd && el.contents.getKey() === item.contents.getKey()) {
+                        sourceIndex = index;
+                    }
+                });
+                return sourceIndex;
+            }
         } else {
             let index = 0;
             (collection as IEnumerable<S>).each((value) => {

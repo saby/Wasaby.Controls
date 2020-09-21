@@ -1863,7 +1863,7 @@ const _private = {
         const isEditing =
             options.useNewModel
             ? NewModelEditInPlaceController.isEditing(listViewModel)
-            : !!listViewModel.getEditingItemData();
+            : listViewModel.isEditing();
 
         const display = listViewModel ? (options.useNewModel ? listViewModel : listViewModel.getDisplay()) : null;
         const hasVisibleItems = !!(display && display.getCount());
@@ -2347,7 +2347,6 @@ const _private = {
         }
 
         const editingConfig = self._listViewModel.getEditingConfig();
-        const editingItemData = self._listViewModel.getEditingItemData && self._listViewModel.getEditingItemData();
         const isActionsAssigned = self._listViewModel.isActionsAssigned();
         let editArrowAction: IItemAction;
         if (options.showEditArrow) {
@@ -2362,7 +2361,7 @@ const _private = {
             };
         }
         const itemActionsChangeResult = itemActionsController.update({
-                editingItem: editingItemData,
+                editingItem: self._editInPlaceController ? self._listViewModel.find((el) => el.isEditing()) : undefined,
                 collection: self._listViewModel,
                 itemActions: options.itemActions,
                 itemActionsProperty: options.itemActionsProperty,
@@ -3828,7 +3827,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const noEdit =
             this._options.useNewModel
                 ? !NewModelEditInPlaceController.isEditing(listViewModel)
-                : !listViewModel.getEditingItemData();
+                : !(this._editInPlaceController && this._editInPlaceController.getEditingItem());
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
         const noDataBeforeReload = this._noDataBeforeReload;
@@ -3992,9 +3991,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Редактирование может запуститься при построении.
         if (this._isMounted) {
             this._notify('afterBeginEdit', [item, isAdd]);
-        }
-        if (this._listViewModel.getCount() > 1) {
-            this.setMarkedKey(item.getKey());
+
+            if (this._listViewModel.getCount() > 1) {
+                this.setMarkedKey(item.getKey());
+            }
         }
 
         item.subscribe('onPropertyChange', this._resetValidation);

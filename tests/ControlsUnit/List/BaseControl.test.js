@@ -2645,6 +2645,14 @@ define([
 
          await baseControl._beforeMount(baseControlOptions);
 
+         let editingItem;
+
+         baseControl._editInPlaceController = {
+            getEditingItem: () => {
+               return editingItem;
+            }
+         };
+
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
 
          baseControl._listViewModel.getCount = function() {
@@ -2665,14 +2673,10 @@ define([
          baseControl._noDataBeforeReload = true;
          assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
 
-         baseControl._listViewModel.getEditingItemData = function() {
-            return {};
-         };
+         editingItem = {};
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
 
-         baseControl._listViewModel.getEditingItemData = function() {
-            return null;
-         };
+         editingItem = null;
          baseControl._sourceController = null;
          assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
 
@@ -3312,16 +3316,16 @@ define([
             }
          };
          const model = {
-            getEditingItemData: function() {
-               return null;
+            isEditing: function() {
+               return false;
             },
             getDisplay: () => ({
                getCount: () => count
             })
          };
          const editingModel = {
-            getEditingItemData: function() {
-               return {};
+            isEditing: function() {
+               return true;
             },
             getDisplay: () => ({
                getCount: () => count
