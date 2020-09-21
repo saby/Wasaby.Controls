@@ -83,8 +83,6 @@ export class Controller {
                if (this._model.getCount() > 0) {
                   if (this._markedKey) {
                      resultKey = this.getFirstItemKey();
-                  } else {
-                     resultKey = null;
                   }
                }
                break;
