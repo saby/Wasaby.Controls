@@ -3401,6 +3401,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
             if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
                 this._selectionController = _private.createSelectionController(this, newOptions);
+                // TODO перепишется в 7100 при рефакторе контроллера
+                if (this._selectionController) {
+                    const result = this._selectionController.getResultAfterConstructor();
+                    _private.handleSelectionControllerResult(this, result);
+                }
             }
         }
 
