@@ -812,6 +812,27 @@ define([
             assert.isTrue(isPropagationStopped);
             // Root wasn't changed
             assert.equal(root, 'itemId');
+
+            explorer._isGoingFront = false;
+            explorer.saveOptions({
+               searchNavigationMode: 'expand'
+            });
+            await new Promise((res) => {
+               explorer._onItemClick({
+                  stopPropagation: () => {
+                     isPropagationStopped = true;
+                  }
+               }, {
+                  get: () => true,
+                  getId: () => 'itemIdOneMore'
+               }, {
+                  nativeEvent: 123
+               });
+               setTimeout(() => {
+                  res();
+               }, 0);
+            });
+            assert.isFalse(explorer._isGoingFront);
          });
 
          it('_onBreadCrumbsClick', function() {
