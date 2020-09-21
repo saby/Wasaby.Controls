@@ -139,7 +139,11 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._updateItemTemplate(options);
         this._updateSource(options, this._options);
         this._updateVirtualPageSize(options, this._options);
-        if (!dateUtils.isDatesEqual(options.position, this._displayedPosition)) {
+        // Сравниваем по ссылке, а не по значению. position обновляется только при смене года или если
+        // напрямую менять position через опцию. Таким обзразом, если мы попробуем подскролить календарь к дате, которую
+        // устанавливали через опцию ранее, значения окажутся одинаковыми и подскролла не произайдет.
+        // В то же время ссылки окажутся разыми
+        if (options.position !== this._displayedPosition) {
             // Не инициализируем перестроение списка пока не завершится пребыбущая перерисовка.
             // https://online.sbis.ru/opendoc.html?guid=4c2ee6ae-c41d-4bc2-97e7-052963074621
             if (!this._lastPositionFromOptions) {

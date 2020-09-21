@@ -80,7 +80,6 @@ import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import 'wml!Controls/_list/BaseControl/Footer';
 
 import {IList} from "./interface/IList";
-import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { EdgeIntersectionObserver } from 'Controls/scroll';
 import { TItemKey } from 'Controls/display';
@@ -1665,6 +1664,16 @@ const _private = {
         if (self._itemActionsMenuId) {
             const itemActionsMenuId = self._itemActionsMenuId;
             _private.closePopup(self, currentPopup ? currentPopup.id : itemActionsMenuId);
+            // При быстром клике правой кнопкой обработчик закрытия меню и setActiveItem(null)
+            // вызывается позже, чем устанавливается новый activeItem. в результате, при попытке
+            // взаимодействия с опциями записи, может возникать ошибка, т.к. activeItem уже null.
+            // Для обхода проблемы ставим условие, что занулять active item нужно только тогда, когда
+            // закрываем самое последнее открытое меню.
+            if (!currentPopup || itemActionsMenuId === currentPopup.id) {
+                const itemActionsController = _private.getItemActionsController(self)
+                itemActionsController.setActiveItem(null);
+                itemActionsController.deactivateSwipe();
+            }
         }
     },
 
@@ -1698,11 +1707,8 @@ const _private = {
             Sticky.closePopup(id);
         }
         if (!itemActionsMenuId || (self._itemActionsMenuId && self._itemActionsMenuId === itemActionsMenuId)) {
-            self._itemActionsMenuId = null;
             UnregisterUtil(self, 'scroll');
-            const controller = _private.getItemActionsController(self);
-            controller.setActiveItem(null);
-            controller.deactivateSwipe();
+            self._itemActionsMenuId = null;
         }
     },
 
@@ -4167,7 +4173,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let hasDragScrolling = false;
         this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (this._options.columnScroll) {
-            hasDragScrolling = isColumnScrollShown(this._container) && (
+            // Не должно быть завязки на горизонтальный скролл.
+            // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
+            hasDragScrolling = this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible() && (
                 typeof this._options.dragScrolling === 'boolean' ? this._options.dragScrolling : !this._options.itemsDragNDrop
             );
         }
@@ -4485,7 +4493,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (detection.isMobileIOS && (scrollEvent.target === document.body || scrollEvent.target === document)) {
             return;
         }
-        _private.closePopup(this);
+        _private.closeActionsMenu(this);
     },
 
     /**
@@ -4734,7 +4742,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала.
         // В таком случае выводим индикатор над списком.
         // FIXME: https://online.sbis.ru/opendoc.html?guid=886c7f51-d327-4efa-b998-7cf94f5467cb
-        // не должно быть завязки на горизонтальный скролл.
+        // Также, не должно быть завязки на горизонтальный скролл.
+        // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
         if (position === 'beforeEmptyTemplate') {
             return this._loadingIndicatorState === 'up' || (
                 this._loadingIndicatorState === 'all' && (
@@ -4758,8 +4767,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._dndListController;
     },
 
-    _isMobileIOS(): boolean {
-        return detection.isMobileIOS;
+    _isPagingPadding(): boolean {
+        return !(detection.isMobileIOS ||
+            (this._options.navigation &&
+                this._options.navigation.viewConfig &&
+                this._options.navigation.viewConfig.pagingMode === 'end')
+        );
     },
 
     _onMouseMove(event): void {
