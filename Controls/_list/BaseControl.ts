@@ -4013,7 +4013,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (e.isStopped()) {
             this._savedItemClickArgs = [item, originalEvent, columnIndex];
         } else {
-            const eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], {bubbling: true});
+            let eventResult = null;
+            /**
+             * Проверяем что событие всплывает дальше. Это необходимо для того, чтобы клик корректно работал в listRender
+             * Событие всплывается для того, чтобы в listRender:TileView срабатывал обработчик события itemClick
+             * https://online.sbis.ru/opendoc.html?guid=edc3fc25-35f5-44a7-9932-9cca8cb4c30f
+             */
+            if (!originalEvent._bubbling) {
+                eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], {bubbling: true});
+            }
             if (eventResult !== false) {
                 this._notify('itemActivate', [item, originalEvent], {bubbling: true});
             }
