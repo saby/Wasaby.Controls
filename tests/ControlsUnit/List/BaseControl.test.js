@@ -7500,7 +7500,8 @@ define([
                getCount: () => data.length,
                getCollapsedGroups: () => {},
                unsubscribe: () => {},
-               destroy: () => {}
+               destroy: () => {},
+               getItemBySourceKey: () => collectionItem
             };
             spyMove = sinon.spy(moveController, 'move');
             spyMoveWithDialog = sinon.spy(moveController, 'moveWithDialog');

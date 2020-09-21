@@ -34,7 +34,6 @@ import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
     CollectionItem,
-    EditInPlaceController as NewModelEditInPlaceController,
     GroupItem,
     TItemKey
 } from 'Controls/display';
@@ -1860,10 +1859,7 @@ const _private = {
     },
 
     needBottomPadding(options, items, listViewModel) {
-        const isEditing =
-            options.useNewModel
-            ? NewModelEditInPlaceController.isEditing(listViewModel)
-            : listViewModel.isEditing();
+        const isEditing = listViewModel.isEditing();
 
         const display = listViewModel ? (options.useNewModel ? listViewModel : listViewModel.getDisplay()) : null;
         const hasVisibleItems = !!(display && display.getCount());
@@ -1945,11 +1941,7 @@ const _private = {
         const oldSourceCfg = oldNavigation && oldNavigation.sourceConfig ? oldNavigation.sourceConfig : {};
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
-            const isEditing = !!self._editInPlaceController && !!self._listViewModel && (
-                self._options.useNewModel ? NewModelEditInPlaceController.isEditing(self._listViewModel) :
-                    !!self._editInPlaceController.getEditingItem()
-            );
-            if (isEditing) {
+            if (!!self._listViewModel && !!self._editInPlaceController && !!self._editInPlaceController.getEditingItem()) {
                 self.cancelEdit();
             }
         }
@@ -2360,8 +2352,14 @@ const _private = {
                 }
             };
         }
+        let editingCollectionItem;
+        let editingModel = self._editInPlaceController ? self._editInPlaceController.getEditingItem() : undefined;
+        if (editingModel) {
+            const collection = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
+            editingCollectionItem = collection.getItemBySourceKey(editingModel.getKey());
+        }
         const itemActionsChangeResult = itemActionsController.update({
-                editingItem: self._editInPlaceController ? self._listViewModel.find((el) => el.isEditing()) : undefined,
+                editingItem: editingCollectionItem,
                 collection: self._listViewModel,
                 itemActions: options.itemActions,
                 itemActionsProperty: options.itemActionsProperty,
@@ -3213,10 +3211,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._moveController.updateOptions(newOptions);
         }
 
-        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
+        if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
             if (this._editInPlaceController && this._editInPlaceController.getEditingItem()) {
                 this.cancelEdit();
             }
+        }
+
+        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
@@ -3824,10 +3825,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
         // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
         const noData = !listViewModel.getCount();
-        const noEdit =
-            this._options.useNewModel
-                ? !NewModelEditInPlaceController.isEditing(listViewModel)
-                : !(this._editInPlaceController && this._editInPlaceController.getEditingItem());
+        const noEdit = !(this._editInPlaceController && this._editInPlaceController.getEditingItem());
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
         const noDataBeforeReload = this._noDataBeforeReload;
@@ -4033,7 +4031,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 )
             );
 
-            return shouldUseDefaultSaving ? this._saveEditingInSource(item) : eventResult;
+            return shouldUseDefaultSaving ? this._saveEditingInSource(item, isAdd) : eventResult;
         });
     },
 
@@ -4203,9 +4201,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _saveEditingInSource(item: Model): Promise<void> {
+    _saveEditingInSource(item: Model, isAdd: boolean): Promise<void> {
         return this.getSourceController().update(item).then(() => {
-            this._items.append([item]);
+            if (isAdd) {
+                this._items.append([item]);
+            }
         }).catch((error: Error) => {
             return this._processEditInPlaceError(error);
         });
