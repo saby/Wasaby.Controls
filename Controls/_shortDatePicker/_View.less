@@ -138,9 +138,21 @@
 }
 
 .controls-PeriodLiteDialog__close_theme-@{themeName} {
-   padding-right: @header_close_padding-right_shortDatePicker;
    position: absolute;
-   right: 0;
+   right: @closeButton_right_shortDatePicker;
+   top: 0;
+   color: @closeButton_color_shortDatePicker;
+   background-color: @closeButton_background-color_shortDatePicker;
+   box-shadow: @closeButton_box-shadow_shortDatePicker;
+   cursor: pointer;
+
+   &::before {
+      content: '\e66c';
+   }
+
+   &:hover {
+      background-color: #cacaca;
+   }
 }
 
 .controls-PeriodLiteDialog__AccordionArrow {
@@ -165,10 +177,11 @@
    font-weight: @header_font-weight_shortDatePicker;
    color: @header_text-color_shortDatePicker;
    height: @header_height_shortDatePicker;
+   line-height: @header_height_shortDatePicker;
    padding: 0 @header_padding-horizontal_shortDatePicker;
    flex: 1;
    display: flex;
-   align-items: center;
+   align-items: baseline;
 }
 
 .controls-PeriodLiteDialog__yearWrapper {

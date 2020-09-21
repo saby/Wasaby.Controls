@@ -91,6 +91,7 @@ var Component = BaseControl.extend({
     _isExpandedPopup: false,
     _popupHeightStyle: '',
     _popupOffset: 2,
+    _isExpandButtonVisible: true,
 
 // constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
@@ -129,6 +130,10 @@ var Component = BaseControl.extend({
         this.monthTemplate = options.monthTemplate || monthTmpl;
     },
 
+    _afterMount: function (options) {
+        this._updateIsExpandButtonVisible(options);
+    },
+
     _beforeUpdate: function (options) {
         // this._caption = _private._getCaption(options);
     },
@@ -140,6 +145,16 @@ var Component = BaseControl.extend({
     setYear: function (year) {
         this._position = new this._options.dateConstructor(year, 0, 1);
         this._notify('yearChanged', [year]);
+    },
+
+    _updateIsExpandButtonVisible(options): void {
+        // Есть возможность получить смещение и размеры из popup'a, но в таком случае, вычислить отображение
+        // кнопки разоворота мы сможем через 1 цикл синхранизации. Из-за чего будут скачки кнопки.
+        // Поэтому читаем тут напрямую с dom
+        const openerPos = options.target.offsetTop + options.margins.top;
+        const popupHeight = this._container.offsetHeight;
+        const viewport = window.innerHeight;
+        this._isExpandButtonVisible = (openerPos + popupHeight) < viewport;
     },
 
     _dateToDataString(date) {
@@ -226,10 +241,9 @@ var Component = BaseControl.extend({
     _expandPopup(): void {
         this._isExpandedPopup = !this._isExpandedPopup;
         if (this._isExpandedPopup) {
-            // Делаем попап до конца экрана. Для этого вычитаем из размера вьюпорта смещение по Y.
-            const maxHeightPopup = this._logicParent._container.style.maxHeight;
-            const topPopup = this._logicParent._container.style.top;
-            this._popupHeightStyle = `height: ${parseInt(maxHeightPopup, 10) - parseInt(topPopup, 10) - this._popupOffset}px`;
+            const maxHeightPopup = window.innerHeight;
+            const topPopup = this._options.target.offsetTop + this._options.margins.top;
+            this._popupHeightStyle = `height: ${maxHeightPopup - parseInt(topPopup, 10) - this._popupOffset}px`;
         } else {
             this._popupHeightStyle = '';
         }

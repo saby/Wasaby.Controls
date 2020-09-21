@@ -110,7 +110,8 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
                 displayedRanges: this._options.displayedRanges,
                 stubTemplate: this._options.stubTemplate,
                 captionFormatter: this._options.captionFormatter,
-                dateConstructor: this._options.dateConstructor
+                dateConstructor: this._options.dateConstructor,
+                target: container
             }
         };
     }
