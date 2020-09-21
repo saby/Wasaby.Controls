@@ -694,4 +694,3 @@ Object.assign(Tree.prototype, {
     _$rootEnumerable: false,
     _root: null
 });
-

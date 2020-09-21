@@ -6,6 +6,7 @@ import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './Expandable
 import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
 import {mixin} from 'Types/util';
+import TreeChildren from './TreeChildren';
 
 export interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
@@ -175,6 +176,14 @@ export default class TreeItem<T> extends mixin<
      */
     getChildrenProperty(): string {
         return this._$childrenProperty;
+    }
+
+    /**
+     * Возвращает коллекцию потомков элемента коллекции
+     * @param [withFilter=true] Учитывать {@link Controls/display:Collection#setFilter фильтр}
+     */
+    getChildren(withFilter: boolean = true): TreeChildren<T> {
+        return this.getOwner().getChildren(this, withFilter);
     }
 
     // region SerializableMixin

@@ -97,7 +97,7 @@ export class Controller {
     */
    restoreSelection(): void {
       // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
-      this._strategy.setItems(this._model.getCollection());
+      this._strategy.setItems(this._model.getItems());
       this._updateModel(this._selection, true);
    }
 
@@ -214,15 +214,7 @@ export class Controller {
     * @return {ISelectionControllerResult}
     */
    handleAddItems(addedItems: Array<CollectionItem<Model>>): ISelectionControllerResult {
-      const records = addedItems
-          .filter((item) => !item['[Controls/_display/GroupItem]']) // TODO заменить на проверку SelectableItem
-          .map((item) => {
-             const contents = item.getContents();
-             // TODO getContents() должен возвращать Record
-             //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-             return contents instanceof Array ? contents[contents.length - 1] : contents;
-          });
-      this._updateModel(this._selection, false, records);
+      this._updateModel(this._selection, false, addedItems);
       return this._getResult(this._selection, this._selection);
    }
 
@@ -360,7 +352,7 @@ export class Controller {
       });
    }
 
-   private _updateModel(selection: ISelection, silent: boolean = false, items?: Model[]): void {
+   private _updateModel(selection: ISelection, silent: boolean = false, items?: Array<CollectionItem<Model>>): void {
       const selectionForModel = this._strategy.getSelectionForModel(selection, this._limit, items, this._searchValue);
       // TODO думаю лучше будет занотифаить об изменении один раз после всех вызовов (сейчас нотифай в каждом)
       this._model.setSelectedItems(selectionForModel.get(true), true, silent);

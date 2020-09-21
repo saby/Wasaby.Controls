@@ -1,12 +1,12 @@
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
-import { RecordSet } from 'Types/collection';
 import { ISelectionObject as ISelection } from 'Controls/interface';
 import { Model } from 'Types/entity';
 import { IFlatSelectionStrategyOptions, TKeys} from '../interface';
 import ISelectionStrategy from './ISelectionStrategy';
 import clone = require('Core/core-clone');
 import { CrudEntityKey } from 'Types/source';
+import { CollectionItem } from 'Controls/display';
 
 const ALL_SELECTION_VALUE = null;
 
@@ -18,7 +18,7 @@ const ALL_SELECTION_VALUE = null;
  * @author Панихин К.А.
  */
 export class FlatSelectionStrategy implements ISelectionStrategy {
-   private _items: RecordSet;
+   private _items: Array<CollectionItem<Model>>;
 
    constructor(options: IFlatSelectionStrategyOptions) {
       this._items = options.items;
@@ -28,7 +28,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       this._items = options.items;
    }
 
-   setItems(items: RecordSet): void {
+   setItems(items: Array<CollectionItem<Model>>): void {
       this._items = items;
    }
 
@@ -97,7 +97,11 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
-   getSelectionForModel(selection: ISelection, limit?: number, items?: Model[]): Map<boolean|null, Model[]> {
+   getSelectionForModel(
+       selection: ISelection,
+       limit?: number,
+       items?: Array<CollectionItem<Model>>
+   ): Map<boolean, Array<CollectionItem<Model>>> {
       let selectedItemsCount = 0;
       const selectedItems = new Map();
       // IE не поддерживает инициализацию конструктором
@@ -113,7 +117,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
       const processingItems = items ? items : this._items;
       processingItems.forEach((item) => {
-         const itemId: CrudEntityKey = item.getKey();
+         const itemId: CrudEntityKey = item.getContents().getKey();
          const selected = (!limit || selectedItemsCount < limit)
             && (selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId));
 
@@ -129,7 +133,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
    getCount(selection: ISelection, hasMoreData: boolean, limit?: number): number|null {
       let countItemsSelected: number|null = null;
-      const itemsCount = this._items.getCount();
+      const itemsCount = this._items.length;
 
       if (this._isAllSelected(selection)) {
          if (!hasMoreData && (!limit || itemsCount <= limit)) {

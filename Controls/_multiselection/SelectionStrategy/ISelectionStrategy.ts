@@ -1,7 +1,7 @@
 import { ISelectionObject as ISelection} from 'Controls/interface';
 import { Model } from 'Types/entity';
 import { IFlatSelectionStrategyOptions, ITreeSelectionStrategyOptions, TKeys } from '../interface';
-import { RecordSet } from 'Types/collection';
+import { CollectionItem } from 'Controls/display';
 
 /**
  * Интерфейс базового класс стратегий выбора
@@ -61,11 +61,11 @@ export default interface ISelectionStrategy {
     *
     * @param {ISelection} selection текущее состояние выбранных ключей
     * @param {number} limit ограничивает максимальное число выбранных элементов
-    * @param {Model[]} items Список элементов для которых нужно определить состояние выбранности
+    * @param {Array<CollectionItem<Model>>} items Список элементов для которых нужно определить состояние выбранности
     * @param {string} searchValue Значение поиска
-    * @return {Map<boolean|null, Model[]>} мапа, в которой для каждого состояния хранится соответствующий список элементов
+    * @return {Map<boolean|null, Array<CollectionItem<Model>>>} мапа, в которой для каждого состояния хранится соответствующий список элементов
     */
-   getSelectionForModel(selection: ISelection, limit?: number, items?: Model[], searchValue?: string): Map<boolean|null, Model[]>;
+   getSelectionForModel(selection: ISelection, limit?: number, items?: Array<CollectionItem<Model>>, searchValue?: string): Map<boolean|null, Array<CollectionItem<Model>>>;
 
    /**
     * Возвращает количество выбранных элементов
@@ -97,8 +97,8 @@ export default interface ISelectionStrategy {
 
    /**
     * Задает список элементов
-    * @param {RecordSet} items Новый список
+    * @param {Array<CollectionItem<Model>>} items Новый список
     * @void
     */
-   setItems(items: RecordSet): void;
+   setItems(items: Array<CollectionItem<Model>>): void;
 }
