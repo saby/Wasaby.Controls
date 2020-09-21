@@ -81,7 +81,7 @@ export default class Render extends Control<IRenderOptions> {
             }
         } else {
             if (!e.preventItemEvent && !item.isEditing()) {
-                this._notify('itemClick', [item.getContents(), e], {bubbling: true});
+                this._notify('itemClick', [item.getContents(), e]);
             }
         }
     }
