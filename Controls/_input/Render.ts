@@ -216,7 +216,7 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
             leftFieldWrapper: descriptor(Function),
             multiline: descriptor(Boolean).required(),
             roundBorder: descriptor(Boolean).required(),
-            contrastBackground: descriptor(Boolean).required()
+            contrastBackground: descriptor(Boolean)
         };
     }
 
