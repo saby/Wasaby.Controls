@@ -36,6 +36,7 @@
                             displayProperty="{{_options.displayProperty}}"
                             highlighter="{{_options.highlighter}}"
                             fontColorStyle="{{_options.fontColorStyle}}"
+                            fontSize="{{_options.fontSize}}"
                             on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                             on:itemClick="_notifyHandler('itemClick')"/>
                 </ws:if>
