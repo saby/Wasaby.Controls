@@ -293,7 +293,8 @@ export default class CollectionItem<T> extends mixin<
         return (
             templateMarker &&
             this._$owner.getMarkerVisibility() !== 'hidden' &&
-            this.isMarked()
+            this.isMarked() &&
+            !this.isEditing()
         );
     }
 
@@ -493,7 +494,7 @@ export default class CollectionItem<T> extends mixin<
             controls-ListView__item_showActions
             js-controls-ItemActions__swipeMeasurementContainer
             controls-ListView__itemV controls-ListView__itemV_cursor-${cursor}
-            ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
+            ${templateHighlightOnHover && !this.isEditing() ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
             ${this.isEditing() ? ` controls-ListView__item_editing_theme-${theme}` : ''}
             ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}
             ${templateHighlightOnHover && this.isActive() ? ` controls-ListView__item_active_theme-${theme}` : ''}`;
