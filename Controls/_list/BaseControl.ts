@@ -4649,8 +4649,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._dndListController;
     },
 
-    _isMobileIOS(): boolean {
-        return detection.isMobileIOS;
+    _isPagingPadding(): boolean {
+        return !(detection.isMobileIOS ||
+            (this._options.navigation &&
+                this._options.navigation.viewConfig &&
+                this._options.navigation.viewConfig.pagingMode)
+        );
     },
 
     _onMouseMove(event): void {
