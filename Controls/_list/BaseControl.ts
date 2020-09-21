@@ -4765,7 +4765,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return !(detection.isMobileIOS ||
             (this._options.navigation &&
                 this._options.navigation.viewConfig &&
-                this._options.navigation.viewConfig.pagingMode)
+                this._options.navigation.viewConfig.pagingMode === 'end')
         );
     },
 
