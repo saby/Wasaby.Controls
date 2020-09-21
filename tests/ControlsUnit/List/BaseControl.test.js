@@ -4599,7 +4599,6 @@ define([
 
       describe('_onItemSwipe()', () => {
          let swipeEvent;
-         let itemData;
          let instance;
 
          function initTest(options) {
@@ -4755,6 +4754,35 @@ define([
                stubCreateSelectionController.restore();
                spySetMarkedKey.restore();
             });
+         });
+
+         // Должен работать свайп по breadcrumbs
+         it('should work with breadcrumbs', () => {
+            swipeEvent = initSwipeEvent('left');
+            initTest();
+            const itemAt0 = instance._listViewModel.at(0);
+            const breadcrumbItem = {
+               '[Controls/_display/BreadcrumbsItem]': true,
+               _$active: false,
+               isSelected: () => true,
+               getContents: () => ['fake', 'fake', 'fake', itemAt0.getContents() ],
+               setActive: function() {
+                  this._$active = true;
+               },
+               getActions: () => ({
+                  all: [{
+                     id: 2,
+                     showType: 0
+                  }]
+               })
+            };
+            const stubActivateSwipe = sinon.stub(instance._itemActionsController, 'activateSwipe')
+               .callsFake((itemKey, actionsContainerWidth, actionsContainerHeight) => {
+                  assert.equal(itemKey, itemAt0.getContents().getKey());
+                  stubActivateSwipe.restore();
+               });
+
+            instance._onItemSwipe({}, breadcrumbItem, swipeEvent);
          });
 
          // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа

@@ -4411,13 +4411,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
         swipeEvent.stopPropagation();
-        const key = item.getContents().getKey();
+        const key = _private.getPlainItemContents(item).getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             _private.setMarkedKey(this, key);
-            _private.getItemActionsController(this).activateSwipe(item.getContents().getKey(), swipeContainer?.width, swipeContainer?.height);
+            _private.getItemActionsController(this).activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             const swipedItem = _private.getItemActionsController(this).getSwipeItem();
@@ -4442,7 +4442,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 // Animation should be played only if checkboxes are visible.
                 if (this._options.multiSelectVisibility !== 'hidden') {
-                    _private.getItemActionsController(this).activateRightSwipe(item.getContents().getKey());
+                    _private.getItemActionsController(this).activateRightSwipe(key);
                 }
                 _private.setMarkedKey(this, key);
             }
