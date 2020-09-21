@@ -56,9 +56,9 @@
                              class="controls-Slider__interval
                                     controls-Slider__interval_{{interval.color}}_theme-{{_options.theme}}
                                     controls-Slider__interval_{{_options.size=='m' ? 'big' : 'small'}}_theme-{{_options.theme}}"
-                             style="left: {{_options.direction === 'horizontal' ? interval.left + '%' : 'auto' }};
+                             style="left: {{_options.direction === 'horizontal' ? interval.start + '%' : 'auto' }};
                                     width: {{_options.direction === 'horizontal' ? interval.width + '%' : 'auto' }};
-                                    top: {{_options.direction === 'vertical' ? interval.left + '%' : 'auto' }};
+                                    top: {{_options.direction === 'vertical' ? interval.start + '%' : 'auto' }};
                                     height: {{_options.direction === 'vertical' ? interval.width + '%' : 'auto' }};">
                      </div>
                   </ws:for>

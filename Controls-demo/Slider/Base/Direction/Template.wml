@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
     <div class="controlsDemo__cell controlsDemo__margin-top">
         <div class="controlsDemo__margin-top controls-text-label_theme-{{_options.theme}}">direction='horizontal'</div>
         <Controls.slider:Base
@@ -16,7 +16,7 @@
                 bind:value="_value"
                 borderVisible="{{true}}"
                 direction="vertical"
-                attr:class="controlsDemo__height300"
+                attr:class="controlsDemo__height200"
         />
     </div>
 </div>

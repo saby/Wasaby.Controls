@@ -21,7 +21,7 @@ export interface IPointData {
 
 export interface IPositionedInterval {
     color: string;
-    left: number;
+    start: number;
     width: number;
 }
 
@@ -95,14 +95,14 @@ export default {
 
             return {
                 color: interval.color,
-                left: start,
+                start,
                 width: intervalWidth
             };
         }).sort((intervalFirst, intervalSecond) => {
-            if (intervalFirst.left < intervalSecond.left) {
+            if (intervalFirst.start < intervalSecond.start) {
                 return -1;
             }
-            if (intervalFirst.left > intervalSecond.left) {
+            if (intervalFirst.start > intervalSecond.start) {
                 return 1;
             }
 
