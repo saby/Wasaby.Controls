@@ -720,7 +720,7 @@ const _private = {
                 drawItemsUp(countCurrentItems, addedItems);
             }
 
-            if (!_private.hasMoreData(self, self._sourceController, direction) && !addedItems.getCount()) {
+            if (!_private.hasMoreData(self, self._sourceController, direction)) {
                 self._updateShadowModeHandler(self._shadowVisibility);
             }
         };
