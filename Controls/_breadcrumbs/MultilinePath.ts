@@ -47,7 +47,7 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
 
     protected _beforeMount(options?: IMultilinePathOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
         if (!options.containerWidth) {
-            Logger.error('MultilinePath: option containerWidth is undefined', this);
+            Logger.warn('MultilinePath: option containerWidth is undefined', this);
             loadFontWidthConstants().then(() => {
                 return;
             });

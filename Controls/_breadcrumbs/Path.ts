@@ -60,7 +60,7 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
 
     protected _beforeMount(options?: IBreadCrumbsOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
         if (!options.containerWidth) {
-            Logger.error('Path: option containerWidth is undefined', this);
+            Logger.warn('Path: option containerWidth is undefined', this);
             loadFontWidthConstants().then(() => {
                 return;
             });
