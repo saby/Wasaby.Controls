@@ -165,6 +165,8 @@ var Component = BaseControl.extend([EventProxy], {
 
     _preventEvent(event: Event): void {
         // Отключаем скролл ленты с месяцами, если свайпнули по колонке с месяцами
+        // Для тач-устройств нельзя остановить событие скрола, которое стреляет с ScrollContainer,
+        // внутри которого лежит 2 контейнера для которых требуется разное поведение на тач устройствах
         event.preventDefault();
         event.stopPropagation();
     }
