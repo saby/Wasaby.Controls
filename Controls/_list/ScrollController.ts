@@ -527,8 +527,15 @@ export default class ScrollController {
     }
 
     handleResetItems(): IScrollControllerResult {
-        let result = this._initVirtualScroll(this._options);
-        return result;
+        /**
+         * Бывают случаи, когда activeElement не существует, поэтому проверяем его наличие,
+         * и в случае отсутствия меняем activeElement
+         */
+        if (typeof this._options.collection.at(this._options.activeElement) === 'undefined') {
+            const activeIndex = this._virtualScroll.getActiveElementIndex(this._lastScrollTop);
+            this._options.activeElement = this._options.collection.at(activeIndex).getUid();
+        }
+        return this._initVirtualScroll(this._options);
     }
 
     private getTriggerOffset(scrollHeight: number, viewportHeight: number, attachLoadTopTriggerToNull: boolean): {top: number, bottom: number} {
