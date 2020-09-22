@@ -87,7 +87,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    selectAll(selection: ISelection): ISelection {
       const newSelection = this.select(selection, [this._rootId]);
-      this._removeChildrenIdsFromSelection(newSelection, this._rootId);
+      this._removeChildes(newSelection, this._rootId);
 
       if (!newSelection.excluded.includes(this._rootId)) {
          newSelection.excluded = ArraySimpleValuesUtil.addSubArray(newSelection.excluded, [this._rootId]);
@@ -269,7 +269,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       const rootInExcluded = selection.excluded.includes(this._rootId);
 
       selection = this.unselect(selection, [this._rootId]);
-      this._removeChildrenIdsFromSelection(selection, this._rootId);
+      this._removeChildes(selection, this._rootId);
 
       if (rootInExcluded) {
          selection.excluded = ArraySimpleValuesUtil.removeSubArray(selection.excluded, [this._rootId]);
@@ -330,6 +330,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return dispItem ? this._getKey(dispItem.getParent()) : undefined;
    }
 
+   // TODO после починки юнитов, попробовать переписать. Какая-то дичь
    private _mergeEntryPath(selectedKeys: TKeys): TKeys {
       const entryPathObject: Object = {};
       const selectedKeysWithEntryPath: TKeys = selectedKeys.slice();
