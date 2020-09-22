@@ -522,7 +522,7 @@ const _private = {
         let startChildrenIndex = 0;
 
         for (let i = startChildrenIndex, len = itemsContainer.children.length; i < len; i++) {
-            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') && 
+            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') &&
                 !itemsContainer.children[i].classList.contains('js-controls-List_invisible-for-VirtualScroll')) {
                 startChildrenIndex = i;
                 break;
@@ -2178,7 +2178,6 @@ const _private = {
             }
         }
         if (result.triggerOffset) {
-            self._loadTriggerOffset = result.triggerOffset;
             self.applyTriggerOffset(result.triggerOffset);
         }
         if (result.scrollToActiveElement) {
@@ -2812,9 +2811,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
     _hideIndicatorOnTriggerHideDirection: null,
-
-    // хранения отступов триггеров хранится для вычисления видимости триггеров
-    _loadTriggerOffset: null,
+    _checkTriggerVisibilityTimeout: null,
     _loadingIndicatorContainerOffsetTop: 0,
     _viewSize: null,
     _viewportSize: null,
@@ -2892,7 +2889,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._validateController = new ControllerClass();
         this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._startDragNDropCallback = this._startDragNDropCallback.bind(this);
-        this._loadTriggerOffset = { top: LOAD_TRIGGER_OFFSET, bottom: LOAD_TRIGGER_OFFSET };
     },
 
     /**
@@ -3547,7 +3543,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     reloadItem(key: String, readMeta: Object, replaceItem: Boolean, reloadType = 'read'): Deferred {
-        const items = this._listViewModel.getItems();
+        const items = this._listViewModel.getCollection();
         const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
         const sourceController = _private.getSourceController(this._options, this._notifyNavigationParamsChanged);
 
@@ -3793,6 +3789,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._scrollToFirstItemIfNeed();
     },
 
+    // setTimeout для проверки триггеров, чтобы IO успел сработать на изменение видимости триггеров, если оно было.
     checkTriggerVisibilityWithTimeout(): void {
         if (this._checkTriggerVisibilityTimeout) {
             clearTimeout(this._checkTriggerVisibilityTimeout);
@@ -3804,13 +3801,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._checkTriggerVisibilityTimeout = null;
         }, TRIGGER_VISIBILITY_DELAY);
     },
-
+    
+    // Проверяем видимость триггеров после перерисовки.
+    // Если видимость не изменилась, то события не будет, а обработать нужно.
     checkTriggersVisibility(): void {
-        const scrollParams = {
-            clientHeight: this._viewportSize,
-            scrollHeight: _private.getViewSize(this),
-            scrollTop: this._scrollTop
-        };
         const triggerDown = this._loadTriggerVisibility.down;
         const triggerUp = this._loadTriggerVisibility.up;
         this._scrollController.setTriggerVisibility('down', triggerDown);
