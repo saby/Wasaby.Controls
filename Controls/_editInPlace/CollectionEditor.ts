@@ -17,7 +17,7 @@ export const ERROR_MSG = {
 
 const ADDING_ITEM_EMPTY_KEY = 'ADDING_ITEM_EMPTY_KEY';
 
-export interface ICollectionEditorOptions {
+interface ICollectionEditorOptions {
     collection: Collection<Model>;
 }
 
