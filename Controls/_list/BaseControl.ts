@@ -523,7 +523,8 @@ const _private = {
         let startChildrenIndex = 0;
 
         for (let i = startChildrenIndex, len = itemsContainer.children.length; i < len; i++) {
-            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer')) {
+            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') && 
+                !itemsContainer.children[i].classList.contains('js-controls-List_invisible-for-VirtualScroll')) {
                 startChildrenIndex = i;
                 break;
             }
@@ -1713,11 +1714,12 @@ const _private = {
             // При быстром клике правой кнопкой обработчик закрытия меню и setActiveItem(null)
             // вызывается позже, чем устанавливается новый activeItem. в результате, при попытке
             // взаимодействия с опциями записи, может возникать ошибка, т.к. activeItem уже null.
-            // Для обхода проблемы ставим условие, что занулять ItemAction нужно только тогда, когда
+            // Для обхода проблемы ставим условие, что занулять active item нужно только тогда, когда
             // закрываем самое последнее открытое меню.
             if (!currentPopup || itemActionsMenuId === currentPopup.id) {
-                self._listViewModel.setActiveItem(null);
-                _private.getItemActionsController(self).deactivateSwipe();
+                const itemActionsController = _private.getItemActionsController(self)
+                itemActionsController.setActiveItem(null);
+                itemActionsController.deactivateSwipe();
             }
         }
     },
@@ -3738,12 +3740,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
-        if (this._scrollController && this._scrollController.needToSaveAndRestoreScrollPosition()) {
+        if (this._scrollController && this._scrollController.getParamsToRestoreScrollPosition()) {
             this._notify('saveScrollPosition', [], {bubbling: true});
         }
     },
 
     _beforePaint(): void {
+
+        // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
+        if (this._container) {
+            const container = this._container[0] || this._container;
+            this._viewSize = container.clientHeight;
+        }
+
         if (this._pagingVisible) {
             this._updatePagingPadding();
         }
@@ -3801,14 +3810,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
             let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
                                     this._scrollController.completeVirtualScrollIfNeed();
 
-            if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
-                const {direction, heightDifference} = this._scrollController.getParamsToRestoreScrollPosition();
-                this._notify('restoreScrollPosition', [heightDifference, direction, correctingHeight], {bubbling: true});
+            const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
+            if (paramsToRestoreScroll) {
+                this._scrollController.beforeRestoreScrollPosition();
+                this._notify('restoreScrollPosition', 
+                             [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
+                             {bubbling: true});
                 needCheckTriggers = true;
             }
 
@@ -4543,7 +4556,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (detection.isMobileIOS && (scrollEvent.target === document.body || scrollEvent.target === document)) {
             return;
         }
-        _private.closePopup(this);
+        _private.closeActionsMenu(this);
     },
 
     /**
@@ -4558,14 +4571,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
         swipeEvent.stopPropagation();
-        const key = item.getContents().getKey();
+        const key = _private.getPlainItemContents(item).getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
         const itemActionsController = _private.getItemActionsController(this);
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             this.setMarkedKey(key);
-            itemActionsController?.activateSwipe(item.getContents().getKey(), swipeContainer?.width, swipeContainer?.height);
+            itemActionsController?.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             const swipedItem = itemActionsController?.getSwipeItem();
@@ -4590,7 +4603,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 // Animation should be played only if checkboxes are visible.
                 if (this._selectionController && this._options.multiSelectVisibility !== 'hidden') {
-                    this._selectionController.startItemAnimation(item.getContents().getKey());
+                    this._selectionController.startItemAnimation(key);
                 }
                 this.setMarkedKey(key);
             }
