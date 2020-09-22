@@ -79,7 +79,7 @@ const _private = {
         const popupCfg = self._getPopupConfig(cfg, sizes);
 
         const targetCoords = self._getTargetCoords(cfg, sizes);
-        cfg.position = StickyStrategy.getPosition(popupCfg, self._getTargetCoords(cfg, sizes));
+        cfg.position = StickyStrategy.getPosition(popupCfg, targetCoords);
         _private.updateStickyPosition(cfg, popupCfg, targetCoords);
 
         cfg.positionConfig = popupCfg;
@@ -121,7 +121,7 @@ const _private = {
             direction: position.direction,
             offset: position.offset,
             position: item.position,
-            targetCoords,
+            targetPosition: targetCoords,
             margins: item.margins
         };
         // быстрая проверка на равенство простых объектов
@@ -217,7 +217,8 @@ class StickyController extends BaseController {
 
     elementUpdated(item, container) {
         _private.setStickyContent(item);
-        _private.updateStickyPosition(item, item.positionConfig);
+        const targetCoords = this._getTargetCoords(item, item.positionConfig.sizes);
+        _private.updateStickyPosition(item, item.positionConfig, targetCoords);
         if (this._isTargetVisible(item)) {
             _private.updateClasses(item, item.positionConfig);
 

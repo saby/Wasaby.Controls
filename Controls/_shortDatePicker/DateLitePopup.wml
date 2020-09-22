@@ -54,14 +54,8 @@
       </div>
    <ws:if data="{{_isExpandButtonVisible}}">
       <div class="controls-PeriodLiteDialog__footer_theme-{{_options.theme}} controls-PeriodLiteDialog__expandButton_theme-{{_options.theme}}">
-         <ws:if data="{{_isExpandedPopup}}">
-            <div class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-AccordionArrowUp action-hover controls-PeriodLiteDialog__AccordionArrow"
-                 on:click="_expandPopup()"></div>
-         </ws:if>
-         <ws:else>
-            <div class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-AccordionArrowDown action-hover controls-PeriodLiteDialog__AccordionArrow"
-                 on:click="_expandPopup()"></div>
-         </ws:else>
+         <div class="controls-icon controls-icon_size-m_theme-{{_options.theme}} icon-AccordionArrow{{_isExpandedPopup ? 'Up' : 'Down'}} action-hover controls-PeriodLiteDialog__AccordionArrow"
+              on:click="_expandPopup()"></div>
       </div>
    </ws:if>
    </ws:if>

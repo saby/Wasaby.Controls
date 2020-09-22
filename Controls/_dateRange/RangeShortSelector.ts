@@ -6,6 +6,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import coreMerge = require('Core/core-merge');
 import template = require('wml!Controls/_dateRange/RangeShortSelector/RangeShortSelector');
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Контрол позволяет пользователю выбрать временной период: месяц, квартал, полугодие, год. Выбор происходит с помощью панели быстрого выбора периода.
@@ -67,6 +68,7 @@ interface IRangeShortSelectorOptions extends IControlOptions {
 
 export default class RangeShortSelector extends BaseSelector<IRangeShortSelectorOptions> {
     protected _template: TemplateFunction = template;
+    protected _fittingMode: string = 'overflow';
 
     protected _getPopupOptions(): IStickyPopupOptions {
         let className;
@@ -81,7 +83,7 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
             opener: this,
             target: container,
             className,
-            fittingMode: 'overflow',
+            fittingMode: this._fittingMode,
             direction: {
                 horizontal: 'center'
             },
@@ -110,7 +112,7 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
                 displayedRanges: this._options.displayedRanges,
                 stubTemplate: this._options.stubTemplate,
                 captionFormatter: this._options.captionFormatter,
-                dateConstructor: this._options.dateConstructor
+                dateConstructor: this._options.dateConstructor,
             }
         };
     }
@@ -118,6 +120,13 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
     _mouseEnterHandler(): void {
         const loadCss = ({View}) => View.loadCSS();
         this._startDependenciesTimer('Controls/shortDatePicker', loadCss);
+    }
+
+    _sendResultHandler(event: SyntheticEvent, fittingMode: string): void {
+        if (typeof fittingMode === 'string') {
+            this._fittingMode = fittingMode;
+            this.openPopup();
+        }
     }
 
     shiftBack(): void {

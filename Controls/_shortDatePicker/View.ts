@@ -90,7 +90,6 @@ var Component = BaseControl.extend({
 
     _isExpandedPopup: false,
     _popupHeightStyle: '',
-    _popupOffset: 2,
     _isExpandButtonVisible: true,
 
 // constructor: function() {
@@ -145,7 +144,7 @@ var Component = BaseControl.extend({
     },
 
     _updateIsExpandButtonVisible(options): void {
-        const openerTop = options.stickyPosition.targetCoords.top;
+        const openerTop = options.stickyPosition.targetPosition.top;
         const popupTop = options.stickyPosition.position.top + Math.abs(options.stickyPosition.margins.top);
         this._isExpandButtonVisible = openerTop === popupTop;
     },
@@ -233,13 +232,18 @@ var Component = BaseControl.extend({
 
     _expandPopup(): void {
         this._isExpandedPopup = !this._isExpandedPopup;
+        let fittingMode;
+
         if (this._isExpandedPopup) {
-            const maxHeightPopup = this._options.stickyPosition.position.maxHeight;
-            const topPopup = this._options.stickyPosition.position.top;
-            this._popupHeightStyle = `height: ${maxHeightPopup - topPopup - this._popupOffset}px`;
+            // const maxHeightPopup = this._options.stickyPosition.position.maxHeight;
+            // const topPopup = this._options.stickyPosition.position.top;
+            this._popupHeightStyle = 'height: 100%';
+            fittingMode = 'fixed';
         } else {
             this._popupHeightStyle = '';
+            fittingMode = 'overflow';
         }
+        this._notify('sendResult', [fittingMode]);
     },
 
     _onHomeClick: function () {
