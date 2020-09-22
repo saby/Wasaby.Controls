@@ -169,7 +169,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       processingItems.forEach((item) => {
          const itemId: CrudEntityKey = this._getKey(item);
-         const parentId = this._getParentId(itemId);
+         const parentId = this._getKey(item.getParent());
          const isNode = this._isNode(item);
          let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
              this._isAllSelected(selection, parentId));
@@ -413,7 +413,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       let countChildrenInList: boolean|number|null = 0;
 
       for (let index = 0; index < children.getCount(); index++) {
-         const child = children[index];
+         const child = children.at(index);
          const childId = this._getKey(child);
          const childInList = listKeys.includes(childId);
 
