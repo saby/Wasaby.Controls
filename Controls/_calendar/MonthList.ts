@@ -102,15 +102,11 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                            Promise<TItems> | void {
 
         const now = new WSDate();
-        let position = options.startPosition || options.position;
+        let position = options.position;
 
         if (!position) {
             position = options.viewMode === VIEW_MODE.year ?
                 dateUtils.getStartOfYear(now) : dateUtils.getStartOfMonth(now);
-        }
-
-        if (options.startPosition) {
-            Logger.error('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
         }
 
         const normalizedPosition = this._normalizeDate(position, options.viewMode);
@@ -143,7 +139,11 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._updateItemTemplate(options);
         this._updateSource(options, this._options);
         this._updateVirtualPageSize(options, this._options);
-        if (!dateUtils.isDatesEqual(options.position, this._displayedPosition)) {
+        // Сравниваем по ссылке, а не по значению. position обновляется только при смене года или если
+        // напрямую менять position через опцию. Таким обзразом, если мы попробуем подскролить календарь к дате, которую
+        // устанавливали через опцию ранее, значения окажутся одинаковыми и подскролла не произайдет.
+        // В то же время ссылки окажутся разыми
+        if (options.position !== this._displayedPosition) {
             // Не инициализируем перестроение списка пока не завершится пребыбущая перерисовка.
             // https://online.sbis.ru/opendoc.html?guid=4c2ee6ae-c41d-4bc2-97e7-052963074621
             if (!this._lastPositionFromOptions) {
@@ -547,7 +547,7 @@ export default ModuleComponent;
  * @example
  * Обновляем заголовок в зависимости от отображаемого года.
  * <pre>
- *    <Controls.calendar:MonthList startPosition="_date" on:positionChanged="_positionChangedHandler()"/>
+ *    <Controls.calendar:MonthList position="_date" on:positionChanged="_positionChangedHandler()"/>
  * </pre>
  * <pre>
  *    class  ModuleComponent extends Control {
