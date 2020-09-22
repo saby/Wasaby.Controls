@@ -443,9 +443,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         const parent = super._getItemsFactory();
 
         return function TreeItemsFactory(options: IItemsFactoryOptions<S>): T {
-            options.hasChildren = this._$hasChildrenProperty
-                ? object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty)
-                : true;
+            options.hasChildren = object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty);
             if (!('node' in options)) {
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }

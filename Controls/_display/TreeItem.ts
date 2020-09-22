@@ -49,7 +49,7 @@ export default class TreeItem<T> extends mixin<
     protected _$node: boolean;
 
     /**
-     * Есть ли дети у узла. По умолчанию есть.
+     * Есть ли дети у узла.
      */
     protected _$hasChildren: boolean;
 
@@ -67,7 +67,7 @@ export default class TreeItem<T> extends mixin<
         }
 
         this._$node = !!this._$node;
-        if (options && options.hasChildren) {
+        if (options && options.hasChildren !== undefined) {
             this._$hasChildren = !!options.hasChildren;
         }
     }
@@ -237,7 +237,7 @@ Object.assign(TreeItem.prototype, {
     _$parent: undefined,
     _$node: false,
     _$expanded: false,
-    _$hasChildren: true,
+    _$hasChildren: false,
     _$childrenProperty: '',
     _instancePrefix: 'tree-item-'
 });
