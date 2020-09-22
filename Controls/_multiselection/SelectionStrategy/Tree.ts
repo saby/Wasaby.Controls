@@ -10,17 +10,15 @@ import { CrudEntityKey } from 'Types/source';
 import { TreeChildren, TreeItem } from 'Controls/display';
 import { List } from 'Types/collection';
 
+const LEAF = null;
+
 /**
- * Стратегия выбора для иерархического списка, для работы с ним как с плоским.
- * Записи не зависимы между собой, выбор родительских узлов никак не отражается на их детей.
+ * Стратегия выбора для иерархического списка.
  * @class Controls/_multiselection/SelectionStrategy/Tree
  * @control
  * @public
  * @author Панихин К.А.
  */
-
-const LEAF = null;
-
 export class TreeSelectionStrategy implements ISelectionStrategy {
    private _selectAncestors: boolean;
    private _selectDescendants: boolean;
@@ -144,7 +142,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
        limit?: number,
        items?: Array<TreeItem<Model>>,
        searchValue?: string
-   ): Map<boolean|null, Model[]> {
+   ): Map<boolean|null, Array<TreeItem<Model>>> {
       const selectedItems = new Map();
       // IE не поддерживает инициализацию конструктором
       selectedItems.set(true, []);
@@ -549,12 +547,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return selectedChildrenCount;
    }
 
-   private _removeChildes(
-       selection: ISelection,
-       nodeId: CrudEntityKey
-   ): void {
+   private _removeChildes(selection: ISelection, nodeId: CrudEntityKey): void {
       const childrenIds = this._getAllChildrenIds(nodeId);
-
       ArraySimpleValuesUtil.removeSubArray(selection.selected, childrenIds);
       ArraySimpleValuesUtil.removeSubArray(selection.excluded, childrenIds);
    }

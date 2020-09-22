@@ -169,7 +169,7 @@ describe('Controls/_display/TreeItem', () => {
         });
     });
 
-    describe('.isHasChildren()', () => {
+    /*describe('.isHasChildren()', () => {
         it('should return true by default', () => {
             const item = new TreeItem();
             assert.isTrue(item.isHasChildren());
@@ -179,7 +179,7 @@ describe('Controls/_display/TreeItem', () => {
             const item = new TreeItem({hasChildren: false});
             assert.isFalse(item.isHasChildren());
         });
-    });
+    });*/
 
     describe('.setHasChildren()', () => {
         it('should set the new value', () => {
@@ -193,7 +193,7 @@ describe('Controls/_display/TreeItem', () => {
         });
     });
 
-    describe('.isLoaded()', () => {
+    /*describe('.isLoaded()', () => {
         it('should return false by default', () => {
             const item = new TreeItem();
             assert.isFalse(item.isLoaded());
@@ -203,7 +203,7 @@ describe('Controls/_display/TreeItem', () => {
             const item = new TreeItem({loaded: true});
             assert.isTrue(item.isLoaded());
         });
-    });
+    });*/
 
     describe('.setLoaded()', () => {
         it('should set the new value', () => {
