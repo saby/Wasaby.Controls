@@ -1017,6 +1017,9 @@ const _private = {
 
         const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
                                       self._scrollController?.calculateVirtualScrollHeight() || 0);
+        if (!viewportSize) {
+            viewportSize = viewSize;
+        }
         const proportion = (scrollHeight / viewportSize);
 
         // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
@@ -3773,7 +3776,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
                 this._scrollController.beforeRestoreScrollPosition();
-                this._notify('restoreScrollPosition', 
+                this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
                 needCheckTriggers = true;
