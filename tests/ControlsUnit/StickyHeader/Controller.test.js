@@ -661,5 +661,41 @@ define([
             assert.equal(component._elementsHeight.length, 0);
          });
       });
+
+      describe('hasShadowVisible', () => {
+         beforeEach(() => {
+            component._headers = {
+               header1: {
+                  inst: {
+                     shadowVisibility: 'hidden'
+                  }
+               },
+               header2: {
+                  inst: {
+                     shadowVisibility: 'lastVisible'
+                  }
+               }
+            };
+         });
+
+         [{
+            fixedHeaders: {
+               top: ['header1']
+            },
+            position: 'top',
+            resp: false
+         }, {
+            fixedHeaders: {
+               top: ['header2']
+            },
+            position: 'top',
+            resp: true
+         }].forEach((test) => {
+            it('should push new elements to array of heights', () => {
+               component._fixedHeadersStack = test.fixedHeaders;
+               assert.strictEqual(component.hasShadowVisible(test.position), test.resp);
+            });
+         });
+      });
    });
 });

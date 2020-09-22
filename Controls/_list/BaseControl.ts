@@ -526,7 +526,8 @@ const _private = {
         let startChildrenIndex = 0;
 
         for (let i = startChildrenIndex, len = itemsContainer.children.length; i < len; i++) {
-            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer')) {
+            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') &&
+                !itemsContainer.children[i].classList.contains('js-controls-List_invisible-for-VirtualScroll')) {
                 startChildrenIndex = i;
                 break;
             }
@@ -2176,7 +2177,6 @@ const _private = {
             }
         }
         if (result.triggerOffset) {
-            self._loadTriggerOffset = result.triggerOffset;
             self.applyTriggerOffset(result.triggerOffset);
         }
         if (result.scrollToActiveElement) {
@@ -2716,9 +2716,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
     _hideIndicatorOnTriggerHideDirection: null,
-
-    // хранения отступов триггеров хранится для вычисления видимости триггеров
-    _loadTriggerOffset: null,
+    _checkTriggerVisibilityTimeout: null,
     _loadingIndicatorContainerOffsetTop: 0,
     _viewSize: null,
     _viewportSize: null,
@@ -2797,7 +2795,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._startDragNDropCallback = this._startDragNDropCallback.bind(this);
         this._resetValidation = this._resetValidation.bind(this);
-        this._loadTriggerOffset = { top: LOAD_TRIGGER_OFFSET, bottom: LOAD_TRIGGER_OFFSET };
     },
 
     /**
@@ -3441,7 +3438,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     reloadItem(key: String, readMeta: Object, replaceItem: Boolean, reloadType = 'read'): Deferred {
-        const items = this._listViewModel.getItems();
+        const items = this._listViewModel.getCollection();
         const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
         const sourceController = _private.getSourceController(this._options, this._notifyNavigationParamsChanged);
 
@@ -3593,12 +3590,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
-        if (this._scrollController && this._scrollController.needToSaveAndRestoreScrollPosition()) {
+        if (this._scrollController && this._scrollController.getParamsToRestoreScrollPosition()) {
             this._notify('saveScrollPosition', [], {bubbling: true});
         }
     },
 
     _beforePaint(): void {
+
+        // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
+        if (this._container) {
+            const container = this._container[0] || this._container;
+            this._viewSize = container.clientHeight;
+        }
+
         if (this._pagingVisible) {
             this._updatePagingPadding();
         }
@@ -3656,14 +3660,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
             let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
                                     this._scrollController.completeVirtualScrollIfNeed();
 
-            if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
-                const {direction, heightDifference} = this._scrollController.getParamsToRestoreScrollPosition();
-                this._notify('restoreScrollPosition', [heightDifference, direction, correctingHeight], {bubbling: true});
+            const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
+            if (paramsToRestoreScroll) {
+                this._scrollController.beforeRestoreScrollPosition();
+                this._notify('restoreScrollPosition',
+                             [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
+                             {bubbling: true});
                 needCheckTriggers = true;
             }
 
@@ -3677,6 +3685,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._scrollToFirstItemIfNeed();
     },
 
+    // setTimeout для проверки триггеров, чтобы IO успел сработать на изменение видимости триггеров, если оно было.
     checkTriggerVisibilityWithTimeout(): void {
         if (this._checkTriggerVisibilityTimeout) {
             clearTimeout(this._checkTriggerVisibilityTimeout);
@@ -3689,12 +3698,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }, TRIGGER_VISIBILITY_DELAY);
     },
 
+    // Проверяем видимость триггеров после перерисовки.
+    // Если видимость не изменилась, то события не будет, а обработать нужно.
     checkTriggersVisibility(): void {
-        const scrollParams = {
-            clientHeight: this._viewportSize,
-            scrollHeight: _private.getViewSize(this),
-            scrollTop: this._scrollTop
-        };
         const triggerDown = this._loadTriggerVisibility.down;
         const triggerUp = this._loadTriggerVisibility.up;
         this._scrollController.setTriggerVisibility('down', triggerDown);

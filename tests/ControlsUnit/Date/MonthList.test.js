@@ -236,6 +236,35 @@ define([
             sandbox.restore();
          });
 
+         it('should update source if changed', function () {
+            const sandbox = sinon.createSandbox();
+            const oldSource = {
+               query: function () {
+                  return {
+                     then: function () {
+                        return 'source1';
+                     }
+                  };
+               }
+            };
+            const newSource = {
+               query: function () {
+                  return {
+                     then: function () {
+                        return 'source2';
+                     }
+                  };
+               }
+            };
+            const ml = calendarTestUtils.createComponent(calendar.MonthList, {});
+            ml._beforeUpdate({ source: oldSource });
+
+            const stub = sandbox.stub(ml, '_enrichItems');
+
+            ml._beforeUpdate({ source: newSource });
+
+            sinon.assert.calledOnce(stub);
+         });
       });
 
       describe('_afterUpdate', function() {
