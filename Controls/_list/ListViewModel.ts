@@ -283,7 +283,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             // Если поддерживается stiky элементы, то конечный индекс не должен совпадать с stopIndex,
             // а должен отображаться застиканный элемент, если он находится за пределами диапазона.
             let idx = endIndex;
-            const count = this._display.getCount();
+            const count =  (this._display ? this._display.getCount() : 0);
             while (idx < count) {
                 const itemData = this.getItemDataByItem(this._display.at(idx));
                 if (this._isStickedItem(itemData)) {
