@@ -5,7 +5,7 @@ import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 
-class Multiline extends Control<IControlOptions> {
+class BreadCrumbs extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     protected items = null;
     protected items1 = null;
@@ -181,4 +181,4 @@ class Multiline extends Control<IControlOptions> {
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/BreadCrumbs/BreadCrumbs/BreadCrumbs'];
 }
 
-export default Multiline;
+export default BreadCrumbs;
