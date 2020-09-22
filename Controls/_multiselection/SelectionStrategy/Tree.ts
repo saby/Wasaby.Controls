@@ -110,7 +110,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    toggleAll(selection: ISelection, hasMoreData: boolean): ISelection {
-      const childrenIdsInRoot = this._getChildrenIds(this._rootId, this._items);
+      const childrenIdsInRoot = this._getAllChildrenIds(this._rootId);
       const rootExcluded = selection.excluded.includes(this._rootId);
       const oldExcludedKeys = selection.excluded.slice();
       const oldSelectedKeys = selection.selected.slice();
@@ -198,7 +198,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       if (!this._isAllSelected(selection, this._rootId) || !hasMoreData) {
          if (this._selectDescendants) {
             for (let index = 0; index < selection.selected.length; index++) {
-               const itemId: CrudEntityKey = selection.selected[index];
+               const itemId = selection.selected[index];
                const item = this._items.find((item) => this._getKey(item) === itemId);
 
                if (!item || this._isNode(item)) {
@@ -255,39 +255,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       let allChildrenExcluded = this._isAllChildrenExcluded(selection, parentId);
       let currentParentId = parentId;
       while (currentParentId !== this._rootId && allChildrenExcluded) {
-         const item = this._items.find((item) => this._getKey(item) === currentParentId);
          this._unselectNode(selection, currentParentId);
-         currentParentId = this._getParentId(this._getKey(item));
+         currentParentId = this._getParentId(currentParentId);
          allChildrenExcluded = this._isAllChildrenExcluded(selection, currentParentId);
       }
-   }
-
-   private _getChildesByEntryPath(nodeId: CrudEntityKey, path: any[] = []): CrudEntityKey[] {
-      let result = [];
-      let children;
-      const childrenMap = new Map();
-      path.forEach((pathItem) => {
-         if (!childrenMap.has(pathItem.parent)) {
-            childrenMap.set(pathItem.parent, [pathItem.id]);
-         } else {
-            childrenMap.get(pathItem.parent).push(pathItem.id);
-         }
-      });
-      children = childrenMap.get(nodeId) || [];
-      childrenMap.delete(nodeId);
-      while (children.length) {
-         let tempChildren = [];
-         result = result.concat(children);
-         children.forEach((key: CrudEntityKey): void => {
-            if (childrenMap.has(key)) {
-               tempChildren = tempChildren.concat(childrenMap.get(key));
-               childrenMap.delete(key);
-            }
-         });
-         children = tempChildren;
-      }
-
-      return result;
    }
 
    private _isAllSelectedInRoot(selection: ISelection): boolean {
@@ -320,7 +291,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._selectLeaf(selection, nodeId);
 
       if (this._selectDescendants) {
-         this._removeChildes(selection, nodeId, this._items);
+         this._removeChildes(selection, nodeId);
       }
    }
 
@@ -328,7 +299,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._unselectLeaf(selection, nodeId);
 
       if (this._selectDescendants) {
-         this._removeChildes(selection, nodeId, this._items);
+         this._removeChildes(selection, nodeId);
       }
    }
 
@@ -434,8 +405,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       if (countChildrenInList > 0) {
          stateNode = null;
       } else if (this._entryPath) {
-         const childesFromPath = this._getChildesByEntryPath(itemId, this._entryPath);
-         const hasChildrenInKeys = listKeys.some((key) => childesFromPath.includes(key));
+         const childesFromEntryPath =  this._entryPath
+             .filter((item) => item.parent === itemId)
+             .map((item) => item.id);
+         const hasChildrenInKeys = listKeys.some((key) => childesFromEntryPath.includes(key));
          if (hasChildrenInKeys) {
             stateNode = null;
          }
@@ -456,7 +429,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       let result = true;
 
       if (childes.getCount()) {
-         for (const child of childes) {
+         for (let i = 0; i < childes.getCount(); i++) {
+            const child = childes.at(i);
             const childId = this._getKey(child);
             if (this._getChildes(childId).getCount() > 0) {
                result = result && this._isAllChildrenExcluded(selection, childId);
@@ -475,53 +449,52 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return result;
    }
 
-   private _removeChildrenIdsFromSelection(selection: ISelection, nodeId: CrudEntityKey): void {
-      this._removeChildes(selection, nodeId, this._items);
-   }
-
-   private _getAllChildren(
-       nodeId: CrudEntityKey,
-       items: Array<TreeItem<Model>>
-   ): Array<TreeItem<Model>> {
+   private _getAllChildren(nodeId: CrudEntityKey): Array<TreeItem<Model>> {
       const childes = [];
 
       this._getChildes(nodeId).each((child) => {
          ArraySimpleValuesUtil.addSubArray(childes, [child]);
 
          if (this._isNode(child)) {
-            ArraySimpleValuesUtil.addSubArray(childes, this._getAllChildren(this._getKey(child), items));
+            ArraySimpleValuesUtil.addSubArray(childes, this._getAllChildren(this._getKey(child)));
          }
       });
 
       return childes;
    }
 
-   private _getChildrenInEntryPath(parentId: CrudEntityKey, entriesPath: IEntryPathItem[]): TKeys {
-      let children = [];
+   /**
+    * Возвращает всех детей данного узла из ENTRY_PATH, включая детей детей узла
+    * @param parentId
+    * @private
+    */
+   private _getChildrenIdsInEntryPath(parentId: CrudEntityKey): TKeys {
+      const childrenIds = [];
 
-      entriesPath.forEach((entryPath) => {
-         if (entryPath.parent === parentId) {
-            children.push(entryPath.id);
-            children = children.concat(this._getChildrenInEntryPath(entryPath.id, entriesPath));
-         }
-      });
+      const childesFromEntryPath = this._entryPath
+          .filter((item) => item.parent === parentId)
+          .map((item) => {
+             childrenIds.concat(this._getChildrenIdsInEntryPath(item.id));
+             return item.id;
+          });
 
-      return children;
+      childrenIds.concat(childesFromEntryPath);
+      return childrenIds;
    }
 
-   private _getChildrenIds(
-       nodeId: CrudEntityKey,
-       items: Array<TreeItem<Model>>
-   ): TKeys {
-      let childrenIds = this._getAllChildren(nodeId, items).map((child) => {
-         return this._getKey(child);
-      });
+   /**
+    * Возвращает ключи всех детей, включая детей из ENTRY_PATH
+    * @param nodeId
+    * @private
+    */
+   private _getAllChildrenIds(nodeId: CrudEntityKey): TKeys {
+      let childrenIds = this._getAllChildren(nodeId).map((child) => this._getKey(child));
 
       if (this._entryPath) {
          this._entryPath.forEach((entryPath) => {
             if ((childrenIds.includes(entryPath.parent) || nodeId === entryPath.parent) && !childrenIds.includes(entryPath.id)) {
                childrenIds.push(entryPath.id);
-               childrenIds = childrenIds.concat(this._getChildrenInEntryPath(entryPath.id, this._entryPath));
+               childrenIds = childrenIds.concat(this._getChildrenIdsInEntryPath(entryPath.id));
             }
          });
       }
@@ -577,10 +550,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _removeChildes(
        selection: ISelection,
-       nodeId: CrudEntityKey,
-       items: Array<TreeItem<Model>>
+       nodeId: CrudEntityKey
    ): void {
-      const childrenIds: TKeys = this._getChildrenIds(nodeId, items);
+      const childrenIds = this._getAllChildrenIds(nodeId);
 
       ArraySimpleValuesUtil.removeSubArray(selection.selected, childrenIds);
       ArraySimpleValuesUtil.removeSubArray(selection.excluded, childrenIds);

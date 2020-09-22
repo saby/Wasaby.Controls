@@ -576,7 +576,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const items = [];
         factory(selectedKeys).each((key) => {
             if (listModel.getItemBySourceKey(key)) {
-                items.push(listModel.getItemBySourceKey(key).getContents());
+                items.push(listModel.getItemBySourceKey(key));
             }
         });
         return items;
