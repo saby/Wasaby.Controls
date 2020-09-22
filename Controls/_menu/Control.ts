@@ -630,7 +630,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const selectionController = this._getSelectionController();
         const selectedItems = this._listModel.getSelectedItems();
         if (selectedItems.length === 1 && MenuControl._isFixedItem(selectedItems[0].getContents())) {
-            selectionController.setSelectedKeys([selectedItems[0].getContents().getKey()], this._excludedKeys);
+            selectionController.toggleItem(selectedItems[0].getContents().getKey());
         }
         const selection = selectionController.toggleItem(key);
         selectionController.setSelectedKeys(selection.selectedKeysDiff.keys, this._excludedKeys);
