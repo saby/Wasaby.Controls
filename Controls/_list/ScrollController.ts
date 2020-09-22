@@ -527,20 +527,6 @@ export default class ScrollController {
     }
 
     handleResetItems(): IScrollControllerResult {
-        /**
-         * Бывают ситуации, когда activeElement уже не существует, это связано с тем, что source обновился, а activeElement нет
-         * Поэтому проверяем его наличие, и в случае отсутствия меняем activeElement на актуальный
-         * https://online.sbis.ru/opendoc.html?guid=00931a10-5f68-4b27-8a78-febe93d81baf
-         */
-        if (typeof this._options.collection.at(this._options.activeElement) === 'undefined') {
-            const activeIndex = this._virtualScroll.getActiveElementIndex(this._lastScrollTop);
-            if (typeof activeIndex !== 'undefined') {
-                const activeElement = this._options.collection.at(activeIndex);
-                if (typeof activeElement !== 'undefined') {
-                    this._options.activeElement = activeElement.getUid();
-                }
-            }
-        }
         return this._initVirtualScroll(this._options);
     }
 
