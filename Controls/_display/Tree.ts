@@ -98,10 +98,6 @@ function invertPropertyLogic(name: string): string {
 }
 
 function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
-    // FIXME: must process options before superclass constructor because it's immediately used in _composer
-    if (options && !options.hasChildrenProperty && options.loadedProperty) {
-        options.hasChildrenProperty = invertPropertyLogic(options.loadedProperty);
-    }
     return options;
 }
 
@@ -447,7 +443,9 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         const parent = super._getItemsFactory();
 
         return function TreeItemsFactory(options: IItemsFactoryOptions<S>): T {
-            options.hasChildren = object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty);
+            options.hasChildren = this._$hasChildrenProperty
+                ? object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty)
+                : true;
             if (!('node' in options)) {
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }

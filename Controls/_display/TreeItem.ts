@@ -67,7 +67,9 @@ export default class TreeItem<T> extends mixin<
         }
 
         this._$node = !!this._$node;
-        this._$hasChildren = !!(options && options.hasChildren);
+        if (options && options.hasChildren) {
+            this._$hasChildren = !!options.hasChildren;
+        }
     }
 
     // region Public methods

@@ -9,6 +9,8 @@ import clone = require('Core/core-clone');
 import { CrudEntityKey } from 'Types/source';
 import { TreeChildren, TreeItem } from 'Controls/display';
 import { List } from 'Types/collection';
+import instance from '../../Store';
+import BreadcrumbsItem from '../../_display/BreadcrumbsItem';
 
 const LEAF = null;
 
@@ -167,7 +169,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       processingItems.forEach((item) => {
          const itemId: CrudEntityKey = this._getKey(item);
-         const parentId = this._getKey(item.getParent());
+         const parentId = item instanceof TreeItem ? this._getKey(item.getParent()) : undefined;
          const isNode = this._isNode(item);
          let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
              this._isAllSelected(selection, parentId));
@@ -325,7 +327,12 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _getParentId(itemId: string|number): CrudEntityKey|undefined {
       const dispItem = this._items.find((item) => this._getKey(item) === itemId);
-      return dispItem ? this._getKey(dispItem.getParent()) : undefined;
+      let parent;
+      if (dispItem instanceof TreeItem) {
+         parent = dispItem.getParent();
+      }
+
+      return parent ? this._getKey(parent) : undefined;
    }
 
    // TODO после починки юнитов, попробовать переписать. Какая-то дичь
@@ -573,7 +580,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
     * @private
     */
    private _isNode(item: TreeItem<Model>): boolean {
-      return item?.isNode() !== LEAF;
+      return item instanceof TreeItem ? item.isNode() !== LEAF : false;
    }
 
    /**
@@ -596,7 +603,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          return undefined;
       }
 
-      // у корневого элемента contents=null
-      return contents && contents.getKey();
+      // у корневого элемента contents=key
+      return contents instanceof Object ?  contents.getKey() : contents;
    }
 }
