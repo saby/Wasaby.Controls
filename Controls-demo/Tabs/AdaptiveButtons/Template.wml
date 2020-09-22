@@ -18,6 +18,7 @@
                     bind:selectedKey="SelectedKey2"
                     keyProperty="id"
                     containerWidth="{{_containerWidth}}"
+                    displayProperty="caption"
                     items="{{_items2}}"
                     align="left"
             />
