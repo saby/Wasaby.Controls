@@ -109,10 +109,10 @@ class MultilinePath extends Control<IMultilinePathOptions, IReceivedState> imple
     }
 
     private _calculateBreadCrumbsToDraw(items: Record[], options: IMultilinePathOptions, getTextWidth: Function = this._getTextWidth): void {
-        const firstContainerData = BreadCrumbsUtil.calculateItemsWithShrinkingLast(options.items, options, this._width, getTextWidth);
+        const firstContainerData = BreadCrumbsUtil.calculateItemsWithShrinkingLast(items, options, this._width, getTextWidth);
         this._indexEdge = firstContainerData.indexEdge;
         this._visibleItemsFirst = firstContainerData.visibleItems;
-        this._visibleItemsSecond = BreadCrumbsUtil.calculateItemsWithDots(options.items, options, this._indexEdge, this._width, this._dotsWidth, getTextWidth);
+        this._visibleItemsSecond = BreadCrumbsUtil.calculateItemsWithDots(items, options, this._indexEdge, this._width, this._dotsWidth, getTextWidth);
     }
 
     private _getTextWidth(text: string, size: string  = 'xs'): number {
