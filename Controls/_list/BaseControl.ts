@@ -522,7 +522,7 @@ const _private = {
         let startChildrenIndex = 0;
 
         for (let i = startChildrenIndex, len = itemsContainer.children.length; i < len; i++) {
-            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') && 
+            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') &&
                 !itemsContainer.children[i].classList.contains('js-controls-List_invisible-for-VirtualScroll')) {
                 startChildrenIndex = i;
                 break;
@@ -3547,7 +3547,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     reloadItem(key: String, readMeta: Object, replaceItem: Boolean, reloadType = 'read'): Deferred {
-        const items = this._listViewModel.getItems();
+        const items = this._listViewModel.getCollection();
         const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
         const sourceController = _private.getSourceController(this._options, this._notifyNavigationParamsChanged);
 
