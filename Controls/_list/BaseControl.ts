@@ -115,7 +115,7 @@ const
         keyDownEnd: constants.key.end,
         keyDownPageUp: constants.key.pageUp,
         keyDownPageDown: constants.key.pageDown,
-        delHandler: constants.key.del
+        keyDownDel: constants.key.del
     };
 
 const LOAD_TRIGGER_OFFSET = 100;
@@ -523,7 +523,7 @@ const _private = {
         let startChildrenIndex = 0;
 
         for (let i = startChildrenIndex, len = itemsContainer.children.length; i < len; i++) {
-            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') && 
+            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') &&
                 !itemsContainer.children[i].classList.contains('js-controls-List_invisible-for-VirtualScroll')) {
                 startChildrenIndex = i;
                 break;
@@ -626,7 +626,7 @@ const _private = {
      * @param self
      * @param event
      */
-    delHandler(self, event): void {
+    keyDownDel(self, event): void {
         const model = self.getViewModel();
         let toggledItemId = model.getMarkedKey();
         let toggledItem: CollectionItem<Model> = model.getItemBySourceKey(toggledItemId);
@@ -3819,7 +3819,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
                 this._scrollController.beforeRestoreScrollPosition();
-                this._notify('restoreScrollPosition', 
+                this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
                 needCheckTriggers = true;

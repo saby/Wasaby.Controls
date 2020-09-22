@@ -1510,7 +1510,7 @@ define([
          sandbox.restore();
       });
 
-      describe('_private.delHandler', () => {
+      describe('_private.keyDownDel', () => {
          let cfg;
          let instance;
          let event;
@@ -1574,7 +1574,7 @@ define([
 
             lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
             const spyUpdateItemActions = sinon.spy(lists.BaseControl._private, 'updateItemActions');
-            lists.BaseControl._private.delHandler(instance, event);
+            lists.BaseControl._private.keyDownDel(instance, event);
             sinon.assert.called(spyUpdateItemActions);
             assert.isTrue(isHandlerCalled);
             spyUpdateItemActions.restore();
@@ -1585,7 +1585,7 @@ define([
             lists.BaseControl._private.updateItemActions(instance, cfg);
             lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
             const spyUpdateItemActions = sinon.spy(lists.BaseControl._private, 'updateItemActions');
-            lists.BaseControl._private.delHandler(instance, event);
+            lists.BaseControl._private.keyDownDel(instance, event);
             sinon.assert.notCalled(spyUpdateItemActions);
             assert.isTrue(isHandlerCalled);
             spyUpdateItemActions.restore();
@@ -1594,7 +1594,7 @@ define([
          it('should not work when no itemActions passed', async () => {
             await initTest();
             lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
-            lists.BaseControl._private.delHandler(instance, event);
+            lists.BaseControl._private.keyDownDel(instance, event);
             sinon.assert.called(stubLogger);
             assert.isFalse(isHandlerCalled);
          });
@@ -1602,7 +1602,7 @@ define([
          it('should not work when itemAction "delete" is not passed', async () => {
             await initTest({ itemActions: [{ id: 1 }, { id: 2 }] });
             lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
-            lists.BaseControl._private.delHandler(instance, event);
+            lists.BaseControl._private.keyDownDel(instance, event);
             sinon.assert.called(stubLogger);
             assert.isFalse(isHandlerCalled);
          });
@@ -1613,14 +1613,14 @@ define([
                itemActionVisibilityCallback: (action, item) => action.id !== 'delete',
             });
             lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
-            lists.BaseControl._private.delHandler(instance, event);
+            lists.BaseControl._private.keyDownDel(instance, event);
             sinon.assert.called(stubLogger);
             assert.isFalse(isHandlerCalled);
          });
 
          it('should not work w/o warnings when no item is marked', () => {
             initTest({ itemActions: [{ id: 'delete', handler: () => {isHandlerCalled = true} }, { id: 1 }, { id: 2 }] });
-            lists.BaseControl._private.delHandler(instance, event);
+            lists.BaseControl._private.keyDownDel(instance, event);
             sinon.assert.notCalled(stubLogger);
             assert.isFalse(isHandlerCalled);
          });
