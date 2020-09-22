@@ -534,7 +534,10 @@ export default class ScrollController {
         if (typeof this._options.collection.at(this._options.activeElement) === 'undefined') {
             const activeIndex = this._virtualScroll.getActiveElementIndex(this._lastScrollTop);
             if (typeof activeIndex !== 'undefined') {
-                this._options.activeElement = this._options.collection.at(activeIndex).getUid();
+                const activeElement = this._options.collection.at(activeIndex);
+                if (typeof activeElement !== 'undefined') {
+                    this._options.activeElement = activeElement.getUid();
+                }
             }
         }
         return this._initVirtualScroll(this._options);
