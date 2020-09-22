@@ -96,7 +96,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl.destroy();
             baseControl = undefined;
         });
-        it('should create selection controller', async () => {
+        /*it('should create selection controller', async () => {
             const cfgClone = {...baseControlCfg};
             cfgClone.selectedKeys = [1];
             cfgClone.multiSelectVisibility = 'hidden';
@@ -120,7 +120,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._createSelectionController();
             assert.isFalse(!baseControl._listViewModel || !baseControl._listViewModel.getCollection());
             assert.isNotNull(baseControl._selectionController);
-        });
+        });*/
     });
     describe('BaseControl watcher paging', () => {
         const baseControlCfg = {

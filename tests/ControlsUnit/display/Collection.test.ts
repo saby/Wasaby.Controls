@@ -2616,6 +2616,7 @@ describe('Controls/_display/Collection', () => {
         });
     });
 
+/*
     describe('.setSelectedItems()', () => {
         it('should selected was given items', () => {
             display.setSelectedItems(
@@ -2666,6 +2667,7 @@ describe('Controls/_display/Collection', () => {
             assert.isFalse(notifyLaterSpy.called);
         });
     });
+*/
 
     describe('.invertSelectedItemsAll()', () => {
         it('should invert selection', () => {
