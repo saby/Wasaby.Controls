@@ -343,6 +343,24 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.equal(baseControl._currentPage, 2);
             assert.equal(baseControl._scrollPagingCtr._options.scrollParams.scrollTop, 400);
         });
+
+        it('visible paging padding', async () => {
+            const cfgClone = {...baseControlCfg};
+            cfgClone.navigation.viewConfig.pagingMode = 'end';
+            baseControl.saveOptions(cfgClone);
+            await baseControl._beforeMount(cfgClone);
+            baseControl._container = {
+                clientHeight: 1000
+            };
+            baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
+            assert.isFalse(baseControl._isPagingPadding());
+            cfgClone.navigation.viewConfig.pagingMode = 'base';
+            await baseControl._beforeUpdate(cfgClone);
+            assert.isTrue(baseControl._isPagingPadding());
+        });
     });
     describe('beforeUnmount', () => {
         let baseControl;

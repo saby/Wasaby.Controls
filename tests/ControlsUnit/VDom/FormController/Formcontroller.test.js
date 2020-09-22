@@ -643,7 +643,8 @@ define([
          const cfg = {
             source: {
                create: () => Promise.resolve(new entity.Record())
-            }
+            },
+            initializingWay: 'delayedCreate'
          };
          return FC._createRecordBeforeMount(cfg).then(() => {
             assert.equal(FC._record, 'initModel');

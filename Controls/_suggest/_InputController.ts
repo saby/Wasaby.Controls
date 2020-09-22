@@ -88,10 +88,16 @@ var _private = {
    },
 
    openWithHistory: function(self) {
-      var filter;
+      let filter;
+
+      function openSuggestIfNeeded(): void {
+         if (self._historyKeys.length || self._options.autoDropDown) {
+            _private.open(self);
+         }
+      }
 
       if (!self._historyKeys) {
-         _private.getRecentKeys(self).addCallback(function(keys) {
+         _private.getRecentKeys(self).addCallback((keys) => {
             self._historyKeys = keys || [];
             filter = clone(self._options.filter || {});
 
@@ -101,14 +107,12 @@ var _private = {
 
             _private.setFilter(self, filter, self._options);
 
-            if (self._historyKeys.length || self._options.autoDropDown) {
-               _private.open(self);
-            }
+            openSuggestIfNeeded();
             return self._historyKeys;
          });
       } else {
          _private.setFilter(self, self._options.filter, self._options);
-         _private.open(self);
+         openSuggestIfNeeded();
       }
    },
 

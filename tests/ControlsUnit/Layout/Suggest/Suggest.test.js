@@ -991,8 +991,14 @@ define(['Controls/suggest', 'Types/collection', 'Types/entity', 'Env/Env', 'Cont
          suggestComponent._searchValue = '';
          suggestComponent._options.minSearchLength = 3;
          suggestComponent._options.searchParam = 'search';
+         suggestComponent._options.autoDropDown = true;
          suggestMod._InputController._private.openWithHistory(suggestComponent);
          assert.deepEqual(suggestComponent._filter, {search: '', historyKeys: [7, 8]});
+
+         suggestComponent._historyKeys = [];
+         suggestComponent._options.autoDropDown = false;
+         suggestMod._InputController._private.openWithHistory(suggestComponent);
+         assert.deepEqual(suggestComponent._filter, {search: ''});
       });
 
       it('Suggest::_private.getRecentKeys', function() {
