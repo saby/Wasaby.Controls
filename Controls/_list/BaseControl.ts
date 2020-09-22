@@ -3638,12 +3638,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
-        if (this._scrollController && this._scrollController.needToSaveAndRestoreScrollPosition()) {
+        if (this._scrollController && this._scrollController.getParamsToRestoreScrollPosition()) {
             this._notify('saveScrollPosition', [], {bubbling: true});
         }
     },
 
     _beforePaint(): void {
+
+        // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
+        if (this._container) {
+            const container = this._container[0] || this._container;
+            this._viewSize = container.clientHeight;
+        }
+
         if (this._pagingVisible) {
             this._updatePagingPadding();
         }
@@ -3700,14 +3707,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
             let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
                                     this._scrollController.completeVirtualScrollIfNeed();
 
-            if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
-                const {direction, heightDifference} = this._scrollController.getParamsToRestoreScrollPosition();
-                this._notify('restoreScrollPosition', [heightDifference, direction, correctingHeight], {bubbling: true});
+            const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
+            if (paramsToRestoreScroll) {
+                this._scrollController.beforeRestoreScrollPosition();
+                this._notify('restoreScrollPosition', 
+                             [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
+                             {bubbling: true});
                 needCheckTriggers = true;
             }
 
