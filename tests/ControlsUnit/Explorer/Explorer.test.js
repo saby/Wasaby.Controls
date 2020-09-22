@@ -1,3 +1,5 @@
+import * as sinon from "sinon";
+
 define([
    'Controls/explorer',
    'Core/Deferred',
@@ -677,6 +679,30 @@ define([
             assert.isFalse(isNotified);
             isNotified = false;
 
+         });
+
+         it('should do nothing by item click with option wxpandByItemClick', () => {
+            const cfg = {
+               editingConfig: {},
+               expandByItemClick: true
+            };
+            const explorer = new explorerMod.View(cfg);
+            explorer.saveOptions(cfg);
+
+            const stub = sinon.stub(explorer._private, 'setRoot').callsFake(() => {
+               throw Error('Explorer:setRoot shouldn\'t be called!')
+            });
+            explorer.commitEdit = () => {
+               throw Error('Explorer:commitEdit shouldn\'t be called!')
+            };
+            const event = { stopPropagation: () => {} };
+            const clickEvent = {
+               target: {closest: () => {}}
+            };
+            assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => true  }, clickEvent) });
+            assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => false }, clickEvent) });
+            assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => null  }, clickEvent) });
+            stub.reset();
          });
 
          it('_onItemClick', async function() {
