@@ -51,7 +51,7 @@ export default class TreeItem<T> extends mixin<
     /**
      * Есть ли дети у узла. По умолчанию есть.
      */
-    protected _$hasChildren: boolean;
+    protected _$hasChildren: boolean = true;
 
     /**
      * Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.

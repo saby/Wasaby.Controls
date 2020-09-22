@@ -559,9 +559,18 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       ArraySimpleValuesUtil.removeSubArray(selection.excluded, childrenIds);
    }
 
-   private _getChildes(nodeId: CrudEntityKey): TreeChildren<Model> {
+   private _getChildes(nodeId: CrudEntityKey): TreeChildren<Model>|List<TreeItem<Model>> {
+      let result;
       const node = this._items.find((item) => this._getKey(item) === nodeId);
-      return node ? node.getChildren() : new List({items: []});
+
+      // Значит передали ключ корневого узла
+      if (!node) {
+         const childes = this._items.filter((item) => this._getKey(item.getParent()) === nodeId);
+         result = new List({items: childes});
+      } else {
+         result = node.getChildren();
+      }
+      return result;
    }
 
    /**
