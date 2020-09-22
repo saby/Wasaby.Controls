@@ -1,4 +1,4 @@
-<ws:for data="index, item in collection.getViewIterator()">
+<ws:template name="localItemTemplate">
    <ws:partial
            template="{{ item.getItemTemplate(collection.getItemTemplateProperty(), itemTemplate, groupTemplate) }}"
            item="{{ item }}"
@@ -44,4 +44,16 @@
                  itemData="{{ item }}" />
       </ws:swipeTemplate>
    </ws:partial>
+</ws:template>
+
+<ws:for data="index, item in collection.getViewIterator()">
+   <ws:if data="{{ item.isEditing() }}">
+      <!-- Во время редактирования строки View не должна слушать событие click и mouseDown -->
+      <Controls._list.EditInPlace.EditingRow name="editingRow" on:deactivated="_onRowDeactivated()">
+              <ws:partial template="localItemTemplate"/>
+      </Controls._list.EditInPlace.EditingRow>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="localItemTemplate"/>
+   </ws:else>
 </ws:for>
