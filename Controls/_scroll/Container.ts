@@ -1322,9 +1322,9 @@ let
       },
 
       _updatePlaceholdersSize: function(e, placeholdersSizes) {
-           this._topPlaceholderSizeChanged = true;
          if (this._topPlaceholderSize !== placeholdersSizes.top ||
             this._bottomPlaceholderSize !== placeholdersSizes.bottom) {
+            this._topPlaceholderSizeChanged = true;
             this._topPlaceholderSize = placeholdersSizes.top;
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
             this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
