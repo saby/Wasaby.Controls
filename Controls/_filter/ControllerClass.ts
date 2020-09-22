@@ -231,11 +231,11 @@ export default class FilterControllerClass {
     }
 
     getCalculatedFilter(config) {
-        getCalculatedFilter.call(this, config);
+        return getCalculatedFilter.call(this, config);
     }
 
     saveFilterToHistory(config) {
-        saveFilterToHistory.call(this, config);
+        return saveFilterToHistory.call(this, config);
     }
 
     destroy(): void {
