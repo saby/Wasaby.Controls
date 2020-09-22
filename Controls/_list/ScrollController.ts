@@ -575,8 +575,9 @@ export default class ScrollController {
 
     handleResetItems(): IScrollControllerResult {
         /**
-         * Бывают случаи, когда activeElement не существует, поэтому проверяем его наличие,
-         * и в случае отсутствия меняем activeElement
+         * Бывают ситуации, когда activeElement уже не существует, это связано с тем, что source обновился, а activeElement нет
+         * Поэтому проверяем его наличие, и в случае отсутствия меняем activeElement на актуальный
+         * https://online.sbis.ru/opendoc.html?guid=00931a10-5f68-4b27-8a78-febe93d81baf
          */
         if (typeof this._options.collection.at(this._options.activeElement) === 'undefined') {
             const activeIndex = this._virtualScroll.getActiveElementIndex(this._lastScrollTop);
