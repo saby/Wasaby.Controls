@@ -721,7 +721,7 @@ const _private = {
             }
 
             if (!_private.hasMoreData(self, self._sourceController, direction) && !addedItems.getCount()) {
-                self.updateShadowModeHandler(self._shadowVisibility);
+                self._updateShadowModeHandler(self._shadowVisibility);
             }
         };
 
@@ -2184,6 +2184,9 @@ const _private = {
         if (result.scrollToActiveElement) {
             _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
         }
+        if (result.shadowVisibility) {
+            self._updateShadowModeHandler(result.shadowVisibility);
+        }
     },
     onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
         // подписываемся на рекордсет, чтобы следить какие элементы будут удалены
@@ -2391,6 +2394,8 @@ const _private = {
             useNewModel: options.useNewModel,
             forceInitVirtualScroll: options?.navigation?.view === 'infinity'
         });
+        const result = self._scrollController.handleResetItems();
+        _private.handleScrollControllerResult(self, result);
     },
 
     /**
@@ -3132,7 +3137,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
+    _updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
         this._shadowVisibility = shadowVisibility;
         if (this._isMounted) {
             _private.updateShadowMode(this, shadowVisibility);
@@ -3777,7 +3782,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
                 this._scrollController.beforeRestoreScrollPosition();
-                this._notify('restoreScrollPosition', 
+                this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
                 needCheckTriggers = true;
