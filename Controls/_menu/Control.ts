@@ -374,7 +374,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const selectedKeys = options.selectedKeys.map((key) => {
             const item = this._listModel.getItemBySourceKey(key)?.getContents();
             if (item) {
-                return item && MenuControl._isHistoryItem(item) ? String(key) : key;
+                return typeof item.get(options.keyProperty) === 'string' ? String(key) : key;
             }
         });
         return { ...{
