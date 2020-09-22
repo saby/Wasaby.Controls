@@ -1,12 +1,12 @@
 import BaseSelector from './BaseSelector';
-import {Date as WSDate} from 'Types/entity';
+import {Date as WSDate, descriptor} from 'Types/entity';
 import ILinkView from './interfaces/ILinkView';
 import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import coreMerge = require('Core/core-merge');
 import template = require('wml!Controls/_dateRange/RangeShortSelector/RangeShortSelector');
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import dateControlsUtils from "./Utils";
 
 /**
  * Контрол позволяет пользователю выбрать временной период: месяц, квартал, полугодие, год. Выбор происходит с помощью панели быстрого выбора периода.
@@ -25,6 +25,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/ICaptionFormatter
  * @control
  * @public
  * @category Input
@@ -141,12 +142,17 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
         return {
             ...IPeriodLiteDialog.getDefaultOptions(),
             ...ILinkView.getDefaultOptions(),
-            dateConstructor: WSDate
+            dateConstructor: WSDate,
+            captionFormatter: dateControlsUtils.formatDateRangeCaption
         };
     }
 
     static getOptionTypes(): object {
-        return coreMerge(coreMerge({}, IPeriodLiteDialog.getOptionTypes()), ILinkView.getOptionTypes());
+        return {
+            ...IPeriodLiteDialog.getOptionTypes(),
+            ...ILinkView.getOptionTypes(),
+            captionFormatter: descriptor(Function)
+        };
     }
 
     EMPTY_CAPTIONS: object = ILinkView.EMPTY_CAPTIONS;

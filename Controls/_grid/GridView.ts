@@ -798,8 +798,12 @@ var
             this._dragScrollController?.onOverlayMouseLeave(e);
         },
         _onItemSwipe(event, itemData) {
-            event.stopPropagation();
+            const direction = event.nativeEvent.direction;
+            if (direction === 'top' || direction === 'bottom') {
+                return;
+            }
 
+            event.stopPropagation();
             if (this._isColumnScrollVisible() && this._dragScrollController) {
                 if (event.target.closest(`.${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`)) {
                     // По фиксированной колонке допустим только свайп вправо

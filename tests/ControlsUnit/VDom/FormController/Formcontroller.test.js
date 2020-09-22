@@ -637,6 +637,18 @@ define([
          });
       });
 
+      it('create record before mount check record state', () => {
+         let FC = new form.Controller();
+         FC._record = 'initModel';
+         FC._source = {
+            create: () => Promise.resolve(new entity.Record())
+         };
+         return FC._createRecordBeforeMount({initializingWay: 'delayedCreate'}).then(() => {
+            assert.equal(FC._record, 'initModel');
+            FC.destroy();
+         });
+      });
+
       it('createHandler and readHandler ', () => {
          let FC = new form.Controller();
          FC._createHandler();

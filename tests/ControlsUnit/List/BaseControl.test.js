@@ -389,6 +389,7 @@ define([
                   return shouldSearch;
                }
             };
+            self._loadedItems = new collection.RecordSet();
 
             // navigation.view !== 'infinity'
             sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
@@ -1041,6 +1042,12 @@ define([
          ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isNull(ctrl._loadingIndicatorState);
          assert.isTrue(ctrl._showContinueSearchButtonDirection === 'down');
+
+         ctrl._loadTriggerVisibility.down = true;
+         ctrl._hideIndicatorOnTriggerHideDirection = 'down';
+         ctrl._sourceController.isLoading = () => true;
+         ctrl.triggerVisibilityChangedHandler('down', false);
+         assert.isTrue(ctrl._hideIndicatorOnTriggerHideDirection === 'down');
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
@@ -2791,6 +2798,7 @@ define([
                registerObserver: () => undefined,
                scrollPositionChange: () => undefined,
                setTriggers: () => undefined,
+               setIndicesAfterCollectionChange: () => undefined,
                calculateVirtualScrollHeight: () => 0
             };
 
@@ -4591,7 +4599,6 @@ define([
 
       describe('_onItemSwipe()', () => {
          let swipeEvent;
-         let itemData;
          let instance;
 
          function initTest(options) {
@@ -4749,6 +4756,35 @@ define([
             });
          });
 
+         // Должен работать свайп по breadcrumbs
+         it('should work with breadcrumbs', () => {
+            swipeEvent = initSwipeEvent('left');
+            initTest();
+            const itemAt0 = instance._listViewModel.at(0);
+            const breadcrumbItem = {
+               '[Controls/_display/BreadcrumbsItem]': true,
+               _$active: false,
+               isSelected: () => true,
+               getContents: () => ['fake', 'fake', 'fake', itemAt0.getContents() ],
+               setActive: function() {
+                  this._$active = true;
+               },
+               getActions: () => ({
+                  all: [{
+                     id: 2,
+                     showType: 0
+                  }]
+               })
+            };
+            const stubActivateSwipe = sinon.stub(instance._itemActionsController, 'activateSwipe')
+               .callsFake((itemKey, actionsContainerWidth, actionsContainerHeight) => {
+                  assert.equal(itemKey, itemAt0.getContents().getKey());
+                  stubActivateSwipe.restore();
+               });
+
+            instance._onItemSwipe({}, breadcrumbItem, swipeEvent);
+         });
+
          // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа
          // Предполагаем, что контейнер содержит класс js-controls-ItemActions__swipeMeasurementContainer
          it('should correctly calculate row size for list', () => {
@@ -4865,7 +4901,8 @@ define([
                },
                markedKey: null,
                viewModelConstructor: lists.ListViewModel,
-               source: source
+               source: source,
+               keyProperty: 'id'
             };
             instance = new lists.BaseControl(cfg);
             item =  item = {
@@ -4887,6 +4924,7 @@ define([
             instance.saveOptions(cfg);
             instance._scrollController = {
                scrollToItem: () => {},
+               setIndicesAfterCollectionChange: () => undefined,
                handleResetItems: () => {}
             };
             instance._container = {
@@ -5005,7 +5043,8 @@ define([
             const self = {
                _itemActionsController: {
                   prepareActionsMenuConfig: (item, clickEvent, action, self, isContextMenu) => ({}),
-                  setActiveItem: (_item) => { }
+                  setActiveItem: (_item) => {},
+                  deactivateSwipe: () => {}
                },
                _itemActionsMenuId: 'fake',
                _scrollHandler: () => {},
@@ -5286,6 +5325,10 @@ define([
                _itemActionsMenuId: 'fake',
                _notify: (eventName, args) => {
                   lastFiredEvent = {eventName, args};
+               },
+               _itemActionsController: {
+                  setActiveItem: (_item) => { },
+                  deactivateSwipe: () => {}
                }
             };
             lists.BaseControl._private.closePopup(self);
@@ -6456,10 +6499,19 @@ define([
 
       it('_beforeUnmount', function() {
          let instance = new lists.BaseControl();
+
+         let unsubscribeCalled = false;
+         instance._items = {
+            unsubscribe: () => {
+               unsubscribeCalled = true;
+            }
+         };
+
          instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
 
          instance._beforeUnmount();
          assert.isNull(instance._portionedSearch);
+         assert.isTrue(unsubscribeCalled);
       });
 
       describe('beforeUpdate', () => {
@@ -7188,18 +7240,18 @@ define([
             await control._afterMount(options);
          }
 
-            beforeEach(async () => {
-               baseControlOptions = {
-                  keyProperty: 'id',
-                  viewName: 'Controls/List/ListView',
-                  source: source,
-                  viewModelConstructor: lists.ListViewModel,
-                  markedKey: null
-               };
-               const _baseControl = new lists.BaseControl(baseControlOptions);
-               await mountBaseControl(_baseControl, baseControlOptions);
-               baseControl = _baseControl;
-            });
+         beforeEach(async () => {
+            baseControlOptions = {
+               keyProperty: 'id',
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewModelConstructor: lists.ListViewModel,
+               markedKey: null
+            };
+            const _baseControl = new lists.BaseControl(baseControlOptions);
+            await mountBaseControl(_baseControl, baseControlOptions);
+            baseControl = _baseControl;
+         });
 
          afterEach(async () => {
             await baseControl._beforeUnmount();
@@ -7366,7 +7418,7 @@ define([
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
             });
 
-               it('should mark item if there are more then one item in list', async function () {
+            it('should mark item if there are more then one item in list', async function () {
                   baseControlOptions.markerVisibility = 'onactivated';
                   await mountBaseControl(baseControl, baseControlOptions);
                   let setMarkedKeyIsCalled = false;
@@ -7392,6 +7444,7 @@ define([
                         }
                         return Promise.resolve();
                      },
+                     setIndicesAfterCollectionChange: () => undefined,
                      handleResetItems: () => {}
                   };
 
@@ -7419,7 +7472,7 @@ define([
                   baseControl._itemMouseUp(event, {key: 1}, originalEvent);
                   assert.equal(setMarkedKeyIsCalled, true);
                });
-            });
+         });
 
          describe('_onItemClick', () => {
             it('click on checkbox should not notify itemClick, but other clicks should', function() {
@@ -7493,6 +7546,31 @@ define([
                // click not on checkbox
                baseControl._onItemClick(e, item, originalEvent);
             });
+
+            it('should not notify if was drag-n-drop', () => {
+               baseControl._dndListController = {
+                  isDragging: () => true
+               };
+
+               const originalEvent = {
+                  target: {
+                     closest: () => false
+                  }
+               };
+
+               let isStopped = false;
+
+               const e = {
+                  isStopped: () => isStopped,
+                  stopPropagation() { isStopped = true; }
+               };
+
+               baseControl._itemMouseUp(e, { key: 1 }, originalEvent);
+
+               // click on checkbox
+               baseControl._onItemClick(e, { key: 1 }, originalEvent);
+               assert.isTrue(isStopped);
+            });
          });
       });
 
@@ -7522,7 +7600,7 @@ define([
             baseControl._beforeMount(cfg);
          });
       });
-      describe('_afterMount', () => {
+      describe('scrollToItem _afterMount', () => {
          let stubScrollToItem;
          beforeEach(() => {
             stubScrollToItem = sinon.stub(lists.BaseControl._private, 'scrollToItem');
@@ -7553,6 +7631,49 @@ define([
             });
             await baseControl._beforeMount(cfg);
             baseControl._afterMount(cfg);
+         });
+      });
+
+      describe('_afterMount registerIntersectionObserver', () => {
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            keyProperty: 'id',
+            viewModelConstructor: lists.ListViewModel,
+            source: source,
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrollConfig: {
+               pageSize: 100
+            }
+         };
+         let baseControl;
+         let registered;
+         let registerIntersectionObserver = () => { registered = true; }
+         beforeEach(() => {
+            registered = false;
+            baseControl = new lists.BaseControl(cfg);
+            baseControl._registerIntersectionObserver = registerIntersectionObserver;
+         });
+         afterEach(() => {
+            baseControl = null;
+         });
+         it('without error', async () => {
+
+            baseControl._container = {};
+            baseControl.saveOptions(cfg);
+            await baseControl._beforeMount(cfg);
+            baseControl._afterMount(cfg);
+            assert.isTrue(registered);
+         });
+         it('with error', async () => {
+
+            baseControl._container = {};
+            baseControl.saveOptions(cfg);
+            await baseControl._beforeMount(cfg);
+            baseControl.__error = {};
+            baseControl._afterMount(cfg);
+            assert.isFalse(registered);
          });
       });
       describe('_private.createEditingData()', () => {
