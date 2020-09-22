@@ -462,7 +462,6 @@ describe('Controls/_display/CollectionItem', () => {
     it('.getWrapperClasses()', () => {
         const defaultClasses = [
             'controls-ListView__itemV',
-            'controls-ListView__item_highlightOnHover_default_theme_default',
             'controls-ListView__item_default',
             'controls-ListView__item_showActions',
             'js-controls-ItemActions__swipeMeasurementContainer'
