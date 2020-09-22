@@ -26,9 +26,7 @@ import {StackOpener} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
 import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
 import {
-    FlatSelectionStrategy, IFlatSelectionStrategyOptions,
-    TreeSelectionStrategy, ITreeSelectionStrategyOptions,
-    SelectionController,
+    FlatSelectionStrategy, SelectionController,
     ISelectionControllerOptions
 } from 'Controls/multiselection';
 
@@ -207,10 +205,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             });
         }
         if (this._isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
-            const additionalOptions = {
-                strategyOptions: this._getSelectionStrategyOptions(newOptions, this._listModel.getCollection())
-            };
-            this._getSelectionController().update(this._getSelectionOptions(newOptions, additionalOptions));
+            const selectionOptions = { ...this._getSelectionOptions(newOptions), ...{
+                    strategyOptions: {
+                        items: this._listModel.getCollection()
+                    }
+                }};
+            this._getSelectionController().update(selectionOptions);
             this._notify('selectedItemsChanged', [this._getSelectedItems()]);
         }
 
@@ -345,43 +345,25 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _createSelectionController(options: IMenuControlOptions): SelectionController {
-        const strategyOptions = this._getSelectionStrategyOptions(options, this._listModel.getCollection());
-        const additionOptions = {
-            strategy: options.parentProperty ? new TreeSelectionStrategy(strategyOptions) :
-                new FlatSelectionStrategy(strategyOptions)
-        };
-        return new SelectionController(this._getSelectionOptions(options, additionOptions));
+        const selectionOptions = { ...this._getSelectionOptions(options), ...{
+            strategy: new FlatSelectionStrategy({
+                items: this._listModel.getCollection()
+            })
+        }};
+        return new SelectionController(selectionOptions);
     }
 
-    private _getSelectionStrategyOptions(options: IMenuControlOptions, items: RecordSet):
-        ITreeSelectionStrategyOptions|IFlatSelectionStrategyOptions {
-        if (options.parentProperty) {
-            return {
-                hierarchyRelation: new relation.Hierarchy({
-                    keyProperty: options.keyProperty,
-                    parentProperty: options.parentProperty,
-                    nodeProperty: options.nodeProperty
-                }),
-                rootId: 'fakeRoot',
-                items
-            };
-        } else {
-            return { items };
-        }
-    }
-
-    private _getSelectionOptions(options: IMenuControlOptions, additionalOptions: object): ISelectionControllerOptions {
+    private _getSelectionOptions(options: IMenuControlOptions): ISelectionControllerOptions {
         const selectedKeys = options.selectedKeys.map((key) => {
             const item = this._listModel.getItemBySourceKey(key)?.getContents();
             if (item) {
                 return typeof item.get(options.keyProperty) === 'string' ? String(key) : key;
             }
         });
-        return { ...{
-                model: this._listModel,
-                selectedKeys,
-                excludedKeys: this._excludedKeys
-            }, ...additionalOptions
+        return {
+            model: this._listModel,
+            selectedKeys,
+            excludedKeys: this._excludedKeys
         };
     }
 
