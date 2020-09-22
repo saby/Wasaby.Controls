@@ -1,7 +1,8 @@
 import entity = require('Types/entity');
 import {editing as constEditing} from 'Controls/Constants';
 import {error as dataSourceError} from 'Controls/dataSource';
-import {hasHorizontalScroll as hasHorizontalScrollUtil, getWidth} from 'Controls/sizeUtils';
+import {hasHorizontalScroll as hasHorizontalScrollUtil} from 'Controls/scroll';
+import {getWidth} from 'Controls/sizeUtils';
 import {Model} from 'Types/entity';
 import {Collection as ViewModel} from '../display';
 import {SyntheticEvent} from 'Vdom/Vdom';
