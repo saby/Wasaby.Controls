@@ -14,6 +14,7 @@
                     item="{{ item }}"
                     itemData="{{ itemData }}"
                     useNewModel="{{ true }}"
+                    useDisplayEditInPlace="{{ false }}"
                     searchValue="{{ searchValue }}"
                     highlightOnHover="{{ highlightOnHover }}"
                     itemActionsTemplate="{{ itemActionsTemplate }}"

@@ -3220,13 +3220,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
+            self._viewModelConstructor = newOptions.viewModelConstructor;
             if (this._editInPlaceController && this._editInPlaceController.getEditingItem()) {
                 this.cancelEdit();
             }
         }
 
         if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
-            this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
