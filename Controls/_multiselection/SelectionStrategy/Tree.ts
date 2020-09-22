@@ -504,7 +504,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    private _isHasChildren(item: TreeItem<Model>): boolean {
-      return item.isHasChildren() !== false || this._getChildes(this._getKey(item)).getCount() > 0;
+      return item.isHasChildren() || this._getChildes(this._getKey(item)).getCount() > 0;
    }
 
    private _getSelectedChildrenCount(
