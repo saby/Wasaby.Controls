@@ -43,12 +43,14 @@ class Manager {
     _contextIsTouch: boolean = false;
     _dataLoaderModule: string;
     _popupItems: List<IPopupItem> = new List();
+    private _pageScrolled: Function;
+    private _popupResizeOuter: Function;
 
     constructor(options = {}) {
         this.initTheme(options);
         this._dataLoaderModule = options.dataLoaderModule;
-        this._pageScrolled = debounce(this._pageScrolled, SCROLL_DELAY);
-        this._popupResizeOuter = debounce(this._popupResizeOuter, RESIZE_DELAY);
+        this._pageScrolled = debounce(this._pageScrolledBase, SCROLL_DELAY);
+        this._popupResizeOuter = debounce(this._popupResizeOuterBase, RESIZE_DELAY);
     }
 
     protected initTheme(options): void {
@@ -510,7 +512,7 @@ class Manager {
         return false;
     }
 
-    protected _popupResizeOuter(): void {
+    protected _popupResizeOuterBase(): void {
         const result = this._updatePopupPosition('resizeOuter');
         // Обработчик обернут в debounce, обновление нужно звать самому, после выполнения функции.
         if (result) {
@@ -522,7 +524,7 @@ class Manager {
         return this._updatePopupPosition('workspaceResize');
     }
 
-    protected _pageScrolled(): boolean {
+    protected _pageScrolledBase(): boolean {
         const result = this._updatePopupPosition('pageScrolled');
         // Обработчик обернут в debounce, обновление нужно звать самому, после выполнения функции.
         if (result) {
@@ -544,10 +546,15 @@ class Manager {
     }
 
     private _resetRestrictiveContainerCache(): void {
+        const BaseController = this._getBaseController();
+        BaseController?.resetRootContainerCoords();
+    }
+
+    private _getBaseController(): unknown {
         const controllerLibName = 'Controls/popupTemplate';
         if (requirejs.defined(controllerLibName)) {
             const {BaseController} = requirejs(controllerLibName);
-            BaseController.resetRootContainerCoords();
+            return BaseController;
         }
     }
 
