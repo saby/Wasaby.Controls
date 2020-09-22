@@ -141,7 +141,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     protected _beforeUpdate(options: IModuleComponentOptions): void {
         this._updateItemTemplate(options);
-        this._updateSource(options, this._options);
+        const sourceUpdated = this._updateSource(options, this._options);
+        if (sourceUpdated) {
+            this._enrichItems();
+        }
         this._updateVirtualPageSize(options, this._options);
         // Сравниваем по ссылке, а не по значению. position обновляется только при смене года или если
         // напрямую менять position через опцию. Таким обзразом, если мы попробуем подскролить календарь к дате, которую
@@ -224,7 +227,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    private _updateSource(options: IModuleComponentOptions, oldOptions?: IModuleComponentOptions): void {
+    private _updateSource(options: IModuleComponentOptions, oldOptions?: IModuleComponentOptions): boolean {
         if (!oldOptions || options.viewMode !== oldOptions.viewMode) {
             this._viewSource = new MonthsSource({
                 header: Boolean(this._itemHeaderTemplate),
@@ -242,8 +245,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 dateConstructor: options.dateConstructor
             });
             this._extDataLastVersion = this._extData.getVersion();
-            this._enrichItems();
+            return true;
         }
+        return false;
     }
     private _updateVirtualPageSize(options: IModuleComponentOptions, oldOptions?: IModuleComponentOptions): void {
         if (!oldOptions || options.virtualPageSize !== oldOptions.virtualPageSize) {
