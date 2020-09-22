@@ -1460,7 +1460,7 @@ const _private = {
                     if (action === IObservable.ACTION_RESET) {
                         result = self._scrollController.handleResetItems();
                     }
-                    if (result) {
+                    if (result && self._items.getRecordById(result.activeElement)) {
                         _private.handleScrollControllerResult(self, result);
                     }
 
@@ -3777,7 +3777,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
                 this._scrollController.beforeRestoreScrollPosition();
-                this._notify('restoreScrollPosition', 
+                this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
                 needCheckTriggers = true;
