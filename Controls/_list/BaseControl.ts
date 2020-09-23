@@ -733,8 +733,8 @@ const _private = {
                 drawItemsUp(countCurrentItems, addedItems);
             }
 
-            if (!_private.hasMoreData(self, self._sourceController, direction) && !addedItems.getCount()) {
-                self.updateShadowModeHandler(self._shadowVisibility);
+            if (!_private.hasMoreData(self, self._sourceController, direction)) {
+                self._updateShadowModeHandler(self._shadowVisibility);
             }
         };
 
@@ -1505,7 +1505,7 @@ const _private = {
                     if (action === IObservable.ACTION_RESET) {
                         result = self._scrollController.handleResetItems();
                     }
-                    if (result) {
+                    if (result && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
                         _private.handleScrollControllerResult(self, result);
                     }
 
@@ -2211,13 +2211,16 @@ const _private = {
             if (result.activeElement) {
                 self._notify('activeElementChanged', [result.activeElement]);
             }
+            if (result.scrollToActiveElement) {
+                _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+            }
         }
         if (result.triggerOffset) {
             self._loadTriggerOffset = result.triggerOffset;
             self.applyTriggerOffset(result.triggerOffset);
         }
-        if (result.scrollToActiveElement) {
-            _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+        if (result.shadowVisibility) {
+            self._updateShadowModeHandler(result.shadowVisibility);
         }
     },
     onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
@@ -2433,6 +2436,8 @@ const _private = {
             useNewModel: options.useNewModel,
             forceInitVirtualScroll: options?.navigation?.view === 'infinity'
         });
+        const result = self._scrollController.handleResetItems();
+        _private.handleScrollControllerResult(self, result);
     },
 
     /**
@@ -3111,7 +3116,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
+    _updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
         this._shadowVisibility = shadowVisibility;
         if (this._isMounted) {
             _private.updateShadowMode(this, shadowVisibility);
@@ -3716,7 +3721,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
                 this._scrollController.beforeRestoreScrollPosition();
-                this._notify('restoreScrollPosition', 
+                this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
                 needCheckTriggers = true;

@@ -1,5 +1,5 @@
 <ws:template name="menuPopup" >
-   <div class="controls-Menu__popup">
+   <div class="controls-Menu__popup" attr:ws-no-focus="true">
       <Controls.popupTemplate:Sticky
               attr:class="controls-DropdownList__popup
                           controls-Popup__isolatedFocusingContext
