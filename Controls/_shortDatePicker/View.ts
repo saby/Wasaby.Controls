@@ -71,9 +71,9 @@ var _private = {
         }
     }
 };
-//В режиме 'Только года' одновременно отобржается 5 элементов.
-//Таким образом последний отображаемый элемент имеет индекс 4.
-const ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX = 4;
+//В режиме 'Только года' одновременно отобржается 15 элементов.
+//Таким образом последний отображаемый элемент имеет индекс 14.
+const ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX = 14;
 
 var Component = BaseControl.extend({
     _template: componentTmpl,
@@ -88,12 +88,15 @@ var Component = BaseControl.extend({
 
     _isFullPicker: null,
 
-    // constructor: function() {
+    _limit: 15,
+
+// constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
     //    Component.superclass.constructor.apply(this, arguments);
     // },
 
     _beforeMount: function (options) {
+        this._options = options;
         this._isFullPicker = options.chooseMonths && options.chooseQuarters && options.chooseHalfyears;
         this._emptyCaption = options.emptyCaption;
         if (!this._emptyCaption) {
@@ -122,6 +125,8 @@ var Component = BaseControl.extend({
         }
         this._displayedRanges = options.displayedRanges || options.range;
 
+        this._position = this._getFirstPositionInMonthList(this._position);
+
         this.monthTemplate = options.monthTemplate || monthTmpl;
     },
 
@@ -136,6 +141,68 @@ var Component = BaseControl.extend({
     setYear: function (year) {
         this._position = new this._options.dateConstructor(year, 0, 1);
         this._notify('yearChanged', [year]);
+    },
+
+    _getFirstPositionInMonthList(position: Date): Date {
+        if (!this._displayedRanges) {
+            return position;
+        }
+
+        const delta = [-1, 1];
+        let countDisplayedRanges = 0;
+        let prevPosition;
+        let curPosition = this._shiftRange(position, -1);
+
+        for (let j = 0; j < delta.length; j++) {
+            if (delta[j] === 1) {
+                curPosition = position;
+            }
+            for (let i = 0; i <= this._limit; i++) {
+                if (!this._isDisplayed(curPosition)) {
+                    const period = this._getHiddenPeriod(curPosition);
+                    curPosition = delta[j] > 0 ? period[1] : period[0];
+                } else {
+                    countDisplayedRanges++;
+                }
+                if (!curPosition || countDisplayedRanges >= this._limit) {
+                    break;
+                }
+                prevPosition = curPosition;
+                curPosition = this._shiftRange(curPosition, delta[j]);
+            }
+        }
+        const resultPosition = countDisplayedRanges >= this._limit ? curPosition : prevPosition;
+        return resultPosition;
+    },
+
+    _shiftRange(date: Date, delta: number): Date {
+        return new this._options.dateConstructor(date.getFullYear() + delta, 0);
+    },
+
+    _getHiddenPeriod(date: Date): Date[] {
+        let range: Date[] = [];
+        for (let i = 0; i < this._options.displayedRanges.length; i++) {
+            range = this._options.displayedRanges[i];
+            if (date < range[0]) {
+                return [
+                    i === 0 ? null : this._shiftRange(this._options.displayedRanges[i - 1][1], 1),
+                    this._shiftRange(range[0], -1)
+                ];
+            }
+        }
+        return [range[1] ? this._shiftRange(range[1], 1) : date, null];
+    },
+
+    _isDisplayed(date: Date): boolean {
+        if (!this._options.displayedRanges || !this._options.displayedRanges.length) {
+            return true;
+        }
+        for (const range of this._options.displayedRanges) {
+            if (date >= range[0] && (date <= range[1] || !range[1])) {
+                return true;
+            }
+        }
+        return false;
     },
 
     _dateToDataString(date) {
@@ -198,18 +265,25 @@ var Component = BaseControl.extend({
     },
 
     _changeYear : function(event, delta) {
+        if (!this._displayedRanges) {
+
+        } else {
+
+        }
         let year = this._position.getFullYear();
         //_position определяется первым отображаемым годом в списке. Всего у нас отображается
         //5 записей. Для перехода на предыдущий элемент, нужно проверить, возможно ли это.
         //Для этого проверям самый нижний элемент списка.
         if (delta === -1 && !this._options.chooseMonths &&
             !this._options.chooseHalfyears && !this._options.chooseQuarters) {
-            //Нижний отображаемый год в списке из 5 элементов.
+            //Нижний отображаемый год в списке из 15 элементов.
             const yearToCheck = year - ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX;
             //_getDisplayedYear вернет нижний отображаемый год. Нам нужен первый отображаемый год в списке,
             //для того чтобы установить _position
-            const yearToSet = this._getDisplayedYear(yearToCheck, delta) + ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX;
-            this.setYear(yearToSet);
+            let yearToSet = this._getDisplayedYear(yearToCheck, delta) + ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX;
+            // Скорректируем _position, если задана опция _displayedRanges
+            yearToSet = this._getFirstPositionInMonthList(new Date(yearToSet, 0));
+            this.setYear(yearToSet.getFullYear());
         } else {
             this.setYear(this._getDisplayedYear(year, delta));
         }
