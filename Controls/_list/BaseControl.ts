@@ -4170,6 +4170,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onEditingRowKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent) {
+        const editNext = (item, editingConfig, direction: 'top' | 'bottom') => {
+            this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, direction);
+            const shouldAdd = !item && !!editingConfig.autoAdd && editingConfig.addPosition === direction;
+            return this._tryContinueEditing(!!item, shouldAdd, item);
+        };
+
         switch (nativeEvent.keyCode) {
             case 13: // Enter
                 return this._editingRowEnterHandler(e);
@@ -4177,7 +4183,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
                 e.stopPropagation();
                 return this.cancelEdit();
-                break;
+            case 38: // ArrowUp
+                const prev = this._getEditInPlaceController().getPrevEditableItem();
+                return editNext(!!prev && prev.contents, this._getEditingConfig(), 'top');
+            case 40: // ArrowDown
+                const next = this._getEditInPlaceController().getNextEditableItem();
+                return editNext(!!next && next.contents, this._getEditingConfig(), 'bottom');
         }
     },
 
