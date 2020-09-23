@@ -1,2 +1,2 @@
-import {scrollToElement} from 'Controls/scroll';
+import {scrollToElement} from 'Controls/scrollUtils';
 export = scrollToElement;

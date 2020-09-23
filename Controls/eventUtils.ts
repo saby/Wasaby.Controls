@@ -1,4 +1,8 @@
 /**
+ * @library Controls/eventUtils
+ * @includes tmplNotify Controls/_utils/eventUtils/ResizeObserverUtil
+ * @includes scrollToElement Controls/_utils/eventUtils/scrollToElement
+ * @public
  * @author Красильников А.С.
  */
 
