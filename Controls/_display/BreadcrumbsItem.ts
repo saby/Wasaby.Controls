@@ -84,7 +84,7 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
      }
 
      getChildren(withFilter: boolean = true): TreeChildren<T> {
-         return this.getLast().getChildren(withFilter);
+         return this.getOwner().getChildren(this, withFilter);
      }
 
      isHasChildren(): boolean {

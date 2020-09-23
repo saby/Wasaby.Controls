@@ -36,7 +36,6 @@
                         keyProperty="{{_keyProperty}}"
                         nodeProperty="{{_nodeProperty}}"
                         parentProperty="{{_parentProperty}}"
-                        hasChildrenProperty="Раздел$"
                         columns="{{_gridColumns}}">
                      <ws:emptyTemplate>
                         <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="m">
