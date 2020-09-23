@@ -15,6 +15,7 @@
       "build": "npm run builder && npm run build:index",
       "build:typescript": "wasaby-cli --tasks=prepare",
       "builder": "wasaby-cli --tasks=build",
+      "builder:watcher": "wasaby-cli --tasks=build --watcher",
       "build:index": "wasaby-cli --tasks=createIndex --moduleName=Controls-demo",
       "compile": "saby-typescript --compiler",
       "start": "wasaby-cli --tasks=app",
