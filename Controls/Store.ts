@@ -133,7 +133,7 @@ class Store implements IStore {
     }
 
     private _removeCallback(id: string): void {
-        const state = Store._getActiveState();
+        const state = Store._getState();
         const [ctxName, propertyName]: string[] = id.split(ID_SEPARATOR);
 
         state[ctxName][propertyName].callbacks = state[ctxName][propertyName].callbacks.reduce(
