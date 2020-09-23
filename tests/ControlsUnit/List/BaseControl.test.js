@@ -1,4 +1,3 @@
-
 /**
  * Created by kraynovdo on 23.10.2017.
  */
@@ -20,8 +19,9 @@ define([
    'Controls/dragnDrop',
    'Controls/listRender',
    'Controls/itemActions',
+   'Controls/dataSource',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, lists, tree, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, dragNDrop, listRender, itemActions) {
+], function(sourceLib, collection, lists, tree, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, dragNDrop, listRender, itemActions, dataSource) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
       beforeEach(function() {
@@ -495,6 +495,10 @@ define([
             }).addErrback((error) => {
                reject(error);
             });
+         }).then(() => {
+            console.log('ergerg');
+         }).catch(() => {
+            console.log('ergerg');
          });
       });
 
@@ -6457,6 +6461,22 @@ define([
          });
       });
 
+      it('should not call _getItemsContainer on error', () => {
+         const baseControl = new lists.BaseControl();
+         let isGetItemsContainerCalled = false;
+         baseControl._isMounted = true;
+         baseControl._loadTriggerVisibility = {down: false};
+         baseControl._scrollController = {};
+         lists.BaseControl._private.showError(baseControl, {
+            mode: dataSource.error.Mode.include
+         });
+         baseControl._getItemsContainer = () => {
+            isGetItemsContainerCalled = true;
+         };
+         baseControl._beforePaint();
+         assert.isFalse(isGetItemsContainerCalled);
+         assert.isNull(baseControl._scrollController);
+      });
 
       it('_getLoadingIndicatorClasses', function() {
          const theme = 'default';
