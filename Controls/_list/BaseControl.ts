@@ -2215,18 +2215,13 @@ const _private = {
     },
 
     getMarkerControllerAsync(self: typeof BaseControl, options: IList = null): Promise<MarkerController> {
-        return import('Controls/marker').then((library) => {
-            if (!self._markerControllerConstructor) {
-                options = options ? options : self._options;
-                self._markerController = new library.MarkerController({
-                    model: self._listViewModel,
-                    markerVisibility: options.markerVisibility,
-                    markedKey: options.markedKey
-                });
+        if (!self._markerLoadPromise) {
+            self._markerLoadPromise = import('Controls/marker').then((library) => {
                 self._markerControllerConstructor = library.MarkerController;
-            }
-            return self._markerController;
-        });
+                return _private.getMarkerController(self, options);
+            });
+        }
+        return self._markerLoadPromise;
     },
 
     moveMarkerToNext(self: typeof BaseControl, event: SyntheticEvent): Promise<void>|void {
@@ -2891,6 +2886,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _markerController: null,
     _markerControllerConstructor: null,
+    _markerLoadPromise: null,
 
     _dndListController: null,
     _dragEntity: undefined,
