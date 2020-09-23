@@ -28,14 +28,14 @@
             >
                {{ _position.getFullYear() }}
             </div>
-            <Controls.buttons:ArrowButton attr:class="controls-PeriodLiteDialog__year-prev_theme-{{_options.theme}}"
-                                          direction="up"
-                                          attr:title="{[Предыдущий год]}"
-                                          on:click="_changeYear (-1)"/>
-            <Controls.buttons:ArrowButton attr:class="controls-PeriodLiteDialog__year-next_theme-{{_options.theme}}"
-                                          direction="down"
-                                          attr:title="{[Следующий год]}"
-                                          on:click="_changeYear (1)"/>
+            <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}} controls-PeriodLiteDialog__year-prev_theme-{{_options.theme}}"
+                 on:click="_changeYear (-1)">
+               <div class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}"></div>
+            </div>
+            <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}} controls-PeriodLiteDialog__year-next_theme-{{_options.theme}}"
+                 on:click="_changeYear (1)">
+               <div class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}"></div>
+            </div>
          </div>
          <ws:partial
                  class="controls-PeriodLiteDialog__body controls-PeriodLiteDialog__body_theme-{{_options.theme}}
@@ -61,8 +61,10 @@
    </ws:if>
    <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__years-next controls-PeriodLiteDialog__years-next_theme-{{_options.theme}}">
-         <Controls.buttons:ArrowButton direction="up"
-                                       on:click="_changeYear (1)"/>
+         <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}}"
+              on:click="_changeYear (1)">
+            <div class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}"></div>
+         </div>
       </div>
       <Controls.calendar:MonthList
               order="desc"
@@ -92,8 +94,10 @@
          </ws:yearTemplate>
       </Controls.calendar:MonthList>
       <div class="controls-PeriodLiteDialog__years-prev controls-PeriodLiteDialog__years-prev_theme-{{_options.theme}}">
-         <Controls.buttons:ArrowButton direction="down"
-                                       on:click="_changeYear (-1)"/>
+         <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}}"
+              on:click="_changeYear (-1)">
+            <div class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}"></div>
+         </div>
       </div>
    </ws:if>
 </div>

@@ -22,7 +22,7 @@
 }
 
 .controls-PeriodLiteDialog {
-   box-sizing: padding-box;
+   box-sizing: border-box;
    user-select: none;
    border-radius: 0;
    padding: 0;
@@ -152,7 +152,7 @@
    }
 
    &:hover {
-      background-color: #cacaca;
+      background-color: rgba(202, 202, 202, 1);
    }
 }
 
@@ -261,6 +261,37 @@
 .controls-PeriodLiteDialog__year {
    vertical-align: middle;
    flex-grow: 1;
+}
+
+.controls-PeriodLiteDialog__arrowUp {
+   background-image: url("/Controls-default-theme/img/RangeShortSelector-arrowup.svg");
+}
+
+.controls-PeriodLiteDialog__arrowDown {
+   background-image: url("/Controls-default-theme/img/RangeShortSelector-arrowdown.svg");
+}
+
+.controls-PeriodLiteDialog__arrow_theme-@{themeName} {
+   height: @arrow_icon-size_shortDatePicker;
+   width: @arrow_icon-size_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__arrow-wrapper_theme-@{themeName} {
+   border: @item_border-thickness_shortDatePicker solid;
+   border-color: @arrow_border-color_shortDatePicker;
+   height: @arrow_height_shortDatePicker;
+   width: @arrow_width_shortDatePicker;
+   box-shadow: @arrow-box-shadow_shortDatePicker;
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   &:hover {
+      border-color: @yearselector_arrow_hover_background-color_shortDatePicker;
+      color: @arrow_hover_icon-color_shortDatePicker;
+      cursor: pointer;
+   }
 }
 
 .controls-PeriodLiteDialog__year_theme-@{themeName} {
@@ -409,7 +440,7 @@
 .controls-PeriodLiteDialog__years-prev_theme-@{themeName},
 .controls-PeriodLiteDialog__years-next_theme-@{themeName} {
    color: @arrow_icon-color_shortDatePicker;
-   height: @arrow_height_shortDatePicker - @item_border-thickness_shortDatePicker;
+   height: @yearselector_height_shortDatePicker;
    line-height: @arrow_height_shortDatePicker - @item_border-thickness_shortDatePicker;
    font-size: @arrow_icon-size_shortDatePicker;
    &:hover {
@@ -485,6 +516,7 @@
 
 .controls-PeriodLiteDialog__year-list_theme-@{themeName} {
    max-height: @height_shortDatePicker - (2 * @item_height_shortDatePicker);
+   height: 100%;
 }
 
 .border-top-hidden {
