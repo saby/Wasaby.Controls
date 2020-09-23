@@ -1,8 +1,7 @@
-/*
 
-/!**
+/**
  * Created by kraynovdo on 23.10.2017.
- *!/
+ */
 define([
    'Types/source',
    'Types/collection',
@@ -1812,10 +1811,10 @@ define([
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
-            /!**
+            /**
              * _beforeMount will load some items, so _loadedItems will get set. Normally, it will reset in _afterUpdate, but since we don't have lifecycle in tests,
              * we'll reset it here manually.
-             *!/
+             */
             ctrl._loadedItems = null;
 
             lists.BaseControl._private.onScrollLoadEdge(ctrl, 'down');
@@ -5429,7 +5428,7 @@ define([
          disableHeader();
          disableResults();
 
-         /!* Список находится в скроллконтейнере, но не личном. До списка лежит контент *!/
+         /* Список находится в скроллконтейнере, но не личном. До списка лежит контент */
          bc._isScrollShown = true;
          bc._viewportRect = {
             top: 50
@@ -6582,7 +6581,7 @@ define([
       it('_shouldShowLoadingIndicator', () => {
          const baseControl = new lists.BaseControl();
 
-         /!*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*!/
+         /*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*/
          const testCases = [
             ['beforeEmptyTemplate', 'up', true,    true],
             ['beforeEmptyTemplate', 'up', false,   true],
@@ -7925,4 +7924,3 @@ define([
       // endregion Move
    });
 });
-*/

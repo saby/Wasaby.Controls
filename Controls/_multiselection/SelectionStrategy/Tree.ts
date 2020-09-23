@@ -46,7 +46,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    select(selection: ISelection, key: CrudEntityKey): ISelection {
       const item = this._getItem(key);
-      if (!item.SelectableItem) {
+      if (item && !item.SelectableItem) {
          return selection;
       }
 
@@ -62,7 +62,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    unselect(selection: ISelection, key: CrudEntityKey): ISelection {
       const item = this._getItem(key);
-      if (!item.SelectableItem) {
+      if (item && !item.SelectableItem) {
          return selection;
       }
 
@@ -85,7 +85,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    selectAll(selection: ISelection): ISelection {
-      const newSelection = this.select(selection, [this._rootId]);
+      const newSelection = this.select(selection, this._rootId);
       this._removeChildes(newSelection, this._rootId);
 
       if (!newSelection.excluded.includes(this._rootId)) {
@@ -119,12 +119,12 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          cloneSelection = this._unselectAllInRoot(cloneSelection);
 
          const intersectionKeys = ArraySimpleValuesUtil.getIntersection(childrenIdsInRoot, oldExcludedKeys);
-         cloneSelection = this.select(cloneSelection, intersectionKeys);
+         intersectionKeys.forEach((key) => cloneSelection = this.select(cloneSelection, key));
       } else {
          cloneSelection = this.selectAll(cloneSelection);
 
          if (hasMoreData) {
-            cloneSelection = this.unselect(cloneSelection, oldSelectedKeys);
+            oldSelectedKeys.forEach((key) => cloneSelection = this.unselect(cloneSelection, key));
          }
       }
 
@@ -267,7 +267,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    private _unselectAllInRoot(selection: ISelection): ISelection {
       const rootInExcluded = selection.excluded.includes(this._rootId);
 
-      selection = this.unselect(selection, [this._rootId]);
+      selection = this.unselect(selection, this._rootId);
       this._removeChildes(selection, this._rootId);
 
       if (rootInExcluded) {

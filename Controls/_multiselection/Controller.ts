@@ -336,7 +336,7 @@ export class Controller {
          const selectionForModel = this._strategy.getSelectionForModel(this._selection, this._limit);
 
          let itemStatus = false;
-         if (selectionForModel.get(true).filter((selectedItem) => selectedItem.getKey() === key).length > 0) {
+         if (selectionForModel.get(true).filter((selectedItem) => selectedItem.getContents().getKey() === key).length > 0) {
             itemStatus = true;
          }
 

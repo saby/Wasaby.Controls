@@ -89,11 +89,11 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       if (this._isAllSelected(cloneSelection)) {
          const excludedKeys = cloneSelection.excluded.slice();
          cloneSelection = this.unselectAll(cloneSelection);
-         cloneSelection = this.select(cloneSelection, excludedKeys);
+         excludedKeys.forEach((key) => cloneSelection = this.select(cloneSelection, key));
       } else {
          const selectedKeys = cloneSelection.selected.slice();
          cloneSelection = this.selectAll(cloneSelection);
-         cloneSelection = this.unselect(cloneSelection, selectedKeys);
+         selectedKeys.forEach((key) => cloneSelection = this.unselect(cloneSelection, key));
       }
 
       return cloneSelection;
