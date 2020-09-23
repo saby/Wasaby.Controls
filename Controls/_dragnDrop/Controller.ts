@@ -48,6 +48,10 @@ class Controller extends Control<IControlOptions> {
         this._controllerClass.documentDragStart(dragObject);
     }
 
+    _testing(): number {
+        return 0;
+    }
+
     _documentDragEnd(event: Event, dragObject: IDragObject): void {
         this._controllerClass.documentDragEnd(dragObject);
     }
