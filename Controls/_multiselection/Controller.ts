@@ -140,13 +140,13 @@ export class Controller {
       let newSelection;
 
       if (status === true || status === null) {
-         newSelection = this._strategy.unselect(this._selection, [key]);
+         newSelection = this._strategy.unselect(this._selection, key);
       } else {
          if (this._limit && !this._excludedKeys.includes(key)) {
             this._increaseLimit([key]);
          }
 
-         newSelection = this._strategy.select(this._selection, [key]);
+         newSelection = this._strategy.select(this._selection, key);
       }
 
       const result = this._getResult(this._selection, newSelection);

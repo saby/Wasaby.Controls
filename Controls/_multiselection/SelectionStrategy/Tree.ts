@@ -44,37 +44,38 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._items = items;
    }
 
-   select(selection: ISelection, keys: TKeys): ISelection {
+   select(selection: ISelection, key: CrudEntityKey): ISelection {
+      const item = this._getItem(key);
+      if (!item.SelectableItem) {
+         return selection;
+      }
+
       const cloneSelection = clone(selection);
-
-      keys.forEach((key) => {
-         const item = this._items.find((item) => this._getKey(item) === key);
-
-         if (!item || this._isNode(item)) {
-            this._selectNode(cloneSelection, key);
-         } else {
-            this._selectLeaf(cloneSelection, key);
-         }
-      });
+      if (!item || this._isNode(item)) {
+         this._selectNode(cloneSelection, key);
+      } else {
+         this._selectLeaf(cloneSelection, key);
+      }
 
       return cloneSelection;
    }
 
-   unselect(selection: ISelection, keys: TKeys): ISelection {
-      const cloneSelection = clone(selection);
+   unselect(selection: ISelection, key: CrudEntityKey): ISelection {
+      const item = this._getItem(key);
+      if (!item.SelectableItem) {
+         return selection;
+      }
 
-      keys.forEach((key) => {
-         const item = this._items.find((item) => this._getKey(item) === key);
-         if (!item || this._isNode(item)) {
-            this._unselectNode(cloneSelection, key);
-         } else {
-            this._unselectLeaf(cloneSelection, key);
-         }
-         if (key !== this._rootId && item && this._selectAncestors) {
-            const parentId = this._getParentId(this._getKey(item));
-            this._unselectParentNodes(cloneSelection, parentId);
-         }
-      });
+      const cloneSelection = clone(selection);
+      if (!item || this._isNode(item)) {
+         this._unselectNode(cloneSelection, key);
+      } else {
+         this._unselectLeaf(cloneSelection, key);
+      }
+      if (key !== this._rootId && item && this._selectAncestors) {
+         const parentId = this._getParentKey(this._getKey(item));
+         this._unselectParentNodes(cloneSelection, parentId);
+      }
 
       if (!cloneSelection.selected.length) {
          cloneSelection.excluded = [];
@@ -166,14 +167,14 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
 
       processingItems.forEach((item) => {
-         const itemId: CrudEntityKey = this._getKey(item);
+         const key = this._getKey(item);
          const parentId = this._getKey(item.getParent());
          const isNode = this._isNode(item);
-         let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
+         let isSelected = !selection.excluded.includes(key) && (selection.selected.includes(key) ||
              this._isAllSelected(selection, parentId));
 
          if (this._selectAncestors && isNode) {
-            isSelected = this._getStateNode(itemId, isSelected, {
+            isSelected = this._getStateNode(key, isSelected, {
                selected: selectedKeysWithEntryPath,
                excluded: selection.excluded
             });
@@ -196,14 +197,14 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       if (!this._isAllSelected(selection, this._rootId) || !hasMoreData) {
          if (this._selectDescendants) {
             for (let index = 0; index < selection.selected.length; index++) {
-               const itemId = selection.selected[index];
-               const item = this._items.find((item) => this._getKey(item) === itemId);
+               const key = selection.selected[index];
+               const item = this._getItem(key);
 
                if (!item || this._isNode(item)) {
-                  selectedNodes.push(itemId);
+                  selectedNodes.push(key);
                }
 
-               if (!selection.excluded.includes(itemId)) {
+               if (!selection.excluded.includes(key)) {
                   countItemsSelected++;
                }
             }
@@ -254,7 +255,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       let currentParentId = parentId;
       while (currentParentId !== this._rootId && allChildrenExcluded) {
          this._unselectNode(selection, currentParentId);
-         currentParentId = this._getParentId(currentParentId);
+         currentParentId = this._getParentKey(currentParentId);
          allChildrenExcluded = this._isAllChildrenExcluded(selection, currentParentId);
       }
    }
@@ -310,7 +311,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    private _unselectLeaf(selection: ISelection, leafId: string|number): void {
-      const parentId = this._getParentId(leafId);
+      const parentId = this._getParentKey(leafId);
 
       ArraySimpleValuesUtil.removeSubArray(selection.selected, [leafId]);
       if (this._isAllSelected(selection, parentId)) {
@@ -323,8 +324,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
    }
 
-   private _getParentId(itemId: string|number): CrudEntityKey|undefined {
-      const dispItem = this._items.find((item) => this._getKey(item) === itemId);
+   private _getParentKey(key: string|number): CrudEntityKey|undefined {
+      const dispItem = this._getItem(key);
       const parent = dispItem?.getParent();
       return parent ? this._getKey(parent) : undefined;
    }
@@ -356,7 +357,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    private _hasSelectedParent(key: CrudEntityKey, selection: ISelection): boolean {
       let hasSelectedParent = false;
       let hasExcludedParent = false;
-      let currentParentId = this._getParentId(key);
+      let currentParentId = this._getParentKey(key);
 
       while (currentParentId !== null && currentParentId !== undefined) {
          if (selection.selected.includes(currentParentId)) {
@@ -367,7 +368,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
             break;
          }
 
-         currentParentId = this._getParentId(currentParentId);
+         currentParentId = this._getParentKey(currentParentId);
       }
 
       if (!hasExcludedParent && !currentParentId && selection.selected.includes(null)) {
@@ -377,8 +378,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return hasSelectedParent;
    }
 
-   private _getStateNode(itemId: CrudEntityKey, initialState: boolean, selection: ISelection): boolean|null {
-      const children = this._getChildes(itemId);
+   private _getStateNode(key: CrudEntityKey, initialState: boolean, selection: ISelection): boolean|null {
+      const children = this._getChildes(key);
       const listKeys = initialState ? selection.excluded : selection.selected;
       let stateNode = initialState;
       let countChildrenInList: boolean|number|null = 0;
@@ -406,7 +407,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          stateNode = null;
       } else if (this._entryPath) {
          const childesFromEntryPath =  this._entryPath
-             .filter((item) => item.parent === itemId)
+             .filter((item) => item.parent === key)
              .map((item) => item.id);
          const hasChildrenInKeys = listKeys.some((key) => childesFromEntryPath.includes(key));
          if (hasChildrenInKeys) {
@@ -556,7 +557,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _getChildes(nodeId: CrudEntityKey): TreeChildren<Model>|List<TreeItem<Model>> {
       let result;
-      const node = this._items.find((item) => this._getKey(item) === nodeId);
+      const node = this._getItem(nodeId);
 
       // Значит передали ключ корневого узла
       if (!node) {
@@ -599,5 +600,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       // у корневого элемента contents=key
       return contents instanceof Object ?  contents.getKey() : contents;
+   }
+
+   private _getItem(key: CrudEntityKey): TreeItem<Model> {
+      return this._items.find((item) => this._getKey(item) === key);
    }
 }

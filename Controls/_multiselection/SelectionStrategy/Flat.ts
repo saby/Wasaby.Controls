@@ -2,7 +2,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import { ISelectionObject as ISelection } from 'Controls/interface';
 import { Model } from 'Types/entity';
-import { IFlatSelectionStrategyOptions, TKeys} from '../interface';
+import { IFlatSelectionStrategyOptions } from '../interface';
 import ISelectionStrategy from './ISelectionStrategy';
 import clone = require('Core/core-clone');
 import { CrudEntityKey } from 'Types/source';
@@ -33,6 +33,10 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    select(selection: ISelection, key: CrudEntityKey): ISelection {
+      if (!this._getItem(key).SelectableItem) {
+         return selection;
+      }
+
       const cloneSelection = clone(selection);
 
       if (this._isAllSelected(cloneSelection)) {
@@ -45,6 +49,10 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    unselect(selection: ISelection, key: CrudEntityKey): ISelection {
+      if (!this._getItem(key).SelectableItem) {
+         return selection;
+      }
+
       const cloneSelection = clone(selection);
 
       if (this._isAllSelected(cloneSelection)) {
@@ -162,5 +170,9 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
     */
    private _isAllSelected(selection: ISelection): boolean {
       return selection.selected.includes(ALL_SELECTION_VALUE);
+   }
+
+   private _getItem(key: CrudEntityKey): CollectionItem<Model> {
+      return this._items.find((item) => item.getContents().getKey() === key);
    }
 }

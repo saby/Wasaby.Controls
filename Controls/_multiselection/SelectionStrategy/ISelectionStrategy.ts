@@ -1,7 +1,8 @@
 import { ISelectionObject as ISelection} from 'Controls/interface';
 import { Model } from 'Types/entity';
-import { IFlatSelectionStrategyOptions, ITreeSelectionStrategyOptions, TKeys } from '../interface';
+import { IFlatSelectionStrategyOptions, ITreeSelectionStrategyOptions} from '../interface';
 import { CollectionItem } from 'Controls/display';
+import { CrudEntityKey } from 'Types/source';
 
 /**
  * Интерфейс базового класс стратегий выбора
@@ -12,18 +13,18 @@ export default interface ISelectionStrategy {
    /**
     * Выбирает элементы с переданными ключам
     * @param {ISelection} selection текущее состояние выбранных ключей
-    * @param {TKeys} keys ключи ээлементов, которые нужно выбрать
+    * @param {CrudEntityKey} key ключ элемента
     * @return {ISelection} новое состояние выбранных элементов
     */
-   select(selection: ISelection, keys: TKeys): ISelection;
+   select(selection: ISelection, key: CrudEntityKey): ISelection;
 
    /**
     * Снимает выбор с элементов с переданными ключам
     * @param {ISelection} selection текущее состояние выбранных ключей
-    * @param {TKeys} keys ключи ээлементов, с которых нужно снять выбор
+    * @param {CrudEntityKey} key ключ элемента
     * @return {ISelection} новое состояние выбранных элементов
     */
-   unselect(selection: ISelection, keys: TKeys): ISelection;
+   unselect(selection: ISelection, key: CrudEntityKey): ISelection;
 
    /**
     * Выбирает все элементы в текущем корне
