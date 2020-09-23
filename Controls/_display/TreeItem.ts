@@ -67,6 +67,9 @@ export default class TreeItem<T> extends mixin<
         }
 
         this._$node = !!this._$node;
+        if (this._$node) {
+            this._$hasChildren = true;
+        }
         if (options && options.hasChildren !== undefined) {
             this._$hasChildren = !!options.hasChildren;
         }

@@ -91,10 +91,6 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
          return this.getLast().isHasChildren();
      }
 
-     isSelected(): boolean | null {
-         return this.getLast().isSelected();
-     }
-
     // endregion
 }
 
