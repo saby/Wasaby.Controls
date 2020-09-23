@@ -1,2 +1,2 @@
-import {getScrollbarWidth} from 'Controls/scroll';
+import {getScrollbarWidth} from 'Controls/sizeUtils';
 export {getScrollbarWidth};
