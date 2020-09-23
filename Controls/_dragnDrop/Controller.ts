@@ -5,6 +5,7 @@ import 'Controls/_dragnDrop/DraggingTemplate';
 import {IDragObject} from './Container';
 // Из-за добавления библиотеки в бандл, в оффлайн рознице возникла проблема загрузки двух css библиотек.
 // Т.к. темизируемых стилей нет, делаем загрузку css через import по просьбе Колбешина.
+import 'css!Controls/dragnDrop';
 
 /**
  * Контроллер обеспечивает взаимосвязь между контейнерами перемещения Controls/dragnDrop:Container.
