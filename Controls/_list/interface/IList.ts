@@ -364,7 +364,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  *     this._children.list.scrollToItem(id, false, true);
  * }
  * </pre>
- * 
  */
 
 /*ENG
