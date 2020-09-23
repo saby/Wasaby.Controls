@@ -86,7 +86,7 @@ class StickyHeaderController {
         const fixedHeaders = this._fixedHeadersStack[position];
         for (const id of fixedHeaders) {
             // TODO: https://online.sbis.ru/opendoc.html?guid=cc01c11d-7849-4c0c-950b-03af5fac417b
-            if (this._headers[id] && this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
+            if (this._headers[id] && this._headers[id].inst.shadowVisibility !== SHADOW_VISIBILITY.hidden) {
                 return true;
             }
         }
