@@ -576,7 +576,7 @@ export class Controller {
             if (this._isMenuButtonRequired(actions)) {
                 showed.push({
                     id: null,
-                    icon: 'icon-ExpandDown',
+                    icon: 'icon-SettingsNew',
                     style: 'secondary',
                     iconStyle: 'secondary',
                     isMenu: true
