@@ -368,7 +368,9 @@ export class Controller {
      */
     setActiveItem(item: IItemActionsItem): void {
         this._collection.setActiveItem(item);
-        this._activeItemKey = item.getContents().getKey();
+        if (item && typeof item.getContents !== 'undefined' && typeof item.getContents().getKey !== 'undefined') {
+            this._activeItemKey = item.getContents().getKey();
+        }
     }
 
     /**
@@ -384,7 +386,8 @@ export class Controller {
             const items = this._collection.getItems();
             if (items) {
                 for (let i = 0; i < items.length; i++) {
-                    if (items[i].getContents().getKey() === this._activeItemKey) {
+                    if (typeof items[i].getContents().getKey() !== 'undefined' &&
+                        items[i].getContents().getKey() === this._activeItemKey) {
                         activeItem = items[i].getContents().getKey();
                         break;
                     }
