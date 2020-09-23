@@ -695,6 +695,7 @@ define([
             const clickEvent = {
                target: {closest: () => {}}
             };
+            explorer._children.treeControl = { getEditingItem: () => {} };
             assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => true  }, clickEvent) });
             assert.equal(rootBefore, explorer._root);
             assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => false }, clickEvent) });
