@@ -1505,7 +1505,7 @@ const _private = {
                     if (action === IObservable.ACTION_RESET) {
                         result = self._scrollController.handleResetItems();
                     }
-                    if (result) {
+                    if (result && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
                         _private.handleScrollControllerResult(self, result);
                     }
 
