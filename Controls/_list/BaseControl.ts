@@ -4385,7 +4385,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
 
-        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
+        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation) && this._items.getCount()) {
             this._pagingVisible = _private.needShowPagingByScrollSize(this,  _private.getViewSize(this), this._viewportSize);
         }
 
