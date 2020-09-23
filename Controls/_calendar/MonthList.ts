@@ -135,6 +135,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._updateScrollAfterViewModification(true);
     }
 
+    private _testing(): void {
+        console.log('test');
+    }
+
     protected _beforeUpdate(options: IModuleComponentOptions): void {
         this._updateItemTemplate(options);
         const sourceUpdated = this._updateSource(options, this._options);
