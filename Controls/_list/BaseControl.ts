@@ -81,7 +81,6 @@ import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import 'wml!Controls/_list/BaseControl/Footer';
 
 import {IList} from "./interface/IList";
-import {isColumnScrollShown} from '../_grid/utils/GridColumnScrollUtil';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { EdgeIntersectionObserver } from 'Controls/scroll';
 import { TItemKey } from 'Controls/display';
@@ -270,7 +269,9 @@ const _private = {
     supportAttachLoadTopTriggerToNull(options): boolean {
         // Поведение отложенной загрузки вверх нужно опциональное, например, для контактов
         // https://online.sbis.ru/opendoc.html?guid=f07ea1a9-743c-42e4-a2ae-8411d59bcdce
-        if (options.attachLoadTopTriggerToNull === false) {
+        // Для мобильных устройств данный функционал включать нельзя из-за инерционного скролла:
+        // https://online.sbis.ru/opendoc.html?guid=45921906-4b0e-4d72-bb80-179c076412d5
+        if (options.attachLoadTopTriggerToNull === false || detection.isMobileIOS) {
             return false;
         }
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
@@ -449,8 +450,10 @@ const _private = {
                     error,
                     dataLoadErrback: cfg.dataLoadErrback
                 }).then(function(result: ICrudResult) {
-                    if (cfg.afterReloadCallback) {
-                        cfg.afterReloadCallback(cfg);
+                    if (!self._destroyed) {
+                        if (cfg.afterReloadCallback) {
+                            cfg.afterReloadCallback(cfg);
+                        }
                     }
                     resDeferred.callback({
                         data: null,
@@ -532,7 +535,8 @@ const _private = {
         let startChildrenIndex = 0;
 
         for (let i = startChildrenIndex, len = itemsContainer.children.length; i < len; i++) {
-            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer')) {
+            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') &&
+                !itemsContainer.children[i].classList.contains('js-controls-List_invisible-for-VirtualScroll')) {
                 startChildrenIndex = i;
                 break;
             }
@@ -1504,6 +1508,9 @@ const _private = {
                     if (result) {
                         _private.handleScrollControllerResult(self, result);
                     }
+
+                    // TODO: уйдет после перехода на новую модель
+                    self._scrollController.setIndicesAfterCollectionChange();
                 }
             }
 
@@ -1533,6 +1540,11 @@ const _private = {
                 // а потом сработает add и для элемента нужно восстановить выделение
                 if (action === IObservable.ACTION_ADD) {
                     _private.getMarkerController(self).handleAddItems(newItems);
+                }
+
+                // TODO костыль для 6100, в 7100 это переписано адекватно и работает
+                if (action === IObservable.ACTION_RESET) {
+                    _private.getMarkerController(self).restoreMarker();
                 }
             }
         }
@@ -1695,11 +1707,12 @@ const _private = {
             // При быстром клике правой кнопкой обработчик закрытия меню и setActiveItem(null)
             // вызывается позже, чем устанавливается новый activeItem. в результате, при попытке
             // взаимодействия с опциями записи, может возникать ошибка, т.к. activeItem уже null.
-            // Для обхода проблемы ставим условие, что занулять ItemAction нужно только тогда, когда
+            // Для обхода проблемы ставим условие, что занулять active item нужно только тогда, когда
             // закрываем самое последнее открытое меню.
             if (!currentPopup || itemActionsMenuId === currentPopup.id) {
-                self._listViewModel.setActiveItem(null);
-                _private.getItemActionsController(self).deactivateSwipe();
+                const itemActionsController = _private.getItemActionsController(self)
+                itemActionsController.setActiveItem(null);
+                itemActionsController.deactivateSwipe();
             }
         }
     },
@@ -3392,6 +3405,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // выбранные элементы могут проставить передав в опции, но контроллер еще может быть не создан
             if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
                 this._selectionController = _private.createSelectionController(this, newOptions);
+                // TODO перепишется в 7100 при рефакторе контроллера
+                if (this._selectionController) {
+                    const result = this._selectionController.getResultAfterConstructor();
+                    _private.handleSelectionControllerResult(this, result);
+                }
             }
         }
 
@@ -3473,7 +3491,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     reloadItem(key: String, readMeta: Object, replaceItem: Boolean, reloadType = 'read'): Deferred {
-        const items = this._listViewModel.getItems();
+        const items = this._listViewModel.getCollection();
         const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
         const sourceController = _private.getSourceController(this._options, this._notifyNavigationParamsChanged);
 
@@ -3620,12 +3638,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
-        if (this._scrollController && this._scrollController.needToSaveAndRestoreScrollPosition()) {
+        if (this._scrollController && this._scrollController.getParamsToRestoreScrollPosition()) {
             this._notify('saveScrollPosition', [], {bubbling: true});
         }
     },
 
     _beforePaint(): void {
+
+        // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
+        if (this._container) {
+            const container = this._container[0] || this._container;
+            this._viewSize = container.clientHeight;
+        }
+
         if (this._pagingVisible) {
             this._updatePagingPadding();
         }
@@ -3682,14 +3707,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
             let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
                                     this._scrollController.completeVirtualScrollIfNeed();
 
-            if (this._scrollController.needToSaveAndRestoreScrollPosition()) {
-                const {direction, heightDifference} = this._scrollController.getParamsToRestoreScrollPosition();
-                this._notify('restoreScrollPosition', [heightDifference, direction, correctingHeight], {bubbling: true});
+            const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
+            if (paramsToRestoreScroll) {
+                this._scrollController.beforeRestoreScrollPosition();
+                this._notify('restoreScrollPosition', 
+                             [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
+                             {bubbling: true});
                 needCheckTriggers = true;
             }
 
@@ -4102,7 +4131,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let hasDragScrolling = false;
         this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (this._options.columnScroll) {
-            hasDragScrolling = isColumnScrollShown(this._container) && (
+            // Не должно быть завязки на горизонтальный скролл.
+            // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
+            hasDragScrolling = this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible() && (
                 typeof this._options.dragScrolling === 'boolean' ? this._options.dragScrolling : !this._options.itemsDragNDrop
             );
         }
@@ -4378,7 +4409,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (detection.isMobileIOS && (scrollEvent.target === document.body || scrollEvent.target === document)) {
             return;
         }
-        _private.closePopup(this);
+        _private.closeActionsMenu(this);
     },
 
     /**
@@ -4393,13 +4424,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
         swipeEvent.stopPropagation();
-        const key = item.getContents().getKey();
+        const key = _private.getPlainItemContents(item).getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             _private.setMarkedKey(this, key);
-            _private.getItemActionsController(this).activateSwipe(item.getContents().getKey(), swipeContainer?.width, swipeContainer?.height);
+            _private.getItemActionsController(this).activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             const swipedItem = _private.getItemActionsController(this).getSwipeItem();
@@ -4424,7 +4455,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 // Animation should be played only if checkboxes are visible.
                 if (this._options.multiSelectVisibility !== 'hidden') {
-                    _private.getItemActionsController(this).activateRightSwipe(item.getContents().getKey());
+                    _private.getItemActionsController(this).activateRightSwipe(key);
                 }
                 _private.setMarkedKey(this, key);
             }
@@ -4625,7 +4656,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала.
         // В таком случае выводим индикатор над списком.
         // FIXME: https://online.sbis.ru/opendoc.html?guid=886c7f51-d327-4efa-b998-7cf94f5467cb
-        // не должно быть завязки на горизонтальный скролл.
+        // Также, не должно быть завязки на горизонтальный скролл.
+        // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
         if (position === 'beforeEmptyTemplate') {
             return this._loadingIndicatorState === 'up' || (
                 this._loadingIndicatorState === 'all' && (
@@ -4649,8 +4681,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._dndListController;
     },
 
-    _isMobileIOS(): boolean {
-        return detection.isMobileIOS;
+    _isPagingPadding(): boolean {
+        return !(detection.isMobileIOS ||
+            (this._options.navigation &&
+                this._options.navigation.viewConfig &&
+                this._options.navigation.viewConfig.pagingMode === 'end')
+        );
     },
 
     _onMouseMove(event): void {

@@ -413,8 +413,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         } else if (eventType === 'cantScroll') {
             this._canScroll = false;
         } else if (eventType === 'scrollMoveSync') {
-            this._negativeScrollTop = scrollState.scrollTop < 0;
-            changed = true;
+            const negativeScrollTop = scrollState.scrollTop < 0;
+            if (negativeScrollTop !== this._negativeScrollTop) {
+                this._negativeScrollTop = negativeScrollTop;
+                // При отрицательном scrollTop ничего не обновляем
+                if (!negativeScrollTop) {
+                    changed = true;
+                }
+            }
         }
 
         if (this._isMobileIOS) {
