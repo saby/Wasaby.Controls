@@ -20,7 +20,7 @@ export interface IModel {
  * Контроллер, управляющий состоянием отображением драг'н'дропа в плоском списке
  * @class Controls/_listDragNDrop/FlatController
  * @public
- * @author Аверкиев П.А
+ * @author Панихин К.А.
  */
 
 export default class FlatController {

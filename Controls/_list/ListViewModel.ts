@@ -277,6 +277,23 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return itemData.isStickedMasterItem || itemData.isGroup;
     },
 
+    _getEndIndexForReset(): number {
+        const endIndex = ListViewModel.superclass._getEndIndexForReset.apply(this);
+        if (this._isSupportStickyItem()) {
+            // Если поддерживается stiky элементы, то конечный индекс не должен совпадать с stopIndex,
+            // а должен отображаться застиканный элемент, если он находится за пределами диапазона.
+            let idx = endIndex;
+            const count =  (this._display ? this._display.getCount() : 0);
+            while (idx < count) {
+                const itemData = this.getItemDataByItem(this._display.at(idx));
+                if (this._isStickedItem(itemData)) {
+                    return ++idx;
+                }
+                idx++;
+            }
+        }
+        return endIndex;
+    },
     _getCurIndexForReset(startIndex: number): number {
         if (this._isSupportStickyItem() && startIndex > 0) {
             // Если поддерживается sticky элементов, то индекс не просто нужно сбросить на 0, а взять индекс ближайшего
@@ -348,28 +365,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
      * @param status значение marked
      */
     setMarkedKey(key: number|string, status: boolean): void {
-        // status - для совместимости с новой моделью, чтобы сбросить маркер нужно передать false
-        if (this._markedKey === key && status !== false) {
-            return;
-        }
-
-        const changedItems = [
-            this.getItemById(this._markedKey),
-            this.getItemById(key)
-        ];
-
-        const item = this.getItemBySourceKey(key);
-        if (item) {
-            item.setMarked(status);
-        }
-
+        this._display.setMarkedKey(key, status);
         if (status === false) {
             this._markedKey = null;
         } else {
             this._markedKey = key;
         }
-
-        this._nextModelVersion(true, 'markedKeyChanged', '', changedItems);
     },
 
     setMarkerVisibility: function(markerVisibility) {
@@ -597,18 +598,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     // для совместимости с новой моделью
     getIndexBySourceIndex(sourceIndex: number): number {
         return this.getDisplay().getIndexBySourceIndex(sourceIndex);
-    },
-
-    getValidItemForMarker: function(index) {
-        const prevValidItemKey = this.getPreviousItem(index);
-        const nextValidItemKey = this.getNextItem(index);
-        if (nextValidItemKey !== undefined) {
-            return this.getItemBySourceKey(nextValidItemKey);
-        } else if (prevValidItemKey !== undefined) {
-            return this.getItemBySourceKey(prevValidItemKey);
-        } else {
-            return null;
-        }
     },
     _setEditingItemData: function(itemData) {
         const data = itemData ? itemData : this._editingItemData;

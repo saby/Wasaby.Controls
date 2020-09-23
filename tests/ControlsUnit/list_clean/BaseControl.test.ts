@@ -211,7 +211,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
-            baseControl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+            baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
@@ -249,7 +249,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
-            baseControl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+            baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
@@ -286,7 +286,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
-            baseControl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+            baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
@@ -323,7 +323,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
-            baseControl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+            baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
@@ -342,6 +342,24 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl.__selectedPageChanged(null, 2);
             assert.equal(baseControl._currentPage, 2);
             assert.equal(baseControl._scrollPagingCtr._options.scrollParams.scrollTop, 400);
+        });
+
+        it('visible paging padding', async () => {
+            const cfgClone = {...baseControlCfg};
+            cfgClone.navigation.viewConfig.pagingMode = 'end';
+            baseControl.saveOptions(cfgClone);
+            await baseControl._beforeMount(cfgClone);
+            baseControl._container = {
+                clientHeight: 1000
+            };
+            baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
+            assert.isFalse(baseControl._isPagingPadding());
+            cfgClone.navigation.viewConfig.pagingMode = 'base';
+            await baseControl._beforeUpdate(cfgClone);
+            assert.isTrue(baseControl._isPagingPadding());
         });
     });
     describe('beforeUnmount', () => {

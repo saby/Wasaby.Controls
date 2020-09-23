@@ -1,7 +1,7 @@
 import {IControlOptions} from 'UI/Base';
 import {Collection} from 'Controls/display';
 import VirtualScroll from './ScrollContainer/VirtualScroll';
-import {Record} from 'Types/entity';
+import {Record, Model} from 'Types/entity';
 import {IObservable} from 'Types/collection';
 import {
     IItemsHeights,
@@ -16,7 +16,8 @@ import {
 import InertialScrolling from './resources/utils/InertialScrolling';
 import {detection} from 'Env/Env';
 import {VirtualScrollHideController, VirtualScrollController} from 'Controls/display';
-
+import { getDimensions as uDimension } from '../sizeUtils';
+import { getStickyHeadersHeight } from '../scroll';
 
 export interface IScrollParams {
     clientHeight: number;
@@ -89,7 +90,6 @@ export default class ScrollController {
                 ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
             }
         }
-        this._initVirtualScroll(options);
     }
 
     private savePlaceholders(placeholders: IPlaceholders = null): void {
@@ -104,7 +104,7 @@ export default class ScrollController {
 
     private updateContainerHeightsData(params: Partial<IScrollParams>):  IScrollControllerResult {
         if (this._virtualScroll && params) {
-            let newParams: Partial<IContainerHeights> = {trigger: this._triggerOffset};
+            let newParams: Partial<IContainerHeights> = {};
             if (params.clientHeight) {
                 newParams.viewport = params.clientHeight;
                 this._viewportHeight = params.clientHeight;
@@ -113,11 +113,13 @@ export default class ScrollController {
                 newParams.scroll = params.scrollHeight;
                 this._viewHeight = params.scrollHeight;
             }
-            this._virtualScroll.applyContainerHeightsData(newParams);
-            return  {
+            const result = {
                 triggerOffset: this.getTriggerOffset(this._viewHeight,
                                                      this._viewportHeight,
                                                      this._options.attachLoadTopTriggerToNull)};
+            newParams.trigger = this._triggerOffset;
+            this._virtualScroll.applyContainerHeightsData(newParams);
+            return result;
         } else {
             return {};
         }
@@ -159,10 +161,6 @@ export default class ScrollController {
         return {...result, ...this.updateContainerHeightsData(params)};
     }
 
-    needToSaveAndRestoreScrollPosition(): boolean {
-        return !!(this._virtualScroll && this._virtualScroll.isNeedToRestorePosition);
-    }
-
     setRendering(state: boolean) {
         this._isRendering = state;
     }
@@ -189,6 +187,52 @@ export default class ScrollController {
         }
         return result;
     }
+
+    /**
+     * Возвращает первый полностью видимый элемент
+     * @param listViewContainer
+     * @param baseContainer
+     * @param scrollTop
+     * @return {Model}
+     */
+    getFirstVisibleRecord(listViewContainer: any, baseContainer: any, scrollTop: number): Model {
+        const topOffset = this._getTopOffsetForItemsContainer(listViewContainer, baseContainer);
+        const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(baseContainer, 'top', 'allFixed') || 0);
+
+        let firstItemIndex = this._options.collection.getStartIndex();
+        firstItemIndex += this._getFirstVisibleItemIndex(listViewContainer.children, verticalOffset);
+        firstItemIndex = Math.min(firstItemIndex, this._options.collection.getStopIndex());
+        const item = this._options.collection.at(firstItemIndex);
+        return item.getContents();
+    }
+
+    /**
+     * Возращает индекс первого полностью видимого элемента
+     * @param {HTMLElement[]} items
+     * @param {number} verticalOffset
+     * @private
+     */
+    private _getFirstVisibleItemIndex(items: HTMLElement[], verticalOffset: number): number {
+        const itemsCount = items.length;
+        let itemsHeight = 0;
+        let i = 0;
+        if (verticalOffset <= 0) {
+            return 0;
+        }
+        while (itemsHeight < verticalOffset && i < itemsCount) {
+            itemsHeight += uDimension(items[i]).height;
+            i++;
+        }
+        return i;
+    }
+
+    private _getTopOffsetForItemsContainer(listViewContainer: any, baseControlContainer: any): number {
+        let offsetTop = uDimension(listViewContainer.children[0], true).top;
+        const container = baseControlContainer[0] || baseControlContainer;
+        offsetTop += container.offsetTop - uDimension(container).top;
+        return offsetTop;
+    }
+
     /**
      * Функция подскролла к элементу
      * @param {string | number} key
@@ -236,7 +280,10 @@ export default class ScrollController {
                                         this._fakeScroll = true;
                                         scrollCallback(index);
                                         this.savePlaceholders(rangeShiftResult.placeholders);
-                                        resolve({ placeholders: rangeShiftResult.placeholders });
+                                        resolve({
+                                            placeholders: rangeShiftResult.placeholders,
+                                            shadowVisibility: this._calcShadowVisibility(this._options.collection, rangeShiftResult.range)
+                                        });
                                     }
                                 }
                             };
@@ -306,11 +353,18 @@ export default class ScrollController {
             return {
                     placeholders: rangeShiftResult.placeholders,
                     activeElement: options.activeElement,
-                    scrollToActiveElement: options.activeElement !== undefined
+                    scrollToActiveElement: options.activeElement !== undefined,
+                    shadowVisibility: this._calcShadowVisibility(options.collection, rangeShiftResult.range)
                 };
         }
     }
 
+    private _calcShadowVisibility(collection: Collection<Record>, range: IRange) {
+        return {
+            up: range.start > 0,
+            down: range.stop < collection.getCount()
+        };
+    }
 
     private _setCollectionIndices(
         collection: Collection<Record>,
@@ -405,7 +459,10 @@ export default class ScrollController {
                 this.completeVirtualScrollIfNeed();
             }
             this.savePlaceholders(rangeShiftResult.placeholders);
-            return {placeholders: rangeShiftResult.placeholders};
+            return {
+                placeholders: rangeShiftResult.placeholders,
+                shadowVisibility: this._calcShadowVisibility(this._options.collection, rangeShiftResult.range)
+            };
         }
     }
 
@@ -432,7 +489,10 @@ export default class ScrollController {
                         this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                             this._options.needScrollCalculation);
                         this.savePlaceholders(rangeShiftResult.placeholders);
-                        resolve({placeholders: rangeShiftResult.placeholders});
+                        resolve({
+                            placeholders: rangeShiftResult.placeholders,
+                            shadowVisibility: this._calcShadowVisibility(this._options.collection, rangeShiftResult.range)
+                        });
                     });
                 } else {
                     resolve(null);
@@ -451,12 +511,21 @@ export default class ScrollController {
      * Получает параметры для восстановления скролла
      */
     getParamsToRestoreScrollPosition(): IScrollRestoreParams {
-        return  this._virtualScroll.getParamsToRestoreScroll();
+        if (this._virtualScroll && this._virtualScroll.isNeedToRestorePosition) {
+            return this._virtualScroll.getParamsToRestoreScroll();
+        } else {
+            return null;
+        }
+    }
+
+    beforeRestoreScrollPosition(): void {
+        this._fakeScroll = true;
+        this._virtualScroll.beforeRestoreScrollPosition();
     }
 
     // TODO рано убирать костыль, ждем перехода на новую модель.
     // https://online.sbis.ru/opendoc.html?guid=1f95ff97-c952-40ef-8d61-077e8431c4be
-    private setIndicesAfterCollectionChange(): void {
+    setIndicesAfterCollectionChange(): void {
 
         // TODO Уберется после https://online.sbis.ru/opendoc.html?guid=5ebdec7d-e95e-438d-94f8-079a17b323c6
         // На данный момент индексы в модели проставляются в двух местах: здесь и на уровне модели
@@ -499,8 +568,11 @@ export default class ScrollController {
         this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
             this._options.needScrollCalculation);
         this.savePlaceholders(rangeShiftResult.placeholders);
-        this.setIndicesAfterCollectionChange();
-        return {...result, placeholders: rangeShiftResult.placeholders };
+        return {
+            ...result,
+            placeholders: rangeShiftResult.placeholders,
+            shadowVisibility: this._calcShadowVisibility(this._options.collection, rangeShiftResult.range)
+        };
     }
 
     /**
@@ -516,14 +588,15 @@ export default class ScrollController {
             this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                 this._options.needScrollCalculation);
             this.savePlaceholders(rangeShiftResult.placeholders);
-            this.setIndicesAfterCollectionChange();
-            return { placeholders: rangeShiftResult.placeholders };
+            return {
+                placeholders: rangeShiftResult.placeholders,
+                shadowVisibility: this._calcShadowVisibility(this._options.collection, rangeShiftResult.range)
+            };
         }
     }
 
     handleResetItems(): IScrollControllerResult {
         let result = this._initVirtualScroll(this._options);
-        this.setIndicesAfterCollectionChange();
         return result;
     }
 
