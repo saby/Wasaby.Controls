@@ -32,25 +32,15 @@
     "Controls/event",
     "Controls/decorator",
     "Controls/scroll",
-    "Controls/dragnDrop"
+    "Controls/dragnDrop",
+    "Controls/buttons",
+    "Controls/Store",
+    "Controls/dataSource",
+    "Controls/source"
   ],
   "includePackages": [
     "Controls/controls-application.package.js",
     "Controls/controls-container-async.package.js"
   ],
   "extendsTo": "online-superbundle.package.js"
-}, {
-  "include": [
-    "Controls/buttons",
-    "Controls/input",
-    "Controls/dropdown",
-    "Controls/toolbars",
-    "Controls/tabs",
-    "Controls/Store",
-    "Controls/validate",
-    "Controls/dataSource",
-    "Controls/source",
-    "Controls/Constants"
-  ],
-  "extendsTo": "page-superbundle.package.js"
 }]
