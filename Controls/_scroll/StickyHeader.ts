@@ -665,13 +665,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             }
 
             style += 'z-index: ' + opts.fixedZIndex + ';';
-        } else {
-            // При построении, заголовок не имеет z-index и позиционируется ниже контента, z-index же задается
-            // после маунта. При тупняках на странице, время на синхронизацию после маунта может быть большим,
-            // из-за чего визуально видно, как скачет содержимое. Задаем z-index сразу, значение берем относительно
-            // опции fixedZIndex, но меньше на 1, чтобы зафиксированные заголовки были выше.
-            const zIndex = opts.fixedZIndex - 1;
-            style += 'z-index: ' + zIndex + ';';
         }
 
         //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274

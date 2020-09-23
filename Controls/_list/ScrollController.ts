@@ -596,8 +596,7 @@ export default class ScrollController {
     }
 
     handleResetItems(): IScrollControllerResult {
-        let result = this._initVirtualScroll(this._options);
-        return result;
+        return this._initVirtualScroll(this._options);
     }
 
     private getTriggerOffset(scrollHeight: number, viewportHeight: number, attachLoadTopTriggerToNull: boolean): {top: number, bottom: number} {
