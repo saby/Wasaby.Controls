@@ -22,6 +22,7 @@ export default class GroupItem<T> extends mixin<
     ExpandableMixin
 ) {
     readonly MarkableItem: boolean = false;
+    readonly SelectableItem: boolean = false;
 
     constructor(options?: IOptions<T>) {
         super(options);

@@ -32,25 +32,25 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       this._items = items;
    }
 
-   select(selection: ISelection, keys: TKeys): ISelection {
+   select(selection: ISelection, key: CrudEntityKey): ISelection {
       const cloneSelection = clone(selection);
 
       if (this._isAllSelected(cloneSelection)) {
-         ArraySimpleValuesUtil.removeSubArray(cloneSelection.excluded, keys);
+         ArraySimpleValuesUtil.removeSubArray(cloneSelection.excluded, [key]);
       } else {
-         ArraySimpleValuesUtil.addSubArray(cloneSelection.selected, keys);
+         ArraySimpleValuesUtil.addSubArray(cloneSelection.selected, [key]);
       }
 
       return cloneSelection;
    }
 
-   unselect(selection: ISelection, keys: TKeys): ISelection {
+   unselect(selection: ISelection, key: CrudEntityKey): ISelection {
       const cloneSelection = clone(selection);
 
       if (this._isAllSelected(cloneSelection)) {
-         ArraySimpleValuesUtil.addSubArray(cloneSelection.excluded, keys);
+         ArraySimpleValuesUtil.addSubArray(cloneSelection.excluded, [key]);
       } else {
-         ArraySimpleValuesUtil.removeSubArray(cloneSelection.selected, keys);
+         ArraySimpleValuesUtil.removeSubArray(cloneSelection.selected, [key]);
       }
 
       return cloneSelection;
@@ -66,9 +66,6 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
-   /**
-    * Remove selection from all items.
-    */
    unselectAll(selection: ISelection): ISelection {
       const cloneSelection = clone(selection);
 
@@ -78,18 +75,15 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
-   /**
-    * Invert selection.
-    */
    toggleAll(selection: ISelection, hasMoreData: boolean): ISelection {
       let cloneSelection = clone(selection);
 
       if (this._isAllSelected(cloneSelection)) {
-         const excludedKeys: TKeys = cloneSelection.excluded.slice();
+         const excludedKeys = cloneSelection.excluded.slice();
          cloneSelection = this.unselectAll(cloneSelection);
          cloneSelection = this.select(cloneSelection, excludedKeys);
       } else {
-         const selectedKeys: TKeys = cloneSelection.selected.slice();
+         const selectedKeys = cloneSelection.selected.slice();
          cloneSelection = this.selectAll(cloneSelection);
          cloneSelection = this.unselect(cloneSelection, selectedKeys);
       }

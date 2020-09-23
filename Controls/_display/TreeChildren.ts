@@ -34,7 +34,7 @@ export default class TreeChildren<S, T = TreeItem<S>> extends List<T> {
      * Возвращает узел-владелец
      * @return {Controls/_display/TreeItem}
      */
-    getOwner(): TreeItem<S> {
+    getOwner(): T {
         return this._$owner;
     }
 

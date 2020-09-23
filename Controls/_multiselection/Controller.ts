@@ -97,7 +97,8 @@ export class Controller {
     */
    restoreSelection(): void {
       // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
-      this._strategy.setItems(this._model.getItems());
+      // TODO при переходе на новую модель изменить просто на this._model.getItems()
+      this._strategy.setItems(this._model.getDisplay().getItems());
       this._updateModel(this._selection, true);
    }
 
