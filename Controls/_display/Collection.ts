@@ -1031,7 +1031,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки).
-     * @return {Array.<Controls/_display/CollectionItem>}
+     * @return {Array<Controls/_display/CollectionItem>}
      */
     getItems(): T[] {
         return this._getItems().slice();
@@ -2086,15 +2086,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      *     display.setSelectedItems([list.at(0), list.at(1)], true) //установит признак двум элементам;
      * </pre>
      */
-    setSelectedItems(items: S[], selected: boolean|null, silent: boolean = false): void {
-        const sourceItems = [];
-        for (let i = 0, count = items.length; i < count; i++) {
-            const item = this.getItemBySourceItem(items[i]);
-            if (item) {
-                sourceItems.push(item);
-            }
-        }
-        this._setSelectedItems(sourceItems, selected, silent);
+    setSelectedItems(items: T[], selected: boolean|null, silent: boolean = false): void {
+        this._setSelectedItems(items, selected, silent);
     }
 
     /**

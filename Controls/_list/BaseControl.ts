@@ -2043,7 +2043,11 @@ const _private = {
             return null;
         }
 
-        const strategy = this.createSelectionStrategy(options, self._listViewModel.getCollection());
+        const strategy = this.createSelectionStrategy(
+            options,
+            self._listViewModel.getDisplay().getItems(),
+            self._items.getMetaData()['ENTRY_PATH']
+        );
 
         return new SelectionController({
             model: self._listViewModel,
@@ -2060,12 +2064,16 @@ const _private = {
             selectedKeys: newOptions.selectedKeys,
             excludedKeys: newOptions.excludedKeys,
             searchValue: newOptions.searchValue,
-            strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
+            strategyOptions: this.getSelectionStrategyOptions(
+                newOptions,
+                self._listViewModel.getDisplay().getItems(),
+                self._items.getMetaData()['ENTRY_PATH']
+            )
         });
     },
 
-    createSelectionStrategy(options: any, items: RecordSet): ISelectionStrategy {
-        const strategyOptions = this.getSelectionStrategyOptions(options, items);
+    createSelectionStrategy(options: any, items: Array<CollectionItem<Model>>, entryPath: []): ISelectionStrategy {
+        const strategyOptions = this.getSelectionStrategyOptions(options, items, entryPath);
         if (options.parentProperty) {
             return new TreeSelectionStrategy(strategyOptions);
         } else {
@@ -2080,20 +2088,15 @@ const _private = {
         return self._selectionController;
     },
 
-    getSelectionStrategyOptions(options: any, items: RecordSet): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
+    getSelectionStrategyOptions(options: any, items: Array<CollectionItem<Model>>, entryPath: []): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
         if (options.parentProperty) {
             return {
                 nodesSourceControllers: options.nodesSourceControllers,
                 selectDescendants: options.selectDescendants,
                 selectAncestors: options.selectAncestors,
-                hierarchyRelation: new relation.Hierarchy({
-                    keyProperty: options.keyProperty || 'id',
-                    parentProperty: options.parentProperty || 'Раздел',
-                    nodeProperty: options.nodeProperty || 'Раздел@',
-                    declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
-                }),
                 rootId: options.root,
-                items
+                items,
+                entryPath
             };
         } else {
             return { items };

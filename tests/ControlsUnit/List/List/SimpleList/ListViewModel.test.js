@@ -196,7 +196,7 @@ define([
             model._stopIndex = 2;
             const result = model._getEndIndexForReset();
             assert.equal(result, 4, 'sticky item must be shown');
-            
+
          });
          it('sticky item in range', () => {
             const data = [
@@ -220,9 +220,9 @@ define([
             model._stopIndex = 2;
             const result = model._getEndIndexForReset();
             assert.equal(result, 2, 'sticky item is in range, so end index === stop index');
-            
+
          });
-         
+
       });
 
       it('markItemReloaded', () => {
@@ -697,7 +697,7 @@ define([
 
          it('getMultiSelectClassList onhover selected', function() {
             lvm._options.multiSelectVisibility = 'onhover';
-            lvm.setSelectedItems([lvm.getItemById(2, 'id').getContents()], true);
+            lvm.setSelectedItems([lvm.getItemById(2, 'id')], true);
             var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable');
          });

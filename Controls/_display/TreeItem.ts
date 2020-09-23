@@ -6,6 +6,7 @@ import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './Expandable
 import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
 import {mixin} from 'Types/util';
+import TreeChildren from './TreeChildren';
 
 export interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
@@ -48,7 +49,7 @@ export default class TreeItem<T> extends mixin<
     protected _$node: boolean;
 
     /**
-     * Есть ли дети у узла. По умолчанию есть.
+     * Есть ли дети у узла.
      */
     protected _$hasChildren: boolean;
 
@@ -66,7 +67,12 @@ export default class TreeItem<T> extends mixin<
         }
 
         this._$node = !!this._$node;
-        this._$hasChildren = !!this._$hasChildren;
+        if (this._$node) {
+            this._$hasChildren = true;
+        }
+        if (options && options.hasChildren !== undefined) {
+            this._$hasChildren = !!options.hasChildren;
+        }
     }
 
     // region Public methods
@@ -177,6 +183,14 @@ export default class TreeItem<T> extends mixin<
         return this._$childrenProperty;
     }
 
+    /**
+     * Возвращает коллекцию потомков элемента коллекции
+     * @param [withFilter=true] Учитывать {@link Controls/display:Collection#setFilter фильтр}
+     */
+    getChildren(withFilter: boolean = true): TreeChildren<T> {
+        return this.getOwner().getChildren(this, withFilter);
+    }
+
     // region SerializableMixin
 
     _getSerializableState(state: ICollectionItemSerializableState<T>): ISerializableState<T> {
@@ -226,7 +240,7 @@ Object.assign(TreeItem.prototype, {
     _$parent: undefined,
     _$node: false,
     _$expanded: false,
-    _$hasChildren: true,
+    _$hasChildren: false,
     _$childrenProperty: '',
     _instancePrefix: 'tree-item-'
 });

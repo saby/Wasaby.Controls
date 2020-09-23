@@ -117,6 +117,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             baseControl._afterMount();
             baseControl._listViewModel = new ListViewModel(baseControlCfg.viewModelConfig);
+            baseControl._items = new RecordSet();
             baseControl._createSelectionController();
             assert.isFalse(!baseControl._listViewModel || !baseControl._listViewModel.getCollection());
             assert.isNotNull(baseControl._selectionController);

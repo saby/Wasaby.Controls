@@ -170,9 +170,9 @@ describe('Controls/_display/TreeItem', () => {
     });
 
     describe('.isHasChildren()', () => {
-        it('should return true by default', () => {
+        it('should return false by default', () => {
             const item = new TreeItem();
-            assert.isTrue(item.isHasChildren());
+            assert.isFalse(item.isHasChildren());
         });
 
         it('should return value passed to the constructor', () => {
@@ -194,9 +194,9 @@ describe('Controls/_display/TreeItem', () => {
     });
 
     describe('.isLoaded()', () => {
-        it('should return false by default', () => {
+        it('should return true by default', () => {
             const item = new TreeItem();
-            assert.isFalse(item.isLoaded());
+            assert.isTrue(item.isLoaded());
         });
 
         it('should return value passed to the constructor', () => {
