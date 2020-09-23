@@ -20,7 +20,8 @@
     "Controls/Utils/*"
   ],
   "exclude": [
-    "Controls/Utils/isVDOMTemplate"
+    "Controls/Utils/isVDOMTemplate",
+    "Controls/Utils/FontWidthConstants/*"
   ],
   "output": "controls-utils.package.js"
 }, {
