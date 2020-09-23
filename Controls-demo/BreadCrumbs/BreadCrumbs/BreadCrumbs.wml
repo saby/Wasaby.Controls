@@ -11,11 +11,13 @@
                                items="{{items}}"
                                parentProperty="parent"
                                keyProperty="id"
+                               containerWidth="{{_containerWidthHeadingPath}}"
                                on:arrowActivated="_onArrowActivated()"
                                on:itemClick="_onItemClick()" />
     <h2>Path with content back button</h2>
     <Controls.breadcrumbs:HeadingPath attr:id="pathContent"
                                       items="{{items}}"
+                                      containerWidth="{{_containerWidthHeadingPath}}"
                                       parentProperty="parent"
                                       keyProperty="id"
                                       on:itemClick="_onItemClick()">
@@ -27,6 +29,7 @@
     <Controls.breadcrumbs:HeadingPath attr:id="pathHeadingOnly"
                                       items="{{items4}}"
                                       parentProperty="parent"
+                                      containerWidth="{{_containerWidthHeadingPath}}"
                                       keyProperty="id"
                                       on:arrowActivated="_onArrowActivated()"
                                       on:itemClick="_onItemClick()" />

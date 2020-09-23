@@ -1,5 +1,5 @@
 import {ItemsUtil} from 'Controls/list';
-import {Record} from 'Types/entity';
+import {Record, Model} from 'Types/entity';
 import {getFontWidth} from 'Controls/Utils/getFontWidth';
 import {IMultilinePathOptions} from './MultilinePath';
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
@@ -27,8 +27,8 @@ export default {
             return this.getItemData(index, items, arrow);
         });
     },
-    canShrink(minWidth: number, currentWidth: number, availableWidth: number): boolean {
-        return currentWidth - minWidth < availableWidth;
+    canShrink(minWidth: number, itemWidth: number, currentWidth: number, availableWidth: number): boolean {
+        return currentWidth + minWidth - itemWidth < availableWidth;
     },
     getTextWidth(text: string, size: string  = 'xs'): number {
         return getFontWidth(text, size);
@@ -115,7 +115,7 @@ export default {
                 currentMinWidth = this.getMinWidth(items, options, index, getTextWidth);
                 if (secondContainerWidth <= width) {
                     break;
-                } else if (this.canShrink(currentMinWidth, secondContainerWidth, width)) {
+                } else if (this.canShrink(currentMinWidth, itemsWidth[index], secondContainerWidth, width)) {
                     shrinkItemIndex = index;
                     secondContainerWidth -= itemsWidth[index] - currentMinWidth;
                     break;
@@ -129,8 +129,12 @@ export default {
                 secondContainerItems.push(this.getItemData(j, items, true, j === index && items[j].get(options.displayProperty).length > 3));
             }
             // добавляем точки
-            const dotsItem = {};
+            const dotsItem = new Model({
+                rawData: {},
+                keyProperty: options.keyProperty
+            });
             dotsItem[options.displayProperty] = '...';
+            dotsItem[options.keyProperty] = 'dots';
 
             secondContainerItems.push({
                 getPropValue: ItemsUtil.getPropertyValue,

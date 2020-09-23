@@ -28,7 +28,7 @@ interface IReceivedState {
  * @mixes Controls/_interface/IFontSize
  * @control
  * @public
- * @author Авраменко А.С.
+ * @author Бондарь А.В.
  * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
  * @see Controls/_breadcrumbs/HeadingPath
  */
@@ -44,7 +44,7 @@ interface IReceivedState {
  * @mixes Controls/_interface/IFontSize
  * @control
  * @private
- * @author Авраменко А.С.
+ * @author Бондарь А.В.
  * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
  */
 

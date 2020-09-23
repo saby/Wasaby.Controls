@@ -13,6 +13,7 @@ class BreadCrumbs extends Control<IControlOptions> {
     protected items3 = null;
     protected items4 = null;
     protected _containerWidth = 1100;
+    protected _containerWidthHeadingPath = 600;
     protected info = '';
     protected _arrowActivated = false;
 
