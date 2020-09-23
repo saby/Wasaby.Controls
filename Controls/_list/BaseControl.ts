@@ -2212,6 +2212,11 @@ const _private = {
                 self._notify('activeElementChanged', [result.activeElement]);
             }
             if (result.scrollToActiveElement) {
+                if (self._resetScrollAfterReload) {
+                    self._resetScrollAfterReload = false;
+                } else {
+                    self._keepScrollAfterReload = true;
+                }
                 _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
             }
         }
