@@ -226,7 +226,9 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    protected _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject) {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = Utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
+         const ratio = this._options.direction === 'vertical' ?
+             Utils.getRatio(dragObject.position.y, box.top + window.pageYOffset, box.height) :
+             Utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
          this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
          this._setValue(this._value);
       }

@@ -3,7 +3,7 @@ import {debounce} from 'Types/function';
 import {IFixedEventData, isHidden, POSITION, SHADOW_VISIBILITY, TRegisterEventData, TYPE_FIXED_HEADERS} from './Utils';
 import StickyHeader from 'Controls/_scroll/StickyHeader';
 import fastUpdate from './FastUpdate';
-import {ResizeObserver as ResizeObserverUtil} from 'Controls/scrollUtils';
+import ResizeObserverUtil from 'Controls/Utils/ResizeObserverUtil';
 
 // @ts-ignore
 
@@ -86,7 +86,7 @@ class StickyHeaderController {
         const fixedHeaders = this._fixedHeadersStack[position];
         for (const id of fixedHeaders) {
             // TODO: https://online.sbis.ru/opendoc.html?guid=cc01c11d-7849-4c0c-950b-03af5fac417b
-            if (this._headers[id] && this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
+            if (this._headers[id] && this._headers[id].inst.shadowVisibility !== SHADOW_VISIBILITY.hidden) {
                 return true;
             }
         }

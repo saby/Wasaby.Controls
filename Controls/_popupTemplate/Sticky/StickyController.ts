@@ -7,7 +7,7 @@ import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyContent = require('wml!Controls/_popupTemplate/Sticky/StickyContent');
 import * as cInstance from 'Core/core-instance';
 import {Logger} from 'UI/Utils';
-import {getScrollbarWidthByMeasuredBlock} from 'Controls/sizeUtils';
+import {getScrollbarWidthByMeasuredBlock} from 'Controls/scroll';
 
 export type TVertical = 'top' | 'bottom' | 'center';
 export type THorizontal = 'left' | 'right' | 'center';
@@ -198,8 +198,9 @@ const _private = {
  * @category Popup
  */
 class StickyController extends BaseController {
-    TYPE = 'Sticky';
+    TYPE: string = 'Sticky';
     _private = _private;
+    _bodyOverflow: string;
 
     elementCreated(item, container) {
         if (this._isTargetVisible(item)) {
@@ -266,7 +267,16 @@ class StickyController extends BaseController {
         if (!item.popupOptions.height) {
             container.style.height = 'auto';
         }
-        const hasScrollAfterReset = document && (document.body.scrollHeight > document.body.clientHeight);
+        let hasScrollAfterReset = document && (document.body.scrollHeight > document.body.clientHeight);
+        if (hasScrollAfterReset) {
+            // Скролл на боди может быть отключен через стили
+           if (!this._bodyOverflow) {
+               this._bodyOverflow = getComputedStyle(document.body).overflowY;
+           }
+           if (this._bodyOverflow === 'hidden') {
+               hasScrollAfterReset = false;
+           }
+        }
 
         /* end: We remove the set values that affect the size and positioning to get the real size of the content */
 

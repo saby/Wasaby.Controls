@@ -1881,8 +1881,8 @@ define([
          assert.isFalse(!!ctrl._loadingIndicatorTimer);
       });
 
-      it('updateShadowModeHandler', () => {
-         const updateShadowModeHandler = lists.BaseControl.prototype.updateShadowModeHandler;
+      it('_updateShadowModeHandler', () => {
+         const updateShadowModeHandler = lists.BaseControl.prototype._updateShadowModeHandler;
          const event = {};
          const control = {
             _options: {
@@ -2144,7 +2144,7 @@ define([
             });
             // эмулируем появление скролла
             await lists.BaseControl._private.onScrollShow(ctrl, heightParams);
-            ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+            ctrl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isFalse(!!ctrl._scrollPagingCtr, 'ScrollPagingController was created');
 
@@ -2258,7 +2258,7 @@ define([
             children: []
          });
          lists.BaseControl._private.onScrollShow(ctrl, heightParams);
-         ctrl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+         ctrl._updateShadowModeHandler({}, {top: 0, bottom: 0});
          ctrl._pagingVisible = true;
        ctrl._pagingCfg = {
            arrowState: {

@@ -103,7 +103,7 @@ export function prepareLadder(params: IPrepareLadderParams): {} {
                 processStickyLadder({
                     itemIndex: idx,
                     value: item.get(stickyProperties[fIdx]),
-                    prevValue: prevItem ? prevItem.get(stickyProperties[fIdx]) : undefined,
+                    prevValue: prevItem && prevItem.get ? prevItem.get(stickyProperties[fIdx]) : undefined,
                     state: stickyLadderState[stickyProperties[fIdx]],
                     ladder: stickyLadder[idx][stickyProperties[fIdx]]
                 });
