@@ -11,7 +11,8 @@ import {RecordSet} from 'Types/collection';
 import {__ContentLayer, __PopupLayer} from 'Controls/suggestPopup';
 import {
    IFilterOptions,
-   INavigationOptions, INavigationSourceConfig,
+   INavigationOptions,
+   INavigationSourceConfig,
    ISearchOptions,
    ISortingOptions,
    ISourceOptions,
@@ -20,7 +21,6 @@ import {
 import {QueryWhereExpression} from 'Types/source';
 import ISuggest, {IEmptyTemplateProp, ISuggestFooterTemplate, ISuggestTemplateProp} from 'Controls/interface/ISuggest';
 import {IValueOptions} from 'Controls/input';
-import {factory} from 'Types/chain';
 import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
 
 import Env = require('Env/Env');
@@ -176,6 +176,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._loadDependencies(this._options).addCallback(() => {
          // focus can be moved out while dependencies loading
          if (this._inputActive) {
+            this._sourceController = this._getSourceController();
             this._suggestStateNotify(true);
          }
       });
@@ -243,7 +244,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._children.indicator.hide();
       }
    }
-   private _searchErrback(error: CancelableError): Promise<void> {
+   private _searchErrback(error: CancelableError): void {
       // aborting of the search may be caused before the search start, because of the delay before searching
       if (this._loading !== null) {
          this._loading = false;
@@ -253,13 +254,15 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._hideIndicator();
       }
    }
-   // private _shouldSearch(value: string): boolean {
-   //    return this._inputActive && this._isValueLengthLongerThenMinSearchLength(value, this._options);
-   // }
+   // TODO remove?
+   private _shouldSearch(value: string): boolean {
+      return this._inputActive && this._isValueLengthLongerThenMinSearchLength(value, this._options);
+   }
 
-   // private _isValueLengthLongerThenMinSearchLength(value: string, options): boolean {
-   //   return value && value.length >= options.minSearchLength;
-   // }
+   // TODO remove?
+   private _isValueLengthLongerThenMinSearchLength(value: string, options): boolean {
+     return value && value.length >= options.minSearchLength;
+   }
 
    private _shouldShowSuggest(searchResult: RecordSet): boolean {
       const hasItems = searchResult && searchResult.getCount();
@@ -290,7 +293,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             this._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
          }
 
-         if (this._searchValue && this._sourceController?.hasMore() && typeof metaData.more === 'number') {
+         if (this._searchValue && this._sourceController?.hasMoreData('down') && typeof metaData.more === 'number') {
             this._moreCount = metaData.more - data.getCount();
          } else {
             this._moreCount = undefined;
@@ -327,8 +330,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _updateSuggestState(): void {
-      // todo
-      const shouldSearch = null; // this._shouldSearch(this._searchValue);
+      const shouldSearch = this._shouldSearch(this._searchValue);
 
       if (this._options.historyId && !shouldSearch && !this._options.suggestState) {
          this._openWithHistory();
@@ -422,21 +424,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          options.validationStatus === 'invalidAccent';
    }
 
-   private _reverseData(data: RecordSet): RecordSet {
-      const recordSetToReverse = data.clone();
-      const reversedData = factory(recordSetToReverse).sort((a, b) => {
-         return recordSetToReverse.getIndex(b) - recordSetToReverse.getIndex(a);
-      }).value();
-
-      // need to use initial recordSet to save metaData in origin format
-      data.clear();
-      reversedData.forEach((item) => {
-         data.add(item);
-      });
-
-      return data;
-   }
-
    private _getSelectorOptions(templateOptions: object): IStackPopupOptions {
       return { ...{
             opener: this,
@@ -461,7 +448,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                searchEndCallback: this._searchEnd,
                searchStartCallback: this._searchStart,
                searchErrback: this._searchErrback,
-               emptyTemplate: this._options.emptyTemplate,
+               emptyTemplate: this._emptyTemplate,
                source: this._options.source,
                minSearchLength: this._options.autoDropDown ? 0 : this._options.minSearchLength,
                navigation: this._options.navigation,
@@ -472,6 +459,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                searchDelay: this._searchDelay,
                tabsSelectedKeyChangedCallback: this._tabsSelectedKeyChanged,
                searchValue: this._searchValue,
+               sourceController: this._sourceController,
                eventHandlers: {
                   onResult: this._select.bind(this)
                }
@@ -487,6 +475,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._searchDelay = options.searchDelay;
       this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
       this._setFilter(options.filter, options);
+      this._emptyTemplate = this._getEmptyTemplate(options.emptyTemplate);
    }
 
    protected _beforeUnmount(): void {
@@ -499,7 +488,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    protected _beforeUpdate(newOptions: IInputControllerOptions): void {
       const valueChanged = this._options.value !== newOptions.value;
       const valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
-      const needSearchOnValueChanged = valueChanged && this._isValueLengthLongerThenMinSearchLength(newOptions.value, this._options);
+      const needSearchOnValueChanged = valueChanged &&
+         this._isValueLengthLongerThenMinSearchLength(newOptions.value, this._options);
       const emptyTemplateChanged = !isEqual(this._options.emptyTemplate, newOptions.emptyTemplate);
       const footerTemplateChanged = !isEqual(this._options.footerTemplate, newOptions.footerTemplate);
 
@@ -583,6 +573,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             }
          });
       }
+
+      this._searchDelayController.resolve(value);
    }
 
    protected _getSearchController(): SearchController {
