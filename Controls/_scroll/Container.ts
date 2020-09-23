@@ -842,7 +842,9 @@ let
 
        _stickyHeaderFixedCallback(position: POSITION): void {
            // После того, как заголовки зафиксировались нужно пересчитать отображение скроллбара и теней.
-          this._forceUpdate();
+          if (this._displayState.canScroll) {
+              this._forceUpdate();
+          }
        },
 
       _updateShadowMode(event, shadowVisibleObject): void {
