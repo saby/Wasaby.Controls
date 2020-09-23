@@ -1015,18 +1015,22 @@ const _private = {
     needShowPagingByScrollSize(self, viewSize: number, viewportSize: number): boolean {
         let result = self._pagingVisible;
 
-        const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
-                                      self._scrollController?.calculateVirtualScrollHeight() || 0);
-        const proportion = (scrollHeight / viewportSize);
+        if (viewportSize !== 0) {
+            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
+                self._scrollController?.calculateVirtualScrollHeight() || 0);
+            const proportion = (scrollHeight / viewportSize);
 
-        // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
-        if (!result) {
-            result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
-        }
+            // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
+            if (!result) {
+                result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
+            }
 
-        // если все данные поместились на один экран, то скрываем пэйджинг
-        if (result) {
-            result = proportion > MAX_SCROLL_PAGING_HIDE_PROPORTION;
+            // если все данные поместились на один экран, то скрываем пэйджинг
+            if (result) {
+                result = proportion > MAX_SCROLL_PAGING_HIDE_PROPORTION;
+            }
+        } else {
+            result = false;
         }
 
         // если мы для списка раз вычислили, что нужен пэйджинг, то возвращаем этот статус
@@ -4385,7 +4389,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
 
-        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation) && this._items.getCount()) {
+        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
             this._pagingVisible = _private.needShowPagingByScrollSize(this,  _private.getViewSize(this), this._viewportSize);
         }
 
