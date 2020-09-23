@@ -514,9 +514,14 @@ var
             if (!self.isSupportLadder(self._options.ladderProperties)) {
                 return {};
             }
-            if (!self._ladder || self._options.stickyColumn) {
-                self.resetCachedItemData();
-            }
+
+            // Если при перестройке "лесенки" не сбрасывать кеш, то после добавления элементов по месту при скролле
+            // реестра ломается вёрстка, т.к. в span подставляются старые данные.
+            // см. https://online.sbis.ru/opendoc.html?guid=4fe3dd6f-c76b-45fa-b676-5914a896c7c9
+            // Предыдущая реализацию согласно док-там:
+            // см. https://online.sbis.ru/opendoc.html?guid=d3a0a646-9a22-4a61-be98-7c8570c7a295
+            // см. https://online.sbis.ru/opendoc.html?guid=458ac3b7-b899-4fff-8fcf-ae8168b67b80
+            self.resetCachedItemData();
 
             const hasVirtualScroll = !!self._options.virtualScrolling || Boolean(self._options.virtualScrollConfig);
             const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
@@ -530,19 +535,6 @@ var
                 columns: self._options.columns,
                 stickyColumn: self._options.stickyColumn
             });
-            //Нужно сбросить кэш для записей, у которых поменялась конфигурация лесенки
-            if (self._ladder) {
-                for (let i = startIndex; i < stopIndex ; i++) {
-                    if (!isEqual(newLadder.stickyLadder[i], self._ladder.stickyLadder[i]) ||
-                        !isEqual(newLadder.ladder[i], self._ladder.ladder[i])) {
-
-                        const dispItem = self.getItemById(self.getItems()?.at(i)?.getId());
-                        if (dispItem) {
-                            self.resetCachedItemData(self._getDisplayItemCacheKey(dispItem));
-                        }
-                    }
-                }
-            }
             return newLadder;
         },
         getTableCellStyles(currentColumn): string {
