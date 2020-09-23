@@ -8,7 +8,8 @@ import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
 import {tmplNotify} from 'Controls/eventUtils';
 import { constants } from 'Env/Env';
 import {RecordSet} from 'Types/collection';
-
+import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {factory} from "Types/chain";
 
 const DIALOG_PAGE_SIZE = 25;
 const MARKER_VISIBILITY_DEFAULT = 'onactivated';
@@ -147,6 +148,10 @@ var List = Control.extend({
       this._collectionChange = this._collectionChange.bind(this);
       this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
       _private.checkContext(this, context);
+
+      if (this._reverseList) {
+         this._reverseData();
+      }
    },
 
    _beforeUpdate: function(newOptions, context) {
@@ -158,6 +163,10 @@ var List = Control.extend({
       }
 
       _private.checkContext(this, context);
+
+      if (this._reverseList) {
+         this._reverseData();
+      }
    },
 
    _afterUpdate(): void {
@@ -179,6 +188,23 @@ var List = Control.extend({
       if (this._options.task1176635657) {
          this._notify('tabsSelectedKeyChanged', [key]);
       }
+   },
+
+   _reverseData(): void {
+      const sourceController: SourceController = this._suggestListOptions.sourceController;
+      const recordSet: RecordSet = sourceController.getItems();
+
+      const recordSetToReverse = recordSet.clone();
+      recordSet.each((e, index) =>
+         recordSetToReverse.move(index, recordSet.getCount() - index));
+
+      // need to use initial recordSet to save metaData in origin format
+      recordSet.clear();
+      recordSetToReverse.forEach((item) => {
+         recordSet.add(item);
+      });
+
+      sourceController.setItems(recordSet);
    },
 
    _itemsReadyCallback(items: RecordSet): void {
