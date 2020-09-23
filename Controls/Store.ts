@@ -136,17 +136,14 @@ class Store implements IStore {
         const state = Store._getState();
         const [ctxName, propertyName]: string[] = id.split(ID_SEPARATOR);
 
-        state[ctxName][propertyName].callbacks = state[ctxName][propertyName].callbacks.reduce(
-            (acc, callbackObj) => {
-                if (callbackObj.id !== id) {
-                    acc.push(callbackObj);
-                }
-                return acc;
-            },
-            []
-        );
+        state[ctxName][propertyName].callbacks = state[ctxName][propertyName].callbacks.reduce((acc, callbackObj) => {
+            if (callbackObj.id !== id) {
+                acc.push(callbackObj);
+            }
+            return acc;
+        }, []);
 
-        Store._setState(state, ctxName);
+        Store._setState(state[ctxName], ctxName);
     }
 
     private _notifySubscribers(propertyName: string): void {
