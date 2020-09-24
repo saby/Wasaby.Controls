@@ -1048,7 +1048,11 @@ const _private = {
     },
     needShowPagingByScrollSize(self, viewSize: number, viewportSize: number): boolean {
         let result = self._pagingVisible;
-
+        /**
+         * Правильнее будет проверять что размер viewport не равен 0.
+         * Это нужно для того, чтобы пэйджинг в таком случае не отобразился.
+         * viewport может быть равен 0 в том случае, когда блок скрыт через display:none, а после становится видим.
+         */
         if (viewportSize !== 0) {
             const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
                 self._scrollController?.calculateVirtualScrollHeight() || 0);
