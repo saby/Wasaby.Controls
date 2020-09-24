@@ -79,8 +79,9 @@ const _private = {
         cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
         const popupCfg = self._getPopupConfig(cfg, sizes);
 
-        cfg.position = StickyStrategy.getPosition(popupCfg, self._getTargetCoords(cfg, sizes));
-        _private.updateStickyPosition(cfg, popupCfg);
+        const targetCoords = self._getTargetCoords(cfg, sizes);
+        cfg.position = StickyStrategy.getPosition(popupCfg, targetCoords);
+        _private.updateStickyPosition(cfg, popupCfg, targetCoords);
 
         cfg.positionConfig = popupCfg;
         _private.updateClasses(cfg, popupCfg);
@@ -115,11 +116,14 @@ const _private = {
         }
     },
 
-    updateStickyPosition(item, position): void {
+    updateStickyPosition(item, position, targetCoords): void {
         const newStickyPosition = {
             targetPoint: position.targetPoint,
             direction: position.direction,
-            offset: position.offset
+            offset: position.offset,
+            position: item.position,
+            targetPosition: targetCoords,
+            margins: item.margins
         };
         // быстрая проверка на равенство простых объектов
         if (JSON.stringify(item.popupOptions.stickyPosition) !== JSON.stringify(newStickyPosition)) {
@@ -215,7 +219,8 @@ class StickyController extends BaseController {
 
     elementUpdated(item, container) {
         _private.setStickyContent(item);
-        _private.updateStickyPosition(item, item.positionConfig);
+        const targetCoords = this._getTargetCoords(item, item.positionConfig.sizes);
+        _private.updateStickyPosition(item, item.positionConfig, targetCoords);
         if (this._isTargetVisible(item)) {
             _private.updateClasses(item, item.positionConfig);
 
