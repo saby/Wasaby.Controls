@@ -3,7 +3,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Template = require('wml!Controls-demo/BreadCrumbs/BreadCrumbs/BreadCrumbs');
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 
 class BreadCrumbs extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
@@ -12,8 +11,6 @@ class BreadCrumbs extends Control<IControlOptions> {
     protected items2 = null;
     protected items3 = null;
     protected items4 = null;
-    protected _containerWidth = 1100;
-    protected _containerWidthHeadingPath = 600;
     protected info = '';
     protected _arrowActivated = false;
 
@@ -113,18 +110,7 @@ class BreadCrumbs extends Control<IControlOptions> {
         this.info = '' + item.getId();
         this._arrowActivated = false;
     }
-    protected _afterMount(): void {
-        RegisterUtil(this, 'controlResize', this._onResize.bind(this));
-    }
-    protected _beforeUnmount(): void {
-        UnregisterUtil(this, 'controlResize');
-    }
 
-    private _onResize(): void {
-        if (this._container.clientWidth !== this._containerWidth) {
-            this._containerWidth = this._container.clientWidth;
-        }
-    }
     private _resetCrumbs(): void {
         this.items = [
             {
