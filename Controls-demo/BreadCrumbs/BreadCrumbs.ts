@@ -74,7 +74,7 @@ class BreadCrumbs extends Control<IControlOptions> {
             secondTitle: 'тест1'
         }, {
             id: 6,
-            title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw Настолько длинное название папки что оно не влезет в максимальный размер 1',
+            title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
             secondTitle: 'тест6'
         }].map(function (item) {
             return new Model({
