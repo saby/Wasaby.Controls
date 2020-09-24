@@ -1018,19 +1018,27 @@ const _private = {
     },
     needShowPagingByScrollSize(self, viewSize: number, viewportSize: number): boolean {
         let result = self._pagingVisible;
+        /**
+         * Правильнее будет проверять что размер viewport не равен 0.
+         * Это нужно для того, чтобы пэйджинг в таком случае не отобразился.
+         * viewport может быть равен 0 в том случае, когда блок скрыт через display:none, а после становится видим.
+         */
+        if (viewportSize !== 0) {
+            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
+                self._scrollController?.calculateVirtualScrollHeight() || 0);
+            const proportion = (scrollHeight / viewportSize);
 
-        const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
-                                      self._scrollController?.calculateVirtualScrollHeight() || 0);
-        const proportion = (scrollHeight / viewportSize);
+            // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
+            if (!result) {
+                result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
+            }
 
-        // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
-        if (!result) {
-            result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
-        }
-
-        // если все данные поместились на один экран, то скрываем пэйджинг
-        if (result) {
-            result = proportion > MAX_SCROLL_PAGING_HIDE_PROPORTION;
+            // если все данные поместились на один экран, то скрываем пэйджинг
+            if (result) {
+                result = proportion > MAX_SCROLL_PAGING_HIDE_PROPORTION;
+            }
+        } else {
+            result = false;
         }
 
         // если мы для списка раз вычислили, что нужен пэйджинг, то возвращаем этот статус
