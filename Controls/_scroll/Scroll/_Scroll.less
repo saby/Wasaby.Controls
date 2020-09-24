@@ -39,6 +39,7 @@
 
 .controls-Scroll__userContent {
    flex-shrink: 0;
+   position: relative;
 }
 
 /**
@@ -56,6 +57,16 @@
    z-index: @z-index_Scroll-contentEnvironment;
    position: absolute;
    pointer-events: none;
+}
+
+.controls-Scroll__shadow-overflow {
+      z-index: @z-index_Scroll-contentEnvironment + 1;
+      position: absolute;
+      pointer-events: none;
+      left: 0;
+      right: 0;
+      height: 9px;
+      background: linear-gradient(@background-color 10%, rgba(@background-color, 0));
 }
 
 .controls-Scroll__shadow_horizontal {
