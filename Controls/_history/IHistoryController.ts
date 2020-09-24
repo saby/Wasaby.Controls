@@ -1,23 +1,24 @@
 import {IControlOptions} from 'UI/Base';
-import {ISourceOptions, IFilterOptions} from 'Controls/interface';
+import {IFilterOptions} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 export type TKey = string|number|null;
 import {Model} from 'Types/entity';
-import {ICrudPlus} from 'Types/source';
+import {Source} from 'Controls/history';
 
-export default interface IDropdownHistoryController {
-    update(newOptions: IDropdownHistoryControllerOptions): void;
+export default interface IHistoryController {
+    updateOptions(newOptions: IHistoryControllerOptions): void;
     setHistory(history?: RecordSet): void;
-    getPreparedSource(): ICrudPlus;
+    getPreparedSource(): Source;
     getPreparedFilter(): object;
     getPreparedItem(item: Model): Model;
     getPreparedItems(items?: RecordSet, history?: RecordSet): RecordSet;
     updateHistory(items: RecordSet): void;
-    hasHistory(options: IDropdownHistoryControllerOptions): boolean;
+    hasHistory(options: IHistoryControllerOptions): boolean|string;
     getItemsWithHistory(): RecordSet;
 }
 
-export interface IDropdownHistoryControllerOptions extends IControlOptions, IFilterOptions, ISourceOptions {
+export interface IHistoryControllerOptions extends IControlOptions, IFilterOptions {
+    source: Source;
     historyId?: string;
     historyNew?: string;
 }

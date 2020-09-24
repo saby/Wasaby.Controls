@@ -5,6 +5,7 @@ import * as Utils from 'Types/util';
 import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
 import {tmplNotify} from 'Controls/eventUtils';
 import Controller from 'Controls/_dropdown/_Controller';
+import {Controller as HistoryController} from 'Controls/history';
 import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ISingleSelectableOptions, IBorderStyleOptions, IValidationStatusOptions} from 'Controls/interface';
@@ -14,7 +15,6 @@ import {IStickyPopupOptions} from 'Controls/popup';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/fastOpenUtils';
 import {generateStates} from 'Controls/input';
-import HistoryController from 'Controls/_dropdown/HistoryController';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions, IBorderStyleOptions,
     IValidationStatusOptions {
@@ -136,8 +136,7 @@ class ComboBox extends BaseDropdown {
             right: 'menu-xs',
             left: 'menu-xs'
          },
-         markerVisibility: 'hidden',
-         theme: options.theme
+         markerVisibility: 'hidden'
       };
       const controllerOptions = getDropdownControllerOptions(options, comboBoxConfig);
       return { ...controllerOptions, ...{

@@ -4,7 +4,7 @@ import * as Control from 'Core/Control';
 import {StickyOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
 import {factory} from 'Types/chain';
-import {isHistorySource} from 'Controls/_dropdown/dropdownHistoryUtils';
+import * as cInstance from 'Core/core-instance';
 import {prepareEmpty} from 'Controls/_dropdown/Util';
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
@@ -60,7 +60,7 @@ export default class _Controller implements IDropdownController {
             .addCallback((items) => {
                const beforeMountResult = {};
 
-               if (isHistorySource(this._source)) {
+               if (cInstance.instanceOfModule(this._source, 'Controls/history:Source')) {
                   beforeMountResult.history = this._source.getHistory();
                   beforeMountResult.items = this._source.getItems(false);
                } else {
@@ -330,10 +330,10 @@ export default class _Controller implements IDropdownController {
                              selectedKeys: string[],
                              items: RecordSet<Model>): Promise<RecordSet> {
       const filter = {...options.filter};
-      filter[options.keyProperty] = selectedKeys;
+      filter[options.menuOptions.keyProperty] = selectedKeys;
       const config = {
          source: options.source,
-         keyProperty: options.keyProperty,
+         keyProperty: options.menuOptions.keyProperty,
          filter
       };
       return this._loadItems(config).then((newItems) => {

@@ -1,10 +1,8 @@
 import { assert } from 'chai';
 import {Memory} from 'Types/source';
-import {Source} from 'Controls/history';
-import {HistoryController} from 'Controls/dropdown';
-import * as cInstance from 'Core/core-instance';
+import {Source, Controller as HistoryController} from 'Controls/history';
 
-describe('Controls/_dropdown/HistoryController', () => {
+describe('Controls/_history/Controller', () => {
     const items = [
         {
             id: '1',
@@ -30,13 +28,13 @@ describe('Controls/_dropdown/HistoryController', () => {
             data: items
         })
     };
-    const getDropdownHistoryController = (config) => {
+    const getHistoryController = (config) => {
         const historyController = new HistoryController(config);
         return historyController;
     };
 
     it('getPreparedItem', () => {
-        let historyController = getDropdownHistoryController(controllerConfig);
+        const historyController = getHistoryController(controllerConfig);
 
         historyController._source = 'testSource';
         let item = historyController.getPreparedItem('item', 'key');

@@ -14,7 +14,7 @@ import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/fastOpenUtils';
-import HistoryController from 'Controls/_dropdown/HistoryController';
+import {Controller as HistoryController} from 'Controls/history';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 
@@ -275,7 +275,7 @@ export default class Input extends BaseDropdown {
    }
 
    _beforeUpdate(options: IInputOptions): void {
-      this._historyController.update(this._getHistoryControllerOptions(options));
+      this._historyController.updateOptions(this._getHistoryControllerOptions(options));
       this._controller.update(this._getControllerOptions(options));
    }
 
@@ -417,7 +417,6 @@ export default class Input extends BaseDropdown {
          controllerItems.prepend(newItems);
          this._controller.updateItems(controllerItems);
       }
-      this._controller.handleSelectorResult(data);
       this._selectedItemsChangedHandler(factory(selectedItems).toArray());
    }
 

@@ -2,7 +2,7 @@ import {Control, IControlOptions} from 'UI/Base';
 import {constants, detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import IDropdownController from 'Controls/_dropdown/interface/IDropdownController';
-import IDropdownHistoryController from 'Controls/_dropdown/interface/IDropdownHistoryController';
+import {IHistoryController} from 'Controls/history';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {DependencyTimer} from 'Controls/fastOpenUtils';
 import {RecordSet} from 'Types/collection';
@@ -14,7 +14,7 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
     protected _controller: IDropdownController = null;
     protected _isOpened: boolean = false;
     protected _dependenciesTimer: DependencyTimer = null;
-    protected _historyController: IDropdownHistoryController = null;
+    protected _historyController: IHistoryController = null;
 
     reload(): void {
         this._controller.reload();

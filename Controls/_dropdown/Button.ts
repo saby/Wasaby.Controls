@@ -3,7 +3,7 @@ import template = require('wml!Controls/_dropdown/Button/Button');
 import {cssStyleGeneration} from 'Controls/_dropdown/Button/MenuUtils';
 import {tmplNotify} from 'Controls/eventUtils';
 import Controller from 'Controls/_dropdown/_Controller';
-import HistoryController from 'Controls/_dropdown/HistoryController';
+import {Controller as HistoryController} from 'Controls/history';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadItems} from 'Controls/_dropdown/Util';
 import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
@@ -110,7 +110,7 @@ export default class Button extends BaseDropdown {
    }
 
    _beforeUpdate(options: IButtonOptions): void {
-      this._historyController.update(this._getHistoryControllerOptions(options));
+      this._historyController.updateOptions(this._getHistoryControllerOptions(options));
       this._controller.update(this._getControllerOptions(options));
       if (this._options.size !== options.size || this._options.icon !== options.icon ||
          this._options.viewMode !== options.viewMode) {
@@ -134,13 +134,13 @@ export default class Button extends BaseDropdown {
          headingCaption: options.caption,
          headingIcon: options.icon,
          headingIconSize: options.iconSize,
-         className: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
-         hasIconPin: this._hasIconPin
+         className: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme
       };
       const controllerOptions = getDropdownControllerOptions(options, buttonConfig);
       return { ...controllerOptions, ...{
             filter: this._historyController.getPreparedFilter(),
             source: this._historyController.getPreparedSource(),
+            openerControl: this,
             dataLoadCallback: this._dataLoadCallback.bind(this)
          }
       };
