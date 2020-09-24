@@ -597,21 +597,21 @@ const _private = {
         }
     },
     spaceHandler(self, event) {
-        if (self._options.checkboxReadOnly || self._options.multiSelectVisibility === 'hidden') {
-            return;
-        }
-        const model = self.getViewModel();
-        let toggledItemId = model.getMarkedKey();
+        if (!self._options.checkboxReadOnly && self._options.multiSelectVisibility !== 'hidden') {
+            const model = self.getViewModel();
+            let toggledItemId = model.getMarkedKey();
 
-        if (!model.getItemById(toggledItemId) && model.getCount()) {
-            toggledItemId = model.at(0).getContents().getId();
+            if (!model.getItemById(toggledItemId) && model.getCount()) {
+                toggledItemId = model.at(0).getContents().getId();
+            }
+
+            if (toggledItemId) {
+                const result = _private.getSelectionController(self).toggleItem(toggledItemId);
+                _private.changeSelection(self, result);
+            }
         }
 
-        if (toggledItemId) {
-            const result = _private.getSelectionController(self).toggleItem(toggledItemId);
-            _private.changeSelection(self, result);
-            _private.moveMarkerToNext(self, event);
-        }
+        _private.moveMarkerToNext(self, event);
     },
 
     /**
@@ -2191,7 +2191,7 @@ const _private = {
         self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), isAllSelected], {bubbling: true});
     },
 
-    changeSelection(self: typeof BaseControl, newSelection: ISelectionObject): void {
+    changeSelection(self: typeof BaseControl, newSelection: ISelectionObject): Promise<ISelectionObject>|ISelectionObject {
         const controller = _private.getSelectionController(self);
         const selectionDifference = controller.getSelectionDifference(newSelection);
         const result = self._notify('beforeSelectionChanged', [selectionDifference]);
@@ -2208,6 +2208,8 @@ const _private = {
             _private.notifySelection(self, newSelection);
             controller.setSelection(newSelection);
         }
+
+        return result;
     },
 
     // endregion
@@ -2230,7 +2232,7 @@ const _private = {
                 self._notify('activeElementChanged', [result.activeElement]);
             }
             if (result.scrollToActiveElement) {
-                
+
                 // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
                 self._keepScrollAfterReload = true;
 
@@ -3387,8 +3389,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._markerController = null;
         }
 
-        if (newOptions.multiSelectVisibility !== 'hidden' && newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
-            const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
+        const selectedKeysChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys);
+        // В browser когда скрывают видимость чекбоксов, еще и сбрасывают selection
+        if (newOptions.multiSelectVisibility !== 'hidden' || selectedKeysChanged && newOptions.selectedKeys.length === 0) {
+            const selectionChanged = selectedKeysChanged
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
             if (selectionChanged) {
@@ -3398,7 +3402,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 };
                 _private.changeSelection(this, newSelection);
             }
-        } else if (_private.hasSelectionController(this) && newOptions.multiSelectVisibility === 'hidden') {
+        } else if (_private.hasSelectionController(this)) {
             _private.getSelectionController(this).destroy();
             this._selectionController = null;
         }
