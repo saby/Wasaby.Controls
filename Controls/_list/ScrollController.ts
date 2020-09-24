@@ -454,9 +454,11 @@ export default class ScrollController {
         });
     }
 
-    updateItemsHeights(itemsHeights: IItemsHeights) {
+    updateItemsHeights(itemsHeights: IItemsHeights): boolean {
         if (this._virtualScroll) {
+            const itemsUpdated = this._virtualScroll.rangeChanged;
             this._virtualScroll.updateItemsHeights(itemsHeights);
+            return itemsUpdated;
         }
     }
 
