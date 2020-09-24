@@ -1816,6 +1816,9 @@ const _private = {
      */
     showError(self: BaseControl, errorConfig: dataSourceError.ViewConfig): void {
         self.__error = errorConfig;
+        if (errorConfig && (errorConfig.mode === dataSourceError.Mode.include)) {
+            self._scrollController = null;
+        }
     },
 
     hideError(self: BaseControl): void {
