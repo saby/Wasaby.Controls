@@ -2,6 +2,7 @@ import {ItemsUtil} from 'Controls/list';
 import {Record, Model} from 'Types/entity';
 import {getFontWidth} from 'Controls/Utils/getFontWidth';
 import {IMultilinePathOptions} from './MultilinePath';
+import PrepareDataUtil from './PrepareDataUtil';
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 
 //TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
@@ -9,24 +10,6 @@ const ARROW_WIDTH = 16;
 const PADDING_RIGHT = 2;
 
 export default {
-    shouldRedraw(currentItems: Record[], newItems: Record[]): boolean {
-        return currentItems !== newItems;
-    },
-    getItemData(index: number, items: Record[], arrow: boolean = false, withOverflow: boolean = false): object {
-        const currentItem = items[index];
-        const count = items.length;
-        return {
-            getPropValue: ItemsUtil.getPropertyValue,
-            item: currentItem,
-            hasArrow: count > 1 && index !== 0 || arrow,
-            withOverflow
-        };
-    },
-    drawBreadCrumbsItems(items: Record[], arrow: boolean = false): any[] {
-        return items.map((item, index, items) => {
-            return this.getItemData(index, items, arrow);
-        });
-    },
     canShrink(minWidth: number, itemWidth: number, currentWidth: number, availableWidth: number): boolean {
         return currentWidth + minWidth - itemWidth < availableWidth;
     },
@@ -51,7 +34,7 @@ export default {
             // Если крошек меньше двух, располагаем их в первом контейнере
             firstContainerItems = items.map((item, index, items) => {
                 const withOverflow = items[index].get(options.displayProperty).length > 3;
-                return this.getItemData(index, items, false, withOverflow);
+                return PrepareDataUtil.getItemData(index, items, false, withOverflow);
             });
             return {
                 visibleItems: firstContainerItems,
@@ -75,7 +58,7 @@ export default {
                 firstContainerItems.push(items[indexEdge]);
                 indexEdge++;
             }
-            visibleItems = this.drawBreadCrumbsItems(firstContainerItems);
+            visibleItems = PrepareDataUtil.drawBreadCrumbsItems(firstContainerItems);
             visibleItems[visibleItems.length - 1].withOverflow = true;
             return {
                 visibleItems,
@@ -125,7 +108,7 @@ export default {
             index = index === -1 && indexEdge === 0 ? 0 : index;
             // заполняем крошками, которые влезли, второй контейнер (не считая последней)
             for (let j = indexEdge; j <= index; j++) {
-                secondContainerItems.push(this.getItemData(j, items, true, j === index && items[j].get(options.displayProperty).length > 3));
+                secondContainerItems.push(PrepareDataUtil.getItemData(j, items, true, j === index && items[j].get(options.displayProperty).length > 3));
             }
             // добавляем точки
             const dotsItem = new Model({
@@ -142,7 +125,7 @@ export default {
                 hasArrow: true
             });
             // добавляем последнюю папку
-            secondContainerItems.push(this.getItemData(items.length - 1, items, true, false));
+            secondContainerItems.push(PrepareDataUtil.getItemData(items.length - 1, items, true, false));
 
             return secondContainerItems;
 
@@ -150,7 +133,7 @@ export default {
             // если все остальные крошки поместились - пушим по второй контейнер
             const secondContainerItems = [];
             for (let j = indexEdge; j < items.length; j++) {
-                secondContainerItems.push(this.getItemData(j, items, true, j === items.length - 2 && items[items.length - 2].get(options.displayProperty).length > 3));
+                secondContainerItems.push(PrepareDataUtil.getItemData(j, items, true, j === items.length - 2 && items[items.length - 2].get(options.displayProperty).length > 3));
             }
             if (secondContainerItems.length <= 2) {
                 secondContainerItems.forEach((item) => {

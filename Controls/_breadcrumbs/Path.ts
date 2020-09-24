@@ -1,11 +1,10 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import BreadCrumbsUtil from './Utils';
+import PrepareDataUtil from './PrepareDataUtil';
 import {tmplNotify} from 'Controls/eventUtils';
 import template = require('wml!Controls/_breadcrumbs/Path/Path');
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
-import {Record, Model} from 'Types/entity';
-import {Logger} from 'UI/Utils';
+import {Record} from 'Types/entity';
 
 const ARROW_WIDTH = 16;
 const PADDING_RIGHT = 2;
@@ -57,26 +56,33 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
     protected _dotsWidth: number = 0;
     protected _indexEdge: number = 0;
     protected _items: Record[] = [];
+    protected NewUtil: object;
 
     protected _beforeMount(options?: IBreadCrumbsOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
-        if (!options.containerWidth && options.items && options.items.length > 0) {
-            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(options.items);
-        } else if (receivedState) {
-            this._dotsWidth = this._getDotsWidth(options.fontSize);
-            this._prepareData(options, options.containerWidth);
-        } else {
-            return new Promise((resolve) => {
-                loadFontWidthConstants().then((getTextWidth: Function) => {
-                    if (options.items && options.items.length > 0) {
+        if (options.items && options.items.length > 0) {
+            if (!options.containerWidth) {
+                this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(options.items);
+            } else {
+                const arrPromise = [];
+                arrPromise.push(import('Controls/_breadcrumbs/Utils'));
+                if (!receivedState) {
+                    arrPromise.push(loadFontWidthConstants());
+                }
+                return Promise.all(arrPromise).then((res) => {
+                    this.NewUtil = res[0].default;
+                    if (receivedState) {
+                        this._dotsWidth = this._getDotsWidth(options.fontSize);
+                        this._prepareData(options, options.containerWidth);
+                    } else {
+                        const getTextWidth = res[1];
                         this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
                         this._prepareData(options, options.containerWidth, getTextWidth);
+                        return {
+                            items: options.items
+                        };
                     }
-                    resolve({
-                            items: this._items
-                        }
-                    );
                 });
-            });
+            }
         }
     }
 
@@ -94,12 +100,12 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
             this._dotsWidth = this._getDotsWidth(newOptions.fontSize);
         }
         const isDataChange = isItemsChanged || isContainerWidthChanged || isFontSizeChanged;
-        if (isDataChange && this._width) {
-            this._calculateBreadCrumbsToDraw(newOptions.items, newOptions);
-        }
-        // если нет опции ширины контейнера, не считаем и идем по старой ветке
-        if (isDataChange && !this._width) {
-            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(newOptions.items);
+        if (isDataChange && newOptions.items) {
+            if (this._width) {
+                this._calculateBreadCrumbsToDraw(newOptions.items, newOptions);
+            } else {
+                this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(newOptions.items);
+            }
         }
     }
     private _getDotsWidth(fontSize: string, getTextWidth: Function = this._getTextWidth): number {
@@ -121,7 +127,7 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
     }
 
     private _calculateBreadCrumbsToDraw(items: Record[], options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): void {
-        this._visibleItems = BreadCrumbsUtil.calculateItemsWithDots(items, options, 0, this._width, this._dotsWidth, getTextWidth);
+        this._visibleItems = this.NewUtil.calculateItemsWithDots(items, options, 0, this._width, this._dotsWidth, getTextWidth);
         this._visibleItems[0].hasArrow = false;
         this._indexEdge = 0;
     }

@@ -1,6 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
-import BreadCrumbsUtil from './Utils';
+import PrepareDataUtil from './PrepareDataUtil';
 import {ItemsUtil} from 'Controls/list';
 import {tmplNotify} from 'Controls/eventUtils';
 import {applyHighlighter} from 'Controls/_breadcrumbs/resources/applyHighlighter';
@@ -112,6 +112,9 @@ const PADDING_RIGHT = 2;
  *    </Controls.breadcrumbs:HeadingPath>
  * </pre>
  */
+interface IReceivedState {
+    items: Record[];
+}
 
 class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     protected _template: TemplateFunction = template;
@@ -128,27 +131,34 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     protected _indexEdge: number = 0;
     protected _items: Record[] = [];
     protected _isHomeVisible: boolean = false;
+    protected NewUtil: object;
 
-    protected _beforeMount(options?: IBreadCrumbsOptions, contexts?: object, receivedState?: unknown): Promise<unknown> | Promise<void> | void {
+    protected _beforeMount(options?: IBreadCrumbsOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
         this._prepareItems(options);
-        if (!options.containerWidth && this._breadCrumbsItems) {
-            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
-        } else if (receivedState) {
-            this._dotsWidth = this._getDotsWidth(options.fontSize);
-            this._prepareData(options, options.containerWidth);
-        } else {
-            return new Promise((resolve) => {
-                loadFontWidthConstants().then((getTextWidth: Function) => {
-                    if (options.items && options.items.length > 0) {
+        if (this._breadCrumbsItems) {
+            if (!options.containerWidth) {
+                this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
+            } else {
+                const arrPromise = [];
+                arrPromise.push(import('Controls/_breadcrumbs/Utils'));
+                if (!receivedState) {
+                    arrPromise.push(loadFontWidthConstants());
+                }
+                return Promise.all(arrPromise).then((res) => {
+                    this.NewUtil = res[0].default;
+                    if (receivedState) {
+                        this._dotsWidth = this._getDotsWidth(options.fontSize);
+                        this._prepareData(options, options.containerWidth);
+                    } else {
+                        const getTextWidth = res[1];
                         this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
                         this._prepareData(options, options.containerWidth, getTextWidth);
+                        return {
+                            items: options.items
+                        };
                     }
-                    resolve({
-                            items: this._items
-                        }
-                    );
                 });
-            });
+            }
         }
     }
 
@@ -166,15 +176,16 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
             this._dotsWidth = this._getDotsWidth(newOptions.fontSize);
         }
         const isDataChange = isItemsChanged || isContainerWidthChanged || isFontSizeChanged;
+
         if (isDataChange) {
             this._prepareItems(newOptions);
-        }
-        if (isDataChange && this._width) {
-            this._calculateBreadCrumbsToDraw(this._breadCrumbsItems, newOptions);
-        }
-        // если нет опции ширины контейнера, не считаем и идем по старой ветке
-        if (isDataChange && !this._width && this._breadCrumbsItems) {
-            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
+            if (this._breadCrumbsItems) {
+                if (this._width) {
+                    this._calculateBreadCrumbsToDraw(this._breadCrumbsItems, newOptions);
+                } else {
+                    this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
+                }
+            }
         }
     }
     private _getDotsWidth(fontSize: string, getTextWidth: Function = this._getTextWidth): number {
@@ -192,7 +203,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     }
     private _calculateBreadCrumbsToDraw(items: Record[], options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): void {
         if (items && items.length > 0) {
-            this._visibleItems = BreadCrumbsUtil.calculateItemsWithDots(items, options, 0, this._width, this._dotsWidth, getTextWidth);
+            this._visibleItems = this.NewUtil.calculateItemsWithDots(items, options, 0, this._width, this._dotsWidth, getTextWidth);
             this._visibleItems[0].hasArrow = false;
             this._indexEdge = 0;
         }
