@@ -340,7 +340,7 @@ export class Controller {
         /**
          * Проверяем что элемент существует, в противном случае пытаемся его найти.
          */
-        if (!activeItem && (typeof this._collection.getItemBySourceKey !== 'undefined')) {
+        if (activeItem === undefined && (typeof this._collection.getItemBySourceKey !== 'undefined' && this._activeItemKey)) {
             activeItem = this._collection.getItemBySourceKey(this._activeItemKey);
         }
         return activeItem;
