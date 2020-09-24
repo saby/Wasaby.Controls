@@ -695,12 +695,53 @@ define([
             const clickEvent = {
                target: {closest: () => {}}
             };
+            explorer._children.treeControl = { getEditingItem: () => {} };
             assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => true  }, clickEvent) });
             assert.equal(rootBefore, explorer._root);
             assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => false }, clickEvent) });
             assert.equal(rootBefore, explorer._root);
             assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => null  }, clickEvent) });
             assert.equal(rootBefore, explorer._root);
+         });
+
+         it('should open node by item click with option expandByItemClick in search mode', () => {
+            const cfg = {
+               editingConfig: {},
+               expandByItemClick: true,
+               nodeProperty: 'node@'
+            };
+            const explorer = new explorerMod.View(cfg);
+            explorer.saveOptions(cfg);
+            explorer._viewMode = 'search';
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: null
+               }
+            };
+            const rootBefore = explorer._root;
+            explorer._children = {
+               treeControl: {
+                  _children: {
+
+                  },
+                  commitEdit: () => ({
+                     addCallback(callback) {
+                        callback();
+                        assert.notEqual(rootBefore, explorer._root);
+                     }
+                  }),
+                  getEditingItem: () => {}
+               }
+            };
+            const event = { stopPropagation: () => {} };
+            const clickEvent = {
+               target: {closest: () => {}}
+            };
+            const item = {
+               get: () => true,
+               getId: () => 'itemId'
+            };
+            assert.doesNotThrow(() => { explorer._onItemClick(event, item, clickEvent) });
          });
 
          it('_onItemClick', async function() {
@@ -736,8 +777,8 @@ define([
             explorer._children = {
                treeControl: {
                   _children: {
-
                   },
+                  getEditingItem: () => {},
                   commitEdit: () => commitEditResult
                }
             };
@@ -1211,6 +1252,9 @@ define([
                null: {
                   markedKey: null
                }
+            };
+            explorer._children.treeControl = {
+               getEditingItem: () => {}
             };
 
             const mockEvent = { stopPropagation: () => {} };

@@ -79,8 +79,9 @@ const _private = {
         cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
         const popupCfg = self._getPopupConfig(cfg, sizes);
 
-        cfg.position = StickyStrategy.getPosition(popupCfg, self._getTargetCoords(cfg, sizes));
-        _private.updateStickyPosition(cfg, popupCfg);
+        const targetCoords = self._getTargetCoords(cfg, sizes);
+        cfg.position = StickyStrategy.getPosition(popupCfg, targetCoords);
+        _private.updateStickyPosition(cfg, popupCfg, targetCoords);
 
         cfg.positionConfig = popupCfg;
         _private.updateClasses(cfg, popupCfg);
@@ -115,11 +116,14 @@ const _private = {
         }
     },
 
-    updateStickyPosition(item, position): void {
+    updateStickyPosition(item, position, targetCoords): void {
         const newStickyPosition = {
             targetPoint: position.targetPoint,
             direction: position.direction,
-            offset: position.offset
+            offset: position.offset,
+            position: item.position,
+            targetPosition: targetCoords,
+            margins: item.margins
         };
         // быстрая проверка на равенство простых объектов
         if (JSON.stringify(item.popupOptions.stickyPosition) !== JSON.stringify(newStickyPosition)) {
@@ -198,8 +202,9 @@ const _private = {
  * @category Popup
  */
 class StickyController extends BaseController {
-    TYPE = 'Sticky';
+    TYPE: string = 'Sticky';
     _private = _private;
+    _bodyOverflow: string;
 
     elementCreated(item, container) {
         if (this._isTargetVisible(item)) {
@@ -214,7 +219,8 @@ class StickyController extends BaseController {
 
     elementUpdated(item, container) {
         _private.setStickyContent(item);
-        _private.updateStickyPosition(item, item.positionConfig);
+        const targetCoords = this._getTargetCoords(item, item.positionConfig.sizes);
+        _private.updateStickyPosition(item, item.positionConfig, targetCoords);
         if (this._isTargetVisible(item)) {
             _private.updateClasses(item, item.positionConfig);
 
@@ -266,7 +272,16 @@ class StickyController extends BaseController {
         if (!item.popupOptions.height) {
             container.style.height = 'auto';
         }
-        const hasScrollAfterReset = document && (document.body.scrollHeight > document.body.clientHeight);
+        let hasScrollAfterReset = document && (document.body.scrollHeight > document.body.clientHeight);
+        if (hasScrollAfterReset) {
+            // Скролл на боди может быть отключен через стили
+           if (!this._bodyOverflow) {
+               this._bodyOverflow = getComputedStyle(document.body).overflowY;
+           }
+           if (this._bodyOverflow === 'hidden') {
+               hasScrollAfterReset = false;
+           }
+        }
 
         /* end: We remove the set values that affect the size and positioning to get the real size of the content */
 
