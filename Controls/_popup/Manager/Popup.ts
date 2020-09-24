@@ -3,7 +3,7 @@ import {debounce, delay as runDelayed} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IPopupOptions} from 'Controls/_popup/interface/IPopup';
-import {RegisterClass, RegisterUtil, UnregisterUtil} from 'Controls/event';
+import {RegisterClass} from 'Controls/event';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 
 import * as template from 'wml!Controls/_popup/Manager/Popup';
@@ -12,8 +12,6 @@ import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
 const RESIZE_DELAY = 10;
 
 interface IPopupControlOptions extends IPopupOptions, IControlOptions {}
-
-type UpdateCallback = () => void;
 
 class Popup extends Control<IPopupControlOptions> {
 
@@ -45,10 +43,6 @@ class Popup extends Control<IPopupControlOptions> {
     protected callbackCreated: Function|null; // TODO: COMPATBILE
 
     private _isPopupMounted: boolean = false;
-
-    // Register the openers that initializing inside current popup
-    // After updating the position of the current popup, calls the repositioning of popup from child openers
-    protected _openersUpdateCallback: UpdateCallback[] = [];
 
     protected _isEscDown: boolean = false;
 
@@ -83,7 +77,6 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     protected _afterMount(): void {
-        RegisterUtil(this, 'controlResize', this._controlResizeOuterHandler.bind(this));
         this._isPopupMounted = true;
 
         /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
@@ -125,8 +118,6 @@ class Popup extends Control<IPopupControlOptions> {
         if (this._resizeRegister) {
             this._resizeRegister.destroy();
         }
-        UnregisterUtil(this, 'scroll');
-        UnregisterUtil(this, 'controlResize');
     }
 
     protected _registerHandler(event, registerType, component, callback, config): void {
@@ -177,23 +168,6 @@ class Popup extends Control<IPopupControlOptions> {
         ManagerController.notifyToManager('popupAnimated', [this._options.id]);
     }
 
-    protected _registerOpenerUpdateCallback(event: SyntheticEvent<Event>, callback: UpdateCallback): void {
-        this._openersUpdateCallback.push(callback);
-    }
-
-    protected _unregisterOpenerUpdateCallback(event: SyntheticEvent<Event>, callback: UpdateCallback): void {
-        const index = this._openersUpdateCallback.indexOf(callback);
-        if (index > -1) {
-            this._openersUpdateCallback.splice(index, 1);
-        }
-    }
-
-    protected _callOpenersUpdate(): void {
-        for (let i = 0; i < this._openersUpdateCallback.length; i++) {
-            this._openersUpdateCallback[i]();
-        }
-    }
-
     protected _showIndicatorHandler(event: Event, config: object = {}, promise?: Promise<any>): string {
         // Вернул для индикаторов, вызванных из кода
         event.stopPropagation();
@@ -230,11 +204,6 @@ class Popup extends Control<IPopupControlOptions> {
     private _prepareEventArs(event: Event, args: IArguments): unknown[] {
         event.stopPropagation();
         return Array.prototype.slice.call(args, 1);
-    }
-
-    protected _controlResizeOuterHandler(): void {
-        // After updating popup position we will updating the position of the popups open with it.
-        runDelayed(this._callOpenersUpdate.bind(this));
     }
 
     protected _controlResizeHandler(): void {

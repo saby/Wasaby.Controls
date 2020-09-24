@@ -679,6 +679,31 @@ define([
 
          });
 
+         it('should do nothing by item click with option wxpandByItemClick', () => {
+            const cfg = {
+               editingConfig: {},
+               expandByItemClick: true
+            };
+            const explorer = new explorerMod.View(cfg);
+            explorer.saveOptions(cfg);
+
+            const rootBefore = explorer._root;
+            explorer.commitEdit = () => {
+               throw Error('Explorer:commitEdit shouldn\'t be called!')
+            };
+            const event = { stopPropagation: () => {} };
+            const clickEvent = {
+               target: {closest: () => {}}
+            };
+            explorer._children.treeControl = { getEditingItem: () => {} };
+            assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => true  }, clickEvent) });
+            assert.equal(rootBefore, explorer._root);
+            assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => false }, clickEvent) });
+            assert.equal(rootBefore, explorer._root);
+            assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => null  }, clickEvent) });
+            assert.equal(rootBefore, explorer._root);
+         });
+
          it('_onItemClick', async function() {
             isNotified = false;
             isWeNotified = false;
@@ -712,8 +737,8 @@ define([
             explorer._children = {
                treeControl: {
                   _children: {
-
                   },
+                  getEditingItem: () => {},
                   commitEdit: () => commitEditResult
                }
             };
@@ -1187,6 +1212,9 @@ define([
                null: {
                   markedKey: null
                }
+            };
+            explorer._children.treeControl = {
+               getEditingItem: () => {}
             };
 
             const mockEvent = { stopPropagation: () => {} };
