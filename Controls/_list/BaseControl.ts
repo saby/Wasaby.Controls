@@ -1510,7 +1510,7 @@ const _private = {
                     if (action === IObservable.ACTION_RESET) {
                         result = self._scrollController.handleResetItems();
                     }
-                    if (result && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
+                    if (result) {
                         _private.handleScrollControllerResult(self, result);
                     }
 
@@ -2220,15 +2220,12 @@ const _private = {
                     self._notify('disableVirtualNavigation', [], { bubbling: true });
                 }
             }
-            if (result.activeElement) {
+            if (result.activeElement && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
                 self._notify('activeElementChanged', [result.activeElement]);
-            }
-            if (result.scrollToActiveElement) {
-                
-                // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
-                self._keepScrollAfterReload = true;
-
-                _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+                if (result.scrollToActiveElement) {
+                    // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
+                self._keepScrollAfterReload = true;_private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+                }
             }
         }
         if (result.triggerOffset) {
