@@ -1438,13 +1438,17 @@ define([
                cancelEditCalled = true;
             };
 
-            treeControl._beforeUpdate({ root: 'test2' });
+            let cfgClone = {...cfg};
+            cfgClone.root = 'test2';
+            treeControl._beforeUpdate(cfgClone);
             assert.isTrue(cancelEditCalled);
 
             treeControl = correctCreateTreeControl({...cfg, editingConfig: undefined});
             cancelEditCalled = false;
 
-            treeControl._beforeUpdate({ root: 'test3' });
+            cfgClone = {...cfg, editingConfig: undefined};
+            cfgClone.root = 'test3';
+            treeControl._beforeUpdate(cfgClone);
             assert.isFalse(cancelEditCalled);
          });
       });
