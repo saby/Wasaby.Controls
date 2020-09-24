@@ -406,7 +406,7 @@ export default class _Controller implements IDropdownController {
       }
    }
 
-   private _loadItemsTemplates(options): Promise<any> {
+   private _loadItemsTemplates(options: IDropdownControllerOptions): Promise<any> {
       if (!this._loadItemsTempPromise) {
          const templatesToLoad = this._getItemsTemplates(options);
          this._loadItemsTempPromise = mStubs.require(templatesToLoad);
@@ -414,10 +414,10 @@ export default class _Controller implements IDropdownController {
       return this._loadItemsTempPromise;
    }
 
-   private _loadMenuTemplates(options: object): Promise<any> {
+   private _loadMenuTemplates(options: IDropdownControllerOptions): Promise<any> {
       if (!this._loadMenuTempPromise) {
-         let templatesToLoad = ['Controls/menu'];
-         let templates = ['headTemplate', 'itemTemplate', 'footerContentTemplate'];
+         const templatesToLoad = ['Controls/menu'];
+         const templates = ['headTemplate', 'itemTemplate', 'footerContentTemplate'];
          templates.forEach((template) => {
             if (typeof options.menuOptions[template] === 'string') {
                templatesToLoad.push(options.menuOptions[template]);
