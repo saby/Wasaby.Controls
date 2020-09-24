@@ -704,6 +704,46 @@ define([
             assert.equal(rootBefore, explorer._root);
          });
 
+         it('should open node by item click with option expandByItemClick in search mode', () => {
+            const cfg = {
+               editingConfig: {},
+               expandByItemClick: true,
+               nodeProperty: 'node@'
+            };
+            const explorer = new explorerMod.View(cfg);
+            explorer.saveOptions(cfg);
+            explorer._viewMode = 'search';
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: null
+               }
+            };
+            const rootBefore = explorer._root;
+            explorer._children = {
+               treeControl: {
+                  _children: {
+
+                  },
+                  commitEdit: () => ({
+                     addCallback(callback) {
+                        callback();
+                        assert.notEqual(rootBefore, explorer._root);
+                     }
+                  }),
+                  getEditingItem: () => {}
+               }
+            };
+            const event = { stopPropagation: () => {} };
+            const clickEvent = {
+               target: {closest: () => {}}
+            };
+            const item = {
+               get: () => true,
+               getId: () => 'itemId'
+            };
+            assert.doesNotThrow(() => { explorer._onItemClick(event, item, clickEvent) });
+         });
+
          it('_onItemClick', async function() {
             isNotified = false;
             isWeNotified = false;

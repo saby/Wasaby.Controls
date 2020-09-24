@@ -668,10 +668,11 @@ var
 
          if (shouldHandleClick) {
               const nodeType = item.get(this._options.nodeProperty);
+              const isSearchMode = this._viewMode === 'search';
 
               // Проваливание возможно только в узел (ITEM_TYPES.node).
               // Проваливание невозможно, если по клику следует развернуть узел/скрытый узел.
-              if ((this._options.expandByItemClick && nodeType !== ITEM_TYPES.leaf) || (nodeType !== ITEM_TYPES.node)) {
+              if ((!isSearchMode && this._options.expandByItemClick && nodeType !== ITEM_TYPES.leaf) || (nodeType !== ITEM_TYPES.node)) {
                   return res;
               }
 
