@@ -140,7 +140,7 @@
 
 .controls-PeriodLiteDialog__close_theme-@{themeName} {
    position: absolute;
-   right: @closeButton_right_shortDatePicker;
+   right: -(@icon-size_m + @closeButton_offset-left_shortDatePicker);
    top: 0;
    color: @closeButton_color_shortDatePicker;
    background-color: @closeButton_background-color_shortDatePicker;
@@ -150,9 +150,11 @@
    &::before {
       content: '\e66c';
    }
+}
 
-   &:hover {
-      background-color: rgba(202, 202, 202, 1);
+.ws-is-hover {
+   .controls-PeriodLiteDialog__close_theme-@{themeName}:hover {
+      background-color: @closeButton_hover_background-color_shortDatePicker;
    }
 }
 
