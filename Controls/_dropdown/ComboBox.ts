@@ -198,8 +198,11 @@ class ComboBox extends BaseDropdown {
       }
    }
 
-   protected _deactivated(): void {
-      this.closeMenu();
+   protected _deactivated(event: SyntheticEvent<Event>): void {
+      // если фокус ушел в меню, не закрываем его
+      if (!event.nativeEvent.relatedTarget?.closest('.controls-Menu__popup')) {
+         this.closeMenu();
+      }
    }
 
    //FIXME delete after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
