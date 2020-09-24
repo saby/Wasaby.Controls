@@ -5664,7 +5664,7 @@ define([
                getCount: () => 5,
                isActionsAssigned: function() { return this._isActionsAssigned; }
             },
-            handleSelectionControllerResult: () => {}
+            changeSelection: () => {}
          };
          const sandbox = sinon.createSandbox();
          sandbox.replace(lists.BaseControl._private, 'updateInitializedItemActions', (self, options) => {
@@ -5847,7 +5847,7 @@ define([
                _listViewModel: {
                   getCount: () => 5
                },
-               handleSelectionControllerResult: () => {}
+               changeSelection: () => {}
             };
             items = [{}];
             sandbox = sinon.createSandbox();

@@ -34,7 +34,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
    select(selection: ISelection, key: CrudEntityKey): ISelection {
       if (!this._getItem(key).SelectableItem) {
-         return selection;
+         return clone(selection);
       }
 
       const cloneSelection = clone(selection);
@@ -50,7 +50,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
    unselect(selection: ISelection, key: CrudEntityKey): ISelection {
       if (!this._getItem(key).SelectableItem) {
-         return selection;
+         return clone(selection);
       }
 
       const cloneSelection = clone(selection);
@@ -65,22 +65,13 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    }
 
    selectAll(selection: ISelection): ISelection {
-      const cloneSelection = clone(selection);
-
-      cloneSelection.selected.length = 0;
-      cloneSelection.excluded.length = 0;
-      cloneSelection.selected[0] = ALL_SELECTION_VALUE;
-
-      return cloneSelection;
+      const newSelection = {selected: [], excluded: []};
+      newSelection.selected.push(ALL_SELECTION_VALUE);
+      return newSelection;
    }
 
    unselectAll(selection: ISelection): ISelection {
-      const cloneSelection = clone(selection);
-
-      cloneSelection.selected.length = 0;
-      cloneSelection.excluded.length = 0;
-
-      return cloneSelection;
+      return {selected: [], excluded: []};
    }
 
    toggleAll(selection: ISelection, hasMoreData: boolean): ISelection {
