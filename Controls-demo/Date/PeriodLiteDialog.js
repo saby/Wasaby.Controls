@@ -27,6 +27,9 @@ define('Controls-demo/Date/PeriodLiteDialog', [
          },
          margins: {
             top: 0
+         },
+         targetPosition: {
+            top: 0
          }
       }
    });
