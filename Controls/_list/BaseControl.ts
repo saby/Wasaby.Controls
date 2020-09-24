@@ -4279,6 +4279,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _saveEditingInSource(item: Model, isAdd: boolean): Promise<void> {
         return this.getSourceController().update(item).then(() => {
+            // После выделения слоя логики работы с источником данных в отдельный контроллер,
+            // код ниже должен переехать в него.
             if (isAdd) {
                 this._items.append([item]);
             }
