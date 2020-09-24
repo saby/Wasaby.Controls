@@ -4,7 +4,6 @@
 define([
    'Types/source',
    'Types/collection',
-   'UI/Utils',
    'Controls/list',
    'Controls/tree',
    'Controls/treeGrid',
@@ -21,7 +20,7 @@ define([
    'Controls/listRender',
    'Controls/itemActions',
    'Core/polyfill/PromiseAPIDeferred'
-], function(sourceLib, collection, ui, lists, tree, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, dragNDrop, listRender, itemActions) {
+], function(sourceLib, collection, lists, tree, treeGrid, grid, tUtil, cDeferred, cInstance, Env, clone, entity, popup, listDragNDrop, dragNDrop, listRender, itemActions) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
 
@@ -1515,7 +1514,6 @@ define([
          let instance;
          let event;
          let isHandlerCalled;
-         let stubLogger;
 
          function initTest(options) {
             const source = new sourceLib.Memory({
@@ -1562,11 +1560,6 @@ define([
             event = {
                preventDefault: () => {}
             };
-            stubLogger = sinon.stub(ui.Logger, 'warn');
-         });
-
-         afterEach(() => {
-            stubLogger.restore();
          });
 
          it('should work when itemActions are not initialized', async () => {
@@ -1595,7 +1588,6 @@ define([
             await initTest();
             lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
             lists.BaseControl._private.keyDownDel(instance, event);
-            sinon.assert.called(stubLogger);
             assert.isFalse(isHandlerCalled);
          });
 
@@ -1603,7 +1595,6 @@ define([
             await initTest({ itemActions: [{ id: 1 }, { id: 2 }] });
             lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
             lists.BaseControl._private.keyDownDel(instance, event);
-            sinon.assert.called(stubLogger);
             assert.isFalse(isHandlerCalled);
          });
 
@@ -1614,14 +1605,12 @@ define([
             });
             lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
             lists.BaseControl._private.keyDownDel(instance, event);
-            sinon.assert.called(stubLogger);
             assert.isFalse(isHandlerCalled);
          });
 
-         it('should not work w/o warnings when no item is marked', () => {
+         it('should not work when no item is marked', () => {
             initTest({ itemActions: [{ id: 'delete', handler: () => {isHandlerCalled = true} }, { id: 1 }, { id: 2 }] });
             lists.BaseControl._private.keyDownDel(instance, event);
-            sinon.assert.notCalled(stubLogger);
             assert.isFalse(isHandlerCalled);
          });
       });
