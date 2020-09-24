@@ -193,30 +193,6 @@ describe('Controls/_display/TreeItem', () => {
         });
     });
 
-    describe('.isLoaded()', () => {
-        it('should return true by default', () => {
-            const item = new TreeItem();
-            assert.isTrue(item.isLoaded());
-        });
-
-        it('should return value passed to the constructor', () => {
-            const item = new TreeItem({loaded: true});
-            assert.isTrue(item.isLoaded());
-        });
-    });
-
-    describe('.setLoaded()', () => {
-        it('should set the new value', () => {
-            const item = new TreeItem();
-
-            item.setLoaded(true);
-            assert.isTrue(item.isLoaded());
-
-            item.setLoaded(false);
-            assert.isFalse(item.isLoaded());
-        });
-    });
-
     describe('.getChildrenProperty()', () => {
         it('should return na empty string by default', () => {
             const item = new TreeItem();

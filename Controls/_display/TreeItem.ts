@@ -62,10 +62,6 @@ export default class TreeItem<T> extends mixin<
         super(options);
         ExpandableMixin.call(this);
 
-        if (options && !options.hasOwnProperty('hasChildren') && options.hasOwnProperty('loaded')) {
-            this._$hasChildren = !options.loaded;
-        }
-
         this._$node = !!this._$node;
         if (this._$node) {
             this._$hasChildren = true;
@@ -166,14 +162,6 @@ export default class TreeItem<T> extends mixin<
      */
     setHasChildren(value: boolean): void {
         this._$hasChildren = value;
-    }
-
-    isLoaded(): boolean {
-        return !this._$hasChildren;
-    }
-
-    setLoaded(value: boolean): void {
-        this._$hasChildren = !value;
     }
 
     /**
