@@ -265,11 +265,6 @@ var Component = BaseControl.extend({
     },
 
     _changeYear : function(event, delta) {
-        if (!this._displayedRanges) {
-
-        } else {
-
-        }
         let year = this._position.getFullYear();
         //_position определяется первым отображаемым годом в списке. Всего у нас отображается
         //5 записей. Для перехода на предыдущий элемент, нужно проверить, возможно ли это.
