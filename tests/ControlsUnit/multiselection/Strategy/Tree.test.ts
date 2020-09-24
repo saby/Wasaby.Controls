@@ -341,6 +341,14 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
           assert.isFalse(hasSelectedItems);
           assert.deepEqual(nullStateKeys, [6]);
       });
+
+      it('selected node use selectAll and go to parent node', () => {
+         const selection = {selected: [1], excluded: [1]};
+         const res = strategy.getSelectionForModel(selection);
+         assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [1, 2, 5].includes(it.id)) );
+         assert.deepEqual(toArray(res.get(null)), [ ]);
+         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![1, 2, 5].includes(it.id)) );
+      });
    });
 
    describe('getCount', () => {
@@ -400,7 +408,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
              items: model.getItems()
          });
          assert.isNull(treeStrategyWithNodesMoreData.getCount(selection, false));
-      })
+      });
    });
 
    describe('cases of go inside node and out it', () => {
