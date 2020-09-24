@@ -419,8 +419,8 @@ export default class _Controller implements IDropdownController {
          let templatesToLoad = ['Controls/menu'];
          let templates = ['headTemplate', 'itemTemplate', 'footerContentTemplate'];
          templates.forEach((template) => {
-            if (typeof options[template] === 'string') {
-               templatesToLoad.push(options[template]);
+            if (typeof options.menuOptions[template] === 'string') {
+               templatesToLoad.push(options.menuOptions[template]);
             }
          });
          this._loadMenuTempPromise = mStubs.require(templatesToLoad).then((loadedDeps) => {
