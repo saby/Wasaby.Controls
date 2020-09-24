@@ -30,11 +30,15 @@
             </div>
             <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}} controls-PeriodLiteDialog__year-prev_theme-{{_options.theme}}"
                  on:click="_changeYear (-1)">
-               <div class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}"></div>
+               <svg class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                  <path xmlns="http://www.w3.org/2000/svg" d="M8 4L15 9.5H13L8 5.7569L3 9.5H1L8 4Z"/>
+               </svg>
             </div>
             <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}} controls-PeriodLiteDialog__year-next_theme-{{_options.theme}}"
                  on:click="_changeYear (1)">
-               <div class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}"></div>
+               <svg class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                  <path xmlns="http://www.w3.org/2000/svg" d="M8 12L1 5.5L3 5.5L8 10.2431L13 5.5L15 5.5L8 12Z"/>
+               </svg>
             </div>
          </div>
          <ws:partial
@@ -63,7 +67,9 @@
       <div class="controls-PeriodLiteDialog__years-next controls-PeriodLiteDialog__years-next_theme-{{_options.theme}}">
          <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}}"
               on:click="_changeYear (1)">
-            <div class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}"></div>
+            <svg class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+               <path xmlns="http://www.w3.org/2000/svg" d="M8 4L15 9.5H13L8 5.7569L3 9.5H1L8 4Z"/>
+            </svg>
          </div>
       </div>
       <Controls.calendar:MonthList
@@ -96,7 +102,9 @@
       <div class="controls-PeriodLiteDialog__years-prev controls-PeriodLiteDialog__years-prev_theme-{{_options.theme}}">
          <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}}"
               on:click="_changeYear (-1)">
-            <div class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}"></div>
+            <svg class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+               <path xmlns="http://www.w3.org/2000/svg" d="M8 12L1 5.5L3 5.5L8 10.2431L13 5.5L15 5.5L8 12Z"/>
+            </svg>
          </div>
       </div>
    </ws:if>
