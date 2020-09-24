@@ -651,11 +651,7 @@ const _private = {
             const deleteAction = itemActions.all.find((itemAction: IItemAction) => itemAction.id === 'delete');
             if (deleteAction) {
                 _private.handleItemActionClick(self, deleteAction, event, toggledItem, false);
-            } else {
-                Logger.warn('Для обработки нажатия клавиши del необходимо, чтобы itemActions содержал операцию с id="delete"');
             }
-        } else {
-            Logger.warn('Для обработки нажатия клавиши del необходимо задать itemActions');
         }
     },
 
