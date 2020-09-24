@@ -74,7 +74,6 @@ import {
     ISelectionStrategy,
     ITreeSelectionStrategyOptions,
     IFlatSelectionStrategyOptions,
-    ISelectionControllerResult,
     SelectionController
 } from 'Controls/multiselection';
 import {getStickyHeadersHeight} from 'Controls/scroll';
@@ -1463,13 +1462,14 @@ const _private = {
                 }
             }
 
-            if (self._selectionController) {
+            if (_private.hasSelectionController(self)) {
                 const selectionController = _private.getSelectionController(self);
 
                 let newSelection;
                 switch (action) {
                     case IObservable.ACTION_ADD:
                         selectionController.onCollectionAdd(newItems);
+                        self._notify('listSelectedKeysCountChanged', [selectionController.getCountOfSelected(), selectionController.isAllSelected()], {bubbling: true});
                         break;
                     case IObservable.ACTION_RESET:
                         newSelection = selectionController.onCollectionReset();
@@ -3346,7 +3346,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
-            if (selectionChanged || this._modelRecreated) {
+            if (selectionChanged || this._modelRecreated || filterChanged) {
                 const newSelection = {
                     selected: newOptions.selectedKeys,
                     excluded: newOptions.excludedKeys
@@ -4713,15 +4713,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             } else {
                 // After the right swipe the item should get selected.
                 if (_private.shouldProcessSelection(this._options) && _private.isItemsSelectionAllowed(this._options)) {
-                    const selectionController = _private.createSelectionController(this);
-                    const newSelection = selectionController.toggleItem(key);
+                    const newSelection = _private.getSelectionController(this).toggleItem(key);
                     _private.changeSelection(this, newSelection);
                 }
                 this._notify('checkboxClick', [key, item.isSelected()]);
 
                 // Animation should be played only if checkboxes are visible.
-                if (this._selectionController) {
-                    this._selectionController.startItemAnimation(key);
+                if (_private.hasSelectionController(this)) {
+                    _private.getSelectionController(this).startItemAnimation(key);
                 }
                 this.setMarkedKey(key);
             }
@@ -4755,8 +4754,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onItemSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
-        if (this._selectionController && e.nativeEvent.animationName === 'rightSwipe') {
-            this._selectionController.stopItemAnimation();
+        if (_private.hasSelectionController(this) && e.nativeEvent.animationName === 'rightSwipe') {
+            _private.getSelectionController(this).stopItemAnimation();
         }
     },
 

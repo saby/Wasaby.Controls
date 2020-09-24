@@ -194,7 +194,10 @@ export class Controller {
       // TODO при переходе на новую модель изменить просто на this._model.getItems()
       this._strategy.setItems(this._model.getDisplay().getItems());
 
-      const keys = this._getItemsKeys(removedItems);
+      let keys = this._getItemsKeys(removedItems);
+      // Событие remove еще срабатывает при скрытии элементов, нас интересует именно удаление
+      keys = keys.filter((key) => !this._model.getCollection().getRecordById(key));
+
       const selected = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys.slice(), keys);
       const excluded = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys.slice(), keys);
 
