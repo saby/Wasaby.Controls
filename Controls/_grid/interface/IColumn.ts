@@ -98,8 +98,48 @@ export interface IColumn {
     /**
      * @name Controls/grid:IColumn#displayProperty
      * @cfg {String} Имя поля, данные которого отображаются в колонке.
-     * @remark
-     * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
+     * @demo Controls-demo/grid/Columns/CellNoClickable/Index В демо-примере в конфигурации колонок заданы свойства displayProperty со значениями number, country и capital.
+     * @example
+     * <pre class="brush: html; highlight: [7,12,13]">
+     * <Controls.grid:View
+     *     keyProperty="id"
+     *     source="{{_viewSource}}">
+     *     <ws:columns>
+     *         <ws:Array>
+     *             <ws:Object displayProperty="number" width="40px">
+     *                 <ws:template>
+     *                     <ws:partial template="Controls/grid:ColumnTemplate" clickable="{{false}}" itemData="{{itemData}}"/>
+     *                 </ws:template>
+     *             </ws:Object>
+     *             <ws:Object displayProperty="country" width="300px"/>
+     *             <ws:Object displayProperty="capital" width="max-content" compatibleWidth="98px">
+     *                 <ws:template>
+     *                     <ws:partial template="Controls/grid:ColumnTemplate" clickable="{{false}}" itemData="{{itemData}}"/>
+     *                 </ws:template>
+     *             </ws:Object>
+     *         </ws:Array>
+     *     </ws:columns>
+     * </Controls.grid:View>
+     * </pre>
+     * <pre class="brush: js; highlight: [8,9,10]">
+     * protected _beforeMount(): void {
+     *     this._viewSource = new Memory({
+     *         keyProperty: 'id',
+     *         // tslint:disable-next-line
+     *         data: [
+     *             {
+     *                 id: 0,
+     *                 number: 1,
+     *                 country: 'Россия',
+     *                 capital: 'Москва',
+     *                 population: 143420300,
+     *                 square: 17075200,
+     *                 populationDensity: 8
+     *             },
+     *             ...
+     *         ]
+     *     });
+     * }
      */
     displayProperty?: string;
     /**
@@ -108,16 +148,52 @@ export interface IColumn {
      * @remark
      * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
      * @see width
+     * @demo Controls-demo/grid/Columns/CellNoClickable/Index В демо-примере в конфигурации третьей колонки свойство compatibleWidth установлено в значение 98px.
      */
     compatibleWidth?: string;
     /**
      * @name Controls/grid:IColumn#template
      * @cfg {String|Function} Шаблон отображения ячейки.
-     * @default Controls/grid:ColumnTemplate
+     * @default undefined
      * @remark
-     * Подробнее о параметрах шаблона Controls/grid:ColumnTemplate читайте {@link Controls/grid:ColumnTemplate здесь}.
-     * Подробнее о создании пользовательского шаблона читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/columns/extend/#template здесь}.
-     *
+     * Позволяет установить прикладной шаблон отображения ячейки (**именно шаблон**, а не контрол!). При установке прикладного шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/grid:ColumnTemplate}.
+     * 
+     * По умолчанию Controls/grid:ColumnTemplate отображает значение поля, имя которого задано в конфигурации колонки в свойстве {@link Controls/grid:IColumn#displayProperty displayProperty}. Также шаблон Controls/grid:ColumnTemplate поддерживает {@link Controls/grid:ColumnTemplate параметры}, с помощью которых можно изменить отображение ячейки.
+     * 
+     * При настройке прикладного шаблона Controls/grid:ColumnTemplate следует использовать директиву <a href="/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial">ws:partial</a>. Также в опцию template можно передавать и более сложные шаблоны, которые содержат иные директивы, например <a href="/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if">ws:if</a>. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/grid:ColumnTemplate.
+     * 
+     * Дополнительно о работе с шаблоном вы можете прочитать в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/columns/template/">руководстве разработчика</a>.
+     * @see Controls/grid:ColumnTemplate
+     * @demo Controls-demo/grid/Columns/Template/Index В демо-примере в конфигурации первой колонки задан шаблон отображения ячейки. В конфигурации шаблона переопределён контент ячейки в опции contentTemplate.
+     * @example
+     * В следующем примере показано, что шаблон отображения ячейки колонки задаётся из отдельного WML-файла.
+     * <pre class="brush: js">
+     * import * as countryRatingNumber from 'wml!Controls-demo/grid/resources/CellTemplates/CountryRatingNumber';
+     * ...
+     * protected _columns: IColumn[] = [
+     *     {
+     *         displayProperty: 'number',
+     *         template: countryRatingNumber
+     *     },
+     *     ...
+     * ]
+     * </pre>
+     * 
+     * <pre class="brush: html; highlight: [4]">
+     * <Controls.grid:View
+     *     keyProperty="id"
+     *     source="{{_viewSource}}"
+     *     columns="{{_columns}}" />
+     * </pre>
+     * 
+     * <pre class="brush: html">
+     * <!-- CountryRatingNumber.wml -->
+     * <ws:partial template="Controls/grid:ColumnTemplate" itemData="{{itemData}}">
+     *     <ws:contentTemplate>
+     *         <span style="color: #f60">№ {{itemData.item['number']}}</span>
+     *     </ws:contentTemplate>
+     * </ws:partial>
+     * </pre>
      */
     template?: TemplateFunction;
     /**
@@ -159,12 +235,14 @@ export interface IColumn {
      * @name Controls/grid:IColumn#align
      * @cfg {TCellAlign} Выравнивание содержимого ячейки по горизонтали.
      * @default left
+     * @demo Controls-demo/grid/Columns/Align/Index В демо-примере для колонок задано горизонтальное выравнивание содержимого ячеек.
      */
     align?: TCellAlign;
     /**
      * @name Controls/grid:IColumn#valign
      * @cfg {TCellVerticalAlign} Выравнивание содержимого ячейки по вертикали.
      * @default baseline
+     * @demo Controls-demo/grid/Columns/Valign/Index В демо-примере для колонок задано вертикальное выравнивание содержимого ячеек.
      * @remark
      * См. {@link https://developer.mozilla.org/ru/docs/Web/CSS/align-items align-items}.
      */
@@ -179,6 +257,7 @@ export interface IColumn {
      * @name Controls/grid:IColumn#textOverflow
      * @cfg {TOverflow} Как отображается текст, если он не умещается в ячейке.
      * @default none
+     * @demo Controls-demo/grid/Columns/TextOverflow/Ellipsis/Index В демо-примере для первой колонки свойство textOverflow установлено в значение ellipsis.
      */
     textOverflow?: TOverflow;
     /**
@@ -207,28 +286,41 @@ export interface IColumn {
      *     </ws:columns>
      * </Controls.grid:View>
      * </pre>
+     * @demo Controls-demo/grid/ColumnSeparator/WithMultiHeader/Index В демо-примере ширина вертикальных разделителей колонок задана с размером "s".
+     * @see Controls/list:IList#rowSeparatorSize
+     * @see Controls/grid:IGridControl#columnSeparatorSize
      */
     columnSeparatorSize?: TColumnSeparatorSizeConfig;
     /**
      * @name Controls/grid:IColumn#cellPadding
-     * @cfg {ICellPadding} Опции для задания ячейкам левого и правого отступа, исключая левый отступ первой ячейки и правый последней.
+     * @cfg {ICellPadding} Конфигурация левого и правого отступа в ячейках колонки, исключая левый отступ первой и правый последней ячейки.
      * @example
-     * <pre class="brush: js">
-     * columns: [{
-     *    width: '1fr',
-     *    cellPadding: {
-     *        left: 'M',
-     *        right: 'M'
-     *    }
-     * },
-     * {
-     *    width: '1fr',
-     *    cellPadding: {
-     *        left: 'S',
-     *        right: 'S'
-     *    }
-     * }]
+     * <pre class="brush: js; highlight: [6,7,8,14,15,16,17]">
+     * columns: [
+     *     {
+     *         displayProperty: 'number',
+     *         width: '100px',
+     *         template: itemCountr,
+     *         cellPadding: {
+     *             right: 's'
+     *         }
+     *     },
+     *     {
+     *         displayProperty: 'country',
+     *         width: '100px',
+     *         template: itemTpl,
+     *         cellPadding: {
+     *             left: 's',
+     *             right: 'null'
+     *         }
+     *     },
+     *     {
+     *         displayProperty: 'capital',
+     *         width: '100px'
+     *     }
+     * ]
      * </pre>
+     * @demo Controls-demo/grid/CellPadding/Index В демо-пример в конфигурации колонок заданы различные отступы для ячеек колонок.
      */
     cellPadding?: ICellPadding;
 }
