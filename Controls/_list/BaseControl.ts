@@ -3346,7 +3346,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
-            if (selectionChanged || this._modelRecreated || filterChanged) {
+            if (selectionChanged) {
                 const newSelection = {
                     selected: newOptions.selectedKeys,
                     excluded: newOptions.excludedKeys
@@ -3851,9 +3851,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!readOnly) {
             const result = _private.getSelectionController(this).toggleItem(key);
             _private.changeSelection(this, result);
-            this.setMarkedKey(key);
             this._notify('checkboxClick', [key, status]);
         }
+        // если чекбокс readonly, то мы все равно должны проставить маркер
+        this.setMarkedKey(key);
     },
 
     showIndicator(direction: 'down' | 'up' | 'all' = 'all'): void {
@@ -4388,7 +4389,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // При редактировании по месту маркер появляется только если в списке больше одной записи.
         // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-        // Если нажали по чекбоксу, то маркер проставим вместе с проставление selection
+        // Если нажали по чекбоксу, то маркер проставим по клику на чекбокс
         let canBeMarked = this._mouseDownItemKey === key
             && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1))
             && !domEvent.target.closest('.js-controls-ListView__checkbox');

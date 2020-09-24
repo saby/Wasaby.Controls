@@ -55,8 +55,12 @@ export class Controller {
       this._strategy.update(options.strategyOptions);
       this._selectedKeys = options.selectedKeys.slice();
       this._excludedKeys = options.excludedKeys.slice();
-      this._model = options.model;
       this._searchValue = options.searchValue;
+
+      if (this._model !== options.model) {
+         this._model = options.model;
+         this.setSelection(this.getSelection());
+      }
    }
 
    /**
