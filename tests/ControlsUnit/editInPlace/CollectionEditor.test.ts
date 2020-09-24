@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import {CollectionEditor, ERROR_MSG} from 'Controls/_editInPlace/CollectionEditor';
-import {Collection} from 'Controls/display';
+import {Collection, CollectionItem} from 'Controls/display';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 
@@ -75,17 +75,23 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
         it('correct', () => {
             // Нет редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // Запуск редактирования первой записи
             collectionEditor.edit(items.at(0));
 
             // Редактирование успешно запустилось
             assert.equal(collectionEditor.getEditingItem().getKey(), 1);
+
+            // Коллекция в режиме редактирования
+            assert.isTrue(collection.isEditing());
+            assert.isTrue(collection.find((el) => el.isEditing()) instanceof CollectionItem);
         });
 
         it('should throw error if trying to begin new edit before end current', () => {
             // Нет редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // Запуск редактирования первой записи
             collectionEditor.edit(items.at(0));
@@ -103,6 +109,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
         it('should throw error if trying to begin edit of item that doesn\'t exist in collection', () => {
             // Нет запущенного редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // Попытка начать редактирование несуществующей записи должна привести к исключению
             assert.throws(() => {
@@ -111,28 +118,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
 
             // Нет запущенного редактирования
             assert.notExists(collectionEditor.getEditingItem());
-        });
-
-        it('should accept all changes made before starting editing', () => {
-            // Нет запущенного редактирования
-            assert.notExists(collectionEditor.getEditingItem());
-
-            // Вручную меняем запись перед запуском редактирования
-            items.at(0).set('title', 'changedTitle');
-
-            // Запись и набор данных изменены
-            assert.isTrue(items.at(0).isChanged());
-            assert.isTrue(items.isChanged());
-
-            // Запуск редактирования записи с имеющимися изменениями приведет к их фиксации
-            collectionEditor.edit(items.at(0));
-
-            // Редактирование запустилось
-            assert.equal(collectionEditor.getEditingItem().getKey(), 1);
-
-            // Запись и набор данных не содержат изменений
-            assert.isFalse(items.at(0).isChanged());
-            assert.isFalse(items.isChanged());
+            assert.isFalse(collection.isEditing());
         });
     });
 
@@ -140,20 +126,24 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
         it('correct', () => {
             // Нет редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // Запуск редактирования первой записи
             collectionEditor.add(newItem);
 
             // Редактирование успешно запустилось
+            assert.isTrue(collection.isEditing());
             assert.equal(collectionEditor.getEditingItem().getKey(), 4);
         });
 
         it('should throw error if trying to begin new edit before end current editing', () => {
             // Нет редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // Запуск редактирования первой записи
             collectionEditor.edit(items.at(0));
+            assert.isTrue(collection.isEditing());
             assert.equal(collectionEditor.getEditingItem().getKey(), 1);
 
             // Запуск добавления новой записи должен привести к исключению
@@ -168,6 +158,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
         it('should throw error if trying to begin edit of item that already exists in collection', () => {
             // Нет запущенного редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // Попытка начать добавление существующей записи должна привести к исключению
             assert.throws(() => {
@@ -176,32 +167,13 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
 
             // Нет запущенного редактирования
             assert.notExists(collectionEditor.getEditingItem());
-        });
-
-        it('should accept all changes made before starting adding', () => {
-            // Нет запущенного редактирования
-            assert.notExists(collectionEditor.getEditingItem());
-
-            // Вручную меняем запись перед запуском редактирования
-            newItem.set('title', 'changedTitle');
-
-            // Запись изменена
-            assert.isTrue(newItem.isChanged());
-
-            // Запуск добавления записи с имеющимися изменениями приведет к их фиксации
-            collectionEditor.add(newItem);
-
-            // Добавление запустилось
-            assert.equal(collectionEditor.getEditingItem().getKey(), 4);
-
-            // Запись и набор данных не содержат изменений
-            assert.isFalse(collectionEditor.getEditingItem().isChanged());
-            assert.isFalse(items.isChanged());
+            assert.isFalse(collection.isEditing());
         });
 
         it('should set temporary adding item key if it is undefined', () => {
             // Нет запущенного редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             newItem.set('id', undefined);
 
@@ -209,6 +181,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
             collectionEditor.add(newItem);
 
             // Добавление запустилось, записи установлен временный ключ.
+            assert.isTrue(collection.isEditing());
             assert.equal(collectionEditor.getEditingItem().getKey(), 'ADDING_ITEM_EMPTY_KEY');
         });
 
@@ -221,11 +194,13 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
                 [undefined, 'bottom', 3]
             ];
 
-            addPositionAssociations.forEach(([intoMethodValue, expectedValue, addingItemIndex]: [string|undefined, string, number]) => {
+            addPositionAssociations.forEach(
+                ([intoMethodValue, expectedValue, addingItemIndex]: [string | undefined, string, number]) => {
 
                 it(`should set add position as '${expectedValue}' if passed into method '${intoMethodValue}' as add position`, () => {
                     // Нет запущенного редактирования
                     assert.notExists(collectionEditor.getEditingItem());
+                    assert.isFalse(collection.isEditing());
 
                     // Запуск добавления записи с в указанную позицию.
                     // @ts-ignore
@@ -233,6 +208,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
 
                     // Добавление запустилось
                     assert.equal(collectionEditor.getEditingItem().getKey(), newItem.getKey());
+                    assert.isTrue(collection.isEditing());
 
                     // Позиция добавления у элемента коллекции должна быть верная (expectedValue).
                     assert.equal(
@@ -253,12 +229,14 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
         it('correct commit editing', () => {
             // Нет редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // Запуск редактирования первой записи
             collectionEditor.edit(items.at(0));
 
             // Редактирование успешно запустилось
             assert.equal(collectionEditor.getEditingItem().getKey(), 1);
+            assert.isTrue(collection.isEditing());
 
             // Редактируем поля записи
             const editingItem = collectionEditor.getEditingItem();
@@ -280,6 +258,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
         it('correct commit adding', () => {
             // Нет редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // В коллекции 3 элемента
             const itemsCountBeforeAdd = collection.getCount();
@@ -288,6 +267,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
             collectionEditor.add(newItem);
 
             // Редактирование успешно запустилось
+            assert.isTrue(collection.isEditing());
             assert.equal(collectionEditor.getEditingItem().getKey(), newItem.getKey());
 
             // Запись отображается
@@ -316,6 +296,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
         it('should throw error if trying to commit without running editing', () => {
             // Нет запущенного редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // Завершение редактирования должно привести к исключению
             assert.throws(() => {
@@ -326,12 +307,14 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
         it('should throw error if trying to commit adding item with undefined key', () => {
             // Нет запущенного редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // Запуск добавления записи с пустым ключом.
             newItem.set('id', undefined);
             collectionEditor.add(newItem);
 
             // Добавление запустилось, записи установлен временный ключ.
+            assert.isTrue(collection.isEditing());
             assert.equal(collectionEditor.getEditingItem().getKey(), 'ADDING_ITEM_EMPTY_KEY');
 
             // Запуск добавления новой записи должен привести к исключению
@@ -340,37 +323,12 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
             }, ERROR_MSG.ADDING_ITEM_KEY_WAS_NOT_SET);
         });
     });
+
     describe('cancel', () => {
-        it('correct cancel editing', () => {
-            // Нет редактирования
-            assert.notExists(collectionEditor.getEditingItem());
-
-            // Запуск редактирования первой записи
-            collectionEditor.edit(items.at(0));
-
-            // Редактирование успешно запустилось
-            assert.equal(collectionEditor.getEditingItem().getKey(), 1);
-
-            // Редактируем поля записи
-            const editingItem = collectionEditor.getEditingItem();
-            editingItem.set('title', 'First edited');
-            assert.isTrue(editingItem.isChanged(), 'Editing item has no changes.');
-
-            // Завершаем редактирование с применением изменений
-            collectionEditor.cancel();
-
-            // Редактирование завершилось
-            assert.notExists(collectionEditor.getEditingItem());
-
-            // Изменения не применились
-            assert.equal(items.at(0).get('title'), 'First');
-            assert.isFalse(items.at(0).isChanged());
-            assert.isFalse(items.isChanged());
-        });
-
         it('correct cancel adding', () => {
             // Нет редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // В коллекции 3 элемента
             const itemsCountBeforeAdd = collection.getCount();
@@ -380,6 +338,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
 
             // Редактирование успешно запустилось
             assert.equal(collectionEditor.getEditingItem().getKey(), newItem.getKey());
+            assert.isTrue(collection.isEditing());
 
             // Редактируем поля записи
             const addingItem = collectionEditor.getEditingItem();
@@ -391,6 +350,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
 
             // Добавление завершилось
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // Изменения не применились, добавляемой записи нет
             assert.equal(items.getCount(), itemsCountBeforeAdd);
@@ -400,6 +360,7 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
         it('should throw error if trying to cancel without running editing', () => {
             // Нет запущенного редактирования
             assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
 
             // Завершение редактирования должно привести к исключению
             assert.throws(() => {
