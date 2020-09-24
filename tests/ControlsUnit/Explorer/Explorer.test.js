@@ -729,7 +729,8 @@ define([
                         callback();
                         assert.notEqual(rootBefore, explorer._root);
                      }
-                  })
+                  }),
+                  getEditingItem: () => {}
                }
             };
             const event = { stopPropagation: () => {} };
