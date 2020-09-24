@@ -3716,7 +3716,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._syncLoadingIndicatorState = null;
             }
 
-            this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            const itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
@@ -3732,7 +3732,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 needCheckTriggers = true;
             }
 
-            if (needCheckTriggers) {
+            if (needCheckTriggers || itemsUpdated) {
                 this.checkTriggerVisibilityWithTimeout();
             }
 
