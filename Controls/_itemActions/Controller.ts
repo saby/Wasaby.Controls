@@ -340,17 +340,8 @@ export class Controller {
         /**
          * Проверяем что элемент существует, в противном случае пытаемся его найти.
          */
-        if (!activeItem && (typeof this._collection.getItems !== 'undefined')) {
-            const items = this._collection.getItems();
-            if (items) {
-                for (let i = 0; i < items.length; i++) {
-                    if (typeof items[i].getContents().getKey() !== 'undefined' &&
-                        items[i].getContents().getKey() === this._activeItemKey) {
-                        activeItem = items[i].getContents().getKey();
-                        break;
-                    }
-                }
-            }
+        if (!activeItem && (typeof this._collection.getItemBySourceKey !== 'undefined')) {
+            activeItem = this._collection.getItemBySourceKey(this._activeItemKey);
         }
         return activeItem;
     }
