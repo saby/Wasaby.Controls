@@ -79,6 +79,7 @@ import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import * as __Util from 'Controls/_input/resources/Util';
 
+// TODO: Устаревшая модель, вместо неё нужно использовать NewBaseViewModel.
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 export {default as TextViewModel} from 'Controls/_input/Text/ViewModel';
 import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
@@ -103,6 +104,7 @@ export {IPadding, IPaddingOptions, THorizontalPadding, getDefaultPaddingOptions,
 export * from './_input/ActualAPI';
 export * from './_input/resources/Types';
 export {default as Field} from './_input/resources/Field';
+export {default as NewBaseViewModel} from './_input/BaseViewModel';
 
 /**
  * ПРИВАТНЫЕ МОДУЛИ.
