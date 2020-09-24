@@ -19,9 +19,10 @@
                         {{_overflowScrolling ? 'controls-Scroll__content-overflowScrolling'}}"
               on:controlResize="_resizeHandler()"
               on:scroll="_scrollHandler()">
-            <ws:partial template="{{_options.content}}"
+            <div class=" controls-Scroll__userContent">
+               <div class="controls-Scroll__shadow-overflow"></div>
+               <ws:partial template="{{_options.content}}"
                         scope="{{_options}}"
-                        attr:class="controls-Scroll__userContent"
                         on:selectedKeysChanged="selectedKeysChanged()"
                         on:excludedKeysChanged="excludedKeysChanged()"
                         on:itemClick="itemClick()"
@@ -35,6 +36,7 @@
                         on:editArrowClick="_tmplNotify('editArrowClick')"
                         on:navigationParamsChanged="_tmplNotify('navigationParamsChanged')"
                      />
+            </div>
          </span>
       </Controls.event:Register>
    </Controls._scroll.Scroll.Watcher>
@@ -76,9 +78,7 @@
          on:draggingChanged="_draggingChangedHandler()"
          attr:style="{{_scrollbarStyles}}"/>
    </ws:if>
-   <ws:if data="{{_displayState.shadowEnable.top}}">
-      <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_top {{!_shadowVisible('top') ? ' ws-invisible'}}"></div>
-   </ws:if>
+      <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_top"></div>
    <ws:if data="{{_displayState.shadowEnable.bottom}}">
       <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_bottom {{!_shadowVisible('bottom') ? ' ws-invisible'}}"></div>
    </ws:if>

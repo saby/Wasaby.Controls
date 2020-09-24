@@ -18,13 +18,14 @@
         <div class="ControlsDemo-example_block">
             <h2>Scroll</h2>
             <Controls.scroll:Container attr:class="ControlsDemo-scroll_container"
+                                       attr:style="background: white"
                                        scrollbarVisible="{{_scrollbarVisible}}"
                                        topShadowVisibility="{{shadowVisibility}}"
                                        bottomShadowVisibility="{{shadowVisibility}}"
 
                                        optimizeShadow="{{false}}">
 
-                <div>
+                <div style="padding: 4px 8px 8px 8px;">
                     <ws:for data="index in _numberOfRecords">
                         <div class="ControlsDemo-record">Record {{index + 1}}</div>
                     </ws:for>
