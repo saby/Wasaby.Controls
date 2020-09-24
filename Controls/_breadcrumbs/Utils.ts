@@ -43,7 +43,6 @@ export default {
         return itemsWidth;
     },
     calculateItemsWithShrinkingLast(items: Record[], options: IMultilinePathOptions, width: number, getTextWidth: Function = this.getTextWidth): {visibleItems: Record[], indexEdge: number} {
-        // придумать, чтобы два раза не проходился в крошках в две строки
         const itemsWidth = this.getItemsWidth(items, options, getTextWidth);
         let indexEdge = 0;
         let visibleItems;
