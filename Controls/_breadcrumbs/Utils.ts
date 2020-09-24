@@ -153,8 +153,12 @@ export default {
             for (let j = indexEdge; j < items.length; j++) {
                 secondContainerItems.push(this.getItemData(j, items, true, j === items.length - 2 && items[items.length - 2].get(options.displayProperty).length > 3));
             }
-            if (secondContainerItems.length === 2) {
-                secondContainerItems[1].withOverflow = true;
+            if (secondContainerItems.length <= 2) {
+                secondContainerItems.forEach((item) => {
+                    if (!item.isDots && item.item.get(options.displayProperty).length > 3) {
+                        item.withOverflow = true;
+                    }
+                });
             }
             return secondContainerItems;
         }

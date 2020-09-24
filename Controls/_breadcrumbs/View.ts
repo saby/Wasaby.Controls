@@ -11,8 +11,6 @@ import itemsMultilineTemplate = require('wml!Controls/_breadcrumbs/View/resource
 import menuItemTemplate = require('wml!Controls/_breadcrumbs/resources/menuItemTemplate');
 import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
 import {Record} from 'Types/entity';
-const CRUMBS_COUNT = 2;
-const MIN_COUNT_OF_LETTER = 3;
 
 /**
  * BreadCrumbs/View.

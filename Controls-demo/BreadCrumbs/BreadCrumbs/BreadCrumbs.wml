@@ -1,23 +1,20 @@
 <div>
     <h2>Много крошек</h2>
-    <Controls.breadcrumbs:Path attr:id="aLotOfCrumbs" items="{{items}}" keyProperty="id" containerWidth = "{{_containerWidth}}"
-                                    on:itemClick="_onItemClick()" />
+    <Controls.breadcrumbs:Path attr:id="aLotOfCrumbs" items="{{items}}" keyProperty="id" on:itemClick="_onItemClick()" />
     <h2>Одна крошка</h2>
-    <Controls.breadcrumbs:Path attr:id="oneCrumb" items="{{items1}}" containerWidth = "{{_containerWidth}}" on:itemClick="_onItemClick()" keyProperty="id" />
+    <Controls.breadcrumbs:Path attr:id="oneCrumb" items="{{items1}}" on:itemClick="_onItemClick()" keyProperty="id" />
     <h2>Две крошки</h2>
-    <Controls.breadcrumbs:Path attr:id="twoCrumbs" items="{{items2}}" containerWidth = "{{_containerWidth}}" on:itemClick="_onItemClick()" keyProperty="id" />
+    <Controls.breadcrumbs:Path attr:id="twoCrumbs" items="{{items2}}" on:itemClick="_onItemClick()" keyProperty="id" />
     <h2>Path</h2>
     <Controls.breadcrumbs:HeadingPath attr:id="path"
                                items="{{items}}"
                                parentProperty="parent"
                                keyProperty="id"
-                               containerWidth="{{_containerWidthHeadingPath}}"
                                on:arrowActivated="_onArrowActivated()"
                                on:itemClick="_onItemClick()" />
     <h2>Path with content back button</h2>
     <Controls.breadcrumbs:HeadingPath attr:id="pathContent"
                                       items="{{items}}"
-                                      containerWidth="{{_containerWidthHeadingPath}}"
                                       parentProperty="parent"
                                       keyProperty="id"
                                       on:itemClick="_onItemClick()">
@@ -29,7 +26,6 @@
     <Controls.breadcrumbs:HeadingPath attr:id="pathHeadingOnly"
                                       items="{{items4}}"
                                       parentProperty="parent"
-                                      containerWidth="{{_containerWidthHeadingPath}}"
                                       keyProperty="id"
                                       on:arrowActivated="_onArrowActivated()"
                                       on:itemClick="_onItemClick()" />

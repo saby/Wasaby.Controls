@@ -8,7 +8,6 @@ import template = require('wml!Controls/_breadcrumbs/HeadingPath/HeadingPath');
 import Common from './HeadingPath/Common';
 import 'Controls/heading';
 import 'wml!Controls/_breadcrumbs/HeadingPath/Back';
-import {Logger} from 'UI/Utils';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
 import {Record} from 'Types/entity';
 const ARROW_WIDTH = 16;
@@ -115,16 +114,15 @@ const PADDING_RIGHT = 2;
  */
 
 class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
-    protected _template = template;
-    protected _backButtonCaption = '';
-    protected _visibleItems = null;
-    protected _breadCrumbsItems = null;
-    protected _backButtonClass = '';
-    protected _breadCrumbsClass = '';
-    protected _viewUpdated = false;
-    protected _notifyHandler = tmplNotify;
-    protected _applyHighlighter = applyHighlighter;
-    protected _getRootModel = Common.getRootModel;
+    protected _template: TemplateFunction = template;
+    protected _backButtonCaption: string = '';
+    protected _visibleItems: Record[] = null;
+    protected _breadCrumbsItems: Record[] = null;
+    protected _backButtonClass: string = '';
+    protected _breadCrumbsClass: string = '';
+    protected _notifyHandler: Function = tmplNotify;
+    protected _applyHighlighter: Function = applyHighlighter;
+    protected _getRootModel: Function = Common.getRootModel;
     protected _width: number = 0;
     protected _dotsWidth: number = 0;
     protected _indexEdge: number = 0;
@@ -133,11 +131,8 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
 
     protected _beforeMount(options?: IBreadCrumbsOptions, contexts?: object, receivedState?: unknown): Promise<unknown> | Promise<void> | void {
         this._prepareItems(options);
-        if (!options.containerWidth) {
-            Logger.warn('Path: option containerWidth is undefined', this);
-            loadFontWidthConstants().then(() => {
-                return;
-            });
+        if (!options.containerWidth && this._breadCrumbsItems) {
+            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
         } else if (receivedState) {
             this._dotsWidth = this._getDotsWidth(options.fontSize);
             this._prepareData(options, options.containerWidth);
@@ -156,12 +151,6 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
             });
         }
     }
-    protected _afterMount(options?: IBreadCrumbsOptions, contexts?: any): void {
-        if (!options.containerWidth) {
-            this._dotsWidth = this._getDotsWidth(options.fontSize);
-            this._prepareData(options, this._container.getElementsByClassName('controls-BreadCrumbsPath__breadCrumbs__wrapper')[0].clientWidth - 6);
-        }
-    }
 
     protected _beforeUpdate(newOptions: IBreadCrumbsOptions): void {
         const isItemsChanged = newOptions.items && newOptions.items !== this._options.items;
@@ -176,13 +165,16 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         if (isFontSizeChanged) {
             this._dotsWidth = this._getDotsWidth(newOptions.fontSize);
         }
-        //поддержка старых крошек
-        if (!newOptions.containerWidth && !this._options.containerWidth) {
-            this._width = this._container.getElementsByClassName('controls-BreadCrumbsPath__breadCrumbs__wrapper')[0].clientWidth - 6;
-        }
-        if (isItemsChanged || isContainerWidthChanged || isFontSizeChanged) {
+        const isDataChange = isItemsChanged || isContainerWidthChanged || isFontSizeChanged;
+        if (isDataChange) {
             this._prepareItems(newOptions);
+        }
+        if (isDataChange && this._width) {
             this._calculateBreadCrumbsToDraw(this._breadCrumbsItems, newOptions);
+        }
+        // если нет опции ширины контейнера, не считаем и идем по старой ветке
+        if (isDataChange && !this._width && this._breadCrumbsItems) {
+            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
         }
     }
     private _getDotsWidth(fontSize: string, getTextWidth: Function = this._getTextWidth): number {

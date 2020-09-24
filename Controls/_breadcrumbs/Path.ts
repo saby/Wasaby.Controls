@@ -59,11 +59,8 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
     protected _items: Record[] = [];
 
     protected _beforeMount(options?: IBreadCrumbsOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
-        if (!options.containerWidth) {
-            Logger.warn('Path: option containerWidth is undefined', this);
-            loadFontWidthConstants().then(() => {
-                return;
-            });
+        if (!options.containerWidth && options.items && options.items.length > 0) {
+            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(options.items);
         } else if (receivedState) {
             this._dotsWidth = this._getDotsWidth(options.fontSize);
             this._prepareData(options, options.containerWidth);
@@ -83,13 +80,6 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
         }
     }
 
-    protected _afterMount(options?: IBreadCrumbsOptions, contexts?: any): void {
-        if (!options.containerWidth) {
-            this._dotsWidth = this._getDotsWidth(options.fontSize);
-            this._prepareData(options, this._container.clientWidth);
-        }
-    }
-
     protected _beforeUpdate(newOptions: IBreadCrumbsOptions): void {
         const isItemsChanged = newOptions.items && newOptions.items !== this._options.items;
         const isContainerWidthChanged = newOptions.containerWidth !== this._options.containerWidth;
@@ -103,20 +93,21 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
         if (isFontSizeChanged) {
             this._dotsWidth = this._getDotsWidth(newOptions.fontSize);
         }
-        if (isItemsChanged || isContainerWidthChanged || isFontSizeChanged) {
+        const isDataChange = isItemsChanged || isContainerWidthChanged || isFontSizeChanged;
+        if (isDataChange && this._width) {
             this._calculateBreadCrumbsToDraw(newOptions.items, newOptions);
         }
-    }
-
-    protected _afterUpdate(): void {
-        if (this._viewUpdated) {
-            this._viewUpdated = false;
+        // если нет опции ширины контейнера, не считаем и идем по старой ветке
+        if (isDataChange && !this._width) {
+            this._visibleItems = BreadCrumbsUtil.drawBreadCrumbsItems(newOptions.items);
         }
     }
     private _getDotsWidth(fontSize: string, getTextWidth: Function = this._getTextWidth): number {
         const dotsWidth = getTextWidth('...', fontSize) + PADDING_RIGHT;
         return ARROW_WIDTH + dotsWidth;
     }
+
+
     private _prepareData(options: IBreadCrumbsOptions, width: number, getTextWidth: Function = this._getTextWidth): void {
         if (options.items && options.items.length > 0) {
             this._items = options.items;
@@ -124,9 +115,11 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
             this._calculateBreadCrumbsToDraw(options.items, options, getTextWidth);
         }
     }
+
     private _getTextWidth(text: string, size: string  = 'xs'): number {
         return getFontWidth(text, size);
     }
+
     private _calculateBreadCrumbsToDraw(items: Record[], options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): void {
         this._visibleItems = BreadCrumbsUtil.calculateItemsWithDots(items, options, 0, this._width, this._dotsWidth, getTextWidth);
         this._visibleItems[0].hasArrow = false;
@@ -141,7 +134,7 @@ class BreadCrumbs extends Control<IBreadCrumbsOptions> {
         }
     }
     static _theme: string[] = ['Controls/crumbs'];
-    static getDefaultOptions() {
+    static getDefaultOptions(): IBreadCrumbsOptions {
         return {
             displayProperty: 'title',
             fontSize: 'xs'
