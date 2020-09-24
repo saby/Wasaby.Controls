@@ -70,7 +70,7 @@ class BreadCrumbs extends Control<IControlOptions> {
         });
         this.items2 = [{
             id: 1,
-            title: '1',
+            title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
             secondTitle: 'тест1'
         }, {
             id: 6,
