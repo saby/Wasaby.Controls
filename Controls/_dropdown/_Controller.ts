@@ -387,8 +387,6 @@ export default class _Controller implements IDropdownController {
       }
    }
 
-
-
    private _closeDropdownList(): void {
       this._sticky.close();
       this._isOpened = false;
@@ -470,7 +468,7 @@ export default class _Controller implements IDropdownController {
          targetPoint: baseConfig.targetPoint,
          actionOnScroll: 'close',
          target: this.target,
-         opener: this._popupOptions.opener || this._options.openerControl,
+         opener: this._popupOptions?.opener || this._options.openerControl,
          fittingMode: {
             vertical: 'adaptive',
             horizontal: 'overflow'

@@ -143,13 +143,21 @@ define(
                   opened = true;
                };
 
+               const newOptions = {
+                  ...config,
+                  ...{
+                     menuOptions: {
+                        headTemplate: 'headTemplate.wml'
+                     },
+                     source: undefined
+                  }
+               };
                dropdownController._isOpened = true;
                dropdownController._items = itemsRecords.clone();
                dropdownController._source = 'testSource';
                dropdownController._sourceController = {hasMoreData: ()=>{}};
                dropdownController._options = {menuOptions:{}};
-               config.menuOptions.headTemplate = 'headTemplate.wml';
-               dropdownController.update({ ...config, source: undefined })
+               dropdownController.update(newOptions);
                assert.isTrue(opened);
             });
 
@@ -722,10 +730,10 @@ define(
                   keyProperty: 'id',
                   rawData: items
                });
-               sandbox.replace(popup.Sticky, 'openPopup', (popupConfig) => {
+               dropdownController._sticky.open = (popupConfig) => {
                   openConfig = popupConfig;
                   return Promise.resolve(true);
-               });
+               };
             });
 
             it('simple', async() => {
