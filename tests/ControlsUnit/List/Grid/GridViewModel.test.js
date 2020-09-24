@@ -1518,21 +1518,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, Object.keys(ladderViewModel._ladder.stickyLadder).length);
             assert.equal(4, Object.keys(ladderViewModel._ladder.ladder).length);
 
-
-            let resetCacheKey = null;
-            let fullCacheReset = false;
-            ladderViewModel.resetCachedItemData = (key) => {
-               if (!key) {
-                  fullCacheReset = true;
-               }
-               resetCacheKey = key;
-            };
             ladderViewModel._model._startIndex = 1;
             ladderViewModel._ladder = gridMod.GridViewModel._private.prepareLadder(ladderViewModel);
             assert.equal(3, Object.keys(ladderViewModel._ladder.stickyLadder).length);
             assert.equal(3, Object.keys(ladderViewModel._ladder.ladder).length);
-            assert.isFalse(fullCacheReset, 'Не должен сбрасываться весь кэш');
-            assert.equal(1, resetCacheKey, 'Неверный id записи со сброшенным кэшем');
          });
       });
       describe('other methods of the class', function() {

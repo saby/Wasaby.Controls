@@ -172,7 +172,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          const parentId = this._getParentId(itemId);
          const isNode = this._isNode(item);
          let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
-             this._isAllSelected(selection, parentId));
+             this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, itemId);
 
          if (this._selectAncestors && isNode) {
             isSelected = this._getStateNode(itemId, isSelected, {
