@@ -593,7 +593,7 @@ const _private = {
         }
     },
     spaceHandler(self, event) {
-        if (self._options.multiSelectVisibility === 'hidden') {
+        if (self._options.checkboxReadOnly || self._options.multiSelectVisibility === 'hidden') {
             return;
         }
         const model = self.getViewModel();
@@ -604,10 +604,8 @@ const _private = {
         }
 
         if (toggledItemId) {
-            if (self._options.hasOwnProperty('selectedKeys')) {
-                const result = _private.getSelectionController(self).toggleItem(toggledItemId);
-                _private.changeSelection(self, result);
-            }
+            const result = _private.getSelectionController(self).toggleItem(toggledItemId);
+            _private.changeSelection(self, result);
             _private.moveMarkerToNext(self, event);
         }
     },
@@ -1482,7 +1480,9 @@ const _private = {
                         break;
                 }
 
-                _private.changeSelection(self, newSelection);
+                if (newSelection) {
+                    _private.changeSelection(self, newSelection);
+                }
             }
 
             if (_private.hasMarkerController(self)) {
@@ -2034,10 +2034,6 @@ const _private = {
         return !!self._selectionController;
     },
 
-    shouldProcessSelection(options: IList): boolean {
-        return options.multiSelectVisibility !== 'hidden' && options.selectedKeys && options.selectedKeys.length > 0;
-    },
-
     createSelectionController(self: any, options?: IList): SelectionController {
         options = options ? options : self._options;
 
@@ -2147,10 +2143,6 @@ const _private = {
     },
 
     changeSelection(self: typeof BaseControl, newSelection: ISelectionObject): void {
-        if (!newSelection) {
-            return;
-        }
-
         const controller = _private.getSelectionController(self);
         const selectionDifference = controller.getSelectionDifference(newSelection);
         const result = self._notify('beforeSelectionChanged', [selectionDifference]);
@@ -2837,7 +2829,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 markerController.setMarkedKey(markedKey);
             }
 
-            if (_private.shouldProcessSelection(newOptions)) {
+            if (newOptions.multiSelectVisibility !== 'hidden' && newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
                 const selectionController = _private.createSelectionController(this, newOptions);
                 const selection = { selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys };
                 selectionController.setSelection(selection);
@@ -3253,7 +3245,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (_private.hasSelectionController(this)) {
-            _private.getSelectionController(self).updateOptions({
+            const selectionController = _private.getSelectionController(self, newOptions);
+
+            selectionController.updateOptions({
                 model: self._listViewModel,
                 selectedKeys: newOptions.selectedKeys,
                 excludedKeys: newOptions.excludedKeys,
@@ -3264,6 +3258,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     self._items.getMetaData().ENTRY_PATH
                 )
             });
+
+            const allowClearSelectionBySelectionViewMode =
+                this._options.selectionViewMode === newOptions.selectionViewMode ||
+                newOptions.selectionViewMode !== 'selected';
+            if (filterChanged && selectionController.isAllSelected(false) &&
+                allowClearSelectionBySelectionViewMode) {
+                _private.changeSelection(this, { selected: [], excluded: [] });
+            }
         }
 
         if (this._dndListController) {
@@ -3332,17 +3334,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._markerController = null;
         }
 
-        if (_private.shouldProcessSelection(newOptions) || _private.hasSelectionController(this)) {
-            const selectionController = _private.getSelectionController(self, newOptions);
-
-            const allowClearSelectionBySelectionViewMode =
-                this._options.selectionViewMode === newOptions.selectionViewMode ||
-                newOptions.selectionViewMode !== 'selected';
-            if (filterChanged && selectionController.isAllSelected(false) &&
-                allowClearSelectionBySelectionViewMode) {
-                _private.changeSelection(this, { selected: [], excluded: [] });
-            }
-
+        if (newOptions.multiSelectVisibility !== 'hidden' && newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
             const selectionChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys)
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
@@ -3353,6 +3345,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 };
                 _private.changeSelection(this, newSelection);
             }
+        } else if (_private.hasSelectionController(this) && newOptions.multiSelectVisibility === 'hidden') {
+            _private.getSelectionController(this).destroy();
+            this._selectionController = null;
         }
 
         if (this._editInPlaceController) {
@@ -3849,8 +3844,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onCheckBoxClick(e, key, status, readOnly) {
         if (!readOnly) {
-            const result = _private.getSelectionController(this).toggleItem(key);
-            _private.changeSelection(this, result);
+            const newSelection = _private.getSelectionController(this).toggleItem(key);
+            _private.changeSelection(this, newSelection);
             this._notify('checkboxClick', [key, status]);
         }
         // если чекбокс readonly, то мы все равно должны проставить маркер
@@ -4443,6 +4438,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._onViewKeyDown(event);
     },
 
+    // TODO удалить после выполнения наследования Explorer <- TreeControl <- BaseControl
     clearSelection(): void {
         _private.changeSelection(this, { selected: [], excluded: [] });
     },
@@ -4713,7 +4709,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
             } else {
                 // After the right swipe the item should get selected.
-                if (_private.shouldProcessSelection(this._options) && _private.isItemsSelectionAllowed(this._options)) {
+                if (this._options.multiSelectVisibility !== 'hidden' && _private.isItemsSelectionAllowed(this._options)) {
                     const newSelection = _private.getSelectionController(this).toggleItem(key);
                     _private.changeSelection(this, newSelection);
                 }

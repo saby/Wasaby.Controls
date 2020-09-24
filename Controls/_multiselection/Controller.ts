@@ -272,6 +272,19 @@ export class Controller {
    }
 
    /**
+    * Уничтожает все ссылки
+    * @void
+    */
+   destroy(): void {
+      this._model = null;
+      this._strategy = null;
+      this._selectedKeys = null;
+      this._excludedKeys = null;
+      this._limit = null;
+      this._searchValue = null;
+   }
+
+   /**
     * Устанавливает текущее состояние анимации записи по её ключу
     * @param key
     * @private
