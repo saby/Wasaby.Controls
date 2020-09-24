@@ -1854,6 +1854,9 @@ const _private = {
      */
     showError(self: BaseControl, errorConfig: dataSourceError.ViewConfig): void {
         self.__error = errorConfig;
+        if (errorConfig && (errorConfig.mode === dataSourceError.Mode.include)) {
+            self._scrollController = null;
+        }
     },
 
     hideError(self: BaseControl): void {
@@ -2213,6 +2216,10 @@ const _private = {
                 self._notify('activeElementChanged', [result.activeElement]);
             }
             if (result.scrollToActiveElement) {
+                
+                // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
+                self._keepScrollAfterReload = true;
+
                 _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
             }
         }
