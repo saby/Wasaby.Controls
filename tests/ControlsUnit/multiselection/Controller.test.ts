@@ -1,3 +1,4 @@
+/*
 // tslint:disable:no-empty
 // tslint:disable:no-magic-numbers
 
@@ -465,3 +466,4 @@ describe('Controls/_multiselection/Controller', () => {
       });
    });
 });
+*/

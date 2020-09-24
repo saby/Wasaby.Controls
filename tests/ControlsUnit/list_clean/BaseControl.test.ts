@@ -118,7 +118,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._afterMount();
             baseControl._listViewModel = new ListViewModel(baseControlCfg.viewModelConfig);
             baseControl._items = new RecordSet();
-            baseControl._createSelectionController();
+            BaseControl._private.createSelectionController(baseControl);
             assert.isFalse(!baseControl._listViewModel || !baseControl._listViewModel.getCollection());
             assert.isNotNull(baseControl._selectionController);
         });
