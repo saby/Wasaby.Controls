@@ -1,7 +1,6 @@
-/*
-/!**
+/**
  * Created by kraynovdo on 23.10.2017.
- *!/
+ */
 define([
    'Types/source',
    'Types/collection',
@@ -1621,7 +1620,7 @@ define([
          });
       });
 
-      it('_private.handleSelectionControllerResult', () => {
+      it('_private.changeSelection', () => {
          const baseControl = {
             _notify: function(eventName, args) {}
          };
@@ -1643,21 +1642,21 @@ define([
             isAllSelected: false
          };
 
-         lists.BaseControl._private.handleSelectionControllerResult(baseControl, result);
+         lists.BaseControl._private.changeSelection(baseControl, result);
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
 
          result.selectedKeysDiff.added = [5];
          result.selectedKeysDiff.keys = [5];
-         lists.BaseControl._private.handleSelectionControllerResult(baseControl, result);
+         lists.BaseControl._private.changeSelection(baseControl, result);
          assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [result.selectedKeysDiff.keys, result.selectedKeysDiff.added, result.selectedKeysDiff.removed]).called);
          assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
 
          result.excludedKeysDiff.added = [2];
          result.excludedKeysDiff.keys = [2];
-         lists.BaseControl._private.handleSelectionControllerResult(baseControl, result);
+         lists.BaseControl._private.changeSelection(baseControl, result);
          assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [result.selectedKeysDiff.keys, result.selectedKeysDiff.added, result.selectedKeysDiff.removed]).called);
          assert.isTrue(notifySpy.withArgs('excludedKeysChanged', [result.excludedKeysDiff.keys, result.excludedKeysDiff.added, result.excludedKeysDiff.removed]).called);
          assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
@@ -1682,7 +1681,6 @@ define([
 
          baseControl.saveOptions(lnCfg);
          await baseControl._beforeMount(lnCfg);
-         baseControl._createSelectionController();
 
          assert.isTrue(baseControl._listViewModel.getItemBySourceKey(1).isSelected());
          baseControl._beforeUpdate({...lnCfg, selectedKeys: []});
@@ -1714,13 +1712,6 @@ define([
          it('should init SelectionController', () => {
             controller = lists.BaseControl._private.createSelectionController(baseControl, lnCfg);
             assert.isNotNull(controller);
-
-            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
-            assert.isNull(controller);
-
-            baseControl._listViewModel = null;
-            controller = lists.BaseControl._private.createSelectionController(baseControl, { ...lnCfg, multiSelectVisibility: 'hidden' });
-            assert.isNull(controller);
          });
 
          it('should init selection controller even when multiselectVisibility===\'null\'', () => {
@@ -1923,10 +1914,10 @@ define([
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
-            /!**
+            /**
              * _beforeMount will load some items, so _loadedItems will get set. Normally, it will reset in _afterUpdate, but since we don't have lifecycle in tests,
              * we'll reset it here manually.
-             *!/
+             */
             ctrl._loadedItems = null;
 
             lists.BaseControl._private.onScrollLoadEdge(ctrl, 'down');
@@ -2885,7 +2876,6 @@ define([
 
          baseControl.saveOptions(lnCfg);
          await baseControl._beforeMount(lnCfg);
-         baseControl._createSelectionController();
 
          let item = baseControl._listViewModel.getItemBySourceKey(1);
          assert.isTrue(item.isMarked());
@@ -4259,7 +4249,6 @@ define([
             instance._beforeMount(cfg);
             instance._listViewModel.setItems(rs, cfg);
             instance._items = rs;
-            instance._createSelectionController();
          }
 
          function initSwipeEvent(direction) {
@@ -4308,38 +4297,32 @@ define([
 
             // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо закрыть свайп
             it('should close swipe when any record has been swiped right', () => {
-               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
                const item = instance._listViewModel.at(0);
                const spySetSwipeAnimation = sinon.spy(item, 'setSwipeAnimation');
                item.setSwiped(true, true);
                instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
 
                sinon.assert.calledWith(spySetSwipeAnimation, 'close');
-               stubCreateSelectionController.restore();
                spySetSwipeAnimation.restore();
             });
 
             // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо переместить маркер
             it('should change marker when any other record has been swiped right', () => {
-               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
                const spySetMarkedKey = sinon.spy(instance, 'setMarkedKey');
                instance._listViewModel.at(0).setSwiped(true, true);
                instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
 
                sinon.assert.calledOnce(spySetMarkedKey);
-               stubCreateSelectionController.restore();
                spySetMarkedKey.restore();
             });
 
             // Если Активирован свайп на одной записи и свайпнули по той же записи, не надо вызывать установку маркера
             it('should deactivate swipe when any other record has been swiped right', () => {
-               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
                const spySetMarkedKey = sinon.spy(instance, 'setMarkedKey');
                instance._listViewModel.at(0).setSwiped(true, true);
                instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
 
                sinon.assert.notCalled(spySetMarkedKey);
-               stubCreateSelectionController.restore();
                spySetMarkedKey.restore();
             });
 
@@ -4409,19 +4392,13 @@ define([
             it('should not create selection controller when isItemsSelectionAllowed returns false', () => {
                initTest({multiSelectVisibility: 'hidden'});
                instance._selectionController = undefined;
-               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
                instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
-               sinon.assert.notCalled(stubCreateSelectionController);
-               stubCreateSelectionController.restore();
             });
 
             it('should create selection controller when isItemsSelectionAllowed returns true', () => {
                initTest({multiSelectVisibility: 'hidden', selectedKeysCount: 2});
                instance._selectionController = undefined;
-               const stubCreateSelectionController = sinon.stub(instance, '_createSelectionController');
                instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
-               sinon.assert.calledOnce(stubCreateSelectionController);
-               stubCreateSelectionController.restore();
             });
 
             // Свайп вправо не влияет на определение свайпа влево
@@ -5236,7 +5213,7 @@ define([
          disableHeader();
          disableResults();
 
-         /!* Список находится в скроллконтейнере, но не личном. До списка лежит контент *!/
+         /* Список находится в скроллконтейнере, но не личном. До списка лежит контент */
          bc._isScrollShown = true;
          bc._viewportRect = {
             top: 50
@@ -5822,7 +5799,6 @@ define([
 
          const notifySpy = sinon.spy(instance, '_notify');
 
-         instance._createSelectionController();
          let cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue' };
          instance._beforeUpdate(cfgClone);
          assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
@@ -5866,7 +5842,6 @@ define([
 
          const notifySpy = sinon.spy(instance, '_notify');
 
-         instance._createSelectionController();
          let cfgClone = { ...cfg, selectedKeys: [1] };
          instance._beforeUpdate(cfgClone);
 
@@ -6405,7 +6380,7 @@ define([
       it('_shouldShowLoadingIndicator', () => {
          const baseControl = new lists.BaseControl();
 
-         /!*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*!/
+         /*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*/
          const testCases = [
             ['beforeEmptyTemplate', 'up', true,    true],
             ['beforeEmptyTemplate', 'up', false,   true],
@@ -7716,4 +7691,3 @@ define([
       // endregion Move
    });
 });
-*/
