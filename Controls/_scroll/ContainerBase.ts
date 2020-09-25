@@ -544,6 +544,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _scrollToElement(event: SyntheticEvent<Event>, {itemContainer, toBottom, force}): void {
         event.stopPropagation();
         scrollToElement(itemContainer, toBottom, force);
+        this._state.scrollTop = this._children.content.scrollTop;
     }
 
     // Виртуальный скролл
