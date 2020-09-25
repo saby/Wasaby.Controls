@@ -798,6 +798,9 @@ var Base = Control.extend({
          * Therefore, we remember the selection from the field at the next drawing cycle.
          */
         runDelayed(() => {
+            if (this._destroyed) {
+                return;
+            }
             this._viewModel.selection = this._getFieldSelection();
             this._currentVersionModel = this._viewModel.getVersion();
         });
