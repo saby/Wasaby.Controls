@@ -1,5 +1,4 @@
 import {DestroyableMixin, Model} from 'Types/entity';
-import {RecordSet} from 'Types/collection';
 import {TEditableCollectionItem, TKey, TAddPosition} from './Types';
 import {mixin} from 'Types/util';
 import {Collection} from 'Controls/display';
@@ -96,16 +95,9 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
             throw Error(ERROR_MSG.ITEM_FOR_EDITING_MISSED_IN_COLLECTION);
         }
 
-        const editingItem = item.clone();
-        this._editingKey = editingItem.getKey();
-        collectionItem.setEditing(true, editingItem);
+        this._editingKey = item.getKey();
+        collectionItem.setEditing(true, item);
         this._options.collection.setEditing(true);
-
-        // Перед редактированием запись и коллекция уже могут содержать изменения.
-        // Эти изменения не должны влиять на логику редактирования по месту (завершение редактирования приводит
-        // к сохранению при наличие изменений).
-        editingItem.acceptChanges();
-        (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
     }
 
     /**
@@ -121,34 +113,26 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
             throw Error(ERROR_MSG.EDITING_IS_ALREADY_RUNNING);
         }
 
-        const editingItem = item.clone();
-
         // Попытка сохранить добавляемую запись, которой не был установлен настоящий ключ приведет к ошибке.
         // При добавлении записи без ключа, ей выдается временный ключ для корректной работы коллекции.
         // Это необходимо, т.к. допускается запуск добавления записи без кдюча, однако сохранить, ее невозможно,
         // пока не установлен настоящий ключ.
-        if (editingItem.getKey() === undefined) {
-            editingItem.set(editingItem.getKeyProperty(), ADDING_ITEM_EMPTY_KEY);
+        if (item.getKey() === undefined) {
+            item.set(item.getKeyProperty(), ADDING_ITEM_EMPTY_KEY);
         }
 
-        this._validateAddingItem(editingItem);
-        this._editingKey = editingItem.getKey();
+        this._validateAddingItem(item);
+        this._editingKey = item.getKey();
 
         const collectionItem = this._options.collection.createItem({
-            contents: editingItem,
+            contents: item,
             isAdd: true,
             addPosition: addPosition === 'top' ? 'top' : 'bottom'
         });
 
-        collectionItem.setEditing(true, editingItem);
+        collectionItem.setEditing(true, item);
         this._options.collection.setAddingItem(collectionItem);
         this._options.collection.setEditing(true);
-
-        // Перед редактированием запись и коллекция уже могут содержать изменения.
-        // Эти изменения не должны влиять на логику редактирования по месту (завершение редактирования приводит
-        // к сохранению при наличие изменений).
-        editingItem.acceptChanges();
-        (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
     }
 
     /**
@@ -176,7 +160,6 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         this._options.collection.resetAddingItem();
         collectionItem.setEditing(false, null);
         this._options.collection.setEditing(false);
-        (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
     }
 
     /**
@@ -196,7 +179,6 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         this._options.collection.resetAddingItem();
         collectionItem.setEditing(false, null);
         this._options.collection.setEditing(false);
-        (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
     }
 
     /**

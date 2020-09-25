@@ -89,6 +89,9 @@ var Component = BaseControl.extend({
     _isFullPicker: null,
 
     _limit: 15,
+    _isExpandedPopup: false,
+    _popupHeightStyle: '',
+    _isExpandButtonVisible: true,
 
 // constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
@@ -132,6 +135,7 @@ var Component = BaseControl.extend({
 
     _beforeUpdate: function (options) {
         // this._caption = _private._getCaption(options);
+        this._updateIsExpandButtonVisible(options);
     },
 
     /**
@@ -204,6 +208,12 @@ var Component = BaseControl.extend({
             }
         }
         return false;
+    },
+
+    _updateIsExpandButtonVisible(options): void {
+        const openerTop = options.stickyPosition.targetPosition.top;
+        const popupTop = options.stickyPosition.position.top + Math.abs(options.stickyPosition.margins.top);
+        this._isExpandButtonVisible = openerTop === popupTop;
     },
 
     _dateToDataString(date) {
@@ -287,6 +297,22 @@ var Component = BaseControl.extend({
 
     _onYearMouseLeave: function () {
         this._yearHovered = null;
+    },
+
+    _expandPopup(): void {
+        this._isExpandedPopup = !this._isExpandedPopup;
+        let fittingMode;
+
+        if (this._isExpandedPopup) {
+            // const maxHeightPopup = this._options.stickyPosition.position.maxHeight;
+            // const topPopup = this._options.stickyPosition.position.top;
+            this._popupHeightStyle = 'height: 100%';
+            fittingMode = 'fixed';
+        } else {
+            this._popupHeightStyle = '';
+            fittingMode = 'overflow';
+        }
+        this._notify('sendResult', [fittingMode]);
     },
 
     _onHomeClick: function () {
