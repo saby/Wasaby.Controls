@@ -128,6 +128,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
         super();
         if (this._validateOptions(options)) {
             this._options = options;
+            this._collectionEditor = new CollectionEditor(this._options);
         }
     }
 
@@ -143,6 +144,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
     updateOptions(newOptions: IEditInPlaceOptions): void {
         const combinedOptions = {...this._options, ...newOptions};
         if (this._validateOptions(combinedOptions)) {
+            this._collectionEditor.updateOptions(this._options);
             this._options = combinedOptions;
         }
     }
