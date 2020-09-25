@@ -43,14 +43,10 @@ describe('Controls/_multiselection/Controller', () => {
 
       controller.updateOptions({
          model,
-         selectedKeys: [1],
-         excludedKeys: [1],
          strategyOptions: { items: model.getDisplay().getItems() }
       });
 
       assert.equal(controller._model, model);
-      assert.deepEqual(controller._selectedKeys, [1]);
-      assert.deepEqual(controller._excludedKeys, [1]);
       assert.deepEqual(controller._strategy._items, model.getDisplay().getItems());
    });
 
@@ -100,11 +96,11 @@ describe('Controls/_multiselection/Controller', () => {
       });
 
       it('all selected not by every item', () => {
-         controller.updateOptions({
+         controller = new SelectionController({
             model,
+            strategy,
             selectedKeys: [null],
-            excludedKeys: [],
-            strategyOptions: { items: model.getDisplay().getItems() }
+            excludedKeys: []
          });
 
          const result = controller.isAllSelected(false);
@@ -139,11 +135,11 @@ describe('Controls/_multiselection/Controller', () => {
          keyProperty: 'id'
       }), {});
 
-      controller.updateOptions({
+      controller = new SelectionController({
          model,
+         strategy,
          selectedKeys: [1, 2, 3, 4],
-         excludedKeys: [],
-         strategyOptions: { items: model.getDisplay().getItems() }
+         excludedKeys: []
       });
 
       const addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
@@ -274,17 +270,11 @@ describe('Controls/_multiselection/Controller', () => {
       it('onCollectionAdd', () => {
          model.setItems(items, {});
 
-         controller.updateOptions({
+         controller = new SelectionController({
             model,
+            strategy,
             selectedKeys: [1, 3],
-            excludedKeys: [],
-            strategyOptions: {
-               items: model.getDisplay().getItems(),
-               selectDescendants: false,
-               selectAncestors: false,
-               rootId: null,
-               nodesSourceControllers
-            }
+            excludedKeys: []
          });
 
          const addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(3)];

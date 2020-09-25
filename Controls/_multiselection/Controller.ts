@@ -53,8 +53,6 @@ export class Controller {
     */
    updateOptions(options: ISelectionControllerOptions): void {
       this._strategy.update(options.strategyOptions);
-      this._selectedKeys = options.selectedKeys.slice();
-      this._excludedKeys = options.excludedKeys.slice();
       this._searchValue = options.searchValue;
 
       if (this._model !== options.model) {

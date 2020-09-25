@@ -2135,11 +2135,11 @@ const _private = {
     },
 
     onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
-        const selectionController = _private.getSelectionController(this);
-        if (!selectionController) {
+        if (this._options.multiSelectVisibility === 'hidden') {
             return;
         }
 
+        const selectionController = _private.getSelectionController(this);
         let result;
         selectionController.setLimit(limit);
 
@@ -3304,8 +3304,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             selectionController.updateOptions({
                 model: self._listViewModel,
-                selectedKeys: newOptions.selectedKeys,
-                excludedKeys: newOptions.excludedKeys,
                 searchValue: newOptions.searchValue,
                 strategyOptions: _private.getSelectionStrategyOptions(
                     newOptions,
