@@ -4263,15 +4263,6 @@ describe('Controls/_display/Collection', () => {
         )
     });
 
-    it('.getRowSpacing()', () => {
-        const rowSpacing = 'rowSpacing';
-        const collection = new CollectionDisplay({
-            collection: [],
-            rowSpacing
-        });
-        assert.strictEqual(collection.getRowSpacing(), rowSpacing);
-    });
-
     it('.getLeftSpacing()', () => {
         const leftSpacing = 'leftSpacing';
         const collection = new CollectionDisplay({

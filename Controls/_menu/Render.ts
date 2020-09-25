@@ -165,6 +165,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
     private setListModelOptions(options: IMenuRenderOptions): void {
         options.listModel.setItemsSpacings({
             top: 'null',
+            bottom: 'menu-default',
             left: this.getLeftSpacing(options),
             right: this.getRightSpacing(options)
         });

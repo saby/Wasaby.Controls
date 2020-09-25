@@ -36,7 +36,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         return {
             left: this._$owner.getLeftSpacing().toLowerCase(),
             right: this._$owner.getRightSpacing().toLowerCase(),
-            row: this._$owner.getRowSpacing().toLowerCase()
+            row: this._$owner.getTopSpacing().toLowerCase()
         };
     }
 

@@ -485,7 +485,8 @@ describe('Controls/_display/CollectionItem', () => {
     it('.getContentClasses()', () => {
         let multiSelectVisibility: string;
         const owner = {
-            getRowSpacing(): string { return '#rowSpacing#'; },
+            getTopSpacing(): string { return '#topSpacing#'; },
+            getBottomSpacing(): string { return '#bottomSpacing#'; },
             getLeftSpacing(): string { return '#leftSpacing#'; },
             getRightSpacing(): string { return '#rightSpacing#'; },
             getMultiSelectVisibility(): string { return multiSelectVisibility; },
@@ -493,8 +494,8 @@ describe('Controls/_display/CollectionItem', () => {
         };
         const defaultClasses = [
             'controls-ListView__itemContent',
-            'controls-ListView__item_default-topPadding_#rowspacing#',
-            'controls-ListView__item_default-bottomPadding_#rowspacing#',
+            'controls-ListView__item_default-topPadding_#topspacing#',
+            'controls-ListView__item_default-bottomPadding_#bottomspacing#',
             'controls-ListView__item-rightPadding_#rightspacing#'
         ];
 

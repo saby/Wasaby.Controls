@@ -90,7 +90,6 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     multiSelectVisibility?: string;
     leftSpacing?: string;
     rightSpacing?: string;
-    rowSpacing?: string;
     rowSeparatorSize?: string;
     theme?: string;
     collapsedGroups?: TArrayGroupKey;
@@ -585,9 +584,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$rightSpacing: string;
 
-    protected _$theme: string;
+    protected _$topSpacing: string;
 
-    protected _$rowSpacing: string;
+    protected _$bottomSpacing: string;
+
+    protected _$theme: string;
 
     protected _$searchValue: string;
 
@@ -2228,8 +2229,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
-    setItemsSpacings(itemPadding: {top: string, left: string, right: string}): void {
-        this._$rowSpacing = itemPadding.top || 'default';
+    setItemsSpacings(itemPadding: {top: string, bottom: string, left: string, right: string}): void {
+        this._$topSpacing = itemPadding.top || 'default';
+        this._$bottomSpacing = itemPadding.bottom || 'default';
         this._$leftSpacing = itemPadding.left || 'default';
         this._$rightSpacing = itemPadding.right || 'default';
     }
@@ -2254,8 +2256,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return false;
     }
 
-    getRowSpacing(): string {
-        return this._$rowSpacing;
+    getTopSpacing(): string {
+        return this._$topSpacing;
+    }
+
+    getBottomSpacing(): string {
+        return this._$bottomSpacing;
     }
 
     getLeftSpacing(): string {
@@ -3631,7 +3637,8 @@ Object.assign(Collection.prototype, {
     _$multiSelectVisibility: 'hidden',
     _$leftSpacing: 'default',
     _$rightSpacing: 'default',
-    _$rowSpacing: 'default',
+    _$topSpacing: 'default',
+    _$bottomSpacing: 'default',
     _$searchValue: '',
     _$editingConfig: null,
     _$unique: false,
