@@ -179,6 +179,25 @@ describe('Controls/list_clean/ScrollController', () => {
             });
         });
     });
+    describe('updateItemsHeights', () => {
+        it('rangeChanged', () => {
+            const collection = new Collection({
+                collection: new RecordSet({
+                    rawData: [ { id: '1'} ]
+                })
+            });
+            const options = {
+                collection,
+                virtualScrollConfig: {pageSize: 1},
+                needScrollCalculation: true
+            };
+            const controller = new ScrollController(options);
+            controller.handleResetItems();
+            assert.isTrue(controller.updateItemsHeights({itemsHeights: [], itemsOffsets: []}));
+            assert.isFalse(controller.updateItemsHeights({itemsHeights: [], itemsOffsets: []}));
+
+        });
+    });
     describe('inertialScrolling', () => {
         let clock;
         beforeEach(() => {

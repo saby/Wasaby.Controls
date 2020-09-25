@@ -56,6 +56,7 @@ export default class Browser extends Control {
                            receivedState): Promise<{ items: RecordSet, filterItems: IFilterItem[] }> {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
+        this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._operationsController = this._createOperationsController(options);
         this._filterController = new FilterController(options);

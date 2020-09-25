@@ -165,6 +165,18 @@ describe('Controls/list_clean/BaseControl', () => {
             BaseControl._private.handleListScrollSync(baseControl, 200);
             assert.isTrue(baseControl._pagingVisible);
         });
+        it('is viewport = 0', async () => {
+            baseControl.saveOptions(baseControlCfg);
+            await baseControl._beforeMount(baseControlCfg);
+            baseControl._beforeUpdate(baseControlCfg);
+            baseControl._afterUpdate(baseControlCfg);
+            baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
+            assert.isFalse(baseControl._pagingVisible);
+            baseControl._viewportSize = 0;
+            baseControl._viewSize = 800;
+            baseControl._mouseEnter(null);
+            assert.isFalse(baseControl._pagingVisible);
+        });
     });
     describe('BaseControl paging', () => {
         const baseControlCfg = {
