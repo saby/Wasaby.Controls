@@ -3,6 +3,7 @@
         <ws:partial template="{{'Controls/suggestPopup:_ListWrapper'}}"
                     on:itemClick="_select()"
                     on:markedKeyChanged="_markedKeyChangedHandler()"
+                    suggestDirectionChangedCallback="{{_suggestDirectionChangedCallback}}"
                     templateName="{{_options.suggestTemplate.templateName}}"
                     templateOptions="{{_options.suggestTemplate.templateOptions}}"
                     searchEndCallback="{{_searchEnd}}"
