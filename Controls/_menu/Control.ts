@@ -13,7 +13,7 @@ import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Model, relation} from 'Types/entity';
+import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {view as constView} from 'Controls/Constants';
@@ -25,10 +25,7 @@ import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
 import {StackOpener} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
 import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
-import {
-    FlatSelectionStrategy, SelectionController,
-    ISelectionControllerOptions
-} from 'Controls/multiselection';
+import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOptions} from 'Controls/multiselection';
 
 /**
  * Контрол меню.
@@ -203,12 +200,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             });
         }
         if (this._isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
-            const selectionOptions = { ...this._getSelectionOptions(newOptions), ...{
-                    strategyOptions: {
-                        items: this._listModel.getCollection()
-                    }
-                }};
-            this._getSelectionController().update(selectionOptions);
+            this._updateSelectionController(newOptions);
             this._notify('selectedItemsChanged', [this._getSelectedItems()]);
         }
 
@@ -342,34 +334,46 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
-    private _createSelectionController(options: IMenuControlOptions): SelectionController {
-        const selectionOptions = { ...this._getSelectionOptions(options), ...{
-            strategy: new FlatSelectionStrategy({
-                items: this._listModel.getCollection()
-            })
-        }};
-        return new SelectionController(selectionOptions);
+    private _getSelectionController(): SelectionController {
+        if (!this._selectionController) {
+            this._selectionController = this._createSelectionController(this._options);
+        }
+        return this._selectionController;
     }
 
-    private _getSelectionOptions(options: IMenuControlOptions): ISelectionControllerOptions {
-        const selectedKeys = options.selectedKeys.map((key) => {
+    private _createSelectionController(options: IMenuControlOptions): SelectionController {
+        return new SelectionController({
+            model: this._listModel,
+            selectedKeys: this._getKeysForSelectionController(options),
+            excludedKeys: [],
+            searchValue: options.searchValue,
+            strategy: new FlatSelectionStrategy(this._getSelectionStrategyOptions())
+        });
+    }
+
+    private _updateSelectionController(newOptions: IMenuControlOptions): void {
+        this._getSelectionController().update({
+            model: this._listModel,
+            selectedKeys: this._getKeysForSelectionController(newOptions),
+            excludedKeys: [],
+            searchValue: newOptions.searchValue,
+            strategyOptions: this._getSelectionStrategyOptions()
+        });
+    }
+
+    private _getSelectionStrategyOptions(): IFlatSelectionStrategyOptions {
+        return {
+            items: this._listModel.getCollection()
+        };
+    }
+
+    private _getKeysForSelectionController(options: IMenuControlOptions): TSelectedKeys {
+        return options.selectedKeys.map((key) => {
             const item = this._listModel.getItemBySourceKey(key)?.getContents();
             if (item) {
                 return MenuControl._isHistoryItem(item) ? String(key) : key;
             }
         });
-        return {
-            model: this._listModel,
-            selectedKeys,
-            excludedKeys: []
-        };
-    }
-
-    private _getSelectionController(options?: IMenuControlOptions): SelectionController {
-        if (!this._selectionController) {
-            this._selectionController = this._createSelectionController(options || this._options);
-        }
-        return this._selectionController;
     }
 
     private _pinClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
