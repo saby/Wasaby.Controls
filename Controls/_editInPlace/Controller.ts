@@ -4,6 +4,7 @@ import {CONSTANTS, TEditableCollectionItem} from './Types';
 import {CollectionEditor} from './CollectionEditor';
 import {mixin} from 'Types/util';
 import {Collection} from 'Controls/display';
+import {RecordSet} from 'Types/collection';
 
 const ERROR_MSG = {
     COLLECTION_IS_NOT_DEFINED: 'IEditInPlaceOptions.collection is not defined. Option is required. It must be installed at least once.',
@@ -297,14 +298,21 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             }
             let model;
             if ((result && result.item) instanceof Model) {
-                model = result.item;
+                model = result.item.clone();
             } else if (item && item instanceof Model) {
-                model = item;
+                model = item.clone();
             } else {
                 Logger.error(ERROR_MSG.ITEM_MISSED, this);
                 return {canceled: true};
             }
             this._collectionEditor[isAdd ? 'add' : 'edit'](model, addPosition);
+
+            // Перед редактированием запись и коллекция уже могут содержать изменения.
+            // Эти изменения не должны влиять на логику редактирования по месту (завершение редактирования приводит
+            // к сохранению при наличие изменений).
+            model.acceptChanges();
+            (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
+
             if (this._options.onAfterBeginEdit) {
                 this._options.onAfterBeginEdit(this._collectionEditor.getEditingItem(), isAdd);
             }
@@ -343,6 +351,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
                 return {canceled: true};
             }
             this._collectionEditor[commit ? 'commit' : 'cancel']();
+            (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
             this._options?.onAfterEndEdit(editingItem, isAdd);
         }).finally(() => {
             this._operationsPromises.end = null;
