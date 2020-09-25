@@ -6,15 +6,20 @@ export default class SearchResolver implements ISearchDelay {
 
    protected _options: ISearchDelayOptions = null;
 
+   protected _searchStarted: boolean = false;
+
    constructor(options: ISearchDelayOptions) {
       this._options = options;
    }
 
-   private _resolveCallback(callback: Function, value: string): void {
+   private _resolveCallback(callback: Function, value: string, searchStarted: boolean): void {
       if (this._options.delayTime) {
-         this._callAfterDelay(callback, value);
+         this._callAfterDelay(callback, value).then(() => {
+            this._searchStarted = searchStarted;
+         });
       } else {
          callback(value);
+         this._searchStarted = searchStarted;
       }
    }
 
@@ -25,13 +30,16 @@ export default class SearchResolver implements ISearchDelay {
       }
    }
 
-   private _callAfterDelay(callback: Function, value: string): void {
+   private _callAfterDelay(callback: Function, value: string): Promise<void> {
       this._clearTimer();
 
-      this._delayTimer = setTimeout(() => {
-         this._delayTimer = null;
-         callback(value);
-      }, this._options.delayTime);
+      return new Promise((resolve) => {
+         this._delayTimer = setTimeout(() => {
+            this._delayTimer = null;
+            callback(value);
+            resolve();
+         }, this._options.delayTime);
+      });
    }
 
    resolve(value: string | null): void {
@@ -39,12 +47,15 @@ export default class SearchResolver implements ISearchDelay {
       const minSearchLength = this._options.minSearchLength !== null;
 
       if (minSearchLength && valueLength >= this._options.minSearchLength) {
-         this._resolveCallback(this._options.searchCallback, value);
+         this._resolveCallback(this._options.searchCallback, value, true);
       } else if (minSearchLength || !valueLength) {
-         if (valueLength) {
-            this._resolveCallback(this._options.searchResetCallback, value);
-         } else {
-            this._options.searchResetCallback();
+         if (this._searchStarted) {
+            if (valueLength) {
+               this._resolveCallback(this._options.searchResetCallback, value, false);
+            } else {
+               this._options.searchResetCallback();
+               this._searchStarted = false;
+            }
          }
       }
    }
