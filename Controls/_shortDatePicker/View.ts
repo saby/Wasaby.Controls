@@ -197,8 +197,9 @@ var Component = BaseControl.extend({
         if (!this._options.displayedRanges || !this._options.displayedRanges.length) {
             return true;
         }
-        for (const range of this._options.displayedRanges) {
-            if (date >= range[0] && (date <= range[1] || !range[1])) {
+
+        for (let i = 0; i < this._displayedRanges.length; i++) {
+            if (this._hitsDiplayedRange(date.getFullYear(), i)) {
                 return true;
             }
         }
