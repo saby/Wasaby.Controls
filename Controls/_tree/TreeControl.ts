@@ -529,7 +529,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             this._root = newOptions.root;
             this._updatedRoot = true;
 
-            if (sourceController.getState().root === undefined) {
+            if (typeof sourceController.getState().root === 'undefined') {
                 sourceController.setRoot(this._root);
             }
 
@@ -572,6 +572,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
         if (newOptions.parentProperty !== this._options.parentProperty) {
             viewModel.setParentProperty(newOptions.parentProperty);
+            baseControl.getSourceController().updateOptions(newOptions);
         }
         if (newOptions.hasChildrenProperty !== this._options.hasChildrenProperty) {
             viewModel.setHasChildrenProperty(newOptions.hasChildrenProperty);
