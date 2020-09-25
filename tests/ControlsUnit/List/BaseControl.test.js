@@ -6924,7 +6924,7 @@ define([
 
             let cfgClone = { ...cfg };
             await lists.BaseControl._private.reload(ctrl, cfgClone);
-            await ctrl._sourceController._loadPromise;
+            await ctrl._sourceController._loadPromise.promise;
 
             assert.equal(2, queryCallsCount);
             assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0);

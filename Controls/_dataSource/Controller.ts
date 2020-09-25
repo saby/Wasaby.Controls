@@ -1,4 +1,4 @@
-import {ICrud, PrefetchProxy} from 'Types/source';
+import {ICrud, ICrudPlus, IData, PrefetchProxy} from 'Types/source';
 import {CrudWrapper} from './CrudWrapper';
 import {NavigationController} from 'Controls/source';
 import {INavigationOptionValue,
@@ -14,8 +14,8 @@ import {INavigationOptionValue,
         IPromiseSelectableOptions,
         INavigationOptions} from 'Controls/interface';
 import {TNavigationPagingMode} from 'Controls/_interface/INavigation';
-import {RecordSet, IObservable} from 'Types/collection';
-import {Record as EntityRecord} from 'Types/entity';
+import {RecordSet} from 'Types/collection';
+import {Record as EntityRecord, CancelablePromise} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import {QueryOrderSelector, QueryWhereExpression} from 'Types/source';
 import {IQueryParams} from 'Controls/_interface/IQueryParams';
@@ -28,7 +28,7 @@ import {SyntheticEvent} from 'UI/Vdom';
 
 export interface IControllerState {
     keyProperty: string;
-    source: ICrud;
+    source: ICrud | ICrudPlus;
 
     sorting: QueryOrderSelector;
     filter: QueryWhereExpression<unknown>;
@@ -66,7 +66,7 @@ export default class Controller {
     private _crudWrapper: CrudWrapper;
     private _navigationController: NavigationController;
     private _items: RecordSet;
-    private _loadPromise: LoadResult;
+    private _loadPromise: CancelablePromise<LoadResult>;
 
     private _expandedItems: TKey[];
     private _deepReload: boolean;
@@ -79,7 +79,7 @@ export default class Controller {
     load(direction?: Direction,
          key: TKey = this._options.root,
          navigationSourceConfig?: INavigationSourceConfig
-    ): LoadResult {
+    ): Promise<LoadResult> {
         return this._load(direction, key, navigationSourceConfig);
     }
 
@@ -94,7 +94,7 @@ export default class Controller {
     }
 
     read(key: TKey, meta?: object): Promise<EntityRecord> {
-        return this._options.source.read(key, meta);
+        return (this._options.source as ICrud).read(key, meta);
     }
 
     setItems(items: RecordSet): RecordSet {
@@ -128,7 +128,7 @@ export default class Controller {
         }
 
         if (isSourceChanged && this._crudWrapper) {
-            this._crudWrapper.updateOptions({source: newOptions.source});
+            this._crudWrapper.updateOptions({source: newOptions.source as ICrud});
         }
 
         if (isNavigationChanged) {
@@ -207,9 +207,10 @@ export default class Controller {
         }
     }
 
-    // TODO обсудить
     cancelLoading(): void {
-        //?
+        if (this._loadPromise) {
+            this._loadPromise.cancel();
+        }
     }
 
     destroy(): void {
@@ -285,36 +286,40 @@ export default class Controller {
         direction?: Direction,
         key?: TKey,
         navigationSourceConfig?: INavigationSourceConfig
-    ): LoadResult {
+    ): Promise<LoadResult> {
         if (this._options.source) {
-            this._loadPromise = Controller._getFilterForCollapsedGroups(this._filter, this._options).then((filter) => {
-                return this._getFilterHierarchy(filter, this._options, key).then((preparedFilter) => {
-                    const crudWrapper = this._getCrudWrapper(this._options.source);
+            this._loadPromise =
+                new CancelablePromise(Controller._getFilterForCollapsedGroups(this._filter, this._options)
+                    .then((filter) => {
+                        return this._getFilterHierarchy(filter, this._options, key).then((preparedFilter) => {
+                            const crudWrapper = this._getCrudWrapper(this._options.source as ICrud);
 
-                    let params = {
-                        filter: preparedFilter,
-                        sorting: this._options.sorting
-                    } as IQueryParams;
+                            let params = {
+                                filter: preparedFilter,
+                                sorting: this._options.sorting
+                            } as IQueryParams;
 
-                    if (this._options.navigation) {
-                        params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
-                    }
-                    return crudWrapper.query(params, this._options.keyProperty).then((result) => {
-                        if (result instanceof Error) {
-                            if (this._options.dataLoadErrback instanceof Function) {
-                                this._options.dataLoadErrback(result);
+                            if (this._options.navigation) {
+                                params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
                             }
-                        }
-                        if (result instanceof RecordSet) {
-                            this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
-                        }
-                        return result;
-                    });
-                });
-            }).finally(() => {
-                this._loadPromise = null;
-            });
-            return this._loadPromise;
+                            return crudWrapper.query(params, this._options.keyProperty).then((result) => {
+                                if (result instanceof Error) {
+                                    if (this._options.dataLoadErrback instanceof Function) {
+                                        this._options.dataLoadErrback(result);
+                                    }
+                                }
+                                if (result instanceof RecordSet) {
+                                    this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
+                                }
+                                return result;
+                            });
+                        });
+                    })
+                    .finally(() => {
+                        this._loadPromise = null;
+                    })
+                );
+            return this._loadPromise.promise;
         } else {
             Logger.error('source/Controller: Source option has incorrect type');
             return Promise.reject(new Error('source/Controller: Source option has incorrect type'));
@@ -352,7 +357,7 @@ export default class Controller {
                         resultFilter.entries = operations.selectionToRecord({
                             selected: options.selectedKeys,
                             excluded: options.excludedKeys
-                        }, options.source.getAdapter());
+                        }, (options.source as IData).getAdapter());
                         resolve(resultFilter);
                     });
                 } else {

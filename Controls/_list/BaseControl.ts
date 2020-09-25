@@ -3388,6 +3388,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._sourceController = _private.getSourceController(newOptions);
             }
         }
+
+        if (!newOptions.sourceController && this._sourceController) {
+            this.updateSourceController(newOptions);
+        }
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
         }

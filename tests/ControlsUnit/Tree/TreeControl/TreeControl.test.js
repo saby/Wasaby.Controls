@@ -1180,7 +1180,7 @@ define([
                treeControl._beforeReloadCallback(filter, null, null, treeControl._options);
                filterOnOptionChange = filter;
             };
-            treeControl._children.baseControl._sourceController._loadPromise.addCallback(function(result) {
+            treeControl._children.baseControl._sourceController._loadPromise.promise.addCallback(function(result) {
                treeControl._children.baseControl.reload().addCallback(function(res) {
                   const configClone = {...config};
                   configClone.root = 'testRoot';
