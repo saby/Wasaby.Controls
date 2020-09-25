@@ -710,7 +710,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     protected _$activeItem: T;
 
-    protected _$isEditing: boolean;
+    protected _$isEditing: boolean = false;
 
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 

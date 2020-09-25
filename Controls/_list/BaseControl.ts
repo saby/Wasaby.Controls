@@ -1510,7 +1510,7 @@ const _private = {
                     if (action === IObservable.ACTION_RESET) {
                         result = self._scrollController.handleResetItems();
                     }
-                    if (result && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
+                    if (result) {
                         _private.handleScrollControllerResult(self, result);
                     }
 
@@ -2223,15 +2223,12 @@ const _private = {
                     self._notify('disableVirtualNavigation', [], { bubbling: true });
                 }
             }
-            if (result.activeElement) {
+            if (result.activeElement && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
                 self._notify('activeElementChanged', [result.activeElement]);
-            }
-            if (result.scrollToActiveElement) {
-                
-                // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
-                self._keepScrollAfterReload = true;
-
-                _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+                if (result.scrollToActiveElement) {
+                    // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
+                self._keepScrollAfterReload = true;_private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+                }
             }
         }
         if (result.triggerOffset) {
@@ -3722,7 +3719,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._syncLoadingIndicatorState = null;
             }
 
-            this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            const itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
@@ -3738,7 +3735,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 needCheckTriggers = true;
             }
 
-            if (needCheckTriggers) {
+            if (needCheckTriggers || itemsUpdated) {
                 this.checkTriggerVisibilityWithTimeout();
             }
 
@@ -4226,6 +4223,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onEditingRowKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent) {
+        const editNext = (item, editingConfig, direction: 'top' | 'bottom') => {
+            this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, direction);
+            const shouldAdd = !item && !!editingConfig.autoAdd && editingConfig.addPosition === direction;
+            return this._tryContinueEditing(!!item, shouldAdd, item);
+        };
+
         switch (nativeEvent.keyCode) {
             case 13: // Enter
                 return this._editingRowEnterHandler(e);
@@ -4233,7 +4236,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
                 e.stopPropagation();
                 return this.cancelEdit();
-                break;
+            case 38: // ArrowUp
+                const prev = this._getEditInPlaceController().getPrevEditableItem();
+                return editNext(!!prev && prev.contents, this._getEditingConfig(), 'top');
+            case 40: // ArrowDown
+                const next = this._getEditInPlaceController().getNextEditableItem();
+                return editNext(!!next && next.contents, this._getEditingConfig(), 'bottom');
         }
     },
 
@@ -4282,6 +4290,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _saveEditingInSource(item: Model, isAdd: boolean): Promise<void> {
         return this.getSourceController().update(item).then(() => {
+            // После выделения слоя логики работы с источником данных в отдельный контроллер,
+            // код ниже должен переехать в него.
             if (isAdd) {
                 this._items.append([item]);
             }
