@@ -8,15 +8,13 @@ import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
 import {tmplNotify} from 'Controls/eventUtils';
 import { constants } from 'Env/Env';
 import {RecordSet} from 'Types/collection';
-import {NewSourceController as SourceController} from 'Controls/dataSource';
-import {factory} from "Types/chain";
 
 const DIALOG_PAGE_SIZE = 25;
 const MARKER_VISIBILITY_DEFAULT = 'onactivated';
 const MARKER_VISIBILITY_AFTER_SEARCH = 'visible';
 
-var _private = {
-   checkContext: function(self, context) {
+const _private = {
+   checkContext(self, context) {
       if (context && context.suggestOptionsField) {
          self._suggestListOptions = context.suggestOptionsField.options;
 
@@ -26,7 +24,7 @@ var _private = {
 
          if (self._suggestListOptions.dialogMode) {
             if (self._suggestListOptions.navigation) {
-               var navigation = clone(self._suggestListOptions.navigation);
+               const navigation = clone(self._suggestListOptions.navigation);
 
                /* to turn on infinityScroll */
                navigation.view = 'infinity';
@@ -46,17 +44,17 @@ var _private = {
       }
    },
 
-   isTabChanged: function(options, tabKey) {
-      var currentTabSelectedKey = options.tabsSelectedKey;
+   isTabChanged(options, tabKey) {
+      const currentTabSelectedKey = options.tabsSelectedKey;
       return currentTabSelectedKey !== tabKey;
    },
 
-   getTabKeyFromContext: function(context) {
-      var tabKey = context && context.suggestOptionsField && context.suggestOptionsField.options.tabsSelectedKey;
+   getTabKeyFromContext(context) {
+      const tabKey = context && context.suggestOptionsField && context.suggestOptionsField.options.tabsSelectedKey;
       return tabKey !== undefined ? tabKey : null;
    },
 
-   dispatchEvent: function(container, nativeEvent, customEvent) {
+   dispatchEvent(container, nativeEvent, customEvent) {
       customEvent.keyCode = nativeEvent.keyCode;
       container.dispatchEvent(customEvent);
    },
@@ -64,7 +62,7 @@ var _private = {
    // Список и input находят в разных контейнерах, поэтому мы просто проксируем нажатие клавиш up, down, enter с input'a
    // на контейнер списка, используя при этом API нативного Event'a. Будет переделано в 600 на HOC'и для горячих клавишь
    // https://online.sbis.ru/opendoc.html?guid=eb58d82c-014f-4608-8c61-b9127730a637
-   getEvent: function(eventName): Event {
+   getEvent(eventName): Event {
       let event;
 
       // ie does not support Event constructor
@@ -132,7 +130,7 @@ var _private = {
  * @control
  * @public
  */
-var List = Control.extend({
+const List = Control.extend({
 
    _template: template,
    _notifyHandler: tmplNotify,
@@ -143,29 +141,40 @@ var List = Control.extend({
    _pendingMarkerVisibility: null,
    _isSuggestListEmpty: false,
 
-   _beforeMount: function(options, context) {
+   _beforeMount(options, context) {
       this._searchEndCallback = this._searchEndCallback.bind(this);
       this._collectionChange = this._collectionChange.bind(this);
       this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
+
+      const currentReverseList = this._reverseList;
       _private.checkContext(this, context);
 
-      if (this._reverseList) {
-         this._reverseData();
+      if (this._reverseList !== currentReverseList) {
+         if (this._reverseList) {
+            this._suggestListOptions.suggestDirectionChangedCallback('up');
+         } else {
+            this._suggestListOptions.suggestDirectionChangedCallback('down');
+         }
       }
    },
 
-   _beforeUpdate: function(newOptions, context) {
-      let tabKey = _private.getTabKeyFromContext(context);
+   _beforeUpdate(newOptions, context) {
+      const tabKey = _private.getTabKeyFromContext(context);
 
       /* Need notify after getting tab from query */
       if (_private.isTabChanged(this._suggestListOptions, tabKey)) {
          this._notify('tabsSelectedKeyChanged', [tabKey]);
       }
 
+      const currentReverseList = this._reverseList;
       _private.checkContext(this, context);
 
-      if (this._reverseList) {
-         this._reverseData();
+      if (this._reverseList !== currentReverseList) {
+         if (this._reverseList) {
+            this._suggestListOptions.suggestDirectionChangedCallback('up');
+         } else {
+            this._suggestListOptions.suggestDirectionChangedCallback('down');
+         }
       }
    },
 
@@ -176,7 +185,7 @@ var List = Control.extend({
       }
    },
 
-   _tabsSelectedKeyChanged: function(event, key) {
+   _tabsSelectedKeyChanged(event, key) {
       /* It is necessary to separate the processing of the tab change by suggest layout and
        a user of a control.
        To do this, using the callback-option that only suggest layout can pass.
@@ -184,27 +193,10 @@ var List = Control.extend({
        because in this event user can change template of a List control. */
       this._suggestListOptions.tabsSelectedKeyChangedCallback(key);
 
-      //FIXME remove after https://online.sbis.ru/opendoc.html?guid=5c91cf92-f61e-4851-be28-3f196945884c
+      // FIXME remove after https://online.sbis.ru/opendoc.html?guid=5c91cf92-f61e-4851-be28-3f196945884c
       if (this._options.task1176635657) {
          this._notify('tabsSelectedKeyChanged', [key]);
       }
-   },
-
-   _reverseData(): void {
-      const sourceController: SourceController = this._suggestListOptions.sourceController;
-      const recordSet: RecordSet = sourceController.getItems();
-
-      const recordSetToReverse = recordSet.clone();
-      recordSet.each((e, index) =>
-         recordSetToReverse.move(index, recordSet.getCount() - index));
-
-      // need to use initial recordSet to save metaData in origin format
-      recordSet.clear();
-      recordSetToReverse.forEach((item) => {
-         recordSet.add(item);
-      });
-
-      sourceController.setItems(recordSet);
    },
 
    _itemsReadyCallback(items: RecordSet): void {
@@ -233,18 +225,18 @@ var List = Control.extend({
       this._items = null;
    },
 
-   _inputKeydown: function(event, domEvent) {
-      let
+   _inputKeydown(event, domEvent) {
+      const
          items = this._items,
          itemsCount = items && items.getCount();
 
       if (this._markedKey === null && itemsCount && domEvent.nativeEvent.keyCode === constants.key.up) {
-         let indexLastItem = this._reverseList ? 0 : itemsCount - 1;
+         const indexLastItem = this._reverseList ? 0 : itemsCount - 1;
          this._markedKey = items.at(indexLastItem).getId();
       } else {
          /* TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
           remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3 */
-         let
+         const
             list = this._children.list,
             listContainer = list._container[0] || list._container,
             customEvent = _private.getEvent('keydown');
@@ -253,7 +245,7 @@ var List = Control.extend({
       }
    },
 
-   _searchEndCallback: function(result, filter) {
+   _searchEndCallback(result, filter) {
       if (this._suggestListOptions.searchEndCallback instanceof Function) {
          this._suggestListOptions.searchEndCallback(result, filter);
       }
@@ -270,7 +262,7 @@ var List = Control.extend({
       }
    },
 
-   _markedKeyChanged: function(event, key) {
+   _markedKeyChanged(event, key) {
       this._markedKey = key;
       return this._notify('markedKeyChanged', [key]);
    }
