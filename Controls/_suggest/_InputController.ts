@@ -70,6 +70,8 @@ interface IInputControllerOptions extends IControlOptions, IFilterOptions, ISear
    trim: boolean;
 }
 
+type TSuggestDirection = 'up' | 'down';
+
 /**
  * Контейнер для поля ввода с автодополнением.
  *
@@ -113,6 +115,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _inputActive: boolean = false;
    private _suggestMarkedKey: Key = null;
    private _misspellingCaption: string = null;
+   private _suggestDirection: TSuggestDirection = null;
 
    private _searchDelayController: SearchDelayController = null;
    private _sourceController: SourceController = null;
@@ -151,6 +154,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       // when closing popup we reset the cache with recent keys
       this._historyLoad = null;
       this._historyKeys = null;
+      this._suggestDirection = null;
+      this._setMissSpellingCaption(null);
    }
 
    private _setSuggestMarkedKey(key: Key): void {
@@ -176,7 +181,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._loadDependencies(this._options).addCallback(() => {
          // focus can be moved out while dependencies loading
          if (this._inputActive) {
-            this._sourceController = this._getSourceController();
             this._suggestStateNotify(true);
          }
       });
@@ -216,8 +220,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
    }
 
-   private _setSearchValue(value: string): void {
-      this._searchValue = value;
+   private _suggestDirectionChangedCallback(direction: TSuggestDirection): void {
+      this._suggestDirection = direction;
+      if (direction === 'up') {
+         this._setItems(this._sourceController.getItems());
+      }
    }
 
    private _inputActivated(): void {
@@ -230,8 +237,21 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._searchDelay = 0;
 
          if (!this._options.suggestState) {
-            this._updateSuggestState();
+            this._getSourceController().load().then((recordSet) => {
+               if (recordSet instanceof RecordSet) {
+                  this._setItems(recordSet);
+                  this._updateSuggestState();
+               }
+            });
          }
+      }
+   }
+
+   private _setItems(recordSet: RecordSet): void {
+      if (this._suggestDirection === 'up') {
+         this._sourceController.setItems(this._reverseData(recordSet));
+      } else {
+         this._sourceController.setItems(recordSet);
       }
    }
 
@@ -253,10 +273,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (!error?.canceled) {
          this._hideIndicator();
       }
-   }
-   // TODO remove?
-   private _shouldSearch(value: string): boolean {
-      return this._inputActive && this._isValueLengthLongerThenMinSearchLength(value, this._options);
    }
 
    // TODO remove?
@@ -305,7 +321,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _prepareFilter(filter: QueryWhereExpression<unknown>,
-                          searchParam: string,
                           searchValue: string,
                           minSearchLength: number,
                           tabId: Key,
@@ -321,20 +336,50 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _setFilter(filter: QueryWhereExpression<unknown>, options: IInputControllerOptions): void {
-      this._filter = this._prepareFilter(filter, options.searchParam, this._searchValue,
+      this._filter = this._prepareFilter(filter, this._searchValue,
          options.minSearchLength, this._tabsSelectedKey, this._historyKeys);
+      this._getSourceController(options).setFilter(this._filter);
    }
 
    private _getEmptyTemplate(emptyTemplate: IEmptyTemplateProp): IEmptyTemplateProp | string {
       return emptyTemplate && emptyTemplate.templateName ? emptyTemplate.templateName : emptyTemplate;
    }
 
-   private _updateSuggestState(): void {
-      const shouldSearch = this._shouldSearch(this._searchValue);
+   private _reverseData(rs?: RecordSet): RecordSet {
+      const sourceController: SourceController = this._sourceController;
+      const recordSet: RecordSet = rs ?? sourceController.getItems();
 
-      if (this._options.historyId && !shouldSearch && !this._options.suggestState) {
+      if (recordSet) {
+         for (let i = 0; i < recordSet.getCount(); i++) {
+            recordSet.move(0, recordSet.getCount() - 1 - i);
+         }
+      }
+
+      return recordSet;
+   }
+
+   private _suggestOpenDirectionChangedHandler(event: SyntheticEvent, direction: TSuggestDirection): void {
+      if (direction === 'up') {
+         this._sourceController.load().then((recordSet) => {
+            if (recordSet instanceof RecordSet) {
+               this._reverseData(recordSet);
+               //this._open();
+            }
+         });
+      } else {
+         // this._sourceController.load().then((recordSet) => {
+         //    if (recordSet instanceof RecordSet) {
+         //       this._sourceController.setItems(recordSet);
+         //       this._open();
+         //    }
+         // });
+      }
+   }
+
+   private _updateSuggestState(recordSet?: RecordSet): void {
+      if (this._options.historyId && !this._inputActive && !this._options.suggestState) {
          this._openWithHistory();
-      } else if (shouldSearch || this._options.autoDropDown && !this._options.suggestState) {
+      } else if (this._inputActive || this._options.autoDropDown && !this._options.suggestState) {
          this._setFilter(this._options.filter, this._options);
          this._open();
       } else if (!this._options.autoDropDown) {
@@ -474,6 +519,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._searchErrback = this._searchErrback.bind(this);
       this._searchDelay = options.searchDelay;
       this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
+      this._suggestDirectionChangedCallback = this._suggestDirectionChangedCallback.bind(this);
       this._setFilter(options.filter, options);
       this._emptyTemplate = this._getEmptyTemplate(options.emptyTemplate);
    }
@@ -516,7 +562,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
       if (emptyTemplateChanged) {
          this._emptyTemplate = this._getEmptyTemplate(newOptions.emptyTemplate);
-         // TODO
       }
 
       if ((emptyTemplateChanged || footerTemplateChanged) && newOptions.suggestState ) {
@@ -534,7 +579,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _afterUpdate(): void {
-      if (this._options.suggestState && this._loading === false && !this._showContent) {
+      if (this._options.suggestState && !this._loading && !this._showContent) {
          this._showContent = true;
          this._forceUpdate();
       }
@@ -562,10 +607,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             minSearchLength: this._options.minSearchLength,
             searchCallback: (validatedValue: string) => {
                this._searchStart();
-               searchController.search(validatedValue).then((data) => {
-                  this._updateSuggestState();
-
-                  this._searchEnd(data);
+               searchController.search(validatedValue).then((recordSet) => {
+                  this._setItems(recordSet);
+                  this._updateSuggestState(recordSet);
+                  this._searchEnd(recordSet);
                });
             },
             searchResetCallback: () => {
@@ -590,7 +635,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._searchController;
    }
 
-   protected _getSourceController(): SourceController {
+   protected _getSourceController(options?: IInputControllerOptions): SourceController {
       if (!this._sourceController) {
          this._sourceController = new SourceController({
             dataLoadErrback: (error) => this._searchErrback(error),
@@ -600,7 +645,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             sorting: this._options.sorting,
             source: this._options.source,
             parentProperty: undefined,
-            root: undefined
+            root: undefined,
+            ...options
          });
       }
       return this._sourceController;
@@ -631,8 +677,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       // change only filter for query, tabSelectedKey will be changed after processing query result,
       // otherwise interface will blink
       if (this._tabsSelectedKey !== key) {
-         this._filter = this._prepareFilter(this._options.filter, this._options.searchParam,
+         this._filter = this._prepareFilter(this._options.filter,
             this._searchValue, this._options.minSearchLength, key, this._historyKeys);
+         this._getSourceController().setFilter(this._filter);
+         // TODO: loader
       }
 
       // move focus from tabs to input, after change tab

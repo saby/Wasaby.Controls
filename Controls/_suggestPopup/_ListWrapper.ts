@@ -16,16 +16,31 @@ import {SyntheticEvent} from 'UI/Vdom';
 export default class ListWrapper extends Control<IControlOptions> {
    protected _template: TemplateFunction = template;
 
-   private _suggestOptionsField: typeof _SuggestOptionsField;
+   private _suggestOptionsContext: typeof _SuggestOptionsField;
 
    protected _getChildContext(): object {
       return {
-         suggestOptionsField: this._suggestOptionsField
+         suggestOptionsField: this._suggestOptionsContext
       };
    }
 
+   private _updateContext(options: object): void {
+      const curContext = this._suggestOptionsContext;
+
+      curContext.options = {
+         ...curContext.options,
+         ...options
+      };
+
+      curContext.updateConsumers();
+   }
+
    protected _beforeMount(options?: IControlOptions): void {
-      this._suggestOptionsField = new _SuggestOptionsField(options);
+      this._suggestOptionsContext = new _SuggestOptionsField(options);
+   }
+
+   protected _beforeUpdate(options?: IControlOptions, contexts?: any): void {
+      this._updateContext(options);
    }
 
    protected _tabsSelectedKeyChanged(event: SyntheticEvent, key: string | number | null): void {

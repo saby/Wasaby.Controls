@@ -16,9 +16,11 @@ export default class Controller implements ISearchController {
       const sourceController = this._options.sourceController;
 
       sourceController.setFilter(filter);
-      return sourceController.load().then((v) =>
-         sourceController.setItems(v)
-      );
+      return sourceController.load().then((v) => {
+         if (v instanceof RecordSet) {
+            return v;
+         }
+      });
    }
 
    reset(): Promise<void> {
