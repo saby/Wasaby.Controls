@@ -29,6 +29,20 @@ define([
          });
       });
 
+      describe('EventHandlers', function() {
+         it('should close popup if startValue is null', function() {
+            const component = calendarTestUtils.createComponent(dateRange.RangeSelector, options);
+            const sandbox = sinon.createSandbox();
+
+            sandbox.stub(component._rangeModel, 'setRange');
+            const stubClosePopup = sandbox.stub(component, 'closePopup');
+            component._onResult(new Date());
+
+            assert.isTrue(stubClosePopup.called);
+            sandbox.restore();
+         });
+      });
+
       describe('_rangeChangedHandler', function() {
          it('should set range on model', function() {
             const
