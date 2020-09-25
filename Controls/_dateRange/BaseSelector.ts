@@ -49,7 +49,7 @@ export default class BaseSelector<T> extends Control<T> {
     }
 
     protected _onResult(startValue: Date, endValue: Date): void {
-        if (startValue instanceof Date) {
+        if (startValue instanceof Date || !startValue) {
             this._rangeModel.setRange(startValue, endValue);
             this.closePopup();
         }

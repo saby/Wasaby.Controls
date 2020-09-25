@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import {Controller as EditInPlace, CONSTANTS} from 'Controls/editInPlace';
-import {Collection} from 'Controls/display';
+import {Collection, CollectionItem} from 'Controls/display';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {Logger} from 'UI/Utils';
@@ -413,6 +413,19 @@ describe('Controls/_editInPlace/EditInPlace', () => {
                 assert.isTrue(onBeforeBeginEditCalled);
                 assert.isTrue(onAfterBeginEditCalled);
                 assert.equal(editInPlace.getEditingItem().getKey(), 1);
+            });
+        });
+
+        it('should accept all changes made before starting editing', () => {
+            const item = collection.at(0).contents;
+            item.set('title', 'changedTitle');
+
+            return editInPlace.edit(item).then((res) => {
+                assert.isUndefined(res);
+                assert.isTrue(onBeforeBeginEditCalled);
+                assert.isTrue(onAfterBeginEditCalled);
+                assert.equal(editInPlace.getEditingItem().getKey(), 1);
+                assert.isFalse(editInPlace.getEditingItem().isChanged());
             });
         });
     });
