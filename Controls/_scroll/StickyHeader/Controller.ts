@@ -293,7 +293,6 @@ class StickyHeaderController {
                     this._fixedHeadersStack.bottom[this._fixedHeadersStack.bottom.length - 1]
                 ]);
             }
-            this._updateShadowsVisibility();
             for (const id in this._headers) {
                 this._headers[id].inst.updateFixed([
                     this._fixedHeadersStack.top[this._fixedHeadersStack.top.length - 1],
@@ -301,6 +300,7 @@ class StickyHeaderController {
                 ]);
             }
         }
+        this._updateShadowsVisibility();
         // Спилить после того ак удалим старый скролл контейнер. Используется только там.
         this._callFixedCallback(position);
     }
