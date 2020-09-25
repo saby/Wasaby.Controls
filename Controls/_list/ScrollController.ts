@@ -246,7 +246,7 @@ export default class ScrollController {
 
         if (index !== -1) {
             return new Promise((resolve) => {
-                if (this._virtualScroll && this._virtualScroll.canScrollToItem(index, toBottom, force)) {
+                if (this._virtualScroll && this._virtualScroll.canScrollToItem(index, toBottom, force) && !this._virtualScroll.rangeChanged) {
                     this._fakeScroll = true;
                     scrollCallback(index);
                     resolve(null);
