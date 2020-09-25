@@ -19,6 +19,7 @@ export class InputActivationHelper {
         item: Model
     };
     private _shouldActivate: boolean;
+    private _paramsForFastEdit?: {container: HTMLDivElement | HTMLTableSectionElement, selector: string};
 
     setClickInfo(event: MouseEvent, item: Model): void {
         if (this._clickItemInfo && this._clickItemInfo.item === item) {
@@ -36,25 +37,69 @@ export class InputActivationHelper {
     }
 
     activateInput(activateRowCallback: Function): void {
-        if (!(this._clickItemInfo || this._shouldActivate)) {
+        if (!(this._clickItemInfo || this._shouldActivate || this._paramsForFastEdit)) {
             return;
         }
+
+        const reset = () => {
+            this._clickItemInfo = null;
+            this._shouldActivate = false;
+            this._paramsForFastEdit = null;
+        };
+
         if (this._clickItemInfo) {
             if (this._tryActivateByClickInfo()) {
-                this._clickItemInfo = null;
-                this._shouldActivate = false;
+                reset();
             } else {
                 if (this._shouldActivate) {
                     if (activateRowCallback()) {
-                        this._shouldActivate = false;
-                        this._clickItemInfo = null;
+                        reset();
                     }
                 }
             }
+        } else if (this._paramsForFastEdit) {
+            const input = this._paramsForFastEdit.container.querySelector(this._paramsForFastEdit.selector);
+            if (input) {
+                input.focus();
+                reset();
+            }
         } else if (this._shouldActivate && activateRowCallback()) {
-            this._shouldActivate = false;
-            this._clickItemInfo = null;
+            reset();
         }
+    }
+
+    setInputForFastEdit(currentTarget: HTMLElement, direction: 'top' | 'bottom'): void {
+        // Ячейка, с которй уходит фокус
+        const cell = currentTarget.closest('.controls-Grid__row-cell');
+        if (!cell) { return; }
+
+        let input;
+        let inputClass;
+        const inputPrefix = 'js-controls-Grid__editInPlace__input-';
+
+        // Поле ввода с которого уходит фокус
+        do {
+            input = input ? input.parentNode : currentTarget;
+            inputClass = Array.prototype.find.call(input.classList, (className) => className.indexOf(inputPrefix) !== -1);
+        } while (cell !== input && !inputClass);
+
+        if (input === cell) {
+            return;
+        }
+
+        // Получение индекса строки в которой продолжится редактирование
+        const container = currentTarget.closest('.controls-GridViewV__itemsContainer');
+        const currentRow = currentTarget.closest('.controls-Grid__row');
+        const currentRowIndex = Array.prototype.indexOf.call(container.children, currentRow);
+        const nextRowIndex = currentRowIndex + 1 + (direction === 'top' ? -1 : 1);
+
+        // Получение индекса колонки в которой продолжится редактирование
+        const columnIndex = 1 + Array.prototype.indexOf.call(currentRow.children, cell);
+
+        this._paramsForFastEdit = {
+            container: container as HTMLTableSectionElement | HTMLDivElement,
+            selector: `.controls-Grid__row:nth-child(${nextRowIndex}) .controls-Grid__row-cell:nth-child(${columnIndex}) .${inputClass} input`
+        };
     }
 
     private _tryActivateByClickInfo(): boolean {
@@ -128,5 +173,4 @@ export class InputActivationHelper {
         }
         return false;
     }
-
 }

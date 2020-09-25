@@ -333,21 +333,24 @@ define([
                      mode: 'stackable',
                      inst: {
                         height: 10,
-                        updateFixed: sinon.fake()
+                        updateFixed: sinon.fake(),
+                        updateShadowVisibility: sinon.fake()
                      }
                   },
                   sticky2: {
                      mode: 'stackable',
                      inst: {
                         height: 10,
-                        updateFixed: sinon.fake()
+                        updateFixed: sinon.fake(),
+                        updateShadowVisibility: sinon.fake()
                      }
                   },
                   sticky3: {
                      mode: 'stackable',
                      inst: {
                         height: 10,
-                        updateFixed: sinon.fake()
+                        updateFixed: sinon.fake(),
+                        updateShadowVisibility: sinon.fake()
                      }
                   }
                };

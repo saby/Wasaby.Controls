@@ -198,6 +198,27 @@ describe('Controls/list_clean/ScrollController', () => {
 
         });
     });
+
+    describe('scrollPositionChange', () => {
+        it('virtual', () => {
+            const collection = new Collection({
+                collection: new RecordSet({
+                    rawData: [ { id: '1'} ]
+                })
+            });
+            const options = {
+                collection,
+                virtualScrollConfig: {pageSize: 1},
+                needScrollCalculation: true
+            };
+            const controller = new ScrollController(options);
+            let applyScrollTopCallbackCalled = false;
+            const applyScrollTopCallback = () => applyScrollTopCallbackCalled = true;
+            controller.scrollPositionChange({scrollTop: 0, scrollHeight: 100, clientHeight: 50, applyScrollTopCallback}, true);
+            assert.isFalse(applyScrollTopCallbackCalled);
+        });
+    });
+
     describe('inertialScrolling', () => {
         let clock;
         beforeEach(() => {
