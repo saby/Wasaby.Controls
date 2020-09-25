@@ -536,10 +536,10 @@ const _private = {
             if (sourceControllerState[optionName] &&
                 options[optionName] &&
                 sourceControllerState[optionName] !== options[optionName]) {
-                Logger.error(`BaseControl: It is necessary to set the ${optionName} option in one place`);
+                Logger.warn(`BaseControl: It is necessary to set the ${optionName} option in one place`);
             }
         };
-        const optionsToValidate = ['source', 'navigation', 'sorting'];
+        const optionsToValidate = ['source', 'navigation', 'sorting', 'root'];
 
         optionsToValidate.forEach(validate);
     },

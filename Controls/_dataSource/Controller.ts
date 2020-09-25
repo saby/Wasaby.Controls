@@ -33,6 +33,7 @@ export interface IControllerState {
     sorting: QueryOrderSelector;
     filter: QueryWhereExpression<unknown>;
     navigation: INavigationOptionValue<INavigationSourceConfig>;
+    root?: TKey;
 
     items: RecordSet;
     sourceController: Controller;
@@ -67,6 +68,7 @@ export default class Controller {
     private _navigationController: NavigationController;
     private _items: RecordSet;
     private _loadPromise: CancelablePromise<LoadResult>;
+    private _root: TKey;
 
     private _expandedItems: TKey[];
     private _deepReload: boolean;
@@ -74,6 +76,7 @@ export default class Controller {
     constructor(cfg: IControllerOptions) {
         this._options = cfg;
         this._filter = cfg.filter;
+        this.setRoot(cfg.root);
         this._collectionChange = this._collectionChange.bind(this);
     }
     load(direction?: Direction,
@@ -100,7 +103,7 @@ export default class Controller {
     setItems(items: RecordSet): RecordSet {
         this._setItems(items);
 
-        if (this._options.navigation) {
+        if (this._hasNavigationBySource()) {
             this._getNavigationController(this._options.navigation).updateQueryProperties(items, this._options.root);
         }
 
@@ -119,12 +122,22 @@ export default class Controller {
         return this._filter;
     }
 
+    // FIXME, если parentProperty задаётся на списке, а не на data(browser)
+    setRoot(key: TKey): void {
+        this._root = key;
+    }
+
     updateOptions(newOptions: IControllerOptions): boolean {
         const isFilterChanged = !isEqual(newOptions.filter, this._options.filter);
         const isSourceChanged = newOptions.source !== this._options.source;
         const isNavigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
+
         if (isFilterChanged) {
             this._filter = newOptions.filter;
+        }
+
+        if (!isEqual(newOptions.root, this._options.root)) {
+            this.setRoot(newOptions.root);
         }
 
         if (isSourceChanged && this._crudWrapper) {
@@ -169,6 +182,7 @@ export default class Controller {
             filter: this._filter,
             sorting: this._options.sorting,
             navigation: this._options.navigation,
+            root: this._options.root,
 
             items: this._items,
             sourceController: this
@@ -188,7 +202,7 @@ export default class Controller {
     hasMoreData(direction: Direction, key: TKey = this._options.root): boolean {
         let hasMoreData = false;
 
-        if (this._options.navigation) {
+        if (this._hasNavigationBySource()) {
             hasMoreData = this._getNavigationController(this._options.navigation)
                 .hasMoreData(NAVIGATION_DIRECTION_COMPATIBILITY[direction], key);
         }
@@ -201,7 +215,7 @@ export default class Controller {
     }
 
     shiftToEdge(direction: Direction, id: TKey, shiftMode: TNavigationPagingMode): void {
-        if (this._options.navigation) {
+        if (this._hasNavigationBySource()) {
             this._getNavigationController(this._options.navigation)
                 .shiftToEdge(NAVIGATION_DIRECTION_COMPATIBILITY[direction], id, shiftMode);
         }
@@ -249,7 +263,7 @@ export default class Controller {
         navigationConfig?: IBaseSourceConfig,
         direction?: Direction
     ): void {
-        if (this._options.navigation) {
+        if (this._hasNavigationBySource()) {
             this._getNavigationController(this._options.navigation)
                 .updateQueryProperties(list, id, navigationConfig, NAVIGATION_DIRECTION_COMPATIBILITY[direction]);
         }
@@ -299,7 +313,7 @@ export default class Controller {
                                 sorting: this._options.sorting
                             } as IQueryParams;
 
-                            if (this._options.navigation) {
+                            if (this._hasNavigationBySource()) {
                                 params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
                             }
                             return crudWrapper.query(params, this._options.keyProperty).then((result) => {
@@ -381,9 +395,13 @@ export default class Controller {
     }
 
     private _collectionChange(): void {
-        if (this._options.navigation) {
+        if (this._hasNavigationBySource()) {
             this._getNavigationController(this._options.navigation).updateQueryRange(this._items, this._options.root);
         }
+    }
+
+    private _hasNavigationBySource(): boolean {
+        return Boolean(this._options.navigation && this._options.navigation.source);
     }
 
     private static _isEqualItems(oldList: RecordSet, newList: RecordSet): boolean {

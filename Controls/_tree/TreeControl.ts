@@ -261,7 +261,10 @@ const _private = {
             isExpandAll = _private.isExpandAll(expandedItemsKeys);
         }
 
-        if (!_private.isDeepReload(cfg, self._deepReload) || !expandedItemsKeys.length || isExpandAll) {
+        if (!(_private.isDeepReload(cfg, self._deepReload) && expandedItemsKeys.length && !isExpandAll)) {
+            if (baseControl) {
+                baseControl.getSourceController().setExpandedItems([]);
+            }
             _private.clearNodesSourceControllers(self);
         }
     },
@@ -521,9 +524,14 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         const viewModel = baseControl.getViewModel();
 
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
+            const sourceController = baseControl.getSourceController();
+
             this._root = newOptions.root;
             this._updatedRoot = true;
-            baseControl.getSourceController().updateOptions(newOptions);
+
+            if (sourceController.getState().root === undefined) {
+                sourceController.setRoot(this._root);
+            }
 
             if (this._options.editingConfig) {
                 baseControl.cancelEdit();
