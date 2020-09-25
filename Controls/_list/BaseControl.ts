@@ -2173,9 +2173,8 @@ const _private = {
         }
 
         // для связи с контроллером ПМО
-        const isAllSelected = controller.isAllSelected();
         let selectionType = 'all';
-        if (isAllSelected && self._options.nodeProperty && self._options.searchValue) {
+        if (controller.isAllSelected() && self._options.nodeProperty && self._options.searchValue) {
             let onlyCrumbsInItems = true;
             self._listViewModel.each((item) => {
                 if (onlyCrumbsInItems) {
@@ -2188,7 +2187,6 @@ const _private = {
             }
         }
         self._notify('listSelectionTypeForAllSelectedChanged', [selectionType], {bubbling: true});
-        self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), isAllSelected], {bubbling: true});
     },
 
     changeSelection(self: typeof BaseControl, newSelection: ISelectionObject): Promise<ISelectionObject>|ISelectionObject {
@@ -2196,17 +2194,21 @@ const _private = {
         const selectionDifference = controller.getSelectionDifference(newSelection);
         const result = self._notify('beforeSelectionChanged', [selectionDifference]);
 
+        const isAllSelected = controller.isAllSelected();
         if (result instanceof Promise) {
             result.then((selection: ISelectionObject) => {
                 _private.notifySelection(self, selection);
                 controller.setSelection(selection);
+                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), isAllSelected], {bubbling: true});
             });
         } else if (result !== undefined) {
             _private.notifySelection(self, result);
             controller.setSelection(result);
+            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), isAllSelected], {bubbling: true});
         } else {
             _private.notifySelection(self, newSelection);
             controller.setSelection(newSelection);
+            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), isAllSelected], {bubbling: true});
         }
 
         return result;
