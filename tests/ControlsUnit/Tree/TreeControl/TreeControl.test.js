@@ -2139,6 +2139,11 @@ define([
                baseControl: {
                   getViewModel: function() {
                      return treeGridViewModel;
+                  },
+                  getSourceController: () => {
+                     return {
+                        setExpandedItems: () => {}
+                     };
                   }
                }
             }
@@ -2150,6 +2155,11 @@ define([
                baseControl: {
                   getViewModel: function() {
                      return emptyTreeGridViewModel;
+                  },
+                  getSourceController: () => {
+                     return {
+                        setExpandedItems: () => {}
+                     };
                   }
                }
             }
