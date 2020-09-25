@@ -455,7 +455,7 @@ export default class ScrollController {
             this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                 this._options.needScrollCalculation);
             this._applyScrollTopCallback = params.applyScrollTopCallback;
-            if (!this._isRendering) {
+            if (!this._isRendering && !this._virtualScroll.rangeChanged) {
                 this.completeVirtualScrollIfNeed();
             }
             this.savePlaceholders(rangeShiftResult.placeholders);
