@@ -91,6 +91,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     leftSpacing?: string;
     rightSpacing?: string;
     rowSeparatorSize?: string;
+    stickyMarkedItem?: boolean;
     theme?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
@@ -594,6 +595,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$rowSeparatorSize: string;
 
+    protected _$stickyMarkedItem: boolean;
+
     protected _$editingConfig: IEditingConfig;
 
     protected _$virtualScrolling: boolean;
@@ -759,6 +762,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         if (options.rowSeparatorSize) {
             this._$rowSeparatorSize = options.rowSeparatorSize;
+        }
+
+        if (options.stickyMarkedItem !== undefined) {
+            this._$stickyMarkedItem = options.stickyMarkedItem;
         }
 
         if (!this._$collection) {
@@ -2208,6 +2215,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return result;
     }
 
+    isStickyMarkedItem(): boolean {
+        return this._$stickyMarkedItem;
+    }
+
     getRowSeparatorSize(): string {
         return this._$rowSeparatorSize;
     }
@@ -3639,6 +3650,7 @@ Object.assign(Collection.prototype, {
     _$rightSpacing: 'default',
     _$topSpacing: 'default',
     _$bottomSpacing: 'default',
+    _$stickyMarkedItem: true,
     _$searchValue: '',
     _$editingConfig: null,
     _$unique: false,

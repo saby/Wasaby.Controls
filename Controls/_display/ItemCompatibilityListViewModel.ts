@@ -5,10 +5,9 @@
  */
 
 export interface IItemCompatibilityListViewModel {
-    calcCursorClasses(clickable: boolean, cursor: string): string;
     item: {};
     key: string|number;
-    isStickedMasterItem: boolean;
+    metaData: {};
 }
 
 export class ItemCompatibilityListViewModel implements IItemCompatibilityListViewModel {
@@ -18,10 +17,6 @@ export class ItemCompatibilityListViewModel implements IItemCompatibilityListVie
 
     get key() {
         return this.item.getKey ? this.item.getKey() : this.item;
-    }
-
-    get isStickedMasterItem() {
-        return false; // todo
     }
 
     get metaData() {

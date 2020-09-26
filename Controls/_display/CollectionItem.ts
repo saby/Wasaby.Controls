@@ -477,6 +477,15 @@ export default class CollectionItem<T> extends mixin<
         return this._$dragged;
     }
 
+    isSticked(style: string = 'default'): boolean {
+        return this.isMarked() && this._isSupportSticky(style);
+    }
+
+    protected _isSupportSticky(style: string = 'default'): boolean {
+        return this.getOwner().isStickyMarkedItem() !== false &&
+            (style === 'master' || style === 'masterClassic');
+    }
+
     setDragged(dragged: boolean, silent?: boolean): void {
         if (this._$dragged === dragged) {
             return;
@@ -491,12 +500,14 @@ export default class CollectionItem<T> extends mixin<
     getWrapperClasses(templateHighlightOnHover: boolean = true,
                       theme?: string,
                       cursor: string = 'pointer',
-                      backgroundColorStyle?: string): string {
+                      backgroundColorStyle?: string,
+                      style: string = 'default'): string {
         return `controls-ListView__itemV
             controls-ListView__item_default
             controls-ListView__item_showActions
             js-controls-ItemActions__swipeMeasurementContainer
             controls-ListView__itemV controls-ListView__itemV_cursor-${cursor}
+            controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}
             ${templateHighlightOnHover && !this.isEditing() ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
             ${this.isEditing() ? ` controls-ListView__item_editing_theme-${theme}` : ''}
             ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}
