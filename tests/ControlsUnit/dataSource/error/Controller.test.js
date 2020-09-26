@@ -197,6 +197,7 @@ define([
                theme
             }).then((viewConfig) => {
                assert.isUndefined(viewConfig, 'returns undefined');
+               assert.isTrue(error.processed, 'marks error as processed');
                assert.isTrue(popupHelper.openConfirmation.calledOnce, 'openConfirmation called');
                assert.include(popupHelper.openConfirmation.getCall(0).args[0], {
                   theme,

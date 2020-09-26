@@ -6,13 +6,14 @@ export function getItemsHeightsData(itemsContainer: HTMLElement): {itemsHeights:
     let itemHeightsData = {itemsHeights: [], itemsOffsets: []};
 
     for (let i = startChildrenIndex, len = itemsContainer.children.length; i < len; i++) {
-        if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer')) {
+        if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') && 
+            !itemsContainer.children[i].classList.contains('js-controls-List_invisible-for-VirtualScroll')) {
             startChildrenIndex = i;
             break;
         }
     }
 
-    for (let i = 0, len = itemsContainer.children.length; i < len; i++) {
+    for (let i = 0, len = itemsContainer.children.length - startChildrenIndex; i < len; i++) {
         const itemHeight = Math.round(
             getDimensions(itemsContainer.children[startChildrenIndex + i] as HTMLElement).height
         );

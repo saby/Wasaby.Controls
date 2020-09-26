@@ -4,7 +4,7 @@
                     itemData="{{itemData}}"
                     itemActionsTemplate="{{itemActionsTemplate}}"
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-                    attr:class="js-controls-ColumnScroll__notDraggable"
+                    attr:class="controls-Grid__itemAction js-controls-ColumnScroll__notDraggable"
                     highlightOnHover="{{highlightOnHover}}"
                     theme="{{itemData.theme}}"/>
     </ws:if>

@@ -86,7 +86,7 @@ class StickyHeaderController {
         const fixedHeaders = this._fixedHeadersStack[position];
         for (const id of fixedHeaders) {
             // TODO: https://online.sbis.ru/opendoc.html?guid=cc01c11d-7849-4c0c-950b-03af5fac417b
-            if (this._headers[id] && this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
+            if (this._headers[id] && this._headers[id].inst.shadowVisibility !== SHADOW_VISIBILITY.hidden) {
                 return true;
             }
         }
@@ -211,24 +211,38 @@ class StickyHeaderController {
             this._stickyHeaderResizeObserver.unobserve(elem);
         });
     }
-
+    private _deleteElementFromElementsHeightStack(entry): boolean {
+        if (entry.contentRect.height === 0) {
+            this._elementsHeight.forEach((item, index) => {
+                if (item.key === entry.target) {
+                    this._elementsHeight.splice(index, 1);
+                    return true;
+                }
+            });
+        }
+        return false;
+    }
     private _resizeObserverCallback(entries: any): void {
         let heightChanged = false;
         for (const entry of entries) {
             const heightEntry: IHeightEntry = this._elementsHeight.find((item: IHeightEntry) => {
                 return item.key === entry.target;
             });
-
-            if (heightEntry) {
-                if (heightEntry.value !== entry.contentRect.height) {
-                    heightEntry.value = entry.contentRect.height;
-                    heightChanged = true;
+            // Если у элемента высота ровна нулю, то удаляем его из массива высот.
+            // Так мы избавимся от утечки в _elementsHeight.
+            const isElementDeleted = this._deleteElementFromElementsHeightStack(entry);
+            if (!isElementDeleted) {
+                if (heightEntry) {
+                    if (heightEntry.value !== entry.contentRect.height) {
+                        heightEntry.value = entry.contentRect.height;
+                        heightChanged = true;
+                    }
+                } else {
+                    // ResizeObserver всегда кидает событие сразу после добавления элемента. Не будем генрировать
+                    // событие, а просто сохраним текущую высоту если это первое событие для элемента и высоту
+                    // этого элемента мы еще не сохранили.
+                    this._elementsHeight.push({key: entry.target, value: entry.contentRect.height});
                 }
-            } else {
-                // ResizeObserver всегда кидает событие сразу после добавления элемента. Не будем генрировать
-                // событие, а просто сохраним текущую высоту если это первое событие для элемента и высоту
-                // этого элемента мы еще не сохранили.
-                this._elementsHeight.push({key: entry.target, value: entry.contentRect.height});
             }
         }
         if (heightChanged) {
@@ -384,9 +398,14 @@ class StickyHeaderController {
     private _getHeaderOffset(id: number, position: string) {
         const header = this._headers[id];
         if (header.offset[position] === undefined) {
-            header.offset[position] = header.inst.getOffset(this._container, position);
+            header.offset[position] = this._getHeaderOffsetByContainer(this._container, id, position);
         }
         return header.offset[position];
+    }
+
+    private _getHeaderOffsetByContainer(container: HTMLElement, id: number, position: string) {
+        const header = this._headers[id];
+        return header.inst.getOffset(container, position);
     }
 
     /**
@@ -399,13 +418,13 @@ class StickyHeaderController {
         }
     }
 
-    private _addToHeadersStack(id: number, position: string) {
+    private _addToHeadersStack(id: number, position: POSITION) {
         if (position === 'topbottom') {
             this._addToHeadersStack(id, 'top');
             this._addToHeadersStack(id, 'bottom');
             return;
         }
-        const container = this._container,
+        const
             headersStack = this._headersStack[position],
             newHeaderOffset = this._getHeaderOffset(id, position),
             headerContainerHeight = this._headers[id].container.getBoundingClientRect().height;
@@ -414,7 +433,6 @@ class StickyHeaderController {
         // Если смещение у элементов одинаковое, но у добавляемоего заголовка высота равна нулю,
         // то считаем, что добавляемый находится выше. Вставляем новый заголовок в этой позиции.
         let index = headersStack.findIndex((headerId) => {
-            const headerInst = this._headers[headerId].inst;
             const headerOffset = this._getHeaderOffset(headerId, position);
             return headerOffset > newHeaderOffset ||
                 (headerOffset === newHeaderOffset && headerContainerHeight === 0);
@@ -426,21 +444,20 @@ class StickyHeaderController {
     private _updateFixedInitially(position: POSITION): void {
         const
             container: HTMLElement = this._container,
-            headersStack: number[] = this._headersStack[position];
+            headersStack: number[] = this._headersStack[position],
+            content: HTMLCollection = container.children,
+            contentContainer: HTMLElement = position === POSITION.top ? content[0] : content[content.length - 1];
 
         let
             headersHeight: number = 0,
             headerInst: StickyHeader;
 
-        if ((position === 'top' && !container.scrollTop) ||
-            (position === 'bottom' && container.scrollTop + container.clientHeight >= container.scrollHeight)) {
-            for (let headerId: number of headersStack) {
-                headerInst = this._headers[headerId].inst;
-                if (headersHeight === this._getHeaderOffset(headerId, position)) {
-                    this._headers[headerId].fixedInitially = true;
-                }
-                headersHeight += headerInst.height;
+        for (let headerId: number of headersStack) {
+            headerInst = this._headers[headerId].inst;
+            if (headersHeight === this._getHeaderOffsetByContainer(contentContainer, headerId, position)) {
+                this._headers[headerId].fixedInitially = true;
             }
+            headersHeight += headerInst.height;
         }
     }
 

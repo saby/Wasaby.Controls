@@ -3,6 +3,8 @@ import Utils = require('Types/util');
 import oldWindowManager from 'Controls/_popupTemplate/_oldWindowManager';
 import {Controller as ManagerController, IPopupItem, IPopupPosition, IPopupSizes} from 'Controls/popup';
 import * as TargetCoords from 'Controls/_popupTemplate/TargetCoords';
+import {Control} from 'UI/Base';
+import {goUpByControlTree} from 'UI/Focus';
 
 export interface IDragOffset {
     x: number;
@@ -25,13 +27,6 @@ abstract class BaseController {
     POPUP_STATE_START_DESTROYING: string = 'startDestroying'; // Окно начало удаление, перед всеми операциями по закрытию детей и пендингов
     POPUP_STATE_DESTROYING: string = 'destroying'; // Окно в процессе удаления (используется где есть операции перед удалением, например анимация)
     POPUP_STATE_DESTROYED: string = 'destroyed'; // Окно удалено из верстки
-
-    constructor(): void {
-        if (document) {
-            window.addEventListener('resize', this._resetRootContainerCoords, true);
-            window.addEventListener('scroll', this._resetRootContainerCoords, true);
-        }
-    }
 
     abstract elementCreated(item: IPopupItem, container: HTMLDivElement): boolean;
 
@@ -156,12 +151,10 @@ abstract class BaseController {
     }
 
     protected resizeOuter(item: IPopupItem, container: HTMLDivElement): boolean {
-        this._resetRootContainerCoords();
         return this._elementUpdated(item, container);
     }
 
     protected workspaceResize(): boolean {
-        this._resetRootContainerCoords();
         return false;
     }
 
@@ -215,8 +208,24 @@ abstract class BaseController {
         };
     }
 
-    protected _resetRootContainerCoords(): void {
-        BaseController.rootContainers = {};
+    protected _isAboveMaximizePopup(item: IPopupItem): boolean {
+        const openerContainer: HTMLElement = item.popupOptions?.opener?._container;
+        const parents: Control[] = this._goUpByControlTree(openerContainer);
+        const popupModuleName: string = 'Controls/_popup/Manager/Popup';
+        const oldPopupModuleName: string = 'Lib/Control/Dialog/Dialog'; // Compatible
+
+        for (let i = 0; i < parents.length; i++) {
+            if (parents[i]._moduleName ===  popupModuleName || parents[i]._moduleName === oldPopupModuleName) {
+                if (parents[i]._options.maximize) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private _goUpByControlTree(container: HTMLElement): Control[] {
+        return goUpByControlTree(container);
     }
 
     private static rootContainers = {};
@@ -244,6 +253,10 @@ abstract class BaseController {
                 }
             }
         }
+    }
+
+    static resetRootContainerCoords(): void {
+        BaseController.rootContainers = {};
     }
 
     static getCoordsByContainer(restrictiveContainer: any): IPopupPosition | void {

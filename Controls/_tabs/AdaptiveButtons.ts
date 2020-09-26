@@ -23,17 +23,16 @@ interface IReceivedState {
 
 /**
  * Интерфейс для опций контрола адаптивных вкладок.
- * @interface Controls/_tabs/ITabsAdaptiveButtons
+ * @interface Controls/_tabs/ITabsAdaptiveButtonsOptions
  * @public
  * @author Бондарь А.В.
  */
-
 export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
     align?: string;
     containerWidth: number;
 }
 /**
- * @name Controls/_tabs/ITabsAdaptiveButtons#align
+ * @name Controls/_tabs/ITabsAdaptiveButtonsOptions#align
  * @cfg {String} Выравнивание вкладок по правому или левому краю.
  * @variant left Вкладки выравниваются по левому краю.
  * @variant right Вкладки выравниваются по правому краю.
@@ -41,7 +40,7 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  */
 
 /**
- * @name Controls/_tabs/ITabsAdaptiveButtons#containerWidth
+ * @name Controls/_tabs/ITabsAdaptiveButtonsOptions#containerWidth
  * @cfg {Number} Ширина контейнера вкладок. Необходимо указывать для правильного расчета ширины вкладок.
  */
 
@@ -142,10 +141,19 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             this._items = items;
         });
     }
+
     private _menuItemClickHandler(event: SyntheticEvent<Event>, item: Model): void {
         item.set('isMainTab', true);
+        /*Выбрав один из пунктов меню пользователь активирует соответствующую вкладку.
+        Выбранная в меню вкладка заменяет собой прежнюю крайнюю на экране вкладку*/
+        this._selectedKeyHandler(event, item.get(this._options.keyProperty));
         this._visibleItems.replace(item, this._position);
         this._updateFilter(this._options);
+    }
+
+    //при нажатии на кнопку еще останавливаем событие для того, чтобы вкладка не выбралась.
+    private _onMouseDownHandler(event: SyntheticEvent<Event>): void {
+        event.stopPropagation();
     }
 
     private _prepareItems(options: ITabsAdaptiveButtonsOptions): void {
@@ -202,6 +210,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         let width = 0;
         let indexLast = 0;
         const arrWidth = this._getItemsWidth(items, options.displayProperty);
+
         if (options.align === 'right') {
             arrWidth.reverse();
         }
@@ -219,25 +228,25 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             return sum + current;
         }, 0);
 
-        const minWidth = MIN_WIDTH + MARGIN;
         if (indexLast === arrWidth.length - 2) {
+            const minWidth = this._getMinWidth(this._getTextOfTabByIndex(options, items, 0)) + MARGIN * 2;
             const width = currentWidth - arrWidth[arrWidth.length - 1] + minWidth;
             if (width < options.containerWidth) {
                 indexLast++;
                 return indexLast;
             } else {
-                indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options.containerWidth);
+                indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options, items);
             }
         }
 
         if (indexLast < arrWidth.length - 2) {
-            indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options.containerWidth);
+            indexLast = this._getLastVisibleItemIndex(indexLast, arrWidth, currentWidth, options, items);
         }
         return indexLast;
     }
 
     private _getLastVisibleItemIndex(lastIndex: number,  arrWidth: number[],
-                                     currentWidth: number, containerWidth: number): number {
+                                     currentWidth: number, options: ITabsAdaptiveButtonsOptions, items: RecordSet): number {
         let i = arrWidth.length - 1;
         let indexLast = lastIndex;
         let width = currentWidth;
@@ -245,11 +254,15 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             width = width - arrWidth[i];
             i--;
         }
-        width = width + this._moreButtonWidth + MIN_WIDTH + MARGIN + PADDING_OF_MORE_BUTTON;
         indexLast++;
-        while (width > containerWidth) {
+        const currentTextOfTab = this._getTextOfTabByIndex(options, items, indexLast);
+        let currentMinWidth = this._getMinWidth(currentTextOfTab);
+        width = width + this._moreButtonWidth + currentMinWidth + COUNT_OF_MARGIN * MARGIN + PADDING_OF_MORE_BUTTON;
+        while (width > options.containerWidth) {
             indexLast--;
-            width = width - arrWidth[lastIndex];
+            width = width - arrWidth[indexLast] - currentMinWidth;
+            currentMinWidth = this._getMinWidth(this._getTextOfTabByIndex(options, items, indexLast));
+            width += currentMinWidth;
         }
         return indexLast;
     }
@@ -260,6 +273,15 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             widthArray.push(this._getTextWidth(items.at(i).get(displayProperty), 'l') + COUNT_OF_MARGIN * MARGIN);
         }
         return widthArray;
+    }
+
+    private _getTextOfTabByIndex(options: ITabsAdaptiveButtonsOptions, items: RecordSet, index: number): string {
+        const tab = options.align === 'right' ? items.at(items.getCount() - 1 - index) : items.at(index);
+        return tab.get(options.displayProperty);
+    }
+
+    private _getMinWidth(text: string): number {
+        return this._getTextWidth(text.substring(0, 3) + '...', 'l');
     }
 
     private _getTextWidth(text: string, size: string  = 'l'): number {

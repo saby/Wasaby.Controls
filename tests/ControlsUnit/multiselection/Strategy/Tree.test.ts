@@ -2,11 +2,10 @@
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
-import { FlatSelectionStrategy, TreeSelectionStrategy } from 'Controls/multiselection';
-import { relation } from 'Types/entity';
+import { TreeSelectionStrategy } from 'Controls/multiselection';
+import { relation, Record } from 'Types/entity';
 import * as ListData from 'ControlsUnit/ListData';
 import { RecordSet } from 'Types/collection';
-import { Record } from "wasaby-cli/store/_repos/saby-types/Types/entity";
 
 describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
    const hierarchy = new relation.Hierarchy({
@@ -126,7 +125,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          selection = { selected: [2], excluded: [3] };
          selection = strategy.unselect(selection, [2]);
          assert.deepEqual(selection.selected, []);
-         assert.deepEqual(selection.excluded, [3]);
+         assert.deepEqual(selection.excluded, []);
 
          // выбран узел без родителей и детей
          selection = { selected: [6], excluded: [] };
@@ -158,6 +157,19 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          selection = strategyWithDescendantsAndAncestors.unselect(selection, [4]);
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null, 4]);
+      });
+
+      it('unselect child', () => {
+         // Снять выбор с последнего ближнего ребенка, но ребенок невыбранного ребенка выбран
+         let selection = { selected: [1, 3], excluded: [4] };
+         selection = strategyWithDescendantsAndAncestors.unselect(selection, [5]);
+         assert.deepEqual(selection.selected, [1, 3]);
+         assert.deepEqual(selection.excluded, [4, 5]);
+
+         // Снять выбор с ребенка ребенка (проверка рекурсивной проверки выбранных детей)
+         selection = strategyWithDescendantsAndAncestors.unselect(selection, [3]);
+         assert.deepEqual(selection.selected, []);
+         assert.deepEqual(selection.excluded, []);
       });
    });
 
@@ -232,6 +244,20 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          selection = strategy.toggleAll(selection);
          assert.deepEqual(selection.selected, [2]);
          assert.deepEqual(selection.excluded, []);
+      });
+
+      it('toggleAll after select all by one', () => {
+         let selection = { selected: [1, 2, 3, 4, 5, 6, 7], excluded: [] };
+
+         selection = strategy.unselect(selection, [2]);
+
+         assert.deepEqual(selection.selected, [1, 3, 4, 5, 6, 7]);
+         assert.deepEqual(selection.excluded, []);
+
+         selection = strategy.toggleAll(selection);
+
+         assert.deepEqual(selection.selected, [null]);
+         assert.deepEqual(selection.excluded, [null, 1, 3, 4, 5, 6, 7]);
       });
    });
 
@@ -324,6 +350,14 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
           assert.isFalse(hasSelectedItems);
           assert.deepEqual(nullStateKeys, [6]);
       });
+
+      it('selected node use selectAll and go to parent node', () => {
+         const selection = {selected: [1], excluded: [1]};
+         const res = strategy.getSelectionForModel(selection);
+         assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [1, 2, 5].includes(it.id)) );
+         assert.deepEqual(toArray(res.get(null)), [ ]);
+         assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![1, 2, 5].includes(it.id)) );
+      });
    });
 
    describe('getCount', () => {
@@ -387,7 +421,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
              })
          });
          assert.isNull(treeStrategyWithNodesMoreData.getCount(selection, false));
-      })
+      });
    });
 
    describe('cases of go inside node and out it', () => {

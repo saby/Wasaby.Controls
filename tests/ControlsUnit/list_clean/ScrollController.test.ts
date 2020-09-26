@@ -23,6 +23,7 @@ describe('Controls/list_clean/ScrollController', () => {
                 useNewModel: true,
                 needScrollCalculation: true
             });
+            controller.handleResetItems();
 
             assert.isTrue(setViewIteratorSpy.called);
         });
@@ -37,6 +38,7 @@ describe('Controls/list_clean/ScrollController', () => {
                 useNewModel: true,
                 needScrollCalculation: false
             });
+            controller.handleResetItems();
 
             assert.isFalse(setViewIteratorSpy.called);
         });
@@ -53,6 +55,8 @@ describe('Controls/list_clean/ScrollController', () => {
                 useNewModel: true,
                 needScrollCalculation: true
             });
+            controller.handleResetItems();
+
             const newCollection = new Collection({
                 collection: items
             });
@@ -78,6 +82,8 @@ describe('Controls/list_clean/ScrollController', () => {
                 useNewModel: true,
                 needScrollCalculation: false
             });
+            controller.handleResetItems();
+
             const newCollection = new Collection({
                 collection: items
             });
@@ -106,6 +112,8 @@ describe('Controls/list_clean/ScrollController', () => {
                     needScrollCalculation: false,
                     attachLoadTopTriggerToNull: true
                 });
+                controller.handleResetItems();
+
                 let result = controller.update({
                     options: {
                         collection,
@@ -128,6 +136,7 @@ describe('Controls/list_clean/ScrollController', () => {
                     needScrollCalculation: false,
                     attachLoadTopTriggerToNull: false
                 });
+                controller.handleResetItems();
 
                 let result = controller.update({
                     options: {
@@ -153,6 +162,7 @@ describe('Controls/list_clean/ScrollController', () => {
                     attachLoadTopTriggerToNull: true
                 };
                 const controller = new ScrollController(options);
+                controller.handleResetItems();
 
                 let result = controller.update({
                     options: {
@@ -167,6 +177,25 @@ describe('Controls/list_clean/ScrollController', () => {
 
                 assert.strictEqual(result.triggerOffset.top, 30);
             });
+        });
+    });
+    describe('updateItemsHeights', () => {
+        it('rangeChanged', () => {
+            const collection = new Collection({
+                collection: new RecordSet({
+                    rawData: [ { id: '1'} ]
+                })
+            });
+            const options = {
+                collection,
+                virtualScrollConfig: {pageSize: 1},
+                needScrollCalculation: true
+            };
+            const controller = new ScrollController(options);
+            controller.handleResetItems();
+            assert.isTrue(controller.updateItemsHeights({itemsHeights: [], itemsOffsets: []}));
+            assert.isFalse(controller.updateItemsHeights({itemsHeights: [], itemsOffsets: []}));
+
         });
     });
     describe('inertialScrolling', () => {
@@ -193,6 +222,7 @@ describe('Controls/list_clean/ScrollController', () => {
             needScrollCalculation: false
         };
         const controller = new ScrollController(options);
+        controller.handleResetItems();
 
         it('inertialScrolling created', () => {
             assert.isOk(controller._inertialScrolling);

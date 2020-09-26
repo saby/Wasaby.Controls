@@ -175,7 +175,7 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
        * </pre>
        * wml:
        * <pre>
-       *    <Controls.input:Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
+       *    <Controls.input:Mask mask="+\?d (ddd) ddd-dd-dd" formatMaskChars="{{ _formatMaskChars }}"/>
        * </pre>
        */
 
@@ -196,7 +196,7 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
        * </pre>
        * wml:
        * <pre>
-       *    <Controls.input:Mask mask="+?d (ddd)ddd-dd-dd" formatMaskChars={{_formatMaskChars}}/>
+       *    <Controls.input:Mask mask="+\?d (ddd) ddd-dd-dd" formatMaskChars="{{ _formatMaskChars }}"/>
        * </pre>
        */
 

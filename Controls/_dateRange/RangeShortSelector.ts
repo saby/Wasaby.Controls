@@ -1,11 +1,12 @@
 import BaseSelector from './BaseSelector';
-import {Date as WSDate} from 'Types/entity';
+import {Date as WSDate, descriptor} from 'Types/entity';
 import ILinkView from './interfaces/ILinkView';
 import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import coreMerge = require('Core/core-merge');
 import template = require('wml!Controls/_dateRange/RangeShortSelector/RangeShortSelector');
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import dateControlsUtils from "./Utils";
 
 /**
  * Контрол позволяет пользователю выбрать временной период: месяц, квартал, полугодие, год. Выбор происходит с помощью панели быстрого выбора периода.
@@ -24,6 +25,7 @@ import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/ICaptionFormatter
  * @control
  * @public
  * @category Input
@@ -67,26 +69,24 @@ interface IRangeShortSelectorOptions extends IControlOptions {
 
 export default class RangeShortSelector extends BaseSelector<IRangeShortSelectorOptions> {
     protected _template: TemplateFunction = template;
+    protected _fittingMode: string = 'overflow';
 
     protected _getPopupOptions(): IStickyPopupOptions {
         let className;
         const container = this._children.linkView.getPopupTarget();
-        let horizontalTargetPoint;
         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
             className = 'controls-DateRangeSelectorLite__picker-years-only';
-            horizontalTargetPoint = 'center';
         } else {
             className = 'controls-DateRangeSelectorLite__picker-normal';
-            horizontalTargetPoint = 'right';
         }
 
         return {
             opener: this,
             target: container,
             className,
-            fittingMode: 'overflow',
+            fittingMode: this._fittingMode,
             direction: {
-                horizontal: horizontalTargetPoint
+                horizontal: 'center'
             },
             targetPoint: { horizontal: 'left' },
             eventHandlers: {
@@ -113,7 +113,7 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
                 displayedRanges: this._options.displayedRanges,
                 stubTemplate: this._options.stubTemplate,
                 captionFormatter: this._options.captionFormatter,
-                dateConstructor: this._options.dateConstructor
+                dateConstructor: this._options.dateConstructor,
             }
         };
     }
@@ -121,6 +121,13 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
     _mouseEnterHandler(): void {
         const loadCss = ({View}) => View.loadCSS();
         this._startDependenciesTimer('Controls/shortDatePicker', loadCss);
+    }
+
+    _sendResultHandler(event: SyntheticEvent, fittingMode: string): void {
+        if (typeof fittingMode === 'string') {
+            this._fittingMode = fittingMode;
+            this.openPopup();
+        }
     }
 
     shiftBack(): void {
@@ -135,12 +142,17 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
         return {
             ...IPeriodLiteDialog.getDefaultOptions(),
             ...ILinkView.getDefaultOptions(),
-            dateConstructor: WSDate
+            dateConstructor: WSDate,
+            captionFormatter: dateControlsUtils.formatDateRangeCaption
         };
     }
 
     static getOptionTypes(): object {
-        return coreMerge(coreMerge({}, IPeriodLiteDialog.getOptionTypes()), ILinkView.getOptionTypes());
+        return {
+            ...IPeriodLiteDialog.getOptionTypes(),
+            ...ILinkView.getOptionTypes(),
+            captionFormatter: descriptor(Function)
+        };
     }
 
     EMPTY_CAPTIONS: object = ILinkView.EMPTY_CAPTIONS;

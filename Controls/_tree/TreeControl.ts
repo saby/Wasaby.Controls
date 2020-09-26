@@ -17,6 +17,9 @@ import selectionToRecord = require('Controls/_operations/MultiSelector/selection
 import { TreeItem } from 'Controls/display';
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
+import {ISelectionObject} from "../_interface/ISelectionType";
+import {CrudEntityKey} from "Types/source";
+import {TMovePosition} from "../_list/Controllers/MoveController";
 
 const HOT_KEYS = {
     expandMarkedItem: Env.constants.key.right,
@@ -262,7 +265,6 @@ const _private = {
                     _private.clearNodeSourceController(self, key);
                 }
             });
-            viewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
         } else {
             expandedItemsKeys = cfg.expandedItems || [];
             isExpandAll = _private.isExpandAll(expandedItemsKeys);
@@ -284,6 +286,7 @@ const _private = {
 
     afterReloadCallback: function(self, options, loadedList: RecordSet) {
         const baseControl = self._children.baseControl;
+        // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         const viewModel = baseControl && baseControl.getViewModel();
 
         if (viewModel) {
@@ -299,7 +302,6 @@ const _private = {
             const modelExpandedItems = viewModel.getExpandedItems();
             const isDeepReload = _private.isDeepReload(options, self._deepReload);
 
-            // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
             if (!isDeepReload || self._needResetExpandedItems) {
                 viewModel.resetExpandedItems();
                 viewModel.setHasMoreStorage({});
@@ -401,6 +403,10 @@ const _private = {
         });
     },
 
+    getItems(): RecordSet {
+        return this._children.baseControl.getItems();
+    },
+
     getReloadableNodes: function(viewModel, nodeKey, keyProp, nodeProp) {
         var nodes = [];
         _private.nodeChildsIterator(viewModel, nodeKey, nodeProp, function(elem) {
@@ -500,6 +506,7 @@ const _private = {
  *
  * @class Controls/_tree/TreeControl
  * @mixes Controls/interface/IEditableList
+ * @mixes Controls/_list/interface/IMovableList
  * @extends Controls/_list/ListControl
  * @control
  * @private
@@ -684,23 +691,66 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
         return result;
     },
-    beginEdit: function(options) {
-        return this._options.readOnly ? Deferred.fail() : this._children.baseControl.beginEdit(options);
-    },
-    beginAdd: function(options) {
-        return this._options.readOnly ? Deferred.fail() : this._children.baseControl.beginAdd(options);
+
+    // region Edit in place
+
+    getEditingItem(): Model {
+        return this._children.baseControl.getEditingItem();
     },
 
-    cancelEdit: function() {
-        return this._options.readOnly ? Deferred.fail() : this._children.baseControl.cancelEdit();
+    beginEdit(options) {
+        return this._children.baseControl.beginEdit(options);
     },
 
-    commitEdit: function() {
-        return this._options.readOnly ? Deferred.fail() : this._children.baseControl.commitEdit();
+    beginAdd(options) {
+        return this._children.baseControl.beginAdd(options);
     },
+
+    cancelEdit() {
+        return this._children.baseControl.cancelEdit();
+    },
+
+    commitEdit() {
+        return this._children.baseControl.commitEdit();
+    },
+
+    // endregion
+
+
+    // region mover
+
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+        return this._children.baseControl.moveItems(selection, targetKey, position);
+    },
+
+    moveItemUp(selectedKey: CrudEntityKey): Promise<void> {
+        return this._children.baseControl.moveItemUp(selectedKey);
+    },
+
+    moveItemDown(selectedKey: CrudEntityKey): Promise<void> {
+        return this._children.baseControl.moveItemDown(selectedKey);
+    },
+
+    moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.moveItemsWithDialog(selection);
+    },
+
+    // endregion mover
+
+    // region remover
+
+    removeItems(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.removeItems(selection);
+    },
+
+    removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+        return this._children.baseControl.removeItemsWithConfirmation(selection);
+    },
+
+    // endregion remover
 
     _markedKeyChangedHandler: function(event, key) {
-        this._notify('markedKeyChanged', [key]);
+        return this._notify('markedKeyChanged', [key]);
     },
 
     _draggingItemMouseMove(e, itemData, nativeEvent){
@@ -764,6 +814,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 _private.toggleExpanded(this, dispItem);
             }
         }
+        return eventResult;
     },
 
     handleKeyDown(event): void {

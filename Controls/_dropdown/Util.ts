@@ -2,6 +2,7 @@ import rk = require('i18n!Controls');
 import Controller from 'Controls/_dropdown/_Controller';
 import {ICrudPlus} from 'Types/source';
 import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 export function prepareEmpty(emptyText) {
    if (emptyText) {
@@ -19,6 +20,8 @@ export function loadItems(
          controller.setHistoryItems(receivedState.history);
       });
    } else if (source) {
-      return controller.loadItems();
+      return controller.loadItems().catch((error) => {
+         dataSourceError.process({error});
+      });
    }
 }

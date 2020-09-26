@@ -1,7 +1,6 @@
 import rk = require('i18n!Controls');
 import BaseControl = require('Core/Control');
-import coreMerge = require('Core/core-merge');
-import {Date as WSDate} from 'Types/entity';
+import {Date as WSDate, descriptor} from 'Types/entity';
 import getCurrentPeriod = require('Core/helpers/Date/getCurrentPeriod');
 import IPeriodSimpleDialog from './IDateLitePopup';
 import {Base as dateUtils} from 'Controls/dateUtils';
@@ -11,6 +10,7 @@ import ItemWrapper = require('wml!Controls/_shortDatePicker/ItemWrapper');
 import {date as formatDate} from 'Types/formatter';
 import monthTmpl = require('wml!Controls/_shortDatePicker/monthTemplate');
 import {Logger} from 'UI/Utils';
+import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
 /**
  * Контрол выбора даты или периода.
@@ -88,7 +88,11 @@ var Component = BaseControl.extend({
 
     _isFullPicker: null,
 
-    // constructor: function() {
+    _isExpandedPopup: false,
+    _popupHeightStyle: '',
+    _isExpandButtonVisible: true,
+
+// constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
     //    Component.superclass.constructor.apply(this, arguments);
     // },
@@ -127,6 +131,7 @@ var Component = BaseControl.extend({
 
     _beforeUpdate: function (options) {
         // this._caption = _private._getCaption(options);
+        this._updateIsExpandButtonVisible(options);
     },
 
     /**
@@ -136,6 +141,12 @@ var Component = BaseControl.extend({
     setYear: function (year) {
         this._position = new this._options.dateConstructor(year, 0, 1);
         this._notify('yearChanged', [year]);
+    },
+
+    _updateIsExpandButtonVisible(options): void {
+        const openerTop = options.stickyPosition.targetPosition.top;
+        const popupTop = options.stickyPosition.position.top + Math.abs(options.stickyPosition.margins.top);
+        this._isExpandButtonVisible = openerTop === popupTop;
     },
 
     _dateToDataString(date) {
@@ -217,6 +228,22 @@ var Component = BaseControl.extend({
 
     _onYearMouseLeave: function () {
         this._yearHovered = null;
+    },
+
+    _expandPopup(): void {
+        this._isExpandedPopup = !this._isExpandedPopup;
+        let fittingMode;
+
+        if (this._isExpandedPopup) {
+            // const maxHeightPopup = this._options.stickyPosition.position.maxHeight;
+            // const topPopup = this._options.stickyPosition.position.top;
+            this._popupHeightStyle = 'height: 100%';
+            fittingMode = 'fixed';
+        } else {
+            this._popupHeightStyle = '';
+            fittingMode = 'overflow';
+        }
+        this._notify('sendResult', [fittingMode]);
     },
 
     _onHomeClick: function () {
@@ -319,6 +346,7 @@ Component.EMPTY_CAPTIONS = IPeriodSimpleDialog.EMPTY_CAPTIONS;
 Component.getDefaultOptions = function () {
     return {
         ...IPeriodSimpleDialog.getDefaultOptions(),
+        captionFormatter: dateControlsUtils.formatDateRangeCaption,
         itemTemplate: ItemWrapper,
         dateConstructor: WSDate
     };
@@ -326,7 +354,10 @@ Component.getDefaultOptions = function () {
 Component._theme = ['Controls/shortDatePicker'];
 
 Component.getOptionTypes = function () {
-    return coreMerge({}, IPeriodSimpleDialog.getOptionTypes());
+    return {
+        ...IPeriodSimpleDialog.getOptionTypes(),
+        captionFormatter: descriptor(Function)
+    };
 };
 
 export default Component;

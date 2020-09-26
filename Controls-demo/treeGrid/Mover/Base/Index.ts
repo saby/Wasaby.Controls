@@ -4,8 +4,7 @@ import {HierarchicalMemory} from 'Types/source';
 import {Gadgets} from '../../DemoHelpers/DataCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { TExpandOrColapsItems } from 'Controls-demo/types';
-import {MoveController, IMoveControllerOptions} from 'Controls/list';
-import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
+import { ISelectionObject } from 'Controls/interface';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -13,9 +12,6 @@ export default class extends Control {
     protected _columns: IColumn[];
     private _selectedKeys: [];
     private _excludedKeys: TExpandOrColapsItems;
-    private _filter: object;
-
-    private _mover: MoveController;
 
     protected _beforeMount(): void {
         this._columns = [{
@@ -39,43 +35,17 @@ export default class extends Control {
                 }
             }
         });
-        this._setMoverOptions();
     }
 
     protected _moveButtonClick(): void {
         if (this._selectedKeys.length) {
-            this._mover.moveWithDialog({
+            const selection: ISelectionObject = {
                 selected: this._selectedKeys,
                 excluded: this._excludedKeys
-            }, this._filter).then(() => {
+            };
+            this._children.treeGrid.moveItemsWithDialog(selection).then(() => {
                 this._children.treeGrid.reload();
             });
-        }
-    }
-
-    private _setMoverOptions() {
-        const moverCgf: IMoveControllerOptions = {
-            parentProperty: 'parent',
-            source: this._viewSource,
-            dialogOptions: {
-                opener: this,
-                template: 'Controls/moverDialog:Template',
-                templateOptions: {
-                    showRoot: true,
-                    keyProperty: 'id',
-                    parentProperty: 'parent',
-                    searchParam: 'title',
-                    filter: this._filter,
-                    nodeProperty: 'type',
-                    source: this._viewSource,
-                    columns: this._columns
-                } as Partial<IMoverDialogTemplateOptions>
-            }
-        }
-        if (!this._mover) {
-            this._mover = new MoveController(moverCgf);
-        } else {
-            this._mover.update(moverCgf)
         }
     }
 

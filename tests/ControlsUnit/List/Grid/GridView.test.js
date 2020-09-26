@@ -88,7 +88,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
          let count = 0;
          let listModel = {
             getCount: () => count,
-            getEditingItemData: () => null
+            isEditing: () => false
          }
          var
              cfg = {
@@ -120,11 +120,11 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
       });
       it('Footer with itemActionsPosition outside', function() {
          let count = 0;
-         let editingItemData = {};
+         let isEditing = true;
          let listModel = {
             getCount: () => count,
-            getEditingItemData: () => editingItemData
-         }
+            isEditing: () => isEditing
+         };
          var
              cfg = {
                 columns: [
@@ -142,7 +142,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
 
          assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default controls-GridView__footer__itemActionsV_outside_theme-default');
 
-         editingItemData = null;
+         isEditing = false;
          assert.equal(gridView._getFooterClasses(), 'controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes_theme-default');
 
          count = 10;
@@ -434,7 +434,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
          gridView.saveOptions(cfg);
          gridView._listModel = {
             setBaseItemTemplateResolver: () => {},
-            setHeaderInEmptyListVisible: () => {},
+            setHeaderVisibility: () => {},
             setColumnTemplate: () => {},
             setColumnScroll: (opts, silent) => {calledMethods.push(['setColumnScroll', silent])},
             setColumns: (opts, silent) => {calledMethods.push(['setColumns', silent])},
@@ -488,7 +488,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                getElementsByClassName: (selector) => {
                   if (selector === 'controls-Grid_columnScroll') {
                      return [contentContainer];
-                  } else if(selector === 'controls-BaseControl__emptyTemplate') {
+                  } else if(selector === 'js-controls-GridView__emptyTemplate') {
                      return [null];
                   }
                }
@@ -648,14 +648,16 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                });
             });
 
-            it('should update columnScrollVisibilty in model after editingItemData has changed', () => {
+            it('should update columnScrollVisibilty in model after editing started/stopped', () => {
                const items = new collection.RecordSet({
                   rawData: [],
                   keyProperty: 'id'
                });
                const listModel = new gridMod.GridViewModel({ ...tempCfg, items });
+               const newListModel = new gridMod.GridViewModel({ ...tempCfg, items });
+               newListModel.isEditing = () => true;
                const oldOptions = { ...cfg, listModel };
-               const newOptions = {...cfg, listModel, editingItemData: {id: 1}};
+               const newOptions = { ...cfg, newListModel };
 
                gridView._beforeMount(oldOptions);
                gridView.saveOptions(oldOptions);
@@ -701,6 +703,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             let wasSwipeInited;
             let wasSwipeClosed;
             let swipeDirection;
+            let wasEventStopped;
 
             const createTouchStartEvent = (touches) => ({
                preventDefault: () => {},
@@ -715,7 +718,9 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             });
 
             const createSwipeEvent = (direction, isFixed) => ({
-               stopPropagation: () => {},
+               stopPropagation: () => {
+                  wasEventStopped = true;
+               },
                nativeEvent: { direction },
                target: {
                   closest: () => isFixed
@@ -725,6 +730,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             beforeEach(async() => {
                wasSwipeInited = false;
                wasSwipeClosed = false;
+               wasEventStopped = false;
 
                contentContainer.querySelector = (selector) => selector === '.controls-Grid_columnScroll__fixed:nth-child(2)' ? {
                   getBoundingClientRect: () => ({
@@ -803,6 +809,22 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                   assert.equal(swipeDirection, 'left');
                   assert.isFalse(gridView._leftSwipeCanBeStarted);
                });
+               it('shouldn\'t handle top swipe', () => {
+                  gridView._startDragScrolling(createTouchStartEvent([55]), 'touch');
+                  gridView._onItemSwipe(createSwipeEvent('top', false));
+
+                  assert.isFalse(wasSwipeInited);
+                  assert.isFalse(wasEventStopped);
+                  assert.notExists(gridView._leftSwipeCanBeStarted);
+               });
+               it('shouldn\'t handle bottom swipe', () => {
+                  gridView._startDragScrolling(createTouchStartEvent([55]), 'touch');
+                  gridView._onItemSwipe(createSwipeEvent('bottom', false));
+
+                  assert.isFalse(wasSwipeInited);
+                  assert.isFalse(wasEventStopped);
+                  assert.notExists(gridView._leftSwipeCanBeStarted);
+               });
             });
          });
 
@@ -850,42 +872,61 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             let hasItemsRecordSet;
             let itemsCount;
             let setEditing = (hasEditing) => {
-               gridView._options.editingItemData = hasEditing
+               gridView._options.listModel.isEditing = () => hasEditing
             };
 
             gridView._columnScrollController = { isVisible: () => needScrollBySize };
             gridView._options.listModel = {
                getItems: () => hasItemsRecordSet ? {
                   getCount: () => itemsCount
-               } : null
+               } : null,
+               isEditing: () => false
             };
 
-            // hasItemsRecordSet, itemsCount, needScrollBySize, hasEditing,   EXPECTED_VISIBILITY
+            // hasItemsRecordSet, itemsCount, needScrollBySize, hasEditing, headerInEmptyListVisible,  EXPECTED_VISIBILITY
             [
-               [false, 0, false, false, false],
-               [false, 0, false, true, false],
-               [false, 0, true, false, false],
-               [false, 0, true, true, false],
-               [false, 5, false, false, false],
-               [false, 5, false, true, false],
-               [false, 5, true, false, false],
-               [false, 5, true, true, false],
-               [true, 0, false, false, false],
-               [true, 0, false, true, false],
-               [true, 0, true, false, false],
-               [true, 0, true, true, true],
-               [true, 5, false, false, false],
-               [true, 5, false, true, false],
-               [true, 5, true, false, true],
-               [true, 5, true, true, true]
+               [false, 0, false, false, true, false],
+               [false, 0, false, true, true, false],
+               [false, 0, true, false, true, true],
+               [false, 0, true, true, true, true],
+               [false, 5, false, false, true, false],
+               [false, 5, false, true, true, false],
+               [false, 5, true, false, true, true],
+               [false, 5, true, true, true, true],
+               [true, 0, false, false, true, false],
+               [true, 0, false, true, true, false],
+               [true, 0, true, false, true, true],
+               [true, 0, true, true, true, true],
+               [true, 5, false, false, true, false],
+               [true, 5, false, true, true, false],
+               [true, 5, true, false, true, true],
+               [true, 5, true, true, true, true],
+
+               [false, 0, false, false, false, false],
+               [false, 0, false, true, false, false],
+               [false, 0, true, false, false, false],
+               [false, 0, true, true, false, false],
+               [false, 5, false, false, false, false],
+               [false, 5, false, true, false, false],
+               [false, 5, true, false, false, false],
+               [false, 5, true, true, false, false],
+               [true, 0, false, false, false, false],
+               [true, 0, false, true, false, false],
+               [true, 0, true, false, false, false],
+               [true, 0, true, true, false, true],
+               [true, 5, false, false, false, false],
+               [true, 5, false, true, false, false],
+               [true, 5, true, false, false, true],
+               [true, 5, true, true, false, true]
             ].forEach((params, index) => {
                hasItemsRecordSet = params[0];
                itemsCount = params[1];
                needScrollBySize = params[2];
                setEditing(params[3]);
+               gridView._options.headerInEmptyListVisible = params[4];
 
-               assert.equal(params[4], gridView._isColumnScrollVisible(),
-                   `Wrong column scroll visibility with params[${index}]: {hasItemsRecordSet: ${params[0]}, itemsCount: ${params[1]}, needScrollBySize: ${params[2]}, hasEditing: ${params[3]}.}`
+               assert.equal(params[5], gridView._isColumnScrollVisible(),
+                   `Wrong column scroll visibility with params[${index}]: {hasItemsRecordSet: ${params[0]}, itemsCount: ${params[1]}, needScrollBySize: ${params[2]}, hasEditing: ${params[3]}, headerInEmptyListVisible: ${params[4]}.}`
                );
             });
          });
@@ -919,7 +960,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             assert.equal(oldClasses, newClasses);
          });*/
 
-         it('update column scroll shadow styles should not leads to forceUpdate (const styles object)', () => {
+         it('update column scroll shadow styles should leads to forceUpdate', () => {
             gridView.saveOptions(cfg);
             gridView._afterMount();
 
@@ -935,7 +976,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             assert.equal('left: 0px;', newStyles.start);
             assert.equal('', newStyles.end);
 
-            assert.equal(oldStyles, newStyles);
+            assert.notEqual(oldStyles, newStyles);
          });
 
          it('should call drag scroll methods only if column scroll enabled', () => {

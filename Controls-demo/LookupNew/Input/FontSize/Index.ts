@@ -10,6 +10,7 @@ export default class extends Control {
         data: COMPANIES
     });
     protected _selectedKeys: string[] = ['Ромашка, ООО'];
+    protected _value: string = 'Ромашка, ООО';
 
     static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/LookupNew/Lookup'];
 }

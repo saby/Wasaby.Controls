@@ -53,6 +53,10 @@ export default class VirtualScroll {
         this._containerHeightsData = {...this._containerHeightsData, ...containerData};
     }
 
+    getRange(): IRange {
+        return this._range;
+    }
+
     /**
      * Создает новый диапазон видимых индексов
      * @remark Используется при инициализации
@@ -242,10 +246,12 @@ export default class VirtualScroll {
             heightDifference
         };
 
-        this._savedDirection = undefined;
-        this._oldRange = {...this._range};
-
         return paramsForRestore;
+    }
+
+    beforeRestoreScrollPosition(): void {
+        this._savedDirection = undefined;
+        this._oldRange = { ...this._range };
     }
 
     /**

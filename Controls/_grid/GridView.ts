@@ -47,6 +47,9 @@ var
             if (cfg.stickyColumn !== undefined) {
                 Logger.warn('IGridControl: Option "stickyColumn" is deprecated and removed in 19.200. Use "stickyProperty" option in the column configuration when setting up the columns.', self);
             }
+            if (cfg.headerInEmptyListVisible !== undefined) {
+                Logger.warn('IGridControl: Option "headerInEmptyListVisible" is deprecated and removed in 20.7000. Use "headerVisibility={ hasdata | visible }".', self);
+            }
         },
 
         getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
@@ -175,7 +178,8 @@ var
                 stickyColumnsCount: options.stickyColumnsCount,
                 hasMultiSelect: options.multiSelectVisibility !== 'hidden',
                 theme: options.theme,
-                backgroundStyle: options.backgroundStyle
+                backgroundStyle: options.backgroundStyle,
+                isEmptyTemplateShown: options.needShowEmptyTemplate
             });
             const uniqueSelector = self._columnScrollController.getTransformSelector();
             self._columnScrollContainerClasses = `${COLUMN_SCROLL_JS_SELECTORS.CONTAINER} ${uniqueSelector}`;
@@ -272,8 +276,10 @@ var
             }
         },
         setGrabbing(self, isGrabbing: boolean): void {
-            self._isGrabbing = isGrabbing;
-            self._viewGrabbingClasses = isGrabbing ? DRAG_SCROLL_JS_SELECTORS.CONTENT_GRABBING : '';
+            if (self._isGrabbing !== isGrabbing) {
+                self._isGrabbing = isGrabbing;
+                self._viewGrabbingClasses = isGrabbing ? DRAG_SCROLL_JS_SELECTORS.CONTENT_GRABBING : '';
+            }
         },
         applyNewOptionsAfterReload(self, oldOptions, newOptions): void {
             // todo remove isEqualWithSkip by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
@@ -285,7 +291,10 @@ var
                     // перерисовывается с новым набором колонок, но со старыми данными. Пример ошибки:
                     // https://online.sbis.ru/opendoc.html?guid=91de986a-8cb4-4232-b364-5de985a8ed11
                     self._doAfterReload(() => {
-                        self._listModel.setColumns(newOptions.columns);
+                        // Если колонки изменились, например, их кол-во, а данные остались те же, то
+                        // то без перерисовки мы не можем корректно отобразить данные в новых колонках.
+                        // правка конфликтует с https://online.sbis.ru/opendoc.html?guid=a8429971-3a3c-44d0-8cca-098887c9c717
+                        self._listModel.setColumns(newOptions.columns, false);
                     });
                 } else {
                     self._listModel.setColumns(newOptions.columns);
@@ -323,7 +332,12 @@ var
             this._listModel.setBaseItemTemplateResolver(this._resolveBaseItemTemplate.bind(this));
             this._listModel.setColumnTemplate(ColumnTpl);
             this._setResultsTemplate(cfg);
-            this._listModel.setHeaderInEmptyListVisible(cfg.headerInEmptyListVisible);
+            if (cfg.headerInEmptyListVisible !== undefined) {
+                this._listModel.setHeaderVisibility(cfg.headerInEmptyListVisible);
+            }
+            if (cfg.headerVisibility !== undefined) {
+                this._listModel.setHeaderVisibility(cfg.headerVisibility);
+            }
 
             // Коротко: если изменить опцию модели пока gridView не построена, то они и не применятся.
             // Подробнее: GridView управляет почти всеми состояниями модели. GridControl создает модель и отдает ее
@@ -357,9 +371,15 @@ var
             GridView.superclass._beforeUpdate.apply(this, arguments);
             const self = this;
             const isColumnsScrollChanged = this._options.columnScroll !== newCfg.columnScroll;
+
             if (this._options.headerInEmptyListVisible !== newCfg.headerInEmptyListVisible) {
                 if (this._listModel) {
-                    this._listModel.setHeaderInEmptyListVisible(newCfg.headerInEmptyListVisible);
+                    this._listModel.setHeaderVisibility(newCfg.headerInEmptyListVisible);
+                }
+            }
+            if (this._options.headerVisibility !== newCfg.headerVisibility) {
+                if (this._listModel) {
+                    this._listModel.setHeaderVisibility(newCfg.headerVisibility);
                 }
             }
             if (this._options.resultsPosition !== newCfg.resultsPosition) {
@@ -376,6 +396,9 @@ var
             }
             if (this._options.multiSelectVisibility !== newCfg.multiSelectVisibility) {
                 this._columnScrollController?.setMultiSelectVisibility(newCfg.multiSelectVisibility, true);
+            }
+            if (this._options.needShowEmptyTemplate !== newCfg.needShowEmptyTemplate) {
+                this._columnScrollController?.setIsEmptyTemplateShown(newCfg.needShowEmptyTemplate);
             }
 
             // В зависимости от columnScroll вычисляются значения колонок для stickyHeader в методе setHeader.
@@ -459,7 +482,7 @@ var
 
             // Для предотвращения скролла одной записи в таблице с экшнами.
             // _options._needBottomPadding почему-то иногда не работает.
-            if ((this._listModel.getCount() || this._listModel.getEditingItemData()) &&
+            if ((this._listModel.getCount() || this._listModel.isEditing()) &&
                 this._options.itemActionsPosition === 'outside' &&
                 !this._options._needBottomPadding &&
                 this._options.resultsPosition !== 'bottom') {
@@ -567,7 +590,7 @@ var
             // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
             if (!e.preventItemEvent) {
                 const item = dispItem.getContents();
-                this._notify('itemClick', [item, e, this._getCellIndexByEventTarget(e)], {bubbling: true});
+                this._notify('itemClick', [item, e, this._getCellIndexByEventTarget(e)]);
             }
         },
 
@@ -596,7 +619,7 @@ var
         _isColumnScrollVisible(): boolean {
             if (this._columnScrollController && this._columnScrollController.isVisible()) {
                 const items = this._options.listModel.getItems();
-                return !!items && (!!items.getCount() || !!this._options.editingItemData);
+                return this._options.headerInEmptyListVisible || (!!items && (!!items.getCount() || !!this._options.listModel.isEditing()));
             } else {
                 return false;
             }
@@ -614,17 +637,26 @@ var
             return this._isColumnScrollVisible() && this._isDragScrollingEnabled(options);
         },
 
+        _setHorizontalScrollPosition(value: number): void {
+            if (this._horizontalScrollPosition !== value) {
+                this._horizontalScrollPosition = value;
+            }
+            this._children.horizontalScrollWrapper?.setPosition(value);
+        },
+
         // Не вызывает реактивную перерисовку, т.к. данные пишутся в поля объекта. Перерисовка инициируется обновлением позиции скрола.
         _updateColumnScrollShadowClasses(): void {
             const newStart = this._columnScrollController.getShadowClasses('start');
             const newEnd = this._columnScrollController.getShadowClasses('end');
 
-            if (this._columnScrollShadowClasses.start !== newStart) {
-                this._columnScrollShadowClasses.start = newStart;
-            }
-
-            if (this._columnScrollShadowClasses.end !== newEnd) {
-                this._columnScrollShadowClasses.end = newEnd;
+            if (
+                this._columnScrollShadowClasses.start !== newStart ||
+                this._columnScrollShadowClasses.end !== newEnd
+            ) {
+                this._columnScrollShadowClasses = {
+                    start: newStart,
+                    end: newEnd
+                };
             }
         },
 
@@ -633,33 +665,32 @@ var
             const newStart = this._columnScrollController.getShadowStyles('start');
             const newEnd = this._columnScrollController.getShadowStyles('end');
 
-            if (this._columnScrollShadowStyles.start !== newStart) {
-                this._columnScrollShadowStyles.start = newStart;
-            }
-
-            if (this._columnScrollShadowStyles.end !== newEnd) {
-                this._columnScrollShadowStyles.end = newEnd;
+            if (
+                this._columnScrollShadowStyles.start !== newStart ||
+                this._columnScrollShadowStyles.end !== newEnd
+            ) {
+                this._columnScrollShadowStyles = {
+                    start: newStart,
+                    end: newEnd
+                };
             }
         },
         _horizontalPositionChangedHandler(e, newScrollPosition: number): void {
             this._columnScrollController.setScrollPosition(newScrollPosition);
-            this._horizontalScrollPosition = this._columnScrollController.getScrollPosition();
+            this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
             this._updateColumnScrollData();
         },
         _columnScrollWheelHandler(e): void {
             if (this._isColumnScrollVisible()) {
                 this._columnScrollController.scrollByWheel(e);
-                this._horizontalScrollPosition = this._columnScrollController.getScrollPosition();
+                this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
                 this._updateColumnScrollData();
             }
         },
         _updateColumnScrollData(): void {
             this._updateColumnScrollShadowClasses();
             this._updateColumnScrollShadowStyles();
-            const newScrollPosition = this._columnScrollController.getScrollPosition();
-            if (this._horizontalScrollPosition !== newScrollPosition) {
-                this._horizontalScrollPosition = newScrollPosition;
-            }
+            this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
             this._dragScrollController?.updateScrollData({
                 scrollLength: this._columnScrollController.getScrollLength(),
                 scrollPosition: this._horizontalScrollPosition
@@ -709,7 +740,7 @@ var
             }
         },
         _onFocusInEditingCell(e: SyntheticEvent<FocusEvent>): void {
-            if (!this._isColumnScrollVisible() || e.target.tagName !== 'INPUT' || !this._options.listModel.getEditingItemData()) {
+            if (!this._isColumnScrollVisible() || e.target.tagName !== 'INPUT' || !this._options.listModel.isEditing()) {
                 return;
             }
             this._columnScrollController.scrollToElementIfHidden(e.target as HTMLElement);
@@ -747,7 +778,7 @@ var
                         this._notify('closeSwipe', []);
                     }
                     this._columnScrollController.setScrollPosition(newPosition);
-                    this._horizontalScrollPosition = this._columnScrollController.getScrollPosition();
+                    this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
                     this._updateColumnScrollData();
                 }
             }
@@ -792,8 +823,12 @@ var
             this._dragScrollController?.onOverlayMouseLeave(e);
         },
         _onItemSwipe(event, itemData) {
-            event.stopPropagation();
+            const direction = event.nativeEvent.direction;
+            if (direction === 'top' || direction === 'bottom') {
+                return;
+            }
 
+            event.stopPropagation();
             if (this._isColumnScrollVisible() && this._dragScrollController) {
                 if (event.target.closest(`.${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`)) {
                     // По фиксированной колонке допустим только свайп вправо

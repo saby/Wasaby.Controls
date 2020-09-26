@@ -4,6 +4,7 @@ import {ICollectionItem} from "./interface/ICollectionItem";
 export type TItemKey = string | number;
 
 export interface IBaseCollection<S, T extends ICollectionItem> {
+    at(index: number): T;
     each(cb: (item: T) => void): void;
     getItemBySourceKey(key: TItemKey): T;
     find(predicate: (item: T) => boolean): T;

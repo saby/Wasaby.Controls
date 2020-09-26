@@ -1,5 +1,4 @@
 import BaseSelector from './BaseSelector';
-import coreMerge = require('Core/core-merge');
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import {IDateRangeOptions} from "./interfaces/IDateRange";
 import ILinkView from './interfaces/ILinkView';
@@ -8,6 +7,8 @@ import componentTmpl = require('wml!Controls/_dateRange/RangeSelector/RangeSelec
 import {Popup as PopupUtil} from 'Controls/dateUtils';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
+import dateControlsUtils from "./Utils";
+import {descriptor} from "Types/entity";
 
 /**
  * Контрол позволяет пользователю выбрать диапазон дат с начальным и конечным значениями в календаре.
@@ -29,6 +30,7 @@ import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IOpenPopup
+ * @mixes Controls/_interface/ICaptionFormatter
  * @control
  * @public
  * @category Input
@@ -120,7 +122,7 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
     }
 
     _mouseEnterHandler(): void {
-        const loadCss = (datePopup) => datePopup.loadCSS();
+        const loadCss = (datePopup) => datePopup.default.loadCSS();
         this._startDependenciesTimer('Controls/datePopup', loadCss);
     }
 
@@ -133,13 +135,20 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
     }
 
     static getDefaultOptions(): object {
-        return coreMerge(coreMerge({
+        return {
             minRange: 'day',
-        }, IDateRangeSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
+            ...ILinkView.getDefaultOptions(),
+            ...IDateRangeSelectable.getDefaultOptions(),
+            captionFormatter: dateControlsUtils.formatDateRangeCaption
+        };
     }
 
     static getOptionTypes(): object {
-        return coreMerge(coreMerge({}, IDateRangeSelectable.getOptionTypes()), ILinkView.getOptionTypes());
+        return {
+            ...IDateRangeSelectable.getOptionTypes(),
+            ...ILinkView.getOptionTypes(),
+            captionFormatter: descriptor(Function)
+        };
     }
 
     static _theme: string[] = ['Controls/dateRange'];

@@ -2612,7 +2612,7 @@ describe('Controls/_display/Collection', () => {
                 i++;
             });
             display.setSelectedItemsAll(true);
-            assert.strictEqual(i, 1);
+            assert.strictEqual(i, 8);
         });
     });
 
@@ -3394,7 +3394,8 @@ describe('Controls/_display/Collection', () => {
 
         it('should fire "onCollectionChange" with valid item contents when work in events queue', () => {
             const getModel = (data) => new Model({
-                    rawData: data
+                keyProperty: 'id',
+                rawData: data
             });
             const list = new ObservableList({
                 items: [
@@ -4262,15 +4263,6 @@ describe('Controls/_display/Collection', () => {
         )
     });
 
-    it('.getRowSpacing()', () => {
-        const rowSpacing = 'rowSpacing';
-        const collection = new CollectionDisplay({
-            collection: [],
-            rowSpacing
-        });
-        assert.strictEqual(collection.getRowSpacing(), rowSpacing);
-    });
-
     it('.getLeftSpacing()', () => {
         const leftSpacing = 'leftSpacing';
         const collection = new CollectionDisplay({
@@ -4481,35 +4473,6 @@ describe('Controls/_display/Collection', () => {
             const testingItem = display.getItemBySourceKey(2);
             display.setActiveItem(display.getItemBySourceKey(2));
             assert.equal(display.getActiveItem(), testingItem);
-        });
-    });
-
-    describe('getValidItemForMarker', () => {
-        let display: CollectionDisplay<Model>;
-
-        beforeEach(() => {
-            const items = [
-                { id: 1 },
-                { id: 2 },
-                { id: 3 }
-            ];
-            const rs = new RecordSet({
-                rawData: items,
-                keyProperty: 'id'
-            });
-            display = new CollectionDisplay({
-                collection: rs
-            });
-        });
-
-        it('next item', () => {
-            const validItem = display.getValidItemForMarker(0);
-            assert.equal(validItem.getContents().getKey(), 2);
-        });
-
-        it('prev item', () => {
-            const validItem = display.getValidItemForMarker(2);
-            assert.equal(validItem.getContents().getKey(), 2);
         });
     });
 });

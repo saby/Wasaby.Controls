@@ -161,6 +161,7 @@ export default class View extends Control<IViewOptions> {
         if (this._markerController) {
             this._markerController.setMarkedKey(item.getKey());
         }
+        this._notify('itemClick', [item, clickEvent]);
         // TODO fire 'markedKeyChanged' event
     }
 
@@ -486,6 +487,13 @@ export default class View extends Control<IViewOptions> {
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
             contextMenuConfig: options.contextMenuConfig
         });
+    }
+
+    destroy(): void {
+        if (this._itemActionsMenuId) {
+            this._closePopup();
+        }
+        super.destroy();
     }
 
     /**

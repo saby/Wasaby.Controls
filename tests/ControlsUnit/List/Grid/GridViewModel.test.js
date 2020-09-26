@@ -200,7 +200,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                },
                keyProperty: 'id'
             });
-            assert.isFalse(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'xxx'));
+            assert.isTrue(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'xxx'));
             assert.isFalse(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', ''));
             assert.isTrue(!!gridMod.GridViewModel._private.isNeedToHighlight(item, 'title', 'tes'));
          });
@@ -710,14 +710,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             current = gridViewModel.getCurrent();
             current.isNotFullGridSupport = true;
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(),
+            cAssert.CssClassesAssert.include(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(),
                 expected.withMarker,
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
 
             current.markerVisibility = 'hidden';
             current.resetColumnIndex();
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(),
+            cAssert.CssClassesAssert.include(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(),
                 expected.withoutMarker,
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
          });
@@ -857,19 +857,19 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             current = gridViewModel.getCurrent();
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(), expectedResult[0]);
+            cAssert.CssClassesAssert.include(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(), expectedResult[0]);
             current.goToNextColumn();
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(), expectedResult[1]);
+            cAssert.CssClassesAssert.include(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(), expectedResult[1]);
             current.goToNextColumn();
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(), expectedResult[2]);
+            cAssert.CssClassesAssert.include(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(), expectedResult[2]);
             current.goToNextColumn();
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(), expectedResult[3]);
+            cAssert.CssClassesAssert.include(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(), expectedResult[3]);
 
             current.dispItem.setMarked(false);
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(), expectedResult[4]);
+            cAssert.CssClassesAssert.include(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll(), expectedResult[4]);
          });
 
          it('should add backgroundStyle when columnScroll is true and row is not in editing state', () => {
@@ -881,7 +881,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('should not add backgroundStyle when columnScroll is true and row is in editing state', () => {
             const gridViewModel = new gridMod.GridViewModel({ ...cfg, columnScroll: true});
             const current = gridViewModel.getCurrent();
-            gridViewModel._setEditingItemData(current);
+            current.isEditing = () => true;
             assert.isTrue(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme).getAll().indexOf(`controls-background-default_theme-${theme}`) === -1);
          });
 
@@ -895,7 +895,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             current = gridViewModel.getCurrent();
 
-            cAssert.isClassesEqual(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme, 'danger').getAll(),
+            cAssert.CssClassesAssert.include(gridMod.GridViewModel._private.getItemColumnCellClasses(gridViewModel, current, theme, 'danger').getAll(),
                expectedResult + ' controls-Grid__row-cell_background_danger_theme-default');
          });
       });
@@ -945,7 +945,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                assert.equal(expectedData.keyProperty, checkedColumn.keyProperty, 'Incorrect value "keyProperty" when checking columns.');
                assert.equal(expectedData.item[expectedData.keyProperty], checkedColumn.key, 'Incorrect value "getPropValue(item, displayProperty)" when checking columns.');
                assert.equal(expectedData.template, checkedColumn.template, 'Incorrect value "template" when checking columns.');
-               cAssert.isClassesEqual(checkedColumn.classList.getAll(), expectedData.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
+               assert.equal(expectedData.needSearchHighlight, checkedColumn.needSearchHighlight, 'Incorrect value "needSearchHighlight" when checking columns.');
+               cAssert.CssClassesAssert.include(checkedColumn.classList.getAll(), expectedData.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
             }
 
             var gridColumn;
@@ -958,7 +959,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                columnIndex: 0,
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
-               column: {needSearchHighlight: false},
+               column: {},
+               needSearchHighlight: false,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__row-cell-background-hover-default_theme-default controls-Grid__row-cell_withRowSeparator_size-s_theme-default ' +
@@ -969,7 +971,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // check next column
             current.goToNextColumn();
             gridColumn = clone(gridColumns[0]);
-            cMerge(gridColumn, {needSearchHighlight: false});
             assert.equal(1, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
             assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "goToNextColumn()".');
             assert.isTrue(gridColumn.textOverflow === 'ellipsis', 'Incorrect value "current.textOverflow".');
@@ -978,6 +979,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
                column: gridColumn,
+               needSearchHighlight: true,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover-default_theme-default ' +
@@ -989,7 +991,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // check next column
             current.goToNextColumn();
             gridColumn = clone(gridColumns[1]);
-            cMerge(gridColumn, {needSearchHighlight: false});
             assert.equal(2, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
             assert.isFalse(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after goToNextColumn().');
             checkBaseProperties(current.getCurrentColumn(), {
@@ -997,6 +998,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
                column: gridColumn,
+               needSearchHighlight: true,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover-default_theme-default ' +
@@ -1009,7 +1011,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // check last column
             current.goToNextColumn();
             gridColumn = clone(gridColumns[2]);
-            cMerge(gridColumn, {needSearchHighlight: false});
             assert.equal(3, current.columnIndex, 'Incorrect value "current.columnIndex" after "goToNextColumn()".');
             assert.isTrue(current.getLastColumnIndex() === current.columnIndex, 'Incorrect value "current.getLastColumnIndex() === current.columnIndex" after "gotToNextColumn()".');
             checkBaseProperties(current.getCurrentColumn(), {
@@ -1017,6 +1018,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
                column: gridColumn,
+               needSearchHighlight: true,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__cell_fit controls-Grid__row-cell-background-hover-default_theme-default ' +
@@ -1039,7 +1041,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                columnIndex: 0,
                keyProperty: cfg.keyProperty,
                displayProperty: cfg.displayProperty,
-               column: {needSearchHighlight: false},
+               column: {},
+               needSearchHighlight: false,
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell_default_min_height-theme-default  controls-Grid__row-cell-background-hover-default_theme-default ' +
@@ -1079,10 +1082,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
-                  'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems',
+                  'updateIndexes', 'setActiveItem', 'appendItems', 'prependItems',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
-                  '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
-                  'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'getEditingItemData'],
+                  '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', 'getMarkedKey',
+                  'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'isEditing'],
                callStackMethods = [];
 
             gridViewModel._model = {
@@ -1184,7 +1187,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   }
                }
             },
-            ladderViewModel = new gridMod.GridViewModel({
+            cfg = {
                items: new collection.RecordSet({
                   keyProperty: 'id',
                   rawData: [
@@ -1203,7 +1206,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                keyProperty: 'id',
                columns: initialColumns,
                ladderProperties: ['date']
-            });
+            },
+            ladderViewModel = new gridMod.GridViewModel(cfg);
          assert.deepEqual(ladderViewModel._ladder.ladder, resultLadder, 'Incorrect value prepared ladder.');
          assert.deepEqual(ladderViewModel._ladder.stickyLadder, resultStickyLadder, 'Incorrect value prepared stickyLadder.');
 
@@ -1236,7 +1240,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                }
             };
 
-         ladderViewModel.setItems(newItems);
+         ladderViewModel.setItems(newItems, cfg);
 
          assert.deepEqual(ladderViewModel._ladder.ladder, newResultLadder, 'Incorrect value prepared ladder after setItems.');
          assert.deepEqual(ladderViewModel._ladder.stickyLadder, newResultStickyLadder, 'Incorrect value prepared stickyLadder after setItems.');
@@ -1514,21 +1518,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(4, Object.keys(ladderViewModel._ladder.stickyLadder).length);
             assert.equal(4, Object.keys(ladderViewModel._ladder.ladder).length);
 
-
-            let resetCacheKey = null;
-            let fullCacheReset = false;
-            ladderViewModel.resetCachedItemData = (key) => {
-               if (!key) {
-                  fullCacheReset = true;
-               }
-               resetCacheKey = key;
-            };
             ladderViewModel._model._startIndex = 1;
             ladderViewModel._ladder = gridMod.GridViewModel._private.prepareLadder(ladderViewModel);
             assert.equal(3, Object.keys(ladderViewModel._ladder.stickyLadder).length);
             assert.equal(3, Object.keys(ladderViewModel._ladder.ladder).length);
-            assert.isFalse(fullCacheReset, 'Не должен сбрасываться весь кэш');
-            assert.equal(1, resetCacheKey, 'Неверный id записи со сброшенным кэшем');
          });
       });
       describe('other methods of the class', function() {
@@ -1593,9 +1586,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._prepareHeaderColumns(gridHeaderClone, true);
             gridViewModel._headerRows[0][0].title = '123';
 
-            let headerRow = gridViewModel.getCurrentHeaderRow();
-            assert.deepEqual({
-               column: {title : '123'},
+            const actual = {
+               column: { title: '123' },
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__cell_spacingRight_theme-default controls-Grid__cell_default controls-Grid__header-cell_min-width',
                index: 0,
                key: '0-0',
@@ -1604,10 +1596,24 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                itemActionsPosition: undefined,
                shadowVisibility: 'visible',
                backgroundStyle: '',
-            }, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+            };
+
+            let headerRow = gridViewModel.getCurrentHeaderRow();
+            assert.deepEqual(actual, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+
+            delete gridViewModel._headerRows[0][0].title;
+            gridViewModel._headerRows[0][0].caption = '123';
+            delete actual.column.title;
+            actual.column.caption = '123';
+            assert.deepEqual(actual, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
+
+            gridViewModel._headerRows[0][0].title = '123';
+            actual.column.title = '123';
+            assert.deepEqual(actual, headerRow.getCurrentHeaderColumn(), 'Incorrect value first call "getCurrentHeaderColumn()".');
 
             headerRow = gridViewModel.getCurrentHeaderRow();
             delete gridViewModel._headerRows[0][0].title;
+            delete gridViewModel._headerRows[0][0].caption;
             assert.deepEqual({
                column: {},
                cellClasses: 'controls-Grid__header-cell controls-Grid__header-cell_theme-default controls-Grid__header-cell_min-height_theme-default controls-background-default_theme-default controls-Grid__header-cell-checkbox_theme-default controls-Grid__header-cell-checkbox_min-width_theme-default',
@@ -1983,7 +1989,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             function assertColumn(actual, expected) {
                assert.deepEqual(actual.column, expected.column);
                assert.equal(actual.index, expected.index);
-               cAssert.isClassesEqual(actual.cellClasses, expected.cellClasses);
+               cAssert.CssClassesAssert.include(actual.cellClasses, expected.cellClasses);
             }
 
             assertColumn(gridViewModel.getCurrentResultsColumn(), {
@@ -2075,28 +2081,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
           it('_prepareColgroupColumns', function() {
-            assert.deepEqual(gridViewModel._colgroupColumns, [
-               {
-                  classes: 'controls-Grid__colgroup-column controls-Grid__colgroup-columnMultiSelect_theme-default',
-                  index: 0,
-                  style: '',
-               },
-               {
-                  classes: 'controls-Grid__colgroup-column',
-                  index: 1,
-                  style: 'width: auto;',
-               },
-               {
-                  classes: 'controls-Grid__colgroup-column',
-                  index: 2,
-                  style: 'width: auto;',
-               },
-               {
-                  classes: 'controls-Grid__colgroup-column',
-                  index: 3,
-                  style: 'width: auto;',
-               },
-            ], 'Incorrect value "_colgroupColumns" before "_prepareColgroupColumns([])" without multiselect.');
+            const originIFGS = gridViewModel.isFullGridSupport;
+            gridViewModel.isFullGridSupport = () => false;
+            assert.deepEqual(gridViewModel._colgroupColumns, undefined, 'Incorrect value "_colgroupColumns" before "_prepareColgroupColumns([])" without multiselect.');
 
             gridViewModel._prepareColgroupColumns([], false);
             assert.deepEqual([], gridViewModel._colgroupColumns, 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns([])" without multiselect.');
@@ -2150,7 +2137,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   style: 'width: auto;',
                },
             ], 'Incorrect value "_colgroupColumns" after "_prepareColgroupColumns(gridColumns)" with multiselect.');
-         });
+             gridViewModel.isFullGridSupport = originIFGS;
+          });
 
          it('getCurrentColgroupColumn && goToNextColgroupColumn && isEndColgroupColumn && resetColgroupColumns', function () {
             assert.deepEqual({
@@ -2535,29 +2523,6 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(gridModel.getCurrent().stickyLadder.prop.headingStyle, '123');
          });
-
-         it('has no bottom border between last row and adding row', () => {
-            const model = new gridMod.GridViewModel({
-               ...cfg,
-               items: new collection.RecordSet({
-                  rawData: [{id: 1}, {id: 2}],
-                  keyProperty: 'id'
-               }),
-               editingConfig: {}
-            });
-
-            model.goToNext();
-            model.setHasMoreData(true);
-            assert.isTrue(model.getCurrent().isLastRow);
-
-            model.resetCachedItemData();
-            model.getEditingItemData = () => ({
-               index: 2
-            });
-            model.reset();
-            model.goToNext();
-            assert.isFalse(model.getCurrent().isLastRow);
-         });
       });
 
       describe('no grid support', () => {
@@ -2603,7 +2568,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                ];
                model._maxEndRow = 3;
 
-               cAssert.isClassesEqual(model.getCurrentHeaderColumn(0, 1).cellClasses, 'controls-Grid__header-cell_align_items_top');
+               cAssert.CssClassesAssert.include(model.getCurrentHeaderColumn(0, 1).cellClasses, 'controls-Grid__header-cell_align_items_top');
             });
             it('separator column in header with multiselect', function () {
                model._headerRows = [
@@ -2631,12 +2596,12 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   }
                ];
 
-               cAssert.hasNoClasses(
+               cAssert.CssClassesAssert.notInclude(
                    model.getCurrentHeaderColumn(0, 1).cellClasses,
                    'controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-s_theme-default'
                );
 
-               cAssert.isClassesEqual(
+               cAssert.CssClassesAssert.include(
                    model.getCurrentHeaderColumn(0, 2).cellClasses,
                    'controls-Grid__row-cell_withColumnSeparator controls-Grid__columnSeparator_size-s_theme-default'
                );
@@ -2761,7 +2726,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   columnIndex: 0
                };
                gridMod.GridViewModel._private.prepareSeparatorClasses(current, classList, theme);
-               cAssert.isClassesEqual(classList.base, 'controls-Grid__row-cell_withRowSeparator_size-null');
+               cAssert.CssClassesAssert.include(classList.base, 'controls-Grid__row-cell_withRowSeparator_size-null');
             });
 
             it('with row separators s', () => {
@@ -2772,7 +2737,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   columnIndex: 0
                };
                gridMod.GridViewModel._private.prepareSeparatorClasses(current, classList, theme);
-               cAssert.isClassesEqual(classList.base, 'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default');
+               cAssert.CssClassesAssert.include(classList.base, 'controls-Grid__row-cell_withRowSeparator_size-s_theme-default controls-Grid__rowSeparator_size-s_theme-default');
             });
 
             it('with row separators l', () => {
@@ -2783,7 +2748,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   columnIndex: 0
                };
                gridMod.GridViewModel._private.prepareSeparatorClasses(current, classList, theme);
-               cAssert.isClassesEqual(classList.base, 'controls-Grid__row-cell_withRowSeparator_size-l_theme-default controls-Grid__rowSeparator_size-l_theme-default');
+               cAssert.CssClassesAssert.include(classList.base, 'controls-Grid__row-cell_withRowSeparator_size-l_theme-default controls-Grid__rowSeparator_size-l_theme-default');
             });
 
          });

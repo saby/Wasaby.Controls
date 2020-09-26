@@ -13,6 +13,11 @@ import {CrudEntityKey} from 'Types/source';
 type TSource = SbisService|ICrudPlus;
 type TFilterObject = IHashMap<any>;
 
+type TValidationResult = {
+    message: string;
+    isError: boolean;
+};
+
 /**
  * Интерфейс опций контроллера
  * @interface Controls/_list/interface/IMoveControllerOptions
@@ -49,7 +54,7 @@ export enum TMovePosition {
 }
 
 /**
- * Контроллер для перемещения элементов списка в recordSet и dataSource.
+ * Контроллер для перемещения элементов списка.
  *
  * @class Controls/_mover/MoveController
  * @control
@@ -68,15 +73,15 @@ export class MoveController {
     protected _parentProperty: string;
 
     constructor(options: IMoveControllerOptions) {
-        this.update(options);
+        this.updateOptions(options);
     }
 
     /**
      * Обновляет параметры контроллера
-     * @function Controls/_list/Controllers/MoveController#moveItems
+     * @function Controls/_list/Controllers/MoveController#updateOptions
      * @param {Controls/_list/interface/IMoveControllerOptions} options
      */
-    update(options: IMoveControllerOptions): void {
+    updateOptions(options: IMoveControllerOptions): void {
         this._popupOptions = options.popupOptions;
         this._source = options.source;
         this._parentProperty = options.parentProperty;
@@ -110,14 +115,18 @@ export class MoveController {
      * @see move
      */
     moveWithDialog(selection: ISelectionObject, filter: TFilterObject = {}): Promise<void> {
-        if (!this._popupOptions.template) {
-            Logger.error('MoveController: MoveDialogTemplate option is undefined', this);
+        const validationResult = MoveController._validateBeforeOpenDialog(selection, this._popupOptions);
+        if (!validationResult.message) {
+            return this._openMoveDialog(selection, filter);
+        } else if (!validationResult.isError) {
+            Confirmation.openPopup({
+                type: 'ok',
+                message: rk('Нет записей для обработки команды')
+            });
             return Promise.reject();
         }
-        if (!MoveController._validateBeforeOpenDialog(selection)) {
-            return Promise.reject();
-        }
-        return this._openMoveDialog(selection, filter)
+        Logger.error(validationResult.message);
+        return Promise.reject(new Error(validationResult.message));
     }
 
     /**
@@ -219,6 +228,12 @@ export class MoveController {
         if (typeof filter !== "object") {
             error = 'MoveController: Filter must be plain object';
         }
+        if (targetKey === undefined) {
+            error = 'MoveController: Target key is undefined';
+        }
+        if ([TMovePosition.on, TMovePosition.after, TMovePosition.before].indexOf(position) === -1) {
+            error = 'MoveController: position must correspond with TMovePosition type';
+        }
         return error;
     }
 
@@ -229,17 +244,20 @@ export class MoveController {
      * @name Controls/_list/Controllers/MoveController#_validateBeforeOpenDialog
      * @private
      */
-    private static _validateBeforeOpenDialog(selection: ISelectionObject): boolean {
-        let resultValidate: boolean = true;
-
-        if (selection.selected && !selection.selected.length) {
-            resultValidate = false;
-            Confirmation.openPopup({
-                type: 'ok',
-                message: rk('Нет записей для обработки команды')
-            });
+    private static _validateBeforeOpenDialog(selection: ISelectionObject, popupOptions: IBasePopupOptions): TValidationResult {
+        let result: TValidationResult = {
+            message: null,
+            isError: false
         }
-
-        return resultValidate;
+        if (!popupOptions.template) {
+            result.message = 'MoveController: MoveDialogTemplate option is undefined';
+            result.isError = true;
+        } else if (!selection || (!selection.selected && !selection.excluded)) {
+            result.message = 'MoveController: Selection type must be Controls/interface:ISelectionObject';
+            result.isError = true;
+        } else if (selection.selected && !selection.selected.length) {
+            result.message = rk('Нет записей для обработки команды');
+        }
+        return result;
     }
 }

@@ -325,7 +325,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         /**
          * https://online.sbis.ru/opendoc.html?guid=6b6e9774-afb3-4379-8578-95ad0f0035a9
          */
-        this._actualItems = ActualAPI.items(items);
+        this._actualItems = ActualAPI.items(items.clone());
         this._items = this._actualItems;
         if (source) {
             this._source = this._createPrefetchProxy(source, this._actualItems);

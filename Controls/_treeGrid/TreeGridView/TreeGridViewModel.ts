@@ -1,4 +1,4 @@
-import {GridViewModel, GridLayoutUtil, COLUMN_SCROLL_JS_SELECTORS} from 'Controls/grid';
+import {GridViewModel, GridLayoutUtil, COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/grid';
 import {
     getBottomPaddingRowIndex,
     getFooterIndex,
@@ -176,7 +176,7 @@ var
                 const superClassesGetter = current.getRelativeCellWrapperClasses;
                 current.getRelativeCellWrapperClasses = (colspan, fixVerticalAlignment) => {
                     return `controls-TreeGridView__row-cell_innerWrapper ${superClassesGetter(colspan, fixVerticalAlignment)}`;
-                }
+                };
             }
 
             if (current.isLastRow) {
@@ -195,11 +195,13 @@ var
                     currentColumn = superGetCurrentColumn(backgroundColorStyle);
                 currentColumn.nodeType = current.item.get && current.item.get(current.nodeProperty);
 
-                currentColumn.getExpanderClasses = current.getExpanderClasses;
                 currentColumn.getExpanderSize = current.getExpanderSize;
 
                 currentColumn.isExpanded = current.isExpanded;
                 currentColumn.classList.base += ` controls-TreeGrid__row-cell_theme-${theme} controls-TreeGrid__row-cell_${currentColumn.style || 'default'}_theme-${theme}`;
+
+                // Экспандер выводится пользователем в произвольном месте в шаблоне колонки, где недоступна itemData строки
+                currentColumn.getExpanderClasses = (_, expanderIcon, expanderSize) => current.getExpanderClasses(current, expanderIcon, expanderSize);
 
                 if (currentColumn.nodeType) {
                     currentColumn.classList.base += ` controls-TreeGrid__row-cell__node_theme-${theme}`;
@@ -255,12 +257,12 @@ var
                         }
 
                         if (self._options.columnScroll && (index < self._options.stickyColumnsCount)) {
-                            classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
+                            classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
                         }
                     } else {
                         classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
                         classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
-                        classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
+                        classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
                     }
 
                     return classes;
@@ -332,10 +334,6 @@ var
                     hasColumnScroll: this._options.columnScroll,
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
-
-            if (this.getEditingItemData()) {
-                cfg.editingRowIndex = this.getEditingItemData().index;
-            }
 
             return {
                 getIndexByItem: (item) => getIndexByItem({item, ...cfg}),

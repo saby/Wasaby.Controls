@@ -6,7 +6,8 @@ import {
     IVersionable,
     ObservableMixin,
     OptionsToPropertyMixin,
-    SerializableMixin
+    SerializableMixin,
+    Model
 } from 'Types/entity';
 import {IList} from 'Types/collection';
 import {mixin} from 'Types/util';
@@ -15,6 +16,7 @@ import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
 import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
 import {ICollectionItem} from './interface/ICollectionItem';
 import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from './ItemCompatibilityListViewModel';
+import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
 
 export interface IOptions<T> {
     contents?: T;
@@ -25,6 +27,8 @@ export interface IOptions<T> {
     swiped?: boolean;
     editingContents?: T;
     owner?: ICollection<T, CollectionItem<T>>;
+    isAdd?: boolean;
+    addPosition?: 'top' | 'bottom';
 }
 
 export interface ISerializableState<T> extends IDefaultSerializableState {
@@ -64,11 +68,12 @@ export default class CollectionItem<T> extends mixin<
     InstantiableMixin,
     SerializableMixin,
     ItemCompatibilityListViewModel
-) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel {
+) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem {
 
     // region IInstantiable
 
     readonly '[Types/_entity/IInstantiable]': boolean;
+    readonly MarkableItem: boolean = true;
 
     getInstanceId: () => string;
 
@@ -125,11 +130,19 @@ export default class CollectionItem<T> extends mixin<
 
     protected _counters: ICollectionItemCounters;
 
+    readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+
+    readonly isAdd: boolean;
+
+    readonly addPosition: 'top' | 'bottom';
+
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
         SerializableMixin.call(this);
         this._counters = {};
+        this.isAdd = (options && options.isAdd) || false;
+        this.addPosition = (options && options.addPosition) || 'bottom';
     }
 
     // endregion
@@ -280,7 +293,8 @@ export default class CollectionItem<T> extends mixin<
         return (
             templateMarker &&
             this._$owner.getMarkerVisibility() !== 'hidden' &&
-            this.isMarked()
+            this.isMarked() &&
+            !this.isEditing()
         );
     }
 
@@ -317,6 +331,17 @@ export default class CollectionItem<T> extends mixin<
         if (!silent) {
             this._notifyItemChangeToOwner('editing');
         }
+    }
+
+    acceptChanges(): void {
+        (this._$contents as unknown as Model).acceptChanges();
+
+        if (!this._$editing) {
+            return;
+        }
+        // Применяем изменения на обоих моделях, т.к. редактирование записи может продолжитсься.
+        (this._$contents as unknown as Model).merge(this._$editingContents as unknown as Model);
+        (this._$editingContents as unknown as Model).acceptChanges();
     }
 
     setActions(actions: any, silent?: boolean): void {
@@ -469,7 +494,7 @@ export default class CollectionItem<T> extends mixin<
             controls-ListView__item_showActions
             js-controls-ItemActions__swipeMeasurementContainer
             controls-ListView__itemV controls-ListView__itemV_cursor-${cursor}
-            ${templateHighlightOnHover ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
+            ${templateHighlightOnHover && !this.isEditing() ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
             ${this.isEditing() ? ` controls-ListView__item_editing_theme-${theme}` : ''}
             ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}
             ${templateHighlightOnHover && this.isActive() ? ` controls-ListView__item_active_theme-${theme}` : ''}`;
@@ -537,11 +562,17 @@ export default class CollectionItem<T> extends mixin<
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {
         let classes = '';
 
-        const rowSpacing = this.getOwner().getRowSpacing().toLowerCase();
+        const topSpacing = this.getOwner().getTopSpacing().toLowerCase();
+        const bottomSpacing = this.getOwner().getBottomSpacing().toLowerCase();
         const rightSpacing = this.getOwner().getRightSpacing().toLowerCase();
 
-        classes += ` controls-ListView__item_${style}-topPadding_${rowSpacing}_theme-${theme}`;
-        classes += ` controls-ListView__item_${style}-bottomPadding_${rowSpacing}_theme-${theme}`;
+        if (topSpacing === 'null' && bottomSpacing === 'null') {
+            classes += ` controls-ListView_default-padding_theme-${theme}`;
+        } else {
+            classes += ` controls-ListView__item_${style}-topPadding_${topSpacing}_theme-${theme}`;
+            classes += ` controls-ListView__item_${style}-bottomPadding_${bottomSpacing}_theme-${theme}`;
+        }
+
         classes += ` controls-ListView__item-rightPadding_${rightSpacing}_theme-${theme}`;
 
         if (this.getOwner().getMultiSelectVisibility() !== 'hidden') {

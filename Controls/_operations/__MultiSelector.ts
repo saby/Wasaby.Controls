@@ -127,9 +127,11 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       // иначе promise порождает асинхронность и перестроение панели операций будет происходить скачками,
       // хотя можно было это сделать за одну синхронизацию
       if (getCountResult instanceof Promise) {
-         return getCountResult.then((count) => {
-            getCountCallback(count, this._options.isAllSelected);
-         });
+         return getCountResult
+             .then((count) => {
+                getCountCallback(count, this._options.isAllSelected);
+             })
+             .catch((error) => error);
       } else {
          getCountCallback(getCountResult, options.isAllSelected);
       }
@@ -192,8 +194,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
           (result: number): number => {
              this._resetCountPromise();
              return result;
-          },
-          (error) => error
+          }
       );
    }
 
@@ -215,6 +216,12 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
          bubbling: true
       });
    }
+
+   protected _beforeUnmount(): void {
+      this._cancelCountPromise();
+   }
+
+   static _theme: string[] = ['Controls/operations'];
 
    static getDefaultOptions(): object {
       return {

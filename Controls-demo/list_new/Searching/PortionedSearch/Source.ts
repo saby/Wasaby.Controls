@@ -2,6 +2,7 @@ import * as Deferred from 'Core/Deferred';
 import {Memory, Query, DataSet} from 'Types/source';
 
 const SEARCH_DELAY = 35000;
+const SOURCE_DEFAULT_DELAY = 200;
 
 interface IOptions {
     source: Memory;
@@ -21,7 +22,7 @@ export default class PortionedSearchSource {
         const isSearch = query.getWhere().title !== undefined && (query.getOffset() === 10 || query.getOffset() === 30);
         const origQuery = this.source.query.apply(this.source, arguments);
         const loadDef = new Deferred();
-        const delayTimer = isSearch ? SEARCH_DELAY : 0;
+        const delayTimer = isSearch ? SEARCH_DELAY : SOURCE_DEFAULT_DELAY;
 
         setTimeout(() => {
             if (!loadDef.isReady()) {

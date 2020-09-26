@@ -331,7 +331,7 @@
    .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell__content_hiddenForLadder {
       background-color: @item_hover_background-color_list;
    }
-   .controls-Grid__row_highlightOnHover-default_theme-@{themeName}:hover .controls-Grid__item_background-hover_default_theme-@{themeName}:not(.controls-Grid__row-ladder-cell__content) {
+   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__item_background-hover_default_theme-@{themeName}:not(.controls-Grid__row-ladder-cell__content) {
       background-color: @item_hover_background-color_list;
    }
 
@@ -341,7 +341,7 @@
       > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper,
       > .controls-Grid__row-cell .controls-Grid__row-cell__content {
          > .controls-itemActionsV {
-            transition: opacity 500ms step-end;
+            transition: timeout .5s;
          }
       }
    }
@@ -879,6 +879,7 @@
    min-width: 0;
    display: flex;
    justify-content: flex-end;
+   align-items: baseline;
 }
 .controls-Grid__editArrow-cellContent {
    flex-shrink:0;
@@ -911,7 +912,6 @@
    min-width: @edit-arrow_icon-size_grid;
    display: inline-flex;
    align-items: baseline;
-   align-self: baseline;
 }
 
 .controls-Grid__editArrow-blur_style-default_background_theme-default:before,

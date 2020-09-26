@@ -6,7 +6,8 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 
 export default class TabButtonsDemo extends Control {
     protected _template: TemplateFunction = template;
-    protected SelectedKey1: string = '1';
+    protected SelectedKey1: string = '6';
+    protected SelectedKey2: string = '1';
     protected _items: RecordSet | null = null;
     protected _items2: RecordSet | null = null;
     protected _containerWidth: number = 500;
@@ -42,30 +43,6 @@ export default class TabButtonsDemo extends Control {
                     id: '7',
                     title: 'Лучший продавец'
                 }
-                // {
-                //     id: '8',
-                //     title: 'Fi4444les'
-                // },
-                // {
-                //     id: '9',
-                //     title: 'Fi4444les  44444'
-                // },
-                // {
-                //     id: '10',
-                //     title: 'Fi222les'
-                // },
-                // {
-                //     id: '11',
-                //     title: 'Files'
-                // },
-                // {
-                //     id: '12',
-                //     title: 'Fi4444444444les'
-                // },
-                // {
-                //     id: '13',
-                //     title: 'F 44444444iles'
-                // }
             ]
         });
         this._items2 = new RecordSet({
@@ -73,55 +50,55 @@ export default class TabButtonsDemo extends Control {
             rawData: [
                 {
                     id: '1',
-                    title: '1Fffffffffs'
+                    caption: '1Fffffffffs'
                 },
                 {
                     id: '2',
-                    title: '22Fiffffffffffffffffffffles'
+                    caption: '22Fiffffffffffffffffffffles'
                 },
                 {
                     id: '3',
-                    title: 'Filfffffffffffffffffffffffes'
+                    caption: 'Filfffffffffffffffffffffffes'
                 },
                 {
                     id: '4',
-                    title: 'Filffffffffffffffffffffes'
+                    caption: 'Filffffffffffffffffffffes'
                 },
                 {
                     id: '5',
-                    title: 'Files'
+                    caption: 'Files'
                 },
                 {
                     id: '6',
-                    title: 'Fiffffffffffffffles'
+                    caption: 'Fiffffffffffffffles'
                 },
                 {
                     id: '7',
-                    title: 'Files'
+                    caption: 'Files'
                 },
                 {
                     id: '8',
-                    title: 'Fi4444les'
+                    caption: 'Fi4444les'
                 },
                 {
                     id: '9',
-                    title: 'Fi4444les  44444'
+                    caption: 'Fi4444les  44444'
                 },
                 {
                     id: '10',
-                    title: 'Fi222les'
+                    caption: 'Fi222les'
                 },
                 {
                     id: '11',
-                    title: 'Files'
+                    caption: 'Files'
                 },
                 {
                     id: '12',
-                    title: 'Fi4444444444les'
+                    caption: 'Fi4444444444les'
                 },
                 {
                     id: '13',
-                    title: 'F 44444444iles'
+                    caption: 'F 44444444iles'
                 }
             ]
         });

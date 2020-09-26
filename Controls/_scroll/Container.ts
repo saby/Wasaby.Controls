@@ -89,18 +89,6 @@ import {debounce} from 'Types/function';
  */
 
 /**
- * @name Controls/_scroll/Container#shadowVisible
- * @cfg {Boolean} Следует ли показывать тень (когда содержимое не подходит).
- * @deprecated Используйте {@link topShadowVisibility} и {@link bottomShadowVisibility}
- */
-
-/*
- * @name Controls/_scroll/Container#shadowVisible
- * @cfg {Boolean} Whether shadow should be shown (when content doesn't fit).
- * @deprecated Use {@link topShadowVisibility} and {@link bottomShadowVisibility} instead.
- */
-
-/**
  * @typedef {String} shadowVisibility
  * @variant auto Видимость зависит от состояния скролируемой области. Тень отображается только с той стороны
  * в которую можно скролить.
@@ -266,9 +254,6 @@ let
        * @param position Позиция тени.
        */
       isShadowEnable: function(options, position: POSITION): boolean {
-         if (options.shadowVisible === false) {
-            return false;
-         }
          return SHADOW_ENABLE_MAP[options[`${position}ShadowVisibility`]];
       },
       /**
@@ -283,9 +268,6 @@ let
              visibleOptionValue = position === POSITION.LEFT || position === POSITION.RIGHT ?
                  'auto' :
                  self._options[`${position}ShadowVisibility`];
-         if (self._options.shadowVisible === false) {
-            return false;
-         }
 
          if (visibleFromInnerComponents !== SHADOW_VISIBILITY.AUTO) {
             return SHADOW_ENABLE_MAP[visibleFromInnerComponents];
@@ -560,10 +542,6 @@ let
             self = this,
             def;
 
-         if ('shadowVisible' in options) {
-            Logger.warn('Controls/scroll:Container: Опция shadowVisible устарела, используйте topShadowVisibility и bottomShadowVisibility.', self);
-         }
-
          // TODO Compatibility на старых страницах нет Register, который скажет controlResize
          this._resizeHandler = this._resizeHandler.bind(this);
          this._shadowVisibilityByInnerComponents = {
@@ -675,7 +653,7 @@ let
       },
 
       _afterMount: function() {
-          this._stickyHeaderController.init(this._container);
+          this._stickyHeaderController.init(this._children.content);
 
          /**
           * Для определения heightFix и styleHideScrollbar может требоваться DOM, поэтому проверим
@@ -809,7 +787,7 @@ let
             this._updateStickyHeaderContext();
          }
 
-         this._stickyHeaderController.updateContainer(this._container);
+         this._stickyHeaderController.updateContainer(this._children.content);
       },
 
       _beforeUnmount(): void {
@@ -864,7 +842,9 @@ let
 
        _stickyHeaderFixedCallback(position: POSITION): void {
            // После того, как заголовки зафиксировались нужно пересчитать отображение скроллбара и теней.
-          this._forceUpdate();
+          if (this._displayState.canScroll) {
+              this._forceUpdate();
+          }
        },
 
       _updateShadowMode(event, shadowVisibleObject): void {
@@ -1003,28 +983,40 @@ let
          if (!ev.nativeEvent.isTrusted) {
             let offset: number;
             const scrollTop: number = _private.getScrollTop(this, this._children.content);
+
+            const scrollSize = _private.getScrollSize(SCROLL_TYPE.VERTICAL, this._children.content);
+            const containerSize = _private.getContainerSize(SCROLL_TYPE.VERTICAL, this._children.content);
+            const scrollContainerSize = scrollSize - containerSize;
+
             if (ev.nativeEvent.which === Env.constants.key.pageDown) {
-               offset = scrollTop + this._children.content.clientHeight;
+                offset = scrollTop + this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.down) {
-               offset = scrollTop + SCROLL_BY_ARROWS;
+                offset = scrollTop + SCROLL_BY_ARROWS;
             }
             if (ev.nativeEvent.which === Env.constants.key.pageUp) {
-               offset = scrollTop - this._children.content.clientHeight;
+                offset = scrollTop - this._children.content.clientHeight;
             }
             if (ev.nativeEvent.which === Env.constants.key.up) {
-               offset = scrollTop - SCROLL_BY_ARROWS;
+                offset = scrollTop - SCROLL_BY_ARROWS;
             }
-            if (offset !== undefined) {
+
+            if (offset > scrollContainerSize) {
+                offset = scrollContainerSize;
+            }
+            if (offset < 0 ) {
+                offset = 0;
+            }
+            if (offset !== undefined && offset !== scrollTop) {
                this.scrollTo(offset);
                ev.preventDefault();
             }
 
-            if (ev.nativeEvent.which === Env.constants.key.home) {
+            if (ev.nativeEvent.which === Env.constants.key.home && scrollTop !== 0) {
                this.scrollToTop();
                ev.preventDefault();
             }
-            if (ev.nativeEvent.which === Env.constants.key.end) {
+            if (ev.nativeEvent.which === Env.constants.key.end && scrollTop !== scrollContainerSize) {
                this.scrollToBottom();
                ev.preventDefault();
             }
@@ -1186,7 +1178,9 @@ let
               // Контекст для тени постоянно вызывает обновление всех заголовков при смене shadowPosition, это
               // сильно сказывается на производительности и вызывает дерганья при скролле на ios в случае,
               // когда доскроллили до низа контейнера.
-              if (!detection.isMobileIOS) {
+              if (detection.isMobileIOS) {
+                  this._stickyHeaderController.setShadowVisibility(topShadowVisible, bottomShadowVisible);
+              } else {
                   this._stickyHeaderContext.updateConsumers();
               }
           }
@@ -1310,9 +1304,9 @@ let
       },
 
       _updatePlaceholdersSize: function(e, placeholdersSizes) {
-           this._topPlaceholderSizeChanged = true;
          if (this._topPlaceholderSize !== placeholdersSizes.top ||
             this._bottomPlaceholderSize !== placeholdersSizes.bottom) {
+            this._topPlaceholderSizeChanged = true;
             this._topPlaceholderSize = placeholdersSizes.top;
             this._bottomPlaceholderSize = placeholdersSizes.bottom;
             this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);

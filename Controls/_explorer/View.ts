@@ -8,7 +8,7 @@ import {factory} from 'Types/chain';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import {Model} from 'Types/entity';
-import {ListView} from 'Controls/list';
+import {ListView, TMovePosition} from 'Controls/list';
 import {isEqual} from 'Types/object';
 import {
    INavigationSourceConfig,
@@ -16,6 +16,9 @@ import {
    INavigationOptionValue as INavigation
 }  from '../_interface/INavigation';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
+import {ISelectionObject} from "../_interface/ISelectionType";
+import {CrudEntityKey} from "Types/source";
+import { RecordSet } from 'Types/collection';
 
 var
       HOT_KEYS = {
@@ -396,6 +399,8 @@ var
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IClickableView
+    * @mixes Controls/_list/interface/IMovableList
+    * @mixes Controls/_list/interface/IRemovableList
     * @control
     * @public
     * @category List
@@ -431,6 +436,8 @@ var
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
+    * @mixes Controls/_list/interface/IMovableList
+    * @mixes Controls/_list/interface/IRemovableList
     * @control
     * @public
     * @category List
@@ -558,12 +565,12 @@ var
          * Если в момент возвращения из папки был изменен тип навигации, не нужно восстанавливать, иначе будут смешаны опции
          * курсорной и постраничной навигаций.
          * */
-         const isNavigationHasBeenChanged = !isEqual(this._options.navigation, cfg.navigation);
+         const navigationChanged = !isEqual(cfg.navigation, this._options.navigation);
 
-         if (this._isGoingBack && _private.isCursorNavigation(this._options.navigation) && !isNavigationHasBeenChanged) {
+         if (this._isGoingBack && _private.isCursorNavigation(this._options.navigation) && !navigationChanged) {
             const newRootId = _private.getRoot(this, this._options.root);
             _private.restorePositionNavigation(this, newRootId);
-         } else if (isNavigationHasBeenChanged) {
+         } else if (navigationChanged) {
             this._navigation = cfg.navigation;
          }
 
@@ -576,7 +583,17 @@ var
             // его, когда новые записи будут установлены в модель (itemsSetCallback).
             _private.setPendingViewMode(this, cfg.viewMode, cfg);
          } else if (isViewModeChanged && !this._pendingViewMode) {
-            _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
+            // Также отложенно необходимо устанавливать viewMode, если при переходе с viewMode === "search" на "table"
+            // или "tile" будет перезагрузка. Этот код нужен до тех пор, пока не будут спускаться данные сверху-вниз.
+            // https://online.sbis.ru/opendoc.html?guid=f90c96e6-032c-404c-94df-cc1b515133d6
+            const filterChanged = !isEqual(cfg.filter, this._options.filter);
+            const recreateSource = cfg.source !== this._options.source;
+            const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
+            if (filterChanged || recreateSource || sortingChanged || navigationChanged) {
+               _private.setPendingViewMode(this, cfg.viewMode, cfg);
+            } else {
+               _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
+            }
          }
 
          if (cfg.virtualScrollConfig !== this._options.virtualScrollConfig) {
@@ -632,34 +649,57 @@ var
             this._isGoingFront = true;
          };
 
-         // Не нужно проваливаться в папку, если должно начаться ее редактирование
+         // Не нужно проваливаться в папку, если должно начаться ее редактирование.
+         // TODO: После перехода на новую схему редактирования это должен решать baseControl или treeControl.
+         //    в данной реализации получается, что в дереве с возможностью редактирования не получится
+         //    развернуть узел кликом по нему (expandByItemClick).
+         //    https://online.sbis.ru/opendoc.html?guid=f91b2f96-d6e7-45d0-b929-a0030f0a2788
          const isNodeEditable = () => {
             const hasEditOnClick = !!this._options.editingConfig && !!this._options.editingConfig.editOnClick;
             return hasEditOnClick && !clickEvent.target.closest(`.${EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE}`);
          };
 
-         if (res !== false && item.get(this._options.nodeProperty) === ITEM_TYPES.node && !isNodeEditable()) {
-            // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся.
-            // Дополнять restoredKeyObject нужно СИНХРОННО, иначе на момент вызова restoredKeyObject опции уже будут
-            // новые и маркер запомнится не для того root'а. Ошибка:
-            // https://online.sbis.ru/opendoc.html?guid=38d9ca66-7088-4ad4-ae50-95a63ae81ab6
-            _private.setRestoredKeyObject(this, item);
-            if (!this._options.editingConfig) {
-               changeRoot();
-            } else {
-               this.commitEdit().addCallback((res = {}) => {
-                  if (!res.validationFailed) {
-                     changeRoot();
-                  }
-               });
-            }
+          const editingItem = this._children.treeControl.getEditingItem();
+          const closeEditing = (eItem: Model) => {
+              return eItem.isChanged() ? this.commitEdit() : this.cancelEdit();
+          };
 
-            // Проваливание в папку и попытка проваливания в папку не должны вызывать разворот узла.
-            // Мы не можем провалиться в папку, пока на другом элементе списка запущено редактирование.
-            return false;
-         }
+         const shouldHandleClick = res !== false && !isNodeEditable();
 
-         return res;
+         if (shouldHandleClick) {
+              const nodeType = item.get(this._options.nodeProperty);
+              const isSearchMode = this._viewMode === 'search';
+
+              // Проваливание возможно только в узел (ITEM_TYPES.node).
+              // Проваливание невозможно, если по клику следует развернуть узел/скрытый узел.
+              if ((!isSearchMode && this._options.expandByItemClick && nodeType !== ITEM_TYPES.leaf) || (nodeType !== ITEM_TYPES.node)) {
+                  return res;
+              }
+
+              // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся.
+              // Дополнять restoredKeyObject нужно СИНХРОННО, иначе на момент вызова restoredKeyObject опции уже будут
+              // новые и маркер запомнится не для того root'а. Ошибка:
+              // https://online.sbis.ru/opendoc.html?guid=38d9ca66-7088-4ad4-ae50-95a63ae81ab6
+              _private.setRestoredKeyObject(this, item);
+
+             // Если в списке запущено редактирование, то проваливаемся только после успешного завершения.
+             if (!editingItem) {
+                  changeRoot();
+              } else {
+                 closeEditing(editingItem).then((result) => {
+                     if (!(result && result.canceled)) {
+                         changeRoot();
+                     }
+                     return result;
+                 });
+              }
+
+              // Проваливание в папку и попытка проваливания в папку не должны вызывать разворот узла.
+              // Мы не можем провалиться в папку, пока на другом элементе списка запущено редактирование.
+              return false;
+          }
+
+          return res;
       },
       _onBreadCrumbsClick: function(event, item) {
           _private.cleanRestoredKeyObject(this, item.getId());
@@ -700,11 +740,48 @@ var
       reload: function(keepScroll, sourceConfig) {
          return this._children.treeControl.reload(keepScroll, sourceConfig);
       },
+      getItems(): RecordSet {
+         return this._children.treeControl.getItems();
+      },
+
       // todo removed or documented by task:
       // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
       toggleExpanded: function(id) {
          this._children.treeControl.toggleExpanded(id);
       },
+
+      // region mover
+
+      moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+         return this._children.treeControl.moveItems(selection, targetKey, position);
+      },
+
+      moveItemUp(selectedKey: CrudEntityKey): Promise<void> {
+         return this._children.treeControl.moveItemUp(selectedKey);
+      },
+
+      moveItemDown(selectedKey: CrudEntityKey): Promise<void> {
+         return this._children.treeControl.moveItemDown(selectedKey);
+      },
+
+      moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
+         return this._children.treeControl.moveItemsWithDialog(selection);
+      },
+
+      // endregion mover
+
+      // region remover
+
+      removeItems(selection: ISelectionObject): Promise<void> {
+         return this._children.treeControl.removeItems(selection);
+      },
+
+      removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+         return this._children.treeControl.removeItemsWithConfirmation(selection);
+      },
+
+      // endregion remover
+
       _onArrowClick: function(e) {
          let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();
          this._notifyHandler(e, 'arrowClick', item);

@@ -88,10 +88,16 @@ var _private = {
    },
 
    openWithHistory: function(self) {
-      var filter;
+      let filter;
+
+      function openSuggestIfNeeded(): void {
+         if (self._historyKeys.length || self._options.autoDropDown) {
+            _private.open(self);
+         }
+      }
 
       if (!self._historyKeys) {
-         _private.getRecentKeys(self).addCallback(function(keys) {
+         _private.getRecentKeys(self).addCallback((keys) => {
             self._historyKeys = keys || [];
             filter = clone(self._options.filter || {});
 
@@ -101,14 +107,12 @@ var _private = {
 
             _private.setFilter(self, filter, self._options);
 
-            if (self._historyKeys.length || self._options.autoDropDown) {
-               _private.open(self);
-            }
+            openSuggestIfNeeded();
             return self._historyKeys;
          });
       } else {
          _private.setFilter(self, self._options.filter, self._options);
-         _private.open(self);
+         openSuggestIfNeeded();
       }
    },
 
@@ -117,13 +121,15 @@ var _private = {
    },
 
    inputActivated: function(self) {
-
+      const options = self._options;
       // toDO Временный костыль, в .320 убрать, должно исправиться с этой ошибкой https://online.sbis.ru/opendoc.html?guid=d0f7513f-7fc8-47f8-8147-8535d69b99d6
-      if (self._options.autoDropDown && !self._options.readOnly && !_private.getActiveElement().classList.contains('controls-Lookup__icon')) {
+      if ((options.autoDropDown || options.historyId) &&
+          !options.readOnly &&
+          !_private.getActiveElement().classList.contains('controls-Lookup__icon')) {
          // The delay is needed when searching, when receiving the focus of the input field, open without delay
          self._searchDelay = 0;
 
-         if (!self._options.suggestState) {
+         if (!options.suggestState) {
             _private.updateSuggestState(self);
          }
       }
@@ -146,17 +152,7 @@ var _private = {
          self._forceUpdate();
       }
       if (!error?.canceled) {
-         if (isEmpty(error)) {
-            return new Promise(function(resolve) {
-               require(['Controls/suggestPopup'], (result) => {
-                  self._emptyTemplate = result.EmptyErrorTemplate;
-                  _private.hideIndicator(self);
-                  resolve();
-               });
-            });
-         } else {
-            _private.hideIndicator(self);
-         }
+         _private.hideIndicator(self);
       }
    },
    shouldSearch(self, value): boolean {
@@ -179,7 +175,8 @@ var _private = {
        * 1) loaded list is empty and empty template option is doesn't set
        * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, becouse input field is empty and historyId options is set  */
       return hasItems ||
-             (!self._options.historyId || self._searchValue || isSuggestHasTabs) && self._options.emptyTemplate;
+             (!self._options.historyId || self._searchValue || isSuggestHasTabs) &&
+             self._options.emptyTemplate && searchResult !== null;
    },
    processResultData: function(self, resultData) {
       self._searchResult = resultData;
@@ -596,6 +593,7 @@ var SuggestLayout = Control.extend({
          }
       }
    },
+
    _searchErrback: function(error) {
       _private.searchErrback(this, error);
       if (this._options.searchErrorCallback) {

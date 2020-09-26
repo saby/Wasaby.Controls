@@ -1,5 +1,6 @@
 import { TemplateFunction } from 'UI/Base';
 import { IItemActionsOptions } from 'Controls/itemActions';
+import { IMarkerListOptions } from 'Controls/marker';
 
 /**
  * Интерфейс для списков.
@@ -11,7 +12,6 @@ import { IItemActionsOptions } from 'Controls/itemActions';
 
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
 
-type TMarkerVisibility = 'visible'|'onactivated'|'hidden';
 type TListStyle = 'master'|'default';
 type TVerticalItemPadding = 'S'|'null';
 type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'null';
@@ -23,16 +23,12 @@ export interface IItemPadding {
     right?: THorizontalItemPadding;
 }
 
-type TPagingMode = 'basic' | 'compact' | 'numbers';
-
-export interface IList extends IItemActionsOptions {
+export interface IList extends IItemActionsOptions, IMarkerListOptions {
     attachLoadTopTriggerToNull?: boolean;
     emptyTemplate?: TemplateFunction|string;
     footerTemplate?: TemplateFunction|string;
     multiSelectVisibility?: TMultiSelectVisibility;
-    markedKey?: string|number;
     stickyMarkedItem?: boolean;
-    markerVisibility?: TMarkerVisibility;
     uniqueKeys?: boolean;
     itemsReadyCallback?: (items) => void;
     dataLoadCallback?: (items) => void;
@@ -43,22 +39,9 @@ export interface IList extends IItemActionsOptions {
     itemPadding?: IItemPadding;
     nodeConfig?: INodeConfig;
 
-    pagingMode?: TPagingMode;
     pagingContentTemplate?: TemplateFunction | string;
 }
 
-/**
- * @typedef {String} PagingMode
- * @variant basic Предназначен для пейджинга в реестре с подгрузкой по скроллу.
- * @variant compact Предназначен для пейджинга с отображением одной команды прокрутки.
- * @variant numbers Предназначен для пейджинга с подсчетом записей и страниц
- */
-
-/**
- * @name Controls/_list/interface/IList#pagingMode
- * @cfg {PagingMode} Опция управляет внешним видом пэйджинга. Позволяет для каждого конкретного реестра задать внешний вид в зависимости от требований к интерфейсу.
- * @see pagingContentTemplate
- * /
 /**
  * @name Controls/_list/interface/IList#pagingContentTemplate
  * @cfg {Function} Опция управляет отображением счетчика непрочитанных сообщений
@@ -233,21 +216,6 @@ export interface IList extends IItemActionsOptions {
  * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
  */
 
-
-/**
- * @name Controls/_list/interface/IList#markedKey
- * @cfg {Number} Идентификатор элемента, который выделен маркером.
- * @demo Controls-demo/List/List/BasePG
- * @see markerVisibility
- */
-
-/*ENG
- * @name Controls/_list/interface/IList#markedKey
- * @cfg {Number} Identifier of the marked collection item.
- * @remark
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
- */
-
 /**
  * @name Controls/_list/interface/IList#stickyMarkedItem
  * @cfg {Boolean} Позволяет включать/отключать прилипание выбранного элемента.
@@ -255,33 +223,6 @@ export interface IList extends IItemActionsOptions {
  * Опция актуальна только для стиля "Мастер".
  * @see style
  * @default true
- */
-
-/**
- * @typedef {String} MarkerVisibility
- * @variant visible Маркер отображается всегда, даже если не задан идентификатор элемента в опции {@link markedKey}.
- * @variant hidden Маркер всегда скрыт.
- * @variant onactivated Макер отображается при активации списка, например при клике по элементу.
- */
-
-/**
- * @name Controls/_list/interface/IList#markerVisibility
- * @cfg {MarkerVisibility} Режим отображения маркера активного элемента.
- * @remark
- * В следующем примере маркер появляется только при активации списка.
- * @demo Controls-demo/list_new/Marker/OnActivated/Index
- * @default onactivated
- * @see markedKey
- */
-
-/*ENG
- * @name Controls/_list/interface/IList#markerVisibility
- * @cfg {String} Determines when marker is visible.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
- * @variant visible The marker is always displayed, even if the marked key entry is not specified.
- * @variant hidden The marker is always hidden.
- * @variant onactivated - The marker is displayed on List activating. For example, when user mark a record.
- * @default onactivated
  */
 
 /**
@@ -396,16 +337,31 @@ export interface IList extends IItemActionsOptions {
  */
 
 /**
- * Прокручивает список к указанному элементу.
- * @function Controls/_list/interface/IList#scrollToItem
- * @param {String|Number} key Идентификатор элемента коллекции, к которому осуществляется прокручивание.
- * @param {Boolean} toBottom Определяет, будет ли виден нижний край элемента. По умолчанию нижний край элемента виден.
- * @param {Boolean} force Определяет, нужно ли подскролливать к границе элемента, если он виден
+ * Возвращает список элементов.
+ * @function Controls/_list/interface/IList#getItems
+ * @return {RecordSet} Список элементов.
  * @example
  * <pre class="brush: js">
- * _buttonClick: function() {
+ * _getItems(): RecordSet {
  *    var list = this._children.myList;
- *    list.scrollToItem(this._firstItemKey);
+ *    return list.getItems();
+ * }
+ * </pre>
+ */
+
+/**
+ * Прокручивает список к указанному элементу.
+ * @function Controls/_list/interface/IList#scrollToItem
+ * @param {String|Number} key Идентификатор элемента коллекции, к которому происходит прокручивание.
+ * @param {Boolean} [toBottom=false] Видимость нижнего края элемента. Для значения true нижний край отображается, а для false — скрыт.
+ * @param {Boolean} [force=false] Прокрутить список к нижнему краю элемента.
+ * Для значения true прокручивание работает, а для false — отключено.
+ * **Примечание:** параметр можно использовать, когда toBottom установлен в значение true.
+ * @demo Controls-demo/list_new/VirtualScroll/ConstantHeights/ScrollToItem/Index В следующем примере под списком находится кнопка, при клике по которой вызывается обработчик и метод scrollToItem().
+ * @example
+ * <pre class="brush: js">
+ * protected _scrollToItem(event: SyntheticEvent, id: number): void {
+ *     this._children.list.scrollToItem(id, false, true);
  * }
  * </pre>
  */
@@ -436,7 +392,7 @@ export interface IList extends IItemActionsOptions {
  * @param {Object} nativeEvent Объект нативного события браузера.
  * @remark
  * От события {@link Controls/_list/interface/IClickableView#itemClick itemClick} данное событие отличается следующим:
- * 
+ *
  * 1. Происходит при нажатии на любую кнопку мыши (левую, правую, среднюю);
  * 2. Происходит в момент нажатия кнопки (itemClick срабатывает уже после её отпускания).
  */
@@ -505,6 +461,17 @@ export interface IList extends IItemActionsOptions {
  */
 
 /**
+ * @event Происходит до изменения ключа маркера.
+ * @name Controls/_list/interface/IList#beforeMarkedKeyChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Number} key Новый ключ маркера.
+ * @demo Controls-demo/List/List/BasePG
+ * @remark
+ * Из обработчика события нужно вернуть полученный ключ или новый ключ.
+ * Либо можно вернуть промис с нужным ключом.
+ */
+
+/**
  * @event Происходит при отрисовке очередного набора данных.
  * @name Controls/_list/interface/IList#drawItems
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
@@ -528,7 +495,7 @@ export interface IList extends IItemActionsOptions {
  * @remark
  * Активация происходит при клике по элементу.
  * Событие не происходит, если:
- * 
+ *
  * * элемент нельзя отметить маркером.
  * * при клике начинается <a href="/doc/platform/developmentapl/interface-development/controls/list/list/edit/">редактирование по месту</a>.
  */
@@ -600,7 +567,7 @@ export interface IList extends IItemActionsOptions {
  * @variant masterClassic
  * @variant detailContrast
  * @variant listItem
- * @variant stackHeader 
+ * @variant stackHeader
  */
 
 /**
@@ -644,4 +611,17 @@ export interface IList extends IItemActionsOptions {
  * @default default
  * @remark
  * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
+ */
+
+/**
+ * @typedef {String} ButtonName
+ * @variant Begin Кнопка "В начало".
+ * @variant End Кнопка "В конец".
+ */
+
+/**
+ * @event Происходит при клике по кнопкам перехода к первой и последней странице.
+ * @name Controls/_list/interface/IList#pagingArrowClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {ButtonName} buttonName.
  */

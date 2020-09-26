@@ -370,7 +370,7 @@ var
 
                 // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
                 // нужно его принудительно установить как фон таблицы
-                if (!isFullGridSupport && !current.isEditing) {
+                if (!isFullGridSupport && !current.isEditing()) {
                     classLists.marked += _private.getBackgroundStyle({backgroundStyle, theme}, true);
                 }
 
@@ -384,6 +384,9 @@ var
                 classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
             }
 
+            if (!GridLayoutUtil.isFullGridSupport() && !(current.columns.length === (current.hasMultiSelect ? 2 : 1)) && self._options.fixIEAutoHeight) {
+                classLists.base += ' controls-Grid__row-cell__autoHeight';
+            }
             return classLists;
         },
 
@@ -423,7 +426,7 @@ var
 
         isNeedToHighlight: function(item, dispProp, searchValue) {
             var itemValue = item.get(dispProp);
-            return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
+            return itemValue && searchValue;
         },
         getItemsLadderVersion(ladder) {
             let ladderVersion = '';
@@ -514,9 +517,14 @@ var
             if (!self.isSupportLadder(self._options.ladderProperties)) {
                 return {};
             }
-            if (!self._ladder || self._options.stickyColumn) {
-                self.resetCachedItemData();
-            }
+
+            // Если при перестройке "лесенки" не сбрасывать кеш, то после добавления элементов по месту при скролле
+            // реестра ломается вёрстка, т.к. в span подставляются старые данные.
+            // см. https://online.sbis.ru/opendoc.html?guid=4fe3dd6f-c76b-45fa-b676-5914a896c7c9
+            // Предыдущая реализацию согласно док-там:
+            // см. https://online.sbis.ru/opendoc.html?guid=d3a0a646-9a22-4a61-be98-7c8570c7a295
+            // см. https://online.sbis.ru/opendoc.html?guid=458ac3b7-b899-4fff-8fcf-ae8168b67b80
+            self.resetCachedItemData();
 
             const hasVirtualScroll = !!self._options.virtualScrolling || Boolean(self._options.virtualScrollConfig);
             const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
@@ -530,19 +538,6 @@ var
                 columns: self._options.columns,
                 stickyColumn: self._options.stickyColumn
             });
-            //Нужно сбросить кэш для записей, у которых поменялась конфигурация лесенки
-            if (self._ladder) {
-                for (let i = startIndex; i < stopIndex ; i++) {
-                    if (!isEqual(newLadder.stickyLadder[i], self._ladder.stickyLadder[i]) ||
-                        !isEqual(newLadder.ladder[i], self._ladder.ladder[i])) {
-
-                        const dispItem = self.getItemById(self.getItems()?.at(i)?.getId());
-                        if (dispItem) {
-                            self.resetCachedItemData(self._getDisplayItemCacheKey(dispItem));
-                        }
-                    }
-                }
-            }
             return newLadder;
         },
         getTableCellStyles(currentColumn): string {
@@ -723,9 +718,10 @@ var
 
             // Резолверы шаблонов. Передается объект, чтобы всегда иметь актуальные резолверы. Передача по ссылке
             // требуется например для построения таблицы с запущенным редактированием по месту. Редактирование строится
-            // до GridView и устанавливает editingItemData в которую передаются резолверы. На момент взятия itemData
+            // до GridView и устанавливает редактируемую запись в которую передаются резолверы. На момент взятия itemData
             // резолверов еще нет, поэтому передаем объект, позже Gridview запишет в него резолверы. С таким подходом
             // порядок маунтов не важен, главное, что все произойдет до маунта.
+            // TODO: Проверить, возможно стало неактуальным в 20.7000
             this._resolvers = {};
             this._model = this._createModel(cfg);
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
@@ -878,8 +874,8 @@ var
             }
         },
 
-        setHeaderInEmptyListVisible(newVisibility) {
-            this.headerInEmptyListVisible = newVisibility;
+        setHeaderVisibility(newVisibility) {
+            this.headerVisibility = newVisibility;
             this.setHeader(this._header, true);
         },
 
@@ -970,7 +966,7 @@ var
          * Метод проверяет, рисовать ли header при отсутствии записей.
          */
         isDrawHeaderWithEmptyList(): boolean {
-            return this.headerInEmptyListVisible || this.isGridListNotEmpty();
+            return (this.headerVisibility === 'visible') || this.isGridListNotEmpty();
         },
 
         isGridListNotEmpty(): boolean {
@@ -1066,7 +1062,7 @@ var
             }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (hasMultiSelect && columnIndex === 0 && !cell.title) {
+            if (hasMultiSelect && columnIndex === 0 && !(cell.title || cell.caption)) {
                 cellClasses += ' controls-Grid__header-cell-checkbox' + `_theme-${theme}` + ` controls-Grid__header-cell-checkbox_min-width_theme-${theme}`;
 
                 // В grid-layout хлебные крошки нельзя расположить в первой ячейке, если в таблице включен множественный выбор,
@@ -1173,7 +1169,12 @@ var
                 }
             }
 
-            if (columnIndex === 0 && rowIndex === 0 && this._options.multiSelectVisibility !== 'hidden' && this._headerRows[rowIndex][columnIndex + 1].startColumn && !cell.title) {
+            if (
+                columnIndex === 0 && rowIndex === 0 &&
+                this._options.multiSelectVisibility !== 'hidden' &&
+                this._headerRows[rowIndex][columnIndex + 1].startColumn &&
+                !(cell.title || cell.caption)
+            ) {
                 cellStyles = GridLayoutUtil.getMultiHeaderStyles(1, 2, 1, this._maxEndRow, 0)
                 if (!GridLayoutUtil.isFullGridSupport()) {
                     headerColumn.rowSpan = this._maxEndRow - 1;
@@ -1462,9 +1463,6 @@ var
         getNextItemKey: function() {
             return this._model.getNextItemKey.apply(this._model, arguments);
         },
-        getValidItemForMarker: function(index) {
-            return this._model.getValidItemForMarker(index);
-        },
         setIndexes: function(startIndex, stopIndex) {
             return this._model.setIndexes(startIndex, stopIndex);
         },
@@ -1537,10 +1535,6 @@ var
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
 
-            if (this.getEditingItemData()) {
-                cfg.editingRowIndex = this.getEditingItemData().index;
-            }
-
             return {
                 getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
                 getIndexById: (id) => getIndexById({id, ...cfg}),
@@ -1603,18 +1597,6 @@ var
             current.isLastRow = (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
                                  (this.getCount() - 1 === current.index);
 
-            // Если после последней записи идет добавление новой, не нужно рисовать широкую линию-разделитель между ними.
-            const editingItemData = this.getEditingItemData();
-            if (editingItemData) {
-                let index;
-                if (this._options.editingConfig.addPosition === 'top') {
-                    index = editingItemData.index - 1;
-                } else {
-                    index = editingItemData.index;
-                }
-                current.isLastRow = current.isLastRow  && (index - 1 < current.index);
-            }
-
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
                 _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
             );
@@ -1652,9 +1634,6 @@ var
             // TODO: Разобраться, зачем это. По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
             if (current.columnScroll) {
                 current.rowIndex = this._calcRowIndex(current);
-                if (this.getEditingItemData() && (current.rowIndex >= this.getEditingItemData().rowIndex)) {
-                    current.rowIndex++;
-                }
             }
 
             if (current.isGroup) {
@@ -1789,7 +1768,7 @@ var
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
                 if (current.item.get) {
-                    currentColumn.column.needSearchHighlight = current.searchValue ?
+                    currentColumn.needSearchHighlight = current.searchValue ?
                         !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue) : false;
                     currentColumn.searchValue = current.searchValue;
                 }
@@ -1879,7 +1858,7 @@ var
 
         setItems(items, cfg): void {
             this._model.setItems(items, cfg);
-            this._setHeader(this._options.header);
+            this._setHeader(cfg.header);
         },
 
         setItemTemplateProperty: function(itemTemplateProperty) {
@@ -1928,25 +1907,6 @@ var
 
         nextModelVersion: function() {
             this._model.nextModelVersion.apply(this._model, arguments);
-        },
-
-        _setEditingItemData: function (itemData) {
-            this._model._setEditingItemData(itemData);
-
-            /*
-            * https://online.sbis.ru/opendoc.html?guid=8a8dcd32-104c-4564-8748-2748af03b4f1
-            * Нужно пересчитать и перерисовать записи после начала и завершения редактирования.
-            * При старте редактирования индексы пересчитываются, и, в случе если началось добавление, индексы записей после добавляемой увеличиваются на 1.
-            * При отмене добавления индексы нужно вернуть в изначальное состояние.
-            * */
-            // TODO: Разобраться, нужно ли. https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-            if (this._options.columnScroll) {
-                this._nextModelVersion();
-            }
-        },
-
-        getEditingItemData(): object | null {
-            return this._model.getEditingItemData();
         },
 
         setItemActionVisibilityCallback: function(callback) {
@@ -2335,6 +2295,10 @@ var
         // region Colgroup columns
 
         _prepareColgroupColumns(columns: IGridColumn[], hasMultiSelect: boolean): void {
+            if (this.isFullGridSupport()) {
+                this._colgroupColumns = undefined;
+                return;
+            }
 
             const colgroupColumns: IColgroupColumn[] = [];
 

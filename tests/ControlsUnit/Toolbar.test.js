@@ -138,7 +138,7 @@ define(
          describe('publicMethod', function() {
             it('check received state', () => {
                toolbar._beforeMount(config, null, records);
-               assert.equal(toolbar._items, records);
+               assert.isFalse(toolbar._items.isEqual(records));
                assert.equal(!!toolbar._needShowMenu, true);
             });
             it('need show menu', function() {
@@ -209,6 +209,17 @@ define(
                   iconStyle: 'super',
                   iconSize: 'm'
                };
+               itemWithMenu = new entity.Model({
+                  rawData: {
+                     id: '2',
+                     title: 'Запись 2',
+                     parent: null,
+                     '@parent': true,
+                     icon: 'icon-Ezy',
+                     iconStyle: 'super',
+                     iconSize: 'm'
+                  }
+               });
                let itemConfig = (new toolbars.View())._getMenuConfigByItem.call(toolbar, itemWithMenu);
                if (standart.caption === itemConfig.templateOptions.headConfig.caption &&
                   standart.icon === itemConfig.templateOptions.headConfig.icon &&

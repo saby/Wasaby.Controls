@@ -132,29 +132,17 @@ var _private = {
    },
 
    searchErrback(self: Control, error: Error): void {
-      const source = _private.getOriginSource(self._options.source);
       if (self._options.searchErrback) {
          self._options.searchErrback(error);
       }
-
-      //if query returned an error, the list should be empty
-      //but if error was called by query abort (error property 'canceled'),
-      //the list should not change
       if (!error?.canceled) {
-         if (isEmpty(error)) {
-            self._source = new Memory({
-               model: source.getModel(),
-               keyProperty: source.getKeyProperty()
-            });
-         } else {
-            _private.getErrorController(self).process({
-               error,
-               theme: self._options.theme,
-               mode: dataSourceError.Mode.include
-            }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
-               self._errorConfig = errorConfig;
-            });
-         }
+         _private.getErrorController(self).process({
+            error,
+            theme: self._options.theme,
+            mode: dataSourceError.Mode.include
+         }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
+            self._errorConfig = errorConfig;
+         });
       }
    },
 
@@ -256,7 +244,7 @@ var _private = {
 
    destroySearchController: function(self) {
       if (self._searchController) {
-         self._searchController.abort();
+         self._searchController.abort(true);
          self._searchController = null;
       }
    },

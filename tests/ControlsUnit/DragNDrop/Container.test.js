@@ -8,17 +8,14 @@ define([
          endDetected = false,
          startDetected = false,
          container = new dragnDrop.Controller();
-      container._children = {
-         dragStartDetect: {
-            start: function() {
-               startDetected = true;
-            }
-         },
-         dragEndDetect: {
-            start: function() {
-               endDetected = true;
-            }
-         }
+      container._controllerClass = new dragnDrop.ControllerClass();
+
+      container._controllerClass._registers.documentDragStart.start = function() {
+         startDetected = true;
+      };
+
+      container._controllerClass._registers.documentDragEnd.start = function() {
+         endDetected = true;
       };
 
       it('documentDragStart', function() {
@@ -42,7 +39,7 @@ define([
             draggingTemplate = 'draggingTemplate';
          let openTemplate;
          let openTemplateOptions;
-         container._dialogOpener.open = (options) => {
+         container._controllerClass._dialogOpener.open = (options) => {
             openTemplate = options.templateOptions.draggingTemplate;
             openTemplateOptions = options.templateOptions.draggingTemplateOptions;
          };

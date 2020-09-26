@@ -2,19 +2,20 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import { relation, Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
-import { TKeySelection as TKey, TKeysSelection as TKeys, ISelectionObject as ISelection } from 'Controls/interface';
+import { ISelectionObject as ISelection } from 'Controls/interface';
 import { Controller as SourceController } from 'Controls/source';
 import ISelectionStrategy from './ISelectionStrategy';
-import { IEntryPath, ITreeSelectionStrategyOptions } from '../interface';
+import { IEntryPath, ITreeSelectionStrategyOptions, TKeys } from '../interface';
 import clone = require('Core/core-clone');
+import { CrudEntityKey } from 'Types/source';
 
 /**
  * Стратегия выбора для иерархического списка, для работы с ним как с плоским.
  * Записи не зависимы между собой, выбор родительских узлов никак не отражается на их детей.
- * @class Controls/_operations/MultiSelector/SelectionStrategy/Tree
+ * @class Controls/_multiselection/SelectionStrategy/Tree
  * @control
- * @private
- * @author Герасимов А.М.
+ * @public
+ * @author Панихин К.А.
  */
 
 const FIELD_ENTRY_PATH = 'ENTRY_PATH';
@@ -25,7 +26,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    private _selectAncestors: boolean;
    private _selectDescendants: boolean;
    private _nodesSourceControllers: Map<string, SourceController>;
-   private _rootId: TKey;
+   private _rootId: CrudEntityKey;
    private _items: RecordSet;
 
    constructor(options: ITreeSelectionStrategyOptions) {
@@ -76,6 +77,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
             this._unselectParentNodes(cloneSelection, parentId);
          }
       });
+
+      if (!cloneSelection.selected.length) {
+         cloneSelection.excluded = [];
+      }
 
       return cloneSelection;
    }
@@ -163,11 +168,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
 
       processingItems.forEach((item) => {
-         const itemId: TKey = item.getKey();
+         const itemId: CrudEntityKey = item.getKey();
          const parentId = this._getParentId(itemId);
          const isNode = this._isNode(item);
          let isSelected = !selection.excluded.includes(itemId) && (selection.selected.includes(itemId) ||
-             this._isAllSelected(selection, parentId));
+             this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, itemId);
 
          if (this._selectAncestors && isNode) {
             isSelected = this._getStateNode(itemId, isSelected, {
@@ -193,7 +198,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       if (!this._isAllSelected(selection, this._rootId) || !hasMoreData) {
          if (this._selectDescendants) {
             for (let index = 0; index < selection.selected.length; index++) {
-               const itemId: TKey = selection.selected[index];
+               const itemId: CrudEntityKey = selection.selected[index];
                const item = this._items.getRecordById(itemId);
 
                if (!item || this._isNode(item)) {
@@ -210,8 +215,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          }
 
          for (let index = 0; index < selectedNodes.length; index++) {
-            const nodeKey: TKey = selectedNodes[index];
-            const nodeSourceController = this._nodesSourceControllers?.get(nodeKey);
+            const nodeKey: CrudEntityKey = selectedNodes[index];
+            const nodeSourceController = this._nodesSourceControllers?.get(nodeKey as string);
             let countItemsSelectedInNode;
             if (nodeSourceController?.hasMoreData('down')) {
                 countItemsSelectedInNode = null;
@@ -246,7 +251,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return isAllSelected;
    }
 
-   private _unselectParentNodes(selection: ISelection, parentId: TKey): void {
+   private _unselectParentNodes(selection: ISelection, parentId: CrudEntityKey): void {
       let allChildrenExcluded = this._isAllChildrenExcluded(selection, parentId);
       let currentParentId = parentId;
       while (currentParentId !== this._rootId && allChildrenExcluded) {
@@ -257,7 +262,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
    }
 
-   private _getChildrenByEntryPath(nodeId: TKey, path: any[] = []): TKey[] {
+   private _getChildrenByEntryPath(nodeId: CrudEntityKey, path: any[] = []): CrudEntityKey[] {
       let result = [];
       let children;
       const childrenMap = new Map();
@@ -273,7 +278,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       while (children.length) {
          let tempChildren = [];
          result = result.concat(children);
-         children.forEach((key: TKey): void => {
+         children.forEach((key: CrudEntityKey): void => {
             if (childrenMap.has(key)) {
                tempChildren = tempChildren.concat(childrenMap.get(key));
                childrenMap.delete(key);
@@ -306,7 +311,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return FIELD_ENTRY_PATH in this._items.getMetaData();
    }
 
-   private _isAllSelected(selection: ISelection, nodeId: TKey): boolean {
+   private _isAllSelected(selection: ISelection, nodeId: CrudEntityKey): boolean {
       if (this._selectDescendants || this._isAllSelectedInRoot(selection)) {
          return selection.selected.includes(nodeId) || !selection.excluded.includes(nodeId) &&
             this._hasSelectedParent(nodeId, selection);
@@ -315,7 +320,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
    }
 
-   private _selectNode(selection: ISelection, nodeId: TKey): void {
+   private _selectNode(selection: ISelection, nodeId: CrudEntityKey): void {
       this._selectLeaf(selection, nodeId);
 
       if (this._selectDescendants) {
@@ -323,7 +328,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
    }
 
-   private _unselectNode(selection: ISelection, nodeId: TKey): void {
+   private _unselectNode(selection: ISelection, nodeId: CrudEntityKey): void {
       this._unselectLeaf(selection, nodeId);
 
       if (this._selectDescendants) {
@@ -347,12 +352,13 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          ArraySimpleValuesUtil.addSubArray(selection.excluded, [leafId]);
       }
 
-      if (this._isAllChildrenExcluded(selection, parentId) && this._selectAncestors) {
+      if (this._isAllChildrenExcluded(selection, parentId) && this._selectAncestors && parentId !== this._rootId) {
+         ArraySimpleValuesUtil.addSubArray(selection.excluded, [parentId]);
          ArraySimpleValuesUtil.removeSubArray(selection.selected, [parentId]);
       }
    }
 
-   private _getParentId(itemId: string|number): TKey|undefined {
+   private _getParentId(itemId: string|number): CrudEntityKey|undefined {
       const parentProperty: string = this._hierarchyRelation.getParentProperty();
       const item: Model|undefined = this._items.getRecordById(itemId);
       return item && item.get(parentProperty);
@@ -382,10 +388,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return selectedKeysWithEntryPath;
    }
 
-   private _hasSelectedParent(key: TKey, selection: ISelection): boolean {
+   private _hasSelectedParent(key: CrudEntityKey, selection: ISelection): boolean {
       let hasSelectedParent: boolean = false;
       let hasExcludedParent: boolean = false;
-      let currentParentId: TKey|undefined = this._getParentId(key);
+      let currentParentId: CrudEntityKey|undefined = this._getParentId(key);
 
       while (currentParentId !== null && currentParentId !== undefined) {
          if (selection.selected.includes(currentParentId)) {
@@ -406,7 +412,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return hasSelectedParent;
    }
 
-   private _getStateNode(itemId: TKey, initialState: boolean, selection: ISelection): boolean|null {
+   private _getStateNode(itemId: CrudEntityKey, initialState: boolean, selection: ISelection): boolean|null {
       const children = this._getChildren(itemId, this._items, this._hierarchyRelation);
       const entryPath = this._items.getMetaData()[FIELD_ENTRY_PATH];
       const listKeys = initialState ? selection.excluded : selection.selected;
@@ -415,7 +421,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
       for (let index = 0; index < children.length; index++) {
          const child: Model = children[index];
-         const childId: TKey = child.getKey();
+         const childId: CrudEntityKey = child.getKey();
          const childInList = listKeys.includes(childId);
 
          if (this._isNode(child)) {
@@ -445,16 +451,41 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return stateNode;
    }
 
-   private _isAllChildrenExcluded(selection: ISelection, nodeId: TKey): boolean {
-      const children = this._getChildren(nodeId, this._items, this._hierarchyRelation);
-      return !children.some((item): boolean => !selection.excluded.includes(item.getKey()));
+   /**
+    * Проверяем, что все дети данного узла находятся в excluded
+    * @param selection
+    * @param nodeId
+    * @private
+    */
+   private _isAllChildrenExcluded(selection: ISelection, nodeId: CrudEntityKey): boolean {
+      const childes = this._getChildren(nodeId, this._items, this._hierarchyRelation);
+
+      let result = true;
+
+      if (childes.length) {
+         for (const child of childes) {
+            if (this._getChildren(child.getKey(), this._items, this._hierarchyRelation).length > 0) {
+               result = result && this._isAllChildrenExcluded(selection, child.getKey());
+            } else {
+               result = result && selection.excluded.includes(child.getKey());
+            }
+
+            if (!result) {
+               break;
+            }
+         }
+      } else {
+         result = false;
+      }
+
+      return result;
    }
 
-   private _removeChildrenIdsFromSelection(selection: ISelection, nodeId: TKey): void {
+   private _removeChildrenIdsFromSelection(selection: ISelection, nodeId: CrudEntityKey): void {
       this._removeChildes(selection, nodeId, this._items, this._hierarchyRelation);
    }
 
-   private _getAllChildren(nodeId: TKey, items: RecordSet, hierarchyRelation: relation.Hierarchy): Model[] {
+   private _getAllChildren(nodeId: CrudEntityKey, items: RecordSet, hierarchyRelation: relation.Hierarchy): Model[] {
       const children: Model[] = [];
 
       this._getChildren(nodeId, items, hierarchyRelation).forEach((child) => {
@@ -468,7 +499,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return children;
    }
 
-   private _getChildrenInEntryPath(parentId: TKey, entriesPath: IEntryPath[]): TKeys {
+   private _getChildrenInEntryPath(parentId: CrudEntityKey, entriesPath: IEntryPath[]): TKeys {
       let children = [];
 
       entriesPath.forEach((entryPath: IEntryPath) => {
@@ -481,7 +512,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return children;
    }
 
-   private _getChildrenIds(nodeId: TKey, items: RecordSet, hierarchyRelation: relation.Hierarchy): TKeys {
+   private _getChildrenIds(nodeId: CrudEntityKey, items: RecordSet, hierarchyRelation: relation.Hierarchy): TKeys {
       const entriesPath = items.getMetaData()[FIELD_ENTRY_PATH];
       let childrenIds = this._getAllChildren(nodeId, items, hierarchyRelation).map((child) => {
          return child.getKey();
@@ -505,7 +536,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    private _getSelectedChildrenCount(
-      nodeId: TKey,
+      nodeId: CrudEntityKey,
       selection: ISelection,
       items: RecordSet,
       hierarchyRelation: relation.Hierarchy,
@@ -547,15 +578,15 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return selectedChildrenCount;
    }
 
-   private _removeChildes(selection: ISelection, nodeId: TKey, items: RecordSet, hierarchy: relation.Hierarchy): void {
+   private _removeChildes(selection: ISelection, nodeId: CrudEntityKey, items: RecordSet, hierarchy: relation.Hierarchy): void {
       const childrenIds: TKeys = this._getChildrenIds(nodeId, items, hierarchy);
 
       ArraySimpleValuesUtil.removeSubArray(selection.selected, childrenIds);
       ArraySimpleValuesUtil.removeSubArray(selection.excluded, childrenIds);
    }
 
-   private _getChildren(nodeId: TKey, items: RecordSet, hierarchyRelation: relation.Hierarchy): Model[] {
-      return hierarchyRelation.getChildren(nodeId, items);
+   private _getChildren(nodeId: CrudEntityKey, items: RecordSet, hierarchyRelation: relation.Hierarchy): Model[] {
+      return hierarchyRelation.getChildren(nodeId as any, items) as Model[];
    }
 
    /**

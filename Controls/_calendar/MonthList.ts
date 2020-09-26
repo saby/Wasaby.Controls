@@ -102,15 +102,11 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                            Promise<TItems> | void {
 
         const now = new WSDate();
-        let position = options.startPosition || options.position;
+        let position = options.position;
 
         if (!position) {
             position = options.viewMode === VIEW_MODE.year ?
                 dateUtils.getStartOfYear(now) : dateUtils.getStartOfMonth(now);
-        }
-
-        if (options.startPosition) {
-            Logger.error('MonthList: Используется устаревшая опция startPosition, используйте опцию position', this);
         }
 
         const normalizedPosition = this._normalizeDate(position, options.viewMode);
@@ -141,8 +137,15 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     protected _beforeUpdate(options: IModuleComponentOptions): void {
         this._updateItemTemplate(options);
-        this._updateSource(options, this._options);
+        const sourceUpdated = this._updateSource(options, this._options);
+        if (sourceUpdated) {
+            this._enrichItems();
+        }
         this._updateVirtualPageSize(options, this._options);
+        // Сравниваем по ссылке, а не по значению. position обновляется только при смене года или если
+        // напрямую менять position через опцию. Таким обзразом, если мы попробуем подскролить календарь к дате, которую
+        // устанавливали через опцию ранее, значения окажутся одинаковыми и подскролла не произайдет.
+        // В то же время ссылки окажутся разыми
         if (options.position !== this._displayedPosition) {
             // Не инициализируем перестроение списка пока не завершится пребыбущая перерисовка.
             // https://online.sbis.ru/opendoc.html?guid=4c2ee6ae-c41d-4bc2-97e7-052963074621
@@ -220,7 +223,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         }
     }
 
-    private _updateSource(options: IModuleComponentOptions, oldOptions?: IModuleComponentOptions): void {
+    private _updateSource(options: IModuleComponentOptions, oldOptions?: IModuleComponentOptions): boolean {
         if (!oldOptions || options.viewMode !== oldOptions.viewMode) {
             this._viewSource = new MonthsSource({
                 header: Boolean(this._itemHeaderTemplate),
@@ -238,7 +241,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 dateConstructor: options.dateConstructor
             });
             this._extDataLastVersion = this._extData.getVersion();
+            return true;
         }
+        return false;
     }
     private _updateVirtualPageSize(options: IModuleComponentOptions, oldOptions?: IModuleComponentOptions): void {
         if (!oldOptions || options.virtualPageSize !== oldOptions.virtualPageSize) {
@@ -281,7 +286,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
     protected _intersectHandler(event: SyntheticEvent, entries: IntersectionObserverSyntheticEntry[]): void {
         // Don't update if the observer is triggered after hiding the component.
-        if (!this.isVisible()) {
+        if (!this._monthListVisible()) {
             return;
         }
         for (const entry of entries) {
@@ -484,7 +489,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         return this._container.get ? this._container.get(0) : this._container;
     }
 
-    private isVisible(): boolean {
+    private _monthListVisible(): boolean {
         return this._getNormalizedContainer().offsetParent !== null;
     }
 
@@ -547,7 +552,7 @@ export default ModuleComponent;
  * @example
  * Обновляем заголовок в зависимости от отображаемого года.
  * <pre>
- *    <Controls.calendar:MonthList startPosition="_date" on:positionChanged="_positionChangedHandler()"/>
+ *    <Controls.calendar:MonthList position="_date" on:positionChanged="_positionChangedHandler()"/>
  * </pre>
  * <pre>
  *    class  ModuleComponent extends Control {
