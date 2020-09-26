@@ -9,20 +9,24 @@
     </ws:if>
     <ws:if data="{{ contentTemplate }}">
         <div attr:class="{{ (item || itemData).getContentClasses(theme, style) }}">
-            <ws:partial
-                    template="{{ contentTemplate }}"
-                    item="{{ item }}"
-                    itemData="{{ itemData }}"
-                    useNewModel="{{ true }}"
-                    searchValue="{{ searchValue }}"
-                    highlightOnHover="{{ highlightOnHover }}"
-                    itemActionsTemplate="{{ itemActionsTemplate }}"
-                    swipeTemplate="{{ swipeTemplate }}" />
+            <div class="controls-ListView_content-template">
+                <ws:partial
+                        template="{{ contentTemplate }}"
+                        item="{{ item }}"
+                        itemData="{{ itemData }}"
+                        useNewModel="{{ true }}"
+                        searchValue="{{ searchValue }}"
+                        highlightOnHover="{{ highlightOnHover }}"
+                        itemActionsTemplate="{{ itemActionsTemplate }}"
+                        swipeTemplate="{{ swipeTemplate }}" />
+            </div>
         </div>
     </ws:if>
     <ws:else>
         <div attr:class="{{ (item || itemData).getContentClasses(theme, style) }}">
-            {{ (item || itemData).getContents()[displayProperty || 'title'] }}
+            <div class="controls-ListView_content-template">
+                {{ (item || itemData).getContents()[displayProperty || 'title'] }}
+            </div>
         </div>
     </ws:else>
     <ws:if data="{{ (item || itemData).hasVisibleActions() || (item || itemData).isEditing() }}">
