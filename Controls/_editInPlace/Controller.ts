@@ -1,10 +1,9 @@
 import {Model, DestroyableMixin} from 'Types/entity';
 import {Logger} from 'UI/Utils';
-import {CONSTANTS, TEditableCollectionItem} from './Types';
+import {CONSTANTS} from './Types';
 import {CollectionEditor} from './CollectionEditor';
 import {mixin} from 'Types/util';
-import {Collection} from 'Controls/display';
-import {RecordSet} from 'Types/collection';
+import {IEditableCollection, IEditableCollectionItem} from 'Controls/display';
 
 const ERROR_MSG = {
     COLLECTION_IS_NOT_DEFINED: 'IEditInPlaceOptions.collection is not defined. Option is required. It must be installed at least once.',
@@ -60,16 +59,23 @@ interface IEditInPlaceOptions {
      * @name Controls/_editInPlace/IEditInPlaceOptions#collection
      * @cfg {Collection.<Types/entity:Model>} Коллекция элементов.
      */
-    collection: Collection<Model>;
+    collection: IEditableCollection;
+}
 
+/**
+ * @interface Controls/_editInPlace/IEditInPlaceCallbacks
+ * @private
+ * @author Родионов Е.А.
+ */
+interface IEditInPlaceCallbacks {
     /**
-     * @name Controls/_editInPlace/IEditInPlaceOptions#onBeforeBeginEdit
+     * @name Controls/_editInPlace/IEditInPlaceCallbacks#onBeforeBeginEdit
      * @cfg {TBeforeBeginEditCallback} Функция обратного вызова перед запуском редактирования.
      */
     onBeforeBeginEdit?: TBeforeBeginEditCallback;
 
     /**
-     * @name Controls/_editInPlace/IEditInPlaceOptions#onAfterBeginEdit
+     * @name Controls/_editInPlace/IEditInPlaceCallbacks#onAfterBeginEdit
      * @cfg {Function} Функция обратного вызова после запуска редактирования.
      * @param {Types/entity:Model} item Запись для которой запускается редактирование.
      * @param {Boolean} isAdd Флаг, принимает значение true, если запись добавляется.
@@ -78,13 +84,13 @@ interface IEditInPlaceOptions {
     onAfterBeginEdit?: (item: Model, isAdd: boolean) => void;
 
     /**
-     * @name Controls/_editInPlace/IEditInPlaceOptions#onBeforeEndEdit
+     * @name Controls/_editInPlace/IEditInPlaceCallbacks#onBeforeEndEdit
      * @cfg {TBeforeEndEditCallback} Функция обратного вызова перед завершением редактирования.
      */
     onBeforeEndEdit?: TBeforeEndEditCallback;
 
     /**
-     * @name Controls/_editInPlace/IEditInPlaceOptions#onAfterEndEdit
+     * @name Controls/_editInPlace/IEditInPlaceCallbacks#onAfterEndEdit
      * @cfg {Function} Функция обратного вызова после завершением редактирования.
      * @param {Types/entity:Model} item Редактируемая запись.
      * @param {Boolean} isAdd Флаг, принимает значение true, если запись добавлялась.
@@ -111,50 +117,44 @@ interface IEditInPlaceOptions {
  * @author Rodionov E.A.
  */
 export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
-    private _options: IEditInPlaceOptions;
+    private _options: IEditInPlaceOptions & IEditInPlaceCallbacks;
     private _collectionEditor: CollectionEditor;
     private _operationsPromises: {
         begin?: TAsyncOperationResult;
         end?: TAsyncOperationResult;
     } = {};
 
-    constructor(options: IEditInPlaceOptions) {
+    constructor(options: IEditInPlaceOptions & IEditInPlaceCallbacks) {
         super();
-        this.updateOptions(options);
+        if (this._validateOptions(options)) {
+            this._options = options;
+            this._collectionEditor = new CollectionEditor(this._options);
+        }
     }
 
     /**
      * Обновить опции контроллера.
      * @method
-     * @param {Partial.<Controls/_editInPlace/IEditInPlaceOptions>} newOptions Новые опции.
+     * @param {Controls/_editInPlace/IEditInPlaceOptions} newOptions Новые опции.
      * @void
      *
      * @public
      * @remark Все поля в новых опциях не являются обязательными, таким образом, есть возможность выборочного обновления.
      */
-    updateOptions(newOptions: Partial<IEditInPlaceOptions>): void {
-        const oldOptions: Partial<IEditInPlaceOptions> = this._options || {};
-        const hasCollection = !!newOptions.collection || !!oldOptions.collection;
-
-        if (!hasCollection) {
-            Logger.error(ERROR_MSG.COLLECTION_IS_NOT_DEFINED, this);
-        }
-        const getOptionValue = (optionName: keyof IEditInPlaceOptions) =>
-            newOptions.hasOwnProperty(optionName) ? newOptions[optionName] : oldOptions[optionName];
-
-        this._options = {
-            collection: getOptionValue('collection'),
-            onBeforeBeginEdit: getOptionValue('onBeforeBeginEdit'),
-            onAfterBeginEdit: getOptionValue('onAfterBeginEdit'),
-            onBeforeEndEdit: getOptionValue('onBeforeEndEdit'),
-            onAfterEndEdit: getOptionValue('onAfterEndEdit')
-        } as IEditInPlaceOptions;
-
-        if (!this._collectionEditor) {
-            this._collectionEditor = new CollectionEditor(this._options);
-        } else {
+    updateOptions(newOptions: IEditInPlaceOptions): void {
+        const combinedOptions = {...this._options, ...newOptions};
+        if (this._validateOptions(combinedOptions)) {
             this._collectionEditor.updateOptions(this._options);
+            this._options = combinedOptions;
         }
+    }
+
+    private _validateOptions(options: IEditInPlaceOptions): boolean {
+        if (!options.collection) {
+            Logger.error(ERROR_MSG.COLLECTION_IS_NOT_DEFINED, this);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -241,7 +241,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
      * @return {CollectionItem.<Types/entity:Model>|undefined}
      * @public
      */
-    getNextEditableItem(): TEditableCollectionItem {
+    getNextEditableItem(): IEditableCollectionItem {
         return this._collectionEditor.getNextEditableItem();
     }
 
@@ -251,7 +251,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
      * @return {CollectionItem.<Types/entity:Model>|undefined}
      * @public
      */
-    getPrevEditableItem(): TEditableCollectionItem {
+    getPrevEditableItem(): IEditableCollectionItem {
         return this._collectionEditor.getPrevEditableItem();
     }
 
