@@ -36,11 +36,11 @@ export default class GroupItem<T> extends mixin<
 
     getGroupPaddingClasses(theme: string, side: 'left'|'right'): string {
         if (side === 'left') {
-            const spacing = this.getOwner().getLeftSpacing().toLowerCase();
+            const spacing = this.getOwner().getLeftPadding().toLowerCase();
             const hasMultiSelect = this.getOwner().getMultiSelectVisibility() !== 'hidden';
             return `controls-ListView__groupContent__leftPadding_${hasMultiSelect ? 'withCheckboxes' : spacing}_theme-${theme}`;
         } else {
-            const spacing = this.getOwner().getRightSpacing().toLowerCase();
+            const spacing = this.getOwner().getRightPadding().toLowerCase();
             return `controls-ListView__groupContent__rightPadding_${spacing}_theme-${theme}`;
         }
     }

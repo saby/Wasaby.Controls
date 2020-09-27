@@ -126,16 +126,9 @@ var ListView = BaseControl.extend(
                 this._listModel = newOptions.listModel;
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
-            if (this._options.itemTemplateProperty !== newOptions.itemTemplateProperty) {
-                this._listModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
-            }
             if (this._options.groupTemplate !== newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
             }
-            // TODO не работает
-            /*if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
-                this._listModel.setItemPadding(newOptions.itemPadding);
-            }*/
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
 

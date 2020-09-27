@@ -578,9 +578,9 @@ export default class CollectionItem<T> extends mixin<
         let classes = '';
 
         const preparedStyle = style === 'masterClassic' ? 'default' : style;
-        const topSpacing = this.getOwner().getTopSpacing().toLowerCase();
-        const bottomSpacing = this.getOwner().getBottomSpacing().toLowerCase();
-        const rightSpacing = this.getOwner().getRightSpacing().toLowerCase();
+        const topSpacing = this.getOwner().getTopPadding().toLowerCase();
+        const bottomSpacing = this.getOwner().getBottomPadding().toLowerCase();
+        const rightSpacing = this.getOwner().getRightPadding().toLowerCase();
 
         if (topSpacing === 'null' && bottomSpacing === 'null') {
             classes += ` controls-ListView_default-padding_theme-${theme}`;
@@ -594,7 +594,7 @@ export default class CollectionItem<T> extends mixin<
         if (this.getOwner().getMultiSelectVisibility() !== 'hidden') {
            classes += ` controls-ListView__itemContent_withCheckboxes_theme-${theme}`;
         } else {
-           classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftSpacing().toLowerCase()}_theme-${theme}`;
+           classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftPadding().toLowerCase()}_theme-${theme}`;
         }
 
         return classes;

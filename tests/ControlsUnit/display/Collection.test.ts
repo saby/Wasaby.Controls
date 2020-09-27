@@ -4263,22 +4263,21 @@ describe('Controls/_display/Collection', () => {
         )
     });
 
-    it('.getLeftSpacing()', () => {
-        const leftSpacing = 'leftSpacing';
+    it('.getPadding()', () => {
+        const itemPadding = {
+            left: 'leftPadding',
+            right: 'rightPadding',
+            top: 'topPadding',
+            bottom: 'bottomPadding'
+        };
         const collection = new CollectionDisplay({
             collection: [],
-            leftSpacing
+            itemPadding
         });
-        assert.strictEqual(collection.getLeftSpacing(), leftSpacing);
-    });
-
-    it('.getRightSpacing()', () => {
-        const rightSpacing = 'rightSpacing';
-        const collection = new CollectionDisplay({
-            collection: [],
-            rightSpacing
-        });
-        assert.strictEqual(collection.getRightSpacing(), rightSpacing);
+        assert.strictEqual(collection.getLeftPadding(), itemPadding.left);
+        assert.strictEqual(collection.getRightPadding(), itemPadding.right);
+        assert.strictEqual(collection.getTopPadding(), itemPadding.top);
+        assert.strictEqual(collection.getBottomPadding(), itemPadding.bottom);
     });
 
     it('.setEditingConfig()', () => {

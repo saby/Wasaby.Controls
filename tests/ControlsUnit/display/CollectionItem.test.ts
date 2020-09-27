@@ -485,10 +485,10 @@ describe('Controls/_display/CollectionItem', () => {
     it('.getContentClasses()', () => {
         let multiSelectVisibility: string;
         const owner = {
-            getTopSpacing(): string { return '#topSpacing#'; },
-            getBottomSpacing(): string { return '#bottomSpacing#'; },
-            getLeftSpacing(): string { return '#leftSpacing#'; },
-            getRightSpacing(): string { return '#rightSpacing#'; },
+            getTopPadding(): string { return '#topSpacing#'; },
+            getBottomPadding(): string { return '#bottomSpacing#'; },
+            getLeftPadding(): string { return '#leftSpacing#'; },
+            getRightPadding(): string { return '#rightSpacing#'; },
             getMultiSelectVisibility(): string { return multiSelectVisibility; },
             getRowSeparatorSize: function () { return ''; }
         };

@@ -88,8 +88,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     displayProperty?: string;
     itemTemplateProperty?: string;
     multiSelectVisibility?: string;
-    leftSpacing?: string;
-    rightSpacing?: string;
+    itemPadding?: IItemPadding;
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
     theme?: string;
@@ -115,6 +114,12 @@ export interface IViewIterator {
 
 export type TGroupKey = string|number;
 export type TArrayGroupKey = TGroupKey[];
+export interface IItemPadding {
+    top?: string;
+    bottom?: string;
+    left?: string;
+    right?: string;
+}
 
 export interface IItemActionsTemplateConfig {
     toolbarVisibility?: boolean;
@@ -581,13 +586,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$multiSelectVisibility: string;
 
-    protected _$leftSpacing: string;
+    protected _$leftPadding: string;
 
-    protected _$rightSpacing: string;
+    protected _$rightPadding: string;
 
-    protected _$topSpacing: string;
+    protected _$topPadding: string;
 
-    protected _$bottomSpacing: string;
+    protected _$bottomPadding: string;
 
     protected _$theme: string;
 
@@ -803,7 +808,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
 
         if (options.itemPadding) {
-            this.setItemsSpacings(options.itemPadding);
+            this._setItemPadding(options.itemPadding);
         }
 
         this._viewIterator = {
@@ -2240,11 +2245,16 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
-    setItemsSpacings(itemPadding: {top: string, bottom: string, left: string, right: string}): void {
-        this._$topSpacing = itemPadding.top || 'default';
-        this._$bottomSpacing = itemPadding.bottom || 'default';
-        this._$leftSpacing = itemPadding.left || 'default';
-        this._$rightSpacing = itemPadding.right || 'default';
+    protected _setItemPadding(itemPadding: IItemPadding): void {
+        this._$topPadding = itemPadding.top || 'default';
+        this._$bottomPadding = itemPadding.bottom || 'default';
+        this._$leftPadding = itemPadding.left || 'default';
+        this._$rightPadding = itemPadding.right || 'default';
+    }
+
+    setItemPadding(itemPadding: IItemPadding): void {
+        this._setItemPadding(itemPadding);
+        this._nextVersion();
     }
 
     setMarkedKey(key: string|number, status: boolean): void {
@@ -2267,20 +2277,20 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return false;
     }
 
-    getTopSpacing(): string {
-        return this._$topSpacing;
+    getTopPadding(): string {
+        return this._$topPadding;
     }
 
-    getBottomSpacing(): string {
-        return this._$bottomSpacing;
+    getBottomPadding(): string {
+        return this._$bottomPadding;
     }
 
-    getLeftSpacing(): string {
-        return this._$leftSpacing;
+    getLeftPadding(): string {
+        return this._$leftPadding;
     }
 
-    getRightSpacing(): string {
-        return this._$rightSpacing;
+    getRightPadding(): string {
+        return this._$rightPadding;
     }
 
     setEditingConfig(config: IEditingConfig): void {
@@ -3646,10 +3656,10 @@ Object.assign(Collection.prototype, {
     _$displayProperty: '',
     _$itemTemplateProperty: '',
     _$multiSelectVisibility: 'hidden',
-    _$leftSpacing: 'default',
-    _$rightSpacing: 'default',
-    _$topSpacing: 'default',
-    _$bottomSpacing: 'default',
+    _$leftPadding: 'default',
+    _$rightPadding: 'default',
+    _$topPadding: 'default',
+    _$bottomPadding: 'default',
     _$stickyMarkedItem: true,
     _$searchValue: '',
     _$editingConfig: null,
