@@ -6,5 +6,5 @@
                       itemTemplate="{{_options.itemTemplate}}"
                       fontColorStyle="{{_options.fontColorStyle}}"
                       fontSize="{{_options.fontSize}}"
-                      displayMode="{{_options.containerWidth ? 'newDisplay' : 'oldDisplay'}}"
+                      containerWidth="{{_options.containerWidth}}"
                       on:itemClick="_itemClickHandler()"/>

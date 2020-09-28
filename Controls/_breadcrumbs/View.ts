@@ -7,7 +7,7 @@ import {applyHighlighter} from 'Controls/_breadcrumbs/resources/applyHighlighter
 import template = require('wml!Controls/_breadcrumbs/View/View');
 import itemTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemTemplate');
 import itemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemsTemplate');
-import itemsMultilineTemplate = require('wml!Controls/_breadcrumbs/View/resources/itemMultilineTemplate');
+import calculatedItemsTemplate = require('wml!Controls/_breadcrumbs/View/resources/calculatedItemsTemplate');
 import menuItemTemplate = require('wml!Controls/_breadcrumbs/resources/menuItemTemplate');
 import 'wml!Controls/_breadcrumbs/resources/menuContentTemplate';
 import {Record} from 'Types/entity';
@@ -31,7 +31,7 @@ const MIN_COUNT_OF_LETTER = 3;
 class BreadCrumbsView extends Control<IControlOptions> {
     protected _template: TemplateFunction =  template;
     protected _itemsTemplate: TemplateFunction = itemsTemplate;
-    protected _itemsMultilineTemplate: TemplateFunction = itemsMultilineTemplate;
+    protected _calculatedItemsTemplate: TemplateFunction = calculatedItemsTemplate;
     protected _popupIsOpen: boolean = false;
     private _menuOpener: StickyOpener;
     protected _items: Record[];
