@@ -378,6 +378,8 @@ export default class Controller {
                         [];
                     resultFilter[parentProperty].push(rootForFilter);
                     resultFilter[parentProperty] = resultFilter[parentProperty].concat(expandedItemsForFilter);
+                } else {
+                    resultFilter[parentProperty] = rootForFilter;
                 }
 
                 if (options.selectedKeys && options.selectedKeys.length) {
