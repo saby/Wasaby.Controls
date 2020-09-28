@@ -246,7 +246,7 @@ export default class ScrollController {
 
         if (index !== -1) {
             return new Promise((resolve) => {
-                if (this._virtualScroll && this._virtualScroll.canScrollToItem(index, toBottom, force)) {
+                if (this._virtualScroll && this._virtualScroll.canScrollToItem(index, toBottom, force) && !this._virtualScroll.rangeChanged) {
                     this._fakeScroll = true;
                     scrollCallback(index);
                     resolve(null);
@@ -455,7 +455,7 @@ export default class ScrollController {
             this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                 this._options.needScrollCalculation);
             this._applyScrollTopCallback = params.applyScrollTopCallback;
-            if (!this._isRendering) {
+            if (!this._isRendering && !this._virtualScroll.rangeChanged) {
                 this.completeVirtualScrollIfNeed();
             }
             this.savePlaceholders(rangeShiftResult.placeholders);
@@ -542,6 +542,14 @@ export default class ScrollController {
                 this._options.needScrollCalculation
             );
         }
+    }
+
+    /**
+     * Метод позволяет узнать, применяется ли для отображения элементов виртуальный скролл
+     * @public
+     */
+    isAppliedVirtualScroll(): boolean {
+        return !!this._virtualScroll;
     }
 
     /**

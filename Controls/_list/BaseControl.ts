@@ -2088,7 +2088,11 @@ const _private = {
             return null;
         }
 
-        const strategy = this.createSelectionStrategy(options, self._listViewModel.getCollection());
+        const strategy = this.createSelectionStrategy(
+            options,
+            self._listViewModel.getDisplay().getItems(),
+            self._items.getMetaData()['ENTRY_PATH']
+        );
 
         return new SelectionController({
             model: self._listViewModel,
@@ -2105,12 +2109,16 @@ const _private = {
             selectedKeys: newOptions.selectedKeys,
             excludedKeys: newOptions.excludedKeys,
             searchValue: newOptions.searchValue,
-            strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
+            strategyOptions: this.getSelectionStrategyOptions(
+                newOptions,
+                self._listViewModel.getDisplay().getItems(),
+                self._items.getMetaData()['ENTRY_PATH']
+            )
         });
     },
 
-    createSelectionStrategy(options: any, items: RecordSet): ISelectionStrategy {
-        const strategyOptions = this.getSelectionStrategyOptions(options, items);
+    createSelectionStrategy(options: any, items: Array<CollectionItem<Model>>, entryPath: []): ISelectionStrategy {
+        const strategyOptions = this.getSelectionStrategyOptions(options, items, entryPath);
         if (options.parentProperty) {
             return new TreeSelectionStrategy(strategyOptions);
         } else {
@@ -2125,20 +2133,15 @@ const _private = {
         return self._selectionController;
     },
 
-    getSelectionStrategyOptions(options: any, items: RecordSet): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
+    getSelectionStrategyOptions(options: any, items: Array<CollectionItem<Model>>, entryPath: []): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
         if (options.parentProperty) {
             return {
                 nodesSourceControllers: options.nodesSourceControllers,
                 selectDescendants: options.selectDescendants,
                 selectAncestors: options.selectAncestors,
-                hierarchyRelation: new relation.Hierarchy({
-                    keyProperty: options.keyProperty || 'id',
-                    parentProperty: options.parentProperty || 'Раздел',
-                    nodeProperty: options.nodeProperty || 'Раздел@',
-                    declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
-                }),
                 rootId: options.root,
-                items
+                items,
+                entryPath
             };
         } else {
             return { items };
@@ -3073,7 +3076,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect): void {
         this._viewportSize = viewportHeight;
         this._viewportRect = viewportRect;
-        if (this._isScrollShown) {
+        if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
             this._updateItemsHeights();
         }
         if (this._loadingIndicatorState) {
@@ -4233,6 +4236,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onEditingRowKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent) {
+        const editNext = (item, editingConfig, direction: 'top' | 'bottom') => {
+            this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, direction);
+            const shouldAdd = !item && !!editingConfig.autoAdd && editingConfig.addPosition === direction;
+            return this._tryContinueEditing(!!item, shouldAdd, item);
+        };
+
         switch (nativeEvent.keyCode) {
             case 13: // Enter
                 return this._editingRowEnterHandler(e);
@@ -4240,7 +4249,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
                 e.stopPropagation();
                 return this.cancelEdit();
-                break;
+            case 38: // ArrowUp
+                const prev = this._getEditInPlaceController().getPrevEditableItem();
+                return editNext(!!prev && prev.contents, this._getEditingConfig(), 'top');
+            case 40: // ArrowDown
+                const next = this._getEditInPlaceController().getNextEditableItem();
+                return editNext(!!next && next.contents, this._getEditingConfig(), 'bottom');
         }
     },
 

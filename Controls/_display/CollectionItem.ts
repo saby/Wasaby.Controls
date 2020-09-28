@@ -74,6 +74,7 @@ export default class CollectionItem<T> extends mixin<
 
     readonly '[Types/_entity/IInstantiable]': boolean;
     readonly MarkableItem: boolean = true;
+    readonly SelectableItem: boolean = true;
 
     getInstanceId: () => string;
 

@@ -761,12 +761,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         const shadowVisible: boolean = !!(this._scrollState.verticalPosition &&
             (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
-                shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END) && this._isShadowVisibleByController);
+                shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END));
 
         const oldShadowVisible: boolean = this._context?.stickyHeader?.shadowPosition &&
             this._context?.stickyHeader?.shadowPosition?.indexOf(fixedPosition) !== -1;
 
-        return shadowVisible || oldShadowVisible;
+        return  this._isShadowVisibleByController && (shadowVisible || oldShadowVisible);
     }
 
     private _getComputedStyle(): CSSStyleDeclaration {
