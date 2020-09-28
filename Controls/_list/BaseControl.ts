@@ -5141,6 +5141,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._insideDragging = false;
         this._documentDragging = false;
 
+        const restoreMarker = () => {
+            if (_private.hasMarkerController(this)) {
+                const controller = _private.getMarkerController(this);
+                controller.setMarkedKey(controller.getMarkedKey());
+            }
+        };
+
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         // endDrag нужно вызывать только после события dragEnd,
         // чтобы не было прыжков в списке, если асинхронно меняют порядок элементов
@@ -5149,10 +5156,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.showIndicator(this);
                 dragEndResult.finally(() => {
                     this._dndListController.endDrag();
+                    restoreMarker();
                     _private.hideIndicator(this);
                 });
             } else {
                 this._dndListController.endDrag();
+                restoreMarker();
             }
         }
     },
