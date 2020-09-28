@@ -1,3 +1,0 @@
-<Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}" closeButtonVisibility="{{false}}">
-    <Controls-demo.Popup.Opener.resources.BaseTemplate/>
-</Controls.popupTemplate:InfoBox>

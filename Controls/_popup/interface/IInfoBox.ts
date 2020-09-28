@@ -231,3 +231,4 @@ export interface IInfoBox {
  * @variant success
  * @variant primary
  */
+Controls-demo/Popup/TestInfoBox
