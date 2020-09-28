@@ -6,8 +6,8 @@
                     suggestDirectionChangedCallback="{{_suggestDirectionChangedCallback}}"
                     templateName="{{_options.suggestTemplate.templateName}}"
                     templateOptions="{{_options.suggestTemplate.templateOptions}}"
-                    searchEndCallback="{{_searchEnd}}"
-                    searchStartCallback="{{_searchStart}}"
+                    searchEndCallback="{{_loadEnd}}"
+                    searchStartCallback="{{_loadStart}}"
                     searchErrback="{{_searchErrbackHandler}}"
                     emptyTemplate="{{_emptyTemplate}}"
                     source="{{_options.source}}"
@@ -21,6 +21,7 @@
                     name="suggestListWrapper"
                     searchValue="{{_searchValue}}"
                     sourceController="{{_sourceController}}"
+                    markerVisibility="{{_markerVisibility}}"
         />
     </ws:template>
 
@@ -44,9 +45,9 @@
         <ws:if data="{{_options.footerTemplate}}">
             <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}" searchResult="{{_searchResult}}">
                 <ws:showSelectorButtonTemplate>
-                            <span class="controls-Suggest__showAllLink controls-Suggest__showAllLink_theme-{{_options.theme}}" on:click="_showAllClick()">
-                                <span class="controls-Suggest__showAllLink-content">{[Показать все]}</span>
-                            </span>
+                    <span class="controls-Suggest__showAllLink controls-Suggest__showAllLink_theme-{{_options.theme}}" on:click="_showAllClick()">
+                        <span class="controls-Suggest__showAllLink-content">{[Показать все]}</span>
+                    </span>
                 </ws:showSelectorButtonTemplate>
                 <ws:showMoreButtonTemplate>
                     <span if="{{_moreCount}}" class="controls-Suggest__moreLink" on:click="_moreClick()">
