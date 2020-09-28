@@ -808,7 +808,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getMultiSelectClassList onhover selected', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'onhover';
-            gridViewModel.setSelectedItems([gridViewModel.getItemById(123, 'id').getContents()], true);
+            gridViewModel.setSelectedItems([gridViewModel.getItemById(123, 'id')], true);
             let data = gridViewModel.getItemDataByItem(gridViewModel.getItemById('123', 'id'));
             assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-GridView__checkbox_theme-default');
          });

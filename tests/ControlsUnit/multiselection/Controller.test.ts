@@ -18,15 +18,15 @@ describe('Controls/_multiselection/Controller', () => {
       keyProperty: 'id'
    });
 
-   const strategy = new FlatSelectionStrategy({items});
-
-   let controller, model;
+   let controller, model, strategy;
 
    beforeEach(() => {
       model = new ListViewModel({
          items,
          keyProperty: 'id'
       });
+
+       strategy = new FlatSelectionStrategy({items: model.getDisplay().getItems() });
 
       controller = new SelectionController({
          model,
@@ -46,13 +46,13 @@ describe('Controls/_multiselection/Controller', () => {
          model,
          selectedKeys: [1],
          excludedKeys: [1],
-         strategyOptions: { items: model.getItems() }
+         strategyOptions: { items: model.getDisplay().getItems() }
       });
 
       assert.equal(controller._model, model);
       assert.deepEqual(controller._selectedKeys, [1]);
       assert.deepEqual(controller._excludedKeys, [1]);
-      assert.equal(controller._strategy._items, model.getItems());
+      assert.deepEqual(controller._strategy._items, model.getDisplay().getItems());
    });
 
    describe('toggleItem', () => {
@@ -180,7 +180,7 @@ describe('Controls/_multiselection/Controller', () => {
             model,
             selectedKeys: [null],
             excludedKeys: [],
-            strategyOptions: { items: model.getItems() }
+            strategyOptions: { items: model.getDisplay().getItems() }
          });
 
          const result = controller.isAllSelected(false);
@@ -259,7 +259,7 @@ describe('Controls/_multiselection/Controller', () => {
          model,
          selectedKeys: [1, 2, 3, 4],
          excludedKeys: [],
-         strategyOptions: { items: model.getItems() }
+         strategyOptions: { items: model.getDisplay().getItems() }
       });
 
       const addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
@@ -398,22 +398,7 @@ describe('Controls/_multiselection/Controller', () => {
          }
       };
 
-      const hierarchy = new relation.Hierarchy({
-         keyProperty: 'id',
-         parentProperty: 'parent',
-         nodeProperty: 'nodeType'
-      });
-
-      const strategy = new TreeSelectionStrategy({
-         items,
-         selectDescendants: false,
-         selectAncestors: false,
-         hierarchyRelation: hierarchy,
-         rootId: null,
-         nodesSourceControllers
-      });
-
-      let model, controller;
+      let model, controller, strategy;
 
       beforeEach(() => {
          model = new SearchGridViewModel({
@@ -422,6 +407,14 @@ describe('Controls/_multiselection/Controller', () => {
             parentProperty: 'parent',
             nodeProperty: 'nodeType',
             columns: [{}]
+         });
+
+         strategy = new TreeSelectionStrategy({
+             items: model.getDisplay().getItems(),
+             selectDescendants: false,
+             selectAncestors: false,
+             rootId: null,
+             nodesSourceControllers
          });
 
          controller = new SelectionController({
@@ -440,10 +433,9 @@ describe('Controls/_multiselection/Controller', () => {
             selectedKeys: [1, 3],
             excludedKeys: [],
             strategyOptions: {
-               items,
+               items: model.getDisplay().getItems(),
                selectDescendants: false,
                selectAncestors: false,
-               hierarchyRelation: hierarchy,
                rootId: null,
                nodesSourceControllers
             }
