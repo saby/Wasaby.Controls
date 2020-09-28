@@ -156,6 +156,12 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
             const key = item.getContents().getKey();
             return !this._options.draggedItemsKeys.includes(key);
         });
+
+        this.source.items.filter((item) => {
+            const key = item.getContents().getKey();
+            return this._options.draggedItemsKeys.includes(key);
+        }).forEach((it) => it.setMarked(false, true));
+
         if (!this._avatarItem) {
             this._avatarItem = this._createAvatarItem();
         }
