@@ -4,6 +4,9 @@
             prevArrowVisibility="{{true}}"
             nextArrowVisibility="{{true}}"
             bind:startValue="_startValue"
+            chooseHalfyears="{{false}}"
+            chooseMonths="{{false}}"
+            chooseQuarters="{{false}}"
             bind:endValue="_endValue"/>
     <div>
         <Controls.dateRange:RangeShortSelector

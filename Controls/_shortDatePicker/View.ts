@@ -147,34 +147,86 @@ var Component = BaseControl.extend({
         this._notify('yearChanged', [year]);
     },
 
+    _getPositions(position: Date, delta: number): any {
+        let curPosition = new Date(position.getTime());
+        for (let i = 0; i <= this._limit; i++) {
+            if (!this._isDisplayed(curPosition)) {
+                const period = this._getHiddenPeriod(curPosition);
+                curPosition = delta > 0 ? period[1] : period[0];
+            } else {
+                countDisplayedRanges++;
+            }
+            if (!curPosition || countDisplayedRanges >= this._limit) {
+                break;
+            }
+            prevPosition = curPosition;
+            curPosition = this._shiftRange(curPosition, delta[j]);
+        }
+    },
+
     _getFirstPositionInMonthList(position: Date): Date {
         if (!this._displayedRanges) {
             return position;
         }
 
-        const delta = [-1, 1];
-        let countDisplayedRanges = 0;
-        let prevPosition;
-        let curPosition = this._shiftRange(position, -1);
-
-        for (let j = 0; j < delta.length; j++) {
-            if (delta[j] === 1) {
-                curPosition = position;
-            }
-            for (let i = 0; i <= this._limit; i++) {
+        const getPositionByDelta = (delta) => {
+            let tempPosition;
+            while (countDisplayedRanges <= this._limit) {
+                curPosition = this._shiftRange(curPosition, delta);
                 if (!this._isDisplayed(curPosition)) {
                     const period = this._getHiddenPeriod(curPosition);
-                    curPosition = delta[j] > 0 ? period[1] : period[0];
+                    tempPosition = delta > 0 ? period[1] : period[0];
+                    if (!tempPosition) {
+                        break;
+                    }
                 } else {
                     countDisplayedRanges++;
                 }
-                if (!curPosition || countDisplayedRanges >= this._limit) {
-                    break;
-                }
-                prevPosition = curPosition;
-                curPosition = this._shiftRange(curPosition, delta[j]);
             }
+            // for (let i = 0; i <= this._limit; i++) {
+            //     if (!this._isDisplayed(curPosition)) {
+            //         const period = this._getHiddenPeriod(curPosition);
+            //         curPosition = delta > 0 ? period[1] : period[0];
+            //     } else {
+            //         countDisplayedRanges++;
+            //     }
+            //     if (!curPosition || countDisplayedRanges >= this._limit) {
+            //         break;
+            //     }
+            //     prevPosition = curPosition;
+            //     curPosition = this._shiftRange(curPosition, delta);
+            // }
         }
+
+        const delta = [-1, 1];
+        let countDisplayedRanges = 1;
+        let curPosition;
+        //let curPosition = this._shiftRange(position, -1);
+
+        getPositionByDelta(-1);
+        getPositionByDelta(1);
+
+        // for (let j = 0; j < delta.length; j++) {
+        //     if (delta[j] === 1) {
+        //         curPosition = position;
+        //     }
+        //     for (let i = 0; i <= this._limit; i++) {
+        //         if (!this._isDisplayed(curPosition)) {
+        //             const period = this._getHiddenPeriod(curPosition);
+        //             curPosition = delta[j] > 0 ? period[1] : period[0];
+        //         } else {
+        //             countDisplayedRanges++;
+        //         }
+        //         if (!curPosition || countDisplayedRanges >= this._limit) {
+        //             break;
+        //         }
+        //         prevPosition = curPosition;
+        //         curPosition = this._shiftRange(curPosition, delta[j]);
+        //     }
+        // }
+
+
+
         const resultPosition = countDisplayedRanges >= this._limit ? curPosition : prevPosition;
         return resultPosition;
     },
