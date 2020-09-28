@@ -363,7 +363,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getSelectionStrategyOptions(): IFlatSelectionStrategyOptions {
         return {
-            items: this._listModel.getCollection()
+            items: this._listModel.getItems()
         };
     }
 
