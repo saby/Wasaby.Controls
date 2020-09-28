@@ -1,9 +1,11 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/list_new/EditInPlace/AddItem/AddItem';
+import * as Template from 'wml!Controls-demo/list_new/EditInPlace/AddItemWithValidation/AddItemWithValidation';
 import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 import {View as List} from 'Controls/list';
 import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
+
+import 'Controls-demo/list_new/EditInPlace/AddItemWithValidation/Validators';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

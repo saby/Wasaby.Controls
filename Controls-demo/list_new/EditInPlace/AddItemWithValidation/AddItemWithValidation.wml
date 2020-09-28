@@ -12,7 +12,14 @@
                 <ws:contentTemplate>
                     <ws:partial template="Controls/list:EditingTemplate" value="{{ itemTemplate.itemData.item.title }}">
                         <ws:editorTemplate>
-                            <Controls.input:Text bind:value="itemTemplate.itemData.item.title"/>
+                            <Controls.validate:InputContainer name="nameValidator" attr:class="nameValidator">
+                                <ws:validators>
+                                    <ws:Function value="{{ itemTemplate.itemData.item.title }}">Controls-demo/list_new/EditInPlace/AddItemWithValidation/Validators:Validators.size</ws:Function>
+                                </ws:validators>
+                                <ws:content>
+                                    <Controls.input:Text validationErrors="{{content.validationErrors}}" bind:value="itemTemplate.itemData.item.title"/>
+                                </ws:content>
+                            </Controls.validate:InputContainer>
                         </ws:editorTemplate>
                     </ws:partial>
                 </ws:contentTemplate>
