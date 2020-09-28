@@ -2194,21 +2194,20 @@ const _private = {
         const selectionDifference = controller.getSelectionDifference(newSelection);
         const result = self._notify('beforeSelectionChanged', [selectionDifference]);
 
-        const isAllSelected = controller.isAllSelected();
         if (result instanceof Promise) {
             result.then((selection: ISelectionObject) => {
                 _private.notifySelection(self, selection);
                 controller.setSelection(selection);
-                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), isAllSelected], {bubbling: true});
+                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             });
         } else if (result !== undefined) {
             _private.notifySelection(self, result);
             controller.setSelection(result);
-            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), isAllSelected], {bubbling: true});
+            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
         } else {
             _private.notifySelection(self, newSelection);
             controller.setSelection(newSelection);
-            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), isAllSelected], {bubbling: true});
+            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
         }
 
         return result;
