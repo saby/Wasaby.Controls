@@ -695,7 +695,7 @@ define([
             const clickEvent = {
                target: {closest: () => {}}
             };
-            explorer._children.treeControl = { getEditingItem: () => {} };
+            explorer._children.treeControl = { isEditing: () => false };
             assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => true  }, clickEvent) });
             assert.equal(rootBefore, explorer._root);
             assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => false }, clickEvent) });
@@ -730,7 +730,7 @@ define([
                         assert.notEqual(rootBefore, explorer._root);
                      }
                   }),
-                  getEditingItem: () => {}
+                  isEditing: () => false
                }
             };
             const event = { stopPropagation: () => {} };
@@ -778,7 +778,7 @@ define([
                treeControl: {
                   _children: {
                   },
-                  getEditingItem: () => {},
+                  isEditing: () => false,
                   commitEdit: () => commitEditResult
                }
             };
@@ -1254,7 +1254,7 @@ define([
                }
             };
             explorer._children.treeControl = {
-               getEditingItem: () => {}
+               isEditing: () => false
             };
 
             const mockEvent = { stopPropagation: () => {} };
