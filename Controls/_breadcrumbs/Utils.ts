@@ -6,8 +6,8 @@ import PrepareDataUtil from './PrepareDataUtil';
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 
 //TODO удалить, когда появится возможность находить значение ширины иконок и отступов.
-const ARROW_WIDTH = 16;
-const PADDING_RIGHT = 2;
+export const ARROW_WIDTH = 16;
+export const PADDING_RIGHT = 2;
 
 export default {
     canShrink(minWidth: number, itemWidth: number, currentWidth: number, availableWidth: number): boolean {
