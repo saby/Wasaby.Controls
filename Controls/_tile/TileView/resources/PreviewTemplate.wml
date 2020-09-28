@@ -1,19 +1,22 @@
 <ws:partial template="wml!Controls/_tile/TileView/TileTpl"
             scope="{{_options}}">
    <ws:contentTemplate>
-      <div class="controls-TileView__previewTemplate_content controls-TileView__previewTemplate_content_theme-{{_options.theme}}">
+      <div
+         class="controls-TileView__previewTemplate_content controls-TileView__previewTemplate_content_theme-{{_options.theme}}">
          <ws:partial template="wml!Controls/_tile/TileView/TileImageTemplate"
                      attr:style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"
                      attr:class="controls-TileView__previewTemplate_image controls-TileView__previewTemplate_image_theme-{{_options.theme}}"
                      titleStyle="none"/>
-         <span class="controls-TileView__previewTemplate_title
+         <div class="controls-TileView__previewTemplate_title
                      controls-TileView__previewTemplate_title_gradient-{{_options.gradientTheme || _options.itemData.item[_options.gradientThemeProperty] || 'light' }}_theme-{{_options.theme}}
-                     controls-fontsize-l_theme-{{_options.theme}}
-                     controls-TileView__previewTemplate_image_gradient_theme-{{_options.theme}}"
-               style="{{'background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%,' + (gradientColor ||  _options.itemData.item[_options.gradientColorProperty] || '#ffffff') + ' 100%);'}}"
-               title="{{itemData.item[itemData.displayProperty]}}">
-            {{itemData.item[itemData.displayProperty]}}
-         </span>
+                     controls-fontsize-l_theme-{{_options.theme}}"
+              title="{{itemData.item[itemData.displayProperty]}}">
+            {{itemData.item[itemData.displayProperty]}}s
+            <div class="controls-TileView__previewTemplate_gradient_wrapper">
+               <div class="controls-TileView__previewTemplate_image_gradient_theme-{{_options.theme}}"
+                    style="{{'background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%,' + (gradientColor ||  _options.itemData.item[_options.gradientColorProperty] || '#ffffff') + ' 100%);'}}"></div>
+            </div>
+         </div>
       </div>
    </ws:contentTemplate>
 </ws:partial>
