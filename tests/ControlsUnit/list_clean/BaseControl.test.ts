@@ -327,11 +327,21 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._container = {
                 clientHeight: 1000
             };
+            baseControl._sourceController = {
+                getAllDataCount: () => 100,
+                hasMoreData: () => false
+            }
+            baseControl._listViewModel._startIndex = 0;
+            baseControl._listViewModel._stopIndex = 100;
             baseControl._viewportSize = 400;
             baseControl._getItemsContainer = () => {
                 return {children: []};
             };
             baseControl._mouseEnter(null);
+            baseControl._notify = (event, args) => {
+                assert.equal(event, 'doScroll');
+                assert.equal(args[0], 400);
+            }
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
@@ -344,7 +354,7 @@ describe('Controls/list_clean/BaseControl', () => {
             BaseControl._private.handleListScrollSync(baseControl, 100);
             assert.deepEqual({
                 begin: 'visible',
-                end: 'hidden',
+                end: 'visible',
                 next: 'hidden',
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
@@ -353,7 +363,6 @@ describe('Controls/list_clean/BaseControl', () => {
 
             await baseControl.__selectedPageChanged(null, 2);
             assert.equal(baseControl._currentPage, 2);
-            assert.equal(baseControl._scrollPagingCtr._options.scrollParams.scrollTop, 400);
         });
 
         it('visible paging padding', async () => {

@@ -2679,7 +2679,9 @@ define([
                scrollPositionChange: () => undefined,
                setTriggers: () => undefined,
                setIndicesAfterCollectionChange: () => undefined,
-               calculateVirtualScrollHeight: () => 0
+               calculateVirtualScrollHeight: () => 0,
+               getParamsToRestoreScrollPosition: () => null,
+               getPlaceholders: () => { return { top: 0, bottom: 0 }; }
             };
 
             // прокручиваем к низу, проверяем состояние пэйджинга

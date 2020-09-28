@@ -216,9 +216,9 @@
                 <Controls.paging:Paging
                     attr:class="controls-BaseControl__scrollPaging_theme-{{_options.theme}}"
                     contrastBackground="{{true}}"
-                    scope="{{_pagingCfg}}"
                     pagingMode="{{_options.navigation.viewConfig.pagingMode}}"
-                    showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
+                    showEndButton="{{_pagingCfg.showEndButton}}"
+                    scope="{{_pagingCfg}}"
                     contentTemplate="{{_options.pagingContentTemplate}}"
                     on:onArrowClick="__onPagingArrowClick()"
                     on:selectedPageChanged="__selectedPageChanged()"/>
