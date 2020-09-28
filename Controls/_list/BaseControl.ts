@@ -2088,14 +2088,16 @@ const _private = {
             return null;
         }
 
+        const collection = self._listViewModel.getDisplay ? self._listViewModel.getDisplay() : self._listViewModel;
+
         const strategy = this.createSelectionStrategy(
             options,
-            self._listViewModel.getItems(),
+            collection.getItems(),
             self._items.getMetaData()['ENTRY_PATH']
         );
 
         return new SelectionController({
-            model: self._listViewModel,
+            model: collection,
             selectedKeys: options.selectedKeys,
             excludedKeys: options.excludedKeys,
             searchValue: options.searchValue,
@@ -2104,14 +2106,16 @@ const _private = {
     },
 
     updateSelectionController(self: any, newOptions: any): void {
+        const collection = self._listViewModel.getDisplay ? self._listViewModel.getDisplay() : self._listViewModel;
+
         _private.getSelectionController(self).update({
-            model: self._listViewModel,
+            model: collection,
             selectedKeys: newOptions.selectedKeys,
             excludedKeys: newOptions.excludedKeys,
             searchValue: newOptions.searchValue,
             strategyOptions: this.getSelectionStrategyOptions(
                 newOptions,
-                self._listViewModel.getItems(),
+                collection.getItems(),
                 self._items.getMetaData()['ENTRY_PATH']
             )
         });
