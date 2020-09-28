@@ -16,8 +16,6 @@
                 name="list"
                 markedKey="{{_markedKey}}"
                 navigation="{{_navigation}}"
-                searchEndCallback="{{_searchEndCallback}}"
-                markerVisibility="{{_markerVisibility}}"
                 itemsReadyCallback="{{_itemsReadyCallback}}"
                 on:markedKeyChanged="_markedKeyChanged()">
         <ws:searchBreadCrumbsItemTemplate>
