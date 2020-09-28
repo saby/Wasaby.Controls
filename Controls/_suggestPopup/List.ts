@@ -10,8 +10,6 @@ import { constants } from 'Env/Env';
 import {RecordSet} from 'Types/collection';
 
 const DIALOG_PAGE_SIZE = 25;
-const MARKER_VISIBILITY_DEFAULT = 'onactivated';
-const MARKER_VISIBILITY_AFTER_SEARCH = 'visible';
 
 const _private = {
    checkContext(self, context) {
@@ -137,12 +135,9 @@ const List = Control.extend({
    _markedKey: null,
    _items: null,
    _layerName: null,
-   _markerVisibility: MARKER_VISIBILITY_DEFAULT,
-   _pendingMarkerVisibility: null,
    _isSuggestListEmpty: false,
 
    _beforeMount(options, context) {
-      this._searchEndCallback = this._searchEndCallback.bind(this);
       this._collectionChange = this._collectionChange.bind(this);
       this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
 
@@ -175,13 +170,6 @@ const List = Control.extend({
          } else {
             this._suggestListOptions.suggestDirectionChangedCallback('down');
          }
-      }
-   },
-
-   _afterUpdate(): void {
-      if (this._pendingMarkerVisibility) {
-         this._markerVisibility = this._pendingMarkerVisibility;
-         this._pendingMarkerVisibility = null;
       }
    },
 
@@ -242,23 +230,6 @@ const List = Control.extend({
             customEvent = _private.getEvent('keydown');
 
          _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
-      }
-   },
-
-   _searchEndCallback(result, filter) {
-      if (this._suggestListOptions.searchEndCallback instanceof Function) {
-         this._suggestListOptions.searchEndCallback(result, filter);
-      }
-
-      if (this._suggestListOptions.searchValue && this._markerVisibility !== MARKER_VISIBILITY_AFTER_SEARCH) {
-         this._pendingMarkerVisibility = MARKER_VISIBILITY_AFTER_SEARCH;
-         // _pendingMarkerVisibility не используется в шаблоне, поэтому св-во не является реактивным
-         // и надо позвать forceUpdate
-         this._forceUpdate();
-      }
-
-      if (result) {
-         this._items = result.data;
       }
    },
 
