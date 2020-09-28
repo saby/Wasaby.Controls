@@ -246,8 +246,8 @@
 /**
  * @name Controls/_grid/interface/IGridControl#stickyHeader
  * @cfg {Boolean} Закрепляет заголовок таблицы.
- * @remark
- * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FStickyPG">демо-пример</a>
+ * @demo Controls-demo/grid/Header/NoSticky/Index В демо-примере опция stickyHeader установлена в значение false.
+ * @demo Controls-demo/grid/Header/Sticky/Index В демо-примере опция stickyHeader установлена в значение true.
  * @default true
  */
 
