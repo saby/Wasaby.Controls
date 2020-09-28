@@ -5,6 +5,8 @@ import {Model} from 'Types/entity';
 import {View as List} from 'Controls/list';
 import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
 
+import 'Controls-demo/list_new/EditInPlace/AddItem/Validators';
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
