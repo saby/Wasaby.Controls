@@ -5131,7 +5131,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let dragEndResult: Promise<any> | undefined;
         if (this._insideDragging && this._dndListController) {
             const targetPosition = this._dndListController.getDragPosition();
-            if (targetPosition) {
+            if (targetPosition && targetPosition.dispItem) {
                 dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.dispItem.getContents(), targetPosition.position]);
             }
 
@@ -5147,17 +5147,22 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // endDrag нужно вызывать только после события dragEnd,
         // чтобы не было прыжков в списке, если асинхронно меняют порядок элементов
         if (this._dndListController) {
-            const draggedKey = this._dndListController.getDraggableItem().getContents().getKey();
+            const draggableItem = this._dndListController.getDraggableItem();
             if (dragEndResult instanceof Promise) {
                 _private.showIndicator(this);
                 dragEndResult.finally(() => {
                     this._dndListController.endDrag();
-                    this.setMarkedKey(draggedKey);
+
+                    if (draggableItem) {
+                        this.setMarkedKey(draggableItem.getContents().getKey());
+                    }
                     _private.hideIndicator(this);
                 });
             } else {
                 this._dndListController.endDrag();
-                this.setMarkedKey(draggedKey);
+                if (draggableItem) {
+                    this.setMarkedKey(draggableItem.getContents().getKey());
+                }
             }
         }
     },
