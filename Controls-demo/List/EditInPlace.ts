@@ -3,9 +3,9 @@ import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 
 import 'Controls/validate';
+import 'Controls-demo/List/EditInPlace/Validators';
 
 import * as Constants from 'Controls/Constants';
-
 import * as template from 'wml!Controls-demo/List/EditInPlace/EditInPlace';
 
 const data = {
