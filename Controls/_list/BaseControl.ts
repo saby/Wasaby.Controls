@@ -2945,7 +2945,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (newOptions.sourceController) {
             self._sourceController = newOptions.sourceController;
             _private.validateSourceControllerOptions(self, newOptions);
-            self._sourceController.updateOptions(newOptions);
+            // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
+            //  и на списке и на Browser'e
+            if (newOptions.parentProperty) {
+                self._sourceController.setParentProperty(newOptions.parentProperty);
+            }
         } else if (newOptions.source) {
             self._sourceController = _private.getSourceController(newOptions);
         }

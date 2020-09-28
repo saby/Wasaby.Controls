@@ -68,6 +68,8 @@ export default class Controller {
     private _navigationController: NavigationController;
     private _items: RecordSet;
     private _loadPromise: CancelablePromise<LoadResult>;
+
+    private _parentProperty: string;
     private _root: TKey;
 
     private _expandedItems: TKey[];
@@ -76,11 +78,14 @@ export default class Controller {
     constructor(cfg: IControllerOptions) {
         this._options = cfg;
         this._filter = cfg.filter;
+
         this.setRoot(cfg.root);
+        this.setParentProperty(cfg.parentProperty);
+
         this._collectionChange = this._collectionChange.bind(this);
     }
     load(direction?: Direction,
-         key: TKey = this._options.root,
+         key: TKey = this._root,
          navigationSourceConfig?: INavigationSourceConfig
     ): Promise<LoadResult> {
         return this._load(direction, key, navigationSourceConfig);
@@ -90,7 +95,7 @@ export default class Controller {
         this._navigationController = null;
         this._deepReload = true;
 
-        return this._load(undefined, this._options.root, sourceConfig).then((result) => {
+        return this._load(undefined, this._root, sourceConfig).then((result) => {
             this._deepReload = false;
             return result;
         });
@@ -104,7 +109,7 @@ export default class Controller {
         this._setItems(items);
 
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation).updateQueryProperties(items, this._options.root);
+            this._getNavigationController(this._options.navigation).updateQueryProperties(items, this._root);
         }
 
         return this._items;
@@ -122,9 +127,14 @@ export default class Controller {
         return this._filter;
     }
 
-    // FIXME, если parentProperty задаётся на списке, а не на data(browser)
+    // FIXME, если root задаётся на списке, а не на data(browser)
     setRoot(key: TKey): void {
         this._root = key;
+    }
+
+    // FIXME, если parentProperty задаётся на списке, а не на data(browser)
+    setParentProperty(parentProperty: string): void {
+        this._parentProperty = parentProperty;
     }
 
     updateOptions(newOptions: IControllerOptions): boolean {
@@ -136,7 +146,11 @@ export default class Controller {
             this._filter = newOptions.filter;
         }
 
-        if (!isEqual(newOptions.root, this._options.root)) {
+        if (newOptions.parentProperty !== this._options.parentProperty) {
+            this.setParentProperty(newOptions.parentProperty);
+        }
+
+        if (newOptions.root !== this._options.root) {
             this.setRoot(newOptions.root);
         }
 
@@ -170,7 +184,7 @@ export default class Controller {
         return isChanged;
     }
 
-    getState(): IControlerState {
+    getState(): IControllerState {
         const source = this._options.source instanceof PrefetchProxy ?
             this._options.source.getOriginal<ICrud>() :
             this._options.source;
@@ -195,11 +209,11 @@ export default class Controller {
     }
 
     // FIXME для поддержки nodeSourceControllers в дереве
-    calculateState(items: RecordSet, direction: Direction, key: TKey = this._options.root): void {
+    calculateState(items: RecordSet, direction: Direction, key: TKey = this._root): void {
         this._updateQueryPropertiesByItems(items, key);
     }
 
-    hasMoreData(direction: Direction, key: TKey = this._options.root): boolean {
+    hasMoreData(direction: Direction, key: TKey = this._root): boolean {
         let hasMoreData = false;
 
         if (this._hasNavigationBySource()) {
@@ -344,9 +358,9 @@ export default class Controller {
         initialFilter: QueryWhereExpression<unknown>,
         options: IControllerOptions,
         root?: TKey): Promise<QueryWhereExpression<unknown>> {
-        const rootForFilter = root || options.root;
+        const rootForFilter = root || this._root;
         const expandedItemsForFilter = this._expandedItems || options.expandedItems;
-        const parentProperty = options.parentProperty;
+        const parentProperty = this._parentProperty;
         const deepReload = this._deepReload || options.deepReload;
         let resultFilter = initialFilter;
 
@@ -355,7 +369,7 @@ export default class Controller {
                 resultFilter = {...initialFilter};
 
                 if (rootForFilter) {
-                    resultFilter[options.parentProperty] = rootForFilter;
+                    resultFilter[parentProperty] = rootForFilter;
                 }
 
                 if (expandedItemsForFilter?.length && expandedItemsForFilter?.[0] !== null && deepReload) {
@@ -396,7 +410,7 @@ export default class Controller {
 
     private _collectionChange(): void {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation).updateQueryRange(this._items, this._options.root);
+            this._getNavigationController(this._options.navigation).updateQueryRange(this._items, this._root);
         }
     }
 
