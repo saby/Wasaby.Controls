@@ -63,13 +63,19 @@ class EnumAdapter extends Control {
    }
 
    private _enumSubscribe(enumInstance: Enum<string>): void {
-      enumInstance.subscribe('onChange', (e, index, value) => {
-         this._selectedKey = value;
-         this._forceUpdate();
-      });
+      enumInstance.subscribe('onChange', this._enumChangeHandler);
+   }
+
+   private _enumUnsubscribe(enumInstance: Enum<string>): void {
+      enumInstance.unsubscribe('onChange', this._enumChangeHandler);
+   }
+
+   private _enumChangeHandler(event: SyntheticEvent<Event>, index: number, value: string): void {
+      this._selectedKey = value;
    }
 
    protected _beforeMount(newOptions: IEnumAdapterOptions): void {
+      this._enumChangeHandler = this._enumChangeHandler.bind(this);
       if (newOptions.enum) {
          this._enum = newOptions.enum;
          this._enumSubscribe(this._enum);
@@ -84,6 +90,13 @@ class EnumAdapter extends Control {
          this._enumSubscribe(this._enum);
          this._source = this._getSourceFromEnum(newOptions.enum);
          this._selectedKey = newOptions.enum.getAsValue();
+      }
+   }
+
+   protected _beforeUnmount(): void {
+      if (this._enum) {
+         this._enumUnsubscribe(this._enum);
+         this._enum = null;
       }
    }
 
