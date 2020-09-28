@@ -1,67 +1,67 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
 import {Memory} from 'Types/source';
+import {Model} from 'Types/entity';
+import {IoC} from 'Env/Env';
 
-import * as template from 'wml!Controls-demo/list_new/ItemActions/ItemActionsVisibility/Onhover/ItemActions';
-import {Model} from "Types/entity";
-import {IoC} from "Env/Env";
+import * as template from 'wml!Controls-demo/list_new/ItemActions/MenuItemTemplate/MenuItemTemplate';
+import * as downloadTemplate from 'wml!Controls-demo/list_new/ItemActions/MenuItemTemplate/_downloadItemTemplate';
 
-const menuToolbarItemActions: IItemAction[] = [
-   {
-      id: 5,
-      title: 'прочитано',
-      showType: TItemActionShowType.TOOLBAR,
-      handler(model: Model): void {
-         IoC.resolve('ILogger').info('action read Click');
-      }
-   },
-   {
-      id: 1,
-      icon: 'icon-PhoneNull',
-      title: 'phone',
-      handler(model: Model): void {
-         IoC.resolve('ILogger').info('action phone Click ', model);
-      }
-   },
+interface ISrcData {
+   id: number;
+   title: string;
+   description: string;
+}
+
+interface IItemActionWithTemplate extends IItemAction {
+   menuItemTemplate?: TemplateFunction;
+   fileInfo?: {
+      prettySize: string
+   }
+}
+
+const menuToolbarItemActions: IItemActionWithTemplate[] = [
    {
       id: 2,
-      icon: 'icon-EmptyMessage',
-      title: 'message',
-      parent: null,
-      'parent@': true,
+      icon: 'icon-DownloadNew',
+      title: 'Сохранить на компьютер',
+      showType: TItemActionShowType.MENU,
+      menuItemTemplate: downloadTemplate,
+      fileInfo: {
+         prettySize: '900Pb'
+      },
+      'parent@': null,
       handler(model: Model): void {
-         alert('Message Click');
+         IoC.resolve('ILogger').info('action download Click');
       }
    },
    {
       id: 3,
-      icon: 'icon-Profile',
-      title: 'profile',
-      showType: TItemActionShowType.MENU,
-      parent: 2,
-      'parent@': null,
-      handler(model: Model): void {
-         IoC.resolve('ILogger').info('action profile Click');
-      }
-   },
-   {
-      id: 6,
-      title: 'call',
-      parent: 2,
-      'parent@': null,
-      handler(model: Model): void {
-         IoC.resolve('ILogger').info('action profile Click');
-      }
-   },
-   {
-      id: 4,
       icon: 'icon-Erase',
       iconStyle: 'danger',
-      title: 'delete pls',
-      showType: TItemActionShowType.TOOLBAR,
+      title: 'Удалить',
+      showType: TItemActionShowType.MENU_TOOLBAR,
       handler(model: Model): void {
          IoC.resolve('ILogger').info('action delete Click');
       }
+   }
+];
+
+const data: ISrcData[] = [
+   {
+      id: 1,
+      title: 'База данных Пентагона',
+      description: 'Свежая база, без СМС и регистрации'
+   },
+   {
+      id: 2,
+      title: 'Самое точное вычисление расстояния до соседней вселенной',
+      description: 'Но это не точно'
+   },
+   {
+      id: 3,
+      title: 'Весь исходный код СБИСа версии 300.2103 от 12.03.2300',
+      description: 'Инфа 100%'
    }
 ];
 
@@ -73,7 +73,9 @@ export default class ListDelayedItemActions extends Control<IControlOptions> {
    protected _beforeMount(options?: IControlOptions, contexts?: object, receivedState?: void): Promise<void> | void {
       this._viewSource = new Memory({
          keyProperty: 'id',
-         data: srcData
+         data
       });
    }
+
+   static _styles: string[] = ['Controls-demo/list_new/ItemActions/MenuItemTemplate/MenuItemTemplate'];
 }
