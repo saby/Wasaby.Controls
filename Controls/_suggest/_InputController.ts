@@ -5,7 +5,7 @@ import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IStackPopupOptions, Stack as StackOpener} from 'Controls/popup';
-import {Controller as SearchController, SearchDelay as SearchDelayController} from 'Controls/searchNew';
+import {Controller as SearchController, SearchResolver as SearchResolverController} from 'Controls/searchNew';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {RecordSet} from 'Types/collection';
 import {__ContentLayer, __PopupLayer} from 'Controls/suggestPopup';
@@ -27,6 +27,7 @@ import Env = require('Env/Env');
 import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
+import {TVisibility} from 'Controls/marker';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -116,8 +117,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _suggestMarkedKey: Key = null;
    private _misspellingCaption: string = null;
    private _suggestDirection: TSuggestDirection = null;
+   private _markerVisibility: TVisibility = 'onactivated';
 
-   private _searchDelayController: SearchDelayController = null;
+   private _searchResolverController: SearchResolverController = null;
    private _sourceController: SourceController = null;
    private _searchController: SearchController = null;
 
@@ -156,6 +158,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._historyKeys = null;
       this._suggestDirection = null;
       this._setMissSpellingCaption(null);
+      this._markerVisibility = 'onactivated';
    }
 
    private _setSuggestMarkedKey(key: Key): void {
@@ -309,7 +312,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             this._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
          }
 
-         if (this._searchValue && this._sourceController?.hasMoreData('down') && typeof metaData.more === 'number') {
+         if (this._searchValue && this._getSourceController().hasMoreData('up')
+            && typeof metaData.more === 'number') {
             this._moreCount = metaData.more - data.getCount();
          } else {
             this._moreCount = undefined;
@@ -321,6 +325,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _prepareFilter(filter: QueryWhereExpression<unknown>,
+                          searchParam: string,
                           searchValue: string,
                           minSearchLength: number,
                           tabId: Key,
@@ -332,11 +337,15 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (searchValue.length < minSearchLength && historyKeys && historyKeys.length) {
          preparedFilter[HISTORY_KEYS_FIELD] = historyKeys;
       }
+      if (searchValue) {
+         preparedFilter[searchParam] = searchValue;
+      }
+
       return preparedFilter;
    }
 
    private _setFilter(filter: QueryWhereExpression<unknown>, options: IInputControllerOptions): void {
-      this._filter = this._prepareFilter(filter, this._searchValue,
+      this._filter = this._prepareFilter(filter, this._options.searchParam, this._searchValue,
          options.minSearchLength, this._tabsSelectedKey, this._historyKeys);
       this._getSourceController(options).setFilter(this._filter);
    }
@@ -356,24 +365,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
 
       return recordSet;
-   }
-
-   private _suggestOpenDirectionChangedHandler(event: SyntheticEvent, direction: TSuggestDirection): void {
-      if (direction === 'up') {
-         this._sourceController.load().then((recordSet) => {
-            if (recordSet instanceof RecordSet) {
-               this._reverseData(recordSet);
-               //this._open();
-            }
-         });
-      } else {
-         // this._sourceController.load().then((recordSet) => {
-         //    if (recordSet instanceof RecordSet) {
-         //       this._sourceController.setItems(recordSet);
-         //       this._open();
-         //    }
-         // });
-      }
    }
 
    private _updateSuggestState(recordSet?: RecordSet): void {
@@ -490,8 +481,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             templateOptions: {
                templateName: this._options.suggestTemplate.templateName,
                templateOptions: this._options.suggestTemplate.templateOptions,
-               searchEndCallback: this._searchEnd,
-               searchStartCallback: this._searchStart,
+               searchEndCallback: this._loadEnd,
+               searchStartCallback: this._loadStart,
                searchErrback: this._searchErrback,
                emptyTemplate: this._emptyTemplate,
                source: this._options.source,
@@ -514,8 +505,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _beforeMount(options: IInputControllerOptions): void {
-      this._searchStart = this._searchStart.bind(this);
-      this._searchEnd = this._searchEnd.bind(this);
+      this._loadStart = this._loadStart.bind(this);
+      this._loadEnd = this._loadEnd.bind(this);
       this._searchErrback = this._searchErrback.bind(this);
       this._searchDelay = options.searchDelay;
       this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
@@ -526,8 +517,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _beforeUnmount(): void {
       this._searchResult = null;
-      this._searchStart = null;
-      this._searchEnd = null;
+      this._loadStart = null;
+      this._loadEnd = null;
       this._searchErrback = null;
    }
 
@@ -599,27 +590,37 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       /* preload suggest dependencies on value changed */
       this._loadDependencies(this._options);
 
-      if (!this._searchDelayController) {
+      if (!this._searchResolverController) {
          const searchController = this._getSearchController();
 
-         this._searchDelayController = new SearchDelayController({
+         this._searchResolverController = new SearchResolverController({
             delayTime: this._options.searchDelay as number,
             minSearchLength: this._options.minSearchLength,
-            searchCallback: (validatedValue: string) => {
-               this._searchStart();
-               searchController.search(validatedValue).then((recordSet) => {
-                  this._setItems(recordSet);
-                  this._updateSuggestState(recordSet);
-                  this._searchEnd(recordSet);
-               });
-            },
-            searchResetCallback: () => {
-               searchController.reset().then();
-            }
+            searchCallback: (validatedValue: string) => this._resolveLoad(validatedValue),
+            searchResetCallback: () => searchController.reset().then()
          });
       }
 
-      this._searchDelayController.resolve(value);
+      this._searchResolverController.resolve(value);
+   }
+
+   private _resolveLoad(value?: string): void {
+      this._loadStart();
+      if (value) {
+         this._getSearchController().search(value).then((recordSet) => {
+            this._setItems(recordSet);
+            this._updateSuggestState(recordSet);
+            this._markerVisibility = 'visible';
+            this._loadEnd(recordSet);
+         });
+      } else {
+         this._getSourceController().load().then((recordSet) => {
+            if (recordSet instanceof RecordSet) {
+               this._setItems(recordSet);
+               this._loadEnd(recordSet);
+            }
+         });
+      }
    }
 
    protected _getSearchController(): SearchController {
@@ -678,9 +679,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       // otherwise interface will blink
       if (this._tabsSelectedKey !== key) {
          this._filter = this._prepareFilter(this._options.filter,
+            this._options.searchParam,
             this._searchValue, this._options.minSearchLength, key, this._historyKeys);
-         this._getSourceController().setFilter(this._filter);
-         // TODO: loader
+         const sourceController = this._getSourceController();
+         sourceController.setFilter(this._filter);
+         this._resolveLoad();
       }
 
       // move focus from tabs to input, after change tab
@@ -710,7 +713,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._setSuggestMarkedKey(key);
    }
 
-   protected _searchStart(): void {
+   protected _loadStart(): void {
       this._loading = true;
       // Обновим таймер, т.к. могут прерывать поиск новыми запросами
       if (this._children.indicator) {
@@ -722,7 +725,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
    }
 
-   protected _searchEnd(result: RecordSet): void {
+   protected _loadEnd(result: RecordSet): void {
       if (this._options.suggestState && this._loading) {
          this._loading = false;
 
