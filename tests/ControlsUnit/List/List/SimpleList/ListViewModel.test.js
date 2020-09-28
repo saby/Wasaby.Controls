@@ -130,15 +130,6 @@ define([
          // assert.include(version, 'ITEM_ACTION_2');
 
          assert.include(version, 'WITHOUT_EDITING');
-
-         const editingItemData = { key: 21, item: {}, setEditing: () => {}, getVersion: () => '' };
-         model._setEditingItemData(editingItemData);
-         version = model._calcItemVersion(item, key);
-         assert.include(version, 'WITH_EDITING');
-
-         model._options.multiSelectVisibility = 'visible';
-         version = model._calcItemVersion(editingItemData, 21);
-         assert.equal(version, 'MULTISELECT-visible_EDITING_WITH_EDITING_1');
       });
 
       it('isShouldBeDrawnItem', function() {
@@ -196,7 +187,7 @@ define([
             model._stopIndex = 2;
             const result = model._getEndIndexForReset();
             assert.equal(result, 4, 'sticky item must be shown');
-            
+
          });
          it('sticky item in range', () => {
             const data = [
@@ -220,9 +211,9 @@ define([
             model._stopIndex = 2;
             const result = model._getEndIndexForReset();
             assert.equal(result, 2, 'sticky item is in range, so end index === stop index');
-            
+
          });
-         
+
       });
 
       it('markItemReloaded', () => {
@@ -298,8 +289,7 @@ define([
          };
 
          assert.deepEqual(cfg.items.at(0), lists.ListViewModel._private.getItemByMarkedKey(iv, 1).getContents());
-         iv._setEditingItemData(edditingItem);
-         assert.deepEqual(cfg.items.at(0), lists.ListViewModel._private.getItemByMarkedKey(iv, 1).getContents());
+         iv.isEditing = () => true;
          assert.isUndefined(lists.ListViewModel._private.getItemByMarkedKey(iv, 21));
          edditingItem.isAdd = true;
          iv._markedKey = 21;
@@ -697,7 +687,7 @@ define([
 
          it('getMultiSelectClassList onhover selected', function() {
             lvm._options.multiSelectVisibility = 'onhover';
-            lvm.setSelectedItems([lvm.getItemById(2, 'id').getContents()], true);
+            lvm.setSelectedItems([lvm.getItemById(2, 'id')], true);
             var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable');
          });

@@ -26,7 +26,6 @@ import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig, ISelectionObject} from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
-import {editing as constEditing} from 'Controls/Constants';
 
 // Utils imports
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
@@ -35,8 +34,8 @@ import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
     CollectionItem,
-    EditInPlaceController,
-    GroupItem
+    GroupItem,
+    TItemKey
 } from 'Controls/display';
 import {
     Controller as ItemActionsController,
@@ -56,7 +55,13 @@ import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
 import {ISwipeEvent} from 'Controls/listRender';
 
-import {IEditingOptions, EditInPlace} from '../editInPlace';
+import {
+    Controller as EditInPlaceController,
+    InputHelper as EditInPlaceInputHelper,
+    CONSTANTS,
+    JS_SELECTORS
+} from '../editInPlace';
+import {IEditableListOption} from './interface/IEditableList';
 
 import {default as ScrollController, IScrollParams} from './ScrollController';
 
@@ -82,7 +87,6 @@ import 'wml!Controls/_list/BaseControl/Footer';
 import {IList} from "./interface/IList";
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { EdgeIntersectionObserver } from 'Controls/scroll';
-import { TItemKey } from 'Controls/display';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {IMoveControllerOptions, MoveController, TMovePosition} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from "../_moverDialog/Template";
@@ -114,7 +118,8 @@ const
         keyDownHome: constants.key.home,
         keyDownEnd: constants.key.end,
         keyDownPageUp: constants.key.pageUp,
-        keyDownPageDown: constants.key.pageDown
+        keyDownPageDown: constants.key.pageDown,
+        keyDownDel: constants.key.del
     };
 
 const LOAD_TRIGGER_OFFSET = 100;
@@ -522,7 +527,7 @@ const _private = {
         let startChildrenIndex = 0;
 
         for (let i = startChildrenIndex, len = itemsContainer.children.length; i < len; i++) {
-            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') && 
+            if (!itemsContainer.children[i].classList.contains('controls-ListView__hiddenContainer') &&
                 !itemsContainer.children[i].classList.contains('js-controls-List_invisible-for-VirtualScroll')) {
                 startChildrenIndex = i;
                 break;
@@ -563,6 +568,9 @@ const _private = {
                 }
             }) : Promise.resolve();
     },
+
+    // region key handlers
+
     keyDownHome(self, event) {
         _private.setMarkerAfterScroll(self, event);
     },
@@ -615,6 +623,40 @@ const _private = {
             _private.moveMarkerToNext(self, event);
         }
     },
+
+    /**
+     * Метод обработки нажатия клавиши del.
+     * Работает по принципу "Если в itemActions есть кнопка удаления, то имитируем её нажатие"
+     * @param self
+     * @param event
+     */
+    keyDownDel(self, event): void {
+        const model = self.getViewModel();
+        let toggledItemId = model.getMarkedKey();
+        let toggledItem: CollectionItem<Model> = model.getItemBySourceKey(toggledItemId);
+        if (!toggledItem) {
+            return;
+        }
+        let itemActions = toggledItem.getActions();
+
+        // Если itemActions были не проинициализированы, то пытаемся их проинициализировать
+        if (!itemActions) {
+            if (self._options.itemActionsVisibility !== 'visible') {
+                _private.updateItemActions(self, self._options);
+            }
+            itemActions = toggledItem.getActions();
+        }
+
+        if (itemActions) {
+            const deleteAction = itemActions.all.find((itemAction: IItemAction) => itemAction.id === 'delete');
+            if (deleteAction) {
+                _private.handleItemActionClick(self, deleteAction, event, toggledItem, false);
+            }
+        }
+    },
+
+    // endregion key handlers
+
     prepareFooter(self, navigation, sourceController) {
         let
             loadedDataCount, allDataCount;
@@ -720,8 +762,8 @@ const _private = {
                 drawItemsUp(countCurrentItems, addedItems);
             }
 
-            if (!_private.hasMoreData(self, self._sourceController, direction) && !addedItems.getCount()) {
-                self.updateShadowModeHandler(self._shadowVisibility);
+            if (!_private.hasMoreData(self, self._sourceController, direction)) {
+                self._updateShadowModeHandler(self._shadowVisibility);
             }
         };
 
@@ -1014,19 +1056,27 @@ const _private = {
     },
     needShowPagingByScrollSize(self, viewSize: number, viewportSize: number): boolean {
         let result = self._pagingVisible;
+        /**
+         * Правильнее будет проверять что размер viewport не равен 0.
+         * Это нужно для того, чтобы пэйджинг в таком случае не отобразился.
+         * viewport может быть равен 0 в том случае, когда блок скрыт через display:none, а после становится видим.
+         */
+        if (viewportSize !== 0) {
+            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
+                self._scrollController?.calculateVirtualScrollHeight() || 0);
+            const proportion = (scrollHeight / viewportSize);
 
-        const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
-                                      self._scrollController?.calculateVirtualScrollHeight() || 0);
-        const proportion = (scrollHeight / viewportSize);
+            // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
+            if (!result) {
+                result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
+            }
 
-        // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
-        if (!result) {
-            result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
-        }
-
-        // если все данные поместились на один экран, то скрываем пэйджинг
-        if (result) {
-            result = proportion > MAX_SCROLL_PAGING_HIDE_PROPORTION;
+            // если все данные поместились на один экран, то скрываем пэйджинг
+            if (result) {
+                result = proportion > MAX_SCROLL_PAGING_HIDE_PROPORTION;
+            }
+        } else {
+            result = false;
         }
 
         // если мы для списка раз вычислили, что нужен пэйджинг, то возвращаем этот статус
@@ -1812,6 +1862,9 @@ const _private = {
      */
     showError(self: BaseControl, errorConfig: dataSourceError.ViewConfig): void {
         self.__error = errorConfig;
+        if (errorConfig && (errorConfig.mode === dataSourceError.Mode.include)) {
+            self._scrollController = null;
+        }
     },
 
     hideError(self: BaseControl): void {
@@ -1863,10 +1916,7 @@ const _private = {
     },
 
     needBottomPadding(options, items, listViewModel) {
-        const isEditing =
-            options.useNewModel
-            ? EditInPlaceController.isEditing(listViewModel)
-            : !!listViewModel.getEditingItemData();
+        const isEditing = listViewModel.isEditing();
 
         const display = listViewModel ? (options.useNewModel ? listViewModel : listViewModel.getDisplay()) : null;
         const hasVisibleItems = !!(display && display.getCount());
@@ -1948,11 +1998,8 @@ const _private = {
         const oldSourceCfg = oldNavigation && oldNavigation.sourceConfig ? oldNavigation.sourceConfig : {};
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
-            const isEditing = !!self._editInPlace && !!self._listViewModel && (
-                self._options.useNewModel ? EditInPlaceController.isEditing(self._listViewModel) : !!self._listViewModel.getEditingItemData()
-            );
-            if (isEditing) {
-                self._editInPlace.cancelEdit();
+            if (!!self._listViewModel && !!self._editInPlaceController && !!self._editInPlaceController.getEditingItem()) {
+                self.cancelEdit();
             }
         }
     },
@@ -2043,7 +2090,11 @@ const _private = {
             return null;
         }
 
-        const strategy = this.createSelectionStrategy(options, self._listViewModel.getCollection());
+        const strategy = this.createSelectionStrategy(
+            options,
+            self._listViewModel.getDisplay().getItems(),
+            self._items.getMetaData()['ENTRY_PATH']
+        );
 
         return new SelectionController({
             model: self._listViewModel,
@@ -2060,12 +2111,16 @@ const _private = {
             selectedKeys: newOptions.selectedKeys,
             excludedKeys: newOptions.excludedKeys,
             searchValue: newOptions.searchValue,
-            strategyOptions: this.getSelectionStrategyOptions(newOptions, self._listViewModel.getCollection())
+            strategyOptions: this.getSelectionStrategyOptions(
+                newOptions,
+                self._listViewModel.getDisplay().getItems(),
+                self._items.getMetaData()['ENTRY_PATH']
+            )
         });
     },
 
-    createSelectionStrategy(options: any, items: RecordSet): ISelectionStrategy {
-        const strategyOptions = this.getSelectionStrategyOptions(options, items);
+    createSelectionStrategy(options: any, items: Array<CollectionItem<Model>>, entryPath: []): ISelectionStrategy {
+        const strategyOptions = this.getSelectionStrategyOptions(options, items, entryPath);
         if (options.parentProperty) {
             return new TreeSelectionStrategy(strategyOptions);
         } else {
@@ -2080,20 +2135,15 @@ const _private = {
         return self._selectionController;
     },
 
-    getSelectionStrategyOptions(options: any, items: RecordSet): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
+    getSelectionStrategyOptions(options: any, items: Array<CollectionItem<Model>>, entryPath: []): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
         if (options.parentProperty) {
             return {
                 nodesSourceControllers: options.nodesSourceControllers,
                 selectDescendants: options.selectDescendants,
                 selectAncestors: options.selectAncestors,
-                hierarchyRelation: new relation.Hierarchy({
-                    keyProperty: options.keyProperty || 'id',
-                    parentProperty: options.parentProperty || 'Раздел',
-                    nodeProperty: options.nodeProperty || 'Раздел@',
-                    declaredChildrenProperty: options.hasChildrenProperty || 'Раздел$'
-                }),
                 rootId: options.root,
-                items
+                items,
+                entryPath
             };
         } else {
             return { items };
@@ -2173,16 +2223,19 @@ const _private = {
                     self._notify('disableVirtualNavigation', [], { bubbling: true });
                 }
             }
-            if (result.activeElement) {
+            if (result.activeElement && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
                 self._notify('activeElementChanged', [result.activeElement]);
+                if (result.scrollToActiveElement) {
+                    // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
+                self._keepScrollAfterReload = true;_private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+                }
             }
         }
         if (result.triggerOffset) {
-            self._loadTriggerOffset = result.triggerOffset;
             self.applyTriggerOffset(result.triggerOffset);
         }
-        if (result.scrollToActiveElement) {
-            _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+        if (result.shadowVisibility) {
+            self._updateShadowModeHandler(result.shadowVisibility);
         }
     },
     onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
@@ -2323,64 +2376,6 @@ const _private = {
 
     // endregion
 
-    createEditInPlace(self: typeof BaseControl, options: any): void {
-        if (options.editingConfig) {
-            self._editInPlace = new EditInPlace({
-                editingConfig: options.editingConfig,
-                listViewModel: self._listViewModel,
-                multiSelectVisibility: options.multiSelectVisibility,
-                errorController: self.__errorController,
-                source: self.getSourceController(),
-                useNewModel: options.useNewModel,
-                theme: self._options.theme,
-                readOnly: self._options.readOnly,
-                keyProperty: self._options.keyProperty,
-                notify: (name, args, params) => {
-                    const eventResult = self._notify(name, args, params);
-
-                    if (name === 'beforeBeginEdit') {
-                        _private.onBeforeBeginEdit(self, eventResult);
-                    }
-
-                    return eventResult;
-                },
-                forceUpdate: () => {
-                    self._forceUpdate();
-                },
-                updateMarkedKey: (key: CrudEntityKey) => {
-                    self.setMarkedKey(key);
-                },
-                updateItemActions: () => {
-                    /*
-                    * TODO: KINGO
-                    * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
-                    * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
-                    * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
-                    * _canUpdateItemsActions приведет к показу неактуальных операций.
-                    */
-                    _private.updateItemActions(self, self._options);
-                },
-                isDestroyed: () => self._destroyed
-            } as IEditingOptions);
-        }
-    },
-
-    createEditingData(self: typeof BaseControl, options: any): void {
-        if (self._editInPlace) {
-            self._editInPlace.createEditingData(
-                options.editingConfig,
-                self._listViewModel,
-                options.useNewModel,
-                self.getSourceController()
-            );
-            self._editingItemData = self._editInPlace.getEditingItemData();
-
-            if (options.itemActions || self._editInPlace.shouldShowToolbar()) {
-                _private.updateItemActions(self, options);
-            }
-        }
-    },
-
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
             virtualScrollConfig: options.virtualScrollConfig || {},
@@ -2391,6 +2386,8 @@ const _private = {
             useNewModel: options.useNewModel,
             forceInitVirtualScroll: options?.navigation?.view === 'infinity'
         });
+        const result = self._scrollController.handleResetItems();
+        _private.handleScrollControllerResult(self, result);
     },
 
     /**
@@ -2407,7 +2404,6 @@ const _private = {
         }
 
         const editingConfig = self._listViewModel.getEditingConfig();
-        const editingItemData = self._listViewModel.getEditingItemData && self._listViewModel.getEditingItemData();
         const isActionsAssigned = self._listViewModel.isActionsAssigned();
         let editArrowAction: IItemAction;
         if (options.showEditArrow) {
@@ -2421,8 +2417,14 @@ const _private = {
                 }
             };
         }
+        let editingCollectionItem;
+        let editingModel = self._editInPlaceController ? self._editInPlaceController.getEditingItem() : undefined;
+        if (editingModel) {
+            const collection = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
+            editingCollectionItem = collection.getItemBySourceKey(editingModel.getKey());
+        }
         const itemActionsChangeResult = itemActionsController.update({
-                editingItem: editingItemData,
+                editingItem: editingCollectionItem,
                 collection: self._listViewModel,
                 itemActions: options.itemActions,
                 itemActionsProperty: options.itemActionsProperty,
@@ -2639,65 +2641,6 @@ const _private = {
         return result;
     },
 
-    /*
-    * Считается, что запись активировалась при клике по ней, если в результате этого клика не запустилось редактирование по месту.
-    * Начинаем запуск редактирования мы, но реально ли оно начнется сейчас знает только прикладник и редактирование по месту, но
-    * оно не дает нам никакой точки входа в этот момент.
-    * Обработчик события начала редактирования может вернуть несколько вариантов ответа. Надо прочекать все.
-    *
-    * В новой схеме этот момент будет учтен и код станет вида
-    * editingController.beginEdit(key).then((startResult) => {
-    *     if (startResult === 'aborted') {
-    *         this._notify('itemActivated');
-    *     }
-    * })
-    * */
-    onBeforeBeginEdit(self, eventResult) {
-        if (self._savedItemClickArgs) {
-
-            // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
-            // обязательно должен случиться после события beforeBeginEdit.
-            self._notify('itemClick', self._savedItemClickArgs, {bubbling: true});
-
-            // Запись становится активной по клику, если не началось редактирование.
-            // Аргументы itemClick сохранены в состояние и используются для нотификации об активации элемента.
-            if (eventResult === constEditing.CANCEL) {
-                self._notify('itemActivate', self._savedItemClickArgs, {bubbling: true});
-                self._savedItemClickArgs = null;
-            } else if (eventResult && eventResult.finally) {
-                eventResult.then((res) => {
-                    if (res === constEditing.CANCEL) {
-                        self._notify('itemActivate', self._savedItemClickArgs, {bubbling: true});
-                    }
-                    return res;
-                }).finally(() => {
-                    self._savedItemClickArgs = null;
-                });
-            } else {
-                self._savedItemClickArgs = null;
-            }
-        }
-    },
-    activateEditingRow(self) {
-        // После запуска редактирования нужно активировать определенное поле ввода.
-        // Если не получилось активировать поле ввода, под точкой клика (клик мимо поля ввода),
-        // то активируем первое в строке
-        if (self._editInPlace.hasPendingActivation()) {
-            // Совместимость с ListRender, он не использует EditingRow. Удалить при полном переходе.
-            if (self._options.useNewModel) {
-                self._editInPlace.activated();
-            } else {
-                const wasActivatedByClick = self._editInPlace.prepareHtmlInput();
-                let wasActivatedByEditingRow;
-                if (!wasActivatedByClick) {
-                    wasActivatedByEditingRow = self._children.listView.activateEditingRow();
-                }
-                if (wasActivatedByEditingRow || wasActivatedByClick) {
-                    self._editInPlace.activated();
-                }
-            }
-        }
-    },
     getMoveController(self): MoveController {
         const options = self._options;
         const controllerOptions: IMoveControllerOptions = {
@@ -2739,6 +2682,24 @@ const _private = {
             self._removeController = new RemoveController(self._options.source);
         }
         return self._removeController;
+    },
+
+    registerFormOperation(self): void {
+        const formOperationHandler = (shouldSave) => {
+            if (shouldSave) {
+                const editingItem = self._editInPlaceController.getEditingItem();
+                if (editingItem?.isChanged()) {
+                    return self.commitEdit();
+                }
+            }
+            return self.cancelEdit();
+        };
+
+        self._notify('registerFormOperation', [{
+            save: formOperationHandler.bind(self, true),
+            cancel: formOperationHandler.bind(self, false),
+            isDestroyed: () => self._destroyed
+        }], {bubbling: true});
     }
 };
 
@@ -2812,9 +2773,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
     _hideIndicatorOnTriggerHideDirection: null,
-
-    // хранения отступов триггеров хранится для вычисления видимости триггеров
-    _loadTriggerOffset: null,
+    _checkTriggerVisibilityTimeout: null,
     _loadingIndicatorContainerOffsetTop: 0,
     _viewSize: null,
     _viewportSize: null,
@@ -2892,7 +2851,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._validateController = new ControllerClass();
         this.__errorController = options.errorController || new dataSourceError.Controller({});
         this._startDragNDropCallback = this._startDragNDropCallback.bind(this);
-        this._loadTriggerOffset = { top: LOAD_TRIGGER_OFFSET, bottom: LOAD_TRIGGER_OFFSET };
+        this._resetValidation = this._resetValidation.bind(this);
     },
 
     /**
@@ -2915,36 +2874,32 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadTriggerVisibility = {};
 
-        if (newOptions.editingConfig) {
-            _private.createEditInPlace(self, newOptions);
-        }
+        return Promise.resolve(this._prepareGroups(newOptions, (collapsedGroups) => {
+            return this._prepareItemsOnMount(self, newOptions, receivedState, collapsedGroups);
+        })).then((res) => {
+            const editingConfig = self._getEditingConfig(newOptions);
+            return editingConfig.item ? self._startInitialEditing(editingConfig) : res;
+        }).then((res) => {
+            if (newOptions.markerVisibility === 'visible'
+                || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined) {
+                const markerController = _private.createMarkerController(
+                    this,
+                    newOptions.markerVisibility,
+                    newOptions.markedKey
+                );
 
-        return this._prepareGroups(newOptions, (collapsedGroups) => {
-            return this._prepareItemsOnMount(self, newOptions, receivedState, collapsedGroups).then(
-                (result) => {
-                    if (newOptions.markerVisibility === 'visible'
-                        || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined) {
-                        const markerController = _private.createMarkerController(
-                            this,
-                            newOptions.markerVisibility,
-                            newOptions.markedKey
-                        );
+                const markedKey = markerController.calculateMarkedKeyForVisible();
+                markerController.setMarkedKey(markedKey);
+            }
 
-                        const markedKey = markerController.calculateMarkedKeyForVisible();
-                        markerController.setMarkedKey(markedKey);
-                    }
-
-                    if (self._selectionController) {
-                        _private.getSelectionController(self).restoreSelection();
-                    } else {
-                        if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
-                            self._selectionController = _private.createSelectionController(self, newOptions);
-                        }
-                    }
-
-                    return result;
+            if (self._selectionController) {
+                _private.getSelectionController(self).restoreSelection();
+            } else {
+                if (newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
+                    self._selectionController = _private.createSelectionController(self, newOptions);
                 }
-            );
+            }
+            return res
         });
     },
 
@@ -3009,9 +2964,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     newOptions.dataLoadCallback(self._items);
                 }
 
-                _private.createEditingData(self, newOptions);
-
-                _private.createScrollController(self, newOptions);
+                    _private.createScrollController(self, newOptions);
 
                 _private.prepareFooter(self, newOptions.navigation, self._sourceController);
 
@@ -3059,8 +3012,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
 
-                _private.createEditingData(self, newOptions);
-                _private.createScrollController(self, newOptions);
+                    _private.createScrollController(self, newOptions);
 
                 _private.initVisibleItemActions(self, newOptions);
 
@@ -3124,7 +3076,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect): void {
         this._viewportSize = viewportHeight;
         this._viewportRect = viewportRect;
-        if (this._isScrollShown) {
+        if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
             this._updateItemsHeights();
         }
         if (this._loadingIndicatorState) {
@@ -3132,7 +3084,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
+    _updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
         this._shadowVisibility = shadowVisibility;
         if (this._isMounted) {
             _private.updateShadowMode(this, shadowVisibility);
@@ -3247,11 +3199,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.handleSelectionControllerResult(this, result);
         }
 
-        if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(this._validateController);
-            this._editInPlace.updateViewModel(this._listViewModel);
-            this._editInPlace.setErrorContainer(this._children.errorContainer);
-            _private.activateEditingRow(this);
+        if (this._editInPlaceController) {
+            _private.registerFormOperation(this);
         }
 
         // для связи с контроллером ПМО
@@ -3324,10 +3273,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._moveController.updateOptions(newOptions);
         }
 
-        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
-            if (this._editInPlace && this._listViewModel.getEditingItemData()) {
-                this._editInPlace.cancelEdit();
+        if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
+            if (this._editInPlaceController && this._editInPlaceController.getEditingItem()) {
+                this.cancelEdit();
             }
+        }
+
+        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
@@ -3379,7 +3331,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (newOptions.editingConfig !== this._options.editingConfig) {
-            this._listViewModel.setEditingConfig(newOptions.editingConfig);
+            this._listViewModel.setEditingConfig(this._getEditingConfig(newOptions));
         }
         if (recreateSource) {
             this.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
@@ -3460,11 +3412,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
-        if (this._editInPlace) {
-            this._editInPlace.updateEditingData(
-                {listViewModel: this._listViewModel, ...newOptions}
-            );
-            this._editingItemData = this._editInPlace.getEditingItemData();
+        if (this._editInPlaceController) {
+            this._editInPlaceController.updateOptions({
+                collection: newOptions.useNewModel ? this._listViewModel : this._listViewModel.getDisplay()
+            });
         }
 
         // Синхронный индикатор загрузки для реестров, в которых записи - тяжелые контролы.
@@ -3547,7 +3498,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     reloadItem(key: String, readMeta: Object, replaceItem: Boolean, reloadType = 'read'): Deferred {
-        const items = this._listViewModel.getItems();
+        const items = this._listViewModel.getCollection();
         const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
         const sourceController = _private.getSourceController(this._options, this._notifyNavigationParamsChanged);
 
@@ -3648,8 +3599,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollPagingCtr.destroy();
         }
 
-        if (this._editInPlace) {
-            this._editInPlace.reset();
+        if (this._editInPlaceController) {
+            this._editInPlaceController.destroy();
+            this._editInPlaceInputHelper = null;
         }
 
         if (this._listViewModel) {
@@ -3767,7 +3719,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._syncLoadingIndicatorState = null;
             }
 
-            this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            const itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
@@ -3777,13 +3729,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
                 this._scrollController.beforeRestoreScrollPosition();
-                this._notify('restoreScrollPosition', 
+                this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
                 needCheckTriggers = true;
             }
 
-            if (needCheckTriggers) {
+            if (needCheckTriggers || itemsUpdated) {
                 this.checkTriggerVisibilityWithTimeout();
             }
 
@@ -3793,6 +3745,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._scrollToFirstItemIfNeed();
     },
 
+    // setTimeout для проверки триггеров, чтобы IO успел сработать на изменение видимости триггеров, если оно было.
     checkTriggerVisibilityWithTimeout(): void {
         if (this._checkTriggerVisibilityTimeout) {
             clearTimeout(this._checkTriggerVisibilityTimeout);
@@ -3805,12 +3758,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }, TRIGGER_VISIBILITY_DELAY);
     },
 
+    // Проверяем видимость триггеров после перерисовки.
+    // Если видимость не изменилась, то события не будет, а обработать нужно.
     checkTriggersVisibility(): void {
-        const scrollParams = {
-            clientHeight: this._viewportSize,
-            scrollHeight: _private.getViewSize(this),
-            scrollTop: this._scrollTop
-        };
         const triggerDown = this._loadTriggerVisibility.down;
         const triggerUp = this._loadTriggerVisibility.up;
         this._scrollController.setTriggerVisibility('down', triggerDown);
@@ -3908,10 +3858,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._callbackAfterUpdate = null;
         }
 
-        if (this._editInPlace) {
-            this._editInPlace.registerFormOperation(this._validateController);
-            _private.activateEditingRow(this);
-            this._validateController.resolveSubmit();
+        if (this._editInPlaceController) {
+            const rowActivator = this._children.listView.activateEditingRow.bind(this._children.listView);
+            this._editInPlaceInputHelper.activateInput(rowActivator);
         }
 
     },
@@ -3952,10 +3901,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
         // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
         const noData = !listViewModel.getCount();
-        const noEdit =
-            this._options.useNewModel
-                ? !EditInPlaceController.isEditing(listViewModel)
-                : !listViewModel.getEditingItemData();
+        const noEdit = !(this._editInPlaceController && this._editInPlaceController.getEditingItem());
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
         const noDataBeforeReload = this._noDataBeforeReload;
@@ -4024,8 +3970,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
 
-        if (this._editInPlace) {
-            this._editInPlace.beginEditByClick(e, item, originalEvent);
+        const canEditByClick = this._getEditingConfig().editOnClick && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`);
+        if (canEditByClick) {
+            e.stopPropagation();
+            this.beginEdit({ item }).then((result) => {
+                if (!(result && result.canceled)) {
+                    this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
+                }
+                return result;
+            });
+        } else if (this._editInPlaceController) {
+            this.commitEdit();
         }
         // При клике по элементу может случиться 2 события: itemClick и itemActivate.
         // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
@@ -4042,57 +3997,344 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    beginEdit(options) {
-        _private.closeSwipe(this);
-        return this._options.readOnly ? Deferred.fail() : this._editInPlace.beginEdit(options);
+    // region EditInPlace
+
+    _editInPlaceController: null,
+    _editInPlaceInputHelper: null,
+
+    _getEditInPlaceController(): EditInPlaceController {
+        if (!this._editInPlaceController) {
+            this._editInPlaceController = this._createEditInPlaceController();
+        }
+        return this._editInPlaceController;
     },
 
-    beginAdd(options) {
-        if (this._options.readOnly) {
-            return Deferred.fail();
-        } else {
-            return this._editInPlace.beginAdd(options).then((addResult) => {
+    _createEditInPlaceController(): EditInPlaceController {
+        this._editInPlaceInputHelper = new EditInPlaceInputHelper();
 
-                // TODO: https://online.sbis.ru/opendoc.html?guid=b8a501c1-6148-4b6a-aba8-2b2e4365ec3a
-                const addingPosition = this._options.editingConfig.addPosition === 'top' ? 0 : (this.getViewModel().getCount() - 1);
-                const isPositionInRange = addingPosition >= this.getViewModel().getStartIndex() && addingPosition < this.getViewModel().getStopIndex();
-                const targetDispItem = this.getViewModel().at(addingPosition);
-                const targetItem = targetDispItem && targetDispItem.getContents();
-                const targetItemKey = targetItem && targetItem.getKey ? targetItem.getKey() : null;
-                if (!isPositionInRange && targetItemKey !== null) {
-                    return _private.scrollToItem(this, targetItemKey, false, true).then(() => Promise.resolve(addResult));
-                } else {
-                    return Promise.resolve(addResult);
+        return new EditInPlaceController({
+            collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
+            onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
+            onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
+            onBeforeEndEdit: this._beforeEndEditCallback.bind(this),
+            onAfterEndEdit: this._afterEndEditCallback.bind(this)
+        });
+    },
+
+    _beforeBeginEditCallback(options: { item?: Model}, isAdd: boolean) {
+        return new Promise((resolve) => {
+            // Редактирование может запуститься при построении.
+            const eventResult = this._isMounted ? this._notify('beforeBeginEdit', [options, isAdd]) : undefined;
+
+            if (this._savedItemClickArgs && this._isMounted) {
+                // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
+                // обязательно должен случиться после события beforeBeginEdit.
+                this._notify('itemClick', this._savedItemClickArgs, {bubbling: true});
+            }
+
+            resolve(eventResult);
+        }).then((result) => {
+
+            if (result === CONSTANTS.CANCEL) {
+                if (this._savedItemClickArgs && this._isMounted) {
+                    // Запись становится активной по клику, если не началось редактирование.
+                    // Аргументы itemClick сохранены в состояние и используются для нотификации об активации элемента.
+                    this._notify('itemActivate', this._savedItemClickArgs, {bubbling: true});
                 }
-            });
+                return result;
+            }
+
+            if (isAdd && !((options && options.item) instanceof Model) && !((result && result.item) instanceof Model)) {
+                return this.getSourceController().create().then((item) => {
+                    if (item instanceof Model) {
+                        return {item};
+                    }
+                    throw Error('BaseControl::create before add error! Source returned non Model.');
+                }).catch((error: Error) => {
+                    return this._processEditInPlaceError(error);
+                });
+            }
+
+            return result;
+        }).finally(() => {
+            this._savedItemClickArgs = null;
+        });
+    },
+
+    _afterBeginEditCallback(item: Model, isAdd: boolean): void {
+        // Редактирование может запуститься при построении.
+        if (this._isMounted) {
+            this._notify('afterBeginEdit', [item, isAdd]);
+
+            if (this._listViewModel.getCount() > 1) {
+                this.setMarkedKey(item.getKey());
+            }
+        }
+
+        item.subscribe('onPropertyChange', this._resetValidation);
+        /*
+         * TODO: KINGO
+         * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
+         * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
+         * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
+         * _canUpdateItemsActions приведет к показу неактуальных операций.
+         */
+        _private.updateItemActions(this, this._options);
+    },
+
+    _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean) {
+        return Promise.resolve().then(() => {
+            if (willSave) {
+                return this._validateController.submit().then((validationResult) => {
+                    for (const key in validationResult) {
+                        if (validationResult.hasOwnProperty(key) && validationResult[key]) {
+                            return CONSTANTS.CANCEL;
+                        }
+                    }
+                });
+            }
+        }).then((result) => {
+            if (result === CONSTANTS.CANCEL) {
+                return result;
+            }
+            const eventResult = this._notify('beforeEndEdit', [item, willSave, isAdd]);
+
+            // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
+            // Пользовательское сохранение потенциально может начаться только если вернули Promise
+            const shouldUseDefaultSaving = willSave && (isAdd || item.isChanged()) && (
+                !eventResult || (
+                    eventResult !== CONSTANTS.CANCEL && !(eventResult instanceof Promise)
+                )
+            );
+
+            return shouldUseDefaultSaving ? this._saveEditingInSource(item, isAdd) : eventResult;
+        });
+    },
+
+    _afterEndEditCallback(item: Model, isAdd: boolean): void {
+        this._notify('afterEndEdit', [item, isAdd]);
+        item.unsubscribe('onPropertyChange', this._resetValidation);
+        _private.updateItemActions(this, this._options);
+    },
+
+    _resetValidation() {
+        this._validateController.setValidationResult(null);
+    },
+
+    getEditingItem(): Model {
+        return this._editInPlaceController?.getEditingItem();
+    },
+
+    _startInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
+        const isAdd = !this._items.getRecordById(editingConfig.item.getKey());
+        if (isAdd) {
+            return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition );
+        } else {
+            return this.beginEdit({ item: editingConfig.item });
         }
     },
 
+    beginEdit(options) {
+        if (this._options.readOnly) {
+            return Promise.reject('Control is in readOnly mode.');
+        }
+        _private.closeSwipe(this);
+        this.showIndicator();
+        return this._getEditInPlaceController().edit(options && options.item).then((result) => {
+            if (!(result && result.canceled)) {
+                this._editInPlaceInputHelper.shouldActivate();
+            }
+            return result;
+        }).finally(() => {
+            this.hideIndicator();
+        });
+    },
+
+    beginAdd(options) {
+        return this._beginAdd(options, this._getEditingConfig().addPosition);
+    },
+
+    _beginAdd(options, addPosition) {
+        if (this._options.readOnly) {
+            return Promise.reject('Control is in readOnly mode.');
+        }
+        _private.closeSwipe(this);
+        this.showIndicator();
+        return this._getEditInPlaceController().add(options && options.item, addPosition).then((addResult) => {
+            if (addResult && addResult.canceled) {
+                return addResult;
+            }
+            this._editInPlaceInputHelper.shouldActivate();
+            if (!this._isMounted) {
+                return addResult;
+            }
+            // TODO: https://online.sbis.ru/opendoc.html?guid=b8a501c1-6148-4b6a-aba8-2b2e4365ec3a
+            const addingPosition = addPosition === 'top' ? 0 : (this.getViewModel().getCount() - 1);
+            const isPositionInRange = addingPosition >= this.getViewModel().getStartIndex() && addingPosition < this.getViewModel().getStopIndex();
+            const targetDispItem = this.getViewModel().at(addingPosition);
+            const targetItem = targetDispItem && targetDispItem.getContents();
+            const targetItemKey = targetItem && targetItem.getKey ? targetItem.getKey() : null;
+            if (!isPositionInRange && targetItemKey !== null) {
+                return _private.scrollToItem(this, targetItemKey, false, true).then(() => addResult);
+            } else {
+                return addResult;
+            }
+        }).finally(() => {
+            this.hideIndicator();
+        });
+    },
+
     cancelEdit() {
-        return this._options.readOnly ? Deferred.fail() : this._editInPlace.cancelEdit();
+        if (this._options.readOnly) {
+            return Promise.reject('Control is in readOnly mode.');
+        }
+        this.showIndicator();
+        return this._getEditInPlaceController().cancel().finally(() => {
+            this.hideIndicator();
+        });
     },
 
     commitEdit() {
-        return this._options.readOnly ? Deferred.fail() : this._editInPlace.commitEdit();
+        if (this._options.readOnly) {
+            return Promise.reject('Control is in readOnly mode.');
+        }
+        this.showIndicator();
+        return this._getEditInPlaceController().commit().finally(() => {
+            this.hideIndicator();
+        });
     },
 
-    /**
-     * Обработка нажатия на кнопку "сохранить"
-     * TODO вроде делает то же самое, что commitEdit
-     * @private
-     */
-    _commitEditActionHandler(): void {
-        this._editInPlace.commitAndMoveNextRow();
+    _commitEditActionHandler(e, collectionItem) {
+        return this.commitEdit().then((result) => {
+            if (result && result.canceled) {
+                return result;
+            }
+            const editingConfig = this._getEditingConfig();
+            if (editingConfig.autoAddByApplyButton && collectionItem.isAdd) {
+                return this._beginAdd({}, editingConfig.addPosition);
+            } else {
+                return result;
+            }
+        });
     },
 
-    /**
-     * Обработка нажатия на кнопку "отмена"
-     * TODO вроде делает то же самое, что cancelEdit
-     * @private
-     */
-    _cancelEditActionHandler(): void {
-        this._editInPlace.cancelEdit();
+    _cancelEditActionHandler(e, collectionItem) {
+        return this.cancelEdit();
     },
+
+    _onEditingRowKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent) {
+        const editNext = (item, editingConfig, direction: 'top' | 'bottom') => {
+            this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, direction);
+            const shouldAdd = !item && !!editingConfig.autoAdd && editingConfig.addPosition === direction;
+            return this._tryContinueEditing(!!item, shouldAdd, item);
+        };
+
+        switch (nativeEvent.keyCode) {
+            case 13: // Enter
+                return this._editingRowEnterHandler(e);
+            case 27: // Esc
+                // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
+                e.stopPropagation();
+                return this.cancelEdit();
+            case 38: // ArrowUp
+                const prev = this._getEditInPlaceController().getPrevEditableItem();
+                return editNext(!!prev && prev.contents, this._getEditingConfig(), 'top');
+            case 40: // ArrowDown
+                const next = this._getEditInPlaceController().getNextEditableItem();
+                return editNext(!!next && next.contents, this._getEditingConfig(), 'bottom');
+        }
+    },
+
+    _editingRowEnterHandler(e: SyntheticEvent<KeyboardEvent>) {
+        const editingConfig = this._getEditingConfig();
+        const next = this._getEditInPlaceController().getNextEditableItem();
+        const shouldEdit = editingConfig.sequentialEditing && !!next;
+        const shouldAdd = !next && !shouldEdit && !!editingConfig.autoAdd && editingConfig.addPosition === 'bottom';
+        return this._tryContinueEditing(shouldEdit, shouldAdd, next && next.contents);
+    },
+
+    _onRowDeactivated(e: SyntheticEvent, eventOptions: any): void {
+        e.stopPropagation();
+
+        if (eventOptions.isTabPressed) {
+            const editingConfig = this._getEditingConfig();
+            let next;
+            let shouldEdit;
+            let shouldAdd;
+
+            if (eventOptions.isShiftKey) {
+                next = this._getEditInPlaceController().getPrevEditableItem();
+                shouldEdit = !!next;
+                shouldAdd = editingConfig.autoAdd && !next && !shouldEdit && editingConfig.addPosition === 'top';
+            } else {
+                next = this._getEditInPlaceController().getNextEditableItem();
+                shouldEdit = !!next;
+                shouldAdd = editingConfig.autoAdd && !next && !shouldEdit && editingConfig.addPosition === 'bottom';
+            }
+            return this._tryContinueEditing(shouldEdit, shouldAdd, next && next.contents);
+        }
+    },
+
+    _tryContinueEditing(shouldEdit, shouldAdd, item?: Model) {
+        return this.commitEdit().then((result) => {
+            if (result && result.canceled) {
+                return result;
+            }
+            if (shouldEdit) {
+                return this.beginEdit({ item });
+            } else if (shouldAdd) {
+                return this._beginAdd({}, this._getEditingConfig().addPosition);
+            }
+        });
+    },
+
+    _saveEditingInSource(item: Model, isAdd: boolean): Promise<void> {
+        return this.getSourceController().update(item).then(() => {
+            // После выделения слоя логики работы с источником данных в отдельный контроллер,
+            // код ниже должен переехать в него.
+            if (isAdd) {
+                this._items.append([item]);
+            }
+        }).catch((error: Error) => {
+            return this._processEditInPlaceError(error);
+        });
+    },
+
+    _getEditingConfig(options = this._options): Required<IEditableListOption['editingConfig']> {
+        const editingConfig = options.editingConfig || {};
+        const addPosition = editingConfig.addPosition === 'top' ? 'top' : 'bottom';
+
+        return {
+            editOnClick: !!editingConfig.editOnClick,
+            sequentialEditing: editingConfig.sequentialEditing !== false,
+            addPosition,
+            item: editingConfig.item,
+            autoAdd: !!editingConfig.autoAdd,
+            autoAddByApplyButton: !!editingConfig.autoAddByApplyButton,
+            toolbarVisibility: !!editingConfig.toolbarVisibility
+        };
+    },
+
+    _processEditInPlaceError(error) {
+        /*
+         * в detail сейчас в многих местах редактирования по месту приходит текст из запроса
+         * Не будем его отображать
+         * TODO Убрать после закрытия задачи по написанию документа по правильному формированию текстов ошибок
+         *  https://online.sbis.ru/doc/c8ff58ac-e6f7-4f0e-877a-e9cbbe661139
+         */
+        delete error.details;
+
+        return this.__errorController.process({
+            error,
+            theme: this._options.theme,
+            mode: dataSourceError.Mode.dialog
+        }).then((errorConfig: dataSourceError.ViewConfig) => {
+            this.__errorContainer.show(errorConfig);
+            return Promise.reject(error);
+        });
+    },
+
+    // endregion
 
     /**
      * Инициализирует опции при mouseenter в шаблоне контрола
@@ -4607,29 +4849,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
         }
         return diCreate(modelName, {...modelConfig, collection: items});
-    },
-
-    _onEditingRowKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent): void {
-        if (this._editInPlace) {
-            switch (nativeEvent.keyCode) {
-                case 13: // Enter
-                    // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
-                    this._editInPlace.editNextRow();
-                    e.stopPropagation();
-                    break;
-                case 27: // Esc
-                    // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
-                    e.stopPropagation();
-                    return this._editInPlace.cancelEdit();
-                    break;
-            }
-        }
-    },
-
-    _onRowDeactivated(e: SyntheticEvent, eventOptions: any): void {
-        if (this._editInPlace) {
-            this._editInPlace.onRowDeactivated(e, eventOptions);
-        }
     },
 
     _stopBubblingEvent(event: SyntheticEvent<Event>): void {
