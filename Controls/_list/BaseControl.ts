@@ -4464,10 +4464,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // При редактировании по месту маркер появляется только если в списке больше одной записи.
         // https://online.sbis.ru/opendoc.html?guid=e3ccd952-cbb1-4587-89b8-a8d78500ba90
-        // Если идет перемещение записей, то маркер ставим после завершения перемещения
         let canBeMarked = this._mouseDownItemKey === key
-            && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1))
-            && !this._dndListController?.isDragging();
+            && (!this._options.editingConfig || (this._options.editingConfig && this._items.getCount() > 1));
 
         // TODO изабвиться по задаче https://online.sbis.ru/opendoc.html?guid=f7029014-33b3-4cd6-aefb-8572e42123a2
         // Колбэк передается из explorer.View, чтобы не проставлять маркер перед проваливанием в узел
@@ -5147,22 +5145,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // endDrag нужно вызывать только после события dragEnd,
         // чтобы не было прыжков в списке, если асинхронно меняют порядок элементов
         if (this._dndListController) {
-            const draggableItem = this._dndListController.getDraggableItem();
             if (dragEndResult instanceof Promise) {
                 _private.showIndicator(this);
                 dragEndResult.finally(() => {
                     this._dndListController.endDrag();
-
-                    if (draggableItem) {
-                        this.setMarkedKey(draggableItem.getContents().getKey());
-                    }
                     _private.hideIndicator(this);
                 });
             } else {
                 this._dndListController.endDrag();
-                if (draggableItem) {
-                    this.setMarkedKey(draggableItem.getContents().getKey());
-                }
             }
         }
     },
