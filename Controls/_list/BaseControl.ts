@@ -2090,7 +2090,7 @@ const _private = {
 
         const strategy = this.createSelectionStrategy(
             options,
-            self._listViewModel.getDisplay().getItems(),
+            self._listViewModel.getItems(),
             self._items.getMetaData()['ENTRY_PATH']
         );
 
@@ -2111,7 +2111,7 @@ const _private = {
             searchValue: newOptions.searchValue,
             strategyOptions: this.getSelectionStrategyOptions(
                 newOptions,
-                self._listViewModel.getDisplay().getItems(),
+                self._listViewModel.getItems(),
                 self._items.getMetaData()['ENTRY_PATH']
             )
         });

@@ -98,7 +98,7 @@ export class Controller {
    restoreSelection(): void {
       // На этот момент еще может не сработать update, поэтому нужно обновить items в стратегии
       // TODO при переходе на новую модель изменить просто на this._model.getItems()
-      this._strategy.setItems(this._model.getDisplay().getItems());
+      this._strategy.setItems(this._model.getItems());
       this._updateModel(this._selection, true);
    }
 
@@ -205,8 +205,7 @@ export class Controller {
     * @return {ISelectionControllerResult}
     */
    handleResetItems(): ISelectionControllerResult {
-      // TODO при переходе на новую модель изменить просто на this._model.getItems()
-      this._strategy.setItems(this._model.getDisplay().getItems());
+      this._strategy.setItems(this._model.getItems());
       this._updateModel(this._selection);
       return this._getResult(this._selection, this._selection);
    }
