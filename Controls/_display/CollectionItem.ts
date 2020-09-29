@@ -498,6 +498,16 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
+    /**
+     * Возвращает строку с классами, устанавливаемыми в шаблоне элемента для корневого div'а.
+     * @param templateHighlightOnHover - подсвечивать или нет запись по ховеру
+     * @param theme - используемая тема
+     * @param cursor - курсор мыши
+     * @param backgroundColorStyle - стиль background
+     * @param style - режим отображения списка (master/masterClassic/default)
+     * @remark
+     * Метод должен уйти в render-модель при её разработке.
+     */
     getWrapperClasses(templateHighlightOnHover: boolean = true,
                       theme?: string,
                       cursor: string = 'pointer',
@@ -533,6 +543,14 @@ export default class CollectionItem<T> extends mixin<
         return itemActionClasses;
     }
 
+    /**
+     * Возвращает строку с классами, устанавливаемыми в шаблоне элемента div'а, расположенного внутри корневого div'a -
+     * так называемого контентного div'a.
+     * @param theme - используемая тема
+     * @param style - режим отображения списка (master/masterClassic/default)
+     * @remark
+     * Метод должен уйти в render-модель при её разработке.
+     */
     getContentClasses(theme: string, style: string = 'default'): string {
         const rowSeparatorSize = this.getOwner().getRowSeparatorSize();
         return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
