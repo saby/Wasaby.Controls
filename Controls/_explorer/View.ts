@@ -567,8 +567,7 @@ var
             this._navigation = cfg.navigation;
          }
 
-         if ((isViewModeChanged && (isSearchViewMode || isRootChanged)) ||
-             this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
+         if ((isViewModeChanged && isRootChanged) || this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
             // Если меняется и root и viewMode, не меняем режим отображения сразу,
             // потому что тогда мы перерисуем explorer в новом режиме отображения
             // со старыми записями, а после загрузки новых получим еще одну перерисовку.

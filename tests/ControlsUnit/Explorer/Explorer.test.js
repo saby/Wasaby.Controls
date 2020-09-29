@@ -466,17 +466,13 @@ define([
             instance._viewMode = cfg.viewMode;
 
             instance._beforeUpdate(cfg2);
-            assert.equal(instance._pendingViewMode, 'search');
-            assert.isFalse(resetExpandedItemsCalled);
-
-            explorerMod.View._private.itemsSetCallback(instance);
             assert.isTrue(resetExpandedItemsCalled);
 
             resetExpandedItemsCalled = false;
             instance._viewMode = cfg2.viewMode;
 
             instance._beforeUpdate(cfg2);
-            assert.isFalse(resetExpandedItemsCalled);
+            assert.isTrue(resetExpandedItemsCalled);
 
             instance._isGoingFront = true;
             instance.saveOptions(cfg);
