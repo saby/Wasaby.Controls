@@ -24,7 +24,6 @@ import {isEqual} from 'Types/object';
 // @ts-ignore
 import * as cInstance from 'Core/core-instance';
 import {TArrayGroupId} from 'Controls/_list/Controllers/Grouping';
-import {SyntheticEvent} from 'UI/Vdom';
 
 export interface IControllerState {
     keyProperty: string;
@@ -146,11 +145,11 @@ export default class Controller {
             this._filter = newOptions.filter;
         }
 
-        if (newOptions.parentProperty !== this._options.parentProperty) {
+        if (newOptions.hasOwnProperty('parentProperty') && newOptions.parentProperty !== this._options.parentProperty) {
             this.setParentProperty(newOptions.parentProperty);
         }
 
-        if (newOptions.root !== this._options.root) {
+        if (newOptions.hasOwnProperty('root') && newOptions.root !== this._options.root) {
             this.setRoot(newOptions.root);
         }
 
@@ -372,17 +371,13 @@ export default class Controller {
             if (parentProperty) {
                 resultFilter = {...initialFilter};
 
-                if (rootForFilter) {
-                    resultFilter[parentProperty] = rootForFilter;
-                }
-
                 if (expandedItemsForFilter?.length && expandedItemsForFilter?.[0] !== null && deepReload) {
                     resultFilter[parentProperty] = Array.isArray(resultFilter[parentProperty]) ?
                         resultFilter[parentProperty] :
                         [];
                     resultFilter[parentProperty].push(rootForFilter);
                     resultFilter[parentProperty] = resultFilter[parentProperty].concat(expandedItemsForFilter);
-                } else {
+                } else if (rootForFilter !== undefined) {
                     resultFilter[parentProperty] = rootForFilter;
                 }
 
