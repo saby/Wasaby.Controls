@@ -471,7 +471,7 @@ var
 
    /**
     * @name Controls/_explorer/View#breadcrumbsDisplayMode
-    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#breadcrumbsDisplayMode}
+    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
     */
 
    /**
