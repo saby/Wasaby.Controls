@@ -1,0 +1,1069 @@
+import {_InputController} from 'Controls/suggest';
+import Deferred = require('Core/Deferred');
+import {assert} from 'chai';
+import {SyntheticEvent} from 'UI/Vdom';
+import {List, RecordSet} from 'Types/collection';
+import {constants} from 'Env/Env';
+import {load} from 'Core/library';
+import {Stack} from 'Controls/popup';
+import {Model} from 'Types/entity';
+import * as sinon from 'sinon';
+
+describe('Controls/suggest', () => {
+
+   describe('Controls.Container.Suggest.Layout', () => {
+      const IDENTIFICATORS = [1, 2, 3];
+
+      const getSearchResult = (hasMore, countItems) => {
+         return {
+            hasMore,
+            data: {
+               getCount: () => {
+                  return countItems;
+               }
+            }
+         };
+      };
+
+      const getComponentObject = (customOptions: object = {}) => {
+         const controller = new _InputController({});
+         const options = {
+            suggestTemplate: {},
+            footerTemplate: {}
+         };
+         controller.saveOptions({...options, ...customOptions});
+         return controller;
+      };
+
+      const getContainer = (size) => {
+         return {
+            getBoundingClientRect: () => {
+               return {
+                  toJSON: () => {
+                     return size;
+                  }
+               };
+            }
+         };
+      };
+
+      const getDropDownContainer = (height) => {
+         return {
+            getBoundingClientRect: () => {
+               return {
+                  bottom: 0,
+                  top: 0,
+                  height
+               };
+            }
+         };
+      };
+
+      const getRecentKeys = _InputController.prototype._getRecentKeys;
+
+      _InputController.prototype._getRecentKeys = () => {
+         return Deferred.success(IDENTIFICATORS);
+      };
+
+      _InputController.prototype._getHistoryService = () => {
+         return {
+            addCallback(func) {
+               func({
+                  update(item) {
+                     item._isUpdateHistory = true;
+                  }
+               });
+            }
+         };
+      };
+
+      it('Suggest::_getHistoryService', (done) => {
+         const controller = getComponentObject({
+            historyId: 'TEST_HISTORY_ID_GET_SOURCE'
+         });
+         controller._getHistoryService().addCallback((historyService) => {
+            assert.equal(12, historyService._$recent);
+            assert.equal('TEST_HISTORY_ID_GET_SOURCE', historyService._$historyId);
+            done();
+         });
+      });
+
+      it('Suggest::_suggestStateNotify', () => {
+         const inputContainer = getComponentObject({
+            suggestState: true
+         });
+         let stateNotifyed = false;
+         inputContainer._notify = (eventName, args) => {
+            stateNotifyed = true;
+         };
+         inputContainer._forceUpdate = () => {};
+         inputContainer._suggestStateNotify( true);
+         assert.isFalse(stateNotifyed);
+
+         inputContainer._suggestStateNotify(false);
+         assert.isTrue(stateNotifyed);
+      });
+
+      it('Suggest::_close', () => {
+         let state;
+         let isReady = true;
+         let isCallCancel = false;
+
+         const inputContainer = getComponentObject({
+            suggestState: true
+         });
+
+         inputContainer._notify = (eventName, args) => {
+            state = args[0];
+         };
+         inputContainer._dependenciesDeferred = {
+            isReady: () => isReady,
+            cancel: () => { isCallCancel = true; }
+         };
+         inputContainer._close();
+         assert.isFalse(state);
+         assert.isFalse(isCallCancel);
+
+         isReady = false;
+         inputContainer._close();
+         assert.isTrue(isCallCancel);
+         assert.equal(inputContainer._dependenciesDeferred, null);
+      });
+
+      it('Suggest::_closeHandler', () => {
+         const suggestComponent = new _InputController({});
+         let propagationStopped = false;
+         const event = {
+            stopPropagation: () => {
+               propagationStopped = true;
+            }
+         };
+         suggestComponent._loading = true;
+         suggestComponent._showContent = true;
+
+         suggestComponent._closeHandler(event);
+         assert.isTrue(propagationStopped);
+         assert.equal(suggestComponent._loading, null);
+         assert.equal(suggestComponent._showContent, false);
+      });
+
+      it('Suggest::_open', (done) => {
+         const inputContainer = getComponentObject({
+            suggestState: false
+         });
+         let state;
+
+         inputContainer._inputActive = true;
+         inputContainer._notify = (eventName, args) => {
+            state = args[0];
+         };
+         inputContainer._forceUpdate = () => {};
+         inputContainer._open();
+         inputContainer._dependenciesDeferred.addCallback(() => {
+            assert.isTrue(state);
+
+            state = false;
+            inputContainer._options.suggestState = false;
+            inputContainer._open();
+            inputContainer._inputActive = false;
+            inputContainer._dependenciesDeferred.addCallback(() => {
+               assert.isFalse(state);
+               done();
+            });
+         });
+      });
+
+      it('Suggest::_shouldShowSuggest', () => {
+         const inputContainer = getComponentObject();
+         const result = {
+            data: new List({items: [1, 2, 3]})
+         };
+         const emptyResult = {
+            data: new List()
+         };
+
+         // case 1. emptyTemplate - is null/undefined, searchValue - is empty string/null
+         assert.isTrue(!!inputContainer._shouldShowSuggest(result));
+         assert.isFalse(!!inputContainer._shouldShowSuggest(emptyResult));
+
+         // case 2. emptyTemplate is set, searchValue - is empty string/null
+         inputContainer._options.emptyTemplate = {};
+         assert.isTrue(!!inputContainer._shouldShowSuggest(result));
+         assert.isTrue(!!inputContainer._shouldShowSuggest(emptyResult));
+
+         // case 3. emptyTemplate is set, searchValue - is set
+         inputContainer._searchValue = 'test';
+         assert.isTrue(!!inputContainer._shouldShowSuggest(result));
+         assert.isTrue(!!inputContainer._shouldShowSuggest(emptyResult));
+
+         // case 4. emptyTemplate is set, search - is empty string, historyId is set
+         inputContainer._searchValue = '';
+         inputContainer._options.historyId = '123';
+         assert.isFalse(!!inputContainer._shouldShowSuggest(emptyResult));
+         assert.isTrue(!!inputContainer._shouldShowSuggest(result));
+
+         // emptyTemplate is set, search - is set, historyId is set
+         inputContainer._searchValue = '123';
+         inputContainer._options.historyId = '123';
+         assert.isTrue(!!inputContainer._shouldShowSuggest(emptyResult));
+         assert.isTrue(!!inputContainer._shouldShowSuggest(result));
+
+         inputContainer._tabsSelectedKey = 'testTab';
+         inputContainer._searchValue = '';
+         assert.isTrue(!!inputContainer._shouldShowSuggest(emptyResult));
+         assert.isTrue(!!inputContainer._shouldShowSuggest(result));
+
+         // case 6. emptyTemplate is null/undefined, search - is empty string, historyId is set
+         inputContainer._options.emptyTemplate = null;
+         assert.isFalse(!!inputContainer._shouldShowSuggest(emptyResult));
+         assert.isTrue(!!inputContainer._shouldShowSuggest(result));
+      });
+
+      it('Suggest::_prepareFilter', () => {
+         const inputContainer = getComponentObject();
+         const resultFilter = {
+            currentTab: 1,
+            searchParam: 'test',
+            filterTest: 'filterTest'
+         };
+
+         let filter = inputContainer._prepareFilter({filterTest: 'filterTest'}, 'searchParam',
+            'test', 3, 1, [1, 2]);
+         assert.deepEqual(filter, resultFilter);
+
+         const newFilter = {...resultFilter, ...{historyKeys: [1, 2]}};
+         filter = inputContainer._prepareFilter({filterTest: 'filterTest'}, 'searchParam',
+            'test', 20, 1, [1, 2]);
+         assert.deepEqual(filter, newFilter);
+      });
+
+      it('Suggest::_setFilter', () => {
+         const inputContainer = getComponentObject();
+         inputContainer._options.searchParam = 'searchParam';
+         inputContainer._searchValue = 'test';
+         inputContainer._tabsSelectedKey = 1;
+         const filter = {
+            test: 'test'
+         };
+         const resultFilter = {
+            searchParam: 'test',
+            test: 'test',
+            currentTab: 1
+         };
+         inputContainer._setFilter(filter, inputContainer._options);
+         assert.deepEqual(inputContainer._filter, resultFilter);
+         // TODO: Нужен кейс на sourceController().setFilter?
+      });
+
+      it('Suggest::_loadStart', () => {
+         const inputContainer = new _InputController({});
+         let isCallShowIndicator = false;
+         let isCallHideIndicator = false;
+         let errorFired = false;
+
+         inputContainer._children.indicator = {
+            show: () => isCallShowIndicator = true,
+            hide: () => isCallHideIndicator = true
+         };
+
+         inputContainer._loadStart();
+         assert.isTrue(inputContainer._loading);
+         assert.isTrue(isCallShowIndicator);
+         assert.isTrue(isCallHideIndicator);
+
+         inputContainer._children = {};
+         try {
+            inputContainer._loadStart();
+         } catch (e) {
+            errorFired = true;
+         }
+         assert.isFalse(errorFired);
+      });
+
+      it('Suggest::_loadEnd', () => {
+         const inputContainer = new _InputController({
+            searchDelay: 300,
+            suggestState: true
+         });
+         let errorFired = false;
+
+         inputContainer._loading = null;
+         inputContainer._searchDelay = 0;
+         inputContainer._children = {};
+
+         try {
+            inputContainer._loadEnd();
+         } catch (e) {
+            errorFired = true;
+         }
+
+         assert.equal(options.searchDelay, inputContainer._searchDelay);
+         assert.isFalse(errorFired);
+         assert.equal(inputContainer._loading, null);
+
+         inputContainer._loading = true;
+         inputContainer._loadEnd();
+         assert.equal(inputContainer._loading, null);
+
+         inputContainer._loading = true;
+         inputContainer._loadEnd({
+            data: new RecordSet({items: [1]})
+         });
+         assert.isFalse(inputContainer._loading);
+
+         inputContainer._destroyed = true;
+         inputContainer._searchDelay = 'testDelay';
+         inputContainer._loadEnd();
+         assert.notEqual(options.searchDelay, inputContainer._searchDelay);
+
+         inputContainer._destroyed = false;
+         inputContainer._showContent = true;
+         inputContainer._loadEnd(null);
+         assert.isFalse(inputContainer._showContent);
+      });
+
+      it('Suggest::_searchErrback', () => {
+         const inputContainer = getComponentObject();
+         let isIndicatorVisible = true;
+         inputContainer._forceUpdate = () => {};
+         inputContainer._children = {};
+         inputContainer._children.indicator = {
+            hide: () => {
+               isIndicatorVisible = false;
+            }
+         };
+
+         inputContainer._loading = null;
+         inputContainer._searchErrback({canceled: true});
+         assert.isTrue(inputContainer._loading === null);
+
+         inputContainer._loading = true;
+         inputContainer._searchErrback({canceled: true});
+         assert.isFalse(inputContainer._loading);
+
+         inputContainer._loading = true;
+         inputContainer._searchErrback({canceled: false});
+         assert.isFalse(isIndicatorVisible);
+         assert.isFalse(inputContainer._loading);
+      });
+
+      it('Suggest::_searchErrback without children', () => {
+         const inputContainer = getComponentObject();
+         inputContainer._children = {};
+
+         inputContainer._loading = true;
+         inputContainer._searchErrback({canceled: false});
+         assert.isFalse(inputContainer._loading);
+      });
+
+      it('Suggest::searchErrback', () => {
+         const suggest = new _InputController({});
+         suggest._loading = true;
+         suggest._searchErrback({canceled: true});
+         assert.isFalse(suggest._loading);
+      });
+
+      it('Suggest::check footer template', () => {
+         let footerTpl;
+         const compat = constants.compat;
+         constants.compat = true;
+
+         return load('Controls/suggestPopup').then((result) => {
+            footerTpl = result.FooterTemplate;
+            assert.equal(footerTpl(), '<div class="controls-Suggest__footer"></div>');
+            assert.equal(footerTpl({
+               showMoreButtonTemplate: 'testShowMore'
+            }), '<div class="controls-Suggest__footer">testShowMore</div>');
+            assert.equal(footerTpl({
+               showMoreButtonTemplate: 'testShowMore',
+               showSelectorButtonTemplate: 'testShowSelector'
+            }), '<div class="controls-Suggest__footer">testShowMoretestShowSelector</div>');
+         }).finally(() => {
+            constants.compat = compat;
+         });
+      });
+
+      it('Suggest::_showAllClick', () => {
+         const suggest = new _InputController({});
+         let stackOpened = false;
+         const eventResult = false;
+         let openCfg;
+
+         suggest._notify = (event, options) => {
+            openCfg = options;
+            return eventResult;
+         };
+         suggest._showContent = true;
+         Stack.openPopup = () => {
+            stackOpened = true;
+         };
+
+         suggest._options.suggestTemplate = {
+            templateName: 'test',
+            templateOptions: {}
+         };
+
+         suggest._showAllClick();
+
+         assert.isFalse(stackOpened);
+         assert.isFalse(suggest._showContent);
+         assert.isTrue(!!openCfg);
+      });
+
+      it('Suggest::_moreClick', () => {
+         let isNotifyShowSelector = false;
+         const suggest = new _InputController({});
+
+         Stack.openPopup = () => {};
+
+         suggest._options.suggestTemplate = {
+            templateName: 'test',
+            templateOptions: {}
+         };
+
+         suggest._notify = (eventName, data) => {
+            if (eventName === 'showSelector') {
+               isNotifyShowSelector = true;
+               assert.deepEqual(data[0].templateOptions.filter, suggest._filter);
+            }
+         };
+         suggest._filter = {};
+         suggest._moreClick();
+         assert.isTrue(isNotifyShowSelector);
+      });
+
+      it('Suggest::_inputActivated/_inputClicked with autoDropDown', () => {
+         const inputContainer = getComponentObject({
+            searchParam: 'searchParam',
+            autoDropDown: true,
+            minSearchLength: 3,
+            readOnly: true,
+            historyId: 'testFieldHistoryId',
+            keyProperty: 'Identificator'
+         });
+         let suggestState = false;
+         const event = {
+            stopPropagation: () => {}
+         };
+
+         if (!document) {
+            inputContainer._getActiveElement = () => {
+               return {
+                  classList: {
+                     contains: () => {
+                        return false;
+                     }
+                  }
+               };
+            };
+         }
+
+         inputContainer._searchDelay = 300;
+         inputContainer.saveOptions(inputContainer._options);
+         inputContainer._setFilter({}, inputContainer._options);
+         inputContainer._notify = (event, val) => {
+            if (event === 'suggestStateChanged') {
+               suggestState = val[0] as boolean;
+            }
+         };
+
+         inputContainer._inputActivated();
+         assert.equal(inputContainer._searchDelay, 300);
+         inputContainer._options.readOnly = false;
+
+         return new Promise((resolve) => {
+            inputContainer._inputActivated();
+            assert.equal(inputContainer._searchDelay, 0);
+
+            inputContainer._dependenciesDeferred.addCallback(() => {
+               assert.isTrue(suggestState);
+               assert.deepEqual(inputContainer._filter.historyKeys, IDENTIFICATORS);
+
+               inputContainer._changeValueHandler(null, '');
+               assert.isTrue(suggestState);
+               assert.equal(inputContainer._searchValue, '');
+
+               inputContainer._close(event);
+               inputContainer._filter = {};
+               inputContainer._inputClicked();
+
+               inputContainer._dependenciesDeferred.addCallback(() => {
+                  assert.isTrue(suggestState);
+                  assert.deepEqual(inputContainer._filter.historyKeys, IDENTIFICATORS);
+
+                  inputContainer._close(event);
+                  inputContainer._options.readOnly = true;
+                  inputContainer._inputActivated();
+                  inputContainer._dependenciesDeferred.addCallback(() => {
+                     assert.isFalse(suggestState);
+
+                     inputContainer._inputClicked();
+                     inputContainer._dependenciesDeferred.addCallback(() => {
+                        assert.isFalse(suggestState);
+
+                        inputContainer._options.historyId = '';
+                        inputContainer._filter = {};
+                        inputContainer._options.readOnly = false;
+                        inputContainer._inputActivated();
+
+                        inputContainer._dependenciesDeferred.addCallback(() => {
+                           assert.isTrue(suggestState);
+                           assert.deepEqual(inputContainer._filter, {searchParam: ''});
+
+                           inputContainer._options.suggestState = true;
+                           inputContainer._filter = {};
+                           inputContainer._inputActivated();
+
+                           inputContainer._dependenciesDeferred.addCallback(() => {
+                              assert.deepEqual(inputContainer._filter, {});
+
+                              suggestState = false;
+                              inputContainer._options.suggestState = false;
+                              inputContainer._options.validationStatus = 'invalid';
+                              inputContainer._inputActivated();
+
+                              assert.isFalse(suggestState, 'suggest opened on activated with validationStatus: "invalid"');
+
+                              inputContainer._options.autoDropDown = false;
+                              inputContainer._options.validationStatus = 'valid';
+                              inputContainer._options.historyId = 'test';
+
+                              const sandBox = sinon.createSandbox();
+                              sandBox.replace(inputContainer, 'getRecentKeys', () => {
+                                 inputContainer._historyLoad = Promise.resolve(['test']);
+                                 return inputContainer._historyLoad;
+                              });
+
+                              inputContainer._inputActivated();
+                              sandBox.restore();
+                              inputContainer._historyLoad.addCallback(() => {
+                                 assert.isTrue(suggestState);
+                                 resolve();
+                              });
+                           });
+                        });
+                     });
+                  });
+               });
+            });
+         });
+      });
+
+      it('Suggest::_changeValueHandler', () => {
+         const suggestComponent = getComponentObject({
+            searchParam: 'searchParam',
+            keyProperty: 'Identificator',
+            minSearchLength: 3,
+            searchDelay: 300
+         });
+
+         suggestComponent._inputActive = true;
+         suggestComponent._searchDelay = 0;
+
+         suggestComponent._changeValueHandler(null, 't');
+         assert.equal(suggestComponent._searchValue, '');
+         assert.equal(suggestComponent._searchDelay, 300);
+
+         suggestComponent._changeValueHandler(null, 'te');
+         assert.equal(suggestComponent._searchValue, '');
+
+         suggestComponent._changeValueHandler(null, 'test');
+         assert.equal(suggestComponent._searchValue, 'test');
+
+         suggestComponent._options.trim = true;
+         suggestComponent._changeValueHandler(null, '  ');
+         assert.equal(suggestComponent._searchValue, '');
+
+         suggestComponent._options.historyId = 'testFieldHistoryId';
+         suggestComponent._options.autoDropDown = true;
+         suggestComponent._changeValueHandler(null, 'te');
+         assert.equal(suggestComponent._searchValue, '');
+         assert.deepEqual(suggestComponent._filter.historyKeys, IDENTIFICATORS);
+
+         suggestComponent._options.historyId = '';
+         suggestComponent._changeValueHandler(null, 'test');
+         assert.deepEqual(suggestComponent._filter, {searchParam: 'test'});
+
+         suggestComponent._changeValueHandler(null, 'te');
+         assert.deepEqual(suggestComponent._filter, {searchParam: '', historyKeys: IDENTIFICATORS});
+      });
+
+      it('Suggest::_loadDependencies', (done) => {
+         const inputContainer = getComponentObject();
+         const options = {
+            footerTemplate: 'test',
+            suggestTemplate: 'test',
+            emptyTemplate: 'test'
+         };
+         inputContainer._loadDependencies(options).addCallback(() => {
+            assert.isTrue(inputContainer._dependenciesDeferred.isReady());
+         });
+
+         const dep = inputContainer._dependenciesDeferred;
+         inputContainer._getTemplatesToLoad = () => [];
+         inputContainer._loadDependencies(options).addCallback(() => {
+            assert.deepEqual(inputContainer._dependenciesDeferred, dep);
+            done();
+         });
+      });
+
+      it('Suggest::_processResultData', () => {
+         const inputContainer = getComponentObject();
+         const queryRecordSet = new RecordSet({
+            rawData: [{id: 1}, {id: 2}, {id: 3}],
+            keyProperty: 'id'
+         });
+
+         inputContainer._notify = () => {};
+         inputContainer._searchValue = 'notEmpty';
+
+         queryRecordSet.setMetaData({
+            results: new Model({
+               rawData: {
+                  tabsSelectedKey: 'testId',
+                  switchedStr: 'testStr'
+               }
+            }),
+            more: 10
+         });
+
+         inputContainer._processResultData(queryRecordSet);
+
+         assert.equal(inputContainer._searchResult, queryRecordSet);
+         assert.equal(inputContainer._tabsSelectedKey, 'testId');
+         assert.equal(inputContainer._misspellingCaption, 'testStr');
+         assert.equal(inputContainer._moreCount, 7);
+
+         const queryRecordSetEmpty = new RecordSet();
+         queryRecordSetEmpty.setMetaData({
+            results: new Model({
+               rawData: {
+                  tabsSelectedKey: 'testId2',
+                  switchedStr: 'testStr2'
+               }
+            })
+         });
+         inputContainer._suggestMarkedKey = 'test';
+         inputContainer._processResultData(queryRecordSetEmpty);
+
+         assert.equal(inputContainer._suggestMarkedKey, null);
+         assert.notEqual(inputContainer._searchResult, queryRecordSet);
+         assert.equal(inputContainer._searchResult, queryRecordSetEmpty);
+         assert.equal(inputContainer._tabsSelectedKey, 'testId2');
+         assert.equal(inputContainer._misspellingCaption, 'testStr2');
+      });
+
+      it('Suggest::_tabsSelectedKeyChanged', () => {
+         const suggestComponent = new _InputController({});
+         let suggestActivated = false;
+         let updated = false;
+         suggestComponent.activate = () => {
+            suggestActivated = true;
+         };
+         suggestComponent._forceUpdate = () => {
+            updated = true;
+         };
+         suggestComponent._filter = {};
+         suggestComponent._filter.currentTab = null;
+         suggestComponent._tabsSelectedKey = 'checkChanged';
+
+         /* tabSelectedKey not changed, filter must be not changed too */
+         suggestComponent._tabsSelectedKeyChanged('checkChanged');
+         assert.equal(suggestComponent._filter.currentTab, null);
+         assert.isTrue(updated);
+
+         /* tabSelectedKey changed, filter must be changed */
+         suggestComponent._suggestMarkedKey = 'test';
+         suggestComponent._tabsSelectedKeyChanged('test');
+         assert.equal(suggestComponent._filter.currentTab, 'test');
+         assert.isTrue(suggestActivated);
+         assert.isTrue(suggestComponent._suggestMarkedKey === null);
+      });
+
+      it('Suggest::searchDelay on tabChange', () => {
+         const suggestComponent = new _InputController({});
+         suggestComponent.activate = () => {};
+
+         suggestComponent._tabsSelectedKeyChanged('test');
+         assert.equal(suggestComponent._searchDelay, 0);
+      });
+
+      it('Suggest::_beforeMount', () => {
+         const suggestComponent = new _InputController({});
+
+         suggestComponent._beforeMount({
+            searchParam: 'title',
+            minSearchLength: 3,
+            filter: {test: 5},
+            value: '123'
+         });
+
+         assert.deepEqual(suggestComponent._filter, {
+            test: 5,
+            title: '123'
+         });
+      });
+
+      it('Suggest::_beforeUpdate', () => {
+         const suggestComponent = new _InputController({
+            emptyTemplate: 'anyTpl',
+            footerTemplate: 'anyTp',
+            suggestState: true,
+            value: '',
+            trim: true,
+            searchParam: 'testSearchParam',
+            minSearchLength: 3
+         });
+         suggestComponent._loadDependencies = () => Deferred.success(true);
+         const sandbox = sinon.createSandbox();
+         const dependenciesDeferred = {
+            isReady: () => {
+               return true;
+            }
+         };
+         suggestComponent._loading = true;
+         suggestComponent._showContent = true;
+         suggestComponent._dependenciesDeferred = dependenciesDeferred;
+         suggestComponent._inputActive = true;
+         suggestComponent._suggestMarkedKey = 'test';
+
+         suggestComponent._beforeUpdate({
+            suggestState: false, emptyTemplate: 'anotherTpl',
+            footerTemplate: 'anotherTpl',  value: 'te'
+         });
+         assert.isFalse(suggestComponent._showContent, null);
+         assert.equal(suggestComponent._loading, null);
+         assert.deepEqual(suggestComponent._dependenciesDeferred, dependenciesDeferred);
+         assert.equal(suggestComponent._searchValue, '');
+         assert.equal(suggestComponent._filter, null);
+         assert.equal(suggestComponent._suggestMarkedKey, null);
+
+         suggestComponent._beforeUpdate({
+            suggestState: false, emptyTemplate: 'anotherTpl',
+            footerTemplate: 'anotherTpl', value: '   '
+         });
+         assert.equal(suggestComponent._filter, null);
+         assert.equal(suggestComponent._searchValue, '');
+
+         suggestComponent._beforeUpdate({
+            suggestState: false, emptyTemplate: 'anotherTpl',
+            footerTemplate: 'anotherTpl', value: 'test',
+            searchParam: 'testSearchParam'
+         });
+         assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
+         assert.equal(suggestComponent._searchValue, 'test');
+
+         sandbox.stub(suggestComponent, '_notify');
+
+         suggestComponent._options.suggestState = true;
+         suggestComponent._options.value = 'test';
+         suggestComponent._beforeUpdate({
+            suggestState: true, emptyTemplate: 'anotherTpl',
+            footerTemplate: 'anotherTpl', value: ''
+         });
+         assert.equal(suggestComponent._searchValue, '');
+         assert.deepEqual(suggestComponent._dependenciesDeferred, dependenciesDeferred);
+         sinon.assert.calledWith(suggestComponent._notify, 'suggestStateChanged', [false]);
+
+         suggestComponent._searchValue = 'test';
+         suggestComponent._beforeUpdate({
+            suggestState: false, emptyTemplate: 'anotherTpl',
+            footerTemplate: 'anotherTpl', value: '',
+            searchParam: 'testSearchParam'
+         });
+         assert.deepEqual(suggestComponent._filter, {testSearchParam: ''});
+         assert.equal(suggestComponent._searchValue, '');
+         sinon.assert.calledOnce(suggestComponent._notify);
+
+         suggestComponent._options.suggestState = false;
+         suggestComponent._options.value = '';
+         suggestComponent._beforeUpdate({suggestState: false, value: 'test'});
+         assert.equal(suggestComponent._searchValue, 'test');
+         sinon.assert.calledOnce(suggestComponent._notify);
+
+         suggestComponent._options.validationStatus = 'valid';
+         suggestComponent._beforeUpdate({suggestState: true, value: '', validationStatus: 'invalid'});
+         assert.isNull(suggestComponent._loading, 'load started with validationStatus: "invalid"');
+
+         suggestComponent._options.validationStatus = 'invalid';
+         suggestComponent._options.suggestState = true;
+         suggestComponent._loading = true;
+         suggestComponent._beforeUpdate({suggestState: true, value: '', validationStatus: 'invalid'});
+         assert.isTrue(suggestComponent._loading);
+
+         suggestComponent._options.value = '';
+         suggestComponent._searchValue = '';
+         suggestComponent._beforeUpdate({suggestState: false, value: null});
+         assert.equal(suggestComponent._searchValue, '');
+
+         suggestComponent._inputActive = false;
+         suggestComponent._beforeUpdate({
+            suggestState: false, emptyTemplate: 'anotherTpl',
+            footerTemplate: 'anotherTpl', value: 'test',
+            searchParam: 'testSearchParam'
+         });
+         assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
+         assert.equal(suggestComponent._searchValue, 'test');
+
+         sandbox.restore();
+      });
+
+      it('Suggest::_updateSuggestState', async () => {
+         const inputContainer = getComponentObject({
+            fitler: {},
+            searchParam: 'testSearchParam',
+            minSearchLength: 3,
+            historyId: 'historyField'
+         });
+         let suggestOpened = false;
+
+         inputContainer._searchValue = 'te';
+         inputContainer._historyKeys = [1, 2];
+         inputContainer._inputActive = true;
+
+         inputContainer._options.autoDropDown = true;
+         inputContainer._updateSuggestState();
+         assert.deepEqual(inputContainer._filter, {
+            testSearchParam: 'te', historyKeys: inputContainer._historyKeys
+         });
+
+         inputContainer._searchValue = 'test';
+         inputContainer._updateSuggestState();
+         assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
+
+         inputContainer._open = () => {
+            suggestOpened = true;
+         };
+         inputContainer._options.autoDropDown = false;
+         inputContainer._options.minSearchLength = 10;
+         inputContainer._filter = {};
+         inputContainer._updateSuggestState();
+         assert.deepEqual(inputContainer._filter, {
+            testSearchParam: 'test', historyKeys: inputContainer._historyKeys
+         });
+         assert.isTrue(suggestOpened);
+
+         inputContainer._getRecentKeys = () => {
+            return Deferred.success(null);
+         };
+
+         suggestOpened = false;
+         inputContainer._options.autoDropDown = false;
+         inputContainer._historyKeys = null;
+         inputContainer._filter = {};
+         await inputContainer._updateSuggestState();
+         assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
+         assert.isFalse(suggestOpened);
+      });
+
+      it('Suggest::_missSpellClick', () => {
+         let value;
+         const suggestComponent = new _InputController({});
+
+         suggestComponent.activate = () => {
+            suggestComponent._inputActive = true;
+         };
+         suggestComponent._notify = (event, val) => {
+            if (event === 'valueChanged') {
+               value = val[0];
+            }
+         };
+         suggestComponent._options.minSearchLength = 3;
+         suggestComponent._misspellingCaption = 'test';
+         suggestComponent._missSpellClick();
+
+         assert.equal(value, 'test');
+         assert.equal(suggestComponent._misspellingCaption, '');
+         assert.equal(suggestComponent._searchValue, 'test');
+         assert.isTrue(suggestComponent._inputActive);
+      });
+
+      it('Suggest::_setMissSpellingCaption', () => {
+         const inputContainer = new _InputController({});
+
+         inputContainer._setMissSpellingCaption('test');
+         assert.equal(inputContainer._misspellingCaption, 'test');
+      });
+
+      it('Suggest::_select', () => {
+         const item = {
+            _isUpdateHistory: false
+         };
+         const suggestComponent = new _InputController({});
+
+         suggestComponent._select(item);
+         assert.isFalse(item._isUpdateHistory);
+         suggestComponent._options.historyId = 'testFieldHistoryId';
+         suggestComponent._select(item);
+         assert.isTrue(item._isUpdateHistory);
+      });
+
+      it('Suggest::markedKeyChangedHandler', () => {
+         const suggestComponent = new _InputController({});
+         suggestComponent._markedKeyChangedHandler(null, 'test');
+         assert.equal(suggestComponent._suggestMarkedKey, 'test');
+
+         suggestComponent._markedKeyChangedHandler(null, 'test2');
+         assert.equal(suggestComponent._suggestMarkedKey, 'test2');
+      });
+
+      it('Suggest::_keyDown', () => {
+         const suggestComponent = new _InputController({});
+         let eventPreventDefault = false;
+         let eventStopPropagation = false;
+         let suggestStateChanged = false;
+         let eventTriggered = false;
+         let suggestActivated = false;
+         suggestComponent._children = {
+            inputKeydown: {
+               start: () => {
+                  eventTriggered = true;
+               }
+            }
+         };
+
+         suggestComponent._notify = (event) => {
+            if (event === 'suggestStateChanged') {
+               suggestStateChanged = true;
+            }
+         };
+
+         suggestComponent.activate = () => {
+            suggestActivated = true;
+         };
+
+         function getEvent(keyCode: number): SyntheticEvent<KeyboardEvent> {
+            return {
+               nativeEvent: {
+                  keyCode
+               },
+               preventDefault: () => {
+                  eventPreventDefault = true;
+               },
+               stopPropagation: () => {
+                  eventStopPropagation = true;
+               }
+            };
+         }
+         suggestComponent._keydown(getEvent(constants.key.down));
+         assert.isFalse(eventPreventDefault);
+         assert.isFalse(eventStopPropagation);
+         assert.isFalse(suggestActivated);
+
+         suggestComponent._options.suggestState = true;
+
+         suggestComponent._keydown(getEvent(constants.key.down));
+         assert.isTrue(eventPreventDefault);
+         assert.isTrue(eventStopPropagation);
+         assert.isTrue(suggestActivated);
+         eventPreventDefault = false;
+         suggestActivated = false;
+
+         suggestComponent._keydown(getEvent(constants.key.up));
+         assert.isTrue(eventPreventDefault);
+         assert.isTrue(suggestActivated);
+         eventPreventDefault = false;
+         suggestActivated = false;
+
+         suggestComponent._keydown(getEvent(constants.key.enter));
+         assert.isFalse(eventPreventDefault);
+         assert.isFalse(suggestActivated);
+         eventPreventDefault = false;
+
+         suggestComponent._suggestMarkedKey = 'test';
+         suggestComponent._keydown(getEvent(constants.key.enter));
+         assert.isTrue(eventPreventDefault);
+         assert.isTrue(suggestActivated);
+
+         eventPreventDefault = false;
+         suggestActivated = false;
+         suggestComponent._keydown(getEvent('test'));
+         assert.isFalse(eventPreventDefault);
+         assert.isTrue(eventTriggered);
+         assert.isFalse(suggestActivated);
+
+         eventPreventDefault = false;
+         suggestComponent._keydown(getEvent(constants.key.esc));
+         assert.isTrue(suggestStateChanged);
+         assert.isFalse(suggestActivated);
+      });
+
+      it('Suggest::_openWithHistory', () => {
+         const suggestComponent = new _InputController({
+            minSearchLength: 3,
+            searchParam: 'search',
+            autoDropDown: true
+         });
+
+         suggestComponent._filter = {};
+         suggestComponent._historyKeys = [7, 8];
+         suggestComponent._searchValue = '';
+         suggestComponent._openWithHistory();
+         assert.deepEqual(suggestComponent._filter, {search: '', historyKeys: [7, 8]});
+
+         suggestComponent._historyKeys = [];
+         suggestComponent._options.autoDropDown = false;
+         suggestComponent._openWithHistory();
+         assert.deepEqual(suggestComponent._filter, {search: ''});
+      });
+
+      it('Suggest:_getRecentKeys', () => {
+         const inputContainer = new _InputController({});
+         inputContainer._getHistoryService = () => {
+            const hService = {
+               query: () => new Deferred.fail(new Error('History Service'))
+            };
+            return new Deferred.success(hService);
+         };
+         return new Promise((resolve) => {
+            inputContainer._getRecentKeys().addCallback((keys) => {
+               assert.deepEqual([], keys);
+               resolve();
+            });
+         });
+      });
+
+      it('Suggest::_inputClicked', () => {
+         const suggestComponent = new _InputController({});
+
+         suggestComponent._inputClicked();
+         assert.isTrue(suggestComponent._inputActive);
+      });
+
+      it('Suggest::_closePopup', () => {
+         let isClosePopup = false;
+         const suggestComponent = new _InputController({});
+
+         suggestComponent._children.layerOpener = {
+            close: () => {
+               isClosePopup = true;
+            }
+         };
+
+         suggestComponent._closePopup();
+         assert.isTrue(isClosePopup);
+      });
+
+      it('Suggest::_openPopup', () => {
+         const isOpenPopup = false;
+         const suggestComponent = new _InputController({
+            suggestTemplate: {}
+         });
+         suggestComponent._options.suggestTemplate = {};
+
+         const filter = {
+            historyKeys: [1, 2, 3]
+         };
+         const templateOptions = suggestComponent._getTemplateOptions(filter);
+
+         suggestComponent._notify = (items, data) => {
+            assert.deepEqual(data[0], templateOptions);
+            assert.deepEqual(templateOptions.templateOptions.filter, {});
+            return true;
+         };
+
+         suggestComponent._openSelector(templateOptions);
+         assert.isFalse(isOpenPopup);
+      });
+   });
+});
