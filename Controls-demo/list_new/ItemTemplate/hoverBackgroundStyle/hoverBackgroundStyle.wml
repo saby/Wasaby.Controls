@@ -9,7 +9,6 @@
                 <ws:contentTemplate>
                     <div class="Controls-demo_itemTemplate_hoverBackGroundStyle-content">
                         <div>{{itemTemplate.itemData.getContents().get('title')}}</div>
-                        <div>{{itemTemplate.itemData.getContents().get('description')}}</div>
                     </div>
                 </ws:contentTemplate>
             </ws:partial>

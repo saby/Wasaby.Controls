@@ -6,7 +6,7 @@ import {getActionsForContacts as getItemActions} from '../../DemoHelpers/ItemAct
 import {IItemAction} from 'Controls/itemActions';
 
 export default class extends Control {
-    protected _itemActions: IItemAction[] = [getItemActions().pop()];
+    protected _itemActions: IItemAction[] = getItemActions().slice(1);
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
 
