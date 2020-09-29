@@ -179,7 +179,6 @@ export default class Browser extends Control {
             this._storeCallbacks.forEach((id) => Store.unsubscribe(id));
         }
 
-        this._filterController.destroy();
         this._filterController = null;
     }
 
