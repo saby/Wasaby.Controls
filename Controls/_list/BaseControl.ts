@@ -4109,8 +4109,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._validateController.setValidationResult(null);
     },
 
-    isEditing(): Model {
-        return !!this._editInPlaceController && this._editInPlaceController.isEditing();
+    isEditing(): boolean {
+        return _private.isEditing(this);
     },
 
     _startInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
