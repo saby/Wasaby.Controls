@@ -79,7 +79,7 @@
             </ws:else>
          </ws:if>
       </ws:else>
-      <ws:partial if="{{!itemData.isSwiped() && (itemData.hasVisibleActions() || itemData.isEditing()) && itemData.itemActionsPosition !== 'custom'}}"
+      <ws:partial if="{{!itemData.isSwiped() && (itemData.hasVisibleActions() || itemData.isEditing()) && itemData.itemActionsPosition !== 'custom' || _options.itemActionsPosition !== 'custom'}}"
                   template="{{itemActionsTemplate}}"
                   highlightOnHover="{{highlightOnHover}}"
                   itemData="{{itemData}}"

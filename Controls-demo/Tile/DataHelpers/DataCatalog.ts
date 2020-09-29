@@ -44,6 +44,60 @@ export const Gadgets = {
       width: 300,
       isShadow: true
    }],
+    getPreviewItems: (): IData[] => [
+        {
+            id: 0,
+            parent: null,
+            type: null,
+            title: 'Конфеты копия',
+            image: explorerImages[8],
+            titleStyle: 'light',
+            'parent@': true,
+            additionalText: 'папка с песцом',
+            gradientStyle: 'dark',
+            isDocument: true,
+            width: 300,
+            isShadow: true
+        },
+        {
+        id: 1,
+        parent: null,
+        type: null,
+        title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+        titleStyle: 'light',
+        'parent@': false,
+        additionalText: 'песец лист',
+        gradientStyle: 'dark',
+        image: explorerImages[8],
+        isDocument: true,
+        hiddenGroup: true,
+        width: 150,
+        isShadow: true
+    }, {
+        id: 2,
+        parent: null,
+        type: null,
+        title: 'Сравнение систем по учету рабочего времени.xlsx',
+        image: explorerImages[9],
+        isDocument: true,
+        hiddenGroup: true,
+        titleStyle: 'dark',
+        'parent@': false,
+        additionalText: 'песец лист',
+        gradientStyle: 'light',
+        image: explorerImages[9],
+        width: 200,
+        isShadow: false
+    }, {
+        id: 3,
+        parent: null,
+        type: null,
+        title: 'Конфеты копия',
+        image: explorerImages[8],
+        isDocument: true,
+        width: 300,
+        isShadow: true
+    }],
 
    getActions: (): IItemAction[] => [
       {

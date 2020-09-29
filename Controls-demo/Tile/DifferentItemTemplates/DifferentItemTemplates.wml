@@ -1,0 +1,34 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__cell">
+      <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                               state="/Controls-demo/app/:app"
+                               app="{{ 'Controls-demo/Tile/DifferentItemTemplates/CustomTemplate/Index' }}">
+         <a href="{{content.href}}">CustomTemplate</a>
+      </Router.router:Reference>
+      <Controls-demo.Tile.DifferentItemTemplates.CustomTemplate.Index/>
+   </div>
+   <div class="controlsDemo__cell">
+      <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                               state="/Controls-demo/app/:app"
+                               app="{{ 'Controls-demo/Tile/DifferentItemTemplates/PreviewTemplate/Index' }}">
+         <a href="{{content.href}}">PreviewTemplate</a>
+      </Router.router:Reference>
+      <Controls-demo.Tile.DifferentItemTemplates.PreviewTemplate.Index/>
+   </div>
+   <div class="controlsDemo__cell">
+      <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                               state="/Controls-demo/app/:app"
+                               app="{{ 'Controls-demo/Tile/DifferentItemTemplates/SimpleItemTemplate/Index' }}">
+         <a href="{{content.href}}">SimpleItemTemplate</a>
+      </Router.router:Reference>
+      <Controls-demo.Tile.DifferentItemTemplates.SimpleItemTemplate.Index/>
+   </div>
+   <div class="controlsDemo__cell">
+      <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                               state="/Controls-demo/app/:app"
+                               app="{{ 'Controls-demo/Tile/DifferentItemTemplates/TitleWithImageTemplate/Index' }}">
+         <a href="{{content.href}}">TitleWithImageTemplate</a>
+      </Router.router:Reference>
+      <Controls-demo.Tile.DifferentItemTemplates.TitleWithImageTemplate.Index/>
+   </div>
+</div>

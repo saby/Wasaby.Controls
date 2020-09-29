@@ -14,7 +14,8 @@
       source="{{_viewSource}}">
       <ws:itemTemplate>
          <ws:partial
-            template="Controls/tile:PreviewTemplate"
+            template="Controls/tile:SimpleItemTemplate"
+            imageSize="m"
             scope="{{itemTemplate}}"/>
       </ws:itemTemplate>
    </Controls.tile:View>
