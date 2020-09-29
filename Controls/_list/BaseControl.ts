@@ -2089,14 +2089,16 @@ const _private = {
             return null;
         }
 
+        const collection = self._listViewModel.getDisplay ? self._listViewModel.getDisplay() : self._listViewModel;
+
         const strategy = this.createSelectionStrategy(
             options,
-            self._listViewModel.getDisplay().getItems(),
+            collection.getItems(),
             self._items.getMetaData()['ENTRY_PATH']
         );
 
         return new SelectionController({
-            model: self._listViewModel,
+            model: collection,
             selectedKeys: options.selectedKeys,
             excludedKeys: options.excludedKeys,
             searchValue: options.searchValue,
@@ -2105,14 +2107,16 @@ const _private = {
     },
 
     updateSelectionController(self: any, newOptions: any): void {
+        const collection = self._listViewModel.getDisplay ? self._listViewModel.getDisplay() : self._listViewModel;
+
         _private.getSelectionController(self).update({
-            model: self._listViewModel,
+            model: collection,
             selectedKeys: newOptions.selectedKeys,
             excludedKeys: newOptions.excludedKeys,
             searchValue: newOptions.searchValue,
             strategyOptions: this.getSelectionStrategyOptions(
                 newOptions,
-                self._listViewModel.getDisplay().getItems(),
+                collection.getItems(),
                 self._items.getMetaData()['ENTRY_PATH']
             )
         });
@@ -2150,6 +2154,8 @@ const _private = {
     },
 
     onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
+        // TODO после dnd вызывается этот метод с параметром typeName='unselectall'.
+        //  В данном случае нам не всегда нужно создавать контроллер. Записей могло быть не выбрано.
         const selectionController = _private.getSelectionController(this);
         if (!selectionController) {
             return;
@@ -3276,14 +3282,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._moveController.updateOptions(newOptions);
         }
 
-        if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
+        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
+            self._viewModelConstructor = newOptions.viewModelConstructor;
             if (_private.isEditing(this)) {
                 this.cancelEdit();
             }
-        }
-
-        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
-            this._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
@@ -3345,6 +3348,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
+        }
+
+        if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
+            this._listViewModel.setItemPadding(newOptions.itemPadding);
         }
 
         if (sortingChanged && !newOptions.useNewModel) {
@@ -3958,11 +3965,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _onGroupClick(e, groupId, baseEvent) {
+    _onGroupClick(e, groupId, baseEvent, dispItem) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             const collection = this._listViewModel;
-            if (this._options.groupProperty) {
-                const groupingLoader = this._groupingLoader;
+            const groupingLoader = this._groupingLoader;
+            if (this._options.useNewModel) {
+                const needExpandGroup = !dispItem.isExpanded();
+                if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
+                    const source = this._options.source;
+                    const filter = this._options.filter;
+                    const sorting = this._options.sorting;
+                    groupingLoader.loadGroup(collection, groupId, source, filter, sorting).then(() => {
+                        dispItem.setExpanded(needExpandGroup);
+                    });
+                } else {
+                    dispItem.setExpanded(needExpandGroup);
+                }
+            } else {
                 const needExpandGroup = !collection.isGroupExpanded(groupId);
                 if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
                     const source = this._options.source;
@@ -3971,10 +3990,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     groupingLoader.loadGroup(collection, groupId, source, filter, sorting).then(() => {
                         GroupingController.toggleGroup(collection, groupId);
                     });
-                    return;
+                } else {
+                    GroupingController.toggleGroup(collection, groupId);
                 }
             }
-            GroupingController.toggleGroup(collection, groupId);
         }
     },
 
@@ -5113,7 +5132,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _dragLeave(): void {
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController) {
-            this._dndListController.setDragPosition(null);
+            const newPosition = this._dndListController.calculateDragPosition(null);
+            this._dndListController.setDragPosition(newPosition);
         }
     },
 
@@ -5152,7 +5172,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let dragEndResult: Promise<any> | undefined;
         if (this._insideDragging && this._dndListController) {
             const targetPosition = this._dndListController.getDragPosition();
-            if (targetPosition) {
+            if (targetPosition && targetPosition.dispItem) {
                 dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.dispItem.getContents(), targetPosition.position]);
             }
 
@@ -5164,16 +5184,27 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._insideDragging = false;
         this._documentDragging = false;
 
+        const restoreMarker = () => {
+            if (_private.hasMarkerController(this)) {
+                const controller = _private.getMarkerController(this);
+                controller.setMarkedKey(controller.getMarkedKey());
+            }
+        };
+
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
+        // endDrag нужно вызывать только после события dragEnd,
+        // чтобы не было прыжков в списке, если асинхронно меняют порядок элементов
         if (this._dndListController) {
             if (dragEndResult instanceof Promise) {
                 _private.showIndicator(this);
-                dragEndResult.addBoth(() => {
+                dragEndResult.finally(() => {
                     this._dndListController.endDrag();
+                    restoreMarker();
                     _private.hideIndicator(this);
                 });
             } else {
                 this._dndListController.endDrag();
+                restoreMarker();
             }
         }
     },

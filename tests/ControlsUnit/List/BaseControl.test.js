@@ -1312,53 +1312,44 @@ define([
          assert.equal(1, baseControl._listViewModel.getMarkedKey());
       });
 
-      it('enterHandler', function() {
-         var notified = false;
+      it('enterHandler', async function() {
+         var
+            cfg = {
+               viewModelConstructor: lists.ListViewModel,
+               markerVisibility: 'visible',
+               keyProperty: 'key',
+               markedKey: 1,
+               multiSelectVisibility: 'visible',
+               selectedKeys: [],
+               excludedKeys: [],
+               selectedKeysCount: 0,
+               source: new sourceLib.Memory({
+                  keyProperty: 'key',
+                  data: [{
+                     key: 1
+                  }, {
+                     key: 2
+                  }, {
+                     key: 3
+                  }]
+               }),
+               selectedKeys: [],
+               excludedKeys: []
+            },
+            baseControl = new lists.BaseControl(cfg),
+            notified = false;
+
+         baseControl.saveOptions(cfg);
+         await baseControl._beforeMount(cfg);
+
+         baseControl._notify = function(e, args, options) {
+            notified = true;
+            assert.equal(e, 'itemClick');
+            assert.deepEqual(options, { bubbling: true });
+         };
 
          // Without marker
-         lists.BaseControl._private.enterHandler({
-            _options: {
-               useNewModel: false
-            },
-            getViewModel: function() {
-               return {
-                  getMarkedItem: function() {
-                     return null;
-                  }
-               };
-            },
-            _notify: function(e, item, options) {
-               notified = true;
-            }
-         });
-         assert.isFalse(notified);
-
-          var mockedEvent = {
-              target: 'myTestTarget',
-              isStopped: function() {
-                  return true;
-              }
-          };
-         // With marker
-         lists.BaseControl._private.enterHandler({
-            _options: {
-               useNewModel: false
-            },
-            _markerController: {
-               getMarkedKey: () => 1
-            },
-            getItems: () => {
-               return {
-                  getRecordById: () => {}
-               };
-            },
-            _notify: function(e, args, options) {
-               notified = true;
-               assert.equal(e, 'itemClick');
-               assert.deepEqual(args, [undefined, mockedEvent]);
-               assert.deepEqual(options, { bubbling: true });
-            }
-         }, mockedEvent);
+         lists.BaseControl._private.enterHandler(baseControl);
          assert.isTrue(notified);
       });
 
@@ -3942,10 +3933,26 @@ define([
          ctrl._nativeDragStart(fakeDragStart);
          assert.isTrue(isDefaultPrevented);
       });
-      it('_documentDragEnd', function() {
+      it('_documentDragEnd', async function() {
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: rs,
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel
+         };
          var
             dragEnded,
             ctrl = new lists.BaseControl();
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+
          ctrl._isMounted = true;
          ctrl._scrollTop = 0;
          ctrl._container = {
@@ -3973,7 +3980,12 @@ define([
                      getContents: () => {}
                   }
                };
-            }
+            },
+            getDraggableItem: () => ({
+               getContents: () => ({
+                  getKey: () => 1
+               })
+            })
          };
          ctrl._documentDragEnd();
          assert.isTrue(dragEnded);
@@ -7283,13 +7295,15 @@ define([
          });
 
          it('drag leave', () => {
+            const newPos = {};
             baseControl._dndListController = {
-               setDragPosition: () => undefined
+               setDragPosition: () => undefined,
+               calculateDragPosition: () => newPos
             };
 
             const setDragPositionSpy = sinon.spy(baseControl._dndListController, 'setDragPosition');
             baseControl._dragLeave();
-            assert.isTrue(setDragPositionSpy.withArgs(null).called);
+            assert.isTrue(setDragPositionSpy.withArgs(newPos).called);
          });
 
          it('drag enter', async () => {
@@ -7312,7 +7326,12 @@ define([
                         getContents: () => {}
                      }
                   };
-               }
+               },
+               getDraggableItem: () => ({
+                  getContents: () => ({
+                     getKey: () => 1
+                  })
+               })
             };
 
             baseControl._insideDragging = true;
