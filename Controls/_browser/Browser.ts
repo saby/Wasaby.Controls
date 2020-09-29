@@ -228,12 +228,12 @@ export default class Browser extends Control {
         }
     }
 
-    protected _filterChangedHandler(event: SyntheticEvent, filter: object) : void {
+    protected _filterChangedHandler(event: SyntheticEvent, filter: object): void {
+        event && event.stopPropagation();
         this._filterChanged(filter);
     }
 
     _filterChanged(filter: object): void {
-        event && event.stopPropagation();
         this._filterController.setFilter(filter);
 
         this._sourceController.setFilter(this._filterController.getFilter());
