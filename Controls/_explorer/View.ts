@@ -471,7 +471,7 @@ var
 
    /**
     * @name Controls/_explorer/View#breadcrumbsDisplayMode
-    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#breadcrumbsDisplayMode}
+    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
     */
 
    /**
@@ -646,7 +646,10 @@ var
 
          const changeRoot = () => {
             _private.setRoot(this, item.getId());
-            this._isGoingFront = true;
+            // При search не должны сбрасывать маркер, так как он встанет на папку
+            if (this._options.searchNavigationMode !== 'expand') {
+               this._isGoingFront = true;
+            }
          };
 
          // Не нужно проваливаться в папку, если должно начаться ее редактирование.
