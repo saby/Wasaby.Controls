@@ -513,6 +513,17 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         this._errorController = cfg.errorController || new dataSourceError.Controller({});
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
+
+    _beforeMount(options): void {
+        if (options.sourceController) {
+            // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
+            //  и на списке и на Browser'e
+            if (options.parentProperty || options.root !== undefined) {
+                options.sourceController.updateOptions(options);
+            }
+        }
+    },
+
     _afterMount: function() {
         _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
     },
@@ -522,20 +533,26 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _beforeUpdate: function(newOptions) {
         const baseControl = this._children.baseControl;
         const viewModel = baseControl.getViewModel();
+        const sourceController = baseControl.getSourceController();
+        let updateSourceController = false;
 
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
-            const sourceController = baseControl.getSourceController();
+            const sourceControllerRoot = sourceController.getState().root;
 
             this._root = newOptions.root;
             this._updatedRoot = true;
 
-            if (typeof sourceController.getState().root === 'undefined') {
-                sourceController.setRoot(this._root);
+            if (sourceControllerRoot === undefined || sourceControllerRoot !== newOptions.root) {
+                updateSourceController = true;
             }
 
             if (this._options.editingConfig) {
                 baseControl.cancelEdit();
             }
+        }
+
+        if (this._options.deepReload !== newOptions.deepReload) {
+            updateSourceController = true;
         }
 
         if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems())) {
@@ -549,6 +566,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             } else {
                 this._updateExpandedItemsAfterReload = true;
             }
+            updateSourceController = true;
         }
         if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {
             viewModel.setCollapsedItems(newOptions.collapsedItems);
@@ -572,10 +590,14 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
         if (newOptions.parentProperty !== this._options.parentProperty) {
             viewModel.setParentProperty(newOptions.parentProperty);
-            baseControl.getSourceController().updateOptions(newOptions);
+            updateSourceController = true;
         }
         if (newOptions.hasChildrenProperty !== this._options.hasChildrenProperty) {
             viewModel.setHasChildrenProperty(newOptions.hasChildrenProperty);
+        }
+
+        if (sourceController && updateSourceController) {
+            sourceController.updateOptions(newOptions);
         }
     },
     _afterUpdate: function(oldOptions) {

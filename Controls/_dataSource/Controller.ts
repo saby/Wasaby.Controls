@@ -154,6 +154,10 @@ export default class Controller {
             this.setRoot(newOptions.root);
         }
 
+        if (newOptions.expandedItems !== this._options.expandedItems) {
+            this.setExpandedItems(newOptions.expandedItems);
+        }
+
         if (isSourceChanged && this._crudWrapper) {
             this._crudWrapper.updateOptions({source: newOptions.source as ICrud});
         }
@@ -204,7 +208,7 @@ export default class Controller {
     }
 
     // FIXME для работы дерева без bind'a опции expandedItems
-    setExpandedItems(expandedItems: number[] | string[]): void {
+    setExpandedItems(expandedItems: TKey[]): void {
         this._expandedItems = expandedItems;
     }
 

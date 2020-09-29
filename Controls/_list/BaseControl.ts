@@ -532,16 +532,23 @@ const _private = {
 
     validateSourceControllerOptions(self, options): void {
         const sourceControllerState = self._sourceController.getState();
-        const validate = (optionName) => {
+        const validateIfOptionsIsSetOnBothControls = (optionName) => {
             if (sourceControllerState[optionName] &&
                 options[optionName] &&
                 sourceControllerState[optionName] !== options[optionName]) {
                 Logger.warn(`BaseControl: It is necessary to set the ${optionName} option in one place`);
             }
         };
-        const optionsToValidate = ['source', 'navigation', 'sorting', 'root'];
+        const validateIfOptionsIsSetOnlyOnList = (optionName) => {
+            if (options[optionName] && !sourceControllerState[optionName]) {
+                Logger.warn(`BaseControl: It is necessary to set the ${optionName} option on Controls/list:DataContainer`);
+            }
+        };
+        const optionsToValidateOnBoth = ['source', 'navigation', 'sorting', 'root'];
+        const optionsToValidateOnlyOnList = ['source', 'navigation', 'sorting'];
 
-        optionsToValidate.forEach(validate);
+        optionsToValidateOnBoth.forEach(validateIfOptionsIsSetOnBothControls);
+        optionsToValidateOnlyOnList.forEach(validateIfOptionsIsSetOnlyOnList);
     },
 
     getAllDataCount(self): number|undefined {
@@ -2945,11 +2952,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (newOptions.sourceController) {
             self._sourceController = newOptions.sourceController;
             _private.validateSourceControllerOptions(self, newOptions);
-            // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
-            //  и на списке и на Browser'e
-            if (newOptions.parentProperty) {
-                self._sourceController.setParentProperty(newOptions.parentProperty);
-            }
         } else if (newOptions.source) {
             self._sourceController = _private.getSourceController(newOptions);
         }
