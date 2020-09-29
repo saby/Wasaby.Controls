@@ -110,7 +110,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
       const processingItems = items ? items : this._items;
       processingItems.forEach((item) => {
-         const itemId: CrudEntityKey = this._getKey(item);
+         const itemId = this._getKey(item);
          const selected = (!limit || selectedItemsCount < limit)
             && (selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId));
 
@@ -163,10 +163,6 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return selection.selected.includes(ALL_SELECTION_VALUE);
    }
 
-   private _getItem(key: CrudEntityKey): CollectionItem<Model> {
-      return this._items.find((item) => this._getKey(item) === key);
-   }
-
    /**
     * @private
     * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
@@ -189,5 +185,9 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
       // у корневого элемента contents=key
       return contents instanceof Object ?  contents.getKey() : contents;
+   }
+
+   private _getItem(key: CrudEntityKey): CollectionItem<Model> {
+      return this._items.find((item) => this._getKey(item) === key);
    }
 }
