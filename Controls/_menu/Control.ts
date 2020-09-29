@@ -363,14 +363,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getSelectionStrategyOptions(): IFlatSelectionStrategyOptions {
         return {
-            items: this._getItemsWithoutGrouping(this._listModel.getItems())
+            items: this._listModel.getItems()
         };
-    }
-
-    private _getItemsWithoutGrouping(items: Model[]): Model[] {
-        return items.filter((item) => {
-            return !item['[Controls/_display/GroupItem]'];
-        });
     }
 
     private _getKeysForSelectionController(options: IMenuControlOptions): TSelectedKeys {
