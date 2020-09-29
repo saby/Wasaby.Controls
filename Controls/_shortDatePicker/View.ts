@@ -147,103 +147,54 @@ var Component = BaseControl.extend({
         this._notify('yearChanged', [year]);
     },
 
-    _getPositions(position: Date, delta: number): any {
-        let curPosition = new Date(position.getTime());
-        for (let i = 0; i <= this._limit; i++) {
-            if (!this._isDisplayed(curPosition)) {
-                const period = this._getHiddenPeriod(curPosition);
-                curPosition = delta > 0 ? period[1] : period[0];
-            } else {
-                countDisplayedRanges++;
-            }
-            if (!curPosition || countDisplayedRanges >= this._limit) {
-                break;
-            }
-            prevPosition = curPosition;
-            curPosition = this._shiftRange(curPosition, delta[j]);
-        }
-    },
-
-    _getFirstPositionInMonthList(position: Date): Date {
+    _getFirstPositionInMonthList(srcPosition: Date): Date {
         if (!this._displayedRanges) {
-            return position;
+            return srcPosition;
         }
 
-        const getPositionByDelta = (delta) => {
+        const calcDisplayedPositionByDelta = (delta) => {
             let tempPosition;
-            while (countDisplayedRanges <= this._limit) {
-                curPosition = this._shiftRange(curPosition, delta);
-                if (!this._isDisplayed(curPosition)) {
-                    const period = this._getHiddenPeriod(curPosition);
+            while (countDisplayedRanges < this._limit) {
+                checkingPosition = this._shiftRange(checkingPosition, delta);
+                if (!this._isDisplayed(checkingPosition)) {
+                    const period = this._getHiddenPeriod(checkingPosition);
                     tempPosition = delta > 0 ? period[1] : period[0];
                     if (!tempPosition) {
                         break;
                     }
                 } else {
+                    lastDisplayedPosition = new Date(checkingPosition.getTime());
                     countDisplayedRanges++;
                 }
             }
-            // for (let i = 0; i <= this._limit; i++) {
-            //     if (!this._isDisplayed(curPosition)) {
-            //         const period = this._getHiddenPeriod(curPosition);
-            //         curPosition = delta > 0 ? period[1] : period[0];
-            //     } else {
-            //         countDisplayedRanges++;
-            //     }
-            //     if (!curPosition || countDisplayedRanges >= this._limit) {
-            //         break;
-            //     }
-            //     prevPosition = curPosition;
-            //     curPosition = this._shiftRange(curPosition, delta);
-            // }
         }
 
-        const delta = [-1, 1];
         let countDisplayedRanges = 1;
-        let curPosition;
-        //let curPosition = this._shiftRange(position, -1);
+        let lastDisplayedPosition = new Date(srcPosition.getTime());
+        let checkingPosition = new Date(srcPosition.getTime());
 
-        getPositionByDelta(-1);
-        getPositionByDelta(1);
+        // Вначале от изначальной даты идём вниз (напр. от 2020 к 2019, 2018 и тд)
+        calcDisplayedPositionByDelta(-1);
+        // Восстаналиваем начальную позицию и идем от даты вверх (напр. от 2020 к 2021, 2022 и тд)
+        checkingPosition = new Date(srcPosition.getTime());
+        calcDisplayedPositionByDelta(1);
 
-        // for (let j = 0; j < delta.length; j++) {
-        //     if (delta[j] === 1) {
-        //         curPosition = position;
-        //     }
-        //     for (let i = 0; i <= this._limit; i++) {
-        //         if (!this._isDisplayed(curPosition)) {
-        //             const period = this._getHiddenPeriod(curPosition);
-        //             curPosition = delta[j] > 0 ? period[1] : period[0];
-        //         } else {
-        //             countDisplayedRanges++;
-        //         }
-        //         if (!curPosition || countDisplayedRanges >= this._limit) {
-        //             break;
-        //         }
-        //         prevPosition = curPosition;
-        //         curPosition = this._shiftRange(curPosition, delta[j]);
-        //     }
-        // }
-
-
-
-        const resultPosition = countDisplayedRanges >= this._limit ? curPosition : prevPosition;
-        return resultPosition;
+        return lastDisplayedPosition;
     },
 
     _shiftRange(date: Date, delta: number): Date {
         return new this._options.dateConstructor(date.getFullYear() + delta, 0);
     },
 
+    // Получить неотображаемый период в который попадает переданная дата
     _getHiddenPeriod(date: Date): Date[] {
         let range: Date[] = [];
         for (let i = 0; i < this._options.displayedRanges.length; i++) {
             range = this._options.displayedRanges[i];
             if (date < range[0]) {
-                return [
-                    i === 0 ? null : this._shiftRange(this._options.displayedRanges[i - 1][1], 1),
-                    this._shiftRange(range[0], -1)
-                ];
+                const startHiddenPeriod = i === 0 ? null : this._shiftRange(this._options.displayedRanges[i - 1][1], 1);
+                const endHiddenPeriod = this._shiftRange(range[0], -1);
+                return [startHiddenPeriod, endHiddenPeriod];
             }
         }
         return [range[1] ? this._shiftRange(range[1], 1) : date, null];

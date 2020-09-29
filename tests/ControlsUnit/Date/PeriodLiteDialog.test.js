@@ -282,7 +282,7 @@ define([
             chooseMonths: false,
             chooseQuarters: false,
             delta: -1,
-            result: 2004
+            result: 1989
          }, {
             year: new Date(2019, 0),
             displayedRanges: [[new Date(2013, 0), new Date(2017, 0)], [new Date(2019, 0), new Date(2020, 0)],
