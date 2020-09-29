@@ -6,7 +6,7 @@ import { IFlatSelectionStrategyOptions } from '../interface';
 import ISelectionStrategy from './ISelectionStrategy';
 import clone = require('Core/core-clone');
 import { CrudEntityKey } from 'Types/source';
-import { CollectionItem } from 'Controls/display';
+import { CollectionItem, TreeItem } from 'Controls/display';
 
 const ALL_SELECTION_VALUE = null;
 
@@ -110,7 +110,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
 
       const processingItems = items ? items : this._items;
       processingItems.forEach((item) => {
-         const itemId: CrudEntityKey = item.getContents().getKey();
+         const itemId = this._getKey(item);
          const selected = (!limit || selectedItemsCount < limit)
             && (selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId));
 
@@ -163,7 +163,31 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return selection.selected.includes(ALL_SELECTION_VALUE);
    }
 
+   /**
+    * @private
+    * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+    *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+    */
+   private _getKey(item: CollectionItem<Model>): CrudEntityKey {
+      if (!item) {
+         return undefined;
+      }
+
+      let contents = item.getContents();
+      if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
+         contents = contents[(contents as any).length - 1];
+      }
+
+      // Для GroupItem нет ключа, в contents хранится не Model
+      if (item['[Controls/_display/GroupItem]']) {
+         return undefined;
+      }
+
+      // у корневого элемента contents=key
+      return contents instanceof Object ?  contents.getKey() : contents;
+   }
+
    private _getItem(key: CrudEntityKey): CollectionItem<Model> {
-      return this._items.find((item) => item.getContents().getKey() === key);
+      return this._items.find((item) => this._getKey(item) === key);
    }
 }
