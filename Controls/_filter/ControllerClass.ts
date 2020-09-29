@@ -1,7 +1,7 @@
 import {IPrefetchHistoryParams} from './IPrefetch';
 import {IFilterItem} from 'Controls/_filter/View/interface/IFilterView';
 
-import {default as Store} from 'Controls/Store';
+import Store from 'Controls/Store';
 import Prefetch from 'Controls/_filter/Prefetch';
 import isEqualItems from 'Controls/_filter/Utils/isEqualItems';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
@@ -58,7 +58,6 @@ export default class FilterControllerClass {
     private _filterButtonItems: IFilterItem[] = null;
     private _fastFilterItems: IFilterItem[] = null;
     private _filter: object = {};
-    private _storeCallbacks: string[] = [];
 
     /* Флаг необходим, т.к. добавлять запись в историю после изменения фильтра
    необходимо только после загрузки данных, т.к. только в ответе списочного метода
@@ -73,10 +72,6 @@ export default class FilterControllerClass {
             this._filter = Prefetch.prepareFilter(this._filter, options.prefetchParams);
         }
         this._updateFilter(options);
-
-        if (options.useStore) {
-            this._observeStore(options);
-        }
     }
 
     setFilterItems(historyItems: THistoryData): void {
@@ -239,12 +234,6 @@ export default class FilterControllerClass {
 
     saveFilterToHistory(config) {
         return saveFilterToHistory.call(this, config);
-    }
-
-    destroy(): void {
-        if (this._options.useStore) {
-            this._storeCallbacks.forEach((id) => Store.unsubscribe(id));
-        }
     }
 
     private _updateFilterItems(newItems: IFilterItem[]): void {
@@ -689,23 +678,6 @@ export default class FilterControllerClass {
 
     private _setFilter(filter: object): void {
         this._filter = filter;
-    }
-
-    private _observeStore(options: IFilterControllerOptions): void {
-        const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
-            this._setFilterItems(filterSource, [], []);
-            this._applyItemsToFilter(this._filter, this._filterButtonItems, this._fastFilterItems);
-            // запись в историю
-            this.updateFilterItems(filterSource);
-        });
-        const filterSourceCallbackId = Store.onPropertyChanged('filter', (filter) => {
-            this._applyItemsToFilter(
-                Prefetch.prepareFilter(filter, options.prefetchParams),
-                this._filterButtonItems,
-                this._fastFilterItems
-            );
-        });
-        this._storeCallbacks = [sourceCallbackId, filterSourceCallbackId];
     }
 
     private static _minimizeItem(item: IFilterItem): IFilterItem {

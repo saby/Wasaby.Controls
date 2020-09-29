@@ -23,7 +23,7 @@
         itemsReadyCallback="{{_itemsReadyCallback}}"
         filterButtonItems="{{_filterButtonItems}}"
         fastFilterItems="{{_fastFilterItems}}"
-        on:filterChanged="_filterChanged()"
+        on:filterChanged="_filterChangedHandler()"
         on:rootChanged="_rootChanged()"
         on:itemsChanged="_itemsChanged()"
         on:dataError="_onDataError()"
@@ -41,7 +41,7 @@
         on:search="_search()"
         on:listExpandedItemsChanged="_notifyHandler('expandedItemsChanged')"
         on:misspellCaptionClick="_misspellCaptionClick()"
-        on:filterItemsChanged="_filterItemsChanged()"
+        on:filterItemsChanged="_filterItemsChangedHandler()"
         on:filterHistoryApply="_filterHistoryApply()"
 />
 

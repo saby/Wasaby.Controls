@@ -14,6 +14,7 @@ import {error as dataSourceError} from 'Controls/dataSource';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {IControllerOptions, IControlerState} from 'Controls/_dataSource/Controller';
 import {TSelectionType} from 'Controls/interface';
+import Store from 'Controls/Store';
 
 type Key = string|number|null;
 
@@ -50,6 +51,7 @@ export default class Browser extends Control {
     private _groupHistoryId: string;
     private _dataOptionsContext: ContextOptions;
     private _errorRegister: RegisterClass;
+    private _storeCallbacks: string[];
 
     protected _beforeMount(options,
                            context,
@@ -85,6 +87,19 @@ export default class Browser extends Control {
                     };
                 });
             });
+        }
+    }
+
+    protected _afterMount(options): void {
+        if (options.useStore) {
+            const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
+                this._filterItemsChanged(filterSource);
+            });
+            const filterSourceCallbackId = Store.onPropertyChanged('filter', (filter) => {
+                this._filterChanged(filter);
+            });
+
+            this._storeCallbacks = [sourceCallbackId, filterSourceCallbackId];
         }
     }
 
@@ -160,6 +175,10 @@ export default class Browser extends Control {
             this._errorRegister = null;
         }
 
+        if (this._storeCallbacks) {
+            this._storeCallbacks.forEach((id) => Store.unsubscribe(id));
+        }
+
         this._filterController.destroy();
         this._filterController = null;
     }
@@ -210,7 +229,11 @@ export default class Browser extends Control {
         }
     }
 
-    _filterChanged(event: SyntheticEvent, filter: object): void {
+    protected _filterChangedHandler(event: SyntheticEvent, filter: object) : void {
+        this._filterChanged(filter);
+    }
+
+    _filterChanged(filter: object): void {
         event && event.stopPropagation();
         this._filterController.setFilter(filter);
 
@@ -255,7 +278,11 @@ export default class Browser extends Control {
         this._updateContext(controllerState);
     }
 
-    protected _filterItemsChanged(event: SyntheticEvent, items: IFilterItem[]): void {
+    protected _filterItemsChangedHandler(event: SyntheticEvent, items: IFilterItem[]): void {
+        this._filterItemsChanged(items);
+    }
+
+    protected _filterItemsChanged(items: IFilterItem[]): void {
         this._filterController.updateFilterItems(items);
         this._updateFilterAndFilterItems();
         this._dataOptionsContext.filter = this._filter;
