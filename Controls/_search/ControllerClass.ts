@@ -223,9 +223,9 @@ export default class SearchControllerClass {
         this._setMisspellValue('');
     }
 
-    search(value: string, force: boolean): void {
-        this._startSearch(value, force);
+    search(value: string, force: boolean): Promise<ISearchCallbackResult>|void {
         this._setInputSearchValue(value);
+        return this._startSearch(value, force);
     }
 
     getSearchValue(): string {
