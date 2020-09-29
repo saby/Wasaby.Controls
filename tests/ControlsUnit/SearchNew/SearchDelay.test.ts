@@ -1,4 +1,4 @@
-import {SearchDelay} from 'Controls/searchNew';
+import {SearchResolver} from 'Controls/searchNew';
 import {assert} from 'chai';
 import * as sinon from 'sinon';
 import {ISearchDelayOptions} from 'Controls/_searchNew/interface';
@@ -10,7 +10,7 @@ const defaultOptions = {
 
 const initSearchDelay = (options?: Partial<ISearchDelayOptions>) => {
    const searchCallback = sinon.stub();
-   const searchDelay = new SearchDelay({
+   const searchDelay = new SearchResolver({
       ...defaultOptions,
       searchCallback,
       ...options
