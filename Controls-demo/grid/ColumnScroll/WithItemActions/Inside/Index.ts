@@ -1,8 +1,8 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/grid/ColumnScroll/WithItemActions/WithItemActions';
+import * as Template from 'wml!Controls-demo/grid/ColumnScroll/WithItemActions/Inside/Inside';
 import {Memory} from 'Types/source';
-import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
-import {getActionsForContacts as getItemActions} from '../../../list_new/DemoHelpers/ItemActionsCatalog';
+import {getCountriesStats} from '../../../DemoHelpers/DataCatalog';
+import {getActionsForContacts as getItemActions} from '../../../../list_new/DemoHelpers/ItemActionsCatalog';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
 import { IHeader } from 'Controls-demo/types';
 import { IItemAction } from 'Controls/itemActions';
