@@ -34,6 +34,7 @@ export interface ISearchControllerOptions extends ISearchOptions, ISourceOptions
     loadingChangedCallback: Function;
     filterChangedCallback: Function;
     dataLoadErrback: Function;
+    searchStartCallback: Function;
     searchStartingWith: string;
     deepReload: boolean;
 }
@@ -417,6 +418,9 @@ export default class SearchControllerClass {
             }
         }
         this._options.loadingChangedCallback(true);
+        if (this._options.searchStartCallback) {
+            this._options.searchStartCallback(filter);
+        }
     }
 
     private _searchErrback(error: Error, filter: object): void {
@@ -580,6 +584,9 @@ export default class SearchControllerClass {
                 } else {
                     self._notify('dataError', [error]);
                 }
+            },
+            searchStartCallback: (filter) => {
+                self._notify('searchStart', [filter]);
             }
         };
     }
