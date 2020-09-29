@@ -75,8 +75,7 @@ export class Controller {
     */
    setSelection(selection: ISelection): void {
       this._selection = selection;
-      // TODO при переходе на новую модель изменить просто на this._model.getItems()
-      this._strategy.setItems(this._model.getDisplay().getItems());
+      this._strategy.setItems(this._model.getItems());
       this._updateModel(selection);
    }
 
@@ -193,8 +192,7 @@ export class Controller {
     * @return {ISelection}
     */
    onCollectionRemove(removedItems: Array<CollectionItem<Model>>): ISelection {
-      // TODO при переходе на новую модель изменить просто на this._model.getItems()
-      this._strategy.setItems(this._model.getDisplay().getItems());
+      this._strategy.setItems(this._model.getItems());
 
       let keys = this._getItemsKeys(removedItems);
       // Событие remove еще срабатывает при скрытии элементов, нас интересует именно удаление
@@ -215,8 +213,7 @@ export class Controller {
          return { selected: [], excluded: [] };
       }
 
-      // TODO при переходе на новую модель изменить просто на this._model.getItems()
-      this._strategy.setItems(this._model.getDisplay().getItems());
+      this._strategy.setItems(this._model.getItems());
       this._updateModel(this._selection);
    }
 
@@ -226,8 +223,7 @@ export class Controller {
     * @void
     */
    onCollectionReplace(newItems: Array<CollectionItem<Model>>): void {
-      // TODO при переходе на новую модель изменить просто на this._model.getItems()
-      this._strategy.setItems(this._model.getDisplay().getItems());
+      this._strategy.setItems(this._model.getItems());
       this._updateModel(this._selection, false, newItems);
    }
 
@@ -237,8 +233,7 @@ export class Controller {
     * @void
     */
    onCollectionAdd(addedItems: Array<CollectionItem<Model>>): void {
-      // TODO при переходе на новую модель изменить просто на this._model.getItems()
-      this._strategy.setItems(this._model.getDisplay().getItems());
+      this._strategy.setItems(this._model.getItems());
       this._updateModel(this._selection, false, addedItems);
    }
 
