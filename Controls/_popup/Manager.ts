@@ -1,5 +1,6 @@
 import {Control, IControlOptions} from 'UI/Base';
 import Popup from 'Controls/_popup/Manager/Popup';
+import {load} from 'Core/library';
 import Container from 'Controls/_popup/Manager/Container';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import {Logger} from 'UI/Utils';
@@ -100,7 +101,7 @@ class Manager {
 
     loadData(dataLoaders): Promise<unknown> {
         return new Promise((resolve) => {
-           import(this._dataLoaderModule).then((DataLoader) => {
+            load(this._dataLoaderModule).then((DataLoader) => {
                const Loader = DataLoader.default || DataLoader;
                resolve(Loader.load(dataLoaders));
            });
