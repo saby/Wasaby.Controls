@@ -1500,7 +1500,7 @@ define([
          it('should work when itemActions are not initialized', async () => {
             await initTest({ itemActions: [{ id: 'delete', handler: () => {isHandlerCalled = true} }, { id: 1 }, { id: 2 }] });
 
-            lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
+            await lists.BaseControl._private.getMarkerControllerAsync(instance).then((controller) => controller.setMarkedKey(1));
             const spyUpdateItemActions = sinon.spy(lists.BaseControl._private, 'updateItemActions');
             lists.BaseControl._private.keyDownDel(instance, event);
             sinon.assert.called(spyUpdateItemActions);
@@ -1511,7 +1511,7 @@ define([
          it('should work when itemActions are initialized', async () => {
             await initTest({ itemActions: [{ id: 'delete', handler: () => {isHandlerCalled = true} }, { id: 1 }, { id: 2 }] });
             lists.BaseControl._private.updateItemActions(instance, cfg);
-            lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
+            await lists.BaseControl._private.getMarkerControllerAsync(instance).then((controller) => controller.setMarkedKey(1));
             const spyUpdateItemActions = sinon.spy(lists.BaseControl._private, 'updateItemActions');
             lists.BaseControl._private.keyDownDel(instance, event);
             sinon.assert.notCalled(spyUpdateItemActions);
@@ -1521,14 +1521,14 @@ define([
 
          it('should not work when no itemActions passed', async () => {
             await initTest();
-            lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
+            await lists.BaseControl._private.getMarkerControllerAsync(instance).then((controller) => controller.setMarkedKey(1));
             lists.BaseControl._private.keyDownDel(instance, event);
             assert.isFalse(isHandlerCalled);
          });
 
          it('should not work when itemAction "delete" is not passed', async () => {
             await initTest({ itemActions: [{ id: 1 }, { id: 2 }] });
-            lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
+            await lists.BaseControl._private.getMarkerControllerAsync(instance).then((controller) => controller.setMarkedKey(1));
             lists.BaseControl._private.keyDownDel(instance, event);
             assert.isFalse(isHandlerCalled);
          });
@@ -1538,7 +1538,7 @@ define([
                itemActions: [{ id: 'delete', handler: () => {isHandlerCalled = true} }, { id: 1 }, { id: 2 }],
                itemActionVisibilityCallback: (action, item) => action.id !== 'delete',
             });
-            lists.BaseControl._private.getMarkerController(instance).setMarkedKey(1);
+            await lists.BaseControl._private.getMarkerControllerAsync(instance).then((controller) => controller.setMarkedKey(1));
             lists.BaseControl._private.keyDownDel(instance, event);
             assert.isFalse(isHandlerCalled);
          });
