@@ -64,5 +64,7 @@ export default class ItemTemplate extends Control<IControlOptions> {
       });
    }
 
+   static _theme: string[] = ['Controls/Classes'];
+
    static _styles: string[] = ['Controls-demo/list_new/ItemActions/ContextMenuConfig/ItemTemplate/ItemTemplate'];
 }
