@@ -44,7 +44,6 @@
 }
 
 .controls-PeriodLiteDialog__footer_theme-@{themeName} {
-   color: @footer_arrow_color_shortDatePicker;
    background-color: @header_background-color_shortDatePicker;
 }
 
@@ -61,7 +60,7 @@
 }
 
 .controls-PeriodLiteDialog__width-big_theme-@{themeName} {
-   width: @quarterly_width_shortDatePicker;
+   min-width: @quarterly_width_shortDatePicker;
 }
 
 .controls-PeriodLiteDialog__width-medium_theme-@{themeName} {
@@ -95,6 +94,12 @@
    .controls-PeriodLiteDialog__vLayoutItem-clickable_theme-@{themeName}:hover {
       border-color: @item_hover_border-color_shortDatePicker;
       background-color: @item_hover_background-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__footer-points_wrapper:hover {
+      .controls-PeriodLiteDialog__footer-icon_theme-@{themeName} {
+         fill: @footer_hover_icon_color_shortDatePicker;
+      }
    }
 }
 
@@ -159,8 +164,32 @@
    }
 }
 
-.controls-PeriodLiteDialog__AccordionArrow {
+.controls-PeriodLiteDialog__footer-points_wrapper {
+   display: flex;
    cursor: pointer;
+   justify-content: center;
+   align-items: center;
+}
+
+.controls-PeriodLiteDialog__footer-points_wrapper_theme-@{themeName} {
+   width: @footer_icon-wrapper_width_shortDatePicker;
+   height: @footer_icon-wrapper_height_shortDatePicker;
+   background-color: @footer_icon-wrapper_background-color_shortDatePicker;
+   border-radius: @footer_icon-wrapper_height_shortDatePicker/2;
+}
+
+.controls-PeriodLiteDialog__footer-points_theme-@{themeName} {
+   width: @footer_points_width_shortDatePicker;
+   height: @footer_points_height_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__footer-arrow {
+   width: @footer_arrow_width_shortDatePicker;
+   height: @footer_arrow_height_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__footer-icon_theme-@{themeName} {
+   fill: @footer_icon_color_shortDatePicker;
 }
 
 .controls-PeriodLiteDialog__header {
