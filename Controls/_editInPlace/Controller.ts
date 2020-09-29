@@ -2,6 +2,7 @@ import {Model, DestroyableMixin} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import {CONSTANTS} from './Types';
 import {CollectionEditor} from './CollectionEditor';
+import {RecordSet} from 'Types/collection';
 import {mixin} from 'Types/util';
 import {IEditableCollection, IEditableCollectionItem} from 'Controls/display';
 
@@ -77,11 +78,11 @@ interface IEditInPlaceCallbacks {
     /**
      * @name Controls/_editInPlace/IEditInPlaceCallbacks#onAfterBeginEdit
      * @cfg {Function} Функция обратного вызова после запуска редактирования.
-     * @param {Types/entity:Model} item Запись для которой запускается редактирование.
+     * @param {IEditableCollectionItem} item Запись для которой запускается редактирование.
      * @param {Boolean} isAdd Флаг, принимает значение true, если запись добавляется.
      * @void
      */
-    onAfterBeginEdit?: (item: Model, isAdd: boolean) => void;
+    onAfterBeginEdit?: (item: IEditableCollectionItem, isAdd: boolean) => void;
 
     /**
      * @name Controls/_editInPlace/IEditInPlaceCallbacks#onBeforeEndEdit
@@ -92,11 +93,11 @@ interface IEditInPlaceCallbacks {
     /**
      * @name Controls/_editInPlace/IEditInPlaceCallbacks#onAfterEndEdit
      * @cfg {Function} Функция обратного вызова после завершением редактирования.
-     * @param {Types/entity:Model} item Редактируемая запись.
+     * @param {IEditableCollectionItem} item Редактируемая запись.
      * @param {Boolean} isAdd Флаг, принимает значение true, если запись добавлялась.
      * @void
      */
-    onAfterEndEdit?: (item: Model, isAdd: boolean) => void;
+    onAfterEndEdit?: (item: IEditableCollectionItem, isAdd: boolean) => void;
 }
 
 /**
@@ -158,12 +159,22 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
     }
 
     /**
-     * Получить редактируемый элемент
+     * Возвращает true, если в коллекции есть запущенное редактирование
      * @method
-     * @return {Types/entity:Model|undefined}
+     * @return {Boolean}
      * @public
      */
-    getEditingItem(): Model | undefined {
+    isEditing(): boolean {
+        return this._collectionEditor.isEditing();
+    }
+
+    /**
+     * Получить редактируемый элемент
+     * @method
+     * @return {IEditableCollectionItem}
+     * @public
+     */
+    private _getEditingItem(): IEditableCollectionItem | undefined {
         return this._collectionEditor.getEditingItem();
     }
 
@@ -214,8 +225,8 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
      *
      * @remark Завершение редактирования может быть отменено. Для этого из функции обратного вызова IEditInPlaceOptions.onBeforeEndEdit необхобимо вернуть константу отмены.
      */
-    commit(): TAsyncOperationResult {
-        return this._endEdit(true);
+    commit(strategy: 'hasChanges' | 'all' = 'all'): TAsyncOperationResult {
+        return this._endEdit(true, strategy);
     }
 
     /**
@@ -257,7 +268,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
 
     // tslint:disable-next-line:max-line-length
     private _endPreviousAndBeginEdit(item: Model | undefined, isAdd: boolean, addPosition?: 'top' | 'bottom'): TAsyncOperationResult {
-        const editingItem = this.getEditingItem();
+        const editingItem = this._getEditingItem()?.contents;
 
         if (editingItem && item && editingItem.getKey() === item.getKey()) {
             return Promise.resolve();
@@ -275,7 +286,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
 
     // TODO: Должен возвращать один промис, если вызвали несколько раз подряд
     private _beginEdit(item: Model | undefined, isAdd: boolean, addPosition?: 'top' | 'bottom'): TAsyncOperationResult {
-        if (this.getEditingItem()) {
+        if (this._getEditingItem()) {
             return Promise.resolve({canceled: true});
         }
 
@@ -314,7 +325,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
 
             if (this._options.onAfterBeginEdit) {
-                this._options.onAfterBeginEdit(this._collectionEditor.getEditingItem(), isAdd);
+                this._options.onAfterBeginEdit(this._getEditingItem(), isAdd);
             }
         }).finally(() => {
             this._operationsPromises.begin = null;
@@ -324,10 +335,10 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
     }
 
     // TODO: Должен возвращать один промис, если вызвали несколько раз подряд
-    private _endEdit(commit: boolean): TAsyncOperationResult {
-        const editingItem = this.getEditingItem();
+    private _endEdit(commit: boolean, commitStrategy: 'hasChanges' | 'all' = 'all'): TAsyncOperationResult {
+        const editingCollectionItem = this._getEditingItem();
 
-        if (!editingItem) {
+        if (!editingCollectionItem) {
             return Promise.resolve();
         }
 
@@ -335,7 +346,12 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             return this._operationsPromises.end;
         }
 
-        const isAdd = this._options.collection.getItemBySourceKey(this.getEditingItem().getKey()).isAdd;
+        const editingItem = editingCollectionItem && editingCollectionItem.contents;
+        const isAdd = editingCollectionItem.isAdd;
+
+        if (commit && commitStrategy === 'hasChanges' && !editingItem.isChanged()) {
+            return Promise.resolve(this._collectionEditor.cancel());
+        }
 
         this._operationsPromises.end = new Promise((resolve) => {
             if (this._options.onBeforeEndEdit) {
@@ -352,7 +368,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             }
             this._collectionEditor[commit ? 'commit' : 'cancel']();
             (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
-            this._options?.onAfterEndEdit(editingItem, isAdd);
+            this._options?.onAfterEndEdit(editingCollectionItem, isAdd);
         }).finally(() => {
             this._operationsPromises.end = null;
         }) as TAsyncOperationResult;

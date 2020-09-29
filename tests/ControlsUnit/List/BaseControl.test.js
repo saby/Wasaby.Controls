@@ -2760,8 +2760,8 @@ define([
          let editingItem;
 
          baseControl._editInPlaceController = {
-            getEditingItem: () => {
-               return editingItem;
+            isEditing: () => {
+               return !!editingItem;
             }
          };
 
@@ -3767,7 +3767,7 @@ define([
                },
                _options: {},
                _editInPlaceController: {
-                  getEditingItem: () => ({})
+                  isEditing: () => true
                },
                cancelEdit: function() {
                   isCanceled = true;
@@ -5199,7 +5199,7 @@ define([
             cancelClosed = true;
          };
          instance._editInPlaceController = {
-            getEditingItem: () => ({}),
+            isEditing: () => true,
             updateOptions: () => {}
          };
          instance._beforeUpdate(cfg);

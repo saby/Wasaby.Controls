@@ -34,7 +34,7 @@ import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
     CollectionItem,
-    GroupItem,
+    GroupItem, IEditableCollectionItem,
     TItemKey
 } from 'Controls/display';
 import {
@@ -1998,7 +1998,7 @@ const _private = {
         const oldSourceCfg = oldNavigation && oldNavigation.sourceConfig ? oldNavigation.sourceConfig : {};
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
-            if (!!self._listViewModel && !!self._editInPlaceController && !!self._editInPlaceController.getEditingItem()) {
+            if (_private.isEditing(self)) {
                 self.cancelEdit();
             }
         }
@@ -2397,7 +2397,7 @@ const _private = {
      * @param options
      * @private
      */
-    updateItemActions(self, options: any): void {
+    updateItemActions(self, options: any, editingCollectionItem?: IEditableCollectionItem): void {
         const itemActionsController =  _private.getItemActionsController(self);
         if (!itemActionsController) {
             return;
@@ -2417,14 +2417,8 @@ const _private = {
                 }
             };
         }
-        let editingCollectionItem;
-        let editingModel = self._editInPlaceController ? self._editInPlaceController.getEditingItem() : undefined;
-        if (editingModel) {
-            const collection = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
-            editingCollectionItem = collection.getItemBySourceKey(editingModel.getKey());
-        }
         const itemActionsChangeResult = itemActionsController.update({
-                editingItem: editingCollectionItem,
+                editingItem: editingCollectionItem as CollectionItem<Model>,
                 collection: self._listViewModel,
                 itemActions: options.itemActions,
                 itemActionsProperty: options.itemActionsProperty,
@@ -2685,21 +2679,15 @@ const _private = {
     },
 
     registerFormOperation(self): void {
-        const formOperationHandler = (shouldSave) => {
-            if (shouldSave) {
-                const editingItem = self._editInPlaceController.getEditingItem();
-                if (editingItem?.isChanged()) {
-                    return self.commitEdit();
-                }
-            }
-            return self.cancelEdit();
-        };
-
         self._notify('registerFormOperation', [{
-            save: formOperationHandler.bind(self, true),
-            cancel: formOperationHandler.bind(self, false),
+            save: self._commitEdit.bind(self, 'hasChanges'),
+            cancel: self.cancelEdit.bind(self),
             isDestroyed: () => self._destroyed
         }], {bubbling: true});
+    },
+
+    isEditing(self): boolean {
+        return !!self._editInPlaceController && self._editInPlaceController.isEditing();
     }
 };
 
@@ -3274,7 +3262,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
-            if (this._editInPlaceController && this._editInPlaceController.getEditingItem()) {
+            if (_private.isEditing(this)) {
                 this.cancelEdit();
             }
         }
@@ -3901,7 +3889,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
         // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
         const noData = !listViewModel.getCount();
-        const noEdit = !(this._editInPlaceController && this._editInPlaceController.getEditingItem());
+        const noEdit = !_private.isEditing(this);
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
         const noDataBeforeReload = this._noDataBeforeReload;
@@ -4061,17 +4049,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _afterBeginEditCallback(item: Model, isAdd: boolean): void {
+    _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): void {
         // Редактирование может запуститься при построении.
         if (this._isMounted) {
-            this._notify('afterBeginEdit', [item, isAdd]);
+            this._notify('afterBeginEdit', [item.contents, isAdd]);
 
             if (this._listViewModel.getCount() > 1) {
-                this.setMarkedKey(item.getKey());
+                this.setMarkedKey(item.contents.getKey());
             }
         }
 
-        item.subscribe('onPropertyChange', this._resetValidation);
+        item.contents.subscribe('onPropertyChange', this._resetValidation);
         /*
          * TODO: KINGO
          * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
@@ -4079,7 +4067,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
          * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
          * _canUpdateItemsActions приведет к показу неактуальных операций.
          */
-        _private.updateItemActions(this, this._options);
+        _private.updateItemActions(this, this._options, item);
     },
 
     _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean) {
@@ -4111,9 +4099,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _afterEndEditCallback(item: Model, isAdd: boolean): void {
-        this._notify('afterEndEdit', [item, isAdd]);
-        item.unsubscribe('onPropertyChange', this._resetValidation);
+    _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean): void {
+        this._notify('afterEndEdit', [item.contents, isAdd]);
+        item.contents.unsubscribe('onPropertyChange', this._resetValidation);
         _private.updateItemActions(this, this._options);
     },
 
@@ -4121,8 +4109,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._validateController.setValidationResult(null);
     },
 
-    getEditingItem(): Model {
-        return this._editInPlaceController?.getEditingItem();
+    isEditing(): boolean {
+        return _private.isEditing(this);
     },
 
     _startInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
@@ -4195,11 +4183,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     commitEdit() {
+        return this._commitEdit();
+    },
+
+    _commitEdit(commitStrategy?: 'hasChanges' | 'all') {
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
         }
         this.showIndicator();
-        return this._getEditInPlaceController().commit().finally(() => {
+        return this._getEditInPlaceController().commit(commitStrategy).finally(() => {
             this.hideIndicator();
         });
     },

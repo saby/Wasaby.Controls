@@ -659,11 +659,6 @@ var
             return hasEditOnClick && !clickEvent.target.closest(`.${EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE}`);
          };
 
-          const editingItem = this._children.treeControl.getEditingItem();
-          const closeEditing = (eItem: Model) => {
-              return eItem.isChanged() ? this.commitEdit() : this.cancelEdit();
-          };
-
          const shouldHandleClick = res !== false && !isNodeEditable();
 
          if (shouldHandleClick) {
@@ -683,10 +678,10 @@ var
               _private.setRestoredKeyObject(this, item);
 
              // Если в списке запущено редактирование, то проваливаемся только после успешного завершения.
-             if (!editingItem) {
+             if (!this._children.treeControl.isEditing()) {
                   changeRoot();
               } else {
-                 closeEditing(editingItem).then((result) => {
+                 this.commitEdit().then((result) => {
                      if (!(result && result.canceled)) {
                          changeRoot();
                      }

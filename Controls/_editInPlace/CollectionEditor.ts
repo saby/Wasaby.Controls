@@ -40,16 +40,26 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
     }
 
     /**
-     * Получить редактируемый элемент
+     * Возвращает true, если в коллекции есть запущенное редактирование
      * @method
-     * @return {Types/entity:Model|undefined}
+     * @return {Boolean}
      * @public
      */
-    getEditingItem(): Model | undefined {
+    isEditing(): boolean {
+        return !!this.getEditingItem();
+    }
+
+    /**
+     * Получить редактируемый элемент
+     * @method
+     * @return {IEditableCollectionItem}
+     * @public
+     */
+    getEditingItem(): IEditableCollectionItem | undefined {
         if (this._editingKey === undefined) {
             return undefined;
         }
-        return this._options.collection.getItemBySourceKey(this._editingKey).contents;
+        return this._options.collection.getItemBySourceKey(this._editingKey);
     }
 
     private _validateOptions(options: Partial<ICollectionEditorOptions>): true | never {
