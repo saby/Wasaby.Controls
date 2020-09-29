@@ -21,7 +21,6 @@
    display: flex;
    box-sizing: border-box;
    align-items: baseline;
-   min-height: @item_height_menu;
 }
 
 .controls-Menu__row_state_default_theme-@{themeName} {
@@ -76,7 +75,6 @@
    font-weight: bold;
 }
 
-//не удалять, высота необходима, чтобы корректно работал align-items:center в IE
 .controls-Menu__row_singleLine_theme-@{themeName} {
    height: @item_height_menu;
    line-height: normal;
@@ -104,6 +102,10 @@
    visibility: hidden;
 }
 
+.controls-Menu__icon_theme-@{themeName} {
+   //padding-top: @item_padding-top_menu;
+}
+
 .controls-Menu__icon {
    .flex-shrink(0);
 }
@@ -126,7 +128,6 @@
    display: inline-flex;
    align-items: baseline;
    box-sizing: border-box;
-   padding-top: @item_padding-top_menu;
    flex-shrink: 1;
    &::before {
       content: '\200b';
@@ -157,6 +158,9 @@
 }
 
 .controls-Menu__content-wrapper {
+   padding-top: @item_padding-top_menu;
+   height: @item_height_menu;
+   box-sizing: border-box;
    .text-overflow();
 }
 
