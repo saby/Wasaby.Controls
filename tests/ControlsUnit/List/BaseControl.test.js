@@ -1390,60 +1390,6 @@ define([
          assert.isFalse(notified);
       });
 
-      it('spaceHandler', async function() {
-         var
-             cfg = {
-                viewModelConstructor: lists.ListViewModel,
-                markerVisibility: 'visible',
-                keyProperty: 'key',
-                multiSelectVisibility: 'visible',
-                selectedKeysCount: 0,
-                source: new sourceLib.Memory({
-                   keyProperty: 'key',
-                   data: [{
-                      key: 1
-                   }, {
-                      key: 2
-                   }, {
-                      key: 3
-                   }]
-                }),
-                selectedKeys: [],
-                excludedKeys: []
-             },
-             baseControl = new lists.BaseControl(cfg);
-
-         const event = {
-            preventDefault: () => {}
-         };
-         const sandbox = sinon.createSandbox();
-
-         baseControl.saveOptions(cfg);
-         await baseControl._beforeMount(cfg);
-
-         baseControl._loadingIndicatorState = 'all';
-         await lists.BaseControl._private.enterHandler(baseControl);
-
-         baseControl._loadingIndicatorState = null;
-         sandbox.replace(lists.BaseControl._private, 'moveMarkerToNext', () => {});
-         const notifySpy = sinon.spy(baseControl, '_notify');
-         await lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).called);
-
-         baseControl.getViewModel()._markedKey = 5;
-         await lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.isFalse(notifySpy.withArgs('selectedKeysChanged', [[1], [], []]).called);
-         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false]).called);
-
-         notifySpy.resetHistory();
-         baseControl._options.multiSelectVisibility = 'hidden';
-         await lists.BaseControl._private.spaceHandler(baseControl, event);
-         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
-         assert.isFalse(notifySpy.withArgs('listSelectedKeysCountChanged').called);
-
-         sandbox.restore();
-      });
-
       describe('_private.keyDownDel', () => {
          let cfg;
          let instance;
@@ -7526,9 +7472,10 @@ define([
 
          it('spaceHandler', () => {
             const notifySpy = sinon.spy(baseControl, '_notify');
-            lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null });
-            assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
-            assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
+            return lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null }).then(() => {
+               assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
+               assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
+            });
          });
 
          it('_onItemSwipe', () => {

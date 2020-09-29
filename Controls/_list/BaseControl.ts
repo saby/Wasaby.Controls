@@ -595,23 +595,24 @@ const _private = {
         }
     },
     spaceHandler(self: typeof BaseControl, event: SyntheticEvent): Promise<void>|void {
-        if (self._options.multiSelectVisibility === 'hidden' || self._options.markerVisibility === 'hidden') {
+        if (self._options.markerVisibility === 'hidden') {
             return;
         }
 
         return _private.getMarkerControllerAsync(self).then((controller) => {
-            let toggledItemId = controller.getMarkedKey();
-            if (toggledItemId === null) {
-                toggledItemId = controller.getNextMarkedKey();
-            }
+            if (self._options.multiSelectVisibility !== 'hidden' && !self._options.checkboxReadOnly) {
+                let toggledItemId = controller.getMarkedKey();
+                if (toggledItemId === null || toggledItemId === undefined) {
+                    toggledItemId = controller.getNextMarkedKey();
+                }
 
-            if (toggledItemId) {
                 if (toggledItemId) {
                     const result = _private.getSelectionController(self).toggleItem(toggledItemId);
                     _private.changeSelection(self, result);
                 }
-                _private.moveMarkerToNext(self, event);
             }
+
+            _private.moveMarkerToNext(self, event);
         });
     },
 
