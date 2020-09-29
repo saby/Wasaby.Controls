@@ -1,8 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+// @ts-ignore
 import * as template from 'wml!Controls/_list/Container';
 import {ContextOptions as DataOptions} from 'Controls/context';
-import {PrefetchProxy} from 'Types/source';
-import {IFilterOptions, INavigationOptions, ISortingOptions} from 'Controls/interface';
 import {ISourceControllerState} from 'Controls/dataSource';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
@@ -12,7 +11,7 @@ interface IDataContext {
 
 export default class ListContainer extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _dataOptions: IDataContextOptions = null;
+    protected _dataOptions: ISourceControllerState = null;
 
     protected _beforeMount(options: IControlOptions, context: IDataContext): void {
         this._dataOptions = context.dataOptions;
@@ -28,7 +27,7 @@ export default class ListContainer extends Control<IControlOptions> {
         });
     }
 
-    static contextTypes() {
+    static contextTypes(): IDataContext {
         return {
             dataOptions: DataOptions
         };

@@ -327,7 +327,7 @@ const _private = {
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             _private.setReloadingState(self, true);
-            self._sourceController.load(filter, sorting, null, sourceConfig, cfg.root).addCallback(function(list) {
+            self._sourceController.reload(sourceConfig).addCallback(function(list) {
                 // Пока загружались данные - список мог уничтожится. Обрабатываем это.
                 // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
                 if (self._destroyed) {
@@ -532,16 +532,23 @@ const _private = {
 
     validateSourceControllerOptions(self, options): void {
         const sourceControllerState = self._sourceController.getState();
-        const validate = (optionName) => {
+        const validateIfOptionsIsSetOnBothControls = (optionName) => {
             if (sourceControllerState[optionName] &&
                 options[optionName] &&
                 sourceControllerState[optionName] !== options[optionName]) {
-                Logger.error(`BaseControl: It is necessary to set the ${optionName} option in one place`);
+                Logger.warn(`BaseControl: It is necessary to set the ${optionName} option in one place`);
             }
         };
-        const optionsToValidate = ['source', 'navigation', 'sorting'];
+        const validateIfOptionsIsSetOnlyOnList = (optionName) => {
+            if (options[optionName] && !sourceControllerState[optionName]) {
+                Logger.warn(`BaseControl: It is necessary to set the ${optionName} option on Controls/list:DataContainer`);
+            }
+        };
+        const optionsToValidateOnBoth = ['source', 'navigation', 'sorting', 'root'];
+        const optionsToValidateOnlyOnList = ['source', 'navigation', 'sorting'];
 
-        optionsToValidate.forEach(validate);
+        optionsToValidateOnBoth.forEach(validateIfOptionsIsSetOnBothControls);
+        optionsToValidateOnlyOnList.forEach(validateIfOptionsIsSetOnlyOnList);
     },
 
     getAllDataCount(self): number|undefined {
@@ -645,7 +652,7 @@ const _private = {
             _private.moveMarkerToNext(self, event);
         }
     },
-    prepareFooter(self, navigation, sourceController) {
+    prepareFooter(self, navigation, sourceController: SourceController): void {
         let
             loadedDataCount, allDataCount;
 
@@ -656,7 +663,7 @@ const _private = {
         }
 
         if (self._shouldDrawFooter) {
-            loadedDataCount = self._listViewModel.getCount();
+            loadedDataCount = self._listViewModel?.getCount();
             allDataCount = _private.getAllDataCount(self);
             if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
                 self._loadMoreCaption = allDataCount - loadedDataCount;
@@ -750,8 +757,8 @@ const _private = {
                 drawItemsUp(countCurrentItems, addedItems);
             }
 
-            if (!_private.hasMoreData(self, self._sourceController, direction) && !addedItems.getCount()) {
-                self.updateShadowModeHandler(self._shadowVisibility);
+            if (!_private.hasMoreData(self, self._sourceController, direction)) {
+                self._updateShadowModeHandler(self._shadowVisibility);
             }
         };
 
@@ -759,9 +766,6 @@ const _private = {
 
         if (self._sourceController) {
             const filter: IHashMap<unknown> = cClone(receivedFilter || self._options.filter);
-            if (self._options.beforeLoadToDirectionCallback) {
-                self._options.beforeLoadToDirectionCallback(filter, self._options);
-            }
             if (isPortionedLoad) {
                 _private.loadToDirectionWithSearchValueStarted(self);
             }
@@ -1003,7 +1007,8 @@ const _private = {
             if (self._options.navigation && self._options.navigation.viewConfig) {
                 pagingMode = self._options.navigation.viewConfig.pagingMode;
             }
-            self._sourceController.setEdgeState(direction, pagingMode);
+
+            self._sourceController.shiftToEdge(direction, self._options.root, pagingMode);
 
             // Если пейджинг уже показан, не нужно сбрасывать его при прыжке
             // к началу или концу, от этого прыжка его состояние не может
@@ -1065,19 +1070,27 @@ const _private = {
     },
     needShowPagingByScrollSize(self, viewSize: number, viewportSize: number): boolean {
         let result = self._pagingVisible;
+        /**
+         * Правильнее будет проверять что размер viewport не равен 0.
+         * Это нужно для того, чтобы пэйджинг в таком случае не отобразился.
+         * viewport может быть равен 0 в том случае, когда блок скрыт через display:none, а после становится видим.
+         */
+        if (viewportSize !== 0) {
+            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
+                self._scrollController?.calculateVirtualScrollHeight() || 0);
+            const proportion = (scrollHeight / viewportSize);
 
-        const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
-                                      self._scrollController?.calculateVirtualScrollHeight() || 0);
-        const proportion = (scrollHeight / viewportSize);
+            // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
+            if (!result) {
+                result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
+            }
 
-        // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
-        if (!result) {
-            result = proportion >= MIN_SCROLL_PAGING_SHOW_PROPORTION;
-        }
-
-        // если все данные поместились на один экран, то скрываем пэйджинг
-        if (result) {
-            result = proportion > MAX_SCROLL_PAGING_HIDE_PROPORTION;
+            // если все данные поместились на один экран, то скрываем пэйджинг
+            if (result) {
+                result = proportion > MAX_SCROLL_PAGING_HIDE_PROPORTION;
+            }
+        } else {
+            result = false;
         }
 
         // если мы для списка раз вычислили, что нужен пэйджинг, то возвращаем этот статус
@@ -1487,9 +1500,10 @@ const _private = {
         if (changesType === 'collectionChanged' || newModelChanged) {
             // TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
             if (self._options.navigation && self._options.navigation.source) {
-                const stateChanged = self._sourceController.setState(self._listViewModel, self._options.root);
+                const itemsCount = self._listViewModel.getCount();
+                const moreMetaCount = _private.getAllDataCount(self);
 
-                if (stateChanged) {
+                if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
                     _private.prepareFooter(self, self._options.navigation, self._sourceController);
                 }
             }
@@ -1864,6 +1878,9 @@ const _private = {
      */
     showError(self: BaseControl, errorConfig: dataSourceError.ViewConfig): void {
         self.__error = errorConfig;
+        if (errorConfig && (errorConfig.mode === dataSourceError.Mode.include)) {
+            self._scrollController = null;
+        }
     },
 
     hideError(self: BaseControl): void {
@@ -1900,17 +1917,7 @@ const _private = {
     },
 
     getSourceController(options): SourceController {
-        return new SourceController({
-            source: options.source,
-            navigation: options.navigation,
-            keyProperty: options.keyProperty,
-            filter: options.filter,
-            sorting: options.sorting,
-            parentProperty: options.parentProperty,
-            root: options.root,
-            groupProperty: options.groupProperty,
-            dataLoadErrback: options.dataLoadErrback
-        });
+        return new SourceController(options);
     },
 
     checkRequiredOptions(options) {
@@ -2230,16 +2237,20 @@ const _private = {
                     self._notify('disableVirtualNavigation', [], { bubbling: true });
                 }
             }
-            if (result.activeElement) {
+            if (result.activeElement && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
                 self._notify('activeElementChanged', [result.activeElement]);
+                if (result.scrollToActiveElement) {
+                    // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
+                self._keepScrollAfterReload = true;_private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+                }
             }
         }
         if (result.triggerOffset) {
             self._loadTriggerOffset = result.triggerOffset;
             self.applyTriggerOffset(result.triggerOffset);
         }
-        if (result.scrollToActiveElement) {
-            _private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+        if (result.shadowVisibility) {
+            self._updateShadowModeHandler(result.shadowVisibility);
         }
     },
     onItemsChanged(self: any, action: string, removedItems: [], removedItemsIndex: number): void {
@@ -2455,6 +2466,8 @@ const _private = {
             useNewModel: options.useNewModel,
             forceInitVirtualScroll: options?.navigation?.view === 'infinity'
         });
+        const result = self._scrollController.handleResetItems();
+        _private.handleScrollControllerResult(self, result);
     },
 
     /**
@@ -2953,10 +2966,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions};
 
-        if (receivedData) {
-            self._sourceController.setItems(receivedData);
-        } else {
-            receivedData = self._sourceController.getItems();
+        if (self._sourceController) {
+            if (receivedData) {
+                self._sourceController.setItems(receivedData);
+            } else {
+                receivedData = self._sourceController.getItems();
+            }
         }
 
         if (collapsedGroups) {
@@ -3051,7 +3066,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         keyProperty: self._options.keyProperty,
                         rawData: []
                     }));
-
+                    this._sourceController.setItems(data);
                     if (newOptions.useNewModel && !self._listViewModel) {
                         self._items = data;
                         self._listViewModel = self._createNewModel(
@@ -3133,7 +3148,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect): void {
         this._viewportSize = viewportHeight;
         this._viewportRect = viewportRect;
-        if (this._isScrollShown) {
+        if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
             this._updateItemsHeights();
         }
         if (this._loadingIndicatorState) {
@@ -3141,7 +3156,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
+    _updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
         this._shadowVisibility = shadowVisibility;
         if (this._isMounted) {
             _private.updateShadowMode(this, shadowVisibility);
@@ -3298,8 +3313,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
         const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         const resetPaging = this._pagingNavigation && filterChanged;
-        const recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging;
         const sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
+        const recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging || sortingChanged;
         const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         this._prevRootId = this._options.root;
@@ -3374,7 +3389,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setEditingConfig(newOptions.editingConfig);
         }
         if (recreateSource) {
-            this.recreateSourceController(newOptions.source, newOptions.navigation, newOptions.keyProperty);
+            if (this._sourceController) {
+                this.updateSourceController(newOptions);
+            } else {
+                this._sourceController = _private.getSourceController(newOptions);
+            }
+        }
+
+        if (!newOptions.sourceController && this._sourceController) {
+            this.updateSourceController(newOptions);
         }
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
@@ -3520,10 +3543,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    reloadItem(key: String, readMeta: Object, replaceItem: Boolean, reloadType = 'read'): Deferred {
+    reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {
         const items = this._listViewModel.getCollection();
         const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
-        const sourceController = _private.getSourceController(this._options, this._notifyNavigationParamsChanged);
+        const sourceController = _private.getSourceController(this._options);
 
         let reloadItemDeferred;
         let filter;
@@ -3552,20 +3575,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (reloadType === 'query') {
             filter = cClone(this._options.filter);
             filter[this._options.keyProperty] = [key];
-            reloadItemDeferred = sourceController.load(filter).addCallback((items) => {
-                itemsCount = items.getCount();
+            sourceController.setFilter(filter);
+            reloadItemDeferred = sourceController.load().then((items) => {
+                if (items instanceof RecordSet) {
+                    itemsCount = items.getCount();
 
-                if (itemsCount === 1) {
-                    loadCallback(items.at(0));
-                } else if (itemsCount > 1) {
-                    Logger.error('BaseControl: reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
-                } else {
-                    Logger.info('BaseControl: reloadItem::query returns empty recordSet.');
+                    if (itemsCount === 1) {
+                        loadCallback(items.at(0));
+                    } else if (itemsCount > 1) {
+                        Logger.error('BaseControl: reloadItem::query returns wrong amount of items for reloadItem call with key: ' + key);
+                    } else {
+                        Logger.info('BaseControl: reloadItem::query returns empty recordSet.');
+                    }
                 }
                 return items;
             });
         } else {
-            reloadItemDeferred = sourceController.read(key, readMeta).addCallback((item) => {
+            reloadItemDeferred = sourceController.read(key, readMeta).then((item) => {
                 if (item) {
                     loadCallback(item);
                 } else {
@@ -3736,7 +3762,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._syncLoadingIndicatorState = null;
             }
 
-            this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            const itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
@@ -3746,13 +3772,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
                 this._scrollController.beforeRestoreScrollPosition();
-                this._notify('restoreScrollPosition', 
+                this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
                 needCheckTriggers = true;
             }
 
-            if (needCheckTriggers) {
+            if (needCheckTriggers || itemsUpdated) {
                 this.checkTriggerVisibilityWithTimeout();
             }
 
@@ -4356,7 +4382,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('tagHover', [dispItem, columnIndex, event]);
     },
 
-    _applyPagingNavigationState(params) {
+    _applyPagingNavigationState(params): void {
+        const options = {...this._options};
         const newNavigation = cClone(this._options.navigation);
         if (params.pageSize) {
             newNavigation.sourceConfig.pageSize = params.pageSize;
@@ -4365,23 +4392,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newNavigation.sourceConfig.page = params.page - 1;
             newNavigation.sourceConfig.pageSize = this._currentPageSize;
         }
-        this.recreateSourceController(this._options.source, newNavigation, this._options.keyProperty);
+        options.navigation = newNavigation;
+        this._sourceController.updateOptions(options);
         _private.reload(this, this._options);
         this._shouldRestoreScrollPosition = true;
     },
 
-    recreateSourceController(newSource, newNavigation, newKeyProperty) {
-
+    recreateSourceController(options): void {
         if (this._sourceController) {
             this._sourceController.destroy();
         }
-        this._sourceController = new SourceController({
-            source: newSource,
-            navigation: newNavigation,
-            keyProperty: newKeyProperty,
-            queryParamsCallback: this._notifyNavigationParamsChanged
-        });
+        this._sourceController = _private.getSourceController(options);
+    },
 
+    updateSourceController(options): void {
+        this._sourceController?.updateOptions(options);
     },
 
     /**

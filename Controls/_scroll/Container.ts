@@ -864,7 +864,9 @@ let
 
        _stickyHeaderFixedCallback(position: POSITION): void {
            // После того, как заголовки зафиксировались нужно пересчитать отображение скроллбара и теней.
-          this._forceUpdate();
+          if (this._displayState.canScroll) {
+              this._forceUpdate();
+          }
        },
 
       _updateShadowMode(event, shadowVisibleObject): void {
@@ -1198,11 +1200,10 @@ let
               // Контекст для тени постоянно вызывает обновление всех заголовков при смене shadowPosition, это
               // сильно сказывается на производительности и вызывает дерганья при скролле на ios в случае,
               // когда доскроллили до низа контейнера.
-              if (detection.isMobileIOS) {
-                  this._stickyHeaderController.setShadowVisibility(topShadowVisible, bottomShadowVisible);
-              } else {
+              if (!detection.isMobileIOS) {
                   this._stickyHeaderContext.updateConsumers();
               }
+              this._stickyHeaderController.setShadowVisibility(topShadowVisible, bottomShadowVisible);
           }
       },
 
