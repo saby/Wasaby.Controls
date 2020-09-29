@@ -1,5 +1,3 @@
-<div class="controlsDemo__wrapper">
-    <Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}" closeButtonVisibility="{{false}}">
-        <div class="controls-text-label_theme-{{_options.theme}}" style="height: 60px">My template</div>
-    </Controls.popupTemplate:InfoBox>
-</div>
+<Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}" closeButtonVisibility="{{false}}">
+   <div class="controls-text-label_theme-{{_options.theme}}" style="height: 60px">My template</div>
+</Controls.popupTemplate:InfoBox>
