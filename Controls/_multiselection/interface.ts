@@ -79,6 +79,12 @@ export interface ISelectionModel extends IBaseCollection<Model, ISelectionItem> 
     * @return {number} кол-во элементов
     */
    getCount(): number;
+
+   /**
+    * Возвращает список элементов
+    * @return {ISelectionItem[]} список элементов
+    */
+   getItems(): ISelectionItem[];
 }
 
 /**
