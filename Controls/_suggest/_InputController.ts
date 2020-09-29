@@ -52,7 +52,7 @@ const DEPS = ['Controls/suggestPopup:_ListWrapper', 'Controls/scroll:Container',
 
 type Key = string | number | null;
 type TState = boolean | null;
-type HistoryKeys = string[] | null;
+type HistoryKeys = string[] | number[] | null;
 type CancelableError = Error & { canceled?: boolean };
 
 interface IInputControllerOptions extends IControlOptions, IFilterOptions, ISearchOptions,
@@ -197,11 +197,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _openWithHistory(): void {
       let filter: QueryWhereExpression<unknown>;
 
-      function openSuggestIfNeeded(): void {
+      const openSuggestIfNeeded = (): void => {
          if (this._historyKeys.length || this._options.autoDropDown) {
-            this.open();
+            this._open();
          }
-      }
+      };
 
       if (!this._historyKeys) {
          this._getRecentKeys().addCallback((keys: string[]) => {
@@ -329,7 +329,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                           searchValue: string,
                           minSearchLength: number,
                           tabId: Key,
-                          historyKeys: string[]): QueryWhereExpression<unknown> {
+                          historyKeys: Key[]): QueryWhereExpression<unknown> {
       const preparedFilter = clone(filter) || {};
       if (tabId) {
          preparedFilter.currentTab = tabId;
