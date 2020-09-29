@@ -117,6 +117,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             baseControl._afterMount();
             baseControl._listViewModel = new ListViewModel(baseControlCfg.viewModelConfig);
+            baseControl._items = new RecordSet();
             baseControl._createSelectionController();
             assert.isFalse(!baseControl._listViewModel || !baseControl._listViewModel.getCollection());
             assert.isNotNull(baseControl._selectionController);
@@ -165,6 +166,18 @@ describe('Controls/list_clean/BaseControl', () => {
             BaseControl._private.handleListScrollSync(baseControl, 200);
             assert.isTrue(baseControl._pagingVisible);
         });
+        it('is viewport = 0', async () => {
+            baseControl.saveOptions(baseControlCfg);
+            await baseControl._beforeMount(baseControlCfg);
+            baseControl._beforeUpdate(baseControlCfg);
+            baseControl._afterUpdate(baseControlCfg);
+            baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
+            assert.isFalse(baseControl._pagingVisible);
+            baseControl._viewportSize = 0;
+            baseControl._viewSize = 800;
+            baseControl._mouseEnter(null);
+            assert.isFalse(baseControl._pagingVisible);
+        });
     });
     describe('BaseControl paging', () => {
         const baseControlCfg = {
@@ -211,7 +224,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
-            baseControl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+            baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
@@ -249,7 +262,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
-            baseControl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+            baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
@@ -286,7 +299,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
-            baseControl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+            baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
@@ -323,7 +336,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
-            baseControl.updateShadowModeHandler({}, {top: 0, bottom: 0});
+            baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
@@ -386,8 +399,8 @@ describe('Controls/list_clean/BaseControl', () => {
 
             baseControl.saveOptions(baseControlCfg);
             await baseControl._beforeMount(baseControlCfg);
-            baseControl._editInPlace = {
-                reset: () => {
+            baseControl._editInPlaceController = {
+                destroy: () => {
                     assert.isFalse(modelDestroyed, 'model is destroyed before editInPlace');
                     eipReset = true;
                 }
