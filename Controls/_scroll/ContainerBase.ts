@@ -544,7 +544,13 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _scrollToElement(event: SyntheticEvent<Event>, {itemContainer, toBottom, force}): void {
         event.stopPropagation();
         scrollToElement(itemContainer, toBottom, force);
-        this._state.scrollTop = this._children.content.scrollTop;
+        /**
+         * Синхронно обновляем состояние скрол контейнера, что бы корректно работали другие синхронные вызовы api скролл контейнера которое зависят от текущего состояния.
+         */
+        this.onScrollContainer({
+            scrollTop: this._children.content.scrollTop,
+            scrollLeft: this._children.content.scrollLeft,
+        });
     }
 
     // Виртуальный скролл
