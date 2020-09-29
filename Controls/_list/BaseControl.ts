@@ -3303,13 +3303,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (_private.hasSelectionController(this)) {
             const selectionController = _private.getSelectionController(self, newOptions);
+            const collection = self._listViewModel.getDisplay ? self._listViewModel.getDisplay() : self._listViewModel;
 
             selectionController.updateOptions({
-                model: self._listViewModel,
+                model: collection,
                 searchValue: newOptions.searchValue,
                 strategyOptions: _private.getSelectionStrategyOptions(
                     newOptions,
-                    self._listViewModel.getDisplay().getItems(),
+                    collection.getItems(),
                     self._items.getMetaData().ENTRY_PATH
                 )
             });

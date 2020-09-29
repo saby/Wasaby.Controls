@@ -28,7 +28,7 @@ describe('Controls/_multiselection/Controller', () => {
        strategy = new FlatSelectionStrategy({items: model.getDisplay().getItems() });
 
       controller = new SelectionController({
-         model,
+         model: model.getDisplay(),
          strategy,
          selectedKeys: [],
          excludedKeys: []
@@ -42,11 +42,11 @@ describe('Controls/_multiselection/Controller', () => {
       });
 
       controller.updateOptions({
-         model,
+         model: model.getDisplay(),
          strategyOptions: { items: model.getDisplay().getItems() }
       });
 
-      assert.equal(controller._model, model);
+      assert.equal(controller._model, model.getDisplay());
       assert.deepEqual(controller._strategy._items, model.getDisplay().getItems());
    });
 
