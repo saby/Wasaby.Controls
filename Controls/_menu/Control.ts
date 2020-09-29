@@ -178,6 +178,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 }
                 if (options.selectedKeys && options.selectedKeys.length) {
                     this._selectionController = this._createSelectionController(options);
+                    this._selectionController.setSelection(this._selectionController.getSelection());
                 }
             });
         }
@@ -352,7 +353,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _updateSelectionController(newOptions: IMenuControlOptions): void {
-        this._getSelectionController().update({
+        this._getSelectionController().updateOptions({
             model: this._listModel,
             selectedKeys: this._getKeysForSelectionController(newOptions),
             excludedKeys: [],
@@ -363,7 +364,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getSelectionStrategyOptions(): IFlatSelectionStrategyOptions {
         return {
-            items: this._listModel.getCollection()
+            items: this._listModel.getItems()
         };
     }
 
@@ -617,10 +618,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             selectionController.toggleItem(selectedItems[0].getContents().getKey());
         }
         const selection = selectionController.toggleItem(key);
-        selectionController.setSelectedKeys(selection.selectedKeysDiff.keys, selection.excludedKeysDiff.keys);
+        selectionController.setSelection(selection);
         this._listModel.nextVersion();
 
-        const isEmptySelected = this._options.emptyText && !selection.selectedKeysDiff.keys.length;
+        const isEmptySelected = this._options.emptyText && !selection.selected.length;
         if (isEmptySelected) {
             this._getMarkerController(this._options).setMarkedKey(this._options.emptyKey);
         }
