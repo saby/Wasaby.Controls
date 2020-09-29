@@ -16,9 +16,19 @@ export default class extends Control<IControlOptions> {
       if (options.hasOwnProperty('collapseNodes')) {
          this._expandedItems = [];
       }
+      const data = Gadgets.getFlatData();
+      data.push({
+         id: 6,
+         title: 'Subtask',
+         rating: '',
+         country: '',
+         parent: null,
+         type: false,
+         subtask: true
+      });
       this._viewSource = new Memory({
          keyProperty: 'id',
-         data: Gadgets.getFlatData()
+         data
       });
    }
 

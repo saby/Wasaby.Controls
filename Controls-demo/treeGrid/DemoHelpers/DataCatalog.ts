@@ -335,15 +335,6 @@ export const Gadgets = {
                 parent: null,
                 type: false,
                 photo: explorerImages[1]
-            },
-            {
-                id: 6,
-                title: 'Subtask',
-                rating: '',
-                country: '',
-                parent: null,
-                type: false,
-                subtask: true
             }
         ];
     },
