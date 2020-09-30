@@ -113,6 +113,7 @@ export function getDefaultOptions(): object {
     return {
         viewMode: 'button',
         iconStyle: 'secondary',
+        iconSize: 'm',
         captionPosition: 'right',
         contrastBackground: false,
         fontSize: 'm',
