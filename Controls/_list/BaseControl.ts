@@ -3529,7 +3529,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // New item has a version of 0. If the replaced item has the same
             // version, it will not be redrawn. Notify the model that the
             // item was reloaded to force its redraw.
-            if (item && item.getId) {
+            // Данный код актуален только для старой модели
+            if (item && item.getId && this._listViewModel.markItemReloaded instanceof Function) {
                 this._listViewModel.markItemReloaded(item.getId());
                 this._itemReloaded = true;
             }
