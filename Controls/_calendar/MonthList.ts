@@ -325,7 +325,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 if (boundingClientRect.top - rootBounds.top <= 0) {
                     // Из-за дробных пикселей при масштабе или на touch-устройствах могу дергаться элементы.
                     // При этом возникает разница между boundingClientRect.bottom и rootBounds.top
-                    // вплоть до 1.5 пикселей. Из-за этого неправильно расчитывается текущая дата.
+                    // вплоть до 1.5 пикселей в зависимости от зума. Из-за этого неправильно расчитывается текущая дата.
                     if (boundingClientRect.bottom - rootBounds.top >= SCALE_ROUNDING_ERROR_FIX) {
                         // If the bottom of the container lies at or below the top of the scrolled container, then we found the right date
                         date = entryDate;
