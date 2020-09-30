@@ -1,9 +1,8 @@
 import {Control, IControlOptions} from 'UI/Base';
 import Popup from 'Controls/_popup/Manager/Popup';
-import {load} from 'Core/library';
 import Container from 'Controls/_popup/Manager/Container';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
-import {Logger} from 'UI/Utils';
+import {Logger, Library} from 'UI/Utils';
 import {IPopupItem, IPopupOptions, IPopupController, IPopupItemInfo} from 'Controls/_popup/interface/IPopup';
 import {goUpByControlTree} from 'UI/Focus';
 import {List} from 'Types/collection';
@@ -101,9 +100,8 @@ class Manager {
 
     loadData(dataLoaders): Promise<unknown> {
         return new Promise((resolve) => {
-            load(this._dataLoaderModule).then((DataLoader) => {
-               const Loader = DataLoader.default || DataLoader;
-               resolve(Loader.load(dataLoaders));
+            Library.load(this._dataLoaderModule).then((DataLoader) => {
+               resolve(DataLoader.load(dataLoaders));
            });
         });
     }
