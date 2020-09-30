@@ -124,7 +124,7 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {IScrollState} from '../Utils/ScrollState';
 import {getScrollPositionTypeByState, SCROLL_DIRECTION, SCROLL_POSITION} from './Utils/Scroll';
 import Context = require('Controls/_scroll/StickyHeader/Context');
-import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
+import {IntersectionObserver} from 'Controls/sizeUtils';
 import Model = require('Controls/_scroll/StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/StickyHeader');
 import {tmplNotify} from 'Controls/eventUtils';
