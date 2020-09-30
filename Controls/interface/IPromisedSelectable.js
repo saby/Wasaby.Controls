@@ -46,7 +46,7 @@ define('Controls/interface/IPromisedSelectable', [
     * @remark
     * Чтобы выбрать все элементы внутри узла, необходимо в selectedKeys передать значение {@link Controls/_interface/ISource#keyProperty keyProperty} этого узла.
     * Чтобы выбрать все элементы, необходимо в selectedKeys передать [null].
-    * 
+    *
     * Следующее примечание актуально только при работе с {@link Controls/operations:Panel Панелью действий}.
     * Если все элементы списочного контрола выбраны через кнопку "Отметить"->"Все", тогда опции **selectedKeys** и **excludedKeys** для плоских списков (см. {@link Controls/list:View Плоский список} и {@link Controls/grid:View таблица}) будут установлены в значение **null**, а для иерархических (см. {@link Controls/treeGrid:View Дерево}, {@link Controls/tile:View Плитка} и {@link Controls/explorer:View Иерархический проводник}) — в значение **корень** (см. {@link Controls/explorer:IExplorer#root root}).
     * @example
@@ -103,7 +103,7 @@ define('Controls/interface/IPromisedSelectable', [
     * @default []
     * @remark
     * Узел будет отмечен как частично выбранный, если ключ любого из его дочерних элементов находится в excludedKeys. Такие узлы обычно отображаются с флагом в неопределенном состоянии рядом с ними.
-    * 
+    *
     * Следующее примечание актуально только при работе с {@link Controls/operations:Panel Панелью действий}.
     * Если все элементы списочного контрола выбраны через кнопку "Отметить"->"Все", тогда опции **selectedKeys** и **excludedKeys** для плоских списков (см. {@link Controls/list:View Плоский список} и {@link Controls/grid:View таблица}) будут установлены в значение **null**, а для иерархических (см. {@link Controls/treeGrid:View Дерево}, {@link Controls/tile:View Плитка} и {@link Controls/explorer:View Иерархический проводник}) — в значение **корень** (см. {@link Controls/explorer:IExplorer#root root}).
     * @example
@@ -273,4 +273,16 @@ define('Controls/interface/IPromisedSelectable', [
     * @see excludedKeys
     */
 
+
+   /**
+    * @event Происходит до изменения списка выбранных элементов.
+    * @name Controls/interface/IPromisedSelectable#beforeSelectionChanged
+    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+    * @param {Controls/_multiselection/interface#ISelectionDifference} selectionDiff Изменение в списке выбранных элементов по сравнению с текущим выбором.
+    * @return {Controls/_interface/ISelectionObject} Список выбранных элементов
+    * @remark
+    * Из обработчика события можно вернуть новый список выбранных элементов.
+    * Либо можно вернуть промис с новым списком выбранных элементов.
+    * В этом месте можно повлият на список выбранных элементов, но аналогичный нужно положить в опции
+    */
 });
