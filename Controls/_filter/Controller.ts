@@ -55,7 +55,6 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
      },
 
     _beforeUnmount(): void {
-        this._filterController.destroy();
         this._filterController = null;
     },
 
