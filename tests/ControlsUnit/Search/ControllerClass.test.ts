@@ -46,7 +46,8 @@ function getDefaultOptions() {
             }
         },
         loadingChangedCallback: () => {},
-        filterChangedCallback: () => {}
+        filterChangedCallback: () => {},
+        itemsChangedCallback: () => {}
     };
 }
 
