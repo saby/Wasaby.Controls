@@ -11,8 +11,8 @@
 .controls-ListView__itemV_marker_default_theme-@{themeName} {
    position: absolute;
    width: @marker_thickness_list;
-   background-color: @marker_color_list;
    height: 100%;
+   background-color: @marker_color_list;
    left: 0;
    top: 0;
 }
@@ -525,31 +525,12 @@
 
 .controls-ListView__itemV_marker_master_theme-@{themeName} {
    position: absolute;
+   box-sizing: border-box;
    width: @master-marker_thickness_list;
-   height: 100%;
-   display: inline-flex;
-   align-items: baseline;
-   top: initial;
-   left: 0;
-}
-
-.ws-is-ie11 .controls-ListView__itemV_marker_master_theme-@{themeName} {
-   top: 0;
-   bottom: 0;
-   height: auto;
-}
-
-.controls-ListView__itemV_marker_master_theme-@{themeName}:before {
-   content: '\200b';
-   font-size: @master-marker_fontSize_list;
-}
-
-.controls-ListView__itemV_marker_master_theme-@{themeName}:after {
-   content: '';
-   display: inline-block;
    background-color: @master-marker_color_list;
-   width: @master-marker_thickness_list;
-   height: @master-marker_height_list;
+   height: 100%;
+   top: 0;
+   left: 0;
 }
 
 .controls-ListView__itemV_marker_masterClassic_theme-@{themeName} {
