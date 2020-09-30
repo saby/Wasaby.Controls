@@ -60,26 +60,9 @@ export class Controller {
     */
    calculateMarkedKeyForVisible(): CrudEntityKey {
       // TODO удалить этот метод, когда избавимся от onactivated
-      const existsMarkedItem = !!this._model.getItemBySourceKey(this._markedKey);
-
-      let newMarkedKey;
-
-      if (existsMarkedItem) {
-         newMarkedKey = this._markedKey;
-      } else {
-         if (this._markerVisibility === Visibility.Visible) {
-            if (this._model.getCount()) {
-               newMarkedKey = this._getFirstItemKey();
-            } else {
-               newMarkedKey = this._markedKey;
-            }
-         } else {
-            if (this._model.getCount()) {
-               newMarkedKey = null;
-            } else {
-               newMarkedKey = this._markedKey;
-            }
-         }
+      let newMarkedKey = this._markedKey;
+      if (this._markerVisibility === Visibility.Visible && this._model.getCount() && !this._model.getItemBySourceKey(this._markedKey)) {
+         newMarkedKey = this._getFirstItemKey();
       }
 
       return newMarkedKey;
