@@ -34,6 +34,7 @@ export interface INumberEditorOptions extends IEditorOptions {
  * @class Controls/_propertyGrid/defaultEditors/Number
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor
+ * @demo Controls-demo/PropertyGridNew/Editors/Number/Demo
  * @control
  * @public
  * @author Борисов А.Н.
