@@ -615,7 +615,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const selectionController = this._getSelectionController();
         const selectedItems = this._listModel.getSelectedItems();
         if (selectedItems.length === 1 && MenuControl._isFixedItem(selectedItems[0].getContents())) {
-            selectionController.toggleItem(selectedItems[0].getContents().getKey());
+            selectionController.setSelection(selectionController.toggleItem(selectedItems[0].getContents().getKey()));
         }
         const selection = selectionController.toggleItem(key);
         selectionController.setSelection(selection);
@@ -655,7 +655,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     private _getSelectedKeys(): TSelectedKeys {
         const selectedKeys: TSelectedKeys = [];
         factory(this._listModel.getSelectedItems()).each((treeItem): void => {
-            selectedKeys.push(treeItem.getContents().get(this._options.keyProperty));
+            const itemContents: Model = treeItem.getContents();
+            selectedKeys.push(itemContents instanceof Object && itemContents.get(this._options.keyProperty));
         });
         return selectedKeys;
     }
