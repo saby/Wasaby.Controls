@@ -19,6 +19,7 @@
       </ws:if>
       <ws:else>
          <Controls._calendar.MonthView
+            newMode="{{_options.newMode}}"
             attr:class="controls-MonthList__month-body"
             attr:data-date="{{dateId}}"
             showWeekdays="{{false}}"

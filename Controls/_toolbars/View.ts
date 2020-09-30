@@ -375,6 +375,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this.setStateBySource(newOptions.source);
         }
         if (this._options.items !== newOptions.items) {
+            this._isLoadMenuItems = false;
             this._sourceByItems = null;
             this._setStateByItems(newOptions.items);
         }
