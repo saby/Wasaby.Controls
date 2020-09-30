@@ -500,6 +500,7 @@ var CompoundArea = CompoundContainer.extend([
 
    _setCustomHeader: function() {
       var hasHeader = !!this._options.caption;
+      const headerPaddingClass = ' controls-CompoundArea-headerPadding';
       var customHeaderContainer = this._getCustomHeaderContainer();
       if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length && !this._options.hideCross)) {
          if (customHeaderContainer.length) {
@@ -511,11 +512,15 @@ var CompoundArea = CompoundContainer.extend([
             customHeaderContainer = $('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + (this._options.caption || '') + '</div></div>');
             this.getContainer().prepend(customHeaderContainer);
             this.getContainer().addClass('controls-CompoundArea-headerPadding');
+            this._className += headerPaddingClass;
          }
       } else if (customHeaderContainer.length && this._options.type === 'dialog') {
          this._prependCustomHeader(customHeaderContainer);
       } else {
          this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+         if (this._className.indexOf(headerPaddingClass) >= 0) {
+            this._className = this._className.replace(headerPaddingClass, '');
+         }
       }
       this._titleBar = customHeaderContainer;
       if (!this._options.maximize && customHeaderContainer.length && this._options.draggable) {
