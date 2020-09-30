@@ -190,11 +190,6 @@ var
                self._pendingViewMode = null;
             }
          },
-         setVirtualScrolling(self, viewMode, cfg): void {
-            // todo https://online.sbis.ru/opendoc.html?guid=7274717e-838d-46c4-b991-0bec75bd0162
-            // For viewMode === 'tile' disable virtualScrolling.
-            self._virtualScrollConfig = viewMode === 'tile' ? false : cfg.virtualScrollConfig;
-         },
 
          setViewConfig: function (self, viewMode) {
             self._viewName = VIEW_NAMES[viewMode];
@@ -202,7 +197,6 @@ var
          },
          setViewModeSync: function(self, viewMode, cfg): void {
             self._viewMode = viewMode;
-            _private.setVirtualScrolling(self, self._viewMode, cfg);
             _private.setViewConfig(self, self._viewMode);
          },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
@@ -577,10 +571,6 @@ var
             _private.setPendingViewMode(this, cfg.viewMode, cfg);
          } else if (isViewModeChanged && !this._pendingViewMode) {
             _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
-         }
-
-         if (cfg.virtualScrollConfig !== this._options.virtualScrollConfig) {
-            _private.setVirtualScrolling(this, this._viewMode, cfg);
          }
       },
       _beforePaint: function() {
