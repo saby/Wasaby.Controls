@@ -93,10 +93,10 @@ export default class Browser extends Control {
     protected _afterMount(options): void {
         if (options.useStore) {
             const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
-                this._filterItemsChanged(filterSource);
+                this._filterItemsChanged(null, filterSource);
             });
             const filterSourceCallbackId = Store.onPropertyChanged('filter', (filter) => {
-                this._filterChanged(filter);
+                this._filterChanged(null, filter);
             });
 
             this._storeCallbacks = [sourceCallbackId, filterSourceCallbackId];
@@ -228,12 +228,8 @@ export default class Browser extends Control {
         }
     }
 
-    protected _filterChangedHandler(event: SyntheticEvent, filter: object): void {
+    protected _filterChanged(event: SyntheticEvent, filter: object): void {
         event && event.stopPropagation();
-        this._filterChanged(filter);
-    }
-
-    _filterChanged(filter: object): void {
         this._filterController.setFilter(filter);
 
         this._sourceController.setFilter(this._filterController.getFilter());
@@ -277,11 +273,7 @@ export default class Browser extends Control {
         this._updateContext(controllerState);
     }
 
-    protected _filterItemsChangedHandler(event: SyntheticEvent, items: IFilterItem[]): void {
-        this._filterItemsChanged(items);
-    }
-
-    protected _filterItemsChanged(items: IFilterItem[]): void {
+    protected _filterItemsChanged(event: SyntheticEvent, items: IFilterItem[]): void {
         this._filterController.updateFilterItems(items);
         this._updateFilterAndFilterItems();
         this._dataOptionsContext.filter = this._filter;
