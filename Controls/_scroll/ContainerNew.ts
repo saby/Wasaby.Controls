@@ -14,7 +14,7 @@ import {
     IScrollbarsOptions,
     getDefaultOptions as getScrollbarsDefaultOptions
 } from './Container/Interface/IScrollbars';
-import {IShadows, SHADOW_VISIBILITY} from './Container/Interface/IShadows';
+import {IShadows, IShadowsVisibilityByInnerComponents, SHADOW_VISIBILITY} from './Container/Interface/IShadows';
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import StickyHeaderController from './StickyHeader/Controller';
 import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyHeader/Utils';
@@ -251,6 +251,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _positionChangedHandler(event, direction, position): void {
         this.scrollTo(position, direction);
+    }
+
+    protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
+        this._shadows.updateVisibilityByInnerComponents(shadowsVisibility);
     }
 
     protected _keydownHandler(event: SyntheticEvent): void {
