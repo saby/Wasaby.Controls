@@ -7579,5 +7579,35 @@ define([
       });
 
       // endregion
+
+      it('change RecordSet with eventRaising=false', () => {
+         const recordSet = new collection.RecordSet({
+            keyProperty: 'id',
+            rawData: [{ id: 1 }, { id: 2 }, { id: 3 }]
+         });
+         const cfg = {
+            viewName: 'Controls/List/ListView',
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            markerVisibility: 'visible'
+         };
+
+         const baseControl = new lists.BaseControl();
+         baseControl.saveOptions(cfg);
+         return baseControl._beforeMount(cfg, null, { data: recordSet }).then(() => {
+            const newRecord = new entity.Model({ rawData: { id: 0 }, keyProperty: 'id' });
+
+            recordSet.setEventRaising(false, true);
+            recordSet.move(0, 1);
+            recordSet.add(newRecord, 0);
+            recordSet.move(0, 1);
+            recordSet.setEventRaising(true, true);
+
+            assert.isFalse(baseControl.getViewModel().getItemBySourceKey(0).isMarked());
+            assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+            assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+            assert.isFalse(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
+         });
+      });
    });
 });
