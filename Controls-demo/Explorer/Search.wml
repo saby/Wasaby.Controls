@@ -4,7 +4,7 @@
       <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id" bind:filter="_filter">
          <Controls.operations:Controller bind:selectedKeys="_selectedKeys"
                                            bind:excludedKeys="_excludedKeys">
-            <Controls.search:Controller searchParam="title" minSearchLength="{{3}}" searchStartingWith="{{_searchStartingWith}}">
+            <Controls.search:Controller searchParam="title" minSearchLength="{{3}}" searchStartingWith="{{_searchStartingWith}}" parentProperty="parent">
                <div class="ws-fragment">
                   <div class="controlsDemo-Explorer-Search__header">
                      <Controls.search:InputContainer>
