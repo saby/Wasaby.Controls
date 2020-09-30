@@ -224,8 +224,9 @@ export default class SearchControllerClass {
     }
 
     search(value: string, force: boolean): Promise<ISearchCallbackResult>|void {
+        const searchPromise = this._startSearch(value, force);
         this._setInputSearchValue(value);
-        return this._startSearch(value, force);
+        return searchPromise;
     }
 
     getSearchValue(): string {
