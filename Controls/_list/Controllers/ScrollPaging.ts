@@ -75,7 +75,7 @@ export default class ScrollPagingController {
             totalHeight,
             pagesCount
         };
-        
+
     }
 
     setNumbersState(state: 'up' | 'down'): void {
@@ -91,15 +91,15 @@ export default class ScrollPagingController {
         const canScrollForward = scrollParams.clientHeight + scrollParams.scrollTop < scrollParams.scrollHeight;
         const canScrollBackward = scrollParams.scrollTop > 0;
         if (canScrollForward && canScrollBackward) {
-            this.handleScrollMiddle();
+            this.handleScrollMiddle(hasMoreData);
         } else if (canScrollForward && !canScrollBackward && this.isHasMoreData(hasMoreData.up)) {
-            this.handleScrollTop();
+            this.handleScrollTop(hasMoreData);
         } else if (!canScrollForward && canScrollBackward && this.isHasMoreData(hasMoreData.down)) {
-            this.handleScrollBottom();
+            this.handleScrollBottom(hasMoreData);
         }
     }
 
-    protected getPagingCfg(arrowState: IArrowState): IPagingCfg {
+    protected getPagingCfg(arrowState: IArrowState, hasMoreData: IHasMoreData): IPagingCfg {
         const pagingCfg: IPagingCfg = {};
         switch (this._options.pagingMode) {
             case 'basic':
@@ -134,16 +134,26 @@ export default class ScrollPagingController {
                 arrowState.prev = 'hidden';
                 arrowState.next = 'hidden';
                 pagingCfg.showEndButton = true;
-                
+
                 pagingCfg.pagesCount = this._pagingData.pagesCount;
                 if (this._numbersState === 'up') {
-                    pagingCfg.selectedPage = Math.round(this._options.scrollParams.scrollTop / this._options.scrollParams.clientHeight) + 1;
+                    if (this._options.scrollParams.scrollTop + this._options.scrollParams.clientHeight >= this._options.scrollParams.scrollHeight && !hasMoreData.down) {
+                        pagingCfg.selectedPage = pagingCfg.pagesCount;
+                        this._numbersState = 'down';
+                    } else {
+                        pagingCfg.selectedPage = Math.round(this._options.scrollParams.scrollTop / this._options.scrollParams.clientHeight) + 1;
+                    }
                 } else {
                     let scrollBottom = this._options.scrollParams.scrollHeight - this._options.scrollParams.scrollTop - this._options.scrollParams.clientHeight;
                     if (scrollBottom < 0) {
                         scrollBottom = 0;
                     }
-                    pagingCfg.selectedPage = pagingCfg.pagesCount - Math.round(scrollBottom / this._options.scrollParams.clientHeight);
+                    if (this._options.scrollParams.scrollTop === 0 && !hasMoreData.up) {
+                        pagingCfg.selectedPage = 1;
+                        this._numbersState = 'up';
+                    } else {
+                        pagingCfg.selectedPage = pagingCfg.pagesCount - Math.round(scrollBottom / this._options.scrollParams.clientHeight);
+                    }
 
                 }
                 break;
@@ -169,38 +179,38 @@ export default class ScrollPagingController {
         }
     }
 
-    protected handleScrollMiddle(): void {
+    protected handleScrollMiddle(hasMoreData: IHasMoreData): void {
         if (!(this._curState === 'middle') || this._options.pagingMode === 'numbers') {
             this._options.pagingCfgTrigger(this.getPagingCfg({
                 begin: 'visible',
                 prev: 'visible',
                 next: 'visible',
                 end: 'visible'
-            }));
+            }, hasMoreData));
             this._curState = 'middle';
         }
     }
 
-    protected handleScrollTop(): void {
+    protected handleScrollTop(hasMoreData: IHasMoreData): void {
         if (!(this._curState === 'top')) {
             this._options.pagingCfgTrigger(this.getPagingCfg({
                 begin: 'readonly',
                 prev: 'readonly',
                 next: 'visible',
                 end: 'visible'
-            }));
+            }, hasMoreData));
             this._curState = 'top';
         }
     }
 
-    protected handleScrollBottom(): void {
+    protected handleScrollBottom(hasMoreData: IHasMoreData): void {
         if (!(this._curState === 'bottom')) {
             this._options.pagingCfgTrigger(this.getPagingCfg({
                 begin: 'visible',
                 prev: 'visible',
                 next: 'readonly',
                 end: 'readonly'
-            }));
+            }, hasMoreData));
             this._curState = 'bottom';
         }
     }
