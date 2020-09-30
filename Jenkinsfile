@@ -1,4 +1,4 @@
-@Library('pipeline') _
+@Library('pipeline@git-lfs_clone') _
 
 def version = '20.7000'
 
