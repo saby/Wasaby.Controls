@@ -91,15 +91,14 @@ var _private = {
       const dropDownContainerSize = _private.getDropDownContainerSize(dropDownContainer);
       const suggestSize = sizes.suggest;
       let height = self._height;
-      const optionValue = suggestSize.top;
-      const suggestBottomSideCoord = optionValue + suggestSize.height;
+      const suggestBottomSideCoord = suggestSize.top + suggestSize.height;
 
       if (suggestBottomSideCoord < 0) {
          height = suggestSize.height + suggestBottomSideCoord + 'px';
       } else if (suggestBottomSideCoord >= dropDownContainerSize.height) {
          height = dropDownContainerSize.height - suggestSize.top + 'px';
       } else if (height) {
-         height = 'auto';
+         height = Math.round(suggestSize.height) + 'px';
       }
       return height;
    },
@@ -120,6 +119,10 @@ var __ContentLayer = BaseLayer.extend({
    _height: '0px',
    _maxHeight: 'none',
    _showContent: false,
+
+   _afterMount(): void {
+      _private.updateHeight(this);
+   },
 
    _afterUpdate(): void {
       /* 1) checking suggestionsContainer in children, because suggest initializing asynchronously
