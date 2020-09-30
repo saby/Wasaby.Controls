@@ -18,7 +18,8 @@ define('Controls/Application',
       'UI/HotKeys',
       'Controls/Application/TouchDetectorController',
       'Controls/dragnDrop',
-      'css!theme?Controls/Application/oldCss'
+      'css!theme?Controls/Application/oldCss',
+      'Core/TimeTesterInv',
    ],
 
    /**
@@ -68,7 +69,8 @@ define('Controls/Application',
       popup,
       HotKeys,
       TouchDetector,
-      dragnDrop) {
+      dragnDrop,
+      TimeTesterInv) {
       'use strict';
 
       var _private;
@@ -263,6 +265,9 @@ define('Controls/Application',
             this.RUMEnabled = cfg.RUMEnabled || appData.RUMEnabled || false;
             this.pageName = cfg.pageName || appData.pageName || '';
             this.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
+
+            const timeTester = new TimeTesterInv.default(this.RUMEnabled, this.pageName);
+            timeTester.load();
 
             // Чтобы при загрузке слоя совместимости, понять нужно ли грузить провайдеры(extensions, userInfo, rights),
             // положим опцию из Application в constants. Иначе придется использовать глобальную переменную.
