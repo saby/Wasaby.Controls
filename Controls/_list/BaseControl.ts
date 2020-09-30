@@ -3874,7 +3874,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._callbackAfterUpdate = null;
         }
 
-        if (this._editInPlaceController) {
+        // Контакты используют новый рендер, на котором нет обертки для редактируемой строки.
+        // В новом рендере эона не нужна
+        if (this._editInPlaceController && this._children.listView.activateEditingRow) {
             const rowActivator = this._children.listView.activateEditingRow.bind(this._children.listView);
             this._editInPlaceInputHelper.activateInput(rowActivator);
         }
