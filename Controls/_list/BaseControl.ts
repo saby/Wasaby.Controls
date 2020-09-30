@@ -4645,7 +4645,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
+    _observeScrollHandler(_: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
         switch (eventName) {
             case 'scrollMoveSync':
                 this.scrollMoveSyncHandler(params);
@@ -4664,6 +4664,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
             case 'cantScroll':
                 this.cantScrollHandler(params);
+                break;
+            case 'scrollResize':
+                if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
+                    this._pagingVisible = _private.needShowPagingByScrollSize(this, params.scrollHeight, params.clientHeight);
+                }
                 break;
         }
     },
