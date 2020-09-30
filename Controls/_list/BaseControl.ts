@@ -1007,6 +1007,9 @@ const _private = {
             _private.reload(self, self._options).addCallback(function() {
                 self._shouldNotResetPagingCache = false;
 
+                if (self._scrollPagingCtr) {
+                    self._scrollPagingCtr.setNumbersState(direction);
+                }
                 /**
                  * Если есть ошибка, то не нужно скроллить, иначе неоднозначное поведение:
                  * иногда скролл происходит раньше, чем показана ошибка, тогда показывается ошибка внутри списка;
@@ -1022,8 +1025,14 @@ const _private = {
                 }
             });
         } else if (direction === 'up') {
+            if (self._scrollPagingCtr) {
+                self._scrollPagingCtr.setNumbersState(direction);
+            }
             self._notify('doScroll', ['top'], { bubbling: true });
         } else {
+            if (self._scrollPagingCtr) {
+                self._scrollPagingCtr.setNumbersState(direction);
+            }
             _private.jumpToEnd(self);
         }
     },
@@ -1156,6 +1165,7 @@ const _private = {
                     down: _private.hasMoreData(self, self._sourceController, 'down')
                 };
                 _private.createScrollPagingController(self, scrollParams, hasMoreData).then((scrollPaging) => {
+                        self._scrollPagingCtr = scrollPaging;
                         callback(scrollPaging);
                     });
                 }
@@ -1172,7 +1182,8 @@ const _private = {
         const scrollPagingConfig = {
             pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
-            elementsCount,
+            totalElementsCount: elementsCount,
+            loadedElementsCount: self._listViewModel.getStopIndex() - self._listViewModel.getStartIndex(),
             pagingCfgTrigger: (cfg) => {
                 if (!isEqual(self._pagingCfg, cfg)) {
                     self._pagingCfg = cfg;
@@ -1180,7 +1191,8 @@ const _private = {
                 }
             }
         };
-        return Promise.resolve(new ScrollPagingController(scrollPagingConfig, hasMoreData));
+        self._scrollPagingCtr = new ScrollPagingController(scrollPagingConfig, hasMoreData)
+        return Promise.resolve(self._scrollPagingCtr);
     },
 
     getViewRect(self): DOMRect {
@@ -1298,12 +1310,14 @@ const _private = {
         self._scrollTop = scrollTop;
         self._scrollPageLocked = false;
         if (_private.needScrollPaging(self._options.navigation)) {
-            const scrollParams = {
-                scrollTop: self._scrollTop,
-                scrollHeight: _private.getViewSize(self),
-                clientHeight: self._viewportSize
-            };
-            _private.updateScrollPagingButtons(self, scrollParams);
+            if (!self._scrollController.getParamsToRestoreScrollPosition()) {
+                const scrollParams = {
+                    scrollTop: self._scrollTop + (self._scrollController?.getPlaceholders().top || 0),
+                    scrollHeight: _private.getViewSize(self)  + (self._scrollController?.getPlaceholders().bottom + self._scrollController?.getPlaceholders().top || 0),
+                    clientHeight: self._viewportSize
+                };
+                _private.updateScrollPagingButtons(self, scrollParams);
+            }
         }
     },
 
@@ -2075,7 +2089,8 @@ const _private = {
             // После того как последний item гарантированно отобразился,
             // нужно попросить ScrollWatcher прокрутить вниз, чтобы
             // прокрутить отступ пейджинга и скрыть тень
-            self._notify('doScroll', ['pageDown'], { bubbling: true });
+            
+            self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
         });
     },
 
@@ -3146,9 +3161,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (_private.needScrollPaging(this._options.navigation)) {
                 _private.doAfterUpdate(this, () => {
                     const scrollParams = {
-                        scrollHeight: _private.getViewSize(this),
-                        clientHeight: this._viewportSize,
-                        scrollTop: this._scrollTop
+                        scrollTop: this._scrollTop + (this._scrollController?.getPlaceholders().top || 0),
+                        scrollHeight: _private.getViewSize(this)  + (this._scrollController?.getPlaceholders().bottom + this._scrollController?.getPlaceholders().top || 0),
+                        clientHeight: this._viewportSize
                     };
                     _private.updateScrollPagingButtons(this, scrollParams);
                 });
@@ -3899,13 +3914,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
     __selectedPageChanged(e, page) {
         this._currentPage = page;
-        const scrollParams = {
-            scrollTop: (page - 1) * this._viewportSize,
-            scrollHeight: _private.getViewSize(this),
-            clientHeight: this._viewportSize
-        };
-        this._notify('doScroll', [scrollParams.scrollTop], { bubbling: true });
-        _private.updateScrollPagingButtons(this, scrollParams);
+        const scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+
+        this._notify('doScroll', [scrollTop], { bubbling: true });
     },
 
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {

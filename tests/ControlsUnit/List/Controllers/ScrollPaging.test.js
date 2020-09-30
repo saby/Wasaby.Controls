@@ -99,5 +99,36 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
                 }, result, 'Wrong pagingCfg after scroll');
             });
         });
+        describe('numbers', () => {
+            var result;
+            var spInstance = new ScrollPaging_1.default({
+                pagingMode: 'numbers',
+                loadedElementsCount: 10,
+                totalElementsCount: 100,
+                scrollParams: {
+                    scrollTop: 0,
+                    scrollHeight: 250,
+                    clientHeight: 50
+                },
+                pagingCfgTrigger: function (cfg) {
+                    result = cfg;
+                }
+            });
+            it('initPagingData', () => {
+                assert.deepEqual(spInstance._pagingData, {totalHeight: 2500, pagesCount: 50});
+            });
+            it('getScrollTopByPage numbersState = up', () => {
+                spInstance.setNumbersState('up');
+                assert.equal(spInstance.getScrollTopByPage(1), 0, 'wrong scrollTop for page 1');
+                assert.equal(spInstance.getScrollTopByPage(2), 50, 'wrong scrollTop for page 2');
+                assert.equal(spInstance.getScrollTopByPage(3), 100, 'wrong scrollTop for page 3');
+            });
+            it('getScrollTopByPage numbersState = down', () => {
+                spInstance.setNumbersState('down');
+                assert.equal(spInstance.getScrollTopByPage(50), 200, 'wrong scrollTop for page 10');
+                assert.equal(spInstance.getScrollTopByPage(49), 150, 'wrong scrollTop for page 9');
+                assert.equal(spInstance.getScrollTopByPage(48), 100, 'wrong scrollTop for page 8');
+            });
+        });
     });
 });

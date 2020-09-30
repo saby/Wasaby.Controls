@@ -161,6 +161,9 @@ export default class ScrollController {
         return {...result, ...this.updateContainerHeightsData(params)};
     }
 
+    getPlaceholders(): IPlaceholders {
+        return this._placeholders;
+    }
     setRendering(state: boolean) {
         this._isRendering = state;
     }

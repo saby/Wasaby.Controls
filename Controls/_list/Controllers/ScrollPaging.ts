@@ -27,7 +27,7 @@ interface IArrowState {
 }
 
 interface IPagingCfg {
-    arrowState: IArrowState;
+    arrowState?: IArrowState;
     showDigits?: boolean;
     showEndButton?: boolean;
     pagingMode?: string;
@@ -39,9 +39,14 @@ interface IPagingCfg {
 interface IScrollPagingOptions {
     pagingMode: TNavigationPagingMode;
     scrollParams: IScrollParams;
-    elementsCount: number;
+    totalElementsCount: number;
+    loadedElementsCount: number;
+    pagingCfgTrigger(cfg: IPagingCfg): void;
+}
 
-    pagingCfgTrigger(IPagingCfg): void;
+interface IPagingData {
+    totalHeight: number;
+    pagesCount: number;
 }
 
 interface IHasMoreData {
@@ -52,12 +57,32 @@ interface IHasMoreData {
 export default class ScrollPagingController {
     protected _curState: IScrollpagingState = null;
     protected _options: IScrollPagingOptions = null;
+    protected _pagingData: IPagingData = null;
+    protected _numbersState: 'up' | 'down' = 'up';
 
     constructor(cfg: IScrollPagingOptions, hasMoreData: IHasMoreData = {up: false, down: false}) {
         this._options = cfg;
+        this.initializePagingData(cfg);
         this.updateStateByScrollParams(cfg.scrollParams, hasMoreData);
     }
 
+    protected initializePagingData(cfg: IScrollPagingOptions): void {
+
+        const averageElementHeight = this._options.scrollParams.scrollHeight / this._options.loadedElementsCount;
+        const totalHeight = averageElementHeight * this._options.totalElementsCount;
+        const pagesCount = Math.round(totalHeight / this._options.scrollParams.clientHeight);
+        this._pagingData = {
+            totalHeight,
+            pagesCount
+        };
+        
+    }
+
+    setNumbersState(state: 'up' | 'down'): void {
+        if (this._options.pagingMode === 'numbers') {
+            this._numbersState = state;
+        }
+    }
     protected isHasMoreData(hasMoreData: boolean): boolean {
         return (!hasMoreData || (this._options.pagingMode !== 'edge' && this._options.pagingMode !== 'end'));
     }
@@ -108,17 +133,40 @@ export default class ScrollPagingController {
             case 'numbers':
                 arrowState.prev = 'hidden';
                 arrowState.next = 'hidden';
-                arrowState.end = 'hidden';
-                pagingCfg.pagesCount = Math.round(this._options.scrollParams.scrollHeight / this._options.scrollParams.clientHeight);
-                pagingCfg.selectedPage = Math.round(this._options.scrollParams.scrollTop / this._options.scrollParams.clientHeight) + 1;
+                pagingCfg.showEndButton = true;
+                
+                pagingCfg.pagesCount = this._pagingData.pagesCount;
+                if (this._numbersState === 'up') {
+                    pagingCfg.selectedPage = Math.round(this._options.scrollParams.scrollTop / this._options.scrollParams.clientHeight) + 1;
+                } else {
+                    let scrollBottom = this._options.scrollParams.scrollHeight - this._options.scrollParams.scrollTop - this._options.scrollParams.clientHeight;
+                    if (scrollBottom < 0) {
+                        scrollBottom = 0;
+                    }
+                    pagingCfg.selectedPage = pagingCfg.pagesCount - Math.round(scrollBottom / this._options.scrollParams.clientHeight);
+
+                }
                 break;
         }
         if (this._options.pagingMode) {
             pagingCfg.pagingMode = this._options.pagingMode;
-            pagingCfg.elementsCount = this._options.elementsCount;
+            pagingCfg.elementsCount = this._options.totalElementsCount;
         }
         pagingCfg.arrowState = arrowState;
         return pagingCfg;
+    }
+
+    getScrollTopByPage(page: number) {
+        if (this._options.pagingMode === 'numbers') {
+            let scrollTop;
+            if (this._numbersState === 'up') {
+                scrollTop = (page - 1) * this._options.scrollParams.clientHeight;
+            } else {
+                const scrollBottom = (this._pagingData.pagesCount - page) * this._options.scrollParams.clientHeight;
+                scrollTop = this._options.scrollParams.scrollHeight - scrollBottom - this._options.scrollParams.clientHeight;
+            }
+            return scrollTop;
+        }
     }
 
     protected handleScrollMiddle(): void {
