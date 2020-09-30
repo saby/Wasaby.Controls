@@ -2089,7 +2089,7 @@ const _private = {
             // После того как последний item гарантированно отобразился,
             // нужно попросить ScrollWatcher прокрутить вниз, чтобы
             // прокрутить отступ пейджинга и скрыть тень
-            
+
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
         });
     },
@@ -3001,13 +3001,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     rawData: []
                 }));
 
-                if (newOptions.useNewModel && !self._listViewModel) {
-                    self._items = data;
-                    self._listViewModel = self._createNewModel(
-                        data,
-                        viewModelConfig,
-                        newOptions.viewModelConstructor
-                    );
+                    if (!self._pagingVisible &&
+                        _private.needScrollPaging(self._options.navigation) &&
+                        self._options.navigation.viewConfig.pagingMode === 'edge') {
+                        self._pagingVisible = _private.needShowPagingByScrollSize(self, self._viewSize, self._viewportSize);
+                    }
+
+                    if (newOptions.useNewModel && !self._listViewModel) {
+                        self._items = data;
+                        self._listViewModel = self._createNewModel(
+                            data,
+                            viewModelConfig,
+                            newOptions.viewModelConstructor
+                        );
 
                     _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
