@@ -5472,6 +5472,43 @@ define([
          });
       });
 
+      it('reloadItem with new model', function() {
+         var filter = {};
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            viewModelConstructor: 'Controls/display:Collection',
+            useNewModel: true,
+            keyProperty: 'id',
+            source: source,
+            filter: filter,
+            navigation: {
+               source: 'page',
+               view: 'page',
+               sourceConfig: {
+                  pageSize: 2,
+                  page: 0,
+                  hasMore: false
+               }
+            }
+         };
+         var baseCtrl = new lists.BaseControl(cfg);
+         baseCtrl.saveOptions(cfg);
+
+         return new Promise(function(resolve) {
+            baseCtrl._beforeMount(cfg)
+               .addCallback(function() {
+                  assert.isTrue(baseCtrl._sourceController.hasMoreData('down'));
+
+                  baseCtrl.reloadItem(1).addCallback((item) => {
+                     assert.equal(item.get('id'), 1);
+                     assert.equal(item.get('title'), 'Первый');
+                     assert.isFalse(baseCtrl._itemReloaded);
+                     resolve();
+                  });
+               });
+         });
+      });
+
       it('update key property', async() => {
          const cfg = {
                 viewName: 'Controls/List/ListView',
