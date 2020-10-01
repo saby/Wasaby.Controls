@@ -2,6 +2,9 @@ import ColumnsInnerView from 'Controls/_columns/ColumnsInnerView';
 import { ColumnsCollection } from 'Controls/display';
 import { RecordSet } from 'Types/collection';
 import { assert } from 'chai';
+import View from '../../../Controls/_listRender/View';
+import { spy } from 'sinon';
+import { IItemActionsItem } from '../../../Controls/_itemActions/interface/IItemActionsItem';
 
 describe('ColumnsInnerView', () => {
     let rs, model, cfg, columnsView;
@@ -15,7 +18,7 @@ describe('ColumnsInnerView', () => {
                 };
             }
         };
-    }
+    };
     beforeEach(() => {
         rs = new RecordSet({
             keyProperty: 'id',
@@ -57,5 +60,33 @@ describe('ColumnsInnerView', () => {
             rs.remove(item);
         })
         assert.deepEqual(columnsView._columnsIndexes, [[0, 3, 6], [1, 4, 7], [2, 5, 8]], 'wrong initial columnIndexes');
+    });
+
+    describe('marker', () => {
+        const cfg = {
+            columnMinWidth: 270,
+            columnMaxWidth: 400,
+            listModel: model,
+            columnsMode: 'auto',
+            initialWidth: 900,
+            markerVisibility: 'visible',
+            markedKey: 2
+        };
+        let view, notifySpy;
+        beforeEach(() => {
+            view = new View(cfg);
+            notifySpy = spy(view, '_notify');
+            return view._beforeMount(cfg).then(() => {
+                assert.isOk(view._markerController);
+            });
+        });
+
+        it('_beforeUpdate', () => {
+            view._beforeUpdate({ ...cfg, markedKey: 1 });
+
+            assert.isTrue(view._collection.getItemBySourceKey(1).isMarked());
+            assert.isFalse(view._collection.getItemBySourceKey(2).isMarked());
+            assert.isFalse(view._collection.getItemBySourceKey(3).isMarked());
+        });
     });
 });
