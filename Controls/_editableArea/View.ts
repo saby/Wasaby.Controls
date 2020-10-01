@@ -3,6 +3,7 @@ import Deferred = require('Core/Deferred');
 import {editing as constEditing} from 'Controls/Constants';
 import template = require('wml!Controls/_editableArea/View');
 import buttonsTemplate = require('Controls/_editableArea/Templates/Buttons');
+import {autoEdit, toolbarVisible, backgroundStyleClass} from './ActualAPI';
 
 'use strict';
 var
@@ -71,8 +72,9 @@ var
  *
  * @class Controls/_editableArea/View
  * @extends Core/Control
- * @mixes Controls/interface/IEditableArea
- * @author Красильников А.С.
+ * @mixes Controls/editableArea:IView
+ * @mixes Controls/interface:IBackgroundStyle
+ * @author Красильников А.С
  * @public
  *
  * @remark
@@ -83,18 +85,7 @@ var
  * * <a href="/doc/platform/developmentapl/interface-development/controls/input/edit/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_editableArea.less">переменные тем оформления</a>
  *
- * @demo Controls-demo/EditableArea/EditableArea
- */
-
-/*
- * Controller for editing of input fields.
- *
- * @class Controls/_editableArea/View
- * @extends Core/Control
- * @mixes Controls/interface/IEditableArea
- * @author Авраменко А.С.
- * @public
- *
+ * @demo Controls-demo/EditableArea/View/Index
  */
 
 var View = Control.extend( /** @lends Controls/List/View.prototype */ {
@@ -104,7 +95,9 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    _isStartEditing: false,
 
    _beforeMount: function (newOptions) {
-      this._isEditing = newOptions.editWhenFirstRendered;
+      this._isEditing = autoEdit(newOptions.autoEdit, newOptions.editWhenFirstRendered);
+      this._toolbarVisible = toolbarVisible(newOptions.toolbarVisible, newOptions.toolbarVisibility);
+      this._backgroundStyleClass = backgroundStyleClass(newOptions.theme, newOptions.backgroundStyle, newOptions.style);
       this._editObject = newOptions.editObject;
    },
    /* В режиме редактирования создается клон, и ссылка остается на старый объект. Поэтому при изменении опций копируем ссылку
@@ -113,6 +106,8 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       if (newOptions.editObject !== this._options.editObject) {
          this._editObject = newOptions.editObject;
       }
+      this._toolbarVisible = toolbarVisible(newOptions.toolbarVisible, newOptions.toolbarVisibility);
+      this._backgroundStyleClass = backgroundStyleClass(newOptions.theme, newOptions.backgroundStyle, newOptions.style);
    },
    _afterUpdate: function () {
       if (this._isStartEditing) {
@@ -128,7 +123,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    },
 
    _onDeactivatedHandler: function () {
-      if (!this._options.readOnly && this._isEditing && !this._options.toolbarVisibility) {
+      if (!this._options.readOnly && this._isEditing && !this._toolbarVisible) {
          this.commitEdit();
       }
    },
@@ -183,11 +178,13 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    }
 });
 
-View._theme = ['Controls/list', 'Controls/editableArea'];
+View._theme = ['Controls/list', 'Controls/editableArea', 'Controls/Classes'];
 
 View.getDefaultOptions = function () {
    return {
-      style: 'withoutBackground'
+      autoEdit: false,
+      toolbarVisible: false,
+      backgroundStyle: 'default'
    };
 };
 
