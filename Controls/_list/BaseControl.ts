@@ -3161,6 +3161,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.getPortionedSearch(this).stopSearch(direction);
             }
         }
+        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)
+            && this._options.navigation.viewConfig.pagingMode === 'edge') {
+            this._pagingVisible = _private.needShowPagingByScrollSize(this, _private.getViewSize(this), this._viewportSize);
+        }
         this._scrollController?.setTriggerVisibility(direction, state);
         if (state) {
             this.handleTriggerVisible(direction);
@@ -4664,11 +4668,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
             case 'cantScroll':
                 this.cantScrollHandler(params);
-                break;
-            case 'scrollResize':
-                if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
-                    this._pagingVisible = _private.needShowPagingByScrollSize(this, params.scrollHeight, params.clientHeight);
-                }
                 break;
         }
     },
