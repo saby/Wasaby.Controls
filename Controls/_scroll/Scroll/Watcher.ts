@@ -313,7 +313,7 @@ import {SyntheticEvent} from "Vdom/Vdom"
                _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight,
                    container.getBoundingClientRect());
             }
-            this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
+            this._notify('register', ['controlResize', this, this._resizeHandler, {listenAll: true}], {bubbling: true});
          },
 
          _scrollHandler: function(e) {

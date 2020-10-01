@@ -1053,7 +1053,7 @@ const _private = {
          */
         if (viewportSize !== 0) {
             const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
-                self._scrollController?.calculateVirtualScrollHeight() || 0);
+                !self._options.disableVirtualScroll && self._scrollController?.calculateVirtualScrollHeight() || 0);
             const proportion = (scrollHeight / viewportSize);
 
             // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
@@ -3113,6 +3113,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.getPortionedSearch(this).stopSearch(direction);
             }
         }
+        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)
+            && this._options.navigation.viewConfig.pagingMode === 'edge') {
+            this._pagingVisible = _private.needShowPagingByScrollSize(this, _private.getViewSize(this), this._viewportSize);
+        }
         this._scrollController?.setTriggerVisibility(direction, state);
         if (state) {
             this.handleTriggerVisible(direction);
@@ -4995,11 +4999,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
             case 'cantScroll':
                 this.cantScrollHandler(params);
-                break;
-            case 'scrollResize':
-                if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
-                    this._pagingVisible = _private.needShowPagingByScrollSize(this, params.scrollHeight, params.clientHeight);
-                }
                 break;
         }
     },
