@@ -409,6 +409,21 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          });
          assert.isNull(treeStrategyWithNodesMoreData.getCount(selection, false));
       });
+
+      it('selected all', () => {
+         const selection = { selected: [null], excluded: [null] };
+         let count = strategy.getCount(selection, false);
+         let countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
+         assert.equal(count, 3);
+         assert.equal(countWithDescAndAnc, 5);
+
+         model.getItemBySourceKey(1).setExpanded(true);
+
+         count = strategy.getCount(selection, false);
+         countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
+         assert.equal(count, 5);
+         assert.equal(countWithDescAndAnc, 5);
+      });
    });
 
    describe('cases of go inside node and out it', () => {
