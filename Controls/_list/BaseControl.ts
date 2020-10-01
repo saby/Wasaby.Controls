@@ -4151,21 +4151,33 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const eventResult = this._notify('beforeEndEdit', [item, willSave, isAdd]);
 
             // Если пользователь не сохранил добавляемый элемент, используется платформенное сохранение.
-            // Пользовательское сохранение потенциально может начаться только если вернули Promise
-            const shouldUseDefaultSaving = willSave && (isAdd || item.isChanged()) && (
+            // Пользовательское сохранение потенциально может начаться только если вернули Promise.
+            // Сохранить элемент в наборе данных можно только после завершения редактирования, т.к.
+            // в процессе начала/завершения редактировани любая модификация данных может привести к ошибке.
+            this._shouldSaveAddingItem = willSave && (isAdd || item.isChanged()) && (
                 !eventResult || (
                     eventResult !== CONSTANTS.CANCEL && !(eventResult instanceof Promise)
                 )
             );
 
-            return shouldUseDefaultSaving ? this._saveEditingInSource(item, isAdd) : eventResult;
+            return eventResult;
         });
     },
 
     _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean): void {
-        this._notify('afterEndEdit', [item.contents, isAdd]);
-        item.contents.unsubscribe('onPropertyChange', this._resetValidation);
-        _private.updateItemActions(this, this._options);
+        new Promise((resolve) => {
+            item.contents.unsubscribe('onPropertyChange', this._resetValidation);
+
+            if (this._shouldSaveAddingItem) {
+                this._shouldSaveAddingItem = false;
+                resolve(this._saveEditingInSource(item.contents, isAdd));
+            } else {
+                resolve();
+            }
+        }).then(() => {
+            this._notify('afterEndEdit', [item.contents, isAdd]);
+            _private.updateItemActions(this, this._options);
+        });
     },
 
     _resetValidation() {

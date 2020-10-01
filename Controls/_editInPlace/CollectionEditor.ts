@@ -167,7 +167,10 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         collectionItem.acceptChanges();
         this._editingKey = undefined;
 
-        this._options.collection.resetAddingItem();
+        if (collectionItem.isAdd) {
+            this._options.collection.resetAddingItem();
+        }
+        
         collectionItem.setEditing(false, null);
         this._options.collection.setEditing(false);
     }
@@ -186,7 +189,9 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         const collectionItem = this._options.collection.getItemBySourceKey(this._editingKey);
         this._editingKey = undefined;
 
-        this._options.collection.resetAddingItem();
+        if (collectionItem.isAdd) {
+            this._options.collection.resetAddingItem();
+        }
         collectionItem.setEditing(false, null);
         this._options.collection.setEditing(false);
     }
