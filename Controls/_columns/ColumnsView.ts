@@ -8,6 +8,25 @@
  * 
  * @class Controls/columns:View
  * @extends Core/Control
+ * @implements Controls/_interface/IErrorController
+ * @implements Controls/_list/interface/IListNavigation
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IItemTemplate
+ * @mixes Controls/interface/IPromisedSelectable
+ * @mixes Controls/_interface/INavigation
+ * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/interface/IHighlighter
+ * @mixes Controls/_list/interface/IList
+ * @mixes Controls/_itemActions/interface/IItemActionsOptions
+ * @mixes Controls/interface/IEditableList
+ * @mixes Controls/_interface/ISorting
+ * @mixes Controls/interface/IDraggable
+ * @mixes Controls/interface/IGroupedList
+ * @mixes Controls/_list/interface/IClickableView
+ * @mixes Controls/_list/interface/IReloadableList
+ * @mixes Controls/_list/interface/IMovableList
+ * @mixes Controls/_list/interface/IRemovableList
+ * @mixes Controls/_list/interface/IVirtualScroll
  * @author Авраменко А.С.
  * @public
  * @example

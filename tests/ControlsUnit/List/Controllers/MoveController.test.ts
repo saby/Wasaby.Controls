@@ -186,6 +186,34 @@ describe('Controls/list_clean/MoveController', () => {
                 });
         });
 
+        // Если при перемещении методом moveWithDialog() в popupOptions.templateOptions передан source,
+        // то он используется в диалоге перемещения вместо source, переданного в контроллер
+        it('moveWithDialog() + source set within popupOptions.templateOptions object', () => {
+            const source2: Memory = new Memory({
+                keyProperty: 'id',
+                data: clone(data)
+            });
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => {
+                assert.notEqual((args.templateOptions as {source: Memory}).source, source);
+                assert.equal((args.templateOptions as {source: Memory}).source, source2);
+                return Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])));
+            });
+            cfg.popupOptions.templateOptions = {
+                ...cfg.popupOptions.templateOptions as object,
+                source: source2
+            }
+            controller = new MoveController(cfg);
+            return resolveMoveWithDialog(controller, selectionObject, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    assert.isTrue(result);
+                    stubDialog.restore();
+                });
+        });
+
         // Передан popupOptions без template при перемещении методом moveWithDialog()
         it('moveWithDialog() + popupOptions.template is not set', () => {
             // to prevent popup open
