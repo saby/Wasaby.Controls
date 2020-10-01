@@ -4,7 +4,7 @@ import {Bus} from 'Env/Event';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {RegisterClass, Registrar} from 'Controls/event';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import ResizeObserverUtil from 'Controls/Utils/ResizeObserverUtil';
+import {ResizeObserverUtil} from 'Controls/sizeUtils';
 import {canScrollByState, getContentSizeByState, getScrollPositionTypeByState, SCROLL_DIRECTION} from './Utils/Scroll';
 import {scrollToElement} from './Utils/scrollToElement';
 import {scrollTo} from './Utils/Scroll';
