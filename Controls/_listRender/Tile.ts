@@ -25,6 +25,7 @@ export default class TileRender extends BaseRender {
     protected _shouldPerformAnimation: boolean;
 
     private _debouncedSetHoveredItem: typeof TileRender.prototype._setHoveredItem;
+    private _destroyed: boolean = false;
 
     protected _beforeMount(options: ITileRenderOptions): void {
         super._beforeMount(options);
@@ -171,12 +172,19 @@ export default class TileRender extends BaseRender {
         return result;
     }
 
+    destroy(): void {
+        this._destroyed = true;
+        super.destroy();
+    }
+
     private _setHoveredItem(item: CollectionItem<unknown>): void {
         // TODO Adding this to prevent constantly resetting null and
         // causing version change. But version should only change when
         // the state actually changes, so probably managers should
         // keep track of the version and not the collection itself.
+        // The "destroyed" check is necessary, because _setHoveredItem is called using debouncer
         if (
+            !this._destroyed &&
             this._options.listModel && !this._options.listModel.destroyed &&
             this._options.listModel.getHoveredItem() !== item
         ) {
