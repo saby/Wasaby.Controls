@@ -2018,6 +2018,11 @@ var
         },
 
         // New Model compatibility
+        isEventRaising(): boolean {
+            return this._model.isEventRaising();
+        },
+
+        // New Model compatibility
         setEventRaising(enabled: boolean, analyze: boolean): void {
             return this._model.setEventRaising(enabled, analyze);
         },

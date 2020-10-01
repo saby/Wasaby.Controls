@@ -159,6 +159,7 @@ describe('Controls/_listRender/View', () => {
                 getEditingConfig: () => null,
                 setActionsTemplateConfig: () => null,
                 getItemBySourceKey: () => item,
+                isEventRaising: () => false,
                 setEventRaising: (val1, val2) => null,
                 each: (val) => null,
                 setActionsAssigned: (val) => null,
