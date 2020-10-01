@@ -170,7 +170,7 @@ export type TNavigationPagingMode = 'basic' | 'edge' | 'end' | 'numbers' | 'dire
 
 /**
  * @typedef {Object} INavigationViewConfig
- * @property {TNavigationPagingMode} [pagingMode=direct] Опция управляет внешним видом пэйджинга. Позволяет для каждого конкретного реестра задать внешний вид в зависимости от требований к интерфейсу.
+ * @property {TNavigationPagingMode} [pagingMode=basic] Опция управляет внешним видом пэйджинга. Позволяет для каждого конкретного реестра задать внешний вид в зависимости от требований к интерфейсу.
  * @property {TNavigationTotalInfo} [totalInfo=basic] Режим отображения информационной подписи.
  * @property {Number} maxCountValue Количество записей, когда необходимо прекратить загрузку в режиме навигации maxCount.
  * О режиме навигации maxCount вы можете посмотреть {@link Controls/_interface/INavigation/INavigationOptionValue.typedef здесь}.
