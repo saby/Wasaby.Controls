@@ -3,6 +3,13 @@ import template = require('wml!Controls/_switchableArea/ItemTpl');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 
+/**
+ * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/switchableArea:View}.
+ *
+ * @class Controls/switchableArea:itemTemplate
+ * @public
+ */
+
 class SwitchableAreaItem extends Control<IControlOptions> {
    protected _template: TemplateFunction = template;
    protected _keyHooksStorage: string[] = null;
