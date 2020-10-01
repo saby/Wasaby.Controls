@@ -7,9 +7,6 @@
  * @includes StringEditor Controls/_propertyGrid/defaultEditors/String
  * @includes TextEditor Controls/_propertyGrid/defaultEditors/Text
  * @includes EnumEditor Controls/_propertyGrid/defaultEditors/Enum
- * @includes NumberEditor Controls/_propertyGrid/defaultEditors/Number
- * @includes BooleanGroupEditor Controls/_propertyGrid/extendedEditors/BooleanGroup
- * @includes FlatEnumEditor Controls/_propertyGrid/extendedEditors/FlatEnumEditor
  * @includes IPropertyGrid Controls/_propertyGrid/IPropertyGrid
  * @includes IEditor Controls/_propertyGrid/IEditor
  * @includes IProperty Controls/_propertyGrid/IProperty
