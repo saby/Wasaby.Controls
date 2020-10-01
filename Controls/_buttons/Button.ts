@@ -95,7 +95,7 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
 
     this._icon = options.icon;
     if (options.icon) {
-        this._iconSize = ActualApi.iconSize(options.iconSize, this._icon);
+        this._iconSize = options.iconSize;
         if (options.readOnly) {
             this._iconStyle = 'readonly';
         } else {
@@ -113,6 +113,7 @@ export function getDefaultOptions(): object {
     return {
         viewMode: 'button',
         iconStyle: 'secondary',
+        iconSize: 'm',
         captionPosition: 'right',
         contrastBackground: false,
         fontSize: 'm',

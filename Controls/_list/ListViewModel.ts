@@ -78,7 +78,7 @@ const _private = {
         if (markedKey === null) {
             return;
         }
-        return self.getItemById(markedKey, self.getKeyProperty());
+        return self.isEditing() ? undefined : self.getItemById(markedKey, self.getKeyProperty());
     },
 
     getMultiSelectClassList(current, checkboxOnHover: boolean): string {
@@ -159,6 +159,8 @@ const _private = {
                 itemsModelCurrent.dispItem.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemPadding, theme, useNewModel) : ''
         );
         itemsModelCurrent.getSwipeAnimation = (): string => itemsModelCurrent.dispItem.getSwipeAnimation();
+        itemsModelCurrent.isAdd = itemsModelCurrent.dispItem.isAdd;
+        itemsModelCurrent.addPosition = itemsModelCurrent.dispItem.addPosition;
     },
     getSeparatorSizes(options: IListSeparatorOptions): IListSeparatorOptions['rowSeparatorSize'] {
         return options.rowSeparatorSize ? options.rowSeparatorSize.toLowerCase() : null;
@@ -174,7 +176,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _hoveredItem: null,
     _reloadedKeys: null,
     _singleItemReloadCount: 0,
-    _editingItemData: null,
 
     constructor(cfg): void {
         const self = this;
@@ -240,10 +241,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.groupPaddingClasses = _private.getGroupPaddingClasses(itemsModelCurrent, theme);
-        }
-
-        if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
-            itemsModelCurrent.item = this._editingItemData.item;
         }
 
         if (this._dragEntity) {
@@ -348,10 +345,15 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._reloadedKeys[key]) {
             version = `RELOADED_${this._reloadedKeys[key]}_` + version;
         }
-        version = (this._editingItemData ? 'WITH_EDITING_' : 'WITHOUT_EDITING_') + version;
-        if (this._editingItemData && this._editingItemData.key === key) {
-            version = 'EDITING_' + version;
-            version = `MULTISELECT-${this._options.multiSelectVisibility}_${version}`;
+        if (this.isEditing()) {
+            version = 'WITH_EDITING_' + version;
+            const editingItemKey = this.getDisplay().find((el) => el.isEditing()).contents.getKey();
+            if (editingItemKey === key) {
+                version = 'EDITING_' + version;
+                version = `MULTISELECT-${this._options.multiSelectVisibility}_${version}`;
+            }
+        } else {
+            version = 'WITHOUT_EDITING_' + version;
         }
         if (this._swipeItem && this._swipeItem.key === key) {
             version = 'SWIPE_' + version;
@@ -599,26 +601,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     getIndexBySourceIndex(sourceIndex: number): number {
         return this.getDisplay().getIndexBySourceIndex(sourceIndex);
     },
-    _setEditingItemData: function(itemData) {
-        const data = itemData ? itemData : this._editingItemData;
-        this._editingItemData = itemData;
-        data.setEditing(itemData !== null);
-        this._onCollectionChange(
-           new EventObject('oncollectionchange', this._display),
-           IObservable.ACTION_CHANGE,
-            [new CollectionItem({
-                contents: data.item
-            })],
-           data.index,
-           [],
-           0
-        );
-        this._nextModelVersion(itemData === null);
-    },
-
-    getEditingItemData(): object | null {
-        return this._editingItemData;
-    },
 
     hasItemById: function(id, keyProperty) {
         return !!this.getItemById(id, keyProperty);
@@ -785,6 +767,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
     setRowSeparatorSize(rowSeparatorSize: IListSeparatorOptions['rowSeparatorSize']): void {
         this._options.rowSeparatorSize = _private.getSeparatorSizes({rowSeparatorSize});
+        this._display.setRowSeparatorSize(rowSeparatorSize);
         this._nextModelVersion();
     }
 });

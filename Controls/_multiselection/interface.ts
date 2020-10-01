@@ -1,4 +1,4 @@
-import { IBaseCollection, ICollectionItem } from 'Controls/display';
+import { CollectionItem, IBaseCollection, ICollectionItem, TreeItem } from 'Controls/display';
 import { Model, relation } from 'Types/entity';
 import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
 import { RecordSet } from 'Types/collection';
@@ -22,6 +22,7 @@ export interface ISelectionItem extends ICollectionItem {
     * @return {Boolean} состояние правого свайпа
     */
    isAnimatedForSelection(): boolean;
+
    /**
     * Флаг, определяющий состояние правого свайпа по записи.
     * @param {Boolean} swiped состояние правого свайпа
@@ -29,6 +30,12 @@ export interface ISelectionItem extends ICollectionItem {
     * @public
     */
    setAnimatedForSelection(swiped: boolean): boolean;
+
+   /**
+    * Определяет состояние выбранности элемента
+    * @return {boolean|null} состояние выбранности элемента
+    */
+   isSelected(): boolean|null;
 }
 
 /**
@@ -65,13 +72,19 @@ export interface ISelectionModel extends IBaseCollection<Model, ISelectionItem> 
     * @param {Boolean} silent Не уведомлять о изменении
     * @void
     */
-   setSelectedItems(items: Model[], selected: boolean, silent: boolean): void;
+   setSelectedItems(items: Array<CollectionItem<Model>>, selected: boolean, silent: boolean): void;
 
    /**
     * Возвращает кол-во элементов в проекции
     * @return {number} кол-во элементов
     */
    getCount(): number;
+
+   /**
+    * Возвращает список элементов
+    * @return {ISelectionItem[]} список элементов
+    */
+   getItems(): ISelectionItem[];
 }
 
 /**
@@ -97,12 +110,14 @@ export interface ISelectionControllerOptions {
  * @public
  * @author Панихин К.А.
  */
-export interface ITreeSelectionStrategyOptions extends IFlatSelectionStrategyOptions {
+export interface ITreeSelectionStrategyOptions {
    selectAncestors: boolean;
    selectDescendants: boolean;
    nodesSourceControllers?: Map<string, SourceController>;
    hierarchyRelation: relation.Hierarchy;
    rootId: CrudEntityKey;
+   entryPath: IEntryPathItem[];
+   items: Array<TreeItem<Model>>;
 }
 
 /**
@@ -113,14 +128,14 @@ export interface ITreeSelectionStrategyOptions extends IFlatSelectionStrategyOpt
  * @author Панихин К.А.
  */
 export interface IFlatSelectionStrategyOptions {
-   items: RecordSet;
+   items: Array<CollectionItem<Model>>;
 }
 
 /**
- * Изменения в состоянии выбранных ключей
+ * Изменения в списке ключей
  * @public
  */
-export interface ISelectionDifference {
+export interface IKeysDifference {
    /**
     * Список ключей
     * @typedef {TKeys}
@@ -141,40 +156,19 @@ export interface ISelectionDifference {
 }
 
 /**
- * Результат метода контроллера множественного выбора
+ * Изменения в выбранных элементах
  * @public
  */
-export interface ISelectionControllerResult {
-   /**
-    * Изменения в состоянии выбранных ключей
-    * @typedef {ISelectionDifference}
-    */
-   selectedKeysDiff: ISelectionDifference;
-
-   /**
-    * Изменения в состоянии исключенных ключей
-    * @typedef {ISelectionDifference}
-    */
-   excludedKeysDiff: ISelectionDifference;
-
-   /**
-    * Кол-во выбранных элементов
-    * @typedef {number}
-    */
-   selectedCount: number;
-
-   /**
-    * Выбраны все записи
-    * @typedef {boolean}
-    */
-   isAllSelected: boolean;
+export interface ISelectionDifference {
+   selectedKeysDifference: IKeysDifference;
+   excludedKeysDifference: IKeysDifference;
 }
 
 /**
  * Данные в рекорде
  * Используется чтобы определить состояние узла с незагруженными детьми
  */
-export interface IEntryPath {
+export interface IEntryPathItem {
    id: CrudEntityKey;
    parent: CrudEntityKey;
 }

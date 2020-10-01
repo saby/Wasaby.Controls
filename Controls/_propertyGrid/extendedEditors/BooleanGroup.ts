@@ -22,6 +22,7 @@ interface IOptions extends IEditorOptions, IControlOptions {
  * @class Controls/_propertyGrid/extendedEditors/BooleanGroup
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor
+ * @demo Controls-demo/PropertyGridNew/Editors/BooleanGroup/Demo
  * @control
  * @public
  * @author Борисов А.Н.

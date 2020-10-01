@@ -6,7 +6,6 @@ import { FlatSelectionStrategy, SelectionController, TreeSelectionStrategy, ISel
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
 import { SearchGridViewModel} from 'Controls/treeGrid';
-import { relation } from 'Types/entity';
 
 describe('Controls/_multiselection/Controller', () => {
    const items = new RecordSet({
@@ -18,9 +17,7 @@ describe('Controls/_multiselection/Controller', () => {
       keyProperty: 'id'
    });
 
-   const strategy = new FlatSelectionStrategy({items});
-
-   let controller, model;
+   let controller, model, strategy;
 
    beforeEach(() => {
       model = new ListViewModel({
@@ -28,50 +25,35 @@ describe('Controls/_multiselection/Controller', () => {
          keyProperty: 'id'
       });
 
+       strategy = new FlatSelectionStrategy({items: model.getDisplay().getItems() });
+
       controller = new SelectionController({
-         model,
+         model: model.getDisplay(),
          strategy,
          selectedKeys: [],
          excludedKeys: []
       });
    });
 
-   it('update', () => {
+   it('updateOptions', () => {
       model =  new ListViewModel({
          items,
          keyProperty: 'id'
       });
 
-      controller.update({
-         model,
-         selectedKeys: [1],
-         excludedKeys: [1],
-         strategyOptions: { items: model.getItems() }
+      controller.updateOptions({
+         model: model.getDisplay(),
+         strategyOptions: { items: model.getDisplay().getItems() }
       });
 
-      assert.equal(controller._model, model);
-      assert.deepEqual(controller._selectedKeys, [1]);
-      assert.deepEqual(controller._excludedKeys, [1]);
-      assert.equal(controller._strategy._items, model.getItems());
+      assert.equal(controller._model, model.getDisplay());
+      assert.deepEqual(controller._strategy._items, model.getDisplay().getItems());
    });
 
    describe('toggleItem', () => {
       it ('toggle', () => {
-         const expectedResult = {
-            isAllSelected: false,
-            selectedCount: 1,
-            selectedKeysDiff: {
-               keys: [1],
-               added: [1],
-               removed: []
-            }, excludedKeysDiff: {
-               keys: [],
-               added: [],
-               removed: []
-            }
-         };
          const result = controller.toggleItem(1);
-         assert.deepEqual(result, expectedResult);
+         assert.deepEqual(result, { selected: [1], excluded: [] });
       });
 
       it('toggle breadcrumbs', () => {
@@ -102,70 +84,8 @@ describe('Controls/_multiselection/Controller', () => {
             excludedKeys: []
          });
 
-         const expectedResult = {
-            isAllSelected: false,
-            selectedCount: 1,
-            selectedKeysDiff: {
-               keys: [2],
-               added: [2],
-               removed: []
-            }, excludedKeysDiff: {
-               keys: [],
-               added: [],
-               removed: []
-            }
-         };
-
          const result = controller.toggleItem(2);
-         assert.deepEqual(result, expectedResult);
-      });
-   });
-
-   describe('clearSelection', () => {
-      it('not empty model', () => {
-         controller.toggleItem(1);
-
-         const result = controller.clearSelection();
-         assert.deepEqual(result, {
-            selectedKeysDiff: {
-               added: [],
-               removed: [1],
-               keys: []
-            },
-            excludedKeysDiff: {
-               added: [],
-               removed: [],
-               keys: []
-            },
-            selectedCount: 0,
-            isAllSelected: false
-         });
-         assert.isFalse(model.getItemBySourceKey(1).isSelected());
-         assert.isFalse(model.getItemBySourceKey(2).isSelected());
-         assert.isFalse(model.getItemBySourceKey(3).isSelected());
-      });
-
-      it('clearSelection and empty model', () => {
-         model.setItems(new RecordSet({
-            rawData: [],
-            keyProperty: 'id'
-         }), {});
-
-         const result = controller.clearSelection();
-         assert.deepEqual(result, {
-            selectedKeysDiff: {
-               added: [],
-               removed: [],
-               keys: []
-            },
-            excludedKeysDiff: {
-               added: [],
-               removed: [],
-               keys: []
-            },
-            selectedCount: 0,
-            isAllSelected: false
-         });
+         assert.deepEqual(result, { selected: [2], excluded: [] });
       });
    });
 
@@ -176,11 +96,11 @@ describe('Controls/_multiselection/Controller', () => {
       });
 
       it('all selected not by every item', () => {
-         controller.update({
+         controller = new SelectionController({
             model,
+            strategy,
             selectedKeys: [null],
-            excludedKeys: [],
-            strategyOptions: { items: model.getItems() }
+            excludedKeys: []
          });
 
          const result = controller.isAllSelected(false);
@@ -189,62 +109,22 @@ describe('Controls/_multiselection/Controller', () => {
    });
 
    it('selectAll', () => {
-      const expectedResult = {
-         isAllSelected: true,
-         selectedCount: 3,
-         selectedKeysDiff: {
-            keys: [null],
-            added: [null],
-            removed: []
-         }, excludedKeysDiff: {
-            keys: [],
-            added: [],
-            removed: []
-         }
-      };
       const result = controller.selectAll();
-      assert.deepEqual(result, expectedResult);
+      assert.deepEqual(result, { selected: [null], excluded: [] });
    });
 
    it('toggleAll', () => {
-      const expectedResult = {
-         isAllSelected: true,
-         selectedCount: 3,
-         selectedKeysDiff: {
-            keys: [null],
-            added: [null],
-            removed: []
-         }, excludedKeysDiff: {
-            keys: [],
-            added: [],
-            removed: []
-         }
-      };
       const result = controller.toggleAll();
-      assert.deepEqual(result, expectedResult);
+      assert.deepEqual(result, { selected: [null], excluded: [] });
    });
 
    it('unselectAll', () => {
       controller.toggleItem(1);
-
-      const expectedResult = {
-         isAllSelected: false,
-         selectedCount: 0,
-         selectedKeysDiff: {
-            keys: [],
-            added: [],
-            removed: [1]
-         }, excludedKeysDiff: {
-            keys: [],
-            added: [],
-            removed: []
-         }
-      };
       const result = controller.unselectAll();
-      assert.deepEqual(result, expectedResult);
+      assert.deepEqual(result, { selected: [], excluded: [] });
    });
 
-   it('handleAddItems', () => {
+   it('onCollectionAdd', () => {
       model.setItems(new RecordSet({
          rawData: [
             { id: 1 },
@@ -255,87 +135,49 @@ describe('Controls/_multiselection/Controller', () => {
          keyProperty: 'id'
       }), {});
 
-      controller.update({
+      controller = new SelectionController({
          model,
+         strategy,
          selectedKeys: [1, 2, 3, 4],
-         excludedKeys: [],
-         strategyOptions: { items: model.getItems() }
+         excludedKeys: []
       });
 
       const addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
-      const result = controller.handleAddItems(addedItems);
-      assert.deepEqual(result, {
-         selectedKeysDiff: {
-            added: [],
-            removed: [],
-            keys: [1, 2, 3, 4]
-         },
-         excludedKeysDiff: {
-            added: [],
-            removed: [],
-            keys: []
-         },
-         selectedCount: 4,
-         isAllSelected: true
-      });
+      controller.onCollectionAdd(addedItems);
 
       assert.isTrue(model.getItemBySourceKey(1).isSelected());
       assert.isTrue(model.getItemBySourceKey(2).isSelected());
    });
 
-   it('handleRemoveItems', () => {
+   it('onCollectionRemove', () => {
       controller.toggleItem(1);
 
       const expectedResult = {
-         isAllSelected: false,
-         selectedCount: 0,
-         selectedKeysDiff: {
-            keys: [],
-            added: [],
-            removed: [1]
-         }, excludedKeysDiff: {
-            keys: [],
-            added: [],
-            removed: []
-         }
+         selected: [], excluded: []
       };
       const removedItem = {
          getKey: () => 1
       };
-      const result = controller.handleRemoveItems([removedItem]);
+      const result = controller.onCollectionRemove([removedItem]);
       assert.deepEqual(result, expectedResult);
    });
 
    it('with limit', () => {
       controller.setLimit(2);
 
-      let result = controller.selectAll();
-      assert.equal(result.selectedCount, 2);
+      let selection = controller.selectAll();
+      controller.setSelection(selection);
+      assert.equal(controller.getCountOfSelected(), 2);
 
-      result = controller.toggleItem(3);
-      assert.equal(result.selectedCount, 3);
+      selection = controller.toggleItem(3);
+       controller.setSelection(selection);
+      assert.equal(controller.getCountOfSelected(), 3);
    });
 
-   it('setSelectedKeys', () => {
+   it('setSelection', () => {
       controller.toggleItem(1);
-      const result = controller.setSelectedKeys([1], []);
-
-      const expectedResult = {
-         isAllSelected: false,
-         selectedCount: 1,
-         selectedKeysDiff: {
-            keys: [1],
-            added: [],
-            removed: []
-         }, excludedKeysDiff: {
-            keys: [],
-            added: [],
-            removed: []
-         }
-      };
-
+      controller.setSelection({selected: [1], excluded: []});
       assert.isTrue(model.getItemBySourceKey(1).isSelected());
-      assert.deepEqual(result, expectedResult);
    });
 
    // При вызове startItemAnimation нужно устанавливать в коллекцию анимацию right-swiped и isSwiped
@@ -398,22 +240,7 @@ describe('Controls/_multiselection/Controller', () => {
          }
       };
 
-      const hierarchy = new relation.Hierarchy({
-         keyProperty: 'id',
-         parentProperty: 'parent',
-         nodeProperty: 'nodeType'
-      });
-
-      const strategy = new TreeSelectionStrategy({
-         items,
-         selectDescendants: false,
-         selectAncestors: false,
-         hierarchyRelation: hierarchy,
-         rootId: null,
-         nodesSourceControllers
-      });
-
-      let model, controller;
+      let model, controller, strategy;
 
       beforeEach(() => {
          model = new SearchGridViewModel({
@@ -424,6 +251,14 @@ describe('Controls/_multiselection/Controller', () => {
             columns: [{}]
          });
 
+         strategy = new TreeSelectionStrategy({
+             items: model.getDisplay().getItems(),
+             selectDescendants: false,
+             selectAncestors: false,
+             rootId: null,
+             nodesSourceControllers
+         });
+
          controller = new SelectionController({
             model,
             strategy,
@@ -432,39 +267,18 @@ describe('Controls/_multiselection/Controller', () => {
          });
       });
 
-      it('handleAddItems', () => {
+      it('onCollectionAdd', () => {
          model.setItems(items, {});
 
-         controller.update({
+         controller = new SelectionController({
             model,
+            strategy,
             selectedKeys: [1, 3],
-            excludedKeys: [],
-            strategyOptions: {
-               items,
-               selectDescendants: false,
-               selectAncestors: false,
-               hierarchyRelation: hierarchy,
-               rootId: null,
-               nodesSourceControllers
-            }
+            excludedKeys: []
          });
 
          const addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(3)];
-         const result = controller.handleAddItems(addedItems);
-         assert.deepEqual(result, {
-            selectedKeysDiff: {
-               added: [],
-               removed: [],
-               keys: [1, 3]
-            },
-            excludedKeysDiff: {
-               added: [],
-               removed: [],
-               keys: []
-            },
-            selectedCount: 2,
-            isAllSelected: false
-         });
+         controller.onCollectionAdd(addedItems);
 
          assert.isTrue(model.getItemBySourceKey(1).isSelected());
          assert.isFalse(model.getItemBySourceKey(2).isSelected());

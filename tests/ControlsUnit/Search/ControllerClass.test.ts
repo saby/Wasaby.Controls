@@ -45,7 +45,9 @@ function getDefaultOptions() {
                 hasMore: false
             }
         },
-        loadingChangedCallback: () => {}
+        loadingChangedCallback: () => {},
+        filterChangedCallback: () => {},
+        itemsChangedCallback: () => {}
     };
 }
 
@@ -173,5 +175,24 @@ describe('Controls/search:ControllerClass', () => {
 
         searchController.update(options, context);
         assert.equal(searchController._viewMode, 'search');
+    });
+
+    describe('search', () => {
+        it('search with searchStartCallback', () => {
+            const options = getDefaultOptions();
+            let isSearchStarted = false;
+            options.searchStartCallback = () => {
+                isSearchStarted = true;
+            };
+            const searchController = new ControllerClass(options, {});
+            searchController._dataOptions = options;
+
+            return new Promise((resolve) => {
+                searchController.search('test', true).then(() => {
+                    assert.isTrue(isSearchStarted);
+                    resolve();
+                });
+            });
+        });
     });
 });

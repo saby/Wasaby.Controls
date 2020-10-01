@@ -15,6 +15,7 @@ interface IOptions extends IEditorOptions {
  * @class Controls/_propertyGrid/extendedEditors/FlatEnum
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor
+ * @demo Controls-demo/PropertyGridNew/Editors/FlatEnum/Demo
  * @control
  * @public
  * @author Борисов А.Н.

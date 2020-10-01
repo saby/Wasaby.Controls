@@ -130,6 +130,12 @@ var CompoundArea = CompoundContainer.extend([
          var maximized = this.getContainer().hasClass('ws-float-area-maximized-mode');
          var templateComponent = this._getTemplateComponent();
          this.getContainer().toggleClass('ws-float-area-has-maximized-button', popupOptions.showMaximizedButton || false);
+         const maximizedButtonClass = ' ws-float-area-has-maximized-button';
+         if (popupOptions.showMaximizedButton) {
+            this._className += maximizedButtonClass;
+         } else if (this._className.indexOf(maximizedButtonClass) >= 0) {
+            this._className = this._className.replace(maximizedButtonClass, '');
+         }
          this.getContainer().toggleClass('ws-float-area-maximized-mode', popupOptions.maximized || false);
          if (templateComponent && maximized !== popupOptions.maximized) {
             templateComponent._notifyOnSizeChanged();
@@ -500,6 +506,7 @@ var CompoundArea = CompoundContainer.extend([
 
    _setCustomHeader: function() {
       var hasHeader = !!this._options.caption;
+      const headerPaddingClass = ' controls-CompoundArea-headerPadding';
       var customHeaderContainer = this._getCustomHeaderContainer();
       if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length && !this._options.hideCross)) {
          if (customHeaderContainer.length) {
@@ -511,11 +518,15 @@ var CompoundArea = CompoundContainer.extend([
             customHeaderContainer = $('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + (this._options.caption || '') + '</div></div>');
             this.getContainer().prepend(customHeaderContainer);
             this.getContainer().addClass('controls-CompoundArea-headerPadding');
+            this._className += headerPaddingClass;
          }
       } else if (customHeaderContainer.length && this._options.type === 'dialog') {
          this._prependCustomHeader(customHeaderContainer);
       } else {
          this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+         if (this._className.indexOf(headerPaddingClass) >= 0) {
+            this._className = this._className.replace(headerPaddingClass, '');
+         }
       }
       this._titleBar = customHeaderContainer;
       if (!this._options.maximize && customHeaderContainer.length && this._options.draggable) {
@@ -1126,6 +1137,9 @@ var CompoundArea = CompoundContainer.extend([
                // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
                // стреляя событием onAfterVisibilityChange
                self._notifyCompound('onAfterVisibilityChange', visible, prevVisible);
+               // обновляю в замыкании, чтобы повторные вызова не приводили к
+               // прохождению проверки visible !== prevVisible
+               prevVisible = visible;
             }
          };
 

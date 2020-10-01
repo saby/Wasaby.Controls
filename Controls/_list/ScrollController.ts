@@ -161,6 +161,9 @@ export default class ScrollController {
         return {...result, ...this.updateContainerHeightsData(params)};
     }
 
+    getPlaceholders(): IPlaceholders {
+        return this._placeholders;
+    }
     setRendering(state: boolean) {
         this._isRendering = state;
     }
@@ -246,7 +249,7 @@ export default class ScrollController {
 
         if (index !== -1) {
             return new Promise((resolve) => {
-                if (this._virtualScroll && this._virtualScroll.canScrollToItem(index, toBottom, force)) {
+                if (this._virtualScroll && this._virtualScroll.canScrollToItem(index, toBottom, force) && !this._virtualScroll.rangeChanged) {
                     this._fakeScroll = true;
                     scrollCallback(index);
                     resolve(null);
@@ -455,7 +458,7 @@ export default class ScrollController {
             this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                 this._options.needScrollCalculation);
             this._applyScrollTopCallback = params.applyScrollTopCallback;
-            if (!this._isRendering) {
+            if (!this._isRendering && !this._virtualScroll.rangeChanged) {
                 this.completeVirtualScrollIfNeed();
             }
             this.savePlaceholders(rangeShiftResult.placeholders);
@@ -501,9 +504,11 @@ export default class ScrollController {
         });
     }
 
-    updateItemsHeights(itemsHeights: IItemsHeights) {
+    updateItemsHeights(itemsHeights: IItemsHeights): boolean {
         if (this._virtualScroll) {
+            const itemsUpdated = this._virtualScroll.rangeChanged;
             this._virtualScroll.updateItemsHeights(itemsHeights);
+            return itemsUpdated;
         }
     }
 
@@ -540,6 +545,14 @@ export default class ScrollController {
                 this._options.needScrollCalculation
             );
         }
+    }
+
+    /**
+     * Метод позволяет узнать, применяется ли для отображения элементов виртуальный скролл
+     * @public
+     */
+    isAppliedVirtualScroll(): boolean {
+        return !!this._virtualScroll;
     }
 
     /**
@@ -596,8 +609,7 @@ export default class ScrollController {
     }
 
     handleResetItems(): IScrollControllerResult {
-        let result = this._initVirtualScroll(this._options);
-        return result;
+        return this._initVirtualScroll(this._options);
     }
 
     private getTriggerOffset(scrollHeight: number, viewportHeight: number, attachLoadTopTriggerToNull: boolean): {top: number, bottom: number} {

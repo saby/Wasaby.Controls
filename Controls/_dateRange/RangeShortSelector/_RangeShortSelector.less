@@ -12,8 +12,8 @@
 }
 
 .controls-DateRangeSelectorLite__picker-normal {
-   margin-top: ceil(@height_rangeShortSelectorLink - @item_height_shortDatePicker) + 2 * @border-thickness_shortDatePicker;
-   margin-left: -(@header_padding-horizontal_shortDatePicker + @border-thickness_shortDatePicker);
+   margin-top: ceil((@height_rangeShortSelectorLink - @item_height_shortDatePicker)/2) - @border-thickness_shortDatePicker;
+   margin-left: ceil((@icon-size_m + @closeButton_offset-left_shortDatePicker)/2);
 }
 
 // Смещаем на расстояние высоты эл-та со стрелкой + расстояние от верха текста эл-та с годом до начала этого блока и так же учитываем такое же расстояние у вызывающего эл-та
@@ -26,6 +26,6 @@
 // добавляем к смещению popup'a 1px (чтобы в FF было так же, как chrome).
 .ws-is-firefox {
    .controls-DateRangeSelectorLite__picker-normal {
-      margin-top: ceil(@height_rangeShortSelectorLink - @item_height_shortDatePicker) + 2 * @border-thickness_shortDatePicker + 1;
+      margin-top: ceil((@height_rangeShortSelectorLink - @item_height_shortDatePicker)/2) - @border-thickness_shortDatePicker + 1;
    }
 }

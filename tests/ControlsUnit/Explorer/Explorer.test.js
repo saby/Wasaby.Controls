@@ -323,7 +323,6 @@ define([
                assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tree);
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tree);
                assert.isFalse(rootChanged);
-               assert.isTrue(Boolean(instance._virtualScrollConfig));
 
                instance._notify = function(eventName) {
                   if (eventName === 'rootChanged') {
@@ -337,7 +336,6 @@ define([
                assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.search);
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.search);
                assert.isFalse(rootChanged);
-               assert.isTrue(Boolean(instance._virtualScrollConfig));
 
                instance._breadCrumbsItems = new collection.RecordSet({
                   rawData: [
@@ -359,7 +357,6 @@ define([
             })
             .then(() => {
                assert.isFalse(rootChanged);
-               assert.isTrue(Boolean(instance._virtualScrollConfig));
 
                return explorerMod.View._private.setViewMode(instance, newCfg2.viewMode, newCfg2);
             })
@@ -368,7 +365,6 @@ define([
                assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tile);
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tile);
                assert.isFalse(rootChanged);
-               assert.isFalse(Boolean(instance._virtualScrollConfig));
             }).then(() => {
                explorerMod.View._private.setViewMode(instance, newCfg3.viewMode, newCfg3);
                assert.equal(instance._breadCrumbsItems, null);
@@ -695,12 +691,53 @@ define([
             const clickEvent = {
                target: {closest: () => {}}
             };
+            explorer._children.treeControl = { isEditing: () => false };
             assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => true  }, clickEvent) });
             assert.equal(rootBefore, explorer._root);
             assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => false }, clickEvent) });
             assert.equal(rootBefore, explorer._root);
             assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => null  }, clickEvent) });
             assert.equal(rootBefore, explorer._root);
+         });
+
+         it('should open node by item click with option expandByItemClick in search mode', () => {
+            const cfg = {
+               editingConfig: {},
+               expandByItemClick: true,
+               nodeProperty: 'node@'
+            };
+            const explorer = new explorerMod.View(cfg);
+            explorer.saveOptions(cfg);
+            explorer._viewMode = 'search';
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: null
+               }
+            };
+            const rootBefore = explorer._root;
+            explorer._children = {
+               treeControl: {
+                  _children: {
+
+                  },
+                  commitEdit: () => ({
+                     addCallback(callback) {
+                        callback();
+                        assert.notEqual(rootBefore, explorer._root);
+                     }
+                  }),
+                  isEditing: () => false
+               }
+            };
+            const event = { stopPropagation: () => {} };
+            const clickEvent = {
+               target: {closest: () => {}}
+            };
+            const item = {
+               get: () => true,
+               getId: () => 'itemId'
+            };
+            assert.doesNotThrow(() => { explorer._onItemClick(event, item, clickEvent) });
          });
 
          it('_onItemClick', async function() {
@@ -736,8 +773,8 @@ define([
             explorer._children = {
                treeControl: {
                   _children: {
-
                   },
+                  isEditing: () => false,
                   commitEdit: () => commitEditResult
                }
             };
@@ -836,6 +873,27 @@ define([
             assert.isTrue(isPropagationStopped);
             // Root wasn't changed
             assert.equal(root, 'itemId');
+
+            explorer._isGoingFront = false;
+            explorer.saveOptions({
+               searchNavigationMode: 'expand'
+            });
+            await new Promise((res) => {
+               explorer._onItemClick({
+                  stopPropagation: () => {
+                     isPropagationStopped = true;
+                  }
+               }, {
+                  get: () => true,
+                  getId: () => 'itemIdOneMore'
+               }, {
+                  nativeEvent: 123
+               });
+               setTimeout(() => {
+                  res();
+               }, 0);
+            });
+            assert.isFalse(explorer._isGoingFront);
          });
 
          it('_onBreadCrumbsClick', function() {
@@ -1211,6 +1269,9 @@ define([
                null: {
                   markedKey: null
                }
+            };
+            explorer._children.treeControl = {
+               isEditing: () => false
             };
 
             const mockEvent = { stopPropagation: () => {} };

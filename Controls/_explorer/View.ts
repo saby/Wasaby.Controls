@@ -193,11 +193,6 @@ var
                self._pendingViewMode = null;
             }
          },
-         setVirtualScrolling(self, viewMode, cfg): void {
-            // todo https://online.sbis.ru/opendoc.html?guid=7274717e-838d-46c4-b991-0bec75bd0162
-            // For viewMode === 'tile' disable virtualScrolling.
-            self._virtualScrollConfig = viewMode === 'tile' ? false : cfg.virtualScrollConfig;
-         },
 
          setViewConfig: function (self, viewMode) {
             self._viewName = VIEW_NAMES[viewMode];
@@ -205,7 +200,6 @@ var
          },
          setViewModeSync: function(self, viewMode, cfg): void {
             self._viewMode = viewMode;
-            _private.setVirtualScrolling(self, self._viewMode, cfg);
             _private.setViewConfig(self, self._viewMode);
          },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
@@ -471,7 +465,7 @@ var
 
    /**
     * @name Controls/_explorer/View#breadcrumbsDisplayMode
-    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#breadcrumbsDisplayMode}
+    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
     */
 
    /**
@@ -479,11 +473,11 @@ var
     * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
     * @default undefined
     * @remark
-    * Позволяет установить прикладной шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке прикладного шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
+    * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
     *
     * Также шаблон Controls/tile:ItemTemplate поддерживает {@link Controls/tile:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
     *
-    * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать прикладной шаблон. Также в опцию tileItemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/tile:ItemTemplate.
+    * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию tileItemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/tile:ItemTemplate.
     *
     * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/explorer/templates/ руководстве разработчика}.
     * @example
@@ -595,10 +589,6 @@ var
                _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
             }
          }
-
-         if (cfg.virtualScrollConfig !== this._options.virtualScrollConfig) {
-            _private.setVirtualScrolling(this, this._viewMode, cfg);
-         }
       },
       _beforePaint: function() {
          if (this._markerForRestoredScroll !== null) {
@@ -646,7 +636,10 @@ var
 
          const changeRoot = () => {
             _private.setRoot(this, item.getId());
-            this._isGoingFront = true;
+            // При search не должны сбрасывать маркер, так как он встанет на папку
+            if (this._options.searchNavigationMode !== 'expand') {
+               this._isGoingFront = true;
+            }
          };
 
          // Не нужно проваливаться в папку, если должно начаться ее редактирование.
@@ -663,10 +656,11 @@ var
 
          if (shouldHandleClick) {
               const nodeType = item.get(this._options.nodeProperty);
+              const isSearchMode = this._viewMode === 'search';
 
               // Проваливание возможно только в узел (ITEM_TYPES.node).
               // Проваливание невозможно, если по клику следует развернуть узел/скрытый узел.
-              if ((this._options.expandByItemClick && nodeType !== ITEM_TYPES.leaf) || (nodeType !== ITEM_TYPES.node)) {
+              if ((!isSearchMode && this._options.expandByItemClick && nodeType !== ITEM_TYPES.leaf) || (nodeType !== ITEM_TYPES.node)) {
                   return res;
               }
 
@@ -675,16 +669,17 @@ var
               // новые и маркер запомнится не для того root'а. Ошибка:
               // https://online.sbis.ru/opendoc.html?guid=38d9ca66-7088-4ad4-ae50-95a63ae81ab6
               _private.setRestoredKeyObject(this, item);
-              if (!this._options.editingConfig) {
+
+             // Если в списке запущено редактирование, то проваливаемся только после успешного завершения.
+             if (!this._children.treeControl.isEditing()) {
                   changeRoot();
               } else {
-                  // TODO: После перехода на новую схему редактирования поправить на canceled.
-                  //    https://online.sbis.ru/opendoc.html?guid=f91b2f96-d6e7-45d0-b929-a0030f0a2788
-                  this.commitEdit().addCallback((res = {}) => {
-                      if (!res.validationFailed) {
-                          changeRoot();
-                      }
-                  });
+                 this.commitEdit().then((result) => {
+                     if (!(result && result.canceled)) {
+                         changeRoot();
+                     }
+                     return result;
+                 });
               }
 
               // Проваливание в папку и попытка проваливания в папку не должны вызывать разворот узла.

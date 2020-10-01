@@ -7,6 +7,8 @@ import ItemsStrategyComposer from './itemsStrategy/Composer';
 import DirectItemsStrategy from './itemsStrategy/Direct';
 import UserItemsStrategy from './itemsStrategy/User';
 import GroupItemsStrategy from './itemsStrategy/Group';
+import DragStrategy from './itemsStrategy/Drag';
+import AddStrategy from './itemsStrategy/Add';
 import {
     DestroyableMixin,
     ObservableMixin,
@@ -30,14 +32,13 @@ import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import { IDragPosition } from 'Controls/listDragNDrop';
-import DragStrategy from './itemsStrategy/Drag';
 import {ICollection, ISourceCollection} from './interface/ICollection';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
-const VERSION_UPDATE_ITEM_PROPERTIES = ['editingContents', 'animated', 'canShowActions', 'expanded', 'marked'];
+const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
@@ -85,10 +86,11 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     sort?: SortFunction<S, T> | Array<SortFunction<S, T>>;
     keyProperty?: string;
     displayProperty?: string;
+    itemTemplateProperty?: string;
     multiSelectVisibility?: string;
-    leftSpacing?: string;
-    rightSpacing?: string;
-    rowSpacing?: string;
+    itemPadding?: IItemPadding;
+    rowSeparatorSize?: string;
+    stickyMarkedItem?: boolean;
     theme?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
@@ -112,6 +114,12 @@ export interface IViewIterator {
 
 export type TGroupKey = string|number;
 export type TArrayGroupKey = TGroupKey[];
+export interface IItemPadding {
+    top?: string;
+    bottom?: string;
+    left?: string;
+    right?: string;
+}
 
 export interface IItemActionsTemplateConfig {
     toolbarVisibility?: boolean;
@@ -574,17 +582,25 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$displayProperty: string;
 
+    protected _$itemTemplateProperty: string;
+
     protected _$multiSelectVisibility: string;
 
-    protected _$leftSpacing: string;
+    protected _$leftPadding: string;
 
-    protected _$rightSpacing: string;
+    protected _$rightPadding: string;
+
+    protected _$topPadding: string;
+
+    protected _$bottomPadding: string;
 
     protected _$theme: string;
 
-    protected _$rowSpacing: string;
-
     protected _$searchValue: string;
+
+    protected _$rowSeparatorSize: string;
+
+    protected _$stickyMarkedItem: boolean;
 
     protected _$editingConfig: IEditingConfig;
 
@@ -709,7 +725,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     protected _$activeItem: T;
 
-    protected _$isEditing: boolean;
+    protected _$isEditing: boolean = false;
 
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
@@ -729,16 +745,33 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
              this._$keyProperty = (options as any).idProperty;
         }
 
+        if (options.groupProperty) {
+            this._$groupProperty = options.groupProperty;
+            this._$group = (item) => {
+                return item.get(this._$groupProperty);
+            };
+        }
+
         // Support of 'groupingKeyCallback' option
         if (!this._$group && (options as any).groupingKeyCallback) {
             this._$group = (options as any).groupingKeyCallback;
+        }
+
+        if (options.itemTemplateProperty) {
+            this._$itemTemplateProperty = options.itemTemplateProperty;
         }
 
         this._$theme = options.theme;
 
         this._$collapsedGroups = options.collapsedGroups;
 
-        this._$groupProperty = options.groupProperty;
+        if (options.rowSeparatorSize) {
+            this._$rowSeparatorSize = options.rowSeparatorSize;
+        }
+
+        if (options.stickyMarkedItem !== undefined) {
+            this._$stickyMarkedItem = options.stickyMarkedItem;
+        }
 
         if (!this._$collection) {
             throw new Error(`${this._moduleName}: source collection is empty`);
@@ -775,7 +808,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
 
         if (options.itemPadding) {
-            this.setItemsSpacings(options.itemPadding);
+            this._setItemPadding(options.itemPadding);
         }
 
         this._viewIterator = {
@@ -1031,7 +1064,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки).
-     * @return {Array.<Controls/_display/CollectionItem>}
+     * @return {Array<Controls/_display/CollectionItem>}
      */
     getItems(): T[] {
         return this._getItems().slice();
@@ -1330,6 +1363,17 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         if (collection && collection['[Types/_collection/IList]']) {
             sourceIndex = (collection as any as IList<S>).getIndex(item);
+
+            // Если записи нет в наборе данных, то, возможно запрашивается индекс добавляемой в данный момент записи.
+            // Такой записи еще нет в наборе данных.
+            if (sourceIndex === -1 && this._$isEditing) {
+                this.each((el, index: number) => {
+                    if (el.isEditing() && el.isAdd && el.contents.getKey() === item.contents.getKey()) {
+                        sourceIndex = index;
+                    }
+                });
+                return sourceIndex;
+            }
         } else {
             let index = 0;
             (collection as IEnumerable<S>).each((value) => {
@@ -2086,15 +2130,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      *     display.setSelectedItems([list.at(0), list.at(1)], true) //установит признак двум элементам;
      * </pre>
      */
-    setSelectedItems(items: S[], selected: boolean|null, silent: boolean = false): void {
-        const sourceItems = [];
-        for (let i = 0, count = items.length; i < count; i++) {
-            const item = this.getItemBySourceItem(items[i]);
-            if (item) {
-                sourceItems.push(item);
-            }
-        }
-        this._setSelectedItems(sourceItems, selected, silent);
+    setSelectedItems(items: T[], selected: boolean|null, silent: boolean = false): void {
+        this._setSelectedItems(items, selected, silent);
     }
 
     /**
@@ -2150,11 +2187,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     resetDraggedItems(): void {
+        // TODO нужно у стратегии вызвать метод reset, чтобы задестроить avatarItem и обнулить все ссылки
         this.removeStrategy(this._dragStrategy);
     }
 
     // endregion
 
+    getItemTemplateProperty(): string {
+        return this._$itemTemplateProperty;
+    }
 
     getDisplayProperty(): string {
         return this._$displayProperty;
@@ -2172,6 +2213,19 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return result;
     }
 
+    isStickyMarkedItem(): boolean {
+        return this._$stickyMarkedItem;
+    }
+
+    getRowSeparatorSize(): string {
+        return this._$rowSeparatorSize;
+    }
+
+    setRowSeparatorSize(rowSeparatorSize: string): void {
+        this._$rowSeparatorSize = rowSeparatorSize;
+        this._nextVersion();
+    }
+
     getMultiSelectVisibility(): string {
         return this._$multiSelectVisibility;
     }
@@ -2184,10 +2238,16 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
-    setItemsSpacings(itemPadding: {top: string, left: string, right: string}): void {
-        this._$rowSpacing = itemPadding.top;
-        this._$leftSpacing = itemPadding.left;
-        this._$rightSpacing = itemPadding.right;
+    protected _setItemPadding(itemPadding: IItemPadding): void {
+        this._$topPadding = itemPadding.top || 'default';
+        this._$bottomPadding = itemPadding.bottom || 'default';
+        this._$leftPadding = itemPadding.left || 'default';
+        this._$rightPadding = itemPadding.right || 'default';
+    }
+
+    setItemPadding(itemPadding: IItemPadding): void {
+        this._setItemPadding(itemPadding);
+        this._nextVersion();
     }
 
     setMarkedKey(key: string|number, status: boolean): void {
@@ -2210,16 +2270,20 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return false;
     }
 
-    getRowSpacing(): string {
-        return this._$rowSpacing;
+    getTopPadding(): string {
+        return this._$topPadding;
     }
 
-    getLeftSpacing(): string {
-        return this._$leftSpacing;
+    getBottomPadding(): string {
+        return this._$bottomPadding;
     }
 
-    getRightSpacing(): string {
-        return this._$rightSpacing;
+    getLeftPadding(): string {
+        return this._$leftPadding;
+    }
+
+    getRightPadding(): string {
+        return this._$rightPadding;
     }
 
     setEditingConfig(config: IEditingConfig): void {
@@ -2242,11 +2306,18 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$searchValue;
     }
 
-    getItemBySourceKey(key: string|number): CollectionItem<S> {
+    getItemBySourceKey(key: string|number): T {
         if (this._$collection['[Types/_collection/RecordSet]']) {
             if (key !== undefined) {
                 const record = (this._$collection as unknown as RecordSet).getRecordById(key);
-                return this.getItemBySourceItem(record as unknown as S);
+
+                // Если записи нет в наборе данных, то, возможно запрашивается добавляемая в данный момент запись.
+                // Такой записи еще нет в наборе данных.
+                if (!record && this._$isEditing) {
+                    return this.find((item) => item.isEditing() && item.isAdd && item.contents.getKey() === key);
+                } else {
+                    return this.getItemBySourceItem(record as unknown as S);
+                }
             } else {
                 return null;
             }
@@ -2284,6 +2355,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getMetaResults(): {} {
         return this._$metaResults;
+    }
+
+    getMetaData(): {} {
+        return this._$collection ? this._$collection.getMetaData() : {};
     }
 
     getCollapsedGroups(): TArrayGroupKey {
@@ -2403,6 +2478,18 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$isEditing = editing;
     }
 
+    setAddingItem(item: T): void {
+        this._prependStrategy(AddStrategy, {
+            item,
+            addPosition: item.addPosition,
+            groupMethod: this.getGroup()
+        }, GroupItemsStrategy);
+    }
+
+    resetAddingItem(): void {
+        this.removeStrategy(AddStrategy);
+    }
+
     getSwipeConfig(): ISwipeConfig {
         return this._swipeConfig;
     }
@@ -2412,6 +2499,31 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._swipeConfig = config;
             this._nextVersion();
         }
+    }
+
+    private _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
+        const strategyOptions = { ...options, display: this };
+        let index = 0;
+
+        if (typeof before === 'function') {
+            this._userStrategies.forEach((strObject, strIndex) => {
+                if (strObject.strategy === before) {
+                    index = strIndex;
+                }
+            });
+        }
+
+        this._userStrategies.splice(index, 0, {
+            strategy,
+            options: strategyOptions
+        });
+
+        if (this._composer) {
+            this._composer.prepend(strategy, strategyOptions, before);
+            this._reBuild(true);
+        }
+
+        this.nextVersion();
     }
 
     appendStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object): void {
@@ -2636,7 +2748,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const items = [];
         for (let i = selecItems.length - 1; i >= 0; i--) {
             if (selecItems[i].isSelected() !== selected) {
-                selecItems[i].setSelected(selected, true);
+                selecItems[i].setSelected(selected, silent);
                 items.push(selecItems[i]);
             }
         }
@@ -3535,10 +3647,13 @@ Object.assign(Collection.prototype, {
     _$sort: null,
     _$keyProperty: '',
     _$displayProperty: '',
+    _$itemTemplateProperty: '',
     _$multiSelectVisibility: 'hidden',
-    _$leftSpacing: 'default',
-    _$rightSpacing: 'default',
-    _$rowSpacing: 'default',
+    _$leftPadding: 'default',
+    _$rightPadding: 'default',
+    _$topPadding: 'default',
+    _$bottomPadding: 'default',
+    _$stickyMarkedItem: true,
     _$searchValue: '',
     _$editingConfig: null,
     _$unique: false,

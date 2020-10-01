@@ -341,7 +341,7 @@ define(
                   {
                      rawData: {
                         id: '0',
-                        icon: 'icon-24 icon-Linked',
+                        icon: 'icon-Linked',
                         fontColorStyle: 'secondary',
                         viewMode: 'toolButton',
                         iconStyle: 'secondary',
@@ -363,7 +363,7 @@ define(
                   _hasIcon: true,
                   _height: 'l',
                   _hoverIcon: true,
-                  _icon: 'icon-24 icon-Linked',
+                  _icon: 'icon-Linked',
                   _iconSize: 'm',
                   _iconStyle: 'readonly',
                   _stringCaption: false,
@@ -506,6 +506,56 @@ define(
                   horizontal: 'overflow'
                };
                assert.deepEqual(Toolbar._getMenuOptions().fittingMode, fittingMode);
+            });
+            it('update menuItems when items/source changed', () => {
+               let options = {
+                  items: records
+               };
+               let newOptions = {
+                  items: new collection.RecordSet({
+                     rawData: [{
+                        id: '1',
+                        title: 'Запись 1',
+                        parent: null,
+                        '@parent': null
+                     },
+                        {
+                           id: '2',
+                           title: 'Запись 2',
+                           parent: null,
+                           '@parent': true,
+                           icon: 'icon-Ezy',
+                           iconStyle: 'super'
+                        },
+                        {
+                           id: '3',
+                           title: 'Запись 3',
+                           icon: 'icon-medium icon-Doge icon-primary',
+                           parent: null,
+                           '@parent': null,
+                           showType: 2
+                        }]
+                  })
+               };
+               let isMenuItemsChanged = false;
+               let Toolbar = new toolbars.View(options);
+               Toolbar._notify = () => {};
+               Toolbar._openMenu = () => {};
+               Toolbar._setMenuItems = () => {
+                  isMenuItemsChanged = true;
+               };
+               Toolbar._beforeMount(options);
+               Toolbar._showMenu();
+               assert.isTrue(isMenuItemsChanged);
+               assert.isTrue(Toolbar._isLoadMenuItems);
+
+               Toolbar._beforeUpdate(newOptions);
+               isMenuItemsChanged = false;
+               assert.isFalse(Toolbar._isLoadMenuItems);
+               Toolbar._showMenu();
+               assert.isTrue(isMenuItemsChanged);
+               assert.isTrue(Toolbar._isLoadMenuItems);
+
             });
          });
          function setTrue(assert) {

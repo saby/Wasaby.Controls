@@ -14,6 +14,7 @@ interface IPositionHasMore {
     forward: boolean;
     before?: boolean;
     after?: boolean;
+    total?: number;
 }
 
 declare type FieldCfg = any;
@@ -34,7 +35,7 @@ interface IPositionBoth {
 }
 
 declare type PositionBoth = Position | IPositionBoth;
-declare type HasMore = boolean | IPositionHasMore;
+declare type HasMore = boolean | number | IPositionHasMore;
 
 export interface IPositionQueryParamsControllerOptions {
     field: FieldCfg;
@@ -312,7 +313,7 @@ class PositionQueryParamsController implements IQueryParamsController {
 
     // TODO Not implemented
     getAllDataCount(rootKey?: string | number): boolean | number {
-        return undefined;
+        return this._more instanceof Object ? this._more.total : undefined;
     }
 
     // TODO Not implemented

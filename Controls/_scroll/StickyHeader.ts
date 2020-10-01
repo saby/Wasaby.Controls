@@ -124,7 +124,7 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {IScrollState} from '../Utils/ScrollState';
 import {getScrollPositionTypeByState, SCROLL_DIRECTION, SCROLL_POSITION} from './Utils/Scroll';
 import Context = require('Controls/_scroll/StickyHeader/Context');
-import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
+import {IntersectionObserver} from 'Controls/sizeUtils';
 import Model = require('Controls/_scroll/StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/StickyHeader');
 import {tmplNotify} from 'Controls/eventUtils';
@@ -665,13 +665,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             }
 
             style += 'z-index: ' + opts.fixedZIndex + ';';
-        } else {
-            // При построении, заголовок не имеет z-index и позиционируется ниже контента, z-index же задается
-            // после маунта. При тупняках на странице, время на синхронизацию после маунта может быть большим,
-            // из-за чего визуально видно, как скачет содержимое. Задаем z-index сразу, значение берем относительно
-            // опции fixedZIndex, но меньше на 1, чтобы зафиксированные заголовки были выше.
-            const zIndex = opts.fixedZIndex - 1;
-            style += 'z-index: ' + zIndex + ';';
         }
 
         //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274
@@ -768,12 +761,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         const shadowVisible: boolean = !!(this._scrollState.verticalPosition &&
             (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
-                shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END) && this._isShadowVisibleByController);
+                shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END));
 
         const oldShadowVisible: boolean = this._context?.stickyHeader?.shadowPosition &&
             this._context?.stickyHeader?.shadowPosition?.indexOf(fixedPosition) !== -1;
 
-        return shadowVisible || oldShadowVisible;
+        return  this._isShadowVisibleByController && (shadowVisible || oldShadowVisible);
     }
 
     private _getComputedStyle(): CSSStyleDeclaration {

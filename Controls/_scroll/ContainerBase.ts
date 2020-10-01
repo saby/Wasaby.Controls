@@ -4,8 +4,9 @@ import {Bus} from 'Env/Event';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {RegisterClass, Registrar} from 'Controls/event';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {ResizeObserver as ResizeObserverUtil, scrollToElement} from 'Controls/scrollUtils';
+import {ResizeObserverUtil} from 'Controls/sizeUtils';
 import {canScrollByState, getContentSizeByState, getScrollPositionTypeByState, SCROLL_DIRECTION} from './Utils/Scroll';
+import {scrollToElement} from './Utils/scrollToElement';
 import {scrollTo} from './Utils/Scroll';
 import {IScrollState} from './Utils/ScrollState';
 import {SCROLL_MODE} from './Container/Type';
@@ -545,6 +546,13 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _scrollToElement(event: SyntheticEvent<Event>, {itemContainer, toBottom, force}): void {
         event.stopPropagation();
         scrollToElement(itemContainer, toBottom, force);
+        /**
+         * Синхронно обновляем состояние скрол контейнера, что бы корректно работали другие синхронные вызовы api скролл контейнера которое зависят от текущего состояния.
+         */
+        this.onScrollContainer({
+            scrollTop: this._children.content.scrollTop,
+            scrollLeft: this._children.content.scrollLeft,
+        });
     }
 
     // Виртуальный скролл
