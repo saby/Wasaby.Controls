@@ -5563,7 +5563,7 @@ define([
          });
       });
 
-      it('_beforeMount create controllers when passed receivedState', function() {
+      it('_beforeMount create controllers when passed receivedState', async function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
             viewModelConstructor: lists.ListViewModel,

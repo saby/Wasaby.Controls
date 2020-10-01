@@ -2913,12 +2913,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadTriggerVisibility = {};
 
+        if (newOptions.sourceController) {
+            this._sourceController = newOptions.sourceController;
+            _private.validateSourceControllerOptions(this, newOptions);
+        } else if (newOptions.source) {
+            this._sourceController = _private.getSourceController(newOptions);
+        }
+
         return Promise.resolve(this._prepareGroups(newOptions, (collapsedGroups) => {
             return this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups);
         })).then((res) => {
             const editingConfig = this._getEditingConfig(newOptions);
             return editingConfig.item ? this._startInitialEditing(editingConfig) : res;
-        }).then( async (res) => {
+        }).then(async (res) => {
 
             const needInitModelState = this._listViewModel && this._listViewModel.getCollection()
                 && this._listViewModel.getCollection().getCount();
@@ -2933,20 +2940,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 if (newOptions.multiSelectVisibility !== 'hidden' && newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
                     const selectionController = _private.createSelectionController(this, newOptions);
-                    const selection = { selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys };
+                    const selection = {selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys};
                     selectionController.setSelection(selection);
                 }
             }
-
-        if (newOptions.sourceController) {
-            self._sourceController = newOptions.sourceController;
-            _private.validateSourceControllerOptions(self, newOptions);
-        } else if (newOptions.source) {
-            self._sourceController = _private.getSourceController(newOptions);
-        }
-
-        return this._prepareGroups(newOptions, (collapsedGroups) => {
-            return this._prepareItemsOnMount(self, newOptions, receivedState, collapsedGroups);
         });
     },
 
