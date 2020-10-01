@@ -157,7 +157,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._historyLoad = null;
       this._historyKeys = null;
       this._suggestDirection = null;
-      this._setMissSpellingCaption(null);
+      this._setMisspellingCaption(null);
       this._markerVisibility = 'onactivated';
    }
 
@@ -230,7 +230,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
    }
 
-   private _inputActivated(): void {
+   private _inputActivated(): Promise<void> {
 
       // toDO Временный костыль, в .320 убрать, должно исправиться с этой ошибкой
       // https://online.sbis.ru/opendoc.html?guid=d0f7513f-7fc8-47f8-8147-8535d69b99d6
@@ -240,7 +240,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._searchDelay = 0;
 
          if (!this._options.suggestState) {
-            this._getSourceController().load().then((recordSet) => {
+            return this._getSourceController().load().then((recordSet) => {
                if (recordSet instanceof RecordSet) {
                   this._setItems(recordSet);
                   this._updateSuggestState();
@@ -248,6 +248,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             });
          }
       }
+      return Promise.resolve();
    }
 
    private _setItems(recordSet: RecordSet): void {
@@ -302,7 +303,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          const metaData = data && data.getMetaData();
          const result = metaData.results;
 
-         this._setMissSpellingCaption(getSwitcherStrFromData(data));
+         this._setMisspellingCaption(getSwitcherStrFromData(data));
 
          if (!data.getCount()) {
             this._setSuggestMarkedKey(null);
@@ -312,7 +313,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             this._tabsSelectedKey = result.get(CURRENT_TAB_META_FIELD);
          }
 
-         if (this._searchValue && this._getSourceController().hasMoreData('up')
+         if (this._searchValue && this._getSourceController().hasMoreData('down')
             && typeof metaData.more === 'number') {
             this._moreCount = metaData.more - data.getCount();
          } else {
@@ -337,16 +338,19 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (searchValue.length < minSearchLength && historyKeys && historyKeys.length) {
          preparedFilter[HISTORY_KEYS_FIELD] = historyKeys;
       }
-      if (searchValue) {
-         preparedFilter[searchParam] = searchValue;
-      }
+      preparedFilter[searchParam] = searchValue;
 
       return preparedFilter;
    }
 
    private _setFilter(filter: QueryWhereExpression<unknown>, options: IInputControllerOptions): void {
-      this._filter = this._prepareFilter(filter, this._options.searchParam, this._searchValue,
-         options.minSearchLength, this._tabsSelectedKey, this._historyKeys);
+      this._filter = this._prepareFilter(filter,
+         options.searchParam ?? this._options.searchParam,
+         this._searchValue,
+         options.minSearchLength,
+         this._tabsSelectedKey,
+         this._historyKeys
+      );
       this._getSourceController(options).setFilter(this._filter);
    }
 
@@ -368,7 +372,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _updateSuggestState(recordSet?: RecordSet): void {
-      if (this._options.historyId && !this._inputActive && !this._options.suggestState) {
+      if (this._options.historyId && this._inputActive && !this._options.suggestState) {
          this._openWithHistory();
       } else if (this._inputActive || this._options.autoDropDown && !this._options.suggestState) {
          this._setFilter(this._options.filter, this._options);
@@ -398,7 +402,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._dependenciesDeferred;
    }
 
-   private _setMissSpellingCaption(value: string): void {
+   private _setMisspellingCaption(value: string): void {
       this._misspellingCaption = value;
    }
 
@@ -511,8 +515,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._searchDelay = options.searchDelay;
       this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
       this._suggestDirectionChangedCallback = this._suggestDirectionChangedCallback.bind(this);
-      this._setFilter(options.filter, options);
       this._emptyTemplate = this._getEmptyTemplate(options.emptyTemplate);
+      this._searchValue = options.value;
+      this._setFilter(options.filter, options);
+      this._resolveSearch(options.value);
    }
 
    protected _beforeUnmount(): void {
@@ -590,6 +596,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       /* preload suggest dependencies on value changed */
       this._loadDependencies(this._options);
 
+      this._resolveSearch(value);
+   }
+
+   protected _resolveSearch(value: string): void {
       if (!this._searchResolverController) {
          const searchController = this._getSearchController();
 
@@ -600,7 +610,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             searchResetCallback: () => searchController.reset().then()
          });
       }
-
+      this._searchDelay = this._options.searchDelay;
       this._searchResolverController.resolve(value);
    }
 
@@ -653,22 +663,24 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._sourceController;
    }
 
-   protected _inputActivatedHandler(event: SyntheticEvent): void {
+   protected _inputActivatedHandler(event: SyntheticEvent): Promise<void> {
       this._inputActive = true;
       if (!this._isInvalidValidationStatus(this._options)) {
-         this._inputActivated();
+         return this._inputActivated();
       }
+      return Promise.resolve();
    }
 
    protected _inputDeactivated(): void {
       this._inputActive = false;
    }
 
-   protected _inputClicked(): void {
+   protected _inputClicked(): Promise<void> {
       this._inputActive = true;
       if (!this._options.suggestState) {
-         this._inputActivated();
+         return this._inputActivated();
       }
+      return Promise.resolve();
    }
 
    protected _tabsSelectedKeyChanged(key: Key): void {
@@ -767,7 +779,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this.activate();
       this._notify('valueChanged', [this._misspellingCaption]);
       this._changeValueHandler(null, this._misspellingCaption);
-      this._setMissSpellingCaption('');
+      this._setMisspellingCaption('');
    }
 
    protected _keydown(event: SyntheticEvent<KeyboardEvent>): void {
