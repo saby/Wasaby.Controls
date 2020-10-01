@@ -298,7 +298,7 @@ define('Controls/Application',
             // сообщает так же про изменение экрана после показа клавиатуры и/или зуме страницы.
             // Подписка на body стреляет не всегда. в 2100 включаю только для 13ios, в перспективе можно включить
             // везде, где есть visualViewport
-            const timeTester = new TimeTesterInv.default(this.RUMEnabled, this.pageName);
+            var timeTester = new TimeTesterInv.default(this.RUMEnabled, this.pageName);
             timeTester.load();
             if (this._isIOS13()) {
                window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
