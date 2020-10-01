@@ -5,10 +5,11 @@
       <div class="controls-PeriodLiteDialog__header">
          <div class="controls-PeriodLiteDialog__currentValue
                   controls-PeriodLiteDialog__currentValue_theme-{{_options.theme}}"
+              title="{{_caption}}"
               on:click="_onHeaderClick()">{{_caption}}
          </div>
          <div class="controls-PeriodLiteDialog__close_theme-{{_options.theme}}
-                     controls-icon controls-icon_size-m_theme-{{_options.theme}}"
+                     controls-icon controls-icon_size-m_theme-{{_options.theme}}" title="{[Закрыть]}"
               on:click="_onHeaderClick()">
          </div>
       </div>
@@ -29,12 +30,14 @@
                {{ _position.getFullYear() }}
             </div>
             <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}} controls-PeriodLiteDialog__year-prev_theme-{{_options.theme}}"
+                 title="{[Предыдущий год]}"
                  on:click="_changeYear (-1)">
                <svg class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                   <path xmlns="http://www.w3.org/2000/svg" d="M8,5l7,5.5h-2L8,6.8l-5,3.7H1L8,5z"/>
                </svg>
             </div>
             <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}} controls-PeriodLiteDialog__year-next_theme-{{_options.theme}}"
+                 title="{[Следующий год]}"
                  on:click="_changeYear (1)">
                <svg class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                   <path xmlns="http://www.w3.org/2000/svg" d="M8,11L1,5.5h2l5,3.7l5-3.7h2L8,11z"/>
@@ -56,30 +59,32 @@
                  _isFullPicker="{{_isFullPicker}}"
          />
       </div>
-   <ws:if data="{{_isExpandButtonVisible}}">
       <div on:click="_expandPopup()" class="controls-PeriodLiteDialog__footer_theme-{{_options.theme}}
                                             controls-PeriodLiteDialog__expandButton_theme-{{_options.theme}}">
-         <div class="controls-PeriodLiteDialog__footer-points_wrapper controls-PeriodLiteDialog__footer-points_wrapper_theme-{{_options.theme}}">
-            <ws:if data="{{!_isExpandedPopup}}">
-               <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                    viewBox="0 0 22 4" style="enable-background:new 0 0 22 4;" class="controls-PeriodLiteDialog__footer-points_theme-{{_options.theme}}">
-                  <circle class="controls-PeriodLiteDialog__footer-icon_theme-{{_options.theme}}" cx="2" cy="2" r="2"/>
-                  <circle class="controls-PeriodLiteDialog__footer-icon_theme-{{_options.theme}}" cx="11" cy="2" r="2"/>
-                  <circle class="controls-PeriodLiteDialog__footer-icon_theme-{{_options.theme}}" cx="20" cy="2" r="2"/>
-               </svg>
-            </ws:if>
-            <ws:else>
-               <svg class="controls-PeriodLiteDialog__footer-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 6" style="enable-background:new 0 0 18 6;">
-                  <polygon class="controls-PeriodLiteDialog__footer-icon_theme-{{_options.theme}}" points="17.5,6 9,1.1 0.5,6 0,5.1 9,0 18,5.1 "/>
-               </svg>
-            </ws:else>
-         </div>
+         <ws:if data="{{_isExpandButtonVisible && _options.stickyPosition }}">
+            <div class="controls-PeriodLiteDialog__footer-points_wrapper  controls-PeriodLiteDialog__footer-points_wrapper_theme-{{_options.theme}}"
+                 title="{{_isExpandedPopup ? rk('Свернуть') : rk('Развернуть')}}">
+               <ws:if data="{{!_isExpandedPopup}}">
+                  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                       viewBox="0 0 22 4" style="enable-background:new 0 0 22 4;" class="controls-PeriodLiteDialog__footer-points_theme-{{_options.theme}}">
+                     <circle class="controls-PeriodLiteDialog__footer-icon_theme-{{_options.theme}}" cx="2" cy="2" r="2"/>
+                     <circle class="controls-PeriodLiteDialog__footer-icon_theme-{{_options.theme}}" cx="11" cy="2" r="2"/>
+                     <circle class="controls-PeriodLiteDialog__footer-icon_theme-{{_options.theme}}" cx="20" cy="2" r="2"/>
+                  </svg>
+               </ws:if>
+               <ws:else>
+                  <svg class="controls-PeriodLiteDialog__footer-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 6" style="enable-background:new 0 0 18 6;">
+                     <polygon class="controls-PeriodLiteDialog__footer-icon_theme-{{_options.theme}}" points="17.5,6 9,1.1 0.5,6 0,5.1 9,0 18,5.1 "/>
+                  </svg>
+               </ws:else>
+            </div>
+         </ws:if>
       </div>
-   </ws:if>
    </ws:if>
    <ws:if data="{{!_options.chooseMonths && !_options.chooseQuarters && !_options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__years-next controls-PeriodLiteDialog__years-next_theme-{{_options.theme}}">
          <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}}"
+              title="{[Следующий год]}"
               on:click="_changeYear (1)">
             <svg class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                <path xmlns="http://www.w3.org/2000/svg" d="M8,5l7,5.5h-2L8,6.8l-5,3.7H1L8,5z"/>
@@ -114,7 +119,7 @@
          </ws:yearTemplate>
       </Controls.calendar:MonthList>
       <div class="controls-PeriodLiteDialog__years-prev controls-PeriodLiteDialog__years-prev_theme-{{_options.theme}}">
-         <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}}"
+         <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}}" title="{[Предыдущий год]}"
               on:click="_changeYear (-1)">
             <svg class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                <path xmlns="http://www.w3.org/2000/svg" d="M8,11L1,5.5h2l5,3.7l5-3.7h2L8,11z"/>
