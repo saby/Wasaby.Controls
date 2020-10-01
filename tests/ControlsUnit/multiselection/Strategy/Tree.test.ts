@@ -415,14 +415,14 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          let count = strategy.getCount(selection, false);
          let countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
          assert.equal(count, 3);
-         assert.equal(countWithDescAndAnc, 5);
+         assert.equal(countWithDescAndAnc, 7);
 
          model.getItemBySourceKey(1).setExpanded(true);
 
          count = strategy.getCount(selection, false);
          countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
          assert.equal(count, 5);
-         assert.equal(countWithDescAndAnc, 5);
+         assert.equal(countWithDescAndAnc, 7);
       });
    });
 

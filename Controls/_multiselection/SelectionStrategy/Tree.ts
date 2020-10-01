@@ -532,7 +532,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
                   const countChildes = deep || childItem.isExpanded();
                   if (this._isNode(childItem) && this._isHasChildren(childItem) && countChildes) {
-                     childNodeSelectedCount = this._getSelectedChildrenCount(childId, selection, items);
+                     childNodeSelectedCount = this._getSelectedChildrenCount(childId, selection, items, deep);
 
                      if (childNodeSelectedCount === null) {
                         selectedChildrenCount = null;
