@@ -241,6 +241,7 @@ export default class Controller {
     cancelLoading(): void {
         if (this._loadPromise) {
             this._loadPromise.cancel();
+            this._loadPromise = null;
         }
     }
 
@@ -306,6 +307,7 @@ export default class Controller {
 
     private _setItems(items: RecordSet): void {
         if (this._items && Controller._isEqualItems(this._items, items)) {
+            this._items.setMetaData(items.getMetaData());
             this._items.assign(items);
         } else {
             this._subscribeItemsCollectionChangeEvent(items);
