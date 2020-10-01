@@ -145,11 +145,11 @@ export interface ISlider {
  *   attr:class="mySliderBase_height"/>
  * </pre>
  *
- * <pre>
- *  .mySliderBase_height {
- *      height: 200px;
+ * <pre class="brush: css">
+ * .mySliderBase_height {
+ *    height: 200px;
  *  }
- * <pre>ш
+ * </pre>
  */
 
 /**
