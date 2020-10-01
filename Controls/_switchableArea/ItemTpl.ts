@@ -7,7 +7,28 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/switchableArea:View}.
  *
  * @class Controls/switchableArea:itemTemplate
+ * @extends Core/Control
  * @public
+ */
+
+/**
+ * @name Controls/switchableArea:itemTemplate#selectedKey
+ * @cfg {String} Ключ выбранного элемента.
+ */
+
+/**
+ * @name Controls/switchableArea:itemTemplate#key
+ * @cfg {String|Number} Ключ элемента.
+ */
+
+/**
+ * @name Controls/switchableArea:itemTemplate#itemTemplate
+ * @cfg {Function} Шаблон элемента.
+ */
+
+/**
+ * @name Controls/_switchableArea/View#templateOptions
+ * @cfg {templateOptions} Опции шаблона элемента.
  */
 
 class SwitchableAreaItem extends Control<IControlOptions> {
