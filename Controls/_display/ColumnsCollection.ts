@@ -2,8 +2,8 @@ import Collection, {ItemsFactory} from './Collection';
 import ColumnsCollectionItem from './ColumnsCollectionItem';
 
 import {IOptions as ICollectionItemOptions} from './ColumnsCollectionItem';
-import { IDragPosition } from 'Controls/listDragNDrop';
 import ColumnsDragStrategy from './itemsStrategy/ColumnsDrag';
+import { IDragPosition } from './interface/IDragPosition';
 
 export default class ColumnsCollection<
     S,

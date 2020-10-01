@@ -31,8 +31,8 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
-import { IDragPosition } from 'Controls/listDragNDrop';
 import {ICollection, ISourceCollection} from './interface/ICollection';
+import { IDragPosition } from './interface/IDragPosition';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
