@@ -3,6 +3,40 @@ import template = require('wml!Controls/_switchableArea/ItemTpl');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 
+/**
+ * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/switchableArea:View}.
+ *
+ * @class Controls/switchableArea:itemTemplate
+ * @extends Core/Control
+ * @public
+ */
+
+/**
+ * @name Controls/switchableArea:itemTemplate#selectedKey
+ * @cfg {String} Ключ выбранного элемента.
+ */
+
+/**
+ * @name Controls/switchableArea:itemTemplate#key
+ * @cfg {String|Number} Ключ элемента.
+ */
+
+/**
+ * @name Controls/switchableArea:itemTemplate#itemTemplate
+ * @cfg {Function} Шаблон элемента.
+ */
+
+/**
+ * @name Controls/_switchableArea/View#templateOptions
+ * @cfg {templateOptions} Опции шаблона элемента.
+ */
+
+/**
+ * @name Controls/_switchableArea/View#autofocus
+ * @cfg {boolean} Определяет, установится ли фокус на контентную область.
+ * @default true
+ */
+
 class SwitchableAreaItem extends Control<IControlOptions> {
    protected _template: TemplateFunction = template;
    protected _keyHooksStorage: string[] = null;
