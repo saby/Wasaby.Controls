@@ -4983,6 +4983,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
             case 'viewportResize':
                 this.viewportResizeHandler(params.clientHeight, params.rect);
+                /**
+                 * Проверяем и в случае необходимости создаем компактный пэйджинг.
+                 * Создаем здесь, так как в beforeMount невозможно определить viewSize и viewportSize.
+                 */
+                if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)
+                    && this._options.navigation.viewConfig.pagingMode === 'edge') {
+                    this._pagingVisible = _private.needShowPagingByScrollSize(this, _private.getViewSize(this), params.clientHeight);
+                }
                 break;
             case 'virtualScrollMove':
                 _private.throttledVirtualScrollPositionChanged(this, params);
@@ -4995,12 +5003,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
             case 'cantScroll':
                 this.cantScrollHandler(params);
-                break;
-            case 'scrollResize':
-                if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)
-                    && this._options.navigation.viewConfig.pagingMode === 'edge') {
-                    this._pagingVisible = _private.needShowPagingByScrollSize(this, _private.getViewSize(this), params.clientHeight);
-                }
                 break;
         }
     },
