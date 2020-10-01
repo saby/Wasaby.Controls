@@ -33,7 +33,8 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 
 /**
  * @name Controls/_switchableArea/View#autofocus
- * @cfg {boolean} Определяет, установится ли фокус на контентную область. По умолчанию - true.
+ * @cfg {boolean} Определяет, установится ли фокус на контентную область.
+ * @default true
  */
 
 class SwitchableAreaItem extends Control<IControlOptions> {
