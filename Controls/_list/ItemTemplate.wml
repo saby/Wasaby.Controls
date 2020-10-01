@@ -37,6 +37,7 @@
         </ws:if>
         <ws:else data="{{ itemActionsPosition !== 'custom' }}">
             <ws:partial template="{{ itemActionsTemplate }}"
+                        itemData="{{itemData}}"
                         itemActionsClass="{{ itemActionsClass }}"
                         highlightOnHover="{{ highlightOnHover }}"/>
         </ws:else>
