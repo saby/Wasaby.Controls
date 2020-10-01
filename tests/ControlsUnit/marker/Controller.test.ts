@@ -115,28 +115,14 @@ describe('Controls/marker/Controller', () => {
    describe('calculateMarkedKeyForVisible', () => {
       it('same key', () => {
           controller.setMarkedKey(2);
-         const result = controller.calculateMarkedKeyForVisible();
-         assert.equal(result, 2);
+          const result = controller.calculateMarkedKeyForVisible();
+          assert.equal(result, 2);
       });
 
       it('same key which not exists in model', () => {
          controller.setMarkedKey(4);
          const result = controller.calculateMarkedKeyForVisible();
          assert.equal(result, 1);
-      });
-
-      it('null', () => {
-         controller = new MarkerController({model, markerVisibility: 'visible', markedKey: null});
-
-         const result = controller.calculateMarkedKeyForVisible();
-         assert.strictEqual(result, 1);
-      });
-
-      it('undefined', () => {
-         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: undefined});
-
-         const result = controller.calculateMarkedKeyForVisible();
-         assert.strictEqual(result, null);
       });
 
       it('not exist item by key', () => {
@@ -146,43 +132,10 @@ describe('Controls/marker/Controller', () => {
          assert.equal(result, 1);
       });
 
-      it('not exists item and onActivated visibility', () => {
+      it('markerVisibility = onactivated', () => {
          controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 4});
-
          const result = controller.calculateMarkedKeyForVisible();
-         assert.equal(result, null);
-      });
-
-      it('onactivated', () => {
-         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 3});
-
-         let result = controller.calculateMarkedKeyForVisible();
-         assert.equal(result, 3);
-
-         controller.setMarkedKey(result);
-         assert.isTrue(model.getItemBySourceKey(3).isMarked());
-
-         // markedKey не должен сброситсья, если список пустой
-         model.setItems(new RecordSet({
-            rawData: [],
-            keyProperty: 'id'
-         }));
-
-         controller.updateOptions({model, markerVisibility: 'onactivated'});
-         result = controller.calculateMarkedKeyForVisible();
-         assert.equal(result, 3);
-
-         model.setItems(new RecordSet({
-            rawData: [
-               {id: 1},
-               {id: 2}
-            ],
-            keyProperty: 'id'
-         }));
-
-         controller.updateOptions({model, markerVisibility: 'onactivated'});
-         result = controller.calculateMarkedKeyForVisible();
-         assert.equal(result, null);
+         assert.equal(result, 4);
       });
 
       it('markerVisibility = visible and not exists item with marked key', () => {
@@ -197,20 +150,6 @@ describe('Controls/marker/Controller', () => {
 
          const result = controller.calculateMarkedKeyForVisible();
          assert.equal(result, 2);
-      });
-
-      it('markerVisibility = onactivated and not exists item with marked key', () => {
-         controller = new MarkerController({model, markerVisibility: 'onactivated', markedKey: 1});
-         model.setItems(new RecordSet({
-            rawData: [
-               {id: 2},
-               {id: 3}
-            ],
-            keyProperty: 'id'
-         }));
-
-         const result = controller.calculateMarkedKeyForVisible();
-         assert.equal(result, null);
       });
    });
 
