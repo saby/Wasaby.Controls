@@ -1055,7 +1055,7 @@ const _private = {
          */
         if (viewportSize !== 0) {
             const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
-                self._scrollController?.calculateVirtualScrollHeight() || 0);
+                !self._options.disableVirtualScroll && self._scrollController?.calculateVirtualScrollHeight() || 0);
             const proportion = (scrollHeight / viewportSize);
 
             // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
@@ -3034,6 +3034,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         rawData: []
                     }));
 
+                    if (!self._pagingVisible &&
+                        _private.needScrollPaging(self._options.navigation) &&
+                        self._options.navigation.viewConfig.pagingMode === 'edge') {
+                        self._pagingVisible = _private.needShowPagingByScrollSize(self, self._viewSize, self._viewportSize);
+                    }
+
                     if (newOptions.useNewModel && !self._listViewModel) {
                         self._items = data;
                         self._listViewModel = self._createNewModel(
@@ -3530,7 +3536,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // New item has a version of 0. If the replaced item has the same
             // version, it will not be redrawn. Notify the model that the
             // item was reloaded to force its redraw.
-            if (item && item.getId) {
+            // Данный код актуален только для старой модели
+            if (item && item.getId && this._listViewModel.markItemReloaded instanceof Function) {
                 this._listViewModel.markItemReloaded(item.getId());
                 this._itemReloaded = true;
             }
