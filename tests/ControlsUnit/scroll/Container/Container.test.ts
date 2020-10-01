@@ -217,7 +217,7 @@ describe('Controls/scroll:Container', () => {
 
     describe('_updateShadowVisibility', () => {
         it('should set always visible', () => {
-            const component = createComponent(_ContainerNew, {});
+            const component = createComponent(Container, {});
             component._shadows._models.top._isVisible = false;
             component._shadows._models.bottom._isVisible = false;
             component._updateShadowVisibility(
@@ -226,7 +226,7 @@ describe('Controls/scroll:Container', () => {
             assert.isTrue(component._shadows._models.bottom.isVisible);
         });
         it('should set always invisible', () => {
-            const component = createComponent(_ContainerNew, {});
+            const component = createComponent(Container, {});
             component._shadows._models.top._isVisible = true;
             component._shadows._models.bottom._isVisible = true;
             component._updateShadowVisibility(
