@@ -520,6 +520,7 @@ var
                 parentId = dispItem.getContents().get(this._options.parentProperty),
                 currentExpanded = this.isExpanded(dispItem);
 
+            dispItem.setExpanded(expanded);
             if (expanded !== currentExpanded || expanded === undefined) {
                 if (_private.isExpandAll(this._expandedItems)) {
                     if (expanded) {

@@ -530,7 +530,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                      selectedChildrenCount++;
                   }
 
-                  if (this._isNode(childItem) && this._isHasChildren(childItem) && deep !== false) {
+                  const countChildes = deep || childItem.isExpanded();
+                  if (this._isNode(childItem) && this._isHasChildren(childItem) && countChildes) {
                      childNodeSelectedCount = this._getSelectedChildrenCount(childId, selection, items);
 
                      if (childNodeSelectedCount === null) {
@@ -542,7 +543,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                }
             }
          });
-      } else if (!nodeItem || this._isHasChildren(nodeItem)) {
+      } else if ((!nodeItem || this._isHasChildren(nodeItem)) && deep) {
          selectedChildrenCount = null;
       }
 
