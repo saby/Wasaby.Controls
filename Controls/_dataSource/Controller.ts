@@ -24,7 +24,6 @@ import {isEqual} from 'Types/object';
 // @ts-ignore
 import * as cInstance from 'Core/core-instance';
 import {TArrayGroupId} from 'Controls/_list/Controllers/Grouping';
-import {SyntheticEvent} from 'UI/Vdom';
 
 export interface IControllerState {
     keyProperty: string;
@@ -146,11 +145,11 @@ export default class Controller {
             this._filter = newOptions.filter;
         }
 
-        if (newOptions.parentProperty !== this._options.parentProperty) {
+        if (newOptions.hasOwnProperty('parentProperty') && newOptions.parentProperty !== this._options.parentProperty) {
             this.setParentProperty(newOptions.parentProperty);
         }
 
-        if (newOptions.root !== this._options.root) {
+        if (newOptions.hasOwnProperty('root') && newOptions.root !== this._options.root) {
             this.setRoot(newOptions.root);
         }
 
@@ -320,37 +319,31 @@ export default class Controller {
         navigationSourceConfig?: INavigationSourceConfig
     ): Promise<LoadResult> {
         if (this._options.source) {
-            this._loadPromise =
-                new CancelablePromise(Controller._getFilterForCollapsedGroups(this._filter, this._options)
-                    .then((filter) => {
-                        return this._getFilterHierarchy(filter, this._options, key).then((preparedFilter) => {
-                            const crudWrapper = this._getCrudWrapper(this._options.source as ICrud);
+            this._loadPromise = new CancelablePromise(
+                this._prepareFilterForQuery(key).then((preparedFilter: QueryWhereExpression<unknown>) => {
+                    const crudWrapper = this._getCrudWrapper(this._options.source as ICrud);
 
-                            let params = {
-                                filter: preparedFilter,
-                                sorting: this._options.sorting
-                            } as IQueryParams;
+                    let params = {
+                        filter: preparedFilter,
+                        sorting: this._options.sorting
+                    } as IQueryParams;
 
-                            if (this._hasNavigationBySource()) {
-                                params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
-                            }
-                            return crudWrapper.query(params, this._options.keyProperty).then((result) => {
-                                if (result instanceof Error) {
-                                    if (this._options.dataLoadErrback instanceof Function) {
-                                        this._options.dataLoadErrback(result);
-                                    }
-                                }
-                                if (result instanceof RecordSet) {
-                                    this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
-                                }
-                                return result;
-                            });
-                        });
-                    })
-                    .finally(() => {
-                        this._loadPromise = null;
-                    })
-                );
+                    if (this._hasNavigationBySource()) {
+                        params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
+                    }
+                    return crudWrapper.query(params, this._options.keyProperty);
+                }));
+
+            this._loadPromise.promise
+                .then((result) => {
+                    this._loadPromise = null;
+                    return this._processQueryResult(result, key, navigationSourceConfig, direction);
+                })
+                .catch((error) => {
+                    this._loadPromise = null;
+                    return error;
+                });
+
             return this._loadPromise.promise;
         } else {
             Logger.error('source/Controller: Source option has incorrect type');
@@ -372,17 +365,13 @@ export default class Controller {
             if (parentProperty) {
                 resultFilter = {...initialFilter};
 
-                if (rootForFilter) {
-                    resultFilter[parentProperty] = rootForFilter;
-                }
-
                 if (expandedItemsForFilter?.length && expandedItemsForFilter?.[0] !== null && deepReload) {
                     resultFilter[parentProperty] = Array.isArray(resultFilter[parentProperty]) ?
                         resultFilter[parentProperty] :
                         [];
                     resultFilter[parentProperty].push(rootForFilter);
                     resultFilter[parentProperty] = resultFilter[parentProperty].concat(expandedItemsForFilter);
-                } else {
+                } else if (rootForFilter !== undefined) {
                     resultFilter[parentProperty] = rootForFilter;
                 }
 
@@ -401,6 +390,29 @@ export default class Controller {
                 resolve(resultFilter);
             }
         });
+    }
+
+    private _prepareFilterForQuery(key: TKey): Promise<QueryWhereExpression<unknown>> {
+        return Controller._getFilterForCollapsedGroups(this._filter, this._options)
+            .then((preparedFilter: QueryWhereExpression<unknown>) => {
+                return this._getFilterHierarchy(preparedFilter, this._options, key);
+            });
+    }
+
+    private _processQueryResult(
+        result: LoadResult,
+        key: TKey,
+        navigationSourceConfig: INavigationSourceConfig,
+        direction: Direction): LoadResult {
+        if (result instanceof Error) {
+            if (this._options.dataLoadErrback instanceof Function) {
+                this._options.dataLoadErrback(result);
+            }
+        }
+        if (result instanceof RecordSet) {
+            this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
+        }
+        return result;
     }
 
     private _subscribeItemsCollectionChangeEvent(items: RecordSet): void {
