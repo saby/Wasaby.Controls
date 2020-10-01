@@ -2511,6 +2511,8 @@ define([
 
          assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
 
+         assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, null));
+
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(null, baseControl._listViewModel));
 
          baseControl._sourceController.isLoading = function() {

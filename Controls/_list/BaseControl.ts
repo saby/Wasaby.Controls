@@ -3929,8 +3929,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
         // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
-        const noData = !listViewModel.getCount();
-        const noEdit = !_private.isEditing(this);
+        const noData = !listViewModel || !listViewModel.getCount();
+        const noEdit = !listViewModel || !_private.isEditing(this);
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
         const noDataBeforeReload = this._noDataBeforeReload;
