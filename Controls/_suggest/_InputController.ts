@@ -617,6 +617,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _resolveLoad(value?: string): void {
       this._loadStart();
       if (value) {
+         this._searchValue = value;
          this._getSearchController().search(value).then((recordSet) => {
             this._setItems(recordSet);
             this._updateSuggestState(recordSet);
