@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/Tile/DifferentItemTemplates/SimpleItemTemplate/SimpleItemTemplate';
+import * as Template from 'wml!Controls-demo/Tile/DifferentItemTemplates/RichTemplate/RichTemplate';
 import {Gadgets} from '../../DataHelpers/DataCatalog';
 import {HierarchicalMemory} from 'Types/source';
 
@@ -12,7 +12,7 @@ export default class extends Control {
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
             parentProperty: 'parent',
-            data: Gadgets.getData()
+            data: Gadgets.getPreviewItems()
         });
         this._itemActions = Gadgets.getActions();
     }

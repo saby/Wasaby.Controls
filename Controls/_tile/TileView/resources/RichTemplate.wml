@@ -1,0 +1,44 @@
+<ws:template name="imageTemplate">
+   <img src="{{itemData.item[imageProperty]}}"
+        class="controls-TileView__richTemplate_image
+               controls-TileView__richTemplate_image_size_{{_options.imageSize || 's'}}_position_{{imagePosition}}_theme-{{theme}}
+               {{_options.nodesScaleSize && itemData.dispItem.isNode() ? 'controls-TileView__richTemplate_image_size_{{_options.imageSize}}_scale_{{_options.nodesScaleSize}}_theme-{{theme}}' : ''}}
+               controls-TileView__richTemplate_image_viewMode_{{_options.imageViewMode || 'rectangle'}}"/>
+</ws:template>
+
+<ws:template name="itemContentTemplate">
+   <div class="controls-TileView__richTemplate_itemContent controls-TileView__richTemplate_itemContent_theme-{{theme}}">
+      <div class="controls-TileView__richTemplate_title
+                  controls-TileView__richTemplate_title_theme-{{theme}}
+                  controls-fontsize-{{itemData.dispItem.isNode() ? '4xl' : 'xl'}}
+                  controls-text-secondary_theme-{{_options.theme}}
+                  controls-fontweight-bold"
+           title="{{itemData.item[itemData.displayProperty]}}">{{itemData.item[itemData.displayProperty]}}</div>
+      <ws:if data="{{description}}">
+         <div class="controls-TileView__richTemplate_description " title="{{description}}">description</div>
+      </ws:if>
+      <ws:if data="{{footerTemplate}}">
+         <ws:partial template="{{footerTemplate}}"
+                     itemData="{{itemData}}"/>
+      </ws:if>
+   </div>
+</ws:template>
+
+<ws:template name="richTemplateContent">
+   <div class="controls-TileView__richTemplate controls-TileView__richTemplate_imagePosition_{{_options.imagePosition || 'top'}}">
+      <ws:partial template="imageTemplate"/>
+      <ws:partial template="itemContentTemplate"/>
+   </div>
+</ws:template>
+
+<ws:partial template="wml!Controls/_tile/TreeTileView/DefaultItemTpl"
+            highlightOnHover="{{false}}"
+            staticHeight="{{true}}"
+            scope="{{_options}}">
+   <ws:contentTemplate>
+      <ws:partial template="richTemplateContent"/>
+   </ws:contentTemplate>
+   <ws:nodeContentTemplate>
+      <ws:partial template="richTemplateContent"/>
+   </ws:nodeContentTemplate>
+</ws:partial>

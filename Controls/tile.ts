@@ -27,6 +27,7 @@ import TileItemTemplate = require("wml!Controls/_tile/TileView/TileTpl");
 import * as SmallItemTemplate from 'wml!Controls/_tile/TileView/resources/SmallTemplate';
 import * as MediumTemplate from 'wml!Controls/_tile/TileView/resources/MediumTemplate';
 import * as PreviewTemplate from 'wml!Controls/_tile/TileView/resources/PreviewTemplate';
+import * as RichTemplate from 'wml!Controls/_tile/TileView/resources/RichTemplate';
 
 import TreeViewModel = require('Controls/_tile/TreeTileView/TreeTileViewModel');
 import TreeView = require('Controls/_tile/TreeTileView/TreeTileView');
@@ -39,7 +40,7 @@ export {
    SmallItemTemplate,
    MediumTemplate,
    PreviewTemplate,
-
+   RichTemplate,
    TreeViewModel,
    TreeView
 };

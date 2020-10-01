@@ -7,8 +7,7 @@
    <ws:contentTemplate>
       <div class="controls-TileView__mediumTemplate_content controls-TileView__mediumTemplate_content_theme-{{_options.theme}}">
          <ws:partial template="wml!Controls/_tile/TileView/TileImageTemplate"
-                     attr:class="controls-TileView__mediumTemplate_image controls-TileView__mediumTemplate_image_theme-{{_options.theme}}"
-                     titleStyle="none"/>
+                     attr:class="controls-TileView__mediumTemplate_image controls-TileView__mediumTemplate_image_theme-{{_options.theme}}"/>
          <span class="controls-TileView__mediumTemplate_title
                       controls-TileView__mediumTemplate_title_ellipsis_{{_options.titleSingleLine ? 'single' : 'multi'}}Line
                       controls-fontsize-l_theme-{{_options.theme}}
