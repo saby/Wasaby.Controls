@@ -55,8 +55,10 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
       position: sticky;
       top: auto;
       margin-right: @scrollpaging_offset-horizontal_list;
-      padding: @scrollpaging_offset-vertical_list 0;
+      // Пэйджин изначально поднят на высоту отступа, поэтому отступ сверху ставим в 2 раза больше.
+      padding: @scrollpaging_offset-vertical_list * 2 0 @scrollpaging_offset-vertical_list 0;
    }
+
    .controls-BaseControl-hide-paging {
       display: none;
    }
