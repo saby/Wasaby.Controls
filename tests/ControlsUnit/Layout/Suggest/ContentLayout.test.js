@@ -104,10 +104,10 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
             top: 300
          });
          self._height = 'auto';
-         assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(900)), '400px');
+         assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(900)), 'auto');
          assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(400)), '300px');
          self._height = '76px';
-         assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(900)), '400px');
+         assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(900)), 'auto');
       });
 
       it('Suggest::_private.getSizes', function() {

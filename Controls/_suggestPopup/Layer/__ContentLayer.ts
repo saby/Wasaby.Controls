@@ -91,14 +91,15 @@ var _private = {
       const dropDownContainerSize = _private.getDropDownContainerSize(dropDownContainer);
       const suggestSize = sizes.suggest;
       let height = self._height;
-      const suggestBottomSideCoord = suggestSize.top + suggestSize.height;
+      const optionValue = suggestSize.top;
+      const suggestBottomSideCoord = optionValue + suggestSize.height;
 
       if (suggestBottomSideCoord < 0) {
          height = suggestSize.height + suggestBottomSideCoord + 'px';
       } else if (suggestBottomSideCoord >= dropDownContainerSize.height) {
          height = dropDownContainerSize.height - suggestSize.top + 'px';
       } else if (height) {
-         height = Math.round(suggestSize.height) + 'px';
+         height = 'auto';
       }
       return height;
    },
