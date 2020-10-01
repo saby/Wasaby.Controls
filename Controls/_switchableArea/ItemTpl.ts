@@ -31,6 +31,11 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
  * @cfg {templateOptions} Опции шаблона элемента.
  */
 
+/**
+ * @name Controls/_switchableArea/View#autofocus
+ * @cfg {boolean} Определяет, установится ли фокус на контентную область. По умолчанию - true.
+ */
+
 class SwitchableAreaItem extends Control<IControlOptions> {
    protected _template: TemplateFunction = template;
    protected _keyHooksStorage: string[] = null;
