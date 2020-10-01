@@ -148,7 +148,7 @@ export interface ISlider {
  * <pre class="brush: css">
  * .mySliderBase_height {
  *    height: 200px;
- *  }
+ * }
  * </pre>
  */
 
