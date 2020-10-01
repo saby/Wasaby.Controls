@@ -87,7 +87,7 @@ export default class ColumnsInnerView extends Control {
             });
 
             if (this._options.markedKey !== options.markedKey) {
-                this._changeMarkedKey(options.markedKey);
+                this._markerController.setMarkedKey(options.markedKey);
             }
         }
     }
