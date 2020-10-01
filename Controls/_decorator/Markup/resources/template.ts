@@ -31,6 +31,7 @@ import {Logger} from 'UI/Utils';
          'file:(//|\\\\)',
          'smb:(//|\\\\)',
          'mailto:',
+         'viber:',
          'tel:',
          '#',
          './',
