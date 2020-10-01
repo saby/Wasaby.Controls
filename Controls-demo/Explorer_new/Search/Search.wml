@@ -5,7 +5,7 @@
                                  on:click="_updateStartingWith()" attr:style="padding: 0 5px"/>
     </div>
     <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id" bind:filter="_filter">
-        <Controls.search:Controller searchParam="title" minSearchLength="{{3}}" startingWith="{{_startingWith}}">
+        <Controls.search:Controller searchParam="title" minSearchLength="{{3}}" searchStartingWith="{{_startingWith}}">
             <div class="ws-fragment">
                 <Controls.search:InputContainer>
                     <Controls.search:Input/>

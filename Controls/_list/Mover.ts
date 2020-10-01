@@ -343,9 +343,9 @@ var _private = {
 
     openMoveDialog(self, selection): Promise<void> {
         const templateOptions: IMoverDialogTemplateOptions = {
-            ...(self._moveDialogOptions as IMoverDialogTemplateOptions),
             movedItems: _private.useController(selection) ? selection.selectedKeys : _private.prepareMovedItems(self, selection),
-            source: self._source
+            source: self._source,
+            ...(self._moveDialogOptions as IMoverDialogTemplateOptions)
         };
         return new Promise((resolve) => {
             Dialog.openPopup({

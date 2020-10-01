@@ -137,9 +137,9 @@ export class MoveController {
      */
     private _openMoveDialog(selection: ISelectionObject, filter?: TFilterObject): Promise<void> {
         const templateOptions: IMoverDialogTemplateOptions = {
-            ...(this._popupOptions.templateOptions as IMoverDialogTemplateOptions),
             movedItems: selection.selected,
-            source: this._source
+            source: this._source,
+            ...(this._popupOptions.templateOptions as IMoverDialogTemplateOptions)
         };
 
         return new Promise((resolve) => {
