@@ -19,10 +19,14 @@
             titleStyle="{{itemTemplate.itemData.item.titleStyle}}"
             gradientType="{{itemTemplate.itemData.item.gradientType}}"
             gradientColor="{{itemTemplate.itemData.item.gradientColor}}"
+            titleLines="{{itemTemplate.itemData.item.titleLines}}"
             scope="{{itemTemplate}}">
             <ws:topTemplate>
                <div>{{itemTemplate.itemData.item.additionalText}}</div>
             </ws:topTemplate>
+            <ws:bottomRightTemplate>
+               <div>20</div>
+            </ws:bottomRightTemplate>
          </ws:partial>
       </ws:itemTemplate>
    </Controls.tile:View>
