@@ -7460,6 +7460,15 @@ define([
                assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false]).called);
                assert.isTrue(notifySpy.withArgs('listSelectionTypeForAllSelectedChanged', ['all']).called);
             });
+
+            it('beforeMount not load items', () => {
+               const newCfg = { ...cfg, selectedKeys: [1], source: undefined };
+               newBaseControl = new lists.BaseControl();
+               newBaseControl.saveOptions(newCfg);
+               return newBaseControl._beforeMount(newCfg).then(() => {
+                  assert.isNotOk(newBaseControl._selectionController);
+               });
+            });
          });
 
          describe('_beforeUpdate', () => {

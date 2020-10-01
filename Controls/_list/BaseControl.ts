@@ -2897,19 +2897,25 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const editingConfig = this._getEditingConfig(newOptions);
             return editingConfig.item ? this._startInitialEditing(editingConfig) : res;
         }).then( async (res) => {
-            if (newOptions.markerVisibility === 'visible'
-                || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined) {
-                await _private.getMarkerControllerAsync(this, newOptions).then((controller) => {
-                    const markedKey = controller.calculateMarkedKeyForVisible();
-                    controller.setMarkedKey(markedKey);
-                });
+
+            const needInitModelState = this._listViewModel && this._listViewModel.getCollection()
+                && this._listViewModel.getCollection().getCount();
+            if (needInitModelState) {
+                if (newOptions.markerVisibility === 'visible'
+                    || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined) {
+                    await _private.getMarkerControllerAsync(this, newOptions).then((controller) => {
+                        const markedKey = controller.calculateMarkedKeyForVisible();
+                        controller.setMarkedKey(markedKey);
+                    });
+                }
+
+                if (newOptions.multiSelectVisibility !== 'hidden' && newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
+                    const selectionController = _private.createSelectionController(this, newOptions);
+                    const selection = { selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys };
+                    selectionController.setSelection(selection);
+                }
             }
 
-            if (newOptions.multiSelectVisibility !== 'hidden' && newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
-                const selectionController = _private.createSelectionController(this, newOptions);
-                const selection = { selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys };
-                selectionController.setSelection(selection);
-            }
             return res;
         });
     },
