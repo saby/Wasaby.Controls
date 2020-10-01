@@ -45,7 +45,8 @@
 }
 
 .controls-Menu__custom-content_theme-@{themeName} {
-   padding-top: @item_padding-top_menu;
+   display: inline-flex;
+   align-items: baseline;
 }
 
 .controls-Menu__row_selected_theme-@{themeName} {
@@ -166,12 +167,10 @@
 }
 
 .controls-Menu__content_padding_theme-@{themeName} {
-   //display: flex;
-   //padding-top: @item_padding-top_menu;
    padding-bottom: @item_padding-bottom_menu;
 }
 
-.controls-Menu__content-wrapper {
+.controls-Menu__content-wrapper_theme-@{themeName} {
    align-self: baseline;
    padding-top: @item_padding-top_menu;
    .text-overflow();
