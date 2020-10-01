@@ -389,12 +389,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._selectionChanged = true;
     }
 
-    protected _toggleExpanded(event: SyntheticEvent<MouseEvent>, value: boolean): void {
+    protected _toggleExpanded(): void {
+        this._expander = !this._expander;
         let toggleFilter = this._additionalFilter;
         if (!this._options.additionalProperty) {
             toggleFilter = this._limitHistoryFilter;
         }
-        if (value) {
+        if (this._expander) {
             this._listModel.removeFilter(toggleFilter);
         } else {
             this._listModel.addFilter(toggleFilter);
