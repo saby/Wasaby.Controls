@@ -3007,12 +3007,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     rawData: []
                 }));
 
-                    if (!self._pagingVisible &&
-                        _private.needScrollPaging(self._options.navigation) &&
-                        self._options.navigation.viewConfig.pagingMode === 'edge') {
-                        self._pagingVisible = _private.needShowPagingByScrollSize(self, self._viewSize, self._viewportSize);
-                    }
-
                     if (newOptions.useNewModel && !self._listViewModel) {
                         self._items = data;
                         self._listViewModel = self._createNewModel(
