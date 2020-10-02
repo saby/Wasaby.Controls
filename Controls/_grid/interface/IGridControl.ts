@@ -469,6 +469,7 @@
  * @cfg {Boolean} Allows showing button in first column on hover and in swipe menu.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTree%2FEditArrow">Example</a>
  * @remark To place the button in the user column template, you should use the editArrowTemplate
+ * @demo Controls-demo/grid/ShowEditArrow/Index
  * @example
  * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  */
