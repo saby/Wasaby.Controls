@@ -22,7 +22,7 @@ import {splitValueForPasting, calculateInputType} from './Util';
 import {delay as runDelayed} from 'Types/function';
 import {IText} from 'Controls/decorator';
 
-type EventName = 'valueChanged' | 'inputCompleted' | 'inputControl';
+type EventName = 'valueChanged' | 'inputCompleted' | 'inputControl' | 'selectionStartChanged' | 'selectionEndChanged';
 type ControllerName = 'changeEventController';
 
 interface IModelData<Value, Options> {
@@ -136,9 +136,12 @@ class Field<Value, ModelOptions>
     }
 
     private _selectionFromFieldToModel(): void {
+        const fieldSelection: ISelection = this._getFieldSelection();
+        const selection: ISelection = {...this._model.selection};
         this._updateModel({
-            selection: this._getFieldSelection()
+            selection: fieldSelection
         });
+        this._notifySelection(selection);
     }
 
     private _getArgsForEvent(name: EventName): unknown[] {
@@ -150,6 +153,10 @@ class Field<Value, ModelOptions>
                 return [model.value, model.displayValue];
             case 'inputControl':
                 return [model.value, model.displayValue, model.selection];
+            case 'selectionStartChanged':
+                return [model.selection.start];
+            case 'selectionEndChanged':
+                return [model.selection.end];
         }
     }
 
@@ -169,6 +176,7 @@ class Field<Value, ModelOptions>
 
     private _handleInput(splitValue: ISplitValue, inputType: InputType): void {
         const displayValue: string = this._model.displayValue;
+        const selection: ISelection = {...this._model.selection};
 
         if (this._model.handleInput(splitValue, inputType)) {
             if (this._options.inputCallback) {
@@ -188,6 +196,7 @@ class Field<Value, ModelOptions>
             if (displayValue !== this._model.displayValue) {
                 this._notifyEvent('valueChanged');
             }
+            this._notifySelection(selection);
         }
         this._notifyEvent('inputControl');
     }
@@ -208,6 +217,13 @@ class Field<Value, ModelOptions>
                 this._options.recalculateLocationVisibleArea(field, model.displayValue, model.selection);
             }
             this._currentVersionModel = versionModel;
+        }
+    }
+
+    private _notifySelection(selection: ISelection): void {
+        if (!isEqual(selection, this._model.selection)) {
+            this._notifyEvent('selectionStartChanged');
+            this._notifyEvent('selectionEndChanged');
         }
     }
 
@@ -325,7 +341,7 @@ class Field<Value, ModelOptions>
             if (this._destroyed) {
                 return;
             }
-            this._model.selection = this._getFieldSelection();
+            this._selectionFromFieldToModel();
             this._currentVersionModel = this._model.getVersion();
         });
     }
@@ -409,6 +425,8 @@ class Field<Value, ModelOptions>
     setSelectionRange(start: number, end: number): boolean {
         const field: HTMLInputElement = this._getField();
         const selection: ISelection = {start, end};
+
+        this._notifySelection(selection);
 
         return this._workWithSelection.setSelectionRange(field, selection);
     }
