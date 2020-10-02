@@ -538,7 +538,7 @@ const _private = {
     },
 
     getAllDataCount(self): number|undefined {
-       return self._listViewModel.getCollection().getMetaData().more;
+       return self._listViewModel?.getCollection().getMetaData().more;
     },
 
     getItemContainerByIndex(index: number, itemsContainer: HTMLElement): HTMLElement {
@@ -3065,6 +3065,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     if (self._listViewModel) {
                         _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                     }
+                    _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                 }
                 if (viewModelConfig.collapsedGroups) {
                     self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
