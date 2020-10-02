@@ -309,6 +309,9 @@ var Component = BaseControl.extend({
     _expandPopup(): void {
         this._isExpandedPopup = !this._isExpandedPopup;
         let fittingMode;
+        if (!this._isExpandButtonVisible || !this._options.stickyPosition) {
+            return;
+        }
 
         if (this._isExpandedPopup) {
             // const maxHeightPopup = this._options.stickyPosition.position.maxHeight;
