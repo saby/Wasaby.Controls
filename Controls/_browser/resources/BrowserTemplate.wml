@@ -20,6 +20,8 @@
         items="{{_items}}"
         filter="{{_filter}}"
         itemsReadyCallback="{{_itemsReadyCallback}}"
+        hasMoreDataToUp="{{_hasMoreDataToUp}}"
+        hasMoreDataToDown="{{_hasMoreDataToDown}}"
         on:filterChanged="_filterChanged()"
         on:rootChanged="_rootChanged()"
         on:itemsChanged="_itemsChanged()"
