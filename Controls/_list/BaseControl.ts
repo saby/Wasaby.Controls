@@ -2407,6 +2407,7 @@ const _private = {
 
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
+            disableVirtualScroll: options.disableVirtualScroll,
             virtualScrollConfig: options.virtualScrollConfig || {},
             needScrollCalculation: self._needScrollCalculation,
             scrollObserver: self._children.scrollObserver,
