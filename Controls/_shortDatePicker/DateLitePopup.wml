@@ -8,7 +8,8 @@
               on:click="_onHeaderClick()">{{_caption}}
          </div>
          <div class="controls-PeriodLiteDialog__close_theme-{{_options.theme}}
-                     controls-icon controls-icon_size-m_theme-{{_options.theme}}"
+                     controls-icon controls-icon_size-m_theme-{{_options.theme}}
+                     controls-PeriodLiteDialog__close_position-{{_closeBtnPosition}}_theme-{{_options.theme}}"
               on:click="_onHeaderClick()">
          </div>
       </div>

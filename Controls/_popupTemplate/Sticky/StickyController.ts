@@ -123,7 +123,8 @@ const _private = {
             offset: position.offset,
             position: item.position,
             targetPosition: targetCoords,
-            margins: item.margins
+            margins: item.margins,
+            sizes: item.sizes
         };
         // быстрая проверка на равенство простых объектов
         if (JSON.stringify(item.popupOptions.stickyPosition) !== JSON.stringify(newStickyPosition)) {
