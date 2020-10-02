@@ -457,7 +457,7 @@
  * Чтобы стрелка-шеврон отобразилась в прикладном шаблоне колонки, необходимо в опции contentTemplate явно указать позицию стрелки-шеврона.
  * Для этого используется переменная {@link Controls/grid:ColumnTemplate#editArrowTemplate} из области видимости самого шаблона.
  * Пример использования смотреть {@link Controls/grid:ColumnTemplate#contentTemplate тут}
- * @demo Controls-demo/List/Tree/EditArrow
+ * @demo Controls-demo/grid/ShowEditArrow/Index
  * @example
  * <pre>
  *    <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
