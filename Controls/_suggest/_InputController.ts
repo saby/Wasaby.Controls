@@ -371,10 +371,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return recordSet;
    }
 
-   private _updateSuggestState(recordSet?: RecordSet): void {
+   private _updateSuggestState(): void {
       if (this._options.historyId && this._inputActive && !this._options.suggestState) {
          this._openWithHistory();
-      } else if (this._inputActive || this._options.autoDropDown && !this._options.suggestState) {
+      } else if (!this._inputActive || this._options.autoDropDown && !this._options.suggestState) {
          this._setFilter(this._options.filter, this._options);
          this._open();
       } else if (!this._options.autoDropDown) {
@@ -532,7 +532,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       const valueChanged = this._options.value !== newOptions.value;
       const valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
       const needSearchOnValueChanged = valueChanged &&
-         this._isValueLengthLongerThenMinSearchLength(newOptions.value, this._options);
+         this._isValueLengthLongerThenMinSearchLength(newOptions.value, newOptions);
       const emptyTemplateChanged = !isEqual(this._options.emptyTemplate, newOptions.emptyTemplate);
       const footerTemplateChanged = !isEqual(this._options.footerTemplate, newOptions.footerTemplate);
 
@@ -620,7 +620,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._searchValue = value;
          this._getSearchController().search(value).then((recordSet) => {
             this._setItems(recordSet);
-            this._updateSuggestState(recordSet);
+            this._updateSuggestState();
             this._markerVisibility = 'visible';
             this._loadEnd(recordSet);
          });
