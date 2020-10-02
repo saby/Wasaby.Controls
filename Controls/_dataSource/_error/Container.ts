@@ -94,7 +94,16 @@ export default class Container extends Control<IContainerConfig> implements ICon
     }
 
     protected _beforeUpdate(options: IContainerConfig): void {
-        if (isEqual(options.viewConfig, this._options.viewConfig)) {
+        const oldConfig = this._options.viewConfig && {
+            ...this._options.viewConfig,
+            getVersion: null
+        };
+        const newConfig = options.viewConfig && {
+            ...options.viewConfig,
+            getVersion: null
+        };
+
+        if (isEqual(oldConfig, newConfig)) {
             /**
              * Если viewConfig не изменился для режима отображения ошибки в списке,
              * то обновляем опции списка, чтобы он корректно обновлялся
