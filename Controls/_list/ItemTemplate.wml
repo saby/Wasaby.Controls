@@ -46,7 +46,7 @@
     <!-- сюда попадаем только в случае застиканной записи в мастер или мастер классик, константа стиля находится в itemData.style -->
     <Controls.scroll:StickyHeader
             attr:class="{{ (item || itemData).getWrapperClasses(highlightOnHover, theme, cursor, backgroundColorStyle, style) }}"
-            position="topbottom" backgroundStyle="{{style + '_sticked'}}">
+            position="topbottom" backgroundStyle="{{style + '_sticked'}}" mode="stackable">
         <ws:partial template="localItemTemplateContent"/>
     </Controls.scroll:StickyHeader>
 </ws:if>
