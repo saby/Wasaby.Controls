@@ -97,7 +97,6 @@ var Component = BaseControl.extend({
     _popupHeightStyle: '',
     _isExpandButtonVisible: true,
     _closeBtnPosition: POSITION.RIGHT,
-    _closeBtnSize: 28,
 
 // constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
@@ -163,10 +162,11 @@ var Component = BaseControl.extend({
 
     _updateCloseBtnPosition(options): void {
         if (options.stickyPosition) {
-            const viewportWidth = options.stickyPosition.position.maxWidth;
-            const popupWidth = options.stickyPosition.sizes.width;
-            const popupLeft = options.stickyPosition.position.left + Math.abs(options.stickyPosition.margins.left);
-            this._closeBtnPosition = (popupWidth + popupLeft + this._closeBtnSize) < viewportWidth ?
+            const openerLeft = options.stickyPosition.targetPosition.left;
+            const popupLeft = options.stickyPosition.position.left;
+            // Вычисляем смещения попапа влево, т.к окно выравнивается по центру открывающего элемента
+            const popupOffset = (options.stickyPosition.sizes.width - options.stickyPosition.targetPosition.width) / 2;
+            this._closeBtnPosition = (popupLeft + popupOffset) === openerLeft ?
                 POSITION.RIGHT :
                 POSITION.LEFT;
         }
