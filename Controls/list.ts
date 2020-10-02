@@ -110,22 +110,31 @@ import IListNavigation from './_list/interface/IListNavigation';
 import { CssClassList, createClassListCollection} from 'Controls/_list/resources/utils/CssClassList';
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 
-import Remover = require('Controls/_list/Remover');
-
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 
-// @deprecated
+// region @deprecated
+
 import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
 import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsTemplate');
 import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeAction');
 import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
-
-export {MoveController, TMovePosition, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
-export {IMovableList} from 'Controls/_list/interface/IMovableList';
+import Remover = require('Controls/_list/Remover');
 import * as Mover from 'Controls/_list/Mover';
+export {IMoveItemsParams, IMover, IRemover, BEFORE_ITEMS_MOVE_RESULT} from 'Controls/_list/interface/IMoverAndRemover';
+export {
+    _itemActionsForTemplate,
+    ItemActionsTemplate,
+    _swipeActionTemplate,
+    SwipeTemplate
+}
 
-export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
+// endregion @deprecated
+
+export {MoveController, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
+export {IMovableList} from 'Controls/_list/interface/IMovableList';
+
 export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
+export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 
 export {
     AddButton,
@@ -168,11 +177,5 @@ export {
     IList,
     VirtualScroll,
     ScrollController,
-    IListNavigation,
-
-    // @deprecated
-    _itemActionsForTemplate,
-    ItemActionsTemplate,
-    _swipeActionTemplate,
-    SwipeTemplate
+    IListNavigation
 };

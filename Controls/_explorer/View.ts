@@ -8,7 +8,7 @@ import {factory} from 'Types/chain';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import {Model} from 'Types/entity';
-import {ListView, TMovePosition} from 'Controls/list';
+import {ListView} from 'Controls/list';
 import {isEqual} from 'Types/object';
 import {
    INavigationSourceConfig,
@@ -16,8 +16,8 @@ import {
    INavigationOptionValue as INavigation
 }  from '../_interface/INavigation';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
-import {ISelectionObject} from "../_interface/ISelectionType";
-import {CrudEntityKey} from "Types/source";
+import {ISelectionObject} from 'Controls/interface';
+import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import { RecordSet } from 'Types/collection';
 
 var
@@ -740,7 +740,7 @@ var
 
       // region mover
 
-      moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+      moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
          return this._children.treeControl.moveItems(selection, targetKey, position);
       },
 

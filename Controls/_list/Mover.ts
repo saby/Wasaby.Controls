@@ -5,8 +5,9 @@ import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySele
 import {Logger} from 'UI/Utils';
 import {ContextOptions as dataOptions} from 'Controls/context';
 
-import {MoveController, TMovePosition, IMoveControllerOptions} from './Controllers/MoveController';
+import {MoveController, IMoveControllerOptions} from './Controllers/MoveController';
 import {Model} from 'Types/entity';
+import {LOCAL_MOVE_POSITION} from 'Types/source';
 
 
 // @TODO Если убрать отсюда шаблон, то operationPanel перестаёт получать события
@@ -18,24 +19,9 @@ import * as TreeItemsUtil from './resources/utils/TreeItemsUtil';
 import {ISelectionObject, TKeysSelection} from 'Controls/interface';
 import {IHashMap} from 'Types/declarations';
 import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
+import {BEFORE_ITEMS_MOVE_RESULT, IMoveItemsParams} from './interface/IMoverAndRemover';
 
 const DEFAULT_SORTING_ORDER = 'asc';
-
-interface IMoveItemsParams {
-    selectedKeys: TKeysSelection;
-    excludedKeys: TKeysSelection;
-    filter?: object;
-}
-
-/**
- * @typedef {String} TMovePosition
- * @description
- * Тип перемещения - в items/source или custom
- */
-const MOVE_TYPE = {
-    CUSTOM: 'Custom',
-    MOVE_IN_ITEMS: 'MoveInItems'
-}
 
 var _private = {
     moveItems(self, items, target, position) {
@@ -52,9 +38,9 @@ var _private = {
                     _private.getIdByItem(self, target),
                     position, beforeItemsMoveResult);
             }
-            if (beforeItemsMoveResult === MOVE_TYPE.MOVE_IN_ITEMS) {
+            if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
                 return _private.moveInItems(self, items, target, position);
-            } else if (beforeItemsMoveResult !== MOVE_TYPE.CUSTOM) {
+            } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
                 return _private.moveInSource(self, items, target, position).addCallback(function (moveResult) {
                     _private.moveInItems(self, items, target, position);
                     return moveResult;
@@ -82,7 +68,7 @@ var _private = {
     },
 
     moveInItems: function (self, items, target, position) {
-        if (position === TMovePosition.on) {
+        if (position === LOCAL_MOVE_POSITION.On) {
             _private.hierarchyMove(self, items, target);
         } else {
             _private.reorderMove(self, items, target, position);
@@ -101,7 +87,7 @@ var _private = {
         items.forEach(function (item) {
             movedItem = _private.getModelByItem(self, item);
             if (movedItem) {
-                if (position === TMovePosition.before) {
+                if (position === LOCAL_MOVE_POSITION.Before) {
                     targetIndex = self._items.getIndex(targetItem);
                 }
 
@@ -116,9 +102,9 @@ var _private = {
                     movedItem.set(parentProperty, targetItem.get(parentProperty));
                 }
 
-                if (position === TMovePosition.after && targetIndex < movedIndex) {
+                if (position === LOCAL_MOVE_POSITION.After && targetIndex < movedIndex) {
                     targetIndex = (targetIndex + 1) < self._items.getCount() ? targetIndex + 1 : self._items.getCount();
-                } else if (position === TMovePosition.before && targetIndex > movedIndex) {
+                } else if (position === LOCAL_MOVE_POSITION.Before && targetIndex > movedIndex) {
                     targetIndex = targetIndex !== 0 ? targetIndex - 1 : 0;
                 }
                 self._items.move(movedIndex, targetIndex);
@@ -143,8 +129,8 @@ var _private = {
         });
 
         //If reverse sorting is set, then when we call the move on the source, we invert the position.
-        if (position !== TMovePosition.on && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
-            position = position === TMovePosition.after ? TMovePosition.before : TMovePosition.after;
+        if (position !== LOCAL_MOVE_POSITION.On && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
+            position = position === LOCAL_MOVE_POSITION.After ? LOCAL_MOVE_POSITION.Before : LOCAL_MOVE_POSITION.After;
         }
         return self._source.move(idArray, targetId, {
             position,
@@ -165,7 +151,7 @@ var _private = {
      * @param position позиция (направление перемещения)
      * @private
      */
-    getTargetItem(self, item, position: TMovePosition): Model {
+    getTargetItem(self, item, position: LOCAL_MOVE_POSITION): Model {
         var
             result,
             display,
@@ -188,11 +174,11 @@ var _private = {
                 display.setRoot(self._options.root)
             }
             itemFromProjection = display.getItemBySourceItem(_private.getModelByItem(self, item));
-            siblingItem = display[position === TMovePosition.before ? 'getPrevious' : 'getNext'](itemFromProjection);
+            siblingItem = display[position === LOCAL_MOVE_POSITION.Before ? 'getPrevious' : 'getNext'](itemFromProjection);
             result = siblingItem ? siblingItem.getContents() : null;
         } else {
             itemIndex = self._items.getIndex(_private.getModelByItem(self, item));
-            result = self._items.at(position === TMovePosition.before ? --itemIndex : ++itemIndex);
+            result = self._items.at(position === LOCAL_MOVE_POSITION.Before ? --itemIndex : ++itemIndex);
         }
 
         return result;
@@ -251,7 +237,7 @@ var _private = {
 
         //Check for a item to be moved because it may not be in the current recordset
         if (self._options.parentProperty && movedItem) {
-            if (target && position === TMovePosition.on && target.get(self._options.nodeProperty) === null) {
+            if (target && position === LOCAL_MOVE_POSITION.On && target.get(self._options.nodeProperty) === null) {
                 return false;
             }
             parentsMap = _private.getParentsMap(self, _private.getIdByItem(self, target));
@@ -355,7 +341,7 @@ var _private = {
                 template: self._moveDialogTemplate,
                 eventHandlers: {
                     onResult: (target: Model) => {
-                        resolve(self.moveItems(selection, target, TMovePosition.on))
+                        resolve(self.moveItems(selection, target, LOCAL_MOVE_POSITION.On))
                     }
                 }
             });
@@ -405,6 +391,7 @@ var _private = {
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IMovable
  * @mixes Controls/_interface/IHierarchy
+ * @deprecated {@link Controls/list:Mover Mover} will be removed soon. Use {@link Controls/list:IMovableList IMovableList} interface instead
  * @control
  * @public
  * @author Авраменко А.С.
@@ -441,11 +428,11 @@ var Mover = BaseAction.extend({
     },
 
     moveItemUp: function (item) {
-        return _private.moveItemToSiblingPosition(this, item, TMovePosition.before);
+        return _private.moveItemToSiblingPosition(this, item, LOCAL_MOVE_POSITION.Before);
     },
 
     moveItemDown: function (item) {
-        return _private.moveItemToSiblingPosition(this, item, TMovePosition.after);
+        return _private.moveItemToSiblingPosition(this, item, LOCAL_MOVE_POSITION.After);
     },
 
     moveItems(items: []|IMoveItemsParams, target, position): Promise<any> {

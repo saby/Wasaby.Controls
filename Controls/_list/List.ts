@@ -11,8 +11,7 @@ import {tmplNotify} from 'Controls/eventUtils';
 import viewName = require('Controls/_list/ListView');
 import {default as ListControl} from 'Controls/_list/ListControl';
 import {ISelectionObject} from 'Controls/interface';
-import { CrudEntityKey } from 'Types/source';
-import { TMovePosition } from './Controllers/MoveController';
+import { CrudEntityKey, LOCAL_MOVE_POSITION } from 'Types/source';
 import {IMovableList} from './interface/IMovableList';
 import {IRemovableList} from './interface/IRemovableList';
 import { RecordSet } from 'Types/collection';
@@ -153,7 +152,7 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
 
     // region mover
 
-    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
         return this._children.listControl.moveItems(selection, targetKey, position);
     }
 

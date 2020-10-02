@@ -1,6 +1,5 @@
-import {CrudEntityKey} from 'Types/source';
+import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import {ISelectionObject} from 'Controls/interface';
-import {TMovePosition} from '../Controllers/MoveController';
 
 /**
  * Интерфейс контрола View, который обладает возможностью перемещения записей
@@ -18,7 +17,7 @@ export interface IMovableList {
      * @param targetKey
      * @param position
      */
-    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void>;
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void>;
 
     /**
      * Перемещаетодин элемент вверх и возвращает результат перемещения

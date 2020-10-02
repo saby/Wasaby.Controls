@@ -7,7 +7,7 @@ import * as rk from 'i18n!*';
 
 import {IHashMap} from 'Types/declarations';
 import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
-import {CrudEntityKey} from 'Types/source';
+import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 
 // @todo https://online.sbis.ru/opendoc.html?guid=2f35304f-4a67-45f4-a4f0-0c928890a6fc
 type TSource = SbisService|ICrudPlus;
@@ -40,17 +40,6 @@ export interface IMoveControllerOptions {
      * @cfg {Controls/popup:IBasePopupOptions} опции диалога перемещения
      */
     popupOptions?: IBasePopupOptions
-}
-
-/**
- * @typedef {String} TMovePosition
- * @description
- * Позиция для перемещения записи
- */
-export enum TMovePosition {
-    on = 'on',
-    before = 'before',
-    after = 'after'
 }
 
 /**
@@ -94,14 +83,14 @@ export class MoveController {
      * @param {TFilterObject} filter Дополнительный фильтр для перемещения в папку через SbisService.
      * @param {Types/source:CrudEntityKey} targetKey Идентификатор целевой записи, относительно которой позиционируются
      * перемещаемые записи или идентификатор папки, в которую происходит перемещение.
-     * @param {TMovePosition} position Положение перемещения.
+     * @param {Types/source:LOCAL_MOVE_POSITION} position Положение перемещения.
      * @returns {Promise} Отложенный результат перемещения.
      * @remark
      * В зависимости от аргумента 'position' элементы могут быть перемещены до, после или на указанный целевой элемент.
      * @see moveUp
      * @see moveDown
      */
-    move(selection: ISelectionObject, filter: TFilterObject = {}, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+    move(selection: ISelectionObject, filter: TFilterObject = {}, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
         return this._moveInSource(selection, filter, targetKey, position);
     }
 
@@ -152,7 +141,7 @@ export class MoveController {
                     onResult: (target: Model) => {
                         // null при перемещении записей в корень
                         const targetKey = target === null ? target : target.getKey();
-                        resolve(this._moveInSource(selection, filter, targetKey, TMovePosition.on))
+                        resolve(this._moveInSource(selection, filter, targetKey, LOCAL_MOVE_POSITION.On))
                     }
                 }
             });
@@ -167,7 +156,7 @@ export class MoveController {
      * @param position
      * @private
      */
-    private _moveInSource(selection: ISelectionObject, filter: TFilterObject = {}, targetKey: CrudEntityKey, position: TMovePosition): Promise<void>  {
+    private _moveInSource(selection: ISelectionObject, filter: TFilterObject = {}, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void>  {
         const error: string = MoveController._validateBeforeMove(this._source, selection, filter, targetKey, position);
         if (error) {
             Logger.error(error);
@@ -178,7 +167,7 @@ export class MoveController {
          * При использовании ICrudPlus.move() мы не можем передать filter и folder_id, т.к. такой контракт
          * не соответствует стандартному контракту SbisService.move(). Поэтому здесь вызывается call
          */
-        if ((this._source as SbisService).call && position === TMovePosition.on) {
+        if ((this._source as SbisService).call && position === LOCAL_MOVE_POSITION.On) {
             const source: SbisService = this._source as SbisService;
             return new Promise((resolve) => {
                 import('Controls/operations').then((operations) => {
@@ -217,7 +206,7 @@ export class MoveController {
         selection: ISelectionObject,
         filter: TFilterObject,
         targetKey: CrudEntityKey,
-        position: TMovePosition): string {
+        position: LOCAL_MOVE_POSITION): string {
         let error: string;
         if (!source) {
             error = 'MoveController: Source is not set';
@@ -231,8 +220,8 @@ export class MoveController {
         if (targetKey === undefined) {
             error = 'MoveController: Target key is undefined';
         }
-        if ([TMovePosition.on, TMovePosition.after, TMovePosition.before].indexOf(position) === -1) {
-            error = 'MoveController: position must correspond with TMovePosition type';
+        if ([LOCAL_MOVE_POSITION.On, LOCAL_MOVE_POSITION.After, LOCAL_MOVE_POSITION.Before].indexOf(position) === -1) {
+            error = 'MoveController: position must correspond with Types/source:LOCAL_MOVE_POSITION type';
         }
         return error;
     }
