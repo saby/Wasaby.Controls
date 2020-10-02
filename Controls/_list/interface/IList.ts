@@ -449,7 +449,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @name Controls/_list/interface/IList#markedKeyChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} key Ключ выбранного элемента.
- * @demo Controls-demo/List/List/BasePG
  */
 
 /*ENG
