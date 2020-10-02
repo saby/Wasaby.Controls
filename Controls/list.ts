@@ -110,22 +110,32 @@ import IListNavigation from './_list/interface/IListNavigation';
 import { CssClassList, createClassListCollection} from 'Controls/_list/resources/utils/CssClassList';
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 
-import Remover = require('Controls/_list/Remover');
-
 import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 
-// @deprecated
+// region @deprecated
+
 import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
 import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsTemplate');
 import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeAction');
 import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
+import Remover = require('Controls/_list/Remover');
+import * as Mover from 'Controls/_list/Mover';
+export {IMoveItemsParams, MOVE_POSITION, MOVE_TYPE, IMover, IRemover} from 'Controls/_list/interface/IMoverAndRemover';
+
+// @deprecated
+export {
+    _itemActionsForTemplate,
+    ItemActionsTemplate,
+    _swipeActionTemplate,
+    SwipeTemplate
+}
+// endregion @deprecated
 
 export {MoveController, TMovePosition, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
 export {IMovableList} from 'Controls/_list/interface/IMovableList';
-import * as Mover from 'Controls/_list/Mover';
 
-export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
+export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 
 export {
     AddButton,
@@ -168,11 +178,5 @@ export {
     IList,
     VirtualScroll,
     ScrollController,
-    IListNavigation,
-
-    // @deprecated
-    _itemActionsForTemplate,
-    ItemActionsTemplate,
-    _swipeActionTemplate,
-    SwipeTemplate
+    IListNavigation
 };

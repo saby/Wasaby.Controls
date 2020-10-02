@@ -18,24 +18,9 @@ import * as TreeItemsUtil from './resources/utils/TreeItemsUtil';
 import {ISelectionObject, TKeysSelection} from 'Controls/interface';
 import {IHashMap} from 'Types/declarations';
 import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
+import {MOVE_TYPE, IMoveItemsParams} from './interface/IMoverAndRemover';
 
 const DEFAULT_SORTING_ORDER = 'asc';
-
-interface IMoveItemsParams {
-    selectedKeys: TKeysSelection;
-    excludedKeys: TKeysSelection;
-    filter?: object;
-}
-
-/**
- * @typedef {String} TMovePosition
- * @description
- * Тип перемещения - в items/source или custom
- */
-const MOVE_TYPE = {
-    CUSTOM: 'Custom',
-    MOVE_IN_ITEMS: 'MoveInItems'
-}
 
 var _private = {
     moveItems(self, items, target, position) {
@@ -405,6 +390,7 @@ var _private = {
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IMovable
  * @mixes Controls/_interface/IHierarchy
+ * @deprecated {@link Controls/list:Mover Mover} will be removed soon. Use {@link Controls/list:IMovableList IMovableList} interface instead
  * @control
  * @public
  * @author Авраменко А.С.
