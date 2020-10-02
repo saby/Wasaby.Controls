@@ -31,8 +31,7 @@ define([
             mode,
             options,
             template: 'template',
-            status: undefined,
-            getVersion: () => Date.now()
+            status: undefined
          };
       }
 

@@ -53,7 +53,6 @@ const getTemplate = (template: string | Control): Promise<Control> => {
  */
 export default class Container extends Control<IContainerConfig> implements IContainer {
     private __viewConfig: Config; // tslint:disable-line:variable-name
-    private __lastShowedId: number; // tslint:disable-line:variable-name
     private _popupHelper: Popup = new Popup();
     protected _template: TemplateFunction = _template;
 
@@ -95,16 +94,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
     }
 
     protected _beforeUpdate(options: IContainerConfig): void {
-        const oldConfig = this._options.viewConfig && {
-            ...this._options.viewConfig,
-            getVersion: null
-        };
-        const newConfig = options.viewConfig && {
-            ...options.viewConfig,
-            getVersion: null
-        };
-
-        if (isEqual(oldConfig, newConfig)) {
+        if (isEqual(options.viewConfig, this._options.viewConfig)) {
             /**
              * Если viewConfig не изменился для режима отображения ошибки в списке,
              * то обновляем опции списка, чтобы он корректно обновлялся
@@ -189,7 +179,6 @@ export default class Container extends Control<IContainerConfig> implements ICon
             return;
         }
 
-        this.__lastShowedId = config.getVersion && config.getVersion();
         getTemplate(config.template)
             .then((dialogTemplate) => this._notifyServiceError(dialogTemplate, config.options))
             .then((dialogData) => {

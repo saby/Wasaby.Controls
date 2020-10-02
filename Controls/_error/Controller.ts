@@ -149,8 +149,7 @@ export default class ErrorController {
                 status: handlerResult.status,
                 mode: handlerResult.mode || _config.mode,
                 template: handlerResult.template,
-                options: handlerResult.options,
-                ...ErrorController._getIVersion()
+                options: handlerResult.options
             };
         }).catch((error: PromiseCanceledError) => {
             if (!error.isCanceled) {
@@ -172,27 +171,6 @@ export default class ErrorController {
      * Поле ApplicationConfig, в котором содержатся названия модулей с обработчиками ошибок.
      */
     static readonly CONFIG_FIELD: string = 'errorHandlers';
-
-    private static _getIVersion(): Partial<IVersionable> {
-        if (constants.isServerSide) {
-            // При построении контролов на сервере мы не будем добавлять в конфиг
-            // функцию getVersion(), иначе конфиг не сможет нормально десериализоваться.
-            return {};
-        }
-
-        const id: number = Math.random();
-        /*
-         * неоходимо для прохождения dirty-checking при схранении объекта на инстансе компонента,
-         * для дальнейшего его отображения через прокидывание параметра в Container
-         * в случа, когда два раза пришла одна и та же ошибка, а между ними стейт не менялся
-         */
-        return {
-            '[Types/_entity/IVersionable]': true,
-            getVersion(): number {
-                return id;
-            }
-        };
-    }
 
     private static _isNeedHandle(error: ProcessedError & CanceledError): boolean {
         return !(
