@@ -58,7 +58,7 @@ interface IDragObject {
  * @default default
  * @demo Controls-demo/PopupTemplate/Dialog/backgroundStyle/Index
  * @remark Данная опция определяет префикс стиля для настройки фона диалогового окна.
- * На шаблон будет установлен класс '.controls-DialogTemplate_backgroundStyle-<prefix>_theme_@{themeName}', который следует определить у себя в стилях.
+ * На шаблон будет установлен класс **.controls-DialogTemplate&#95;backgroundStyle-&lt;prefix&gt;&#95;theme&#95;@{themeName}**, который следует определить у себя в стилях.
  */
 
 class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTemplate {
