@@ -311,6 +311,32 @@ define([
          // dafault template
       });
 
+      describe('_getIVersion()', () => {
+         it('returns empty object on server side', () => {
+            const { isServerSide } = constants;
+            constants.isServerSide = true;
+            try {
+               assert.isEmpty(Controller._getIVersion());
+            } finally {
+               constants.isServerSide = isServerSide;
+            }
+         });
+
+         it('returns IVersionable on browser side', () => {
+            const { isServerSide } = constants;
+            constants.isServerSide = false;
+            try {
+               const result = Controller._getIVersion();
+               assert.isObject(result, 'must return an object');
+               assert.isTrue(result['[Types/_entity/IVersionable]'], 'must have [Types/_entity/IVersionable]');
+               assert.isFunction(result.getVersion, 'must have getVersion()');
+               assert.isNumber(result.getVersion(), 'getVersion() must return a number');
+            } finally {
+               constants.isServerSide = isServerSide;
+            }
+         });
+      });
+
       describe('_isNeedHandle()', () => {
          it('returns false for Abort error', () => {
             const error = new Transport.fetch.Errors.Abort('test-url');
