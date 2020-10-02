@@ -281,7 +281,7 @@ const _private = {
         // https://online.sbis.ru/opendoc.html?guid=f07ea1a9-743c-42e4-a2ae-8411d59bcdce
         // Для мобильных устройств данный функционал включать нельзя из-за инерционного скролла:
         // https://online.sbis.ru/opendoc.html?guid=45921906-4b0e-4d72-bb80-179c076412d5
-        if (options.attachLoadTopTriggerToNull === false || detection.isMobileIOS) {
+        if (options.attachLoadTopTriggerToNull === false || detection.isMobilePlatform) {
             return false;
         }
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
