@@ -152,7 +152,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /**
  * @name Controls/_list/interface/IList#multiSelectVisibility
  * @cfg {MultiSelectVisibility} Режим отображения флагов множественного выбора.
- * @demo Controls-demo/List/List/MultiselectPG
+ * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
  * @remark
  * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="/doc/platform/developmentapl/interface-development/controls/list/list/select/#multiple-choice">руководству разработчика</a>.
@@ -168,7 +168,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /*ENG
  * @name Controls/_list/interface/IList#multiSelectVisibility
  * @cfg {MultiSelectVisibility} Whether multiple selection is enabled.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
+ * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
  */
 
