@@ -8,11 +8,11 @@
 }
 
 .controls-TileView__previewTemplate_title_singleLine_theme-@{themeName} {
-   min-height: @inline_height_xl;
+   min-height: @title_single_line_height_preview_tile;
 }
 
 .controls-TileView__previewTemplate_title_multiLine_theme-@{themeName} {
-   min-height: 48px;
+   min-height: @title_multi_line_height_preview_tile;
 }
 
 .controls-TileView__previewTemplate_gradient {
@@ -24,15 +24,15 @@
 }
 
 .controls-TileView__previewTemplate_gradient_light_theme-@{themeName} {
-   background: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) calc(100% - 4px), transparent 100%);
+   background: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) calc(100% - @gradient_light_height_preview_tile), transparent 100%);
 }
 
 .controls-TileView__previewTemplate_gradient_dark_theme-@{themeName} {
-   background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) calc(100% - 14px), transparent 100%);
+   background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) calc(100% - @gradient_dark_height_preview_tile), transparent 100%);
 }
 
 .ws-is-hover .controls-TileView__previewTemplate_content:hover .controls-TileView__previewTemplate_gradient_dark_theme-@{themeName} {
-   background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.6) calc(100% - 14px), transparent 100%);
+   background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.6) calc(100% - @gradient_dark_height_preview_tile), transparent 100%);
 }
 
 .controls-TileView__previewTemplate_title_text {
@@ -51,8 +51,8 @@
 
 .controls-TileView__previewTemplate_topTemplate {
    position: absolute;
-   top: 6px;
-   right: 6px;
+   top: @top_template_offset_top_preview_tile;
+   right: @top_template_offset_right_preview_tile;
 }
 
 .controls-TileView__previewTemplate_bottomRightTemplate_theme-@{themeName} {
