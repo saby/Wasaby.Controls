@@ -582,7 +582,7 @@ var
             const filterChanged = !isEqual(cfg.filter, this._options.filter);
             const recreateSource = cfg.source !== this._options.source;
             const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
-            if (filterChanged || recreateSource || sortingChanged || navigationChanged) {
+            if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !isSearchViewMode) {
                _private.setPendingViewMode(this, cfg.viewMode, cfg);
             } else {
                _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
