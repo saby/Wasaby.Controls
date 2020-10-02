@@ -18,7 +18,7 @@ import { TreeItem } from 'Controls/display';
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
 import {ISelectionObject} from 'Controls/interface';
-import {CrudEntityKey, MOVE_POSITION} from 'Types/source';
+import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 
 const HOT_KEYS = {
     expandMarkedItem: Env.constants.key.right,
@@ -718,7 +718,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
     // region mover
 
-    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: MOVE_POSITION): Promise<void> {
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
         return this._children.baseControl.moveItems(selection, targetKey, position);
     },
 

@@ -11,7 +11,7 @@ import {constants, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
-import {ICrud, Memory, CrudEntityKey, MOVE_POSITION} from 'Types/source';
+import {ICrud, Memory, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import {debounce, throttle} from 'Types/function';
 import {create as diCreate} from 'Types/di';
 import {Model, relation} from 'Types/entity';
@@ -2689,9 +2689,9 @@ const _private = {
         return self._moveController;
     },
 
-    getMoveTargetItem(self: typeof BaseControl, selectedKey: CrudEntityKey, position: MOVE_POSITION): CrudEntityKey {
+    getMoveTargetItem(self: typeof BaseControl, selectedKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): CrudEntityKey {
         let siblingItem;
-        if (position === MOVE_POSITION.before) {
+        if (position === LOCAL_MOVE_POSITION.Before) {
             siblingItem = self._listViewModel.getPrevByKey(selectedKey);
         } else {
             siblingItem = self._listViewModel.getNextByKey(selectedKey);
@@ -4582,26 +4582,26 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // region move
 
-    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: MOVE_POSITION): Promise<void> {
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
         return _private.getMoveController(this).move(selection, this._filter, targetKey, position);
     },
 
     moveItemUp(selectedKey: CrudEntityKey): Promise<void> {
-        const sibling = _private.getMoveTargetItem(this, selectedKey, MOVE_POSITION.before);
+        const sibling = _private.getMoveTargetItem(this, selectedKey, LOCAL_MOVE_POSITION.Before);
         const selection: ISelectionObject = {
             selected: [selectedKey],
             excluded: []
         };
-        return _private.getMoveController(this).move(selection, {}, sibling, MOVE_POSITION.before);
+        return _private.getMoveController(this).move(selection, {}, sibling, LOCAL_MOVE_POSITION.Before);
     },
 
     moveItemDown(selectedKey: CrudEntityKey): Promise<void> {
-        const sibling = _private.getMoveTargetItem(this, selectedKey, MOVE_POSITION.after);
+        const sibling = _private.getMoveTargetItem(this, selectedKey, LOCAL_MOVE_POSITION.After);
         const selection: ISelectionObject = {
             selected: [selectedKey],
             excluded: []
         };
-        return _private.getMoveController(this).move(selection, {}, sibling, MOVE_POSITION.after);
+        return _private.getMoveController(this).move(selection, {}, sibling, LOCAL_MOVE_POSITION.After);
     },
 
     moveItemsWithDialog(selection: ISelectionObject): Promise<void> {

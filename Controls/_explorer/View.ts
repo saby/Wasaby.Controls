@@ -17,7 +17,7 @@ import {
 }  from '../_interface/INavigation';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import {ISelectionObject} from 'Controls/interface';
-import {CrudEntityKey, MOVE_POSITION} from 'Types/source';
+import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import { RecordSet } from 'Types/collection';
 
 var
@@ -740,7 +740,7 @@ var
 
       // region mover
 
-      moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: MOVE_POSITION): Promise<void> {
+      moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
          return this._children.treeControl.moveItems(selection, targetKey, position);
       },
 

@@ -1,4 +1,4 @@
-import {CrudEntityKey, MOVE_POSITION} from 'Types/source';
+import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import {ISelectionObject} from 'Controls/interface';
 
 /**
@@ -17,7 +17,7 @@ export interface IMovableList {
      * @param targetKey
      * @param position
      */
-    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: MOVE_POSITION): Promise<void>;
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void>;
 
     /**
      * Перемещаетодин элемент вверх и возвращает результат перемещения
