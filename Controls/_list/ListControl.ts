@@ -4,9 +4,8 @@ import BaseControl = require('Controls/_list/BaseControl');
 import {saveConfig} from 'Controls/Application/SettingsController';
 import Deferred = require('Core/Deferred');
 import {isEqual} from 'Types/object';
-import {ISelectionObject} from "../_interface/ISelectionType";
-import {CrudEntityKey} from "Types/source";
-import {TMovePosition} from "./Controllers/MoveController";
+import {ISelectionObject} from 'Controls/interface';
+import {CrudEntityKey, MOVE_POSITION} from 'Types/source';
 import {IMovableList} from './interface/IMovableList';
 import { RecordSet } from 'Types/collection';
 
@@ -74,7 +73,7 @@ export default class ListControl extends Control/** @lends Controls/_list/ListCo
 
     // region mover
 
-    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: MOVE_POSITION): Promise<void> {
         return this._children.baseControl.moveItems(selection, targetKey, position);
     }
 

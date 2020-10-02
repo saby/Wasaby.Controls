@@ -120,18 +120,17 @@ import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/
 import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
 import Remover = require('Controls/_list/Remover');
 import * as Mover from 'Controls/_list/Mover';
-export {IMoveItemsParams, MOVE_POSITION, MOVE_TYPE, IMover, IRemover} from 'Controls/_list/interface/IMoverAndRemover';
-
-// @deprecated
+export {IMoveItemsParams, IMover, IRemover, BEFORE_ITEMS_MOVE_RESULT} from 'Controls/_list/interface/IMoverAndRemover';
 export {
     _itemActionsForTemplate,
     ItemActionsTemplate,
     _swipeActionTemplate,
     SwipeTemplate
 }
+
 // endregion @deprecated
 
-export {MoveController, TMovePosition, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
+export {MoveController, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
 export {IMovableList} from 'Controls/_list/interface/IMovableList';
 
 export {RemoveController} from 'Controls/_list/Controllers/RemoveController';

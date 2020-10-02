@@ -1,6 +1,5 @@
 import {Control} from 'UI/Base';
 import {TKeysSelection} from 'Controls/interface';
-import {TMovePosition} from '../Controllers/MoveController';
 
 /**
  * Эти интерфейсы необходимы для совместимости до момента перехода на {@link Controls/list:IMovableList IMovableList} и {@link Controls/list:IMovableList IRemovableList}
@@ -18,12 +17,7 @@ export interface IMoveItemsParams {
 /**
  * @deprecated {@link Controls/list:Mover Mover} will be removed soon. Use {@link Controls/list:IMovableList IMovableList} interface instead
  */
-export type MOVE_POSITION = TMovePosition;
-
-/**
- * @deprecated {@link Controls/list:Mover Mover} will be removed soon. Use {@link Controls/list:IMovableList IMovableList} interface instead
- */
-export const MOVE_TYPE = {
+export const BEFORE_ITEMS_MOVE_RESULT = {
     CUSTOM: 'Custom',
     MOVE_IN_ITEMS: 'MoveInItems'
 }
