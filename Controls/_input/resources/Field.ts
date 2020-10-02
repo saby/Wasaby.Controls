@@ -204,7 +204,10 @@ class Field<Value, ModelOptions>
         if (shouldBeChanged) {
             this._updateField(model.displayValue, model.selection);
 
-            if (WorkWithSelection.isFieldFocused(field) && !field.readOnly) {
+            if (
+                WorkWithSelection.isFieldFocused(field) && !field.readOnly &&
+                this._options.recalculateLocationVisibleArea
+            ) {
                 this._options.recalculateLocationVisibleArea(field, model.displayValue, model.selection);
             }
             this._currentVersionModel = versionModel;
@@ -339,7 +342,7 @@ class Field<Value, ModelOptions>
          * Для этого останавливаем всплытие события.
          */
         if (processedKeys.includes(code)) {
-            event.stopPropagation();
+            event.nativeEvent.stopPropagation();
         }
 
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
