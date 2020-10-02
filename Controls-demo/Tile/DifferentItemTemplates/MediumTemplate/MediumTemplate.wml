@@ -14,7 +14,7 @@
       source="{{_viewSource}}">
       <ws:itemTemplate>
          <ws:partial
-            template="Controls/tile:TitleWithImageTemplate"
+            template="Controls/tile:MediumTemplate"
             titleSingleLine="{{true}}"
             scope="{{itemTemplate}}"/>
       </ws:itemTemplate>

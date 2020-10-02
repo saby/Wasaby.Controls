@@ -1,7 +1,8 @@
 <ws:template name="folderTemplate">
 <ws:partial
-      template="wml!Controls/_tile/TileView/resources/SimpleTileTemplate"
+      template="wml!Controls/_tile/TileView/resources/SmallTemplate"
       width="{{width}}"
+      height="{{height}}"
       hasTitle="{{hasTitle}}"
       itemData="{{itemData}}"
       invisible="{{invisible}}"
@@ -27,6 +28,7 @@
       checkboxReadOnly="{{checkboxReadOnly}}"
       itemActionsPosition="{{itemActionsPosition}}"
       cursor="{{cursor}}"
+      height="{{height}}"
       hasTitle="{{hasTitle}}"
       itemData="{{itemData}}"
       invisible="{{invisible}}"

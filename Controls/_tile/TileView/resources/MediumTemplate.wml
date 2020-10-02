@@ -9,11 +9,12 @@
          <ws:partial template="wml!Controls/_tile/TileView/TileImageTemplate"
                      attr:class="controls-TileView__mediumTemplate_image controls-TileView__mediumTemplate_image_theme-{{_options.theme}}"/>
          <span class="controls-TileView__mediumTemplate_title
-                      controls-TileView__mediumTemplate_title_ellipsis_{{_options.titleSingleLine ? 'single' : 'multi'}}Line
                       controls-fontsize-l_theme-{{_options.theme}}
                       controls-text-secondary_theme-{{_options.theme}}
+                      controls-TileView__text_ellipsis_multiLine
                       controls-fontweight-bold
                       controls-TileView__mediumTemplate_title_theme-{{_options.theme}}"
+               style="-webkit-line-clamp: {{titleLines || 1}};"
                title="{{itemData.item[itemData.displayProperty]}}">
             {{itemData.item[itemData.displayProperty]}}
          </span>

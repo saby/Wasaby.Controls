@@ -14,23 +14,13 @@
 }
 
 .controls-TileView__mediumTemplate_title_theme-@{themeName} {
-   height: @inline_height_2xl;
+   max-height: @inline_height_2xl;
    width: 100%;
    white-space: normal;
    overflow: hidden;
    margin-top: @offset_xs;
 }
 
-.controls-TileView__mediumTemplate_title_ellipsis_singleLine {
-   .text-overflow();
-}
-
-.controls-TileView__mediumTemplate_title_ellipsis_multiLine {
-   display: -webkit-box;
-   -webkit-line-clamp: 2;
-   -webkit-box-orient: vertical;
-}
-
 .controls-TileView__mediumTemplate_itemActions_theme-@{themeName} {
-   padding: 0 0 4px 0;
+   padding-bottom: 4px;
 }

@@ -5,7 +5,6 @@
    box-sizing: border-box;
    display: flex;
    align-items: center;
-   position: absolute;
 }
 
 .controls-TileView__previewTemplate_title_singleLine_theme-@{themeName} {
@@ -50,16 +49,6 @@
    color: @background-color;
 }
 
-.controls-TileView__previewTemplate_title_ellipsis_singleLine {
-   .text-overflow();
-}
-
-.controls-TileView__previewTemplate_title_ellipsis_multiLine {
-   display: -webkit-box;
-   -webkit-line-clamp: 2;
-   -webkit-box-orient: vertical;
-}
-
 .controls-TileView__previewTemplate_topTemplate {
    position: absolute;
    top: 6px;
@@ -67,7 +56,7 @@
 }
 
 .controls-TileView__previewTemplate_bottomRightTemplate_theme-@{themeName} {
-   padding-left: 12px;
+   padding-left: @offset_m;
 }
 
 .controls-TileView__previewTemplate_itemActions {

@@ -1,12 +1,12 @@
-.controls-TileView__richTemplate-imagePosition_right {
+.controls-TileView__richTemplate_imagePosition_right {
    flex-direction: row-reverse;
 }
 
-.controls-TileView__richTemplate-image_position-top {
+.controls-TileView__richTemplate_imagePosition_top {
    flex-direction: column;
 }
 
-.controls-TileView__richTemplate__itemContent {
+.controls-TileView__richTemplate_itemContent {
    display: flex;
    flex-direction: column;
    flex-grow: 1;
@@ -15,11 +15,8 @@
    white-space: normal;
 }
 
-.controls-TileView__richTemplate__itemContent_theme-@{themeName} {
-
-}
-
-.controls-TileView__richTemplate-image-spacing_theme-@{themeName} {
+.controls-TileView__richTemplate_itemContent_theme-@{themeName} {
+   padding: @offset_m;
 }
 
 .controls-TileView__richTemplate {
@@ -34,7 +31,7 @@
 .controls-TileView__richTemplate_image_effect_gradient {
    position: absolute;
    pointer-events: none;
-   height: 30%;
+   height: 48px;
    width: 100%;
    bottom: 0;
    left: 0;
@@ -52,45 +49,55 @@
    border-radius: 60px;
 }
 
-.controls-TileView__richTemplate_image::after {
-   content: "";
-   display: block;
-   padding-bottom: 100%;
-}
-
 .controls-TileView__richTemplate_image {
    width: 100%;
-   height: 100%;
-   object-fit: cover;
+   background-repeat: no-repeat;
+   background-size: cover;
+   background-position: center;
+}
+
+.controls-TileView__richTemplate_imageWrapper {
+   overflow: hidden;
+   display: flex;
+   flex-shrink: 0;
+   max-width: 100%;
+   box-sizing: border-box;
+   justify-content: center;
+   position: relative;
+}
+
+.controls-TileView_richTemplate_image_spacing_viewMode_circle_theme-@{themeName},
+.controls-TileView_richTemplate_image_spacing_viewMode_ellipse_theme-@{themeName} {
+   padding: @offset_m;
+}
+
+.controls-TileView__richTemplate_title_theme-@{themeName} {
+   margin-bottom: @offset_m;
 }
 
 .controls-TileView__richTemplate_image_size_s_position_top_theme-@{themeName} {
    height: @image_height_s_position_top_rich_tile;
-   width: 100%;
 }
 
 .controls-TileView__richTemplate_image_size_m_position_top_theme-@{themeName} {
    height: @image_height_m_position_top_rich_tile;
-   width: 100%;
 }
 
-.controls-TileView__richTemplate_image_size_l_postition_top_theme-@{themeName} {
+.controls-TileView__richTemplate_image_size_l_position_top_theme-@{themeName} {
    height: @image_height_l_position_top_rich_tile;
-   width: 100%;
 }
 
-
-.controls-TileView__richTemplate_image_size_s_postition_vertical_theme-@{themeName} {
+.controls-TileView__richTemplate_image_size_s_position_vertical_theme-@{themeName} {
    height: @image_height_s_position_vertical_rich_tile;
-   width:  @image_width_s_position_vertical_rich_tile;
+   width: @image_width_s_position_vertical_rich_tile;
 }
 
-.controls-TileView__richTemplate_image_size_m_postition_vertical_theme-@{themeName} {
+.controls-TileView__richTemplate_image_size_m_position_vertical_theme-@{themeName} {
    height: @image_height_m_position_vertical_rich_tile;
    width: @image_width_m_position_vertical_rich_tile;
 }
 
-.controls-TileView__richTemplate_image_size_l_postition_vertical_theme-@{themeName} {
+.controls-TileView__richTemplate_image_size_l_position_vertical_theme-@{themeName} {
    height: @image_height_l_position_vertical_rich_tile;
    width: @image_width_l_position_vertical_rich_tile;
 }
@@ -129,4 +136,24 @@ controls-TileView__richTemplate_image_size_m_scale_s_theme-@{themeName} {
 
 .controls-TileView__richTemplate_image_size_l_scale_l_theme-@{themeName} {
    height: @image_height_l_position_top_rich_tile * 1;
+}
+
+.controls-TileView__richTemplate_image_size_s_position_top_viewMode_circle_theme-@{themeName},
+.controls-TileView__richTemplate_image_size_s_position_top_viewMode_ellipse_theme-@{themeName} {
+   width: @image_width_s_position_vertical_rich_tile;
+}
+
+.controls-TileView__richTemplate_image_size_m_position_top_viewMode_circle,
+.controls-TileView__richTemplate_image_size_m_position_top_viewMode_ellipse {
+   width: @image_height_m_position_top_rich_tile;
+}
+
+.controls-TileView__richTemplate_image_size_l_position_top_viewMode_circle,
+.controls-TileView__richTemplate_image_size_l_position_top_viewMode_ellipse {
+   width: @image_height_l_position_top_rich_tile;
+}
+
+.controls-TileView__richTemplate {
+   display: flex;
+   height: 100%;
 }
