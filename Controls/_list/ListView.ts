@@ -192,6 +192,16 @@ var ListView = BaseControl.extend(
             }
         },
 
+        /**
+         * Обработчик долгого тапа
+         * @param event
+         * @param itemData
+         * @private
+         */
+        _onItemLongTap(event, itemData): void {
+            this._onItemContextMenu(event, itemData);
+        },
+
         _onItemSwipe: function(event, itemData) {
             this._notify('itemSwipe', [itemData, event]);
             event.stopPropagation();
