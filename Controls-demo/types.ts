@@ -1,6 +1,5 @@
 import { IHeaderCell } from 'Controls/_grid/interface/IHeaderCell';
 import {RecordSet} from 'Types/collection';
-import {TemplateFunction} from 'UI/Base';
 
 export interface IHeader extends IHeaderCell {
     title: string;

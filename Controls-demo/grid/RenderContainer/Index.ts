@@ -18,7 +18,7 @@ export default class GridRenderContainerDemo extends Control {
     protected _template: TemplateFunction = template;
 
     protected _items: RecordSet = this._generateItems(MAXITEMCOUNT);
-    protected _columns: IColumn = [
+    protected _columns: IColumn[] = [
         {
             template: titleColumnTpl,
             width: '2fr'
