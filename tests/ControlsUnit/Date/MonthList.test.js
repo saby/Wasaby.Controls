@@ -163,6 +163,7 @@ define([
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
             sandbox.stub(ml, '_canScroll');
+            sandbox.stub(ml, '_isHidden').returns(false);
             ml._children.months = { reload: sinon.fake() };
             ml._container = {};
             ml._displayedDates = [1, 2];
@@ -202,6 +203,7 @@ define([
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
             sandbox.stub(ml, '_canScroll').returns(false);
+            sandbox.stub(ml, '_isHidden').returns(false);
             sandbox.stub(ml, '_findElementByDate').returns(null);
             ml._children.months = { reload: sinon.fake() };
             ml._container = {};
@@ -345,6 +347,7 @@ define([
                position = new Date(2018, 0, 1),
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: position });
             sandbox.stub(ml, '_canScroll').returns(false);
+            sandbox.stub(ml, '_isHidden').returns(false);
             ml._children = {
                months: {
                   reload: sinon.fake()
@@ -364,6 +367,7 @@ define([
                position = new Date(2018, 0, 1),
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2019, 0, 1) });
             sandbox.stub(ml, '_canScroll').returns(false);
+            sandbox.stub(ml, '_isHidden').returns(false);
             ml._children = {
                months: {
                   reload: sinon.fake()
@@ -382,6 +386,7 @@ define([
                position = new Date(2018, 0, 2),
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2019, 0, 1) });
             sandbox.stub(ml, '_canScroll').returns(false);
+            sandbox.stub(ml, '_isHidden').returns(false);
             ml._children = {
                months: {
                   reload: sinon.fake()

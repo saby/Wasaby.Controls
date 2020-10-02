@@ -284,6 +284,12 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             if (oldPositionId === this._startPositionId && this._children.months) {
                 this._children.months.reload();
             }
+            // Если компонент скрыт, то сбросим _positionToScroll, доверим списочному контролу восстановление скрола
+            // после того, как компонент станет видимым. Скорее всего _positionToScroll уже нигде не актален.
+            // https://online.sbis.ru/opendoc.html?guid=d85227d0-3f42-4300-947f-cf8f57a02c0d
+            if (this._isHidden()) {
+                this._positionToScroll = null;
+            }
         }
     }
 
@@ -531,6 +537,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     // https://online.sbis.ru/opendoc.html?guid=d3d0fc8a-06cf-49fb-ad80-ce0a9d9a8632
     protected _idToDate(dateId: string): Date {
         return monthListUtils.idToDate(dateId);
+    }
+
+    private _isHidden(): boolean {
+        return !!this._container.closest('.ws-hidden');
     }
 
     static _ITEM_BODY_SELECTOR = ITEM_BODY_SELECTOR;
