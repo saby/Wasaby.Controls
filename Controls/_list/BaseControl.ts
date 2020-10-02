@@ -1306,8 +1306,8 @@ const _private = {
      * Инициализируем paging если он не создан
      * @private
      */
-    initPaging(self, isPagingVisible: boolean = true) {
-        if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation) && isPagingVisible) {
+    initPaging(self) {
+        if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
             self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
         }
     },
@@ -4692,7 +4692,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
              поэтому нужен таймаут
              */
             this._needPagingTimeout = setTimeout(() => {
-                _private.initPaging(this, this._options.navigation.viewConfig.pagingMode === 'edge');
+                if (_private.needScrollPaging(this._options.navigation) &&
+                    this._options.navigation.viewConfig.pagingMode === 'edge') {
+                    this._pagingVisible = _private.needShowPagingByScrollSize(
+                        this, _private.getViewSize(this), this._viewportSize);
+                }
             }, 18);
         } else {
             this._pagingVisible = _private.needShowPagingByScrollSize(this, params.scrollHeight, params.clientHeight);
