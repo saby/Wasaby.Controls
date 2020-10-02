@@ -367,6 +367,7 @@ const _private = {
                     if (!self._shouldNotResetPagingCache) {
                         self._cachedPagingState = false;
                     }
+                    clearTimeout(self._needPagingTimeout);
 
                     if (listModel) {
                         if (self._options.groupProperty) {
@@ -1301,10 +1302,19 @@ const _private = {
         _private.handleScrollControllerResult(self, result);
     }, SCROLLMOVE_DELAY, true),
 
-    handleListScrollSync(self, scrollTop) {
-        if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
-            self._pagingVisible = _private.needShowPagingByScrollSize(self,  _private.getViewSize(self), self._viewportSize);
+    /**
+     * Инициализируем paging если он не создан
+     * @private
+     */
+    initPaging(self, isPagingVisible: boolean = true) {
+        if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation) && isPagingVisible) {
+            self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
         }
+    },
+
+    handleListScrollSync(self, scrollTop) {
+        _private.initPaging(self);
+
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
@@ -2821,6 +2831,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
     _shouldNotResetPagingCache: false,
+    _needPagingTimeout: null,
 
     _itemTemplate: null,
 
@@ -3632,6 +3643,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._intersectionObserver = null;
         }
 
+        if (this._needPagingTimeout) {
+            clearTimeout(this._needPagingTimeout);
+            this._needPagingTimeout = null;
+        }
+
         // для связи с контроллером ПМО
         this._notify('unregister', ['selectedTypeChanged', this], {bubbling: true});
 
@@ -4298,10 +4314,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
-
-        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
-            this._pagingVisible = _private.needShowPagingByScrollSize(this,  _private.getViewSize(this), this._viewportSize);
-        }
+        _private.initPaging(this);
 
         if (this._documentDragging) {
             this._insideDragging = true;
@@ -4653,14 +4666,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
             case 'viewportResize':
                 this.viewportResizeHandler(params.clientHeight, params.rect);
-                /**
-                 * Проверяем и в случае необходимости создаем компактный пэйджинг.
-                 * Создаем здесь, так как в beforeMount невозможно определить viewSize и viewportSize.
-                 */
-                if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)
-                    && this._options.navigation.viewConfig.pagingMode === 'edge') {
-                    this._pagingVisible = _private.needShowPagingByScrollSize(this, _private.getViewSize(this), params.clientHeight);
-                }
                 break;
             case 'virtualScrollMove':
                 _private.throttledVirtualScrollPositionChanged(this, params);
@@ -4674,6 +4679,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             case 'cantScroll':
                 this.cantScrollHandler(params);
                 break;
+            case 'scrollResize':
+                this.scrollResizeHandler(params);
+                break;
+        }
+    },
+
+    scrollResizeHandler(params: IScrollParams): void {
+        if (!this._pagingVisible) {
+            /*
+             внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
+             поэтому нужен таймаут
+             */
+            this._needPagingTimeout = setTimeout(() => {
+                _private.initPaging(this, this._options.navigation.viewConfig.pagingMode === 'edge');
+            }, 18);
+        } else {
+            this._pagingVisible = _private.needShowPagingByScrollSize(this, params.scrollHeight, params.clientHeight);
         }
     },
 
