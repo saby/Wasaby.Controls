@@ -420,7 +420,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /**
  * @event Происходит при наведении курсора мыши на элемент списка.
  * @name Controls/_list/interface/IList#hoveredItemChanged
- * @demo Controls-demo/List/List/BasePG
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента, на который наводим курсор.
  * @param {HTMLElement} itemContainer Контейнер элемента.
