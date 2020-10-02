@@ -32,7 +32,7 @@ import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScro
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import { stickyLadderCellsCount, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
-import { IDragPosition } from 'Controls/listDragNDrop';
+import { IDragPosition } from 'Controls/display';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;

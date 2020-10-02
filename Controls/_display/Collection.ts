@@ -31,8 +31,8 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
-import { IDragPosition } from 'Controls/listDragNDrop';
 import {ICollection, ISourceCollection} from './interface/ICollection';
+import { IDragPosition } from './interface/IDragPosition';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -444,10 +444,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$collection: ISourceCollection<S>;
 
     /**
-     * @cfg {
-     * Array.<Function(*, Number, Controls/_display/CollectionItem, Number): Boolean>|
-     * Function(*, Number, Controls/_display/CollectionItem, Number): Boolean
-     * } Пользовательские методы фильтрации элементов проекциию. Аргументы: элемент коллекции, позиция в коллекции,
+     * @cfg Пользовательские методы фильтрации элементов проекциию. Аргументы: элемент коллекции, позиция в коллекции,
      * элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям
      * фильтрации.
      * @name Controls/_display/Collection#filter
@@ -488,9 +485,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$filter: Array<FilterFunction<S>>;
 
     /**
-     * @cfg {
-     * Function(*, Number, Controls/_display/CollectionItem): String|null
-     * } Метод группировки элементов проекции. Аргументы: элемент коллекции, позиция в коллекции, элемент проекции.
+     * @cfg Метод группировки элементов проекции. Аргументы: элемент коллекции, позиция в коллекции, элемент проекции.
      * Должен вернуть идентификатор группы.
      * @name Controls/_display/Collection#group
      * @example
@@ -532,14 +527,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * @see getGroup
      * @see setGroup
      */
-    protected _$
-        : GroupFunction<S, T>;
+    protected _$group: GroupFunction<S, T>;
 
     /**
-     * @cfg {
-     * Array.<Function(UserSortItem, UserSortItem): Number>|
-     * Function(UserSortItem, UserSortItem): Number
-     * } Пользовательские методы сортировки элементов. Аргументы: 2 объекта типа {@link UserSortItem},
+     * @cfg Пользовательские методы сортировки элементов. Аргументы: 2 объекта типа {@link UserSortItem},
      * должен вернуть -1|0|1 (см. Array.prototype.sort())
      * @name Controls/_display/Collection#sort
      * @example
@@ -1412,7 +1403,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Возвращает пользовательские методы фильтрации элементов проекции
-     * @return {Array.<Function(*, Number, Controls/_display/CollectionItem, Number): Boolean>}
      * @see filter
      * @see setFilter
      * @see addFilter
@@ -1425,7 +1415,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     /**
      * Устанавливает пользовательские методы фильтрации элементов проекции. Вызов метода без аргументов приведет к
      * удалению всех пользовательских фильтров.
-     * @param {...Function(*, Number, Controls/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации
+     * @param [...filter] Методы фильтрации
      * элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции.
      * Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
      * @see filter
@@ -1495,10 +1485,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Добавляет пользовательский метод фильтрации элементов проекции, если такой еще не был задан.
-     * @param {Function(*, Number, Controls/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+     * @param filter Метод фильтрации элементов:
      * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
      * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
-     * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
+     * @param [at] Порядковый номер метода (если не передан, добавляется в конец)
      * @see filter
      * @see getFilter
      * @see setFilter
@@ -1552,10 +1542,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Удаляет пользовательский метод фильтрации элементов проекции.
-     * @param {Function(*, Number, Controls/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+     * @param filter Метод фильтрации элементов:
      * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
      * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
-     * @return {Boolean} Был ли установлен такой метод фильтрации
+     * @return Был ли установлен такой метод фильтрации
      * @see filter
      * @see getFilter
      * @see setFilter
@@ -1624,7 +1614,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Возвращает метод группировки элементов проекции
-     * @return {Function}
      * @see group
      * @see setGroup
      */
@@ -1635,7 +1624,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     /**
      * Устанавливает метод группировки элементов проекции. Для сброса ранее установленной группировки следует вызвать
      * этот метод без параметров.
-     * @param {Function(*, Number, Controls/_display/CollectionItem): String|null} group Метод группировки элементов:
+     * @param group Метод группировки элементов:
      * аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу,
      * в которую входит элемент.
      * @see group
@@ -1789,7 +1778,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Возвращает пользовательские методы сортировки элементов проекции
-     * @return {Array.<Function>}
      * @see sort
      * @see setSort
      * @see addSort
@@ -1801,7 +1789,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     /**
      * Устанавливает пользовательские методы сортировки элементов проекции. Вызов метода без аргументов приведет к
      * удалению всех пользовательских сортировок.
-     * @param {...Function(UserSortItem, UserSortItem): Number} [sort] Методы сортировки элементов: аргументами
+     * @param [...sort] Методы сортировки элементов: аргументами
      * приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
      * @see sort
      * @see getSort
@@ -1897,9 +1885,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Добавляет пользовательский метод сортировки элементов проекции, если такой еще не был задан.
-     * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов:
+     * @param sort Метод сортировки элементов:
      * аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
-     * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
+     * @param [at] Порядковый номер метода (если не передан, добавляется в конец)
      * @see sort
      * @see getSort
      * @see setSort
@@ -1953,9 +1941,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Удаляет пользовательский метод сортировки элементов проекции.
-     * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов:
+     * @param sort Метод сортировки элементов:
      * аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
-     * @return {Boolean} Был ли установлен такой метод сортировки
+     * @return Был ли установлен такой метод сортировки
      * @see sort
      * @see getSort
      * @see setSort
