@@ -93,7 +93,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /**
  * @name Controls/_list/interface/IList#emptyTemplate
  * @cfg {Function} Шаблон отображения контрола без элементов.
- * @demo Controls-demo/List/List/BasePG
+ * @demo Controls-demo/list_new/EmptyList/Default/Index
  * @default Controls/list:EmptyTemplate
  * @example
  * <pre class="brush: html">
@@ -117,6 +117,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * - contentTemplate content of emptyTemplate
  * - topSpacing Spacing between top border and content of emptyTemplate
  * - bottomSpacing Spacing between bottom border and content of emptyTemplate
+ * @demo Controls-demo/list_new/EmptyList/Default/Index
  * @example
  * <pre>
  *    <Controls.list:View>
