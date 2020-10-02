@@ -3061,12 +3061,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                     _private.initVisibleItemActions(self, newOptions);
 
-                    if (self._listViewModel && !self._pagingVisible &&
-                        _private.needScrollPaging(self._options.navigation) &&
-                        self._options.navigation.viewConfig.pagingMode === 'edge') {
-                        self._pagingVisible = _private.needShowPagingByScrollSize(self, self._viewSize, self._viewportSize);
-                    }
-
                     // TODO Kingo.
                     // В случае, когда в опцию источника передают PrefetchProxy
                     // не надо возвращать из _beforeMount загруженный рекордсет, это вызывает проблему,
