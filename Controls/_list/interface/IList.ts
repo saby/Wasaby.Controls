@@ -473,7 +473,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @event Происходит при отрисовке очередного набора данных.
  * @name Controls/_list/interface/IList#drawItems
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @demo Controls-demo/List/List/BasePG
  */
 
 /*ENG
