@@ -174,6 +174,8 @@ var _private = {
         if (self._viewModel.value !== newValue) {
             self._viewModel.value = newValue;
         }
+
+        _private.updateSelectionByOptions(self, newOptions);
     },
 
     getValue: function (self, options) {
@@ -186,6 +188,19 @@ var _private = {
         }
 
         return self._defaultValue;
+    },
+
+    updateSelectionByOptions: function(self, options) {
+        if (
+            options.hasOwnProperty('selectionStart') &&
+            options.hasOwnProperty('selectionEnd') &&
+            (self._options.selectionStart !== options.selectionStart || self._options.selectionEnd !== options.selectionEnd)
+        ) {
+            self._viewModel.selection = {
+                start: options.selectionStart,
+                end: options.selectionEnd
+            };
+        }
     }
 };
 
@@ -209,6 +224,7 @@ var _private = {
  * @implements Controls/input:IValue
  * @implements Controls/input:IBorderVisibility
  * @implements Controls/input:IPadding
+ * @implements Controls/input:ISelection
  *
  * @public
  *
@@ -409,6 +425,7 @@ var Base = Control.extend({
             this._getViewModelOptions(options),
             _private.getValue(this, options)
         );
+        _private.updateSelectionByOptions(this, options);
         this._initProperties(options);
 
         if (this._autoComplete !== 'off') {
@@ -708,6 +725,8 @@ Base.getOptionTypes = function () {
     return {
         ...getOptionPaddingTypes(),
         value: entity.descriptor(String, null),
+        selectionStart: entity.descriptor(Number),
+        selectionEnd: entity.descriptor(Number),
         tooltip: entity.descriptor(String),
         /*autoComplete: entity.descriptor(String).oneOf([
          'on',
