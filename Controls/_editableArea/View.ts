@@ -71,7 +71,7 @@ var
    };
 
 /**
- * Контроллер для редактирования по месту в полях ввода.
+ * Контроллер для <a href="/doc/platform/developmentapl/interface-development/controls/input/edit/">редактирования по месту в полях ввода</a>.
  *
  * @class Controls/_editableArea/View
  * @extends Core/Control
@@ -82,10 +82,9 @@ var
  *
  * @remark
  * Если в качестве шаблона редактирования используются поля ввода, то при переключении в режим чтения может наблюдаться скачок текста.
- * Для того, чтобы избежать этого, рекомендуется навесить CSS-класс controls-Input_negativeOffset_theme_{{_options.theme}} на редактируемую область.
+ * Для того, чтобы избежать этого, рекомендуется навесить CSS-класс **controls-Input_negativeOffset_theme_{{_options.theme}}** на редактируемую область.
  *
  * Полезные ссылки:
- * * <a href="/doc/platform/developmentapl/interface-development/controls/input/edit/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_editableArea.less">переменные тем оформления</a>
  *
  * @demo Controls-demo/EditableArea/View/Index

@@ -16,9 +16,7 @@ interface IBaseOptions extends IFontSizeOptions, IFontWeightOptions, IFontColorS
 }
 
 /**
- * Базовый шаблон редактирования полей ввода. Имитирует стили {@link Controls/input:Text Text}.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FEditableArea%2FEditableArea">Демо-пример</a>.
- *
+ * Базовый шаблон редактирования полей ввода. Имитирует стили {@link Controls/input:Text}.
  * @class Controls/_editableArea/Templates/Editors/Base
  * @extends UI/Base:Control
  * @mixes Controls/interface:IFontWeight
@@ -28,8 +26,7 @@ interface IBaseOptions extends IFontSizeOptions, IFontWeightOptions, IFontColorS
  * @author Красильников А.С.
  * @public
  * @see Controls/_editableArea/Templates/Editors/DateTime
- *
- * @demo Controls-demo/EditableArea/View/Index
+ * @demo Controls-demo/EditableArea/ViewContent/Index
  */
 class Base extends Control<IBaseOptions>
     implements IHeight, IFontSize, IFontWeight, IFontColorStyle {
