@@ -54,7 +54,7 @@ import { RecordSet } from 'Types/collection';
  * @author Авраменко А.С.
  * @public
  * @category List
- * @demo Controls-demo/List/List/BasePG
+ * @demo Controls-demo/list_new/Base/Index
  */
 
 /*
@@ -88,7 +88,7 @@ import { RecordSet } from 'Types/collection';
  * @author Авраменко А.С.
  * @public
  * @category List
- * @demo Controls-demo/List/List/BasePG
+ * @demo Controls-demo/list_new/Base/Index
  */
 
 export default class List extends Control/** @lends Controls/_list/List.prototype */ implements IMovableList, IRemovableList {
