@@ -10,7 +10,7 @@
  * @includes NumberEditor Controls/_propertyGrid/defaultEditors/Number
  * @includes BooleanGroupEditor Controls/_propertyGrid/extendedEditors/BooleanGroup
  * @includes FlatEnumEditor Controls/_propertyGrid/extendedEditors/FlatEnumEditor
- * @includes IPropertyGrid Controls/_propertyGrid/IPropertyGrid
+ * @includes IPropertyGrid Controls/propertyGrid:GroupTemplate
  * @includes IEditor Controls/_propertyGrid/IEditor
  * @includes IProperty Controls/_propertyGrid/IProperty
  * @author Герасимов А.М.
@@ -28,7 +28,7 @@
  * @includes NumberEditor Controls/_propertyGrid/defaultEditors/Number
  * @includes BooleanGroupEditor Controls/_propertyGrid/extendedEditors/BooleanGroup
  * @includes FlatEnumEditor Controls/_propertyGrid/extendedEditors/FlatEnumEditor
- * @includes IPropertyGrid Controls/_propertyGrid/IPropertyGrid
+ * @includes IPropertyGrid Controls/propertyGrid:GroupTemplate
  * @includes IEditor Controls/_propertyGrid/IEditor
  * @includes IProperty Controls/_propertyGrid/IProperty
  * @author Герасимов А.М.
