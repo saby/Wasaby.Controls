@@ -2472,10 +2472,32 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             addPosition: item.addPosition,
             groupMethod: this.getGroup()
         }, GroupItemsStrategy);
+
+        const addingIndex: number = this.getStrategyInstance(AddStrategy).getAddingItemIndex();
+
+        this._notifyCollectionChange(
+            IObservable.ACTION_ADD,
+            [item],
+            addingIndex,
+            [],
+            0
+        );
     }
 
     resetAddingItem(): void {
-        this.removeStrategy(AddStrategy);
+        const addStrategy = this.getStrategyInstance(AddStrategy);
+
+        if (addStrategy) {
+            this.removeStrategy(AddStrategy);
+
+            this._notifyCollectionChange(
+                IObservable.ACTION_REMOVE,
+                [],
+                0,
+                [addStrategy.getAddingItem()],
+                addStrategy.getAddingItemIndex()
+            );
+        }
     }
 
     getSwipeConfig(): ISwipeConfig {

@@ -120,6 +120,14 @@ export default class Add<S extends Model, T extends CollectionItem<S>> extends m
 
     // endregion
 
+    getAddingItem(): T {
+        return this._options.item;
+    }
+
+    getAddingItemIndex(): number {
+        return this._getAddingItemIndex();
+    }
+
     private _getAddingItemIndex(): number {
         if (this._addingItemIndex === undefined) {
             this._addingItemIndex = Add._calculateIndex<S, T>(this._options, this.source);

@@ -682,6 +682,14 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     // New Model compatibility
+    isEventRaising(): boolean {
+        if (this._display) {
+            return this._display.isEventRaising();
+        }
+        return false;
+    },
+
+    // New Model compatibility
     setEventRaising(enabled: boolean, analyze: boolean): void {
         if (this._display) {
             this._display.setEventRaising(enabled, analyze);
