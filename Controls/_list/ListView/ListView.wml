@@ -3,9 +3,10 @@
    <ws:if data="{{_listModel}}">
       <div name="itemsContainer" class="controls-ListViewV__itemsContainer">
          <ws:partial
-             template="wml!Controls/_list/Render/For"
+             template="{{_options.useNewModel ? 'wml!Controls/_list/Render/For' : 'wml!Controls/_list/resources/For'}}"
              collection="{{ _listModel }}"
              keyPrefix="listView-item"
+             listModel="{{_listModel}}"
 
              style="{{ _options.style }}"
              theme="{{ _options.theme }}"
@@ -21,6 +22,7 @@
              multiSelectTpl="{{ _options.multiSelectTpl }}"
              backgroundStyle="{{ _options.backgroundStyle || _options.style }}">
          </ws:partial>
+
          <ws:if data="{{_options._needBottomPadding}}">
             <div  class="controls-itemActionsV_outside-spacing_theme-{{_options.theme}}"></div>
          </ws:if>
