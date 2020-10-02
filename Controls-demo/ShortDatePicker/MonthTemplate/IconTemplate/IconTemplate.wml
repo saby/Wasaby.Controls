@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper" style="position: absolute; width:auto;">
     <Controls.shortDatePicker:View>
         <ws:monthTemplate>
-            <div style="width: 110px;">
+            <div style="min-width: 110px;">
                 <ws:partial template="Controls/shortDatePicker:MonthTemplate" >
                     <ws:iconTemplate>
                         <ws:if data="{{_getState()}}">
