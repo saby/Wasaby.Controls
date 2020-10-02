@@ -1,8 +1,6 @@
 import {assert} from 'chai';
 import {BaseControl, ListViewModel} from 'Controls/list';
 import {RecordSet} from 'Types/collection';
-import {IScrollParams} from '../../../Controls/_list/ScrollController';
-import * as sinon from 'sinon';
 
 describe('Controls/list_clean/BaseControl', () => {
     describe('BaseControl watcher groupHistoryId', () => {
