@@ -314,6 +314,6 @@ export default class TabButtonsDemo extends Control {
         });
         this._source6.destroy();
     }
-    static _theme: string[] = ['Controls/heading', 'Controls/Classes'];
+
     static _styles: string[] = ['Controls-demo/Tabs/Buttons/Buttons'];
 }
