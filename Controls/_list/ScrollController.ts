@@ -309,7 +309,7 @@ export default class ScrollController {
 
     private _initVirtualScroll(options: IOptions, count?: number): IScrollControllerResult {
         const virtualScrollConfig = !options.disableVirtualScroll && options.virtualScrollConfig || {};
-        if (!options.disableVirtualScroll && options.collection && (
+        if (options.collection && (
             !virtualScrollConfig.pageSize ||
             options.collection.getCount() >= virtualScrollConfig.pageSize ||
             options.forceInitVirtualScroll ||
