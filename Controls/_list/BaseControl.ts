@@ -1463,6 +1463,10 @@ const _private = {
         );
     },
 
+    getItemsCount(self) {
+        return self._listViewModel ? self._listViewModel.getCount() : 0;
+    },
+
     /**
      * Закрывает меню опций записи у активной записи, если она есть
      * @param self
@@ -2924,9 +2928,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const editingConfig = this._getEditingConfig(newOptions);
             return editingConfig.item ? this._startInitialEditing(editingConfig) : res;
         }).then(async (res) => {
+            const needInitModelState =
+                this._listViewModel &&
+                this._listViewModel.getCollection() &&
+                this._listViewModel.getCollection().getCount();
 
-            const needInitModelState = this._listViewModel && this._listViewModel.getCollection()
-                && this._listViewModel.getCollection().getCount();
             if (needInitModelState) {
                 if (newOptions.markerVisibility === 'visible'
                     || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined) {
@@ -2942,6 +2948,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     selectionController.setSelection(selection);
                 }
             }
+
+            return res;
         });
     },
 
@@ -3072,7 +3080,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     // возврашать полученный recordSet, иначе он будет сериализоваться
                     // и на уровне Container/Data и на уровне BaseControl'a
                     if (result.errorConfig || !newOptions.sourceController) {
-                        return Promise.resolve(result);
+                        return Promise.resolve(getState(result));
                     }
                 });
             } else {
