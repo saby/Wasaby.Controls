@@ -3,7 +3,7 @@ import {InputType, ISplitValue} from '../resources/Types';
 import {textBySplitValue} from '../resources/Util';
 import {IText} from 'Controls/decorator';
 
-interface IViewModelOptions {
+export interface IViewModelOptions {
     maxLength?: number;
     constraint?: string;
     punycodeToUnicode?: (punycode: string) => string;
