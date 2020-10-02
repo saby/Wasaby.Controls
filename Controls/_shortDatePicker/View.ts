@@ -144,9 +144,13 @@ var Component = BaseControl.extend({
     },
 
     _updateIsExpandButtonVisible(options): void {
-        const openerTop = options.stickyPosition.targetPosition.top;
-        const popupTop = options.stickyPosition.position.top + Math.abs(options.stickyPosition.margins.top);
-        this._isExpandButtonVisible = openerTop === popupTop;
+        // options.stickyPosition может не быть, если shortDatePicker:View используется отдельно
+        // от dateRange:RangeShortSelector
+        if (options.stickyPosition) {
+            const openerTop = options.stickyPosition.targetPosition.top;
+            const popupTop = options.stickyPosition.position.top + Math.abs(options.stickyPosition.margins.top);
+            this._isExpandButtonVisible = openerTop === popupTop;
+        }
     },
 
     _dateToDataString(date) {
