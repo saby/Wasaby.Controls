@@ -2,12 +2,12 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGrid/LoadMore/LoadMore';
 import {Memory} from 'Types/source';
 import {Gadgets} from '../DemoHelpers/DataCatalog';
-import { INavigation, IColumn } from 'Controls-demo/types';
+import { INavigation } from 'Controls-demo/types';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns: IColumn[] = Gadgets.getGridColumnsForFlat();
+    protected _columns = Gadgets.getGridColumnsForFlat();
     protected _navigation: INavigation = {
         source: 'page',
         view: 'demand',

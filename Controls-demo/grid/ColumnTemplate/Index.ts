@@ -5,7 +5,7 @@ import {Memory} from 'Types/source';
 import {getCountriesStats} from '../DemoHelpers/DataCatalog';
 import {IColumn} from '../../../Controls/_grid/interface/IColumn';
 
-interface IColorColumn extends IColumn {
+interface IColorColumn{
     getColor?: (n: number) => string;
 }
 

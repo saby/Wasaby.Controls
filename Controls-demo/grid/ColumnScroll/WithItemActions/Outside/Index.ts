@@ -3,14 +3,14 @@ import * as Template from 'wml!Controls-demo/grid/ColumnScroll/WithItemActions/O
 import {Memory} from 'Types/source';
 import {getCountriesStats} from '../../../DemoHelpers/DataCatalog';
 import {getActionsForContacts as getItemActions} from '../../../../list_new/DemoHelpers/ItemActionsCatalog';
-import { IHeader, IColumn } from 'Controls-demo/types';
+import { IHeader } from 'Controls-demo/types';
 import { IItemAction } from 'Controls/itemActions';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     protected _itemActions: IItemAction[] = getItemActions();
-    protected _columns: IColumn[] = getCountriesStats().getColumnsWithWidths();
+    protected _columns = getCountriesStats().getColumnsWithWidths();
     protected _header: IHeader[] = getCountriesStats().getDefaultHeader();
 
     protected _beforeMount(): void {

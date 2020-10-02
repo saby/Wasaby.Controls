@@ -8,14 +8,14 @@ import 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorRequired';
 import 'wml!Controls-demo/grid/EditInPlace/Validation/_cellEditorTitle';
 import {LengthChecker, ChangedChecker} from './Custom';
 import {getMoreActions} from '../../../list_new/DemoHelpers/ItemActionsCatalog';
-import { IHeader, TItemsReadyCallback, IColumn } from 'Controls-demo/types';
+import { IHeader, TItemsReadyCallback } from 'Controls-demo/types';
 import {RecordSet} from 'Types/collection';
 import { IItemAction } from 'Controls/itemActions';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns: IColumn[] = getEditing().getEditingColumnsValidation();
+    protected _columns = getEditing().getEditingColumnsValidation();
     protected _header: IHeader[] = getEditing().getEditingHeaderValidations();
     protected _markedKey: number;
     protected _dataLoadCallback: TItemsReadyCallback = this._dataCallback.bind(this);

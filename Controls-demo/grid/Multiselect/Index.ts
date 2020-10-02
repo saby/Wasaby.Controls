@@ -2,7 +2,6 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/grid/Multiselect/Multiselect';
 import {Memory} from 'Types/source';
 import {getCountriesStats} from '../DemoHelpers/DataCatalog';
-import { IColumn } from 'Controls-demo/types';
 
 interface IColumn {
     displayProperty: string;
@@ -11,7 +10,7 @@ interface IColumn {
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns: IColumn[] = getCountriesStats().getColumnsWithoutWidths();
+    protected _columns: IColumn = getCountriesStats().getColumnsWithoutWidths();
     private _multiselect: 'visible'|'hidden'|'onhover' = 'visible';
 
     protected _beforeMount(): void {

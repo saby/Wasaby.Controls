@@ -4,7 +4,7 @@ import * as ListEntity from 'Controls-demo/DragNDrop/ListEntity';
 import {HierarchicalMemory} from 'Types/source';
 import {Gadgets} from '../DemoHelpers/DataCatalog';
 import {RecordSet} from 'Types/collection';
-import { TRoot, TItemsReadyCallback, IColumn } from 'Controls-demo/types';
+import { TRoot, TItemsReadyCallback } from 'Controls-demo/types';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';
@@ -12,7 +12,7 @@ import {Model} from 'Types/entity';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
-    protected _columns: IColumn[] = Gadgets.getGridColumnsForFlat();
+    protected _columns = Gadgets.getGridColumnsForFlat();
     protected _viewMode: string = 'table';
     protected _root: TRoot = null;
     protected _selectedKeys: Number[] = [];

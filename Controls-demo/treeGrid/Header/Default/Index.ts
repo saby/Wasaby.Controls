@@ -2,12 +2,12 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGrid/Header/Default/Default';
 import {Memory} from 'Types/source';
 import {Gadgets} from '../../DemoHelpers/DataCatalog';
-import { IHeader, IColumn } from 'Controls-demo/types';
+import { IHeader } from 'Controls-demo/types';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
    protected _viewSource: Memory;
-   protected _columns: IColumn[] = Gadgets.getGridColumnsForFlat();
+   protected _columns = Gadgets.getGridColumnsForFlat();
    protected _header: IHeader[] = Gadgets.getHeaderForFlat();
 
    protected _beforeMount(): void {

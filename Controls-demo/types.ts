@@ -24,23 +24,3 @@ export interface INavigation {
         maxCountValue?: number;
     };
 }
-
-export interface IColumn {
-    width: string;
-    displayProperty?: string;
-    compatibleWidth?: string;
-    template?: TemplateFunction;
-    resultTemplate?: TemplateFunction;
-    align?: 'left' | 'center' | 'right';
-    valign?: 'top' | 'center' | 'bottom' | 'baseline';
-    stickyProperty?: string;
-    textOverflow?: 'ellipsis' | 'none';
-    columnSeparatorSize?: {
-        left: 's' | null,
-        right: 's' | null
-    };
-    cellPadding?: {
-        left: 'S' | 'M' | 'null',
-        right: 'S' | 'M' | 'null'
-    };
-}

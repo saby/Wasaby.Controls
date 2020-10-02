@@ -1,7 +1,7 @@
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
 import * as editingColumnTemplate from 'wml!Controls-demo/Explorer/Editing/editingCellTemplate';
 import * as notEditableTemplate from 'wml!Controls-demo/Explorer/Editing/notEditableCell';
-import { IHeader, IColumn } from 'Controls-demo/types';
+import { IHeader } from 'Controls-demo/types';
 
 interface IData {
    id: number;
@@ -35,7 +35,7 @@ export const DataWithLongFolderName = {
          title: 'Файл 12'
       }],
 
-   getColumns: (): IColumn[] => [
+   getColumns: () => [
       {
          displayProperty: 'title',
          width: '1fr',
@@ -514,7 +514,7 @@ export const Gadgets = {
          }
       ];
    },
-   getSearchColumns(): IColumn[] {
+   getSearchColumns() {
       return [
          {
             displayProperty: 'title',
@@ -530,7 +530,7 @@ export const Gadgets = {
          }
       ];
    },
-   getSearchColumnsWithColumnScroll(): IColumn[] {
+   getSearchColumnsWithColumnScroll() {
       return [
          {
             displayProperty: 'title',

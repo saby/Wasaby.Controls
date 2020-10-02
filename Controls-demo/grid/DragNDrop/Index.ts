@@ -7,13 +7,13 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
-import { TItemsReadyCallback, IColumn } from 'Controls-demo/types';
+import { TItemsReadyCallback } from 'Controls-demo/types';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     protected _itemsReadyCallback: TItemsReadyCallback = this._itemsReady.bind(this);
-    protected _columns: IColumn[] = DragNDrop().columns;
+    protected _columns = DragNDrop().columns;
     protected _selectedKeys: Number[] = [];
     private _multiselect: 'visible'|'hidden' = 'hidden';
     private _itemsFirst: RecordSet = null;
