@@ -377,7 +377,6 @@ const _private = {
                     if (!self._shouldNotResetPagingCache) {
                         self._cachedPagingState = false;
                     }
-                    clearTimeout(self._needPagingTimeout);
 
                     if (listModel) {
                         if (self._options.groupProperty) {
@@ -1294,7 +1293,12 @@ const _private = {
      */
     initPaging(self) {
         if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
-            self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
+            if (self._viewportSize) {
+                this._recalcPagingVisible = false;
+                self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
+            } else {
+                self._recalcPagingVisible = true;
+            }
         }
     },
 
@@ -2777,7 +2781,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
     _shouldNotResetPagingCache: false,
-    _needPagingTimeout: null,
+    _recalcPagingVisible: false,
 
     _itemTemplate: null,
 
@@ -3088,6 +3092,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
+        }
+        if(this._recalcPagingVisible){
+            _private.initPaging(this);
         }
     },
 
@@ -3645,11 +3652,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._intersectionObserver) {
             this._intersectionObserver.destroy();
             this._intersectionObserver = null;
-        }
-
-        if (this._needPagingTimeout) {
-            clearTimeout(this._needPagingTimeout);
-            this._needPagingTimeout = null;
         }
 
         // для связи с контроллером ПМО
@@ -5009,27 +5011,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             case 'cantScroll':
                 this.cantScrollHandler(params);
                 break;
-            case 'scrollResize':
-                this.scrollResizeHandler(params);
-                break;
-        }
-    },
-
-    scrollResizeHandler(params: IScrollParams): void {
-        if (!this._pagingVisible) {
-            /*
-             внутри метода проверки используется состояние триггеров, а их IO обновляет не синхронно,
-             поэтому нужен таймаут
-             */
-            this._needPagingTimeout = setTimeout(() => {
-                if (_private.needScrollPaging(this._options.navigation) &&
-                    this._options.navigation.viewConfig.pagingMode === 'edge') {
-                    this._pagingVisible = _private.needShowPagingByScrollSize(
-                        this, _private.getViewSize(this), this._viewportSize);
-                }
-            }, 18);
-        } else {
-            this._pagingVisible = _private.needShowPagingByScrollSize(this, params.scrollHeight, params.clientHeight);
         }
     },
 

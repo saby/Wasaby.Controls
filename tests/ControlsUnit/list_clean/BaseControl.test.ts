@@ -74,17 +74,14 @@ describe('Controls/list_clean/BaseControl', () => {
             }
         };
         let baseControl;
-        let clock;
 
         beforeEach(() => {
             baseControl = new BaseControl(baseControlCfg);
-            clock = sinon.useFakeTimers();
         });
 
         afterEach(() => {
             baseControl.destroy();
             baseControl = undefined;
-            clock.restore();
         });
 
         it('is _pagingVisible', async () => {
@@ -113,53 +110,6 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._viewportSize = 0;
             baseControl._viewSize = 800;
             baseControl._mouseEnter(null);
-            assert.isFalse(baseControl._pagingVisible);
-        });
-        it('scroll resize', async () => {
-            const cloneBaseControlCfg = {...baseControlCfg};
-            cloneBaseControlCfg.navigation.viewConfig.pagingMode = 'edge';
-            baseControl.saveOptions(baseControlCfg);
-            await baseControl._beforeMount(baseControlCfg);
-            baseControl._beforeUpdate(baseControlCfg);
-            baseControl._afterUpdate(baseControlCfg);
-            baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
-            assert.isFalse(baseControl._pagingVisible);
-            baseControl._viewportSize = 400;
-            baseControl._viewSize = 300;
-            const params: IScrollParams = {
-                scrollHeight: 300,
-                clientHeight: 400,
-                scrollTop: 0
-            };
-
-            baseControl._observeScrollHandler(null, 'scrollResize', params);
-            clock.tick(20);
-            assert.isFalse(baseControl._pagingVisible);
-
-            params.scrollHeight = baseControl._viewSize = 800;
-            baseControl._observeScrollHandler(null, 'scrollResize', params);
-            clock.tick(20);
-            assert.isTrue(baseControl._pagingVisible);
-
-            params.scrollHeight = 300;
-            baseControl._observeScrollHandler(null, 'scrollResize', params);
-            clock.tick(20);
-            assert.isFalse(baseControl._pagingVisible);
-
-            cloneBaseControlCfg.navigation.viewConfig.pagingMode = 'basic';
-            await baseControl._beforeUpdate(baseControlCfg);
-            baseControl._afterUpdate(baseControlCfg);
-
-            params.scrollHeight = 800;
-            baseControl._observeScrollHandler(null, 'scrollResize', params);
-            clock.tick(20);
-            assert.isFalse(baseControl._pagingVisible);
-            baseControl._mouseEnter(null);
-            assert.isTrue(baseControl._pagingVisible);
-
-            params.scrollHeight = 300;
-            baseControl._observeScrollHandler(null, 'scrollResize', params);
-            clock.tick(20);
             assert.isFalse(baseControl._pagingVisible);
         });
     });
