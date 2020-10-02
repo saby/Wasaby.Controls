@@ -1,8 +1,7 @@
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
 import * as editingColumnTemplate from 'wml!Controls-demo/Explorer/Editing/editingCellTemplate';
 import * as notEditableTemplate from 'wml!Controls-demo/Explorer/Editing/notEditableCell';
-import { IHeader } from 'Controls-demo/types';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { IHeader, IColumn } from 'Controls-demo/types';
 
 interface IData {
    id: number;

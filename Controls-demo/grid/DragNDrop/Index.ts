@@ -3,12 +3,11 @@ import * as Template from 'wml!Controls-demo/grid/DragNDrop/DragNDrop';
 import {Memory} from 'Types/source';
 import {DragNDrop} from '../DemoHelpers/DataCatalog';
 import * as Dnd from '../../../Controls/dragnDrop';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
-import { TItemsReadyCallback } from 'Controls-demo/types';
+import { TItemsReadyCallback, IColumn } from 'Controls-demo/types';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

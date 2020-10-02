@@ -2,8 +2,7 @@ import * as CntTpl from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/conte
 import * as CntTwoLvlTpl from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/contentTwoLvl';
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
 
-import { IHeader } from 'Controls-demo/types';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { IHeader, IColumn } from 'Controls-demo/types';
 
 export interface IData {
    id: number;

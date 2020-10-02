@@ -4,11 +4,10 @@ import * as ListEntity from 'Controls-demo/DragNDrop/ListEntity';
 import {HierarchicalMemory} from 'Types/source';
 import {Gadgets} from '../DemoHelpers/DataCatalog';
 import {RecordSet} from 'Types/collection';
-import { TRoot, TItemsReadyCallback } from 'Controls-demo/types';
+import { TRoot, TItemsReadyCallback, IColumn } from 'Controls-demo/types';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

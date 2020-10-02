@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { IColumn } from 'Controls-demo/types';
 import {Gadgets} from '../DemoHelpers/DataCatalog';
 
 import * as Template from 'wml!Controls-demo/treeGrid/ItemPadding/ItemPadding';

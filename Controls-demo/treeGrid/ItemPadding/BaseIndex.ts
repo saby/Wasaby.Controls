@@ -1,6 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {Memory} from 'Types/source';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { IColumn } from 'Controls-demo/types';
 
 import {Gadgets} from '../DemoHelpers/DataCatalog';
 

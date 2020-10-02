@@ -4,8 +4,7 @@ import * as PopulationTemplate from 'wml!Controls-demo/grid/Header/CellTemplate/
 import * as SquareTemplate from 'wml!Controls-demo/grid/Header/CellTemplate/squareTemplate';
 import {Memory} from 'Types/source';
 import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
-import { IHeader } from 'Controls-demo/types';
+import { IHeader, IColumn } from 'Controls-demo/types';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

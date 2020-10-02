@@ -4,7 +4,7 @@ import {Memory} from 'Types/source';
 import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
 import {getActionsForContacts as getItemActions,
     getMoreActions} from '../../../list_new/DemoHelpers/ItemActionsCatalog';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { IColumn } from 'Controls-demo/types';
 import { IItemAction } from 'Controls/itemActions';
 
 export default class extends Control {

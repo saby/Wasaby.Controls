@@ -2,8 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/grid/SourceChanger/WithFull/WithFull';
 import {Memory} from 'Types/source';
 import {getCountriesStats, changeSourceData} from '../../DemoHelpers/DataCatalog';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
-import { INavigation } from 'Controls-demo/types';
+import { INavigation, IColumn } from 'Controls-demo/types';
 
 const { data, data2 } = changeSourceData();
 // tslint:disable

@@ -5,8 +5,7 @@ import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
 import * as Dnd from 'Controls/dragnDrop';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
-import { IHeader } from 'Controls-demo/types';
+import { IHeader, IColumn } from 'Controls-demo/types';
 import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';
 

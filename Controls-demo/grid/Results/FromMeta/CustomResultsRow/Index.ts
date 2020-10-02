@@ -4,8 +4,7 @@ import {Memory} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {getCountriesStats} from '../../../DemoHelpers/DataCatalog';
 import {Model} from 'Types/entity';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
-import { IHeader } from 'Controls-demo/types';
+import { IHeader, IColumn } from 'Controls-demo/types';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

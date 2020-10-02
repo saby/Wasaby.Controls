@@ -2,8 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/grid/Columns/Width/Width';
 import {Memory} from 'Types/source';
 import {forShowWidths} from '../../DemoHelpers/DataCatalog';
-import { IHeader } from 'Controls-demo/types';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { IHeader, IColumn } from 'Controls-demo/types';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;

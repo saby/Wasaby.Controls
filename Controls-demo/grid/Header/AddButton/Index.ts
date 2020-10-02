@@ -4,8 +4,7 @@ import {Memory} from 'Types/source';
 import {getCountriesStats} from '../../DemoHelpers/DataCatalog';
 import 'wml!Controls-demo/grid/Header/AddButton/FirstHeaderCellTemplate';
 import 'wml!Controls-demo/grid/Header/AddButton/Cell';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
-import { IHeader } from 'Controls-demo/types';
+import { IHeader, IColumn } from 'Controls-demo/types';
 
 const MAXITEM = 10;
 

@@ -2,8 +2,7 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/Photo24px/Photo24px';
 import {Memory} from 'Types/source';
 import {Gadgets} from '../../../DemoHelpers/DataCatalog';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
-import { TExpandOrColapsItems } from 'Controls-demo/types';
+import { TExpandOrColapsItems, IColumn } from 'Controls-demo/types';
 
 export default class extends Control<IControlOptions> {
    protected _template: TemplateFunction = Template;

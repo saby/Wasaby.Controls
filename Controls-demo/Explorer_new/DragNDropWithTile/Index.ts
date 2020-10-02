@@ -3,9 +3,8 @@ import * as Template from 'wml!Controls-demo/Explorer_new/DragNDropWithTile/Drag
 import * as ListEntity from 'Controls-demo/DragNDrop/ListEntity';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
 import {Gadgets} from '../DataHelpers/DataCatalog';
-import { TRoot, TItemsReadyCallback } from 'Controls-demo/types';
+import { TRoot, TItemsReadyCallback, IColumn } from 'Controls-demo/types';
 import {RecordSet} from 'Types/collection';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Collection} from 'Controls/display';
 import {Model} from 'Types/entity';

@@ -3,8 +3,7 @@ import * as Template from 'wml!Controls-demo/Explorer_new/ItemActions/ItemAction
 import {Gadgets} from '../DataHelpers/DataCatalog';
 import {Memory} from 'Types/source';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
-import { IColumn } from 'Controls/_grid/interface/IColumn';
-import { TRoot } from 'Controls-demo/types';
+import { TRoot, IColumn } from 'Controls-demo/types';
 import { IItemAction } from 'Controls/itemActions';
 
 interface IFilter {
