@@ -1,4 +1,4 @@
-@Library('pipeline') _
+@Library('pipeline@lfs_init') _
 
 def version = '20.7000'
 
