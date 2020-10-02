@@ -27,7 +27,8 @@
     </ws:if>
     <ws:else>
         <ws:if data="{{_options.readOnly}}">
-            <span attr:class="controls-Selectorbutton_button-select_readOnly">{{_options.caption}}</span>
+            <span class="controls-Selectorbutton_button-select_readOnly
+                         controls-fontsize-{{_options.fontSize}}_theme-{{_options.theme}}">{{_options.caption}}</span>
         </ws:if>
         <ws:else>
             <Controls.buttons:Button name="link"
