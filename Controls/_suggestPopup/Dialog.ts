@@ -6,15 +6,17 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
 import 'Controls/popupTemplate';
 
       /**
-       * Контрол-контейнер, который обеспечивает связь поля ввода и списка внутри выпадающего блока.
+       * Контрол-контейнер, который используется для работы <a href="/doc/platform/developmentapl/interface-development/controls/input/suggest/">автодополнения</a> в поле ввода.
+       * Он обеспечивает связь поля ввода и списка внутри выпадающего блока.
        * 
        * @remark
        * Полезные ссылки:
        * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggestPopup.less">переменные тем оформления</a>
        * 
        * @example
-       * JavaScript
+       * 
        * <pre class="brush: js">
+       * // JavaScript
        * define('myControl/SuggestList',
        *    [
        *       'UI/Base',
@@ -28,8 +30,9 @@ import 'Controls/popupTemplate';
        *    }
        * );
        * </pre>
-       * WML
+       * 
        * <pre class="brush: html">
+       * <!-- WML -->
        * <Controls.suggestPopup:ListContainer>
        *    <Controls.list:View
        *       displayProperty="title"
@@ -42,6 +45,8 @@ import 'Controls/popupTemplate';
        * @author Герасимов А.М.
        * @control
        * @public
+       * @demo Controls-demo/Input/Suggest/Suggest
+       * @demo Controls-demo/LookupNew/Input/SuggestPopupOptions/Index
        */
 
       /*
