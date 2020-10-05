@@ -60,6 +60,5 @@
 </ws:if>
 <ws:else>
     <ws:partial template="wml!Controls/_list/CompatibleItem"
-                a="{{debug()}}"
                 scope="{{_options}}"/>
 </ws:else>
