@@ -18,7 +18,7 @@
 
 // Смещаем на расстояние высоты эл-та со стрелкой + расстояние от верха текста эл-та с годом до начала этого блока и так же учитываем такое же расстояние у вызывающего эл-та
 .controls-DateRangeSelectorLite__picker-years-only {
-   margin-top: -(@arrow_height_shortDatePicker + (floor(((@item_height_shortDatePicker - @item_border-thickness_shortDatePicker) - @item_font-size_shortDatePicker)/2)) - floor((@height_rangeShortSelectorLink - @font-size_l) / 2));
+   margin-top: -(@annually_header_height_shortDatePicker + (ceil((@item_height_shortDatePicker - @item_font-size_shortDatePicker)/2)) - floor((@height_rangeShortSelectorLink - @font-size_l) / 2));
 }
 
 // Механизмы рендеринга webkit и FF по-разному реализуют высоту строки.
