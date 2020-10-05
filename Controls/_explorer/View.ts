@@ -508,6 +508,7 @@ var
       _itemsResolver: null,
       _markerForRestoredScroll: null,
       _navigation: null,
+      _resetScrollAfterViewModeChange: false,
 
       _resolveItemsPromise() {
          this._itemsResolver();
@@ -550,6 +551,7 @@ var
          const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
          const isSearchViewMode = cfg.viewMode === 'search';
          const isRootChanged = cfg.root !== this._options.root;
+         this._resetScrollAfterViewModeChange = isViewModeChanged && !isRootChanged;
 
          /*
          * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.
@@ -589,6 +591,13 @@ var
                _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
             }
          }
+      },
+      _beforeRender(): void { 
+         if (this._resetScrollAfterViewModeChange) {
+            this._notify('doScroll', ['top'], {bubbling: true});
+            this._resetScrollAfterViewModeChange = false;
+         }
+         
       },
       _beforePaint: function() {
          if (this._markerForRestoredScroll !== null) {
