@@ -47,7 +47,6 @@ export default class Browser extends Control {
     private _dataOptionsContext: ContextOptions;
     private _errorRegister: RegisterClass;
     private _hasMoreDataToUp: boolean;
-    private _hasMoreDataToDown: boolean;
 
     protected _beforeMount(options, context, receivedState): void|Promise<RecordSet> {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
@@ -67,12 +66,10 @@ export default class Browser extends Control {
         if (receivedState && isNewEnvironment()) {
             this._setItemsAndCreateSearchController(receivedState, options);
             this._hasMoreDataToUp = receivedState.getMetaData().more.before;
-            this._hasMoreDataToDown = receivedState.getMetaData().more.after;
         } else if (options.source) {
             return this._sourceController.load().then((items) => {
                 this._setItemsAndCreateSearchController(items, options);
                 this._hasMoreDataToUp = items.getMetaData().more.before;
-                this._hasMoreDataToDown = items.getMetaData().more.after;
                 return items;
             });
         } else {

@@ -609,13 +609,6 @@ let
              if (options.hasMoreDataToUp) {
                  this._displayState.shadowEnable.top = true;
                  this._displayState.shadowVisible.top = true;
-                 this._displayState.shadowPosition += 'top';
-             }
-
-             if (options.hasMoreDataToDown) {
-                 this._displayState.shadowEnable.bottom = true;
-                 this._displayState.shadowVisible.bottom = true;
-                 this._displayState.shadowPosition += 'bottom';
              }
 
              this._styleHideScrollbar = receivedState.styleHideScrollbar || ScrollWidthUtil.calcStyleHideScrollbar(options.scrollMode);
@@ -626,8 +619,8 @@ let
 
             def.addCallback(function() {
                let
-                  topShadowVisible = _private.getInitialShadowVisibleState(options, POSITION.TOP) || options.hasMoreDataToUp,
-                  bottomShadowVisible = _private.getInitialShadowVisibleState(options, POSITION.BOTTOM) || options.hasMoreDataToDown,
+                   topShadowVisible = _private.getInitialShadowVisibleState(options, POSITION.TOP) || !!options.hasMoreDataToUp,
+                   bottomShadowVisible = _private.getInitialShadowVisibleState(options, POSITION.BOTTOM),
                    leftShadowVisible = false,
                    rightShadowVisible = false,
                    displayState = {

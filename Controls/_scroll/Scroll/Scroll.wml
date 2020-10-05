@@ -77,7 +77,6 @@
          attr:style="{{_scrollbarStyles}}"/>
    </ws:if>
    <ws:if data="{{_displayState.shadowEnable.top}}">
-      {{ debug() }}
       <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_top {{!_shadowVisible('top') ? ' ws-invisible'}}"></div>
    </ws:if>
    <ws:if data="{{_displayState.shadowEnable.bottom}}">

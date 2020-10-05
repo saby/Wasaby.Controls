@@ -289,13 +289,13 @@ const _private = {
         return sourceController && hasMoreData;
     },
 
-    attachLoadTopTriggerToNullIfNeed(self, options): boolean {
+    attachLoadTopTriggerToNullIfNeed(self, options, needAttach?: boolean): boolean {
         const supportAttachLoadTopTriggerToNull = _private.supportAttachLoadTopTriggerToNull(options);
         if (!supportAttachLoadTopTriggerToNull) {
             return false;
         }
         const needAttachLoadTopTriggerToNull = _private.needAttachLoadTopTriggerToNull(self);
-        if (needAttachLoadTopTriggerToNull && self._isMounted) {
+        if (needAttachLoadTopTriggerToNull && self._isMounted && needAttach) {
             self._attachLoadTopTriggerToNull = true;
             self._needScrollToFirstItem = true;
         } else {
@@ -3280,7 +3280,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
 
-        _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+        _private.attachLoadTopTriggerToNullIfNeed(this, this._options, detection.isMobileIOS || detection.isMobileAndroid);
     },
 
     _updateScrollController(newOptions) {
@@ -4324,6 +4324,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             this._dragEnter(this._getDragObject());
         }
+
+        _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
     },
 
     _mouseLeave(event): void {
