@@ -21,6 +21,9 @@ import {IControlOptions} from 'UI/Base';
 export interface ISortingParam {
    paramName: string | null;
    title: string;
+   value: 'ASC' | 'DESC';
+   icon: string;
+   iconSize: 's' | 'm' | 'l';
 }
 export interface ISortingSelectorOptions extends IControlOptions {
    

@@ -2,11 +2,11 @@
     <Controls.dropdown:Input
             name="dropdown"
             selectedKeys="{{_selectedKeys}}"
-            on:selectedKeysChanged="_selectedKeysChangedHandler()"
-            keyProperty="id"
+            keyProperty="paramName"
             displayProperty="title"
             source="{{_source}}"
             fontSize="{{_options.fontSize}}"
+            iconSize="{{_iconSize}}"
             dropdownClassName="{{_options.dropdownClassName}}"
             popupClassName="{{_options.popupClassName}}"
             menuPopupOptions="{{_options.menuPopupOptions}}"
@@ -27,7 +27,9 @@
         </ws:itemTemplate>
     </Controls.dropdown:Input>
     <ws:if data="{{_currentParamName}}">
-        <ws:partial on:click="_switchValue()" attr:class="controls-SortingSelector_arrow-outside_theme-{{_options.theme}}" value="{{_currentOrder}}" template="wml!Controls/_grid/SortingResources/SortingArrow"/>
+        <ws:partial on:click="_switchValue()"
+                    attr:class="controls-SortingSelector_arrow-outside_theme-{{_options.theme}} controls-SortingSelector_arrow{{_nocaption ? '_nocaption' : '_caption'}}_theme-{{_options.theme}}"
+                    value="{{_orders[_currentParamName]}}" template="wml!Controls/_grid/SortingResources/SortingArrow"/>
     </ws:if>
 
 </div>
