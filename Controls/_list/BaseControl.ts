@@ -3236,7 +3236,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterMount() {
         this._isMounted = true;
-        this._hideTopTriggerUntilMount = false;
         if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
             this._registerIntersectionObserver();
@@ -3279,8 +3278,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
-
-        _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
     },
 
     _updateScrollController(newOptions) {
@@ -4324,6 +4321,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             this._dragEnter(this._getDragObject());
         }
+
+        if (this._hideTopTriggerUntilMount) {
+            this._hideTopTriggerUntilMount = false;
+        }
+        _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
     },
 
     _mouseLeave(event): void {
