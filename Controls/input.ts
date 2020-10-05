@@ -80,7 +80,7 @@ import * as ActualAPI from 'Controls/_input/ActualAPI';
 import * as __Util from 'Controls/_input/resources/Util';
 
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
-export {default as TextViewModel} from 'Controls/_input/Text/ViewModel';
+export {default as TextViewModel, IViewModelOptions as ITextViewModelOptions} from 'Controls/_input/Text/ViewModel';
 import MaskInputProcessor = require('Controls/_input/Mask/InputProcessor');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
 
