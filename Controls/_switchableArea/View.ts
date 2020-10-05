@@ -18,7 +18,7 @@ interface ISwitchableAreaItem {
 }
 
 /**
- * Контрол для переключения контентных областей
+ * Контрол для переключения контентных областей.
  * @class Controls/_switchableArea/View
  * @extends Core/Control
  * @control
@@ -29,15 +29,18 @@ interface ISwitchableAreaItem {
 
 /**
  * @typedef {Object} SwitchableAreaItem
- * @property {String|Number} key Ключ элемента
- * @property {Function} itemTemplate Шаблон элемента
- * @property {templateOptions} templateOptions Опции шаблона элемента
- * @property {boolean} autofocus Определяет, установится ли фокус на контентную область. По умолчанию - true
+ * @property {String|Number} key Ключ элемента.
+ * @property {Function} itemTemplate Шаблон элемента.
+ * При инициализации контрола происходит загрузка всех контентных областей.
+ * Чтобы инициализация контрола происходила быстрее, контентные области можно подгружать по необходимости, т.е. только при переключении на такую область.
+ * Для этого используют класс {@link Controls/Container/Async}, подробнее о котором можно прочитать <a href="/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/">здесь</a>.
+ * @property {Object} templateOptions Опции, передаваемые в itemTemplate.
+ * @property {Boolean} [autofocus=true] Определяет, установится ли фокус на контентную область.
  */
 
 /**
  * @name Controls/_switchableArea/View#items
- * @cfg {Array.<SwitchableAreaItem>} Данные элементов
+ * @cfg {Array.<SwitchableAreaItem>} Данные элементов.
  */
 
 /**
