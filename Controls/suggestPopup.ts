@@ -1,5 +1,9 @@
 /**
- * Библиотека контролов, которые реализуют содержимое подсказки, отображающейся при вводе текста.
+ * Библиотека контролов, которые реализуют содержимое автодополнения, отображающееся при вводе текста.
+ * Автодополнение можно настроить в следующих контролах:
+ * 
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/input/">Поле ввода с автодополнением</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/directory/lookup/">Поле выбора</a>
  * @library Controls/suggestPopup
  * @includes ListContainer Controls/_suggestPopup/List
  * @includes FooterTemplate Controls/suggestPopup:FooterTemplate
