@@ -8,7 +8,9 @@ import {load} from 'Core/library';
 import {Stack} from 'Controls/popup';
 import {Model} from 'Types/entity';
 import * as sinon from 'sinon';
-import {Memory} from "Types/source";
+import {Memory} from 'Types/source';
+import {Controller as SearchController, SearchResolver as SearchResolverController} from 'Controls/searchNew';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
 
 describe('Controls/suggest', () => {
 
@@ -547,45 +549,83 @@ describe('Controls/suggest', () => {
          });
       });
 
-      it('Suggest::_changeValueHandler', () => {
-         const suggestComponent = getComponentObject({
-            searchParam: 'searchParam',
-            keyProperty: 'Identificator',
-            minSearchLength: 3,
-            searchDelay: 300,
-            source: getMemorySource()
+      describe('Suggest::_resolveLoad', () => {
+         const sandbox = sinon.createSandbox();
+         let inputContainer;
+         let searchCallbackSpy;
+         let loadEndSpy;
+         const setItemsSpy = sandbox.spy(SourceController.prototype, 'setItems');
+
+         const recordSet = new RecordSet({
+            rawData: [{id: 1}, {id: 2}, {id: 3}],
+            keyProperty: 'id'
          });
 
-         suggestComponent._inputActive = true;
-         suggestComponent._searchDelay = 0;
+         beforeEach(() => {
+            inputContainer = getComponentObject({
+               searchStartCallback: () => {},
+               searchParam: 'testtt'
+            });
+            searchCallbackSpy = sandbox.spy(inputContainer._options, 'searchStartCallback');
+            loadEndSpy = sandbox.spy(inputContainer, '_loadEnd');
+         });
+         afterEach(() => sandbox.reset());
 
-         suggestComponent._changeValueHandler(null, 't');
-         assert.equal(suggestComponent._searchValue, '');
-         assert.equal(suggestComponent._searchDelay, 300);
+         after(() => sandbox.restore());
 
-         suggestComponent._changeValueHandler(null, 'te');
-         assert.equal(suggestComponent._searchValue, '');
+         it('value is not specified', async () => {
+            sandbox.stub(SourceController.prototype, 'load')
+               .callsFake(() => Promise.resolve(recordSet));
+            const result = await inputContainer._resolveLoad();
 
-         // TODO: Из-за нескольких промизов в цепочке метода этот тест не проходит
-         suggestComponent._changeValueHandler(null, 'test');
-         assert.equal(suggestComponent._searchValue, 'test');
+            assert.isTrue(searchCallbackSpy.calledOnce);
+            assert.equal(recordSet, result);
+            assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
+            assert.isTrue(loadEndSpy.calledOnce);
+         });
 
-         suggestComponent._options.trim = true;
-         suggestComponent._changeValueHandler(null, '  ');
-         assert.equal(suggestComponent._searchValue, '');
+         it('value is specified', async () => {
+            const value = 'test1';
+            sandbox.stub(SearchController.prototype, 'search')
+               .callsFake(() => Promise.resolve(recordSet));
 
-         suggestComponent._options.historyId = 'testFieldHistoryId';
-         suggestComponent._options.autoDropDown = true;
-         suggestComponent._changeValueHandler(null, 'te');
-         assert.equal(suggestComponent._searchValue, '');
-         assert.deepEqual(suggestComponent._filter.historyKeys, IDENTIFICATORS);
+            const result = await inputContainer._resolveLoad(value);
 
-         suggestComponent._options.historyId = '';
-         suggestComponent._changeValueHandler(null, 'test');
-         assert.deepEqual(suggestComponent._filter, {searchParam: 'test'});
+            assert.isTrue(searchCallbackSpy.calledOnce);
 
-         suggestComponent._changeValueHandler(null, 'te');
-         assert.deepEqual(suggestComponent._filter, {searchParam: '', historyKeys: IDENTIFICATORS});
+            assert.equal(inputContainer._searchValue, value);
+            assert.equal(recordSet, result);
+            assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
+            assert.deepEqual(inputContainer._filter, {testtt: 'test1'});
+            assert.equal(inputContainer._markerVisibility, 'visible');
+            assert.isTrue(loadEndSpy.calledOnce);
+         });
+      });
+
+      it('Suggest::_resolveSearch', () => {
+         const opts = {
+            delayTime: 300,
+            minSearchLength: 3,
+            searchCallback: (value: string) => {},
+            searchResetCallback: () => {}
+         };
+         const inputContainer = getComponentObject({
+            searchDelay: 300,
+            minSearchLength: 3
+         });
+
+         inputContainer._searchDelay = 0;
+
+         const resolverSpy = sinon.spy(SearchResolverController.prototype, 'resolve');
+
+         inputContainer._resolveSearch('test');
+
+         assert.equal(inputContainer._searchDelay, 300);
+         assert.instanceOf(inputContainer._searchResolverController, SearchResolverController);
+
+         assert.isTrue(resolverSpy.calledWith('test'));
+
+         resolverSpy.restore();
       });
 
       it('Suggest::_loadDependencies', (done) => {
@@ -618,7 +658,7 @@ describe('Controls/suggest', () => {
             }
          };
 
-         let inputContainer = getComponentObject({
+         const inputContainer = getComponentObject({
             navigation,
             source: getMemorySource()
          });
