@@ -536,7 +536,7 @@ var Base = Control.extend({
     _keyUpHandler: function () {
         // redefinition
     },
-    _keyDownHandler: function () {
+    _keyDownHandler: function (event) {
         // redefinition
     },
     _selectHandler: function () {
