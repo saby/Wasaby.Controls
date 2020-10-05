@@ -444,7 +444,7 @@ const _private = {
                         }
                     } else if (!self._wasScrollToEnd) {
                         if (_private.attachLoadTopTriggerToNullIfNeed(self, cfg) && !self._isMounted) {
-                            self._hideTopTriggerUntilMount = true;
+                            self._hideTopTrigger = true;
                         }
                     }
                 });
@@ -2777,7 +2777,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     iWantVDOM: true,
 
     _attachLoadTopTriggerToNull: false,
-    _hideTopTriggerUntilMount: false,
+    _hideTopTrigger: false,
     _listViewModel: null,
     _viewModelConstructor: null,
 
@@ -3005,7 +3005,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
                     _private.needAttachLoadTopTriggerToNull(self)) {
-                    self._hideTopTriggerUntilMount = true;
+                    self._hideTopTrigger = true;
                 }
                 return Promise.resolve();
             }
@@ -4699,10 +4699,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
-        if (this._hideTopTriggerUntilMount) {
-            this._hideTopTriggerUntilMount = false;
+        if (!this._scrollController?.getScrollTop()) {
+            _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+            if (this._hideTopTrigger) {
+                this._hideTopTrigger = false;
+            }
         }
-        _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
     },
 
     _mouseLeave(event): void {
