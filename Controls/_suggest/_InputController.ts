@@ -606,7 +606,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._searchResolverController = new SearchResolverController({
             delayTime: this._options.searchDelay as number,
             minSearchLength: this._options.minSearchLength,
-            searchCallback: (validatedValue: string) => this._resolveLoad(validatedValue),
+            searchCallback: (validatedValue: string) => this._resolveLoad(validatedValue).then(),
             searchResetCallback: () => searchController.reset().then()
          });
       }
@@ -614,21 +614,23 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._searchResolverController.resolve(value);
    }
 
-   private _resolveLoad(value?: string): void {
+   private _resolveLoad(value?: string): Promise<RecordSet> {
       this._loadStart();
       if (value) {
          this._searchValue = value;
-         this._getSearchController().search(value).then((recordSet) => {
+         return this._getSearchController().search(value).then((recordSet) => {
             this._setItems(recordSet);
             this._updateSuggestState();
             this._markerVisibility = 'visible';
             this._loadEnd(recordSet);
+            return recordSet;
          });
       } else {
-         this._getSourceController().load().then((recordSet) => {
+         return this._getSourceController().load().then((recordSet) => {
             if (recordSet instanceof RecordSet) {
                this._setItems(recordSet);
                this._loadEnd(recordSet);
+               return recordSet as RecordSet;
             }
          });
       }
@@ -684,7 +686,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return Promise.resolve();
    }
 
-   protected _tabsSelectedKeyChanged(key: Key): void {
+   protected async _tabsSelectedKeyChanged(key: Key): Promise<void> {
       this._searchDelay = 0;
       this._setSuggestMarkedKey(null);
 
@@ -696,7 +698,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             this._searchValue, this._options.minSearchLength, key, this._historyKeys);
          const sourceController = this._getSourceController();
          sourceController.setFilter(this._filter);
-         this._resolveLoad();
+         await this._resolveLoad();
       }
 
       // move focus from tabs to input, after change tab
