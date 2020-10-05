@@ -6,52 +6,20 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
 import 'Controls/popupTemplate';
 
       /**
-       * Контрол-контейнер, который используется для работы <a href="/doc/platform/developmentapl/interface-development/controls/input/suggest/">автодополнения</a> в поле ввода.
-       * Он обеспечивает связь поля ввода и списка внутри выпадающего блока.
+       * Контрол-контейнер, который обеспечивает связь поля ввода и списка внутри выпадающего блока.
        * 
        * @remark
        * Полезные ссылки:
        * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggestPopup.less">переменные тем оформления</a>
-       * 
-       * @example
-       * 
-       * <pre class="brush: js">
-       * // JavaScript
-       * define('myControl/SuggestList',
-       *    [
-       *       'UI/Base',
-       *       'wml!myControl/SuggestList'
-       *    ], function(Base, template) {
-       *       'use strict';
-       *         
-       *       return Base.Control.extend({
-       *          _template: template
-       *       });
-       *    }
-       * );
-       * </pre>
-       * 
-       * <pre class="brush: html">
-       * <!-- WML -->
-       * <Controls.suggestPopup:ListContainer>
-       *    <Controls.list:View
-       *       displayProperty="title"
-       *       keyProperty="id"
-       *       attr:class="demo-SuggestList"/>
-       * </Controls.suggestPopup:ListContainer>
-       * </pre>
-       * @class Controls/_suggestPopup/List
+       * @class Controls/_suggestPopup/Dialog
        * @extends Controls/Control
        * @author Герасимов А.М.
        * @control
-       * @public
-       * @demo Controls-demo/Input/Suggest/Suggest
-       * @demo Controls-demo/LookupNew/Input/SuggestPopupOptions/Index
        */
 
       /*
        * Dialog for list in Suggest component.
-       * @class Controls/_suggestPopup/List
+       * @class Controls/_suggestPopup/Dialog
        * @extends Controls/Control
        * @author Герасимов Александр
        * @control

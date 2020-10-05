@@ -78,16 +78,45 @@ var _private = {
 };
 
 /**
- * Контейнер для списка в выпадающем блоке автодополнения.
+ * Контрол-контейнер, который используется для работы <a href="/doc/platform/developmentapl/interface-development/controls/input/suggest/">автодополнения</a> в поле ввода.
+ * Он обеспечивает связь поля ввода и списка внутри выпадающего блока.
+ * @remark
  *
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/suggest/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggestPopup.less">переменные тем оформления</a>
- *
- *
+ * @example
+ * 
+ * <pre class="brush: js">
+ * // JavaScript
+ * define('myControl/SuggestList',
+ *    [
+ *       'UI/Base',
+ *       'wml!myControl/SuggestList'
+ *    ], function(Base, template) {
+ *       'use strict';
+ *         
+ *       return Base.Control.extend({
+ *          _template: template
+ *       });
+ *    }
+ * );
+ * </pre>
+ * 
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.suggestPopup:ListContainer>
+ *    <Controls.list:View
+ *       displayProperty="title"
+ *       keyProperty="id"
+ *       attr:class="demo-SuggestList"/>
+ * </Controls.suggestPopup:ListContainer>
+ * </pre>
+ * @demo Controls-demo/Input/Suggest/Suggest
+ * @demo Controls-demo/LookupNew/Input/SuggestPopupOptions/Index
  * @class Controls/_suggestPopup/List
  * @extends Core/Control
- * @author Герасимов Александр
+ * @author Герасимов А.М.
  * @control
  * @public
  */
