@@ -52,6 +52,7 @@ export default class Browser extends Control {
     private _dataOptionsContext: ContextOptions;
     private _errorRegister: RegisterClass;
     private _storeCallbacks: string[];
+    private _hasMoreDataToUp: boolean;
 
     protected _beforeMount(options,
                            context,
@@ -77,10 +78,12 @@ export default class Browser extends Control {
             if (isNewEnvironment()) {
                 this._setItemsAndCreateSearchController(receivedState.items, options);
             }
+            this._hasMoreDataToUp = receivedState.getMetaData().more.before;
         } else {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems);
                 return this._loadItems(options, controllerState).then((items) => {
+                    this._hasMoreDataToUp = items.getMetaData().more.before;
                     return {
                         filterItems,
                         items
