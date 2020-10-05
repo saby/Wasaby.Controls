@@ -712,7 +712,7 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_tabsSelectedKeyChanged', () => {
-         const suggestComponent = new _InputController({
+         const suggestComponent = getComponentObject({
             source: getMemorySource()
          });
          let suggestActivated = false;
@@ -926,7 +926,9 @@ describe('Controls/suggest', () => {
 
       it('Suggest::_missSpellClick', () => {
          let value;
-         const suggestComponent = new _InputController({});
+         const suggestComponent = new getComponentObject({
+            source: getMemorySource()
+         });
 
          suggestComponent.activate = () => {
             suggestComponent._inputActive = true;
