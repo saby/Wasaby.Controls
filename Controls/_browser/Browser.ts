@@ -83,7 +83,9 @@ export default class Browser extends Control {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems);
                 return this._loadItems(options, controllerState).then((items) => {
-                    this._hasMoreDataToUp = items.getMetaData().more.before;
+                    if (items) {
+                        this._hasMoreDataToUp = items.getMetaData().more.before;
+                    }
                     return {
                         filterItems,
                         items
