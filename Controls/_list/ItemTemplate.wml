@@ -43,7 +43,7 @@
         </ws:else>
     </ws:if>
 </ws:template>
-<ws:if data="{{useNewModel}}">
+<ws:if data="{{itemData.isSticked}}">
     <ws:if data="{{(item || itemData).isSticked(style)}}">
         <!-- сюда попадаем только в случае застиканной записи в мастер или мастер классик, константа стиля находится в itemData.style -->
         <Controls.scroll:StickyHeader
@@ -60,5 +60,6 @@
 </ws:if>
 <ws:else>
     <ws:partial template="wml!Controls/_list/CompatibleItem"
+                a="{{debug()}}"
                 scope="{{_options}}"/>
 </ws:else>
