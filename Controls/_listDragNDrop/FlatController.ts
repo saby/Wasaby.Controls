@@ -1,7 +1,7 @@
-import { IDragPosition, TKey, TPosition } from './interface';
+import { TKey, TPosition } from './interface';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { ItemsEntity } from 'Controls/dragnDrop';
-import { CollectionItem } from 'Controls/display';
+import { CollectionItem, IDragPosition } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { ISelectionObject } from 'Controls/interface';
 

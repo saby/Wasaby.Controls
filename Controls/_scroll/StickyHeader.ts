@@ -124,7 +124,7 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {IScrollState} from '../Utils/ScrollState';
 import {getScrollPositionTypeByState, SCROLL_DIRECTION, SCROLL_POSITION} from './Utils/Scroll';
 import Context = require('Controls/_scroll/StickyHeader/Context');
-import IntersectionObserver = require('Controls/Utils/IntersectionObserver');
+import {IntersectionObserver} from 'Controls/sizeUtils';
 import Model = require('Controls/_scroll/StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/StickyHeader');
 import {tmplNotify} from 'Controls/eventUtils';
@@ -763,9 +763,13 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
                 shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END));
 
-        const oldShadowVisible: boolean = this._context?.stickyHeader?.shadowPosition &&
-            this._context?.stickyHeader?.shadowPosition?.indexOf(fixedPosition) !== -1;
-
+        let oldShadowVisible: boolean = false;
+        // Актуально только для старого скролл контейнера, удаляем в 7100
+        // https://online.sbis.ru/opendoc.html?guid=c591cddf-885c-4576-b790-c368ab9b8bb9
+        if (!this._isMobileIOS) {
+            oldShadowVisible = this._context?.stickyHeader?.shadowPosition &&
+                this._context?.stickyHeader?.shadowPosition?.indexOf(fixedPosition) !== -1;
+        }
         return  this._isShadowVisibleByController && (shadowVisible || oldShadowVisible);
     }
 

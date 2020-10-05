@@ -375,12 +375,16 @@ export class Controller {
                 }
             }
         };
-        this._collection.setEventRaising(false, true);
+        if (this._collection.isEventRaising()) {
+            this._collection.setEventRaising(false, true);
+        }
         this._collection.each(assignActionsOnItem);
         if (editingItem) {
             assignActionsOnItem(editingItem);
         }
-        this._collection.setEventRaising(true, true);
+        if (!this._collection.isEventRaising()) {
+            this._collection.setEventRaising(true, true);
+        }
         this._collection.setActionsAssigned(true);
 
         if (hasChanges) {

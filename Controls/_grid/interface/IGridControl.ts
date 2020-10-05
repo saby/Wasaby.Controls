@@ -17,8 +17,8 @@
 /**
  * @name Controls/_grid/interface/IGridControl#ladderProperties
  * @cfg {Array.<String>} Массив свойств, по которым происходит прилипание.
- * @demo Controls-demo/grid/Ladder/Sticky/Index В демо-примере настроено отображение данных "лесенкой" для свойству "photo". Дополнительно включено прилипание заголовка таблицы.
- * @demo Controls-demo/grid/LadderStickyMultiline/StickyMultiline/Index В демо-примере настроено отображение данных "лесенкой" для свойствам "date" и "time".
+ * @demo Controls-demo/grid/Ladder/Sticky/Index В демо-примере настроено отображение данных "лесенкой" для свойств "photo" и "date". Дополнительно включено прилипание заголовка таблицы, а также прилипание по первой колонке (см. {@link Controls/grid:IColumn#stickyProperty stickyProperty}).
+ * @demo Controls-demo/grid/LadderStickyMultiline/StickyMultiline/Index В демо-примере настроено отображение данных "лесенкой" для свойств "date" и "time". Дополнительно включено прилипание по первой колонке.
  * @example
  * <pre class="brush: js">
  * protected _ladderProperties: string[] = ['date', 'time'];
@@ -457,7 +457,7 @@
  * Чтобы стрелка-шеврон отобразилась в прикладном шаблоне колонки, необходимо в опции contentTemplate явно указать позицию стрелки-шеврона.
  * Для этого используется переменная {@link Controls/grid:ColumnTemplate#editArrowTemplate} из области видимости самого шаблона.
  * Пример использования смотреть {@link Controls/grid:ColumnTemplate#contentTemplate тут}
- * @demo Controls-demo/List/Tree/EditArrow
+ * @demo Controls-demo/grid/ShowEditArrow/Index
  * @example
  * <pre>
  *    <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
@@ -469,6 +469,7 @@
  * @cfg {Boolean} Allows showing button in first column on hover and in swipe menu.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTree%2FEditArrow">Example</a>
  * @remark To place the button in the user column template, you should use the editArrowTemplate
+ * @demo Controls-demo/grid/ShowEditArrow/Index
  * @example
  * <ws:partial template="{{editArrowTemplate}}" itemData="{{itemData}}"/>
  */

@@ -221,30 +221,31 @@ let getPropValue = Utils.object.getPropertyValue.bind(Utils);
 /**
  * @event Controls/_dropdown/Input#selectedKeysChanged Происходит при изменении выбранных элементов.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Array.<Number|String>} keys Массив ключей выбранных элементов.
+ * @param {Array.<Number|String>} keys Набор ключей выбранных элементов.
  * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, выпадающий список не закроется.
  * По умолчанию, когда выбран пункт с иерархией, выпадающий список закрывается.
  * @example
  * В следующем примере создается список и устанавливается опция selectedKeys со значением [1, 2, 3], а также показано, как изменить сообщение, выведенное пользователю на основе выбора.
- * TMPL:
- * <pre>
- *    <Controls.dropdown:Input on:selectedKeysChanged="onSelectedKeysChanged()"
- *                             selectedKeys="{{ _selectedKeys }}"/>
+ * <pre class="brush: html; highlight: [3,4]">
+ * <!-- WML -->
+ * <Controls.dropdown:Input
+ *     on:selectedKeysChanged="onSelectedKeysChanged()"
+ *     selectedKeys="{{ _selectedKeys }}"/>
  *    <h1>{{ _message }}</h1>
  * </pre>
- * JS:
- * <pre>
- *     _beforeMount: function() {
- *       this._selectedKeys = [1, 2, 3];
- *    },
- *    onSelectedKeysChanged: function(e, keys) {
- *       this._selectedKeys = keys; //We don't use binding in this example so we have to update state manually.
- *       if (keys.length > 0) {
- *          this._message = 'Selected ' + keys.length + ' items.';
- *       } else {
- *          this._message = 'You have not selected any items.';
- *       }
+ * <pre class="brush: js;">
+ * // JavaScript
+ * _beforeMount: function() {
+ *    this._selectedKeys = [1, 2, 3];
+ * },
+ * onSelectedKeysChanged: function(e, keys) {
+ *    this._selectedKeys = keys; //We don't use binding in this example so we have to update state manually.
+ *    if (keys.length > 0) {
+ *       this._message = 'Selected ' + keys.length + ' items.';
+ *    } else {
+ *       this._message = 'You have not selected any items.';
  *    }
+ * }
  * </pre>
  */
 

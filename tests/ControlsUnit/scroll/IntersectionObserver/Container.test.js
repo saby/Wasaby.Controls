@@ -9,30 +9,12 @@ define([
 ) {
    'use strict';
 
-   return;
-
    const options = {
       data: 'some data',
       observerName: 'observerName'
    };
 
    describe('Controls/scroll:IntersectionObserverContainer', function() {
-      describe('itemClick', function() {
-         it('should return event result', function() {
-            const container = new scroll.Container(options);
-            const event = {
-               type: "itemclick",
-               _bubbling: true,
-               stopped: false,
-               propagating: () => false,
-            };
-            var result = container.itemClick(event);
-            assert.isUndefined(result);
-            event.result = 'result';
-            result = container.itemClick(event);
-            assert.equal(result, 'result');
-         });
-      });
       describe('_afterMount', function() {
          it('should notify intersectionObserverRegister event', function() {
             const

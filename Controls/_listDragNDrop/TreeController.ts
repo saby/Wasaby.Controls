@@ -1,7 +1,7 @@
 import FlatController, { IModel } from './FlatController';
-import { IDragPosition, IOffset, TPosition } from './interface';
+import { IOffset, TPosition } from './interface';
 import { SyntheticEvent } from 'Vdom/Vdom';
-import { TreeItem } from 'Controls/display';
+import { IDragPosition, TreeItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 
 const DRAG_MAX_OFFSET = 10,

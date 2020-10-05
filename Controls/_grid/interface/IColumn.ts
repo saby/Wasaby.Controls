@@ -256,10 +256,12 @@ export interface IColumn {
     /**
      * @name Controls/grid:IColumn#stickyProperty
      * @cfg {String | Array} Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы. Чтобы сделать прилипание по двум полям в одной колонке, нужно передать массив из двух строк.
-     * @remark Подробнее о настройке колонок с прилипание читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/sticky/">руководстве разработчика</a>.
+     * Прилипание работает только для первой колонки таблицы.
+     * @remark Подробнее о настройке колонок с прилипанием читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/sticky/">руководстве разработчика</a>.
      * @default undefined
-     * @demo Controls-demo/grid/LadderStickyMultiline/StickyMultilineWithHeader/Index В демо-примере прилипание задано для колонки "Время".
-     * @demo Controls-demo/grid/Ladder/Sticky/Index В демо-примере прилипание задано для колонки с изображением колонки.
+     * @demo Controls-demo/grid/LadderStickyMultiline/StickyMultilineWithHeader/Index В демо-примере лесенка и прилипание данных работает для колонок "photo" и "time".
+     * @demo Controls-demo/grid/Ladder/Sticky/Index В демо-примере отображение лесенкой включено для колонок "photo" (первая колонка) и "date" (последняя колонка). Прилипание данных работает для колонки photo.
+     * @see Controls/grid:IGridControl#ladderProperties
      */
     stickyProperty?: string;
     /**

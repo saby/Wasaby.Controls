@@ -3,7 +3,7 @@ import {debounce} from 'Types/function';
 import {IFixedEventData, isHidden, POSITION, SHADOW_VISIBILITY, TRegisterEventData, TYPE_FIXED_HEADERS} from './Utils';
 import StickyHeader from 'Controls/_scroll/StickyHeader';
 import fastUpdate from './FastUpdate';
-import ResizeObserverUtil from 'Controls/Utils/ResizeObserverUtil';
+import {ResizeObserverUtil} from 'Controls/sizeUtils';
 
 // @ts-ignore
 

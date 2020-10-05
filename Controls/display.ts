@@ -94,6 +94,9 @@ export { VirtualScrollController };
 import * as VirtualScrollHideController from './_display/controllers/VirtualScrollHide';
 export { VirtualScrollHideController };
 
+import {IDragPosition} from './_display/interface/IDragPosition';
+export {IDragPosition};
+
 register('Controls/display:Collection', Collection, {instantiate: false});
 register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});
 register('Controls/display:ColumnsCollection', ColumnsCollection, {instantiate: false});

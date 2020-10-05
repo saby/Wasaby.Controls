@@ -6,8 +6,8 @@ import {Control} from 'UI/Base';
 import {IHashMap} from 'Types/declarations';
 
 import * as clone from 'Core/core-clone';
-import {CrudEntityKey, DataSet, Memory, SbisService} from 'Types/source';
-import {IMoveControllerOptions, MoveController, TMovePosition} from 'Controls/list';
+import {CrudEntityKey, DataSet, Memory, SbisService, LOCAL_MOVE_POSITION} from 'Types/source';
+import {IMoveControllerOptions, MoveController} from 'Controls/list';
 import {ISelectionObject} from 'Controls/interface';
 import {Confirmation, Dialog, IBasePopupOptions} from 'Controls/popup';
 import {Model, adapter, Record} from 'Types/entity';
@@ -86,7 +86,7 @@ function resolveMove(
     selectionObject: ISelectionObject,
     filter: IHashMap<any>,
     target: CrudEntityKey,
-    position: TMovePosition) {
+    position: LOCAL_MOVE_POSITION) {
     return new Promise((resolve) => {
         controller
             .move(selectionObject, filter, target, position)
@@ -160,7 +160,7 @@ describe('Controls/list_clean/MoveController', () => {
         // Передан source===undefined при перемещении методом move()
         it('move() + source is not set/invalid', () => {
             controller = new MoveController({...cfg, source: undefined});
-            return resolveMove(controller, selectionObject, {myProp: 'test'}, 4, TMovePosition.after)
+            return resolveMove(controller, selectionObject, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
                 .then((result: boolean) => {
 
                     // Ожидаю, что перемещение провалится из-за того, что source не задан
@@ -182,6 +182,34 @@ describe('Controls/list_clean/MoveController', () => {
                     // Ожидаю, что перемещение провалится из-за того, что source не задан
                     sinonAssert.called(stubLoggerError);
                     assert.isFalse(result);
+                    stubDialog.restore();
+                });
+        });
+
+        // Если при перемещении методом moveWithDialog() в popupOptions.templateOptions передан source,
+        // то он используется в диалоге перемещения вместо source, переданного в контроллер
+        it('moveWithDialog() + source set within popupOptions.templateOptions object', () => {
+            const source2: Memory = new Memory({
+                keyProperty: 'id',
+                data: clone(data)
+            });
+            // to prevent popup open
+            const stubDialog = stub(Dialog, 'openPopup').callsFake((args) => {
+                assert.notEqual((args.templateOptions as {source: Memory}).source, source);
+                assert.equal((args.templateOptions as {source: Memory}).source, source2);
+                return Promise.resolve(args.eventHandlers.onResult(createFakeModel(data[3])));
+            });
+            cfg.popupOptions.templateOptions = {
+                ...cfg.popupOptions.templateOptions as object,
+                source: source2
+            }
+            controller = new MoveController(cfg);
+            return resolveMoveWithDialog(controller, selectionObject, {myProp: 'test'})
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    sinonAssert.notCalled(stubLoggerError);
+                    assert.isTrue(result);
                     stubDialog.restore();
                 });
         });
@@ -258,7 +286,7 @@ describe('Controls/list_clean/MoveController', () => {
         it('move() + source set via update()', () => {
             controller = new MoveController({...cfg, source: undefined});
             controller.updateOptions({...cfg, source});
-            return resolveMove(controller, selectionObject, {myProp: 'test'}, 4, TMovePosition.after)
+            return resolveMove(controller, selectionObject, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -358,7 +386,7 @@ describe('Controls/list_clean/MoveController', () => {
         // Попытка вызвать move() с невалидным selection
         it ('should not move "after" with invalid selection', () => {
             // @ts-ignore
-            return resolveMove(controller,['1', '2', '2'], {myProp: 'test'}, 4, TMovePosition.after)
+            return resolveMove(controller,['1', '2', '2'], {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
@@ -369,7 +397,7 @@ describe('Controls/list_clean/MoveController', () => {
 
         // Попытка вызвать move() с selection===undefined
         it ('should not move "after" with undefined selection', () => {
-            return resolveMove(controller, undefined, {myProp: 'test'}, 4, TMovePosition.after)
+            return resolveMove(controller, undefined, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
@@ -384,7 +412,7 @@ describe('Controls/list_clean/MoveController', () => {
                 selected: [],
                 excluded: []
             }
-            return resolveMove(controller, emptySelectionObject, {myProp: 'test'}, 4, TMovePosition.after)
+            return resolveMove(controller, emptySelectionObject, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -407,7 +435,7 @@ describe('Controls/list_clean/MoveController', () => {
                     assert.deepEqual(data.filter.get('selection').get('excluded'), correctSelection.excluded.map((key) => `${key}`));
                     return Promise.resolve({} as DataSet);
                 });
-            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -432,7 +460,7 @@ describe('Controls/list_clean/MoveController', () => {
                     return Promise.resolve({} as DataSet);
                 });
 
-            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -456,7 +484,7 @@ describe('Controls/list_clean/MoveController', () => {
                     assert.deepEqual(data.filter.get('selection').get('excluded'), correctSelection.excluded.map((key) => `${key}`));
                     return Promise.resolve({} as DataSet);
                 });
-            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -470,7 +498,7 @@ describe('Controls/list_clean/MoveController', () => {
         // Попытка вызвать move() с target===undefined
         it ('should not move to undefined target', () => {
             const spyCall = spy(sbisServiceSource, 'call');
-            return resolveMove(controller, selectionObject, {myProp: 'test'}, undefined, TMovePosition.on)
+            return resolveMove(controller, selectionObject, {myProp: 'test'}, undefined, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
@@ -484,7 +512,7 @@ describe('Controls/list_clean/MoveController', () => {
         // Попытка вызвать move() с некорректным filter
         it ('should not move with incorrect filter', () => {
             const spyCall = spy(sbisServiceSource, 'call');
-            return resolveMove(controller, selectionObject, () => {}, 4, TMovePosition.on)
+            return resolveMove(controller, selectionObject, () => {}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
@@ -517,7 +545,7 @@ describe('Controls/list_clean/MoveController', () => {
                     assert.exists(data.filter, 'filter should exist anyway');
                     return Promise.resolve({} as DataSet);
                 });
-            return resolveMove(controller, selectionObject, undefined, 4, TMovePosition.on)
+            return resolveMove(controller, selectionObject, undefined, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -531,7 +559,7 @@ describe('Controls/list_clean/MoveController', () => {
         // Попытка вызвать move() с target === null
         it ('should move with target === null', () => {
             const spyCall = spy(sbisServiceSource, 'call');
-            return resolveMove(controller, selectionObject, {}, null, TMovePosition.on)
+            return resolveMove(controller, selectionObject, {}, null, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -558,9 +586,9 @@ describe('Controls/list_clean/MoveController', () => {
         });
 
         // Попытка вызвать move() с position===on
-        it ('should move with position === TMovePosition.on', () => {
+        it ('should move with position === LOCAL_MOVE_POSITION.On', () => {
             const spyCall = spy(sbisServiceSource, 'call');
-            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.on)
+            return resolveMove(controller, selectionObject, {}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -572,9 +600,9 @@ describe('Controls/list_clean/MoveController', () => {
         });
 
         // Попытка вызвать move() с position===after
-        it ('should move with position === TMovePosition.after', () => {
+        it ('should move with position === LOCAL_MOVE_POSITION.After', () => {
             const spyMove = spy(sbisServiceSource, 'move');
-            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.after)
+            return resolveMove(controller, selectionObject, {}, 4, LOCAL_MOVE_POSITION.After)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -586,9 +614,9 @@ describe('Controls/list_clean/MoveController', () => {
         });
 
         // Попытка вызвать move() с position===after
-        it ('should move with position === TMovePosition.before', () => {
+        it ('should move with position === LOCAL_MOVE_POSITION.Before', () => {
             const spyMove = spy(sbisServiceSource, 'move');
-            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.before)
+            return resolveMove(controller, selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -614,7 +642,7 @@ describe('Controls/list_clean/MoveController', () => {
                     assert.exists(meta.parentProperty, parentProperty);
                     return Promise.resolve();
                 });
-            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.before)
+            return resolveMove(controller, selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -822,7 +850,7 @@ describe('Controls/list_clean/MoveController', () => {
         // Попытка вызвать move() с невалидным selection
         it ('should not move "after" with invalid selection', () => {
             // @ts-ignore
-            return resolveMove(controller,['1', '2', '2'], {myProp: 'test'}, 4, TMovePosition.after)
+            return resolveMove(controller,['1', '2', '2'], {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
@@ -833,7 +861,7 @@ describe('Controls/list_clean/MoveController', () => {
 
         // Попытка вызвать move() с selection===undefined
         it ('should not move "after" with undefined selection', () => {
-            return resolveMove(controller, undefined, {myProp: 'test'}, 4, TMovePosition.after)
+            return resolveMove(controller, undefined, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
@@ -848,7 +876,7 @@ describe('Controls/list_clean/MoveController', () => {
                 selected: [],
                 excluded: []
             }
-            return resolveMove(controller, emptySelectionObject, {myProp: 'test'}, 4, TMovePosition.after)
+            return resolveMove(controller, emptySelectionObject, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.After)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -868,11 +896,11 @@ describe('Controls/list_clean/MoveController', () => {
                 .callsFake((items: EntityKey | EntityKey[], target: EntityKey, meta?: IHashMap<any>) => {
                     assert.equal(items, correctSelection.selected, 'items are not equal');
                     assert.equal(target, 4, 'targets are not equal');
-                    assert.equal(meta.position, TMovePosition.on, 'positions are not equal');
+                    assert.equal(meta.position, LOCAL_MOVE_POSITION.On, 'positions are not equal');
                     assert.equal(meta.parentProperty, cfg.parentProperty, 'parentProperties are not equal');
                     return Promise.resolve();
                 });
-            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -893,12 +921,12 @@ describe('Controls/list_clean/MoveController', () => {
                 .callsFake((items: EntityKey | EntityKey[], target: EntityKey, meta?: IHashMap<any>) => {
                     assert.equal(items, correctSelection.selected, 'items are not equal');
                     assert.equal(target, 4, 'targets are not equal');
-                    assert.equal(meta.position, TMovePosition.on, 'positions are not equal');
+                    assert.equal(meta.position, LOCAL_MOVE_POSITION.On, 'positions are not equal');
                     assert.equal(meta.parentProperty, cfg.parentProperty, 'parentProperties are not equal');
                     return Promise.resolve();
                 });
 
-            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -919,11 +947,11 @@ describe('Controls/list_clean/MoveController', () => {
                 .callsFake((items: EntityKey | EntityKey[], target: EntityKey, meta?: IHashMap<any>) => {
                     assert.equal(items, correctSelection.selected, 'items are not equal');
                     assert.equal(target, 4, 'targets are not equal');
-                    assert.equal(meta.position, TMovePosition.on, 'positions are not equal');
+                    assert.equal(meta.position, LOCAL_MOVE_POSITION.On, 'positions are not equal');
                     assert.equal(meta.parentProperty, cfg.parentProperty, 'parentProperties are not equal');
                     return Promise.resolve();
                 });
-            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, TMovePosition.on)
+            return resolveMove(controller, correctSelection, {myProp: 'test'}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -937,7 +965,7 @@ describe('Controls/list_clean/MoveController', () => {
         // Попытка вызвать move() с target===undefined
         it ('should not move to undefined target', () => {
             const spyMove = spy(source, 'move');
-            return resolveMove(controller, selectionObject, {myProp: 'test'}, undefined, TMovePosition.on)
+            return resolveMove(controller, selectionObject, {myProp: 'test'}, undefined, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
@@ -951,7 +979,7 @@ describe('Controls/list_clean/MoveController', () => {
         // Попытка вызвать move() с некорректным filter
         it ('should not move with incorrect filter', () => {
             const spyMove = spy(source, 'move');
-            return resolveMove(controller, selectionObject, () => {}, 4, TMovePosition.on)
+            return resolveMove(controller, selectionObject, () => {}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
@@ -980,7 +1008,7 @@ describe('Controls/list_clean/MoveController', () => {
         // Попытка вызвать move() с filter===undefined
         it ('should move with undefined filter', () => {
             const spyMove = spy(source, 'move');
-            return resolveMove(controller, selectionObject, undefined, 4, TMovePosition.on)
+            return resolveMove(controller, selectionObject, undefined, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -994,7 +1022,7 @@ describe('Controls/list_clean/MoveController', () => {
         // Попытка вызвать move() с target === null
         it ('should move with target === null', () => {
             const spyMove = spy(source, 'move');
-            return resolveMove(controller, selectionObject, {}, null, TMovePosition.on)
+            return resolveMove(controller, selectionObject, {}, null, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -1021,9 +1049,9 @@ describe('Controls/list_clean/MoveController', () => {
         });
 
         // Попытка вызвать move() с position===on
-        it ('should move with position === TMovePosition.on', () => {
+        it ('should move with position === LOCAL_MOVE_POSITION.On', () => {
             const spyMove = spy(source, 'move');
-            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.on)
+            return resolveMove(controller, selectionObject, {}, 4, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -1035,9 +1063,9 @@ describe('Controls/list_clean/MoveController', () => {
         });
 
         // Попытка вызвать move() с position===after
-        it ('should move with position === TMovePosition.after', () => {
+        it ('should move with position === LOCAL_MOVE_POSITION.After', () => {
             const spyMove = spy(source, 'move');
-            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.after)
+            return resolveMove(controller, selectionObject, {}, 4, LOCAL_MOVE_POSITION.After)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -1049,9 +1077,9 @@ describe('Controls/list_clean/MoveController', () => {
         });
 
         // Попытка вызвать move() с position===after
-        it ('should move with position === TMovePosition.before', () => {
+        it ('should move with position === LOCAL_MOVE_POSITION.Before', () => {
             const spyMove = spy(source, 'move');
-            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.before)
+            return resolveMove(controller, selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -1068,7 +1096,7 @@ describe('Controls/list_clean/MoveController', () => {
             // @ts-ignore
             controller = new MoveController({ ...cfg, parentProperty });
             const spyMove = spy(source, 'move');
-            return resolveMove(controller, selectionObject, {}, 4, TMovePosition.before)
+            return resolveMove(controller, selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
                 .then((result: boolean) => {
 
                     // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
@@ -1152,7 +1180,7 @@ describe('Controls/list_clean/MoveController', () => {
                 .callsFake((items: EntityKey | EntityKey[], target: EntityKey, meta?: IHashMap<any>) => {
                     assert.equal(items, correctSelection.selected, 'items are not equal');
                     assert.equal(target, 4, 'targets are not equal');
-                    assert.equal(meta.position, TMovePosition.on, 'positions are not equal');
+                    assert.equal(meta.position, LOCAL_MOVE_POSITION.On, 'positions are not equal');
                     assert.equal(meta.parentProperty, cfg.parentProperty, 'parentProperties are not equal');
                     return Promise.resolve();
                 });
@@ -1183,7 +1211,7 @@ describe('Controls/list_clean/MoveController', () => {
                 .callsFake((items: EntityKey | EntityKey[], target: EntityKey, meta?: IHashMap<any>) => {
                     assert.equal(items, correctSelection.selected, 'items are not equal');
                     assert.equal(target, 4, 'targets are not equal');
-                    assert.equal(meta.position, TMovePosition.on, 'positions are not equal');
+                    assert.equal(meta.position, LOCAL_MOVE_POSITION.On, 'positions are not equal');
                     assert.equal(meta.parentProperty, cfg.parentProperty, 'parentProperties are not equal');
                     return Promise.resolve();
                 });

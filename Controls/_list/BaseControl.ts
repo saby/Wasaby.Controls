@@ -11,7 +11,7 @@ import {constants, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
-import {ICrud, Memory, CrudEntityKey} from 'Types/source';
+import {ICrud, Memory, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import {debounce, throttle} from 'Types/function';
 import {create as diCreate} from 'Types/di';
 import {Model, relation} from 'Types/entity';
@@ -86,8 +86,8 @@ import {IList} from './interface/IList';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
 import { EdgeIntersectionObserver } from 'Controls/scroll';
 import { ItemsEntity } from 'Controls/dragnDrop';
-import {IMoveControllerOptions, MoveController, TMovePosition} from './Controllers/MoveController';
-import {IMoverDialogTemplateOptions} from '../_moverDialog/Template';
+import {IMoveControllerOptions, MoveController} from './Controllers/MoveController';
+import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
 import {RemoveController} from './Controllers/RemoveController';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
@@ -281,7 +281,7 @@ const _private = {
         // https://online.sbis.ru/opendoc.html?guid=f07ea1a9-743c-42e4-a2ae-8411d59bcdce
         // Для мобильных устройств данный функционал включать нельзя из-за инерционного скролла:
         // https://online.sbis.ru/opendoc.html?guid=45921906-4b0e-4d72-bb80-179c076412d5
-        if (options.attachLoadTopTriggerToNull === false || detection.isMobileIOS) {
+        if (options.attachLoadTopTriggerToNull === false || detection.isMobilePlatform) {
             return false;
         }
         // Прижимать триггер к верху списка нужно только при infinity-навигации.
@@ -1062,7 +1062,7 @@ const _private = {
          */
         if (viewportSize !== 0) {
             const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
-                self._scrollController?.calculateVirtualScrollHeight() || 0);
+                !self._options.disableVirtualScroll && self._scrollController?.calculateVirtualScrollHeight() || 0);
             const proportion = (scrollHeight / viewportSize);
 
             // начиличе пэйджинга зависит от того превышают данные два вьюпорта или нет
@@ -1299,10 +1299,24 @@ const _private = {
         _private.handleScrollControllerResult(self, result);
     }, SCROLLMOVE_DELAY, true),
 
-    handleListScrollSync(self, scrollTop) {
+    /**
+     * Инициализируем paging если он не создан
+     * @private
+     */
+    initPaging(self) {
         if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
-            self._pagingVisible = _private.needShowPagingByScrollSize(self,  _private.getViewSize(self), self._viewportSize);
+            if (self._viewportSize) {
+                this._recalcPagingVisible = false;
+                self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
+            } else {
+                self._recalcPagingVisible = true;
+            }
         }
+    },
+
+    handleListScrollSync(self, scrollTop) {
+        _private.initPaging(self);
+
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
@@ -1606,7 +1620,7 @@ const _private = {
      * @param newItems
      */
     shouldUpdateItemActions(newItems): boolean {
-        const propertyVariants = 'selected|marked|swiped|hovered|active|dragged|editingContents';
+        const propertyVariants = ['selected', 'marked', 'swiped', 'hovered', 'active', 'dragged', 'editingContents'];
         return !newItems || !newItems.properties || propertyVariants.indexOf(newItems.properties) === -1;
     },
 
@@ -2089,7 +2103,7 @@ const _private = {
             // После того как последний item гарантированно отобразился,
             // нужно попросить ScrollWatcher прокрутить вниз, чтобы
             // прокрутить отступ пейджинга и скрыть тень
-            
+
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
         });
     },
@@ -2407,6 +2421,7 @@ const _private = {
 
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
+            disableVirtualScroll: options.disableVirtualScroll,
             virtualScrollConfig: options.virtualScrollConfig || {},
             needScrollCalculation: self._needScrollCalculation,
             scrollObserver: self._children.scrollObserver,
@@ -2689,9 +2704,9 @@ const _private = {
         return self._moveController;
     },
 
-    getMoveTargetItem(self: typeof BaseControl, selectedKey: CrudEntityKey, position: TMovePosition): CrudEntityKey {
+    getMoveTargetItem(self: typeof BaseControl, selectedKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): CrudEntityKey {
         let siblingItem;
-        if (position === TMovePosition.before) {
+        if (position === LOCAL_MOVE_POSITION.Before) {
             siblingItem = self._listViewModel.getPrevByKey(selectedKey);
         } else {
             siblingItem = self._listViewModel.getNextByKey(selectedKey);
@@ -2782,6 +2797,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
     _shouldNotResetPagingCache: false,
+    _recalcPagingVisible: false,
 
     _itemTemplate: null,
 
@@ -2897,19 +2913,25 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const editingConfig = this._getEditingConfig(newOptions);
             return editingConfig.item ? this._startInitialEditing(editingConfig) : res;
         }).then( async (res) => {
-            if (newOptions.markerVisibility === 'visible'
-                || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined) {
-                await _private.getMarkerControllerAsync(this, newOptions).then((controller) => {
-                    const markedKey = controller.calculateMarkedKeyForVisible();
-                    controller.setMarkedKey(markedKey);
-                });
+
+            const needInitModelState = this._listViewModel && this._listViewModel.getCollection()
+                && this._listViewModel.getCollection().getCount();
+            if (needInitModelState) {
+                if (newOptions.markerVisibility === 'visible'
+                    || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined) {
+                    await _private.getMarkerControllerAsync(this, newOptions).then((controller) => {
+                        const markedKey = controller.calculateMarkedKeyForVisible();
+                        controller.setMarkedKey(markedKey);
+                    });
+                }
+
+                if (newOptions.multiSelectVisibility !== 'hidden' && newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
+                    const selectionController = _private.createSelectionController(this, newOptions);
+                    const selection = { selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys };
+                    selectionController.setSelection(selection);
+                }
             }
 
-            if (newOptions.multiSelectVisibility !== 'hidden' && newOptions.selectedKeys && newOptions.selectedKeys.length > 0) {
-                const selectionController = _private.createSelectionController(this, newOptions);
-                const selection = { selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys };
-                selectionController.setSelection(selection);
-            }
             return res;
         });
     },
@@ -3001,13 +3023,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     rawData: []
                 }));
 
-                if (newOptions.useNewModel && !self._listViewModel) {
-                    self._items = data;
-                    self._listViewModel = self._createNewModel(
-                        data,
-                        viewModelConfig,
-                        newOptions.viewModelConstructor
-                    );
+                    if (newOptions.useNewModel && !self._listViewModel) {
+                        self._items = data;
+                        self._listViewModel = self._createNewModel(
+                            data,
+                            viewModelConfig,
+                            newOptions.viewModelConstructor
+                        );
 
                     _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
@@ -3092,6 +3114,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
+        }
+        if(this._recalcPagingVisible){
+            _private.initPaging(this);
         }
     },
 
@@ -3923,8 +3948,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
         // Described in this document: https://docs.google.com/spreadsheets/d/1fuX3e__eRHulaUxU-9bXHcmY9zgBWQiXTmwsY32UcsE
-        const noData = !listViewModel.getCount();
-        const noEdit = !_private.isEditing(this);
+        const noData = !listViewModel || !listViewModel.getCount();
+        const noEdit = !listViewModel || !_private.isEditing(this);
         const isLoading = this._sourceController && this._sourceController.isLoading();
         const notHasMore = !_private.hasMoreDataInAnyDirection(this, this._sourceController);
         const noDataBeforeReload = this._noDataBeforeReload;
@@ -4570,26 +4595,26 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // region move
 
-    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
         return _private.getMoveController(this).move(selection, this._filter, targetKey, position);
     },
 
     moveItemUp(selectedKey: CrudEntityKey): Promise<void> {
-        const sibling = _private.getMoveTargetItem(this, selectedKey, TMovePosition.before);
+        const sibling = _private.getMoveTargetItem(this, selectedKey, LOCAL_MOVE_POSITION.Before);
         const selection: ISelectionObject = {
             selected: [selectedKey],
             excluded: []
         };
-        return _private.getMoveController(this).move(selection, {}, sibling, TMovePosition.before);
+        return _private.getMoveController(this).move(selection, {}, sibling, LOCAL_MOVE_POSITION.Before);
     },
 
     moveItemDown(selectedKey: CrudEntityKey): Promise<void> {
-        const sibling = _private.getMoveTargetItem(this, selectedKey, TMovePosition.after);
+        const sibling = _private.getMoveTargetItem(this, selectedKey, LOCAL_MOVE_POSITION.After);
         const selection: ISelectionObject = {
             selected: [selectedKey],
             excluded: []
         };
-        return _private.getMoveController(this).move(selection, {}, sibling, TMovePosition.after);
+        return _private.getMoveController(this).move(selection, {}, sibling, LOCAL_MOVE_POSITION.After);
     },
 
     moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
@@ -4669,10 +4694,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
-
-        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
-            this._pagingVisible = _private.needShowPagingByScrollSize(this,  _private.getViewSize(this), this._viewportSize);
-        }
+        _private.initPaging(this);
 
         if (this._documentDragging) {
             this._insideDragging = true;
@@ -4989,7 +5011,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
+    _observeScrollHandler(_: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
         switch (eventName) {
             case 'scrollMoveSync':
                 this.scrollMoveSyncHandler(params);

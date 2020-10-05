@@ -8,7 +8,7 @@ import {factory} from 'Types/chain';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import {Model} from 'Types/entity';
-import {ListView, TMovePosition} from 'Controls/list';
+import {ListView} from 'Controls/list';
 import {isEqual} from 'Types/object';
 import {
    INavigationSourceConfig,
@@ -16,8 +16,8 @@ import {
    INavigationOptionValue as INavigation
 }  from '../_interface/INavigation';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
-import {ISelectionObject} from "../_interface/ISelectionType";
-import {CrudEntityKey} from "Types/source";
+import {ISelectionObject} from 'Controls/interface';
+import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import { RecordSet } from 'Types/collection';
 
 var
@@ -193,11 +193,6 @@ var
                self._pendingViewMode = null;
             }
          },
-         setVirtualScrolling(self, viewMode, cfg): void {
-            // todo https://online.sbis.ru/opendoc.html?guid=7274717e-838d-46c4-b991-0bec75bd0162
-            // For viewMode === 'tile' disable virtualScrolling.
-            self._virtualScrollConfig = viewMode === 'tile' ? false : cfg.virtualScrollConfig;
-         },
 
          setViewConfig: function (self, viewMode) {
             self._viewName = VIEW_NAMES[viewMode];
@@ -205,7 +200,6 @@ var
          },
          setViewModeSync: function(self, viewMode, cfg): void {
             self._viewMode = viewMode;
-            _private.setVirtualScrolling(self, self._viewMode, cfg);
             _private.setViewConfig(self, self._viewMode);
          },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
@@ -595,10 +589,6 @@ var
                _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
             }
          }
-
-         if (cfg.virtualScrollConfig !== this._options.virtualScrollConfig) {
-            _private.setVirtualScrolling(this, this._viewMode, cfg);
-         }
       },
       _beforePaint: function() {
          if (this._markerForRestoredScroll !== null) {
@@ -750,7 +740,7 @@ var
 
       // region mover
 
-      moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: TMovePosition): Promise<void> {
+      moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
          return this._children.treeControl.moveItems(selection, targetKey, position);
       },
 

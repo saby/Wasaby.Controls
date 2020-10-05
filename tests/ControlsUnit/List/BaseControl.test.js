@@ -2511,6 +2511,8 @@ define([
 
          assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, baseControl._listViewModel));
 
+         assert.isTrue(!!baseControl.__needShowEmptyTemplate(baseControl._options.emptyTemplate, null));
+
          assert.isFalse(!!baseControl.__needShowEmptyTemplate(null, baseControl._listViewModel));
 
          baseControl._sourceController.isLoading = function() {
@@ -7457,6 +7459,15 @@ define([
                newBaseControl._afterMount();
                assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false]).called);
                assert.isTrue(notifySpy.withArgs('listSelectionTypeForAllSelectedChanged', ['all']).called);
+            });
+
+            it('beforeMount not load items', () => {
+               const newCfg = { ...cfg, selectedKeys: [1], source: undefined };
+               newBaseControl = new lists.BaseControl();
+               newBaseControl.saveOptions(newCfg);
+               return newBaseControl._beforeMount(newCfg).then(() => {
+                  assert.isNotOk(newBaseControl._selectionController);
+               });
             });
          });
 

@@ -33,6 +33,7 @@
       </ws:if>
       <ws:else>
          <ws:partial type="{{_type}}"
+                     model="{{_viewModel}}"
                      options="{{_options}}"
                      scope="{{_field.scope}}"
                      autoWidth="{{_autoWidth}}"

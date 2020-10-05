@@ -47,6 +47,7 @@ const enum VIEW_MODE {
     year = 'year'
 }
 
+const SCALE_ROUNDING_ERROR_FIX = 1.5;
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
  *
@@ -278,6 +279,12 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             if (oldPositionId === this._startPositionId && this._children.months) {
                 this._children.months.reload();
             }
+            // Если компонент скрыт, то сбросим _positionToScroll, доверим списочному контролу восстановление скрола
+            // после того, как компонент станет видимым. Скорее всего _positionToScroll уже нигде не актален.
+            // https://online.sbis.ru/opendoc.html?guid=d85227d0-3f42-4300-947f-cf8f57a02c0d
+            if (this._isHidden()) {
+                this._positionToScroll = null;
+            }
         }
     }
 
@@ -318,9 +325,9 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 // and intersect with the scrolled container in its upper part, or lie higher.
                 if (boundingClientRect.top - rootBounds.top <= 0) {
                     // Из-за дробных пикселей при масштабе или на touch-устройствах могу дергаться элементы.
-                    // При этом возникает разница между boundingClientRect.bottom и rootBounds.top  меньше 1 пикселя.
-                    // Из-за этого неправильно расчитывается текущая дата.
-                    if (boundingClientRect.bottom - rootBounds.top >= 1) {
+                    // При этом возникает разница между boundingClientRect.bottom и rootBounds.top
+                    // вплоть до 1.5 пикселей в зависимости от зума. Из-за этого неправильно расчитывается текущая дата.
+                    if (boundingClientRect.bottom - rootBounds.top >= SCALE_ROUNDING_ERROR_FIX) {
                         // If the bottom of the container lies at or below the top of the scrolled container, then we found the right date
                         date = entryDate;
                         break;
@@ -525,6 +532,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     // https://online.sbis.ru/opendoc.html?guid=d3d0fc8a-06cf-49fb-ad80-ce0a9d9a8632
     protected _idToDate(dateId: string): Date {
         return monthListUtils.idToDate(dateId);
+    }
+
+    private _isHidden(): boolean {
+        return !!this._container.closest('.ws-hidden');
     }
 
     static _ITEM_BODY_SELECTOR = ITEM_BODY_SELECTOR;

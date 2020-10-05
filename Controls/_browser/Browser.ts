@@ -14,6 +14,7 @@ import {error as dataSourceError} from 'Controls/dataSource';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {IControllerOptions, IControlerState} from 'Controls/_dataSource/Controller';
 import {TSelectionType} from 'Controls/interface';
+import Store from 'Controls/Store';
 
 type Key = string|number|null;
 
@@ -50,6 +51,7 @@ export default class Browser extends Control {
     private _groupHistoryId: string;
     private _dataOptionsContext: ContextOptions;
     private _errorRegister: RegisterClass;
+    private _storeCallbacks: string[];
 
     protected _beforeMount(options,
                            context,
@@ -85,6 +87,19 @@ export default class Browser extends Control {
                     };
                 });
             });
+        }
+    }
+
+    protected _afterMount(options): void {
+        if (options.useStore) {
+            const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
+                this._filterItemsChanged(null, filterSource);
+            });
+            const filterSourceCallbackId = Store.onPropertyChanged('filter', (filter) => {
+                this._filterChanged(null, filter);
+            });
+
+            this._storeCallbacks = [sourceCallbackId, filterSourceCallbackId];
         }
     }
 
@@ -160,7 +175,10 @@ export default class Browser extends Control {
             this._errorRegister = null;
         }
 
-        this._filterController.destroy();
+        if (this._storeCallbacks) {
+            this._storeCallbacks.forEach((id) => Store.unsubscribe(id));
+        }
+
         this._filterController = null;
     }
 
@@ -210,7 +228,7 @@ export default class Browser extends Control {
         }
     }
 
-    _filterChanged(event: SyntheticEvent, filter: object): void {
+    protected _filterChanged(event: SyntheticEvent, filter: object): void {
         event && event.stopPropagation();
         this._filterController.setFilter(filter);
 

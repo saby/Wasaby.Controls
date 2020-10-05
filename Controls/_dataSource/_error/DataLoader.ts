@@ -41,7 +41,7 @@ export default class DataLoader extends Control<IErrorContainerOptions, IErrorCo
       if (receivedState) {
          this._sources = sources;
          this._errorViewConfig = receivedState.errorViewConfig;
-      } else {
+      } else if (sources) {
          return DataLoader.load(sources, requestTimeout).then(({sources, errors}) => {
             const errorsCount = errors.length;
 
