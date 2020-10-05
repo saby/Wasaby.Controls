@@ -5,11 +5,8 @@
 
 .controls-Paging__info_theme-@{themeName} {
    color: @label_text-color;
-   border-bottom-width: @marker_thickness_paging;
-   min-width: @item_min-width_paging;
-   padding: 0 @item_padding-horizontal_paging 0 @item_left-padding-horizontal_paging;
-   background-color: @item_background-color_paging;
-   font-size: @item_font-size_paging;
+   margin-right: -@info_margin_paging;
+   font-size: @info_font-size_paging;
 }
 
 .controls-Paging__same_theme-@{themeName} {
@@ -126,4 +123,8 @@
    content: '';
    top: (@item_height_paging - @arrow_separator_length_paging) / 2;
    left: -@arrow_separator_thickness_paging;
+}
+
+.controls-Paging__btn-Template {
+   padding: 0 @item_right-padding-horizontal_paging 0 @item_left-padding-horizontal_paging;
 }
