@@ -129,7 +129,7 @@ class Paging extends Control<IPagingOptions> {
     }
 
     private _isShowContentTemplate(): boolean {
-        return (this._getArrowStateVisibility('begin') === 'hidden' &&
+        return !(this._getArrowStateVisibility('begin') === 'hidden' &&
             this._getArrowStateVisibility('prev') === 'hidden' &&
             this._getArrowStateVisibility('next') === 'hidden' &&
             this._getArrowStateVisibility('end') === 'hidden');
