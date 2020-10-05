@@ -3851,7 +3851,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // к началу или концу, от этого прыжка его состояние не может
             // измениться, поэтому пейджинг не должен прятаться в любом случае
             this._shouldNotResetPagingCache = true;
-            _private.reload(this, this._options).addCallback(function() {
+            _private.reload(this, this._options).addCallback(() => {
                 this._shouldNotResetPagingCache = false;
 
                 /**
