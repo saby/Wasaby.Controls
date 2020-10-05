@@ -26,6 +26,7 @@ describe('Controls/suggest', () => {
       const getComponentObject = (customOptions: object = {}) => {
          const controller = new _InputController({});
          const options = {
+            source: getMemorySource(),
             suggestTemplate: {},
             footerTemplate: {}
          };
@@ -131,7 +132,7 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_closeHandler', () => {
-         const suggestComponent = new _InputController({});
+         const suggestComponent = getComponentObject();
          let propagationStopped = false;
          const event = {
             stopPropagation: () => {
@@ -252,7 +253,7 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_loadStart', () => {
-         const inputContainer = new _InputController({});
+         const inputContainer = getComponentObject();
          let isCallShowIndicator = false;
          let isCallHideIndicator = false;
          let errorFired = false;
@@ -377,7 +378,7 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_showAllClick', () => {
-         const suggest = new _InputController({});
+         const suggest = getComponentObject();
          let stackOpened = false;
          const eventResult = false;
          let openCfg;
@@ -405,7 +406,7 @@ describe('Controls/suggest', () => {
 
       it('Suggest::_moreClick', () => {
          let isNotifyShowSelector = false;
-         const suggest = new _InputController({});
+         const suggest = getComponentObject();
 
          Stack.openPopup = () => {};
 
@@ -751,7 +752,7 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_beforeMount', () => {
-         const suggestComponent = new _InputController({});
+         const suggestComponent = getComponentObject();
 
          suggestComponent._beforeMount({
             searchParam: 'title',
@@ -767,7 +768,7 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_beforeUpdate', () => {
-         const suggestComponent = new _InputController({
+         const suggestComponent = getComponentObject({
             emptyTemplate: 'anyTpl',
             footerTemplate: 'anyTp',
             suggestState: true,
@@ -949,7 +950,7 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_setMisspellingCaption', () => {
-         const inputContainer = new _InputController({});
+         const inputContainer = getComponentObject();
 
          inputContainer._setMisspellingCaption('test');
          assert.equal(inputContainer._misspellingCaption, 'test');
@@ -959,7 +960,7 @@ describe('Controls/suggest', () => {
          const item = {
             _isUpdateHistory: false
          };
-         const suggestComponent = new _InputController({});
+         const suggestComponent = getComponentObject();
          suggestComponent._getHistoryService = () => {
             return {
                addCallback(func) {
@@ -980,7 +981,7 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::markedKeyChangedHandler', () => {
-         const suggestComponent = new _InputController({});
+         const suggestComponent = getComponentObject();
          suggestComponent._markedKeyChangedHandler(null, 'test');
          assert.equal(suggestComponent._suggestMarkedKey, 'test');
 
@@ -989,7 +990,7 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_keyDown', () => {
-         const suggestComponent = new _InputController({});
+         const suggestComponent = getComponentObject();
          let eventPreventDefault = false;
          let eventStopPropagation = false;
          let suggestStateChanged = false;
@@ -1089,7 +1090,7 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest:_getRecentKeys', () => {
-         const inputContainer = new _InputController({});
+         const inputContainer = getComponentObject();
          inputContainer._getHistoryService = () => {
             const hService = {
                query: () => new Deferred.fail(new Error('History Service'))
@@ -1105,7 +1106,7 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_inputClicked', () => {
-         const suggestComponent = new _InputController({});
+         const suggestComponent = getComponentObject();
 
          suggestComponent._inputClicked();
          assert.isTrue(suggestComponent._inputActive);
@@ -1127,7 +1128,7 @@ describe('Controls/suggest', () => {
 
       it('Suggest::_openPopup', () => {
          const isOpenPopup = false;
-         const suggestComponent = new _InputController({
+         const suggestComponent = getComponentObject({
             suggestTemplate: {}
          });
          suggestComponent._options.suggestTemplate = {};
