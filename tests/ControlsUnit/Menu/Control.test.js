@@ -193,6 +193,22 @@ define(
                assert.isFalse(result, 'level is not first');
                assert.equal(menuControl._visibleIds.length, 0);
             });
+
+            it('expandButton hidden, history menu, with parent', () => {
+               let records = [];
+               for (let i = 0; i < 20; i++) {
+                  records.push({ parent: i < 15 });
+               }
+               items = new collection.RecordSet({
+                  rawData: records,
+                  keyProperty: 'key'
+               });
+               const newMenuOptions = { allowPin: true, root: null, parentProperty: 'parent' };
+
+               const result = menuControl._isExpandButtonVisible(items, newMenuOptions);
+               assert.isFalse(result);
+               assert.equal(menuControl._visibleIds.length, 5);
+            });
          });
 
          describe('_itemClick', function() {

@@ -466,7 +466,8 @@
 }
 
 .controls-TileView__item_withoutBorder_theme-@{themeName} {
-   border: @item_border-thickness_tile solid transparent;
+   border: none;
+   margin: @item_border-thickness_tile;
 }
 
 .controls-TileView__item_withMarker_theme-@{themeName} {
@@ -608,4 +609,14 @@
    width: 100%;
    height: 100%;
    object-fit: contain;
+}
+
+.controls-TileView__text_ellipsis_multiLine {
+   display: -webkit-box;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+   white-space: normal;
+   word-break: break-word;
+   overflow-wrap: break-word;
+   max-width: 100%;
 }
