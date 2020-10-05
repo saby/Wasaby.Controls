@@ -104,6 +104,14 @@ export default class Controller {
         return (this._options.source as ICrud).read(key, meta);
     }
 
+    update(item: EntityRecord): Promise<void> {
+        return (this._options.source as ICrud).update(item);
+    }
+
+    create(meta?: object): Promise<EntityRecord> {
+        return (this._options.source as ICrud).create(meta);
+    }
+
     setItems(items: RecordSet): RecordSet {
         this._setItems(items);
 
@@ -443,7 +451,9 @@ export default class Controller {
         return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
                (newList.getModel() === oldList.getModel()) &&
                (newList.getKeyProperty() === oldList.getKeyProperty()) &&
+                // tslint:disable-next-line:triple-equals
                (getProtoOf(newList).constructor == getProtoOf(newList).constructor) &&
+                // tslint:disable-next-line:triple-equals
                (getProtoOf(newList.getAdapter()).constructor == getProtoOf(oldList.getAdapter()).constructor);
     }
 

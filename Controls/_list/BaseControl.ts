@@ -683,7 +683,9 @@ const _private = {
         }
 
         if (self._shouldDrawFooter) {
-            loadedDataCount = self._listViewModel?.getCount();
+            loadedDataCount = self._options.root !== undefined ?
+                self._listViewModel?.getChildren(self._options.root)?.length :
+                self._listViewModel?.getCount();
             allDataCount = _private.getAllDataCount(self);
             if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
                 self._loadMoreCaption = allDataCount - loadedDataCount;
@@ -1459,10 +1461,6 @@ const _private = {
             navigationOpt.viewConfig &&
             navigationOpt.viewConfig.pagingMode
         );
-    },
-
-    getItemsCount(self) {
-        return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
 
     /**
