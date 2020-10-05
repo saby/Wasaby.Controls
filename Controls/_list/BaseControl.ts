@@ -1301,10 +1301,24 @@ const _private = {
         _private.handleScrollControllerResult(self, result);
     }, SCROLLMOVE_DELAY, true),
 
-    handleListScrollSync(self, scrollTop) {
+    /**
+     * Инициализируем paging если он не создан
+     * @private
+     */
+    initPaging(self) {
         if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
-            self._pagingVisible = _private.needShowPagingByScrollSize(self,  _private.getViewSize(self), self._viewportSize);
+            if (self._viewportSize) {
+                this._recalcPagingVisible = false;
+                self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
+            } else {
+                self._recalcPagingVisible = true;
+            }
         }
+    },
+
+    handleListScrollSync(self, scrollTop) {
+        _private.initPaging(self);
+
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
@@ -2822,6 +2836,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // если пэйджинг в скролле показался то запоним это состояние и не будем проверять до след перезагрузки списка
     _cachedPagingState: false,
     _shouldNotResetPagingCache: false,
+    _recalcPagingVisible: false,
 
     _itemTemplate: null,
 
@@ -3126,6 +3141,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
+        }
+        if(this._recalcPagingVisible){
+            _private.initPaging(this);
         }
     },
 
@@ -4299,10 +4317,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
-
-        if (!this._pagingVisible && _private.needScrollPaging(this._options.navigation)) {
-            this._pagingVisible = _private.needShowPagingByScrollSize(this,  _private.getViewSize(this), this._viewportSize);
-        }
+        _private.initPaging(this);
 
         if (this._documentDragging) {
             this._insideDragging = true;
@@ -4647,7 +4662,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _observeScrollHandler( _: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
+    _observeScrollHandler(_: SyntheticEvent<Event>, eventName: string, params: IScrollParams): void {
         switch (eventName) {
             case 'scrollMoveSync':
                 this.scrollMoveSyncHandler(params);
