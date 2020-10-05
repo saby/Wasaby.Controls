@@ -593,6 +593,8 @@ var
          }
       },
       _beforeRender(): void { 
+          // Сбрасываем скролл при режима отображения
+          // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
          if (this._resetScrollAfterViewModeChange) {
             this._notify('doScroll', ['top'], {bubbling: true});
             this._resetScrollAfterViewModeChange = false;
