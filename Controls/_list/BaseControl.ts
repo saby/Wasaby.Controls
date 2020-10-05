@@ -1605,6 +1605,11 @@ const _private = {
                     _private.changeMarkedKey(self, newMarkedKey);
                 }
             }
+
+            // will updated after render
+            if (self._loadingIndicatorState === 'all') {
+                self._loadingIndicatorContainerHeight = 0;
+            }
         }
         // VirtualScroll controller can be created and after that virtual scrolling can be turned off,
         // for example if Controls.explorer:View is switched from list to tile mode. The controller
@@ -3300,7 +3305,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const navigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         const resetPaging = this._pagingNavigation && filterChanged;
         const sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
-        const recreateSource = newOptions.source !== this._options.source || navigationChanged || resetPaging || sortingChanged;
+        const sourceChanged = newOptions.source !== this._options.source;
+        const recreateSource = navigationChanged || resetPaging || sortingChanged;
         const searchStarted = !this._options.searchValue && newOptions.searchValue;
         const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
@@ -3407,7 +3413,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(this._getEditingConfig(newOptions));
         }
-        if (recreateSource) {
+        if (recreateSource || sourceChanged) {
             if (this._sourceController) {
                 this.updateSourceController(newOptions);
             } else {
@@ -3445,7 +3451,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader = new GroupingLoader({});
         }
 
-        const needReload = filterChanged || recreateSource || sortingChanged;
+        const needReload =
+            sourceChanged && !newOptions.sourceController ||
+            filterChanged && !searchStarted ||
+            sortingChanged ||
+            recreateSource;
 
         const shouldProcessMarker = newOptions.markerVisibility === 'visible'
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
@@ -3512,7 +3522,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.getPortionedSearch(self).reset();
         }
 
-        if ((filterChanged && !searchStarted) || recreateSource || sortingChanged) {
+        if (needReload) {
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
