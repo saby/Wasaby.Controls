@@ -125,7 +125,9 @@ class BreadCrumbsView extends Control<IControlOptions> {
                             this._popupIsOpen = true;
                         },
                         onClose: () => {
-                            this._popupIsOpen = false;
+                            if (!this._destroyed) {
+                                this._popupIsOpen = false;
+                            }
                         }
                     },
                     templateOptions: {
