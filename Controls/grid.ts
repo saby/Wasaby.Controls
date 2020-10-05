@@ -13,9 +13,11 @@
  * @includes EditingEmptyTemplate Controls/grid:EditingEmptyTemplate
  * @includes IGridControl Controls/_grid/interface/IGridControl
  * @includes IColumn Controls/grid:IColumn
- * @includes ITagColumn Controls/_grid/interface/ITagColumn
+ * @includes ITagColumn Controls/grid:ITagColumn
  * @includes IHeaderCell Controls/_grid/interface/IHeaderCell
  * @includes IPropStorage Controls/_grid/interface/IPropStorage
+ * @includes SortingSelector Controls/grid:SortingSelector
+ * @includes SortingSelector Controls/grid:ITagColumn
  * @public
  * @author Крайнов Д.О.
  */
