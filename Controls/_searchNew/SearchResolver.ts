@@ -1,14 +1,18 @@
-import {ISearchDelay, ISearchDelayOptions} from './interface';
+import {ISearchDelay, ISearchResolverOptions} from './interface';
 
 export default class SearchResolver implements ISearchDelay {
 
    protected _delayTimer: NodeJS.Timeout = null;
 
-   protected _options: ISearchDelayOptions = null;
+   protected _options: ISearchResolverOptions = null;
 
    protected _searchStarted: boolean = false;
 
-   constructor(options: ISearchDelayOptions) {
+   constructor(options: ISearchResolverOptions) {
+      this._options = options;
+   }
+
+   updateOptions(options: ISearchResolverOptions): void {
       this._options = options;
    }
 

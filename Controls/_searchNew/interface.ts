@@ -9,7 +9,7 @@ import {
 import {NewSourceController} from 'Controls/dataSource';
 import {RecordSet} from 'Types/collection';
 
-export interface ISearchDelayOptions {
+export interface ISearchResolverOptions {
    delayTime?: number | null;
    minSearchLength?: number;
    searchCallback: (value: string) => void;
