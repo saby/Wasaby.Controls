@@ -24,16 +24,15 @@
                              multiSelectStatus="{{itemData.isSelected()}}"
                              key="{{itemData.key}}"/>
       </ws:partial>
-      <ws:if data="{{itemData.dispItem.isNode()}}">
-         <span
-            attr:class="controls-TileView__smallTemplate__nodeIcon_theme-{{theme}} icon-large icon-Folder icon-disabled"></span>
-      </ws:if>
-      <ws:else>
-         <div class="controls-TileView__smallTemplate_imageWrapper">
+      <div class="controls-TileView__smallTemplate_imageWrapper">
+         <ws:if data="{{itemData.dispItem.isNode()}}">
+            <span attr:class="controls-TileView__smallTemplate_nodeIcon_theme-{{theme}} icon-large icon-Folder icon-disabled"></span>
+         </ws:if>
+         <ws:else>
             <img class="controls-TileView__smallTemplate_image  controls-TileView__smallTemplate_image_size_{{_options.imageSize}}_theme-{{_options.theme}}"
                  src="{{itemData.item[itemData.imageProperty]}}"/>
-         </div>
-      </ws:else>
+         </ws:else>
+      </div>
       <ws:if data="{{!!itemData.dragTargetNode}}">
          <div attr:class="controls-TileView__smallTemplate_dragTargetNode_theme-{{theme}}"></div>
       </ws:if>

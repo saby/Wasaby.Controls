@@ -39,13 +39,6 @@
    box-shadow: @node_shadow-size_tile @node_shadow-color_tile;
 }
 
-.controls-TileView__smallTemplate_image {
-   position: absolute;
-   left: 50%;
-   top: 50%;
-   transform: translate(-50%, -50%);
-}
-
 .controls-TileView__smallTemplate_image_size_m_theme-@{themeName} {
    height: @image_height_m_small_tile;
    width: @image_width_m_small_tile;
@@ -67,6 +60,8 @@
 .controls-TileView__smallTemplate_imageWrapper {
    height: @height_item_small_tile;
    width: @width_item_small_tile;
+   display: flex;
+   align-items: center;
    position: relative;
    flex-shrink: 0;
 }
