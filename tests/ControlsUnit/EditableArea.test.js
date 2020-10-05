@@ -227,6 +227,24 @@ define([
             assert.isTrue(instance._options.editObject.isChanged());
          });
 
+         it('callback cancel', function() {
+            instance.saveOptions(cfg2);
+            instance._beforeMount(cfg2);
+            instance._isEditing = true;
+            let prom = new Promise((resolve) => {resolve(null)});
+            instance._notify = mockNotify(prom.then(() => {
+               return Constants.editing.CANCEL;
+            }));
+            instance._editObject.set('text', 'changed');
+            instance.cancelEdit();
+            assert.equal(eventQueue.length, 1);
+            assert.equal(eventQueue[0].event, 'beforeEndEdit');
+            assert.equal(eventQueue[0].eventArgs[0], instance._editObject);
+            assert.equal(instance._editObject.get('text'), 'changed');
+            assert.isTrue(instance._editObject.isChanged());
+            assert.isTrue(instance._options.editObject.isChanged());
+         });
+
          it ('clone in begitedit', async function() {
             instance._children = {
                formController: {

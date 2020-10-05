@@ -2404,6 +2404,7 @@ const _private = {
 
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
+            disableVirtualScroll: options.disableVirtualScroll,
             virtualScrollConfig: options.virtualScrollConfig || {},
             needScrollCalculation: self._needScrollCalculation,
             scrollObserver: self._children.scrollObserver,
@@ -2997,12 +2998,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         keyProperty: self._options.keyProperty,
                         rawData: []
                     }));
-
-                    if (!self._pagingVisible &&
-                        _private.needScrollPaging(self._options.navigation) &&
-                        self._options.navigation.viewConfig.pagingMode === 'edge') {
-                        self._pagingVisible = _private.needShowPagingByScrollSize(self, self._viewSize, self._viewportSize);
-                    }
 
                     if (newOptions.useNewModel && !self._listViewModel) {
                         self._items = data;
