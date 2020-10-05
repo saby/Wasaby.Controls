@@ -71,7 +71,7 @@ class Paging extends Control<IPagingOptions> {
                 } else {
                     this._stateTop = this._getState('visible');
                 }
-                
+
                 if (config.selectedPage >= config.pagesCount) {
                     this._stateBottom = this._getState('hidden');
                 } else {
@@ -126,6 +126,13 @@ class Paging extends Control<IPagingOptions> {
         } else {
             this._initArrowDefaultStates(newOptions);
         }
+    }
+
+    private _isShowContentTemplate(): boolean {
+        return (this._getArrowStateVisibility('begin') === 'hidden' &&
+            this._getArrowStateVisibility('prev') === 'hidden' &&
+            this._getArrowStateVisibility('next') === 'hidden' &&
+            this._getArrowStateVisibility('end') === 'hidden');
     }
 
     private _changePage(page: number): void {
