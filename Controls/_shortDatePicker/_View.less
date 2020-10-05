@@ -156,7 +156,7 @@
 
 .controls-PeriodLiteDialog__close_theme-@{themeName} {
    position: absolute;
-   top: 0;
+   top: -(@item_border-thickness_shortDatePicker);
    color: @closeButton_color_shortDatePicker;
    background-color: @closeButton_background-color_shortDatePicker;
    box-shadow: @closeButton_box-shadow_shortDatePicker;
@@ -173,7 +173,7 @@
 
 .controls-PeriodLiteDialog__close_position-right_theme-@{themeName} {
    right: 0;
-   margin-right: -(@icon-size_m + @closeButton_offset-left_shortDatePicker);
+   margin-right: -(@icon-size_m + @closeButton_offset-left_shortDatePicker + @item_border-thickness_shortDatePicker);
 }
 
 .ws-is-hover {
