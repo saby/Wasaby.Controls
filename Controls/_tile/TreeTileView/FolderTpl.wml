@@ -1,1 +1,2 @@
-<div></div>
+<ws:partial template="Controls/_tile/TileView/resources/SmallTemplate"
+            scope="{{_options}}"/>
