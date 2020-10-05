@@ -8,6 +8,7 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
  *
  * @class Controls/switchableArea:itemTemplate
  * @extends Core/Control
+ * @author Красильников А.С.
  * @public
  */
 
@@ -27,13 +28,13 @@ import {UnregisterUtil, RegisterUtil} from 'Controls/event';
  */
 
 /**
- * @name Controls/_switchableArea/View#templateOptions
- * @cfg {templateOptions} Опции шаблона элемента.
+ * @name Controls/switchableArea:itemTemplate#templateOptions
+ * @cfg {Object} Опции шаблона элемента.
  */
 
 /**
- * @name Controls/_switchableArea/View#autofocus
- * @cfg {boolean} Определяет, установится ли фокус на контентную область.
+ * @name Controls/switchableArea:itemTemplate#autofocus
+ * @cfg {Boolean} Определяет, установится ли фокус на контентную область.
  * @default true
  */
 
