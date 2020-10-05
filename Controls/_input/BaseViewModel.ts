@@ -3,7 +3,7 @@ import {VersionableMixin} from 'Types/entity';
 import {hasSelectionChanged} from './resources/Util';
 import {InputType, ISelection, ISplitValue} from './resources/Types';
 
-abstract class BaseViewModel<TValue, TOptions extends {}> extends VersionableMixin {
+abstract class BaseViewModel<TValue, TOptions extends {} = {}> extends VersionableMixin {
     protected _value: TValue | null;
     protected _displayValue: string;
     protected _selection: ISelection;
