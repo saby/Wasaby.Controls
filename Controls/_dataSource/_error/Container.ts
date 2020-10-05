@@ -1,4 +1,3 @@
-/// <amd-module name="Controls/_dataSource/_error/Container" />
 import { Control, TemplateFunction } from 'UI/Base';
 import _template = require('wml!Controls/_dataSource/_error/Container');
 import { constants } from 'Env/Env';
@@ -54,7 +53,6 @@ const getTemplate = (template: string | Control): Promise<Control> => {
  */
 export default class Container extends Control<IContainerConfig> implements IContainer {
     private __viewConfig: Config; // tslint:disable-line:variable-name
-    private __lastShowedId: number; // tslint:disable-line:variable-name
     private _popupHelper: Popup = new Popup();
     protected _template: TemplateFunction = _template;
 
@@ -179,15 +177,17 @@ export default class Container extends Control<IContainerConfig> implements ICon
 
     private __showDialog(config: Config): void {
         if (
-            config.isShowed ||
             config.mode !== Mode.dialog ||
-            config.getVersion && config.getVersion() === this.__lastShowedId ||
             !constants.isBrowserPlatform
         ) {
             return;
         }
-        this.__lastShowedId = config.getVersion && config.getVersion();
-        config.isShowed = true;
+
+        if (this._popupId) {
+            this._openDialog(config);
+            return;
+        }
+
         getTemplate(config.template)
             .then((dialogTemplate) => this._notifyServiceError(dialogTemplate, config.options))
             .then((dialogData) => {

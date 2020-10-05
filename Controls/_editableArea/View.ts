@@ -32,7 +32,10 @@ var
          }
 
          if (result && result.addCallback) {
-            return result.addCallback(function () {
+            return result.addCallback((res) => {
+               if (res === constEditing.CANCEL) {
+                  return Deferred.success();
+               }
                return _private.afterEndEdit(self, commit);
             });
          }

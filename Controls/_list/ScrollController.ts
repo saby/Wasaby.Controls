@@ -38,6 +38,7 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
         itemHeightProperty?: string;
         viewportHeight?: number;
     };
+    disableVirtualScroll: boolean;
     needScrollCalculation: boolean;
     collection: Collection<Record>;
     activeElement: string | number;
@@ -130,8 +131,10 @@ export default class ScrollController {
         if (options) {
             if (options.collection && (
                 this._options.collection !== options.collection ||
-                options.needScrollCalculation && !this._options.needScrollCalculation
+                options.needScrollCalculation && !this._options.needScrollCalculation ||
+                options.disableVirtualScroll !== this._options.disableVirtualScroll
             )) {
+                this._options.disableVirtualScroll = options.disableVirtualScroll;
                 if (options.needScrollCalculation) {
                     if (options.useNewModel) {
                         ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
@@ -255,7 +258,7 @@ export default class ScrollController {
     }
 
     private _initVirtualScroll(options: IOptions, count?: number): IScrollControllerResult {
-        const virtualScrollConfig = options.virtualScrollConfig || {};
+        const virtualScrollConfig = !options.disableVirtualScroll && options.virtualScrollConfig || {};
         if (options.collection && (
             !virtualScrollConfig.pageSize ||
             options.collection.getCount() >= virtualScrollConfig.pageSize ||
@@ -263,7 +266,7 @@ export default class ScrollController {
             this._virtualScroll
         )) {
             this._virtualScroll = new VirtualScroll(
-                options.virtualScrollConfig || {},
+                virtualScrollConfig,
                 {
                     viewport: this._viewportHeight,
                     scroll: this._viewHeight,
