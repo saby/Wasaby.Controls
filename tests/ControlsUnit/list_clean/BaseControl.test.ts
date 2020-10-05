@@ -263,7 +263,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._sourceController = {
                 getAllDataCount: () => 100,
                 hasMoreData: () => false
-            }
+            };
             baseControl._listViewModel._startIndex = 0;
             baseControl._listViewModel._stopIndex = 100;
             baseControl._viewportSize = 400;
@@ -274,7 +274,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._notify = (event, args) => {
                 assert.equal(event, 'doScroll');
                 assert.equal(args[0], 400);
-            }
+            };
 
             // эмулируем появление скролла
             await BaseControl._private.onScrollShow(baseControl, heightParams);
@@ -314,6 +314,38 @@ describe('Controls/list_clean/BaseControl', () => {
             cfgClone.navigation.viewConfig.pagingMode = 'base';
             await baseControl._beforeUpdate(cfgClone);
             assert.isTrue(baseControl._isPagingPadding());
+        });
+
+        it('paging mode is edge + itemActions', async () => {
+            const cfgClone = {...baseControlCfg};
+            cfgClone.navigation.viewConfig.pagingMode = 'edge';
+            baseControl.saveOptions(cfgClone);
+            await baseControl._beforeMount(cfgClone);
+            baseControl._container = {
+                clientHeight: 1000
+            };
+            baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
+            baseControl._mouseEnter(null);
+            assert.isTrue(baseControl._pagingVisible);
+
+            // Эмулируем начало редактирования
+            await baseControl._beforeBeginEditCallback(null, false);
+            assert.isFalse(baseControl._pagingVisible);
+            baseControl._mouseEnter(null);
+            assert.isFalse(baseControl._pagingVisible);
+
+            const item = {
+                contents: {
+                    unsubscribe: () => {
+                        return '';
+                    }
+                }
+            };
+            baseControl._afterEndEditCallback(item, false);
+            assert.isTrue(baseControl._pagingVisible);
         });
     });
     describe('beforeUnmount', () => {
