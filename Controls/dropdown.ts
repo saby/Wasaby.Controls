@@ -3,7 +3,6 @@
  * @library Controls/dropdown
  * @includes Button Controls/_dropdown/Button
  * @includes Input Controls/_dropdown/Input
- * @includes _Controller Controls/_dropdown/_Controller
  * @includes Combobox Controls/_dropdown/ComboBox
  * @includes ItemTemplate Controls/dropdown:ItemTemplate
  * @includes HeaderTemplate Controls/dropdown:HeaderTemplate
@@ -23,7 +22,6 @@
  * @library Controls/dropdown
  * @includes Button Controls/_dropdown/Button
  * @includes Input Controls/_dropdown/Input
- * @includes _Controller Controls/_dropdown/_Controller
  * @includes Combobox Controls/_dropdown/ComboBox
  * @includes ItemTemplate Controls/dropdown:ItemTemplate
  * @includes HeaderTemplate Controls/dropdown:HeaderTemplate
