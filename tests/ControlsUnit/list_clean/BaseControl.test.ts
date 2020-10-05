@@ -316,7 +316,7 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isTrue(baseControl._isPagingPadding());
         });
 
-        it('paging mode is edge + itemActions', async () => {
+        it('paging mode is edge + eip', async () => {
             const cfgClone = {...baseControlCfg};
             cfgClone.navigation.viewConfig.pagingMode = 'edge';
             baseControl.saveOptions(cfgClone);
