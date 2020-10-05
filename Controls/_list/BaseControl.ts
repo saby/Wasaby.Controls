@@ -3838,10 +3838,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     },
 
-    /**
-     * Скролит к началу или концу списка.
-     * @param direction
-     */
     scrollToEdge(direction: 'up' | 'down'): void {
         _private.setMarkerAfterScroll(this);
         if (_private.hasMoreData(this, this._sourceController, direction)) {
