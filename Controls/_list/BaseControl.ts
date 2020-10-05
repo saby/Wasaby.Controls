@@ -582,7 +582,7 @@ const _private = {
     keyDownEnd(self, event) {
         _private.setMarkerAfterScroll(self, event);
         if (self._options.navigation.viewConfig.showEndButton) {
-            _private.scrollToEdge(self, 'down');
+            self.scrollToEdge('down');
         }
     },
     keyDownPageUp(self, event) {
@@ -979,42 +979,6 @@ const _private = {
         }
     },
 
-    scrollToEdge(self, direction) {
-        _private.setMarkerAfterScroll(self);
-        if (_private.hasMoreData(self, self._sourceController, direction)) {
-            let pagingMode = '';
-            if (self._options.navigation && self._options.navigation.viewConfig) {
-                pagingMode = self._options.navigation.viewConfig.pagingMode;
-            }
-            self._sourceController.setEdgeState(direction, pagingMode);
-
-            // Если пейджинг уже показан, не нужно сбрасывать его при прыжке
-            // к началу или концу, от этого прыжка его состояние не может
-            // измениться, поэтому пейджинг не должен прятаться в любом случае
-            self._shouldNotResetPagingCache = true;
-            _private.reload(self, self._options).addCallback(function() {
-                self._shouldNotResetPagingCache = false;
-
-                /**
-                 * Если есть ошибка, то не нужно скроллить, иначе неоднозначное поведение:
-                 * иногда скролл происходит раньше, чем показана ошибка, тогда показывается ошибка внутри списка;
-                 * иногда ошибка показывается раньше скролла, тогда ошибка во весь список.
-                 * https://online.sbis.ru/opendoc.html?guid=ab2c30cd-895d-4b1f-8f71-cd0063e581d2
-                 */
-                if (!self.__error) {
-                    if (direction === 'up') {
-                        self._notify('doScroll', ['top'], { bubbling: true });
-                    } else {
-                        _private.jumpToEnd(self);
-                    }
-                }
-            });
-        } else if (direction === 'up') {
-            self._notify('doScroll', ['top'], { bubbling: true });
-        } else {
-            _private.jumpToEnd(self);
-        }
-    },
     scrollPage(self, direction) {
         if (!self._scrollPageLocked) {
             /**
@@ -3879,6 +3843,47 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     },
 
+    /**
+     * Скролит к началу или концу списка.
+     * @param direction
+     */
+    scrollToEdge(direction: 'up' | 'down'): void {
+        _private.setMarkerAfterScroll(this);
+        if (_private.hasMoreData(this, this._sourceController, direction)) {
+            let pagingMode = '';
+            if (this._options.navigation && this._options.navigation.viewConfig) {
+                pagingMode = this._options.navigation.viewConfig.pagingMode;
+            }
+            this._sourceController.setEdgeState(direction, pagingMode);
+
+            // Если пейджинг уже показан, не нужно сбрасывать его при прыжке
+            // к началу или концу, от этого прыжка его состояние не может
+            // измениться, поэтому пейджинг не должен прятаться в любом случае
+            this._shouldNotResetPagingCache = true;
+            _private.reload(this, this._options).addCallback(function() {
+                this._shouldNotResetPagingCache = false;
+
+                /**
+                 * Если есть ошибка, то не нужно скроллить, иначе неоднозначное поведение:
+                 * иногда скролл происходит раньше, чем показана ошибка, тогда показывается ошибка внутри списка;
+                 * иногда ошибка показывается раньше скролла, тогда ошибка во весь список.
+                 * https://online.sbis.ru/opendoc.html?guid=ab2c30cd-895d-4b1f-8f71-cd0063e581d2
+                 */
+                if (!this.__error) {
+                    if (direction === 'up') {
+                        this._notify('doScroll', ['top'], {bubbling: true});
+                    } else {
+                        _private.jumpToEnd(this);
+                    }
+                }
+            });
+        } else if (direction === 'up') {
+            this._notify('doScroll', ['top'], {bubbling: true});
+        } else {
+            _private.jumpToEnd(this);
+        }
+    },
+
     __onPagingArrowClick(e, arrow) {
         switch (arrow) {
             case 'Next':
@@ -3890,13 +3895,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             case 'Begin':
                 const resultEvent = this._notify('pagingArrowClick', ['Begin'], {bubbling: true});
                 if (resultEvent !== false) {
-                    _private.scrollToEdge(this, 'up');
+                    this.scrollToEdge('up');
                 }
                 break;
             case 'End':
                 const resultEvent = this._notify('pagingArrowClick', ['End'], {bubbling: true});
                 if (resultEvent !== false) {
-                    _private.scrollToEdge(this, 'down');
+                    this.scrollToEdge('down');
                 }
                 break;
         }
