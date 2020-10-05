@@ -10,13 +10,13 @@ const defaultOptions = {
 
 const initSearchDelay = (options?: Partial<ISearchDelayOptions>) => {
    const searchCallback = sinon.stub();
-   const searchDelay = new SearchResolver({
+   const searchResolver = new SearchResolver({
       ...defaultOptions,
       searchCallback,
       ...options
    });
    return {
-      searchDelay, searchCallback
+      searchResolver, searchCallback
    };
 };
 
@@ -25,21 +25,21 @@ describe('Controls/search:SearchDelay', () => {
 
    describe('delayTime', () => {
       it('should callback when delay is undefined', () => {
-         const {searchDelay, searchCallback} = initSearchDelay({
+         const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3
          });
 
-         searchDelay.resolve('test');
+         searchResolver.resolve('test');
          assert.isTrue(searchCallback.called);
       });
 
       it('should callback when delay is 0', () => {
-         const {searchDelay, searchCallback} = initSearchDelay({
+         const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3,
             delayTime: 0
          });
 
-         searchDelay.resolve('test');
+         searchResolver.resolve('test');
          assert.isTrue(searchCallback.called);
       });
 
@@ -47,16 +47,66 @@ describe('Controls/search:SearchDelay', () => {
          const clock = sinon.useFakeTimers({
             now, toFake: ['setTimeout', 'clearTimeout']
          });
-         const {searchDelay, searchCallback} = initSearchDelay({
+         const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3,
             delayTime: 1000
          });
 
-         searchDelay.resolve('test');
+         searchResolver.resolve('test');
          clock.tick(1001);
          assert.isTrue(searchCallback.called);
 
          clock.restore();
+      });
+   });
+
+   describe('searchStarted', () => {
+      it('shouldn\'t resolve callback if search isn\'t started', () => {
+         const searchResetCallback = sinon.stub();
+         const {searchResolver, searchCallback} = initSearchDelay({
+            minSearchLength: 3,
+            delayTime: 1000,
+            searchResetCallback
+         });
+         searchResolver.resolve('');
+
+         assert.isFalse(searchCallback.called);
+         assert.isFalse(searchResetCallback.called);
+      });
+
+      it('searchStarted = false when length is > 0', () => {
+         const clock = sinon.useFakeTimers({
+            now, toFake: ['setTimeout', 'clearTimeout']
+         });
+         const searchResetCallback = sinon.stub();
+         const {searchResolver, searchCallback} = initSearchDelay({
+            minSearchLength: 3,
+            delayTime: 1000,
+            searchResetCallback
+         });
+         searchResolver.resolve('te');
+
+         clock.tick(1001);
+
+         assert.isFalse(searchCallback.called);
+         assert.isFalse(searchResetCallback.called);
+         assert.isFalse(searchResolver._searchStarted);
+
+         clock.restore();
+      });
+
+      it('searchStarted = true when delayTime = 0, length > minLength', () => {
+         const searchResetCallback = sinon.stub();
+         const {searchResolver, searchCallback} = initSearchDelay({
+            minSearchLength: 3,
+            delayTime: 0,
+            searchResetCallback
+         });
+         searchResolver.resolve('test');
+
+         assert.isTrue(searchCallback.called);
+         assert.isFalse(searchResetCallback.called);
+         assert.isTrue(searchResolver._searchStarted);
       });
    });
 
@@ -66,13 +116,14 @@ describe('Controls/search:SearchDelay', () => {
             now, toFake: ['setTimeout', 'clearTimeout']
          });
          const searchResetCallback = sinon.stub();
-         const {searchDelay, searchCallback} = initSearchDelay({
+         const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3,
             delayTime: 1000,
             searchResetCallback
          });
+         searchResolver._searchStarted = true;
+         searchResolver.resolve('');
 
-         searchDelay.resolve('');
          clock.tick(1001);
 
          assert.isFalse(searchCallback.called);
@@ -86,13 +137,14 @@ describe('Controls/search:SearchDelay', () => {
             now, toFake: ['setTimeout', 'clearTimeout']
          });
          const searchResetCallback = sinon.stub();
-         const {searchDelay, searchCallback} = initSearchDelay({
+         const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3,
             delayTime: 1000,
             searchResetCallback
          });
 
-         searchDelay.resolve(null);
+         searchResolver._searchStarted = true;
+         searchResolver.resolve(null);
          clock.tick(1001);
 
          assert.isFalse(searchCallback.called);
@@ -105,11 +157,11 @@ describe('Controls/search:SearchDelay', () => {
          const clock = sinon.useFakeTimers({
             now, toFake: ['setTimeout', 'clearTimeout']
          });
-         const {searchDelay, searchCallback} = initSearchDelay({
+         const {searchResolver, searchCallback} = initSearchDelay({
             delayTime: 1000
          });
 
-         searchDelay.resolve('test');
+         searchResolver.resolve('test');
          clock.tick(1001);
          assert.isFalse(searchCallback.called);
 
@@ -118,13 +170,14 @@ describe('Controls/search:SearchDelay', () => {
 
       it('shouldn\'t callback when minSearchValueLength is null and valueLength is 0', () => {
          const searchResetCallback = sinon.stub();
-         const {searchDelay, searchCallback} = initSearchDelay({
+         const {searchResolver, searchCallback} = initSearchDelay({
             delayTime: 1000,
             minSearchLength: null,
             searchResetCallback
          });
 
-         searchDelay.resolve('');
+         searchResolver._searchStarted = true;
+         searchResolver.resolve('');
 
          assert.isFalse(searchCallback.called);
          assert.isTrue(searchResetCallback.called);
@@ -135,13 +188,13 @@ describe('Controls/search:SearchDelay', () => {
             now, toFake: ['setTimeout', 'clearTimeout']
          });
          const searchResetCallback = sinon.stub();
-         const {searchDelay, searchCallback} = initSearchDelay({
+         const {searchResolver, searchCallback} = initSearchDelay({
             delayTime: 1000,
             minSearchLength: null,
             searchResetCallback
          });
 
-         searchDelay.resolve('test');
+         searchResolver.resolve('test');
 
          clock.tick(1001);
          assert.isFalse(searchCallback.called);
@@ -154,12 +207,12 @@ describe('Controls/search:SearchDelay', () => {
          const clock = sinon.useFakeTimers({
             now, toFake: ['setTimeout', 'clearTimeout']
          });
-         const {searchDelay, searchCallback} = initSearchDelay({
+         const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 0,
             delayTime: 1000
          });
 
-         searchDelay.resolve('t');
+         searchResolver.resolve('t');
          clock.tick(1001);
          assert.isTrue(searchCallback.called);
 
