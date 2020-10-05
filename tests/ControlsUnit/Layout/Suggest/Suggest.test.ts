@@ -287,7 +287,6 @@ describe('Controls/suggest', () => {
 
          inputContainer._loading = null;
          inputContainer.saveOptions(options);
-         inputContainer._searchDelay = 0;
          inputContainer._children = {};
 
          try {
@@ -296,7 +295,6 @@ describe('Controls/suggest', () => {
             errorFired = true;
          }
 
-         assert.equal(options.searchDelay, inputContainer._searchDelay);
          assert.isFalse(errorFired);
          assert.equal(inputContainer._loading, null);
 
@@ -453,7 +451,6 @@ describe('Controls/suggest', () => {
             };
          }
 
-         inputContainer._searchDelay = 300;
          inputContainer._setFilter({}, inputContainer._options);
          inputContainer._notify = (event, val) => {
             if (event === 'suggestStateChanged') {
@@ -466,11 +463,9 @@ describe('Controls/suggest', () => {
          };
 
          return inputContainer._inputActivatedHandler().then(() => {
-            assert.equal(inputContainer._searchDelay, 300);
             inputContainer._options.readOnly = false;
          }).then(() => {
             inputContainer._inputActivatedHandler().then(() => {
-               assert.equal(inputContainer._searchDelay, 0);
                inputContainer._dependenciesDeferred.addCallback(() => {
                   assert.isTrue(suggestState);
                   assert.deepEqual(inputContainer._filter.historyKeys, IDENTIFICATORS);
@@ -615,13 +610,10 @@ describe('Controls/suggest', () => {
             minSearchLength: 3
          });
 
-         inputContainer._searchDelay = 0;
-
          const resolverSpy = sinon.spy(SearchResolverController.prototype, 'resolve');
 
          inputContainer._resolveSearch('test');
 
-         assert.equal(inputContainer._searchDelay, 300);
          assert.instanceOf(inputContainer._searchResolverController, SearchResolverController);
 
          assert.isTrue(resolverSpy.calledWith('test'));
@@ -739,16 +731,6 @@ describe('Controls/suggest', () => {
          assert.equal(suggestComponent._filter.currentTab, 'test');
          assert.isTrue(suggestActivated);
          assert.isTrue(suggestComponent._suggestMarkedKey === null);
-      });
-
-      it('Suggest::searchDelay on tabChange', () => {
-         const suggestComponent = getComponentObject({
-            source: getMemorySource()
-         });
-         suggestComponent.activate = () => {};
-
-         suggestComponent._tabsSelectedKeyChanged('test');
-         assert.equal(suggestComponent._searchDelay, 0);
       });
 
       it('Suggest::_beforeMount', () => {
