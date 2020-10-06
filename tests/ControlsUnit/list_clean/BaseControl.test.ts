@@ -351,14 +351,6 @@ describe('Controls/list_clean/BaseControl', () => {
             };
             baseControl._mouseEnter(null);
             assert.isTrue(baseControl._pagingVisible);
-
-            // Эмулируем начало редактирования
-            await baseControl._afterBeginEditCallback(null, false);
-            baseControl._editInPlaceController = {isEditing: () => true};
-            assert.isFalse(baseControl._pagingVisible);
-            baseControl._mouseEnter(null);
-            assert.isFalse(baseControl._pagingVisible);
-
             const item = {
                 contents: {
                     unsubscribe: () => {
@@ -366,6 +358,13 @@ describe('Controls/list_clean/BaseControl', () => {
                     }
                 }
             };
+            // Эмулируем начало редактирования
+            await baseControl._afterBeginEditCallback(item, false);
+            baseControl._editInPlaceController = {isEditing: () => true};
+            assert.isFalse(baseControl._pagingVisible);
+            baseControl._mouseEnter(null);
+            assert.isFalse(baseControl._pagingVisible);
+
             baseControl._afterEndEditCallback(item, false);
             baseControl._editInPlaceController.isEditing = () => {
                 return false;
