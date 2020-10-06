@@ -132,9 +132,7 @@ export interface ITreeSelectionStrategyOptions {
  * @public
  * @author Панихин К.А.
  */
-export interface IFlatSelectionStrategyOptions {
-   items: Array<CollectionItem<Model>>;
-}
+export interface IFlatSelectionStrategyOptions {}
 
 /**
  * Изменения в списке ключей

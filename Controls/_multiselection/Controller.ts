@@ -54,13 +54,14 @@ export class Controller {
     */
    updateOptions(options: ISelectionControllerOptions): void {
       this._strategy.update(options.strategyOptions);
-      this._strategy.setItems(this._getSelectableItems());
       this._searchValue = options.searchValue;
 
       if (this._model !== options.model) {
          this._model = options.model;
          this.setSelection(this.getSelection());
       }
+
+      this._strategy.setItems(this._getSelectableItems());
    }
 
    /**
