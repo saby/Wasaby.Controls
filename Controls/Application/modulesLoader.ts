@@ -1,7 +1,7 @@
 /**
  * A modules loader on application level
  */
-import ModulesManager from 'RequireJsLoader/ModulesManager';
+import {ModulesManager} from 'RequireJsLoader/conduct';
 import {Library as library} from 'UI/Utils';
 
 interface IParsedName {

@@ -170,12 +170,72 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
             assert.isFalse(collection.isEditing());
         });
 
+        describe('should set temporary adding item key if it was not set', () => {
+            // values of typed fields and its transformed expected values. [empty, transformed].
+            const variants: Record<string, Array<[null | undefined | number | string, number | string]>> = {
+                integer: [
+                    [null, Number.MIN_VALUE],
+                    [undefined, Number.MIN_VALUE],
+                    [100, 100]
+                ],
+                string: [
+                    [null, 'ADDING_ITEM_EMPTY_KEY'],
+                    [undefined, 'ADDING_ITEM_EMPTY_KEY'],
+                    ['str', 'str']
+                ]
+            };
+
+            for(const keyPropertyType in variants) {
+                describe(keyPropertyType, () => {
+                    variants[keyPropertyType].forEach((pair) => {
+                        const emptyKey = pair[0];
+                        const transformedKey = pair[1];
+
+                        it(`key transformed from ${emptyKey} to ${transformedKey} on adding`, () => {
+                            // Нет запущенного редактирования
+                            assert.notExists(collectionEditor.getEditingItem());
+                            assert.isFalse(collection.isEditing());
+
+                            // Запуск добавления записи с пустым ключом.
+                            collectionEditor.add(new Model({
+                                keyProperty: 'id',
+                                rawData: { id: emptyKey, title: 'Fourth' },
+                                format: [
+                                    { name: 'id', type: keyPropertyType },
+                                    { name: 'title', type: 'string' }
+                                ]
+                            }));
+
+                            // Добавление запустилось, записи установлен временный ключ.
+                            assert.isTrue(collection.isEditing());
+                            assert.equal(collectionEditor.getEditingItem().contents.getKey(), transformedKey);
+                        });
+                    });
+                });
+            }
+        });
+
         it('should set temporary adding item key if it is undefined', () => {
             // Нет запущенного редактирования
             assert.notExists(collectionEditor.getEditingItem());
             assert.isFalse(collection.isEditing());
 
             newItem.set('id', undefined);
+
+            // Запуск добавления записи с пустым ключом.
+            collectionEditor.add(newItem);
+
+            // Добавление запустилось, записи установлен временный ключ.
+            assert.isTrue(collection.isEditing());
+            assert.equal(collectionEditor.getEditingItem().contents.getKey(), 'ADDING_ITEM_EMPTY_KEY');
+        });
+
+        it('should set temporary adding item key if it is null', () => {
+            // Нет запущенного редактирования
+            assert.notExists(collectionEditor.getEditingItem());
+            assert.isFalse(collection.isEditing());
+
+            newItem.set('id', null);
 
             // Запуск добавления записи с пустым ключом.
             collectionEditor.add(newItem);
@@ -304,24 +364,6 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
             }, ERROR_MSG.HAS_NO_EDITING);
         });
 
-        it('should throw error if trying to commit adding item with undefined key', () => {
-            // Нет запущенного редактирования
-            assert.notExists(collectionEditor.getEditingItem());
-            assert.isFalse(collection.isEditing());
-
-            // Запуск добавления записи с пустым ключом.
-            newItem.set('id', undefined);
-            collectionEditor.add(newItem);
-
-            // Добавление запустилось, записи установлен временный ключ.
-            assert.isTrue(collection.isEditing());
-            assert.equal(collectionEditor.getEditingItem().contents.getKey(), 'ADDING_ITEM_EMPTY_KEY');
-
-            // Запуск добавления новой записи должен привести к исключению
-            assert.throws(() => {
-                collectionEditor.commit();
-            }, ERROR_MSG.ADDING_ITEM_KEY_WAS_NOT_SET);
-        });
     });
 
     describe('cancel', () => {

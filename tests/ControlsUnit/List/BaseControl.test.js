@@ -159,15 +159,9 @@ define([
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
             let doScrollToTop = false;
-            ctrl._notify = (name, params) => {
-               if (name === 'doScroll' && params && params[0] === 'top') {
-                  doScrollToTop = true;
-               }
-            };
+            
             ctrl._isScrollShown = true;
             ctrl._beforeUpdate(cfg);
-
-            assert.isTrue(doScrollToTop);
 
             // check saving loaded items after new viewModelConstructor
             // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
@@ -3417,6 +3411,83 @@ define([
 
             lists.BaseControl._private.closeEditingIfPageChanged(fakeCtrl, {sourceConfig: {page: 1}}, {sourceConfig: {page: 2}});
             assert.isTrue(isCanceled);
+         });
+
+         it('register form operation in afterMount is mount with editing', async() => {
+            const cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               editingConfig: {
+                  item: new entity.Model({ keyProperty: 'id', rawData: { id: 1910 } })
+               },
+               viewModelConstructor: lists.ListViewModel
+            };
+            const baseControl = new lists.BaseControl(cfg);
+            let isRegistered = false;
+
+            baseControl._notify = (eName) => {
+               if (eName === 'registerFormOperation') {
+                  isRegistered = true;
+               }
+            };
+
+            baseControl.saveOptions(cfg);
+            await baseControl._beforeMount(cfg);
+            assert.isFalse(isRegistered);
+
+            baseControl._afterMount(cfg);
+            assert.isTrue(isRegistered);
+         });
+
+         it('register form operation immediately on create EIP', async() => {
+            it('register form operation immediately on create EIP', (done) => {
+               const cfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: source,
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: rs,
+                     keyProperty: 'id',
+                     selectedKeys: [1, 3]
+                  },
+                  viewModelConstructor: lists.ListViewModel
+               };
+               const baseControl = new lists.BaseControl(cfg);
+               let isRegistered = false;
+
+               baseControl._notify = (eName) => {
+                  if (eName === 'registerFormOperation') {
+                     isRegistered = true;
+                  }
+               };
+               baseControl.showIndicator = () => {};
+               baseControl.hideIndicator = () => {};
+
+               baseControl.saveOptions(cfg);
+               baseControl._beforeMount(cfg).then(() => {
+                  assert.isFalse(isRegistered);
+
+                  baseControl._afterMount(cfg);
+                  assert.isFalse(isRegistered);
+
+                  source.read(1).then((item) => {
+                     baseControl.beginEdit({ item }).then(() => {
+                        assert.isTrue(isRegistered);
+                        done();
+                     });
+                  });
+               });
+            });
          });
       });
 
