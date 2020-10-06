@@ -176,7 +176,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     const markedKey = this._markerController.calculateMarkedKeyForVisible();
                     this._markerController.setMarkedKey(markedKey);
                 }
-                if (options.selectedKeys && options.selectedKeys.length) {
+                if (options.selectedKeys && options.selectedKeys.length && options.multiSelect) {
                     this._selectionController = this._createSelectionController(options);
                     this._selectionController.setSelection(this._selectionController.getSelection());
                 }
@@ -653,11 +653,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getSelectedKeys(): TSelectedKeys {
-        const selectedKeys: TSelectedKeys = [];
-        factory(this._listModel.getSelectedItems()).each((treeItem): void => {
-            const itemContents: Model = treeItem.getContents();
-            selectedKeys.push(itemContents instanceof Object && itemContents.get(this._options.keyProperty));
-        });
+        let selectedKeys = [];
+
+        if (this._options.multiSelect) {
+            selectedKeys = this._getSelectionController().getSelection().selected;
+        } else {
+            selectedKeys = this._options.selectedKeys;
+        }
+
         return selectedKeys;
     }
 
