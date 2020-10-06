@@ -28,6 +28,7 @@
 
                         on:contextmenu="_onItemContextMenu(itemData)"
                         on:swipe="_onItemSwipe(itemData)"
+                        on:longtap="_onItemLongTap(item)"
                         on:mouseup="_onItemMouseUp(itemData)"
                         on:mouseenter="_onItemMouseEnter(itemData)"
                         on:mouseleave="_onItemMouseLeave(itemData)"
@@ -52,6 +53,7 @@
                     on:click="_onItemClick(itemData.dispItem)"
                     on:contextmenu="_onItemContextMenu(itemData)"
                     on:swipe="_onItemSwipe(itemData)"
+                    on:longtap="_onItemLongTap(item)"
                     on:mousedown="_onItemMouseDown(itemData)"
                     on:mouseup="_onItemMouseUp(itemData)"
                     on:mouseenter="_onItemMouseEnter(itemData)"
