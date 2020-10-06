@@ -11,10 +11,12 @@ export const ERROR_MSG = {
     COLLECTION_IS_REQUIRED: 'Options ICollectionEditorOptions:collection is required.',
     SOURCE_COLLECTION_MUST_BE_RECORDSET: 'Source collection must be instance of type extended of Types/collection:RecordSet.',
     HAS_NO_EDITING: 'There is no running edit in collection.',
-    EDITING_IS_ALREADY_RUNNING: 'Editing is already running. Commit or cancel current before beginning new.'
+    EDITING_IS_ALREADY_RUNNING: 'Editing is already running. Commit or cancel current before beginning new.',
+    NO_FORMAT_FOR_KEY_PROPERTY: 'There is no format for item\'s key property. It is required if trying to add item with empty key. set item\'s key or format of key property.'
 };
 
-const ADDING_ITEM_EMPTY_KEY = 'ADDING_ITEM_EMPTY_KEY';
+const ADDING_ITEM_EMPTY_INT_KEY = Number.MIN_VALUE;
+const ADDING_ITEM_EMPTY_STRING_KEY = 'ADDING_ITEM_EMPTY_KEY';
 
 interface ICollectionEditorOptions {
     collection: IEditableCollection;
@@ -127,8 +129,8 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         // При добавлении записи без ключа, ей выдается временный ключ для корректной работы коллекции.
         // Это необходимо, т.к. допускается запуск добавления записи без кдюча, однако сохранить, ее невозможно,
         // пока не установлен настоящий ключ.
-        if (item.getKey() === undefined) {
-            item.set(item.getKeyProperty(), ADDING_ITEM_EMPTY_KEY);
+        if (item.getKey() === undefined || item.getKey() === null) {
+            this._setTemporaryKey(item);
         }
 
         this._validateAddingItem(item);
@@ -161,9 +163,6 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         // Временный ключ выдается добавляемой записи с отсутствующим ключом, т.к.
         // допустимо запускать добавление такой записи, в отличае от сохранения.
         const collectionItem = this._options.collection.getItemBySourceKey(this._editingKey);
-        if (collectionItem.isAdd && this._editingKey === ADDING_ITEM_EMPTY_KEY) {
-            throw Error(ERROR_MSG.ADDING_ITEM_KEY_WAS_NOT_SET);
-        }
         collectionItem.acceptChanges();
         this._editingKey = undefined;
 
@@ -233,11 +232,37 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         const addingKey = item.getKey();
         const collectionItem = this._options.collection.getItemBySourceKey(addingKey);
         if (collectionItem) {
-            if (addingKey === ADDING_ITEM_EMPTY_KEY) {
+            if (addingKey === ADDING_ITEM_EMPTY_STRING_KEY || addingKey === ADDING_ITEM_EMPTY_INT_KEY) {
                 throw Error(ERROR_MSG.ADDING_ITEM_KEY_WAS_NOT_SET);
             } else {
                 throw Error(`${ERROR_MSG.ADD_ITEM_KEY_DUPLICATED} Duplicated key: ${addingKey}.`);
             }
+        }
+    }
+
+    private _setTemporaryKey(item: Model): void {
+        const keyProperty = item.getKeyProperty();
+        const format = item.getFormat();
+        const fieldFormatIndex = format.getFieldIndex(keyProperty);
+        let keyValue;
+
+        if (fieldFormatIndex === -1) {
+            keyValue = ADDING_ITEM_EMPTY_STRING_KEY;
+        } else {
+            const keyType = format.at(fieldFormatIndex).getTypeName();
+
+            // Если тип ключевого поля не является строковым или числовым, то временный ключ не выдается.
+            if (keyType === 'String') {
+                keyValue = ADDING_ITEM_EMPTY_STRING_KEY;
+            } else if (keyType === 'Integer') {
+                keyValue = ADDING_ITEM_EMPTY_INT_KEY;
+            }
+        }
+
+        if (!keyValue || this._options.collection.getItemBySourceKey(keyValue)) {
+            throw Error(ERROR_MSG.ADDING_ITEM_KEY_WAS_NOT_SET);
+        } else {
+            item.set(keyProperty, keyValue);
         }
     }
 
