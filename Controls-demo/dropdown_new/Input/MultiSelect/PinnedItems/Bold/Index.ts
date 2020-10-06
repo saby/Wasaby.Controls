@@ -47,5 +47,5 @@ export default class extends Control<IControlOptions> {
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo',
-        'Controls-demo/dropdown_new/Input/MultiSelect/PinnedItems/Bold/Index'];
+        'Controls-demo/dropdown_new/Input/MultiSelect/PinnedItems/Index'];
 }
