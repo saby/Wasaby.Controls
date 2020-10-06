@@ -2,7 +2,6 @@ import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
 import {tmplNotify} from 'Controls/eventUtils';
 import {Logger} from 'UI/Utils';
-import 'Controls/lookup';
 
 /**
  * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
