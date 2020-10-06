@@ -15,10 +15,11 @@
       "build": "npm run builder && npm run build:index",
       "build:typescript": "wasaby-cli --tasks=prepare",
       "builder": "wasaby-cli --tasks=build",
+      "builder:watch": "wasaby-cli --tasks=build --watcher",
       "build:index": "wasaby-cli --tasks=createIndex --moduleName=Controls-demo",
-      "builder:watcher": "wasaby-cli --tasks=build --watcher",
       "compile": "saby-typescript --compiler",
       "start": "wasaby-cli --tasks=app",
+      "start:hot": "concurrently \"npm:builder:watch\" \"npm:start\"",
       "start:units": "wasaby-cli --tasks=startTest --server",
       "test": "wasaby-cli --tasks=startTest --node --report=console",
       "test:coverage": "wasaby-cli --tasks=startTest --node --coverage",
@@ -33,10 +34,11 @@
    "dependencies": {},
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.3",
+      "concurrently": "^5.3.0",
       "eslint": "^5.7.0",
-      "wasaby-cli": "git+https://platform-git.sbis.ru/saby/wasaby-cli.git#rc-20.7000",
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
-      "tslint": "^5.18.0"
+      "tslint": "^5.18.0",
+      "wasaby-cli": "git+https://platform-git.sbis.ru/saby/wasaby-cli.git#rc-20.7000"
    }
 }

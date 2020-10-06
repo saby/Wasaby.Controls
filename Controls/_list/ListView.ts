@@ -7,6 +7,8 @@ import {Logger} from 'UI/Utils';
 import ListViewTpl = require('wml!Controls/_list/ListView/ListView');
 import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
+import * as forTemplate from 'wml!Controls/_list/Render/For';
+import * as oldForTemplate from 'wml!Controls/_list/resources/For';
 
 const DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
 
@@ -50,6 +52,7 @@ var ListView = BaseControl.extend(
         _pendingRedraw: false,
         _reloadInProgress: false,
         _callbackAfterReload: null,
+        _forTemplate: null,
 
         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
@@ -111,6 +114,11 @@ var ListView = BaseControl.extend(
                     // Если изменить опцию модели пока ListView не построена, то они и не применятся.
                     this._listModel.setItemPadding(newOptions.itemPadding, true);
                 }
+            }
+            if (newOptions.useNewModel) {
+                this._forTemplate = forTemplate;
+            } else {
+                this._forTemplate = oldForTemplate;
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },
@@ -190,6 +198,16 @@ var ListView = BaseControl.extend(
            if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false && !this._options.listModel.isEditing()) {
                 this._notify('itemContextMenu', [itemData, event, false]);
             }
+        },
+
+        /**
+         * Обработчик долгого тапа
+         * @param event
+         * @param itemData
+         * @private
+         */
+        _onItemLongTap(event, itemData): void {
+            this._onItemContextMenu(event, itemData);
         },
 
         _onItemSwipe: function(event, itemData) {
