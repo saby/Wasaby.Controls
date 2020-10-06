@@ -5306,6 +5306,113 @@ define([
          assert.isTrue(portionSearchReseted);
       });
 
+      it('_beforeUpdate with new viewModelConstructor', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            source: source,
+            getHasMoreData: () => true
+         };
+         let instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         instance._beforeUpdate({ ...cfg, viewModelConstructor: tree.TreeViewModel });
+         assert.isTrue(instance._listViewModel.getHasMoreData());
+      });
+
+      it('_beforeUpdate with new filter', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: tree.TreeViewModel,
+            keyProperty: 'id',
+            source: source,
+            selectedKeys: [],
+            excludedKeys: [],
+            parentProperty: 'node'
+         };
+         let instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         const notifySpy = sinon.spy(instance, '_notify');
+
+         instance._createSelectionController();
+         let cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue' };
+         instance._beforeUpdate(cfgClone);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+
+         cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'], selectionViewMode: 'selected'};
+         instance._beforeUpdate(cfgClone);
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+
+         cfgClone = { ...cfg, filter: { id: 'newvalue' }, root: 'newvalue', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
+         instance._beforeUpdate(cfgClone);
+         instance.saveOptions(cfgClone);
+
+         cfgClone = { ...cfg, filter: { id: 'newvalue1' }, root: 'newvalue1', selectedKeys: ['newvalue'], excludedKeys: ['newvalue'] };
+         instance._beforeUpdate(cfgClone);
+         assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [0, false], {bubbling: true}).called);
+      });
+
+      it('_beforeUpdate with new selectedKeys', async function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: tree.TreeViewModel,
+            keyProperty: 'id',
+            source: source,
+            selectedKeys: [],
+            excludedKeys: [],
+            parentProperty: 'node'
+         };
+         let instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         const notifySpy = sinon.spy(instance, '_notify');
+
+         instance._createSelectionController();
+         let cfgClone = { ...cfg, selectedKeys: [1] };
+         instance._beforeUpdate(cfgClone);
+
+         // нам ключи пришли в опциях и мы не должны их нотифаить
+         assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+         assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false], {bubbling: true}).called);
+         assert.isTrue(instance._listViewModel.getItemBySourceKey(1).isSelected());
+
+         notifySpy.resetHistory();
+         instance._listViewModel.getItemBySourceKey(1).setSelected(false);
+
+         cfgClone = { ...cfg, selectedKeys: [1], selectedKeysCount: 2 };
+         instance._beforeUpdate(cfgClone);
+         assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false], {bubbling: true}).called);
+         assert.isTrue(instance._listViewModel.getItemBySourceKey(1).isSelected());
+      });
+
       it('_beforeUpdate with new searchValue', async function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
