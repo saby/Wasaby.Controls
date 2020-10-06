@@ -332,7 +332,7 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isTrue(baseControl._pagingVisible);
 
             // Эмулируем начало редактирования
-            await baseControl._beforeBeginEditCallback(null, false);
+            await baseControl._afterBeginEditCallback(null, false);
             baseControl._editInPlaceController = {isEditing: () => true};
             assert.isFalse(baseControl._pagingVisible);
             baseControl._mouseEnter(null);
