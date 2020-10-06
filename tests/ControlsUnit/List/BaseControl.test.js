@@ -3520,6 +3520,7 @@ define([
          await ctrl._beforeMount(cfg);
          assert.isTrue(setHasMoreDataCalled);
          lists.BaseControl._private.needBottomPadding = origNBP;
+         lists.BaseControl._private.setHasMoreData = origSHMD;
       });
 
       it('getUpdatedMetaData: set full metaData.more on load to direction with position navigation', () => {
