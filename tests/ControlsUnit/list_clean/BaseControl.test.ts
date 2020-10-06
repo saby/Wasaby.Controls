@@ -355,6 +355,9 @@ describe('Controls/list_clean/BaseControl', () => {
                 contents: {
                     unsubscribe: () => {
                         return '';
+                    },
+                    subscribe: () => {
+                        return '';
                     }
                 }
             };
