@@ -1410,6 +1410,14 @@ var
             return this._model.getMultiSelectVisibility();
         },
 
+        setMultiSelectPosition(position) {
+            this._model.setMultiSelectPosition(position);
+        },
+
+        getMultiSelectPosition() {
+            return this._model.getMultiSelectPosition();
+        },
+
         setMultiSelectVisibility: function(multiSelectVisibility) {
             const hasMultiSelect = multiSelectVisibility !== 'hidden';
             this._model.setMultiSelectVisibility(multiSelectVisibility);

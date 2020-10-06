@@ -586,6 +586,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$multiSelectVisibility: string;
 
+    protected _$multiSelectPosition: 'default' | 'custom';
+
     protected _$leftPadding: string;
 
     protected _$rightPadding: string;
@@ -2238,6 +2240,18 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
+    setMultiSelectPosition(position: 'default' | 'custom'): void {
+        if (this._$multiSelectPosition === position) {
+            return;
+        }
+        this._$multiSelectPosition = position;
+        this._nextVersion();
+    }
+
+    getMultiSelectPosition(): 'default' | 'custom' {
+        return this._$multiSelectPosition;
+    }
+
     protected _setItemPadding(itemPadding: IItemPadding): void {
         this._$topPadding = itemPadding.top || 'default';
         this._$bottomPadding = itemPadding.bottom || 'default';
@@ -3649,6 +3663,7 @@ Object.assign(Collection.prototype, {
     _$displayProperty: '',
     _$itemTemplateProperty: '',
     _$multiSelectVisibility: 'hidden',
+    _$multiSelectPosition: 'default',
     _$leftPadding: 'default',
     _$rightPadding: 'default',
     _$topPadding: 'default',

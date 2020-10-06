@@ -188,6 +188,7 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
     static getDefaultOptions() {
         return {
             multiSelectVisibility: 'hidden',
+            multiSelectPosition: 'default',
             stickyHeader: true,
             style: 'default'
         };

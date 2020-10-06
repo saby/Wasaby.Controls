@@ -42,6 +42,7 @@ export interface ICollection<S, T> extends IBaseCollection<T> {
     getCollection(): ISourceCollection<S>;
     getDisplayProperty(): string;
     getMultiSelectVisibility(): string;
+    getMultiSelectPosition(): 'default' | 'custom';
     getTopPadding(): string;
     getBottomPadding(): string;
     getRightPadding(): string;

@@ -1,5 +1,5 @@
 <ws:template name="localItemTemplateContent">
-    <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' }}">
+    <ws:if data="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && multiSelectPosition !== 'custom' }}">
         <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ (item || itemData).getMultiSelectClasses(theme) }}">
             <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}" key="{{ (item || itemData).getContents().getKey() }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
         </ws:partial>
@@ -19,7 +19,15 @@
                         searchValue="{{ searchValue }}"
                         highlightOnHover="{{ highlightOnHover }}"
                         itemActionsTemplate="{{ itemActionsTemplate }}"
-                        swipeTemplate="{{ swipeTemplate }}" />
+                        swipeTemplate="{{ swipeTemplate }}">
+                    <ws:multiSelectTemplate>
+                        <ws:partial template="{{ multiSelectTpl }}"
+                                    if="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && multiSelectPosition === 'custom' }}"
+                                    attr:class="{{ (item || itemData).getMultiSelectClasses(theme) }}">
+                            <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}" key="{{ (item || itemData).getContents().getKey() }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
+                        </ws:partial>
+                    </ws:multiSelectTemplate>
+                </ws:partial>
             </div>
         </div>
     </ws:if>
