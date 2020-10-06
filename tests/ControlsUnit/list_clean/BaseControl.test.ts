@@ -1,6 +1,7 @@
 import {assert} from 'chai';
 import {BaseControl, ListViewModel} from 'Controls/list';
 import {RecordSet} from 'Types/collection';
+import {Memory} from 'Types/source';
 
 describe('Controls/list_clean/BaseControl', () => {
     describe('BaseControl watcher groupHistoryId', () => {
@@ -60,9 +61,9 @@ describe('Controls/list_clean/BaseControl', () => {
             viewName: 'Controls/List/ListView',
             keyProperty: 'id',
             viewModelConstructor: ListViewModel,
-            items: new RecordSet({
+            source: new Memory({
                 keyProperty: 'id',
-                rawData: []
+                data: []
             }),
             navigation: {
                 view: 'infinity',
@@ -108,6 +109,26 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._viewportSize = 0;
             baseControl._viewSize = 800;
             baseControl._mouseEnter(null);
+            assert.isFalse(baseControl._pagingVisible);
+        });
+
+        it('update navigation', async () => {
+            baseControl.saveOptions(baseControlCfg);
+            await baseControl._beforeMount(baseControlCfg);
+            baseControl._beforeUpdate(baseControlCfg);
+            baseControl._afterUpdate(baseControlCfg);
+            baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
+            assert.isFalse(baseControl._pagingVisible);
+            baseControl._viewportSize = 200;
+            baseControl._viewSize = 800;
+            baseControl._mouseEnter(null);
+            assert.isTrue(baseControl._pagingVisible);
+            const cloneBaseControlCfg = {...baseControlCfg};
+            cloneBaseControlCfg.navigation = {
+                view: 'infinity',
+                viewConfig: null
+            };
+            baseControl._beforeUpdate(cloneBaseControlCfg);
             assert.isFalse(baseControl._pagingVisible);
         });
     });

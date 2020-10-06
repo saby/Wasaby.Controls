@@ -3286,13 +3286,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         this._prevRootId = this._options.root;
-        if (!isEqual(newOptions.navigation, this._options.navigation)) {
+        if (navigationChanged) {
 
             // При смене страницы, должно закрыться редактирование записи.
             _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
             _private.initializeNavigation(this, newOptions);
             if (this._listViewModel && this._listViewModel.setSupportVirtualScroll) {
                 this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
+            }
+
+            if (this._pagingVisible) {
+                this._pagingVisible = false;
             }
         }
 
