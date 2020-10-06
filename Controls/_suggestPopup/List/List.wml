@@ -11,10 +11,9 @@
                         selectedKey="{{_suggestListOptions.tabsSelectedKey || _options.tabsOptions.selectedKey}}"/>
         </Controls.Container.Async>
     </ws:if>
-    <Controls.dataSource:error.Container viewConfig="{{_suggestListOptions.errorConfig}}">
+    <Controls.dataSource:error.Container name="list" viewConfig="{{_suggestListOptions.errorConfig}}">
         <ws:partial template="{{_options.content}}"
                     scope="{{_suggestListOptions}}"
-                    name="list"
                     markedKey="{{_markedKey}}"
                     navigation="{{_navigation}}"
                     itemsReadyCallback="{{_itemsReadyCallback}}"
