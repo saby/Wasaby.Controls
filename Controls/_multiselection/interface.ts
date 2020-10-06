@@ -16,6 +16,11 @@ export type TKeys = CrudEntityKey[];
  */
 export interface ISelectionItem extends ICollectionItem {
    /**
+    * Определяет, можно ли выбрать данный элемент
+    */
+   SelectableItem: boolean;
+
+   /**
     * Флаг, определяющий состояние правого свайпа по записи.
     * @method
     * @public
