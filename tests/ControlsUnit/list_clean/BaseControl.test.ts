@@ -1,7 +1,7 @@
 import {assert} from 'chai';
 import {BaseControl, ListViewModel} from 'Controls/list';
 import {RecordSet} from 'Types/collection';
-import Memory from '../../../Controls-demo/operations/SelectionViewMode/Memory';
+import {Memory} from 'Types/source';
 
 describe('Controls/list_clean/BaseControl', () => {
     describe('BaseControl watcher groupHistoryId', () => {
