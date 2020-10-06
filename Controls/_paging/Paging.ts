@@ -135,6 +135,10 @@ class Paging extends Control<IPagingOptions> {
             this._getArrowStateVisibility('end') === 'hidden');
     }
 
+    private _isBtnFirst(): boolean {
+        return (this._options.pagingMode === 'end' || this._options.pagingMode === 'edge');
+    }
+
     private _changePage(page: number): void {
         if (this._options.selectedPage !== page) {
             this._notify('selectedPageChanged', [page]);
