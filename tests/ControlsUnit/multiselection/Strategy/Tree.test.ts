@@ -410,17 +410,18 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.isNull(treeStrategyWithNodesMoreData.getCount(selection, false));
       });
 
+      it('selected node', () => {
+         const selection = {selected: [1], excluded: []};
+         const count = strategy.getCount(selection, false);
+         const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
+         assert.equal(count, 1);
+         assert.equal(countWithDescAndAnc, 5);
+      });
+
       it('selected all', () => {
          const selection = { selected: [null], excluded: [null] };
-         let count = strategy.getCount(selection, false);
-         let countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
-         assert.equal(count, 7);
-         assert.equal(countWithDescAndAnc, 7);
-
-         model.getItemBySourceKey(1).setExpanded(true);
-
-         count = strategy.getCount(selection, false);
-         countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
+         const count = strategy.getCount(selection, false);
+         const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
          assert.equal(count, 7);
          assert.equal(countWithDescAndAnc, 7);
       });
