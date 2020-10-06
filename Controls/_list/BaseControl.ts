@@ -305,6 +305,13 @@ const _private = {
         return needAttachLoadTopTriggerToNull;
     },
 
+    showTopTriggerAndAddPaddingIfNeed(self): void {
+        _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
+        if (self._hideTopTrigger) {
+            self._hideTopTrigger = false;
+        }
+    },
+
     reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
@@ -3237,10 +3244,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _afterMount(): void {
         this._isMounted = true;
 
-        if (!this._options.hasOwnProperty('hasMoreDataToUp')) {
-            this._hideTopTrigger = false;
-        }
-
         if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
             this._registerIntersectionObserver();
@@ -3284,8 +3287,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
 
-        if (!this._options.hasOwnProperty('hasMoreDataToUp')) {
-            _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+        if (!this._items || !this._items.getCount()) {
+            _private.showTopTriggerAndAddPaddingIfNeed(this);
         }
     },
 
@@ -4331,11 +4334,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
-        if (!this._scrollController?.getScrollTop()) {
-            _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
-            if (this._hideTopTrigger) {
-                this._hideTopTrigger = false;
-            }
+        if (!this._scrollTop) {
+            _private.showTopTriggerAndAddPaddingIfNeed(this);
         }
     },
 
