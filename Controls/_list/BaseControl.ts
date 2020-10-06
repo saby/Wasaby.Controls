@@ -4334,7 +4334,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
-        if (!this._scrollTop) {
+        if (!this._scrollController?.getScrollTop()) {
             _private.showTopTriggerAndAddPaddingIfNeed(this);
         }
     },

@@ -167,6 +167,10 @@ export default class ScrollController {
         this._isRendering = state;
     }
 
+    getScrollTop(): number {
+        return this._lastScrollTop;
+    }
+
     continueScrollToItemIfNeed(): boolean {
         let result = false;
         if (this._continueScrollToItem) {
