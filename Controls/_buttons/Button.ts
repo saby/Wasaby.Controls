@@ -90,7 +90,8 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
     this._hasIcon = !!options.icon;
 
     this._caption = options.caption;
-    this._stringCaption = typeof options.caption === 'string';
+    // На сервере rk создает инстанс String'a, проверки на typeof недостаточно
+    this._stringCaption = typeof options.caption === 'string' || options.caption instanceof String;
     this._captionPosition = options.captionPosition || 'right';
 
     this._icon = options.icon;
