@@ -220,7 +220,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
             if (nodeSourceController?.hasMoreData('down')) {
                 countItemsSelectedInNode = null;
             } else {
-                countItemsSelectedInNode = this._getSelectedChildrenCount(nodeKey, selection, this._items, this._selectDescendants);
+                countItemsSelectedInNode = this._getSelectedChildrenCount(nodeKey, selection, this._items);
             }
 
             if (countItemsSelectedInNode === null) {
@@ -510,8 +510,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    private _getSelectedChildrenCount(
       nodeId: CrudEntityKey,
       selection: ISelection,
-      items: Array<TreeItem<Model>>,
-      deep?: boolean
+      items: Array<TreeItem<Model>>
    ): number|null {
       const nodeItem = items.find((item) => this._getKey(item) === nodeId);
       const children = this._getChildes(nodeId);
@@ -530,9 +529,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                      selectedChildrenCount++;
                   }
 
-                  const countChildes = deep || childItem.isExpanded();
-                  if (this._isNode(childItem) && this._isHasChildren(childItem) && countChildes) {
-                     childNodeSelectedCount = this._getSelectedChildrenCount(childId, selection, items, deep);
+                  if (this._isNode(childItem) && this._isHasChildren(childItem)) {
+                     childNodeSelectedCount = this._getSelectedChildrenCount(childId, selection, items);
 
                      if (childNodeSelectedCount === null) {
                         selectedChildrenCount = null;
@@ -543,7 +541,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                }
             }
          });
-      } else if ((!nodeItem || this._isHasChildren(nodeItem)) && deep) {
+      } else if (!nodeItem || this._isHasChildren(nodeItem)) {
          selectedChildrenCount = null;
       }
 
