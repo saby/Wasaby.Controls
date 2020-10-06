@@ -30,10 +30,16 @@ interface ISwitchableAreaItem {
 /**
  * @typedef {Object} SwitchableAreaItem
  * @property {String|Number} key Ключ элемента.
- * @property {Function} itemTemplate Шаблон элемента.
- * При инициализации контрола происходит загрузка всех контентных областей.
- * Чтобы инициализация контрола происходила быстрее, контентные области можно подгружать по необходимости, т.е. только при переключении на такую область.
- * Для этого используют класс {@link Controls/Container/Async}, подробнее о котором можно прочитать <a href="/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/">здесь</a>.
+ * @property {Function} itemTemplate Шаблон элемента (контентной области).
+ * 
+ * Шаблон, который указан в настройках этого свойства, нужно предварительно импортировать в родительский контрол.
+ * Т.к. загрузка шаблонов происходит синхронно, то длительность инициализации контрола может быть увеличена.
+ * 
+ * Чтобы инициализация контрола происходила быстрее, шаблоны можно подгружать по необходимости, т.е. только при переключении на шаблон.
+ * Для этого в конфигурации свойства **itemTemplate** рекомендуется использовать контрол-контейнер {@link Controls/Container/Async}.
+ * Он позволяет реализовать отложенную загрузку шаблонов для {@link Controls/switchableArea:View}.
+ * Это поведение показано в <a href="/materials/Controls-demo/app/Controls-demo%2FSwitchableArea%2FDemoSwitchableArea">демо-примере</a>.
+ * Подробнее об использовании Controls/Container/Async можно прочитать <a href="/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/">здесь</a>.
  * @property {Object} templateOptions Опции, передаваемые в itemTemplate.
  * @property {Boolean} [autofocus=true] Определяет, установится ли фокус на контентную область.
  */
