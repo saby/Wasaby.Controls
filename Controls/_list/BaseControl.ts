@@ -3264,7 +3264,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (!this._items || !this._items.getCount()) {
-            _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+            _private.showTopTriggerAndAddPaddingIfNeed(this);
         }
     },
 
