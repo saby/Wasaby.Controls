@@ -7547,6 +7547,17 @@ define([
             });
          });
 
+         it('spaceHandler and multiselection hidden', () => {
+            const baseControl = new lists.BaseControl();
+            baseControl.saveOptions({ ...cfg, multiSelectVisibility: 'hidden' });
+            return baseControl._beforeMount({ ...cfg, multiSelectVisibility: 'hidden' })
+               .then(() => {
+                     const result = lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null })
+                     assert.isUndefined(result);
+                  }
+               );
+         });
+
          it('_onItemSwipe', () => {
             const swipeEvent = {
                stopPropagation: () => null,
