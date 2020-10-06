@@ -4085,7 +4085,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return new Promise((resolve) => {
             // Редактирование может запуститься при построении.
             const eventResult = this._isMounted ? this._notify('beforeBeginEdit', [options, isAdd]) : undefined;
-            if (this._options.navigation.viewConfig.pagingMode === 'edge') {
+            if (this._pagingVisible && this._options.navigation.viewConfig.pagingMode === 'edge') {
                 this._pagingVisible = false;
             }
             if (this._savedItemClickArgs && this._isMounted) {
