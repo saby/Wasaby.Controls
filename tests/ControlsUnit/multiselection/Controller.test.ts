@@ -6,6 +6,7 @@ import { FlatSelectionStrategy, SelectionController, TreeSelectionStrategy, ISel
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
 import { SearchGridViewModel} from 'Controls/treeGrid';
+import { Collection, CollectionItem } from 'Controls/display';
 
 describe('Controls/_multiselection/Controller', () => {
    const items = new RecordSet({
@@ -25,7 +26,7 @@ describe('Controls/_multiselection/Controller', () => {
          keyProperty: 'id'
       });
 
-       strategy = new FlatSelectionStrategy({items: model.getDisplay().getItems() });
+      strategy = new FlatSelectionStrategy({items: model.getDisplay().getItems() });
 
       controller = new SelectionController({
          model: model.getDisplay(),
@@ -78,7 +79,7 @@ describe('Controls/_multiselection/Controller', () => {
             columns: [{}]
          });
          controller = new SelectionController({
-            model,
+            model: model.getDisplay(),
             strategy,
             selectedKeys: [],
             excludedKeys: []
@@ -97,7 +98,7 @@ describe('Controls/_multiselection/Controller', () => {
 
       it('all selected not by every item', () => {
          controller = new SelectionController({
-            model,
+            model: model.getDisplay(),
             strategy,
             selectedKeys: [null],
             excludedKeys: []
@@ -136,7 +137,7 @@ describe('Controls/_multiselection/Controller', () => {
       }), {});
 
       controller = new SelectionController({
-         model,
+         model: model.getDisplay(),
          strategy,
          selectedKeys: [1, 2, 3, 4],
          excludedKeys: []
@@ -170,7 +171,7 @@ describe('Controls/_multiselection/Controller', () => {
       assert.equal(controller.getCountOfSelected(), 2);
 
       selection = controller.toggleItem(3);
-       controller.setSelection(selection);
+      controller.setSelection(selection);
       assert.equal(controller.getCountOfSelected(), 3);
    });
 
@@ -201,6 +202,34 @@ describe('Controls/_multiselection/Controller', () => {
       // @ts-ignore
       swipedItem = controller.getAnimatedItem() as CollectionItem<Record>;
       assert.equal(swipedItem, null, 'Current right-swiped item has not been un-swiped');
+   });
+
+   it('skip not selectable items', () => {
+      const items = new RecordSet({
+         rawData: [
+            {id: 1, group: 1},
+            {id: 2, group: 2},
+            {id: 3, group: 1},
+            {id: 4, group: 3}
+         ],
+         keyProperty: 'id'
+      });
+      const display = new Collection({
+         collection: items,
+         group: (item) => item.get('group')
+      });
+
+      const newController = new SelectionController({
+         model: display,
+         strategy: new FlatSelectionStrategy({items: display.getItems() }),
+         selectedKeys: [null],
+         excludedKeys: []
+      });
+
+      // всего элементов учитывая группы 7, но выбрать можно только 4
+      assert.equal(display.getCount(), 7);
+      assert.equal(newController.getCountOfSelected(), 4);
+
    });
 
    describe('should work with breadcrumbs', () => {
@@ -260,7 +289,7 @@ describe('Controls/_multiselection/Controller', () => {
          });
 
          controller = new SelectionController({
-            model,
+            model: model.getDisplay(),
             strategy,
             selectedKeys: [],
             excludedKeys: []
@@ -271,7 +300,7 @@ describe('Controls/_multiselection/Controller', () => {
          model.setItems(items, {});
 
          controller = new SelectionController({
-            model,
+            model: model.getDisplay(),
             strategy,
             selectedKeys: [1, 3],
             excludedKeys: []

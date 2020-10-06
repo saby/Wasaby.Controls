@@ -43,6 +43,7 @@ export class Controller {
       this._selectedKeys = options.selectedKeys.slice();
       this._excludedKeys = options.excludedKeys.slice();
       this._strategy = options.strategy;
+      this._strategy.setItems(this._getSelectableItems());
       this._searchValue = options.searchValue;
    }
 
@@ -53,6 +54,7 @@ export class Controller {
     */
    updateOptions(options: ISelectionControllerOptions): void {
       this._strategy.update(options.strategyOptions);
+      this._strategy.setItems(this._getSelectableItems());
       this._searchValue = options.searchValue;
 
       if (this._model !== options.model) {
@@ -75,7 +77,7 @@ export class Controller {
     */
    setSelection(selection: ISelection): void {
       this._selection = selection;
-      this._strategy.setItems(this._model.getItems());
+      this._strategy.setItems(this._getSelectableItems());
       this._updateModel(selection);
    }
 
@@ -192,7 +194,7 @@ export class Controller {
     * @return {ISelection}
     */
    onCollectionRemove(removedItems: Array<CollectionItem<Model>>): ISelection {
-      this._strategy.setItems(this._model.getItems());
+      this._strategy.setItems(this._getSelectableItems());
 
       let keys = this._getItemsKeys(removedItems);
       // Событие remove еще срабатывает при скрытии элементов, нас интересует именно удаление
@@ -213,7 +215,7 @@ export class Controller {
          return { selected: [], excluded: [] };
       }
 
-      this._strategy.setItems(this._model.getItems());
+      this._strategy.setItems(this._getSelectableItems());
       this._updateModel(this._selection);
    }
 
@@ -223,7 +225,7 @@ export class Controller {
     * @void
     */
    onCollectionReplace(newItems: Array<CollectionItem<Model>>): void {
-      this._strategy.setItems(this._model.getItems());
+      this._strategy.setItems(this._getSelectableItems());
       this._updateModel(this._selection, false, newItems);
    }
 
@@ -233,8 +235,8 @@ export class Controller {
     * @void
     */
    onCollectionAdd(addedItems: Array<CollectionItem<Model>>): void {
-      this._strategy.setItems(this._model.getItems());
-      this._updateModel(this._selection, false, addedItems);
+      this._strategy.setItems(this._getSelectableItems());
+      this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));
    }
 
    // region rightSwipe
@@ -344,5 +346,9 @@ export class Controller {
       this._model.setSelectedItems(selectionForModel.get(true), true, silent);
       this._model.setSelectedItems(selectionForModel.get(false), false, silent);
       this._model.setSelectedItems(selectionForModel.get(null), null, silent);
+   }
+
+   private _getSelectableItems(): ISelectionItem[] {
+      return this._model.getItems().filter((it) => it.SelectableItem);
    }
 }
