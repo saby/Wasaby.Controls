@@ -48,7 +48,12 @@ const PROCESSED_KEYDOWN_KEYS = {
    SUGGESTIONS_LIST: [Env.constants.key.down, Env.constants.key.up, ENTER_KEY]
 };
 
-const DEPS = ['Controls/suggestPopup:_ListWrapper', 'Controls/scroll:Container', 'Controls/search:Misspell', 'Controls/LoadingIndicator'];
+const DEPS = [
+   'Controls/suggestPopup:_ListWrapper',
+   'Controls/scroll:Container',
+   'Controls/search:Misspell',
+   'Controls/LoadingIndicator'
+];
 
 type Key = string | number | null;
 type TState = boolean | null;
@@ -64,11 +69,11 @@ interface IInputControllerOptions extends IControlOptions, IFilterOptions, ISear
    searchEndCallback?: Function;
    searchStartCallback?: Function;
    emptyTemplate?: IEmptyTemplateProp;
-   historyId?: string|null;
+   historyId?: string | null;
    layerName: string;
    suggestTemplate: ISuggestTemplateProp | null;
    footerTemplate: ISuggestFooterTemplate;
-   trim: boolean;
+   trim: boolean; // TODO: searchValueTrim ???
 }
 
 type TSuggestDirection = 'up' | 'down';
@@ -374,7 +379,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _updateSuggestState(): void {
       const shouldSearch = this._shouldSearch(this._searchValue);
 
-      if (this._options.historyId && this._inputActive && !this._options.suggestState) {
+      if (this._options.historyId && !shouldSearch && !this._options.suggestState) {
          this._openWithHistory();
       } else if (shouldSearch || this._options.autoDropDown && !this._options.suggestState) {
          this._setFilter(this._options.filter, this._options);
@@ -520,7 +525,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._setFilter(options.filter, options);
 
       if (this._searchValue) {
-         this._resolveSearch(this._searchValue);
+         this._resolveSearch(this._searchValue, options);
       }
    }
 
@@ -604,10 +609,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._resolveSearch(value);
    }
 
-   protected _resolveSearch(value: string): void {
+   protected _resolveSearch(value: string, options?: IInputControllerOptions): void {
       if (!this._searchResolverController) {
          this._searchResolverController = new SearchResolverController(
-             this._getSearchResolverOptions(this._options)
+             this._getSearchResolverOptions(options ?? this._options)
          );
       }
       this._searchResolverController.resolve(value);
