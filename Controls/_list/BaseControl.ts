@@ -1304,7 +1304,8 @@ const _private = {
      * @private
      */
     initPaging(self) {
-        if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
+        if (!(self._editInPlaceController && self._editInPlaceController.isEditing())
+            && !self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
             if (self._viewportSize) {
                 this._recalcPagingVisible = false;
                 self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
@@ -1315,9 +1316,7 @@ const _private = {
     },
 
     handleListScrollSync(self, scrollTop) {
-        if (self._isPagingVisible) {
-            _private.initPaging(self);
-        }
+        _private.initPaging(self);
 
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
@@ -2793,7 +2792,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _pagingCfg: null,
     _pagingVisible: false,
-    _isPagingVisible: true,
     _actualPagingVisible: false,
     _pagingPadding: null,
 
@@ -4092,9 +4090,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return new Promise((resolve) => {
             // Редактирование может запуститься при построении.
             const eventResult = this._isMounted ? this._notify('beforeBeginEdit', [options, isAdd]) : undefined;
-            if (this._pagingVisible && this._options.navigation.viewConfig.pagingMode === 'edge') {
+            if (this._options.navigation.viewConfig.pagingMode === 'edge') {
                 this._pagingVisible = false;
-                this._isPagingVisible = false;
             }
             if (this._savedItemClickArgs && this._isMounted) {
                 // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
@@ -4183,10 +4180,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean): void {
         this._notify('afterEndEdit', [item.contents, isAdd]);
-        if (!this._isPagingVisible) {
-            _private.initPaging(this);
-            this._isPagingVisible = true;
-        }
         item.contents.unsubscribe('onPropertyChange', this._resetValidation);
         _private.updateItemActions(this, this._options);
     },
@@ -4704,9 +4697,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
-        if (this._isPagingVisible) {
-            _private.initPaging(this);
-        }
+        _private.initPaging(this);
 
         if (this._documentDragging) {
             this._insideDragging = true;
