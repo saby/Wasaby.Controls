@@ -22,6 +22,7 @@ import {QueryWhereExpression} from 'Types/source';
 import ISuggest, {IEmptyTemplateProp, ISuggestFooterTemplate, ISuggestTemplateProp} from 'Controls/interface/ISuggest';
 import {IValueOptions} from 'Controls/input';
 import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
+import { error as dataSourceError } from 'Controls/dataSource';
 
 import Env = require('Env/Env');
 import mStubs = require('Core/moduleStubs');
@@ -123,6 +124,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _suggestDirection: TSuggestDirection = null;
    private _markerVisibility: TVisibility = 'onactivated';
 
+   private _errorController: dataSourceError.Controller = null;
+   private _errorConfig: dataSourceError.ViewConfig | void = null;
+
    private _searchResolverController: SearchResolverController = null;
    private _sourceController: SourceController = null;
    private _searchController: SearchController = null;
@@ -156,6 +160,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _setCloseState(): void {
       this._showContent = false;
       this._loading = null;
+      this._errorConfig = null;
 
       // when closing popup we reset the cache with recent keys
       this._historyLoad = null;
@@ -277,6 +282,16 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
       if (!error?.canceled) {
          this._hideIndicator();
+
+         this.getErrorController().process({
+            error,
+            theme: this._options.theme,
+            mode: dataSourceError.Mode.include
+         }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
+            this._errorConfig = errorConfig;
+            this._showContent = true;
+            this._open();
+         });
       }
    }
 
@@ -778,6 +793,13 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._options.searchErrorCallback) {
          this._options.searchErrorCallback();
       }
+   }
+
+   getErrorController(): dataSourceError.Controller {
+      if (!this._errorController) {
+         this._errorController = new dataSourceError.Controller({});
+      }
+      return this._errorController;
    }
 
    protected _showAllClick(): void {
