@@ -35,4 +35,5 @@
                                                    bind:endValue="_endValue"/>
         </div>
     </div>
+    <div style="width: 300px;" class="targetClass">{{targets}}</div>
 </div>

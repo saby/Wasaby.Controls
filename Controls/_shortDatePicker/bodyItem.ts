@@ -110,10 +110,13 @@ const Component = BaseControl.extend({
     _onQuarterClick: function (event, quarter, year) {
         let start = new this._options.dateConstructor(year, quarter * 3, 1),
             end = new this._options.dateConstructor(year, (quarter + 1) * 3, 0);
+        alert('quarter');
+
         this._notify('sendResult', [start, end], {bubbling: true});
     },
 
     _onMonthClick: function (event, month) {
+        alert('month');
         this._notify('sendResult', [month, dateUtils.getEndOfMonth(month)], {bubbling: true});
     }
 });
