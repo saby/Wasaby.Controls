@@ -4072,6 +4072,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _createEditInPlaceController(): EditInPlaceController {
         this._editInPlaceInputHelper = new EditInPlaceInputHelper();
 
+        // При создании редактирования по мсесту до маунта, регистрация в formController
+        // произойдет после маунта, т.к. она реализована через события. В любом другом случае,
+        // регистрация произойдет при создании контроллера редактирования.
+        if (this._isMounted) {
+            _private.registerFormOperation(this);
+        }
+
         return new EditInPlaceController({
             collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
             onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
