@@ -16,6 +16,11 @@ export type TKeys = CrudEntityKey[];
  */
 export interface ISelectionItem extends ICollectionItem {
    /**
+    * Определяет, можно ли выбрать данный элемент
+    */
+   SelectableItem: boolean;
+
+   /**
     * Флаг, определяющий состояние правого свайпа по записи.
     * @method
     * @public
@@ -127,9 +132,7 @@ export interface ITreeSelectionStrategyOptions {
  * @public
  * @author Панихин К.А.
  */
-export interface IFlatSelectionStrategyOptions {
-   items: Array<CollectionItem<Model>>;
-}
+export interface IFlatSelectionStrategyOptions {}
 
 /**
  * Изменения в списке ключей
