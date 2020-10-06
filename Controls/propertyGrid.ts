@@ -27,7 +27,7 @@
  * @includes EnumEditor Controls/_propertyGrid/defaultEditors/Enum
  * @includes NumberEditor Controls/_propertyGrid/defaultEditors/Number
  * @includes BooleanGroupEditor Controls/_propertyGrid/extendedEditors/BooleanGroup
- * @includes FlatEnumEditor Controls/_propertyGrid/extendedEditors/FlatEnumEditor
+ * @includes FlatEnumEditor Controls/_propertyGrid/extendedEditors/FlatEnum
  * @includes IPropertyGrid Controls/propertyGrid:GroupTemplate
  * @includes IEditor Controls/_propertyGrid/IEditor
  * @includes IProperty Controls/_propertyGrid/IProperty
