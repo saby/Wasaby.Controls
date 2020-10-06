@@ -595,12 +595,12 @@ const _private = {
         }
     },
     spaceHandler(self: typeof BaseControl, event: SyntheticEvent): Promise<void>|void {
-        if (self._options.markerVisibility === 'hidden') {
+        if (self._options.multiSelectVisibility === 'hidden' || self._options.markerVisibility === 'hidden') {
             return;
         }
 
         return _private.getMarkerControllerAsync(self).then((controller) => {
-            if (self._options.multiSelectVisibility !== 'hidden' && !self._options.checkboxReadOnly) {
+            if (!self._options.checkboxReadOnly) {
                 let toggledItemId = controller.getMarkedKey();
                 if (toggledItemId === null || toggledItemId === undefined) {
                     toggledItemId = controller.getNextMarkedKey();
@@ -3326,11 +3326,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // scroll и произведет неправильные расчёты, т.к. у него старая collection.
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
-            // Сбрасываем скролл при смене конструктора модели
-            // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
-            if (this._isScrollShown) {
-                this._notify('doScroll', ['top'], {bubbling: true});
-            }
         } else {
             this._updateScrollController(newOptions);
         }

@@ -159,15 +159,9 @@ define([
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
             let doScrollToTop = false;
-            ctrl._notify = (name, params) => {
-               if (name === 'doScroll' && params && params[0] === 'top') {
-                  doScrollToTop = true;
-               }
-            };
+            
             ctrl._isScrollShown = true;
             ctrl._beforeUpdate(cfg);
-
-            assert.isTrue(doScrollToTop);
 
             // check saving loaded items after new viewModelConstructor
             // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
@@ -7545,6 +7539,17 @@ define([
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
             });
+         });
+
+         it('spaceHandler and multiselection hidden', () => {
+            const baseControl = new lists.BaseControl();
+            baseControl.saveOptions({ ...cfg, multiSelectVisibility: 'hidden' });
+            return baseControl._beforeMount({ ...cfg, multiSelectVisibility: 'hidden' })
+               .then(() => {
+                     const result = lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null })
+                     assert.isUndefined(result);
+                  }
+               );
          });
 
          it('_onItemSwipe', () => {
