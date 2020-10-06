@@ -3234,8 +3234,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._sourceController;
     },
 
-    _afterMount() {
+    _afterMount(): void {
         this._isMounted = true;
+
+        if (!this._options.hasOwnProperty('hasMoreDataToUp')) {
+            this._hideTopTrigger = false;
+        }
+
         if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
             this._registerIntersectionObserver();
@@ -3278,6 +3283,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
+
+        if (!this._options.hasOwnProperty('hasMoreDataToUp')) {
+            _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+        }
     },
 
     _updateScrollController(newOptions) {
