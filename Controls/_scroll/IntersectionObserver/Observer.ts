@@ -1,5 +1,6 @@
 import SyntheticEntry from './SyntheticEntry';
 import {IIntersectionObserverObject, IIntersectionObserverOptions} from './Types';
+import {IntersectionObserver} from '../../sizeUtils';
 
 interface IIntersectionContainersMap {
    [key: string]: IIntersectionObserverObject;
