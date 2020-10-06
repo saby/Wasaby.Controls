@@ -59,7 +59,7 @@
 <ws:if data="{{itemData.isStickedMasterItem}}">
    <ws:partial template="itemOutputTpl">
        <!-- сюда попадаем только в случае застиканной записи в мастер или мастер классик, константа стиля находится в itemData.style -->
-      <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{itemData.style + '_sticked'}}">
+      <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{itemData.style + '_sticked'}}" mode="stackable">
          <ws:partial template="itemContentTpl"/>
       </Controls.scroll:StickyHeader>
    </ws:partial>
