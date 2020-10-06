@@ -2,7 +2,6 @@ import {Control} from 'UI/Base';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {goUpByControlTree} from 'UI/Focus';
-import {IndicatorOpener} from 'Controls/LoadingIndicator';
 import rk = require('i18n!Controls');
 
 interface IModuleInfo {
@@ -46,15 +45,17 @@ export default {
     },
 
     showIndicator(cfg): void {
-        const hideFunction = () => {
-            IndicatorOpener.hide(id);
-        };
-        const indicatorConfig = this.getIndicatorConfig(null, cfg);
-        const id: string = IndicatorOpener.show(indicatorConfig);
-        cfg._events = {
-            onOpen: hideFunction,
-            onClose: hideFunction
-        };
+        import('Controls/LoadingIndicator').then((Indicator) => {
+            const hideFunction = () => {
+                Indicator.IndicatorOpener.hide(id);
+            };
+            const indicatorConfig = this.getIndicatorConfig(null, cfg);
+            const id: string = Indicator.IndicatorOpener.show(indicatorConfig);
+            cfg._events = {
+                onOpen: hideFunction,
+                onClose: hideFunction
+            };
+        });
     },
 
     getIndicatorConfig(id: string, cfg = {}) {
