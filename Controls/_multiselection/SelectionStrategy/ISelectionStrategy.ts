@@ -1,6 +1,6 @@
 import { ISelectionObject as ISelection} from 'Controls/interface';
 import { Model } from 'Types/entity';
-import { IFlatSelectionStrategyOptions, ITreeSelectionStrategyOptions} from '../interface';
+import { IFlatSelectionStrategyOptions, ISelectionItem, ITreeSelectionStrategyOptions } from '../interface';
 import { CollectionItem } from 'Controls/display';
 import { CrudEntityKey } from 'Types/source';
 
@@ -101,5 +101,5 @@ export default interface ISelectionStrategy {
     * @param {Array<CollectionItem<Model>>} items Новый список
     * @void
     */
-   setItems(items: Array<CollectionItem<Model>>): void;
+   setItems(items: ISelectionItem[]): void;
 }
