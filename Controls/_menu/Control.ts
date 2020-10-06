@@ -648,7 +648,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             return emptyKey;
         }
         if (!multiSelect) {
-            return selectedKeys[0];
+            const selectedKey = selectedKeys[0];
+            return selectedKey === undefined && emptyKey !== undefined ? emptyKey : selectedKey;
         }
     }
 
