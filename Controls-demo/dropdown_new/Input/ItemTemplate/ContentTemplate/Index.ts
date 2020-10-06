@@ -1,8 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/dropdown_new/Input/ContentTemplate/Index');
+import controlTemplate = require('wml!Controls-demo/dropdown_new/Input/ItemTemplate/ContentTemplate/Index');
 import {Memory} from 'Types/source';
 
-class SearchFlat extends Control<IControlOptions> {
+export default class extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
     protected _source: Memory;
     protected _selectedKeys: number[] = [1];
@@ -24,4 +24,3 @@ class SearchFlat extends Control<IControlOptions> {
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
-export default SearchFlat;
