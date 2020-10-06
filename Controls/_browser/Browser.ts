@@ -65,11 +65,13 @@ export default class Browser extends Control {
 
         if (receivedState && isNewEnvironment()) {
             this._setItemsAndCreateSearchController(receivedState, options);
-            this._hasMoreDataToUp = receivedState.getMetaData().more.before;
+            this._hasMoreDataToUp = !!receivedState.getMetaData().more?.before;
         } else if (options.source) {
             return this._sourceController.load().then((items) => {
                 this._setItemsAndCreateSearchController(items, options);
-                this._hasMoreDataToUp = items.getMetaData().more.before;
+                if (items) {
+                    this._hasMoreDataToUp = !!items.getMetaData().more?.before;
+                }
                 return items;
             });
         } else {
