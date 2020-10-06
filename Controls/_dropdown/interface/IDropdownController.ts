@@ -16,11 +16,12 @@ export default interface IDropdownController {
     update(newOptions: IDropdownControllerOptions): Promise<RecordSet>|void;
     loadDependencies(): Promise<unknown[]>;
     setMenuPopupTarget(target: HTMLElement): void;
-    openMenu(popupOptions?: object): string|Promise<unknown[]>;
+    openMenu(popupOptions?: object): Promise<unknown[]>;
     closeMenu(): void;
     destroy(): void;
     getPreparedItem(item: Model): Model;
     handleSelectorResult(selectedItems: RecordSet): void;
+    handleSelectedItems(selectedItem: Model): void;
 }
 
 export interface IDropdownControllerOptions extends IControlOptions, IDropdownSourceOptions,
