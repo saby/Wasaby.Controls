@@ -802,14 +802,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             });
         } else if (options.allowPin && options.root === null) {
             this._visibleIds = [];
-            const itemsCount = factory(items).count((item) => {
+            factory(items).each((item) => {
                 const hasParent = item.get(options.parentProperty);
                 if (!hasParent)  {
                     this._visibleIds.push(item.getKey());
                 }
-                return !hasParent;
-            }).value()[0];
-            hasAdditional = itemsCount > MAX_HISTORY_VISIBLE_ITEMS_COUNT + 1;
+            });
+            hasAdditional = this._visibleIds.length > MAX_HISTORY_VISIBLE_ITEMS_COUNT + 1;
             if (hasAdditional) {
                 this._visibleIds.splice(MAX_HISTORY_VISIBLE_ITEMS_COUNT);
             }
