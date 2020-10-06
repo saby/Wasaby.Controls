@@ -16,7 +16,7 @@
                     searchParam="{{_options.searchParam}}"
                     tabsSelectedKey="{{_tabsSelectedKey}}"
                     layerName="{{_options.layerName}}"
-                    searchDelay="{{_searchDelay}}"
+                    errorConfig="{{_errorConfig}}"
                     tabsSelectedKeyChangedCallback="{{_tabsSelectedKeyChanged}}"
                     name="suggestListWrapper"
                     searchValue="{{_searchValue}}"
