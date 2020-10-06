@@ -288,6 +288,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             theme: this._options.theme,
             mode: dataSourceError.Mode.include
          }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
+            if (errorConfig) {
+               errorConfig.options.size = 'medium';
+            }
             this._errorConfig = errorConfig;
             this._showContent = true;
             this._open();
@@ -640,7 +643,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          return this._getSearchController().search(value).then((recordSet) => {
             this._loadEnd(recordSet);
 
-            if (this._shouldShowSuggest(recordSet)) {
+            if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
                this._setItems(recordSet);
                this._setFilter(this._options.filter, this._options);
                this._open();
