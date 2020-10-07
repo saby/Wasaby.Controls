@@ -147,7 +147,7 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
         const originalContentSize = this._originalContentSize || 0;
         this._contentSize = originalContentSize - this._offsets.top - this._offsets.bottom +
             this._placeholders.start + this._placeholders.end;
-        return this._contentSize === oldContentSize;
+        return this._contentSize !== oldContentSize;
     }
 
     private _updatePosition(): void {
