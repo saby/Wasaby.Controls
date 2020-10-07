@@ -506,6 +506,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             searchValue,
             template: 'Controls/suggestPopup:_ListWrapper',
             templateOptions: {
+               filter,
                templateName: this._options.suggestTemplate.templateName,
                templateOptions: this._options.suggestTemplate.templateOptions,
                searchEndCallback: this._loadEnd,
@@ -514,14 +515,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                emptyTemplate: this._emptyTemplate,
                source: this._options.source,
                minSearchLength: this._options.autoDropDown ? 0 : this._options.minSearchLength,
-               navigation: this._options.navigation,
                sorting: this._options.sorting,
                searchParam: this._options.searchParam,
                tabsSelectedKey: this._tabsSelectedKey,
                layerName: this._options.layerName,
                tabsSelectedKeyChangedCallback: this._tabsSelectedKeyChanged,
                searchValue,
-               sourceController: searchValue ? this._sourceController : undefined,
                eventHandlers: {
                   onResult: this._select.bind(this)
                }
