@@ -76,8 +76,12 @@ import {
     IFlatSelectionStrategyOptions,
     SelectionController
 } from 'Controls/multiselection';
-import { MarkerController, Visibility as MarkerVisibility} from 'Controls/marker';
-import { DndFlatController, DndTreeController } from 'Controls/listDragNDrop';
+import { MarkerController } from 'Controls/marker';
+import {
+    DndController,
+    FlatStrategy, IDragStrategyParams, ITreeDragStrategyParams,
+    TreeStrategy
+} from 'Controls/listDragNDrop';
 
 import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import 'wml!Controls/_list/BaseControl/Footer';
@@ -2540,7 +2544,7 @@ const _private = {
     startDragNDrop(self, domEvent, item): void {
         if (
             !self._options.readOnly && self._options.itemsDragNDrop
-            && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)
+            && DndController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)
         ) {
             const key = item.getContents().getKey();
 
@@ -2550,7 +2554,7 @@ const _private = {
                 selected: self._options.selectedKeys || [],
                 excluded: self._options.excludedKeys || []
             };
-            selection = DndFlatController.getSelectionForDragNDrop(self._listViewModel, selection, key);
+            selection = DndController.getSelectionForDragNDrop(self._listViewModel, selection, key);
             const recordSet = self._listViewModel.getCollection();
 
             // Ограничиваем получение перемещаемых записей до 100 (максимум в D&D пишется "99+ записей"), в дальнейшем
@@ -2586,12 +2590,15 @@ const _private = {
         }
     },
 
-    createDndListController(self: any, options: any): DndFlatController|DndTreeController {
+    // TODO dnd когда будет наследование TreeControl <- BaseControl, правильно указать тип параметров
+    createDndListController(model: any, options: any): DndController<IDragStrategyParams | ITreeDragStrategyParams> {
+        let strategy;
         if (options.parentProperty) {
-            return new DndTreeController(self._listViewModel);
+            strategy = TreeStrategy;
         } else {
-            return new DndFlatController(self._listViewModel);
+            strategy = FlatStrategy;
         }
+        return new DndController(model, strategy);
     },
 
     getPageXY(event): object {
@@ -3357,10 +3364,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 allowClearSelectionBySelectionViewMode) {
                 _private.changeSelection(this, { selected: [], excluded: [] });
             }
-        }
-
-        if (this._dndListController) {
-            this._dndListController.update(this._listViewModel, newOptions.canStartDragNDrop);
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
@@ -4665,7 +4668,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._showActions = true;
         }
 
-        if (this._dndListController instanceof DndTreeController && this._dndListController.isDragging()) {
+        // TODO dnd при наследовании TreeControl <- BaseControl не нужно будет событие
+        if (this._dndListController && this._dndListController.isDragging()) {
             this._notify('draggingItemMouseMove', [itemData, nativeEvent]);
         }
     },
@@ -4673,7 +4677,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = null;
-            if (this._dndListController instanceof DndTreeController && this._dndListController.isDragging()) {
+
+            // TODO dnd при наследовании TreeControl <- BaseControl не нужно будет событие
+            if (this._dndListController && this._dndListController.isDragging()) {
                 this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
             }
         }
@@ -5062,7 +5068,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // region Drag-N-Drop
 
-    getDndListController(): DndFlatController | DndTreeController {
+    getDndListController(): DndController {
         return this._dndListController;
     },
 
@@ -5132,10 +5138,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _dragStart(dragObject, draggedKey): void {
         if (!this._dndListController) {
-            this._dndListController = _private.createDndListController(this, this._options);
+            this._dndListController = _private.createDndListController(this._listViewModel, this._options);
         }
 
-        this._dndListController.startDrag(draggedKey, dragObject.entity);
+        const draggedItem = this._listViewModel.getItemBySourceKey(draggedKey);
+        this._dndListController.startDrag(draggedItem, dragObject.entity);
 
         // Cобытие mouseEnter на записи может сработать до dragStart.
         // И тогда перемещение при наведении не будет обработано.
@@ -5149,7 +5156,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _dragLeave(): void {
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController) {
-            const newPosition = this._dndListController.calculateDragPosition(null);
+            const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
             this._dndListController.setDragPosition(newPosition);
         }
     },
@@ -5157,7 +5164,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _dragEnter(dragObject): void {
         // если мы утащим в другой список, то в нем нужно создать контроллер
         if (!this._dndListController) {
-            this._dndListController = _private.createDndListController(this, this._options);
+            this._dndListController = _private.createDndListController(this._listViewModel, this._options);
         }
         if (dragObject && cInstance.instanceOfModule(dragObject.entity, 'Controls/dragnDrop:ItemsEntity')) {
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
@@ -5174,7 +5181,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _processItemMouseEnterWithDragNDrop(itemData): void {
         let dragPosition;
         if (this._dndListController.isDragging()) {
-            dragPosition = this._dndListController.calculateDragPosition(this._options.useNewModel ? itemData : itemData.dispItem);
+            const targetItem = this._options.useNewModel ? itemData : itemData.dispItem;
+            dragPosition = this._dndListController.calculateDragPosition({targetItem});
             if (dragPosition) {
                 const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);
                 if (changeDragTarget !== false) {
@@ -5216,11 +5224,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.showIndicator(this);
                 dragEndResult.finally(() => {
                     this._dndListController.endDrag();
+                    this._dndListController = null;
                     restoreMarker();
                     _private.hideIndicator(this);
                 });
             } else {
                 this._dndListController.endDrag();
+                this._dndListController = null;
                 restoreMarker();
             }
         }
