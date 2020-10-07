@@ -1454,7 +1454,8 @@ const _private = {
         return (navigationOpt &&
             navigationOpt.view === 'infinity' &&
             navigationOpt.viewConfig &&
-            navigationOpt.viewConfig.pagingMode
+            navigationOpt.viewConfig.pagingMode &&
+            navigationOpt.viewConfig.pagingMode !== 'hidden'
         );
     },
 
