@@ -788,6 +788,35 @@ describe('Controls/_editInPlace/EditInPlace', () => {
                 assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), newItem.getKey());
             });
         });
+
+        it('keyProperty value should be the same all time (and nullable too)', () => {
+            newItem.set(newItem.getKeyProperty(), null);
+
+            editInPlace.updateOptions({
+                onBeforeBeginEdit: (options) => {
+                    onBeforeBeginEditCalled = true;
+                    assert.isNull(options.item.getKey());
+                },
+                onAfterBeginEdit: (collectionItem) => {
+                    onAfterBeginEditCalled = true;
+                    assert.isNull(collectionItem.contents.getKey());
+                },
+                onBeforeEndEdit: (item) => {
+                    onBeforeEndEditCalled = true;
+                    assert.isNull(item.getKey());
+                },
+                onAfterEndEdit: (collectionItem) => {
+                    onAfterEndEditCalled = true;
+                    assert.isNull(collectionItem.contents.getKey());
+                }
+            });
+
+            return editInPlace.add(newItem).then(() => {
+                return editInPlace.cancel().then(() => {
+                    assert.isTrue(onBeforeBeginEditCalled && onAfterBeginEditCalled && onBeforeEndEditCalled && onAfterEndEditCalled);
+                });
+            });
+        });
     });
 
     testEndEditWith('commit');
