@@ -79,7 +79,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * <pre class="brush: html">
  * <Controls.list:View>
  *     <ws:loadingIndicatorTemplate>
- *         <ws:partial template="Controls/list:LoadingIndicatorTemplate"
+ *         <ws:partial template="Controls/list:ContinueSearchTemplate"
  *                     scope="{{loadingIndicatorTemplate}}">
  *             <ws:footerTemplate>
  *                 <div>Дополнительная информация при итеративном поиске</div>
@@ -132,8 +132,10 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /**
  * @name Controls/_list/interface/IList#footerTemplate
- * @cfg {Function} Шаблон подвала списка.
- * @demo Controls-demo/List/List/BasePG
+ * @cfg {Function} Шаблон отображения подвала списка.
+ * @remark
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/footer/">руководство разработчика</a>.
+ * @demo Controls-demo/list_new/FooterTemplate/Index
  */
 
 /*ENG

@@ -319,6 +319,13 @@ const _private = {
         return needAttachLoadTopTriggerToNull;
     },
 
+    showTopTriggerAndAddPaddingIfNeed(self): void {
+        _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
+        if (self._hideTopTrigger) {
+            self._hideTopTrigger = false;
+        }
+    },
+
     reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
@@ -448,7 +455,7 @@ const _private = {
                         }
                     } else if (!self._wasScrollToEnd) {
                         if (_private.attachLoadTopTriggerToNullIfNeed(self, cfg) && !self._isMounted) {
-                            self._hideTopTriggerUntilMount = true;
+                            self._hideTopTrigger = true;
                         }
                     }
                 });
@@ -1065,7 +1072,8 @@ const _private = {
          * viewport может быть равен 0 в том случае, когда блок скрыт через display:none, а после становится видим.
          */
         if (viewportSize !== 0) {
-            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
+            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result,
+                (self._pagingPadding || (self._isPagingPadding() ? PAGING_PADDING : 0))),
                 !self._options.disableVirtualScroll && self._scrollController?.calculateVirtualScrollHeight() || 0);
             const proportion = (scrollHeight / viewportSize);
 
@@ -2784,7 +2792,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     iWantVDOM: true,
 
     _attachLoadTopTriggerToNull: false,
-    _hideTopTriggerUntilMount: false,
+    _hideTopTrigger: false,
     _listViewModel: null,
     _viewModelConstructor: null,
 
@@ -3012,7 +3020,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
                     _private.needAttachLoadTopTriggerToNull(self)) {
-                    self._hideTopTriggerUntilMount = true;
+                    self._hideTopTrigger = true;
                 }
                 return Promise.resolve();
             }
@@ -3030,22 +3038,22 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     rawData: []
                 }));
 
-                    if (newOptions.useNewModel && !self._listViewModel) {
-                        self._items = data;
-                        self._listViewModel = self._createNewModel(
-                            data,
-                            viewModelConfig,
-                            newOptions.viewModelConstructor
-                        );
+                if (newOptions.useNewModel && !self._listViewModel) {
+                    self._items = data;
+                    self._listViewModel = self._createNewModel(
+                        data,
+                        viewModelConfig,
+                        newOptions.viewModelConstructor
+                    );
 
                     _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                     if (newOptions.itemsReadyCallback) {
                         newOptions.itemsReadyCallback(self._listViewModel.getCollection());
                     }
-                    if (self._listViewModel) {
-                        _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
-                    }
+
+                    self._shouldNotifyOnDrawItems = true;
+                    _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                 }
                 if (viewModelConfig.collapsedGroups) {
                     self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
@@ -3216,7 +3224,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterMount(): void {
         this._isMounted = true;
-        this._hideTopTriggerUntilMount = false;
+
         if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
             this._registerIntersectionObserver();
@@ -3250,8 +3258,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
 
-        _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
-
         // TODO удалить после того как избавимся от onactivated
         if (_private.hasMarkerController(this)) {
             const newMarkedKey = _private.getMarkerController(this).getMarkedKey();
@@ -3263,6 +3269,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasSelectionController(this)) {
             const selection = _private.getSelectionController(this).getSelection();
             _private.changeSelection(this, selection);
+        }
+
+        if (!this._items || !this._items.getCount()) {
+            _private.showTopTriggerAndAddPaddingIfNeed(this);
         }
     },
 
@@ -3292,13 +3302,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         this._prevRootId = this._options.root;
-        if (!isEqual(newOptions.navigation, this._options.navigation)) {
+        if (navigationChanged) {
 
             // При смене страницы, должно закрыться редактирование записи.
             _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
             _private.initializeNavigation(this, newOptions);
             if (this._listViewModel && this._listViewModel.setSupportVirtualScroll) {
                 this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
+            }
+
+            if (this._pagingVisible) {
+                this._pagingVisible = false;
             }
         }
 
@@ -3327,6 +3341,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }));
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;
+
+            _private.setHasMoreData(this._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
 
             // Важно обновить коллекцию в scrollContainer перед сбросом скролла, т.к. scrollContainer реагирует на
             // scroll и произведет неправильные расчёты, т.к. у него старая collection.
@@ -4708,6 +4724,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._insideDragging = true;
 
             this._dragEnter(this._getDragObject());
+        }
+
+        if (!this._scrollController?.getScrollTop()) {
+            _private.showTopTriggerAndAddPaddingIfNeed(this);
         }
     },
 

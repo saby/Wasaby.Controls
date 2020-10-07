@@ -37,11 +37,11 @@
                </ws:if>
                <ws:else data="{{_expandButtonVisible}}">
                   <div class="controls-DropdownList__additional-button
-                              controls-Menu__additional">
+                              controls-Menu__additional"
+                        on:click="_toggleExpanded()">
                      <Controls.Container.Async templateName="Controls/toggle:BigSeparator">
                         <ws:partial template="{{content.resolvedTemplate}}"
-                                    bind:value="_expander"
-                                    on:valueChanged="_toggleExpanded()"/>
+                                    value="{{_expander}}"/>
                      </Controls.Container.Async>
                   </div>
                </ws:else>

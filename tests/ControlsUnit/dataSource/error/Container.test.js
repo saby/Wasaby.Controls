@@ -110,19 +110,30 @@ define([
          it('does not set new viewConfig when options.viewConfig are equal', () => {
             instance.__viewConfig = null;
             instance._options.viewConfig = viewConfig;
-
             instance._beforeUpdate({ viewConfig });
 
             assert.isNull(instance.__viewConfig);
          });
 
-         it('does not set new viewConfig when options.viewConfig are equal (deep comparison)', () => {
-            instance.__viewConfig = null;
+         it('resets new viewConfig when options.viewConfig mode is dialog', () => {
+            instance.__viewConfig = {};
+            viewConfig.mode = 'include';
             instance._options.viewConfig = viewConfig;
+            instance._beforeUpdate({ viewConfig });
 
-            instance._beforeUpdate({ viewConfig: getViewConfig('include') });
+            assert.isNotNull(instance.__viewConfig);
+
+            viewConfig.mode = 'dialog';
+            instance._beforeUpdate({ viewConfig });
 
             assert.isNull(instance.__viewConfig);
+         });
+
+         it('updates list options in inlist mode', () => {
+            const options = { viewConfig };
+            viewConfig.mode = 'inlist';
+            instance._beforeUpdate(options);
+            assert.strictEqual(instance.__viewConfig.options.listOptions, options);
          });
 
          it('inlist mode: sets new list options when options viewConfig are equal', () => {
@@ -191,12 +202,6 @@ define([
                instance.__updateConfig({ viewConfig });
                assert.strictEqual(instance.__viewConfig.isShowed, result);
             });
-         });
-
-         it('updates list options in inlist mode', () => {
-            viewConfig.mode = 'inlist';
-            instance.__updateConfig(options);
-            assert.strictEqual(instance.__viewConfig.options.listOptions, options);
          });
 
          it('does not update list options in non-inlist mode', () => {

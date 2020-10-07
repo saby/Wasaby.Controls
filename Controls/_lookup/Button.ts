@@ -79,7 +79,8 @@ import {IHashMap} from 'Types/declarations';
  */
 
 export interface ISelectorButtonOptions extends IControlOptions, IValidationStatusOptions, ILookupOptions {
-   fontColorStyle: string;
+   fontColorStyle?: string;
+   fontSize?: string;
    buttonStyle: string;
    maxVisibleItems: number;
    itemTemplate: TemplateFunction;
@@ -133,6 +134,7 @@ export default class Button extends BaseLookup<ISelectorButtonOptions> {
    static getDefaultOptions = (): ISelectorButtonOptions => {
       const buttonOptions = {
          fontColorStyle: 'link',
+         fontSize: 'm',
          buttonStyle: 'secondary',
          maxVisibleItems: 7,
          itemTemplate,

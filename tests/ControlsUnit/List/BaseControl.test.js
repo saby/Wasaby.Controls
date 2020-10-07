@@ -3016,6 +3016,7 @@ define([
          await ctrl._beforeMount(cfg);
          assert.isTrue(setHasMoreDataCalled);
          lists.BaseControl._private.needBottomPadding = origNBP;
+         lists.BaseControl._private.setHasMoreData = origSHMD;
       });
 
       it('getUpdatedMetaData: set full metaData.more on load to direction with position navigation', () => {
@@ -5383,6 +5384,28 @@ define([
          clock.tick(100);
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
+      });
+
+      it('_beforeUpdate with new viewModelConstructor', function() {
+         let cfg = {
+            viewName: 'Controls/List/ListView',
+            sorting: [],
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: lists.ListViewModel,
+            keyProperty: 'id',
+            source: source,
+            getHasMoreData: () => true
+         };
+         let instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         return instance._beforeMount(cfg).then(() => {
+            instance._beforeUpdate({ ...cfg, viewModelConstructor: tree.TreeViewModel });
+            assert.isTrue(instance._listViewModel.getHasMoreData());
+         });
       });
 
       it('_beforeUpdate with new searchValue', async function() {
