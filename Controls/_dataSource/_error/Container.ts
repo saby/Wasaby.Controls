@@ -1,4 +1,3 @@
-/// <amd-module name="Controls/_dataSource/_error/Container" />
 import { Control, TemplateFunction } from 'UI/Base';
 import _template = require('wml!Controls/_dataSource/_error/Container');
 import { constants } from 'Env/Env';
@@ -54,7 +53,6 @@ const getTemplate = (template: string | Control): Promise<Control> => {
  */
 export default class Container extends Control<IContainerConfig> implements IContainer {
     private __viewConfig: Config; // tslint:disable-line:variable-name
-    private __lastShowedId: number; // tslint:disable-line:variable-name
     private _popupHelper: Popup = new Popup();
     protected _template: TemplateFunction = _template;
 
@@ -96,26 +94,20 @@ export default class Container extends Control<IContainerConfig> implements ICon
     }
 
     protected _beforeUpdate(options: IContainerConfig): void {
-        const oldConfig = this._options.viewConfig && {
-            ...this._options.viewConfig,
-            getVersion: null
-        };
-        const newConfig = options.viewConfig && {
-            ...options.viewConfig,
-            getVersion: null
-        };
-
-        if (isEqual(oldConfig, newConfig)) {
-            /**
-             * Если viewConfig не изменился для режима отображения ошибки в списке,
-             * то обновляем опции списка, чтобы он корректно обновлялся
-             */
-            if (options.viewConfig?.mode === Mode.inlist) {
-                this._updateInlistOptions(options);
+        if (isEqual(this._options.viewConfig, options.viewConfig)) {
+            // Чтобы диалог не показывался каждый раз при обновлении контрола
+            if (options.viewConfig?.mode === Mode.dialog) {
+                this.__viewConfig = null;
             }
             return;
         }
+
         this.__updateConfig(options);
+
+        // обновляем опции списка, чтобы он корректно обновлялся
+        if (this.__viewConfig?.mode === Mode.inlist) {
+            this._updateInlistOptions(options);
+        }
     }
 
     protected _afterMount(): void {
@@ -179,15 +171,17 @@ export default class Container extends Control<IContainerConfig> implements ICon
 
     private __showDialog(config: Config): void {
         if (
-            config.isShowed ||
             config.mode !== Mode.dialog ||
-            config.getVersion && config.getVersion() === this.__lastShowedId ||
             !constants.isBrowserPlatform
         ) {
             return;
         }
-        this.__lastShowedId = config.getVersion && config.getVersion();
-        config.isShowed = true;
+
+        if (this._popupId) {
+            this._openDialog(config);
+            return;
+        }
+
         getTemplate(config.template)
             .then((dialogTemplate) => this._notifyServiceError(dialogTemplate, config.options))
             .then((dialogData) => {
@@ -213,12 +207,6 @@ export default class Container extends Control<IContainerConfig> implements ICon
 
         if (this.__viewConfig) {
             this.__viewConfig.isShowed = this.__viewConfig.isShowed || this.__viewConfig.mode !== Mode.dialog;
-
-            if (this.__viewConfig.mode === Mode.inlist) {
-                // __updateConfig вызывается при первом возникновении ошибки.
-                // Здесь прокидываем опции для списка в список
-                this._updateInlistOptions(options);
-            }
         }
     }
 

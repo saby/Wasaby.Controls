@@ -805,8 +805,8 @@ define(
             let result = 0;
 
             //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=41b3a01c-72e1-418b-937f-ca795dacf508
-            let isMobileIOS = StickyStrategy._private._isMobileIOS;
-            StickyStrategy._private._isMobileIOS = () => true;
+            let _isMobileDevices = StickyStrategy._private._isMobileDevices;
+            StickyStrategy._private._isMobileDevices = () => true;
 
             // правый и нижний край не влезли
             result = StickyStrategy._private.checkOverflow({}, {}, position, 'horizontal');
@@ -825,7 +825,7 @@ define(
             result = StickyStrategy._private.checkOverflow({}, {}, position, 'vettical');
             assert.strictEqual(result, 20);
 
-            StickyStrategy._private._isMobileIOS = isMobileIOS;
+            StickyStrategy._private._isMobileDevices = _isMobileDevices;
          });
 
          it('revertPosition outsideOfWindow', () => {

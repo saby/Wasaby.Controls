@@ -19,7 +19,12 @@ export default class ResizeObserverUtil {
         if (this._resizeObserverSupported) {
             this._initResizeObserver();
         } else {
-            RegisterUtil(this._control, 'controlResize', this._controlResizeCallback);
+            // Обратная совместимость для мест где это еще используется, например старый скролл контэйнер.
+            // Избавляемся от передачи this._control.
+            // https://online.sbis.ru/opendoc.html?guid=1c50054d-615a-49b7-be10-24d512e97be7
+            if (this._control) {
+                RegisterUtil(this._control, 'controlResize', this._controlResizeCallback, { listenAll: true });
+            }
         }
     }
 
@@ -29,12 +34,18 @@ export default class ResizeObserverUtil {
         }
     }
 
+    isResizeObserverSupported(): void {
+        return this._resizeObserverSupported;
+    }
+
     terminate(): void {
         if (this._resizeObserverSupported) {
             this._resizeObserver.disconnect();
             this._resizeObserver = null;
         } else {
-            UnregisterUtil(this._control, 'controlResize');
+            if (this._control) {
+                UnregisterUtil(this._control, 'controlResize');
+            }
         }
     }
 

@@ -15,7 +15,9 @@
         <div class="controls-BaseControl__continueSearch_wrapper_theme-{{_options.theme}} ws-inline-flexbox ws-align-items-center">
             <ws:partial template="{{_options.contentTemplate}}"/>
         </div>
-        <ws:partial template="{{_options.footerTemplate}}"/>
+        <div class="controls-BaseControl__continueSearch_footerTemplate_theme-{{_options.theme}}">
+            <ws:partial template="{{_options.footerTemplate}}"/>
+        </div>
     </div>
 </ws:template>
 

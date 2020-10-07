@@ -200,6 +200,19 @@ define([
          });
       });
 
+      describe('_expandPopup', function() {
+         it('should not expand popup', function() {
+            const component = calendarTestUtils.createComponent(PeriodLiteDialog.View, {stickyPosition: {position: {top: 10}}});
+            component._isExpandButtonVisible = false;
+            component._expandPopup();
+            assert.deepEqual(component._isExpandedPopup, false);
+
+            component._isExpandButtonVisible = true;
+            component._expandPopup();
+            assert.deepEqual(component._isExpandedPopup, true);
+         });
+      });
+
       describe('_onYearMouseEnter', function() {
          it('should set year to _yearHovered', function() {
             const component = calendarTestUtils.createComponent(PeriodLiteDialog.View, {});

@@ -1,6 +1,6 @@
 <ws:template name="inputElement">
    <ws:if data="{{tag === 'textarea'}}">
-      <textarea></textarea>
+      <textarea>{{_model.displayValue}}</textarea>
    </ws:if>
    <ws:else>
       <input/>
