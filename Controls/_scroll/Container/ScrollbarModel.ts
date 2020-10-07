@@ -87,10 +87,7 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
         const originalContentSize: number = getContentSizeByState(scrollState, this._direction);
 
         if (originalContentSize !== this._originalContentSize) {
-            // Если значение впервые инициализируется - не вызываем перерисовку
-            if (this._originalContentSize !== undefined) {
-                changed = true;
-            }
+            changed = true;
             this._originalContentSize = originalContentSize;
             this._updateContentSize();
         }
@@ -147,7 +144,7 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
         const originalContentSize = this._originalContentSize || 0;
         this._contentSize = originalContentSize - this._offsets.top - this._offsets.bottom +
             this._placeholders.start + this._placeholders.end;
-        return this._contentSize === oldContentSize;
+        return this._contentSize !== oldContentSize;
     }
 
     private _updatePosition(): void {
