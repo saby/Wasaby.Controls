@@ -24,7 +24,13 @@ import {Logger} from 'UI/Utils';
 import {TouchContextField} from 'Controls/context';
 import {Controller as SourceController} from 'Controls/source';
 import {error as dataSourceError} from 'Controls/dataSource';
-import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig, ISelectionObject} from 'Controls/interface';
+import {
+    INavigationOptionValue,
+    INavigationSourceConfig,
+    IBaseSourceConfig,
+    ISelectionObject,
+    IFontColorStyle
+} from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
 
 // Utils imports
@@ -2783,6 +2789,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _viewModelConstructor: null,
 
     _loadMoreCaption: null,
+    _moreFontColorStyle: 'listMore',
     _shouldDrawFooter: false,
 
     _loader: null,
@@ -2945,6 +2952,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
         }
 
+        if (newOptions.moreFontColorStyle) {
+            this._setMoreFontColorStyle(newOptions.moreFontColorStyle);
+        }
+
         if (newOptions.groupProperty) {
             self._groupingLoader = new GroupingLoader({});
         }
@@ -3085,6 +3096,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         } else {
             return callback(undefined);
         }
+    },
+
+    _setMoreFontColorStyle(moreFontColorStyle: IFontColorStyle): void {
+        this._moreFontColorStyle = moreFontColorStyle ? moreFontColorStyle : 'listMore';
     },
 
     scrollMoveSyncHandler(params: IScrollParams): void {
@@ -3298,6 +3313,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._pagingVisible) {
                 this._pagingVisible = false;
             }
+        }
+
+        if (this._options.moreFontColorStyle !== newOptions.moreFontColorStyle) {
+            this._setMoreFontColorStyle(newOptions.moreFontColorStyle);
         }
 
         if (this._options.rowSeparatorSize !== newOptions.rowSeparatorSize) {
