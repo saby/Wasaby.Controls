@@ -119,7 +119,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         // Выше коммент и задача после которой можно будет удалить.
         // В светлом будущем нужно решать через окна. https://github.com/saby/wasaby-controls/pull/15953/files
         this._recalcMessagePosition = this._recalcMessagePosition.bind(this);
-        RegisterUtil(this, 'scroll', this._recalcMessagePosition);
+        RegisterUtil(this, 'controlResize', this._recalcMessagePosition);
     }
 
     protected _beforeUpdate(cfg: ILoadingIndicatorOptions): void {
@@ -128,7 +128,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     protected _beforeUnmount(): void {
-        UnregisterUtil(this, 'scroll');
+        UnregisterUtil(this, 'controlResize');
     }
 
     _updateProperties(cfg: ILoadingIndicatorOptions): void {
