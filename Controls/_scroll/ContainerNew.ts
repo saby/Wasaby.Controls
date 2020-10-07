@@ -339,6 +339,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
+    _updatePlaceholdersSize(e: SyntheticEvent<Event>, placeholdersSizes): void {
+        super._beforeMount(...arguments);
+        this._scrollbars.updatePlaceholdersSize(placeholdersSizes);
+    }
 
     // Intersection observer
 
