@@ -20,16 +20,24 @@ define('Controls-demo/Date/PeriodLiteDialog', [
       _endValueOnlyYears: new Date(2011, 0, 0),
       _stickyPosition: {
          position: {
-            top: 0
+            top: 0,
+            left: 0,
+            maxWidth: 150
          },
          targetCoords: {
             top: 0
          },
          margins: {
-            top: 0
+            top: 0,
+            left: 0
          },
          targetPosition: {
-            top: 0
+            top: 0,
+            left: 0,
+            width: 50
+         },
+         sizes: {
+            width: 50
          }
       }
    });
