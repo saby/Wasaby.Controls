@@ -22,7 +22,7 @@
                    {{fixTextPosition ? 'controls-Area__realField_fixTextPosition'}}"
             placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
             on:keypress="_keyPressHandler()"
-         ></textarea>
+         >{{calculateValueForTemplate()}}</textarea>
       </ws:partial>
    </ws:partial>
    <ws:if data="{{!value}}">
