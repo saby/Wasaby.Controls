@@ -126,6 +126,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    private _errorController: dataSourceError.Controller = null;
    private _errorConfig: dataSourceError.ViewConfig | void = null;
+   private _pendingErrorConfig: dataSourceError.ViewConfig | void = null;
 
    private _searchResolverController: SearchResolverController = null;
    private _sourceController: SourceController = null;
@@ -161,6 +162,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._showContent = false;
       this._loading = null;
       this._errorConfig = null;
+      this._pendingErrorConfig = null;
 
       // when closing popup we reset the cache with recent keys
       this._historyLoad = null;
@@ -288,11 +290,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             theme: this._options.theme,
             mode: dataSourceError.Mode.include
          }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
-            if (errorConfig) {
-               errorConfig.options.size = 'medium';
-            }
-            this._errorConfig = errorConfig;
-            this._showContent = true;
+            this._pendingErrorConfig = errorConfig;
             this._open();
          });
       }
@@ -603,9 +601,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _afterUpdate(): void {
+      if (this._showContent && this._pendingErrorConfig) {
+         this._errorConfig = this._pendingErrorConfig;
+         this._pendingErrorConfig = null;
+      }
       if (this._options.suggestState && !this._loading && !this._showContent) {
          this._showContent = true;
-         this._forceUpdate();
       }
    }
 
