@@ -87,7 +87,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * <pre class="brush: html">
  * <Controls.list:View>
  *     <ws:loadingIndicatorTemplate>
- *         <ws:partial template="Controls/list:LoadingIndicatorTemplate"
+ *         <ws:partial template="Controls/list:ContinueSearchTemplate"
  *                     scope="{{loadingIndicatorTemplate}}">
  *             <ws:footerTemplate>
  *                 <div>Дополнительная информация при итеративном поиске</div>
