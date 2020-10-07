@@ -5,6 +5,7 @@ import {List} from 'Types/collection';
 import ILoadingIndicator, {ILoadingIndicatorOptions} from 'Controls/_LoadingIndicator/interface/ILoadingIndicator';
 import LoadingIndicatorOpener from 'Controls/_LoadingIndicator/LoadingIndicatorOpener';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 
 
@@ -118,7 +119,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         // Выше коммент и задача после которой можно будет удалить.
         // В светлом будущем нужно решать через окна. https://github.com/saby/wasaby-controls/pull/15953/files
         this._recalcMessagePosition = this._recalcMessagePosition.bind(this);
-        window.addEventListener('resize', this._recalcMessagePosition);
+        RegisterUtil(this, 'scroll', this._recalcMessagePosition);
     }
 
     protected _beforeUpdate(cfg: ILoadingIndicatorOptions): void {
@@ -127,7 +128,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     }
 
     protected _beforeUnmount(): void {
-        window?.removeEventListener('resize', this._recalcMessagePosition);
+        UnregisterUtil(this, 'scroll');
     }
 
     _updateProperties(cfg: ILoadingIndicatorOptions): void {
