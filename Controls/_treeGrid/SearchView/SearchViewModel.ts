@@ -48,6 +48,7 @@ var
          data.searchBreadCrumbsItemTemplate = this._options.searchBreadCrumbsItemTemplate || 'Controls/treeGrid:SearchBreadCrumbsItemTemplate';
          data.searchBreadCrumbsItemContent = "Controls/breadcrumbs:ItemTemplate";
          data.breadcrumbsItemClickCallback = this._breadcrumbsItemClickCallback;
+
          data.getColspan = (tmplColspan, isColumnScrollVisible: boolean) => {
              if (data.columnScroll && isColumnScrollVisible) {
                  return false;
@@ -75,6 +76,9 @@ var
             }
             return data.resolvers.baseItemTemplate();
          };
+         data.getLevelIndentClasses = (itemData, tmplExpanderSize: string, levelIndentSize: string): string => {
+             return `controls-TreeGrid__row-levelPadding_size_search_theme-${data.theme}`;
+         }
          return data;
       },
        _convertItemKeyToCacheKey(key: number|string): number|string {
@@ -92,7 +96,9 @@ var
            if (isBreadCrumbsItem(item)) {
                const versions = [];
                item.forEach((rec) => {
-                   versions.push(rec.getVersion());
+                   if (rec) {
+                       versions.push(rec.getVersion());
+                   }
                });
                return versions.join('_');
            }

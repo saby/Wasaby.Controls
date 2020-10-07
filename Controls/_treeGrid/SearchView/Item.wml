@@ -1,10 +1,16 @@
 <ws:if data="{{itemData.breadCrumbs}}">
-   <ws:partial template="{{ itemData.searchBreadCrumbsItemTemplate }}"
-               scope="{{_options}}"
-               on:click="_onSearchItemClick(itemData.dispItem)"/>
+   <ws:if data="{{itemData.dispItem.isRoot()}}">
+      <ws:partial template="wml!Controls/_treeGrid/SearchView/SearchSeparatorTemplate" scope="{{_options}}"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="{{ itemData.searchBreadCrumbsItemTemplate }}"
+                  scope="{{_options}}"
+                  on:click="_onSearchItemClick(itemData.dispItem)"/>
+   </ws:else>
 </ws:if>
 <ws:else>
    <ws:partial template="{{itemData.resolveItemTemplate(itemData)}}"
                expanderIcon="none"
-               scope="{{_options}}"/>
+               scope="{{_options}}"
+               attr:class="{{itemData.level === 1 && !itemData.dispItem.isNode() ? 'controls-TreeGrid__row-rootLeaf' : ''}}"/>
 </ws:else>

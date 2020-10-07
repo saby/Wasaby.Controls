@@ -164,7 +164,8 @@ var
             if (params.columnIndex === params.columns.length - arrayLengthOffset) {
                 classLists.right += ` controls-Grid__cell_spacingLastCol_${params.itemPadding.right}_theme-${theme}`;
             }
-            if (!params.isHeader && !params.isResult) {
+
+            if (!params.isRootItemsSeparator && !params.isHeader && !params.isResult) {
                 classLists.top += ` controls-Grid__row-cell_rowSpacingTop_${params.itemPadding.top}_theme-${theme}`;
                 classLists.bottom += ` controls-Grid__row-cell_rowSpacingBottom_${params.itemPadding.bottom}_theme-${theme}`;
             }
@@ -322,16 +323,19 @@ var
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
             // Стиль колонки
-            if (current.itemPadding.top === 'null' && current.itemPadding.bottom === 'null') {
-                classLists.base += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
-            } else {
-                classLists.base += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
-            }
-            classLists.base += `controls-Grid__row-cell controls-Grid__cell_${style} controls-Grid__row-cell_${style}_theme-${theme}`;
-            _private.prepareSeparatorClasses(current, classLists, theme);
+            // Если current.isRootItemsSeparator, значит имеем дело с сепаратором
+            if (!current.isRootItemsSeparator) {
+                if (current.itemPadding.top === 'null' && current.itemPadding.bottom === 'null') {
+                    classLists.base += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
+                } else {
+                    classLists.base += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
+                }
+                classLists.base += `controls-Grid__row-cell controls-Grid__cell_${style} controls-Grid__row-cell_${style}_theme-${theme}`;
+                _private.prepareSeparatorClasses(current, classLists, theme);
 
-            if (backgroundColorStyle) {
-                classLists.base += _private.getBackgroundStyle({backgroundStyle, theme, backgroundColorStyle}, true);
+                if (backgroundColorStyle) {
+                    classLists.base += _private.getBackgroundStyle({backgroundStyle, theme, backgroundColorStyle}, true);
+                }
             }
 
             if (self._options.columnScroll) {
@@ -1583,6 +1587,7 @@ var
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
+            current.isRootItemsSeparator = current.dispItem.isRoot();
             // todo remove multiSelectVisibility by task:
             // https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
             current.multiSelectVisibility = this._options.multiSelectVisibility;

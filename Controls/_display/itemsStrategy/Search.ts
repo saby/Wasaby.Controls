@@ -160,7 +160,6 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
     ): Array<T | BreadcrumbsItem<S>> {
         const {display, treeItemToDecorator, treeItemToBreadcrumbs}: ISortOptions<S, T> = options;
         const breadcrumbsToData = new Map<BreadcrumbsItem<S>, T[]>();
-        const root = display && display.getRoot();
         const sortedItems = [];
 
         interface IBreadCrumbsReference {
@@ -186,10 +185,11 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             return getNearestNode(parent);
         }
 
+        // Раньше из root не создавался BreadCrumbsItem. Теперь он будет использоваться как сепаратор
         function getBreadCrumbsReference(item: T): IBreadCrumbsReference {
             let breadCrumbs;
             const last = getNearestNode(item);
-            if (last && last !== root) {
+            if (last) {
                 breadCrumbs = treeItemToBreadcrumbs.get(last);
                 if (!breadCrumbs) {
                     breadCrumbs = new BreadcrumbsItem<S>({
