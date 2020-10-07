@@ -170,7 +170,7 @@ export default class Controller {
         }
 
         if (isNavigationChanged) {
-            if (newOptions.navigation) {
+            if (newOptions.navigation && this._hasNavigationBySource(newOptions.navigation)) {
                 if (this._navigationController)  {
                     this._navigationController.updateOptions({
                         navigationType: newOptions.navigation.source,
@@ -442,8 +442,9 @@ export default class Controller {
         }
     }
 
-    private _hasNavigationBySource(): boolean {
-        return Boolean(this._options.navigation && this._options.navigation.source);
+    private _hasNavigationBySource(navigation?: INavigationOptionValue<unknown>): boolean {
+        const navigationOption = navigation || this._options.navigation;
+        return Boolean(navigationOption && navigationOption.source);
     }
 
     private static _isEqualItems(oldList: RecordSet, newList: RecordSet): boolean {
