@@ -595,12 +595,12 @@ const _private = {
         }
     },
     spaceHandler(self: typeof BaseControl, event: SyntheticEvent): Promise<void>|void {
-        if (self._options.markerVisibility === 'hidden') {
+        if (self._options.multiSelectVisibility === 'hidden' || self._options.markerVisibility === 'hidden') {
             return;
         }
 
         return _private.getMarkerControllerAsync(self).then((controller) => {
-            if (self._options.multiSelectVisibility !== 'hidden' && !self._options.checkboxReadOnly) {
+            if (!self._options.checkboxReadOnly) {
                 let toggledItemId = controller.getMarkedKey();
                 if (toggledItemId === null || toggledItemId === undefined) {
                     toggledItemId = controller.getNextMarkedKey();
@@ -1061,7 +1061,8 @@ const _private = {
          * viewport может быть равен 0 в том случае, когда блок скрыт через display:none, а после становится видим.
          */
         if (viewportSize !== 0) {
-            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
+            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result,
+                (self._pagingPadding || (self._isPagingPadding() ? PAGING_PADDING : 0))),
                 !self._options.disableVirtualScroll && self._scrollController?.calculateVirtualScrollHeight() || 0);
             const proportion = (scrollHeight / viewportSize);
 
@@ -3285,13 +3286,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         this._prevRootId = this._options.root;
-        if (!isEqual(newOptions.navigation, this._options.navigation)) {
+        if (navigationChanged) {
 
             // При смене страницы, должно закрыться редактирование записи.
             _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
             _private.initializeNavigation(this, newOptions);
             if (this._listViewModel && this._listViewModel.setSupportVirtualScroll) {
                 this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
+            }
+
+            if (this._pagingVisible) {
+                this._pagingVisible = false;
             }
         }
 
@@ -3321,15 +3326,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;
 
+            _private.setHasMoreData(this._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+
             // Важно обновить коллекцию в scrollContainer перед сбросом скролла, т.к. scrollContainer реагирует на
             // scroll и произведет неправильные расчёты, т.к. у него старая collection.
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
-            // Сбрасываем скролл при смене конструктора модели
-            // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
-            if (this._isScrollShown) {
-                this._notify('doScroll', ['top'], {bubbling: true});
-            }
         } else {
             this._updateScrollController(newOptions);
         }
@@ -4075,6 +4077,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _createEditInPlaceController(): EditInPlaceController {
         this._editInPlaceInputHelper = new EditInPlaceInputHelper();
+
+        // При создании редактирования по мсесту до маунта, регистрация в formController
+        // произойдет после маунта, т.к. она реализована через события. В любом другом случае,
+        // регистрация произойдет при создании контроллера редактирования.
+        if (this._isMounted) {
+            _private.registerFormOperation(this);
+        }
 
         return new EditInPlaceController({
             collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),

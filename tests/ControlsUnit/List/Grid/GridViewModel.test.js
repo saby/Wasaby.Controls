@@ -2429,6 +2429,25 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                }
             );
 
+            // without sticky ladder
+            itemData.columns = [{}, {}, {}, {}];
+            assert.deepEqual(
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, undefined, false, 0),
+                {
+                   left: 'grid-column: 1 / 5; -ms-grid-column: 1; -ms-grid-column-span: 4;',
+                   right: ''
+                }
+            );
+            // with sticky ladder
+            itemData.columns = [{}, {}, {}, {}];
+            assert.deepEqual(
+                gridMod.GridViewModel._private.getColumnAlignGroupStyles(itemData, undefined, false, 1),
+                {
+                   left: 'grid-column: 1 / 6; -ms-grid-column: 1; -ms-grid-column-span: 5;',
+                   right: ''
+                }
+            );
+
             // with column scroll and action cell
             itemData.hasMultiSelect = true;
             itemData.columns = [{}, {}, {}, {}];

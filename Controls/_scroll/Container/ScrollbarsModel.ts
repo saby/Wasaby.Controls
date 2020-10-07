@@ -1,4 +1,5 @@
 import {detection} from 'Env/Env';
+import {debounce} from 'Types/function';
 import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
 import {SCROLL_DIRECTION} from '../Utils/Scroll';
@@ -13,6 +14,8 @@ interface ISerializeState {
     overflowHidden: boolean;
     styleHideScrollbar: string;
 }
+
+const UPDATE_CONTAINER_SIZES_DELAY: number = 20;
 
 export default class ScrollbarsModel extends mixin<VersionableMixin>(VersionableMixin) implements IVersionable {
     readonly '[Types/_entity/VersionableMixin]': true;
@@ -30,6 +33,10 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     private _canScroll: boolean = false;
     private _overflowHidden: boolean;
     private _styleHideScrollbar: string;
+
+    private _newState: IScrollState;
+    private _container: HTMLElement;
+    private _newPlaceholderSizes;
 
     constructor(options: IScrollbarsOptions, receivedState?: ISerializeState) {
         super(options);
@@ -56,6 +63,9 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             this._models.horizontal = new ScrollbarModel(SCROLL_DIRECTION.HORIZONTAL, options);
         }
 
+        // Размеры обновляются асинхронно по разным событиям.
+        // Рассчитываем состояние скролбара с дебоунсом что бы не было скачков.
+        this._updateContainerSizes = debounce(this._updateContainerSizes.bind(this), UPDATE_CONTAINER_SIZES_DELAY);
     }
 
     serializeState(): ISerializeState {
@@ -71,10 +81,18 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
+    _updateContainerSizes(): void {
+        this._updateScrollState();
+        this._updatePlaceholdersSize();
+    }
+
     updateScrollState(scrollState: IScrollState, container: HTMLElement): void {
+        this._newState = scrollState;
+        this._container = container;
+
         let changed: boolean = false;
         for (let scrollbar of Object.keys(this._models)) {
-            changed = this._models[scrollbar].updateScrollState(scrollState) || changed;
+            changed = this._models[scrollbar].updatePosition(scrollState) || changed;
         }
         const canScroll = scrollState.canVerticalScroll || scrollState.canHorizontalScroll;
         if (canScroll !== this._canScroll) {
@@ -87,12 +105,59 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             !detection.firefox && !detection.isIE;
         const overflowHidden = ScrollHeightFixUtil.calcHeightFix({
             scrollHeight: scrollState.scrollHeight,
-            offsetHeight: isHorizontalScrollbarHidden ? scrollState.clientHeight : container.offsetHeight
+            offsetHeight: isHorizontalScrollbarHidden ? scrollState.clientHeight : this._container.offsetHeight
         });
         if (overflowHidden !== this._overflowHidden) {
             this._overflowHidden = overflowHidden;
             changed = true;
         }
+
+        if (changed) {
+            this._nextVersion();
+        }
+
+        this._updateContainerSizes();
+    }
+
+    _updateScrollState(): void {
+        if (!this._newState) {
+            return;
+        }
+        let changed: boolean = false;
+        for (let scrollbar of Object.keys(this._models)) {
+            changed = this._models[scrollbar].updateContentSize(this._newState) || changed;
+        }
+
+        this._newState = null;
+
+        if (changed) {
+            this._nextVersion();
+        }
+    }
+
+    updatePlaceholdersSize(sizes): void {
+        this._newPlaceholderSizes = sizes;
+        this._updateContainerSizes();
+    }
+
+    _updatePlaceholdersSize(): void {
+        if (!this._newPlaceholderSizes) {
+            return;
+        }
+
+        let changed: boolean = false;
+        let model: ScrollbarModel = this._models[SCROLL_DIRECTION.VERTICAL];
+        if (model) {
+            changed = model.updatePlaceholdersSize(
+                {start: this._newPlaceholderSizes.top, end: this._newPlaceholderSizes.bottom });
+        }
+        model = this._models[SCROLL_DIRECTION.HORIZONTAL];
+        if (model) {
+            changed = model.updatePlaceholdersSize(
+                { start: this._newPlaceholderSizes.left, end: this._newPlaceholderSizes.right }) || changed;
+        }
+
+        this._newPlaceholderSizes = null;
 
         if (changed) {
             this._nextVersion();

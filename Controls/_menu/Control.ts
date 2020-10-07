@@ -176,7 +176,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     const markedKey = this._markerController.calculateMarkedKeyForVisible();
                     this._markerController.setMarkedKey(markedKey);
                 }
-                if (options.selectedKeys && options.selectedKeys.length) {
+                if (options.selectedKeys && options.selectedKeys.length && options.multiSelect) {
                     this._selectionController = this._createSelectionController(options);
                     this._selectionController.setSelection(this._selectionController.getSelection());
                 }
@@ -389,12 +389,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._selectionChanged = true;
     }
 
-    protected _toggleExpanded(event: SyntheticEvent<MouseEvent>, value: boolean): void {
+    protected _toggleExpanded(): void {
+        this._expander = !this._expander;
         let toggleFilter = this._additionalFilter;
         if (!this._options.additionalProperty) {
             toggleFilter = this._limitHistoryFilter;
         }
-        if (value) {
+        if (this._expander) {
             this._listModel.removeFilter(toggleFilter);
         } else {
             this._listModel.addFilter(toggleFilter);
@@ -648,16 +649,20 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             return emptyKey;
         }
         if (!multiSelect) {
-            return selectedKeys[0];
+            const selectedKey = selectedKeys[0];
+            return selectedKey === undefined && emptyKey !== undefined ? emptyKey : selectedKey;
         }
     }
 
     private _getSelectedKeys(): TSelectedKeys {
-        const selectedKeys: TSelectedKeys = [];
-        factory(this._listModel.getSelectedItems()).each((treeItem): void => {
-            const itemContents: Model = treeItem.getContents();
-            selectedKeys.push(itemContents instanceof Object && itemContents.get(this._options.keyProperty));
-        });
+        let selectedKeys = [];
+
+        if (this._options.multiSelect) {
+            selectedKeys = this._getSelectionController().getSelection().selected;
+        } else {
+            selectedKeys = this._options.selectedKeys;
+        }
+
         return selectedKeys;
     }
 
