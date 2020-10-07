@@ -3789,8 +3789,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             scrollHeight: _private.getViewSize(this),
             scrollTop: this._scrollTop
         };
-        const triggerDown = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.bottom, 'down');
-        const triggerUp = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.top, 'up');
+        const triggerDown = this._loadTriggerVisibility.down || _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.bottom, 'down');
+        const triggerUp = this._loadTriggerVisibility.up || _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.top, 'up');
         this._scrollController.setTriggerVisibility('down', triggerDown);
         this._scrollController.setTriggerVisibility('up', triggerUp);
         if (triggerDown) {
