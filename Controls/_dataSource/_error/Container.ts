@@ -94,9 +94,11 @@ export default class Container extends Control<IContainerConfig> implements ICon
     }
 
     protected _beforeUpdate(options: IContainerConfig): void {
-        if (options?.viewConfig?.mode === Mode.dialog && isEqual(this._options.viewConfig, options.viewConfig)) {
+        if (isEqual(this._options.viewConfig, options.viewConfig)) {
             // Чтобы диалог не показывался каждый раз при обновлении контрола
-            this.__viewConfig = null;
+            if (options.viewConfig?.mode === Mode.dialog) {
+                this.__viewConfig = null;
+            }
             return;
         }
 

@@ -107,18 +107,26 @@ define([
             assert.isNull(instance.__viewConfig);
          });
 
-         it('does not set new viewConfig when options.viewConfig are equal and mode is dialog', () => {
+         it('does not set new viewConfig when options.viewConfig are equal', () => {
             instance.__viewConfig = null;
-            viewConfig.mode = 'dialog';
             instance._options.viewConfig = viewConfig;
             instance._beforeUpdate({ viewConfig });
 
             assert.isNull(instance.__viewConfig);
+         });
 
+         it('resets new viewConfig when options.viewConfig mode is dialog', () => {
+            instance.__viewConfig = {};
             viewConfig.mode = 'include';
+            instance._options.viewConfig = viewConfig;
             instance._beforeUpdate({ viewConfig });
 
             assert.isNotNull(instance.__viewConfig);
+
+            viewConfig.mode = 'dialog';
+            instance._beforeUpdate({ viewConfig });
+
+            assert.isNull(instance.__viewConfig);
          });
 
          it('updates list options in inlist mode', () => {
