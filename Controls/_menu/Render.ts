@@ -262,7 +262,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
             itemContents = item.getContents();
             icon = itemContents.get && itemContents.get('icon');
             if (icon) {
-                iconPadding = itemContents.get('iconSize') || options.iconSize || this.getIconSize(icon);
+                iconPadding = itemContents.get('iconSize') || this.getIconSize(icon) || options.iconSize;
             }
         });
         return iconPadding;
