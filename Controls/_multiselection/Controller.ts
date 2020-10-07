@@ -317,7 +317,7 @@ export class Controller {
     * @private
     */
    private _increaseLimit(keys: TKeys): ISelection {
-      const newSelection = clone(this._selection);
+      const newSelection = {...this._selection};
       let selectedItemsCount: number = 0;
       const limit: number = this._limit ? this._limit - this._excludedKeys.length : 0;
 
