@@ -23,7 +23,8 @@
             attr:style="{{headerColumn.style}}"
             rowspan="{{headerColumn.rowSpan}}"
             colspan="{{headerColumn.colSpan}}">
-        <ws:partial template="cellContent"/>
+        <ws:partial template="cellContent"
+                    on:arrowClick="_notifyHandler('arrowClick')"/>
     </th>
 </ws:template>
 
@@ -36,8 +37,7 @@
             <ws:partial template="cell"
                         defaultHeaderContent="{{defaultHeaderContent}}"
                         headerColumn="{{ headerRow.getCurrentHeaderColumn() }}"
-                        multiselect="{{ headerModel.getMultiSelectVisibility() }}"
-                        on:arrowClick="_notifyHandler('arrowClick')"/>
+                        multiselect="{{ headerModel.getMultiSelectVisibility() }}"/>
         </ws:if>
     </ws:for>
 </ws:template>
