@@ -2,7 +2,7 @@ import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import {detection} from 'Env/Env';
 import {Bus} from 'Env/Event';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {RegisterClass, Registrar} from 'Controls/event';
+import {RegisterClass, RegisterUtil, Registrar, UnregisterUtil} from 'Controls/event';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {ResizeObserver as ResizeObserverUtil, scrollToElement} from 'Controls/scrollUtils';
 import {canScrollByState, getContentSizeByState, getScrollPositionTypeByState, SCROLL_DIRECTION} from './Utils/Scroll';
@@ -52,7 +52,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     _beforeMount(options: IContainerBaseOptions): void {
         this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
-        this._resizeObserverSupported = typeof window !== 'undefined' && window.ResizeObserver;
+        this._resizeObserverSupported = this._resizeObserver.isResizeObserverSupported();
         this._registrars.scrollStateChanged = new RegisterClass({register: 'scrollStateChanged'});
         // событие viewportResize используется только в списках.
         this._registrars.viewportResize = new RegisterClass({register: 'viewportResize'});
@@ -66,6 +66,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _afterMount(): void {
+        if (!this._resizeObserver.isResizeObserverSupported()) {
+            RegisterUtil(this, 'controlResize', this._controlResizeHandler, { listenAll: true });
+        }
         this._resizeObserver.observe(this._children.content);
 
         this._observeContentSize();
@@ -93,12 +96,19 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _beforeUnmount(): void {
+        if (!this._resizeObserver.isResizeObserverSupported()) {
+            UnregisterUtil(this, 'controlResize');
+        }
         this._resizeObserver.terminate();
         for (const registrar of this._registrars) {
             registrar.destroy();
         }
         this._state = null;
         this._oldState = null;
+    }
+
+    _controlResizeHandler(): void {
+        this._resizeObserver.controlResizeHandler();
     }
 
     _observeContentSize(): void {
