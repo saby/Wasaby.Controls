@@ -156,10 +156,14 @@ export class Controller {
          newSelection = this._strategy.unselect(this._selection, key);
       } else {
          if (this._limit && !this._excludedKeys.includes(key)) {
-            this._increaseLimit([key]);
+            newSelection = this._increaseLimit([key]);
          }
 
-         newSelection = this._strategy.select(this._selection, key);
+         if (newSelection) {
+            newSelection = this._strategy.select(newSelection, key);
+         } else {
+            newSelection = this._strategy.select(this._selection, key);
+         }
       }
 
       return newSelection;
@@ -312,7 +316,8 @@ export class Controller {
     * @param {Array} keys
     * @private
     */
-   private _increaseLimit(keys: TKeys): void {
+   private _increaseLimit(keys: TKeys): ISelection {
+      const newSelection = {...this._selection};
       let selectedItemsCount: number = 0;
       const limit: number = this._limit ? this._limit - this._excludedKeys.length : 0;
 
@@ -322,7 +327,7 @@ export class Controller {
          const selectionForModel = this._strategy.getSelectionForModel(this._selection, this._limit);
 
          let itemStatus = false;
-         if (selectionForModel.get(true).filter((selectedItem) => selectedItem.getContents().getKey() === key).length > 0) {
+         if (selectionForModel.get(true).find((selectedItem) => selectedItem.getContents().getKey() === key)) {
             itemStatus = true;
          }
 
@@ -332,13 +337,13 @@ export class Controller {
             selectedItemsCount++;
             this._limit++;
 
-            if (keys.includes(key)) {
-               keys.splice(keys.indexOf(key), 1);
-            } else {
-               this._excludedKeys.push(key);
+            if (!keys.includes(key)) {
+               newSelection.excluded.push(key);
             }
          }
       });
+
+      return newSelection;
    }
 
    private _updateModel(selection: ISelection, silent: boolean = false, items?: Array<CollectionItem<Model>>): void {
