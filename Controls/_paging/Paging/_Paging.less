@@ -30,8 +30,10 @@
       height: @item_height_paging;
       box-shadow: @item_box-shadow_paging;
    }
+}
 
-   & + .controls-Paging__btn {
+.controls-Paging__wrapper_theme-@{themeName} {
+   & .controls-Paging__btn:not(:first-child) {
       margin-left: @item_offset_paging;
 
       &.controls-Paging__btn_separated_theme-@{themeName}::before {
