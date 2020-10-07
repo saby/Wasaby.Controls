@@ -1061,7 +1061,8 @@ const _private = {
          * viewport может быть равен 0 в том случае, когда блок скрыт через display:none, а после становится видим.
          */
         if (viewportSize !== 0) {
-            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result, self._pagingPadding || PAGING_PADDING),
+            const scrollHeight = Math.max(_private.calcViewSize(viewSize, result,
+                (self._pagingPadding || (self._isPagingPadding() ? PAGING_PADDING : 0))),
                 !self._options.disableVirtualScroll && self._scrollController?.calculateVirtualScrollHeight() || 0);
             const proportion = (scrollHeight / viewportSize);
 
