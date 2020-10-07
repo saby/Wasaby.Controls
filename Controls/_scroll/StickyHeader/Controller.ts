@@ -46,7 +46,7 @@ class StickyHeaderController {
 
     // TODO: Избавиться от передачи контрола доработав логику ResizeObserverUtil
     // https://online.sbis.ru/opendoc.html?guid=4091b62e-cca4-45d8-834b-324f3b441892
-    constructor(control: Control, options: IStickyHeaderController = {}) {
+    constructor(control?: Control, options: IStickyHeaderController = {}) {
         this._headersStack = {
             top: [],
             bottom: []
@@ -319,8 +319,8 @@ class StickyHeaderController {
         this._updateTopBottom();
     }
 
-    _controlResizeHandler(): void {
-        this._stickyHeaderResizeObserver.controlResizeHandler()
+    controlResizeHandler(): void {
+        this._stickyHeaderResizeObserver.controlResizeHandler();
     }
 
     resizeHandler() {
