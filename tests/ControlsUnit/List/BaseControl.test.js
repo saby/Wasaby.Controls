@@ -159,7 +159,7 @@ define([
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
             let doScrollToTop = false;
-            
+
             ctrl._isScrollShown = true;
             ctrl._beforeUpdate(cfg);
 
@@ -3490,7 +3490,7 @@ define([
             });
          });
       });
-
+/*
       it('can\'t start drag on readonly list', function() {
          let
              cfg = {
@@ -3562,8 +3562,9 @@ define([
          ctrl.itemsDragNDrop = true;
          ctrl._itemMouseDown({}, { key: 1 }, { nativeEvent: { button: 0 } });
          assert.isNull(ctrl._draggingItem);
-      });
+      });*/
 
+/*
       it('startDragNDrop', () => {
          const self = {
                _options: {
@@ -3615,7 +3616,9 @@ define([
          lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
          assert.isTrue(notifyCalled);
       });
+*/
 
+/*
       it('_processItemMouseEnterWithDragNDrop', () => {
          const ctrl = new lists.BaseControl({});
          const dragEntity = { entity: 'entity' },
@@ -3676,7 +3679,9 @@ define([
          assert.isTrue(setDragPositionCalled);
          assert.isNull(ctrl._unprocessedDragEnteredItem);
       });
+*/
 
+/*
       it('_dragEnter only works with ItemsEntity', function() {
          const ctrl = new lists.BaseControl({});
 
@@ -3711,7 +3716,9 @@ define([
          assert.strictEqual(notifiedEvent, 'dragEnter');
          assert.strictEqual(notifiedEntity, goodDragObject.entity);
       });
+*/
 
+/*
       it('native drag prevent only by native "dragstart" event', async function() {
          let isDefaultPrevented = false;
 
@@ -3782,7 +3789,8 @@ define([
          ctrl._nativeDragStart(fakeDragStart);
          assert.isTrue(isDefaultPrevented);
       });
-      it('_documentDragEnd', async function() {
+*/
+/*      it('_documentDragEnd', async function() {
          const cfg = {
             viewName: 'Controls/List/ListView',
             source: source,
@@ -3846,7 +3854,7 @@ define([
          ctrl._documentDragEnd({});
          assert.isFalse(dragEnded);
          assert.isTrue(!!ctrl._loadingState);
-      });
+      });*/
 
       describe('Calling animation handlers', () => {
          let deactivateSwipeCalled;
@@ -4959,7 +4967,7 @@ define([
          assert.equal(lists.BaseControl._private.getListTopOffset(bc), 50);
       });
 
-      it('_itemMouseMove: notify draggingItemMouseMove', async function() {
+      /*it('_itemMouseMove: notify draggingItemMouseMove', async function() {
          var cfg = {
                 viewName: 'Controls/List/ListView',
                 itemsDragNDrop: true,
@@ -4993,9 +5001,9 @@ define([
          instance._dndListController = null;
          instance._itemMouseLeave({}, {});
          assert.equal(eName, 'itemMouseLeave');
-      });
+      });*/
 
-      it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
+      /*it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
          var cfg = {
                 viewName: 'Controls/List/ListView',
                 itemsDragNDrop: true,
@@ -5030,7 +5038,7 @@ define([
          instance._itemMouseLeave({}, {});
          assert.equal(eName, 'draggingItemMouseLeave');
       });
-
+*/
       it('should fire "drawItems" in afterMount', async function() {
          let
              cfg = {
@@ -6855,6 +6863,7 @@ define([
          });
       });
 
+/*
       describe('drag-n-drop', () => {
          source = new sourceLib.Memory({
             keyProperty: 'id',
@@ -7040,6 +7049,7 @@ define([
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
          });
       });
+*/
 
       describe('changeMarkedKey', () => {
          const data = [

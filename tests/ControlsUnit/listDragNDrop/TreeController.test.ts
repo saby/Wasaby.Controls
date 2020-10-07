@@ -1,3 +1,4 @@
+/*
 // tslint:disable:no-empty
 // tslint:disable:no-magic-numbers
 
@@ -241,3 +242,4 @@ describe('Controls/_listDragNDrop/TreeController', () => {
       assert.isNull(controller._timeoutForExpandOnDrag);
    });
 });
+*/
