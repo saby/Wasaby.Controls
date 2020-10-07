@@ -159,7 +159,7 @@ define([
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
             let doScrollToTop = false;
-            
+
             ctrl._isScrollShown = true;
             ctrl._beforeUpdate(cfg);
 
@@ -3016,6 +3016,7 @@ define([
          await ctrl._beforeMount(cfg);
          assert.isTrue(setHasMoreDataCalled);
          lists.BaseControl._private.needBottomPadding = origNBP;
+         lists.BaseControl._private.setHasMoreData = origSHMD;
       });
 
       it('getUpdatedMetaData: set full metaData.more on load to direction with position navigation', () => {
