@@ -88,7 +88,6 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         e.stopPropagation();
         const order = item.get('value') || 'ASC';
         item.set('value', this._getOppositeOrder(order));
-
     }
 
     protected _getOppositeOrder = (order: Order) => {
