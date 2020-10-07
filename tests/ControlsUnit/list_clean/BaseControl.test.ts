@@ -138,7 +138,6 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isTrue(baseControl._pagingVisible);
             const cloneBaseControlCfg = {...baseControlCfg};
             cloneBaseControlCfg.navigation = {
-                source: 'page',
                 view: 'infinity',
                 viewConfig: null
             };
