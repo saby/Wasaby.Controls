@@ -500,12 +500,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          }, ...templateOptions};
    }
 
-   private _getTemplateOptions(filter: QueryWhereExpression<unknown>): IStackPopupOptions {
+   private _getTemplateOptions(filter: QueryWhereExpression<unknown>, searchValue: string): IStackPopupOptions {
       delete filter[HISTORY_KEYS_FIELD];
       return {
          templateOptions: {
             filter,
-            searchValue: this._searchValue,
+            searchValue,
             template: 'Controls/suggestPopup:_ListWrapper',
             templateOptions: {
                templateName: this._options.suggestTemplate.templateName,
@@ -522,8 +522,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                tabsSelectedKey: this._tabsSelectedKey,
                layerName: this._options.layerName,
                tabsSelectedKeyChangedCallback: this._tabsSelectedKeyChanged,
-               searchValue: this._searchValue,
-               sourceController: this._sourceController,
+               searchValue,
+               sourceController: searchValue ? this._sourceController : undefined,
                eventHandlers: {
                   onResult: this._select.bind(this)
                }
@@ -809,12 +809,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       const filter = clone(this._filter) || {};
 
       filter[this._options.searchParam] = '';
-      this._openSelector(this._getTemplateOptions(filter));
+      this._openSelector(this._getTemplateOptions(filter, ''));
       this._close();
    }
 
    protected _moreClick(): void {
-      this._openSelector(this._getTemplateOptions(this._filter));
+      this._openSelector(this._getTemplateOptions(this._filter, this._searchValue));
       this._close();
    }
 
