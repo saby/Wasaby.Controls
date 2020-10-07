@@ -561,7 +561,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
-            this._open();
+            this._resolveLoad(this._searchValue);
          } else {
             this._setCloseState();
             this._setSuggestMarkedKey(null);
@@ -573,6 +573,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
          if (this._options.suggestState && newOptions.suggestState) {
             this._updateSuggestState();
+
+            if (this._showContent) {
+               this._resolveLoad(this._searchValue);
+            }
          }
       }
 
