@@ -136,13 +136,13 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._viewSize = 800;
             baseControl._mouseEnter(null);
             assert.isTrue(baseControl._pagingVisible);
-            const cloneBaseControlCfg = {...baseControlCfg};
-            cloneBaseControlCfg.navigation = {
-                view: 'infinity',
-                viewConfig: null
-            };
-            baseControl._beforeUpdate(cloneBaseControlCfg);
-            assert.isFalse(baseControl._pagingVisible);
+            // const cloneBaseControlCfg = {...baseControlCfg};
+            // cloneBaseControlCfg.navigation = {
+            //     view: 'infinity',
+            //     viewConfig: null
+            // };
+            // baseControl._beforeUpdate(cloneBaseControlCfg);
+            // assert.isFalse(baseControl._pagingVisible);
         });
     });
     describe('BaseControl paging', () => {
