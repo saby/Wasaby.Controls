@@ -105,6 +105,15 @@ define(
                assert.isFalse(scroll._displayState.shadowEnable.top);
                assert.isFalse(scroll._displayState.shadowEnable.bottom);
             });
+
+            it('should init top shadows', () => {
+               scroll._beforeMount({
+                  ...scrollMod.Container.getDefaultOptions(),
+                  hasMoreDataToUp: true
+               }, {});
+               assert.isTrue(scroll._displayState.shadowEnable.top);
+               assert.isTrue(scroll._displayState.shadowVisible.top);
+            });
          });
 
          describe('_afterUpdate', function() {
