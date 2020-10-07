@@ -380,7 +380,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const selection = { selected: [null], excluded: [null, 2] };
          const count = strategy.getCount(selection, false);
          const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
-         assert.equal(count, 3);
+         assert.equal(count, 4);
          assert.equal(countWithDescAndAnc, 4);
       });
 
@@ -408,6 +408,22 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
              items: model.getItems()
          });
          assert.isNull(treeStrategyWithNodesMoreData.getCount(selection, false));
+      });
+
+      it('selected node', () => {
+         const selection = {selected: [1], excluded: []};
+         const count = strategy.getCount(selection, false);
+         const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
+         assert.equal(count, 1);
+         assert.equal(countWithDescAndAnc, 5);
+      });
+
+      it('selected all', () => {
+         const selection = { selected: [null], excluded: [null] };
+         const count = strategy.getCount(selection, false);
+         const countWithDescAndAnc = strategyWithDescendantsAndAncestors.getCount(selection, false);
+         assert.equal(count, 7);
+         assert.equal(countWithDescAndAnc, 7);
       });
    });
 
