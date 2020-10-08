@@ -3,14 +3,13 @@ import { SyntheticEvent } from 'UI/Vdom';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import { ISelectionObject } from 'Controls/interface';
 import { CrudEntityKey } from 'Types/source';
-import { Model } from 'Types/entity';
 
 type StrategyConstructor<
-    P extends IDragStrategyParams<T>,
     A,
-    S extends Model = Model,
-    T extends IDraggableItem<S> = IDraggableItem<S>
-> = new (model: IDraggableCollection<S, T, A>, draggableItem: T) => IDragStrategy<A, T, P>;
+    T extends IDraggableItem = IDraggableItem,
+    C extends IDraggableCollection<T, A> = IDraggableCollection<T, A>,
+    P extends IDragStrategyParams<T> = IDragStrategyParams<T>
+> = new (model: IDraggableCollection<T, A>, draggableItem: T) => IDragStrategy<A, T, C, P>;
 
 /**
  * Контроллер, управляющий состоянием отображения драг'н'дропа
@@ -24,20 +23,20 @@ type StrategyConstructor<
  */
 
 export default class Controller<
-    P extends IDragStrategyParams<T>,
     A,
-    S extends Model = Model,
-    T extends IDraggableItem<S> = IDraggableItem<S>
+    T extends IDraggableItem = IDraggableItem,
+    C extends IDraggableCollection<T, A> = IDraggableCollection<T, A>,
+    P extends IDragStrategyParams<T> = IDragStrategyParams<T>
 > {
-   private _model: IDraggableCollection<S, T, A>;
-   private _strategy: IDragStrategy<A, T, P>;
-   private _strategyConstructor: StrategyConstructor<P, A, S, T>;
+   private _model: C;
+   private _strategy: IDragStrategy<A, T, C, P>;
+   private _strategyConstructor: StrategyConstructor<A, T, C, P>;
 
    private _draggableItem: T;
    private _dragPosition: A;
    private _entity: ItemsEntity;
 
-   constructor(model: IDraggableCollection<S, T, A>, strategyConstructor: StrategyConstructor<P, A, S, T>) {
+   constructor(model: C, strategyConstructor: StrategyConstructor<A, T, C, P>) {
       this._model = model;
       this._strategyConstructor = strategyConstructor;
    }

@@ -3,9 +3,9 @@ import {
     BaseDragStrategy,
     IDraggableCollection,
     IDraggableItem,
-    IDragStrategy,
     IDragStrategyParams
 } from '../interface';
+import { Model } from 'Types/entity';
 
 export interface IFlatDragStrategyParams<
     T extends IDraggableItem = IDraggableItem,
@@ -14,13 +14,19 @@ export interface IFlatDragStrategyParams<
     currentPosition: A;
 }
 
+export interface IDraggableFlatCollection<T extends IDraggableItem = IDraggableItem> extends IDraggableCollection<T> {
+    getIndex(item: T): number;
+    getIndexBySourceItem(sourceItem: Model): number;
+}
+
 export default class Flat<
     T extends IDraggableItem = IDraggableItem,
+    C extends IDraggableFlatCollection = IDraggableFlatCollection,
     P extends IFlatDragStrategyParams<T> = IFlatDragStrategyParams<T>,
-> extends BaseDragStrategy<IDragPosition<T>, T, P> {
+> extends BaseDragStrategy<IDragPosition<T>, T, C, P> {
     protected _startPosition: IDragPosition<T>;
 
-    constructor(model: IDraggableCollection, draggableItem: T) {
+    constructor(model: C, draggableItem: T) {
         super(model, draggableItem);
 
         // getIndexBySourceItem - т.к. draggableItem это avatar и его нет в коллекции

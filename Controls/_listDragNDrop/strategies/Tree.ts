@@ -1,6 +1,6 @@
-import Flat, { IFlatDragStrategyParams } from './Flat';
+import Flat, { IDraggableFlatCollection, IFlatDragStrategyParams } from './Flat';
 import { IDragPosition } from 'Controls/display';
-import { IDraggableCollection, IDraggableItem } from '../interface';
+import { IDraggableItem } from '../interface';
 
 const DRAG_MAX_OFFSET = 10;
 
@@ -17,13 +17,11 @@ export interface ITreeDragStrategyParams extends IFlatDragStrategyParams<IDragga
     mouseOffsetInTargetItem: IOffset;
 }
 
-interface IDraggableTreeCollection extends IDraggableCollection {
+interface IDraggableTreeCollection extends IDraggableFlatCollection<IDraggableTreeItem> {
     getPrevDragPosition(): IDragPosition<IDraggableTreeItem>;
 }
 
-export default class Tree extends Flat<IDraggableTreeItem, ITreeDragStrategyParams> {
-    protected _draggableItem: IDraggableTreeItem;
-    protected _model: IDraggableTreeCollection;
+export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollection, ITreeDragStrategyParams> {
 
     calculatePosition(
         {currentPosition, targetItem, mouseOffsetInTargetItem}: ITreeDragStrategyParams
