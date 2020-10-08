@@ -14,10 +14,10 @@ type StrategyConstructor<
 /**
  * Контроллер, управляющий состоянием отображения драг'н'дропа
  * @class Controls/_listDragNDrop/Controller
- * @template P Тип параметров метода calculateDragPosition
  * @template A Тип объекта, обозначающего позицию
- * @template S Тип содержимого элемента коллекции
  * @template T Тип элемента коллекции
+ * @template C Тип коллекции
+ * @template P Тип параметра метода calculateDragPosition
  * @public
  * @author Панихин К.А.
  */
@@ -77,6 +77,9 @@ export default class Controller<
       this._model.setDragPosition(position);
    }
 
+   /**
+    * Возвращает перетаскиваемый элемент
+    */
    getDraggableItem(): T {
       return this._draggableItem;
    }
@@ -121,6 +124,12 @@ export default class Controller<
       return this._strategy.calculatePosition({ ...params, currentPosition: this._dragPosition });
    }
 
+   /**
+    * Проверяет можно ли начать перетаскивание
+    * @param canStartDragNDropOption
+    * @param event
+    * @param isTouch
+    */
    static canStartDragNDrop(
        canStartDragNDropOption: boolean|Function,
        event: SyntheticEvent<MouseEvent>,
