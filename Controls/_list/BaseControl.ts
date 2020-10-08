@@ -2789,7 +2789,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _viewModelConstructor: null,
 
     _loadMoreCaption: null,
-    _moreFontColorStyle: 'listMore',
     _shouldDrawFooter: false,
 
     _loader: null,
@@ -2952,10 +2951,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
         }
 
-        if (newOptions.moreFontColorStyle) {
-            this._setMoreFontColorStyle(newOptions.moreFontColorStyle);
-        }
-
         if (newOptions.groupProperty) {
             self._groupingLoader = new GroupingLoader({});
         }
@@ -3096,10 +3091,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         } else {
             return callback(undefined);
         }
-    },
-
-    _setMoreFontColorStyle(moreFontColorStyle: IFontColorStyle): void {
-        this._moreFontColorStyle = moreFontColorStyle ? moreFontColorStyle : 'listMore';
     },
 
     scrollMoveSyncHandler(params: IScrollParams): void {
@@ -3313,10 +3304,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._pagingVisible) {
                 this._pagingVisible = false;
             }
-        }
-
-        if (this._options.moreFontColorStyle !== newOptions.moreFontColorStyle) {
-            this._setMoreFontColorStyle(newOptions.moreFontColorStyle);
         }
 
         if (this._options.rowSeparatorSize !== newOptions.rowSeparatorSize) {
@@ -5331,7 +5318,8 @@ BaseControl.getDefaultOptions = function() {
         virtualScrollMode: 'remove',
         filter: {},
         itemActionsVisibility: 'onhover',
-        searchValue: ''
+        searchValue: '',
+        moreFontColorStyle: 'listMore'
     };
 };
 export = BaseControl;
