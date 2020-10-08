@@ -174,7 +174,6 @@ export type TCursor = 'default' | 'pointer' | 'right';
      * @cfg {backgroundColorStyle} Стиль фона ячейки.
      */
     backgroundColorStyle?: string;
-}
 
     /**
      * @name Controls/grid:ColumnTemplate#tagStyle
@@ -186,3 +185,5 @@ export type TCursor = 'default' | 'pointer' | 'right';
      * @variant warning
      * @variant secondary
      */
+    tagStyle?: 'info' | 'danger' | 'primary' | 'success' | 'secondary';
+}
