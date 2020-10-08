@@ -1312,7 +1312,8 @@ const _private = {
      * @private
      */
     initPaging(self) {
-        if (!self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
+        if (!(self._editInPlaceController && self._editInPlaceController.isEditing())
+            && !self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
             if (self._viewportSize) {
                 this._recalcPagingVisible = false;
                 self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
@@ -3123,7 +3124,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
         }
-        if(this._recalcPagingVisible){
+        if (this._recalcPagingVisible) {
             _private.initPaging(this);
         }
     },
@@ -4107,7 +4108,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return new Promise((resolve) => {
             // Редактирование может запуститься при построении.
             const eventResult = this._isMounted ? this._notify('beforeBeginEdit', [options, isAdd]) : undefined;
-
             if (this._savedItemClickArgs && this._isMounted) {
                 // itemClick стреляет, даже если после клика начался старт редактирования, но itemClick
                 // обязательно должен случиться после события beforeBeginEdit.
@@ -4151,6 +4151,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._listViewModel.getCount() > 1) {
                 this.setMarkedKey(item.contents.getKey());
             }
+        }
+
+        if (this._pagingVisible && this._options.navigation.viewConfig.pagingMode === 'edge') {
+            this._pagingVisible = false;
         }
 
         item.contents.subscribe('onPropertyChange', this._resetValidation);

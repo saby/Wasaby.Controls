@@ -399,6 +399,45 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeUpdate(cfgClone);
             assert.isTrue(baseControl._isPagingPadding());
         });
+
+        it('paging mode is edge + eip', async () => {
+            const cfgClone = {...baseControlCfg};
+            cfgClone.navigation.viewConfig.pagingMode = 'edge';
+            baseControl.saveOptions(cfgClone);
+            await baseControl._beforeMount(cfgClone);
+            baseControl._container = {
+                clientHeight: 1000
+            };
+            baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
+            baseControl._mouseEnter(null);
+            assert.isTrue(baseControl._pagingVisible);
+            const item = {
+                contents: {
+                    unsubscribe: () => {
+                        return '';
+                    },
+                    subscribe: () => {
+                        return '';
+                    }
+                }
+            };
+            // Эмулируем начало редактирования
+            await baseControl._afterBeginEditCallback(item, false);
+            baseControl._editInPlaceController = {isEditing: () => true};
+            assert.isFalse(baseControl._pagingVisible);
+            baseControl._mouseEnter(null);
+            assert.isFalse(baseControl._pagingVisible);
+
+            baseControl._afterEndEditCallback(item, false);
+            baseControl._editInPlaceController.isEditing = () => {
+                return false;
+            };
+            baseControl._mouseEnter(null);
+            assert.isTrue(baseControl._pagingVisible);
+        });
     });
     describe('beforeUnmount', () => {
         let baseControl;
