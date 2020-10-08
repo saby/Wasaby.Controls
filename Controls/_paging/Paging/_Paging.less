@@ -11,10 +11,6 @@
    padding: @padding-vertical_paging 0;
 }
 
-.controls-Paging__btn_separated_theme-@{themeName} {
-   position: relative;
-}
-
 .controls-Paging__btn {
    display: inline-flex;
    align-items: center;
@@ -34,17 +30,6 @@
    & + .controls-Paging__btn,
    & + .controls-DigitButtons {
       margin-left: @item_offset_paging;
-
-      &.controls-Paging__btn_separated_theme-@{themeName}::before {
-         pointer-events: none;
-         position: absolute;
-         height: @arrow_separator_length_paging;
-         width: @arrow_separator_thickness_paging;
-         background: @arrow_separator_color_paging;
-         content: '';
-         top: (@item_height_paging - @arrow_separator_length_paging) / 2;
-         left: -@arrow_separator_thickness_paging;
-      }
    }
 }
 
@@ -132,6 +117,21 @@
 
 .controls-Paging_icon-End_theme-@{themeName}::before {
    content: @arrow_end_icon_content_paging;
+}
+
+.controls-Paging__btn_separated_theme-@{themeName} {
+   position: relative;
+}
+
+.controls-Paging__btn_separated_theme-@{themeName}::before {
+   pointer-events: none;
+   position: absolute;
+   height: @arrow_separator_length_paging;
+   width: @arrow_separator_thickness_paging;
+   background: @arrow_separator_color_paging;
+   content: '';
+   top: (@item_height_paging - @arrow_separator_length_paging) / 2;
+   left: -@arrow_separator_thickness_paging;
 }
 
 .controls-Paging__btn-Template {
