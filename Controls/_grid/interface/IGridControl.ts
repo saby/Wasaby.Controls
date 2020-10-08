@@ -504,3 +504,19 @@
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<Number|String>} expandedItems Идентификаторы свернутых узлов.
  */
+
+/**
+ * @event Происходит при клике на тег внутри ячейки грида.
+ * @name Controls/_grid/interface/IGridControl#tagClick
+ * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
+ * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:ITagColumn#tagStyleProperty tagStyleProperty} у колонки.
+ * @see tagStyle
+ */
+
+/**
+ * @event Происходит при наведении курсора мыши на тег внутри ячейки грида.
+ * @name Controls/_grid/interface/IGridControl#tagHover
+ * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
+ * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:ITagColumn#tagStyleProperty tagStyleProperty} у колонки.
+ * @see tagClick
+ */
