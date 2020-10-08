@@ -1,7 +1,7 @@
 import {DestroyableMixin, Model} from 'Types/entity';
 import {TKey, TAddPosition} from './Types';
 import {mixin} from 'Types/util';
-import {IEditableCollection, IEditableCollectionItem} from 'Controls/display';
+import {IEditableCollection, IEditableCollectionItem, TreeItem} from 'Controls/display';
 
 export const ERROR_MSG = {
     ADDING_ITEM_KEY_WAS_NOT_SET: 'Adding item key was not set. Key is required. You can set the key ' +
@@ -12,7 +12,9 @@ export const ERROR_MSG = {
     SOURCE_COLLECTION_MUST_BE_RECORDSET: 'Source collection must be instance of type extended of Types/collection:RecordSet.',
     HAS_NO_EDITING: 'There is no running edit in collection.',
     EDITING_IS_ALREADY_RUNNING: 'Editing is already running. Commit or cancel current before beginning new.',
-    NO_FORMAT_FOR_KEY_PROPERTY: 'There is no format for item\'s key property. It is required if trying to add item with empty key. set item\'s key or format of key property.'
+    NO_FORMAT_FOR_KEY_PROPERTY: 'There is no format for item\'s key property. It is required if trying to add item with empty key. set item\'s key or format of key property.',
+    PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST: 'Parent of adding item doesn\'t exist. Check if the parentProperty field is filled in correctly and parent is displayed.' +
+        'If you want to add item to the root, the parentProperty value of the added item must be "null"'
 };
 
 interface ICollectionEditorOptions {
@@ -129,6 +131,15 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
             isAdd: true,
             addPosition: addPosition === 'top' ? 'top' : 'bottom'
         });
+
+        // У каждого элемента дерева есть родитель. Если его нет, значит конфигурация добавляемого элемента
+        // ошибочна. Добавление записи не сможет начаться, если родительская запись отсутствует в дереве.
+        if (this._editingItem instanceof TreeItem) {
+            const parentKey = item.get(this._options.collection.getParentProperty());
+            if (parentKey !== null && !this._options.collection.getItemBySourceKey(parentKey)) {
+                throw Error(ERROR_MSG.PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST);
+            }
+        }
 
         this._editingItem.setEditing(true, item);
         this._options.collection.setAddingItem(this._editingItem);
