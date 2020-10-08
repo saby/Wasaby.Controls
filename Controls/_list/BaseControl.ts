@@ -3866,8 +3866,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
     checkTriggerVisibilityAfterRedraw(): void {
-        _private.doAfterUpdate(this, function () {
-            window.requestAnimationFrame(()=>{
+        _private.doAfterUpdate(this, () => {
+            window.requestAnimationFrame(() => {
                 setTimeout(function () {
                     this.checkTriggersVisibility();
                 }, 0);
