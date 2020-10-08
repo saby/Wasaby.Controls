@@ -3,7 +3,7 @@ import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import ICrud from './ICrud';
 import {DataSet} from 'Types/source';
 
-const SEARCH_DELAY = 3000;
+const SEARCH_DELAY = 2500;
 
 export default class DelaySuggestSource {
    private source: ICrud;

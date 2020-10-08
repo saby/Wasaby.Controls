@@ -517,6 +517,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                minSearchLength: this._options.autoDropDown ? 0 : this._options.minSearchLength,
                sorting: this._options.sorting,
                searchParam: this._options.searchParam,
+               navigation: this._options.navigation,
                tabsSelectedKey: this._tabsSelectedKey,
                layerName: this._options.layerName,
                tabsSelectedKeyChangedCallback: this._tabsSelectedKeyChanged,
