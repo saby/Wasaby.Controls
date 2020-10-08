@@ -578,7 +578,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             this._updateSuggestState();
 
             if (this._showContent) {
-               this._resolveLoad(this._searchValue);
+               this._setFilter(newOptions.filter, newOptions);
+               this._resolveLoad();
             }
          }
       }
