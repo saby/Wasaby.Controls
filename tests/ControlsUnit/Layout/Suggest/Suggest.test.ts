@@ -598,7 +598,7 @@ describe('Controls/suggest', () => {
          });
       });
 
-      it('Suggest::_resolveSearch', () => {
+      it('Suggest::_resolveSearch', async () => {
          const opts = {
             delayTime: 300,
             minSearchLength: 3,
@@ -612,7 +612,7 @@ describe('Controls/suggest', () => {
 
          const resolverSpy = sinon.spy(SearchResolverController.prototype, 'resolve');
 
-         inputContainer._resolveSearch('test');
+         await inputContainer._resolveSearch('test');
 
          assert.instanceOf(inputContainer._searchResolverController, SearchResolverController);
 
@@ -907,11 +907,9 @@ describe('Controls/suggest', () => {
          assert.isFalse(suggestOpened);
       });
 
-      it('Suggest::_missSpellClick', () => {
+      it('Suggest::_misspellClick', async () => {
          let value;
-         const suggestComponent = new getComponentObject({
-            source: getMemorySource()
-         });
+         const suggestComponent = getComponentObject();
 
          suggestComponent.activate = () => {
             suggestComponent._inputActive = true;
@@ -923,7 +921,7 @@ describe('Controls/suggest', () => {
          };
          suggestComponent._options.minSearchLength = 3;
          suggestComponent._misspellingCaption = 'test';
-         suggestComponent._missSpellClick();
+         await suggestComponent._misspellClick();
 
          assert.equal(value, 'test');
          assert.equal(suggestComponent._misspellingCaption, '');

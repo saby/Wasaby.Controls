@@ -1,6 +1,6 @@
-import {ISearchDelay, ISearchResolverOptions} from './interface';
+import {ISearchResolver, ISearchResolverOptions} from './interface';
 
-export default class SearchResolver implements ISearchDelay {
+export default class SearchResolver implements ISearchResolver {
 
    protected _delayTimer: NodeJS.Timeout = null;
 
@@ -27,7 +27,7 @@ export default class SearchResolver implements ISearchDelay {
       }
    }
 
-   private _clearTimer(): void {
+    clearTimer(): void {
       if (this._delayTimer) {
          clearTimeout(this._delayTimer);
          this._delayTimer = null;
@@ -35,7 +35,7 @@ export default class SearchResolver implements ISearchDelay {
    }
 
    private _callAfterDelay(callback: Function, value: string): Promise<void> {
-      this._clearTimer();
+      this.clearTimer();
 
       return new Promise((resolve) => {
          this._delayTimer = setTimeout(() => {

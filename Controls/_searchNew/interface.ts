@@ -38,6 +38,7 @@ export interface ISearchController {
    update(options: Partial<ISearchControllerOptions>): void;
 }
 
-export interface ISearchDelay {
+export interface ISearchResolver {
    resolve(value: string | null): void;
+   clearTimer(): void;
 }
