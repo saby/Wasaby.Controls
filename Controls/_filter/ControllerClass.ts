@@ -272,7 +272,9 @@ export default class FilterControllerClass {
 
     // Получает итемы с учетом истории.
     private _resolveHistoryItems(historyId: string, historyItems: IFilterItem[]): Promise<THistoryData> {
-        return historyItems ? Promise.resolve(historyItems) : this._loadHistoryItems(historyId);
+        return this._loadHistoryItems(historyId).then((result) => {
+            return historyItems ? historyItems : result;
+        });
     }
 
     private _loadHistoryItems(historyId: string): Promise<THistoryData> {
