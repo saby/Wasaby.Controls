@@ -3,6 +3,7 @@ import Tree from '../Tree';
 import TreeItem from '../TreeItem';
 import TreeItemDecorator from '../TreeItemDecorator';
 import BreadcrumbsItem from '../BreadcrumbsItem';
+import SearchSeparator from '../SearchSeparator';
 import {DestroyableMixin, SerializableMixin, ISerializableState} from 'Types/entity';
 import {mixin} from 'Types/util';
 import {Map} from 'Types/shim';
@@ -16,7 +17,7 @@ interface IOptions<S, T> {
 
 interface ISortOptions<S, T extends TreeItem<S>> {
     treeItemToDecorator: Map<T, TreeItemDecorator<S>>;
-    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S>>;
+    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S> | SearchSeparator<S>>;
     display: Tree<S, T>;
 }
 
@@ -157,9 +158,10 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
     static sortItems<S, T extends TreeItem<S> = TreeItem<S>>(
         items: T[],
         options: ISortOptions<S, T>
-    ): Array<T | BreadcrumbsItem<S>> {
+    ): Array<T | BreadcrumbsItem<S> | SearchSeparator<S>> {
         const {display, treeItemToDecorator, treeItemToBreadcrumbs}: ISortOptions<S, T> = options;
         const breadcrumbsToData = new Map<BreadcrumbsItem<S>, T[]>();
+        const root = display && display.getRoot();
         const sortedItems = [];
 
         interface IBreadCrumbsReference {
@@ -189,13 +191,22 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
         function getBreadCrumbsReference(item: T): IBreadCrumbsReference {
             let breadCrumbs;
             const last = getNearestNode(item);
-            if (last) {
+            if (last && last !== root) {
                 breadCrumbs = treeItemToBreadcrumbs.get(last);
                 if (!breadCrumbs) {
                     breadCrumbs = new BreadcrumbsItem<S>({
                         contents: null,
                         last,
                         owner: display
+                    });
+                    treeItemToBreadcrumbs.set(last, breadCrumbs);
+                }
+            } else if (last === root) {
+                breadCrumbs = treeItemToBreadcrumbs.get(last);
+                if (!breadCrumbs) {
+                    breadCrumbs = new SearchSeparator({
+                        contents: null,
+                        source: last
                     });
                     treeItemToBreadcrumbs.set(last, breadCrumbs);
                 }
@@ -309,9 +320,9 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
         }
 
         // Expand breadcrumbs into flat array
-        const resultItems: Array<T | BreadcrumbsItem<S>> = [];
+        const resultItems: Array<T | BreadcrumbsItem<S> | SearchSeparator<S>> = [];
         sortedItems.forEach((item) => {
-            if (item instanceof BreadcrumbsItem) {
+            if (item instanceof BreadcrumbsItem || item instanceof SearchSeparator) {
                 resultItems.push(item);
                 const data = breadcrumbsToData.get(item);
                 if (data) {

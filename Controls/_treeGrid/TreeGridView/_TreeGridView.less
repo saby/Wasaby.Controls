@@ -356,8 +356,17 @@
    // https://online.sbis.ru/opendoc.html?guid=7ec6ad1a-6c9d-412d-b477-7935d81c82cc
    z-index: 3;
 }
+.controls-TreeGrid__row__searchSeparator_theme-@{themeName} {
+}
 
-
+.controls-TreeGrid__row__searchSeparator_line_horizontal_theme-@{themeName} {
+   margin-top: @separator_padding-top_search_treeGrid;
+   margin-bottom: @separator_padding-bottom_search_treeGrid;
+   width: @separator_length_search_treeGrid;
+   height: @separator_thickness_search_treeGrid;
+   background-color: @separator_color_search_treeGrid;
+   display: block;
+}
 
 .ws-is-hover {
    .controls-TreeGrid__row-expander_node_default_theme-@{themeName}:hover:before {

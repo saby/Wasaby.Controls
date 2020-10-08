@@ -93,10 +93,6 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
          return this.getLast().isHasChildren();
      }
 
-     isRoot(): boolean {
-         return this.getLast().isRoot();
-     }
-
     // endregion
 }
 
