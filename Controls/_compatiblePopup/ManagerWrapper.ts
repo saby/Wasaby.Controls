@@ -181,7 +181,7 @@ var ManagerWrapper = Control.extend({
          // Если попап не следует за таргетом при скролле - закроем его.
          // Избавимся только когда сделают задачу, описанную комментом выше
          if (item.popupOptions.actionOnScroll === 'close' && $(scrollContainer).find(item.popupOptions.target).length) {
-            this._children.Manager.remove(item.id);
+            this._popupManager.remove(item.id);
          }
       });
    },

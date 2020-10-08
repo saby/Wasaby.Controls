@@ -421,7 +421,8 @@ define([
             },
             isRoot: function() {
                return false;
-            }
+            },
+            setExpanded: () => undefined
          });
          tree.TreeControl._private.createSourceController = originalCreateSourceController;
 

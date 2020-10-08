@@ -13,6 +13,11 @@ export interface IOffsets {
     right?: number;
 }
 
+export interface IStartEnd {
+    start?: number;
+    end?: number;
+}
+
 export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableMixin) implements IVersionable {
     readonly '[Types/_entity/VersionableMixin]': true;
 
@@ -22,11 +27,16 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
     private _options: IScrollbarsOptions;
     private _canScroll: boolean = false;
     private _position: number = 0;
+    private _virtualPosition: number = 0;
     private _contentSize: number;
     private _originalContentSize: number;
     private _offsets: IOffsets = {
         top: 0,
         bottom: 0
+    };
+    private _placeholders: IStartEnd = {
+        start: 0,
+        end: 0
     };
     private _style: string = '';
 
@@ -45,7 +55,7 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
     }
 
     get position(): number {
-        return this._position;
+        return this._virtualPosition;
     }
 
     get contentSize(): number {
@@ -56,28 +66,47 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
         this._options = options;
     }
 
-    updateScrollState(scrollState: IScrollState): boolean {
+    updatePosition(scrollState: IScrollState): boolean {
         let changed = false;
         const canScroll: boolean = canScrollByState(scrollState, this._direction);
         const position: number = getScrollPositionByState(scrollState, this._direction);
-        const originalContentSize: number = getContentSizeByState(scrollState, this._direction);
         if (canScroll !== this._canScroll || position !== this._position) {
             this._canScroll = canScroll;
             this._position = position;
+            this._updatePosition();
             changed = true;
         }
+        if (changed) {
+            this._nextVersion();
+        }
+        return changed;
+    }
+
+    updateContentSize(scrollState: IScrollState): boolean {
+        let changed = false;
+        const originalContentSize: number = getContentSizeByState(scrollState, this._direction);
 
         if (originalContentSize !== this._originalContentSize) {
-            // Если значение впервые инициализируется - не вызываем перерисовку
-            if (this._originalContentSize !== undefined) {
-                changed = true;
-            }
+            changed = true;
             this._originalContentSize = originalContentSize;
             this._updateContentSize();
         }
 
         if (changed) {
             this._nextVersion();
+        }
+        return changed;
+    }
+
+    updatePlaceholdersSize(size: IStartEnd): boolean {
+        const changed = size.start !== this._placeholders.start || size.end !== this._placeholders.end;
+        this._placeholders = {
+            ...this._placeholders,
+            ...size
+        };
+        if (changed) {
+            this._updateContentSize();
+            this._updatePosition();
         }
         return changed;
     }
@@ -113,7 +142,12 @@ export default class ScrollbarModel extends mixin<VersionableMixin>(VersionableM
     private _updateContentSize(): boolean {
         const oldContentSize = this._contentSize;
         const originalContentSize = this._originalContentSize || 0;
-        this._contentSize = originalContentSize - this._offsets.top - this._offsets.bottom;
-        return this._contentSize === oldContentSize;
+        this._contentSize = originalContentSize - this._offsets.top - this._offsets.bottom +
+            this._placeholders.start + this._placeholders.end;
+        return this._contentSize !== oldContentSize;
+    }
+
+    private _updatePosition(): void {
+        this._virtualPosition = this._position + this._placeholders.start;
     }
 }

@@ -1,11 +1,8 @@
 /**
  * Шаблон, который по умолчанию используется для отображения подвала {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/suggest/ автодополнения}.
- *  
  * @class Controls/suggestPopup:FooterTemplate
- * @author Герасимов А.М.
- * @see Controls/suggestPopup
- * @see Controls/interface/ISuggest#footerTemplate
- * @public
+ * @remark
+ * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/suggest/ здесь}.
  * @example
  * <pre class="brush: html">
  * <Controls.suggest:Input>
@@ -20,9 +17,11 @@
  *    </ws:footerTemplate>
  * </Controls.suggest:Input>
  * </pre>
- * @demo @demo Controls-demo/Suggest_new/SearchInput/FooterTemplate/FooterTemplate
- * @remark
- * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/suggest/ здесь}.
+ * @demo Controls-demo/Suggest_new/SearchInput/FooterTemplate/FooterTemplate
+ * @see Controls/suggestPopup
+ * @see Controls/interface/ISuggest#footerTemplate
+ * @author Герасимов А.М.
+ * @public
  */
 
 /**

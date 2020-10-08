@@ -57,7 +57,7 @@ let getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @public
  * @author Золотова Э.Е.
  * @category Input
- * @demo Controls-demo/Input/Dropdown/DropdownPG
+ * @demo Controls-demo/dropdown_new/Input/Source/Index
  */
 
 /*
@@ -97,6 +97,7 @@ let getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * Содержимое можно переопределить с помощью параметра "contentTemplate".
  * Базовый шаблон Controls/dropdown:inputDefaultContentTemplate по умолчанию отображает только текст.
  * Для отображения иконки и текста используйте шаблон "Controls/dropdown:defaultContentTemplateWithIcon".
+ * @demo Controls-demo/dropdown_new/ContentTemplate/Index
  * @example
  * Отображение иконки и текста.
  *

@@ -464,14 +464,14 @@ var
          * @param isActionsCellExists выводится ли в строке дополнительная ячейка под операции над записью
          * @private
          */
-        getColumnAlignGroupStyles(itemData: IGridItemData, leftSideItemsCount: number = 0, isActionsCellExists: boolean): {
+        getColumnAlignGroupStyles(itemData: IGridItemData, leftSideItemsCount: number = 0, isActionsCellExists: boolean, stickyLadderCellsCount: number = 0): {
             left: string
             right: string
         } {
             const additionalTerm = (itemData.hasMultiSelect ? 1 : 0);
             const result = {left: '', right: ''};
             const start = 1;
-            const end = itemData.columns.length + 1 + (isActionsCellExists ? 1 : 0);
+            const end = itemData.columns.length + 1 + (isActionsCellExists ? 1 : 0) + stickyLadderCellsCount;
 
             if (leftSideItemsCount > 0) {
                 const center = leftSideItemsCount + additionalTerm + 1;
@@ -1603,7 +1603,7 @@ var
                                  (this.getCount() - 1 === current.index);
 
             current.getColumnAlignGroupStyles = (columnAlignGroup: number) => (
-                _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell())
+                _private.getColumnAlignGroupStyles(current, columnAlignGroup, self._shouldAddActionsCell(), self.stickyLadderCellsCount())
             );
 
             const style = !current.style ? 'default' : current.style;
