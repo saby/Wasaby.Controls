@@ -122,7 +122,7 @@ class Notification extends BaseOpener<INotificationOpenerOptions> implements INo
         return getCompatibleConfig(BaseOpenerCompat, config);
     }
 
-    static openPopup(config: object): Promise<string> {
+    static openPopup(config: INotificationPopupOptions): Promise<string> {
         return new Promise((resolve) => {
             const newConfig = BaseOpener.getConfig(BASE_OPTIONS, config);
             // Сделал так же как в ws3. окна, которые закрываются автоматически - всегда выше всех.
