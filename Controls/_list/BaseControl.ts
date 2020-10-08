@@ -1041,7 +1041,7 @@ const _private = {
             return false;
         }
         if (direction === 'up') {
-            return scrollParams.scrollTop <= triggerOffset;
+            return scrollParams.scrollTop <= triggerOffset && !self._hideTopTrigger;
         } else {
             let bottomScroll = scrollParams.scrollHeight - scrollParams.clientHeight - scrollParams.scrollTop;
             if (self._pagingVisible) {
