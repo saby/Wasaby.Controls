@@ -1,4 +1,4 @@
-import Flat from './Flat';
+import Flat, { IFlatDragStrategyParams } from './Flat';
 import { IDragPosition } from 'Controls/display';
 import { IDraggableCollection, IDraggableItem, IDragStrategyParams, IOffset } from '../interface';
 
@@ -8,7 +8,7 @@ interface IDraggableTreeItem extends IDraggableItem {
     isNode(): boolean;
 }
 
-export interface ITreeDragStrategyParams extends IDragStrategyParams<IDraggableTreeItem> {
+export interface ITreeDragStrategyParams extends IFlatDragStrategyParams<IDraggableTreeItem> {
     mouseOffsetInTargetItem: IOffset;
 }
 

@@ -6,6 +6,9 @@ import { ISelectionObject } from 'Controls/interface';
 import { CrudEntityKey } from 'Types/source';
 import { Model } from 'Types/entity';
 
+type StrategyConstructor<S extends Model, T extends IDraggableItem<S>>
+    = new (model: IDraggableCollection<S, T>, draggableItem: T) => IDragStrategy<T>;
+
 /**
  * Контроллер, управляющий состоянием отображения драг'н'дропа
  * @class Controls/_listDragNDrop/Controller
@@ -20,16 +23,13 @@ export default class Controller<
 > {
    private _model: IDraggableCollection<S, T>;
    private _strategy: IDragStrategy<T, P>;
-   private _strategyConstructor: new (model: IDraggableCollection<S, T>, draggableItem: T) => IDragStrategy<T>;
+   private _strategyConstructor: StrategyConstructor<S, T>;
 
    private _draggableItem: T;
    private _dragPosition: IDragPosition<T>;
    private _entity: ItemsEntity;
 
-   constructor(
-       model: IDraggableCollection<S, T>,
-       strategyConstructor: new (model: IDraggableCollection<S, T>, draggableItem: T) => IDragStrategy<T>
-   ) {
+   constructor(model: IDraggableCollection<S, T>, strategyConstructor: StrategyConstructor<S, T>) {
       this._model = model;
       this._strategyConstructor = strategyConstructor;
    }

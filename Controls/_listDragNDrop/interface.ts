@@ -17,6 +17,7 @@ export interface IDraggableCollection<
    S extends Model = Model,
    T extends IDraggableItem<S> = IDraggableItem<S>
 > {
+   getIndexBySourceItem(item: S): number;
    getIndex(item: T): number;
 
    setDragPosition(position: IDragPosition<T>): void;
@@ -26,7 +27,6 @@ export interface IDraggableCollection<
 
 export interface IDragStrategyParams<T extends IDraggableItem = IDraggableItem> {
    targetItem: T;
-   currentPosition?: IDragPosition<T>;
 }
 
 export interface IDragStrategy<
