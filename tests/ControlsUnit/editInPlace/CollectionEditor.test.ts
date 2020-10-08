@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import {CollectionEditor, ERROR_MSG} from 'Controls/_editInPlace/CollectionEditor';
-import {Collection, CollectionItem} from 'Controls/display';
+import {Collection, CollectionItem, Tree} from 'Controls/display';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 
@@ -170,7 +170,6 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
             assert.isFalse(collection.isEditing());
         });
 
-
         describe('addPosition', () => {
             const addPositionAssociations = [
                 ['anyInvalid', 'bottom', 3],
@@ -208,6 +207,29 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
                 });
 
             });
+        });
+
+        it('throw error if parent of adding item missing in display:Collection', () => {
+            const tree = new Tree({
+                collection: new RecordSet({
+                    keyProperty: 'id',
+                    rawData: []
+                }),
+                root: null,
+                keyProperty: 'id',
+                parentProperty: 'pid'
+            });
+            collectionEditor = new CollectionEditor({collection: tree});
+
+            newItem = new Model<{ id: number, title: string, pid: number}>({
+                keyProperty: 'id',
+                rawData: {id: 4, title: 'Fourth', pid: 0}
+            });
+
+            // Попытка начать добавление записи в родителя, которого нет в коллекции должна привести к исключению
+            assert.throws(() => {
+                collectionEditor.add(newItem);
+            }, ERROR_MSG.PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST);
         });
     });
 
