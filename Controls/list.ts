@@ -33,6 +33,7 @@
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IReloadableList Controls/_list/interface/IReloadableList
  * @includes IMovableList Controls/_list/interface/IMovableList
+ * @includes IMarkerListOptions Controls/_marker/interface/IMarkerListOptions
  * @public
  * @author Крайнов Д.О.
  */

@@ -395,6 +395,7 @@ var
     * @mixes Controls/_list/interface/IClickableView
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
+    * @mixes Controls/_marker/interface/IMarkerListOptions
     * @control
     * @public
     * @category List
@@ -432,6 +433,7 @@ var
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
+    * @mixes Controls/_marker/interface/IMarkerListOptions
     * @control
     * @public
     * @category List
@@ -591,14 +593,14 @@ var
             }
          }
       },
-      _beforeRender(): void { 
+      _beforeRender(): void {
           // Сбрасываем скролл при режима отображения
           // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
          if (this._resetScrollAfterViewModeChange) {
             this._notify('doScroll', ['top'], {bubbling: true});
             this._resetScrollAfterViewModeChange = false;
          }
-         
+
       },
       _beforePaint: function() {
          if (this._markerForRestoredScroll !== null) {
