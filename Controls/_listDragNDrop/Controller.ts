@@ -1,35 +1,43 @@
 import { IDraggableCollection, IDraggableItem, IDragStrategy, IDragStrategyParams } from './interface';
 import { SyntheticEvent } from 'UI/Vdom';
 import { ItemsEntity } from 'Controls/dragnDrop';
-import { IDragPosition } from 'Controls/display';
 import { ISelectionObject } from 'Controls/interface';
 import { CrudEntityKey } from 'Types/source';
 import { Model } from 'Types/entity';
 
-type StrategyConstructor<S extends Model, T extends IDraggableItem<S>>
-    = new (model: IDraggableCollection<S, T>, draggableItem: T) => IDragStrategy<T>;
+type StrategyConstructor<
+    P extends IDragStrategyParams<T>,
+    A,
+    S extends Model = Model,
+    T extends IDraggableItem<S> = IDraggableItem<S>
+> = new (model: IDraggableCollection<S, T, A>, draggableItem: T) => IDragStrategy<A, T, P>;
 
 /**
  * Контроллер, управляющий состоянием отображения драг'н'дропа
  * @class Controls/_listDragNDrop/Controller
+ * @template P Тип параметров метода calculateDragPosition
+ * @template A Тип объекта, обозначающего позицию
+ * @template S Тип содержимого элемента коллекции
+ * @template T Тип элемента коллекции
  * @public
  * @author Панихин К.А.
  */
 
 export default class Controller<
     P extends IDragStrategyParams<T>,
+    A,
     S extends Model = Model,
     T extends IDraggableItem<S> = IDraggableItem<S>
 > {
-   private _model: IDraggableCollection<S, T>;
-   private _strategy: IDragStrategy<T, P>;
-   private _strategyConstructor: StrategyConstructor<S, T>;
+   private _model: IDraggableCollection<S, T, A>;
+   private _strategy: IDragStrategy<A, T, P>;
+   private _strategyConstructor: StrategyConstructor<P, A, S, T>;
 
    private _draggableItem: T;
-   private _dragPosition: IDragPosition<T>;
+   private _dragPosition: A;
    private _entity: ItemsEntity;
 
-   constructor(model: IDraggableCollection<S, T>, strategyConstructor: StrategyConstructor<S, T>) {
+   constructor(model: IDraggableCollection<S, T, A>, strategyConstructor: StrategyConstructor<P, A, S, T>) {
       this._model = model;
       this._strategyConstructor = strategyConstructor;
    }
@@ -61,7 +69,7 @@ export default class Controller<
     * Отображает перетаскиваемые сущности в указанной позиции списка
     * @param position - позиция в которой надо отобразить перемещаемые записи
     */
-   setDragPosition(position: IDragPosition<T>): void {
+   setDragPosition(position: A): void {
       if (this._dragPosition === position) {
          return;
       }
@@ -95,7 +103,7 @@ export default class Controller<
    /**
     * Возвращает текущую позицию
     */
-   getDragPosition(): IDragPosition<T> {
+   getDragPosition(): A {
       return this._dragPosition;
    }
 
@@ -110,7 +118,7 @@ export default class Controller<
     * Рассчитывает итоговую позицию для перемещения
     * @param params
     */
-   calculateDragPosition(params: P): IDragPosition<T> {
+   calculateDragPosition(params: P): A {
       return this._strategy.calculatePosition({ ...params, currentPosition: this._dragPosition });
    }
 

@@ -6,14 +6,14 @@
  * @author Панихин К.А.
  */
 import Controller from 'Controls/_listDragNDrop/Controller';
-import {IDragStrategyParams} from 'Controls/_listDragNDrop/interface';
 import Flat from 'Controls/_listDragNDrop/strategies/Flat';
 import Tree, {ITreeDragStrategyParams} from 'Controls/_listDragNDrop/strategies/Tree';
+
+export * from 'Controls/_listDragNDrop/interface';
 
 export {
    Controller as DndController,
    Flat as FlatStrategy,
-   IDragStrategyParams,
    Tree as TreeStrategy,
    ITreeDragStrategyParams
 };

@@ -1,11 +1,16 @@
 import Flat, { IFlatDragStrategyParams } from './Flat';
 import { IDragPosition } from 'Controls/display';
-import { IDraggableCollection, IDraggableItem, IDragStrategyParams, IOffset } from '../interface';
+import { IDraggableCollection, IDraggableItem } from '../interface';
 
 const DRAG_MAX_OFFSET = 10;
 
 interface IDraggableTreeItem extends IDraggableItem {
     isNode(): boolean;
+}
+
+interface IOffset {
+    top: number;
+    bottom: number;
 }
 
 export interface ITreeDragStrategyParams extends IFlatDragStrategyParams<IDraggableTreeItem> {

@@ -1,21 +1,27 @@
 import { IDragPosition } from 'Controls/display';
-import { IDraggableCollection, IDraggableItem, IDragStrategy, IDragStrategyParams, IOffset } from '../interface';
+import {
+    BaseDragStrategy,
+    IDraggableCollection,
+    IDraggableItem,
+    IDragStrategy,
+    IDragStrategyParams
+} from '../interface';
 
-export interface IFlatDragStrategyParams<T extends IDraggableItem = IDraggableItem> extends IDragStrategyParams<T> {
-    currentPosition: IDragPosition<T>;
+export interface IFlatDragStrategyParams<
+    T extends IDraggableItem = IDraggableItem,
+    A = IDragPosition<T>
+> extends IDragStrategyParams<T> {
+    currentPosition: A;
 }
 
 export default class Flat<
     T extends IDraggableItem = IDraggableItem,
-    P extends IFlatDragStrategyParams<T> = IFlatDragStrategyParams<T>
-> implements IDragStrategy<T, P> {
-    protected _draggableItem: T;
-    protected _model: IDraggableCollection;
+    P extends IFlatDragStrategyParams<T> = IFlatDragStrategyParams<T>,
+> extends BaseDragStrategy<IDragPosition<T>, T, P> {
     protected _startPosition: IDragPosition<T>;
 
     constructor(model: IDraggableCollection, draggableItem: T) {
-        this._model = model;
-        this._draggableItem = draggableItem;
+        super(model, draggableItem);
 
         // getIndexBySourceItem - т.к. draggableItem это avatar и его нет в коллекции
         this._startPosition = {
