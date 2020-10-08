@@ -58,13 +58,13 @@ class ChangeEventController {
      * Обработчик, который нужно вызвать при нажатии клавиши(keydown) в поле ввода.
      */
     keyDownHandler: Handler<KeyboardEvent> = (event, config) => {
-        if (ChangeEventController._isTriggeredOnKeyDown(event.nativeEvent.code, config.tag)) {
+        if (ChangeEventController._isTriggeredOnKeyDown(event.nativeEvent.key, config.tag)) {
             this._callChangeHandler(config.displayValue);
         }
     };
 
-    private static _isTriggeredOnKeyDown(code: string, tag: Tag): boolean {
-        return code === 'Enter' && tag !== 'textarea';
+    private static _isTriggeredOnKeyDown(key: string, tag: Tag): boolean {
+        return key === 'Enter' && tag !== 'textarea';
     }
 }
 
