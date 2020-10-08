@@ -79,7 +79,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * <pre class="brush: html">
  * <Controls.list:View>
  *     <ws:loadingIndicatorTemplate>
- *         <ws:partial template="Controls/list:LoadingIndicatorTemplate"
+ *         <ws:partial template="Controls/list:ContinueSearchTemplate"
  *                     scope="{{loadingIndicatorTemplate}}">
  *             <ws:footerTemplate>
  *                 <div>Дополнительная информация при итеративном поиске</div>
@@ -93,7 +93,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /**
  * @name Controls/_list/interface/IList#emptyTemplate
  * @cfg {Function} Шаблон отображения контрола без элементов.
- * @demo Controls-demo/List/List/BasePG
+ * @demo Controls-demo/list_new/EmptyList/Default/Index
  * @default Controls/list:EmptyTemplate
  * @example
  * <pre class="brush: html">
@@ -117,6 +117,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * - contentTemplate content of emptyTemplate
  * - topSpacing Spacing between top border and content of emptyTemplate
  * - bottomSpacing Spacing between bottom border and content of emptyTemplate
+ * @demo Controls-demo/list_new/EmptyList/Default/Index
  * @example
  * <pre>
  *    <Controls.list:View>
@@ -131,8 +132,10 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /**
  * @name Controls/_list/interface/IList#footerTemplate
- * @cfg {Function} Шаблон подвала списка.
- * @demo Controls-demo/List/List/BasePG
+ * @cfg {Function} Шаблон отображения подвала списка.
+ * @remark
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/footer/">руководство разработчика</a>.
+ * @demo Controls-demo/list_new/FooterTemplate/Index
  */
 
 /*ENG
@@ -151,7 +154,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /**
  * @name Controls/_list/interface/IList#multiSelectVisibility
  * @cfg {MultiSelectVisibility} Режим отображения флагов множественного выбора.
- * @demo Controls-demo/List/List/MultiselectPG
+ * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
  * @remark
  * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="/doc/platform/developmentapl/interface-development/controls/list/list/select/#multiple-choice">руководству разработчика</a>.
@@ -167,8 +170,34 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /*ENG
  * @name Controls/_list/interface/IList#multiSelectVisibility
  * @cfg {MultiSelectVisibility} Whether multiple selection is enabled.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
+ * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
+ */
+
+/**
+ * @typedef {String} MultiSelectPosition
+ * @variant custom Нестандартная позиця расположени чекбоксов множественного выбора. При данном значении опции, шаблон чекбоксов передается в прикладной шаблон и может быть выведен в любом месте записи.
+ * @variant default Стандартная позиция чекбоксов множественного выбора в начале строки.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#multiSelectPosition
+ * @cfg {MultiSelectPosition} Позиция чекбоксов множественного выбора.
+ * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
+ * @default default
+ */
+
+/*ENG
+ * @typedef {String} MultiSelectPosition
+ * @variant custom A custom position for the multiple selection checkboxes. With this option value, the multiple selection template is passed to the item template and can be displayed anywhere in it
+ * @variant default The standard position of the multiple selection checkboxes (at the beginning of the line)
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#multiSelectPosition
+ * @cfg {MultiSelectPosition} Position of multiple selection checkboxes
+ * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
+ * @default default
  */
 
 /**
@@ -419,7 +448,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /**
  * @event Происходит при наведении курсора мыши на элемент списка.
  * @name Controls/_list/interface/IList#hoveredItemChanged
- * @demo Controls-demo/List/List/BasePG
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Экземпляр элемента, на который наводим курсор.
  * @param {HTMLElement} itemContainer Контейнер элемента.
@@ -449,7 +477,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @name Controls/_list/interface/IList#markedKeyChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} key Ключ выбранного элемента.
- * @demo Controls-demo/List/List/BasePG
  */
 
 /*ENG
@@ -465,7 +492,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @name Controls/_list/interface/IList#beforeMarkedKeyChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} key Новый ключ маркера.
- * @demo Controls-demo/List/List/BasePG
  * @remark
  * Из обработчика события нужно вернуть полученный ключ или новый ключ.
  * Либо можно вернуть промис с нужным ключом.
@@ -475,7 +501,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @event Происходит при отрисовке очередного набора данных.
  * @name Controls/_list/interface/IList#drawItems
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @demo Controls-demo/List/List/BasePG
  */
 
 /*ENG

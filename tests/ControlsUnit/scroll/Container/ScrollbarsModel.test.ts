@@ -3,7 +3,7 @@ import {getDefaultOptions as getScrollbarsDefaultOptions} from 'Controls/_scroll
 import {SCROLL_MODE} from 'Controls/_scroll/Container/Type';
 import {SCROLL_DIRECTION} from 'Controls/_scroll/Utils/Scroll';
 
-describe('Controls/scroll:ContainerNew ScrollbarsModel', () => {
+describe('Controls/scroll:Container ScrollbarsModel', () => {
 
     describe('constructor', () => {
         [{
@@ -94,6 +94,9 @@ describe('Controls/scroll:ContainerNew ScrollbarsModel', () => {
                     scrollMode: SCROLL_MODE.VERTICAL_HORIZONTAL
                 });
 
+            // В реальнности метод задебоунсен, в тестах выключаем дебоунс.
+            model._updateContainerSizes = ScrollbarsModel.prototype._updateContainerSizes;
+
             model.updateScrollState(scrollState, { offsetHeight: 50 });
 
             assert.strictEqual(model._models.vertical.position, scrollState.scrollTop);
@@ -114,5 +117,36 @@ describe('Controls/scroll:ContainerNew ScrollbarsModel', () => {
             assert.isFalse(model._overflowHidden);
         });
     });
+
+    describe('updatePlaceholdersSize', () => {
+        const scrollState = {
+            scrollTop: 10,
+            scrollLeft: 20,
+            scrollHeight: 30,
+            scrollWidth: 40
+        };
+        const placeholders = { top: 10, bottom: 10, left: 10, right: 10 };
+
+        it('should update position and contentSize.', () => {
+            const
+                model: ScrollbarsModel = new ScrollbarsModel({
+                    ...getScrollbarsDefaultOptions(),
+                    scrollMode: SCROLL_MODE.VERTICAL_HORIZONTAL
+                });
+
+            // В реальнности метод задебоунсен, в тестах выключаем дебоунс.
+            model._updateContainerSizes = ScrollbarsModel.prototype._updateContainerSizes;
+
+            model.updateScrollState(scrollState, { offsetHeight: 50 });
+            model.updatePlaceholdersSize({ top: 10, bottom: 10, left: 10, right: 10 });
+
+            assert.strictEqual(model._models.vertical.position, scrollState.scrollTop + placeholders.top);
+            assert.strictEqual(model._models.horizontal.position, scrollState.scrollLeft + placeholders.left);
+            assert.strictEqual(model._models.vertical.contentSize,
+                scrollState.scrollHeight + placeholders.top + placeholders.bottom);
+            assert.strictEqual(model._models.horizontal.contentSize,
+                scrollState.scrollWidth + placeholders.left + placeholders.right);
+        });
+    })
 
 });

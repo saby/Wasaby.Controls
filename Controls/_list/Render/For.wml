@@ -18,6 +18,7 @@
            on:click="_onItemClick(item)"
            on:contextmenu="_onItemContextMenu(item)"
            on:swipe="_onItemSwipe(item)"
+           on:longtap="_onItemLongTap(item)"
            on:mouseenter="_onItemMouseEnter(item)"
            on:mousedown="_onItemMouseDown(item)"
            on:mouseup="_onItemMouseUp(item)"

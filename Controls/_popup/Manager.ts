@@ -4,6 +4,7 @@ import Container from 'Controls/_popup/Manager/Container';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import {Logger, Library} from 'UI/Utils';
 import {IPopupItem, IPopupOptions, IPopupController, IPopupItemInfo} from 'Controls/_popup/interface/IPopup';
+import {getModuleByName} from 'Controls/_popup/utils/moduleHelper';
 import {goUpByControlTree} from 'UI/Focus';
 import {List} from 'Types/collection';
 import {Bus as EventBus} from 'Env/Event';
@@ -99,6 +100,11 @@ class Manager {
     }
 
     loadData(dataLoaders): Promise<unknown> {
+        const Loader = getModuleByName(this._dataLoaderModule);
+        if (Loader) {
+            return Loader.load(dataLoaders);
+        }
+
         return new Promise((resolve) => {
             Library.load(this._dataLoaderModule).then((DataLoader) => {
                resolve(DataLoader.load(dataLoaders));

@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import { IOpener, IBaseOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
 import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
+import {loadModule, getModuleByName} from 'Controls/_popup/utils/moduleHelper';
 import * as CoreMerge from 'Core/core-merge';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as Deferred from 'Core/Deferred';
@@ -132,8 +133,8 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     private _getModulesSync(config: TBaseOpenerOptions, controller: string): ILoadDependencies|null {
-        const templateModule = BaseOpenerUtil.getModule(config.template);
-        const controllerModule = BaseOpenerUtil.getModule(controller);
+        const templateModule = getModuleByName(config.template);
+        const controllerModule = getModuleByName(controller);
         if (templateModule && controllerModule) {
             return {
                 template: templateModule,
@@ -369,7 +370,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
      * @private
      */
     static requireModule(module: string|Control): Promise<Control> {
-        return BaseOpenerUtil.requireModule(module);
+        return loadModule(module);
     }
 
     static getConfig(options: IBaseOpenerOptions, popupOptions: IBaseOpenerOptions): IBaseOpenerOptions {

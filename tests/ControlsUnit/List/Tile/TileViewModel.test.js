@@ -11,6 +11,7 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection', 'Types/enti
             keyProperty: 'id',
             imageWidthProperty: 'imageWidth',
             imageHeightProperty: 'imageHeight',
+            multiSelectPosition: 'default',
             imageFit: 'cover',
             imageUrlResolver: urlResolver,
             items: new collection.RecordSet({
@@ -95,21 +96,21 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection', 'Types/enti
       it('getMultiSelectClassList visible', function() {
          tileViewModel.setMultiSelectVisibility('visible');
          var item = tileViewModel.getItemDataByItem(tileViewModel.getItemById(2, 'id'));
-         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox_position-default_theme-default controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
       });
 
 
       it('getMultiSelectClassList onhover unselected', function() {
          tileViewModel.setMultiSelectVisibility('onhover');
          var item = tileViewModel.getItemDataByItem(tileViewModel.getItemById(2, 'id'));
-         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-TileView__checkbox_position-default_theme-default controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
       });
 
       it('getMultiSelectClassList onhover selected', function() {
          tileViewModel.setMultiSelectVisibility('onhover');
          tileViewModel.setSelectedItems([tileViewModel.getItemBySourceKey(2)], true);
          var item = tileViewModel.getItemDataByItem(tileViewModel.getItemById(2, 'id'));
-         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox_position-default_theme-default controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
       });
 
       it('getPaddingClasses', () => {

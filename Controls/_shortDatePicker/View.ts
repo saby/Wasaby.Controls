@@ -50,6 +50,11 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
  *
  */
 
+const enum POSITION {
+    RIGHT = 'right',
+    LEFT = 'left'
+}
+
 var _private = {
 
     _getYearListPosition: function (options, dateConstructor) {
@@ -92,6 +97,7 @@ var Component = BaseControl.extend({
     _isExpandedPopup: false,
     _popupHeightStyle: '',
     _isExpandButtonVisible: true,
+    _closeBtnPosition: POSITION.RIGHT,
 
 // constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
@@ -136,6 +142,7 @@ var Component = BaseControl.extend({
     _beforeUpdate: function (options) {
         // this._caption = _private._getCaption(options);
         this._updateIsExpandButtonVisible(options);
+        this._updateCloseBtnPosition(options);
     },
 
     /**
@@ -214,9 +221,25 @@ var Component = BaseControl.extend({
     },
 
     _updateIsExpandButtonVisible(options): void {
-        const openerTop = options.stickyPosition.targetPosition.top;
-        const popupTop = options.stickyPosition.position.top + Math.abs(options.stickyPosition.margins.top);
-        this._isExpandButtonVisible = openerTop === popupTop;
+        // options.stickyPosition может не быть, если shortDatePicker:View используется отдельно
+        // от dateRange:RangeShortSelector
+        if (options.stickyPosition) {
+            const openerTop = options.stickyPosition.targetPosition.top;
+            const popupTop = options.stickyPosition.position.top + Math.abs(options.stickyPosition.margins.top);
+            this._isExpandButtonVisible = openerTop === popupTop;
+        }
+    },
+
+    _updateCloseBtnPosition(options): void {
+        if (options.stickyPosition) {
+            const openerLeft = options.stickyPosition.targetPosition.left;
+            const popupLeft = options.stickyPosition.position.left;
+            // Вычисляем смещения попапа влево, т.к окно выравнивается по центру открывающего элемента
+            const popupOffset = (options.stickyPosition.sizes.width - options.stickyPosition.targetPosition.width) / 2;
+            this._closeBtnPosition = (popupLeft + popupOffset) === openerLeft ?
+                POSITION.RIGHT :
+                POSITION.LEFT;
+        }
     },
 
     _dateToDataString(date) {
@@ -303,12 +326,15 @@ var Component = BaseControl.extend({
     },
 
     _expandPopup(): void {
-        this._isExpandedPopup = !this._isExpandedPopup;
+
         let fittingMode;
+        if (!this._isExpandButtonVisible || !this._options.stickyPosition) {
+            return;
+        }
+
+        this._isExpandedPopup = !this._isExpandedPopup;
 
         if (this._isExpandedPopup) {
-            // const maxHeightPopup = this._options.stickyPosition.position.maxHeight;
-            // const topPopup = this._options.stickyPosition.position.top;
             this._popupHeightStyle = 'height: 100%';
             fittingMode = 'fixed';
         } else {

@@ -129,9 +129,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _needUpdateContentSize: boolean = false;
 
     _beforeMount(options: IContainerOptions, context, receivedState) {
-        this._shadows = new ShadowsModel(options);
+        const shadowsModelOptions = {...options};
+        if (options.hasMoreDataToUp) {
+            shadowsModelOptions.topShadowVisibility = true;
+        }
+        this._shadows = new ShadowsModel(shadowsModelOptions);
         this._scrollbars = new ScrollbarsModel(options, receivedState);
-        this._stickyHeaderController = new StickyHeaderController(this);
+        this._stickyHeaderController = new StickyHeaderController();
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
         this._optimizeShadowClass = this._getOptimizeShadowClass(options);
 
@@ -183,6 +187,11 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._intersectionObserverController = null;
         }
         this._stickyHeaderController.destroy();
+    }
+
+    _controlResizeHandler(): void {
+        super._controlResizeHandler();
+        this._stickyHeaderController.controlResizeHandler();
     }
 
     _updateState(...args) {
@@ -334,6 +343,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
+    _updatePlaceholdersSize(e: SyntheticEvent<Event>, placeholdersSizes): void {
+        super._updatePlaceholdersSize(...arguments);
+        this._scrollbars.updatePlaceholdersSize(placeholdersSizes);
+    }
 
     // Intersection observer
 

@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import {CollectionEditor, ERROR_MSG} from 'Controls/_editInPlace/CollectionEditor';
-import {Collection, CollectionItem} from 'Controls/display';
+import {Collection, CollectionItem, Tree} from 'Controls/display';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 
@@ -170,21 +170,6 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
             assert.isFalse(collection.isEditing());
         });
 
-        it('should set temporary adding item key if it is undefined', () => {
-            // Нет запущенного редактирования
-            assert.notExists(collectionEditor.getEditingItem());
-            assert.isFalse(collection.isEditing());
-
-            newItem.set('id', undefined);
-
-            // Запуск добавления записи с пустым ключом.
-            collectionEditor.add(newItem);
-
-            // Добавление запустилось, записи установлен временный ключ.
-            assert.isTrue(collection.isEditing());
-            assert.equal(collectionEditor.getEditingItem().contents.getKey(), 'ADDING_ITEM_EMPTY_KEY');
-        });
-
         describe('addPosition', () => {
             const addPositionAssociations = [
                 ['anyInvalid', 'bottom', 3],
@@ -222,6 +207,29 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
                 });
 
             });
+        });
+
+        it('throw error if parent of adding item missing in display:Collection', () => {
+            const tree = new Tree({
+                collection: new RecordSet({
+                    keyProperty: 'id',
+                    rawData: []
+                }),
+                root: null,
+                keyProperty: 'id',
+                parentProperty: 'pid'
+            });
+            collectionEditor = new CollectionEditor({collection: tree});
+
+            newItem = new Model<{ id: number, title: string, pid: number}>({
+                keyProperty: 'id',
+                rawData: {id: 4, title: 'Fourth', pid: 0}
+            });
+
+            // Попытка начать добавление записи в родителя, которого нет в коллекции должна привести к исключению
+            assert.throws(() => {
+                collectionEditor.add(newItem);
+            }, ERROR_MSG.PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST);
         });
     });
 
@@ -304,24 +312,6 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
             }, ERROR_MSG.HAS_NO_EDITING);
         });
 
-        it('should throw error if trying to commit adding item with undefined key', () => {
-            // Нет запущенного редактирования
-            assert.notExists(collectionEditor.getEditingItem());
-            assert.isFalse(collection.isEditing());
-
-            // Запуск добавления записи с пустым ключом.
-            newItem.set('id', undefined);
-            collectionEditor.add(newItem);
-
-            // Добавление запустилось, записи установлен временный ключ.
-            assert.isTrue(collection.isEditing());
-            assert.equal(collectionEditor.getEditingItem().contents.getKey(), 'ADDING_ITEM_EMPTY_KEY');
-
-            // Запуск добавления новой записи должен привести к исключению
-            assert.throws(() => {
-                collectionEditor.commit();
-            }, ERROR_MSG.ADDING_ITEM_KEY_WAS_NOT_SET);
-        });
     });
 
     describe('cancel', () => {

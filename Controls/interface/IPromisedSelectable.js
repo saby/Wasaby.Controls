@@ -45,19 +45,18 @@ define('Controls/interface/IPromisedSelectable', [
     * @default []
     * @remark
     * Чтобы выбрать все элементы внутри узла, необходимо в selectedKeys передать значение {@link Controls/_interface/ISource#keyProperty keyProperty} этого узла.
-    * Чтобы выбрать все элементы, необходимо в selectedKeys передать [null].
+    * Чтобы выбрать все элементы, необходимо в selectedKeys передать значение **[null]**.
     *
-    * Следующее примечание актуально только при работе с {@link Controls/operations:Panel Панелью действий}.
-    * Если все элементы списочного контрола выбраны через кнопку "Отметить"->"Все", тогда опции **selectedKeys** и **excludedKeys** для плоских списков (см. {@link Controls/list:View Плоский список} и {@link Controls/grid:View таблица}) будут установлены в значение **null**, а для иерархических (см. {@link Controls/treeGrid:View Дерево}, {@link Controls/tile:View Плитка} и {@link Controls/explorer:View Иерархический проводник}) — в значение **корень** (см. {@link Controls/explorer:IExplorer#root root}).
+    * Следующее примечание актуально только при работе с {@link Controls/operations:Panel Панелью действий}. Если все элементы списочного контрола выбраны через кнопку "Отметить"->"Все", тогда опции **selectedKeys** и **excludedKeys** для плоских списков (см. {@link Controls/list:View Плоский список} и {@link Controls/grid:View Таблица}) будут установлены в значение **null**, а для иерархических (см. {@link Controls/treeGrid:View Дерево}, {@link Controls/tile:View Плитка} и {@link Controls/explorer:View Иерархический проводник}) — в значение **корень** (см. {@link Controls/explorer:IExplorer#root root}).
     * @example
-    * В следующем примере создается список и выбираются все элементы, кроме двух. Последующие изменения, внесенные в selectedKeys и excludedKeys, будут синхронизированы посредством биндинга.
-    * <pre class="brush: js">
+    * В следующем примере создается список и выбираются все элементы, кроме двух. Последующие изменения, внесенные в selectedKeys и excludedKeys, будут <a href="/doc/platform/developmentapl/interface-development/ui-library/options/#sync">синхронизированы</a>, потому что использована директива bind.
+    * <pre class="brush: html; highlight: [3,4]">
     * <!-- WML -->
     * <Controls.operations:Controller
     *     bind:selectedKeys="_selectedKeys"
     *     bind:excludedKeys="_excludedKeys" />
     * </pre>
-    * <pre class="brush: html">
+    * <pre class="brush: js; highlight: [5,6]">
     * // JavaScript
     * _selectedKeys: null,
     * _excludedKeys: null,

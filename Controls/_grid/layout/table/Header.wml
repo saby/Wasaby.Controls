@@ -1,5 +1,5 @@
 <ws:template name="cellContent">
-    <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0 || headerColumn.column.caption || headerColumn.column.title}}">
+    <ws:if data="{{ !hasMultiSelect || headerColumn.index !== 0 || headerColumn.column.caption || headerColumn.column.title}}">
         <ws:if data="{{!!headerColumn.column.template}}">
             <ws:partial
                     attr:class="controls-Grid__header-cell__content controls-Grid__header-cell__content_theme-{{_options.theme}} {{headerModel.isMultiHeader() ? ' controls-Grid__row-multi-header__content_baseline' : ' controls-Grid__row-header__content_baseline'}}_theme-{{_options.theme}} {{headerColumn.cellContentClasses}}"
@@ -23,7 +23,8 @@
             attr:style="{{headerColumn.style}}"
             rowspan="{{headerColumn.rowSpan}}"
             colspan="{{headerColumn.colSpan}}">
-        <ws:partial template="cellContent"/>
+        <ws:partial template="cellContent"
+                    on:arrowClick="_notifyHandler('arrowClick')"/>
     </th>
 </ws:template>
 
@@ -36,8 +37,7 @@
             <ws:partial template="cell"
                         defaultHeaderContent="{{defaultHeaderContent}}"
                         headerColumn="{{ headerRow.getCurrentHeaderColumn() }}"
-                        multiselect="{{ headerModel.getMultiSelectVisibility() }}"
-                        on:arrowClick="_notifyHandler('arrowClick')"/>
+                        hasMultiSelect="{{ headerModel.hasMultiSelectColumn() }}"/>
         </ws:if>
     </ws:for>
 </ws:template>

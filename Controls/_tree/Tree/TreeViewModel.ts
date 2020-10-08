@@ -5,7 +5,7 @@ import { RecordSet, IObservable } from 'Types/collection';
 import { isEqual } from 'Types/object';
 import { TemplateFunction } from 'UI/Base';
 
-import { IDragPosition } from 'Controls/listDragNDrop';
+import { IDragPosition } from 'Controls/display';
 import {Logger} from 'UI/Utils';
 import { TreeChildren, TreeItem } from 'Controls/display';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
@@ -335,7 +335,6 @@ var
                     level: params.dispItem.getLevel(),
                     shouldDrawExpanderPadding: (expanderIcon, expanderSize) => _private.shouldDrawExpanderPadding(current, expanderIcon, expanderSize),
                     getExpanderPaddingClasses: (tmplExpanderSize) => _private.getExpanderPaddingClasses(current, tmplExpanderSize, true),
-                    multiSelectVisibility: self._options.multiSelectVisibility,
                     template: params.template,
                     hasMoreStorage: !!params.hasMoreStorage,
                     getExpanderSize: (tplExpanderSize) => tplExpanderSize || self._options.expanderSize,
@@ -520,6 +519,7 @@ var
                 parentId = dispItem.getContents().get(this._options.parentProperty),
                 currentExpanded = this.isExpanded(dispItem);
 
+            dispItem.setExpanded(expanded);
             if (expanded !== currentExpanded || expanded === undefined) {
                 if (_private.isExpandAll(this._expandedItems)) {
                     if (expanded) {
@@ -625,6 +625,10 @@ var
             // 4. Отступы под экспандер
             current.getExpanderPaddingClasses = _private.getExpanderPaddingClasses;
 
+            // todo remove multiSelectVisibility, multiSelectPosition and multiSelectClassList by task:
+            // https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
+            current.multiSelectVisibility = this._options.multiSelectVisibility;
+            current.multiSelectPosition = this._options.multiSelectPosition;
 
             current.expanderVisibility = _private.getExpanderVisibility(this._options);
             current.getLevelIndentSize = _private.getLevelIndentSize;

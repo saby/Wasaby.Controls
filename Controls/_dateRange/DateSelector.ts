@@ -14,7 +14,7 @@ import {descriptor} from "Types/entity";
  * @class Controls/_dateRange/DateSelector
  * @extends Core/Control
  * @mixes Controls/interface/IDateRange
- * @mixes Controls/interface/ILinkView
+ * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
  * @mixes Controls/_interface/IDayTemplate
@@ -34,7 +34,7 @@ import {descriptor} from "Types/entity";
  * @class Controls/_dateRange/DateSelector
  * @extends Core/Control
  * @mixes Controls/interface/IDateRange
- * @mixes Controls/interface/ILinkView
+ * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
  * @mixes Controls/_interface/IDayTemplate

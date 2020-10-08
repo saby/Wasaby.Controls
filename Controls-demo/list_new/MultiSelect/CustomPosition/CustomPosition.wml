@@ -20,4 +20,5 @@
             </ws:partial>
         </ws:itemTemplate>
     </Controls.list:View>
+    <div style="padding-top: 10px;">Selected keys [{{ _selectedKeys.join(', ') }}]</div>
 </div>
