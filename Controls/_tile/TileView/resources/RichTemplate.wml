@@ -18,8 +18,8 @@
       <div class="controls-TileView__richTemplate_title
                   controls-TileView__text_ellipsis_multiLine
                   controls-TileView__richTemplate_title_theme-{{theme}}
-                  controls-fontsize-{{itemData.dispItem.isNode() ? '4xl' : 'xl'}}
-                  controls-text-{{titleColorStyle || 'secondary'}}-{{theme}}
+                  controls-fontsize-{{itemData.dispItem.isNode() ? '4xl' : 'xl'}}_theme-{{theme}}
+                  controls-text-{{titleColorStyle || 'default'}}_theme-{{theme}}
                   controls-fontweight-bold"
            title="{{itemData.item[itemData.displayProperty]}}"
            style="-webkit-line-clamp: {{titleLines || 1}};">{{itemData.item[itemData.displayProperty]}}</div>
@@ -29,11 +29,11 @@
                      controls-TileView__richTemplate_description_theme-{{theme}}" title="{{description}}"
               style="-webkit-line-clamp: {{descriptionLines || 1}};">{{description}}</div>
       </ws:if>
-      <ws:if data="{{footerTemplate}}">
-         <ws:partial template="{{footerTemplate}}"
-                     itemData="{{itemData}}"/>
-      </ws:if>
    </div>
+   <ws:if data="{{footerTemplate}}">
+      <ws:partial template="{{footerTemplate}}"
+                  itemData="{{itemData}}"/>
+   </ws:if>
 </ws:template>
 
 <ws:template name="richTemplateContent">

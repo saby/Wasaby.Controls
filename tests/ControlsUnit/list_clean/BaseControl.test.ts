@@ -3,6 +3,19 @@ import {BaseControl, ListViewModel} from 'Controls/list';
 import {RecordSet} from 'Types/collection';
 import {Memory} from 'Types/source';
 
+const getData = (dataCount: number = 0) => {
+    const data = [];
+
+    for (let i = 0; i < dataCount; i++) {
+        data.push({
+            key: i,
+            title: 'title' + i
+        });
+    }
+
+    return data;
+};
+
 describe('Controls/list_clean/BaseControl', () => {
     describe('BaseControl watcher groupHistoryId', () => {
 
@@ -339,8 +352,19 @@ describe('Controls/list_clean/BaseControl', () => {
         it('paging mode is numbers', async () => {
             const cfgClone = {...baseControlCfg};
             cfgClone.navigation.viewConfig.pagingMode = 'numbers';
-            baseControl.saveOptions(cfgClone);
+            cfgClone.navigation.sourceConfig = {
+                pageSize: 100,
+                page: 0,
+                hasMore: false
+            };
+            cfgClone.source = new Memory({
+                keyProperty: 'id',
+                data: getData(100)
+            });
+
             await baseControl._beforeMount(cfgClone);
+            baseControl.saveOptions(cfgClone);
+
             baseControl._container = {
                 clientHeight: 1000
             };
@@ -398,6 +422,45 @@ describe('Controls/list_clean/BaseControl', () => {
             cfgClone.navigation.viewConfig.pagingMode = 'base';
             await baseControl._beforeUpdate(cfgClone);
             assert.isTrue(baseControl._isPagingPadding());
+        });
+
+        it('paging mode is edge + eip', async () => {
+            const cfgClone = {...baseControlCfg};
+            cfgClone.navigation.viewConfig.pagingMode = 'edge';
+            baseControl.saveOptions(cfgClone);
+            await baseControl._beforeMount(cfgClone);
+            baseControl._container = {
+                clientHeight: 1000
+            };
+            baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
+            baseControl._mouseEnter(null);
+            assert.isTrue(baseControl._pagingVisible);
+            const item = {
+                contents: {
+                    unsubscribe: () => {
+                        return '';
+                    },
+                    subscribe: () => {
+                        return '';
+                    }
+                }
+            };
+            // Эмулируем начало редактирования
+            await baseControl._afterBeginEditCallback(item, false);
+            baseControl._editInPlaceController = {isEditing: () => true};
+            assert.isFalse(baseControl._pagingVisible);
+            baseControl._mouseEnter(null);
+            assert.isFalse(baseControl._pagingVisible);
+
+            baseControl._afterEndEditCallback(item, false);
+            baseControl._editInPlaceController.isEditing = () => {
+                return false;
+            };
+            baseControl._mouseEnter(null);
+            assert.isTrue(baseControl._pagingVisible);
         });
     });
     describe('beforeUnmount', () => {

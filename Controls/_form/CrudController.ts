@@ -19,39 +19,44 @@ export const enum CRUD_EVENTS {
 }
 
 /**
- * Контроллер CRUD методов.
+ * Контроллер, который инициирует запросы к источнику данных (см. {@link Controls/form:Controller#source source}) для чтения, создания, удаления или обновления записи.
+ * Контроллер используется в {@link Controls/form:Controller}.
  * @class Controls/_form/CrudController
  * @public
+ * @author Красильников А.С.
+ * @see Controls/form:Controller
+ * @see Types/source:SbisService
+ * @see Types/source:Memory
  */
 
 /**
- * Создает пустую запись через источник данных
+ * Создает пустую запись через источник данных.
  * @function Controls/_form/CrudController#create
- * @param [meta] Дополнительные мета данные, которые могут понадобиться для создания записи
+ * @param [meta] Дополнительные метаданные, которые могут понадобиться для создания записи.
  */
 
 /**
- * Читает запись из источника данных по идентификатору
+ * Читает запись из источника данных по идентификатору.
  * @function Controls/_form/CrudController#read
- * @param {Number|String}key Первичный ключ записи
- * @param {Object} [meta] Дополнительные мета данные
+ * @param {Number|String}key Первичный ключ записи.
+ * @param {Object} [meta] Дополнительные метаданные.
  */
 
 /**
- * Обновляет запись в источнике данных
+ * Обновляет запись в источнике данных.
  * @function Controls/_form/CrudController#update
- * @param {Record|RecordSet} Обновляемая запись или рекордсет
- * @param {Object} [meta] Дополнительные мета данные
+ * @param {Record|RecordSet} Обновляемая запись или рекордсет.
+ * @param {Object} [meta] Дополнительные метаданные.
  */
 
 /**
- * Удаляет запись из источника данных
+ * Удаляет запись из источника данных.
  * @function Controls/_form/CrudController#delete
- * @param {Number|String} Первичный ключ, или массив первичных ключей записи
- * @param {Object} [meta] Дополнительные мета данные
+ * @param {Number|String} Первичный ключ или массив первичных ключей записи.
+ * @param {Object} [meta] Дополнительные метаданные.
  */
 
-/**
+/*
  * Удаления запроса отображения индикатора.
  * @function Controls/_form/CrudController#hideIndicator
  */

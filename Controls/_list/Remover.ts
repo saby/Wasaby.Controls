@@ -42,13 +42,11 @@ var _private = {
         return Promise.resolve(afterItemsRemoveResult);
     },
 
-    updateDataOptions: function (self, dataOptions) {
-        if (dataOptions) {
-            self._items = dataOptions.items;
-            self._source = dataOptions.source;
-            self._filter = dataOptions.filter;
-            self._keyProperty = dataOptions.keyProperty;
-        }
+    updateDataOptions: function (self, newOptions, contextDataOptions) {
+        self._keyProperty = newOptions.keyProperty ? newOptions.keyProperty : contextDataOptions.keyProperty;
+        self._items = newOptions.items ? newOptions.items : contextDataOptions.items;
+        self._source = newOptions.source ? newOptions.source : contextDataOptions.source;
+        self._filter = newOptions.filter ? newOptions.filter : contextDataOptions.filter;
     },
 
     getItemsBySelection(self, items): Promise<CrudEntityKey[]> {
@@ -95,11 +93,11 @@ var _private = {
 
 var Remover = BaseAction.extend({
     _beforeMount: function (options, context) {
-        _private.updateDataOptions(this, options);
+        _private.updateDataOptions(this, options, context.dataOptions);
     },
 
     _beforeUpdate: function (options, context) {
-        _private.updateDataOptions(this, options);
+        _private.updateDataOptions(this, options, context.dataOptions);
     },
 
     removeItems(items: string[]): Promise<void> {
