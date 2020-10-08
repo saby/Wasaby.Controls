@@ -27,6 +27,7 @@
              controls-Menu__popup-content controls-Menu__popup-content_theme-{{_options.theme}}">
                <ws:if data="{{_applyButtonVisible}}">
                   <div class="controls-DropdownList__applyButton
+                        controls-Menu__popup_applyButton
                         controls-Menu__applyButton_theme-{{_options.theme}}
                         controls-Menu_{{(_options.headerTemplate || _headingCaption || _headerTemplate) ? 'withHeader' +
                         (_verticalDirection === 'top' ? '-reverse') : 'withoutHeader'}}__applyButton_theme-{{_options.theme}}
