@@ -604,23 +604,17 @@ let
          this._getScrollPositionCallback = this._getScrollPositionCallback.bind(this);
 
          if (receivedState) {
-             _private.updateDisplayState(this, receivedState.displayState);
-
-             if (options.hasMoreDataToUp) {
-                 this._displayState.shadowEnable.top = true;
-                 this._displayState.shadowVisible.top = true;
-             }
-
-             this._styleHideScrollbar = receivedState.styleHideScrollbar || ScrollWidthUtil.calcStyleHideScrollbar(options.scrollMode);
-             this._useNativeScrollbar = receivedState.useNativeScrollbar;
-             this._contentStyles = receivedState.contentStyles;
+            _private.updateDisplayState(this, receivedState.displayState);
+            this._styleHideScrollbar = receivedState.styleHideScrollbar || ScrollWidthUtil.calcStyleHideScrollbar(options.scrollMode);
+            this._useNativeScrollbar = receivedState.useNativeScrollbar;
+            this._contentStyles = receivedState.contentStyles;
          } else {
             def = new Deferred();
 
             def.addCallback(function() {
                let
-                   topShadowVisible = _private.getInitialShadowVisibleState(options, POSITION.TOP) || !!options.hasMoreDataToUp,
-                   bottomShadowVisible = _private.getInitialShadowVisibleState(options, POSITION.BOTTOM),
+                  topShadowVisible = _private.getInitialShadowVisibleState(options, POSITION.TOP),
+                  bottomShadowVisible = _private.getInitialShadowVisibleState(options, POSITION.BOTTOM),
                    leftShadowVisible = false,
                    rightShadowVisible = false,
                    displayState = {
