@@ -545,6 +545,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _beforeUnmount(): void {
+      if (this._searchResolverController) {
+         this._searchResolverController.clearTimer();
+      }
       this._searchResult = null;
       this._loadStart = null;
       this._loadEnd = null;
@@ -624,27 +627,28 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._close();
    }
 
-   protected _changeValueHandler(event: SyntheticEvent, value: string): void {
+   protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
       /* preload suggest dependencies on value changed */
       this._loadDependencies(this._options);
 
-      this._resolveSearch(value);
+      return this._resolveSearch(value);
    }
 
-   protected _resolveSearch(value: string, options?: IInputControllerOptions): void {
+   protected async _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {
       if (!this._searchResolverController) {
-         this._searchResolverController = new SearchResolverController(
-             this._getSearchResolverOptions(options ?? this._options)
+         const result = await import('Controls/searchNew');
+         this._searchResolverController = new result.SearchResolver(
+            this._getSearchResolverOptions(options ?? this._options)
          );
       }
       this._searchResolverController.resolve(value);
    }
 
-   private _resolveLoad(value?: string): Promise<RecordSet> {
+   private async _resolveLoad(value?: string): Promise<RecordSet> {
       this._loadStart();
       if (value) {
          this._searchValue = value;
-         return this._getSearchController().search(value).then((recordSet) => {
+         return (await this._getSearchController()).search(value).then((recordSet) => {
             this._loadEnd(recordSet);
 
             if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
@@ -672,18 +676,21 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          delayTime: options.searchDelay,
          minSearchLength: options.minSearchLength,
          searchCallback: (validatedValue: string) => this._resolveLoad(validatedValue),
-         searchResetCallback: () => this._getSearchController().reset()
+         searchResetCallback: async () => (await this._getSearchController()).reset()
       };
    }
 
-   protected _getSearchController(): SearchController {
+   protected async _getSearchController(): Promise<SearchController> {
       if (!this._searchController) {
-         this._searchController = new SearchController({
-            sourceController: this._getSourceController(),
-            minSearchLength: this._options.minSearchLength,
-            searchDelay: this._options.searchDelay as number,
-            searchParam: this._options.searchParam,
-            searchValueTrim: this._options.trim
+         return import('Controls/searchNew').then((result) => {
+            this._searchController = new result.Controller({
+               sourceController: this._getSourceController(),
+               minSearchLength: this._options.minSearchLength,
+               searchDelay: this._options.searchDelay as number,
+               searchParam: this._options.searchParam,
+               searchValueTrim: this._options.trim
+            });
+            return this._searchController;
          });
       }
       return this._searchController;
@@ -822,12 +829,13 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._close();
    }
 
-   protected _missSpellClick(): void {
+   protected _misspellClick(): Promise<void> {
       // Return focus to the input field by changing the keyboard layout
       this.activate();
       this._notify('valueChanged', [this._misspellingCaption]);
-      this._changeValueHandler(null, this._misspellingCaption);
-      this._setMisspellingCaption('');
+      return this._changeValueHandler(null, this._misspellingCaption).then(() => {
+         this._setMisspellingCaption('');
+      });
    }
 
    protected _keydown(event: SyntheticEvent<KeyboardEvent>): void {

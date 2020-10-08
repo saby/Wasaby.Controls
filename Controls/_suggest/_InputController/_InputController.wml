@@ -29,7 +29,7 @@
         <ws:if data="{{_misspellingCaption}}">
             <ws:partial template="{{'Controls/search:Misspell'}}" attr:class="controls-Suggest__Misspell" attr:style="width:{{content.suggestWidth}}px">
                 <ws:caption>
-                    <span on:click="_missSpellClick()" title="{{_misspellingCaption}}">{{_misspellingCaption}}</span>
+                    <span on:click="_misspellClick()" title="{{_misspellingCaption}}">{{_misspellingCaption}}</span>
                 </ws:caption>
             </ws:partial>
         </ws:if>
