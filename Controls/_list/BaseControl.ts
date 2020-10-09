@@ -1348,7 +1348,7 @@ const _private = {
         if (!(self._editInPlaceController && self._editInPlaceController.isEditing())
             && !self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
             if (self._viewportSize) {
-                this._recalcPagingVisible = false;
+                self._recalcPagingVisible = false;
                 self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
             } else {
                 self._recalcPagingVisible = true;
@@ -3238,6 +3238,24 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._mounted) {
             const container = this._container[0] || this._container;
             this._viewSize = container.clientHeight;
+
+            /**
+             * Заново определяем должен ли отображаться пэйджинг или нет.
+             * Скрывать нельзя, так как при подгрузке данных пэйджинг будет моргать.
+             */
+            if (this._pagingVisible) {
+                if (!(this._editInPlaceController && this._editInPlaceController.isEditing())
+                    && _private.needScrollPaging(this._options.navigation)) {
+                    if (this._viewportSize) {
+                        this._recalcPagingVisible = false;
+                        this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewportSize);
+                    } else {
+                        this._recalcPagingVisible = true;
+                    }
+                } else {
+                    this._pagingVisible = false;
+                }
+            }
             this._viewRect = container.getBoundingClientRect();
             if (this._isScrollShown) {
                 this._updateItemsHeights();
