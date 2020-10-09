@@ -676,9 +676,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          });
       } else {
          return this._getSourceController().load().then((recordSet) => {
-            if (recordSet instanceof RecordSet) {
+            if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
                this._setItems(recordSet);
                this._loadEnd(recordSet);
+               this._open();
                return recordSet as RecordSet;
             }
          });
