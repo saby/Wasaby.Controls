@@ -3235,7 +3235,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._children.bottomVirtualScrollTrigger?.style.bottom = `${offset.bottom}px`;
     },
     _viewResize(): void {
-        if (this._mounted) {
+        if (this._isMounted) {
             const container = this._container[0] || this._container;
             this._viewSize = container.clientHeight;
 
