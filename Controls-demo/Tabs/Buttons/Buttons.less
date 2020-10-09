@@ -72,30 +72,7 @@
   align-items: center;
   padding-right: 12px;
 }
-.tabs-baseline() {
-  &:before {
-    content: '\200b'; //zero width space
-    width: 0;
-    display: inline-block;
-    visibility: hidden;
-    line-height: @item_height_tabs;
-    font-size: @unselected_item_font-size_tabs;
-  }
-}
-.demo-TabButtons__mainTemplate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  display: inline-block;
-  white-space: nowrap;
-  height: 100%;
-  font-weight: bold;
-  color: @secondary_text-color;
+.mainTemplate__header {
   font-size: @font-size_3xl;
-  .tabs-baseline();
-}
-.demo-TabButtons__mainTemplate_selected {
   font-weight: bold;
-  color: @primary_text-color_heading;
-  font-size: @font-size_3xl;
 }
