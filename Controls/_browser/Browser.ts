@@ -79,7 +79,6 @@ export default class Browser extends Control {
             if (receivedState.items) {
                 this._hasMoreDataToUp = !!receivedState.items.getMetaData().more?.before;
             }
-
             if (isNewEnvironment()) {
                 this._setItemsAndCreateSearchController(receivedState.items, options);
             }
