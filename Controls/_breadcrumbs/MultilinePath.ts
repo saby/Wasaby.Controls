@@ -16,13 +16,12 @@ import {Logger} from 'UI/Utils';
 const ARROW_WIDTH = 16;
 const PADDING_RIGHT = 2;
 
-/*
- * Хлебные крошки в две строки
+/**
+ * Хлебные крошки в две строки.
  * @class Controls/_breadcrumbs/MultilinePath
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
  * @implements Controls/_interface/IFontSize
- * @control
  * @public
  * @author Бондарь А.В.
  * @demo Controls-demo/BreadCrumbs/Multiline/Index
