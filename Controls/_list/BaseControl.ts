@@ -3778,7 +3778,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     checkTriggerVisibilityAfterRedraw(): void {
         _private.doAfterUpdate(this, () => {
             window.requestAnimationFrame(() => {
-                setTimeout(function () {
+                setTimeout(() => {
                     this.checkTriggersVisibility();
                 }, 0);
             });
