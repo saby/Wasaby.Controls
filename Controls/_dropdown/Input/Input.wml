@@ -13,7 +13,7 @@
         <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
                     item="{{_item}}"
                     icon="{{_icon}}"
-                    iconSize="{{_options.iconSize}}"
+                    iconSize="{{_item && _item.get('iconSize') || _options.iconSize}}"
                     fontSize="{{_options.fontSize}}"
                     fontColorStyle="{{_options.fontColorStyle}}"
                     text="{{_text}}"

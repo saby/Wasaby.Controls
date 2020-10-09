@@ -314,6 +314,7 @@ define([
          };
          var instance = new explorerMod.View(cfg);
          var rootChanged = false;
+         let root;
 
          instance.saveOptions(cfg);
 
@@ -324,9 +325,10 @@ define([
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tree);
                assert.isFalse(rootChanged);
 
-               instance._notify = function(eventName) {
+               instance._notify = function(eventName, eventValue) {
                   if (eventName === 'rootChanged') {
                      rootChanged = true;
+                     root = eventValue[0];
                   }
                };
                return explorerMod.View._private.setViewMode(instance, newCfg.viewMode, newCfg);
@@ -365,8 +367,17 @@ define([
                assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tile);
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tile);
                assert.isFalse(rootChanged);
-            }).then(() => {
+
+               instance._breadCrumbsItems = [new entityLib.Model({
+                  rawData: {
+                     id: 1,
+                     title: 'crumb'
+                  },
+                  keyProperty: 'id'
+               })];
                explorerMod.View._private.setViewMode(instance, newCfg3.viewMode, newCfg3);
+               assert.isTrue(rootChanged);
+               assert.equal(root, 1);
                assert.equal(instance._breadCrumbsItems, null);
             });
       });

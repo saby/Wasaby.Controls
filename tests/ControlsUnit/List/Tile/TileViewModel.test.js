@@ -7,6 +7,7 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection', 'Types/enti
          tileViewModel = new TileViewModel({
             tileMode: 'static',
             itemsHeight: 300,
+            tileWidth: 150,
             imageProperty: 'image',
             keyProperty: 'id',
             imageWidthProperty: 'imageWidth',
@@ -80,6 +81,7 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection', 'Types/enti
             displayProperty: 'title',
             imageWidthProperty: 'imageWidth',
             imageHeightProperty: 'imageHeight',
+            itemWidth: 150,
             imageFit: 'cover',
             imageUrlResolver: urlResolver,
          });

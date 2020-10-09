@@ -233,8 +233,8 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          ]);
 
          this._titleItems = this._createMemory([
-            {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
-            {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
+            {id: 1, title: 'Name', icon: 'icon-TrendUp'},
+            {id: 2, title: 'Date of change', icon: 'icon-TrendDown'}
          ]);
 
          this._duplicateItemsData = [
