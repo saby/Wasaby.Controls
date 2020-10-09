@@ -26,7 +26,7 @@ describe('Controls/_multiselection/Controller', () => {
          keyProperty: 'id'
       });
 
-      strategy = new FlatSelectionStrategy({items: model.getDisplay().getItems() });
+      strategy = new FlatSelectionStrategy({model: model.getDisplay() });
 
       controller = new SelectionController({
          model: model.getDisplay(),
@@ -44,11 +44,11 @@ describe('Controls/_multiselection/Controller', () => {
 
       controller.updateOptions({
          model: model.getDisplay(),
-         strategyOptions: { items: model.getDisplay().getItems() }
+         strategyOptions: { model: model.getDisplay() }
       });
 
       assert.equal(controller._model, model.getDisplay());
-      assert.deepEqual(controller._strategy._items, model.getDisplay().getItems());
+      assert.deepEqual(controller._strategy._model, model.getDisplay());
    });
 
    describe('toggleItem', () => {
@@ -227,7 +227,7 @@ describe('Controls/_multiselection/Controller', () => {
 
       const newController = new SelectionController({
          model: display,
-         strategy: new FlatSelectionStrategy({items: display.getItems() }),
+         strategy: new FlatSelectionStrategy({model: display }),
          selectedKeys: [null],
          excludedKeys: []
       });
@@ -287,7 +287,7 @@ describe('Controls/_multiselection/Controller', () => {
          });
 
          strategy = new TreeSelectionStrategy({
-             items: model.getDisplay().getItems(),
+             model: model.getDisplay(),
              selectDescendants: false,
              selectAncestors: false,
              rootId: null,
