@@ -158,6 +158,7 @@ describe('Controls/filter:ControllerClass', () => {
             });
             assert.deepEqual(controller.getFilter(), {});
 
+            controller._options.filter = null;
             controller.update({
                 filter,
                 selectedKeys: [1, 2],
@@ -170,6 +171,7 @@ describe('Controls/filter:ControllerClass', () => {
             });
             assert.isTrue('entries' in controller.getFilter());
 
+            controller._options.filter = null;
             controller._options.selectionViewMode = 'selected';
             controller.update({
                 filter,
@@ -223,6 +225,7 @@ describe('Controls/filter:ControllerClass', () => {
 
             assert.deepEqual(filterController.getFilter(), { title: 'test2' });
 
+            filterController._options.filter = null;
             filterController.update({
                 filter: {
                     title: 'test2'
@@ -234,6 +237,9 @@ describe('Controls/filter:ControllerClass', () => {
 
             assert.deepEqual(filterController.getFilter(), { title: 'test2', search_string: 'test' });
 
+            filterController._options.filter = {
+                title: 'test2'
+            };
             filterController._filter = null;
             // filter options is not changed
             filterController.update({
@@ -241,7 +247,7 @@ describe('Controls/filter:ControllerClass', () => {
                     title: 'test2'
                 }
             });
-            assert.deepEqual(filterController.getFilter(), {});
+            assert.isNull(filterController.getFilter());
         });
     });
 

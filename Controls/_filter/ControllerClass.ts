@@ -144,7 +144,9 @@ export default class FilterControllerClass {
             }
         }
         this._options = newOptions;
-        this._updateFilter(this._options);
+        if (filterChanged) {
+            this._updateFilter(this._options);
+        }
         return filterChanged || filterButtonChanged || fastFilterChanged;
     }
 
