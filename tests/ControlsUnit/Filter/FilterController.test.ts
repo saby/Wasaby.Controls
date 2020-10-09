@@ -71,6 +71,40 @@ describe('Controls/filter:ControllerClass', () => {
         });
     });
 
+    it ('loadFilterItemsFromHistory with prefetch', () => {
+        const historyItems = [                {
+            name: 'testId1',
+            value: '',
+            textValue: '',
+            resetValue: ''
+        }, {
+            name: 'testId2',
+            value: 'testValue',
+            textValue: 'textValue4',
+            resetValue: ''
+        }];
+        let itemsLoaded = false;
+        const filterController = new ControllerClass({
+            filterButtonSource: getFilterButtonItems(),
+            searchParam: 'test',
+            filter: {},
+            searchValue: '',
+            minSearchLength: 1,
+            parentProperty: '',
+            historyId: 'hId2',
+            historyItems,
+            prefetchParams: {PrefetchSessionId: 'test', PrefetchDataValidUntil: null}
+        });
+        sandbox.replace(filterController, '_loadHistoryItems', () => {
+            itemsLoaded = true;
+            return Promise.resolve();
+        });
+        sandbox.replace(filterController, '_findItemInHistory', () => null);
+        return filterController.loadFilterItemsFromHistory().then(() => {
+            assert.isTrue(itemsLoaded);
+        });
+    });
+
     it('handleDataLoad', () => {
         const controller = new ControllerClass({
             filter: {},
