@@ -314,6 +314,13 @@ const _private = {
         return needAttachLoadTopTriggerToNull;
     },
 
+    showTopTriggerAndAddPaddingIfNeed(self): void {
+        _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
+        if (self._hideTopTrigger) {
+            self._hideTopTrigger = false;
+        }
+    },
+
     reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
@@ -443,7 +450,7 @@ const _private = {
                         }
                     } else if (!self._wasScrollToEnd) {
                         if (_private.attachLoadTopTriggerToNullIfNeed(self, cfg) && !self._isMounted) {
-                            self._hideTopTriggerUntilMount = true;
+                            self._hideTopTrigger = true;
                         }
                     }
                 });
@@ -2808,7 +2815,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     iWantVDOM: true,
 
     _attachLoadTopTriggerToNull: false,
-    _hideTopTriggerUntilMount: false,
+    _hideTopTrigger: false,
     _listViewModel: null,
     _viewModelConstructor: null,
 
@@ -3053,7 +3060,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
                     _private.needAttachLoadTopTriggerToNull(self)) {
-                    self._hideTopTriggerUntilMount = true;
+                    self._hideTopTrigger = true;
                 }
                 return Promise.resolve();
             }
@@ -3256,7 +3263,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterMount(): void {
         this._isMounted = true;
-        this._hideTopTriggerUntilMount = false;
         if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
             this._registerIntersectionObserver();
@@ -3290,8 +3296,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
 
-        _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
-
         // TODO удалить после того как избавимся от onactivated
         if (_private.hasMarkerController(this)) {
             const newMarkedKey = _private.getMarkerController(this).getMarkedKey();
@@ -3303,6 +3307,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasSelectionController(this)) {
             const selection = _private.getSelectionController(this).getSelection();
             _private.changeSelection(this, selection);
+        }
+
+        if (!this._items || !this._items.getCount()) {
+            _private.showTopTriggerAndAddPaddingIfNeed(this);
         }
     },
 
@@ -3547,6 +3555,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (needReload) {
+            this._hideTopTrigger = true;
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
@@ -4775,6 +4784,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._insideDragging = true;
 
             this._dragEnter(this._getDragObject());
+        }
+
+        if (!this._scrollController?.getScrollTop()) {
+            _private.showTopTriggerAndAddPaddingIfNeed(this);
         }
     },
 
