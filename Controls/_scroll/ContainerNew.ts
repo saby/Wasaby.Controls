@@ -14,7 +14,7 @@ import {
     IScrollbarsOptions,
     getDefaultOptions as getScrollbarsDefaultOptions
 } from './Container/Interface/IScrollbars';
-import {IShadows, SHADOW_VISIBILITY} from './Container/Interface/IShadows';
+import { IShadows, IShadowsOptions, SHADOW_VISIBILITY } from './Container/Interface/IShadows';
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import StickyHeaderController from './StickyHeader/Controller';
 import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyHeader/Utils';
@@ -129,11 +129,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _needUpdateContentSize: boolean = false;
 
     _beforeMount(options: IContainerOptions, context, receivedState) {
-        const shadowsModelOptions = {...options};
-        if (options.hasMoreDataToUp) {
-            shadowsModelOptions.topShadowVisibility = true;
-        }
-        this._shadows = new ShadowsModel(shadowsModelOptions);
+        this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
         this._scrollbars = new ScrollbarsModel(options, receivedState);
         this._stickyHeaderController = new StickyHeaderController();
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
@@ -169,7 +165,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         //  из старого скроллконейнера, нужно отрефакторить. Очень запутанно
         this._updateScrollContainerPaigingSccClass(options);
         this._scrollbars.updateOptions(options);
-        this._shadows.updateOptions(options);
+        this._shadows.updateOptions(this._getShadowsModelOptions(options));
     }
 
     protected _afterUpdate() {
@@ -346,6 +342,19 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     _updatePlaceholdersSize(e: SyntheticEvent<Event>, placeholdersSizes): void {
         super._updatePlaceholdersSize(...arguments);
         this._scrollbars.updatePlaceholdersSize(placeholdersSizes);
+    }
+
+    private _getShadowsModelOptions(options: IContainerOptions): IShadowsOptions {
+        const shadowsModelOptions = {...options};
+        if (options.initialTopShadowVisibility) {
+            shadowsModelOptions.topShadowVisibility = options.initialTopShadowVisibility;
+        }
+
+        if (options.initialBottomShadowVisibility) {
+            shadowsModelOptions.bottomShadowVisibility = options.initialBottomShadowVisibility;
+        }
+
+        return shadowsModelOptions;
     }
 
     // Intersection observer

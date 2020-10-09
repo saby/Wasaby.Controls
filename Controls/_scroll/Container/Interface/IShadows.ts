@@ -30,6 +30,8 @@ export function getDefaultOptions(): IShadowsOptions {
 
 export interface IShadows {
     readonly '[Controls/_scroll/Container/Interface/IShadows]': boolean;
+    initialTopShadowVisibility?: SHADOW_VISIBILITY;
+    initialBottomShadowVisibility?: SHADOW_VISIBILITY;
 }
 
 /**
