@@ -44,7 +44,7 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
     private _calculatePositionRelativeNode(
         targetItem: IDraggableTreeItem, mouseOffsetInTargetItem: IOffset
     ): IDragPosition<IDraggableTreeItem> {
-        let relativePosition;
+        let relativePosition = 'on';
         // Если перетаскиваем лист на узел, то позиция может быть только 'on'
         // Если нет перетаскиваемого элемента, то значит мы перетаскивам в папку другого реестра
         if (!this._draggableItem || !this._draggableItem.isNode() && targetItem.isNode()) {
