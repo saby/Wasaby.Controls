@@ -39,7 +39,6 @@
             <Controls.dropdown:Input bind:selectedKeys="_selectedKeysIcon"
                                      keyProperty="id"
                                      displayProperty="title"
-                                     iconSize="s"
                                      attr:class="ControlsDemo-iconLeft ControlsDemo-InputDropdown__item"
                                      source="{{_iconItems}}"/>
          </div>
@@ -62,7 +61,6 @@
                                      keyProperty="id"
                                      displayProperty="title"
                                      source="{{_titleItems}}"
-                                     iconSize="s"
                                      attr:class="demo-InputDropdown__withTitle ControlsDemo-InputDropdown__item"
                                      contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
                <ws:headerTemplate>
@@ -147,7 +145,6 @@
             <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMyTemplate"
                                      keyProperty="id"
                                      displayProperty="title"
-                                     iconSize="s"
                                      attr:class="demo-InputDropdown__withComment ControlsDemo-InputDropdown__item"
                                      popupClassName="ControlsDemo-InputDropdownn-width"
                                      contentTemplate="wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon"
