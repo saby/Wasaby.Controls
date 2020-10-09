@@ -172,7 +172,7 @@ export default class FlatController {
        isTouch: boolean
    ): boolean {
       return (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption())
-         && !event.nativeEvent.button && !event.target.closest('.controls-DragNDrop__notDraggable') && !isTouch;
+         && !event.nativeEvent.button && !event.target.closest('.controls-List_DragNDrop__notDraggable') && !isTouch;
    }
 
    /**
