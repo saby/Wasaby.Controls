@@ -10,7 +10,7 @@ describe('Controls/input:__ChangeEventController', () => {
     const newDisplayValue: string = 'test';
     const focusEvent: SyntheticEvent<FocusEvent> = new SyntheticEvent<FocusEvent>({} as FocusEvent);
     const keyboardEventEnter: SyntheticEvent<KeyboardEvent> = new SyntheticEvent<KeyboardEvent>({
-        code: 'Enter'
+        key: 'Enter'
     } as KeyboardEvent);
     const keyboardEventSpace: SyntheticEvent<KeyboardEvent> = new SyntheticEvent<KeyboardEvent>({
         code: 'Space'
