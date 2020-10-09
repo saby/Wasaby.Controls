@@ -18,7 +18,7 @@ define('Controls/Application',
       'UI/HotKeys',
       'Controls/Application/TouchDetectorController',
       'Controls/dragnDrop',
-      'RUM/TimeTesterInv',
+      'Core/TimeTesterInv',
       'css!theme?Controls/Application/oldCss'
    ],
 
