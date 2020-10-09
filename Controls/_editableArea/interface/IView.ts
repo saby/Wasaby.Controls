@@ -8,7 +8,7 @@ export interface IViewOptions {
     commitEdit: () => Promise<void>;
     cancelEdit: () => Promise<void>;
 }
-/*
+/**
  * Интерфейс для полей ввода с возможностью редактирования по месту.
  * @remark
  * Разница между этим интерфейсом и {@link Controls/interface/IEditableList} заключается в том,
@@ -18,6 +18,7 @@ export interface IViewOptions {
  * @public
  * @author Красильников А.С.
  */
+
 export interface IView {
     readonly '[Controls/editableArea:View]': boolean;
 }
@@ -27,6 +28,13 @@ export interface IView {
  * @cfg {Boolean} Определяет, находится ли контрол в режиме редактирования при построении.
  * @default false
  * @demo Controls-demo/EditableArea/AutoEdit/Index
+ */
+
+/**
+ * @name Controls/_editableArea/interface/IView#backgroundStyle
+ * @cfg {String} Определяет префикс стиля для настройки фона внутренних элементов контрола.
+ * @variant editableArea Стандартный фон заливки строки редактирования.
+ * @demo Controls-demo/EditableArea/BackgroundStyle/Index
  */
 
 /**
