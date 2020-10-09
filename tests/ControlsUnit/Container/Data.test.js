@@ -65,17 +65,22 @@ define(
                keyProperty: 'id',
                data: sourceDataEdited
             });
+            let callbackCalled = false;
+            const dataLoadCallbackFunction = () => {
+               callbackCalled = true;
+            };
 
             data._beforeMount(dataOptions).then(() => {
                data._dataOptionsContext = new contexts.ContextOptions();
                const newFilter = {test: 'testFilter'};
-               var loadDef = data._beforeUpdate({source: newSource, idProperty: 'id', filter: newFilter});
+               var loadDef = data._beforeUpdate({source: newSource, idProperty: 'id', filter: newFilter, dataLoadCallback: dataLoadCallbackFunction});
                assert.isTrue(data._loading);
                loadDef.addCallback(function() {
                   try {
                      assert.isTrue(data._dataOptionsContext.source === newSource);
                      assert.deepEqual(data._filter, newFilter);
                      assert.isFalse(data._loading);
+                     assert.isTrue(callbackCalled);
                      done();
                   } catch (e) {
                      done(e);
