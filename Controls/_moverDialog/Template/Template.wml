@@ -17,6 +17,7 @@
            expanderDisplayMode="adaptive"
            expanderVisibility="{{_options.expanderVisibility}}"
            emptyTemplate="{{_options.emptyTemplate}}"
+           containerWidth="{{_options.containerWidth}}"
            columns="{{_columns}}"/>
 </ws:template>
 
@@ -39,6 +40,7 @@
            expanderDisplayMode="adaptive"
            expanderVisibility="{{_options.expanderVisibility}}"
            emptyTemplate="{{_options.emptyTemplate}}"
+           containerWidth="{{_options.containerWidth}}"
            columns="{{_columns}}"
            markedKey="{{_options.markedKey}}"/>
 </ws:template>
