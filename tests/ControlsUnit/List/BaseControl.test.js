@@ -159,7 +159,7 @@ define([
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
             let doScrollToTop = false;
-            
+
             ctrl._isScrollShown = true;
             ctrl._beforeUpdate(cfg);
 
@@ -5479,8 +5479,12 @@ define([
          instance._options.groupProperty = 'NewProp';
          assert.isTrue(!!instance._groupingLoader);
          instance._beforeUpdate({ ...cfg, groupProperty: undefined });
-         assert.isTrue(instance._groupingLoader._destroyed);
-
+         assert.isFalse(!!instance._groupingLoader);
+         cfg.navigation = {
+            view: 'demand'
+         };
+         instance._beforeUpdate({ ...cfg, groupProperty: 'NewProp' });
+         assert.isFalse(!!instance._groupingLoader);
       });
 
       // Иногда необходимо переинициализировать опции записи в момент обновления контрола

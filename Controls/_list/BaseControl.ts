@@ -385,7 +385,7 @@ const _private = {
                     }
 
                     if (listModel) {
-                        if (self._options.groupProperty) {
+                        if (self._groupingLoader) {
                             self._groupingLoader.resetLoadedGroups(listModel);
                         }
 
@@ -3489,15 +3489,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setSorting(newOptions.sorting);
         }
 
-        if (newOptions.groupProperty && !this._options.groupProperty) {
-            this._groupingLoader = new GroupingLoader({});
-        } else if (!newOptions.groupProperty && this._options.groupProperty) {
-            this._groupingLoader.destroy();
-        } else if (newOptions.groupProperty !== this._options.groupProperty) {
-            if (this._groupingLoader) {
-                this._groupingLoader.destroy();
+        const needGroupingLoader = !!newOptions.groupProperty && !_private.isDemandNavigation(newOptions.navigation);
+        const hasGroupingLoader = !!this._groupingLoader;
+        if (needGroupingLoader) {
+            const groupPropertyChanged = newOptions.groupProperty !== this._options.groupProperty;
+            if (hasGroupingLoader) {
+                if (groupPropertyChanged) {
+                    this._groupingLoader.destroy();
+                    this._groupingLoader = new GroupingLoader({});
+                }
+            } else {
+                this._groupingLoader = new GroupingLoader({});
             }
-            this._groupingLoader = new GroupingLoader({});
+        } else if (hasGroupingLoader) {
+            this._groupingLoader.destroy();
+            this._groupingLoader = null;
         }
 
         const needReload =
@@ -4089,7 +4095,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const groupingLoader = this._groupingLoader;
             if (this._options.useNewModel) {
                 const needExpandGroup = !dispItem.isExpanded();
-                if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
+                if (groupingLoader && needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
                     const source = this._options.source;
                     const filter = this._options.filter;
                     const sorting = this._options.sorting;
@@ -4101,7 +4107,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
             } else {
                 const needExpandGroup = !collection.isGroupExpanded(groupId);
-                if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
+                if (groupingLoader && needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
                     const source = this._options.source;
                     const filter = this._options.filter;
                     const sorting = this._options.sorting;
