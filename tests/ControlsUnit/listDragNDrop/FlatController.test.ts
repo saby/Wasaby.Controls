@@ -165,7 +165,7 @@ describe('Controls/_listDragNDrop/FlatController', () => {
                },
                target: {
                   closest(cssClass) {
-                     assert.equal(cssClass, '.controls-DragNDrop__notDraggable');
+                     assert.equal(cssClass, '.controls-List_DragNDrop__notDraggable');
                      return false;
                   }
                }
