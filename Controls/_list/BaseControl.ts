@@ -389,28 +389,7 @@ const _private = {
                             self._groupingLoader.resetLoadedGroups(listModel);
                         }
 
-                        // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
-                        if (self._options.useNewModel) {
-                            // TODO restore marker + maybe should recreate the model completely
-                            // instead of assigning items
-                            // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
-                            const modelCollection = listModel.getCollection();
-                            listModel.setCompatibleReset(true);
-                            modelCollection.setMetaData(list.getMetaData());
-                            modelCollection.assign(list);
-                            listModel.setCompatibleReset(false);
-                            self._items = listModel.getCollection();
-                        } else {
-                            listModel.setItems(list, cfg);
-                            self._items = listModel.getItems();
-
-                            // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
-                            // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
-                            // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
-                            if (self._options.task1178907511) {
-                                self._markedKeyForRestoredScroll = listModel.getMarkedKey();
-                            }
-                        }
+                        _private.assignItemsToModel(self, list, cfg);
 
                         if (self._sourceController) {
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -479,6 +458,33 @@ const _private = {
             Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
         }
         return resDeferred;
+    },
+
+    assignItemsToModel(self, items: RecordSet, newOptions): void {
+        const listModel = self._listViewModel;
+
+        // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
+        if (self._options.useNewModel) {
+            // TODO restore marker + maybe should recreate the model completely
+            // instead of assigning items
+            // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
+            const modelCollection = listModel.getCollection();
+            listModel.setCompatibleReset(true);
+            modelCollection.setMetaData(items.getMetaData());
+            modelCollection.assign(items);
+            listModel.setCompatibleReset(false);
+            self._items = listModel.getCollection();
+        } else {
+            listModel.setItems(items, newOptions);
+            self._items = listModel.getItems();
+
+            // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
+            // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
+            // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
+            if (self._options.task1178907511) {
+                self._markedKeyForRestoredScroll = listModel.getMarkedKey();
+            }
+        }
     },
 
     resolveIndicatorStateAfterReload(self, list, navigation): void {
@@ -3446,6 +3452,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(this._getEditingConfig(newOptions));
         }
+
+        if (this._options.sourceController !== newOptions.sourceController && newOptions.sourceController) {
+            const items = newOptions.sourceController.getItems();
+            this._sourceController = newOptions.sourceController;
+
+            if (this._listViewModel && !this._listViewModel.getCollection()) {
+                _private.assignItemsToModel(this, items, newOptions);
+            }
+        }
+
         if (recreateSource || sourceChanged) {
             if (this._sourceController) {
                 this.updateSourceController(newOptions);
