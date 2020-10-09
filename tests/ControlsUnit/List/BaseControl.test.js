@@ -2698,6 +2698,120 @@ define([
           });
       });
 
+
+      describe('getItemActionsController', () => {
+         let cfg;
+
+         beforeEach(async() => {
+            cfg = {
+               items: new collection.RecordSet({
+                  rawData: [
+                     {
+                        id: 1,
+                        title: 'item 1'
+                     },
+                     {
+                        id: 2,
+                        title: 'item 2'
+                     }
+                  ],
+                  keyProperty: 'id'
+               }),
+               itemActions: [
+                  {
+                     id: 1,
+                     showType: 2,
+                     'parent@': true
+                  },
+                  {
+                     id: 2,
+                     showType: 0,
+                     parent: 1
+                  },
+                  {
+                     id: 3,
+                     showType: 0,
+                     parent: 1
+                  }
+               ],
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: [],
+                  idProperty: 'id'
+               },
+               markedKey: null,
+               viewModelConstructor: lists.ListViewModel,
+               source: source,
+               keyProperty: 'id'
+            };
+         });
+
+         it('should not init when __error is occurred', async () => {
+            const instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            lists.BaseControl._private.showError(instance, {
+               mode: 'inlist'
+            });
+            assert.notExists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should not init when _listViewModel is not set', async () => {
+            const instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            assert.notExists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should not init when there are no itemActions, no itemActionsProperty and no editingConfig.toolbarVisibility',  async () => {
+            cfg.itemActions = undefined;
+            const instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            assert.notExists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should return existing controller instance despite errors', async () => {
+            const instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            lists.BaseControl._private.updateItemActions(instance, instance._options);
+            lists.BaseControl._private.showError(instance, {
+               mode: 'inlist'
+            });
+            assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should init when itemActions are set, but, there are no itemActionsProperty and toolbarVisibility is false', async () => {
+            const instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should init when itemActionsProperty is set, but, there are no itemActions and toolbarVisibility is false', async () => {
+            const instance = new lists.BaseControl({ ...cfg, itemActions: null, itemActionsProperty: 'myActions' });
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should init when toolbarVisibility is true, but, there are no itemActions and no itemActionsProperty', async () => {
+            const instance = new lists.BaseControl({
+               ...cfg,
+               itemActions: null,
+               editingConfig: {
+                  toolbarVisibility: true
+               }
+            });
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+      });
+
       describe('calling updateItemActions method with different params', function() {
          let stubItemActionsController;
          let source;
