@@ -1,19 +1,28 @@
+<ws:template name="RecordContent">
+   <ws:if data="{{ _record }}">
+      <ws:partial
+         template="{{ _options.content }}"
+         record="{{ _record }}"/>
+   </ws:if>
+   <ws:else>
+      <invisible-node />
+   </ws:else>
+</ws:template>
+
 <div on:registerFormOperation="_registerFormOperationHandler()"
      on:validateCreated="_onValidateCreated()"
      on:validateDestroyed="_onValidateDestroyed()">
-    <ws:partial
-            name="errorContainer"
-            template="{{ _options.errorContainer || _errorContainer }}"
-            viewConfig="{{ __error }}"
-            on:dialogClosed="_onCloseErrorDialog()">
-        <ws:if data="{{ _record }}">
-            <ws:partial
-                    template="{{ _options.content }}"
-                    record="{{ _record }}"/>
-        </ws:if>
-        <ws:else>
-            <invisible-node />
-        </ws:else>
-    </ws:partial>
+   <ws:if data="{{ __error }}">
+      <ws:partial
+         name="errorContainer"
+         template="{{ _options.errorContainer || _errorContainer }}"
+         viewConfig="{{ __error }}"
+         on:dialogClosed="_onCloseErrorDialog()"
+      >
+         <ws:partial template="RecordContent"/>
+      </ws:partial>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="RecordContent"/>
+   </ws:else>
 </div>
-
