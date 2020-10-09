@@ -859,6 +859,30 @@ describe('Controls/suggest', () => {
          sandbox.restore();
       });
 
+      describe('_beforeUpdate hook', () => {
+         it('source is empty on mount', () => {
+            const options = {
+               emptyTemplate: 'anyTpl',
+               footerTemplate: 'anyTp',
+               suggestState: true,
+               value: '',
+               trim: true,
+               searchParam: 'testSearchParam',
+               minSearchLength: 3,
+               source: null
+            };
+
+            const inputController = getComponentObject(options);
+
+            assert.ok(inputController._getSourceController().getState().source === null);
+
+            options.source = new Memory();
+            inputController._beforeUpdate(options);
+
+            assert.ok(inputController._getSourceController().getState().source !== null);
+         });
+      });
+
       it('Suggest::_updateSuggestState', async () => {
          const inputContainer = getComponentObject({
             fitler: {},
