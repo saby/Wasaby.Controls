@@ -54,6 +54,41 @@ define([
          });
       });
 
+      describe('PopupOptions', function() {
+         [{
+            fittingMode: 'overflow',
+            result: {
+               vertical: 'overflow',
+               horizontal: 'overflow'
+            }
+         }, {
+            fittingMode: 'fixed',
+            result: {
+               vertical: 'fixed',
+               horizontal: 'overflow'
+            }
+         }].forEach(function(test) {
+            it('should return correct fittingMode in popup options', function() {
+               const
+                  sandbox = sinon.createSandbox(),
+                  component = calendarTestUtils.createComponent(dateRange.RangeShortSelector, options);
+
+               sandbox.stub(component, '_notify');
+
+               component._children = {
+                  linkView: {
+                     getPopupTarget: function() {
+                        return 'target1';
+                     }
+                  }
+               };
+               component._fittingMode = test.fittingMode;
+               const popupOptions = component._getPopupOptions();
+               assert.deepEqual(popupOptions.fittingMode, test.result);
+            });
+         });
+      });
+
       describe('_rangeChangedHandler', function() {
          it('should set range on model', function() {
             const
