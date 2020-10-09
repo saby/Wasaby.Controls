@@ -23,7 +23,6 @@
         itemsReadyCallback="{{_itemsReadyCallback}}"
         filterButtonItems="{{_filterButtonItems}}"
         fastFilterItems="{{_fastFilterItems}}"
-        hasMoreDataToUp="{{_hasMoreDataToUp}}"
         on:filterChanged="_filterChanged()"
         on:rootChanged="_rootChanged()"
         on:itemsChanged="_itemsChanged()"
