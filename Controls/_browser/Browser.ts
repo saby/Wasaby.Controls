@@ -85,7 +85,7 @@ export default class Browser extends Control {
         } else {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems);
-                return this._loadItems(options, controllerState).then((items) => {
+                return this._loadItems(options, this._sourceController.getState()).then((items) => {
                     if (items) {
                         this._hasMoreDataToUp = !!items.getMetaData().more?.before;
                     }
