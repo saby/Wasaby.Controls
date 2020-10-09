@@ -2526,7 +2526,6 @@ define([
                scrollHeight: 600
             };
             assert.isTrue(calcTriggerVisibility({}, scrollParams, 100, 'up'), 'up trigger should be visible');
-            assert.isFalse(calcTriggerVisibility( {_hideTopTrigger: true }, scrollParams, 100, 'up'), 'up trigger should be visible');
             scrollParams = {
                scrollTop: 101,
                clientHeight: 300,
