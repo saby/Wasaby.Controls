@@ -212,6 +212,12 @@ const getData = (crudResult: ICrudResult): Promise<any> => {
 
 const _private = {
     getItemActionsController(self): ItemActionsController {
+        // При существующем контроллере нам не нужны дополнительные проверки как при инициализации.
+        // Например, может потребоваться продолжение работы с контроллером после показа ошибки в Popup окне,
+        // когда _error не зануляется.
+        if (self._itemActionsController) {
+            return self._itemActionsController;
+        }
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (self.__error || !self._listViewModel) {
@@ -227,9 +233,7 @@ const _private = {
             return;
         }
 
-        if (!self._itemActionsController) {
-            self._itemActionsController = new ItemActionsController();
-        }
+        self._itemActionsController = new ItemActionsController();
 
         return self._itemActionsController;
     },
