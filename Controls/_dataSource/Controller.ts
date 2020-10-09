@@ -1,4 +1,4 @@
-import {ICrud, ICrudPlus, IData, PrefetchProxy} from 'Types/source';
+import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryOrderSelector, QueryWhereExpression} from 'Types/source';
 import {CrudWrapper} from './CrudWrapper';
 import {NavigationController} from 'Controls/source';
 import {INavigationOptionValue,
@@ -17,7 +17,6 @@ import {TNavigationPagingMode} from 'Controls/_interface/INavigation';
 import {RecordSet} from 'Types/collection';
 import {Record as EntityRecord, CancelablePromise} from 'Types/entity';
 import {Logger} from 'UI/Utils';
-import {QueryOrderSelector, QueryWhereExpression} from 'Types/source';
 import {IQueryParams} from 'Controls/_interface/IQueryParams';
 import {default as groupUtil} from './GroupUtil';
 import {isEqual} from 'Types/object';
@@ -196,9 +195,7 @@ export default class Controller {
     }
 
     getState(): IControllerState {
-        const source = this._options.source instanceof PrefetchProxy ?
-            this._options.source.getOriginal<ICrud>() :
-            this._options.source;
+        const source = Controller._getSource(this._options.source);
 
         return {
             keyProperty: this._options.keyProperty,
@@ -392,7 +389,7 @@ export default class Controller {
                         resultFilter.entries = operations.selectionToRecord({
                             selected: options.selectedKeys,
                             excluded: options.excludedKeys
-                        }, (options.source as IData).getAdapter());
+                        }, Controller._getSource(options.source).getAdapter());
                         resolve(resultFilter);
                     });
                 } else {
@@ -488,6 +485,18 @@ export default class Controller {
         }
 
         return resultFilterPromise;
+    }
+
+    private static _getSource(source: ICrud | ICrudPlus | PrefetchProxy): IData & ICrud {
+        let resultSource;
+
+        if (source instanceof PrefetchProxy) {
+            resultSource = source.getOriginal();
+        } else {
+            resultSource = source;
+        }
+
+        return resultSource;
     }
 
 }
