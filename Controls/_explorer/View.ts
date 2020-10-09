@@ -206,8 +206,8 @@ var
             var result;
 
             if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
-               self._breadCrumbsItems = null;
                _private.updateRootOnViewModeChanged(self, viewMode, cfg);
+               self._breadCrumbsItems = null;
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
