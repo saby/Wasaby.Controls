@@ -28,39 +28,6 @@ export const enum CRUD_EVENTS {
  * @see Types/source:SbisService
  * @see Types/source:Memory
  */
-
-/**
- * Создает пустую запись через источник данных.
- * @function Controls/_form/CrudController#create
- * @param [meta] Дополнительные метаданные, которые могут понадобиться для создания записи.
- */
-
-/**
- * Читает запись из источника данных по идентификатору.
- * @function Controls/_form/CrudController#read
- * @param {Number|String}key Первичный ключ записи.
- * @param {Object} [meta] Дополнительные метаданные.
- */
-
-/**
- * Обновляет запись в источнике данных.
- * @function Controls/_form/CrudController#update
- * @param {Record|RecordSet} Обновляемая запись или рекордсет.
- * @param {Object} [meta] Дополнительные метаданные.
- */
-
-/**
- * Удаляет запись из источника данных.
- * @function Controls/_form/CrudController#delete
- * @param {Number|String} Первичный ключ или массив первичных ключей записи.
- * @param {Object} [meta] Дополнительные метаданные.
- */
-
-/*
- * Удаления запроса отображения индикатора.
- * @function Controls/_form/CrudController#hideIndicator
- */
-
 export default class CrudController {
     private readonly _crudOperationFinished: (result: string, args: [Error|Model, Model|string?, unknown?]) => void = null;
     private readonly _notifyRegisterPending: (args: [Promise<Model>, object]) => void = null;
@@ -85,7 +52,11 @@ export default class CrudController {
     setDataSource(newDataSource: Memory): void {
         this._dataSource = newDataSource;
     }
-
+    /**
+     * Создает пустую запись через источник данных.
+     * @function Controls/_form/CrudController#create
+     * @param [meta] Дополнительные метаданные, которые могут понадобиться для создания записи.
+     */
     create(createMetaData: unknown): Promise<Model> {
         const promise = this._dataSource.create(createMetaData);
         this._notifyRegisterPending([promise, {showLoadingIndicator: this._showLoadingIndicator}]);
@@ -99,7 +70,12 @@ export default class CrudController {
             });
         });
     }
-
+    /**
+     * Читает запись из источника данных по идентификатору.
+     * @function Controls/_form/CrudController#read
+     * @param {Number|String}key Первичный ключ записи.
+     * @param {Object} [meta] Дополнительные метаданные.
+     */
     read(key: string, readMetaData: unknown): Promise<Model> {
         const id = this._indicatorId;
         const message = rk('Пожалуйста, подождите…');
@@ -116,7 +92,12 @@ export default class CrudController {
             });
         });
     }
-
+    /**
+     * Обновляет запись в источнике данных.
+     * @function Controls/_form/CrudController#update
+     * @param {Record|RecordSet} Обновляемая запись или рекордсет.
+     * @param {Object} [meta] Дополнительные метаданные.
+     */
     update(record: Model, isNewRecord: boolean, config?: unknown): Promise<void> | null {
         if (record.isChanged() || isNewRecord) {
             const updateMetaData = config?.additionalData;
@@ -137,6 +118,12 @@ export default class CrudController {
         return null;
     }
 
+    /**
+     * Удаляет запись из источника данных.
+     * @function Controls/_form/CrudController#delete
+     * @param {Number|String} Первичный ключ или массив первичных ключей записи.
+     * @param {Object} [meta] Дополнительные метаданные.
+     */
     delete(record: Model, destroyMeta: unknown): Promise<Model> {
         const promise = this._dataSource.destroy(record.getId(), destroyMeta);
         this._notifyRegisterPending([promise, { showLoadingIndicator: this._showLoadingIndicator }]);
@@ -151,7 +138,10 @@ export default class CrudController {
             });
         });
     }
-
+    /*
+    * Удаления запроса отображения индикатора.
+    * @function Controls/_form/CrudController#hideIndicator
+    */
     hideIndicator(): void {
         if (this._indicatorId) {
             this._notifyIndicator('hideIndicator', [this._indicatorId]);
