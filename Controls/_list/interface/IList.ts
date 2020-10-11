@@ -1,6 +1,7 @@
 import { TemplateFunction } from 'UI/Base';
 import { IItemActionsOptions } from 'Controls/itemActions';
 import { IMarkerListOptions } from 'Controls/marker';
+import {IFontColorStyle} from 'Controls/interface';
 
 /**
  * Интерфейс для списков.
@@ -25,8 +26,8 @@ export interface IItemPadding {
 
 export interface IList extends IItemActionsOptions, IMarkerListOptions {
     attachLoadTopTriggerToNull?: boolean;
-    emptyTemplate?: TemplateFunction|string;
-    footerTemplate?: TemplateFunction|string;
+    emptyTemplate?: TemplateFunction | string;
+    footerTemplate?: TemplateFunction | string;
     multiSelectVisibility?: TMultiSelectVisibility;
     stickyMarkedItem?: boolean;
     uniqueKeys?: boolean;
@@ -40,7 +41,14 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
     nodeConfig?: INodeConfig;
 
     pagingContentTemplate?: TemplateFunction | string;
+    moreFontColorStyle?: IFontColorStyle;
 }
+
+/**
+ * @name Controls/_list/interface/IList#moreFontColorStyle
+ * @cfg {IFontColorStyle}[moreFontColorStyle=listMore] Опция управляет стилем цвета текста для кнопки ещё.
+ * @see IFontColorStyle
+ */
 
 /**
  * @name Controls/_list/interface/IList#pagingContentTemplate

@@ -23,7 +23,13 @@ import {Logger} from 'UI/Utils';
 
 import {TouchContextField} from 'Controls/context';
 import {error as dataSourceError, NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
-import {INavigationOptionValue, INavigationSourceConfig, IBaseSourceConfig, Direction, ISelectionObject} from 'Controls/interface';
+import {
+    INavigationOptionValue,
+    INavigationSourceConfig,
+    IBaseSourceConfig,
+    Direction,
+    ISelectionObject
+} from 'Controls/interface';
 import { Sticky } from 'Controls/popup';
 
 // Utils imports
@@ -5417,7 +5423,8 @@ BaseControl.getDefaultOptions = function() {
         virtualScrollMode: 'remove',
         filter: {},
         itemActionsVisibility: 'onhover',
-        searchValue: ''
+        searchValue: '',
+        moreFontColorStyle: 'listMore'
     };
 };
 export = BaseControl;
