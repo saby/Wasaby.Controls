@@ -525,11 +525,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return item.isHasChildren() || item.getChildren(false).getCount() > 0;
    }
 
-   private _getSelectedChildrenCount(
-      node: TreeItem<Model>,
-      selection: ISelection,
-      deep: boolean
-   ): number|null {
+   private _getSelectedChildrenCount(node: TreeItem<Model>, selection: ISelection, deep: boolean): number|null {
+      if (!node) {
+         return 0;
+      }
+
       const children = node.getChildren(false);
       let selectedChildrenCount = 0;
 
