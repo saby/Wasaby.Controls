@@ -24,14 +24,14 @@
 import {default as View} from 'Controls/_grid/Grid';
 import * as GridLayoutUtil from './_grid/utils/GridLayoutUtil';
 
-import GridLayoutItemTemplate = require('wml!Controls/_grid/layout/grid/Item');
+import GridLayoutItemTemplate = require('wml!Controls/_grid/Render/grid/Item');
 import TableLayoutItemTemplate = require('wml!Controls/_grid/layout/table/Item');
 const ItemTemplate = GridLayoutUtil.isFullGridSupport() ? GridLayoutItemTemplate : TableLayoutItemTemplate;
 
 import ResultsTemplate = require('wml!Controls/_grid/ResultsTemplateResolver');
 import GroupTemplate = require('wml!Controls/_grid/GroupTemplate');
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
-import ColumnTemplate = require('wml!Controls/_grid/layout/common/ColumnContent');
+import ColumnTemplate = require('wml!Controls/_grid/Render/common/ColumnContent');
 import ColumnLightTemplate = require('wml!Controls/_grid/layout/common/ColumnContentLight');
 
 import HeaderContent = require('wml!Controls/_grid/HeaderContent');

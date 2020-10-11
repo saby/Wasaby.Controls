@@ -9,6 +9,7 @@ import {
 } from 'Types/entity';
 import GridCollectionItem from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
+import {createClassListCollection} from "../_list/resources/utils/CssClassList";
 
 export interface IColumnConfig {
     template: TemplateFunction|string;
@@ -42,6 +43,134 @@ export default class GridColumn<T> extends mixin<
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
+    }
+
+    getWrapperClasses(theme: string, backgroundColorStyle?: string, style: string = 'default'): string {
+        let wrapperClasses = '';
+        const isEditing = this._$owner.isEditing();
+        const preparedStyle = style === 'masterClassic' ? 'default' : style;
+        const topPadding = this._$owner.getTopPadding();
+        const bottomPadding = this._$owner.getBottomPadding();
+        const leftPadding = this._$owner.getLeftPadding();
+        const rightPadding = this._$owner.getRightPadding();
+        const isCheckBoxColumn = false;
+        const hasColumnScroll = false;
+
+        if (topPadding === 'null' && bottomPadding === 'null') {
+            wrapperClasses += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
+        } else {
+            wrapperClasses += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
+        }
+
+        wrapperClasses += `controls-Grid__row-cell controls-Grid__cell_${preparedStyle} controls-Grid__row-cell_${preparedStyle}_theme-${theme}`;
+
+        if (hasColumnScroll) {
+        } else if (!isCheckBoxColumn) {
+            wrapperClasses += ' controls-Grid__cell_fit';
+        }
+
+        /*const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
+        const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
++++     let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
+        const backgroundStyle = current.backgroundStyle || current.style || 'default';
+        const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
+
++++     // Стиль колонки
++++     if (current.itemPadding.top === 'null' && current.itemPadding.bottom === 'null') {
++++         classLists.base += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
++++     } else {
++++         classLists.base += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
++++     }
++++     classLists.base += `controls-Grid__row-cell controls-Grid__cell_${style} controls-Grid__row-cell_${style}_theme-${theme}`;
+        _private.prepareSeparatorClasses(current, classLists, theme);
+
+        if (backgroundColorStyle) {
+            classLists.base += _private.getBackgroundStyle({backgroundStyle, theme, backgroundColorStyle}, true);
+        }
+
+        if (self._options.columnScroll) {
+            classLists.columnScroll += _private.getColumnScrollCalculationCellClasses(current, theme);
+            if (self._options.columnScrollVisibility) {
+                classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
+            }
+        } else if (!checkBoxCell) {
+            classLists.base += ' controls-Grid__cell_fit';
+        }
+
+        if (current.isEditing()) {
+            classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
+        } else {
+            let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
+            classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
+        }
+
+        if (current.columnScroll && !current.isEditing()) {
+            classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
+        }
+
+        // Если включен множественный выбор и рендерится первая колонка с чекбоксом
+        if (checkBoxCell) {
+            classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
+            classLists.padding = createClassListCollection('top', 'bottom');
+            classLists.padding.top = `controls-Grid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
+            classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;
+        } else {
+            classLists.padding = _private.getPaddingCellClasses(current, theme);
+        }
+
+        if (current.dispItem.isMarked() && current.markerVisibility !== 'hidden') {
+            style = current.style || 'default';
+            classLists.marked = `controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+
+            // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
+            // нужно его принудительно установить как фон таблицы
+            if (!isFullGridSupport && !current.isEditing()) {
+                classLists.marked += _private.getBackgroundStyle({backgroundStyle, theme}, true);
+            }
+
+            if (current.columnIndex === 0) {
+                classLists.marked += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
+            }
+            if (current.columnIndex === current.getLastColumnIndex()) {
+                classLists.marked += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${style}_theme-${theme}`;
+            }
+        } else if (current.columnIndex === current.getLastColumnIndex()) {
+            classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
+        }
+
+        if (!GridLayoutUtil.isFullGridSupport() && !(current.columns.length === (current.hasMultiSelect ? 2 : 1)) && self._options.fixIEAutoHeight) {
+            classLists.base += ' controls-Grid__row-cell__autoHeight';
+        }
+        return classLists;*/
+        return wrapperClasses;
+    }
+
+    getContentClasses(theme: string, cursor: string = 'pointer'): string {
+        const isCheckBoxCell = false;
+        let contentClasses = 'controls-Grid__row-cell__content';
+
+        contentClasses += `controls-Grid__row-cell__content_baseline_default_theme-${theme}`;
+        contentClasses += `controls-Grid__row-cell_cursor-${cursor}`;
+
+        // Если включен множественный выбор и рендерится первая колонка с чекбоксом
+        if (isCheckBoxCell) {
+            /*classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
+            classLists.padding = createClassListCollection('top', 'bottom');
+            classLists.padding.top = `controls-Grid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
+            classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;*/
+        } else {
+            contentClasses = this._getContentPaddingClasses(theme);
+        }
+
+        contentClasses += ' controls-Grid__row-cell_withoutRowSeparator_size-null_theme-default';
+
+        /*
++++     controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_default_theme-{{_options.theme}}
++++     {{itemData.classList.padding.getAll()}} {{ itemData.classList.columnContent }} controls-Grid__row-cell_cursor-{{cursor || 'pointer'}}
+        {{backgroundColorStyle ? 'controls-Grid__row-cell__content_background_' + backgroundColorStyle + '_theme-' + _options.theme}}
+        {{itemData.hoverBackgroundStyle ? 'controls-Grid__item_background-hover_' + itemData.hoverBackgroundStyle  + '_theme-' + _options.theme}}
+        */
+        return contentClasses;
     }
 
     getCellClasses(templateHighlightOnHover: boolean): string {
@@ -131,10 +260,20 @@ export default class GridColumn<T> extends mixin<
         this._nextVersion();
     }
 
-    protected _getCellPaddingClasses(): string {
-        // GridViewModel -> getPaddingCellClasses
-        const itemSpacing = this._$owner.getItemSpacing();
-        let classes = 'controls-Grid__cell_default';
+    protected _getContentPaddingClasses(theme: string): string {
+        const topPadding = this._$owner.getTopPadding();
+        const bottomPadding = this._$owner.getBottomPadding();
+        const leftPadding = this._$owner.getLeftPadding();
+        const rightPadding = this._$owner.getRightPadding();
+        let classes = '';
+
+        /*if (columns[columnIndex].isActionCell) {
+            return classLists;
+        }*/
+        // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+        /*if (params.isBreadCrumbs) {
+            classLists.left += ` controls-Grid__cell_spacingFirstCol_null_theme-${theme}`;
+        }*/
 
         // left <-> right
         const cellPadding = this._$column.cellPadding;
@@ -144,9 +283,9 @@ export default class GridColumn<T> extends mixin<
             if (cellPadding?.left) {
                 classes += `_${cellPadding.left}`;
             }
-            classes += '_theme-default';
+            classes += '_theme-${theme}';
         } else {
-            classes += ` controls-Grid__cell_spacingFirstCol_${itemSpacing.left}_theme-default`;
+            classes += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
         }
 
         if (!this.isLastColumn()) {
@@ -154,14 +293,14 @@ export default class GridColumn<T> extends mixin<
             if (cellPadding?.right) {
                 classes += `_${cellPadding.right}`;
             }
-            classes += '_theme-default';
+            classes += `_theme-${theme}`;
         } else {
-            classes += ` controls-Grid__cell_spacingLastCol_${itemSpacing.right}_theme-default`;
+            classes += ` controls-Grid__cell_spacingLastCol_${rightPadding}_theme-${theme}`;
         }
 
         // top <-> bottom
-        classes += ` controls-Grid__row-cell_rowSpacingTop_${itemSpacing.row}_theme-default`;
-        classes += ` controls-Grid__row-cell_rowSpacingBottom_${itemSpacing.row}_theme-default`;
+        classes += ` controls-Grid__row-cell_rowSpacingTop_${topPadding}_theme-${theme}`;
+        classes += ` controls-Grid__row-cell_rowSpacingBottom_${bottomPadding}_theme-${theme}`;
 
         return classes;
     }

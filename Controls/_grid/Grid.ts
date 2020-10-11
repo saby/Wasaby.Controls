@@ -1,5 +1,4 @@
 import {ListControl as viewTemplate, View as List} from 'Controls/list';
-import GridViewModel = require('Controls/_grid/GridViewModel');
 import viewName = require('Controls/_grid/GridView');
 
    /**
@@ -69,10 +68,10 @@ import viewName = require('Controls/_grid/GridView');
 export default class Grid extends List /** @lends Controls/grid:View */ {
     _viewName = viewName;
     _viewTemplate = viewTemplate;
-    protected _supportNewModel: boolean = false;
+    protected _supportNewModel: boolean = true;
 
     _getModelConstructor() {
-        return GridViewModel;
+        return 'Controls/display:GridCollection';
     }
 }
 

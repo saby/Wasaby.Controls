@@ -6,7 +6,6 @@ import {debounce as cDebounce} from 'Types/function';
 import {Logger} from 'UI/Utils';
 import ListViewTpl = require('wml!Controls/_list/ListView/ListView');
 import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
-import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
 import * as forTemplate from 'wml!Controls/_list/Render/For';
 import * as oldForTemplate from 'wml!Controls/_list/resources/For';
 
@@ -47,7 +46,6 @@ var ListView = BaseControl.extend(
         _listModel: null,
         _hoveredItem: null,
         _template: ListViewTpl,
-        _groupTemplate: GroupTemplate,
         _defaultItemTemplate: defaultItemTemplate,
         _pendingRedraw: false,
         _reloadInProgress: false,
@@ -133,9 +131,6 @@ var ListView = BaseControl.extend(
             if (newOptions.listModel && (this._listModel != newOptions.listModel)) {
                 this._listModel = newOptions.listModel;
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
-            }
-            if (this._options.groupTemplate !== newOptions.groupTemplate) {
-                this._groupTemplate = newOptions.groupTemplate;
             }
             this._itemTemplate = this._resolveItemTemplate(newOptions);
         },

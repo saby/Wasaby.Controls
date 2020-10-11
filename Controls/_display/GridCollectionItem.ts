@@ -32,6 +32,22 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         return this._$columns.indexOf(column);
     }
 
+    getTopPadding(): string {
+        return this._$owner.getTopPadding().toLowerCase();
+    }
+
+    getBottomPadding(): string {
+        return this._$owner.getBottomPadding().toLowerCase();
+    }
+
+    getLeftPadding(): string {
+        return this._$owner.getLeftPadding().toLowerCase();
+    }
+
+    getRightPadding(): string {
+        return this._$owner.getRightPadding().toLowerCase();
+    }
+
     getItemSpacing(): { left: string, right: string, row: string } {
         return {
             left: this._$owner.getLeftPadding().toLowerCase(),

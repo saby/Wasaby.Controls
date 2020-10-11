@@ -34,4 +34,3 @@ Object.assign(GridCollection.prototype, {
     _itemModule: 'Controls/display:GridCollectionItem',
     _$columns: null
 });
-
