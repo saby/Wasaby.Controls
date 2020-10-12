@@ -190,13 +190,20 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     protected _getFieldWrapperWidth(recount?: boolean): number {
-        if (this._fieldWrapperWidth === null || recount) {
+        let resultWidth = this._fieldWrapperWidth;
 
+        if (this._fieldWrapperWidth === null || recount) {
             // we cache width, since used in several places in the calculations and need to compare when resize
-            this._fieldWrapperWidth = DOMUtil.width(this._getFieldWrapper());
+            resultWidth = DOMUtil.width(this._getFieldWrapper());
+
+            if (resultWidth > 0) {
+                this._fieldWrapperWidth = resultWidth;
+            } else {
+                this._fieldWrapperWidth = null;
+            }
         }
 
-        return this._fieldWrapperWidth;
+        return resultWidth;
     }
 
     private _isInputActive(options: ILookupInputOptions): boolean {

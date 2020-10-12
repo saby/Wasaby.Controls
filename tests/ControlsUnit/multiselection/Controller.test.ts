@@ -307,13 +307,21 @@ describe('Controls/_multiselection/Controller', () => {
    });
 
    it('with limit', () => {
-      controller.setLimit(2);
+      controller.setLimit(1);
 
       let result = controller.selectAll();
-      assert.equal(result.selectedCount, 2);
+      controller.setSelectedKeys(result.selectedKeysDiff.keys, result.excludedKeysDiff.keys);
+      assert.equal(result.selectedCount, 1);
+      assert.isTrue(model.getItemBySourceKey(1).isSelected());
+      assert.isFalse(model.getItemBySourceKey(2).isSelected());
+      assert.isFalse(model.getItemBySourceKey(3).isSelected());
 
       result = controller.toggleItem(3);
-      assert.equal(result.selectedCount, 3);
+      controller.setSelectedKeys(result.selectedKeysDiff.keys, result.excludedKeysDiff.keys);
+      assert.equal(result.selectedCount, 2);
+      assert.isTrue(model.getItemBySourceKey(1).isSelected());
+      assert.isFalse(model.getItemBySourceKey(2).isSelected());
+      assert.isTrue(model.getItemBySourceKey(3).isSelected());
    });
 
    it('setSelectedKeys', () => {

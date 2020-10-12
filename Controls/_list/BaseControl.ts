@@ -118,7 +118,6 @@ const LOAD_TRIGGER_OFFSET = 100;
 const INDICATOR_DELAY = 2000;
 const INITIAL_PAGES_COUNT = 1;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
-const TRIGGER_VISIBILITY_DELAY = 101;
 const LIMIT_DRAG_SELECTION = 100;
 const PORTIONED_LOAD_META_FIELD = 'iterative';
 const MIN_SCROLL_PAGING_SHOW_PROPORTION = 2;
@@ -3608,9 +3607,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._checkLoadToDirectionTimeout) {
             clearTimeout(this._checkLoadToDirectionTimeout);
         }
-        if (this._checkTriggerVisibilityTimeout) {
-            clearTimeout(this._checkTriggerVisibilityTimeout);
-        }
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
@@ -3683,6 +3679,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _beforePaint(): void {
+        let positionRestored = false
 
         // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
         if (this._container) {
@@ -3712,9 +3709,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-            if (this._scrollController) {
-                this.checkTriggerVisibilityWithTimeout();
-            }
+            positionRestored = true;
         }
 
         // До отрисовки элементов мы не можем понять потребуется ли еще загрузка (зависит от видимости тригеров).
@@ -3761,8 +3756,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 needCheckTriggers = true;
             }
 
-            if (needCheckTriggers || itemsUpdated) {
-                this.checkTriggerVisibilityWithTimeout();
+            if (needCheckTriggers || itemsUpdated || positionRestored) {
+                this.checkTriggerVisibilityAfterRedraw();
             }
 
         }
@@ -3771,16 +3766,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._scrollToFirstItemIfNeed();
     },
 
-    checkTriggerVisibilityWithTimeout(): void {
-        if (this._checkTriggerVisibilityTimeout) {
-            clearTimeout(this._checkTriggerVisibilityTimeout);
-        }
-        this._checkTriggerVisibilityTimeout = setTimeout(() => {
-            _private.doAfterUpdate(this, () => {
-                this.checkTriggersVisibility();
+    checkTriggerVisibilityAfterRedraw(): void {
+        _private.doAfterUpdate(this, () => {
+            window.requestAnimationFrame(() => {
+                setTimeout(() => {
+                    this.checkTriggersVisibility();
+                }, 0);
             });
-            this._checkTriggerVisibilityTimeout = null;
-        }, TRIGGER_VISIBILITY_DELAY);
+        });
     },
 
     checkTriggersVisibility(): void {
@@ -3789,8 +3782,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             scrollHeight: _private.getViewSize(this),
             scrollTop: this._scrollTop
         };
-        const triggerDown = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.bottom, 'down');
-        const triggerUp = _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.top, 'up');
+        const triggerDown = this._loadTriggerVisibility.down || _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.bottom, 'down');
+        const triggerUp = this._loadTriggerVisibility.up || _private.calcTriggerVisibility(this, scrollParams, this._loadTriggerOffset.top, 'up');
         this._scrollController.setTriggerVisibility('down', triggerDown);
         this._scrollController.setTriggerVisibility('up', triggerUp);
         if (triggerDown) {
