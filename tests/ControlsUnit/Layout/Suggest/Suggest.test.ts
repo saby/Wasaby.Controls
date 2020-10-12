@@ -306,7 +306,7 @@ describe('Controls/suggest', () => {
          inputContainer._loadEnd(
             new RecordSet({items: [1]})
          );
-         assert.isFalse(inputContainer._loading);
+         assert.isNotTrue(inputContainer._loading);
 
          inputContainer._destroyed = false;
          inputContainer._showContent = true;
