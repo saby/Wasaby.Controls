@@ -102,13 +102,13 @@ define([
       describe('_getFontSizeClass', function() {
          [{
             fontSize: '2xl',
-            result: 'medium'
+            result: 'm'
          }, {
             fontSize: '3xl',
-            result: 'big'
+            result: 'l'
          }, {
             fontSize: 'm',
-            result: 'small'
+            result: 's'
          }].forEach(function(test) {
             it(`should return ${test.result} if fontSize: ${test.fontSize}`, function() {
                const opt = {

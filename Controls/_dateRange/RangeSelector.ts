@@ -122,16 +122,16 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
     }
 
     _getFontSizeClass(): string {
-        let fontSize = 'medium';
         // c fontSize 18px (20px, 24px и тд) линк смещается на 1px вниз, с 14px (13px, 12px и тд) на 1px вверх
         // относительно стандратного положения
-        if (this._options.fontSize === '3xl' || this._options.fontSize === '4xl') {
-            fontSize = 'big';
+        switch (this._options.fontSize) {
+            case '4xl': return 'l';
+            case '3xl': return 'l';
+            case 'm': return 's';
+            case 's': return 's';
+            case 'xs': return 's';
+            default: return 'm';
         }
-        if (this._options.fontSize === 'm' || this._options.fontSize === 's' || this._options.fontSize === 'xs') {
-            fontSize = 'small';
-        }
-        return fontSize;
     }
 
     _mouseEnterHandler(): void {
