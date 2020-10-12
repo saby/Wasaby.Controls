@@ -663,10 +663,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
     _onExpandedItemsChanged(e, expandedItems): void {
         this._notify('expandedItemsChanged', [expandedItems]);
-
-        if (!this._options.hasOwnProperty('expandedItems')) {
-            this._children.baseControl.getSourceController().setExpandedItems(expandedItems);
-        }
+        this._children.baseControl.getSourceController().setExpandedItems(expandedItems);
         // вызываем обновление, так как, если нет биндинга опции, то контрол не обновится.
         // А обновление нужно, чтобы отдать в модель нужные expandedItems
         this._forceUpdate();
