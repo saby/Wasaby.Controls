@@ -1,6 +1,7 @@
 import { CrudEntityKey } from 'Types/source';
 import { Model } from 'Types/entity';
 import { IDragPosition } from 'Controls/display';
+import { IOffset } from '../_scroll/StickyHeader/Utils';
 
 /**
  * Тип позиции, которая указывает куда вставляется элемент относительно элемента, на который навели
@@ -26,16 +27,12 @@ export interface IDraggableItem<S extends Model = Model> {
 /**
  * Интерфейс коллекции с возможностью перетаскивания записей
  * @interface Controls/_listDragNDrop/interface#IDraggableCollection
- * @template A Тип объекта, обозначающего позицию
- * @template T Тип элемента коллекции
+ * @template P Тип объекта, обозначающего позицию
  * @public
  * @author Панихин К.А.
  */
-export interface IDraggableCollection<
-   T extends IDraggableItem = IDraggableItem,
-   A = IDragPosition<T>
-> {
-   setDragPosition(position: A): void;
+export interface IDraggableCollection<P = IDragPosition<IDraggableItem>> {
+   setDragPosition(position: P): void;
    setDraggedItems(draggedItemKey: CrudEntityKey, draggedItemKeys: CrudEntityKey[]): void;
    resetDraggedItems(): void;
 }
@@ -43,51 +40,44 @@ export interface IDraggableCollection<
 /**
  * Интерфейс параметра основного метода стратегии перетаскивания
  * @interface Controls/_listDragNDrop/interface#IDragStrategyParams
+ * @template P Тип объекта, обозначающего позицию
  * @template T Тип элемента коллекции
  * @public
  * @author Панихин К.А.
  */
-export interface IDragStrategyParams<T extends IDraggableItem = IDraggableItem> {
+export interface IDragStrategyParams<P, T extends IDraggableItem = IDraggableItem> {
    targetItem: T;
+   currentPosition?: P;
+   mouseOffset?: IOffset;
 }
 
 /**
  * Интерфейс стратегии перетаскивания
  * @interface Controls/_listDragNDrop/interface#IDragStrategy
- * @template A Тип объекта, обозначающего позицию
- * @template T Тип элемента коллекции
- * @template C Тип коллекции
- * @template P Тип параметра метода calculateDragPosition
+ * @template P Тип объекта, обозначающего позицию
  * @public
  * @author Панихин К.А.
  */
-export interface IDragStrategy<
-    A,
-    T extends IDraggableItem = IDraggableItem,
-    C extends IDraggableCollection<T, A> = IDraggableCollection<T, A>,
-    P extends IDragStrategyParams<T> = IDragStrategyParams<T>,
-> {
-   calculatePosition(params: P): A;
+export interface IDragStrategy<P> {
+   calculatePosition(params: IDragStrategyParams<P>): P;
 }
 
 /**
  * Базовый класс стратегии перетаскивания
  * @class Controls/_listDragNDrop/interface#BaseDragStrategy
  * @implements Controls/_listDragNDrop/interface#IDragStrategy
- * @template A Тип объекта, обозначающего позицию
+ * @template P Тип объекта, обозначающего позицию
  * @template T Тип элемента коллекции
  * @template C Тип коллекции
- * @template P Тип параметра метода calculateDragPosition
  * @public
  * @abstract
  * @author Панихин К.А.
  */
 export abstract class BaseDragStrategy<
-    A,
+    P,
     T extends IDraggableItem = IDraggableItem,
-    C extends IDraggableCollection<T, A> = IDraggableCollection<T, A>,
-    P extends IDragStrategyParams<T> = IDragStrategyParams<T>,
-> implements IDragStrategy<A, T, C, P> {
+    C extends IDraggableCollection<P> = IDraggableCollection<P>,
+> implements IDragStrategy<P> {
    protected _draggableItem: T;
    protected _model: C;
 
@@ -96,5 +86,5 @@ export abstract class BaseDragStrategy<
       this._draggableItem = draggableItem;
    }
 
-   abstract calculatePosition(params: P): A;
+   abstract calculatePosition(params: IDragStrategyParams<P>): P;
 }

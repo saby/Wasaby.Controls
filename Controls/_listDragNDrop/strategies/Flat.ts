@@ -7,14 +7,7 @@ import {
 } from '../interface';
 import { Model } from 'Types/entity';
 
-export interface IFlatDragStrategyParams<
-    T extends IDraggableItem = IDraggableItem,
-    A = IDragPosition<T>
-> extends IDragStrategyParams<T> {
-    currentPosition: A;
-}
-
-export interface IDraggableFlatCollection<T extends IDraggableItem = IDraggableItem> extends IDraggableCollection<T> {
+export interface IDraggableFlatCollection<T extends IDraggableItem = IDraggableItem> extends IDraggableCollection {
     getIndex(item: T): number;
     getIndexBySourceItem(sourceItem: Model): number;
 }
@@ -22,8 +15,7 @@ export interface IDraggableFlatCollection<T extends IDraggableItem = IDraggableI
 export default class Flat<
     T extends IDraggableItem = IDraggableItem,
     C extends IDraggableFlatCollection = IDraggableFlatCollection,
-    P extends IFlatDragStrategyParams<T> = IFlatDragStrategyParams<T>,
-> extends BaseDragStrategy<IDragPosition<T>, T, C, P> {
+> extends BaseDragStrategy<IDragPosition<T>, T, C> {
     protected _startPosition: IDragPosition<T>;
 
     constructor(model: C, draggableItem: T) {
@@ -37,7 +29,7 @@ export default class Flat<
         };
     }
 
-    calculatePosition({currentPosition, targetItem}: IFlatDragStrategyParams<T>): IDragPosition<T> {
+    calculatePosition({currentPosition, targetItem}: IDragStrategyParams<IDragPosition<T>, T>): IDragPosition<T> {
         let prevIndex = -1;
 
         if (targetItem === null) {

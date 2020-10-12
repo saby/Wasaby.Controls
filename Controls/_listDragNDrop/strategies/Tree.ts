@@ -1,6 +1,6 @@
-import Flat, { IDraggableFlatCollection, IFlatDragStrategyParams } from './Flat';
+import Flat, { IDraggableFlatCollection} from './Flat';
 import { IDragPosition } from 'Controls/display';
-import { IDraggableItem } from '../interface';
+import { IDraggableItem, IDragStrategyParams, TPosition } from '../interface';
 
 const DRAG_MAX_OFFSET = 10;
 
@@ -13,18 +13,16 @@ interface IOffset {
     bottom: number;
 }
 
-export interface ITreeDragStrategyParams extends IFlatDragStrategyParams<IDraggableTreeItem> {
-    mouseOffsetInTargetItem: IOffset;
-}
-
 interface IDraggableTreeCollection extends IDraggableFlatCollection<IDraggableTreeItem> {
     getPrevDragPosition(): IDragPosition<IDraggableTreeItem>;
 }
 
-export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollection, ITreeDragStrategyParams> {
+type ITreeDragStrategyParams = IDragStrategyParams<IDragPosition<IDraggableTreeItem>, IDraggableTreeItem>;
+
+export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollection> {
 
     calculatePosition(
-        {currentPosition, targetItem, mouseOffsetInTargetItem}: ITreeDragStrategyParams
+        {currentPosition, targetItem, mouseOffset}: ITreeDragStrategyParams
     ): IDragPosition<IDraggableTreeItem> {
         if (this._draggableItem && this._draggableItem === targetItem) {
             return this._model.getPrevDragPosition() || null;
@@ -33,7 +31,7 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
         let result;
 
         if (targetItem && targetItem.isNode()) {
-            result = this._calculatePositionRelativeNode(targetItem, mouseOffsetInTargetItem);
+            result = this._calculatePositionRelativeNode(targetItem, mouseOffset);
         } else {
             result = super.calculatePosition({currentPosition, targetItem});
         }
@@ -44,7 +42,7 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
     private _calculatePositionRelativeNode(
         targetItem: IDraggableTreeItem, mouseOffsetInTargetItem: IOffset
     ): IDragPosition<IDraggableTreeItem> {
-        let relativePosition = 'on';
+        let relativePosition: TPosition = 'on';
         // Если перетаскиваем лист на узел, то позиция может быть только 'on'
         // Если нет перетаскиваемого элемента, то значит мы перетаскивам в папку другого реестра
         if (!this._draggableItem || !this._draggableItem.isNode() && targetItem.isNode()) {

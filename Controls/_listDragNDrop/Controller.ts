@@ -4,39 +4,26 @@ import { ItemsEntity } from 'Controls/dragnDrop';
 import { ISelectionObject } from 'Controls/interface';
 import { CrudEntityKey } from 'Types/source';
 
-type StrategyConstructor<
-    A,
-    T extends IDraggableItem = IDraggableItem,
-    C extends IDraggableCollection<T, A> = IDraggableCollection<T, A>,
-    P extends IDragStrategyParams<T> = IDragStrategyParams<T>
-> = new (model: IDraggableCollection<T, A>, draggableItem: T) => IDragStrategy<A, T, C, P>;
+type StrategyConstructor<P> = new (model: IDraggableCollection<P>, draggableItem: IDraggableItem) => IDragStrategy<P>;
 
 /**
  * Контроллер, управляющий состоянием отображения драг'н'дропа
  * @class Controls/_listDragNDrop/Controller
- * @template A Тип объекта, обозначающего позицию
- * @template T Тип элемента коллекции
- * @template C Тип коллекции
- * @template P Тип параметра метода calculateDragPosition
+ * @template P Тип объекта, обозначающего позицию
  * @public
  * @author Панихин К.А.
  */
 
-export default class Controller<
-    A,
-    T extends IDraggableItem = IDraggableItem,
-    C extends IDraggableCollection<T, A> = IDraggableCollection<T, A>,
-    P extends IDragStrategyParams<T> = IDragStrategyParams<T>
-> {
-   private _model: C;
-   private _strategy: IDragStrategy<A, T, C, P>;
-   private _strategyConstructor: StrategyConstructor<A, T, C, P>;
+export default class Controller<P> {
+   private _model: IDraggableCollection<P>;
+   private _strategy: IDragStrategy<P>;
+   private _strategyConstructor: StrategyConstructor<P>;
 
-   private _draggableItem: T;
-   private _dragPosition: A;
+   private _draggableItem: IDraggableItem;
+   private _dragPosition: P;
    private _entity: ItemsEntity;
 
-   constructor(model: C, strategyConstructor: StrategyConstructor<A, T, C, P>) {
+   constructor(model: IDraggableCollection<P>, strategyConstructor: StrategyConstructor<P>) {
       this._model = model;
       this._strategyConstructor = strategyConstructor;
    }
@@ -47,7 +34,7 @@ export default class Controller<
     * @param draggableItem - ключ записи, за которую осуществляется перетаскивание
     * @param entity - сущность перемещения, содержит весь список перемещаемых записей
     */
-   startDrag(draggableItem: T, entity: ItemsEntity): void {
+   startDrag(draggableItem: IDraggableItem, entity: ItemsEntity): void {
       this.setDraggedItems(entity, draggableItem);
       this._strategy = new this._strategyConstructor(this._model, draggableItem);
    }
@@ -58,7 +45,7 @@ export default class Controller<
     * @param entity - сущность перемещения, содержит весь список перемещаемых записей
     * @param draggedItem - запись, за которую осуществляется перетаскивание
     */
-   setDraggedItems(entity: ItemsEntity, draggedItem: T = null): void {
+   setDraggedItems(entity: ItemsEntity, draggedItem: IDraggableItem = null): void {
       this._entity = entity;
       this._draggableItem = draggedItem;
       this._model.setDraggedItems(draggedItem.getContents().getKey(), entity.getItems());
@@ -68,7 +55,7 @@ export default class Controller<
     * Отображает перетаскиваемые сущности в указанной позиции списка
     * @param position - позиция в которой надо отобразить перемещаемые записи
     */
-   setDragPosition(position: A): void {
+   setDragPosition(position: P): void {
       if (this._dragPosition === position) {
          return;
       }
@@ -80,7 +67,7 @@ export default class Controller<
    /**
     * Возвращает перетаскиваемый элемент
     */
-   getDraggableItem(): T {
+   getDraggableItem(): IDraggableItem {
       return this._draggableItem;
    }
 
@@ -105,7 +92,7 @@ export default class Controller<
    /**
     * Возвращает текущую позицию
     */
-   getDragPosition(): A {
+   getDragPosition(): P {
       return this._dragPosition;
    }
 
@@ -120,7 +107,7 @@ export default class Controller<
     * Рассчитывает итоговую позицию для перемещения
     * @param params
     */
-   calculateDragPosition(params: P): A {
+   calculateDragPosition(params: IDragStrategyParams<P>): P {
       return this._strategy.calculatePosition({ ...params, currentPosition: this._dragPosition });
    }
 
