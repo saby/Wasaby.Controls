@@ -23,7 +23,7 @@
  * @remark
  * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/templates/item/ здесь}.
  * @public
- * @demo Controls-demo/Tile/CustomTemplate/Index
+ * @demo Controls-demo/Tile/DifferentItemTemplates/CustomTemplate/Index
  */
 
 export default interface IItemTemplateOptions {
