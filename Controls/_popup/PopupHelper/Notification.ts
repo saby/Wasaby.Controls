@@ -14,9 +14,9 @@ export default class NotificationOpener extends Base {
     _opener = Notification;
 
     /**
-     * Метод для открытия прилипающих окон
+     * Метод для открытия нотификационных окон
      * @function Controls/_popup/PopupHelper/Notification#open
-     * @param {INotificationPopupOptions} popupOptions Конфигурация прилипающего окна
+     * @param {INotificationPopupOptions} popupOptions Конфигурация нотификационного окна
      * @example
      * <pre class="brush: js">
      * import {NotificationOpener} from 'Controls/popup';
@@ -37,7 +37,7 @@ export default class NotificationOpener extends Base {
     }
 }
 /**
- * Метод для закрытия прилипающего окна
+ * Метод для закрытия нотификационного окна
  * @name Controls/_popup/PopupHelper/Notification#close
  * @function
  * @example
