@@ -103,7 +103,7 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  * @name Controls/_scroll/ContainerNew#backgroundStyle
  * @cfg {String} Определяет префикс стиля для настройки элементов которые зависят от цвета фона.
  * @default default
- * @demo Controls-demo/Scroll/BackgroundStyle/Index
+ * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index
  */
 
 const SCROLL_BY_ARROWS = 40;
