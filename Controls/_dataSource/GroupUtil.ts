@@ -29,7 +29,11 @@ var
                 preparedStoreKey = PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey;
             Config.UserConfig.getParam(preparedStoreKey).addCallback(function (storedGroups) {
                 try {
-                    result.callback(JSON.parse(storedGroups));
+                    if (storedGroups !== undefined) {
+                        result.callback(JSON.parse(storedGroups));
+                    } else {
+                        result.callback();
+                    }
                 } catch (e) {
                     Logger.error('GroupUtil: In the store by key "' + preparedStoreKey + '" value in invalid format.');
                     result.callback();
