@@ -426,7 +426,9 @@ export default class Controller {
 
     private _subscribeItemsCollectionChangeEvent(items: RecordSet): void {
         this._unsubscribeItemsCollectionChangeEvent();
-        items.subscribe('onCollectionChange', this._collectionChange);
+        if (items) {
+            items.subscribe('onCollectionChange', this._collectionChange);
+        }
     }
 
     private _unsubscribeItemsCollectionChangeEvent(): void {
