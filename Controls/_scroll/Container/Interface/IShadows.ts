@@ -7,8 +7,10 @@ export const enum SHADOW_VISIBILITY {
 export interface IShadowsOptions {
     topShadowVisibility: SHADOW_VISIBILITY;
     bottomShadowVisibility: SHADOW_VISIBILITY;
-    leftShadowVisibility: SHADOW_VISIBILITY,
-    rightShadowVisibility: SHADOW_VISIBILITY
+    leftShadowVisibility: SHADOW_VISIBILITY;
+    rightShadowVisibility: SHADOW_VISIBILITY;
+    initialTopShadowVisibility?: SHADOW_VISIBILITY;
+    initialBottomShadowVisibility?: SHADOW_VISIBILITY;
 }
 
 export function getDefaultOptions(): IShadowsOptions {
@@ -30,8 +32,6 @@ export function getDefaultOptions(): IShadowsOptions {
 
 export interface IShadows {
     readonly '[Controls/_scroll/Container/Interface/IShadows]': boolean;
-    initialTopShadowVisibility?: SHADOW_VISIBILITY;
-    initialBottomShadowVisibility?: SHADOW_VISIBILITY;
 }
 
 /**
