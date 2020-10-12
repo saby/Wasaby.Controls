@@ -310,7 +310,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
        * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, because input field is empty and historyId options is set  */
       return !!(hasItems ||
          (!this._options.historyId || this._searchValue || isSuggestHasTabs) &&
-         this._options.emptyTemplate && searchResult !== null);
+         this._options.emptyTemplate &&
+         searchResult !== null) && !!this._options.suggestTemplate;
    }
 
    private _processResultData(data: RecordSet): void {
