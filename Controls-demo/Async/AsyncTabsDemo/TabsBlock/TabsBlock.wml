@@ -22,7 +22,7 @@
    <div class="TabsBlock__Content">
       <!-- Based on the value of the _selectedTabId field, display different content -->
       <ws:if data="{{ _selectedTabId == 0 }}">
-         <Controls.Container.Async templateName="Controls-demo/Async/_asyncDemo/TabsBlock/Tab0">
+         <Controls.Container.Async templateName="Controls-demo/Async/AsyncTabsDemo/TabsBlock/Tab0">
             <ws:templateOptions>
             </ws:templateOptions>
             <ws:content>
@@ -31,7 +31,7 @@
          </Controls.Container.Async>
       </ws:if>
       <ws:else data="{{ _selectedTabId == 1}}">
-         <Controls.Container.Async templateName="Controls-demo/Async/_asyncDemo/TabsBlock/Tab1">
+         <Controls.Container.Async templateName="Controls-demo/Async/AsyncTabsDemo/TabsBlock/Tab1">
             <ws:templateOptions>
             </ws:templateOptions>
             <ws:content>
@@ -40,7 +40,7 @@
          </Controls.Container.Async>
       </ws:else>
       <ws:else data="{{ _selectedTabId == 2}}">
-         <Controls.Container.Async templateName="Controls-demo/Async/testLibAsync:TestModule">
+         <Controls.Container.Async templateName="Controls-demo/Async/AsyncTabsDemo/TabsBlock/testLibAsync:TestModule">
             <ws:templateOptions>
             </ws:templateOptions>
             <ws:content>
