@@ -176,7 +176,7 @@ export default class FlatController {
          Logger.warn('DragNDrop: Css class "controls-DragNDrop__notDraggable" is deprecated and removed in 20.7000. Use css class "controls-List_DragNDrop__notDraggable".');
       }
       return (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption())
-          && !event.nativeEvent.button && (!event.target.closest('.controls-List_DragNDrop__notDraggable') ||
+          && !event.nativeEvent.button && (!event.target.closest('.controls-List_DragNDrop__notDraggable') &&
               !event.target.closest('.controls-DragNDrop__notDraggable')) && !isTouch;
    }
 
