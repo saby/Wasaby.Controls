@@ -201,7 +201,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                     });
                     treeItemToBreadcrumbs.set(last, breadCrumbs);
                 }
-            } else if (last === root) {
+            } else if (last === root && treeItemToBreadcrumbs.size > 0) {
                 breadCrumbs = treeItemToBreadcrumbs.get(last);
                 if (!breadCrumbs) {
                     breadCrumbs = new SearchSeparator({
