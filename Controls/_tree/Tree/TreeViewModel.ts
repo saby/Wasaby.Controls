@@ -653,10 +653,6 @@ var
                 if (this._dragTargetPosition.index === current.index) {
                     current.dragTargetNode = true;
                 }
-                if (this._prevDragTargetPosition && this._prevDragTargetPosition.index === current.index) {
-                    current.dragTargetPosition = this._prevDragTargetPosition.position;
-                    current.draggingItemData = this._draggingItemData;
-                }
             }
 
             current.useNewNodeFooters = this._options.useNewNodeFooters;
