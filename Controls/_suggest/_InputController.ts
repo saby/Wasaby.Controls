@@ -6,7 +6,7 @@ import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IStackPopupOptions, Stack as StackOpener} from 'Controls/popup';
 import {Controller as SearchController, SearchResolver as SearchResolverController, ISearchResolverOptions} from 'Controls/searchNew';
-import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
 import {RecordSet} from 'Types/collection';
 import {__ContentLayer, __PopupLayer} from 'Controls/suggestPopup';
 import {
@@ -247,7 +247,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       // https://online.sbis.ru/opendoc.html?guid=d0f7513f-7fc8-47f8-8147-8535d69b99d6
       if ((this._options.autoDropDown || this._options.historyId) && !this._options.readOnly
          && !this._getActiveElement().classList.contains('controls-Lookup__icon')) {
-         if (!this._options.suggestState) {
+         if (!this._options.suggestState && this._options.source) {
             return this._getSourceController().load().then((recordSet) => {
                if (recordSet instanceof RecordSet) {
                   this._setItems(recordSet);
@@ -310,7 +310,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
        * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, because input field is empty and historyId options is set  */
       return !!(hasItems ||
          (!this._options.historyId || this._searchValue || isSuggestHasTabs) &&
-         this._options.emptyTemplate && searchResult !== null);
+         this._options.emptyTemplate &&
+         searchResult !== null) && !!this._options.suggestTemplate;
    }
 
    private _processResultData(data: RecordSet): void {
@@ -562,6 +563,16 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._isValueLengthLongerThenMinSearchLength(newOptions.value, newOptions);
       const emptyTemplateChanged = !isEqual(this._options.emptyTemplate, newOptions.emptyTemplate);
       const footerTemplateChanged = !isEqual(this._options.footerTemplate, newOptions.footerTemplate);
+      const filterChanged = !isEqual(this._options.filter, newOptions.filter);
+      const sourceChanged = this._options.source !== newOptions.source;
+      const needUpdateSourceController = sourceChanged ||
+                                         this._options.navigation !== newOptions.navigation ||
+                                         this._options.sorting !== newOptions.sorting ||
+                                         filterChanged;
+
+      if (needUpdateSourceController && this._sourceController) {
+         this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
+      }
 
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
@@ -666,9 +677,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          });
       } else {
          return this._getSourceController().load().then((recordSet) => {
-            if (recordSet instanceof RecordSet) {
+            if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
                this._setItems(recordSet);
                this._loadEnd(recordSet);
+               this._open();
                return recordSet as RecordSet;
             }
          });
@@ -702,19 +714,23 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _getSourceController(options?: IInputControllerOptions): SourceController {
       if (!this._sourceController) {
-         this._sourceController = new SourceController({
-            dataLoadErrback: (error) => this._searchErrback(error),
-            filter: this._filter,
-            keyProperty: this._options.keyProperty,
-            navigation: this._options.navigation,
-            sorting: this._options.sorting,
-            source: this._options.source,
-            parentProperty: undefined,
-            root: undefined,
-            ...options
-         });
+         this._sourceController = new SourceController(this._getSourceControllerOptions(options));
       }
       return this._sourceController;
+   }
+
+   private _getSourceControllerOptions(options: IInputControllerOptions = this._options): ISourceControllerOptions {
+      return {
+         dataLoadErrback: (error) => this._searchErrback(error),
+         filter: this._filter,
+         keyProperty: this._options.keyProperty,
+         navigation: this._options.navigation,
+         sorting: this._options.sorting,
+         source: this._options.source,
+         parentProperty: undefined,
+         root: undefined,
+         ...options
+      };
    }
 
    protected _inputActivatedHandler(event: SyntheticEvent): Promise<void> {

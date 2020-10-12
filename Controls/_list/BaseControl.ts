@@ -123,7 +123,6 @@ const LOAD_TRIGGER_OFFSET = 100;
 const INDICATOR_DELAY = 2000;
 const INITIAL_PAGES_COUNT = 1;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
-const TRIGGER_VISIBILITY_DELAY = 101;
 const LIMIT_DRAG_SELECTION = 100;
 const PORTIONED_LOAD_META_FIELD = 'iterative';
 const MIN_SCROLL_PAGING_SHOW_PROPORTION = 2;
@@ -212,6 +211,12 @@ const getData = (crudResult: ICrudResult): Promise<any> => {
 
 const _private = {
     getItemActionsController(self): ItemActionsController {
+        // При существующем контроллере нам не нужны дополнительные проверки как при инициализации.
+        // Например, может потребоваться продолжение работы с контроллером после показа ошибки в Popup окне,
+        // когда _error не зануляется.
+        if (self._itemActionsController) {
+            return self._itemActionsController;
+        }
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (self.__error || !self._listViewModel) {
@@ -227,9 +232,7 @@ const _private = {
             return;
         }
 
-        if (!self._itemActionsController) {
-            self._itemActionsController = new ItemActionsController();
-        }
+        self._itemActionsController = new ItemActionsController();
 
         return self._itemActionsController;
     },
@@ -385,32 +388,11 @@ const _private = {
                     }
 
                     if (listModel) {
-                        if (self._options.groupProperty) {
+                        if (self._groupingLoader) {
                             self._groupingLoader.resetLoadedGroups(listModel);
                         }
 
-                        // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
-                        if (self._options.useNewModel) {
-                            // TODO restore marker + maybe should recreate the model completely
-                            // instead of assigning items
-                            // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
-                            const modelCollection = listModel.getCollection();
-                            listModel.setCompatibleReset(true);
-                            modelCollection.setMetaData(list.getMetaData());
-                            modelCollection.assign(list);
-                            listModel.setCompatibleReset(false);
-                            self._items = listModel.getCollection();
-                        } else {
-                            listModel.setItems(list, cfg);
-                            self._items = listModel.getItems();
-
-                            // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
-                            // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
-                            // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
-                            if (self._options.task1178907511) {
-                                self._markedKeyForRestoredScroll = listModel.getMarkedKey();
-                            }
-                        }
+                        _private.assignItemsToModel(self, list, cfg);
 
                         if (self._sourceController) {
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -479,6 +461,33 @@ const _private = {
             Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
         }
         return resDeferred;
+    },
+
+    assignItemsToModel(self, items: RecordSet, newOptions): void {
+        const listModel = self._listViewModel;
+
+        // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
+        if (self._options.useNewModel) {
+            // TODO restore marker + maybe should recreate the model completely
+            // instead of assigning items
+            // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
+            const modelCollection = listModel.getCollection();
+            listModel.setCompatibleReset(true);
+            modelCollection.setMetaData(items.getMetaData());
+            modelCollection.assign(items);
+            listModel.setCompatibleReset(false);
+            self._items = listModel.getCollection();
+        } else {
+            listModel.setItems(items, newOptions);
+            self._items = listModel.getItems();
+
+            // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
+            // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
+            // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
+            if (self._options.task1178907511) {
+                self._markedKeyForRestoredScroll = listModel.getMarkedKey();
+            }
+        }
     },
 
     resolveIndicatorStateAfterReload(self, list, navigation): void {
@@ -3446,6 +3455,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (newOptions.editingConfig !== this._options.editingConfig) {
             this._listViewModel.setEditingConfig(this._getEditingConfig(newOptions));
         }
+
+        if (this._options.sourceController !== newOptions.sourceController && newOptions.sourceController) {
+            const items = newOptions.sourceController.getItems();
+            this._sourceController = newOptions.sourceController;
+
+            if (this._listViewModel && !this._listViewModel.getCollection()) {
+                _private.assignItemsToModel(this, items, newOptions);
+            }
+        }
+
         if (recreateSource || sourceChanged) {
             if (this._sourceController) {
                 this.updateSourceController(newOptions);
@@ -3473,15 +3492,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setSorting(newOptions.sorting);
         }
 
-        if (newOptions.groupProperty && !this._options.groupProperty) {
-            this._groupingLoader = new GroupingLoader({});
-        } else if (!newOptions.groupProperty && this._options.groupProperty) {
-            this._groupingLoader.destroy();
-        } else if (newOptions.groupProperty !== this._options.groupProperty) {
-            if (this._groupingLoader) {
-                this._groupingLoader.destroy();
+        const needGroupingLoader = !!newOptions.groupProperty && !_private.isDemandNavigation(newOptions.navigation);
+        const hasGroupingLoader = !!this._groupingLoader;
+        if (needGroupingLoader) {
+            const groupPropertyChanged = newOptions.groupProperty !== this._options.groupProperty;
+            if (hasGroupingLoader) {
+                if (groupPropertyChanged) {
+                    this._groupingLoader.destroy();
+                    this._groupingLoader = new GroupingLoader({});
+                }
+            } else {
+                this._groupingLoader = new GroupingLoader({});
             }
-            this._groupingLoader = new GroupingLoader({});
+        } else if (hasGroupingLoader) {
+            this._groupingLoader.destroy();
+            this._groupingLoader = null;
         }
 
         const needReload =
@@ -3709,9 +3734,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._checkLoadToDirectionTimeout) {
             clearTimeout(this._checkLoadToDirectionTimeout);
         }
-        if (this._checkTriggerVisibilityTimeout) {
-            clearTimeout(this._checkTriggerVisibilityTimeout);
-        }
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
@@ -3781,6 +3803,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _beforePaint(): void {
+        let positionRestored = false
 
         // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
         if (this._container) {
@@ -3811,9 +3834,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-            if (this._scrollController) {
-                this.checkTriggerVisibilityWithTimeout();
-            }
+            positionRestored = true;
         }
 
         // До отрисовки элементов мы не можем понять потребуется ли еще загрузка (зависит от видимости тригеров).
@@ -3860,8 +3881,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 needCheckTriggers = true;
             }
 
-            if (needCheckTriggers || itemsUpdated) {
-                this.checkTriggerVisibilityWithTimeout();
+            if (needCheckTriggers || itemsUpdated || positionRestored) {
+                this.checkTriggerVisibilityAfterRedraw();
             }
 
         }
@@ -3870,17 +3891,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._scrollToFirstItemIfNeed();
     },
 
-    // setTimeout для проверки триггеров, чтобы IO успел сработать на изменение видимости триггеров, если оно было.
-    checkTriggerVisibilityWithTimeout(): void {
-        if (this._checkTriggerVisibilityTimeout) {
-            clearTimeout(this._checkTriggerVisibilityTimeout);
-        }
-        this._checkTriggerVisibilityTimeout = setTimeout(() => {
-            _private.doAfterUpdate(this, () => {
-                this.checkTriggersVisibility();
+    // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
+    checkTriggerVisibilityAfterRedraw(): void {
+        _private.doAfterUpdate(this, () => {
+            window.requestAnimationFrame(() => {
+                setTimeout(() => {
+                    this.checkTriggersVisibility();
+                }, 0);
             });
-            this._checkTriggerVisibilityTimeout = null;
-        }, TRIGGER_VISIBILITY_DELAY);
+        });
     },
 
     // Проверяем видимость триггеров после перерисовки.
@@ -4073,7 +4092,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const groupingLoader = this._groupingLoader;
             if (this._options.useNewModel) {
                 const needExpandGroup = !dispItem.isExpanded();
-                if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
+                if (groupingLoader && needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
                     const source = this._options.source;
                     const filter = this._options.filter;
                     const sorting = this._options.sorting;
@@ -4085,7 +4104,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
             } else {
                 const needExpandGroup = !collection.isGroupExpanded(groupId);
-                if (needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
+                if (groupingLoader && needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
                     const source = this._options.source;
                     const filter = this._options.filter;
                     const sorting = this._options.sorting;

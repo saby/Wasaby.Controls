@@ -56,8 +56,8 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 4, title: 'Matching' }
             ];
             this._iconsItems = [
-               { id: 1, title: 'Form file', icon: 'icon-medium icon-Attach icon-primary' },
-               { id: 2, title: 'From 1C', icon: 'icon-medium icon-1c icon-primary' }
+               { id: 1, title: 'Form file', icon: ' icon-Attach' },
+               { id: 2, title: 'From 1C', icon: ' icon-1c' }
             ];
 
             this._subParagraphItems = [
@@ -133,22 +133,22 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 4, title: 'Subscriber', icon: 'icon-Subscribe' }
             ];
             this._iconAdd = [
-               { id: 1, title: 'Work phone', icon: 'icon-small icon-PhoneWork' },
-               { id: 2, title: 'Mobile phone', icon: 'icon-small icon-PhoneCell' },
-               { id: 3, title: 'Home phone', icon: 'icon-small icon-Home' },
-               { id: 4, title: 'Telegram', icon: 'icon-small icon-Telegram' },
-               { id: 5, title: 'e-mail', icon: 'icon-small icon-Email' },
-               { id: 6, title: 'Skype', icon: 'icon-small icon-Skype' },
-               { id: 7, title: 'ICQ', icon: 'icon-small icon-Icq' }
+               { id: 1, title: 'Work phone', icon: 'icon-PhoneWork' },
+               { id: 2, title: 'Mobile phone', icon: 'icon-PhoneCell' },
+               { id: 3, title: 'Home phone', icon: 'icon-Home' },
+               { id: 4, title: 'Telegram', icon: 'icon-Telegram' },
+               { id: 5, title: 'e-mail', icon: 'icon-Email' },
+               { id: 6, title: 'Skype', icon: 'icon-Skype' },
+               { id: 7, title: 'ICQ', icon: 'icon-Icq' }
             ];
             this._iconAddMedium = [
-               { id: 1, title: 'Work phone', icon: 'icon-medium icon-PhoneWork' },
-               { id: 2, title: 'Mobile phone', icon: 'icon-medium icon-PhoneCell' },
-               { id: 3, title: 'Home phone', icon: 'icon-medium icon-Home' },
-               { id: 4, title: 'Telegram', icon: 'icon-medium icon-Telegram' },
-               { id: 5, title: 'e-mail', icon: 'icon-medium icon-Email' },
-               { id: 6, title: 'Skype', icon: 'icon-medium icon-Skype' },
-               { id: 7, title: 'ICQ', icon: 'icon-medium icon-Icq' }
+               { id: 1, title: 'Work phone', icon: 'icon-PhoneWork' },
+               { id: 2, title: 'Mobile phone', icon: 'icon-PhoneCell' },
+               { id: 3, title: 'Home phone', icon: 'icon-Home' },
+               { id: 4, title: 'Telegram', icon: 'icon-Telegram' },
+               { id: 5, title: 'e-mail', icon: 'icon-Email' },
+               { id: 6, title: 'Skype', icon: 'icon-Skype' },
+               { id: 7, title: 'ICQ', icon: 'icon-Icq' }
             ];
             this._iconButtonItems = [
                { id: 1, title: 'All documents to disk' },
@@ -167,34 +167,18 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 7, title: 'Finished products', parent: 1 }
             ];
             this._groupItems = [
-               { id: 1, title: 'Add', icon: 'icon-small icon-Bell icon-primary' },
-               {
-                  id: 2, title: 'Vacation', icon: 'icon-small icon-Vacation', group: '2'
-               },
-               {
-                  id: 3, title: 'Time off', icon: 'icon-small icon-SelfVacation', group: '2'
-               },
-               {
-                  id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2'
-               },
-               {
-                  id: 5, title: 'Business trip', icon: 'icon-small icon-statusDeparted', group: '2'
-               }
+               { id: 1, title: 'Add', icon: 'icon-Bell' },
+               { id: 2, title: 'Vacation', icon: 'icon-Vacation', group: '2' },
+               { id: 3, title: 'Time off', icon: 'icon-SelfVacation', group: '2' },
+               { id: 4, title: 'Hospital', icon: 'icon-Sick', group: '2' },
+               { id: 5, title: 'Business trip', icon: 'icon-statusDeparted', group: '2' }
             ];
             this._oneGroupItems = [
-               { id: 1, title: 'Add', icon: 'icon-small icon-Bell icon-primary', group: '2' },
-               {
-                  id: 2, title: 'Vacation', icon: 'icon-small icon-Vacation', group: '2'
-               },
-               {
-                  id: 3, title: 'Time off', icon: 'icon-small icon-SelfVacation', group: '2'
-               },
-               {
-                  id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2'
-               },
-               {
-                  id: 5, title: 'Business trip', icon: 'icon-small icon-statusDeparted', group: '2'
-               }
+               { id: 1, title: 'Add', icon: 'icon-Bell', group: '2' },
+               { id: 2, title: 'Vacation', icon: 'icon-Vacation', group: '2' },
+               { id: 3, title: 'Time off', icon: 'icon-SelfVacation', group: '2' },
+               { id: 4, title: 'Hospital', icon: 'icon-Sick', group: '2' },
+               { id: 5, title: 'Business trip', icon: 'icon-statusDeparted', group: '2' }
             ];
             this._groupTextItems = [
                { id: 1, title: 'Project', group: 'Select' },

@@ -543,6 +543,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         const baseControl = this._children.baseControl;
         const viewModel = baseControl.getViewModel();
         const sourceController = baseControl.getSourceController();
+        const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let updateSourceController = false;
 
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
@@ -570,7 +571,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 viewModel.getExpandedItems(),
                 newOptions.expandedItems
             );
-            if (newOptions.source === this._options.source && isEqual(newOptions.filter, this._options.filter)) {
+            if ((newOptions.source === this._options.source && isEqual(newOptions.filter, this._options.filter)) ||
+                (searchValueChanged && newOptions.sourceController)) {
                 viewModel.setExpandedItems(newOptions.expandedItems);
             } else {
                 this._updateExpandedItemsAfterReload = true;
@@ -661,10 +663,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
     _onExpandedItemsChanged(e, expandedItems): void {
         this._notify('expandedItemsChanged', [expandedItems]);
-
-        if (!this._options.hasOwnProperty('expandedItems')) {
-            this._children.baseControl.getSourceController().setExpandedItems(expandedItems);
-        }
+        this._children.baseControl.getSourceController().setExpandedItems(expandedItems);
         // вызываем обновление, так как, если нет биндинга опции, то контрол не обновится.
         // А обновление нужно, чтобы отдать в модель нужные expandedItems
         this._forceUpdate();

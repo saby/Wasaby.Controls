@@ -57,7 +57,6 @@
                      <div></div>
                   </Controls.LoadingIndicator>
                </ws:if>
-               <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
             </div>
          </ws:bodyContent>
       </ws:partial>
