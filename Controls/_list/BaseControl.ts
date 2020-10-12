@@ -1346,18 +1346,22 @@ const _private = {
      */
     initPaging(self) {
         if (!(self._editInPlaceController && self._editInPlaceController.isEditing())
-            && !self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
+            && _private.needScrollPaging(self._options.navigation)) {
             if (self._viewportSize) {
                 self._recalcPagingVisible = false;
                 self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
             } else {
                 self._recalcPagingVisible = true;
             }
+        } else {
+            self._pagingVisible = false;
         }
     },
 
     handleListScrollSync(self, scrollTop) {
-        _private.initPaging(self);
+        if (!self._pagingVisible) {
+            _private.initPaging(self);
+        }
 
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
@@ -3176,7 +3180,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
         }
         if (this._recalcPagingVisible) {
-            _private.initPaging(this);
+            if (!this._pagingVisible) {
+                _private.initPaging(this);
+            }
         }
     },
 
@@ -3244,17 +3250,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
              * Скрывать нельзя, так как при подгрузке данных пэйджинг будет моргать.
              */
             if (this._pagingVisible) {
-                if (!(this._editInPlaceController && this._editInPlaceController.isEditing())
-                    && _private.needScrollPaging(this._options.navigation)) {
-                    if (this._viewportSize) {
-                        this._recalcPagingVisible = false;
-                        this._pagingVisible = _private.needShowPagingByScrollSize(this, this._viewSize, this._viewportSize);
-                    } else {
-                        this._recalcPagingVisible = true;
-                    }
-                } else {
-                    this._pagingVisible = false;
-                }
+                _private.initPaging(this);
             }
             this._viewRect = container.getBoundingClientRect();
             if (this._isScrollShown) {
@@ -4819,7 +4815,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
-        _private.initPaging(this);
+        if (!this._pagingVisible) {
+            _private.initPaging(this);
+        }
 
         if (this._documentDragging) {
             this._insideDragging = true;
