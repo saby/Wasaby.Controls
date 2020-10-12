@@ -218,7 +218,7 @@ var CompoundArea = CompoundContainer.extend([
       const item = this._getManagerConfig();
       const popupItems = Controller.getContainer()._popupItems;
       // Нотифай события делаю в следующий цикл синхронизации после выставления позиции окну.
-      EventBus.channel('popupManager').notify('managerPopupCreated', [item, popupItems]);
+      EventBus.channel('popupManager').notify('managerPopupCreated', item, popupItems);
    },
 
    _notifyManagerPopupDestroyed(): void {
