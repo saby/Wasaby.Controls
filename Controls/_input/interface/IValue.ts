@@ -86,7 +86,7 @@ export interface IValueOptions<T> {
      * Лучшим подходом будет воспользоваться опцией {@link inputCallback}.
      * Хорошо:
      * <pre>
-     *     <Controls:input:Text bind:value="{{_value}}" inputCallback="{{_toUpperCase}}"/>
+     *     <Controls:input:Text bind:value="_value" inputCallback="{{_toUpperCase}}"/>
      *
      *     class Form extends Control<IControlOptions, void> {
      *         private _value: string = '';

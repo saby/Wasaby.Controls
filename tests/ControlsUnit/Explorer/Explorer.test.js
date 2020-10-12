@@ -202,12 +202,12 @@ define([
             explorer = new explorerMod.View(cfg);
 
          explorer.saveOptions(cfg);
-         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromOptions');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer, cfg), 'rootFromOptions');
 
          delete cfg.root;
          explorer.saveOptions(cfg);
          explorer._root = 'rootFromState';
-         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromState');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer, cfg), 'rootFromState');
 
          explorer._breadCrumbsItems = [new entityLib.Model({
             rawData: {
@@ -215,11 +215,11 @@ define([
             },
             keyProperty: 'id'
          })];
-         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromBreadCrumbs');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer, cfg), 'rootFromBreadCrumbs');
 
          cfg.root = 'rootFromOptions';
          explorer.saveOptions(cfg);
-         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromBreadCrumbs');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer, cfg), 'rootFromBreadCrumbs');
       });
 
       it('itemsReadyCallback', function() {
@@ -314,6 +314,7 @@ define([
          };
          var instance = new explorerMod.View(cfg);
          var rootChanged = false;
+         let root;
 
          instance.saveOptions(cfg);
 
@@ -324,9 +325,10 @@ define([
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tree);
                assert.isFalse(rootChanged);
 
-               instance._notify = function(eventName) {
+               instance._notify = function(eventName, eventValue) {
                   if (eventName === 'rootChanged') {
                      rootChanged = true;
+                     root = eventValue[0];
                   }
                };
                return explorerMod.View._private.setViewMode(instance, newCfg.viewMode, newCfg);
@@ -365,8 +367,17 @@ define([
                assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tile);
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tile);
                assert.isFalse(rootChanged);
-            }).then(() => {
+
+               instance._breadCrumbsItems = [new entityLib.Model({
+                  rawData: {
+                     id: 1,
+                     title: 'crumb'
+                  },
+                  keyProperty: 'id'
+               })];
                explorerMod.View._private.setViewMode(instance, newCfg3.viewMode, newCfg3);
+               assert.isTrue(rootChanged);
+               assert.equal(root, 1);
                assert.equal(instance._breadCrumbsItems, null);
             });
       });
@@ -462,17 +473,13 @@ define([
             instance._viewMode = cfg.viewMode;
 
             instance._beforeUpdate(cfg2);
-            assert.equal(instance._pendingViewMode, 'search');
-            assert.isFalse(resetExpandedItemsCalled);
-
-            explorerMod.View._private.itemsSetCallback(instance);
             assert.isTrue(resetExpandedItemsCalled);
 
             resetExpandedItemsCalled = false;
             instance._viewMode = cfg2.viewMode;
 
             instance._beforeUpdate(cfg2);
-            assert.isFalse(resetExpandedItemsCalled);
+            assert.isTrue(resetExpandedItemsCalled);
 
             instance._isGoingFront = true;
             instance.saveOptions(cfg);
@@ -495,7 +502,7 @@ define([
 
             instance._beforeUpdate(cfg2);
             instance.saveOptions(cfg2);
-            assert.strictEqual(instance._pendingViewMode, 'search');
+            assert.strictEqual(instance._viewMode, 'search');
 
          });
 

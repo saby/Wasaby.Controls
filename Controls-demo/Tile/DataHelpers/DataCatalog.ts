@@ -87,7 +87,6 @@ export const Gadgets = {
         'parent@': false,
         additionalText: 'солнышко',
         gradientType: 'light',
-        image: explorerImages[9],
         width: 200,
         isShadow: false
     }, {

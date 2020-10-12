@@ -159,7 +159,7 @@ define([
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             const prevModel = ctrl._listViewModel;
             let doScrollToTop = false;
-            
+
             ctrl._isScrollShown = true;
             ctrl._beforeUpdate(cfg);
 
@@ -167,8 +167,8 @@ define([
             // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
             assert.equal(ctrl._items, ctrl.getViewModel()
                .getItems());
-            assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
-            assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
+            assert.isTrue(ctrl._sourceController.getState().source === cfg.source, '_dataSourceController wasn\'t changed before updating');
+            assert.deepEqual(ctrl._sourceController.getState().filter, cfg.filter, 'incorrect filter before updating');
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, tree.TreeViewModel);
@@ -204,7 +204,13 @@ define([
                keyProperty: 'id'
             },
             navigation: {
-               view: 'infinity'
+               view: 'infinity',
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 10,
+                  page: 0,
+                  hasMore: false
+               }
             },
             virtualScrollConfig: {
                pageSize: 100
@@ -214,18 +220,13 @@ define([
          };
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
-         return new Promise(function(resolve, reject) {
-            ctrl._beforeMount(cfg, null, [{
-               id: 1,
-               title: 'qwe'
-            }]);
-            setTimeout(function() {
-               assert.equal(ctrl.getViewModel()
-                  .getStartIndex(), 0);
-               assert.equal(ctrl.getViewModel()
-                  .getStopIndex(), 6);
+         return new Promise(function(resolve) {
+            ctrl._beforeMount(cfg, null).then((res) => {
+               assert.equal(ctrl.getViewModel().getStartIndex(), 0);
+               assert.equal(ctrl.getViewModel().getStopIndex(), 6);
                resolve();
-            }, 10);
+               return res;
+            });
          });
       });
 
@@ -413,7 +414,13 @@ define([
             resultsPosition: 'top',
             keyProperty: 'id',
             navigation: {
-               view: 'infinity'
+               view: 'infinity',
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 2,
+                  page: 0,
+                  hasMore: false
+               }
             },
             virtualScrollConfig: {
                pageSize: 100
@@ -530,7 +537,7 @@ define([
          assert.isTrue(dataLoadCallbackCalled, 'dataLoadCallback is not called.');
 
          // emulate reload with error
-         ctrl._sourceController.load = function() {
+         ctrl._sourceController.reload = function() {
             return cDeferred.fail();
          };
 
@@ -567,7 +574,7 @@ define([
          // Empty list
          assert.isUndefined(ctrl._loadedItems);
 
-         ctrl._sourceController.load = () => ({
+         ctrl._sourceController.reload = () => ({
             addCallback(fn) {
                fn(loadedItems);
                return {
@@ -615,14 +622,13 @@ define([
                items: [],
                keyProperty: 'id'
             },
-            viewModelConstructor: lists.ListViewModel,
-            navigation: {}
+            viewModelConstructor: lists.ListViewModel
          };
 
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
-         assert.isFalse(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
+         assert.isNotOk(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
 
          cfg = {
             viewName: 'Controls/List/ListView',
@@ -639,7 +645,13 @@ define([
             },
             viewModelConstructor: lists.ListViewModel,
             navigation: {
-               view: 'infinity'
+               view: 'infinity',
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 2,
+                  page: 0,
+                  hasMore: false
+               }
             }
          };
          setTimeout(function() {
@@ -661,15 +673,11 @@ define([
          });
 
          let dataLoadFired = false;
-         let beforeLoadToDirectionCalled = false;
 
          const cfg = {
             viewName: 'Controls/List/ListView',
             dataLoadCallback: function() {
                dataLoadFired = true;
-            },
-            beforeLoadToDirectionCallback: function() {
-               beforeLoadToDirectionCalled = true;
             },
             source: source,
             viewConfig: {
@@ -711,7 +719,6 @@ define([
          assert.isNull(ctrl._showContinueSearchButtonDirection);
          assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-         assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
          assert.isTrue(ctrl._listViewModel.getHasMoreData());
          assert.isTrue(ctrl._sourceController.hasMoreData('down', 'testRoot'));
@@ -812,9 +819,6 @@ define([
             dataLoadCallback: function() {
                dataLoadFired = true;
             },
-            beforeLoadToDirectionCallback: function() {
-               beforeLoadToDirectionCalled = true;
-            },
             source: source,
             viewConfig: {
                keyProperty: 'id'
@@ -852,7 +856,6 @@ define([
 
          assert.equal(4, lists.BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
          assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-         assert.isTrue(beforeLoadToDirectionCalled, 'beforeLoadToDirectionCallback is not called.');
          assert.equal(ctrl._loadingState, null);
          assert.isTrue(ctrl._listViewModel.getHasMoreData());
 
@@ -958,7 +961,8 @@ define([
             },
             viewModelConstructor: lists.ListViewModel,
             navigation: {
-               source: 'infinity',
+               view: 'infinity',
+               source: 'page',
                sourceConfig: {
                   pageSize: 2,
                   page: 0,
@@ -1042,7 +1046,8 @@ define([
             },
             viewModelConstructor: lists.ListViewModel,
             navigation: {
-               source: 'infinity',
+               view: 'infinity',
+               source: 'page',
                sourceConfig: {
                   pageSize: 2,
                   page: 0,
@@ -1189,8 +1194,16 @@ define([
                   }
                }
             ];
-         tests.forEach(function(test, index) {
+         tests.forEach(function (test, index) {
             baseControl._options.groupingKeyCallback = undefined;
+            baseControl._listViewModel = {
+               getCount: () => test.data[2].getLoadedDataCount(),
+               getCollection: () => ({
+                  getMetaData: () => ({
+                     more: test.data[2].getAllDataCount()
+                  })
+               })
+            };
             lists.BaseControl._private.prepareFooter.apply(null, test.data);
             assert.equal(test.data[0]._shouldDrawFooter, test.result._shouldDrawFooter, 'Invalid prepare footer on step #' + index);
             assert.equal(test.data[0]._loadMoreCaption, test.result._loadMoreCaption, 'Invalid prepare footer on step #' + index);
@@ -2683,6 +2696,120 @@ define([
 
               sinon.assert.calledOnce(lists.BaseControl._private.prepareFooter);
           });
+      });
+
+
+      describe('getItemActionsController', () => {
+         let cfg;
+
+         beforeEach(async() => {
+            cfg = {
+               items: new collection.RecordSet({
+                  rawData: [
+                     {
+                        id: 1,
+                        title: 'item 1'
+                     },
+                     {
+                        id: 2,
+                        title: 'item 2'
+                     }
+                  ],
+                  keyProperty: 'id'
+               }),
+               itemActions: [
+                  {
+                     id: 1,
+                     showType: 2,
+                     'parent@': true
+                  },
+                  {
+                     id: 2,
+                     showType: 0,
+                     parent: 1
+                  },
+                  {
+                     id: 3,
+                     showType: 0,
+                     parent: 1
+                  }
+               ],
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: [],
+                  idProperty: 'id'
+               },
+               markedKey: null,
+               viewModelConstructor: lists.ListViewModel,
+               source: source,
+               keyProperty: 'id'
+            };
+         });
+
+         it('should not init when __error is occurred', async () => {
+            const instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            lists.BaseControl._private.showError(instance, {
+               mode: 'inlist'
+            });
+            assert.notExists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should not init when _listViewModel is not set', async () => {
+            const instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            assert.notExists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should not init when there are no itemActions, no itemActionsProperty and no editingConfig.toolbarVisibility',  async () => {
+            cfg.itemActions = undefined;
+            const instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            assert.notExists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should return existing controller instance despite errors', async () => {
+            const instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            lists.BaseControl._private.updateItemActions(instance, instance._options);
+            lists.BaseControl._private.showError(instance, {
+               mode: 'inlist'
+            });
+            assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should init when itemActions are set, but, there are no itemActionsProperty and toolbarVisibility is false', async () => {
+            const instance = new lists.BaseControl(cfg);
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should init when itemActionsProperty is set, but, there are no itemActions and toolbarVisibility is false', async () => {
+            const instance = new lists.BaseControl({ ...cfg, itemActions: null, itemActionsProperty: 'myActions' });
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('should init when toolbarVisibility is true, but, there are no itemActions and no itemActionsProperty', async () => {
+            const instance = new lists.BaseControl({
+               ...cfg,
+               itemActions: null,
+               editingConfig: {
+                  toolbarVisibility: true
+               }
+            });
+            instance.saveOptions(cfg);
+            await instance._beforeMount(cfg);
+            assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
       });
 
       describe('calling updateItemActions method with different params', function() {
@@ -5358,12 +5485,14 @@ define([
          instance._afterUpdate(cfg);
 
          let clock = sandbox.useFakeTimers();
+         let loadPromise;
 
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.sorting = [{ title: 'ASC' }];
-         instance._beforeUpdate(cfgClone);
+         loadPromise = instance._beforeUpdate(cfgClone);
          clock.tick(100);
          instance._afterUpdate({});
+         await loadPromise;
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
 
@@ -5371,9 +5500,10 @@ define([
          cfgClone = { ...cfg };
          cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.filter = { test: 'test' };
-         instance._beforeUpdate(cfgClone);
+         loadPromise = instance._beforeUpdate(cfgClone);
          instance._afterUpdate({});
          clock.tick(100);
+         await loadPromise;
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
       });
@@ -5463,8 +5593,12 @@ define([
          instance._options.groupProperty = 'NewProp';
          assert.isTrue(!!instance._groupingLoader);
          instance._beforeUpdate({ ...cfg, groupProperty: undefined });
-         assert.isTrue(instance._groupingLoader._destroyed);
-
+         assert.isFalse(!!instance._groupingLoader);
+         cfg.navigation = {
+            view: 'demand'
+         };
+         instance._beforeUpdate({ ...cfg, groupProperty: 'NewProp' });
+         assert.isFalse(!!instance._groupingLoader);
       });
 
       // Иногда необходимо переинициализировать опции записи в момент обновления контрола
@@ -5638,39 +5772,6 @@ define([
                itemActionsPosition: 'outside',
             });
             assert.isTrue(updateItemActionsCalled);
-         });
-      });
-
-      it('_beforeMount with PrefetchProxy in source', function() {
-         let prefetchSource = new sourceLib.PrefetchProxy({
-            target: source,
-            data: {
-               query: new collection.RecordSet({
-                  keyProperty: 'id',
-                  rawData: data
-               })
-            }
-         });
-         let cfg = {
-            viewName: 'Controls/List/ListView',
-            sorting: [],
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel,
-            keyProperty: 'id',
-            source: prefetchSource
-         };
-         let instance = new lists.BaseControl(cfg);
-         instance.saveOptions(cfg);
-
-         return new Promise(function(resolve) {
-            instance._beforeMount(cfg)
-               .addCallback(function(receivedState) {
-                  assert.isTrue(!receivedState);
-                  resolve();
-               });
          });
       });
 
@@ -6096,45 +6197,36 @@ define([
             src.query = function(query) {
                if (queryCallsCount === 0) {
                   queryCallsCount++;
-                  assert.deepEqual({ field: 'updatedFilter' }, query.getWhere());
-                  return new Promise(function(resolve) {
-                     resolve(new sourceLib.DataSet({
-                        keyProperty: 'id',
-                        metaProperty: 'meta',
-                        itemsProperty: 'items',
-                        rawData: {
-                           items: [],
-                           meta: {
-                              more: true
-                           }
+                  return Promise.resolve(new sourceLib.DataSet({
+                     keyProperty: 'id',
+                     metaProperty: 'meta',
+                     itemsProperty: 'items',
+                     rawData: {
+                        items: [],
+                        meta: {
+                           more: true
                         }
-                     }));
-                  });
+                     }
+                  }));
                } else if (queryCallsCount === 1) {
                   queryCallsCount++;
-                  assert.deepEqual({ field: 'updatedFilter' }, query.getWhere());
-                  return new Promise(function(resolve) {
-                     resolve(new sourceLib.DataSet({
-                        keyProperty: 'id',
-                        metaProperty: 'meta',
-                        itemsProperty: 'items',
-                        rawData: {
-                           items: [{ id: 1 }, { id: 2 }],
-                           meta: {
-                              more: false
-                           }
+                  return Promise.resolve(new sourceLib.DataSet({
+                     keyProperty: 'id',
+                     metaProperty: 'meta',
+                     itemsProperty: 'items',
+                     rawData: {
+                        items: [{ id: 1 }, { id: 2 }],
+                        meta: {
+                           more: false
                         }
-                     }));
-                  });
+                     }
+                  }));
                }
             };
 
             let cfgClone = { ...cfg };
-            cfgClone.filter = {
-               field: 'updatedFilter'
-            };
-
             await lists.BaseControl._private.reload(ctrl, cfgClone);
+            await ctrl._sourceController._loadPromise.promise;
 
             assert.equal(2, queryCallsCount);
             assert.equal(ctrl._loadingIndicatorContainerOffsetTop, 0);
@@ -6160,7 +6252,7 @@ define([
                            newItem.set('id', 777);
                            items.add(newItem);
                            try {
-                              assert.deepEqual(ctrl._sourceController._queryParamsController._controllers.at(0).queryParamsController._afterPosition, [777]);
+                              assert.deepEqual(ctrl._sourceController._navigationController._navigationStores.at(0).store._forwardPosition, [777]);
                               resolve();
                            } catch (e) {
                               reject(e);
@@ -6288,6 +6380,7 @@ define([
             it('changePageSize', async function() {
                let cfg = {
                   viewModelConstructor: lists.ListViewModel,
+                  source: source,
                   navigation: {
                      view: 'pages',
                      source: 'page',
@@ -6816,7 +6909,16 @@ define([
                viewModelConstructor: lists.ListViewModel,
                source: source,
                navigation: {
-                  view: 'infinity'
+                  view: 'infinity',
+                  source: 'page',
+                  viewConfig: {
+                     pagingMode: 'direct'
+                  },
+                  sourceConfig: {
+                     pageSize: 3,
+                     page: 0,
+                     hasMore: false
+                  }
                },
                virtualScrollConfig: {
                   pageSize: 100

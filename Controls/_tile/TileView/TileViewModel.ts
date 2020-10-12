@@ -178,6 +178,8 @@ var TileViewModel = ListViewModel.extend({
                 this._itemsHeight,
                 itemWidth
             );
+        } else {
+            resultData.itemWidth = this._options.tileWidth;
         }
         return resultData;
     },
