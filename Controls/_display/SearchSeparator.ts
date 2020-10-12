@@ -59,6 +59,13 @@ export default class SearchSeparator<T> extends CollectionItem<T>  {
     isRoot(): boolean {
         return this._$source && this._$source.isRoot();
     }
+
+    /**
+     * Returns branch level in tree
+     */
+    getLevel(): number {
+        return 0;
+    }
 }
 
 Object.assign(SearchSeparator.prototype, {

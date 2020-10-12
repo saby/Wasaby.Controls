@@ -160,7 +160,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
         options: ISortOptions<S, T>
     ): Array<T | BreadcrumbsItem<S> | SearchSeparator<S>> {
         const {display, treeItemToDecorator, treeItemToBreadcrumbs}: ISortOptions<S, T> = options;
-        const breadcrumbsToData = new Map<BreadcrumbsItem<S>, T[]>();
+        const breadcrumbsToData = new Map<BreadcrumbsItem<S> | SearchSeparator<S>, T[]>();
         const root = display && display.getRoot();
         const sortedItems = [];
 
@@ -276,7 +276,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                         const itsDescendant = item.getParent() !== breadcrumbsReference.last;
                         decoratedItem = new TreeItemDecorator({
                             source: item,
-                            parent: itsDescendant ? item.getParent() : currentBreadcrumbs
+                            parent: itsDescendant ? item.getParent() : (currentBreadcrumbs instanceof SearchSeparator ? undefined : currentBreadcrumbs)
                         });
                         treeItemToDecorator.set(item, decoratedItem);
                     }
