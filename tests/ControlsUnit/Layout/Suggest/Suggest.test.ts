@@ -884,17 +884,17 @@ describe('Controls/suggest', () => {
          });
       });
 
-      it('PrefetchProxy source should became to original source type', () => {
-         const inputContainer = getComponentObject({
-            searchParam: 'testSearchParam',
-            minSearchLength: 3,
-            source: new PrefetchProxy({target: getMemorySource()})
-         });
-
-         inputContainer._getSourceController();
-
-         assert.instanceOf(inputContainer._sourceController._options.source, Memory);
-      });
+      // it('PrefetchProxy source should became to original source type', () => {
+      //    const inputContainer = getComponentObject({
+      //       searchParam: 'testSearchParam',
+      //       minSearchLength: 3,
+      //       source: new PrefetchProxy({target: getMemorySource()})
+      //    });
+      //
+      //    inputContainer._getSourceController();
+      //
+      //    assert.instanceOf(inputContainer._sourceController._options.source, Memory);
+      // });
 
       it('Suggest::_updateSuggestState', async () => {
          const inputContainer = getComponentObject({

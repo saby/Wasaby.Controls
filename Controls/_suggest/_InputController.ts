@@ -643,6 +643,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
+      this._searchValue = value;
       /* preload suggest dependencies on value changed */
       this._loadDependencies(this._options);
 
