@@ -383,6 +383,25 @@ define(
             assert.isFalse(itemData.isFixedItem);
          });
 
+         it('_getIconSize', () => {
+            let menuRender = getRender();
+            let item = new entity.Model({
+               rawData: { iconSize: 's' }
+            });
+            let result = menuRender._getIconSize(item);
+            assert.isUndefined(result);
+
+            menuRender._iconPadding = 's';
+            result = menuRender._getIconSize(item);
+            assert.equal(result, '');
+
+            item = new entity.Model({
+               rawData: { iconSize: 's', icon: 'icon-test' }
+            });
+            result = menuRender._getIconSize(item);
+            assert.equal(result, 's');
+         });
+
          describe('getIconPadding', function() {
             let menuRender = getRender();
             let iconItems = [
@@ -399,6 +418,14 @@ define(
             it('simple', () => {
                const iconPadding = menuRender.getIconPadding(renderOptions);
                assert.equal(iconPadding, 'm');
+            });
+
+            it('iconSize set on item', () => {
+               const itemsIconSize = [
+                  { key: 1, title: 'Россия', icon: 'icon-add', iconSize: 'l' }
+               ];
+               const iconPadding = menuRender.getIconPadding({listModel: getListModel(itemsIconSize)});
+               assert.equal(iconPadding, 'l');
             });
 
             it('with headingIcon', () => {

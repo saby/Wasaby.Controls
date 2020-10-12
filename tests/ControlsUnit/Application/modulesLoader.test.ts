@@ -1,8 +1,18 @@
 import { assert } from 'chai';
-import { loadAsync, loadSync } from 'Controls/Application/modulesLoader';
+import { getModuleUrl, loadAsync, loadSync } from 'Controls/Application/modulesLoader';
 import TestModuleSync = require('ControlsUnit/Async/TestModuleSync');
 
 describe('Controls/Application/modulesLoader', () => {
+    describe('getModuleUrl()', () => {
+        it('should return valid module URL', () => {
+            assert.include(getModuleUrl('ControlsUnit/Foo/bar'), '/ControlsUnit/Foo/bar.js');
+        });
+
+        it('should return valid library URL', () => {
+            assert.include(getModuleUrl('ControlsUnit/Foo:bar'), '/ControlsUnit/Foo.js');
+        });
+    });
+
     describe('loadAsync()', () => {
         it('should load module', () => {
             return loadAsync('ControlsUnit/Async/TestLibraryAsync').then((res) => {
