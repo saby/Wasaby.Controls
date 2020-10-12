@@ -3,7 +3,6 @@
  * @library Controls/popupTemplate
  * @includes CloseButton Controls/_popupTemplate/CloseButton
  * @includes Stack Controls/_popupTemplate/Stack
- * @includes StackHeader wml!Controls/_popupTemplate/Stack/resources/Header
  * @includes Dialog Controls/_popupTemplate/Dialog
  * @includes InfoBox Controls/_popupTemplate/InfoBox
  * @includes Notification Controls/_popupTemplate/Notification/Base
