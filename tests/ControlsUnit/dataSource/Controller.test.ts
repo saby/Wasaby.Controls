@@ -1,4 +1,4 @@
-import {NewSourceController} from 'Controls/dataSource';
+import {NewSourceController, ISourceControllerOptions} from 'Controls/dataSource';
 import {Memory} from 'Types/source';
 import {ok} from 'assert';
 import {RecordSet} from 'Types/collection';
@@ -54,6 +54,30 @@ const hierarchyItems = [
     }
 ];
 
+function getMemory(): Memory {
+    return new Memory({
+        data: items,
+        keyProperty: 'key'
+    });
+}
+
+function getControllerOptions(): ISourceControllerOptions {
+    return {
+        source: getMemory(),
+        filter: {},
+        keyProperty: 'key'
+    };
+}
+
+function getControllerWithHierarchyOptions(): ISourceControllerOptions {
+    return {
+        source: getMemoryWithHierarchyItems(),
+        parentProperty: 'parent',
+        filter: {},
+        keyProperty: 'key'
+    };
+}
+
 function getMemoryWithHierarchyItems(): Memory {
     return new Memory({
         data: hierarchyItems,
@@ -63,14 +87,11 @@ function getMemoryWithHierarchyItems(): Memory {
 }
 
 function getControllerWithHierarchy(additionalOptions: object = {}): NewSourceController {
-    const options = {
-        source: getMemoryWithHierarchyItems(),
-        parentProperty: 'parent',
-        filter: {},
-        keyProperty: 'key'
-    };
+    return new NewSourceController({...getControllerWithHierarchyOptions(), ...additionalOptions});
+}
 
-    return new NewSourceController({...options, ...additionalOptions});
+function getController(additionalOptions: object = {}): NewSourceController {
+    return new NewSourceController({...getControllerOptions(), ...additionalOptions});
 }
 
 describe('Controls/dataSource:SourceController', () => {
@@ -92,5 +113,21 @@ describe('Controls/dataSource:SourceController', () => {
             ok((loadedItems as RecordSet).getCount() === 1);
         });
 
+    });
+
+    describe('updateOptions', () => {
+        it('updateOptions with root',  async () => {
+            const controller = getControllerWithHierarchy();
+            let options = {...getControllerWithHierarchyOptions()};
+            options.root = 'testRoot';
+
+            controller.updateOptions(options);
+            ok(controller._root === 'testRoot');
+
+            options = {...getControllerWithHierarchyOptions()};
+            options.root = undefined;
+            controller.updateOptions(options);
+            ok(controller._root === 'testRoot');
+        });
     });
 });

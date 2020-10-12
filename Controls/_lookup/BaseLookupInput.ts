@@ -179,7 +179,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
     private _resize(): void {
         if (this._isNeedCalculatingSizes(this._options)) {
-            const oldFieldWrapperWidth = this._getFieldWrapperWidth();
+            const oldFieldWrapperWidth = this._fieldWrapperWidth;
             const newFieldWrapperWidth = this._getFieldWrapperWidth(true);
 
             // if hidden, then there is no reason to recalc the sizes
