@@ -1,6 +1,6 @@
 /**
  * Интерфейс диалога выбора периода.
- * @interface Controls/datePopup/interfaces/IDatePopup
+ * @interface Controls/_datePopup/interfaces/IDatePopup
  * @public
  * @author Красильников А.С.
  */
@@ -13,7 +13,7 @@
  */
 
 /**
- * @name Controls/datePopup/interfaces/IDatePopup#startValue
+ * @name Controls/_datePopup/interfaces/IDatePopup#startValue
  * @cfg {Date} Начало периода.
  * @example
  * В этом примере вы привязываете _startValue в состоянии контрола к значению периода.
@@ -57,7 +57,7 @@
  */
 
 /**
- * @name Controls/datePopup/interfaces/IDatePopup#endValue
+ * @name Controls/_datePopup/interfaces/IDatePopup#endValue
  * @cfg {Date} Конец периода.
  * @example
  * В этом примере вы привязываете _endValue в состоянии контрола к значению периода.
@@ -212,7 +212,7 @@
  *       ...
  *    });
  * </pre>
- */ 
+ */
 
 /**
  * @event Controls/_datePopup/interfaces/IDatePopup#inputCompleted Происходит при завершении ввода (поле ввода периода потеряло фокус или пользователь нажал клавишу "Enter").
@@ -241,7 +241,7 @@
  */
 
 /*
- * @event Controls/datePopup/interfaces/IDatePopup#inputCompleted Occurs when input was completed (period lost focus or user pressed ‘enter’).
+ * @event Controls/_datePopup/interfaces/IDatePopup#inputCompleted Occurs when input was completed (period lost focus or user pressed ‘enter’).
  * @param {Date} startValue Start period value.
  * @param {Date} endValue End period value.
  * @param {String} displayedStartValue Text value of the start period.
@@ -263,4 +263,4 @@
  *       ...
  *    })
  * </pre>
- */ 
+ */
