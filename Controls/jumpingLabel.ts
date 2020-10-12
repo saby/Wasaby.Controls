@@ -1,7 +1,6 @@
 /**
  * Библиотека контролов, которые позволяют реализовать прыгающие метки.
  * @library Controls/jumpingLabel
- * @includes Abstract Controls/_jumpingLabel/Abstract
  * @includes InputContainer Controls/_jumpingLabel/InputContainer
  * @includes SelectionContainer Controls/_jumpingLabel/SelectionContainer
  *

@@ -1,20 +1,4 @@
 /**
- * Интерфейс для контролов, поддерживающих навигацию.
- *
- * @interface Controls/_interface/INavigation
- * @public
- * @author Крайнов Д.О.
- */
-
-/*
- * Interface for list navigation.
- *
- * @interface Controls/_interface/INavigation
- * @public
- * @author Крайнов Д.О.
- */
-
-/**
  * @typedef {String} TNavigationSource
  * @description Алгоритм, с которым работает источник данных.
  * @variant position Навигация по курсору. Подробнее читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
@@ -216,6 +200,26 @@ export interface INavigationOptions<U> {
 }
 
 /**
+ * Интерфейс для контролов, поддерживающих навигацию.
+ *
+ * @interface Controls/_interface/INavigation
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+ /*
+ * Interface for list navigation.
+ *
+ * @interface Controls/_interface/INavigation
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+export default interface INavigation {
+    readonly '[Controls/_interface/INavigation]': boolean;
+}
+
+/**
  * @name Controls/_interface/INavigation#navigation
  * @cfg {INavigationOptionValue} Конфигурация навигации по списку. Настройка навигации источника данных (страниц, смещения, положения) и визуального отображения навигации (страниц, бесконечного скролла и т.д.).
  * @remark
@@ -261,7 +265,7 @@ export interface INavigationOptions<U> {
  * </pre>
  */
 
-/*
+ /*
  * @name Controls/_interface/INavigation#navigation
  * @cfg {Navigation} List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)
  * @example
@@ -302,6 +306,3 @@ export interface INavigationOptions<U> {
  * }
  * </pre>
  */
-export default interface INavigation {
-    readonly '[Controls/_interface/INavigation]': boolean;
-}

@@ -467,6 +467,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
          isCalculatingSizes = true;
       };
 
+      lookupView._fieldWrapperWidth = oldFieldWrapperWidth;
       lookupView._resize();
       ok(!isCalculatingSizes);
 
