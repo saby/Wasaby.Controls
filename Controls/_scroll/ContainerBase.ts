@@ -69,6 +69,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _afterMount(): void {
         if (!this._resizeObserver.isResizeObserverSupported()) {
             RegisterUtil(this, 'controlResize', this._controlResizeHandler, { listenAll: true });
+            // ResizeObserver при инициализации контрола стрелнет событием ресайза.
+            // Вызваем метод при инициализации сами если браузер не поддерживает ResizeObserver
+            this._controlResizeHandler();
         }
         this._resizeObserver.observe(this._children.content);
 
