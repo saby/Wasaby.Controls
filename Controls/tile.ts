@@ -18,8 +18,8 @@
  * @includes IDraggable Controls/interface/IDraggable
  * @includes SmallItemTemplate Controls/tile:SmallTemplate
  * @includes MediumTemplate Controls/tile:MediumTemplate
- * @includes MediumTemplate Controls/tile:PreviewTemplate
- * @includes MediumTemplate Controls/tile:RichTemplate
+ * @includes PreviewTemplate Controls/tile:PreviewTemplate
+ * @includes RichTemplate Controls/tile:RichTemplate
  * @public
  * @author Крайнов Д.О.
  */
