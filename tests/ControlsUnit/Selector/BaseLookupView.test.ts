@@ -5,7 +5,7 @@
 import {default as Lookup} from 'Controls/_lookup/Lookup';
 import {Model} from 'Types/entity';
 import {List} from 'Types/collection';
-import {Memory} from 'Types/source';
+import {DOMUtil} from 'Controls/sizeUtils';
 import {constants} from 'Env/Env';
 import {deepStrictEqual, ok, notStrictEqual, strictEqual} from 'assert';
 import * as sinon from 'sinon';
@@ -467,6 +467,7 @@ describe('Controls/_lookup/BaseLookupView', function() {
          isCalculatingSizes = true;
       };
 
+      lookupView._fieldWrapperWidth = oldFieldWrapperWidth;
       lookupView._resize();
       ok(!isCalculatingSizes);
 
@@ -483,5 +484,25 @@ describe('Controls/_lookup/BaseLookupView', function() {
       lookupView._isNeedCalculatingSizes = () => false;
       lookupView._resize();
       ok(!wrapperWidthCalled);
+   });
+
+   it('_getFieldWrapperWidth', () => {
+      const lookupView = new Lookup({});
+      const sandbox = sinon.createSandbox();
+      let wrappedWidth;
+
+      sandbox.replace(lookupView, '_getFieldWrapper', () => {});
+      sandbox.replace(DOMUtil, 'width', () => wrappedWidth);
+
+      wrappedWidth = 100;
+      ok(lookupView._getFieldWrapperWidth() === wrappedWidth);
+      ok(lookupView._fieldWrapperWidth === wrappedWidth);
+
+      wrappedWidth = -10;
+      lookupView._fieldWrapperWidth = null;
+      ok(lookupView._getFieldWrapperWidth() === wrappedWidth);
+      ok(lookupView._fieldWrapperWidth === null);
+
+      sandbox.restore();
    });
 });

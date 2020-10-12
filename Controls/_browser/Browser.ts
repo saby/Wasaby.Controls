@@ -85,7 +85,7 @@ export default class Browser extends Control {
         } else {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems);
-                return this._loadItems(options, controllerState).then((items) => {
+                return this._loadItems(options, this._sourceController.getState()).then((items) => {
                     if (items) {
                         this._hasMoreDataToUp = !!items.getMetaData().more?.before;
                     }
@@ -131,9 +131,14 @@ export default class Browser extends Control {
             this._loading = true;
             methodResult = this._sourceController.load().then((items) => {
                 // для того чтобы мог посчитаться новый prefetch Source внутри
-                const newItems = this._sourceController.setItems(items);
-                if (!this._items) {
-                    this._items = newItems;
+                if (items instanceof RecordSet) {
+                    if (newOptions.dataLoadCallback instanceof Function) {
+                        newOptions.dataLoadCallback(items);
+                    }
+                    const newItems = this._sourceController.setItems(items);
+                    if (!this._items) {
+                        this._items = newItems;
+                    }
                 }
 
                 const controllerState = this._sourceController.getState();

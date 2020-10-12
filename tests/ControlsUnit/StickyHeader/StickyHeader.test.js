@@ -163,6 +163,8 @@ define([
                stickyHeader: { top: 0, bottom: 0 }
             };
 
+            component._container = {};
+
             component._model = { fixedPosition: 'top' };
             assert.include(component._getStyle(), 'z-index: 2;');
 
@@ -212,7 +214,7 @@ define([
                component = createComponent(StickyHeader, { fixedZIndex: 2, position: 'top' });
             let style;
             sandbox.replace(component, '_getComputedStyle', function() {
-               return { boxSizing: 'border-box', minHeight: '30px', paddingTop: '1px' };
+               return { boxSizing: 'border-box', minHeight: '30px', 'padding-top': '1px' };
             });
             component._stickyHeadersHeight = {
                top: 10

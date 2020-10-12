@@ -1,9 +1,9 @@
 // @ts-ignore
 import * as Control from 'Core/Control';
 // @ts-ignore
-import template = require('wml!Controls-demo/Async/_asyncDemo/TabsBlock/TabsBlock');
+import template = require('wml!Controls-demo/Async/AsyncTabsDemo/TabsBlock/TabsBlock');
 
-import 'css!Controls-demo/Async/AsyncDemo';
+import 'css!Controls-demo/Async/AsyncTabsDemo/TabsBlock/TabsBlock';
 
 interface ITabsBlockOptions {
    selectedTab?: string;
