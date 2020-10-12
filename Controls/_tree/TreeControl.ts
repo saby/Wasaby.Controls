@@ -782,7 +782,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             });
 
             if (dragTargetPosition) {
-                if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.item, dragTargetPosition.position]) !== false) {
+                if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.dispItem, dragTargetPosition.position]) !== false) {
                     dndListController.setDragPosition(dragTargetPosition);
                 }
 
