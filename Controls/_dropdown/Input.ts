@@ -4,9 +4,12 @@ import template = require('wml!Controls/_dropdown/Input/Input');
 import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplate');
 import * as Utils from 'Types/util';
 import {factory} from 'Types/chain';
+import {Model} from 'Types/entity';
+import {RecordSet, List} from 'Types/collection';
 import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
 import {isEqual} from 'Types/object';
 import Controller from 'Controls/_dropdown/_Controller';
+import {TKey} from './interface/IDropdownController';
 import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IStickyPopupOptions, InfoboxTarget} from 'Controls/popup';
@@ -22,7 +25,7 @@ interface IInputOptions extends IBaseDropdownOptions {
    caption?: string;
 }
 
-let getPropValue = Utils.object.getPropertyValue.bind(Utils);
+const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
@@ -259,7 +262,13 @@ export default class Input extends BaseDropdown {
    protected _defaultContentTemplate: TemplateFunction = defaultContentTemplate;
    protected _text: string = '';
    protected _hasMoreText: string = '';
-   protected _selectedItems = '';
+   protected _countItems: number;
+   protected _needInfobox: boolean = false;
+   protected _item: Model = null;
+   protected _isEmptyItem: boolean = false;
+   protected _icon: string;
+   protected _tooltip: string;
+   protected _selectedItems: Model[];
    protected _children: IDropdownInputChildren;
 
    _beforeMount(options: IInputOptions,
@@ -309,7 +318,7 @@ export default class Input extends BaseDropdown {
       };
    }
 
-   _selectedItemsChangedHandler(items) {
+   _selectedItemsChangedHandler(items: Model[]): void|unknown {
       this._notify('textValueChanged', [this._getText(items) + this._getMoreText(items)]);
       const newSelectedKeys = this._getSelectedKeys(items, this._options.keyProperty);
       if (!isEqual(this._options.selectedKeys, newSelectedKeys) || this._options.task1178744737) {
@@ -317,7 +326,7 @@ export default class Input extends BaseDropdown {
       }
    }
 
-   _dataLoadCallback(items): void {
+   _dataLoadCallback(items: RecordSet<Model>): void {
       this._countItems = items.getCount();
       if (this._options.emptyText) {
          this._countItems += 1;
@@ -328,7 +337,7 @@ export default class Input extends BaseDropdown {
       }
    }
 
-   _prepareDisplayState(items): void {
+   _prepareDisplayState(items: Model[]): void {
       if (items.length) {
          this._selectedItems = items;
          this._needInfobox = this._options.readOnly && this._selectedItems.length > 1;
@@ -359,7 +368,7 @@ export default class Input extends BaseDropdown {
       });
    }
 
-   protected _onResult(action, data) {
+   protected _onResult(action: string, data: Model|Model[]): void {
       switch (action) {
          case 'applyClick':
             this._applyClick(data);
@@ -378,7 +387,7 @@ export default class Input extends BaseDropdown {
       }
    }
 
-   protected _itemClick(data): void {
+   protected _itemClick(data: Model): void {
       const item = this._controller.getPreparedItem(data);
       const res = this._selectedItemsChangedHandler([item]);
 
@@ -388,7 +397,7 @@ export default class Input extends BaseDropdown {
       }
    }
 
-   protected _applyClick(data): void {
+   protected _applyClick(data: Model[]): void {
       this._selectedItemsChangedHandler(data);
       this._controller.handleSelectedItems(data);
    }
@@ -398,32 +407,32 @@ export default class Input extends BaseDropdown {
       this._selectedItemsChangedHandler(factory(data).toArray());
    }
 
-   protected _selectorTemplateResult(event, selectedItems): void {
-      let result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
+   protected _selectorTemplateResult(event: Event, selectedItems: List<Model>): void {
+      const result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
       this._selectorResult(result);
    }
 
-   private _getSelectedKeys(items, keyProperty) {
-      let keys = [];
-      factory(items).each(function (item) {
+   private _getSelectedKeys(items: Model[], keyProperty: string): TKey[] {
+      const keys = [];
+      factory(items).each((item) => {
          keys.push(getPropValue(item, keyProperty));
       });
       return keys;
    }
 
-   private _getTooltip(items, displayProperty) {
-      var tooltips = [];
-      factory(items).each(function (item) {
+   private _getTooltip(items: Model[], displayProperty: string): string {
+      const tooltips = [];
+      factory(items).each((item) => {
          tooltips.push(getPropValue(item, displayProperty));
       });
       return tooltips.join(', ');
    }
 
-   private isEmptyItem(item) {
+   private isEmptyItem(item: Model): boolean {
       return this._options.emptyText && (getPropValue(item, this._options.keyProperty) === null || !item);
    }
 
-   private _getText(items) {
+   private _getText(items: Model[]): string {
       let text = '';
       if (this.isEmptyItem(items[0])) {
          text = prepareEmpty(this._options.emptyText);
@@ -433,7 +442,7 @@ export default class Input extends BaseDropdown {
       return text;
    }
 
-   private _getMoreText(items) {
+   private _getMoreText(items: Model[]): string {
       let moreText = '';
       if (items.length > 1) {
          moreText = ', ' + rk('еще') + ' ' + (items.length - 1);
@@ -446,4 +455,10 @@ export default class Input extends BaseDropdown {
    }
 
    static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
+
+   static getDefaultOptions(): Partial<IBaseDropdownOptions> {
+      return {
+         iconSize: 's'
+      };
+   }
 }

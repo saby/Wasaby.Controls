@@ -1,4 +1,4 @@
-<div attr:class="{{ item.getWrapperClasses(highlightOnHover, theme) }}">
+<div attr:class="{{ item.getWrapperClasses(highlightOnHover, theme, cursor) }}">
    <ws:if data="{{ multiSelectVisibility !== 'hidden' }}">
       <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ item.getMultiSelectClasses(theme) }}">
          <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}" checkboxReadOnly="{{checkboxReadOnly}}"/>

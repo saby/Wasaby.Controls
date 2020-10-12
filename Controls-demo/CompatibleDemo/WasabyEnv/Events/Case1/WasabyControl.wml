@@ -2,12 +2,12 @@
     <div>
         WasabyEnv {{ _options.opt }}
     </div>
-    <div class="wasabyControl__br">
+    <div class="wasabyControl__br controlsDemo-CompatibleDemo__date-picker_1">
         <Controls.input:Date
                 bind:value="_date"
                 mask="DD.MM.YYYY"/>
     </div>
-    <div class="wasabyControl__br">
+    <div class="wasabyControl__br controlsDemo-CompatibleDemo__date-picker_2">
         <Controls.input:Date
                 bind:value="_date"
                 mask="DD.MM.YYYY"
