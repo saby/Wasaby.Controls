@@ -173,7 +173,7 @@ export default class FlatController {
        isTouch: boolean
    ): boolean {
       if (!event.target.closest('.controls-DragNDrop__notDraggable')) {
-         Logger.warn('DragNDrop: Css class "controls-DragNDrop__notDraggable" is deprecated and removed in 20.7000. Use option "controls-List_DragNDrop__notDraggable".');
+         Logger.warn('DragNDrop: Css class "controls-DragNDrop__notDraggable" is deprecated and removed in 20.7000. Use css class "controls-List_DragNDrop__notDraggable".');
       }
       return (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption())
           && !event.nativeEvent.button && (!event.target.closest('.controls-List_DragNDrop__notDraggable') ||
