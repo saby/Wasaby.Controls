@@ -22,7 +22,7 @@ type ITreeDragStrategyParams = IDragStrategyParams<IDragPosition<IDraggableTreeI
 export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollection> {
 
     calculatePosition(
-        {currentPosition, targetItem, mouseOffset}: ITreeDragStrategyParams
+        {currentPosition, targetItem, mouseOffsetInTargetItem}: ITreeDragStrategyParams
     ): IDragPosition<IDraggableTreeItem> {
         if (this._draggableItem && this._draggableItem === targetItem) {
             return this._model.getPrevDragPosition() || null;
@@ -31,7 +31,7 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
         let result;
 
         if (targetItem && targetItem.isNode()) {
-            result = this._calculatePositionRelativeNode(targetItem, mouseOffset);
+            result = this._calculatePositionRelativeNode(targetItem, mouseOffsetInTargetItem);
         } else {
             result = super.calculatePosition({currentPosition, targetItem});
         }

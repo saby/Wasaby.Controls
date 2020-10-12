@@ -48,7 +48,7 @@ export interface IDraggableCollection<P = IDragPosition<IDraggableItem>> {
 export interface IDragStrategyParams<P, T extends IDraggableItem = IDraggableItem> {
    targetItem: T;
    currentPosition?: P;
-   mouseOffset?: IOffset;
+   mouseOffsetInTargetItem?: IOffset;
 }
 
 /**
