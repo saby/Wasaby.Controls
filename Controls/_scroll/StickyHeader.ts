@@ -2,7 +2,7 @@
  * Обеспечивает прилипание контента к верхней или нижней части родительского контейнера при прокрутке.
  * Прилипание происходит в момент пересечения верхней или нижней части контента и родительского контейнера.
  * @remark
- * Фиксация заголовка в браузере IE версии ниже 16 не поддерживается.
+ * Фиксация заголовка в IE и Edge версии ниже 16 не поддерживается.
  *
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
@@ -20,7 +20,7 @@
  * Ensures that content sticks to the top or bottom of the parent container when scrolling.
  * Occurs at the moment of intersection of the upper or lower part of the content and the parent container.
  * @remark
- * Fixing in ie browser below version 16 is not supported.
+ * Fixing in IE and Edge below version 16 is not supported.
  *
  * @public
  * @extends Core/Control
