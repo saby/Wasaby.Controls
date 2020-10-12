@@ -141,7 +141,12 @@ const SCROLLMOVE_DELAY = 150;
  * Минимальное количество элементов, при которых должен отобразиться пэйджинг
  */
 const PAGING_MIN_ELEMENTS_COUNT = 5;
-
+/**
+ * Нативный IntersectionObserver дергает callback по перерисовке.
+ * В ie нет нативного IntersectionObserver. 
+ * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
+ */
+const CHECK_TRIGGERS_DELAY_IF_IE = detection.isIE ? 150 : 0;
 const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
 
 interface IAnimationEvent extends Event {
@@ -3903,7 +3908,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             window.requestAnimationFrame(() => {
                 setTimeout(() => {
                     this.checkTriggersVisibility();
-                }, 0);
+                }, CHECK_TRIGGERS_DELAY_IF_IE);
             });
         });
     },
