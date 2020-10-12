@@ -17,7 +17,7 @@ const ARROW_WIDTH = 16;
 const PADDING_RIGHT = 2;
 
 /**
- * Хлебные крошки в две строки.
+ * Контрол "Хлебные крошки", отображающиеся в две строки.
  * @class Controls/_breadcrumbs/MultilinePath
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
@@ -25,6 +25,9 @@ const PADDING_RIGHT = 2;
  * @public
  * @author Бондарь А.В.
  * @demo Controls-demo/BreadCrumbs/Multiline/Index
+ * @remark
+ * {@link Controls/breadcrumbs:Path} — хлебные крошки, отображающиеся в одну строку.
+ * @see Controls/breadcrumbs:Path
  */
 
 export interface IMultilinePathOptions extends IBreadCrumbsOptions {
