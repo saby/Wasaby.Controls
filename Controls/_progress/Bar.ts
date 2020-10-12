@@ -36,19 +36,6 @@ export interface IBarOptions extends IControlOptions {
  *
  */
 
-/**
- * @name Controls/_progress/Bar#value
- * @cfg {Number} Значение прогресса в процентах.
- * @remark
- * Целое число от 1 до 100.
- */
-
-/*
- * @name Controls/_progress/Bar#value
- * @cfg {Number} Progress in percents (ratio of the filled part)
- * @remark
- * An integer from 1 to 100.
- */
 class Bar extends Control<IBarOptions> {
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = barTemplate;
@@ -85,5 +72,19 @@ class Bar extends Control<IBarOptions> {
       };
    }
 }
+
+/**
+ * @name Controls/_progress/Bar#value
+ * @cfg {Number} Значение прогресса в процентах.
+ * @remark
+ * Целое число от 1 до 100.
+ */
+
+ /*
+ * @name Controls/_progress/Bar#value
+ * @cfg {Number} Progress in percents (ratio of the filled part)
+ * @remark
+ * An integer from 1 to 100.
+ */
 
 export default Bar;
