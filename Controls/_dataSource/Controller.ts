@@ -152,11 +152,11 @@ export default class Controller {
             this._filter = newOptions.filter;
         }
 
-        if (newOptions.hasOwnProperty('parentProperty') && newOptions.parentProperty !== this._options.parentProperty) {
+        if (newOptions.parentProperty !== undefined && newOptions.parentProperty !== this._options.parentProperty) {
             this.setParentProperty(newOptions.parentProperty);
         }
 
-        if (newOptions.hasOwnProperty('root') && newOptions.root !== this._options.root) {
+        if (newOptions.root !== undefined && newOptions.root !== this._options.root) {
             this.setRoot(newOptions.root);
         }
 
