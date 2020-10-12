@@ -385,7 +385,7 @@ define(
             newOptions.iconSize = 's';
             newOptions.viewMode = 'button';
             menu._beforeUpdate(newOptions);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_iconSize-small_duplicate_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_iconSize-small_popup');
 
 
             newOptions.viewMode = 'link';
