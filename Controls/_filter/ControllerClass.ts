@@ -144,7 +144,9 @@ export default class FilterControllerClass {
             }
         }
         this._options = newOptions;
-        this._updateFilter(this._options);
+        if (filterChanged) {
+            this._updateFilter(this._options);
+        }
         return filterChanged || filterButtonChanged || fastFilterChanged;
     }
 
@@ -257,7 +259,11 @@ export default class FilterControllerClass {
 
     private _resolveItemsWithHistory(options: Partial<IFilterControllerOptions>,
                                      filter: object): Promise<THistoryData> {
-        return this._resolveHistoryItems(options.historyId, options.historyItems).then((history) => {
+        return this._resolveHistoryItems(
+            options.historyId,
+            options.historyItems,
+            options.prefetchParams
+        ).then((history) => {
             this._setFilterItems(options.filterButtonSource, options.fastFilterSource, history);
             this._applyItemsToFilter(
                 Prefetch.applyPrefetchFromHistory(filter, history),
@@ -271,8 +277,18 @@ export default class FilterControllerClass {
     }
 
     // Получает итемы с учетом истории.
-    private _resolveHistoryItems(historyId: string, historyItems: IFilterItem[]): Promise<THistoryData> {
-        return historyItems ? Promise.resolve(historyItems) : this._loadHistoryItems(historyId);
+    private _resolveHistoryItems(
+        historyId: string,
+        historyItems: IFilterItem[],
+        prefetchParams: IPrefetchHistoryParams
+    ): Promise<THistoryData> {
+        if (historyItems && prefetchParams) {
+            return this._loadHistoryItems(historyId).then((result) => {
+                return historyItems ? historyItems : result;
+            });
+        } else {
+            return historyItems ? Promise.resolve(historyItems) : this._loadHistoryItems(historyId);
+        }
     }
 
     private _loadHistoryItems(historyId: string): Promise<THistoryData> {
@@ -765,7 +781,7 @@ export default class FilterControllerClass {
 
 function getCalculatedFilter(config) {
     const def = new Deferred();
-    this._resolveHistoryItems(config.historyId, config.historyItems).then((items) => {
+    this._resolveHistoryItems(config.historyId, config.historyItems, config.prefetchParams).then((items) => {
         this._setFilterItems(clone(config.filterButtonSource), clone(config.fastFilterSource), items);
         let calculatedFilter;
         try {

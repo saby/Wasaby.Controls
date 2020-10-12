@@ -68,6 +68,30 @@ describe('Controls/browser:Browser', () => {
                     deepStrictEqual(browser._searchController._dataOptions.filter, filter);
                 });
 
+                it('filterButtonSource and filter in context without source on _beforeMount', async () => {
+                    const options = getBrowserOptions();
+                    const filter = {
+                        testField: 'testValue'
+                    };
+                    options.source = null;
+                    options.filter = filter;
+                    options.filterButtonSource = [{
+                        id: 'testField2',
+                        value: 'testValue2'
+                    }];
+
+                    const expectedFilter = {
+                        testField: 'testValue',
+                        testField2: 'testValue2'
+                    };
+
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options, {});
+                    deepStrictEqual(browser._dataOptionsContext.filter, expectedFilter);
+                    deepStrictEqual(browser._filter, expectedFilter);
+                    deepStrictEqual(browser._searchController._dataOptions.filter, expectedFilter);
+                });
+
             });
         });
 

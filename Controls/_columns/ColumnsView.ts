@@ -1,11 +1,11 @@
 /**
  * Списочный контрол, который позволяет расположить записи в нескольких столбцах в зависимости от доступной ширины.
- * 
+ *
  * @remark
  * Переменные тем оформления:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_columns.less">набор переменных columns</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">набор переменных list</a>
- * 
+ *
  * @class Controls/columns:View
  * @extends Core/Control
  * @implements Controls/_interface/IErrorController
@@ -27,6 +27,7 @@
  * @mixes Controls/_list/interface/IMovableList
  * @mixes Controls/_list/interface/IRemovableList
  * @mixes Controls/_list/interface/IVirtualScroll
+ * @mixes Controls/_marker/interface/IMarkerListOptions
  * @author Авраменко А.С.
  * @public
  * @example
@@ -38,13 +39,13 @@
  *    source="{{ _viewSource }}">
  * </Controls.columns:View>
  * </pre>
- * 
+ *
  * @demo Controls-demo/list_new/ColumnsView/Default/Index
  */
 
 /**
  * @name Controls/columns:View#itemTemplate
- * @cfg {Number} Шаблон записи. 
+ * @cfg {Number} Шаблон записи.
  * @example
  * <pre>
  * <Controls.columns:View
@@ -64,8 +65,8 @@
 
 /**
  * @name Controls/columns:View#columnMinWidth
- * @cfg {Number} Минимальная ширина колонки. 
- * @default 270 
+ * @cfg {Number} Минимальная ширина колонки.
+ * @default 270
  * @example
  * <pre>
  * <Controls.columns:View
@@ -80,7 +81,7 @@
 
 /**
  * @name Controls/columns:View#columnMaxWidth
- * @cfg {Number} Максимальная ширина колонки. 
+ * @cfg {Number} Максимальная ширина колонки.
  * @default 400
  * @example
  * <pre>

@@ -63,7 +63,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
             item: treeItem.getContents(),
             treeItem,
             iconPadding: this._iconPadding,
-            iconSize: this._options.iconSize,
+            iconSize: this._getIconSize(treeItem.getContents()),
             multiSelect: this._options.multiSelect,
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
@@ -162,6 +162,16 @@ class MenuRender extends Control<IMenuRenderOptions> {
         return treeItem.getOwner().at(index + 1);
     }
 
+    private _getIconSize(item: Model): string {
+        let iconSize = '';
+        if (item.get && item.get('icon')) {
+            iconSize = item.get('iconSize') || this._options.iconSize;
+        } else if (!this._iconPadding) {
+            iconSize = this._options.iconSize;
+        }
+        return iconSize;
+    }
+
     private setListModelOptions(options: IMenuRenderOptions): void {
         options.listModel.setItemPadding({
             top: 'null',
@@ -252,25 +262,21 @@ class MenuRender extends Control<IMenuRenderOptions> {
             itemContents = item.getContents();
             icon = itemContents.get && itemContents.get('icon');
             if (icon) {
-                iconPadding = this.getIconSize(options.iconSize, icon);
+                iconPadding = itemContents.get('iconSize') || this.getIconSize(icon) || options.iconSize;
             }
         });
         return iconPadding;
     }
 
-    private getIconSize(iconSize: string, icon: string): string {
+    private getIconSize(icon: string): string {
         const iconSizes = [['icon-small', 's'], ['icon-medium', 'm'], ['icon-large', 'l'], ['icon-size', 'default']];
-        if (iconSize) {
-            return iconSize;
-        } else {
-            let result = '';
-            iconSizes.forEach((size) => {
-                if (icon.indexOf(size[0]) !== -1) {
-                    result = size[1];
-                }
-            });
-            return result;
-        }
+        let result = '';
+        iconSizes.forEach((size) => {
+            if (icon.indexOf(size[0]) !== -1) {
+                result = size[1];
+            }
+        });
+        return result;
     }
 
     private _selectItem(collection: Collection<unknown>, key: number|string, state: boolean): void {

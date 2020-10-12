@@ -9,7 +9,8 @@
               on:click="_onHeaderClick()">{{_caption}}
          </div>
          <div class="controls-PeriodLiteDialog__close_theme-{{_options.theme}}
-                     controls-icon controls-icon_size-m_theme-{{_options.theme}}" title="{[Закрыть]}"
+                     controls-icon controls-icon_size-m_theme-{{_options.theme}}
+                     controls-PeriodLiteDialog__close_position-{{_closeBtnPosition}}_theme-{{_options.theme}}" title="{[Закрыть]}"
               on:click="_onHeaderClick()">
          </div>
       </div>
@@ -90,6 +91,11 @@
                <path xmlns="http://www.w3.org/2000/svg" d="M8,5l7,5.5h-2L8,6.8l-5,3.7H1L8,5z"/>
             </svg>
          </div>
+      </div>
+      <div class="controls-PeriodLiteDialog__close_theme-{{_options.theme}}
+                     controls-icon controls-icon_size-m_theme-{{_options.theme}}
+                     controls-PeriodLiteDialog__close_position-{{_closeBtnPosition}}_theme-{{_options.theme}}" title="{[Закрыть]}"
+           on:click="_onHeaderClick()">
       </div>
       <Controls.calendar:MonthList
               order="desc"

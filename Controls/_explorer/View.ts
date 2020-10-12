@@ -124,7 +124,7 @@ var
                resolver(result);
                self._firstLoad = false;
                _private.fillRestoredMarkedKeysByBreadCrumbs(
-                   _private.getDataRoot(self),
+                   _private.getDataRoot(self, self._options),
                    self._breadCrumbsItems,
                    self._restoredMarkedKeys,
                    self._options.parentProperty,
@@ -206,8 +206,8 @@ var
             var result;
 
             if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
-               self._breadCrumbsItems = null;
                _private.updateRootOnViewModeChanged(self, viewMode, cfg);
+               self._breadCrumbsItems = null;
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
@@ -227,13 +227,13 @@ var
                _private.setRoot(self, self._breadCrumbsItems[self._breadCrumbsItems.length - 1].get(self._options.parentProperty));
             }
          },
-         getDataRoot: function(self) {
+         getDataRoot: function(self, options) {
             var result;
 
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
                result = self._breadCrumbsItems[0].get(self._options.parentProperty);
             } else {
-               result = _private.getRoot(self, self._options.root);
+               result = _private.getRoot(self, options.root);
             }
 
             return result;
@@ -242,7 +242,7 @@ var
             var
                item,
                itemFromRoot = true,
-               root = _private.getDataRoot(self);
+               root = _private.getDataRoot(self, self._options);
 
             for (var i = 0; i < dragItems.length; i++) {
                item = self._items.getRecordById(dragItems[i]);
@@ -342,7 +342,7 @@ var
          updateRootOnViewModeChanged(self, viewMode: string, options): void {
             if (viewMode === 'search' && options.searchStartingWith === 'root') {
                const currentRoot = _private.getRoot(self, options.root);
-               const dataRoot = _private.getDataRoot(self);
+               const dataRoot = _private.getDataRoot(self, options);
 
                if (dataRoot !== currentRoot) {
                   _private.setRoot(self, dataRoot, dataRoot);
@@ -395,6 +395,7 @@ var
     * @mixes Controls/_list/interface/IClickableView
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
+    * @mixes Controls/_marker/interface/IMarkerListOptions
     * @control
     * @public
     * @category List
@@ -432,6 +433,7 @@ var
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
+    * @mixes Controls/_marker/interface/IMarkerListOptions
     * @control
     * @public
     * @category List
@@ -570,8 +572,7 @@ var
             this._navigation = cfg.navigation;
          }
 
-         if ((isViewModeChanged && (isSearchViewMode || isRootChanged)) ||
-             this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
+         if ((isViewModeChanged && isRootChanged && !isSearchViewMode) || this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
             // Если меняется и root и viewMode, не меняем режим отображения сразу,
             // потому что тогда мы перерисуем explorer в новом режиме отображения
             // со старыми записями, а после загрузки новых получим еще одну перерисовку.
@@ -585,21 +586,21 @@ var
             const filterChanged = !isEqual(cfg.filter, this._options.filter);
             const recreateSource = cfg.source !== this._options.source;
             const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
-            if (filterChanged || recreateSource || sortingChanged || navigationChanged) {
+            if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !isSearchViewMode) {
                _private.setPendingViewMode(this, cfg.viewMode, cfg);
             } else {
                _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
             }
          }
       },
-      _beforeRender(): void { 
+      _beforeRender(): void {
           // Сбрасываем скролл при режима отображения
           // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
          if (this._resetScrollAfterViewModeChange) {
             this._notify('doScroll', ['top'], {bubbling: true});
             this._resetScrollAfterViewModeChange = false;
          }
-         
+
       },
       _beforePaint: function() {
          if (this._markerForRestoredScroll !== null) {
@@ -631,7 +632,7 @@ var
             dragObject.entity.dragControlId === this._dragControlId
          ) {
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
-            this._dragOnBreadCrumbs = _private.getRoot(this, this._options.root) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
+            this._dragOnBreadCrumbs = _private.getRoot(this, this._options.root) !== _private.getDataRoot(this, this._options) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
       },
       _hoveredCrumbChanged: function(event, item) {

@@ -11,7 +11,7 @@ import {ContextOptions} from 'Controls/context';
 import {RegisterClass} from 'Controls/event';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {error as dataSourceError} from 'Controls/dataSource';
-import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
 import {IControllerOptions, IControlerState} from 'Controls/_dataSource/Controller';
 import {TSelectionType} from 'Controls/interface';
 import Store from 'Controls/Store';
@@ -52,6 +52,7 @@ export default class Browser extends Control {
     private _dataOptionsContext: ContextOptions;
     private _errorRegister: RegisterClass;
     private _storeCallbacks: string[];
+    private _hasMoreDataToUp: boolean;
 
     protected _beforeMount(options,
                            context,
@@ -74,13 +75,20 @@ export default class Browser extends Control {
 
         if (receivedState) {
             this._setFilterItems(receivedState.filterItems);
+
+            if (receivedState.items) {
+                this._hasMoreDataToUp = !!receivedState.items.getMetaData().more?.before;
+            }
             if (isNewEnvironment()) {
                 this._setItemsAndCreateSearchController(receivedState.items, options);
             }
         } else {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems);
-                return this._loadItems(options, controllerState).then((items) => {
+                return this._loadItems(options, this._sourceController.getState()).then((items) => {
+                    if (items) {
+                        this._hasMoreDataToUp = !!items.getMetaData().more?.before;
+                    }
                     return {
                         filterItems,
                         items
@@ -104,7 +112,6 @@ export default class Browser extends Control {
     }
 
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
-        const isChanged = this._sourceController.updateOptions(newOptions);
         let methodResult;
 
         this._operationsController.update(newOptions);
@@ -118,13 +125,20 @@ export default class Browser extends Control {
             this._updateFilterAndFilterItems();
         }
 
+        const isChanged = this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
+
         if (this._options.source !== newOptions.source) {
             this._loading = true;
             methodResult = this._sourceController.load().then((items) => {
                 // для того чтобы мог посчитаться новый prefetch Source внутри
-                const newItems = this._sourceController.setItems(items);
-                if (!this._items) {
-                    this._items = newItems;
+                if (items instanceof RecordSet) {
+                    if (newOptions.dataLoadCallback instanceof Function) {
+                        newOptions.dataLoadCallback(items);
+                    }
+                    const newItems = this._sourceController.setItems(items);
+                    if (!this._items) {
+                        this._items = newItems;
+                    }
                 }
 
                 const controllerState = this._sourceController.getState();
@@ -140,14 +154,9 @@ export default class Browser extends Control {
         } else if (isChanged) {
             const controllerState = this._sourceController.getState();
 
-            // TODO 1) filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-            // TODO 2) getState у SourceController пересоздаёт prefetchProxy,
-            // TODO поэтому весь state на контекст перекладывать нельзя, иначе список перезагрузится с теми же данными
+            // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
             this._filter = controllerState.filter;
-            this._dataOptionsContext.navigation = controllerState.navigation;
-            this._dataOptionsContext.filter = controllerState.filter;
-            this._dataOptionsContext.sorting = controllerState.sorting;
-            this._dataOptionsContext.updateConsumers();
+            this._updateContext(controllerState);
             this._groupHistoryId = newOptions.groupHistoryId;
         }
 
@@ -238,11 +247,8 @@ export default class Browser extends Control {
 
         // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
         this._filter = controllerState.filter;
-        this._updateContext(controllerState);
 
-        /* If filter changed, prefetchSource should return data not from cache,
-           will be changed by task https://online.sbis.ru/opendoc.html?guid=861459e2-a229-441d-9d5d-14fdcbc6676a */
-        this._dataOptionsContext.prefetchSource = this._options.source;
+        this._updateContext(controllerState);
         this._dataOptionsContext.updateConsumers();
 
         this._notify('filterChanged', [this._filter]);
@@ -392,6 +398,10 @@ export default class Browser extends Control {
         const optionsChangedCallbacks = SearchController.getStateAndOptionsChangedCallbacks(this);
         optionsChangedCallbacks.filter = this._sourceController.getFilter();
         return {...options, ...optionsChangedCallbacks};
+    }
+
+    _getSourceControllerOptions(options: ISourceControllerOptions): ISourceControllerOptions {
+        return {...options, filter: this._filter};
     }
 
     _getSearchController(): SearchController {

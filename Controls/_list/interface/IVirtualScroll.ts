@@ -10,9 +10,9 @@ export interface IVirtualScrollConfig {
 /**
  * @typedef {object} IVirtualScrollConfig
  * @property {number} pageSize Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
- * @property {IVirtualScrollMode} mode Режим скрытия элементов в виртуальном скроллинге.
+ * @property {IVirtualScrollMode} [mode=remove] Режим скрытия элементов в виртуальном скроллинге.
  * @property {number} [viewportHeight=undefined] Высота вьюпорта контейнера, в котором лежит список.
- * @property {number} segmentSize Количество подгружаемых элементов при скроллировании.
+ * @property {number} [segmentSize] Количество подгружаемых элементов при скроллировании. По умолчанию равен четверти размера виртуальной страницы, который задан в опции pageSize.
  * @property {string} [itemHeightProperty=undefined] Поле в элементе, которое содержит его высоту для оптимистичного рендеринга.
  */
 
