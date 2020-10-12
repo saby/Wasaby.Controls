@@ -4,6 +4,7 @@ import {IPopupItemInfo} from 'Controls/_popup/interface/IPopup';
 import {List} from 'Types/collection';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import {INotificationPopupOptions, INotificationOpener} from '../interface/INotification';
+import {Logger} from 'UI/Utils';
 
 /**
  * Контрол, открывающий окно, которое позиционируется в правом нижнем углу окна браузера. Одновременно может быть открыто несколько окон уведомлений. В этом случае они выстраиваются в стек по вертикали.
@@ -124,6 +125,10 @@ class Notification extends BaseOpener<INotificationOpenerOptions> implements INo
 
     static openPopup(config: INotificationPopupOptions): Promise<string> {
         return new Promise((resolve) => {
+            if (!config.hasOwnProperty('isHelper')) {
+                Logger.warn('Controls/popup:Dialog: Для открытия нотификационных окон из ' +
+                    'кода используйте NotificationOpener');
+            }
             const newConfig = BaseOpener.getConfig(BASE_OPTIONS, config);
             // Сделал так же как в ws3. окна, которые закрываются автоматически - всегда выше всех.
             if (newConfig.autoClose) {
