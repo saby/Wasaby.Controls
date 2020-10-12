@@ -7769,6 +7769,8 @@ define([
 
             const notifySpy = sinon.spy(baseControl, '_notify');
 
+            baseControl.saveOptions({ ...cfg, multiSelectVisibility: 'hidden' });
+
             baseControl._onItemSwipe({}, swipedItem, swipeEvent);
             assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
             assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
