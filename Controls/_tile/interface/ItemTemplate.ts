@@ -32,7 +32,7 @@ export default interface IItemTemplateOptions {
     * @cfg {Boolean} Подпись к плитке.
     * @see titleStyle
     */
-   hasTitle?: string; 
+   hasTitle?: string;
    /**
     * @typedef {String} TitleStyle
     * @variant onhover Заголовок отображается только при наведении мыши на плитку.

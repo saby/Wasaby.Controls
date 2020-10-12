@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as Control from 'Core/Control';
 // @ts-ignore
-import template = require('wml!Controls-demo/Async/_asyncDemo/TabsBlock/Tab1');
+import template = require('wml!Controls-demo/Async/AsyncTabsDemo/AsyncTabs/Tab1');
 
 class Tab1 extends Control {
     _template: Function = template;

@@ -18,6 +18,7 @@ define('Controls/Application',
       'UI/HotKeys',
       'Controls/Application/TouchDetectorController',
       'Controls/dragnDrop',
+      'Core/TimeTesterInv',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -68,7 +69,8 @@ define('Controls/Application',
       popup,
       HotKeys,
       TouchDetector,
-      dragnDrop) {
+      dragnDrop,
+      TimeTesterInv) {
       'use strict';
 
       var _private;
@@ -264,6 +266,8 @@ define('Controls/Application',
             this.pageName = cfg.pageName || appData.pageName || '';
             this.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
 
+
+
             // Чтобы при загрузке слоя совместимости, понять нужно ли грузить провайдеры(extensions, userInfo, rights),
             // положим опцию из Application в constants. Иначе придется использовать глобальную переменную.
             // TODO: Удалить этот код отсюда по задае:
@@ -294,6 +298,8 @@ define('Controls/Application',
             // сообщает так же про изменение экрана после показа клавиатуры и/или зуме страницы.
             // Подписка на body стреляет не всегда. в 2100 включаю только для 13ios, в перспективе можно включить
             // везде, где есть visualViewport
+            var timeTester = new TimeTesterInv.default(this.RUMEnabled, this.pageName);
+            timeTester.load();
             if (this._isIOS13()) {
                window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
             }
@@ -304,6 +310,7 @@ define('Controls/Application',
 
             this._globalpopup.registerGlobalPopup();
             this._popupManager.init(cfg, this._getChildContext());
+
          },
 
          _beforeUnmount: function () {

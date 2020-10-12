@@ -63,6 +63,7 @@ define(
             beforeEach(function() {
                ctrl = new _StickyHeader({});
                inst._options = _StickyHeader.getDefaultOptions();
+               inst._container = {};
                inst._updateStyles = ctrl._updateStyles;
                inst._updateStyle = ctrl._updateStyle;
                inst._updateShadowStyles = ctrl._updateShadowStyles;
@@ -105,7 +106,7 @@ define(
                sandbox.stub(StickyHeaderUtils, 'getGapFixSize').returns(1);
                inst._model.fixedPosition = 'top';
                sandbox.replace(inst, '_getComputedStyle', function() {
-                  return {paddingTop: '0px'};
+                  return {'padding-top': '0px'};
                });
                inst._container = {style: {paddingTop: ''}};
                inst._options.theme = 'default';

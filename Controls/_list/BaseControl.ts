@@ -123,7 +123,6 @@ const LOAD_TRIGGER_OFFSET = 100;
 const INDICATOR_DELAY = 2000;
 const INITIAL_PAGES_COUNT = 1;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
-const TRIGGER_VISIBILITY_DELAY = 101;
 const LIMIT_DRAG_SELECTION = 100;
 const PORTIONED_LOAD_META_FIELD = 'iterative';
 const MIN_SCROLL_PAGING_SHOW_PROPORTION = 2;
@@ -212,6 +211,12 @@ const getData = (crudResult: ICrudResult): Promise<any> => {
 
 const _private = {
     getItemActionsController(self): ItemActionsController {
+        // При существующем контроллере нам не нужны дополнительные проверки как при инициализации.
+        // Например, может потребоваться продолжение работы с контроллером после показа ошибки в Popup окне,
+        // когда _error не зануляется.
+        if (self._itemActionsController) {
+            return self._itemActionsController;
+        }
         // Проверки на __error не хватает, так как реактивность работает не мгновенно, и это состояние может не
         // соответствовать опциям error.Container. Нужно смотреть по текущей ситуации на наличие ItemActions
         if (self.__error || !self._listViewModel) {
@@ -227,9 +232,7 @@ const _private = {
             return;
         }
 
-        if (!self._itemActionsController) {
-            self._itemActionsController = new ItemActionsController();
-        }
+        self._itemActionsController = new ItemActionsController();
 
         return self._itemActionsController;
     },
@@ -3731,9 +3734,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._checkLoadToDirectionTimeout) {
             clearTimeout(this._checkLoadToDirectionTimeout);
         }
-        if (this._checkTriggerVisibilityTimeout) {
-            clearTimeout(this._checkTriggerVisibilityTimeout);
-        }
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
@@ -3803,6 +3803,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _beforePaint(): void {
+        let positionRestored = false
 
         // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
         if (this._container) {
@@ -3833,9 +3834,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             this._loadedItems = null;
             this._shouldRestoreScrollPosition = false;
-            if (this._scrollController) {
-                this.checkTriggerVisibilityWithTimeout();
-            }
+            positionRestored = true;
         }
 
         // До отрисовки элементов мы не можем понять потребуется ли еще загрузка (зависит от видимости тригеров).
@@ -3882,8 +3881,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 needCheckTriggers = true;
             }
 
-            if (needCheckTriggers || itemsUpdated) {
-                this.checkTriggerVisibilityWithTimeout();
+            if (needCheckTriggers || itemsUpdated || positionRestored) {
+                this.checkTriggerVisibilityAfterRedraw();
             }
 
         }
@@ -3892,17 +3891,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._scrollToFirstItemIfNeed();
     },
 
-    // setTimeout для проверки триггеров, чтобы IO успел сработать на изменение видимости триггеров, если оно было.
-    checkTriggerVisibilityWithTimeout(): void {
-        if (this._checkTriggerVisibilityTimeout) {
-            clearTimeout(this._checkTriggerVisibilityTimeout);
-        }
-        this._checkTriggerVisibilityTimeout = setTimeout(() => {
-            _private.doAfterUpdate(this, () => {
-                this.checkTriggersVisibility();
+    // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
+    checkTriggerVisibilityAfterRedraw(): void {
+        _private.doAfterUpdate(this, () => {
+            window.requestAnimationFrame(() => {
+                setTimeout(() => {
+                    this.checkTriggersVisibility();
+                }, 0);
             });
-            this._checkTriggerVisibilityTimeout = null;
-        }, TRIGGER_VISIBILITY_DELAY);
+        });
     },
 
     // Проверяем видимость триггеров после перерисовки.

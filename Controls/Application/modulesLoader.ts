@@ -1,8 +1,8 @@
 /**
  * A modules loader on application level
  */
-import {ModulesManager} from 'RequireJsLoader/conduct';
-import {Library as library} from 'UI/Utils';
+import { getModuleUrl as getModuleUrlBase, ModulesManager } from 'RequireJsLoader/conduct';
+import { Library as library } from 'UI/Utils';
 
 interface IParsedName {
     name: string;
@@ -40,6 +40,16 @@ function isCached(name: string): boolean {
 export function isLoaded(name: string): boolean {
     const parsedInfo: IParsedName = library.parse(name);
     return getModulesManager().isLoaded(parsedInfo.name);
+}
+
+/**
+ * Возвращает URL местоположения модуля
+ * @param name Имя модуля в обычном (Foo/bar) или библиотечном (Foo/bar:baz) синтаксисе
+ * @protected
+ */
+export function getModuleUrl(name: string): string {
+    const parsedInfo: IParsedName = library.parse(name);
+    return getModuleUrlBase(parsedInfo.name);
 }
 
 /**
@@ -88,16 +98,16 @@ export function loadSync<T>(name: string): T {
 
 }
 
-export function clearCache(): void {
-    cache = {};
-}
-
 /**
- * Синхронно помечает модуль незагруженным в requirejs
+ * Синхронно выгружает модуль
  * @param module Имя модуля в обычном (Foo/bar) или библиотечном (Foo/bar:baz) синтаксисе
  * @protected
  */
 export function unloadSync(module: string): void {
     const parsedInfo: IParsedName = library.parse(module);
     getModulesManager().unloadSync(parsedInfo.name);
+}
+
+export function clearCache(): void {
+    cache = {};
 }

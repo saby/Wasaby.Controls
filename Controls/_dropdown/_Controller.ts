@@ -214,7 +214,7 @@ export default class _Controller implements IDropdownController {
       this._open();
    }
 
-   private _open(popupOptions?: object): string|Promise<unknown[]> {
+   private _open(popupOptions?: object): Promise<unknown[]> {
       if (this._options.readOnly) {
          return Promise.resolve();
       }
