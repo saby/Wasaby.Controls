@@ -78,7 +78,7 @@ import {
 import { MarkerController } from 'Controls/marker';
 import {
     DndController,
-    FlatStrategy, IDragStrategyParams, ITreeDragStrategyParams,
+    FlatStrategy, IDragStrategyParams,
     TreeStrategy
 } from 'Controls/listDragNDrop';
 
@@ -2638,7 +2638,7 @@ const _private = {
     },
 
     // TODO dnd когда будет наследование TreeControl <- BaseControl, правильно указать тип параметров
-    createDndListController(model: any, options: any): DndController<IDragStrategyParams | ITreeDragStrategyParams> {
+    createDndListController(model: any, options: any): DndController<IDragStrategyParams> {
         let strategy;
         if (options.parentProperty) {
             strategy = TreeStrategy;
