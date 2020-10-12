@@ -25,6 +25,7 @@
                         backgroundStyle="{{ backgroundStyle }}"
                         isColumnScrollVisible="{{ isColumnScrollVisible }}"
                         tagTemplate="{{ tagTemplate }}"
+                        markerPosition="{{_options.markerPosition}}"
 
                         on:contextmenu="_onItemContextMenu(itemData)"
                         on:swipe="_onItemSwipe(itemData)"
@@ -49,6 +50,7 @@
                     backgroundStyle="{{ backgroundStyle }}"
                     isColumnScrollVisible="{{ isColumnScrollVisible }}"
                     tagTemplate="{{ tagTemplate }}"
+                    markerPosition="{{_options.markerPosition}}"
 
                     on:click="_onItemClick(itemData.dispItem)"
                     on:contextmenu="_onItemContextMenu(itemData)"

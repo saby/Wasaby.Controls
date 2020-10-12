@@ -4,6 +4,7 @@
            item="{{ item }}"
            itemData="{{ item }}"
            isAdd="{{ isAdd }}"
+           markerPosition="{{_options.markerPosition}}"
            multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
            itemActionsPosition="{{ _options.itemActionsPosition }}"
            searchValue="{{ collection.getSearchValue() }}"
