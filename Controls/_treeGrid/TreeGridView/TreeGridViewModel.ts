@@ -12,7 +12,7 @@ function isLastColumn(
    itemData: object,
    colspan: boolean
 ): boolean {
-   const columnWidth = itemData.multiSelectVisibility === 'hidden' ? 1 : 2;
+   const columnWidth = itemData.multiSelectVisibility === 'hidden' || itemData.isRootItemsSeparator ? 1 : 2;
    return itemData.getLastColumnIndex() >= itemData.columnIndex && (!colspan || itemData.columnIndex < columnWidth);
 }
 

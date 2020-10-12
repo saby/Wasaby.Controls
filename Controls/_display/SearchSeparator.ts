@@ -11,6 +11,9 @@ export default class SearchSeparator<T> extends CollectionItem<T>  {
     readonly '[Controls/_display/SearchSeparator]': boolean = true;
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
 
+    readonly MarkableItem: boolean = false;
+    readonly SelectableItem: boolean = false;
+
     protected _instancePrefix: 'breadcrumbs-item-';
 
     protected readonly _$source: TreeItem<T>;

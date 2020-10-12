@@ -68,7 +68,7 @@ interface IColgroupColumn {
 
 type GridColspanableElements = 'customResults' | 'fixedColumnOfColumnScroll' | 'scrollableColumnOfColumnScroll' |
     'colspanedRow' | 'editingRow' | 'bottomPadding' | 'emptyTemplate' | 'emptyTemplateAndColumnScroll' | 'footer'
-    | 'headerBreadcrumbs' | 'fullWithoutMultiSelect';
+    | 'headerBreadcrumbs' | 'fullWithoutMultiSelect' | 'rootItemsSeparator';
 
 interface IGetColspanStylesForParams {
     columnIndex: number;
@@ -121,7 +121,7 @@ var
                style = '';
            if (colspan) {
                 style += self.getColspanStylesFor(
-                    'fullWithoutMultiSelect',
+                    itemData.isRootItemsSeparator ? 'rootItemsSeparator' : 'fullWithoutMultiSelect',
                     {
                         columnIndex: currentColumn.columnIndex,
                         columnsLength: self._columns.length
@@ -323,7 +323,6 @@ var
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
             // Стиль колонки
-            // Если current.isRootItemsSeparator, значит имеем дело с сепаратором
             if (!current.isRootItemsSeparator) {
                 if (current.itemPadding.top === 'null' && current.itemPadding.bottom === 'null') {
                     classLists.base += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
@@ -1599,6 +1598,7 @@ var
             current.getColspanFor = (elementName: string) => self.getColspanFor.apply(self, [elementName]);
             current.stickyColumnsCount = this._options.stickyColumnsCount;
 
+            current.hasMultiSelect = !current.isRootItemsSeparator && current.hasMultiSelect;
             current.rowSeparatorSize = this._options.rowSeparatorSize;
             current.columnSeparatorSize = this._options.columnSeparatorSize;
             current.multiSelectClassList += current.hasMultiSelect ? ` controls-GridView__checkbox_theme-${current.theme}` : '';
@@ -1616,7 +1616,7 @@ var
             controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${current.theme}`;
 
-            if (current.multiSelectVisibility !== 'hidden') {
+            if (current.multiSelectVisibility !== 'hidden' && !current.isRootItemsSeparator) {
                 current.columns = [{}].concat(this._columns);
             } else {
                 current.columns = this._columns;
@@ -2234,7 +2234,9 @@ var
         },
 
         getColspanStylesFor(colspanFor: GridColspanableElements, params: IGetColspanStylesForParams): string {
-            const multiSelectOffset = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
+            const multiSelectVisible = this._options.multiSelectVisibility !== 'hidden';
+            const spanMultiSelectColumn = colspanFor === 'rootItemsSeparator';
+            const multiSelectOffset = multiSelectVisible && !spanMultiSelectColumn ? 1 : 0;
             if (params.columnIndex !== multiSelectOffset) {
                 return '';
             }
@@ -2252,6 +2254,7 @@ var
                 return GridLayoutUtil.getColumnStyles(columnCfg);
             } else {
                 columnCfg.columnSpan = params.columnsLength;
+                columnCfg.columnSpan += (multiSelectVisible && spanMultiSelectColumn ? 1 : 0);
                 columnCfg.columnSpan += this.stickyLadderCellsCount();
 
                 return GridLayoutUtil.getColumnStyles(columnCfg);
