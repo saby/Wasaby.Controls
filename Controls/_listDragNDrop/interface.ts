@@ -21,7 +21,6 @@ export type TPosition = 'after'|'before'|'on';
 export interface IDraggableItem<S extends Model = Model> {
    getContents(): S;
    setDragged(state: boolean): void;
-   setVisible(state: boolean): void;
 }
 
 /**
