@@ -8,9 +8,24 @@ style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentC
       <div attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style) }}">
       <!--<div class="{{column.classList.base}} {{column.classList.columnScroll}} {{itemData.hasMultiSelect && column.columnIndex === 0 ? column.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
            style="{{column.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">-->
-         <ws:partial template="wml!Controls/_grid/Render/grid/Column"
-                     attr:key="{{ column.getInstanceId() }}"
-                     column="{{ column }}" />
+         <div if="{{ column.shouldDisplayMarker(marker) }}" attr:class="{{ column.getMarkerClasses(theme, style) }}"></div>
+         <ws:if data="{{ column.isMultiSelectColumn() }}">
+               <!--<ws:if data="{{!itemData.isAdd}}">-->
+                  <ws:partial template="{{ multiSelectTpl }}" attr:class="{{ (item || itemData).getMultiSelectClasses(theme) }}">
+                     <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
+                                         key="{{ (item || itemData).getContents().getKey() }}"
+                                         checkboxReadOnly="{{ checkboxReadOnly }}"/>
+                  </ws:partial>
+               <!--</ws:if>-->
+               <!--<ws:else>
+                  <div class="{{'controls-Grid__cell_spacingFirstCol_' + itemData.itemPadding.left + '_theme-' +itemData.theme}}"></div>
+               </ws:else>-->
+         </ws:if>
+         <ws:else>
+            <ws:partial template="wml!Controls/_grid/Render/grid/Column"
+                        attr:key="{{ column.getInstanceId() }}"
+                        column="{{ column }}" />
+         </ws:else>
       </div>
    </ws:for>
 </div>

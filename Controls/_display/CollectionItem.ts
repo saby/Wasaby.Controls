@@ -310,9 +310,9 @@ export default class CollectionItem<T> extends mixin<
         return this._counters;
     }
 
-    getMultiSelectClasses(theme): string {
+    getMultiSelectClasses(theme: string): string {
         let classes = `js-controls-ListView__notEditable controls-ListView__checkbox_theme-${theme}`;
-        if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
+        if (this.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += ' controls-ListView__checkbox-onhover';
         }
         return classes;
@@ -593,6 +593,10 @@ export default class CollectionItem<T> extends mixin<
         return templateFromProperty || userTemplate;
     }
 
+    getMultiSelectVisibility(): string {
+        return this.getOwner().getMultiSelectVisibility();
+    }
+
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {
         let classes = '';
 
@@ -610,7 +614,7 @@ export default class CollectionItem<T> extends mixin<
 
         classes += ` controls-ListView__item-rightPadding_${rightSpacing}_theme-${theme}`;
 
-        if (this.getOwner().getMultiSelectVisibility() !== 'hidden') {
+        if (this.getMultiSelectVisibility() !== 'hidden') {
            classes += ` controls-ListView__itemContent_withCheckboxes_theme-${theme}`;
         } else {
            classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftPadding().toLowerCase()}_theme-${theme}`;

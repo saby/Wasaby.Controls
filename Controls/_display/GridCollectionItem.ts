@@ -14,9 +14,15 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
 
     constructor(options?: IOptions<T>) {
         super(options);
+        const addMultiSelectColumn = this.getMultiSelectVisibility() !== 'hidden';
         if (this._$columns) {
             const factory = this._getColumnsFactory();
             this._$columnItems = this._$columns.map((column) => factory({ column }));
+            if (addMultiSelectColumn) {
+                this._$columnItems = [
+                    factory({ column: {} })
+                ].concat(this._$columnItems);
+            }
         }
     }
 
@@ -25,11 +31,11 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     }
 
     getColumnsCount(): number {
-        return this._$columns.length;
+        return this._$columnItems.length;
     }
 
-    getColumnIndex(column: IColumnConfig): number {
-        return this._$columns.indexOf(column);
+    getColumnIndex(column: GridColumn<T>): number {
+        return this._$columnItems.indexOf(column);
     }
 
     getTopPadding(): string {

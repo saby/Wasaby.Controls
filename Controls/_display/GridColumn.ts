@@ -69,6 +69,8 @@ export default class GridColumn<T> extends mixin<
             wrapperClasses += ' controls-Grid__cell_fit';
         }
 
+        wrapperClasses += this._getWrapperSeparatorClasses(theme);
+
         /*const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
         const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
 +++     let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
@@ -145,12 +147,12 @@ export default class GridColumn<T> extends mixin<
         return wrapperClasses;
     }
 
-    getContentClasses(theme: string, cursor: string = 'pointer'): string {
+    getContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
         const isCheckBoxCell = false;
         let contentClasses = 'controls-Grid__row-cell__content';
 
-        contentClasses += `controls-Grid__row-cell__content_baseline_default_theme-${theme}`;
-        contentClasses += `controls-Grid__row-cell_cursor-${cursor}`;
+        contentClasses += ` controls-Grid__row-cell__content_baseline_default_theme-${theme}`;
+        contentClasses += ` controls-Grid__row-cell_cursor-${cursor}`;
 
         // Если включен множественный выбор и рендерится первая колонка с чекбоксом
         if (isCheckBoxCell) {
@@ -159,7 +161,7 @@ export default class GridColumn<T> extends mixin<
             classLists.padding.top = `controls-Grid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
             classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;*/
         } else {
-            contentClasses = this._getContentPaddingClasses(theme);
+            contentClasses += this._getContentPaddingClasses(theme);
         }
 
         contentClasses += ' controls-Grid__row-cell_withoutRowSeparator_size-null_theme-default';
@@ -168,8 +170,17 @@ export default class GridColumn<T> extends mixin<
 +++     controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_default_theme-{{_options.theme}}
 +++     {{itemData.classList.padding.getAll()}} {{ itemData.classList.columnContent }} controls-Grid__row-cell_cursor-{{cursor || 'pointer'}}
         {{backgroundColorStyle ? 'controls-Grid__row-cell__content_background_' + backgroundColorStyle + '_theme-' + _options.theme}}
-        {{itemData.hoverBackgroundStyle ? 'controls-Grid__item_background-hover_' + itemData.hoverBackgroundStyle  + '_theme-' + _options.theme}}
++++     {{itemData.hoverBackgroundStyle ? 'controls-Grid__item_background-hover_' + itemData.hoverBackgroundStyle  + '_theme-' + _options.theme}}
         */
+
+        if (this._$owner.isEditing()) {
+            contentClasses += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
+        } else {
+            contentClasses += ` controls-Grid__row-cell-background-hover-default_theme-${theme}`;
+        }
+        if (this._$owner.isActive() && templateHighlightOnHover !== false) {
+            contentClasses += ` controls-GridView__item_active_theme-${theme}`;
+        }
         return contentClasses;
     }
 
@@ -233,7 +244,7 @@ export default class GridColumn<T> extends mixin<
     }
 
     getColumnIndex(): number {
-        return this._$owner.getColumnIndex(this._$column);
+        return this._$owner.getColumnIndex(this);
     }
 
     isFirstColumn(): boolean {
@@ -244,20 +255,48 @@ export default class GridColumn<T> extends mixin<
         return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
     }
 
-    shouldDisplayMarker(): boolean {
-        return this._$owner.isMarked() && this.isFirstColumn();
+    isMultiSelectColumn(): boolean {
+        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this.isFirstColumn();
     }
 
-    getMarkerClasses(): string {
+    shouldDisplayMarker(marker: boolean): boolean {
+        return marker !== false && this._$owner.isMarked() && this.isFirstColumn();
+    }
+
+    getMarkerClasses(theme: string, style: string = 'default'): string {
         return `
-        controls-ListView__itemV_marker controls-ListView__itemV_marker_theme-default
-        controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-default
-        controls-GridView-without-rowSeparator_item_marker_theme-default
+            controls-ListView__itemV_marker controls-ListView__itemV_marker-${style}_theme-${theme}
+            controls-GridView__itemV_marker controls-GridView__itemV_marker-${style}_theme-${theme}
         `;
     }
 
     nextVersion(): void {
         this._nextVersion();
+    }
+
+    protected _getWrapperSeparatorClasses(theme: string): string {
+        let classes = '';
+
+        if (true/*current.rowSeparatorSize === null*/) {
+
+            // Вспомогательный класс, вешается на ячейку. Через него задаются правильные отступы ячейке
+            // обеспечивает отсутствие "скачков" при динамической смене размера границы.
+            classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
+            classes += ' controls-Grid__no-rowSeparator';
+        }/* else {
+            classLists.base += ` controls-Grid__row-cell_withRowSeparator_size-${current.rowSeparatorSize}_theme-${theme}`;
+            classLists.base += ` controls-Grid__rowSeparator_size-${current.rowSeparatorSize}_theme-${theme}`;
+        }*/
+
+        /*if (current.columnIndex > current.hasMultiSelect ? 1 : 0) {
+            const columnSeparatorSize = _private.getSeparatorForColumn(current.columns, current.columnIndex, current.columnSeparatorSize);
+
+            if (columnSeparatorSize !== null) {
+                classLists.base += ' controls-Grid__row-cell_withColumnSeparator';
+                classLists.columnContent += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
+            }
+        }*/
+        return classes;
     }
 
     protected _getContentPaddingClasses(theme: string): string {
@@ -283,7 +322,7 @@ export default class GridColumn<T> extends mixin<
             if (cellPadding?.left) {
                 classes += `_${cellPadding.left}`;
             }
-            classes += '_theme-${theme}';
+            classes += `_theme-${theme}`;
         } else {
             classes += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
         }
@@ -313,4 +352,3 @@ Object.assign(GridColumn.prototype, {
     _$owner: null,
     _$column: null
 });
-

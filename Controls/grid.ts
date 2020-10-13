@@ -31,7 +31,7 @@ const ItemTemplate = GridLayoutUtil.isFullGridSupport() ? GridLayoutItemTemplate
 import ResultsTemplate = require('wml!Controls/_grid/ResultsTemplateResolver');
 import GroupTemplate = require('wml!Controls/_grid/GroupTemplate');
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
-import ColumnTemplate = require('wml!Controls/_grid/Render/common/ColumnContent');
+import ColumnTemplate = require('wml!Controls/_grid/Render/grid/Column');
 import ColumnLightTemplate = require('wml!Controls/_grid/layout/common/ColumnContentLight');
 
 import HeaderContent = require('wml!Controls/_grid/HeaderContent');

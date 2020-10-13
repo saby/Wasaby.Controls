@@ -6,10 +6,6 @@ import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import * as Template from 'wml!Controls/_grid/Render/grid/GridView';
 import * as Item from 'wml!Controls/_grid/Render/grid/Item';
 
-// todo События не работают
-// todo Базовые стили строк/ячеек - отступы и т.п.
-// todo События не работают
-
 const _private = {
     getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
         if (!columns) {
@@ -43,6 +39,8 @@ const _private = {
 
 const GridView = ListView.extend({
     _template: Template,
+    _hoveredCellIndex: null,
+    _hoveredCellItem: null,
 
     _beforeMount(options): void {
         GridView.superclass._beforeMount.apply(this, arguments);
@@ -88,6 +86,59 @@ const GridView = ListView.extend({
             classes.add('controls-Grid_support-ladder')
         }*/
         return classes.compile();
+    },
+
+    _onItemMouseMove(event, collectionItem) {
+        GridView.superclass._onItemMouseMove.apply(this, arguments);
+        this._setHoveredCell(collectionItem.item, event.nativeEvent);
+    },
+    _onItemMouseLeave() {
+        GridView.superclass._onItemMouseLeave.apply(this, arguments);
+        this._setHoveredCell(null, null);
+    },
+
+    _getCellIndexByEventTarget(event): number {
+        if (!event) {
+            return null;
+        }
+        const target = this._getCorrectElement(event.target);
+
+        const gridRow = target.closest('.controls-Grid__row');
+        if (!gridRow) {
+            return null;
+        }
+        const gridCells = gridRow.querySelectorAll('.controls-Grid__row-cell');
+        const currentCell = this._getCellByEventTarget(target);
+        const multiSelectOffset = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
+        return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
+    },
+
+    _getCorrectElement(element: HTMLElement): HTMLElement {
+        // В FF целью события может быть элемент #text, у которого нет метода closest, в этом случае рассматриваем как
+        // цель его родителя.
+        if (element && !element.closest && element.parentElement) {
+            return element.parentElement;
+        }
+        return element;
+    },
+    _getCellByEventTarget(target: HTMLElement): HTMLElement {
+        return target.closest('.controls-Grid__row-cell') as HTMLElement;
+    },
+
+    _setHoveredCell(item, nativeEvent): void {
+        const hoveredCellIndex = this._getCellIndexByEventTarget(nativeEvent);
+        if (item !== this._hoveredCellItem || hoveredCellIndex !== this._hoveredCellIndex) {
+            this._hoveredCellItem = item;
+            this._hoveredCellIndex = hoveredCellIndex;
+            let container = null;
+            let hoveredCellContainer = null;
+            if (nativeEvent) {
+                const target = this._getCorrectElement(nativeEvent.target);
+                container = target.closest('.controls-ListView__itemV');
+                hoveredCellContainer = this._getCellByEventTarget(target);
+            }
+            this._notify('hoveredCellChanged', [item, container, hoveredCellIndex, hoveredCellContainer]);
+        }
     },
 
     _getGridViewStyles(): string {
