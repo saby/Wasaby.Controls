@@ -37,7 +37,9 @@ export class Controller {
          const markedKey = this.calculateMarkedKeyForVisible();
          this.setMarkedKey(markedKey);
       }
-      this.setMarkedKey(options.markedKey);
+      if (options.markedKey !== undefined) {
+         this.setMarkedKey(options.markedKey);
+      }
       this._markerVisibility = options.markerVisibility;
    }
 

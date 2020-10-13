@@ -7583,7 +7583,7 @@ define([
                baseControl._beforeUpdate(newCfg);
 
                assert.equal(baseControl._markerController._markerVisibility, 'onactivated');
-               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
 
