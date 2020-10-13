@@ -155,7 +155,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
      * @cfg {Controls/_display/TreeItem|*} Корневой узел или его содержимое
      * @name Controls/_display/Tree#root
      */
-    protected _$root: T | any;
+    protected _$root: T | S;
 
     /**
      * @cfg {Boolean} Включать корневой узел в список элементов

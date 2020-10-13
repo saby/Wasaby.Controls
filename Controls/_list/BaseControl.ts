@@ -38,6 +38,7 @@ import {tmplNotify, keysHandler} from 'Controls/eventUtils';
 import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
+    Collection,
     CollectionItem,
     GroupItem, IEditableCollectionItem,
     TItemKey
@@ -2183,7 +2184,7 @@ const _private = {
 
         const strategy = this.createSelectionStrategy(
             options,
-            collection.getItems(),
+            collection,
             self._items.getMetaData().ENTRY_PATH
         );
 
@@ -2198,8 +2199,8 @@ const _private = {
         return self._selectionController;
     },
 
-    createSelectionStrategy(options: any, items: Array<CollectionItem<Model>>, entryPath: []): ISelectionStrategy {
-        const strategyOptions = this.getSelectionStrategyOptions(options, items, entryPath);
+    createSelectionStrategy(options: any, collection: Collection<CollectionItem<Model>>, entryPath: []): ISelectionStrategy {
+        const strategyOptions = this.getSelectionStrategyOptions(options, collection, entryPath);
         if (options.parentProperty) {
             return new TreeSelectionStrategy(strategyOptions);
         } else {
@@ -2214,18 +2215,18 @@ const _private = {
         return self._selectionController;
     },
 
-    getSelectionStrategyOptions(options: any, items: Array<CollectionItem<Model>>, entryPath: []): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
+    getSelectionStrategyOptions(options: any, collection: Collection<CollectionItem<Model>>, entryPath: []): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
         if (options.parentProperty) {
             return {
                 nodesSourceControllers: options.nodesSourceControllers,
                 selectDescendants: options.selectDescendants,
                 selectAncestors: options.selectAncestors,
                 rootId: options.root,
-                items,
+                model: collection,
                 entryPath
             };
         } else {
-            return { items };
+            return { model: collection };
         }
     },
 
@@ -3443,7 +3444,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 searchValue: newOptions.searchValue,
                 strategyOptions: _private.getSelectionStrategyOptions(
                     newOptions,
-                    collection.getItems(),
+                    collection,
                     self._items.getMetaData().ENTRY_PATH
                 )
             });
