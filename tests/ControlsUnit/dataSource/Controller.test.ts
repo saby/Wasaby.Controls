@@ -105,11 +105,17 @@ describe('Controls/dataSource:SourceController', () => {
         });
 
         it('load with parentProperty and selectedKeys',  async () => {
-            const controller = getControllerWithHierarchy({
+            let controller = getControllerWithHierarchy({
                 selectedKeys: [0],
                 excludedKeys: []
             });
-            const loadedItems = await controller.load();
+            let loadedItems = await controller.load();
+            ok((loadedItems as RecordSet).getCount() === 1);
+
+            controller = getControllerWithHierarchy({
+                selectedKeys: [0]
+            });
+            loadedItems = await controller.load();
             ok((loadedItems as RecordSet).getCount() === 1);
         });
 
