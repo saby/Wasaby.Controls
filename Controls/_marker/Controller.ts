@@ -27,13 +27,10 @@ export class Controller {
     */
    updateOptions(options: IOptions): void {
       const modelChanged = this._model !== options.model;
-      this._model = options.model;
-
-      if (options.markedKey !== undefined) {
-         this.setMarkedKey(options.markedKey);
-      }
 
       if (modelChanged) {
+         this._model = options.model;
+
          // Когда модель пересоздается, то возможен такой вариант:
          // Маркер указывает на папку, TreeModel -> SearchViewModel, после пересоздания markedKey
          // будет указывать на хлебную крошку, но маркер не должен ставиться на нее,

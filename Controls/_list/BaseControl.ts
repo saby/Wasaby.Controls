@@ -3433,8 +3433,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasMarkerController(this)) {
             _private.getMarkerController(this).updateOptions({
                 model: this._listViewModel,
-                markerVisibility: newOptions.markerVisibility,
-                markedKey: newOptions.markedKey
+                markerVisibility: newOptions.markerVisibility
             });
         }
 
