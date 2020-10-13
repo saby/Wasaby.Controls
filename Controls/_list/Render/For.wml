@@ -5,6 +5,7 @@
            itemData="{{ item }}"
            isAdd="{{ isAdd }}"
            multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
+           multiSelectPosition="{{ collection.getMultiSelectPosition() }}"
            itemActionsPosition="{{ _options.itemActionsPosition }}"
            searchValue="{{ collection.getSearchValue() }}"
            style="{{ _options.style }}"

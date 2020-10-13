@@ -19,12 +19,25 @@
     </ws:else>
 </ws:template>
 
+<ws:template name="multiSelectTemplate">
+    <ws:partial template="{{multiSelectTpl}}" attr:class="{{ itemData.multiSelectClassList }}">
+        <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
+                            checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"
+                            multiSelectStatus="{{itemData.isSelected()}}"
+                            key="{{itemData.key}}"/>
+    </ws:partial>
+</ws:template>
+
 <ws:template name="COLUMN_COLSPAN_CONTENT">
     <div class="controls-Grid__row-cell__content_colspaned {{ cellClassName || '' }}
        {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).top}}
        {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).bottom}}
        {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).right}}">
-        <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
+        <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}">
+            <ws:multiSelectTemplate>
+                <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+            </ws:multiSelectTemplate>
+        </ws:partial>
     </div>
 </ws:template>
 
@@ -41,14 +54,18 @@
                 ladderWrapper="{{currentColumn.ladderWrapper}}"
                 expanderTemplate="{{itemData.expanderTemplate}}"
                 itemData="{{currentColumn}}"
-                tagTemplate="{{tagTemplate}}"/>
+                tagTemplate="{{tagTemplate}}">
+        <ws:multiSelectTemplate>
+            <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+        </ws:multiSelectTemplate>
+    </ws:partial>
 </ws:template>
 
 <ws:template name="COLUMN">
 
     <!-- Первая ячейка может быть заколспанена на N колонок. Выводим Первую, следующие N-1 колонок не выводим. -->
     <ws:if data="{{
-            colspan === false && !!colspanLength ? ( (currentColumn.columnIndex <= (itemData.hasMultiSelect ? 1 : 0)) || (currentColumn.columnIndex >= ((itemData.hasMultiSelect ? 1 : 0) + colspanLength))) : true
+            colspan === false && !!colspanLength ? ( (currentColumn.columnIndex <= (itemData.hasMultiSelectColumn ? 1 : 0)) || (currentColumn.columnIndex >= ((itemData.hasMultiSelectColumn ? 1 : 0) + colspanLength))) : true
         }}">
         <td class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
               {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}
@@ -57,9 +74,9 @@
               {{ marker !== false ? currentColumn.classList.marked }}
               controls-TreeGrid__row js-controls-ItemActions__swipeMeasurementContainer"
             style="{{ currentColumn.tableCellStyles }}"
-            colspan="{{(colspan === false && !!colspanLength) ? (currentColumn.columnIndex === (itemData.hasMultiSelect ? 1 : 0) ? colspanLength : 1) : itemData.getColspanFor((itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex == 0) ? 'multiSelectColumn' : (colspan || colspanCurrentNode ? 'node'))}}">
+            colspan="{{(colspan === false && !!colspanLength) ? (currentColumn.columnIndex === (itemData.hasMultiSelectColumn ? 1 : 0) ? colspanLength : 1) : itemData.getColspanFor((itemData.hasMultiSelectColumn && currentColumn.columnIndex == 0) ? 'multiSelectColumn' : (colspan || colspanCurrentNode ? 'node'))}}">
             <div class="{{ itemData.getRelativeCellWrapperClasses(colspan, true) }}
-                        {{itemData.columnIndex === 0 && !itemData.hasMultiSelect ? currentColumn.classList.padding.left }}">
+                        {{itemData.columnIndex === 0 && !itemData.hasMultiSelectColumn ? currentColumn.classList.padding.left }}">
                 <!-- Маркер активной записи -->
                 <ws:if data="{{ marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0 }}">
                     <div class="{{itemData.getMarkerClasses()}}"></div>
@@ -73,15 +90,10 @@
                 </ws:if>
 
                 <!-- Контент колонки с чекбоксом -->
-                <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
+                <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
                     <ws:if data="{{!itemData.isAdd}}">
                         <div class="{{ currentColumn.classList.padding.getAll() }} {{ cellClassName || '' }}">
-                            <ws:partial template="{{multiSelectTpl}}" attr:class="{{ itemData.multiSelectClassList }}">
-                                <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
-                                                    checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"
-                                                    multiSelectStatus="{{itemData.isSelected()}}"
-                                                    key="{{itemData.key}}"/>
-                            </ws:partial>
+                            <ws:partial template="multiSelectTemplate"/>
                         </div>
                     </ws:if>
                     <ws:else>
@@ -92,7 +104,7 @@
                 <ws:else>
 
                     <!-- Иерархические отступы -->
-                    <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 1 || !itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
+                    <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 1 || !itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
                         <ws:if data="{{!withoutLevelPadding && itemData.level > 1}}">
                             <ws:for data="i in itemData.level - 1">
                                 <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(itemData, expanderSize, levelIndentSize)}}"></div>
@@ -116,11 +128,11 @@
                         <ws:partial template="COLUMN_COLSPAN_CONTENT"/>
                     </ws:else>
                     <ws:else>
-                        <ws:if data="{{ currentColumn.columnIndex === (itemData.hasMultiSelect ? 1 : 0) }}">
+                        <ws:if data="{{ currentColumn.columnIndex === (itemData.hasMultiSelectColumn ? 1 : 0) }}">
                             <!-- Растянутая колонка -->
                             <ws:partial template="COLUMN_COLSPAN_CONTENT"/>
                         </ws:if>
-                        <ws:else data="{{ currentColumn.columnIndex >= (colspanLength + (itemData.hasMultiSelect ? 1 : 0)) }}">
+                        <ws:else data="{{ currentColumn.columnIndex >= (colspanLength + (itemData.hasMultiSelectColumn ? 1 : 0)) }}">
                             <!-- Оставшиеся колонки -->
                             <ws:partial template="COLUMN_CONTENT"/>
                         </ws:else>
@@ -158,7 +170,7 @@
 <tr class="{{ itemData.getRowClasses(_options) }}">
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
        {{itemData.resetColumnIndex();}}
-       <ws:if data="{{itemData.hasMultiSelect}}">
+       <ws:if data="{{itemData.hasMultiSelectColumn}}">
            <ws:partial template="COLUMN" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}"/>
            {{itemData.goToNextColumn();}}
        </ws:if>
