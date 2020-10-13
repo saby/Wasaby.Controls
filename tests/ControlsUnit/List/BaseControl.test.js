@@ -7293,7 +7293,8 @@ define([
                getCollapsedGroups: () => {},
                unsubscribe: () => {},
                destroy: () => {},
-               getItemBySourceKey: () => collectionItem
+               getItemBySourceKey: () => collectionItem,
+               isEditing: () => false
             };
             spyMove = sinon.spy(moveController, 'move');
             spyMoveWithDialog = sinon.spy(moveController, 'moveWithDialog');
@@ -7338,6 +7339,24 @@ define([
             return baseControl.moveItemsWithDialog(selectionObject, {anyFilter: 'anyVal'}).then(() => {
                sinon.assert.called(spyMoveWithDialog);
             });
+         });
+
+         // Работает даже после update
+         it('should also work after update', () => {
+            baseControl._beforeUpdate({
+               ...cfg,
+               moveDialogTemplate: {
+                  templateName: 'fakeTemplate',
+                  templateOptions: {
+                     containerWidth: 500
+                  }
+               }
+            });
+            const stubUpdateOptions = sinon.stub(moveController, 'updateOptions').callsFake((options) => {
+               assert(options.popupOptions.template, 'fakeTemplate');
+               assert(options.popupOptions.templateOptions.containerWidth, 500);
+            });
+            stubUpdateOptions.restore();
          });
       });
 

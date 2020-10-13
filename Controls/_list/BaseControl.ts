@@ -2741,8 +2741,7 @@ const _private = {
         return result;
     },
 
-    getMoveController(self): MoveController {
-        const options = self._options;
+    prepareMoverControllerOptions(self, options): IMoveControllerOptions {
         const controllerOptions: IMoveControllerOptions = {
             source: options.source,
             parentProperty: options.parentProperty
@@ -2760,9 +2759,12 @@ const _private = {
                 Logger.error('Mover: Wrong type of moveDialogTemplate option, use object notation instead of template function', self);
             }
         }
+        return controllerOptions;
+    },
 
+    getMoveController(self): MoveController {
         if (!self._moveController) {
-            self._moveController = new MoveController(controllerOptions);
+            self._moveController = new MoveController(_private.prepareMoverControllerOptions(self, self._options));
         }
         return self._moveController;
     },
@@ -3401,7 +3403,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._moveController) {
-            this._moveController.updateOptions(newOptions);
+            this._moveController.updateOptions(_private.prepareMoverControllerOptions(this, newOptions));
         }
 
         if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
