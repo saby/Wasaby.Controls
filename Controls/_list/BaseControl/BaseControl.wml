@@ -215,6 +215,9 @@
                  class="controls-BaseControl_paging-Padding_theme-{{_options.theme}} {{(_options.task1179362156) ? 'controls-BaseControl-hide-paging'}}">
             </div>
             <div class="controls-BaseControl__pagingContainer {{_options.task1179362156 ? 'controls-BaseControl-hide-paging'}}">
+                <ws:if data="{{_options.pagingLeftTemplate}}">
+                    <ws:partial template="{{_options.pagingLeftTemplate}}"/>
+                </ws:if>
                 <Controls.paging:Paging
                         attr:class="controls-BaseControl__scrollPaging_theme-{{_options.theme}}"
                         contrastBackground="{{true}}"
