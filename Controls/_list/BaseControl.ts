@@ -137,7 +137,7 @@ const SCROLLMOVE_DELAY = 150;
 const PAGING_MIN_ELEMENTS_COUNT = 5;
 /**
  * Нативный IntersectionObserver дергает callback по перерисовке.
- * В ie нет нативного IntersectionObserver. 
+ * В ie нет нативного IntersectionObserver.
  * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
  */
 const CHECK_TRIGGERS_DELAY_IF_IE = detection.isIE ? 150 : 0;
@@ -2281,7 +2281,7 @@ const _private = {
     changeSelection(self: typeof BaseControl, newSelection: ISelectionObject): Promise<ISelectionObject>|ISelectionObject {
         const controller = _private.getSelectionController(self);
         const selectionDifference = controller.getSelectionDifference(newSelection);
-        const result = self._notify('beforeSelectionChanged', [selectionDifference]);
+        const result = self._notify('beforeSelectionChanged', [selectionDifference], {bubbling: true});
 
         if (result instanceof Promise) {
             result.then((selection: ISelectionObject) => {
