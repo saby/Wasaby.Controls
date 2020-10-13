@@ -176,6 +176,7 @@ class Field<Value, ModelOptions>
 
     private _handleInput(splitValue: ISplitValue, inputType: InputType): void {
         const displayValue: string = this._model.displayValue;
+        const value: string = this._model.value;
         const selection: ISelection = {...this._model.selection};
 
         if (this._model.handleInput(splitValue, inputType)) {
@@ -193,7 +194,7 @@ class Field<Value, ModelOptions>
                 };
             }
 
-            if (displayValue !== this._model.displayValue) {
+            if (this._model.isValueChanged(displayValue, value)) {
                 this._notifyEvent('valueChanged');
             }
             this._notifySelection(selection);

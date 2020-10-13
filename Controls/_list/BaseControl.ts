@@ -38,6 +38,7 @@ import {tmplNotify, keysHandler} from 'Controls/eventUtils';
 import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
+    Collection,
     CollectionItem,
     GroupItem, IEditableCollectionItem,
     TItemKey
@@ -141,7 +142,12 @@ const SCROLLMOVE_DELAY = 150;
  * Минимальное количество элементов, при которых должен отобразиться пэйджинг
  */
 const PAGING_MIN_ELEMENTS_COUNT = 5;
-
+/**
+ * Нативный IntersectionObserver дергает callback по перерисовке.
+ * В ie нет нативного IntersectionObserver. 
+ * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
+ */
+const CHECK_TRIGGERS_DELAY_IF_IE = detection.isIE ? 150 : 0;
 const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
 
 interface IAnimationEvent extends Event {
@@ -1355,18 +1361,22 @@ const _private = {
      */
     initPaging(self) {
         if (!(self._editInPlaceController && self._editInPlaceController.isEditing())
-            && !self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
+            && _private.needScrollPaging(self._options.navigation)) {
             if (self._viewportSize) {
-                this._recalcPagingVisible = false;
+                self._recalcPagingVisible = false;
                 self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
             } else {
                 self._recalcPagingVisible = true;
             }
+        } else {
+            self._pagingVisible = false;
         }
     },
 
     handleListScrollSync(self, scrollTop) {
-        _private.initPaging(self);
+        if (!self._pagingVisible) {
+            _private.initPaging(self);
+        }
 
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
@@ -2174,7 +2184,7 @@ const _private = {
 
         const strategy = this.createSelectionStrategy(
             options,
-            collection.getItems(),
+            collection,
             self._items.getMetaData().ENTRY_PATH
         );
 
@@ -2189,8 +2199,8 @@ const _private = {
         return self._selectionController;
     },
 
-    createSelectionStrategy(options: any, items: Array<CollectionItem<Model>>, entryPath: []): ISelectionStrategy {
-        const strategyOptions = this.getSelectionStrategyOptions(options, items, entryPath);
+    createSelectionStrategy(options: any, collection: Collection<CollectionItem<Model>>, entryPath: []): ISelectionStrategy {
+        const strategyOptions = this.getSelectionStrategyOptions(options, collection, entryPath);
         if (options.parentProperty) {
             return new TreeSelectionStrategy(strategyOptions);
         } else {
@@ -2205,18 +2215,18 @@ const _private = {
         return self._selectionController;
     },
 
-    getSelectionStrategyOptions(options: any, items: Array<CollectionItem<Model>>, entryPath: []): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
+    getSelectionStrategyOptions(options: any, collection: Collection<CollectionItem<Model>>, entryPath: []): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
         if (options.parentProperty) {
             return {
                 nodesSourceControllers: options.nodesSourceControllers,
                 selectDescendants: options.selectDescendants,
                 selectAncestors: options.selectAncestors,
                 rootId: options.root,
-                items,
+                model: collection,
                 entryPath
             };
         } else {
-            return { items };
+            return { model: collection };
         }
     },
 
@@ -2731,8 +2741,7 @@ const _private = {
         return result;
     },
 
-    getMoveController(self): MoveController {
-        const options = self._options;
+    prepareMoverControllerOptions(self, options): IMoveControllerOptions {
         const controllerOptions: IMoveControllerOptions = {
             source: options.source,
             parentProperty: options.parentProperty
@@ -2750,9 +2759,12 @@ const _private = {
                 Logger.error('Mover: Wrong type of moveDialogTemplate option, use object notation instead of template function', self);
             }
         }
+        return controllerOptions;
+    },
 
+    getMoveController(self): MoveController {
         if (!self._moveController) {
-            self._moveController = new MoveController(controllerOptions);
+            self._moveController = new MoveController(_private.prepareMoverControllerOptions(self, self._options));
         }
         return self._moveController;
     },
@@ -3185,7 +3197,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
         }
         if (this._recalcPagingVisible) {
-            _private.initPaging(this);
+            if (!this._pagingVisible) {
+                _private.initPaging(this);
+            }
         }
     },
 
@@ -3244,9 +3258,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._children.bottomVirtualScrollTrigger?.style.bottom = `${offset.bottom}px`;
     },
     _viewResize(): void {
-        if (this._mounted) {
+        if (this._isMounted) {
             const container = this._container[0] || this._container;
             this._viewSize = container.clientHeight;
+
+            /**
+             * Заново определяем должен ли отображаться пэйджинг или нет.
+             * Скрывать нельзя, так как при подгрузке данных пэйджинг будет моргать.
+             */
+            if (this._pagingVisible) {
+                _private.initPaging(this);
+            }
             this._viewRect = container.getBoundingClientRect();
             if (this._isScrollShown) {
                 this._updateItemsHeights();
@@ -3381,7 +3403,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._moveController) {
-            this._moveController.updateOptions(newOptions);
+            this._moveController.updateOptions(_private.prepareMoverControllerOptions(this, newOptions));
         }
 
         if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
@@ -3424,7 +3446,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 searchValue: newOptions.searchValue,
                 strategyOptions: _private.getSelectionStrategyOptions(
                     newOptions,
-                    collection.getItems(),
+                    collection,
                     self._items.getMetaData().ENTRY_PATH
                 )
             });
@@ -3484,6 +3506,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
+        }
+        if (newOptions.multiSelectPosition !== this._options.multiSelectPosition) {
+            this._listViewModel.setMultiSelectPosition(newOptions.multiSelectPosition);
         }
 
         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
@@ -3903,7 +3928,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             window.requestAnimationFrame(() => {
                 setTimeout(() => {
                     this.checkTriggersVisibility();
-                }, 0);
+                }, CHECK_TRIGGERS_DELAY_IF_IE);
             });
         });
     },
@@ -4507,7 +4532,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             theme: this._options.theme,
             mode: dataSourceError.Mode.dialog
         }).then((errorConfig: dataSourceError.ViewConfig) => {
-            this.__errorContainer.show(errorConfig);
+            this._children.errorContainer.show(errorConfig);
+            error.errorProcessed = true;
             return Promise.reject(error);
         });
     },
@@ -4804,7 +4830,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
-        _private.initPaging(this);
+        if (!this._pagingVisible) {
+            _private.initPaging(this);
+        }
 
         if (this._documentDragging) {
             this._insideDragging = true;
@@ -4965,7 +4993,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
             } else {
                 // After the right swipe the item should get selected.
-                if (this._options.multiSelectVisibility !== 'hidden' && _private.isItemsSelectionAllowed(this._options)) {
+                if (_private.isItemsSelectionAllowed(this._options)) {
                     const newSelection = _private.getSelectionController(this).toggleItem(key);
                     _private.changeSelection(this, newSelection);
                 }
@@ -5274,7 +5302,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
-                const draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
+                const draggingItemProjection = this._listViewModel.createItem({contents: dragEnterResult});
                 this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
             } else if (dragEnterResult === true) {
                 this._dndListController.setDraggedItems(dragObject.entity);
@@ -5406,6 +5434,7 @@ BaseControl.getDefaultOptions = function() {
         attachLoadTopTriggerToNull: true,
         uniqueKeys: true,
         multiSelectVisibility: 'hidden',
+        multiSelectPosition: 'default',
         markerVisibility: 'onactivated',
         style: 'default',
         selectedKeys: defaultSelectedKeys,

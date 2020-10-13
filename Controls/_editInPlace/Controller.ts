@@ -301,7 +301,11 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
                 resolve();
             }
         }).catch((err) => {
-            Logger.error(ERROR_MSG.BEFORE_BEGIN_EDIT_FAILED, this, err);
+            if (!err.errorProcessed) {
+                Logger.error(ERROR_MSG.BEFORE_BEGIN_EDIT_FAILED, this, err);
+            } else {
+                delete err.errorProcessed;
+            }
             return CONSTANTS.CANCEL;
         }).then((result?: { item: Model } | CONSTANTS.CANCEL) => {
             if (result === CONSTANTS.CANCEL) {
@@ -360,7 +364,11 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
                 resolve();
             }
         }).catch((err) => {
-            Logger.error(ERROR_MSG.BEFORE_END_EDIT_FAILED, this, err);
+            if (!err.errorProcessed) {
+                Logger.error(ERROR_MSG.BEFORE_END_EDIT_FAILED, this, err);
+            } else {
+                delete err.errorProcessed;
+            }
             return CONSTANTS.CANCEL;
         }).then((result) => {
             if (result === CONSTANTS.CANCEL) {

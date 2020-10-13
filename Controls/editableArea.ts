@@ -4,6 +4,7 @@
  * @includes View Controls/_editableArea/View
  * @includes Base Controls/_editableArea/Templates/Editors/Base
  * @includes DateTime Controls/_editableArea/Templates/Editors/DateTime
+ * @includes Buttons Controls/_editableArea/Templates/Buttons
  * @includes IView Controls/_editableArea/interface/IView
  * @public
  * @author Крайнов Д.О.

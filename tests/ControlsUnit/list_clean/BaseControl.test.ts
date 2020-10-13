@@ -144,6 +144,32 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._beforeUpdate(cloneBaseControlCfg);
             assert.isFalse(baseControl._pagingVisible);
         });
+
+        it('viewSize resize', async () => {
+            baseControl.saveOptions(baseControlCfg);
+            await baseControl._beforeMount(baseControlCfg);
+            baseControl._afterMount();
+            baseControl._beforeUpdate(baseControlCfg);
+            baseControl._afterUpdate(baseControlCfg);
+            baseControl._container = {
+                clientHeight: 1000,
+                getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}]),
+                getBoundingClientRect: () => ([{clientHeight: 100, offsetHeight: 0}])
+            };
+            assert.isFalse(baseControl._pagingVisible);
+            baseControl._viewportSize = 400;
+            baseControl._viewSize = 800;
+            baseControl._mouseEnter(null);
+            assert.isTrue(baseControl._pagingVisible);
+
+            baseControl._container.clientHeight = 1000;
+            baseControl._viewResize();
+            assert.isTrue(baseControl._pagingVisible);
+
+            baseControl._container.clientHeight = 200;
+            baseControl._viewResize();
+            assert.isFalse(baseControl._pagingVisible);
+        });
     });
     describe('BaseControl paging', () => {
         const baseControlCfg = {

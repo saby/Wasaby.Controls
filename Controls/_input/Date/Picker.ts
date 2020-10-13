@@ -22,6 +22,7 @@ import {Popup as PopupUtil} from 'Controls/dateUtils';
     * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
     * @mixes Controls/_input/interface/IBase
     * @mixes Controls/interface/IInputPlaceholder
+    * @mixes Controls/_input/interface/IValueValidators
     * @mixes Controls/_interface/IOpenPopup
     * @control
     * @public

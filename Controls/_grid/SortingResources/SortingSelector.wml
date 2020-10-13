@@ -7,7 +7,6 @@
                 displayProperty="title"
                 source="{{_source}}"
                 fontSize="{{_options.fontSize}}"
-                iconSize="{{_iconSize}}"
                 dropdownClassName="{{_options.dropdownClassName}}"
                 popupClassName="{{_options.popupClassName}}"
                 menuPopupOptions="{{_options.menuPopupOptions}}"
