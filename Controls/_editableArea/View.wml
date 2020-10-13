@@ -11,6 +11,8 @@
          <ws:partial
             template="{{_options.content}}"
             editObject="{{_editObject}}"
+            on:applyButtonClick="commitEdit()"
+            on:closeButtonClick="cancelEdit()"
             on:mousedown="_onClickHandler()"
             on:keyDown="_onKeyDown()"
             isEditing="{{_isEditing}}"
