@@ -159,17 +159,16 @@ describe('Controls/_listDragNDrop/FlatController', () => {
 
    it('canStartDragNDrop', () => {
       const canStartDragNDrop = () => true,
-            event = {
-               nativeEvent: {
-                  button: undefined
-               },
-               target: {
-                  closest(cssClass) {
-                     assert.equal(cssClass, '.controls-List_DragNDrop__notDraggable');
-                     return false;
-                  }
-               }
-            };
+          event = {
+             nativeEvent: {
+                button: undefined
+             },
+             target: {
+                closest(cssClass) {
+                   return false;
+                }
+             }
+          };
 
       assert.isTrue(DndFlatController.canStartDragNDrop(canStartDragNDrop, event, false));
       assert.isTrue(DndFlatController.canStartDragNDrop(false, event, false));
