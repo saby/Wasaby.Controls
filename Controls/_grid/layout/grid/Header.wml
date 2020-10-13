@@ -5,13 +5,13 @@
                       defaultHeaderContent="{{defaultHeaderContent}}"
                       headerModel="{{headerModel}}"
                       headerColumn="{{ headerRow.getCurrentHeaderColumn() }}"
-                      multiselect="{{ headerModel.getMultiSelectVisibility() }}"
+                      hasMultiSelect="{{ headerModel.hasMultiSelectColumn() }}"
                       on:arrowClick="_notifyHandler('arrowClick')"/>
       </ws:for>
 </ws:template>
 
 <ws:template name="cellContent">
-   <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0 || headerColumn.column.caption || headerColumn.column.title}}">
+   <ws:if data="{{ !hasMultiSelect || headerColumn.index !== 0 || headerColumn.column.caption || headerColumn.column.title}}">
       <ws:if data="{{!!headerColumn.column.template}}">
          <ws:partial attr:class="controls-Grid__header-cell__content controls-Grid__header-cell__content_theme-{{_options.theme}} {{headerModel.isMultiHeader() ? ' controls-Grid__row-multi-header__content_baseline' : ' controls-Grid__row-header__content_baseline'}}_theme-{{_options.theme}} {{headerColumn.cellContentClasses}}"
                      template="{{headerColumn.column.template}}"
@@ -55,7 +55,7 @@
          <ws:partial template="cellContent"
                      defaultHeaderContent="{{defaultHeaderContent}}"
                      headerColumn="{{headerColumn}}"
-                     multiselect="{{multiselect}}"
+                     hasMultiSelect="{{hasMultiSelect}}"
                      headerModel="{{ headerModel }}"/>
       </Controls.scroll:StickyHeader>
 </ws:template>

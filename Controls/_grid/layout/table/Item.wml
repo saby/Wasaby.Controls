@@ -19,17 +19,21 @@
     </ws:else>
 </ws:template>
 
+<ws:template name="multiSelectTemplate">
+    <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
+        <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"/>
+    </ws:partial>
+</ws:template>
+
 <ws:template name="COLUMN_CONTENT">
     <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0}}">
         <div class="{{itemData.getMarkerClasses()}}"></div>
     </ws:if>
 
-    <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
+    <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
         <ws:if data="{{!itemData.isAdd}}">
             <div class="{{ currentColumn.classList.padding.getAll() }}">
-                <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
-                    <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"/>
-                </ws:partial>
+                <ws:partial template="multiSelectTemplate"/>
             </div>
         </ws:if>
         <ws:else>
@@ -39,7 +43,11 @@
     <ws:else>
         <ws:if data="{{colspan}}">
             <div class="controls-Grid__row-cell__content_colspaned {{ currentColumn.getColspanedPaddingClassList(currentColumn, colspan).getAll() }}">
-                <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
+                <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}">
+                    <ws:multiSelectTemplate>
+                        <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+                    </ws:multiSelectTemplate>
+                </ws:partial>
             </div>
         </ws:if>
         <ws:else>
@@ -51,7 +59,11 @@
                                     {{itemData.isAnimatedForSelection() ? ' controls-ListView__item_rightSwipeAnimation'}}"
                         itemData="{{currentColumn}}"
                         backgroundStyle="{{backgroundStyle}}"
-                        tagTemplate="{{tagTemplate}}"/>
+                        tagTemplate="{{tagTemplate}}">
+                <ws:multiSelectTemplate>
+                    <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+                </ws:multiSelectTemplate>
+            </ws:partial>
         </ws:else>
     </ws:else>
 
@@ -94,7 +106,7 @@
     </ws:if>
     <ws:else>
         <!-- При включеном colspan растягиваем контент (если включен мультивыбор, дополнительно выводим под него колонку). -->
-        <ws:partial template="COLUMN_CONTENT_WRAPPER" colspanFor="{{(colspan && !(itemData.hasMultiSelect && currentColumn.columnIndex === 0)) ? 'colspanedRow' : null}}">
+        <ws:partial template="COLUMN_CONTENT_WRAPPER" colspanFor="{{(colspan && !(itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0)) ? 'colspanedRow' : null}}">
             <ws:partial template="COLUMN_CONTENT"/>
         </ws:partial>
     </ws:else>

@@ -724,6 +724,20 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._display.setSelectedItems(items, selected);
     },
 
+    // New Model compatibility
+    setMultiSelectPosition(position: 'default' | 'custom'): void {
+        if (this._display) {
+            this._display.setMultiSelectPosition(position);
+        }
+    },
+
+    // New Model compatibility
+    getMultiSelectPosition(): 'default' | 'custom' {
+        if (this._display) {
+            return this._display.getMultiSelectPosition();
+        }
+    },
+
     setItemTemplateProperty: function(itemTemplateProperty) {
         this._options.itemTemplateProperty = itemTemplateProperty;
         this._nextModelVersion();

@@ -21,6 +21,12 @@
    </ws:else>
 </ws:template>
 
+<ws:template name="multiSelectTemplate">
+   <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
+      <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"/>
+   </ws:partial>
+</ws:template>
+
 <ws:template name="COLUMN_CONTENT">
    <!-- Маркер активной записи. Не должен быть выведен в фейковой ячейке лесенки -->
    <ws:if data="{{ !isLadderHeader && (marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0) }}">
@@ -28,11 +34,9 @@
    </ws:if>
 
    <!-- Ячейка с чекбоксом -->
-   <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
+   <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
       <ws:if data="{{!itemData.isAdd}}">
-         <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
-            <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"/>
-         </ws:partial>
+         <ws:partial template="multiSelectTemplate"/>
       </ws:if>
       <ws:else>
          <div class="{{'controls-Grid__cell_spacingFirstCol_' + itemData.itemPadding.left + '_theme-' +itemData.theme}}"></div>
@@ -45,7 +49,11 @@
                      {{ currentColumn.getColspanedPaddingClassList(currentColumn, colspan).getAll() }}
                      {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
                      {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}">
-            <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
+            <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}">
+               <ws:multiSelectTemplate>
+                  <ws:partial template="multiSelectTemplate" if="{{ multiSelectPosition === 'custom' }}"/>
+               </ws:multiSelectTemplate>
+            </ws:partial>
          </div>
       </ws:if>
       <ws:else>
@@ -61,7 +69,11 @@
                                  {{itemData.isAnimatedForSelection() ? ' controls-ListView__item_rightSwipeAnimation'}}
                                  {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}"
                      itemData="{{currentColumn}}"
-                     tagTemplate="{{tagTemplate}}"/>
+                     tagTemplate="{{tagTemplate}}">
+            <ws:multiSelectTemplate>
+               <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+            </ws:multiSelectTemplate>
+         </ws:partial>
       </ws:else>
    </ws:else>
 
@@ -116,17 +128,17 @@
    <!-- Данный выводятся в зафиксированной части. ws:for вызовет рендер только первой колонки для заколспанненой записи. -->
    <ws:if data="{{itemData.columnScroll && colspan}}">
       <!-- Зафиксированная часть. -->
-      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
+      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
            style="{{currentColumn.gridCellStyles}} {{itemData.getCellStyle(itemData, currentColumn, false)}} {{itemData.getColspanForColumnScroll().fixedColumns}}">
          <ws:partial template="COLUMN_CONTENT"/>
       </div>
 
       <!-- Скроллируемая часть. -->
-      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}} {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
+      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}} {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
            style="{{currentColumn.gridCellStyles}} {{itemData.getCellStyle(itemData, currentColumn, false)}} {{itemData.getColspanForColumnScroll().scrollableColumns}}"></div>
    </ws:if>
    <ws:else>
-      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
+      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
            style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">
          <ws:partial template="COLUMN_CONTENT"/>
       </div>
@@ -154,7 +166,7 @@
    <Controls.scroll:StickyHeader position="topbottom" backgroundStyle="{{itemData.style + '_sticked'}}"
                           mode="{{stickyMode}}"
                           attr:class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
-                                      {{itemData.hasMultiSelect && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
+                                      {{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}
                                       {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}
                                       {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
                                       js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
