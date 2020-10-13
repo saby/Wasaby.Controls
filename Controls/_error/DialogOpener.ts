@@ -21,7 +21,7 @@ export default class DialogOpener {
 
         options.eventHandlers = {
             ...options.eventHandlers,
-            onClose(): void {
+            onClose: () => {
                 this._popupId = null;
                 dialogOptions?.eventHandlers?.onClose();
             }
