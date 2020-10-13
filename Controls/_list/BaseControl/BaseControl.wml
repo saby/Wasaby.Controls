@@ -108,6 +108,7 @@
                 on:deactivated="_onListDeactivated()"
                 on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
                 on:beforeMarkedKeyChanged="_notifyHandler('beforeMarkedKeyChanged')"
+                on:beforeSelectionChanged="_notifyHandler('beforeSelectionChanged')"
                 on:itemClick="_onItemClick()"
                 on:groupClick="_onGroupClick()"
                 on:editArrowClick="_notifyHandler('editArrowClick')"
