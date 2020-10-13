@@ -75,11 +75,6 @@ interface IInputControllerOptions extends IControlOptions, IFilterOptions, ISear
    suggestTemplate: ISuggestTemplateProp | null;
    footerTemplate: ISuggestFooterTemplate;
    trim: boolean; // TODO: searchValueTrim ???
-   /**
-    * @name Controls/_suggest/_InputController#dataLoadCallback
-    * @cfg {Function} Callback вызывающийся после того, как загружены данные.
-    * @param {RecordSet} Загруженные данные.
-    */
    dataLoadCallback?: Function;
 }
 
