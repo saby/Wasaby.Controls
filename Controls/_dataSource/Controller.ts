@@ -388,7 +388,7 @@ export default class Controller {
                     import('Controls/operations').then((operations) => {
                         resultFilter.entries = operations.selectionToRecord({
                             selected: options.selectedKeys,
-                            excluded: options.excludedKeys
+                            excluded: options.excludedKeys || []
                         }, Controller._getSource(options.source).getAdapter());
                         resolve(resultFilter);
                     });
