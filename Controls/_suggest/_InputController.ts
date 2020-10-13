@@ -693,7 +693,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          delayTime: options.searchDelay,
          minSearchLength: options.minSearchLength,
          searchCallback: (validatedValue: string) => this._resolveLoad(validatedValue),
-         searchResetCallback: async () => (await this._getSearchController()).reset()
+         searchResetCallback: async () => {
+            (await this._getSearchController()).reset();
+            this._updateSuggestState();
+         }
       };
    }
 
