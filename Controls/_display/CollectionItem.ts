@@ -556,7 +556,8 @@ export default class CollectionItem<T> extends mixin<
     getContentClasses(theme: string, style: string = 'default'): string {
         const rowSeparatorSize = this.getOwner().getRowSeparatorSize();
         return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
-        ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}`;
+            ${this.isAnimatedForSelection() ? ' controls-ListView__item_rightSwipeAnimation' : ''}
+            ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}`;
     }
 
     /**
