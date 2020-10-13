@@ -350,6 +350,13 @@ interface ISuggest {
        * </pre>
        */
       suggestPopupOptions: object;
+
+      /**
+       * @name Controls/_suggest/_InputController#dataLoadCallback
+       * @cfg {Function} Callback вызывающийся после того, как загружены данные.
+       * @param {RecordSet} Загруженные данные.
+       */
+      dataLoadCallback: Function;
    };
 }
 

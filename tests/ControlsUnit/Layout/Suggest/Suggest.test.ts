@@ -561,7 +561,8 @@ describe('Controls/suggest', () => {
          beforeEach(() => {
             inputContainer = getComponentObject({
                searchStartCallback: () => {},
-               searchParam: 'testtt'
+               searchParam: 'testtt',
+               dataLoadCallback: () => {}
             });
             searchCallbackSpy = sandbox.spy(inputContainer._options, 'searchStartCallback');
             loadEndSpy = sandbox.spy(inputContainer, '_loadEnd');
@@ -573,10 +574,12 @@ describe('Controls/suggest', () => {
          it('value is not specified', async () => {
             sandbox.stub(SourceController.prototype, 'load')
                .callsFake(() => Promise.resolve(recordSet));
+            const dataLoadCallbackSpy = sandbox.spy(inputContainer._options, 'dataLoadCallback');
             const result = await inputContainer._resolveLoad();
 
             assert.isTrue(searchCallbackSpy.calledOnce);
             assert.equal(recordSet, result);
+            assert.isTrue(dataLoadCallbackSpy.withArgs(recordSet).calledOnce);
             assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
             assert.isTrue(loadEndSpy.calledOnce);
          });
