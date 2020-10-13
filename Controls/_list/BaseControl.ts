@@ -2446,7 +2446,7 @@ const _private = {
 
     changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey): Promise<CrudEntityKey>|CrudEntityKey {
         // Пока выполнялся асинхронный запрос, контрол мог быть уничтожен. Например, всплывающие окна.
-        if (self._destroyed || self._options.hasOwnProperty('markedKey')) {
+        if (self._destroyed) {
             return undefined;
         }
 
@@ -2456,18 +2456,24 @@ const _private = {
         let result = eventResult;
         if (eventResult instanceof Promise) {
             eventResult.then((key) => {
-                markerController.setMarkedKey(key);
+                if (self._options.hasOwnProperty('markedKey')) {
+                    markerController.setMarkedKey(key);
+                }
                 self._notify('markedKeyChanged', [key]);
                 return key;
             });
         } else if (eventResult !== undefined && self._environment) {
             // Если не был инициализирован environment, то _notify будет возвращать null,
             // но это значение используется, чтобы сбросить маркер. Актуально для юнитов
-            markerController.setMarkedKey(eventResult);
+            if (self._options.hasOwnProperty('markedKey')) {
+                markerController.setMarkedKey(eventResult);
+            }
             self._notify('markedKeyChanged', [eventResult]);
         } else {
             result = newMarkedKey;
-            markerController.setMarkedKey(newMarkedKey);
+            if (self._options.hasOwnProperty('markedKey')) {
+                markerController.setMarkedKey(newMarkedKey);
+            }
             self._notify('markedKeyChanged', [newMarkedKey]);
         }
 
