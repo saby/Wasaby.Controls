@@ -1,5 +1,5 @@
 import {NewSourceController, ISourceControllerOptions} from 'Controls/dataSource';
-import {Memory} from 'Types/source';
+import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {ok} from 'assert';
 import {RecordSet} from 'Types/collection';
 
@@ -22,6 +22,10 @@ const items = [
     },
     {
         key: 2,
+        title: 'Aleksey'
+    },
+    {
+        key: 3,
         title: 'Aleksey'
     }
 ];
@@ -58,6 +62,18 @@ function getMemory(): Memory {
     return new Memory({
         data: items,
         keyProperty: 'key'
+    });
+}
+
+function getPrefetchProxy(): PrefetchProxy {
+    return new PrefetchProxy({
+        target: getMemory(),
+        data: {
+            query: new DataSet({
+                rawData: items.slice(0, 2),
+                keyProperty: 'key'
+            })
+        }
     });
 }
 
@@ -113,6 +129,26 @@ describe('Controls/dataSource:SourceController', () => {
             ok((loadedItems as RecordSet).getCount() === 1);
         });
 
+        it('load with prefetchProxy in options',  async () => {
+            const controller = getController({
+                source: getPrefetchProxy(),
+                navigation: {
+                    source: 'page',
+                    sourceConfig: {
+                        pageSize: 2,
+                        hasMore: false
+                    }
+                }
+            });
+
+            let loadedItems = await controller.load();
+            ok((loadedItems as RecordSet).getCount() === 2);
+            ok((loadedItems as RecordSet).at(0).get('title') === 'Sasha');
+
+            loadedItems = await controller.load('down');
+            ok((loadedItems as RecordSet).getCount() === 2);
+            ok((loadedItems as RecordSet).at(0).get('title') === 'Aleksey');
+        });
     });
 
     describe('updateOptions', () => {
