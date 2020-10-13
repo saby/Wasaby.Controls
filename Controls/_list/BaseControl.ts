@@ -2281,7 +2281,7 @@ const _private = {
     changeSelection(self: typeof BaseControl, newSelection: ISelectionObject): Promise<ISelectionObject>|ISelectionObject {
         const controller = _private.getSelectionController(self);
         const selectionDifference = controller.getSelectionDifference(newSelection);
-        const result = self._notify('beforeSelectionChanged', [selectionDifference], {bubbling: true});
+        const result = self._notify('beforeSelectionChanged', [selectionDifference]);
 
         if (result instanceof Promise) {
             result.then((selection: ISelectionObject) => {
@@ -2450,7 +2450,7 @@ const _private = {
         }
 
         const markerController = _private.getMarkerController(self);
-        const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey], { bubbling: true });
+        const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey]);
 
         let result = eventResult;
         if (eventResult instanceof Promise) {
