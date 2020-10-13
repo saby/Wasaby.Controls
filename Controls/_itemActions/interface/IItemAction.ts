@@ -80,13 +80,13 @@ export type TMenuButtonVisibility = 'visible' | 'adaptive';
 /**
  * @typedef {Function} TItemActionHandler
  * @description
- * Обработчик опции записи. См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler-click/ пример обработчика}.
+ * Обработчик опции записи. См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler/ пример обработчика}.
  * @param item Corresponding list item.
  */
 export type TItemActionHandler = (item: Model) => void;
 
 /**
- * Интерфейс опции записи
+ * Интерфейс {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опции записи}
  * @interface Controls/_itemActions/interface/IItemAction
  * @description
  * Опции записи могут быть использованы в следующих вариантах:
@@ -149,8 +149,11 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#style
-     * @cfg {TIconStyle} Значение свойства преобразуется в CSS-класс вида "controls-itemActionsV__action_style_<значение_свойства>".
-     * Он будет установлен для html-контейнера самой опции записи, и свойства класса будут применены как к тексту (см. title), так и к иконке (см. icon).
+     * @cfg {TIconStyle} стиль контейнера опции записи
+     * @remark
+     * Значение свойства преобразуется в CSS-класс вида "controls-itemActionsV__action_style_<значение_свойства>".
+     * Он будет установлен для html-контейнера самой опции записи,
+     * и свойства класса будут применены как к {@link Controls/_itemActions/interface/IItemAction#title тексту}, так и к {@link Controls/_itemActions/interface/IItemAction#icon иконке}.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#style
@@ -160,7 +163,8 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#iconStyle
-     * @cfg {TIconStyle} [iconStyle=secondary] Стиль иконки.
+     * @cfg {TIconStyle} Стиль иконки.
+     * @remark
      * Каждому значению свойства соответствует стиль, который определяется {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темой оформления} приложения.
      * @default secondary
      */
@@ -173,7 +177,9 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#handler
-     * @cfg {TItemActionHandler} Обработчик опции записи. См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler-click/ пример обработчика}.
+     * @cfg {TItemActionHandler} Обработчик опции записи.
+     * @remark
+     * См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler/ пример обработчика}.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#handler
@@ -184,6 +190,7 @@ export interface IItemAction {
     /**
      * @name Controls/_itemActions/interface/IItemAction#parent@
      * @cfg {Boolean} Поле, описывающее тип узла (список, узел, скрытый узел).
+     * @remark
      * Подробнее о различиях между типами узлов можно прочитать {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy здесь}.
      */
     /*
@@ -204,7 +211,7 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#tooltip
-     * @cfg {String} Текст подсказки при наведении мыши.
+     * @cfg {String} Текст всплывающей подсказки, отображаемой при наведении на опцию записи.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#tooltip
@@ -215,6 +222,7 @@ export interface IItemAction {
     /**
      * @name Controls/_itemActions/interface/IItemAction#parent
      * @cfg {String|Number} Идентификатор родительской опции записи.
+     * @remark
      * Используется для создания {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/hierarchy/ многоуровневого контекстного меню}.
      */
     /*
