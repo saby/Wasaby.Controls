@@ -388,7 +388,7 @@ export default class Controller {
                     import('Controls/operations').then((operations) => {
                         resultFilter.entries = operations.selectionToRecord({
                             selected: options.selectedKeys,
-                            excluded: options.excludedKeys
+                            excluded: options.excludedKeys || []
                         }, Controller._getSource(options.source).getAdapter());
                         resolve(resultFilter);
                     });
@@ -426,7 +426,9 @@ export default class Controller {
 
     private _subscribeItemsCollectionChangeEvent(items: RecordSet): void {
         this._unsubscribeItemsCollectionChangeEvent();
-        items.subscribe('onCollectionChange', this._collectionChange);
+        if (items) {
+            items.subscribe('onCollectionChange', this._collectionChange);
+        }
     }
 
     private _unsubscribeItemsCollectionChangeEvent(): void {

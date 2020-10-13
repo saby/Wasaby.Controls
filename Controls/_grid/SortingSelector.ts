@@ -14,7 +14,6 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
     private _currentParamName: string = null;
     private _orders: object = {};
     protected _source: Memory;
-    protected _iconSize: string = 's';
     // когда выбран пункт с иконкой, в вызывающем элементе отображается только иконка. У нее другой отступ.
     protected _nocaption: boolean = false;
 
@@ -50,11 +49,6 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
 
                 if (dataElem.icon) {
                     this._nocaption = true;
-                }
-
-                //TODO https://online.sbis.ru/opendoc.html?guid=7e42cd81-9aa2-47eb-8e41-8573d4012b4f
-                if (dataElem.iconSize) {
-                    this._iconSize = dataElem.iconSize || 's';
                 }
             }
             data.push(dataElem);

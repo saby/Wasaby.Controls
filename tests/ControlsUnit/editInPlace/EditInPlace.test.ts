@@ -822,6 +822,25 @@ describe('Controls/_editInPlace/EditInPlace', () => {
     testEndEditWith('commit');
     testEndEditWith('cancel');
 
+    it('should not throw console error if it was processed by error controller', () => {
+        editInPlace.updateOptions({
+            onBeforeBeginEdit: (options) => {
+                throw { errorProcessed: true };
+            }
+        });
+        let consoleErrorThrown = false;
+
+        Logger.error = () => {
+            consoleErrorThrown = true;
+        };
+
+        return editInPlace.add(newItem).then((result) => {
+            assert.isTrue(result && result.canceled);
+            assert.isFalse(consoleErrorThrown);
+            Logger.error = () => ({});
+        });
+    });
+
     function testEndEditWith(operation: 'commit' | 'cancel'): void {
         describe(operation, () => {
             beforeEach(async () => {

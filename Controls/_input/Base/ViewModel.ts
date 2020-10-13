@@ -160,6 +160,10 @@ import {isEqual} from 'Types/object';
 
             this._nextVersion();
             this._shouldBeChanged = true;
+         },
+
+         isValueChanged: function(oldDisplayValue: string, oldValue?: string) {
+            return oldDisplayValue !== this._displayValue;
          }
       });
 

@@ -48,6 +48,9 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
             this._nextVersion();
 
             return result;
+         },
+         isValueChanged: function(oldDisplayValue: string, oldValue?: string) {
+            return oldValue !== this._value;
          }
       });
 

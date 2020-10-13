@@ -1,5 +1,5 @@
 /**
- * Библиотека, которая предоставляет редактирование по месту в коллекции
+ * Библиотека, которая предоставляет редактирование по месту в коллекции.
  * @library Controls/editInPlace
  * @includes Controller Controls/_editInPlace/Controller
  *
@@ -15,7 +15,9 @@
  * @public
  * @author Родионов Е.А.
  */
-
+/**
+ * @ignore
+ */
 const JS_SELECTORS = {
     NOT_EDITABLE: 'js-controls-ListView__notEditable'
 };

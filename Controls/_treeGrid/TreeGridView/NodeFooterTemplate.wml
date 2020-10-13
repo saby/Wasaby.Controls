@@ -58,7 +58,7 @@
 
 <ws:template name="footer">
     <!-- Колонка под чекбокс -->
-    <ws:partial template="wrapForTable" if="{{footer.multiSelectVisibility !== 'hidden'}}">
+    <ws:partial template="wrapForTable" if="{{footer.hasMultiSelectColumn}}">
         <ws:tagContent>
             <div></div>
         </ws:tagContent>

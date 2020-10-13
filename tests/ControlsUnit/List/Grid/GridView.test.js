@@ -97,6 +97,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                    { displayProperty: 'field2', template: 'column2' }
                 ],
                 multiSelectVisibility: 'onhover',
+                multiSelectPosition: 'default',
                 itemPadding: {
                    left: 'S'
                 },
@@ -133,6 +134,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                 ],
                 itemActionsPosition: 'outside',
                 needBottomPadding: false,
+                multiSelectPosition: 'default',
                 theme
              },
              gridView = new gridMod.GridView(cfg);
@@ -351,6 +353,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
       it('itemClick sends right args', function() {
          const cfg = {
             multiSelectVisibility: 'visible',
+            multiSelectPosition: 'default',
             columns: [
                { displayProperty: 'field1', template: 'column1' },
                { displayProperty: 'field2', template: 'column2' }
@@ -389,6 +392,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                assert.equal(args[2], 1);
             }
          };
+         gridView.saveOptions(cfg);
          gridView._onItemClick(fakeEvent, fakeDispItem);
          assert.isTrue(isEventRaised);
          assert.isTrue(isNativeStopped);
