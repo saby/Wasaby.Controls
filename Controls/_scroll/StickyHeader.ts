@@ -2,7 +2,7 @@
  * Обеспечивает прилипание контента к верхней или нижней части родительского контейнера при прокрутке.
  * Прилипание происходит в момент пересечения верхней или нижней части контента и родительского контейнера.
  * @remark
- * Фиксация заголовка в браузере IE версии ниже 16 не поддерживается.
+ * Фиксация заголовка в IE и Edge версии ниже 16 не поддерживается.
  *
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
@@ -20,7 +20,7 @@
  * Ensures that content sticks to the top or bottom of the parent container when scrolling.
  * Occurs at the moment of intersection of the upper or lower part of the content and the parent container.
  * @remark
- * Fixing in ie browser below version 16 is not supported.
+ * Fixing in IE and Edge below version 16 is not supported.
  *
  * @public
  * @extends Core/Control
@@ -609,7 +609,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
         // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было
-        const isIosOptimizedMode = detection.isMobileIOS;
+        const isIosOptimizedMode = this._isMobileIOS;
 
         if (opts.position.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
@@ -628,12 +628,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // отключить эти обновления.
         // Повсеместно включать нельзя, на заголовках где есть бордеры или в контенте есть разные цвета фона
         // могут наблюдаться проблемы.
-        if (isIosOptimizedMode) {
-            style += 'z-index: ' + opts.fixedZIndex + ';';
-            return style;
+        let position = fixedPosition;
+        if (!position && isIosOptimizedMode && this._options.position !== 'topbottom') {
+            position = this._options.position;
         }
-
-        if (fixedPosition) {
+        if (position && this._container) {
             if (offset) {
                 container = this._getNormalizedContainer();
 
@@ -651,17 +650,18 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 // Increase border or padding by offset.
                 // If the padding or border is already set by the style attribute, then don't change it.
                 if (this._reverseOffsetStyle === null) {
-                    const borderWidth: number = parseInt(styles['border-' + fixedPosition + '-width'], 10);
+                    const borderWidth: number = parseInt(styles['border-' + position + '-width'], 10);
 
                     if (borderWidth) {
-                        this._reverseOffsetStyle = 'border-' + fixedPosition + '-width:' + (borderWidth + offset) + 'px;';
+                        this._reverseOffsetStyle = 'border-' + position + '-width:' + (borderWidth + offset) + 'px;';
                     } else {
-                        this._reverseOffsetStyle = 'padding-' + fixedPosition + ':' + (parseInt(styles.paddingTop, 10) + offset) + 'px;';
+                        const padding = parseInt(styles['padding-' + position], 10);
+                        this._reverseOffsetStyle = 'padding-' + position + ':' + (padding + offset) + 'px;';
                     }
                 }
 
                 style += this._reverseOffsetStyle;
-                style += 'margin-' + fixedPosition + ': -' + offset + 'px;';
+                style += 'margin-' + position + ': -' + offset + 'px;';
             }
 
             style += 'z-index: ' + opts.fixedZIndex + ';';

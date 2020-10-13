@@ -131,9 +131,14 @@ export default class Browser extends Control {
             this._loading = true;
             methodResult = this._sourceController.load().then((items) => {
                 // для того чтобы мог посчитаться новый prefetch Source внутри
-                const newItems = this._sourceController.setItems(items);
-                if (!this._items) {
-                    this._items = newItems;
+                if (items instanceof RecordSet) {
+                    if (newOptions.dataLoadCallback instanceof Function) {
+                        newOptions.dataLoadCallback(items);
+                    }
+                    const newItems = this._sourceController.setItems(items);
+                    if (!this._items) {
+                        this._items = newItems;
+                    }
                 }
 
                 const controllerState = this._sourceController.getState();

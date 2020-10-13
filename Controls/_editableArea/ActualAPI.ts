@@ -31,7 +31,7 @@ export function backgroundStyleClass(theme: string, backgroundStyle: string, sty
     }
 
     // default value
-    return `controls-background-default_theme-${theme}`;
+    return '';
 }
 
 export function fontColorStyle(fontColorStyle: string, style?: string): string {

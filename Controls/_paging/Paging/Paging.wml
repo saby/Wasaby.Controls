@@ -42,7 +42,7 @@
         </ws:if>
         <ws:if data="{{_getArrowStateVisibility('next') !== 'hidden'}}">
           <span class="controls-Paging__btn controls-Paging__btn-Next controls-Paging__btn_theme-{{_options.theme}}
-                         {{!_options.showEndButton ? ' controls-Paging__btn_last' }}
+                         {{!_options.showEndButton ? ' controls-Paging__btn_last controls-Paging__btn_last_theme-' + _options.theme }}
                          {{!_options.showDigits ? ' controls-Paging__btn_separated_theme-' + _options.theme}}
                          controls-Paging__arrow controls-Paging__arrow_theme-{{_options.theme}}
                          controls-Paging__arrow__state-{{_stateForward}}

@@ -118,6 +118,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          markedKey: '123',
          markerVisibility: 'visible',
          multiSelectVisibility: 'visible',
+         multiSelectPosition: 'default',
          stickyColumnsCount: 1,
          header: gridHeader,
          columns: gridColumns,
@@ -174,21 +175,15 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('calcItemColumnVersion', function() {
             assert.equal(gridMod.GridViewModel._private.calcItemColumnVersion({
                _columnsVersion: 1,
-               _options: {
-                  multiSelectVisibility: 'hidden'
-               }
+               _hasMultiSelectColumn: () => false
             }, 1, 0), '1_1_0');
             assert.equal(gridMod.GridViewModel._private.calcItemColumnVersion({
                _columnsVersion: 1,
-               _options: {
-                  multiSelectVisibility: 'visible'
-               }
+               _hasMultiSelectColumn: () => true
             }, 1, 0), '1_1_-1');
             assert.equal(gridMod.GridViewModel._private.calcItemColumnVersion({
                _columnsVersion: 1,
-               _options: {
-                  multiSelectVisibility: 'visible'
-               }
+               _hasMultiSelectColumn: () => true
             }, 1, 1), '1_1_0_MS');
          });
 
@@ -265,7 +260,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         itemData: {
                            hasVisibleActions: () => false,
                            isEditing: () => false,
-                           multiSelectVisibility: 'hidden',
+                           hasMultiSelectColumn: false,
                            getLastColumnIndex: function() {
                               return 0;
                            },
@@ -283,7 +278,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         itemData: {
                            hasVisibleActions: () => true,
                            isEditing: () => true,
-                           multiSelectVisibility: 'hidden',
+                           hasMultiSelectColumn: false,
                            getLastColumnIndex: function() {
                               return 0;
                            },
@@ -301,7 +296,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         itemData: {
                            hasVisibleActions: () => true,
                            isEditing: () => true,
-                           multiSelectVisibility: 'hidden',
+                           hasMultiSelectColumn: false,
                            getLastColumnIndex: function() {
                               return 1;
                            },
@@ -319,7 +314,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         itemData: {
                            hasVisibleActions: () => true,
                            isEditing: () => true,
-                           multiSelectVisibility: 'visible',
+                           hasMultiSelectColumn: true,
                            getLastColumnIndex: function() {
                               return 2;
                            },
@@ -337,7 +332,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                         itemData: {
                            hasVisibleActions: () => true,
                            isEditing: () => true,
-                           multiSelectVisibility: 'visible',
+                           hasMultiSelectColumn: true,
                            getLastColumnIndex: function() {
                               return 2;
                            },
@@ -445,7 +440,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var
                paramsWithoutMultiselect = {
                   headerColumns: gridColumns,
-                  multiSelectVisibility: false,
+                  hasMultiSelectColumn: false,
                   itemPadding: {
                      left: 'XL',
                      right: 'L',
@@ -457,7 +452,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                },
                paramsWithMultiselect = {
                   headerColumns: [{}].concat(gridColumns),
-                  multiSelectVisibility: true,
+                  hasMultiSelectColumn: true,
                   itemPadding: {
                      left: 'XL',
                      right: 'L',
@@ -531,7 +526,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             //------ with actionCell ----
             var paramsWithActionCell = {
                   headerColumns: headerWitchActionCell,
-                  multiSelectVisibility: false,
+                  hasMultiSelectColumn: false,
                   itemPadding: {
                      left: 'XL',
                      right: 'L',
@@ -582,7 +577,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             const paramsWithMultiselect = {
                headerColumns: columnsWithMultiSelect,
-               multiSelectVisibility: true,
+               hasMultiSelectColumn: true,
                isBreadCrumbs: true,
                isTableLayout: true,
                itemPadding: {
@@ -637,7 +632,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             ]
             const paramsForFirstRow = {
                headerColumns: headerRows[0],
-               multiSelectVisibility: false,
+               hasMultiSelectColumn: false,
                maxEndColumn: 5,
                isMultiHeader: true,
                style: 'default',
@@ -664,7 +659,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             const paramsForSecondRow = {
                headerColumns: headerRows[1],
-               multiSelectVisibility: false,
+               hasMultiSelectColumn: false,
                maxEndColumn: 5,
                style: 'default',
                isMultiHeader: true,
@@ -794,7 +789,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._options.multiSelectVisibility = 'visible';
             let data = gridViewModel.getItemDataByItem(dummyDispitem);
 
-            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-GridView__checkbox_theme-default');
+            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default');
          });
 
          it('getMultiSelectClassList hidden', function() {
@@ -810,14 +805,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._options.multiSelectVisibility = 'onhover';
             gridViewModel.setSelectedItems([gridViewModel.getItemById(123, 'id')], true);
             let data = gridViewModel.getItemDataByItem(gridViewModel.getItemById('123', 'id'));
-            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-GridView__checkbox_theme-default');
+            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default');
          });
 
          it('getMultiSelectClassList onhover unselected', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'onhover';
             let data = gridViewModel.getItemDataByItem(dummyDispitem);
-            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-GridView__checkbox_theme-default');
+            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default');
          });
 
          it('getItemColumnCellClasses', function() {
@@ -2216,7 +2211,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             var testCases = [
                {
                   settings: {
-                     multiSelectVisibility: 'visible',
+                     hasMultiSelectColumn: true,
                      stickyColumnsCount: 1
                   },
                   tests: [
@@ -2227,7 +2222,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                },
                {
                   settings: {
-                     multiSelectVisibility: 'hidden',
+                     hasMultiSelectColumn: false,
                      stickyColumnsCount: 1
                   },
                   tests: [
@@ -2237,7 +2232,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                },
                {
                   settings: {
-                     multiSelectVisibility: 'visible',
+                     hasMultiSelectColumn: true,
                      stickyColumnsCount: 2
                   },
                   tests: [
@@ -2249,7 +2244,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                },
                {
                   settings: {
-                     multiSelectVisibility: 'hidden',
+                     hasMultiSelectColumn: false,
                      stickyColumnsCount: 2
                   },
                   tests: [
@@ -2355,7 +2350,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             const fixedCell = ` controls-Grid_columnScroll__fixed`;
             const transformCell = ' controls-Grid_columnScroll__scrollable';
             const params = {
-               multiSelectVisibility: 'hidden',
+               hasMultiSelectColumn: false,
                stickyColumnsCount: 1,
                columnIndex: 0,
                rowIndex: 0,
@@ -2401,7 +2396,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                }
             );
 
-            itemData.hasMultiSelect = true;
+            itemData.hasMultiSelectColumn = true;
             itemData.columns = [{}, {}, {}, {}];
 
             assert.deepEqual(
@@ -2468,8 +2463,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                    actions: 'grid-column: 3 / 11; -ms-grid-column: 3; -ms-grid-column-span: 8;'
                 },
                 gridMod.GridViewModel._private.getColspanForColumnScroll({
+                   _hasMultiSelectColumn: () => false,
                    _options: {
-                      multiSelectVisibility: 'hidden',
                       columnScroll: true,
                       stickyColumnsCount: 2,
                    },
@@ -2485,10 +2480,10 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                 },
                 gridMod.GridViewModel._private.getColspanForColumnScroll({
                    _options: {
-                      multiSelectVisibility: 'visible',
                       columnScroll: true,
                       stickyColumnsCount: 2,
                    },
+                   _hasMultiSelectColumn: () => true,
                    _columns: {length: 10}
                 })
             );
@@ -2838,7 +2833,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   rowSeparatorSize: null,
                   columnSeparatorSize: 's',
                   columnIndex: 0,
-                  hasMultiSelect: false
+                  hasMultiSelectColumn: false
                };
                [
                   [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
@@ -2868,7 +2863,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                   rowSeparatorSize: null,
                   columnSeparatorSize: 's',
                   columnIndex: 0,
-                  hasMultiSelect: true
+                  hasMultiSelectColumn: true
                };
                [
                   [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],
@@ -2973,6 +2968,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             model = new gridMod.GridViewModel({
                ...cfg,
                multiSelectVisibility: 'visible',
+               multiSelectPosition: 'default',
                columnScroll: false
             });
             assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 2; grid-column-end: 5;');
@@ -2983,6 +2979,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                ...cfg,
                columns: [],
                multiSelectVisibility: 'visible',
+               multiSelectPosition: 'default',
                columnScroll: true
             });
             assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 1; grid-column-end: 5;');
@@ -2992,6 +2989,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             model = new gridMod.GridViewModel({
                ...cfg,
                multiSelectVisibility: 'visible',
+               multiSelectPosition: 'default',
                columnScroll: true
             });
             assert.equal(model.getEmptyTemplateStyles(), 'grid-column-start: 1; grid-column-end: 6;');
@@ -3001,6 +2999,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             model = new gridMod.GridViewModel({
                ...cfg,
                multiSelectVisibility: 'visible',
+               multiSelectPosition: 'default',
                columnScroll: false,
                stickyColumn: {
                   index: 0,
@@ -3014,6 +3013,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             model = new gridMod.GridViewModel({
                ...cfg,
                multiSelectVisibility: 'visible',
+               multiSelectPosition: 'default',
                columns: [],
                header: [],
                columnScroll: false
@@ -3026,6 +3026,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             model = new gridMod.GridViewModel({
                ...cfg,
                multiSelectVisibility: 'visible',
+               multiSelectPosition: 'default',
                columns: [],
                columnScroll: false
             });
@@ -3037,6 +3038,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             model = new gridMod.GridViewModel({
                ...cfg,
                multiSelectVisibility: 'visible',
+               multiSelectPosition: 'default',
                columns: [],
                header: undefined,
                columnScroll: false

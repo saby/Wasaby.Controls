@@ -17,9 +17,13 @@
    top: 0;
 }
 
-.controls-ListView__itemV .controls-ListView__checkbox_theme-@{themeName} {
+.controls-ListView__itemV .controls-ListView__checkbox_position-default_theme-@{themeName} {
    float: left;
    margin-top: @checkbox_offset-top_list;
+}
+
+.controls-ListView__itemV .controls-ListView__checkbox_position-custom_theme-@{themeName} {
+   display: inline-block;
 }
 
 .ws-is-desktop-platform .controls-ListView__checkbox-onhover {
@@ -61,6 +65,7 @@
    & > .controls-ListView_content-template {
       display: block;
       width: inherit;
+      height: inherit;
    }
 }
 

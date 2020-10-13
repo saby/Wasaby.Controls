@@ -26,13 +26,6 @@ export interface ILegendOptions extends IControlOptions {
  */ 
 
 /**
- * @typedef {Object} IndicatorCategory
- * @property {Number} value=0 Percents of the corresponding category
- * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
- * @property {String} title='' category note
- */
-
-/**
  * @cfg {Array.<IndicatorCategory>} Array of indicator categories
  * <pre class="brush:html">
  *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]]}}"/>
@@ -60,7 +53,7 @@ export default Legend;
 
 /**
  * @name Controls/_progress/Legend#data
- * @cfg {Array.<IndicatorCategory>} Конфигурация элементов легенды.
+ * @cfg {Array.<Controls/_progress/StateIndicator/IndicatorCategory.typedef>} Конфигурация элементов легенды.
  * @example
  * <pre class="brush:html">
  *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]}}"/>

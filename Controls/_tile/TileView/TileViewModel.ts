@@ -63,7 +63,15 @@ var TileViewModel = ListViewModel.extend({
             current._tileViewModelCached = true;
         }
 
-        current.multiSelectClassList += current.hasMultiSelect ? ' controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom' : '';
+        // todo remove multiSelectVisibility, multiSelectPosition and multiSelectClassList by task:
+        // https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
+        current.multiSelectVisibility = this._options.multiSelectVisibility;
+        current.multiSelectPosition = this._options.multiSelectPosition;
+
+        if (current.hasMultiSelect) {
+            current.multiSelectClassList += ` controls-TileView__checkbox_position-${current.multiSelectPosition}_theme-${current.theme} ` +
+                'controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom';
+        }
         return current;
     },
 
@@ -178,6 +186,8 @@ var TileViewModel = ListViewModel.extend({
                 this._itemsHeight,
                 itemWidth
             );
+        } else {
+            resultData.itemWidth = this._options.tileWidth;
         }
         return resultData;
     },
