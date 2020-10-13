@@ -1949,8 +1949,8 @@ var
             return version;
         },
 
-        _prepareDisplayItemForAdd: function(item) {
-            return this._model._prepareDisplayItemForAdd(item);
+        createItem(options: {contents: Model}): CollectionItem<Model> {
+            return this._model.createItem(options);
         },
 
         getCurrentIndex: function() {

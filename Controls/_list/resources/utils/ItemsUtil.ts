@@ -50,10 +50,6 @@ var ItemsUtil = {
         }
     },
 
-    getDefaultDisplayItem: function(display, item) {
-        return display.createItem({contents: item});
-    },
-
     getFirstItem: function(display) {
         var
             itemIdx = 0,
