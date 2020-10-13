@@ -14,7 +14,7 @@ import { IFormOperation } from 'Controls/interface';
 import { Confirmation } from 'Controls/popup';
 import { CRUD_EVENTS, default as CrudController } from 'Controls/_form/CrudController';
 import { DialogOpener } from 'Controls/error';
-import Mode from '../_error/Mode';
+import { Mode } from 'Controls/error';
 
 interface IFormController extends IControlOptions {
     readMetaData?: object;
@@ -364,6 +364,7 @@ class FormController extends Control<IFormController, IReceivedState> {
         this._crudController.hideIndicator();
         this._crudController = null;
         this._dialogOpener?.destroy();
+        this._dialogOpener = null;
     }
 
     protected _onValidateCreated(e: Event, control: ValidateContainer): void {
@@ -789,8 +790,8 @@ class FormController extends Control<IFormController, IReceivedState> {
     private _hideError(): void {
         if (this.__error) {
             this.__error = null;
-            this._dialogOpener?.close();
         }
+        this._dialogOpener?.close();
     }
 
     private _onCloseErrorDialog(): void {
