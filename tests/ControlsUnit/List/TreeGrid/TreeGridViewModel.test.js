@@ -329,6 +329,7 @@ define(['Controls/treeGrid',
                 keyProperty: 'id',
                 nodeProperty: 'type',
                 multiSelectVisibility: 'hidden',
+                multiSelectPosition: 'default',
                 parentProperty: 'parent',
                 columns: initialColumns
              });
@@ -366,6 +367,7 @@ define(['Controls/treeGrid',
                 rowSeparatorSize: 'l',
                 parentProperty: 'parent',
                 columns: initialColumns,
+                multiSelectPosition: 'default',
                 columnScroll: true
              });
 
@@ -467,6 +469,7 @@ define(['Controls/treeGrid',
                 keyProperty: 'id',
                 nodeProperty: 'type',
                 parentProperty: 'parent',
+                multiSelectPosition: 'default',
                 columns: initialColumns
              }),
              current = model.getCurrent();
@@ -613,7 +616,8 @@ define(['Controls/treeGrid',
             nodeProperty: 'type',
             parentProperty: 'parent',
             columns: initialColumns,
-            resultsPosition: 'top'
+            resultsPosition: 'top',
+            multiSelectPosition: 'default'
          });
 
          const itemData = model.getCurrent();
