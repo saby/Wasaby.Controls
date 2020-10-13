@@ -2891,7 +2891,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _needBottomPadding: false,
     _noDataBeforeReload: null,
-    _checkLoadToDirectionTimeout: null,
+    _checkTriggerVisibilityTimeout: null,
 
     _keepScrollAfterReload: false,
     _resetScrollAfterReload: false,
@@ -3762,8 +3762,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _beforeUnmount() {
-        if (this._checkLoadToDirectionTimeout) {
-            clearTimeout(this._checkLoadToDirectionTimeout);
+        if (this._checkTriggerVisibilityTimeout) {
+            clearTimeout(this._checkTriggerVisibilityTimeout);
         }
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
@@ -3924,9 +3924,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
     checkTriggerVisibilityAfterRedraw(): void {
+        if (this._checkTriggerVisibilityTimeout) {
+            clearTimeout(this._checkTriggerVisibilityTimeout);
+        }
         _private.doAfterUpdate(this, () => {
             window.requestAnimationFrame(() => {
-                setTimeout(() => {
+                this._checkTriggerVisibilityTimeout = setTimeout(() => {
                     this.checkTriggersVisibility();
                 }, CHECK_TRIGGERS_DELAY_IF_IE);
             });
