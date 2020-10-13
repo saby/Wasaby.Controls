@@ -1354,18 +1354,22 @@ const _private = {
      */
     initPaging(self) {
         if (!(self._editInPlaceController && self._editInPlaceController.isEditing())
-            && !self._pagingVisible && _private.needScrollPaging(self._options.navigation)) {
+            && _private.needScrollPaging(self._options.navigation)) {
             if (self._viewportSize) {
-                this._recalcPagingVisible = false;
+                self._recalcPagingVisible = false;
                 self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
             } else {
                 self._recalcPagingVisible = true;
             }
+        } else {
+            self._pagingVisible = false;
         }
     },
 
     handleListScrollSync(self, scrollTop) {
-        _private.initPaging(self);
+        if (!self._pagingVisible) {
+            _private.initPaging(self);
+        }
 
         if (self._setMarkerAfterScroll) {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
@@ -3184,7 +3188,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
         }
         if (this._recalcPagingVisible) {
-            _private.initPaging(this);
+            if (!this._pagingVisible) {
+                _private.initPaging(this);
+            }
         }
     },
 
@@ -3243,9 +3249,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._children.bottomVirtualScrollTrigger?.style.bottom = `${offset.bottom}px`;
     },
     _viewResize(): void {
-        if (this._mounted) {
+        if (this._isMounted) {
             const container = this._container[0] || this._container;
             this._viewSize = container.clientHeight;
+
+            /**
+             * Заново определяем должен ли отображаться пэйджинг или нет.
+             * Скрывать нельзя, так как при подгрузке данных пэйджинг будет моргать.
+             */
+            if (this._pagingVisible) {
+                _private.initPaging(this);
+            }
             this._viewRect = container.getBoundingClientRect();
             if (this._isScrollShown) {
                 this._updateItemsHeights();
@@ -4807,7 +4821,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _mouseEnter(event): void {
         this._initItemActions(event, this._options);
-        _private.initPaging(this);
+        if (!this._pagingVisible) {
+            _private.initPaging(this);
+        }
 
         if (this._documentDragging) {
             this._insideDragging = true;
