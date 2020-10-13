@@ -4509,7 +4509,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             theme: this._options.theme,
             mode: dataSourceError.Mode.dialog
         }).then((errorConfig: dataSourceError.ViewConfig) => {
-            this.__errorContainer.show(errorConfig);
+            this._children.errorContainer.show(errorConfig);
+            error.errorProcessed = true;
             return Promise.reject(error);
         });
     },
