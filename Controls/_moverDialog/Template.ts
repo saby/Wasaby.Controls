@@ -150,6 +150,10 @@ export default class extends Control<IMoverDialogTemplateOptions> {
         return this._notify('markedKeyChanged', [newKey]);
     }
 
+    protected _onBeforeMarkedKeyChanged(event: SyntheticEvent<null>, newKey: string | number | null): void {
+        return this._notify('beforeMarkedKeyChanged', [newKey]);
+    }
+
     protected _onItemActionsClick(event: SyntheticEvent<MouseEvent>, action: object, item: Record): void {
         this._applyMove(item);
     }
