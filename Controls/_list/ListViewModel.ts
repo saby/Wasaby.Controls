@@ -472,8 +472,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
         if (avatarItemKey !== undefined && avatarItemKey !== null) {
             const dispItem = this.getItemBySourceKey(avatarItemKey);
-            const itemData = this.getItemDataByItem(dispItem);
-            this.setDragItemData(itemData);
+            if (dispItem) {
+                const itemData = this.getItemDataByItem(dispItem);
+                this.setDragItemData(itemData);
+            }
         }
 
         const entity = new ItemsEntity({items: draggedItemsKeys});
@@ -606,8 +608,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return !!this.getItemById(id, keyProperty);
     },
 
-    _prepareDisplayItemForAdd: function(item) {
-        return ItemsUtil.getDefaultDisplayItem(this._display, item);
+    createItem(options: {contents: Model}): CollectionItem<Model> {
+        const display = this.getDisplay();
+        if (display) {
+            return display.createItem(options);
+        }
     },
 
     // New Model compatibility

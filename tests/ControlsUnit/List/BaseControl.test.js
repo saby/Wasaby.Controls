@@ -7129,14 +7129,25 @@ define([
          });
 
          it('drag enter', async () => {
-            let secondBaseControl = new lists.BaseControl();
+            const secondBaseControl = new lists.BaseControl();
             secondBaseControl.saveOptions(cfg);
             await secondBaseControl._beforeMount(cfg);
             secondBaseControl._listViewModel.setItems(rs);
 
-            secondBaseControl._dragEnter({ entity: secondBaseControl._dragEntity });
-            assert.isNotNull(secondBaseControl._dndListController);
-            assert.isNotNull(secondBaseControl._dndListController.getDragEntity());
+            secondBaseControl._notify = () => true;
+            const dragEntity = new dragNDrop.ItemsEntity({ items: [1] });
+            secondBaseControl._dragEnter({ entity: dragEntity });
+            assert.isOk(secondBaseControl._dndListController);
+            assert.equal(secondBaseControl._dndListController.getDragEntity(), dragEntity);
+            assert.isNotOk(secondBaseControl._dndListController.getDraggableItem());
+
+            const newRecord = new entity.Model({ rawData: { id: 0 }, keyProperty: 'id' });
+            secondBaseControl._notify = () => newRecord;
+            secondBaseControl._dragEnter({ entity: dragEntity });
+            assert.isOk(secondBaseControl._dndListController);
+            assert.isOk(secondBaseControl._dndListController.getDragEntity());
+            assert.isOk(secondBaseControl._dndListController.getDraggableItem());
+            assert.equal(secondBaseControl._dndListController.getDraggableItem().getContents(), newRecord);
          });
 
          it('drag end', () => {
