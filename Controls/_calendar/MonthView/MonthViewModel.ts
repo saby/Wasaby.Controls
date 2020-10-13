@@ -122,7 +122,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       }, this);
    },
 
-   _prepareClass: function(scope, theme, fontColorStyle, backgroundStyle) {
+   _prepareClass: function(scope, theme, fontColorStyle, backgroundStyle, borderStyle) {
 
       let textColorClass = 'controls-MonthView__textColor',
          backgroundColorClass = 'controls-MonthView__backgroundColor',
@@ -150,6 +150,8 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
                backgroundColorClass += '-startend-unfinished';
             }
          }
+         const borderStylePostfix = borderStyle ? "_style-" + borderStyle : '';
+         css.push(`controls-MonthViewVDOM__item-border_theme-${theme}${borderStylePostfix}`);
       } else {
          backgroundColorClass += '-unselected';
       }
@@ -186,6 +188,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          if (!scope.selected) {
             let borderStyle;
             if (scope.selectionEnabled && this._singleDayHover) {
+               // перенести границы выше
                borderStyle = 'controls-MonthView__border-currentMonthDay-unselected_theme-' + theme;
             } else if (scope.hovered) {
                borderStyle = 'controls-MonthView__border-hover_theme-' + theme;
