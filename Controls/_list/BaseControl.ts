@@ -144,7 +144,7 @@ const SCROLLMOVE_DELAY = 150;
 const PAGING_MIN_ELEMENTS_COUNT = 5;
 /**
  * Нативный IntersectionObserver дергает callback по перерисовке.
- * В ie нет нативного IntersectionObserver. 
+ * В ie нет нативного IntersectionObserver.
  * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
  */
 const CHECK_TRIGGERS_DELAY_IF_IE = detection.isIE ? 150 : 0;
@@ -2457,7 +2457,7 @@ const _private = {
         }
 
         const markerController = _private.getMarkerController(self);
-        const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey], { bubbling: true });
+        const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey]);
 
         let result = eventResult;
         if (eventResult instanceof Promise) {
