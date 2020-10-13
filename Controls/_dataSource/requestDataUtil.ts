@@ -92,10 +92,10 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       sortingPromise,
       collapsedGroupsPromise
    ]).then(([filterObject, sortingObject, collapsedGroups]: [IFilter, ISorting, string[]]) => {
-      const filter = filterObject ? filterObject.filter : cfg.filter;
+      const filter = (filterObject ? filterObject.filter : cfg.filter) || {};
       const historyItems = filterObject ? filterObject.historyItems : null;
       const sorting = sortingObject ? sortingObject.sorting : cfg.sorting;
-      if (collapsedGroups && filter) {
+      if (collapsedGroups) {
          filter.collapsedGroups = collapsedGroups;
       }
       const result = {filter, sorting, historyItems, collapsedGroups};
