@@ -28,6 +28,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
     attachLoadTopTriggerToNull?: boolean;
     emptyTemplate?: TemplateFunction | string;
     footerTemplate?: TemplateFunction | string;
+    pagingLeftTemplate?: TemplateFunction|string;
     multiSelectVisibility?: TMultiSelectVisibility;
     stickyMarkedItem?: boolean;
     uniqueKeys?: boolean;
@@ -150,6 +151,18 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @name Controls/_list/interface/IList#footerTemplate
  * @cfg {Function} Template that will be rendered below the list.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#pagingLeftTemplate
+ * @cfg {Function} Шаблон для отображения слева от постраничной навигации.
+ * @demo Controls-demo/list_new/Navigation/Paging/LeftTemplate/Index
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#pagingLeftTemplate
+ * @cfg {Function} Template to display to the left of page navigation.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2Flist_new%2FNavigation%2FPaging%2FLeftTemplate%2FIndex">Example</a>.
  */
 
 /**
