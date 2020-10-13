@@ -165,8 +165,7 @@ describe('Controls/_listDragNDrop/FlatController', () => {
              },
              target: {
                 closest(cssClass) {
-                   return !(cssClass === '.controls-DragNDrop__notDraggable' ||
-                       cssClass === '.controls-List_DragNDrop__notDraggable');
+                   return false;
                 }
              }
           };
