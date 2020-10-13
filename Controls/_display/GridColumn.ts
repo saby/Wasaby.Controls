@@ -115,12 +115,17 @@ export default class GridColumn<T> extends mixin<
         return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
     }
 
-    shouldDisplayMarker(): boolean {
-        return this._$owner.isMarked() && this.isFirstColumn();
+    shouldDisplayMarker(markerPosition): boolean {
+        if (markerPosition === 'right') {
+            return this._$owner.isMarked() && this.isLastColumn();
+        } else {
+            return this._$owner.isMarked() && this.isFirstColumn();
+        }
     }
 
-    getMarkerClasses(): string {
+    getMarkerClasses(markerPosition): string {
         return `
+        controls-ListView__itemV_marker-${markerPosition || 'left'}
         controls-ListView__itemV_marker controls-ListView__itemV_marker_theme-default
         controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-default
         controls-GridView-without-rowSeparator_item_marker_theme-default
