@@ -183,6 +183,32 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /**
+ * @typedef {String} MultiSelectPosition
+ * @variant custom Нестандартная позиця расположени чекбоксов множественного выбора. При данном значении опции, шаблон чекбоксов передается в прикладной шаблон и может быть выведен в любом месте записи.
+ * @variant default Стандартная позиция чекбоксов множественного выбора в начале строки.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#multiSelectPosition
+ * @cfg {MultiSelectPosition} Позиция чекбоксов множественного выбора.
+ * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
+ * @default default
+ */
+
+/*ENG
+ * @typedef {String} MultiSelectPosition
+ * @variant custom A custom position for the multiple selection checkboxes. With this option value, the multiple selection template is passed to the item template and can be displayed anywhere in it
+ * @variant default The standard position of the multiple selection checkboxes (at the beginning of the line)
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#multiSelectPosition
+ * @cfg {MultiSelectPosition} Position of multiple selection checkboxes
+ * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
+ * @default default
+ */
+
+/**
  * @event Происходит в момент, когда курсор оказывается над элементом списка.
  * @name Controls/_list/interface/IList#itemMouseEnter
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.

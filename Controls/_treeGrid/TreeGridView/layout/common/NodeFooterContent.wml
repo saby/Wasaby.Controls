@@ -1,12 +1,10 @@
-<ws:template name="multiSelectIfNeed">
-    <ws:if data="{{footer.multiSelectVisibility !== 'hidden'}}">
-        <ws:if data="{{footer.isFullGridSupport}}">
-            <div></div>
-        </ws:if>
-        <ws:else>
-            <td></td>
-        </ws:else>
+<ws:template name="multiSelectColumn">
+    <ws:if data="{{footer.isFullGridSupport}}">
+        <div></div>
     </ws:if>
+    <ws:else>
+        <td></td>
+    </ws:else>
 </ws:template>
 
 <ws:template name="footerContent">
@@ -33,7 +31,7 @@
 </ws:template>
 
 <ws:template name="footer">
-    <ws:partial template="multiSelectIfNeed"/>
+    <ws:partial template="multiSelectColumn" if="{{footer.hasMultiSelectColumn}}"/>
 
     <ws:if data="{{footer.isFullGridSupport}}">
         <ws:partial template="footerContent"/>
