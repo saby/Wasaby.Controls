@@ -2456,7 +2456,7 @@ const _private = {
         let result = eventResult;
         if (eventResult instanceof Promise) {
             eventResult.then((key) => {
-                if (self._options.hasOwnProperty('markedKey')) {
+                if (!self._options.hasOwnProperty('markedKey')) {
                     markerController.setMarkedKey(key);
                 }
                 self._notify('markedKeyChanged', [key]);
@@ -2465,13 +2465,13 @@ const _private = {
         } else if (eventResult !== undefined && self._environment) {
             // Если не был инициализирован environment, то _notify будет возвращать null,
             // но это значение используется, чтобы сбросить маркер. Актуально для юнитов
-            if (self._options.hasOwnProperty('markedKey')) {
+            if (!self._options.hasOwnProperty('markedKey')) {
                 markerController.setMarkedKey(eventResult);
             }
             self._notify('markedKeyChanged', [eventResult]);
         } else {
             result = newMarkedKey;
-            if (self._options.hasOwnProperty('markedKey')) {
+            if (!self._options.hasOwnProperty('markedKey')) {
                 markerController.setMarkedKey(newMarkedKey);
             }
             self._notify('markedKeyChanged', [newMarkedKey]);
