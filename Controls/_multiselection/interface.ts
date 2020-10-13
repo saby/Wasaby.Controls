@@ -1,4 +1,4 @@
-import { CollectionItem, IBaseCollection, ICollectionItem, TreeItem } from 'Controls/display';
+import { Collection, CollectionItem, IBaseCollection, ICollectionItem, TreeItem } from 'Controls/display';
 import { Model, relation } from 'Types/entity';
 import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
 import { RecordSet } from 'Types/collection';
@@ -115,14 +115,13 @@ export interface ISelectionControllerOptions {
  * @public
  * @author Панихин К.А.
  */
-export interface ITreeSelectionStrategyOptions {
+export interface ITreeSelectionStrategyOptions extends IFlatSelectionStrategyOptions{
    selectAncestors: boolean;
    selectDescendants: boolean;
    nodesSourceControllers?: Map<string, SourceController>;
    hierarchyRelation: relation.Hierarchy;
    rootId: CrudEntityKey;
    entryPath: IEntryPathItem[];
-   items: Array<TreeItem<Model>>;
 }
 
 /**
@@ -132,7 +131,9 @@ export interface ITreeSelectionStrategyOptions {
  * @public
  * @author Панихин К.А.
  */
-export interface IFlatSelectionStrategyOptions {}
+export interface IFlatSelectionStrategyOptions {
+   model: ISelectionModel;
+}
 
 /**
  * Изменения в списке ключей

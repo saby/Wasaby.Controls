@@ -18,7 +18,7 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
 
    const model = new Collection({collection: items, keyProperty: 'id'});
 
-   const strategy = new FlatSelectionStrategy({ items: model.getItems() });
+   const strategy = new FlatSelectionStrategy({ model: model });
 
    describe('select', () => {
       it('not selected', () => {
@@ -208,17 +208,11 @@ describe('Controls/_multiselection/SelectionStrategy/Flat', () => {
 
       it('empty model', () => {
          const strategy = new FlatSelectionStrategy({
-            items: []
+            items: new Collection({collection: new RecordSet(), keyProperty: 'id'})
          });
 
          const selection = { selected: [], excluded: [] };
          assert.isFalse(strategy.isAllSelected(selection, false, 0, true));
       });
-   });
-
-   it('setItems', () => {
-      const newItems = model.getItems();
-      strategy.setItems(newItems);
-      assert.equal(strategy._items, newItems);
    });
 });
