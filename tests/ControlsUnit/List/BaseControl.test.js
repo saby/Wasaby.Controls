@@ -6681,10 +6681,8 @@ define([
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
                await baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
 
-               /*assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-               assert.equal(baseControl.getViewModel().getItemBySourceKey(1).getVersion(), 1);
-               assert.equal(baseControl.getViewModel().getVersion(), 4);*/
             });
 
             it('not should marker, _needSetMarkerCallback return false', async function() {
@@ -6722,7 +6720,6 @@ define([
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
             });
 
-/*
             it('should mark item if there are more then one item in list', async function () {
                baseControlOptions.markerVisibility = 'onactivated';
                await mountBaseControl(baseControl, baseControlOptions);
@@ -6747,12 +6744,13 @@ define([
                   handleResetItems: () => {}
                };
 
+               const notifySpy = sinon.spy(baseControl, '_notify');
+
                // No editing
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
                await baseControl._itemMouseUp(event, {key: 1}, originalEvent);
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-               assert.equal(baseControl.getViewModel().getItemBySourceKey(1).getVersion(), 1);
-               assert.equal(baseControl.getViewModel().getVersion(), 4);
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).calledOnce);
 
                // With editing
                baseControl._markerController.setMarkedKey(null);
@@ -6763,11 +6761,9 @@ define([
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
                await baseControl._itemMouseUp(event, {key: 1}, originalEvent);
 
-               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-               assert.equal(baseControl.getViewModel().getItemBySourceKey(1).getVersion(), 3);
-               assert.equal(baseControl.getViewModel().getVersion(), 6);
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).calledTwice);
             });
-*/
          });
 
          describe('_onItemClick', () => {
@@ -7228,7 +7224,7 @@ define([
             });
          });
 
-         /*it('notify return new key', () => {
+         it('notify return new key', () => {
             baseControl._notify = (eventName, params) => {
                if (eventName === 'beforeMarkedKeyChanged') {
                   assert.deepEqual(params, [1]);
@@ -7239,9 +7235,9 @@ define([
             };
 
             lists.BaseControl._private.changeMarkedKey(baseControl, 1);
-            assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-            assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
-         });*/
+            assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+            assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+         });
 
          it('notify nothing return', () => {
             baseControl._notify = (eventName, params) => {
@@ -7410,7 +7406,7 @@ define([
                });
             });
 
-            /*it('notify return new key', () => {
+            it('notify return new key', () => {
                baseControl._notify = (eventName, params) => {
                   if (eventName === 'beforeMarkedKeyChanged') {
                      assert.deepEqual(params, [1]);
@@ -7421,9 +7417,9 @@ define([
                };
 
                lists.BaseControl._private.changeMarkedKey(baseControl, 1);
-               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
-            });*/
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+            });
 
             it('notify nothing return', () => {
                baseControl._notify = (eventName, params) => {
@@ -7456,7 +7452,7 @@ define([
                preventDefaultCalled = false;
             });
 
-            /*it('to next', () => {
+            it('to next', () => {
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
                assert.equal(baseControl.getViewModel().getItemBySourceKey(2).getVersion(), 1);
                assert.equal(baseControl.getViewModel().getVersion(), 6);
@@ -7470,9 +7466,9 @@ define([
                   assert.equal(baseControl.getViewModel().getItemBySourceKey(3).getVersion(), 1);
                   assert.equal(baseControl.getViewModel().getVersion(), 8);
                });
-            });*/
+            });
 
-            /*it('to prev', function() {
+            it('to prev', function() {
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
                assert.equal(baseControl.getViewModel().getItemBySourceKey(2).getVersion(), 1);
                assert.equal(baseControl.getViewModel().getVersion(), 6);
@@ -7486,7 +7482,7 @@ define([
                   assert.equal(baseControl.getViewModel().getItemBySourceKey(1).getVersion(), 3);
                   assert.equal(baseControl.getViewModel().getVersion(), 8);
                });
-            });*/
+            });
          });
 
          describe('onCollectionChanged', () => {
@@ -7541,7 +7537,6 @@ define([
                assert.isTrue(item.isMarked());
             });
 
-/*
             it('reset after update with new markedKey', () => {
                const newCfg = {
                   ...cfg,
@@ -7553,8 +7548,8 @@ define([
                };
                baseControl._beforeUpdate(newCfg);
                baseControl.saveOptions(newCfg);
-               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
 
                baseControl.getViewModel().setItems(new collection.RecordSet({
@@ -7571,7 +7566,6 @@ define([
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
             });
-*/
          });
 
          describe('_beforeUpdate', () => {
@@ -7598,7 +7592,7 @@ define([
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
 
-            /*it('change markerVisibility on visible', () => {
+            it('change markerVisibility on visible', () => {
                let newCfg = {
                   ...cfg,
                   markerVisibility: 'onactivated'
@@ -7619,11 +7613,10 @@ define([
                };
                baseControl._beforeUpdate(newCfg);
 
-               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
-            });*/
+            });
 
-/*
             it('need reload, not call setMarkedKey', () => {
                const newCfg = {
                   ...cfg,
@@ -7636,10 +7629,9 @@ define([
                baseControl._beforeUpdate(newCfg);
                baseControl.saveOptions(newCfg);
 
-               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
-*/
          });
       });
 

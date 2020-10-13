@@ -25,7 +25,6 @@ describe('Controls/marker/Controller', () => {
       controller = new MarkerController({ model, markerVisibility: 'visible', markedKey: undefined });
    });
 
-/*
    describe('updateOptions', () => {
       it('change options', () => {
           controller.updateOptions({
@@ -57,7 +56,6 @@ describe('Controls/marker/Controller', () => {
          assert.equal(newModel.getItemBySourceKey(3).getVersion(), 0);
       });
    });
-*/
 
    describe('setMarkedKey', () => {
       it('same key', () => {

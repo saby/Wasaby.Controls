@@ -2453,28 +2453,26 @@ const _private = {
         const markerController = _private.getMarkerController(self);
         const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey], { bubbling: true });
 
+        const handleResult = (key) => {
+            if (!self._options.hasOwnProperty('markedKey')) {
+                markerController.setMarkedKey(key);
+            }
+            self._notify('markedKeyChanged', [key]);
+        }
+
         let result = eventResult;
         if (eventResult instanceof Promise) {
             eventResult.then((key) => {
-                if (!self._options.hasOwnProperty('markedKey')) {
-                    markerController.setMarkedKey(key);
-                }
-                self._notify('markedKeyChanged', [key]);
+                handleResult(key);
                 return key;
             });
         } else if (eventResult !== undefined && self._environment) {
             // Если не был инициализирован environment, то _notify будет возвращать null,
             // но это значение используется, чтобы сбросить маркер. Актуально для юнитов
-            if (!self._options.hasOwnProperty('markedKey')) {
-                markerController.setMarkedKey(eventResult);
-            }
-            self._notify('markedKeyChanged', [eventResult]);
+            handleResult(eventResult);
         } else {
             result = newMarkedKey;
-            if (!self._options.hasOwnProperty('markedKey')) {
-                markerController.setMarkedKey(newMarkedKey);
-            }
-            self._notify('markedKeyChanged', [newMarkedKey]);
+            handleResult(newMarkedKey);
         }
 
         return result;
