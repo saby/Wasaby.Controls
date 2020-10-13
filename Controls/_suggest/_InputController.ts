@@ -252,7 +252,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             return this._getSourceController().load().then((recordSet) => {
                if (recordSet instanceof RecordSet) {
                   this._setItems(recordSet);
-                  this._options?.dataLoadCallback(recordSet);
+                  if (this._options.dataLoadCallback) {
+                     this._options.dataLoadCallback(recordSet);
+                  }
                   this._updateSuggestState();
                }
             });
@@ -681,7 +683,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          return this._getSourceController().load().then((recordSet) => {
             if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
                this._setItems(recordSet);
-               this._options?.dataLoadCallback(recordSet);
+               if (this._options.dataLoadCallback) {
+                  this._options.dataLoadCallback(recordSet);
+               }
                this._loadEnd(recordSet);
                this._open();
                return recordSet as RecordSet;
