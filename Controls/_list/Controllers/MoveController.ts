@@ -20,7 +20,7 @@ type TValidationResult = {
 
 /**
  * Интерфейс опций контроллера
- * @interface Controls/_list/interface/IMoveControllerOptions
+ * @interface Controls/_list/Controllers/MoveController/IMoveControllerOptions
  * @public
  * @author Аверкиев П.А.
  */
@@ -45,7 +45,7 @@ export interface IMoveControllerOptions {
 /**
  * Контроллер для перемещения элементов списка.
  *
- * @class Controls/_mover/MoveController
+ * @class Controls/_list/Controllers/MoveController
  * @control
  * @public
  * @author Аверкиев П.А
@@ -68,7 +68,7 @@ export class MoveController {
     /**
      * Обновляет параметры контроллера
      * @function Controls/_list/Controllers/MoveController#updateOptions
-     * @param {Controls/_list/interface/IMoveControllerOptions} options
+     * @param {Controls/_list/Controllers/MoveController/IMoveControllerOptions} options
      */
     updateOptions(options: IMoveControllerOptions): void {
         this._popupOptions = options.popupOptions;

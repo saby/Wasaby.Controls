@@ -593,6 +593,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @variant detailContrast
  * @variant listItem
  * @variant stackHeader
+ * @variant default фон списка по умолчанию
+ * @default default
  */
 
 /**
