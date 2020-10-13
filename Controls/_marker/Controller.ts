@@ -26,6 +26,7 @@ export class Controller {
     * @void
     */
    updateOptions(options: IOptions): void {
+      this.setMarkedKey(options.markedKey);
       const modelChanged = this._model !== options.model;
       if (modelChanged) {
          this._model = options.model;

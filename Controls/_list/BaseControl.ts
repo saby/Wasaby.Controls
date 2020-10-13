@@ -138,7 +138,7 @@ const SCROLLMOVE_DELAY = 150;
 const PAGING_MIN_ELEMENTS_COUNT = 5;
 /**
  * Нативный IntersectionObserver дергает callback по перерисовке.
- * В ie нет нативного IntersectionObserver. 
+ * В ie нет нативного IntersectionObserver.
  * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
  */
 const CHECK_TRIGGERS_DELAY_IF_IE = detection.isIE ? 150 : 0;
@@ -2446,7 +2446,7 @@ const _private = {
 
     changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey): Promise<CrudEntityKey>|CrudEntityKey {
         // Пока выполнялся асинхронный запрос, контрол мог быть уничтожен. Например, всплывающие окна.
-        if (self._destroyed) {
+        if (self._destroyed || self._options.hasOwnProperty('markedKey')) {
             return undefined;
         }
 
@@ -3427,7 +3427,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasMarkerController(this)) {
             _private.getMarkerController(this).updateOptions({
                 model: this._listViewModel,
-                markerVisibility: newOptions.markerVisibility
+                markerVisibility: newOptions.markerVisibility,
+                markedKey: newOptions.markedKey
             });
         }
 
