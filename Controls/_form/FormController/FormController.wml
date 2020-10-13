@@ -1,19 +1,18 @@
 <div on:registerFormOperation="_registerFormOperationHandler()"
      on:validateCreated="_onValidateCreated()"
      on:validateDestroyed="_onValidateDestroyed()">
-    <ws:partial
-            name="errorContainer"
-            template="{{ _options.errorContainer || _errorContainer }}"
-            viewConfig="{{ __error }}"
-            on:dialogClosed="_onCloseErrorDialog()">
-        <ws:if data="{{ _record }}">
-            <ws:partial
-                    template="{{ _options.content }}"
-                    record="{{ _record }}"/>
-        </ws:if>
-        <ws:else>
-            <invisible-node />
-        </ws:else>
-    </ws:partial>
+   <ws:if data="{{ __error }}">
+      <ws:partial
+         template="{{ _options.errorContainer || _errorContainer }}"
+         viewConfig="{{ __error }}"
+      />
+   </ws:if>
+   <ws:else data="{{ _record }}">
+      <ws:partial
+         template="{{ _options.content }}"
+         record="{{ _record }}"/>
+   </ws:else>
+   <ws:else>
+      <invisible-node />
+   </ws:else>
 </div>
-
