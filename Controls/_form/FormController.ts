@@ -789,7 +789,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     private _hideError(): void {
         if (this.__error) {
             this.__error = null;
-            this._dialogOpener.close();
+            this._dialogOpener?.close();
         }
     }
 
