@@ -24,6 +24,7 @@ describe('Controls/scroll:ContainerBase', () => {
          control._beforeMount(options);
 
          sinon.stub(control._resizeObserver, 'observe');
+         control._controlResizeHandler = () => {};
          control._children = {
             content: {
                children: children,
