@@ -95,7 +95,7 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       const filter = filterObject ? filterObject.filter : cfg.filter;
       const historyItems = filterObject ? filterObject.historyItems : null;
       const sorting = sortingObject ? sortingObject.sorting : cfg.sorting;
-      if (collapsedGroups) {
+      if (collapsedGroups && filter) {
          filter.collapsedGroups = collapsedGroups;
       }
       const result = {filter, sorting, historyItems, collapsedGroups};
