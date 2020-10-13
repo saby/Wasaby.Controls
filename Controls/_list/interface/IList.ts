@@ -374,7 +374,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /**
- * Возвращает список элементов.
+ * Возвращает рекордсет, на основании которого в данный момент строится списочный контрол.
  * @function Controls/_list/interface/IList#getItems
  * @return {RecordSet} Список элементов.
  * @example
