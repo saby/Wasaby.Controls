@@ -8,6 +8,7 @@ export interface IViewOptions {
     commitEdit: () => Promise<void>;
     cancelEdit: () => Promise<void>;
 }
+
 /**
  * Интерфейс для полей ввода с возможностью редактирования по месту.
  * @remark
@@ -103,7 +104,8 @@ export interface IView {
  */
 
 /**
- * @event Controls/interface/IEditableArea#beforeBeginEdit Происходит перед стартом редактирования.
+ * @event Происходит перед стартом редактирования.
+ * @name Controls/interface/IEditableArea#beforeBeginEdit
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} options Объект, в котором лежит item — редактируемая строка.
  * @param {Boolean} isAdd Флаг, который позволяет различать редактирование (false) и добавление (true).
@@ -133,7 +135,8 @@ export interface IView {
  */
 
 /**
- * @event Controls/interface/IEditableArea#beforeEndEdit Происходит до окончания редактирования.
+ * @event Происходит до окончания редактирования.
+ * @name Controls/interface/IEditableArea#beforeEndEdit
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Record} editObject Редактируемая запись.
  * @param {Boolean} commit Если значение параметра true, редактирование закончится сохранением.
@@ -166,7 +169,8 @@ export interface IView {
  */
 
 /**
- * @event Controls/interface/IEditableArea#afterEndEdit Происходит после окончания редактирования.
+ * @event Происходит после окончания редактирования.
+ * @name Controls/interface/IEditableArea#afterEndEdit
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Record} editObject Редактируемая запись.
  * @example
