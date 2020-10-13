@@ -75,6 +75,7 @@ interface IInputControllerOptions extends IControlOptions, IFilterOptions, ISear
    suggestTemplate: ISuggestTemplateProp | null;
    footerTemplate: ISuggestFooterTemplate;
    trim: boolean; // TODO: searchValueTrim ???
+   dataLoadCallback?: Function;
 }
 
 type TSuggestDirection = 'up' | 'down';
@@ -251,6 +252,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             return this._getSourceController().load().then((recordSet) => {
                if (recordSet instanceof RecordSet) {
                   this._setItems(recordSet);
+                  if (this._options.dataLoadCallback) {
+                     this._options.dataLoadCallback(recordSet);
+                  }
                   this._updateSuggestState();
                }
             });
@@ -680,6 +684,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          return this._getSourceController().load().then((recordSet) => {
             if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
                this._setItems(recordSet);
+               if (this._options.dataLoadCallback) {
+                  this._options.dataLoadCallback(recordSet);
+               }
                this._loadEnd(recordSet);
                this._open();
                return recordSet as RecordSet;

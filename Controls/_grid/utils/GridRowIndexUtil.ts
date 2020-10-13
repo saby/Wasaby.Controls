@@ -53,7 +53,6 @@ type HasEmptyTemplate = { hasEmptyTemplate: boolean };
 type GridRowIndexOptions<T = DisplayItemIndex|DisplayItem|ItemId|HasEmptyTemplate> = IBaseGridRowIndexOptions & T;
 
 
-
 /**
  * Возвращает номер строки в списке для элемента с указанным id.
  *
@@ -61,15 +60,11 @@ type GridRowIndexOptions<T = DisplayItemIndex|DisplayItem|ItemId|HasEmptyTemplat
  * @return {Number} Номер строки в списке для элемента с указанным id.
  */
 function getIndexById(cfg: GridRowIndexOptions<ItemId>): number {
-    let
-        idProperty = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getKeyProperty(),
-        item = ItemsUtil.getDisplayItemById(cfg.display, cfg.id, idProperty),
-        index = cfg.display.getIndex(item);
-
-    return getItemRealIndex(<GridRowIndexOptions<DisplayItemIndex>>{index, ...cfg});
+    return getItemRealIndex({
+        ...cfg,
+        index: cfg.display.getIndexByKey(cfg.id)
+    });
 }
-
-
 
 /**
  * Возвращает номер строки в списке для указанного элемента.
