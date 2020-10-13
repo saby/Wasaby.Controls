@@ -22,7 +22,6 @@ export interface IMoverDialogTemplateOptions extends IControlOptions {
     nodeProperty: string;
     parentProperty: string;
     filter?: IHashMap<any>;
-    containerWidth?: number;
 }
 
 /**
