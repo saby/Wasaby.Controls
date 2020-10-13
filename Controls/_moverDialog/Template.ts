@@ -21,7 +21,7 @@ export interface IMoverDialogTemplateOptions extends IControlOptions {
     keyProperty: string;
     nodeProperty: string;
     parentProperty: string;
-    filter?: IHashMap<any>
+    filter?: IHashMap<any>;
 }
 
 /**
@@ -99,7 +99,7 @@ export interface IMoverDialogTemplateOptions extends IControlOptions {
  * @see sendResult
  */
 
-export default class extends Control {
+export default class extends Control<IMoverDialogTemplateOptions> {
     protected _template: TemplateFunction = template;
     protected _itemActions: any[];
     protected _root: string|number;

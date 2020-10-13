@@ -11,6 +11,7 @@ import * as sinon from 'sinon';
 import {Memory} from 'Types/source';
 import {Controller as SearchController, SearchResolver as SearchResolverController} from 'Controls/searchNew';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {PrefetchProxy} from 'Types/source';
 
 describe('Controls/suggest', () => {
 
@@ -740,7 +741,8 @@ describe('Controls/suggest', () => {
             searchParam: 'title',
             minSearchLength: 3,
             filter: {test: 5},
-            value: '123'
+            value: '123',
+            source: getMemorySource()
          });
 
          assert.deepEqual(suggestComponent._filter, {
@@ -774,7 +776,8 @@ describe('Controls/suggest', () => {
 
          suggestComponent._beforeUpdate({
             suggestState: false, emptyTemplate: 'anotherTpl',
-            footerTemplate: 'anotherTpl',  value: 'te'
+            footerTemplate: 'anotherTpl',  value: 'te',
+            source: getMemorySource()
          });
          assert.isFalse(suggestComponent._showContent, null);
          assert.equal(suggestComponent._loading, null);
@@ -785,7 +788,8 @@ describe('Controls/suggest', () => {
 
          suggestComponent._beforeUpdate({
             suggestState: false, emptyTemplate: 'anotherTpl',
-            footerTemplate: 'anotherTpl', value: '   '
+            footerTemplate: 'anotherTpl', value: '   ',
+            source: getMemorySource()
          });
          assert.equal(suggestComponent._filter, null);
          assert.equal(suggestComponent._searchValue, '');
@@ -794,7 +798,8 @@ describe('Controls/suggest', () => {
             suggestState: false, emptyTemplate: 'anotherTpl',
             footerTemplate: 'anotherTpl', value: 'test',
             searchParam: 'testSearchParam',
-            minSearchLength: 3
+            minSearchLength: 3,
+            source: getMemorySource()
          });
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
          assert.equal(suggestComponent._searchValue, 'test');
@@ -805,7 +810,8 @@ describe('Controls/suggest', () => {
          suggestComponent._options.value = 'test';
          suggestComponent._beforeUpdate({
             suggestState: true, emptyTemplate: 'anotherTpl',
-            footerTemplate: 'anotherTpl', value: ''
+            footerTemplate: 'anotherTpl', value: '',
+            source: getMemorySource()
          });
          assert.equal(suggestComponent._searchValue, '');
          assert.deepEqual(suggestComponent._dependenciesDeferred, dependenciesDeferred);
@@ -815,7 +821,8 @@ describe('Controls/suggest', () => {
          suggestComponent._beforeUpdate({
             suggestState: false, emptyTemplate: 'anotherTpl',
             footerTemplate: 'anotherTpl', value: '',
-            searchParam: 'testSearchParam'
+            searchParam: 'testSearchParam',
+            source: getMemorySource()
          });
          assert.deepEqual(suggestComponent._filter, {testSearchParam: ''});
          assert.equal(suggestComponent._searchValue, '');
@@ -826,24 +833,38 @@ describe('Controls/suggest', () => {
          suggestComponent._beforeUpdate({
             suggestState: false,
             value: 'test',
-            minSearchLength: 3
+            minSearchLength: 3,
+            source: getMemorySource()
          });
          assert.equal(suggestComponent._searchValue, 'test');
          sinon.assert.calledOnce(suggestComponent._notify);
 
          suggestComponent._options.validationStatus = 'valid';
-         suggestComponent._beforeUpdate({suggestState: true, value: '', validationStatus: 'invalid'});
+         suggestComponent._beforeUpdate({
+            suggestState: true,
+            value: '',
+            validationStatus: 'invalid',
+            source: getMemorySource()
+         });
          assert.isNull(suggestComponent._loading, 'load started with validationStatus: "invalid"');
 
          suggestComponent._options.validationStatus = 'invalid';
          suggestComponent._options.suggestState = true;
          suggestComponent._loading = true;
-         suggestComponent._beforeUpdate({suggestState: true, value: '', validationStatus: 'invalid'});
+         suggestComponent._beforeUpdate({
+            suggestState: true,
+            value: '',
+            validationStatus: 'invalid',
+            source: getMemorySource()
+         });
          assert.isTrue(suggestComponent._loading);
 
          suggestComponent._options.value = '';
          suggestComponent._searchValue = '';
-         suggestComponent._beforeUpdate({suggestState: false, value: null});
+         suggestComponent._beforeUpdate({
+            suggestState: false, value: null,
+            source: getMemorySource()
+         });
          assert.equal(suggestComponent._searchValue, '');
 
          suggestComponent._inputActive = false;
@@ -851,7 +872,8 @@ describe('Controls/suggest', () => {
             suggestState: false, emptyTemplate: 'anotherTpl',
             footerTemplate: 'anotherTpl', value: 'test',
             searchParam: 'testSearchParam',
-            minSearchLength: 3
+            minSearchLength: 3,
+            source: getMemorySource()
          });
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
          assert.equal(suggestComponent._searchValue, 'test');
@@ -883,9 +905,21 @@ describe('Controls/suggest', () => {
          });
       });
 
+      it('PrefetchProxy source should became to original source type', async () => {
+         const inputContainer = getComponentObject({
+            searchParam: 'testSearchParam',
+            minSearchLength: 3,
+            source: new PrefetchProxy({target: getMemorySource()})
+         });
+
+         inputContainer._getSourceController();
+
+         assert.instanceOf(inputContainer._getSourceController().getState().source, Memory);
+      });
+
       it('Suggest::_updateSuggestState', async () => {
          const inputContainer = getComponentObject({
-            fitler: {},
+            filter: {},
             searchParam: 'testSearchParam',
             minSearchLength: 3,
             historyId: 'historyField'

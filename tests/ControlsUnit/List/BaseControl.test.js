@@ -7129,14 +7129,25 @@ define([
          });
 
          it('drag enter', async () => {
-            let secondBaseControl = new lists.BaseControl();
+            const secondBaseControl = new lists.BaseControl();
             secondBaseControl.saveOptions(cfg);
             await secondBaseControl._beforeMount(cfg);
             secondBaseControl._listViewModel.setItems(rs);
 
-            secondBaseControl._dragEnter({ entity: secondBaseControl._dragEntity });
-            assert.isNotNull(secondBaseControl._dndListController);
-            assert.isNotNull(secondBaseControl._dndListController.getDragEntity());
+            secondBaseControl._notify = () => true;
+            const dragEntity = new dragNDrop.ItemsEntity({ items: [1] });
+            secondBaseControl._dragEnter({ entity: dragEntity });
+            assert.isOk(secondBaseControl._dndListController);
+            assert.equal(secondBaseControl._dndListController.getDragEntity(), dragEntity);
+            assert.isNotOk(secondBaseControl._dndListController.getDraggableItem());
+
+            const newRecord = new entity.Model({ rawData: { id: 0 }, keyProperty: 'id' });
+            secondBaseControl._notify = () => newRecord;
+            secondBaseControl._dragEnter({ entity: dragEntity });
+            assert.isOk(secondBaseControl._dndListController);
+            assert.isOk(secondBaseControl._dndListController.getDragEntity());
+            assert.isOk(secondBaseControl._dndListController.getDraggableItem());
+            assert.equal(secondBaseControl._dndListController.getDraggableItem().getContents(), newRecord);
          });
 
          it('drag end', () => {
@@ -7282,7 +7293,8 @@ define([
                getCollapsedGroups: () => {},
                unsubscribe: () => {},
                destroy: () => {},
-               getItemBySourceKey: () => collectionItem
+               getItemBySourceKey: () => collectionItem,
+               isEditing: () => false
             };
             spyMove = sinon.spy(moveController, 'move');
             spyMoveWithDialog = sinon.spy(moveController, 'moveWithDialog');
@@ -7327,6 +7339,24 @@ define([
             return baseControl.moveItemsWithDialog(selectionObject, {anyFilter: 'anyVal'}).then(() => {
                sinon.assert.called(spyMoveWithDialog);
             });
+         });
+
+         // Работает даже после update
+         it('should also work after update', () => {
+            baseControl._beforeUpdate({
+               ...cfg,
+               moveDialogTemplate: {
+                  templateName: 'fakeTemplate',
+                  templateOptions: {
+                     containerWidth: 500
+                  }
+               }
+            });
+            const stubUpdateOptions = sinon.stub(moveController, 'updateOptions').callsFake((options) => {
+               assert(options.popupOptions.template, 'fakeTemplate');
+               assert(options.popupOptions.templateOptions.containerWidth, 500);
+            });
+            stubUpdateOptions.restore();
          });
       });
 

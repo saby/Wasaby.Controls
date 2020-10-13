@@ -18,7 +18,7 @@ import {
    ISourceOptions,
    IValidationStatusOptions
 } from 'Controls/interface';
-import {QueryWhereExpression} from 'Types/source';
+import {PrefetchProxy, QueryWhereExpression} from 'Types/source';
 import ISuggest, {IEmptyTemplateProp, ISuggestFooterTemplate, ISuggestTemplateProp} from 'Controls/interface/ISuggest';
 import {IValueOptions} from 'Controls/input';
 import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
@@ -643,6 +643,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
+      this._searchValue = value;
       /* preload suggest dependencies on value changed */
       this._loadDependencies(this._options);
 
@@ -692,7 +693,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          delayTime: options.searchDelay,
          minSearchLength: options.minSearchLength,
          searchCallback: (validatedValue: string) => this._resolveLoad(validatedValue),
-         searchResetCallback: async () => (await this._getSearchController()).reset()
+         searchResetCallback: async () => {
+            (await this._getSearchController()).reset();
+            this._updateSuggestState();
+         }
       };
    }
 
@@ -720,16 +724,22 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _getSourceControllerOptions(options: IInputControllerOptions = this._options): ISourceControllerOptions {
+      let source;
+      if (options.source instanceof PrefetchProxy) {
+         source = options.source.getOriginal();
+      } else {
+         source = options.source;
+      }
+
       return {
          dataLoadErrback: (error) => this._searchErrback(error),
          filter: this._filter,
-         keyProperty: this._options.keyProperty,
-         navigation: this._options.navigation,
-         sorting: this._options.sorting,
-         source: this._options.source,
-         parentProperty: undefined,
-         root: undefined,
-         ...options
+         keyProperty: options.keyProperty,
+         navigation: options.navigation,
+         sorting: options.sorting,
+         source,
+         parentProperty: options.parentProperty,
+         root: options.root
       };
    }
 
