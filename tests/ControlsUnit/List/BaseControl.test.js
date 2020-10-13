@@ -7228,7 +7228,7 @@ define([
             });
          });
 
-         it('notify return new key', () => {
+         /*it('notify return new key', () => {
             baseControl._notify = (eventName, params) => {
                if (eventName === 'beforeMarkedKeyChanged') {
                   assert.deepEqual(params, [1]);
@@ -7241,7 +7241,7 @@ define([
             lists.BaseControl._private.changeMarkedKey(baseControl, 1);
             assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
             assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
-         });
+         });*/
 
          it('notify nothing return', () => {
             baseControl._notify = (eventName, params) => {
@@ -7410,7 +7410,7 @@ define([
                });
             });
 
-            it('notify return new key', () => {
+            /*it('notify return new key', () => {
                baseControl._notify = (eventName, params) => {
                   if (eventName === 'beforeMarkedKeyChanged') {
                      assert.deepEqual(params, [1]);
@@ -7423,7 +7423,7 @@ define([
                lists.BaseControl._private.changeMarkedKey(baseControl, 1);
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
-            });
+            });*/
 
             it('notify nothing return', () => {
                baseControl._notify = (eventName, params) => {
@@ -7598,7 +7598,7 @@ define([
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
 
-            it('change markerVisibility on visible', () => {
+            /*it('change markerVisibility on visible', () => {
                let newCfg = {
                   ...cfg,
                   markerVisibility: 'onactivated'
@@ -7621,7 +7621,7 @@ define([
 
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
-            });
+            });*/
 
 /*
             it('need reload, not call setMarkedKey', () => {
