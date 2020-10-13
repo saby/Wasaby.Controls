@@ -2710,14 +2710,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         newItems: T[],
         newItemsIndex: number,
         oldItems: T[],
-        oldItemsIndex: number,
-        session?: IEnumerableComparatorSession
+        oldItemsIndex: number
     ): void {
         if (!this._isNeedNotifyCollectionChange()) {
             return;
         }
         if (
-            !session ||
             action === IObservable.ACTION_RESET ||
             !this._isGrouped()
         ) {
@@ -2760,6 +2758,38 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 notify(notifyIndex, i + 1);
             }
         }
+    }
+
+    protected _notifyCollectionChangeBySession(
+        session: IEnumerableComparatorSession,
+        action: string,
+        newItems: T[],
+        newItemsIndex: number,
+        oldItems: T[],
+        oldItemsIndex: number
+    ): void {
+        if (!this._isNeedNotifyCollectionChange()) {
+            return;
+        }
+        if (!session) {
+            this._notifyLater(
+                'onCollectionChange',
+                action,
+                newItems,
+                newItemsIndex,
+                oldItems,
+                oldItemsIndex
+            );
+            return;
+        }
+
+        this._notifyCollectionChange(
+            action,
+            newItems,
+            newItemsIndex,
+            oldItems,
+            oldItemsIndex
+        );
     }
 
     /**
@@ -3482,13 +3512,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (diff.length) {
             this._notifyBeforeCollectionChange();
             this._extractPacksByList(this, diff, (items, index) => {
-                this._notifyCollectionChange(
+                this._notifyCollectionChangeBySession(
+                    session,
                     IObservable.ACTION_CHANGE,
                     items,
                     index,
                     items,
-                    index,
-                    session
+                    index
                 );
             });
             this._notifyAfterCollectionChange();
@@ -3544,13 +3574,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this,
             changedItems,
             (pack, index) => {
-                this._notifyCollectionChange(
+                this._notifyCollectionChangeBySession(
+                    session,
                     IObservable.ACTION_CHANGE,
                     pack,
                     index,
                     pack,
-                    index,
-                    session
+                    index
                 );
             }
         );
