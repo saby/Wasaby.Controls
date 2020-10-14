@@ -411,7 +411,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       } else if (!this._options.autoDropDown) {
          // autoDropDown - close only on Esc key or deactivate
          this._close();
-         state = false;
       }
 
       return state;
@@ -713,7 +712,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private async _searchResetCallback(): Promise<void> {
       const searchController = await this._getSearchController();
 
-      if (this._updateSuggestState()) {
+      if (this._updateSuggestState() || this._options.autoDropDown) {
          this._setItems(await searchController.reset());
       }
    }
