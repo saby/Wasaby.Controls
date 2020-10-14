@@ -120,13 +120,13 @@ export default class Controller<P> {
     * @param isTouch
     */
    static canStartDragNDrop(
-       canStartDragNDropOption: boolean|Function,
+       canStartDragNDropOption: boolean | Function,
        event: SyntheticEvent<MouseEvent>,
        isTouch: boolean
    ): boolean {
       return (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption())
           && !event.nativeEvent.button
-          && !(event.target as Element).closest('.controls-DragNDrop__notDraggable')
+          && !(event.target as Element).closest('.controls-List_DragNDrop__notDraggable')
           && !isTouch;
    }
 

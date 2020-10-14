@@ -156,17 +156,16 @@ describe('Controls/_listDragNDrop/Controller', () => {
 
    it('canStartDragNDrop', () => {
       const canStartDragNDrop = () => true,
-            event = {
-               nativeEvent: {
-                  button: undefined
-               },
-               target: {
-                  closest(cssClass) {
-                     assert.equal(cssClass, '.controls-DragNDrop__notDraggable');
-                     return false;
-                  }
-               }
-            };
+          event = {
+             nativeEvent: {
+                button: undefined
+             },
+             target: {
+                closest(cssClass) {
+                   return false;
+                }
+             }
+          };
 
       assert.isTrue(DndController.canStartDragNDrop(canStartDragNDrop, event, false));
       assert.isTrue(DndController.canStartDragNDrop(false, event, false));
