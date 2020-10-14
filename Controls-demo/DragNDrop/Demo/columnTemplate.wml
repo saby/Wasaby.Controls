@@ -10,7 +10,7 @@
          <ws:else>
             <img class="demo-DragNDrop__explorerItem_photo" src="{{itemData.item.image}}"/>
             <div class="demo-DragNDrop__explorerItem_row">
-               <span class="demo-DragNDrop__explorerItem_author controls-Grid_DragNDrop__notDraggable">{{itemData.item.title}}</span>
+               <span class="demo-DragNDrop__explorerItem_author controls-List_DragNDrop__notDraggable">{{itemData.item.title}}</span>
                <div class="demo-DragNDrop__explorerItem_aboutTask">
                   <span class="demo-DragNDrop__explorerItem__taskText controls-List_DragNDrop__notDraggable">{{itemData.item.text}}</span>
                </div>
