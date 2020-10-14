@@ -528,12 +528,12 @@ define('Controls/Application',
          }
 
          var API = AppPage.Head.getInstance();
-         modules.forEach((moduleName) => {
+         modules.forEach(function(moduleName) {
             var path = UIUtils.ModulesLoader.getModuleUrl(moduleName);
             path = path.indexOf('/') !== 0 ? '/' + path : path;
             var _type = _getTypeString(path);
             if (!_type) {
-               Env.IoC.resolve('ILogger').warn(`[Controls/Application.js] Для файла ${path} не удалось получить строку-тип`);
+               Env.IoC.resolve('ILogger').warn('[Controls/Application.js] Для файла ' + path + ' не удалось получить строку-тип');
                return;
             }
 
