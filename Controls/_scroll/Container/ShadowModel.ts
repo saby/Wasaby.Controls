@@ -54,7 +54,6 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
             this._type = SHADOW_TYPE.AFTER;
         }
         this._options = options;
-        this._updateEnabled();
     }
 
     get isEnabled() {

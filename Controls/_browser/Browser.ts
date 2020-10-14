@@ -56,8 +56,8 @@ export default class Browser extends Control {
     private _dataOptionsContext: ContextOptions;
     private _errorRegister: RegisterClass;
     private _storeCallbacks: string[];
-    private _initialTopShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
-    private _initialBottomShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
+    private _topShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
+    private _bottomShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
 
     protected _beforeMount(options,
                            context,
@@ -394,8 +394,8 @@ export default class Browser extends Control {
         if (items instanceof RecordSet) {
             const more = items.getMetaData().more;
             if (more) {
-                this._initialTopShadowVisibility = more.before ? SHADOW_VISIBILITY.VISIBLE : SHADOW_VISIBILITY.AUTO;
-                this._initialBottomShadowVisibility = more.after ? SHADOW_VISIBILITY.VISIBLE : SHADOW_VISIBILITY.AUTO;
+                this._topShadowVisibility = more.before ? SHADOW_VISIBILITY.VISIBLE : SHADOW_VISIBILITY.AUTO;
+                this._bottomShadowVisibility = more.after ? SHADOW_VISIBILITY.VISIBLE : SHADOW_VISIBILITY.AUTO;
             }
 
         }
