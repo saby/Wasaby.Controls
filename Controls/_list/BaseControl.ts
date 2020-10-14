@@ -3584,7 +3584,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     selected: newOptions.selectedKeys,
                     excluded: newOptions.excludedKeys
                 };
-                _private.getSelectionController(this, newOptions).setSelection(newSelection);
+                const controller = _private.getSelectionController(this, newOptions);
+                controller.setSelection(newSelection);
+                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             }
         } else if (_private.hasSelectionController(this)) {
             _private.getSelectionController(this).destroy();
