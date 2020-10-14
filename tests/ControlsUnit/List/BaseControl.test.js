@@ -7701,7 +7701,7 @@ define([
                baseControl.saveOptions(newCfg);
                return baseControl._beforeMount(newCfg).then(() => {
                   const notifySpy = sinon.spy(baseControl, '_notify');
-                  baseControl._beforeUpdate({... newCfg, selectionViewMode: '', filter: {}});
+                  baseControl._beforeUpdate({ ...newCfg, selectionViewMode: '', filter: {} });
                   assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [null]]).called);
                });
             });
@@ -7710,9 +7710,9 @@ define([
                const newCfg = { ...cfg, selectedKeys: [1] };
                baseControl.saveOptions(newCfg);
                return baseControl._beforeMount(newCfg).then(() => {
-                  const notifySpy = sinon.spy(baseControl, '_notify');
-                  baseControl._beforeUpdate({... newCfg, selectedKeys: [], multiSelectVisibility: 'hidden'});
-                  assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [1]]).called);
+                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
+                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [], multiSelectVisibility: 'hidden' });
+                  assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
                });
             });
 

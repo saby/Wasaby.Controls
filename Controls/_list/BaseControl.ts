@@ -2282,22 +2282,23 @@ const _private = {
     changeSelection(self: typeof BaseControl, newSelection: ISelectionObject): Promise<ISelectionObject>|ISelectionObject {
         const controller = _private.getSelectionController(self);
         const selectionDifference = controller.getSelectionDifference(newSelection);
-        const result = self._notify('beforeSelectionChanged', [selectionDifference]);
+        let result = self._notify('beforeSelectionChanged', [selectionDifference]);
+
+        const handleResult = (selection) => {
+            _private.notifySelection(self, selection);
+            if (!self._options.hasOwnProperty('selectedKeys')) {
+                controller.setSelection(selection);
+            }
+            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
+        }
 
         if (result instanceof Promise) {
-            result.then((selection: ISelectionObject) => {
-                _private.notifySelection(self, selection);
-                controller.setSelection(selection);
-                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
-            });
+            result.then((selection: ISelectionObject) => handleResult(selection));
         } else if (result !== undefined) {
-            _private.notifySelection(self, result);
-            controller.setSelection(result);
-            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
+            handleResult(result);
         } else {
-            _private.notifySelection(self, newSelection);
-            controller.setSelection(newSelection);
-            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
+            handleResult(newSelection);
+            result = newSelection;
         }
 
         return result;
@@ -3582,7 +3583,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     selected: newOptions.selectedKeys,
                     excluded: newOptions.excludedKeys
                 };
-                _private.changeSelection(this, newSelection);
+                const controller = _private.getSelectionController(this, newOptions);
+                controller.setSelection(newSelection);
+                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             }
         } else if (_private.hasSelectionController(this)) {
             _private.getSelectionController(this).destroy();
