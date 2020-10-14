@@ -230,7 +230,6 @@ const _private = {
 
         if (viewModel) {
             const modelRoot = viewModel.getRoot();
-            const isMultiNavigationData = loadedList?.getMetaData().more instanceof RecordSet;
             const root = self._options.root !== undefined ? self._options.root : self._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
             if (self._updateExpandedItemsAfterReload) {
@@ -275,6 +274,21 @@ const _private = {
                 if (!isEqual({}, hasMore)) {
                     viewModel.setHasMoreStorage(hasMore);
                 }
+            }
+            if (loadedList) {
+                const modelHasMoreStorage = viewModel.getHasMoreStorage();
+                const sourceController = baseControl.getSourceController();
+
+                loadedList.each((item) => {
+                    if (item.get(options.nodeProperty) !== null) {
+                        const itemKey = item.getId();
+
+                        if (!modelHasMoreStorage.hasOwnProperty(String(itemKey)) &&
+                            viewModel.getChildren(itemKey, loadedList).length) {
+                            modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
+                        }
+                    }
+                });
             }
         }
         // reset deepReload after loading data (see reload method or constructor)
