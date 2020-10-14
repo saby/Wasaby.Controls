@@ -12,7 +12,7 @@ function isLastColumn(
    itemData: object,
    colspan: boolean
 ): boolean {
-   const columnWidth = itemData.multiSelectVisibility === 'hidden' || itemData.isRootItemsSeparator ? 1 : 2;
+   const columnWidth = itemData.hasMultiSelectColumn && !itemData.isRootItemsSeparator ? 2 : 1;
    return itemData.getLastColumnIndex() >= itemData.columnIndex && (!colspan || itemData.columnIndex < columnWidth);
 }
 
@@ -212,7 +212,7 @@ var
                 }
 
                 // если текущая колонка первая и для нее не задан мультиселект, то убираем левый отступ
-                if (currentColumn.columnIndex === 0 && !current.hasMultiSelect) {
+                if (currentColumn.columnIndex === 0 && !current.hasMultiSelectColumn) {
                     currentColumn.classList.padding.left += ' controls-TreeGrid__row-cell__firstColumn__contentSpacing_null';
                 }
 
@@ -224,6 +224,8 @@ var
                 footer.columns = columns;
                 footer.isFullGridSupport = GridLayoutUtil.isFullGridSupport();
                 footer.colspan = self.getColspanFor('nodeFooter');
+                footer.hasMultiSelectColumn = self._hasMultiSelectColumn();
+
 
                 if (current.useNewNodeFooters) {
                     footer.template = self._options.nodeFooterTemplate || 'wml!Controls/_treeGrid/TreeGridView/NodeFooterTemplate';
@@ -248,7 +250,7 @@ var
                         if (index > 0) {
                             classes += ` controls-TreeGrid__nodeFooterCell_columnSeparator-size_${current.getSeparatorForColumn(columns, index, current.columnSeparatorSize)}_theme-${theme}`;
                         }
-                        if (!current.hasMultiSelect && index === 0) {
+                        if (!current.hasMultiSelectColumn && index === 0) {
                             classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
                         }
 
@@ -271,7 +273,7 @@ var
                 footer.classes = footer.getColumnClasses(0);
 
                 const colspanCfg = {
-                    columnStart: self._options.multiSelectVisibility !== 'hidden' ? 1 : 0,
+                    columnStart: self._hasMultiSelectColumn() ? 1 : 0,
                     columnSpan: self._options.columnScroll ? self._columns.length + 1 : self._columns.length,
                 };
                 if (current.columnScroll) {

@@ -151,6 +151,11 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     protected _setInputValue(options: ILookupInputOptions, value: string): void {
         if (!options.hasOwnProperty('value')) {
             this._inputValue = value;
+
+            // _inputValue - состояние, которое используется, если не задают опцию value
+            // Т.к. _inputValue не реактивное св-во, и в шаблоне оно получается через getter (_getInputValue),
+            // то необходимо звать forceUpdate
+            this._forceUpdate();
         }
     }
 
