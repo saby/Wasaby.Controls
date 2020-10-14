@@ -1,0 +1,12 @@
+<ws:for data="column in _prepareFooterTemplateColumns(columns || [{ 'template' : content}], backgroundStyle)">
+    <ws:if data="{{ column.isFullGridSupport }}">
+        <div class="{{ column.classes }}" style="{{ column.styles }}">
+            <ws:partial template="{{ column.template }}" if="{{ column.template }}"/>
+        </div>
+    </ws:if>
+    <ws:else>
+        <td class="{{ column.classes }}" style="{{ column.styles }}" colspan="{{ column.colspan }}">
+            <ws:partial template="{{ column.template }}" if="{{ column.template }}" attr:style="{{ column.styles }}"/>
+        </td>
+    </ws:else>
+</ws:for>

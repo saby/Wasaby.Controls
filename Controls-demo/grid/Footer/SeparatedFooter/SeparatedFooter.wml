@@ -1,0 +1,121 @@
+<div xmlns:ws="http://www.w3.org/1999/html">
+    <div class="controlsDemo__wrapper">
+        <Controls.grid:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                multiSelectVisibility="visible"
+                columns="{{_columns}}"
+                useNewFooterTemplate="{{ true }}">
+            <ws:footerTemplate>
+                <ws:partial template="Controls/grid:FooterTemplate">
+                    <div>content</div>
+                </ws:partial>
+            </ws:footerTemplate>
+        </Controls.grid:View>
+    </div>
+
+    <div class="controlsDemo__wrapper">
+        <Controls.grid:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                multiSelectVisibility="visible"
+                columns="{{_columns}}"
+                useNewFooterTemplate="{{ true }}">
+            <ws:footerTemplate>
+                <ws:partial template="Controls/grid:FooterTemplate">
+                    <ws:columns>
+                        <ws:Array>
+                            <ws:Object>
+                                <ws:template>
+                                    First
+                                </ws:template>
+                            </ws:Object>
+                            <ws:Object>
+                                <ws:template>
+                                    Second
+                                </ws:template>
+                            </ws:Object>
+                            <ws:Object>
+                                <ws:template>
+                                    Last
+                                </ws:template>
+                            </ws:Object>
+                        </ws:Array>
+                    </ws:columns>
+                </ws:partial>
+            </ws:footerTemplate>
+        </Controls.grid:View>
+    </div>
+
+    <div class="controlsDemo__wrapper">
+        <Controls.grid:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                multiSelectVisibility="visible"
+                columns="{{_columns}}">
+            <ws:footerTemplate>
+                <div>123</div>
+            </ws:footerTemplate>
+        </Controls.grid:View>
+    </div>
+
+    <div class="controlsDemo__wrapper">
+        <Controls.grid:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                columns="{{_columns}}"
+                useNewFooterTemplate="{{ true }}">
+            <ws:footerTemplate>
+                <ws:partial template="Controls/grid:FooterTemplate">
+                    <div>content</div>
+                </ws:partial>
+            </ws:footerTemplate>
+        </Controls.grid:View>
+    </div>
+
+    <div class="controlsDemo__wrapper">
+        <Controls.grid:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                columns="{{_columns}}"
+                useNewFooterTemplate="{{ true }}">
+            <ws:footerTemplate>
+                <ws:partial template="Controls/grid:FooterTemplate">
+                    <ws:columns>
+                        <ws:Array>
+                            <ws:Object>
+                                <ws:template>
+                                    First
+                                </ws:template>
+                            </ws:Object>
+                            <ws:Object>
+                                <ws:template>
+                                    Second
+                                </ws:template>
+                            </ws:Object>
+                            <ws:Object>
+                                <ws:template>
+                                    Last
+                                </ws:template>
+                            </ws:Object>
+                        </ws:Array>
+                    </ws:columns>
+                </ws:partial>
+            </ws:footerTemplate>
+        </Controls.grid:View>
+    </div>
+
+    <div class="controlsDemo__wrapper">
+        <Controls.grid:View
+                keyProperty="id"
+                source="{{_viewSource}}"
+                columns="{{_columns}}">
+            <ws:footerTemplate>
+                <div>123</div>
+            </ws:footerTemplate>
+        </Controls.grid:View>
+    </div>
+
+
+</div>
+

@@ -4,7 +4,7 @@ import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import * as GridIsEqualUtil from 'Controls/_grid/utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from 'Controls/context';
 import {tmplNotify} from 'Controls/eventUtils';
-import {prepareEmptyEditingColumns} from './utils/GridEmptyTemplateUtil';
+import {prepareColumns} from './utils/GridColumnsColspanUtil';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS, ColumnScroll} from './resources/ColumnScroll';
 import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/DragScroll';
 import {shouldAddActionsCell, shouldDrawColumnScroll, getAllowedSwipeType, isInLeftSwipeRange} from 'Controls/_grid/utils/GridColumnScrollUtil';
@@ -352,9 +352,9 @@ var
 
             // При прокидывании функции через шаблон и последующем вызове, она вызывается с областью видимости шаблона, а не контрола.
             // https://online.sbis.ru/opendoc.html?guid=756c49a6-13da-4e54-9333-fdd7a7fb6461
-            this._getFooterClasses = this._getFooterClasses.bind(this);
-            this._getFooterStyles = this._getFooterStyles.bind(this);
-            this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
+            this._prepareEmptyEditingTemplateColumns = this._prepareEmptyEditingTemplateColumns.bind(this);
+            this._prepareFooterTemplateColumns = this._prepareFooterTemplateColumns.bind(this);
+
 
             return resultSuper;
         },
@@ -462,45 +462,6 @@ var
         _beforeUnmount(): void {
             GridView.superclass._beforeUnmount.apply(this, arguments);
             _private.destroyColumnScroll(this);
-        },
-
-        /**
-         * Производит расчёт CSS классов для футера grid'а
-         * @protected
-         */
-        _getFooterClasses(): string {
-            let leftPadding;
-            if (this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default') {
-                leftPadding = 'withCheckboxes';
-            } else {
-                leftPadding = (this._options.itemPadding && this._options.itemPadding.left || 'default').toLowerCase();
-            }
-            let classList = CssClassList
-                .add('controls-GridView__footer')
-                .add(COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT, !!this._options.columnScroll)
-                .add(`controls-GridView__footer__paddingLeft_${leftPadding}_theme-${this._options.theme}`);
-
-            // Для предотвращения скролла одной записи в таблице с экшнами.
-            // _options._needBottomPadding почему-то иногда не работает.
-            if ((this._listModel.getCount() || this._listModel.isEditing()) &&
-                this._options.itemActionsPosition === 'outside' &&
-                !this._options._needBottomPadding &&
-                this._options.resultsPosition !== 'bottom') {
-                classList = classList.add(`controls-GridView__footer__itemActionsV_outside_theme-${this._options.theme}`);
-            }
-            return classList.compile();
-        },
-
-        /**
-         * @protected
-         */
-        _getFooterStyles(): string {
-            let styles = '';
-
-            if (this._containerSize && this._isColumnScrollVisible()) {
-                styles += `width: ${this._containerSize}px;`;
-            }
-            return styles;
         },
 
         resizeNotifyOnListChanged(): void {
@@ -851,8 +812,8 @@ var
             this._leftSwipeCanBeStarted = false;
         },
 
-        _prepareColumnsForEmptyEditingTemplate(columns, topSpacing, bottomSpacing) {
-            return prepareEmptyEditingColumns({
+        _prepareEmptyEditingTemplateColumns(columns, topSpacing: string, bottomSpacing: string) {
+            const params = {
                 gridColumns: this._options.columns,
                 emptyTemplateSpacing: {
                     top: topSpacing,
@@ -860,10 +821,152 @@ var
                 },
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
                 hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
-                emptyTemplateColumns: columns,
-                itemPadding: this._options.itemPadding || {},
+                colspanColumns: columns,
+                itemPadding: {
+                    top: this._options.itemPadding?.top?.toLowerCase() || 'default',
+                    bottom: this._options.itemPadding?.bottom?.toLowerCase() || 'default',
+                    left: this._options.itemPadding?.left?.toLowerCase() || 'default',
+                    right: this._options.itemPadding?.right?.toLowerCase() || 'default'
+                },
                 theme: this._options.theme
+            };
+
+            return prepareColumns<{ classes: string }>({
+                ...params,
+                afterPrepareCallback: (column, index, columns) => {
+                    column.classes = this._getEmptyColumnClasses({
+                        ...params,
+                        emptyColumn: column,
+                        emptyColumnIndex: index,
+                        emptyColumnsLength: columns.length
+                    });
+                }
             });
+        },
+
+        _getEmptyColumnClasses(params): string {
+            const isFirst = params.emptyColumnIndex === 0 && !params.hasMultiSelect;
+            const isLast = params.emptyColumnIndex === params.emptyColumnsLength - 1;
+            const cellPadding = params.gridColumns[params.emptyColumn.startIndex].cellPadding;
+            const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side].toLowerCase()}` : '';
+            const theme = params.theme;
+
+            let classes = 'controls-GridView__emptyTemplate__cell ';
+            classes += `controls-Grid__row-cell-background-editing_theme-${theme} `;
+
+            if (params.isFullGridSupport) {
+                classes += `controls-Grid__row-cell__content_baseline_default_theme-${theme} `;
+            }
+
+            // Вертикальные отступы шаблона путого списка
+            classes +=  `controls-ListView__empty_topSpacing_${params.emptyTemplateSpacing.top || 'default'}_theme-${theme} `;
+            classes += `controls-ListView__empty_bottomSpacing_${params.emptyTemplateSpacing.bottom || 'default'}_theme-${theme} `;
+
+            // Вертикальные отступы внутри ячеек
+            classes += `controls-Grid__row-cell_rowSpacingTop_${params.itemPadding.top}_theme-${theme} `;
+            classes += `controls-Grid__row-cell_rowSpacingBottom_${params.itemPadding.bottom}_theme-${theme} `;
+
+            // Левый отступ ячейки
+            if (!(params.emptyColumnIndex === 0 && params.hasMultiSelect)) {
+                if (isFirst) {
+                    classes += `controls-Grid__cell_spacingFirstCol_${params.itemPadding.left}_theme-${theme} `;
+                } else {
+                    classes += `controls-Grid__cell_spacingLeft${getCellPadding('left')}_theme-${theme} `;
+                }
+            }
+
+            // Правый отступ ячейки
+            if (isLast) {
+                classes += `controls-Grid__cell_spacingLastCol_${params.itemPadding.right}_theme-${theme}`;
+            } else {
+                classes += `controls-Grid__cell_spacingRight${getCellPadding('right')}_theme-${theme}`;
+            }
+
+            return classes;
+        },
+
+        _prepareFooterTemplateColumns(colspanColumns?, backgroundStyle: string = 'default') {
+            const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default';
+            const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
+
+            const prepared = prepareColumns<{
+                isFullGridSupport: boolean;
+                classes: string,
+                styles: string,
+                colspan: number;
+            }>({
+                gridColumns: this._options.columns,
+                colspanColumns,
+                hasMultiSelect
+            });
+
+            const isMultiColumn = prepared.length > 1;
+
+            const itemPadding = {
+                left: this._options.itemPadding?.left?.toLowerCase() || 'default',
+                right: this._options.itemPadding?.right?.toLowerCase() || 'default'
+            };
+            const theme = this._options.theme;
+
+            prepared.forEach((column, index, columns) => {
+                column.isFullGridSupport = isFullGridSupport;
+                column.classes = `controls-GridView__footer__cell controls-GridView__footer__cell_theme-${theme}`;
+                column.styles = '';
+
+                if (index === 0) {
+                    if (!hasMultiSelect) {
+                        column.classes += ` controls-GridView__footer__cell__paddingLeft_${itemPadding.left}_theme-${theme}`;
+                    }
+                } else {
+                    const dataColumnIndex = column.startIndex - +hasMultiSelect - 1;
+                    const leftCellPadding = this._options.columns[dataColumnIndex].cellPadding?.left?.toLowerCase() || 'default';
+                    column.classes += ` controls-GridView__footer__cell__cellPaddingLeft_${leftCellPadding}_theme-${theme}`;
+                }
+
+                if (index === columns.length - 1) {
+                    column.classes += ` controls-GridView__footer__cell__paddingRight_${itemPadding.right}_theme-${theme}`;
+                } else {
+                    const dataColumnIndex = column.endIndex - +hasMultiSelect - 1;
+                    const rightCellPadding = this._options.columns[dataColumnIndex].cellPadding?.right?.toLowerCase() || 'default';
+                    column.classes += ` controls-GridView__footer__cell__cellPaddingRight_${rightCellPadding}_theme-${theme}`;
+                }
+
+                if (this._options.columnScroll) {
+
+                    // Не скроллируем 1) растянутый подвал; 2) фиксированную часть разбитого на колонки подвала.
+                    if (!isMultiColumn) {
+                        column.classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
+                        column.classes += ` ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
+
+                        // Растянутый подвал должен растягиваться только на ширину видимой области таблицы.
+                        if (this._containerSize) {
+                            column.styles += ` width: ${this._containerSize}px;`;
+                        }
+                    } else if ((column.endIndex - 1 - +hasMultiSelect) <= this._options.stickyColumnsCount) {
+                        column.classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
+                        column.classes += ` ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
+                    }
+                    column.classes += ` controls-background-${backgroundStyle}_theme-${theme}`;
+                }
+
+                // Для предотвращения скролла одной записи в таблице с экшнами.
+                // _options._needBottomPadding почему-то иногда не работает.
+                // https://online.sbis.ru/opendoc.html?guid=3d84bd7a-039d-4a30-915b-41c75ed501cd
+                if ((this._listModel.getCount() || this._listModel.isEditing()) &&
+                    this._options.itemActionsPosition === 'outside' &&
+                    !this._options._needBottomPadding &&
+                    this._options.resultsPosition !== 'bottom') {
+                    column.classes += ` controls-GridView__footer__itemActionsV_outside_theme-${theme}`;
+                }
+
+                if (isFullGridSupport) {
+                    column.styles += ` grid-column: ${column.startIndex} / ${column.endIndex};`;
+                } else {
+                    column.colspan = column.endIndex - column.startIndex;
+                }
+            });
+
+            return prepared;
         }
     });
 
