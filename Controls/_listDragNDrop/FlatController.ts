@@ -4,6 +4,7 @@ import { ItemsEntity } from 'Controls/dragnDrop';
 import { CollectionItem, IDragPosition } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { ISelectionObject } from 'Controls/interface';
+import {Logger} from 'UI/Utils';
 
 export interface IModel {
    setDraggedItems(draggedItem: TKey, draggedItems: Array<string | number>): void;
@@ -167,12 +168,16 @@ export default class FlatController {
    }
 
    static canStartDragNDrop(
-       canStartDragNDropOption: boolean|Function,
+       canStartDragNDropOption: boolean | Function,
        event: SyntheticEvent<MouseEvent>,
        isTouch: boolean
    ): boolean {
+      if (!event.target.closest('.controls-DragNDrop__notDraggable')) {
+         Logger.warn('DragNDrop: Css class "controls-DragNDrop__notDraggable" is not used in lists and was removed in 20.7000. Use the css class "controls-List_DragNDrop__notDraggable".');
+      }
       return (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption())
-         && !event.nativeEvent.button && !event.target.closest('.controls-DragNDrop__notDraggable') && !isTouch;
+          && !event.nativeEvent.button && (!event.target.closest('.controls-List_DragNDrop__notDraggable') &&
+              !event.target.closest('.controls-DragNDrop__notDraggable')) && !isTouch;
    }
 
    /**
