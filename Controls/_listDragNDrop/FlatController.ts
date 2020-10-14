@@ -167,12 +167,12 @@ export default class FlatController {
    }
 
    static canStartDragNDrop(
-       canStartDragNDropOption: boolean|Function,
+       canStartDragNDropOption: boolean | Function,
        event: SyntheticEvent<MouseEvent>,
        isTouch: boolean
    ): boolean {
       return (!canStartDragNDropOption || typeof canStartDragNDropOption === 'function' && canStartDragNDropOption())
-         && !event.nativeEvent.button && !event.target.closest('.controls-DragNDrop__notDraggable') && !isTouch;
+          && !event.nativeEvent.button && !event.target.closest('.controls-List_DragNDrop__notDraggable') && !isTouch;
    }
 
    /**
