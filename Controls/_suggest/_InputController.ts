@@ -713,7 +713,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       const searchController = await this._getSearchController();
 
       if (this._updateSuggestState() || this._options.autoDropDown) {
-         this._setItems(await searchController.reset());
+         const recordSet = await searchController.reset();
+         this._setItems(recordSet);
       }
    }
 
