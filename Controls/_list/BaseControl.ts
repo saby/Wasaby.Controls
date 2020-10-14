@@ -333,13 +333,6 @@ const _private = {
         return needAttachLoadTopTriggerToNull;
     },
 
-    showTopTriggerAndAddPaddingIfNeed(self): void {
-        _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
-        if (self._hideTopTrigger) {
-            self._hideTopTrigger = false;
-        }
-    },
-
     reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
         const filter: IHashMap<unknown> = cClone(cfg.filter);
         const sorting = cClone(cfg.sorting);
@@ -3359,7 +3352,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (!this._items || !this._items.getCount()) {
-            _private.showTopTriggerAndAddPaddingIfNeed(this);
+            _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+            if (this._hideTopTrigger) {
+                this._hideTopTrigger = false;
+            }
         }
     },
 
@@ -4012,6 +4008,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (firstItem && firstItem.key !== null) {
                 _private.scrollToItem(this, firstItem.key, false, true, firstItem.skippedItemsCount);
             }
+            this._notify('_scrollToFirstItemForTopPadding', [], {bubbling: true});
         }
     },
 
@@ -4863,8 +4860,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
+
+        if (this._hideTopTrigger) {
+            this._hideTopTrigger = false;
+        }
         if (!this._scrollController?.getScrollTop()) {
-            _private.showTopTriggerAndAddPaddingIfNeed(this);
+            _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
         }
     },
 
