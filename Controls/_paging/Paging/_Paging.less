@@ -138,8 +138,14 @@
    left: -@arrow_separator_thickness_paging;
 }
 
-.controls-Paging__btn-Template {
-   padding: 0 @content_right-padding-horizontal_paging - @item_offset_paging 0 @item_left-padding-horizontal_paging;
+.controls-Paging__content-Template {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   padding: 0 @content_right-padding-horizontal_paging 0 @item_left-padding-horizontal_paging;
+   &:empty{
+      padding-right: 0;
+   }
 }
 
 .controls-Paging__btn-elements-count {
