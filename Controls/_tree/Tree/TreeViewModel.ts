@@ -440,6 +440,7 @@ var
             this._options = cfg;
             this._expandedItems = cfg.expandedItems ? cClone(cfg.expandedItems) : [];
             this._collapsedItems = _private.prepareCollapsedItems(this._expandedItems, cfg.collapsedItems);
+            this._hasMoreStorage = {};
             this._hierarchyRelation = new relation.Hierarchy({
                 keyProperty: cfg.keyProperty || 'id',
                 parentProperty: cfg.parentProperty || 'Раздел',
