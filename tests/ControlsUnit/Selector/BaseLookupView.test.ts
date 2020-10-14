@@ -345,6 +345,19 @@ describe('Controls/_lookup/BaseLookupView', function() {
       sandbox.restore();
    });
 
+   it('setInputValue', () => {
+      const lookup = new Lookup({});
+      let forceUpdateCalled = false;
+
+      lookup._forceUpdate = () => {
+         forceUpdateCalled = true;
+      };
+
+      lookup._setInputValue({}, 'test');
+      ok(lookup._inputValue === 'test');
+      ok(forceUpdateCalled);
+   });
+
    it('activate', function() {
       let isActivate = false;
       const lookup = new Lookup();
