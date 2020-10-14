@@ -27,6 +27,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
     attachLoadTopTriggerToNull?: boolean;
     emptyTemplate?: TemplateFunction|string;
     footerTemplate?: TemplateFunction|string;
+    pagingLeftTemplate?: TemplateFunction|string;
     multiSelectVisibility?: TMultiSelectVisibility;
     stickyMarkedItem?: boolean;
     uniqueKeys?: boolean;
@@ -145,6 +146,18 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /**
+ * @name Controls/_list/interface/IList#pagingLeftTemplate
+ * @cfg {Function} Шаблон для отображения слева от постраничной навигации.
+ * @demo Controls-demo/list_new/Navigation/Paging/LeftTemplate/Index
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#pagingLeftTemplate
+ * @cfg {Function} Template to display to the left of page navigation.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2Flist_new%2FNavigation%2FPaging%2FLeftTemplate%2FIndex">Example</a>.
+ */
+
+/**
  * @typedef {String} MultiSelectVisibility
  * @variant visible Показать.
  * @variant hidden Скрыть.
@@ -172,6 +185,32 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @cfg {MultiSelectVisibility} Whether multiple selection is enabled.
  * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
+ */
+
+/**
+ * @typedef {String} MultiSelectPosition
+ * @variant custom Нестандартная позиця расположени чекбоксов множественного выбора. При данном значении опции, шаблон чекбоксов передается в прикладной шаблон и может быть выведен в любом месте записи.
+ * @variant default Стандартная позиция чекбоксов множественного выбора в начале строки.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#multiSelectPosition
+ * @cfg {MultiSelectPosition} Позиция чекбоксов множественного выбора.
+ * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
+ * @default default
+ */
+
+/*ENG
+ * @typedef {String} MultiSelectPosition
+ * @variant custom A custom position for the multiple selection checkboxes. With this option value, the multiple selection template is passed to the item template and can be displayed anywhere in it
+ * @variant default The standard position of the multiple selection checkboxes (at the beginning of the line)
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#multiSelectPosition
+ * @cfg {MultiSelectPosition} Position of multiple selection checkboxes
+ * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
+ * @default default
  */
 
 /**
@@ -340,7 +379,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /**
- * Возвращает список элементов.
+ * Возвращает рекордсет, на основании которого в данный момент строится списочный контрол.
  * @function Controls/_list/interface/IList#getItems
  * @return {RecordSet} Список элементов.
  * @example
@@ -567,6 +606,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @variant detailContrast
  * @variant listItem
  * @variant stackHeader
+ * @variant default фон списка по умолчанию
+ * @default default
  */
 
 /**

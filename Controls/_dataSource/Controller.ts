@@ -330,7 +330,12 @@ export default class Controller {
         if (this._options.source) {
             this._loadPromise = new CancelablePromise(
                 this._prepareFilterForQuery(key).then((preparedFilter: QueryWhereExpression<unknown>) => {
-                    const crudWrapper = this._getCrudWrapper(this._options.source as ICrud);
+                    // В source может лежать prefetchProxy
+                    // При подгрузке вниз/вверх данные необходимо брать не из кэша prefetchProxy
+                    const source = direction !== undefined ?
+                        Controller._getSource(this._options.source) :
+                        this._options.source;
+                    const crudWrapper = this._getCrudWrapper(source as ICrud);
 
                     let params = {
                         filter: preparedFilter,
@@ -388,7 +393,7 @@ export default class Controller {
                     import('Controls/operations').then((operations) => {
                         resultFilter.entries = operations.selectionToRecord({
                             selected: options.selectedKeys,
-                            excluded: options.excludedKeys
+                            excluded: options.excludedKeys || []
                         }, Controller._getSource(options.source).getAdapter());
                         resolve(resultFilter);
                     });
@@ -426,7 +431,9 @@ export default class Controller {
 
     private _subscribeItemsCollectionChangeEvent(items: RecordSet): void {
         this._unsubscribeItemsCollectionChangeEvent();
-        items.subscribe('onCollectionChange', this._collectionChange);
+        if (items) {
+            items.subscribe('onCollectionChange', this._collectionChange);
+        }
     }
 
     private _unsubscribeItemsCollectionChangeEvent(): void {

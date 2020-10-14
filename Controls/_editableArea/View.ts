@@ -76,7 +76,6 @@ var
  * @class Controls/_editableArea/View
  * @extends Core/Control
  * @mixes Controls/editableArea:IView
- * @mixes Controls/interface:IBackgroundStyle
  * @author Красильников А.С
  * @public
  *
@@ -185,8 +184,7 @@ View._theme = ['Controls/list', 'Controls/editableArea', 'Controls/Classes'];
 View.getDefaultOptions = function () {
    return {
       autoEdit: false,
-      toolbarVisible: false,
-      backgroundStyle: 'default'
+      toolbarVisible: false
    };
 };
 

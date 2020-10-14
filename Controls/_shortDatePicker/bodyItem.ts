@@ -1,33 +1,35 @@
-import BaseControl = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {date as formatDate} from 'Types/formatter';
 import {Base as dateUtils} from 'Controls/dateUtils';
 import itemMonthsTmpl = require('wml!Controls/_shortDatePicker/ItemMonths');
 import MonthCaption = require('wml!Controls/_shortDatePicker/MonthCaption');
 import itemFullTmpl = require('wml!Controls/_shortDatePicker/ItemFull');
 import itemQuartersTmpl = require('wml!Controls/_shortDatePicker/ItemQuarters');
-import {Date as WSDate} from "Types/entity";
+import {Date as WSDate} from 'Types/entity';
+import {IDateConstructor, IDateConstructorOptions} from 'Controls/interface';
 
-const Component = BaseControl.extend({
-    _template: itemMonthsTmpl,
-    monthCaptionTemplate: MonthCaption,
+interface IShortDatePickerOptions extends IControlOptions, IDateConstructorOptions {
+    currentYear?: number;
+}
 
-    _position: null,
-    _currentYear: null,
-    _yearModel: null,
+class BodyItem extends Control<IShortDatePickerOptions> implements IDateConstructor {
+    readonly '[Controls/_interface/IDateConstructor]': boolean = true;
+    protected _template: TemplateFunction = itemMonthsTmpl;
+    protected monthCaptionTemplate: TemplateFunction = MonthCaption;
 
-    _halfyearHovered: null,
-    _quarterHovered: null,
+    protected _yearModel: object[] = null;
 
-    _formatDate: formatDate,
+    protected _halfYearHovered: number = null;
+    protected _quarterHovered: number = null;
 
-    _beforeMount: function (options) {
-        this._position = options._position;
+    protected _formatDate: Function = formatDate;
+
+    protected _beforeMount(options: IShortDatePickerOptions): void {
         this._template = this._getItemTmplByType(options);
-        this._currentYear =  options.currentYear;
-        this._yearModel = this._getYearModel(this._currentYear, options.dateConstructor);
-    },
+        this._yearModel = this._getYearModel(options.currentYear, options.dateConstructor);
+    }
 
-    _getItemTmplByType: function (options) {
+    protected _getItemTmplByType(options: IShortDatePickerOptions): TemplateFunction {
         if (options.chooseHalfyears && options.chooseQuarters && options.chooseMonths) {
             return itemFullTmpl;
         } else if (options.chooseMonths) {
@@ -35,9 +37,9 @@ const Component = BaseControl.extend({
         } else if (options.chooseQuarters) {
             return itemQuartersTmpl;
         }
-    },
+    }
 
-    _getYearModel: function (year, dateConstructor) {
+    protected _getYearModel(year: number, dateConstructor: IDateConstructor): object[] {
         const numerals = ['I', 'II', 'III', 'IV'];
         const halfYearsList = [];
 
@@ -50,79 +52,80 @@ const Component = BaseControl.extend({
                 for (let j = 0; j < 3; j++) {
                     const month = quarterMonth + j;
                     monthsList.push({
-                            date: new dateConstructor(year, month, 1),
-                            tooltip: formatDate(new Date(year, month, 1), formatDate.FULL_MONTH)
-                        });
+                        date: new dateConstructor(year, month, 1),
+                        tooltip: formatDate(new Date(year, month, 1), formatDate.FULL_MONTH)
+                    });
                 }
                 quartersList.push({
-                        name: numerals[quarter],
-                        number: quarter,
-                        fullName: formatDate(new Date(year, quarterMonth, 1), 'QQQQr'),
-                        tooltip: formatDate(new Date(year, quarterMonth, 1), formatDate.FULL_QUATER),
-                        months: monthsList
-                    });
+                    name: numerals[quarter],
+                    number: quarter,
+                    fullName: formatDate(new Date(year, quarterMonth, 1), 'QQQQr'),
+                    tooltip: formatDate(new Date(year, quarterMonth, 1), formatDate.FULL_QUATER),
+                    months: monthsList
+                });
             }
             halfYearsList.push({
-                    name: numerals[halfYear],
-                    number: halfYear,
-                    tooltip: formatDate(new Date(year, halfYear * 6, 1), formatDate.FULL_HALF_YEAR),
-                    quarters: quartersList
-                });
+                name: numerals[halfYear],
+                number: halfYear,
+                tooltip: formatDate(new Date(year, halfYear * 6, 1), formatDate.FULL_HALF_YEAR),
+                quarters: quartersList
+            });
         }
         return halfYearsList;
-    },
+    }
 
-    _onQuarterMouseEnter: function (event, quarter) {
+    protected _onQuarterMouseEnter(event: Event, quarter: number): void {
         this._quarterHovered = quarter;
-    },
+    }
 
-    _onQuarterMouseLeave: function () {
+    protected _onQuarterMouseLeave(): void {
         this._quarterHovered = null;
-    },
+    }
 
-    _onHalfYearMouseEnter: function (event, halfyear) {
-        this._halfyearHovered = halfyear;
-    },
+    protected _onHalfYearMouseEnter(event: Event, halfYear: number): void {
+        this._halfYearHovered = halfYear;
+    }
 
-    _onHalfYearMouseLeave: function () {
-        this._halfyearHovered = null;
-    },
+    protected _onHalfYearMouseLeave(): void {
+        this._halfYearHovered = null;
+    }
 
-    _onHeaderClick: function () {
+    protected _onHeaderClick(): void {
         this._notify('close', [], {bubbling: true});
-    },
+    }
 
-    _onYearClick: function (event, year) {
+    protected _onYearClick(event: Event, year: number): void {
         if (this._options.chooseYears) {
             this._notify(
                 'sendResult',
                 [new this._options.dateConstructor(year, 0, 1), new WSDate(year, 11, 31)],
                 {bubbling: true});
         }
-    },
+    }
 
-    _onHalfYearClick: function (event, halfYear, year) {
-        let start = new this._options.dateConstructor(year, halfYear * 6, 1),
-            end = new this._options.dateConstructor(year, (halfYear + 1) * 6, 0);
+    protected _onHalfYearClick(event: Event, halfYear: number, year: number): void {
+        const start = new this._options.dateConstructor(year, halfYear * 6, 1);
+        const end = new this._options.dateConstructor(year, (halfYear + 1) * 6, 0);
         this._notify('sendResult', [start, end], {bubbling: true});
-    },
+    }
 
-    _onQuarterClick: function (event, quarter, year) {
-        let start = new this._options.dateConstructor(year, quarter * 3, 1),
-            end = new this._options.dateConstructor(year, (quarter + 1) * 3, 0);
+    protected _onQuarterClick(event: Event, quarter: number, year: number): void {
+        const start = new this._options.dateConstructor(year, quarter * 3, 1);
+        const end = new this._options.dateConstructor(year, (quarter + 1) * 3, 0);
         this._notify('sendResult', [start, end], {bubbling: true});
-    },
+    }
 
-    _onMonthClick: function (event, month) {
+    protected _onMonthClick(event: Event, month: Date): void {
         this._notify('sendResult', [month, dateUtils.getEndOfMonth(month)], {bubbling: true});
     }
-});
 
-Component._theme = ['Controls/shortDatePicker'];
-Component.getDefaultOptions = function () {
-    return {
-        dateConstructor: WSDate
-    };
-};
+    static _theme: string[] = ['Controls/shortDatePicker'];
 
-export = Component;
+    static getDefaultOptions(): IShortDatePickerOptions {
+        return {
+            dateConstructor: WSDate
+        };
+    }
+}
+
+export default BodyItem;

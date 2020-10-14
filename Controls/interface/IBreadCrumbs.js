@@ -33,6 +33,8 @@ define('Controls/interface/IBreadCrumbs', [
    /**
     * @name Controls/interface/IBreadCrumbs#keyProperty
     * @cfg {String} Имя свойства, содержащего информацию об идентификаторе текущей строки.
+    * @see parentProperty
+    * @see displayProperty
     */
 
    /*
@@ -43,6 +45,8 @@ define('Controls/interface/IBreadCrumbs', [
    /**
     * @name Controls/interface/IBreadCrumbs#parentProperty
     * @cfg {String} Имя свойства, содержащего сведения о родительском узле.
+    * @see keyProperty
+    * @see displayProperty
     */
 
    /*
@@ -54,6 +58,8 @@ define('Controls/interface/IBreadCrumbs', [
     * @name Controls/interface/IBreadCrumbs#displayProperty
     * @cfg {String} Имя свойства элемента, содержимое которого будет отображаться.
     * @default title
+    * @see keyProperty
+    * @see parentProperty
     */
 
    /*
@@ -64,11 +70,13 @@ define('Controls/interface/IBreadCrumbs', [
 
    /**
     * @name Controls/interface/IBreadCrumbs#containerWidth
-    * @cfg {Number} Ширина контейнера крошек. Необходимо указывать для правильного расчета ширины вкладок.
+    * @cfg {Number} Ширина контейнера крошек.
+    * Необходимо указывать для правильного расчета ширины вкладок.
     */
 
    /**
-    * @event Controls/interface/IBreadCrumbs#itemClick Происходит после клика по хлебным крошкам.
+    * @event Происходит после клика по хлебным крошкам.
+    * @name Controls/interface/IBreadCrumbs#itemClick
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Record} item Элемент, по которому произвели клик.
     */

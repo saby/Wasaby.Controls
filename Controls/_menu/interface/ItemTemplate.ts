@@ -28,6 +28,7 @@
  * @name Controls/menu:ItemTemplate#contentTemplate
  * @cfg {String|Function|undefined} Устанавливает пользовательский шаблон, описывающий содержимое элемента.
  * @default undefined
+ * @demo Controls-demo/Menu/Control/ItemTemplate/ContentTemplate/Index
  * @example
  *
  * В следующих примерах показано, как изменять опции шаблона для контрола {@link Controls/dropdown:Control}.
