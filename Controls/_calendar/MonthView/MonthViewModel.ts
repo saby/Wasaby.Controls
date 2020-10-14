@@ -122,7 +122,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       }, this);
    },
 
-   _prepareClass: function(scope, theme, fontColorStyle, backgroundStyle) {
+   _prepareClass: function(scope, theme, fontColorStyle, backgroundStyle, borderStyle) {
 
       let textColorClass = 'controls-MonthView__textColor',
          backgroundColorClass = 'controls-MonthView__backgroundColor',
@@ -150,6 +150,23 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
                backgroundColorClass += '-startend-unfinished';
             }
          }
+
+         let borderColorClass = 'controls-MonthViewVDOM__item-border';
+
+         const borderStylePostfix = borderStyle ? '_style-' + borderStyle : '';
+         css.push(`${borderColorClass}_theme-${theme}${borderStylePostfix}`);
+
+         borderColorClass = 'controls-MonthView__item-border';
+         if (scope.selectedStart && scope.selectedEnd && !scope.selectionProcessing) {
+            borderColorClass += '-start-end';
+         } else if (scope.selectedStart && !scope.selectedUnfinishedStart) {
+            borderColorClass += '-start';
+         } else if (scope.selectedEnd && (!scope.selectionProcessing ||
+             (scope.selectedEnd !== scope.selectedStart && !scope.selectedUnfinishedEnd))) {
+            borderColorClass += '-end';
+         }
+         css.push(`${borderColorClass}${borderStylePostfix}`);
+         css.push(`${borderColorClass}_theme-${theme}${borderStylePostfix}`);
       } else {
          backgroundColorClass += '-unselected';
       }
