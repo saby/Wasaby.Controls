@@ -14,7 +14,7 @@ import {
     IScrollbarsOptions,
     getDefaultOptions as getScrollbarsDefaultOptions
 } from './Container/Interface/IScrollbars';
-import { IShadows, IShadowsOptions, SHADOW_VISIBILITY } from './Container/Interface/IShadows';
+import { IShadows, SHADOW_VISIBILITY } from './Container/Interface/IShadows';
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import StickyHeaderController from './StickyHeader/Controller';
 import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyHeader/Utils';
