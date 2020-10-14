@@ -2804,10 +2804,6 @@ const _private = {
 
     isEditing(self): boolean {
         return !!self._editInPlaceController && self._editInPlaceController.isEditing();
-    },
-
-    canEditByClick(self, event) {
-        return self._getEditingConfig().editOnClick && !event.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`);
     }
 };
 
@@ -2965,13 +2961,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._resetValidation = this._resetValidation.bind(this);
     },
 
-    ________uuidv4() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    },
-
     /**
      * @param {Object} newOptions
      * @param {Object} context
@@ -2990,8 +2979,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.initializeNavigation(this, newOptions);
 
         this._loadTriggerVisibility = {};
-
-        this._code = this.________uuidv4();
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController;
@@ -4182,7 +4169,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
 
-        const canEditByClick = _private.canEditByClick(this, originalEvent);
+        const canEditByClick = this._getEditingConfig().editOnClick && !e.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`);
         if (canEditByClick) {
             e.stopPropagation();
             this.beginEdit({ item }).then((result) => {
