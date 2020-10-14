@@ -486,20 +486,24 @@ define('Controls/Application',
 
       /**
        * Добавление ресурсов, которые необходимо вставить в head как <link rel="prefetch"/>
+       * По умолчанию ресурсы добавляются только на сервисе представления
        * @param modules
+       * @param force
        * @public
        */
-      Page.addPrefetchModules = function(modules) {
-         _addHeadLinks(modules, { prefetch: true });
+      Page.addPrefetchModules = function(modules, force) {
+         _addHeadLinks(modules, { prefetch: true, force: !!force });
       };
 
       /**
        * Добавление ресурсов, которые необходимо вставить в head как <link rel="preload"/>
+       * По умолчанию ресурсы добавляются только на сервисе представления
        * @param modules
+       * @param force
        * @public
        */
-      Page.addPreloadModules = function(modules) {
-         _addHeadLinks(modules, { preload: true });
+      Page.addPreloadModules = function(modules, force) {
+         _addHeadLinks(modules, { preload: true, force: !!force });
       };
 
       /**
@@ -509,25 +513,31 @@ define('Controls/Application',
        *             {
        *                'prefetch': <boolean>,  // добавить prefetch-ссылку в head
        *                'preload': <boolean>  // добавить preload-ссылку в head
+       *                'force': <boolean>  // по умолчанию ресурсы добавляются только на сервисе представления, но
+       *                                    // с этим параметром можно на это повлиять
        *             }
        * @private
        */
       function _addHeadLinks(modules, cfg) {
+         cfg = cfg || {};
+         if (!Env.constants.isServerSide && !cfg.force) {
+            return;
+         }
          if (!modules || !modules.length) {
             return;
          }
 
-         const API = AppPage.Head.getInstance();
+         var API = AppPage.Head.getInstance();
          modules.forEach((moduleName) => {
-            let path = UIUtils.ModulesLoader.getModuleUrl(moduleName);
+            var path = UIUtils.ModulesLoader.getModuleUrl(moduleName);
             path = path.indexOf('/') !== 0 ? '/' + path : path;
-            const _type = _getTypeString(path);
+            var _type = _getTypeString(path);
             if (!_type) {
                Env.IoC.resolve('ILogger').warn(`[Controls/Application.js] Для файла ${path} не удалось получить строку-тип`);
                return;
             }
 
-            let rel = cfg && cfg.preload ? 'preload' : 'prefetch';
+            var rel = cfg.preload ? 'preload' : 'prefetch';
             API.createTag('link', { rel: rel, as: _type, href: path });
          });
       }
@@ -538,12 +548,12 @@ define('Controls/Application',
        * @private
        */
       function _getTypeString(path) {
-         const types = {
+         var types = {
             'script': new RegExp('\.js'),
             'fetch': new RegExp('\.wml'),
             'style': new RegExp('\.css')
          };
-         for (let _type in types) {
+         for (var _type in types) {
             if (types.hasOwnProperty(_type) && types[_type].test(path)) {
                return _type;
             }
