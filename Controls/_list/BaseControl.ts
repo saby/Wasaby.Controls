@@ -2895,7 +2895,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _needBottomPadding: false,
     _noDataBeforeReload: null,
-    _checkTriggerVisibilityTimeout: null,
 
     _keepScrollAfterReload: false,
     _resetScrollAfterReload: false,
