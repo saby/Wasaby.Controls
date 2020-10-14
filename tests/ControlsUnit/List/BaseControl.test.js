@@ -7725,6 +7725,20 @@ define([
                   assert.isNotOk(baseControl._selectionController);
                });
             });
+
+            it('empty items', () => {
+               const source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: []
+               });
+               const newCfg = { ...cfg, source, selectedKeys: [] };
+               baseControl.saveOptions(newCfg);
+               return baseControl._beforeMount(newCfg).then(() => {
+                  assert.isNotOk(baseControl._selectionController);
+                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1] });
+                  assert.isNotOk(baseControl._selectionController);
+               });
+            });
          });
 
          describe('_onCheckboxClick', () => {
