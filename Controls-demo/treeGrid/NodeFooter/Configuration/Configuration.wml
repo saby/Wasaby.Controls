@@ -13,7 +13,6 @@
                     bind:expandedItems="_expandedItems1"
                     parentProperty="parent"
                     nodeProperty="type"
-                    useNewNodeFooters="{{ true }}"
                     navigation="{{_navigation}}" />
         </div>
 

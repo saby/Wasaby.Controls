@@ -519,7 +519,8 @@ describe('Controls/_display/CollectionItem', () => {
     it('.getMultiSelectClasses()', () => {
         let multiSelectVisibility;
         const owner = {
-            getMultiSelectVisibility(): string { return multiSelectVisibility; }
+            getMultiSelectVisibility(): string { return multiSelectVisibility; },
+            getMultiSelectPosition(): string { return 'default';}
         };
         const defaultClasses = [
             'controls-ListView__checkbox',

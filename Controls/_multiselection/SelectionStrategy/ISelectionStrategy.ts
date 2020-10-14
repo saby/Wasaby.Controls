@@ -95,11 +95,4 @@ export default interface ISelectionStrategy {
     * @return {boolean}
     */
    isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number, byEveryItem?: boolean): boolean;
-
-   /**
-    * Задает список элементов
-    * @param {Array<CollectionItem<Model>>} items Новый список
-    * @void
-    */
-   setItems(items: ISelectionItem[]): void;
 }

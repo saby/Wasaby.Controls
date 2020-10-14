@@ -176,7 +176,7 @@ var
             self._columnScrollController = new ColumnScroll({
                 needBottomPadding: options._needBottomPadding,
                 stickyColumnsCount: options.stickyColumnsCount,
-                hasMultiSelect: options.multiSelectVisibility !== 'hidden',
+                hasMultiSelect: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition === 'default',
                 theme: options.theme,
                 backgroundStyle: options.backgroundStyle,
                 isEmptyTemplateShown: options.needShowEmptyTemplate
@@ -470,7 +470,7 @@ var
          */
         _getFooterClasses(): string {
             let leftPadding;
-            if (this._options.multiSelectVisibility !== 'hidden') {
+            if (this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default') {
                 leftPadding = 'withCheckboxes';
             } else {
                 leftPadding = (this._options.itemPadding && this._options.itemPadding.left || 'default').toLowerCase();
@@ -567,7 +567,7 @@ var
         _getGridViewStyles(): string {
             let styles = '';
             if (GridLayoutUtil.isFullGridSupport()) {
-                const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
+                const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default';
                 styles += _private.getGridTemplateColumns(this, this._options.columns, hasMultiSelect);
             }
             return styles;
@@ -725,7 +725,7 @@ var
             }
             const gridCells = gridRow.querySelectorAll('.controls-Grid__row-cell');
             const currentCell = this._getCellByEventTarget(target);
-            const multiSelectOffset = this._options.multiSelectVisibility !== 'hidden' ? 1 : 0;
+            const multiSelectOffset = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default' ? 1 : 0;
             return Array.prototype.slice.call(gridCells).indexOf(currentCell) - multiSelectOffset;
         },
         _resizeHandler(e): void {
@@ -859,7 +859,7 @@ var
                     bottom: bottomSpacing
                 },
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
-                hasMultiSelect: this._options.multiSelectVisibility !== 'hidden',
+                hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
                 emptyTemplateColumns: columns,
                 itemPadding: this._options.itemPadding || {},
                 theme: this._options.theme

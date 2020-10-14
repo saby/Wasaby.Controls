@@ -27,6 +27,7 @@ export class Controller {
     */
    updateOptions(options: IOptions): void {
       const modelChanged = this._model !== options.model;
+
       if (modelChanged) {
          this._model = options.model;
 
@@ -37,6 +38,7 @@ export class Controller {
          const markedKey = this.calculateMarkedKeyForVisible();
          this.setMarkedKey(markedKey);
       }
+
       this._markerVisibility = options.markerVisibility;
    }
 

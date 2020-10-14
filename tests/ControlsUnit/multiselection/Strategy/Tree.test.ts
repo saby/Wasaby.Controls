@@ -34,7 +34,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       selectDescendants: false,
       selectAncestors: false,
       rootId: null,
-      items: model.getItems()
+      model: model
    });
 
    const strategyWithDescendantsAndAncestors = new TreeSelectionStrategy({
@@ -42,7 +42,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       selectDescendants: true,
       selectAncestors: true,
       rootId: null,
-      items: model.getItems()
+      model: model
    });
 
    function toArray(array: TreeItem<Model>[]): object[] {
@@ -318,7 +318,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
               selectDescendants: true,
               selectAncestors: true,
               rootId: null,
-              items: model.getItems()
+              model: model
           });
           const entryPath = [
               {parent: 6, id: 10},
@@ -405,7 +405,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                  }
              },
              rootId: null,
-             items: model.getItems()
+             model: model
          });
          assert.isNull(treeStrategyWithNodesMoreData.getCount(selection, false));
       });
@@ -471,7 +471,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: false,
             selectAncestors: false,
             rootId: 5,
-            items: model.getItems()
+            model: model
          });
          assert.isTrue(strategy.isAllSelected(selection, false, 7));
          assert.isTrue(strategy.isAllSelected(selection, true, 7, false));
@@ -495,16 +495,10 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: false,
             selectAncestors: false,
             rootId: null,
-            items: model.getItems()
+            model: model
          });
          const selection = { selected: [], excluded: [] };
          assert.isFalse(strategy.isAllSelected(selection, false, 0, true));
       });
-   });
-
-   it('setItems', () => {
-      const newItems = model.getItems();
-      strategy.setItems(newItems);
-      assert.deepEqual(strategy._items, newItems);
    });
 });

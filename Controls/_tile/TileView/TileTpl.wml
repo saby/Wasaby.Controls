@@ -5,6 +5,12 @@
    </div>
 </ws:template>
 
+<ws:template name="multiSelectTemplate">
+   <ws:partial template="{{multiSelectTpl}}" checkboxReadOnly="{{checkboxReadOnly}}" attr:class="{{itemData.multiSelectClassList}}">
+      <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" />
+   </ws:partial>
+</ws:template>
+
 <ws:template name="defaultContentTpl">
    <div attr:class="controls-TileView__itemContent controls-TileView__itemContent_theme-{{theme}} {{titleStyle === 'accent' ? 'controls-TileView__itemContent_accent'}}
                {{height === 'auto' ? 'controls-TileView__item_autoHeight'}}
@@ -27,19 +33,18 @@
                   :  ' controls-TileView__item_withoutBorder_theme-' + theme }}
                {{itemData.canShowActions ? ' controls-ListView__item_showActions'}}"
         attr:style="{{itemData.position ? itemData.position}} ">
-      <ws:partial if="{{itemData.hasMultiSelect}}"
-                  template="{{multiSelectTpl}}"
-                  checkboxReadOnly="{{checkboxReadOnly}}"
-                  attr:class="{{itemData.multiSelectClassList}}">
-         <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" />
-      </ws:partial>
+      <ws:partial if="{{itemData.multiSelectVisibility !== 'hidden' && itemData.multiSelectPosition === 'default' }}" template="multiSelectTemplate"/>
       <ws:if data="{{contentTemplate}}">
          <ws:partial template="{{contentTemplate}}"
                      itemData="{{itemData}}"
                      swipeTemplate="{{swipeTemplate}}"
                      itemActionsTemplate="{{itemActionsTemplate}}"
                      hasTitle="{{hasTitle}}"
-                     width="{{width || itemData.defaultItemWidth}}"/>
+                     width="{{width || itemData.defaultItemWidth}}">
+            <ws:multiSelectTemplate>
+               <ws:partial if="{{itemData.multiSelectPosition === 'custom'}}" template="multiSelectTemplate"/>
+            </ws:multiSelectTemplate>
+         </ws:partial>
       </ws:if>
       <ws:else>
          <ws:partial template="wml!Controls/_tile/TileView/TileImageTemplate"

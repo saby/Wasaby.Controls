@@ -39,4 +39,12 @@
         </Router.router:Reference>
         <Controls-demo.list_new.Navigation.Paging.Numbers.Index/>
     </div>
+    <div class="controlsDemo__cell controlsDemo__mr4">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Navigation/Paging/LeftTemplate' }}">
+            <a href="{{content.href}}">Подгрузка данных по скролу. Oтображение с 3 кнопками и слева от пейджинга задан шаблон.</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Navigation.Paging.LeftTemplate.Index/>
+    </div>
 </div>

@@ -765,10 +765,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
     // endregion remover
 
-    _markedKeyChangedHandler: function(event, key) {
-        return this._notify('markedKeyChanged', [key]);
-    },
-
     _draggingItemMouseMove(e, itemData, nativeEvent): void {
         e.stopPropagation();
         if (itemData.dispItem.isNode()) {
@@ -781,10 +777,10 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 mouseOffsetInTargetItem
             });
 
-            if (dragTargetPosition) {
-                if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.dispItem, dragTargetPosition.position]) !== false) {
-                    dndListController.setDragPosition(dragTargetPosition);
-                }
+        if (dragTargetPosition) {
+            if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.dispItem.getContents(), dragTargetPosition.position]) !== false) {
+                dndListController.setDragPosition(dragTargetPosition);
+            }
 
                 /*
                     Если мы сверху меняем позицию на before, то есть перед этим узлом вставляем элемент,
