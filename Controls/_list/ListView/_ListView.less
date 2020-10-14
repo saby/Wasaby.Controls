@@ -56,9 +56,12 @@
    width: 100%;
    flex-shrink: 1;
    box-sizing: border-box;
-   &:before{
+
+   &:before {
       content: '\200b';
       font-size: @item_max-font-size_list;
+      // в ie если задан display: flex, то ширина ставится не в 0, а колеблется от 0.001-0.009. Из-за чего ломается верстка
+      width: 0;
    }
    // Нужен для вложенного div, без этого будет ломаться верстка некоторых блоков.
    // Ломается из-за display: inline-flex, поэтому возвращаем display block
