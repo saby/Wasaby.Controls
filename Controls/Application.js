@@ -19,6 +19,8 @@ define('Controls/Application',
       'Controls/Application/TouchDetectorController',
       'Controls/dragnDrop',
       'Core/TimeTesterInv',
+      'Application/Page',
+      'UI/Utils',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -70,7 +72,9 @@ define('Controls/Application',
       HotKeys,
       TouchDetector,
       dragnDrop,
-      TimeTesterInv) {
+      TimeTesterInv,
+      AppPage,
+      UIUtils) {
       'use strict';
 
       var _private;
@@ -479,6 +483,74 @@ define('Controls/Application',
 
       Page._theme = ['Controls/application'];
       Page._styles = ['Controls/dragnDrop'];
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="prefetch"/>
+       * @param modules
+       * @public
+       */
+      Page.addPrefetchModules = function(modules) {
+         _addHeadLinks(modules, { prefetch: true });
+      };
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="preload"/>
+       * @param modules
+       * @public
+       */
+      Page.addPreloadModules = function(modules) {
+         _addHeadLinks(modules, { preload: true });
+      };
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="prefetch"/> или <link rel="preload"/>
+       * @param modules
+       * @param cfg настройки для ссылок
+       *             {
+       *                'prefetch': <boolean>,  // добавить prefetch-ссылку в head
+       *                'preload': <boolean>  // добавить preload-ссылку в head
+       *             }
+       * @private
+       */
+      function _addHeadLinks(modules, cfg) {
+         if (!modules || !modules.length) {
+            return;
+         }
+
+         const API = AppPage.Head.getInstance();
+         modules.forEach((moduleName) => {
+            let path = UIUtils.ModulesLoader.getModuleUrl(moduleName);
+            path = path.indexOf('/') !== 0 ? '/' + path : path;
+            const _type = _getTypeString(path);
+            if (!_type) {
+               Env.IoC.resolve('ILogger').warn(`[Controls/Application.js] Для файла ${path} не удалось получить строку-тип`);
+               return;
+            }
+
+            let rel = cfg && cfg.preload ? 'preload' : 'prefetch';
+            API.createTag('link', { rel: rel, as: _type, href: path });
+         });
+      }
+
+      /**
+       * Получить строку-тип ресурса по его расширению
+       * @param path
+       * @private
+       */
+      function _getTypeString(path) {
+         const types = {
+            'script': new RegExp('\.js'),
+            'fetch': new RegExp('\.wml'),
+            'style': new RegExp('\.css')
+         };
+         for (let _type in types) {
+            if (types.hasOwnProperty(_type) && types[_type].test(path)) {
+               return _type;
+            }
+         }
+         return null;
+      }
+
 
       return Page;
    });
