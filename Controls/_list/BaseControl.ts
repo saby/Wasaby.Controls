@@ -4875,6 +4875,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onTagClickHandler(event: Event, dispItem: CollectionItem<Model>, columnIndex: number): void {
+        event.stopPropagation();
         this._notify('tagClick', [dispItem, columnIndex, event]);
     },
 
