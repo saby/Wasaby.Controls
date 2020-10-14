@@ -826,7 +826,7 @@ const _private = {
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
-            return self._sourceController.load(direction, self._options.root).addCallback(function(addedItems) {
+            return self._sourceController.load({direction, key: self._options.root}).addCallback((addedItems) => {
                 // TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 // до реализации функционала и проблемы из новости делаем решение по месту:
                 // посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
@@ -2985,7 +2985,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadTriggerVisibility = {};
 
         if (newOptions.sourceController) {
-            this._sourceController = newOptions.sourceController;
+            this._sourceController = newOptions.sourceController as SourceController;
             _private.validateSourceControllerOptions(this, newOptions);
         } else if (newOptions.source) {
             this._sourceController = _private.getSourceController(newOptions);
@@ -3493,7 +3493,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._options.sourceController !== newOptions.sourceController && newOptions.sourceController) {
             const items = newOptions.sourceController.getItems();
-            this._sourceController = newOptions.sourceController;
+            this._sourceController = newOptions.sourceController as SourceController;
 
             if (this._listViewModel && !this._listViewModel.getCollection()) {
                 _private.assignItemsToModel(this, items, newOptions);
