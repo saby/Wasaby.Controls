@@ -51,25 +51,38 @@ export default class GridColumn<T> extends mixin<
         const preparedStyle = style === 'masterClassic' ? 'default' : style;
         const topPadding = this._$owner.getTopPadding();
         const bottomPadding = this._$owner.getBottomPadding();
-        const leftPadding = this._$owner.getLeftPadding();
-        const rightPadding = this._$owner.getRightPadding();
-        const isCheckBoxColumn = false;
+        const isMultiSelectColumn = this.isMultiSelectColumn();
         const hasColumnScroll = false;
 
         if (topPadding === 'null' && bottomPadding === 'null') {
             wrapperClasses += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
         } else {
-            wrapperClasses += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
+            if (isMultiSelectColumn) {
+                if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this._$owner.isSelected()) {
+                    wrapperClasses += ' controls-ListView__checkbox-onhover';
+                }
+            } else {
+                wrapperClasses += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
+            }
         }
 
         wrapperClasses += `controls-Grid__row-cell controls-Grid__cell_${preparedStyle} controls-Grid__row-cell_${preparedStyle}_theme-${theme}`;
 
         if (hasColumnScroll) {
-        } else if (!isCheckBoxColumn) {
+        } else if (!isMultiSelectColumn) {
             wrapperClasses += ' controls-Grid__cell_fit';
         }
 
         wrapperClasses += this._getWrapperSeparatorClasses(theme);
+
+        if (isMultiSelectColumn) {
+            wrapperClasses += ' js-controls-ListView__notEditable' +
+                    ' js-controls-ColumnScroll__notDraggable' +
+                    ' controls-GridView__checkbox_theme-default' +
+                    ' controls-GridView__checkbox_position-default_theme-default' +
+                    ` controls-Grid__row-cell-background-hover-default_theme-${theme}` +
+                    ` controls-Grid__row-checkboxCell_rowSpacingTop_${topPadding}_theme-${theme}`;
+        }
 
         /*const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
         const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
@@ -95,9 +108,9 @@ export default class GridColumn<T> extends mixin<
             if (self._options.columnScrollVisibility) {
                 classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
             }
-        } else if (!checkBoxCell) {
-            classLists.base += ' controls-Grid__cell_fit';
-        }
++++     } else if (!checkBoxCell) {
++++         classLists.base += ' controls-Grid__cell_fit';
++++     }
 
         if (current.isEditing()) {
             classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
@@ -148,21 +161,12 @@ export default class GridColumn<T> extends mixin<
     }
 
     getContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
-        const isCheckBoxCell = false;
         let contentClasses = 'controls-Grid__row-cell__content';
 
         contentClasses += ` controls-Grid__row-cell__content_baseline_default_theme-${theme}`;
         contentClasses += ` controls-Grid__row-cell_cursor-${cursor}`;
 
-        // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-        if (isCheckBoxCell) {
-            /*classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
-            classLists.padding = createClassListCollection('top', 'bottom');
-            classLists.padding.top = `controls-Grid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
-            classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;*/
-        } else {
-            contentClasses += this._getContentPaddingClasses(theme);
-        }
+        contentClasses += this._getContentPaddingClasses(theme);
 
         contentClasses += ' controls-Grid__row-cell_withoutRowSeparator_size-null_theme-default';
 
@@ -263,6 +267,10 @@ export default class GridColumn<T> extends mixin<
         return marker !== false && this._$owner.isMarked() && this.isFirstColumn();
     }
 
+    shouldDisplayItemActions(): boolean {
+        return this.isLastColumn() && (this._$owner.hasVisibleActions() || this._$owner.isEditing());
+    }
+
     getMarkerClasses(theme: string, style: string = 'default'): string {
         return `
             controls-ListView__itemV_marker controls-ListView__itemV_marker-${style}_theme-${theme}
@@ -316,13 +324,14 @@ export default class GridColumn<T> extends mixin<
 
         // left <-> right
         const cellPadding = this._$column.cellPadding;
-
         if (!this.isFirstColumn()) {
-            classes += ' controls-Grid__cell_spacingLeft';
-            if (cellPadding?.left) {
-                classes += `_${cellPadding.left}`;
+            if (this._$owner.getMultiSelectVisibility() === 'hidden' || this.getColumnIndex() > 1) {
+                classes += ' controls-Grid__cell_spacingLeft';
+                if (cellPadding?.left) {
+                    classes += `_${cellPadding.left}`;
+                }
+                classes += `_theme-${theme}`;
             }
-            classes += `_theme-${theme}`;
         } else {
             classes += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
         }
