@@ -3988,6 +3988,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (firstItem && firstItem.key !== null) {
                 _private.scrollToItem(this, firstItem.key, false, true, firstItem.skippedItemsCount);
             }
+            this._notify('_scrollToFirstItemForTopPadding', [], {bubbling: true});
         }
     },
 

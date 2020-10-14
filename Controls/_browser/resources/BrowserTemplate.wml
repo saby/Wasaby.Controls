@@ -45,5 +45,6 @@
         on:misspellCaptionClick="_misspellCaptionClick()"
         on:filterItemsChanged="_filterItemsChanged()"
         on:filterHistoryApply="_filterHistoryApply()"
+        on:_scrollToFirstItemForTopPadding="_onScrollToFirstItemForTopPadding()"
 />
 

@@ -56,6 +56,9 @@ export default class Browser extends Control {
     private _dataOptionsContext: ContextOptions;
     private _errorRegister: RegisterClass;
     private _storeCallbacks: string[];
+
+    private _topShadowVisibilityFromOptions;
+    private _bottomShadowVisibilityFromOptions;
     private _topShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
     private _bottomShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
 
@@ -66,6 +69,7 @@ export default class Browser extends Control {
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
+        this._initShadowVisibility(options);
         this._operationsController = this._createOperationsController(options);
         this._filterController = new FilterController(options);
 
@@ -370,6 +374,16 @@ export default class Browser extends Control {
         this._getOperationsController(this._options).setOperationsPanelVisible(false);
     }
 
+    protected _onScrollToFirstItemForTopPadding(): void {
+        // Возвращаем в опции значение видимости теней, которое передали прикладники
+        if (this._topShadowVisibility !== this._topShadowVisibilityFromOptions) {
+            this._topShadowVisibility = this._topShadowVisibilityFromOptions;
+        }
+        if (this._bottomShadowVisibility !== this._bottomShadowVisibilityFromOptions) {
+            this._bottomShadowVisibility = this._bottomShadowVisibilityFromOptions;
+        }
+    }
+
     private _createOperationsController(options) {
         const controllerOptions = {
             ...options,
@@ -394,11 +408,21 @@ export default class Browser extends Control {
         if (items instanceof RecordSet) {
             const more = items.getMetaData().more;
             if (more) {
-                this._topShadowVisibility = more.before ? SHADOW_VISIBILITY.VISIBLE : SHADOW_VISIBILITY.AUTO;
-                this._bottomShadowVisibility = more.after ? SHADOW_VISIBILITY.VISIBLE : SHADOW_VISIBILITY.AUTO;
+                if (more.before) {
+                    this._topShadowVisibility = SHADOW_VISIBILITY.VISIBLE;
+                }
+
+                if (more.after) {
+                    this._bottomShadowVisibility = SHADOW_VISIBILITY.VISIBLE;
+                }
             }
 
         }
+    }
+
+    private _initShadowVisibility(options): void {
+        this._topShadowVisibility = this._topShadowVisibilityFromOptions = options.topShadowVisibility;
+        this._bottomShadowVisibility = this._bottomShadowVisibilityFromOptions = options.bottomShadowVisibility;
     }
 
     _createSearchController(options, context): SearchController {
