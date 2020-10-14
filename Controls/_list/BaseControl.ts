@@ -2549,6 +2549,16 @@ const _private = {
     },
 
     /**
+     * Вызывает расчёт itemActions, только в том случае, если это происходит впервые
+     * @private
+     */
+    updateItemActionsOnce(self, options: any): void {
+        if (self._options.itemActionsVisibility !== 'visible' && !self._listViewModel.isActionsAssigned()) {
+            _private.updateItemActions(self, options);
+        }
+    },
+
+    /**
      * Обновляет ItemActions только в случае, если они были ранее проинициализированы
      * @param self
      * @param options
@@ -2794,6 +2804,10 @@ const _private = {
 
     isEditing(self): boolean {
         return !!self._editInPlaceController && self._editInPlaceController.isEditing();
+    },
+
+    canEditByClick(self, event) {
+        return self._getEditingConfig().editOnClick && !event.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`);
     }
 };
 
@@ -2951,6 +2965,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._resetValidation = this._resetValidation.bind(this);
     },
 
+    ________uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    },
+
     /**
      * @param {Object} newOptions
      * @param {Object} context
@@ -2969,6 +2990,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.initializeNavigation(this, newOptions);
 
         this._loadTriggerVisibility = {};
+
+        this._code = this.________uuidv4();
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController;
@@ -3663,7 +3686,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (
             ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated)) {
-            this._initItemActions(null, newOptions);
+            _private.updateItemActionsOnce(this, newOptions);
         }
 
         if (this._itemsChanged) {
@@ -4159,7 +4182,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
 
-        const canEditByClick = this._getEditingConfig().editOnClick && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`);
+        const canEditByClick = _private.canEditByClick(this, originalEvent);
         if (canEditByClick) {
             e.stopPropagation();
             this.beginEdit({ item }).then((result) => {
@@ -4541,18 +4564,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // endregion
 
     /**
-     * Инициализирует опции при mouseenter в шаблоне контрола
-     * @private
-     */
-    _initItemActions(e: SyntheticEvent, options: any): void {
-        if (this._options.itemActionsVisibility !== 'visible') {
-            if (!this._listViewModel.isActionsAssigned()) {
-                _private.updateItemActions(this, options);
-            }
-        }
-    },
-
-    /**
      * Обработчик показа контекстного меню
      * @param e
      * @param itemData
@@ -4829,7 +4840,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _mouseEnter(event): void {
-        this._initItemActions(event, this._options);
+        // В chrome/safari mouseEnter происходит всегда, сразу после touch
+        if (!detection.isMobilePlatform) {
+            _private.updateItemActionsOnce(this, this._options);
+        }
         if (!this._pagingVisible) {
             _private.initPaging(this);
         }
@@ -4976,13 +4990,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const key = _private.getPlainItemContents(item).getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
-        const itemActionsController = _private.getItemActionsController(this);
+        let itemActionsController: ItemActionsController;
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             this.setMarkedKey(key);
+            _private.updateItemActionsOnce(this, this._options);
+            itemActionsController = _private.getItemActionsController(this);
             itemActionsController?.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
+            itemActionsController = _private.getItemActionsController(this);
             const swipedItem = itemActionsController?.getSwipeItem();
             if (swipedItem) {
                 itemActionsController.startSwipeCloseAnimation();

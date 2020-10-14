@@ -2,6 +2,7 @@
     <Controls.list:View
             name="list"
             keyProperty="id"
+            itemActions="{{_itemActions}}"
             source="{{_viewSource}}">
         <ws:editingConfig editOnClick="{{true}}" autoAdd="{{true}}"/>
         <ws:itemTemplate>
