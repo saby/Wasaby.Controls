@@ -138,7 +138,7 @@ const SCROLLMOVE_DELAY = 150;
 const PAGING_MIN_ELEMENTS_COUNT = 5;
 /**
  * Нативный IntersectionObserver дергает callback по перерисовке.
- * В ie нет нативного IntersectionObserver. 
+ * В ie нет нативного IntersectionObserver.
  * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
  */
 const CHECK_TRIGGERS_DELAY_IF_IE = detection.isIE ? 150 : 0;
@@ -2451,24 +2451,28 @@ const _private = {
         }
 
         const markerController = _private.getMarkerController(self);
-        const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey], { bubbling: true });
+        const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey]);
+
+        const handleResult = (key) => {
+            if (!self._options.hasOwnProperty('markedKey')) {
+                markerController.setMarkedKey(key);
+            }
+            self._notify('markedKeyChanged', [key]);
+        }
 
         let result = eventResult;
         if (eventResult instanceof Promise) {
             eventResult.then((key) => {
-                markerController.setMarkedKey(key);
-                self._notify('markedKeyChanged', [key]);
+                handleResult(key);
                 return key;
             });
         } else if (eventResult !== undefined && self._environment) {
             // Если не был инициализирован environment, то _notify будет возвращать null,
             // но это значение используется, чтобы сбросить маркер. Актуально для юнитов
-            markerController.setMarkedKey(eventResult);
-            self._notify('markedKeyChanged', [eventResult]);
+            handleResult(eventResult);
         } else {
             result = newMarkedKey;
-            markerController.setMarkedKey(newMarkedKey);
-            self._notify('markedKeyChanged', [newMarkedKey]);
+            handleResult(newMarkedKey);
         }
 
         return result;
@@ -2885,7 +2889,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _needBottomPadding: false,
     _noDataBeforeReload: null,
-    _checkTriggerVisibilityTimeout: null,
 
     _keepScrollAfterReload: false,
     _resetScrollAfterReload: false,
@@ -4865,6 +4868,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onTagClickHandler(event: Event, dispItem: CollectionItem<Model>, columnIndex: number): void {
+        event.stopPropagation();
         this._notify('tagClick', [dispItem, columnIndex, event]);
     },
 

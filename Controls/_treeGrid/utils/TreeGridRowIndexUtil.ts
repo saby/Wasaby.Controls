@@ -80,12 +80,13 @@ type TreeGridRowIndexOptions<T = ItemId|DisplayItem|DisplayItemIndex|HasEmptyTem
  * @return {Number} Номер строки в списке для элемента с указанным id.
  */
 function getIndexById(cfg: TreeGridRowIndexOptions<ItemId>): number {
+    const item = cfg.display.getItemBySourceKey(cfg.id);
 
-    let idProperty = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getKeyProperty(),
-        item = ItemsUtil.getDisplayItemById(cfg.display, cfg.id, idProperty),
-        index = cfg.display.getIndex(item);
-
-    return getItemRealIndex({item, index, ...cfg});
+    return getItemRealIndex({
+        ...cfg,
+        item,
+        index: cfg.display.getIndex(item)
+    });
 }
 
 

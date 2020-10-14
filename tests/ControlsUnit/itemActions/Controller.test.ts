@@ -360,14 +360,12 @@ describe('Controls/_itemActions/Controller', () => {
         // T1.9. После установки набора операций, операции с иконками содержат в поле icon CSS класс
         // “controls-itemActionsV__action_icon icon-size” (оч сомнительный тест)
         // TODO Возможно, установка этого класса переедет в шаблон
-        it('should set "controls-itemActionsV__action_icon_theme-default icon-size_theme-default" CSS class for' +
+        it('should set "controls-itemActionsV__action_icon_theme-default" CSS class for' +
             'shown item actions icons', () => {
             const actionsOf5 = collection.getItemBySourceKey(5).getActions();
             assert.exists(actionsOf5, 'actions were not set to item 5');
             assert.notEqual(actionsOf5.showed[0].icon.indexOf('controls-itemActionsV__action_icon_theme'), -1,
                 'Css class \'controls-itemActionsV__action_icon_theme-\' should be added to item');
-            assert.notEqual(actionsOf5.showed[0].icon.indexOf('icon-size_theme'), -1,
-                'Css class \'icon-size_theme-\' should be added to item');
         });
 
         // T1.10. При реальной смене у операций элементов настроек all/showed должна изменяться версия модели

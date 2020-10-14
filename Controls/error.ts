@@ -1,28 +1,45 @@
-/// <amd-module name="Controls/error" />
 /**
  * Библиотека компонентов для обработки ошибок.
  * @library Controls/error
- * @includes parking Controls/_dataSource/parking
- * @public
+ * @private
  * @author Северьянов А.А.
  */
 
-export {
+import {
     Handler as ParkingHandler,
     ViewConfig as ParkingViewConfig
 } from './_error/_parking/Handler';
-export {
-    default as ParkingController,
+import ParkingController, {
     loadHandlers,
     IParkingControllerOptions
 } from './_error/_parking/Controller';
 
-export {
+import {
     Handler,
     ViewConfig,
     HandlerConfig
 } from './_error/Handler';
-export { default as Controller, Config } from './_error/Controller';
-export { default as Mode } from './_error/Mode';
-export { default as process, IProcessOptions } from './_error/process';
-export { default as Popup, IPopupHelper } from './_error/Popup';
+import Controller, { Config } from './_error/Controller';
+import Mode from './_error/Mode';
+import process, { IProcessOptions } from './_error/process';
+import Popup, { IPopupHelper } from './_error/Popup';
+import DialogOpener from './_error/DialogOpener';
+
+export {
+    Config,
+    Controller,
+    DialogOpener,
+    Handler,
+    HandlerConfig,
+    IParkingControllerOptions,
+    IPopupHelper,
+    IProcessOptions,
+    loadHandlers,
+    Mode,
+    ParkingHandler,
+    ParkingViewConfig,
+    ParkingController,
+    Popup,
+    process,
+    ViewConfig
+};
