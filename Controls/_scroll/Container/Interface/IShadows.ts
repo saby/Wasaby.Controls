@@ -7,8 +7,15 @@ export const enum SHADOW_VISIBILITY {
 export interface IShadowsOptions {
     topShadowVisibility: SHADOW_VISIBILITY;
     bottomShadowVisibility: SHADOW_VISIBILITY;
-    leftShadowVisibility: SHADOW_VISIBILITY,
-    rightShadowVisibility: SHADOW_VISIBILITY
+    leftShadowVisibility: SHADOW_VISIBILITY;
+    rightShadowVisibility: SHADOW_VISIBILITY;
+}
+
+export interface IShadowsVisibilityByInnerComponents {
+    top?: SHADOW_VISIBILITY;
+    bottom?: SHADOW_VISIBILITY;
+    left?: SHADOW_VISIBILITY;
+    right?: SHADOW_VISIBILITY;
 }
 
 export function getDefaultOptions(): IShadowsOptions {
@@ -17,7 +24,7 @@ export function getDefaultOptions(): IShadowsOptions {
         bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
         leftShadowVisibility: SHADOW_VISIBILITY.AUTO,
         rightShadowVisibility: SHADOW_VISIBILITY.AUTO
-    }
+    };
 }
 
 /**

@@ -370,6 +370,14 @@ export default class ScrollController {
     }
 
     private _calcShadowVisibility(collection: Collection<Record>, range: IRange) {
+
+        // TODO: сейчас от флага needScrollCalculation зависит,
+        // будут ли применены индексы виртуального скролла к коллекции.
+        // По-хорошему, если needScrollCalculation===false, то вычислений диапазона происходить не должно.
+        // Разобраться по ошибке https://online.sbis.ru/opendoc.html?guid=5bb48c1c-cdd9-419c-ab47-5d9ab9d450b4
+        if (!this._options.needScrollCalculation) {
+            return null;
+        }
         return {
             up: range.start > 0,
             down: range.stop < collection.getCount()

@@ -1,5 +1,6 @@
 import {Container} from 'Controls/scroll';
-import {constants} from "Env/Env";
+import {constants} from 'Env/Env';
+import {SHADOW_VISIBILITY} from 'Controls/_scroll/Container/Interface/IShadows';
 
 function createComponent(Component, cfg) {
     let cmp;
@@ -211,6 +212,27 @@ describe('Controls/scroll:Container', () => {
             };
             component._keydownHandler(event);
             assert.strictEqual(component._children.content.scrollTop, result);
+        });
+    });
+
+    describe('_updateShadowVisibility', () => {
+        it('should set always visible', () => {
+            const component = createComponent(Container, {});
+            component._shadows._models.top._isVisible = false;
+            component._shadows._models.bottom._isVisible = false;
+            component._updateShadowVisibility(
+                {},{ top: SHADOW_VISIBILITY.VISIBLE, bottom: SHADOW_VISIBILITY.VISIBLE });
+            assert.isTrue(component._shadows._models.top.isVisible);
+            assert.isTrue(component._shadows._models.bottom.isVisible);
+        });
+        it('should set always invisible', () => {
+            const component = createComponent(Container, {});
+            component._shadows._models.top._isVisible = true;
+            component._shadows._models.bottom._isVisible = true;
+            component._updateShadowVisibility(
+                {},{ top: SHADOW_VISIBILITY.HIDDEN, bottom: SHADOW_VISIBILITY.HIDDEN });
+            assert.isFalse(component._shadows._models.top.isVisible);
+            assert.isFalse(component._shadows._models.bottom.isVisible);
         });
     });
 });
