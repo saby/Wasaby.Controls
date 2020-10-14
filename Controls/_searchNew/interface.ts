@@ -1,11 +1,5 @@
 import {IControlOptions} from 'UI/Base';
-import {
-   IFilterOptions,
-   INavigationOptions,
-   INavigationSourceConfig,
-   ISearchOptions,
-   ISourceOptions
-} from 'Controls/interface';
+import {ISearchOptions} from 'Controls/interface';
 import {NewSourceController} from 'Controls/dataSource';
 import {RecordSet} from 'Types/collection';
 
@@ -26,14 +20,8 @@ export interface ISearchControllerOptions extends ISearchOptions {
    searchValue?: string;
 }
 
-export interface ISearchContainerOptions extends IControlOptions,
-   ISourceOptions, IFilterOptions, INavigationOptions<INavigationSourceConfig>, ISearchOptions {
-   sourceController: NewSourceController;
-   searchValue?: string;
-}
-
 export interface ISearchController {
-   reset(): Promise<void>;
+   reset(): Promise<RecordSet>;
    search(value: string): Promise<RecordSet>;
    update(options: Partial<ISearchControllerOptions>): void;
 }

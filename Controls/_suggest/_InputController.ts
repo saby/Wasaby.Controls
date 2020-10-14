@@ -397,18 +397,23 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._inputActive && this._isValueLengthLongerThenMinSearchLength(value, this._options);
    }
 
-   private _updateSuggestState(): void {
+   private _updateSuggestState(): boolean {
       const shouldSearch = this._shouldSearch(this._searchValue);
+      let state = false;
 
       if (this._options.historyId && !shouldSearch && !this._options.suggestState) {
          this._openWithHistory();
+         state = true;
       } else if (shouldSearch || this._options.autoDropDown && !this._options.suggestState) {
          this._setFilter(this._options.filter, this._options);
          this._open();
+         state = true;
       } else if (!this._options.autoDropDown) {
          // autoDropDown - close only on Esc key or deactivate
          this._close();
       }
+
+      return state;
    }
 
    private _getTemplatesToLoad(options: IInputControllerOptions): string[] {
@@ -700,11 +705,17 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          delayTime: options.searchDelay,
          minSearchLength: options.minSearchLength,
          searchCallback: (validatedValue: string) => this._resolveLoad(validatedValue),
-         searchResetCallback: async () => {
-            (await this._getSearchController()).reset();
-            this._updateSuggestState();
-         }
+         searchResetCallback: this._searchResetCallback.bind(this)
       };
+   }
+
+   private async _searchResetCallback(): Promise<void> {
+      const searchController = await this._getSearchController();
+
+      if (this._updateSuggestState() || this._options.autoDropDown) {
+         const recordSet = await searchController.reset();
+         this._setItems(recordSet);
+      }
    }
 
    protected async _getSearchController(): Promise<SearchController> {

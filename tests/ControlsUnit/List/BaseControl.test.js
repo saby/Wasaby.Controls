@@ -7701,7 +7701,7 @@ define([
                baseControl.saveOptions(newCfg);
                return baseControl._beforeMount(newCfg).then(() => {
                   const notifySpy = sinon.spy(baseControl, '_notify');
-                  baseControl._beforeUpdate({... newCfg, selectionViewMode: '', filter: {}});
+                  baseControl._beforeUpdate({ ...newCfg, selectionViewMode: '', filter: {} });
                   assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [null]]).called);
                });
             });
@@ -7710,9 +7710,9 @@ define([
                const newCfg = { ...cfg, selectedKeys: [1] };
                baseControl.saveOptions(newCfg);
                return baseControl._beforeMount(newCfg).then(() => {
-                  const notifySpy = sinon.spy(baseControl, '_notify');
-                  baseControl._beforeUpdate({... newCfg, selectedKeys: [], multiSelectVisibility: 'hidden'});
-                  assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [1]]).called);
+                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
+                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [], multiSelectVisibility: 'hidden' });
+                  assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
                });
             });
 
@@ -7722,6 +7722,20 @@ define([
                return baseControl._beforeMount(newCfg).then(() => {
                   assert.isOk(baseControl._selectionController);
                   baseControl._beforeUpdate({ ...newCfg, multiSelectVisibility: 'hidden' });
+                  assert.isNotOk(baseControl._selectionController);
+               });
+            });
+
+            it('empty items', () => {
+               const source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: []
+               });
+               const newCfg = { ...cfg, source, selectedKeys: [] };
+               baseControl.saveOptions(newCfg);
+               return baseControl._beforeMount(newCfg).then(() => {
+                  assert.isNotOk(baseControl._selectionController);
+                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1] });
                   assert.isNotOk(baseControl._selectionController);
                });
             });

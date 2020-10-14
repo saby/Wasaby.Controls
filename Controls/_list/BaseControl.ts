@@ -2275,22 +2275,23 @@ const _private = {
     changeSelection(self: typeof BaseControl, newSelection: ISelectionObject): Promise<ISelectionObject>|ISelectionObject {
         const controller = _private.getSelectionController(self);
         const selectionDifference = controller.getSelectionDifference(newSelection);
-        const result = self._notify('beforeSelectionChanged', [selectionDifference]);
+        let result = self._notify('beforeSelectionChanged', [selectionDifference]);
+
+        const handleResult = (selection) => {
+            _private.notifySelection(self, selection);
+            if (!self._options.hasOwnProperty('selectedKeys')) {
+                controller.setSelection(selection);
+            }
+            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
+        }
 
         if (result instanceof Promise) {
-            result.then((selection: ISelectionObject) => {
-                _private.notifySelection(self, selection);
-                controller.setSelection(selection);
-                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
-            });
+            result.then((selection: ISelectionObject) => handleResult(selection));
         } else if (result !== undefined) {
-            _private.notifySelection(self, result);
-            controller.setSelection(result);
-            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
+            handleResult(result);
         } else {
-            _private.notifySelection(self, newSelection);
-            controller.setSelection(newSelection);
-            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
+            handleResult(newSelection);
+            result = newSelection;
         }
 
         return result;
@@ -3483,6 +3484,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (this._listViewModel && !this._listViewModel.getCollection()) {
                 _private.assignItemsToModel(this, items, newOptions);
+
+                // TODO удалить когда полностью откажемся от старой модели
+                if (!_private.hasSelectionController(this) && newOptions.multiSelectVisibility !== 'hidden'
+                    && newOptions.selectedKeys && newOptions.selectedKeys.length) {
+                    const controller = _private.createSelectionController(this, newOptions);
+                    controller.setSelection({ selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys });
+                }
             }
         }
 
@@ -3569,7 +3577,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const selectedKeysChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys);
         // В browser когда скрывают видимость чекбоксов, еще и сбрасывают selection
-        if (newOptions.multiSelectVisibility !== 'hidden' || selectedKeysChanged && newOptions.selectedKeys.length === 0) {
+        if (this._items && this._items.getCount() &&
+            (newOptions.multiSelectVisibility !== 'hidden' || selectedKeysChanged && newOptions.selectedKeys.length === 0)) {
             const selectionChanged = selectedKeysChanged
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
@@ -3578,7 +3587,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     selected: newOptions.selectedKeys,
                     excluded: newOptions.excludedKeys
                 };
-                _private.changeSelection(this, newSelection);
+                const controller = _private.getSelectionController(this, newOptions);
+                controller.setSelection(newSelection);
+                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             }
         } else if (_private.hasSelectionController(this)) {
             _private.getSelectionController(this).destroy();
