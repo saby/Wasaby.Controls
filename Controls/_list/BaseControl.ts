@@ -3487,6 +3487,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (this._listViewModel && !this._listViewModel.getCollection()) {
                 _private.assignItemsToModel(this, items, newOptions);
+
+                // TODO удалить когда полностью откажемся от старой модели
+                if (!_private.hasSelectionController(this) && newOptions.multiSelectVisibility !== 'hidden'
+                    && newOptions.selectedKeys && newOptions.selectedKeys.length) {
+                    const controller = _private.createSelectionController(this, newOptions);
+                    controller.setSelection({ selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys });
+                }
             }
         }
 
@@ -3573,7 +3580,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const selectedKeysChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys);
         // В browser когда скрывают видимость чекбоксов, еще и сбрасывают selection
-        if (newOptions.multiSelectVisibility !== 'hidden' || selectedKeysChanged && newOptions.selectedKeys.length === 0) {
+        if (this._items && this._items.getCount() &&
+            (newOptions.multiSelectVisibility !== 'hidden' || selectedKeysChanged && newOptions.selectedKeys.length === 0)) {
             const selectionChanged = selectedKeysChanged
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
