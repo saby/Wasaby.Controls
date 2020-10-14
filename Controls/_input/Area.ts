@@ -105,7 +105,7 @@ export default class Area extends Text<IAreaOptions> {
      * Изменение расположения видимой области поля так, чтобы отобразился курсор.
      * Если курсор виден, расположение не изменяется. В противном случае новое местоположение будет таким, что курсор отобразится в середине области.
      */
-    private _recalculateLocationVisibleArea(value: string, selection: object): void {
+    private _recalculateLocationVisibleArea(field: HTMLElement, value: string, selection: object): void {
         const scroll = this._children.scroll;
         const textBeforeCursor = value.substring(0, selection.end);
 
