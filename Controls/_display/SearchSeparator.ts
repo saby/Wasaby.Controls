@@ -1,3 +1,4 @@
+import {Model} from 'Types/entity';
 import TreeItem from './TreeItem';
 import Tree from './Tree';
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
@@ -14,7 +15,7 @@ export default class SearchSeparator<T> extends CollectionItem<T>  {
     readonly MarkableItem: boolean = false;
     readonly SelectableItem: boolean = false;
 
-    protected _instancePrefix: 'breadcrumbs-item-';
+    protected _instancePrefix: 'search-separator-item-';
 
     protected readonly _$source: TreeItem<T>;
 
@@ -38,7 +39,15 @@ export default class SearchSeparator<T> extends CollectionItem<T>  {
     }
 
     getContents(): T {
-        return this._$source && this._$source.getContents() || {};
+        const contents = this._$source.getContents();
+        // Получение null в качестве значения ломает приложение
+        if (!contents) {
+            return new Model({
+                rawData: {},
+                keyProperty: this.getOwner().getKeyProperty()
+            }) as T;
+        }
+        return contents;
     }
 
     setContents(contents: T, silent?: boolean): void {
@@ -46,7 +55,7 @@ export default class SearchSeparator<T> extends CollectionItem<T>  {
     }
 
     getUid(): string {
-        return this._$source && this._$source.getUid();
+        return 'searchSeparator';
     }
 
     isSelected(): boolean {
