@@ -56,11 +56,11 @@ EventRegistrator.getOptionTypes = function() {
 
 /**
  * @name Controls/_event/Register#register
- * @cfg {String} Имя события, которое генерируется контролом для оповещения об изменении размеров контрола.
+ * @cfg {String} Имя события, которое генерируется на зарегистрированных {@link Controls/event:Listener} при вызове метода {@link start}.
  */
 
 /**
- * Оповещает зарегистрированные {@link Controls/event:Listener} об изменении размеров контрола.
+ * Оповещает зарегистрированные {@link Controls/event:Listener}.
  * @name Controls/_event/Register#start
  * @function 
  */
