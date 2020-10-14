@@ -59,7 +59,7 @@ export default class Area extends Text<IAreaOptions> {
 
         this._fixSyncFakeArea();
 
-        this._recalculateLocationVisibleArea(this._viewModel.displayValue, this._viewModel.selection);
+        this._recalculateLocationVisibleArea(null, this._viewModel.displayValue, this._viewModel.selection);
     }
 
     private _updateFieldInTemplate(): void {
