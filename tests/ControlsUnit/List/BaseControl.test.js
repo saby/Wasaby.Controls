@@ -6682,9 +6682,7 @@ define([
                await baseControl._itemMouseUp(event, { key: 1 }, originalEvent);
 
                assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
-               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-               assert.equal(baseControl.getViewModel().getItemBySourceKey(1).getVersion(), 1);
-               assert.equal(baseControl.getViewModel().getVersion(), 4);
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
             });
 
             it('not should marker, _needSetMarkerCallback return false', async function() {
@@ -6746,12 +6744,13 @@ define([
                   handleResetItems: () => {}
                };
 
+               const notifySpy = sinon.spy(baseControl, '_notify');
+
                // No editing
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
                await baseControl._itemMouseUp(event, {key: 1}, originalEvent);
-               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-               assert.equal(baseControl.getViewModel().getItemBySourceKey(1).getVersion(), 1);
-               assert.equal(baseControl.getViewModel().getVersion(), 4);
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).calledOnce);
 
                // With editing
                baseControl._markerController.setMarkedKey(null);
@@ -6762,9 +6761,8 @@ define([
                assert.isUndefined(baseControl._listViewModel.getMarkedItem());
                await baseControl._itemMouseUp(event, {key: 1}, originalEvent);
 
-               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-               assert.equal(baseControl.getViewModel().getItemBySourceKey(1).getVersion(), 3);
-               assert.equal(baseControl.getViewModel().getVersion(), 6);
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).calledTwice);
             });
          });
 
