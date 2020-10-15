@@ -2,6 +2,13 @@
 @import "_monthsRange";
 @import "_dateRange";
 
+@shift-top_PeriodDialog-picker: -((@header_height_datePicker - @inline_height_default)/2 + @border-thickness_datePicker);
+@shift-left_PeriodDialog-picker: -(@header_padding-left_datePicker + @border-thickness_datePicker + @icon-size_s + @switcher_offset_datePicker);
+@shift-left_PeriodDialog-picker-withoutModeBtn: -(@header_padding-left_datePicker + @border-thickness_datePicker);
+@shift-top_PeriodDialog-selector: ceil((@height_dateRangeSelector - @header_height_datePicker)/2) - @border-thickness_datePicker;
+@shift-top_fontSize-l_PeriodDialog-selector: ceil((@height_dateRangeSelector - @header_height_datePicker)/2) - @border-thickness_datePicker + 1;
+@shift-top_fontSize-s_PeriodDialog-selector: ceil((@height_dateRangeSelector - @header_height_datePicker)/2) - @border-thickness_datePicker - 1;
+
 // TODO: выпилить после того как приведут стили List в порядок
 .controls-PeriodDialog {
    .controls-ListView__itemContent {
@@ -37,8 +44,16 @@
          @yearlist_item_border-thickness_datePicker * 3;
 }
 
-.controls-DatePopup__selector-marginTop_theme-@{themeName} {
+.controls-DatePopup__selector-marginTop_fontSize-m_theme-@{themeName} {
    margin-top: @shift-top_PeriodDialog-selector;
+}
+
+.controls-DatePopup__selector-marginTop_fontSize-l_theme-@{themeName} {
+   margin-top: @shift-top_fontSize-l_PeriodDialog-selector;
+}
+
+.controls-DatePopup__selector-marginTop_fontSize-s_theme-@{themeName} {
+   margin-top: @shift-top_fontSize-s_PeriodDialog-selector;
 }
 
 .controls-DatePopup__selector-marginLeft_theme-@{themeName} {

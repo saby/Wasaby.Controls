@@ -69,7 +69,7 @@ define([
             sinon.assert.called(component._children.opener.open);
             sinon.assert.called(component._children.linkView.getPopupTarget);
             sinon.assert.calledWith(component._children.opener.open, sinon.match({
-               className: 'controls-DatePopup__selector-marginTop_theme-default controls-DatePopup__selector-marginLeft_theme-default',
+               className: 'controls-DatePopup__selector-marginTop_fontSize-m_theme-default controls-DatePopup__selector-marginLeft_theme-default',
                target: TARGET,
                templateOptions: {
                   startValue: opts.startValue,
@@ -98,7 +98,7 @@ define([
             };
             component.openPopup();
             sinon.assert.calledWith(component._children.opener.open, sinon.match({
-               className: 'controls-DatePopup__selector-marginTop_theme-default controls-DatePopup__selector-marginLeft_theme-default',
+               className: 'controls-DatePopup__selector-marginTop_fontSize-m_theme-default controls-DatePopup__selector-marginLeft_theme-default',
                templateOptions: {
                   quantum: extOptions.ranges,
                   minRange: extOptions.minRange,
@@ -143,7 +143,7 @@ define([
                   };
                   component.openPopup();
                   sinon.assert.calledWith(component._children.opener.open, sinon.match({
-                     className: 'controls-DatePopup__selector-marginTop_theme-default controls-DatePopup__selector-marginLeft_theme-default'
+                     className: 'controls-DatePopup__selector-marginTop_fontSize-m_theme-default controls-DatePopup__selector-marginLeft_theme-default'
                   }));
                });
             });
@@ -173,7 +173,7 @@ define([
                   };
                   component.openPopup();
                   sinon.assert.calledWith(component._children.opener.open, sinon.match({
-                     className: 'controls-DatePopup__selector-marginTop_theme-default controls-DatePopup__selector-marginLeft-withoutModeBtn_theme-default'
+                     className: 'controls-DatePopup__selector-marginTop_fontSize-m_theme-default controls-DatePopup__selector-marginLeft-withoutModeBtn_theme-default'
                   }));
                });
             });

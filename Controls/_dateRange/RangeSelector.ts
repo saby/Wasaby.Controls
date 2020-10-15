@@ -87,7 +87,7 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
     protected _getPopupOptions(): IStickyPopupOptions {
         const container = this._children.linkView.getPopupTarget();
         const ranges = this._options.ranges;
-        let className = 'controls-DatePopup__selector-marginTop_theme-' + this._options.theme;
+        let className = `controls-DatePopup__selector-marginTop_fontSize-${this._getFontSizeClass()}_theme-${this._options.theme}`;
         if (this._options.popupClassName) {
             className += `${this._options.popupClassName} `;
         }
@@ -119,6 +119,19 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
                 rangeSelectedCallback: this._options.rangeSelectedCallback
             }
         };
+    }
+
+    _getFontSizeClass(): string {
+        // c fontSize 18px (20px, 24px и тд) линк смещается на 1px вниз, с 14px (13px, 12px и тд) на 1px вверх
+        // относительно стандратного положения
+        switch (this._options.fontSize) {
+            case '4xl': return 'l';
+            case '3xl': return 'l';
+            case 'm': return 's';
+            case 's': return 's';
+            case 'xs': return 's';
+            default: return 'm';
+        }
     }
 
     _mouseEnterHandler(): void {
