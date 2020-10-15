@@ -8,6 +8,10 @@ describe('Controls/scroll:ContainerBase', () => {
       scrollMode: SCROLL_MODE.VERTICAL
    };
 
+   global.window = {
+      devicePixelRatio: 1
+   };
+
    describe('_beforeMount', () => {
       it('should create models', () => {
          const control: ContainerBase = new ContainerBase(options);

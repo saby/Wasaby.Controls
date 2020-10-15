@@ -486,7 +486,9 @@ define([
                   component = calendarTestUtils.createComponent(
                      calendar.MonthList, coreMerge(test.options, config, { preferSource: true })
                   );
-
+               global.window = {
+                  devicePixelRatio: 1
+               };
                sandbox.stub(component, '_notify');
                component._intersectHandler(null, test.entries);
                sinon.assert.calledWith(component._notify, 'positionChanged', [test.date]);
