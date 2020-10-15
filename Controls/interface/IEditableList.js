@@ -24,7 +24,8 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {Object} ItemEditOptions
-    * @property {Types/entity:Model} [options.item] Элемент с исходными данными.
+    * @property {Types/entity:Model} [options.item] Элемент, который будет открыт на редактирование. 
+    * Однако, если в результатате события {@link beforeBeginEdit} будет возвращен элемент, то при редактировании будет использоваться именно он.
     */
 
    /*
@@ -586,6 +587,7 @@ define('Controls/interface/IEditableList', [
     * @param {ItemEditOptions} options Параметры добавления.
     * @returns {Core/Deferred}
     * @remark
+    * В процессе добавления элемента вызываются события {@link beforeBeginEdit} и {@link afterBeginEdit}.
     * Чтобы задать позицию добавления элемента, установите значение для параметра {@link Controls/interface/IEditableList/EditingConfig.typedef addPosition}.
     * Если вы не передадите параметры, будет вызван метод {@link Types/source:ICrud#create create} источника списка, и результат будет добавлен в список.
     * @demo Controls-demo/list_new/EditInPlace/AddItem/Index
@@ -606,6 +608,8 @@ define('Controls/interface/IEditableList', [
     * @see beginEdit
     * @see commitEdit
     * @see cancelEdit
+    * @see beforeBeginEdit
+    * @see afterBeginEdit
     */
 
    /*
