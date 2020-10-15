@@ -24,8 +24,8 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {Object} ItemEditOptions
-    * @property {Types/entity:Model} [options.item] Элемент, который будет открыт на редактирование. 
-    * Однако, если в результатате события {@link beforeBeginEdit} будет возвращен элемент, то при редактировании будет использоваться именно он.
+    * @property {Types/entity:Model} [options.item] Запись списка, которая будет запущена на редактирование. 
+    * Если из обработчика события {@link beforeBeginEdit} также будет возвращена запись, то именно она будет запущена на редактирование вместо первоначальной.
     */
 
    /*
