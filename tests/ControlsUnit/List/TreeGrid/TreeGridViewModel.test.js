@@ -430,7 +430,10 @@ define(['Controls/treeGrid',
                columns: initialColumns,
                nodeFooters: [{}],
                rowIndex: 1,
-               itemPadding: {},
+               itemPadding: {
+                  left: 'default',
+                  right: 'default',
+               },
                getCurrentColumn: function() {
                   return {
                      cellClasses: ''
@@ -440,13 +443,17 @@ define(['Controls/treeGrid',
             };
          };
 
-         let nodeFooter = model.getItemDataByItem.call(model).nodeFooters[0];
+         const current  = model.getItemDataByItem.call(model);
+         let nodeFooter = current.nodeFooters[0];
          assert.isTrue(nodeFooter.getColumnClasses(0).indexOf('controls-Grid_columnScroll__fixed') !== -1);
          assert.isTrue(nodeFooter.getColumnClasses(0, { colspan: false }).indexOf('controls-Grid_columnScroll__fixed') !== -1);
 
          assert.isTrue(nodeFooter.getColumnClasses(0).indexOf('js-controls-ColumnScroll__notDraggable') !== -1);
          assert.isTrue(nodeFooter.getColumnClasses(0, { colspan: false }).indexOf('js-controls-ColumnScroll__notDraggable') !== -1);
          assert.equal(nodeFooter.classes, nodeFooter.getColumnClasses(0));
+
+         current.hasMultiSelect = true;
+         assert.isTrue(nodeFooter.getColumnClasses(0).indexOf('controls-TreeGrid__nodeFooterContent_spacingLeft-default') === -1);
 
          treeGrid.ViewModel.superclass.getItemDataByItem = originFn;
       });
