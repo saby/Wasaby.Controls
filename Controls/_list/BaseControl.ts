@@ -2601,7 +2601,6 @@ const _private = {
      */
     initVisibleItemActions(self, options: IList): void {
         if (options.itemActionsVisibility === 'visible') {
-            self._showActions = true;
             _private.updateItemActions(self, options);
         }
     },
@@ -2979,6 +2978,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.initializeNavigation(this, newOptions);
 
         this._loadTriggerVisibility = {};
+
+        this._showActions = true;
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController;
@@ -5431,7 +5432,6 @@ BaseControl.contextTypes = function contextTypes() {
         isTouch: TouchContextField
     };
 };
-
 BaseControl._theme = ['Controls/Classes', 'Controls/list'];
 
 BaseControl.getDefaultOptions = function() {
