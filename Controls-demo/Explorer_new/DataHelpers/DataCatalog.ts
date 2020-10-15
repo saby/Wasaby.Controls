@@ -4,7 +4,7 @@ import * as notEditableTemplate from 'wml!Controls-demo/Explorer/Editing/notEdit
 import { IHeader } from 'Controls-demo/types';
 import { IColumn } from 'Controls/grid';
 
-interface IData {
+export interface IData {
    id: number;
    parent: null | number;
    'parent@': null | Boolean;

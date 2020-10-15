@@ -625,6 +625,76 @@ describe('Controls/suggest', () => {
          resolverSpy.restore();
       });
 
+      describe('Suggest::_searchResetCallback', async () => {
+         const recordSet = new RecordSet({
+            rawData: [{id: 1}, {id: 2}, {id: 3}],
+            keyProperty: 'id'
+         });
+         const sandbox = sinon.createSandbox();
+         let inputContainer;
+         let getSearchControllerStub;
+         let setItemsSpy;
+
+         beforeEach(() => {
+            inputContainer = getComponentObject();
+            getSearchControllerStub = sandbox.stub(inputContainer, '_getSearchController').callsFake(() => ({
+               reset: () => Promise.resolve(recordSet)
+            }));
+            setItemsSpy = sandbox.stub(inputContainer, '_setItems');
+         });
+
+         afterEach(() => sandbox.reset());
+
+         after(() => sandbox.restore());
+
+         it('openWithHistory case :: suggest should stay opened', async () => {
+            sandbox.stub(inputContainer, '_openWithHistory');
+            sandbox.stub(inputContainer, '_shouldSearch').callsFake(() => false);
+
+            inputContainer._options.historyId = 'historyField';
+            inputContainer._options.suggestState = false;
+            inputContainer._options.autoDropDown = false;
+            await inputContainer._searchResetCallback();
+
+            assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
+         });
+
+         it('default case with autoDropDown :: suggest should stay opened', async () => {
+            sandbox.stub(inputContainer, '_shouldSearch').callsFake(() => true);
+            sandbox.stub(inputContainer, '_open');
+            sandbox.stub(inputContainer, '_setFilter');
+
+            inputContainer._options.historyId = 'historyField';
+            inputContainer._options.suggestState = false;
+            inputContainer._options.autoDropDown = true;
+            await inputContainer._searchResetCallback();
+
+            assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
+         });
+
+         it('only autoDropDown :: suggest should stay opened', async () => {
+            sandbox.stub(inputContainer, '_shouldSearch').callsFake(() => true);
+
+            inputContainer._options.historyId = undefined;
+            inputContainer._options.autoDropDown = true;
+            await inputContainer._searchResetCallback();
+
+            assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
+         });
+
+         it('autoDropDown is False :: suggest should close, setItems not called', async () => {
+            sandbox.stub(inputContainer, '_shouldSearch').callsFake(() => false);
+            const closeSpy = sandbox.spy(inputContainer, '_close');
+
+            inputContainer._options.historyId = undefined;
+            inputContainer._options.autoDropDown = false;
+            await inputContainer._searchResetCallback();
+
+            assert.isFalse(setItemsSpy.called);
+            assert.isTrue(closeSpy.calledOnce);
+         });
+      });
+
       it('Suggest::_loadDependencies', (done) => {
          const inputContainer = getComponentObject();
          const options = {
