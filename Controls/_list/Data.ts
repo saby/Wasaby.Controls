@@ -144,22 +144,24 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
       if (this._options.source !== newOptions.source) {
          this._loading = true;
-         return this._sourceController.load().then((items) => {
-            if (items instanceof RecordSet) {
-               if (newOptions.dataLoadCallback instanceof Function) {
-                  newOptions.dataLoadCallback(items);
-               }
-               const newItems = this._sourceController.setItems(items);
-               if (!this._items) {
-                  this._items = newItems;
-               }
-            }
+         return this._sourceController.load()
+             .then((items) => {
+                if (items instanceof RecordSet) {
+                   if (newOptions.dataLoadCallback instanceof Function) {
+                      newOptions.dataLoadCallback(items);
+                   }
+                   const newItems = this._sourceController.setItems(items);
+                   if (!this._items) {
+                      this._items = newItems;
+                   }
+                }
 
-            const controllerState = this._sourceController.getState();
-            this._updateContext(controllerState);
-            this._loading = false;
-            return items;
-         });
+                const controllerState = this._sourceController.getState();
+                this._updateContext(controllerState);
+                this._loading = false;
+                return items;
+             })
+             .catch((error) => error);
       } else if (isChanged) {
          const controllerState = this._sourceController.getState();
 
