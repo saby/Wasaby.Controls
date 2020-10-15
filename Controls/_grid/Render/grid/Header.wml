@@ -1,16 +1,4 @@
-<ws:template name="headContent">
-      <ws:for data="headerRow.resetHeaderColumns(); headerRow.isEndHeaderColumn(); headerRow.goToNextHeaderColumn();">
-          <ws:partial template="{{headerModel.isStickyHeader() && !headerRow.getCurrentHeaderColumn().column.isActionCell ? 'stickyCell' : 'cell'}}"
-                      backgroundStyle="{{backgroundStyle}}"
-                      defaultHeaderContent="{{defaultHeaderContent}}"
-                      headerModel="{{headerModel}}"
-                      headerColumn="{{ headerRow.getCurrentHeaderColumn() }}"
-                      multiselect="{{ headerModel.getMultiSelectVisibility() }}"
-                      on:arrowClick="_notifyHandler('arrowClick')"/>
-      </ws:for>
-</ws:template>
-
-<ws:template name="cellContent">
+<!--<ws:template name="cellContent">
    <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0 || headerColumn.column.caption || headerColumn.column.title}}">
       <ws:if data="{{!!headerColumn.column.template}}">
          <ws:partial attr:class="controls-Grid__header-cell__content controls-Grid__header-cell__content_theme-{{_options.theme}} {{headerModel.isMultiHeader() ? ' controls-Grid__row-multi-header__content_baseline' : ' controls-Grid__row-header__content_baseline'}}_theme-{{_options.theme}} {{headerColumn.cellContentClasses}}"
@@ -26,54 +14,22 @@
                  colData="{{headerColumn}}"/>
       </ws:else>
    </ws:if>
-</ws:template>
+</ws:template>-->
 
-<ws:template name="cell">
-    <ws:if data="{{headerColumn.itemActionsPosition !== 'custom'}}">
-      <div attr:class="{{headerColumn.cellClasses}}"
-           attr:style="{{headerColumn.cellStyles}}{{headerColumn.style}}">
-         <ws:partial template="cellContent"/>
-      </div>
-    </ws:if>
-</ws:template>
+<div class="{{ header.getHeaderClasses(theme) }}">
+    <ws:for data="headerCell in header.getHeaderCells()">
+        <div attr:class="{{ headerCell.getWrapperClasses(theme) }}"
+             attr:style="{{ headerCell.getWrapperStyles() }}">
+            <ws:if data="{{ !!headerCell.getTemplate() }}">
+                <ws:partial attr:class="{{ headerCell.getContentClasses(theme) }}"
+                            template="{{ headerCell.template }}"
+                            scope="{{ headerCell.templateOptions }}"
+                            colData="{{ headerCell }}"/>
 
-<ws:template name="stickyCell">
-         <Controls.scroll:StickyHeader
-              attr:key="{{(headerColumn.key)}}"
-              attr:class="{{headerColumn.cellClasses}}"
-              attr:style="{{headerColumn.style ? headerColumn.style : ''}}{{headerColumn.cellStyles}}"
-              backgroundStyle="{{headerColumn.backgroundStyle || backgroundStyle}}"
-              mode="stackable"
-              task1177692247="{{true}}"
-              fixedZIndex="{{headerColumn.zIndex}}"
-              shadowVisibility="{{headerColumn.shadowVisibility}}">
-         <!-- Set the headerModel option only in order for the update of the internal templates to update -->
-         <!-- when the model changes. The 'header' option is an array in which templates can be set. -->
-         <!-- Inside these templates can be bindings. But we do not track changes in objects inside. -->
-         <!-- Most often, the headings are changed simultaneously with updating the table. -->
-         <!-- Remove after complete https://online.sbis.ru/opendoc.html?guid=660b0a02-abbd-433c-9b37-b2468076171c -->
-         <ws:partial template="cellContent"
-                     defaultHeaderContent="{{defaultHeaderContent}}"
-                     headerColumn="{{headerColumn}}"
-                     multiselect="{{multiselect}}"
-                     headerModel="{{ headerModel }}"/>
-      </Controls.scroll:StickyHeader>
-</ws:template>
-
-<ws:template name="header">
-      <div class="controls-Grid__header controls-Grid__header_theme-{{_options.theme}}">
-         {{ headerModel.resetHeaderRows() }}
-         <ws:for data="headerModel.resetHeaderRows(); headerModel.isEndHeaderRow(); headerModel.goToNextHeaderRow();">
-            <ws:partial template="headContent" headerRow="{{ headerModel.getCurrentHeaderRow() }}"/>
-         </ws:for>
-      </div>
-</ws:template>
-
-<ws:if data="{{headerModel.isStickyHeader()}}">
-   <Controls.scroll:Group calculateHeadersOffsets="{{ headerModel.isMultiHeader() }}">
-      <ws:partial template="header" headerModel="{{headerModel}}"/>
-   </Controls.scroll:Group>
-</ws:if>
-<ws:else>
-   <ws:partial template="header" headerModel="{{headerModel}}"/>
-</ws:else>
+            </ws:if>
+            <ws:else>
+                <div></div>
+            </ws:else>
+        </div>
+    </ws:for>
+</div>
