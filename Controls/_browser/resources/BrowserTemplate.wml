@@ -36,6 +36,7 @@
         on:markedKeyChanged="_markedKeyChangedHandler()"
         on:selectedTypeChanged="_selectedTypeChangedHandler()"
         on:listMarkedKeyChanged="_listMarkedKeyChangedHandler()"
+        on:listRootChanged="_rootChanged()"
         on:operationsPanelOpen="_operationsPanelOpen()"
         on:operationsPanelClose="_operationsPanelClose()"
         on:register="_registerHandler()"

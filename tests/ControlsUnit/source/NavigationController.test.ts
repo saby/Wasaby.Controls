@@ -1,9 +1,6 @@
 import {assert} from 'chai';
-import {Memory} from 'Types/source';
-import {Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {NavigationController} from 'Controls/source';
-import {CrudWrapper} from "../../../Controls/_dataSource/CrudWrapper";
 
 const dataPrev = [
     {
@@ -426,6 +423,31 @@ describe('Controls/_source/NavigationController', () => {
                 assert.equal(null, params.filter['id<='], 'Wrong query params');
             });
 
+            it('getQueryParams with config', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        position: 1,
+                        field: 'id',
+                        direction: 'bothways',
+                        limit: 3
+                    }
+                });
+
+                const params = nc.getQueryParams(
+                    {
+                        filter: defFilter
+                    },
+                    null,
+                    {
+                        direction: 'bothways',
+                        field: 'id',
+                        limit: 3,
+                        position: 'testPosition'
+                    });
+                assert.equal('testPosition', params.filter['id~'], 'Wrong query params');
+            });
+
             it('updateQueryProperties root', () => {
                 const nc = new NavigationController({
                     navigationType: 'position',
@@ -663,7 +685,7 @@ describe('Controls/_source/NavigationController', () => {
 
             it ('Position', () => {
                 const QUERY_LIMIT = 3;
-                let nc = new NavigationController({
+                const nc = new NavigationController({
                     navigationType: 'position',
                     navigationConfig: {
                         position: 1,
@@ -787,6 +809,56 @@ describe('Controls/_source/NavigationController', () => {
             params = nc.getQueryParams({filter: {}, sorting: []}, null, {}, 'forward');
             assert.equal(9, params.filter['parId>='], 'Wrong query params');
 
+        });
+    });
+
+    describe('shiftToEdge', () => {
+        describe('page', () => {
+            it ('shift to edge with more meta as number', () => {
+                const START_PAGE = 0;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: true
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                rs.setMetaData({more: false});
+                nc.updateQueryProperties(rs);
+
+                const edgeQueryConfig = nc.shiftToEdge('forward');
+                assert.equal(edgeQueryConfig.page, -1);
+            });
+
+            it ('shift to edge with more meta as boolean', () => {
+                const START_PAGE = 0;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: false
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                rs.setMetaData({more: 18});
+                nc.updateQueryProperties(rs);
+
+                const edgeQueryConfig = nc.shiftToEdge('forward');
+                assert.equal(edgeQueryConfig.page, 5);
+            });
         });
     });
 });

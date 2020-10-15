@@ -425,6 +425,36 @@ describe('Controls/suggest', () => {
          assert.isTrue(isNotifyShowSelector);
       });
 
+      it('Suggest::_inputActivated - request should call once', async () => {
+         const sandbox = sinon.createSandbox();
+         const inputContainer = getComponentObject({
+            searchParam: 'searchParam',
+            autoDropDown: true,
+            minSearchLength: 3,
+            historyId: 'testFieldHistoryId',
+            keyProperty: 'Identificator',
+            source: getMemorySource()
+         });
+         if (!document) {
+            sandbox.stub(inputContainer, '_getActiveElement').callsFake(() => ({
+               classList: {
+                  contains: () => false
+               }
+            }));
+         }
+
+         const sourceController = inputContainer._getSourceController();
+
+         const loadSpy = sandbox.spy(sourceController, 'load');
+
+         inputContainer._inputActivated();
+         await inputContainer._inputActivated();
+
+         assert.isTrue(loadSpy.calledOnce);
+
+         sandbox.restore();
+      });
+
       it('Suggest::_inputActivated/_inputClicked with autoDropDown', () => {
          const inputContainer = getComponentObject({
             searchParam: 'searchParam',

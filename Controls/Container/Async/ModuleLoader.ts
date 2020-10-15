@@ -1,4 +1,4 @@
-import { isLoaded, loadAsync, loadSync, clearCache, unloadSync } from 'Controls/Application/modulesLoader';
+import { ModulesLoader as loader } from 'UI/Utils';
 import { ParkingController, Controller, ViewConfig } from 'Controls/error';
 import { IoC } from 'Env/Env';
 import rk = require('i18n!Controls');
@@ -10,7 +10,7 @@ class ModuleLoader {
         name: string,
         errorCallback?: (viewConfig: void | ViewConfig, error: unknown) => void
     ): Promise<T> {
-        return loadAsync<T>(name).catch((error) => {
+        return loader.loadAsync<T>(name).catch((error) => {
             IoC.resolve('ILogger').error(`Couldn't load module "${name}"`, error);
 
             return new ParkingController(
@@ -21,7 +21,7 @@ class ModuleLoader {
                 }
 
                 if (!viewConfig?.status || viewConfig.status !== ERROR_NOT_FOUND) {
-                    unloadSync(name);
+                    loader.unloadSync(name);
                 }
 
                 const message = viewConfig?.options?.message;
@@ -32,7 +32,7 @@ class ModuleLoader {
 
     loadSync<T = unknown>(name: string): T {
         try {
-            const loaded = loadSync<T>(name);
+            const loaded = loader.loadSync<T>(name);
             if (loaded) {
                 return loaded;
             }
@@ -43,11 +43,11 @@ class ModuleLoader {
     }
 
     isLoaded(name: string): boolean {
-        return isLoaded(name);
+        return loader.isLoaded(name);
     }
 
     clearCache(): void {
-        clearCache();
+        loader.clearCache();
     }
 }
 

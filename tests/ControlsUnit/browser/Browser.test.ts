@@ -1,6 +1,8 @@
 import {Browser} from 'Controls/browser';
 import {Memory} from 'Types/source';
 import {equal, deepStrictEqual} from 'assert';
+import { RecordSet } from 'Types/collection';
+import { detection } from 'Env/Env';
 
 const browserData = [
     {
@@ -92,6 +94,56 @@ describe('Controls/browser:Browser', () => {
                     deepStrictEqual(browser._searchController._dataOptions.filter, expectedFilter);
                 });
 
+            });
+        });
+
+        describe('init shadow visibility', () => {
+            const recordSet = new RecordSet({
+                rawData: [{id: 1}],
+                keyProperty: 'id',
+                metaData: {
+                    more: {
+                        before: true,
+                        after: true
+                    }
+                }
+            });
+
+            const options = getBrowserOptions();
+
+            let browser;
+
+            let defaultIsMobilePlatformValue;
+
+            beforeEach(() => {
+                defaultIsMobilePlatformValue = detection.isMobilePlatform;
+            })
+
+            afterEach(() => {
+                detection.isMobilePlatform = defaultIsMobilePlatformValue;
+            })
+
+            it('items in receivedState',() => {
+                const newOptions = {
+                    ...options,
+                    topShadowVisibility: 'auto',
+                    bottomShadowVisibility: 'auto',
+                }
+
+                browser = new Browser(newOptions)
+                browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
+                equal(browser._topShadowVisibility, 'visible');
+                equal(browser._bottomShadowVisibility, 'visible');
+
+                equal(browser._topShadowVisibilityFromOptions, 'auto');
+                equal(browser._bottomShadowVisibilityFromOptions, 'auto');
+
+                detection.isMobilePlatform = true;
+
+                browser = new Browser(newOptions)
+                browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
+                equal(browser._topShadowVisibility, 'auto');
+                equal(browser._bottomShadowVisibility, 'auto');
             });
         });
 
