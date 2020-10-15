@@ -1,6 +1,6 @@
 import { mixin } from 'Types/util';
 import { OptionsToPropertyMixin } from 'Types/entity';
-import { THeader } from '../_grid/interface/IHeaderCell';
+import { THeader} from '../_grid/interface/IHeaderCell';
 import GridCollection from './GridCollection';
 import GridHeaderCell from './GridHeaderCell';
 
@@ -29,7 +29,35 @@ export default class GridHeader<T> extends mixin<OptionsToPropertyMixin>(Options
         return this._$headerCells;
     }
 
-    _prepareHeaderCells(header: THeader): THeaderCells<T> {
+    getHeaderCellIndex(headerCell: GridHeaderCell<T>): number {
+        return this._$headerCells.indexOf(headerCell);
+    }
+
+    getHeaderCellsCount(): number {
+        return this._$headerCells.length;
+    }
+
+    getTopPadding(): string {
+        return this._$owner.getTopPadding().toLowerCase();
+    }
+
+    getBottomPadding(): string {
+        return this._$owner.getBottomPadding().toLowerCase();
+    }
+
+    getLeftPadding(): string {
+        return this._$owner.getLeftPadding().toLowerCase();
+    }
+
+    getRightPadding(): string {
+        return this._$owner.getRightPadding().toLowerCase();
+    }
+
+    getMultiSelectVisibility(): string {
+        return this._$owner.getMultiSelectVisibility();
+    }
+
+    protected _prepareHeaderCells(header: THeader): THeaderCells<T> {
         const headerCells = [];
         header.forEach((elem) => {
             const headerCell = new GridHeaderCell({
@@ -44,5 +72,5 @@ export default class GridHeader<T> extends mixin<OptionsToPropertyMixin>(Options
 
 Object.assign(GridHeader.prototype, {
     _moduleName: 'Controls/display:GridHeader',
-    _$headerCells: null
+    _$owner: null
 });

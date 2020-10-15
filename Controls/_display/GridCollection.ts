@@ -30,6 +30,10 @@ export default class GridCollection<
         return this._$columns;
     }
 
+    getHeader(): GridHeader<S> {
+        return this._$header;
+    }
+
     protected _initializeHeader(options): GridHeader<S> {
         return new GridHeader({
             owner: this,

@@ -1,9 +1,9 @@
 <div class="{{ _getGridViewClasses() }}" style="{{ _getGridViewStyles() }}">
     <!-- Header -->
     <ws:if data="{{ _listModel.getHeader() }}">
-        <ws:partial template="wml!Controls/_grid/Render/Header"
+        <ws:partial template="wml!Controls/_grid/Render/grid/Header"
                     attr:name="header"
-                    headerModel="{{ _listModel.getHeader() }}"
+                    header="{{ _listModel.getHeader() }}"
                     backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
         <!--defaultHeaderContent="{{_headerContentTemplate}}"-->
     </ws:if>

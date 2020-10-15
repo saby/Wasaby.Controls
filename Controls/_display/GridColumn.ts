@@ -9,7 +9,6 @@ import {
 } from 'Types/entity';
 import GridCollectionItem from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
-import {createClassListCollection} from "../_list/resources/utils/CssClassList";
 
 export interface IColumnConfig {
     template: TemplateFunction|string;
@@ -308,11 +307,12 @@ export default class GridColumn<T> extends mixin<
     }
 
     protected _getContentPaddingClasses(theme: string): string {
+        let classes = '';
+
         const topPadding = this._$owner.getTopPadding();
         const bottomPadding = this._$owner.getBottomPadding();
         const leftPadding = this._$owner.getLeftPadding();
         const rightPadding = this._$owner.getRightPadding();
-        let classes = '';
 
         /*if (columns[columnIndex].isActionCell) {
             return classLists;

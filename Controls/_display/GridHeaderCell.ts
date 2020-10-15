@@ -1,8 +1,24 @@
+/*
+    align Выравнивание содержимого ячейки по горизонтали.
+    caption Текст заголовка ячейки.
+    sortingProperty Свойство, по которому выполняется сортировка.
+    template Шаблон заголовка ячейки.
+    templateOptions Опции, передаваемые в шаблон ячейки заголовка.
+    textOverflow Поведение текста, если он не умещается в ячейке
+    valign Выравнивание содержимого ячейки по вертикали.
+
+    isActionCell Поле, для определения ячейки действий
+    startColumn Порядковый номер колонки, на которой начинается ячейка.
+    startRow Порядковый номер строки, на которой начинается ячейка.
+    endColumn Порядковый номер колонки, на которой заканчивается ячейка.
+    endRow Порядковый номер строки, на которой заканчивается ячейка.
+*/
+
+import { TemplateFunction } from 'UI/Base';
 import { IHeaderCell } from '../_grid/interface/IHeaderCell';
 import GridHeader from './GridHeader';
 import { mixin } from 'Types/_util/mixin';
 import { OptionsToPropertyMixin } from 'Types/entity';
-import {isStickySupport} from '../_scroll/StickyHeader/Utils';
 
 export interface IOptions<T> {
     owner: GridHeader<T>;
@@ -11,16 +27,34 @@ export interface IOptions<T> {
 
 export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridHeader<T>;
+    protected _$headerCell: IHeaderCell;
 
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
     }
 
-    getWrapperClasses(theme: string): string {
+    getHeaderCellIndex(): number {
+        return this._$owner.getHeaderCellIndex(this);
+    }
+
+    isFirstColumn(): boolean {
+        return this.getHeaderCellIndex() === 0;
+    }
+
+    isLastColumn(): boolean {
+        return this.getHeaderCellIndex() === this._$owner.getHeaderCellsCount() - 1;
+    }
+
+    isMultiSelectColumn(): boolean {
+        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this.isFirstColumn();
+    }
+
+    getWrapperClasses(theme: string, style: string = 'default'): string {
+        let wrapperClasses = `controls-Grid__header-cell controls-Grid__cell_${style}`;
+
         const isMultiHeader = false;
         const isStickySupport = false;
-        let wrapperClasses = 'controls-Grid__header-cell';
 
         wrapperClasses += ` controls-Grid__header-cell_theme-${theme}`;
         if (isMultiHeader) {
@@ -31,6 +65,9 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
         if (!isStickySupport) {
             wrapperClasses += ' controls-Grid__header-cell_static';
         }
+
+        wrapperClasses += this._getWrapperPaddingClasses(theme, style);
+
         // _private.getBackgroundStyle(this._options, true);
         return wrapperClasses;
     }
@@ -56,10 +93,56 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
         let paddingClasses = '';
         return paddingClasses;
     }
+
+    getTemplate(): TemplateFunction|string {
+        return this._$headerCell.template;
+    }
+
+    getTemplateOptions(): {} {
+        return this._$headerCell.templateOptions;
+    }
+
+    getCaption(): string {
+        // todo "title" - is deprecated property, use "caption"
+        return this._$headerCell.caption || this._$headerCell.title;
+    }
+
+    protected _getWrapperPaddingClasses(theme: string): string {
+        let paddingClasses = '';
+        const leftPadding = this._$owner.getLeftPadding();
+        const rightPadding = this._$owner.getRightPadding();
+        const isMultiSelectColumn = this.isMultiSelectColumn();
+        const isFirstColumn = this.isFirstColumn();
+        const isLastColumn = this.isLastColumn();
+
+        // todo <<< START <<< need refactor css classes names
+        const compatibleLeftPadding = leftPadding === 'default' ? '' : leftPadding;
+        const compatibleRightPadding = rightPadding === 'default' ? '' : rightPadding;
+        // todo >>> END >>>
+
+        // left padding
+        if (!isMultiSelectColumn) {
+            if (isFirstColumn) {
+                paddingClasses += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
+            } else {
+                paddingClasses += ` controls-Grid__cell_spacingLeft${compatibleLeftPadding}_theme-${theme}`;
+            }
+        }
+
+        // right padding
+        if (isLastColumn) {
+            paddingClasses += ` controls-Grid__cell_spacingLastCol_${rightPadding}_theme-${theme}`;
+        } else {
+            paddingClasses += ` controls-Grid__cell_spacingRight${compatibleRightPadding}_theme-${theme}`;
+        }
+
+        return paddingClasses;
+    }
 }
 
 Object.assign(GridHeaderCell.prototype, {
     _moduleName: 'Controls/display:GridHeaderCell',
     _instancePrefix: 'grid-header-cell-',
-    _$owner: null
+    _$owner: null,
+    _$headerCell: null
 });
