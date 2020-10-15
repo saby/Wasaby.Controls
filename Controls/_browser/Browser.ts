@@ -19,6 +19,7 @@ import { IControlerState } from 'Controls/_dataSource/Controller';
 import { TSelectionType } from 'Controls/interface';
 import Store from 'Controls/Store';
 import { SHADOW_VISIBILITY } from 'Controls/scroll';
+import {detection} from 'Env/Env';
 
 type Key = string|number|null;
 
@@ -133,28 +134,30 @@ export default class Browser extends Control {
 
         if (this._options.source !== newOptions.source) {
             this._loading = true;
-            methodResult = this._sourceController.load().then((items) => {
-                // для того чтобы мог посчитаться новый prefetch Source внутри
-                if (items instanceof RecordSet) {
-                    if (newOptions.dataLoadCallback instanceof Function) {
-                        newOptions.dataLoadCallback(items);
+            methodResult = this._sourceController.reload()
+                .then((items) => {
+                    // для того чтобы мог посчитаться новый prefetch Source внутри
+                    if (items instanceof RecordSet) {
+                        if (newOptions.dataLoadCallback instanceof Function) {
+                            newOptions.dataLoadCallback(items);
+                        }
+                        const newItems = this._sourceController.setItems(items);
+                        if (!this._items) {
+                            this._items = newItems;
+                        }
                     }
-                    const newItems = this._sourceController.setItems(items);
-                    if (!this._items) {
-                        this._items = newItems;
-                    }
-                }
 
-                const controllerState = this._sourceController.getState();
+                    const controllerState = this._sourceController.getState();
 
-                // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-                this._filter = controllerState.filter;
-                this._updateContext(controllerState);
+                    // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+                    this._filter = controllerState.filter;
+                    this._updateContext(controllerState);
 
-                this._loading = false;
-                this._groupHistoryId = newOptions.groupHistoryId;
-                return items;
-            });
+                    this._loading = false;
+                    this._groupHistoryId = newOptions.groupHistoryId;
+                    return items;
+                })
+                .catch((error) => error);
         } else if (isChanged) {
             const controllerState = this._sourceController.getState();
 
@@ -405,6 +408,11 @@ export default class Browser extends Control {
     }
 
     private _defineShadowVisibility(items: RecordSet|Error|void): void {
+        if (detection.isMobilePlatform) {
+            // На мобильных устройствах тень верхняя показывается, т.к. там есть уже загруженные данные вверху
+            return;
+        }
+
         if (items instanceof RecordSet) {
             const more = items.getMetaData().more;
             if (more) {

@@ -120,6 +120,18 @@ describe('Controls/dataSource:SourceController', () => {
             ok((loadedItems as RecordSet).getCount() === 5);
         });
 
+        it('load call while loading',  async () => {
+            const controller = getController();
+            let loadPromiseWasCanceled = false;
+
+            controller.load().catch(() => {
+                loadPromiseWasCanceled = true;
+            });
+
+            await controller.load();
+            ok(loadPromiseWasCanceled);
+        });
+
         it('load with parentProperty and selectedKeys',  async () => {
             let controller = getControllerWithHierarchy({
                 selectedKeys: [0],
