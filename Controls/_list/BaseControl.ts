@@ -1103,6 +1103,10 @@ const _private = {
          * viewport может быть равен 0 в том случае, когда блок скрыт через display:none, а после становится видим.
          */
         if (viewportSize !== 0) {
+            /**
+             * Проверяем что pagingPaddingContainer отрисовался.
+             * Без этой проверки, не сможем корректно определить высоту контейнера, если она была изменена или отличается от 40px.
+             */
             self._updatePagingPadding();
             let pagingPadding = self._pagingPadding;
             if (pagingPadding === null) {
@@ -1371,7 +1375,12 @@ const _private = {
             scrollHeight: _private.getViewSize(self),
             clientHeight: self._viewportSize
         };
-        if (self._options.navigation.viewConfig.pagingMode === 'numbers') {
+        /**
+         * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
+         * Это нужно чтобы правильно посчитать номер страницы
+         */
+        if (_private.needScrollPaging(self._options.navigation) &&
+            self._options.navigation.viewConfig.pagingMode === 'numbers') {
             scrollParams.scrollTop += (self._scrollController?.getPlaceholders().top || 0);
             scrollParams.scrollHeight += (self._scrollController?.getPlaceholders().bottom +
                 self._scrollController?.getPlaceholders().top || 0);
