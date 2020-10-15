@@ -497,35 +497,34 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._container = {
                 clientHeight: 1000
             };
-            baseControl._viewportSize = 400;
-            baseControl._getItemsContainer = () => {
+            baseControl._itemsContainerReadyHandler(null, () => {
                 return {children: []};
-            };
+            });
+            baseControl._observeScrollHandler(null, 'viewportResize', {clientHeight: 400});
             baseControl._mouseEnter(null);
-            await BaseControl._private.onScrollShow(baseControl, heightParams);
+            await baseControl.canScrollHandler(heightParams);
             assert.isTrue(baseControl._pagingVisible);
-            baseControl._scrollController = {
-                getPlaceholders: () => {
-                    return {top: 100, bottom: 100};
-                }
+            baseControl._scrollController.getPlaceholders = () => {
+                return {top: 100, bottom: 100};
             };
             const scrollParams = {
                 scrollTop: 0,
                 scrollHeight: 1000,
                 clientHeight: 400
             };
-            assert.deepEqual(BaseControl._private.getScrollParams(baseControl), scrollParams);
-            baseControl._scrollTop = scrollParams.scrollTop = 400;
-            assert.deepEqual(BaseControl._private.getScrollParams(baseControl), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            scrollParams.scrollTop = 400;
+            baseControl.scrollMoveSyncHandler({scrollTop: scrollParams.scrollTop});
+            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
 
-            baseControl._scrollTop = 0;
+            baseControl.scrollMoveSyncHandler({scrollTop: 0});
             scrollParams.scrollTop = 100;
             scrollParams.scrollHeight = 1200;
             cfgClone.navigation.viewConfig.pagingMode = 'numbers';
-            assert.deepEqual(BaseControl._private.getScrollParams(baseControl), scrollParams);
-            baseControl._scrollTop = 400;
+            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            baseControl.scrollMoveSyncHandler({scrollTop: 400});
             scrollParams.scrollTop = 500;
-            assert.deepEqual(BaseControl._private.getScrollParams(baseControl), scrollParams);
+            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
         });
     });
     describe('beforeUnmount', () => {

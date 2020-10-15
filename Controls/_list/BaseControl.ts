@@ -1103,11 +1103,6 @@ const _private = {
          * viewport может быть равен 0 в том случае, когда блок скрыт через display:none, а после становится видим.
          */
         if (viewportSize !== 0) {
-            /**
-             * Проверяем что pagingPaddingContainer отрисовался.
-             * Без этой проверки, не сможем корректно определить высоту контейнера, если она была изменена или отличается от 40px.
-             */
-            self._updatePagingPadding();
             let pagingPadding = self._pagingPadding;
             if (pagingPadding === null) {
                 pagingPadding = self._isPagingPadding() ? PAGING_PADDING : 0;
@@ -1369,25 +1364,6 @@ const _private = {
         }
     },
 
-    getScrollParams(self): IScrollParams {
-        const scrollParams = {
-            scrollTop: self._scrollTop,
-            scrollHeight: _private.getViewSize(self),
-            clientHeight: self._viewportSize
-        };
-        /**
-         * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
-         * Это нужно чтобы правильно посчитать номер страницы
-         */
-        if (_private.needScrollPaging(self._options.navigation) &&
-            self._options.navigation.viewConfig.pagingMode === 'numbers') {
-            scrollParams.scrollTop += (self._scrollController?.getPlaceholders().top || 0);
-            scrollParams.scrollHeight += (self._scrollController?.getPlaceholders().bottom +
-                self._scrollController?.getPlaceholders().top || 0);
-        }
-        return scrollParams;
-    },
-
     handleListScrollSync(self, scrollTop) {
         if (!self._pagingVisible) {
             _private.initPaging(self);
@@ -1401,7 +1377,7 @@ const _private = {
         self._scrollPageLocked = false;
         if (_private.needScrollPaging(self._options.navigation)) {
             if (!self._scrollController.getParamsToRestoreScrollPosition()) {
-                _private.updateScrollPagingButtons(self, _private.getScrollParams(self));
+                _private.updateScrollPagingButtons(self, self._getScrollParams());
             }
         }
     },
@@ -3299,13 +3275,32 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (_private.needScrollPaging(this._options.navigation)) {
                 _private.doAfterUpdate(this, () => {
-                    _private.updateScrollPagingButtons(this, _private.getScrollParams(this));
+                    _private.updateScrollPagingButtons(this, this._getScrollParams());
                 });
             }
             if (this._loadingIndicatorState) {
                 _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
             }
         }
+    },
+
+    _getScrollParams(): IScrollParams {
+        const scrollParams = {
+            scrollTop: this._scrollTop,
+            scrollHeight: _private.getViewSize(this),
+            clientHeight: this._viewportSize
+        };
+        /**
+         * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
+         * Это нужно чтобы правильно посчитать номер страницы
+         */
+        if (_private.needScrollPaging(this._options.navigation) &&
+            this._options.navigation.viewConfig.pagingMode === 'numbers') {
+            scrollParams.scrollTop += (this._scrollController?.getPlaceholders().top || 0);
+            scrollParams.scrollHeight += (this._scrollController?.getPlaceholders().bottom +
+                this._scrollController?.getPlaceholders().top || 0);
+        }
+        return scrollParams;
     },
 
     getViewModel() {
