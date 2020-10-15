@@ -488,6 +488,45 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._mouseEnter(null);
             assert.isTrue(baseControl._pagingVisible);
         });
+
+        it('paging getScrollParams', async () => {
+            const cfgClone = {...baseControlCfg};
+            cfgClone.navigation.viewConfig.pagingMode = 'edge';
+            baseControl.saveOptions(cfgClone);
+            await baseControl._beforeMount(cfgClone);
+            baseControl._container = {
+                clientHeight: 1000
+            };
+            baseControl._viewportSize = 400;
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
+            baseControl._mouseEnter(null);
+            await BaseControl._private.onScrollShow(baseControl, heightParams);
+            assert.isTrue(baseControl._pagingVisible);
+            baseControl._scrollController = {
+                getPlaceholders: () => {
+                    return {top: 100, bottom: 100};
+                }
+            };
+            const scrollParams = {
+                scrollTop: 0,
+                scrollHeight: 1000,
+                clientHeight: 400
+            };
+            assert.deepEqual(BaseControl._private.getScrollParams(baseControl), scrollParams);
+            baseControl._scrollTop = scrollParams.scrollTop = 400;
+            assert.deepEqual(BaseControl._private.getScrollParams(baseControl), scrollParams);
+
+            baseControl._scrollTop = 0;
+            scrollParams.scrollTop = 100;
+            scrollParams.scrollHeight = 1200;
+            cfgClone.navigation.viewConfig.pagingMode = 'numbers';
+            assert.deepEqual(BaseControl._private.getScrollParams(baseControl), scrollParams);
+            baseControl._scrollTop = 400;
+            scrollParams.scrollTop = 500;
+            assert.deepEqual(BaseControl._private.getScrollParams(baseControl), scrollParams);
+        });
     });
     describe('beforeUnmount', () => {
         let baseControl;
