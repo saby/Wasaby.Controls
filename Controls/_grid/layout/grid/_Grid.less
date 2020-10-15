@@ -548,9 +548,12 @@
 }
 
 .controls-GridView__footer__cell_theme-@{themeName} {
-   min-height: @footer_min-height_list;
    display: flex;
    align-items: baseline;
+}
+
+.controls-GridView__newFooter__cell_theme-@{themeName} {
+   min-height: @footer_min-height_list;
    &::before {
       content: '\200b';
       font-size: @footer_font-size_list;

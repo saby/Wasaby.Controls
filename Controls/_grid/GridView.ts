@@ -4,7 +4,8 @@ import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import * as GridIsEqualUtil from 'Controls/_grid/utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from 'Controls/context';
 import {tmplNotify} from 'Controls/eventUtils';
-import {prepareColumns} from './utils/GridColumnsColspanUtil';
+import {IPreparedColumn, prepareColumns} from './utils/GridColumnsColspanUtil';
+import {prepareEmptyEditingColumns} from './utils/GridEmptyTemplateUtil';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS, ColumnScroll} from './resources/ColumnScroll';
 import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/DragScroll';
 import {shouldAddActionsCell, shouldDrawColumnScroll, getAllowedSwipeType, isInLeftSwipeRange} from 'Controls/_grid/utils/GridColumnScrollUtil';
@@ -813,7 +814,7 @@ var
         },
 
         _prepareEmptyEditingTemplateColumns(columns, topSpacing: string, bottomSpacing: string) {
-            const params = {
+            return prepareEmptyEditingColumns({
                 gridColumns: this._options.columns,
                 emptyTemplateSpacing: {
                     top: topSpacing,
@@ -822,67 +823,9 @@ var
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
                 hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
                 colspanColumns: columns,
-                itemPadding: {
-                    top: this._options.itemPadding?.top?.toLowerCase() || 'default',
-                    bottom: this._options.itemPadding?.bottom?.toLowerCase() || 'default',
-                    left: this._options.itemPadding?.left?.toLowerCase() || 'default',
-                    right: this._options.itemPadding?.right?.toLowerCase() || 'default'
-                },
+                itemPadding: this._options.itemPadding || {},
                 theme: this._options.theme
-            };
-
-            return prepareColumns<{ classes: string }>({
-                ...params,
-                afterPrepareCallback: (column, index, columns) => {
-                    column.classes = this._getEmptyColumnClasses({
-                        ...params,
-                        emptyColumn: column,
-                        emptyColumnIndex: index,
-                        emptyColumnsLength: columns.length
-                    });
-                }
             });
-        },
-
-        _getEmptyColumnClasses(params): string {
-            const isFirst = params.emptyColumnIndex === 0 && !params.hasMultiSelect;
-            const isLast = params.emptyColumnIndex === params.emptyColumnsLength - 1;
-            const cellPadding = params.gridColumns[params.emptyColumn.startIndex].cellPadding;
-            const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side].toLowerCase()}` : '';
-            const theme = params.theme;
-
-            let classes = 'controls-GridView__emptyTemplate__cell ';
-            classes += `controls-Grid__row-cell-background-editing_theme-${theme} `;
-
-            if (params.isFullGridSupport) {
-                classes += `controls-Grid__row-cell__content_baseline_default_theme-${theme} `;
-            }
-
-            // Вертикальные отступы шаблона путого списка
-            classes +=  `controls-ListView__empty_topSpacing_${params.emptyTemplateSpacing.top || 'default'}_theme-${theme} `;
-            classes += `controls-ListView__empty_bottomSpacing_${params.emptyTemplateSpacing.bottom || 'default'}_theme-${theme} `;
-
-            // Вертикальные отступы внутри ячеек
-            classes += `controls-Grid__row-cell_rowSpacingTop_${params.itemPadding.top}_theme-${theme} `;
-            classes += `controls-Grid__row-cell_rowSpacingBottom_${params.itemPadding.bottom}_theme-${theme} `;
-
-            // Левый отступ ячейки
-            if (!(params.emptyColumnIndex === 0 && params.hasMultiSelect)) {
-                if (isFirst) {
-                    classes += `controls-Grid__cell_spacingFirstCol_${params.itemPadding.left}_theme-${theme} `;
-                } else {
-                    classes += `controls-Grid__cell_spacingLeft${getCellPadding('left')}_theme-${theme} `;
-                }
-            }
-
-            // Правый отступ ячейки
-            if (isLast) {
-                classes += `controls-Grid__cell_spacingLastCol_${params.itemPadding.right}_theme-${theme}`;
-            } else {
-                classes += `controls-Grid__cell_spacingRight${getCellPadding('right')}_theme-${theme}`;
-            }
-
-            return classes;
         },
 
         _prepareFooterTemplateColumns(colspanColumns?, backgroundStyle: string = 'default') {
@@ -891,10 +834,10 @@ var
 
             const prepared = prepareColumns<{
                 isFullGridSupport: boolean;
-                classes: string,
-                styles: string,
+                classes: string;
+                styles: string;
                 colspan: number;
-            }>({
+            } & IPreparedColumn>({
                 gridColumns: this._options.columns,
                 colspanColumns,
                 hasMultiSelect
@@ -910,8 +853,12 @@ var
 
             prepared.forEach((column, index, columns) => {
                 column.isFullGridSupport = isFullGridSupport;
-                column.classes = `controls-GridView__footer__cell controls-GridView__footer__cell_theme-${theme}`;
                 column.styles = '';
+                column.classes = `controls-GridView__footer__cell controls-GridView__footer__cell_theme-${theme}`;
+
+                if (this._options.useNewFooterTemplate) {
+                    column.classes += ` controls-GridView__newFooter__cell_theme-${theme}`;
+                }
 
                 if (index === 0) {
                     if (!hasMultiSelect) {

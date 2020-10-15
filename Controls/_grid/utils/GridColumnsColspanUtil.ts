@@ -4,18 +4,16 @@ interface IColumn {
     endIndex?: number;
 }
 
-interface IPreparedColumn extends Required<IColumn> {
-    '[IPreparedColumn]': true;
-}
+interface IPreparedColumn extends Required<IColumn> {}
 
-interface IPrepareColumnsParams {
+interface IPrepareColumnsParams<T extends IPreparedColumn> {
     gridColumns: unknown[];
     colspanColumns: IColumn[];
     hasMultiSelect: boolean;
-    afterPrepareCallback?(column: IPreparedColumn, index: number, columns: IPreparedColumn[]): void;
+    afterPrepareCallback?(column: T, index: number, columns: T[]): void;
 }
 
-function prepareColumns<T>(params: IPrepareColumnsParams): Array<IPreparedColumn & T> {
+function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams<T>): Array<T> {
     const result = [];
     const multiSelectOffset = +params.hasMultiSelect;
     const gridColumnsCount = params.gridColumns.length;
@@ -85,7 +83,7 @@ function prepareColumns<T>(params: IPrepareColumnsParams): Array<IPreparedColumn
         resultColumn.startIndex += multiSelectOffset;
         resultColumn.endIndex += multiSelectOffset;
         if (params.afterPrepareCallback) {
-            params.afterPrepareCallback(resultColumn, index, params);
+            params.afterPrepareCallback(resultColumn, index, result);
         }
     });
 

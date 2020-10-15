@@ -88,13 +88,16 @@
         <ws:partial template="{{_options.footerTemplate}}"
                     _prepareFooterTemplateColumns="{{ _prepareFooterTemplateColumns }}"
                     hasColumnScroll="{{ _containerSize && _isColumnScrollVisible }}"
-                    attr:class="controls-GridView__footer"/>
+                    hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"
+                    attr:class="controls-GridView__footer"
+                    isFullGridSupport="{{ true }}"/>
     </ws:if>
     <ws:else>
         <ws:partial template="wml!Controls/_grid/FooterTemplate"
                     _prepareFooterTemplateColumns="{{ _prepareFooterTemplateColumns }}"
                     hasColumnScroll="{{ _containerSize && _isColumnScrollVisible }}"
-                    attr:class="controls-GridView__footer">
+                    hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"
+                    isFullGridSupport="{{ true }}">
             <ws:partial template="{{_options.footerTemplate}}"/>
         </ws:partial>
     </ws:else>
