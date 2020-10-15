@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper {{_options.theme.indexOf('large')<0 ? 'controlsDemo_fixedWidth1700' : 'controlsDemo_fixedWidth550'}}">
+<div class="controlsDemo__wrapper {{_options.theme.indexOf('default')<0 ? 'controlsDemo_fixedWidth1700' : 'controlsDemo_fixedWidth550'}}">
    <div class="controlsDemo__cell">
       <Controls.spoiler:Heading captions="{{_captions}}"/>
    </div>
