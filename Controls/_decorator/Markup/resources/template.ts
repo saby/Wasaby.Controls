@@ -34,6 +34,7 @@ import {constants} from 'Env/Env';
          'mailto:',
          'tel:',
          'viber:(//|\\\\)',
+         'sbisplugin:(//|\\\\)',
          '#',
          './',
          '/'
