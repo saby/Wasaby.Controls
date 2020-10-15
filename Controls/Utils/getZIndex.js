@@ -1,5 +1,3 @@
-import {constants} from "wasaby-cli/store/_repos/rmi/src/client/Env/Env";
-
 /**
  * Created by as.krasilnikov on 29.10.2018.
  */
