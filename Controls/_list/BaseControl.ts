@@ -2933,6 +2933,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _endDragNDropTimer: null, // для IE
     _draggedKey: null,
     _validateController: null,
+    _isEditingRowScrollToElement: true,
 
     // Контроллер для перемещения элементов из источника
     _moveController: null,
@@ -4324,7 +4325,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _startInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
         const isAdd = !this._items.getRecordById(editingConfig.item.getKey());
         if (isAdd) {
-            return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition );
+            return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition, false);
         } else {
             return this.beginEdit({ item: editingConfig.item });
         }
@@ -4334,6 +4335,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
         }
+        this._isEditingRowScrollToElement = true;
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().edit(options && options.item).then((result) => {
@@ -4350,10 +4352,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._beginAdd(options, this._getEditingConfig().addPosition);
     },
 
-    _beginAdd(options, addPosition) {
+    _beginAdd(options, addPosition, isScroll = true) {
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
         }
+        this._isEditingRowScrollToElement = isScroll;
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().add(options && options.item, addPosition).then((addResult) => {
