@@ -328,6 +328,7 @@ export default class Controller {
         navigationSourceConfig?: INavigationSourceConfig
     ): Promise<LoadResult> {
         if (this._options.source) {
+            this.cancelLoading();
             this._loadPromise = new CancelablePromise(
                 this._prepareFilterForQuery(key).then((preparedFilter: QueryWhereExpression<unknown>) => {
                     // В source может лежать prefetchProxy
