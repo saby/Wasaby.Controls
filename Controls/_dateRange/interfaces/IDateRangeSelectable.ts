@@ -34,7 +34,6 @@ export = {
        * </pre>
        * <pre class="brush: js">
        * // TypeScript
-       * _ranges: null,
        * _beforeMount(): void {
        *     this._ranges = {days: [1,4], weeks: [2], months: [1] }
        * }
