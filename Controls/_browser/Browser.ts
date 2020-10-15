@@ -133,7 +133,7 @@ export default class Browser extends Control {
 
         if (this._options.source !== newOptions.source) {
             this._loading = true;
-            methodResult = this._sourceController.load()
+            methodResult = this._sourceController.reload()
                 .then((items) => {
                     // для того чтобы мог посчитаться новый prefetch Source внутри
                     if (items instanceof RecordSet) {

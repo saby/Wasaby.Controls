@@ -144,7 +144,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
       if (this._options.source !== newOptions.source) {
          this._loading = true;
-         return this._sourceController.load()
+         return this._sourceController.reload()
              .then((items) => {
                 if (items instanceof RecordSet) {
                    if (newOptions.dataLoadCallback instanceof Function) {
