@@ -28,6 +28,7 @@ import {ILinkViewControlOptions} from './_dateRange/LinkView';
  * @mixes Controls/interface/IDateMask
  * @mixes Controls/_datePopup/interfaces/IDatePopup
  * @mixes Controls/_interface/IDateRangeValidators
+ * @mixes Controls/_interface/ICaptionFormatter
  * @control
  * @public
  * @author Красильников А.С.
