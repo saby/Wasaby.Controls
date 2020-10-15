@@ -25,7 +25,7 @@ export default class Controller implements ISearchController {
 
    reset(): Promise<RecordSet> {
       const filter = {...this._options.sourceController.getFilter()};
-      delete filter[this._options.searchParam];
+      filter[this._options.searchParam] = '';
       this._searchValue = '';
       return this._updateFilter(filter);
    }

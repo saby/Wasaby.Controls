@@ -248,8 +248,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       // https://online.sbis.ru/opendoc.html?guid=d0f7513f-7fc8-47f8-8147-8535d69b99d6
       if ((this._options.autoDropDown || this._options.historyId) && !this._options.readOnly
          && !this._getActiveElement().classList.contains('controls-Lookup__icon')) {
-         if (!this._options.suggestState && this._options.source) {
-            return this._getSourceController().load().then((recordSet) => {
+         const sourceController = this._getSourceController();
+
+         if (!this._options.suggestState &&
+            this._options.source &&
+            !sourceController.isLoading()) {
+            return sourceController.load().then((recordSet) => {
                if (recordSet instanceof RecordSet) {
                   this._setItems(recordSet);
                   if (this._options.dataLoadCallback) {
@@ -360,7 +364,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (searchValue.length < minSearchLength && historyKeys && historyKeys.length) {
          preparedFilter[HISTORY_KEYS_FIELD] = historyKeys;
       }
-      preparedFilter[searchParam] = searchValue;
+      if (searchValue.length >= minSearchLength) {
+         preparedFilter[searchParam] = searchValue;
+      }
 
       return preparedFilter;
    }
@@ -787,6 +793,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       // change only filter for query, tabSelectedKey will be changed after processing query result,
       // otherwise interface will blink
       if (this._tabsSelectedKey !== key) {
+         // todo: refactor to _setFilter method - the same (?)
          this._filter = this._prepareFilter(this._options.filter,
             this._options.searchParam,
             this._searchValue, this._options.minSearchLength, key, this._historyKeys);
