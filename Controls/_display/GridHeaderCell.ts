@@ -1,4 +1,5 @@
-/*
+/*  IHeaderCell
+    Сделано:
     align Выравнивание содержимого ячейки по горизонтали.
     caption Текст заголовка ячейки.
     sortingProperty Свойство, по которому выполняется сортировка.
@@ -7,6 +8,7 @@
     textOverflow Поведение текста, если он не умещается в ячейке
     valign Выравнивание содержимого ячейки по вертикали.
 
+    Не сделано:
     isActionCell Поле, для определения ячейки действий
     startColumn Порядковый номер колонки, на которой начинается ячейка.
     startRow Порядковый номер строки, на которой начинается ячейка.
@@ -85,7 +87,6 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
         } else {
             contentClasses += ` controls-Grid__row-header__content_baseline_theme-${theme}`;
         }
-        // {{headerColumn.cellContentClasses}}
         return contentClasses;
     }
 
@@ -107,6 +108,28 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
         return this._$headerCell.caption || this._$headerCell.title;
     }
 
+    getSortingProperty(): string {
+        return this._$headerCell.sortingProperty;
+    }
+
+    getAlign(): string {
+        return this._$headerCell.align;
+    }
+
+    getVAlign(): string {
+        return this._$headerCell.valign;
+    }
+
+    getTextOverflow(): string {
+        return this._$headerCell.textOverflow;
+    }
+
+    // todo <<< START >>> compatible with old gridHeaderModel
+    get column(): IHeaderCell {
+        return this._$headerCell;
+    }
+    // todo <<< END >>>
+
     protected _getWrapperPaddingClasses(theme: string): string {
         let paddingClasses = '';
         const leftPadding = this._$owner.getLeftPadding();
@@ -115,10 +138,10 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
         const isFirstColumn = this.isFirstColumn();
         const isLastColumn = this.isLastColumn();
 
-        // todo <<< START <<< need refactor css classes names
+        // todo <<< START >>> need refactor css classes names
         const compatibleLeftPadding = leftPadding === 'default' ? '' : leftPadding;
         const compatibleRightPadding = rightPadding === 'default' ? '' : rightPadding;
-        // todo >>> END >>>
+        // todo <<< END >>>
 
         // left padding
         if (!isMultiSelectColumn) {

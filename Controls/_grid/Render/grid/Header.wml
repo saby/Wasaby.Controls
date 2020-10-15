@@ -1,35 +1,15 @@
-<!--<ws:template name="cellContent">
-   <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0 || headerColumn.column.caption || headerColumn.column.title}}">
-      <ws:if data="{{!!headerColumn.column.template}}">
-         <ws:partial attr:class="controls-Grid__header-cell__content controls-Grid__header-cell__content_theme-{{_options.theme}} {{headerModel.isMultiHeader() ? ' controls-Grid__row-multi-header__content_baseline' : ' controls-Grid__row-header__content_baseline'}}_theme-{{_options.theme}} {{headerColumn.cellContentClasses}}"
-                     template="{{headerColumn.column.template}}"
-                     scope="{{ headerColumn.column.templateOptions }}"
-                     colData="{{headerColumn}}"/>
-
-      </ws:if>
-      <ws:else>
-         <ws:partial
-                 attr:class="{{headerModel.isMultiHeader() ? ' controls-Grid__row-multi-header__content_baseline' : ' controls-Grid__row-header__content_baseline'}}_theme-{{_options.theme}} {{headerColumn.cellContentClasses}}"
-                 template="{{defaultHeaderContent}}"
-                 colData="{{headerColumn}}"/>
-      </ws:else>
-   </ws:if>
-</ws:template>-->
-
 <div class="{{ header.getHeaderClasses(theme) }}">
     <ws:for data="headerCell in header.getHeaderCells()">
         <div attr:class="{{ headerCell.getWrapperClasses(theme, style) }}"
              attr:style="{{ headerCell.getWrapperStyles() }}">
             <ws:if data="{{ !!headerCell.getTemplate() }}">
-                <ws:partial attr:class="{{ headerCell.getContentClasses(theme) }}"
-                            template="{{ headerCell.getTemplate() }}"
+                <ws:partial template="{{ headerCell.getTemplate() }}"
                             scope="{{ headerCell.getTemplateOptions() }}"
                             colData="{{ headerCell }}"/>
             </ws:if>
             <ws:else>
-                <div attr:class="{{ headerCell.getContentClasses(theme) }}">
-                    {{ headerCell.getCaption() }}
-                </div>
+                <ws:partial template="wml!Controls/_grid/Render/HeaderContent"
+                            colData="{{ headerCell }}"/>
             </ws:else>
         </div>
     </ws:for>
