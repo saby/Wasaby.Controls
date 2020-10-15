@@ -359,7 +359,7 @@ class Field<Value, ModelOptions>
          * Для этого останавливаем всплытие события.
          */
         if (processedKeys.includes(code)) {
-            event.nativeEvent.stopPropagation();
+            event.stopPropagation();
         }
 
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
