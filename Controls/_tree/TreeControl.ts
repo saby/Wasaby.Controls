@@ -562,7 +562,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 updateSourceController = true;
             }
 
-            if (this._options.editingConfig) {
+            if (this.isEditing()) {
                 baseControl.cancelEdit();
             }
         }

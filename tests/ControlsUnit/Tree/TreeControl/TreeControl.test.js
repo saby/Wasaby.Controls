@@ -1272,7 +1272,6 @@ define([
                 cfg = {
                    columns: [],
                    source: new sourceLib.Memory(),
-                   editingConfig: {},
                    items: new collection.RecordSet({
                       rawData: [],
                       idProperty: 'id'
@@ -1287,6 +1286,7 @@ define([
 
             let cfgClone = {...cfg};
             cfgClone.root = 'test2';
+            treeControl.isEditing = () => true;
             treeControl._beforeUpdate(cfgClone);
             assert.isTrue(cancelEditCalled);
 
