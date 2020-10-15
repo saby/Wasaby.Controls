@@ -1050,13 +1050,13 @@ const _private = {
                 pagingMode = self._options.navigation.viewConfig.pagingMode;
             }
 
-            self._sourceController.shiftToEdge(direction, self._options.root, pagingMode);
+            const navigationQueryConfig = self._sourceController.shiftToEdge(direction, self._options.root, pagingMode);
 
             // Если пейджинг уже показан, не нужно сбрасывать его при прыжке
             // к началу или концу, от этого прыжка его состояние не может
             // измениться, поэтому пейджинг не должен прятаться в любом случае
             self._shouldNotResetPagingCache = true;
-            _private.reload(self, self._options).addCallback(function() {
+            _private.reload(self, self._options, navigationQueryConfig).addCallback(() => {
                 self._shouldNotResetPagingCache = false;
 
                 if (self._scrollPagingCtr) {

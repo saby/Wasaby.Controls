@@ -238,9 +238,9 @@ export default class Controller {
         return !!this._loadPromise;
     }
 
-    shiftToEdge(direction: Direction, id: TKey, shiftMode: TNavigationPagingMode): void {
+    shiftToEdge(direction: Direction, id: TKey, shiftMode: TNavigationPagingMode): IBaseSourceConfig {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation)
+            return this._getNavigationController(this._options.navigation)
                 .shiftToEdge(NAVIGATION_DIRECTION_COMPATIBILITY[direction], id, shiftMode);
         }
     }
