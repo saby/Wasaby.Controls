@@ -1103,8 +1103,12 @@ const _private = {
          * viewport может быть равен 0 в том случае, когда блок скрыт через display:none, а после становится видим.
          */
         if (viewportSize !== 0) {
+            let pagingPadding = self._pagingPadding;
+            if (pagingPadding === null) {
+                pagingPadding = self._isPagingPadding() ? PAGING_PADDING : 0;
+            }
             const scrollHeight = Math.max(_private.calcViewSize(viewSize, result,
-                (self._pagingPadding || (self._isPagingPadding() ? PAGING_PADDING : 0))),
+                pagingPadding),
                 !self._options.disableVirtualScroll && self._scrollController?.calculateVirtualScrollHeight() || 0);
             const proportion = (scrollHeight / viewportSize);
 
@@ -1373,12 +1377,7 @@ const _private = {
         self._scrollPageLocked = false;
         if (_private.needScrollPaging(self._options.navigation)) {
             if (!self._scrollController.getParamsToRestoreScrollPosition()) {
-                const scrollParams = {
-                    scrollTop: self._scrollTop + (self._scrollController?.getPlaceholders().top || 0),
-                    scrollHeight: _private.getViewSize(self)  + (self._scrollController?.getPlaceholders().bottom + self._scrollController?.getPlaceholders().top || 0),
-                    clientHeight: self._viewportSize
-                };
-                _private.updateScrollPagingButtons(self, scrollParams);
+                _private.updateScrollPagingButtons(self, self._getScrollParams());
             }
         }
     },
@@ -3276,18 +3275,32 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (_private.needScrollPaging(this._options.navigation)) {
                 _private.doAfterUpdate(this, () => {
-                    const scrollParams = {
-                        scrollTop: this._scrollTop + (this._scrollController?.getPlaceholders().top || 0),
-                        scrollHeight: _private.getViewSize(this)  + (this._scrollController?.getPlaceholders().bottom + this._scrollController?.getPlaceholders().top || 0),
-                        clientHeight: this._viewportSize
-                    };
-                    _private.updateScrollPagingButtons(this, scrollParams);
+                    _private.updateScrollPagingButtons(this, this._getScrollParams());
                 });
             }
             if (this._loadingIndicatorState) {
                 _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
             }
         }
+    },
+
+    _getScrollParams(): IScrollParams {
+        const scrollParams = {
+            scrollTop: this._scrollTop,
+            scrollHeight: _private.getViewSize(this),
+            clientHeight: this._viewportSize
+        };
+        /**
+         * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
+         * Это нужно чтобы правильно посчитать номер страницы
+         */
+        if (_private.needScrollPaging(this._options.navigation) &&
+            this._options.navigation.viewConfig.pagingMode === 'numbers') {
+            scrollParams.scrollTop += (this._scrollController?.getPlaceholders().top || 0);
+            scrollParams.scrollHeight += (this._scrollController?.getPlaceholders().bottom +
+                this._scrollController?.getPlaceholders().top || 0);
+        }
+        return scrollParams;
     },
 
     getViewModel() {
