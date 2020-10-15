@@ -40,7 +40,13 @@ class PositionParamsCalculator implements IParamsCalculator {
         switch (direction) {
             case 'forward': queryPosition = storeParams.forwardPosition; break;
             case 'backward': queryPosition = storeParams.backwardPosition; break;
-            default: queryPosition = config.position ? config.position : storeParams.position;
+            default: {
+                queryPosition = config.position ? config.position : storeParams.position;
+
+                if (!Array.isArray(queryPosition)) {
+                    queryPosition = [queryPosition];
+                }
+            }
         }
 
         const queryDirection = PositionParamsCalculator._resolveDirection(direction, storeParams.direction);
