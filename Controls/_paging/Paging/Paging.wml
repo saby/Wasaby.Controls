@@ -1,8 +1,7 @@
 <div class="controls-PagingV {{_options.contrastBackground ? 'controls-Paging__contrast_theme-' + _options.theme : 'controls-Paging__same_theme-' + _options.theme}}">
     <div class="controls-Paging__wrapper controls-Paging__wrapper_theme-{{_options.theme}}">
         <ws:if data="{{_options.contentTemplate && _isShowContentTemplate()}}">
-         <span class="controls-Paging__btn controls-Paging__btn-Template controls-Paging__btn_theme-{{_options.theme}}
-                        controls-Paging__btn_first controls-Paging__arrow controls-Paging__arrow__state-normal">
+         <span class="controls-Paging__content-Template">
             <ws:partial template="{{_options.contentTemplate}}"/>
          </span>
         </ws:if>

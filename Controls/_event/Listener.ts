@@ -15,11 +15,13 @@ export interface IListenerOptions extends IControlOptions {
 }
 
 /**
- * Позволяет реагировать на события родителя, использующего Controls.events:Register в своем шаблоне
+ * Позволяет реагировать на события родителя, использующего {@link Controls/events:Register} в своем шаблоне.
  * @class Controls/_event/Listener
  * @extends UI/Base:Control
  * @control
  * @public
+ * @remark
+ * Подробнее о работе с контролом читайте <a href="/doc/platform/developmentapl/interface-development/controls/tools/autoresize/">здесь</a>.
  * @author Красильников А.С.
  */
 
@@ -30,8 +32,8 @@ export interface IListenerOptions extends IControlOptions {
 
 /**
  * @name Controls/_event/Listener#listenAll
- * @cfg {boolean} Нужно ли реагировать на события всех родительских контролов с Register в шаблоне,
- *  либо же только на события ближайшего такого контрола
+ * @cfg {Boolean} Нужно ли реагировать на события всех родительских контролов с Register в шаблоне,
+ * либо же только на события ближайшего такого контрола.
  */
 
 const getConfig = (options: IListenerOptions): IListenerOptions => {

@@ -76,7 +76,9 @@
                         </div>
                     </div>
                 </div>
-                <Controls.editableArea:Buttons attr:class="controlsDemo-EditableArea__buttons"/>
+                <ws:partial template="{{content.buttonsTemplate}}"
+                            attr:class="controlsDemo-EditableArea__buttons">
+                </ws:partial>
             </ws:if>
             <ws:else>
                 <div>Нажмите для начала редактирования</div>

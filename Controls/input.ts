@@ -63,7 +63,6 @@
  */
 
 import Base = require('Controls/_input/Base');
-import Area = require('Controls/_input/Area');
 import Number = require('Controls/_input/Number');
 import Text = require('Controls/_input/Text');
 import {default as Label} from 'Controls/_input/Label';
@@ -106,6 +105,9 @@ export * from './_input/resources/Types';
 export {default as Field} from './_input/resources/Field';
 export {default as NewBaseViewModel} from './_input/BaseViewModel';
 
+export {default as Area} from './_input/Area';
+export {IAreaOptions} from './_input/interface/IArea';
+
 /**
  * ПРИВАТНЫЕ МОДУЛИ.
  * ЭКСПОРТИРУЮТСЯ ДЛЯ UNIT-ТЕСТИРОВАНИЯ.
@@ -134,7 +136,6 @@ const InputCallback = {
 
 export {
     Base,
-    Area,
     Number,
     Text,
     Label,

@@ -24,6 +24,7 @@
  * @includes StickyOpener Controls/_popup/PopupHelper/Sticky
  * @includes StackOpener Controls/_popup/PopupHelper/Stack
  * @includes DialogOpener Controls/_popup/PopupHelper/Dialog
+ * @includes NotificationOpener Controls/_popup/PopupHelper/Notification
  * @public
  * @author Крайнов Д.О.
  */
@@ -86,6 +87,7 @@ export {default as PreviewerTemplate} from './_popup/Previewer/PreviewerTemplate
 export {default as StackOpener} from './_popup/PopupHelper/Stack';
 export {default as StickyOpener} from './_popup/PopupHelper/Sticky';
 export {default as DialogOpener} from './_popup/PopupHelper/Dialog';
+export {default as NotificationOpener} from './_popup/PopupHelper/Notification';
 
 export {default as IPopup, IPopupOptions, IPopupItem, IPopupSizes, IPopupPosition, IEventHandlers, IPopupItemInfo} from './_popup/interface/IPopup';
 export {IBasePopupOptions} from './_popup/interface/IBaseOpener';

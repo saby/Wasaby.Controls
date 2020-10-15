@@ -45,6 +45,7 @@ import EdgeIntersectionObserverContainer from 'Controls/_scroll/IntersectionObse
 import IntersectionObserverSyntheticEntry from 'Controls/_scroll/IntersectionObserver/SyntheticEntry';
 import _ContainerBase from 'Controls/_scroll/ContainerBase';
 import VirtualScrollContainer from 'Controls/_scroll/VirtualScrollContainer';
+import {SHADOW_VISIBILITY} from 'Controls/_scroll/Container/Interface/IShadows';
 
 import Group from 'Controls/_scroll/StickyHeader/Group';
 import {isStickySupport, getNextId as getNextStickyId, getOffset as getStickyOffset} from 'Controls/_scroll/StickyHeader/Utils';
@@ -70,5 +71,6 @@ export {
    EdgeIntersectionObserverContainer,
    IntersectionObserverSyntheticEntry,
    VirtualScrollContainer,
-   _ContainerBase
+   _ContainerBase,
+   SHADOW_VISIBILITY
 };
