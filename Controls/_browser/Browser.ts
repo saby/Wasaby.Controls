@@ -19,6 +19,7 @@ import { IControlerState } from 'Controls/_dataSource/Controller';
 import { TSelectionType } from 'Controls/interface';
 import Store from 'Controls/Store';
 import { SHADOW_VISIBILITY } from 'Controls/scroll';
+import {detection} from 'Env/Env';
 
 type Key = string|number|null;
 
@@ -405,6 +406,11 @@ export default class Browser extends Control {
     }
 
     private _defineShadowVisibility(items: RecordSet|Error|void): void {
+        if (detection.isMobilePlatform) {
+            // На мобильных устройствах тень верхняя показывается, т.к. там есть уже загруженные данные вверху
+            return;
+        }
+
         if (items instanceof RecordSet) {
             const more = items.getMetaData().more;
             if (more) {
