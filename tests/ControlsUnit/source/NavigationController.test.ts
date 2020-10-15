@@ -575,6 +575,7 @@ describe('Controls/_source/NavigationController', () => {
                         direction: 'bothways'
                     }
                 });
+                let hasMore;
 
                 const rs = new RecordSet({
                     rawData: data,
@@ -582,12 +583,18 @@ describe('Controls/_source/NavigationController', () => {
                 });
 
                 rs.setMetaData({more : {before: true, after: false}});
-
-                const params = nc.updateQueryProperties(rs);
-                let hasMore = nc.hasMoreData('forward');
+                nc.updateQueryProperties(rs);
+                hasMore = nc.hasMoreData('forward');
                 assert.isFalse(hasMore, 'Wrong more value');
                 hasMore = nc.hasMoreData('backward');
                 assert.isTrue(hasMore, 'Wrong more value');
+
+                rs.setMetaData({more : {before: false, after: false}});
+                nc.updateQueryProperties(rs);
+                hasMore = nc.hasMoreData('forward');
+                assert.isFalse(hasMore, 'Wrong more value');
+                hasMore = nc.hasMoreData('backward');
+                assert.isFalse(hasMore, 'Wrong more value');
             });
 
             it('hasMoreData bothways values false root', () => {
@@ -598,6 +605,7 @@ describe('Controls/_source/NavigationController', () => {
                         direction: 'bothways'
                     }
                 });
+                let hasMore;
 
                 const rs = new RecordSet({
                     rawData: data,
@@ -605,12 +613,18 @@ describe('Controls/_source/NavigationController', () => {
                 });
 
                 rs.setMetaData({more : {backward: true, forward: false}});
-
-                const params = nc.updateQueryProperties(rs);
-                let hasMore = nc.hasMoreData('forward');
+                nc.updateQueryProperties(rs);
+                hasMore = nc.hasMoreData('forward');
                 assert.isFalse(hasMore, 'Wrong more value');
                 hasMore = nc.hasMoreData('backward');
                 assert.isTrue(hasMore, 'Wrong more value');
+
+                rs.setMetaData({more : {backward: false, forward: false}});
+                nc.updateQueryProperties(rs);
+                hasMore = nc.hasMoreData('forward');
+                assert.isFalse(hasMore, 'Wrong more value');
+                hasMore = nc.hasMoreData('backward');
+                assert.isFalse(hasMore, 'Wrong more value');
             });
 
             it('hasMoreData forward values false root', () => {
