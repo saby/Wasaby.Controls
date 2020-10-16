@@ -442,6 +442,7 @@ define([
                         }
                      },
                      getExpanderIcon: () => undefined,
+                     getExpanderPosition: () => 'default',
                      getExpanderSize: () => undefined,
                      itemPadding
                   }
@@ -455,6 +456,7 @@ define([
                      },
                      itemPadding,
                      getExpanderIcon: () => 'testIcon',
+                     getExpanderPosition: () => 'default',
                      getExpanderSize: () => undefined,
                   },
                   expanderIcon: 'testIcon'
@@ -468,6 +470,7 @@ define([
                      },
                      itemPadding,
                      getExpanderIcon: () => undefined,
+                     getExpanderPosition: () => 'default',
                      getExpanderSize: () => undefined,
                   }
                }, {
@@ -480,6 +483,7 @@ define([
                      },
                      itemPadding,
                      getExpanderIcon: () => 'testIcon',
+                     getExpanderPosition: () => 'default',
                      getExpanderSize: () => undefined,
                   },
                   expanderIcon: 'testIcon'
@@ -493,6 +497,7 @@ define([
                      },
                      itemPadding,
                      getExpanderIcon: () => 'node',
+                     getExpanderPosition: () => 'default',
                      getExpanderSize: () => undefined,
                   },
                   expanderIcon: 'node'
@@ -506,6 +511,21 @@ define([
                      },
                      itemPadding,
                      getExpanderIcon: () => 'hiddenNode',
+                     getExpanderPosition: () => 'default',
+                     getExpanderSize: () => undefined,
+                  },
+                  expanderIcon: 'hiddenNode'
+               }, {
+                  itemData: {
+                     theme,
+                     item: {
+                        get: function() {
+                           return true;
+                        }
+                     },
+                     itemPadding,
+                     getExpanderIcon: () => 'hiddenNode',
+                     getExpanderPosition: () => 'right',
                      getExpanderSize: () => undefined,
                   },
                   expanderIcon: 'hiddenNode'
@@ -516,7 +536,8 @@ define([
                   'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_default-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed_theme-default',
                   'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_default-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed_theme-default',
                   'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_default-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node controls-TreeGrid__row-expander_node_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed_theme-default',
-                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_default-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default'
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_default-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default',
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_default-expander_position_right_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default'
                ];
             testsPrepareExpanderClasses.forEach(function(item, i) {
                cAssert.CssClassesAssert.include(

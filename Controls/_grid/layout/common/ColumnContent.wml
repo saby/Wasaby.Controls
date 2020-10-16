@@ -51,4 +51,8 @@
             </ws:if>
         </ws:else>
     </ws:if>
+
+    <ws:partial if="{{ itemData.afterItemTemplate }}"
+                template="{{ itemData.afterItemTemplate }}"
+                scope="{{ itemData.afterItemTemplateOptions }}"/>
 </div>

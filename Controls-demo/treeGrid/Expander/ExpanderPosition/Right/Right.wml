@@ -5,5 +5,5 @@
             columns="{{_columns}}"
             parentProperty="parent"
             nodeProperty="type"
-            expanderPosition="custom"/>
+            expanderPosition="right"/>
 </div>

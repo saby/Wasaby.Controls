@@ -150,10 +150,12 @@ var
             }
         },
 
-        shouldDrawExpander(itemData, tmplExpanderIcon): boolean {
+        shouldDrawExpander(itemData, tmplExpanderIcon, isRight = false): boolean {
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
             const expanderPosition = itemData.getExpanderPosition();
-            if ((expanderIcon === 'none' || expanderPosition === 'custom') ||
+
+            const isExpander = !(expanderPosition === 'default' || isRight);
+            if ((expanderIcon === 'none' || isExpander) ||
                 itemData.item.get(itemData.nodeProperty) === null) {
                 return false;
             }
@@ -167,9 +169,9 @@ var
             const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
 
             if (itemData.expanderVisibility === 'hasChildren') {
-                return itemData.thereIsChildItem && (expanderIcon !== 'none' && expanderPosition !== 'custom');
+                return itemData.thereIsChildItem && (expanderIcon !== 'none' && expanderPosition === 'default');
             } else {
-                return !expanderSize && (expanderIcon !== 'none' && expanderPosition !== 'custom');
+                return !expanderSize && (expanderIcon !== 'none' && expanderPosition === 'default');
             }
         },
         getExpanderPaddingClasses(itemData, tmplExpanderSize, isNodeFooter): string {
@@ -178,9 +180,13 @@ var
             expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default') + `_theme-${itemData.theme}`;
             return expanderPaddingClasses;
         },
+        isNodeProperty(itemData): boolean {
+            return itemData.item.get(itemData.nodeProperty) !== null;
+        },
         getExpanderClasses(itemData, tmplExpanderIcon, tmplExpanderSize): string {
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
             const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
+            const expanderPosition = itemData.getExpanderPosition();
             const theme = itemData.theme;
             const style = itemData.style || 'default';
             const itemType = itemData.item.get(itemData.nodeProperty);
@@ -188,7 +194,11 @@ var
             let expanderClasses = `controls-TreeGrid__row-expander_theme-${theme}`;
             let expanderIconClass = '';
 
-            expanderClasses += ' controls-TreeGrid__row_' + style + '-expander_size_' + (expanderSize || 'default') + `_theme-${theme} `;
+            if (expanderPosition !== 'right') {
+                expanderClasses += ` controls-TreeGrid__row_${style}-expander_size_${(expanderSize || 'default')}_theme-${theme} `;
+            } else {
+                expanderClasses += ` controls-TreeGrid__row_${style}-expander_position_right_theme-${theme} `;
+            }
             expanderClasses += EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE;
 
             expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${itemData.itemPadding.top}_theme-${theme}`;
@@ -199,7 +209,7 @@ var
                 expanderClasses += expanderIconClass;
 
                 // могут передать node или hiddenNode в этом случае добавляем наши классы для master/default
-                if ((expanderIcon === 'node') || (expanderIcon === 'hiddenNode')) {
+                if ((expanderIcon === 'node') || (expanderIcon === 'hiddenNode') || (expanderIcon === 'emptyNode')) {
                     expanderIconClass += '_' + (itemData.style === 'master' || itemData.style === 'masterClassic' ? 'master' : 'default');
                 }
             } else {
@@ -622,6 +632,7 @@ var
 
             // 2. Классы экспандера.
             current.getExpanderClasses = _private.getExpanderClasses;
+            current.isNodeProperty = _private.isNodeProperty;
 
             // 3. Нужны ли отступы под экспандер
             current.shouldDrawExpanderPadding = _private.shouldDrawExpanderPadding;
