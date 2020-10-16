@@ -123,7 +123,7 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isFalse(baseControl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
             //BaseControl._private.handleListScrollSync(baseControl, 200);
             baseControl.scrollMoveSyncHandler({scrollTop: 200});
-            assert.isFalse(baseControl._pagingVisible);
+            assert.isTrue(baseControl._pagingVisible);
             Env.detection.isMobilePlatform = true;
             baseControl.scrollMoveSyncHandler({scrollTop: 200});
             assert.isTrue(baseControl._pagingVisible);

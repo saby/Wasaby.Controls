@@ -1365,7 +1365,7 @@ const _private = {
     },
 
     handleListScrollSync(self, scrollTop) {
-        if (detection.isMobilePlatform && !self._pagingVisible) {
+        if (/*detection.isMobilePlatform && */!self._pagingVisible) {
             _private.initPaging(self);
         }
 
