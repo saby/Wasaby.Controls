@@ -100,6 +100,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
     }
 });
 
+Container.getDefaultOptions = () => ({
+    minSearchLength: 3
+});
+
 Container.getCalculatedFilter = getCalculatedFilter;
 Container.updateFilterHistory = updateFilterHistory;
 export = Container;
