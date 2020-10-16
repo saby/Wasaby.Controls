@@ -25,7 +25,7 @@ import dateControlsUtils from "./Utils";
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_interface/ICaptionFormatter
+ * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
  * @control
  * @public
  * @category Input

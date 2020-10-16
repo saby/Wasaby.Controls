@@ -38,7 +38,6 @@
  * @includes IItems Controls/_interface/IItems
  * @includes IHref Controls/_interface/IHref
  * @includes IBackgroundStyle Controls/_interface/IBackgroundStyle
- * @includes ICaptionFormatter Controls/_interface/ICaptionFormatter
  * @public
  * @author Крайнов Д.О.
  */

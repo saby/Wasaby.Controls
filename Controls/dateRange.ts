@@ -14,6 +14,7 @@ export {default as rangeSelection} from './_dateRange/Utils/RangeSelection';
 export {default as dateRangeQuantum} from './_dateRange/Utils/DateRangeQuantum';
 export {default as IRangeSelectable} from './_dateRange/interfaces/IRangeSelectable';
 import IDateRangeSelectable = require('Controls/_dateRange/interfaces/IDateRangeSelectable');
+import {default as ICaptionFormatter} from 'Controls/_dateRange/interfaces/ICaptionFormatter';
 
 export {IDateRangeSelectable};
 
@@ -31,6 +32,7 @@ export {IDateRangeSelectable};
  * @includes IPeriodLiteDialog Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @includes IDateRangeSelectable Controls/_dateRange/interfaces/IDateRangeSelectable
  * @includes IRangeSelectable Controls/_dateRange/interfaces/IRangeSelectable
+ * @includes ICaptionFormatter Controls/_dateRange/interfaces/ICaptionFormatter
  * @includes Utils Controls/_dateRange/Utils
  * @includes DateSelector Controls/_dateRange/DateSelector
  * @includes RangeSelectionController Controls/_dateRange/Controllers/RangeSelectionController

@@ -23,7 +23,7 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
  * @extends Core/Control
  * @mixes Controls/shortDatePicker/IDateLitePopup
  * @mixes Controls/_interface/IDisplayedRanges
- * @mixes Controls/_interface/ICaptionFormatter
+ * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
  * @control
  * @public
  * @author Красильников А.С.

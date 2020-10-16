@@ -1,7 +1,7 @@
 /**
- * Интерфейс для контролов, которые поддерживают возможность форматирования выводимого текста
+ * Интерфейс для контролов ввода или выбора дат, которые поддерживают возможность форматирования выводимого заголовка
  *
- * @interface Controls/_interface/ICaptionFormatter
+ * @interface Controls/_dateRange/interfaces/ICaptionFormatter
  * @public
  * @author Красильников А.С.
  */
@@ -11,7 +11,7 @@ export interface ICaptionFormatterOptions {
 }
 
 /**
- * @name Controls/_interface/ICaptionFormatter#captionFormatter
+ * @name Controls/_dateRange/interfaces/ICaptionFormatter#captionFormatter
  * @cfg {Function} Функция форматирования заголовка.
  * @remark
  * Аргументы функции:
@@ -36,5 +36,5 @@ export interface ICaptionFormatterOptions {
  */
 
 export default interface ICaptionFormatter {
-    readonly '[Controls/_interface/ICaptionFormatter]': boolean;
+    readonly '[Controls/_dateRange/interfaces/ICaptionFormatter]': boolean;
 }
