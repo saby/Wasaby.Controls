@@ -14,26 +14,34 @@ function createComponent(Component, cfg) {
 }
 
 describe('Controls/scroll:Container', () => {
-    global.window = {
-        devicePixelRatio: 1
-    };
-    global.document = {
-        createElement: function () {
-            return {
-                setAttribute: function () {
+    beforeEach(() => {
+        global.window = {
+            devicePixelRatio: 1
+        };
+        global.document = {
+            createElement: function () {
+                return {
+                    setAttribute: function () {
+                        return 0;
+                    }
+                };
+            },
+            body: {
+                removeChild: function () {
+                    return 0;
+                },
+                appendChild: function () {
                     return 0;
                 }
-            };
-        },
-        body: {
-            removeChild: function () {
-                return 0;
-            },
-            appendChild: function () {
-                return 0;
             }
-        }
-    };
+        };
+    });
+
+    afterEach(() => {
+        global.window = undefined;
+        global.document = undefined;
+    });
+
     describe('constructor', () => {
         it('should initialize by default', () => {
             const component = createComponent(Container, {});
@@ -255,6 +263,4 @@ describe('Controls/scroll:Container', () => {
             assert.isFalse(component._shadows._models.bottom.isVisible);
         });
     });
-    global.window = undefined;
-    global.document = undefined;
 });

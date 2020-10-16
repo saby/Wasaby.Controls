@@ -652,6 +652,9 @@ define([
          }].forEach(function(test) {
             it(test.title, function() {
                const sandbox = sinon.createSandbox();
+               global.window = {
+                  devicePixelRatio: 1
+               };
                const component = calendarTestUtils.createComponent(calendar.MonthList);
                sinon.replace(component, '_updateSource', () => {
                   return;
@@ -674,6 +677,7 @@ define([
                component._intersectHandler(null, test.entries);
                assert.deepEqual(component._displayedDates, test.resultDisplayedDates);
                sandbox.restore();
+               global.window = undefined;
             });
          });
       });

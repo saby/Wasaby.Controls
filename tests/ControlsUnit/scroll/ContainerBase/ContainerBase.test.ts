@@ -8,9 +8,15 @@ describe('Controls/scroll:ContainerBase', () => {
       scrollMode: SCROLL_MODE.VERTICAL
    };
 
-   global.window = {
-      devicePixelRatio: 1
-   };
+   beforeEach(() => {
+      global.window = {
+         devicePixelRatio: 1
+      };
+   });
+
+   afterEach(() => {
+      global.window = undefined;
+   });
 
    describe('_beforeMount', () => {
       it('should create models', () => {
@@ -405,5 +411,4 @@ describe('Controls/scroll:ContainerBase', () => {
          sandBox.restore();
       });
    });
-   global.window = undefined;
 });
