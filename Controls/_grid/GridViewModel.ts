@@ -152,7 +152,7 @@ var
             }
 
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
-            if (params.columnIndex === 0 && !params.hasMultiSelectColumn) {
+            if (params.columnIndex === 0 && !params.hasMultiSelectColumn && !params.isRootItemsSeparator) {
                 classLists.left += ` controls-Grid__cell_spacingFirstCol_${params.itemPadding.left}_theme-${theme}`;
             }
 
@@ -1601,17 +1601,16 @@ var
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
-			current.isRootItemsSeparator = dispItem['[Controls/_display/SearchSeparator]'];
+			current.isRootItemsSeparator = current.dispItem['[Controls/_display/SearchSeparator]'];
             // todo remove multiSelectVisibility, multiSelectPosition and multiSelectClassList by task:
             // https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
             current.multiSelectVisibility = this._options.multiSelectVisibility;
             current.multiSelectPosition = this._options.multiSelectPosition;
-            current.hasMultiSelectColumn = this._hasMultiSelectColumn();
+            current.hasMultiSelectColumn = !current.isRootItemsSeparator && this._hasMultiSelectColumn();
             current.getColspanForColumnScroll = () => _private.getColspanForColumnScroll(self);
             current.getColspanFor = (elementName: string) => self.getColspanFor.apply(self, [elementName]);
             current.stickyColumnsCount = this._options.stickyColumnsCount;
 
-            current.hasMultiSelect = !current.isRootItemsSeparator && current.hasMultiSelect;
             current.rowSeparatorSize = this._options.rowSeparatorSize;
             current.columnSeparatorSize = this._options.columnSeparatorSize;
             if (current.hasMultiSelect) {
