@@ -43,7 +43,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
         if (contents instanceof Array) {
             result = `#${contents.join(',')}`;
         } else if(contents instanceof Object) {
-            result = JSON.stringify(contents);
+            result = JSON.stringify(contents.getRawData());
         } else {
             result = contents;
         }
