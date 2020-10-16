@@ -3395,7 +3395,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         const sourceChanged = newOptions.source !== this._options.source;
         const recreateSource = navigationChanged || resetPaging || sortingChanged;
-        const searchStarted = !this._options.searchValue && newOptions.searchValue;
+        const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
         this._prevRootId = this._options.root;
@@ -3567,8 +3567,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         const needReload =
+            // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
             sourceChanged && !newOptions.sourceController ||
-            filterChanged && !searchStarted ||
+            // Если изменился поиск и фильтр, то данные меняет контроллер поиска через sourceController
+            filterChanged && (!searchValueChanged || !newOptions.searchValue || !newOptions.sourceController) ||
             sortingChanged ||
             recreateSource;
 
@@ -3636,7 +3638,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
-        if (this._options.searchValue !== newOptions.searchValue) {
+        if (searchValueChanged) {
             _private.getPortionedSearch(self).reset();
         }
 
