@@ -69,6 +69,23 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
             const currentCollection = collectionEditor._options.collection;
             assert.equal(currentCollection, collection);
         });
+
+        it('should not update equal options', () => {
+            let wasCollectionUpdated = false;
+            Object.defineProperty(collectionEditor._options, 'collection', {
+                get: function () {
+                    return collection;
+                },
+                set: function () {
+                    wasCollectionUpdated = true;
+                },
+                enumerable: false,
+                configurable: true
+            });
+
+            collectionEditor.updateOptions({collection});
+            assert.isFalse(wasCollectionUpdated);
+        });
     });
 
     describe('edit', () => {
