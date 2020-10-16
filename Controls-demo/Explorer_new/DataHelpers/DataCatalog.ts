@@ -440,11 +440,6 @@ export const Gadgets = {
             id: 5, parent: null, 'parent@': null, code: 'FT-13352', price: 112360,
             title: 'Canon EOS 5D Mark II Body SATA support',
             image: explorerImages[0]
-         },
-         {
-            id: 6, parent: null, 'parent@': null, code: 'FT2-13352', price: 112360,
-            title: 'Canon 2 EOS 5D Mark II Body SATA support',
-            image: explorerImages[0]
          }
       ];
    },

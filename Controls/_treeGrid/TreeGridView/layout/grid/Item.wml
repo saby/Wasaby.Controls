@@ -195,7 +195,7 @@
                        {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                        controls-TreeGrid__row js-controls-ItemActions__swipeMeasurementContainer"
            style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode) }}
-                  {{ (colspan === false && !!colspanLength) && (currentColumn.columnIndex === (itemData.hasMultiSelectColumn ? 1 : 0)) ? itemData.getPartialColspanStyles(itemData.hasMultiSelectColumn ? 1 : 0, colspanLength) }}">
+                  {{ (colspan === false && !!colspanLength) && (currentColumn.columnIndex === (itemData.hasMultiSelectColumn ? 1 : 0)) ? itemData.getPartialColspanStyles(itemData.hasMultiSelectColumn ? 1 : 0, colspanLength + (itemData.isRootItemsSeparator ? 1 : 0)) }}">
       <ws:partial template="COLUMN_CONTENT_WRAPPER"/>
    </div>
    </ws:if>
