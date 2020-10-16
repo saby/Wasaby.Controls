@@ -57,6 +57,9 @@ function getNearestNode<S, T extends TreeItem<S>>(item: T): T {
 /**
  * Returns breadcrumbs reference for given tree item
  * @param item Item to detect breadcrumbs reference to
+ * @param treeItemToBreadcrumbs Tree item to breadcrumbs map
+ * @param breadcrumbsToData Breadcrumbs to data map
+ * @param display Related display
  */
 function getBreadCrumbsReference<S, T extends TreeItem<S>>(
     item: T,
