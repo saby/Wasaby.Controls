@@ -20,6 +20,7 @@ import { TSelectionType } from 'Controls/interface';
 import Store from 'Controls/Store';
 import { SHADOW_VISIBILITY } from 'Controls/scroll';
 import {detection} from 'Env/Env';
+import {ICrud, ICrudPlus, IData, PrefetchProxy} from "Types/source";
 
 type Key = string|number|null;
 
@@ -46,6 +47,7 @@ export default class Browser extends Control {
     private _deepReload: boolean = undefined;
     private _inputSearchValue: string = '';
 
+    private _source: ICrudPlus | ICrud & ICrudPlus & IData;
     private _sourceController: SourceController = null;
     private _itemsReadyCallback: Function;
     private _loading: boolean = false;
@@ -79,6 +81,11 @@ export default class Browser extends Control {
         this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
         this._errorRegister = new RegisterClass({register: 'dataError'});
 
+        if (receivedState && options.source instanceof PrefetchProxy) {
+            this._source = options.source.getOriginal();
+        } else {
+            this._source = options.source;
+        }
         this._sourceController = new SourceController(options);
         const controllerState = this._sourceController.getState();
         this._dataOptionsContext = this._createContext(controllerState);
@@ -130,9 +137,14 @@ export default class Browser extends Control {
             this._updateFilterAndFilterItems();
         }
 
+        const sourceChanged = this._options.source !== newOptions.source;
+        if (sourceChanged) {
+            this._source = newOptions.source;
+        }
+
         const isChanged = this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
 
-        if (this._options.source !== newOptions.source) {
+        if (sourceChanged) {
             this._loading = true;
             methodResult = this._sourceController.reload()
                 .then((items) => {
@@ -444,7 +456,7 @@ export default class Browser extends Control {
     }
 
     _getSourceControllerOptions(options: ISourceControllerOptions): ISourceControllerOptions {
-        return {...options, filter: this._filter};
+        return {...options, filter: this._filter, source: this._source};
     }
 
     _getSearchController(): SearchController {
