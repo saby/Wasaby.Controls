@@ -181,8 +181,7 @@
     <div class="controls-BaseControl"
          on:sortingChanged="_sortingChanged()"
          on:mouseenter="_mouseEnter()"
-         on:mouseleave="_mouseLeave()"
-         on:touchstart="_initItemActions(_options)">
+         on:mouseleave="_mouseLeave()">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
 
         <ws:if data="{{_showContinueSearchButtonDirection === 'up'}}">

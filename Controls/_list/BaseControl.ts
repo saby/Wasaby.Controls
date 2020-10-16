@@ -2552,6 +2552,16 @@ const _private = {
     },
 
     /**
+     * Вызывает расчёт itemActions, только в том случае, если это происходит впервые
+     * @private
+     */
+    updateItemActionsOnce(self, options: any): void {
+        if (self._options.itemActionsVisibility !== 'visible' && !self._listViewModel.isActionsAssigned()) {
+            _private.updateItemActions(self, options);
+        }
+    },
+
+    /**
      * Обновляет ItemActions только в случае, если они были ранее проинициализированы
      * @param self
      * @param options
@@ -2594,7 +2604,7 @@ const _private = {
      */
     initVisibleItemActions(self, options: IList): void {
         if (options.itemActionsVisibility === 'visible') {
-            self._showActions = true;
+            _private.showActions(this);
             _private.updateItemActions(self, options);
         }
     },
@@ -2808,6 +2818,20 @@ const _private = {
         if (self._children.listView.activateEditingRow) {
             const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView);
             self._editInPlaceInputHelper.activateInput(rowActivator);
+        }
+    },
+
+    showActions(self) {
+        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
+        if (!detection.isMobilePlatform) {
+            self._showActions = true;
+        }
+    },
+
+    hideActions(self) {
+        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
+        if (!detection.isMobilePlatform) {
+            self._showActions = false;
         }
     }
 };
@@ -3710,7 +3734,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (
             ((newOptions.itemActions || newOptions.itemActionsProperty) && this._modelRecreated)) {
-            this._initItemActions(null, newOptions);
+            _private.updateItemActionsOnce(this, newOptions);
         }
 
         if (this._itemsChanged) {
@@ -4590,18 +4614,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // endregion
 
     /**
-     * Инициализирует опции при mouseenter в шаблоне контрола
-     * @private
-     */
-    _initItemActions(e: SyntheticEvent, options: any): void {
-        if (this._options.itemActionsVisibility !== 'visible') {
-            if (!this._listViewModel.isActionsAssigned()) {
-                _private.updateItemActions(this, options);
-            }
-        }
-    },
-
-    /**
      * Обработчик показа контекстного меню
      * @param e
      * @param itemData
@@ -4845,7 +4857,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData.item, nativeEvent]);
         if (!this._showActions && (!this._dndListController || !this._dndListController.isDragging())) {
-            this._showActions = true;
+            _private.showActions(this);
         }
 
         // TODO dnd при наследовании TreeControl <- BaseControl не нужно будет событие
@@ -4881,7 +4893,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _mouseEnter(event): void {
-        this._initItemActions(event, this._options);
+        // В chrome/safari mouseEnter происходит всегда, сразу после touch
+        if (!detection.isMobilePlatform) {
+            _private.updateItemActionsOnce(this, this._options);
+        }
         if (!this._pagingVisible) {
             _private.initPaging(this);
         }
@@ -5032,13 +5047,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const key = _private.getPlainItemContents(item).getKey();
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
-        const itemActionsController = _private.getItemActionsController(this);
+        let itemActionsController: ItemActionsController;
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             this.setMarkedKey(key);
+            _private.updateItemActionsOnce(this, this._options);
+            itemActionsController = _private.getItemActionsController(this);
             itemActionsController?.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
+            itemActionsController = _private.getItemActionsController(this);
             const swipedItem = itemActionsController?.getSwipeItem();
             if (swipedItem) {
                 itemActionsController.startSwipeCloseAnimation();
@@ -5393,7 +5411,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
             // Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
-            this._showActions = false;
+            _private.hideActions(this);
         }
 
         this._insideDragging = false;
@@ -5487,7 +5505,6 @@ BaseControl.contextTypes = function contextTypes() {
         isTouch: TouchContextField
     };
 };
-
 BaseControl._theme = ['Controls/Classes', 'Controls/list'];
 
 BaseControl.getDefaultOptions = function() {
