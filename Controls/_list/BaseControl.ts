@@ -2594,6 +2594,7 @@ const _private = {
      */
     initVisibleItemActions(self, options: IList): void {
         if (options.itemActionsVisibility === 'visible') {
+            _private.showActions(this);
             _private.updateItemActions(self, options);
         }
     },
@@ -2805,6 +2806,20 @@ const _private = {
             const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView);
             self._editInPlaceInputHelper.activateInput(rowActivator);
         }
+    },
+
+    showActions(self) {
+        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
+        if (!detection.isMobilePlatform) {
+            self._showActions = true;
+        }
+    },
+
+    hideActions(self) {
+        // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
+        if (!detection.isMobilePlatform) {
+            self._showActions = false;
+        }
     }
 };
 
@@ -2980,8 +2995,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.initializeNavigation(this, newOptions);
 
         this._loadTriggerVisibility = {};
-
-        this._showActions = true;
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController;
@@ -4823,7 +4836,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData.item, nativeEvent]);
         if (!this._showActions && (!this._dndListController || !this._dndListController.isDragging())) {
-            this._showActions = true;
+            _private.showActions(this);
         }
 
         if (this._dndListController instanceof DndTreeController && this._dndListController.isDragging()) {
@@ -5372,7 +5385,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
             // Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
-            this._showActions = false;
+            _private.hideActions(this);
         }
 
         this._insideDragging = false;
