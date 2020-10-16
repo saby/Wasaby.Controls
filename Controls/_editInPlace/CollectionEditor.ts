@@ -35,9 +35,8 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
 
     constructor(options: ICollectionEditorOptions) {
         super();
-        if (this._validateOptions(options)) {
-            this._options = options;
-        }
+        this._options = {} as ICollectionEditorOptions;
+        this.updateOptions(options);
     }
 
     /**
@@ -60,9 +59,12 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         return this._editingItem;
     }
 
-    private _validateOptions(options: Partial<ICollectionEditorOptions>): true | never {
+    private _validateOptions(options: Partial<ICollectionEditorOptions>): boolean | never {
         if (!options.collection) {
             throw Error(ERROR_MSG.COLLECTION_IS_REQUIRED);
+        }
+        if (this._options.collection === options.collection) {
+            return false;
         }
         if (!options.collection.getCollection()['[Types/_collection/RecordSet]']) {
             throw Error(ERROR_MSG.SOURCE_COLLECTION_MUST_BE_RECORDSET);
