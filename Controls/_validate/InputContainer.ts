@@ -18,7 +18,8 @@ class Input extends Container {
     _template: TemplateFunction = template;
     _shouldValidate: boolean;
     protected _deactivatedHandler(): void {
-        this._validationStatus = this._getValidStatus(false);
+        this._contentActive = false;
+        this._validationStatus = this._getValidStatus(this._contentActive);
         if (!this._options.readOnly) {
             this._shouldValidate = true;
             this._forceUpdate();
