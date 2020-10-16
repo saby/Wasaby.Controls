@@ -3615,18 +3615,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._markerController = null;
         }
 
-        const selectionChanged = (!isEqual(self._options.selectedKeys, newOptions.selectedKeys)
-            || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
-            || self._options.selectedKeysCount !== newOptions.selectedKeysCount);
-        if (this._items && this._items.getCount() && (newOptions.multiSelectVisibility !== 'hidden' && newOptions.selectedKeys || selectionChanged)) {
-            const newSelection = {
-                selected: newOptions.selectedKeys,
-                excluded: newOptions.excludedKeys
-            };
-            const controller = _private.getSelectionController(this, newOptions);
-            controller.setSelection(newSelection);
-            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
-        } else if (_private.hasSelectionController(this)) {
+        if (this._items && this._items.getCount()) {
+            const selectionChanged = (!isEqual(self._options.selectedKeys, newOptions.selectedKeys)
+                || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
+                || self._options.selectedKeysCount !== newOptions.selectedKeysCount);
+
+            // В browser когда скрывают видимость чекбоксов, еще и сбрасывают selection
+            if (selectionChanged && (newOptions.multiSelectVisibility !== 'hidden' || _private.hasSelectionController(this))) {
+                const newSelection = {
+                    selected: newOptions.selectedKeys,
+                    excluded: newOptions.excludedKeys
+                };
+                const controller = _private.getSelectionController(this, newOptions);
+                controller.setSelection(newSelection);
+                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
+            }
+        }
+        if (newOptions.multiSelectVisibility === 'hidden') {
             _private.getSelectionController(this).destroy();
             this._selectionController = null;
         }
