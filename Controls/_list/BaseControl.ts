@@ -3071,6 +3071,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     _private.updatePagingData(self, hasMoreData);
                 }
 
+                if (newOptions.afterReloadCallback) {
+                    newOptions.afterReloadCallback(newOptions, self._items);
+                }
+
                 if (newOptions.serviceDataLoadCallback instanceof Function) {
                     newOptions.serviceDataLoadCallback(null, self._items);
                 }
