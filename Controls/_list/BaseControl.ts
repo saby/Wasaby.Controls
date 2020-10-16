@@ -3606,22 +3606,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._markerController = null;
         }
 
-        const selectedKeysChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys);
-        // В browser когда скрывают видимость чекбоксов, еще и сбрасывают selection
-        if (this._items && this._items.getCount() &&
-            (newOptions.multiSelectVisibility !== 'hidden' || selectedKeysChanged && newOptions.selectedKeys.length === 0)) {
-            const selectionChanged = selectedKeysChanged
-                || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
-                || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
-            if (selectionChanged) {
-                const newSelection = {
-                    selected: newOptions.selectedKeys,
-                    excluded: newOptions.excludedKeys
-                };
-                const controller = _private.getSelectionController(this, newOptions);
-                controller.setSelection(newSelection);
-                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
-            }
+        const selectionChanged = (!isEqual(self._options.selectedKeys, newOptions.selectedKeys)
+            || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
+            || self._options.selectedKeysCount !== newOptions.selectedKeysCount);
+        if (this._items && this._items.getCount() && (newOptions.multiSelectVisibility !== 'hidden' && newOptions.selectedKeys || selectionChanged)) {
+            const newSelection = {
+                selected: newOptions.selectedKeys,
+                excluded: newOptions.excludedKeys
+            };
+            const controller = _private.getSelectionController(this, newOptions);
+            controller.setSelection(newSelection);
+            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
         } else if (_private.hasSelectionController(this)) {
             _private.getSelectionController(this).destroy();
             this._selectionController = null;
