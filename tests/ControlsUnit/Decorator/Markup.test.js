@@ -1214,6 +1214,18 @@ define([
             ]];
             assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });
+         it('link href start from sbisplugin://', function() {
+            var parentNode = ['p', ['a',
+            {
+               'class': 'asLink',
+               rel: 'noreferrer noopener',
+               href: 'sbisplugin://Screenshot-0.0.0.0?1111|1111',
+               target: '_blank'
+            },
+            'sbisplugin://Screenshot-0.0.0.0?1111|1111'
+         ]];
+         assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
          it('link href starts from "file://" and has "http" inside', function() {
             var parentNode = ['p', ['a',
                {

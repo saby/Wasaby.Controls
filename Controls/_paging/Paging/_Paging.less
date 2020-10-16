@@ -138,8 +138,19 @@
    left: -@arrow_separator_thickness_paging;
 }
 
-.controls-Paging__btn-Template {
-   padding: 0 @content_right-padding-horizontal_paging - @item_offset_paging 0 @item_left-padding-horizontal_paging;
+.controls-Paging__content-Template {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   padding: 0 @content_right-padding-horizontal_paging 0 @item_left-padding-horizontal_paging;
+
+   // При передаче в контентную опцию вёрстки, которая строится под условием в контроле невозможно проверить,
+   // что эта контентная опция оказалась пустая. Поэтому проверяем через css.
+   // Если в шаблоне пусто, то отступ справа не нужен.
+   // https://online.sbis.ru/opendoc.html?guid=8b2c991d-05d9-4513-be30-350a1b16fed9
+   &:empty {
+      padding-right: 0;
+   }
 }
 
 .controls-Paging__btn-elements-count {

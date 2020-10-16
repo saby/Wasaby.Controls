@@ -2994,6 +2994,33 @@ define([
          });
       });
 
+      it('should activate input after mounting', async function() {
+         var lnSource = new sourceLib.Memory({
+                keyProperty: 'id',
+                data: data
+             }),
+             lnCfg = {
+                viewName: 'Controls/List/ListView',
+                source: lnSource,
+                keyProperty: 'id',
+                viewModelConstructor: lists.ListViewModel
+             },
+             lnBaseControl = new lists.BaseControl(lnCfg);
+         lnBaseControl.saveOptions(lnCfg);
+         await lnBaseControl._beforeMount(lnCfg);
+         lnBaseControl._editInPlaceController = {
+            isEditing: () => true
+         };
+         const origin = lists.BaseControl._private.activateEditingRow;
+         let rowActivated = false;
+         lists.BaseControl._private.activateEditingRow = () => {
+            rowActivated = true;
+         };
+         lnBaseControl._afterMount(lnCfg);
+         assert.isTrue(rowActivated);
+         lists.BaseControl._private.activateEditingRow = origin;
+      });
+
       describe('calling _onItemClick method', function() {
          let cfg;
          let originalEvent;
@@ -3541,7 +3568,7 @@ define([
             assert.isTrue(isCanceled);
          });
 
-         it('register form operation in afterMount is mount with editing', async() => {
+         it('register form operation in afterMount if mount with editing', async() => {
             const cfg = {
                viewName: 'Controls/List/ListView',
                source: source,
@@ -3569,6 +3596,7 @@ define([
 
             baseControl.saveOptions(cfg);
             await baseControl._beforeMount(cfg);
+            baseControl._children.listView = {};
             assert.isFalse(isRegistered);
 
             baseControl._afterMount(cfg);
@@ -7701,7 +7729,7 @@ define([
                baseControl.saveOptions(newCfg);
                return baseControl._beforeMount(newCfg).then(() => {
                   const notifySpy = sinon.spy(baseControl, '_notify');
-                  baseControl._beforeUpdate({... newCfg, selectionViewMode: '', filter: {}});
+                  baseControl._beforeUpdate({ ...newCfg, selectionViewMode: '', filter: {} });
                   assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [null]]).called);
                });
             });
@@ -7710,9 +7738,9 @@ define([
                const newCfg = { ...cfg, selectedKeys: [1] };
                baseControl.saveOptions(newCfg);
                return baseControl._beforeMount(newCfg).then(() => {
-                  const notifySpy = sinon.spy(baseControl, '_notify');
-                  baseControl._beforeUpdate({... newCfg, selectedKeys: [], multiSelectVisibility: 'hidden'});
-                  assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [1]]).called);
+                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
+                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [], multiSelectVisibility: 'hidden' });
+                  assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
                });
             });
 
@@ -7722,6 +7750,20 @@ define([
                return baseControl._beforeMount(newCfg).then(() => {
                   assert.isOk(baseControl._selectionController);
                   baseControl._beforeUpdate({ ...newCfg, multiSelectVisibility: 'hidden' });
+                  assert.isNotOk(baseControl._selectionController);
+               });
+            });
+
+            it('empty items', () => {
+               const source = new sourceLib.Memory({
+                  keyProperty: 'id',
+                  data: []
+               });
+               const newCfg = { ...cfg, source, selectedKeys: [] };
+               baseControl.saveOptions(newCfg);
+               return baseControl._beforeMount(newCfg).then(() => {
+                  assert.isNotOk(baseControl._selectionController);
+                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1] });
                   assert.isNotOk(baseControl._selectionController);
                });
             });
