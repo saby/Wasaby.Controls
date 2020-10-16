@@ -75,7 +75,7 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
         let className;
         const container = this._children.linkView.getPopupTarget();
         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
-            className = 'controls-DateRangeSelectorLite__picker-years-only';
+            className = `controls-DateRangeSelectorLite__picker-years_fontSize-${this._getFontSizeClass()}_theme-${this._options.theme}`;
         } else {
             className = 'controls-DateRangeSelectorLite__picker-normal';
         }
