@@ -3557,7 +3557,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
             sourceChanged && !newOptions.sourceController ||
             // Если изменился поиск и фильтр, то данные меняет контроллер поиска через sourceController
-            filterChanged && (!searchValueChanged || !newOptions.sourceController) ||
+            filterChanged && (!searchValueChanged || !newOptions.searchValue || !newOptions.sourceController) ||
             sortingChanged ||
             recreateSource;
 
