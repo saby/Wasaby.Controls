@@ -121,19 +121,6 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
         };
     }
 
-    _getFontSizeClass(): string {
-        // c fontSize 18px (20px, 24px и тд) линк смещается на 1px вниз, с 14px (13px, 12px и тд) на 1px вверх
-        // относительно стандратного положения
-        switch (this._options.fontSize) {
-            case '4xl': return 'l';
-            case '3xl': return 'l';
-            case 'm': return 's';
-            case 's': return 's';
-            case 'xs': return 's';
-            default: return 'm';
-        }
-    }
-
     _mouseEnterHandler(): void {
         const loadCss = (datePopup) => datePopup.default.loadCSS();
         this._startDependenciesTimer('Controls/datePopup', loadCss);
