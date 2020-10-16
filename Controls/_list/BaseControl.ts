@@ -3775,6 +3775,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._checkTriggerVisibilityTimeout) {
             clearTimeout(this._checkTriggerVisibilityTimeout);
         }
+
+        // requestAnimationFrame, чтобы гарантированно изменения отобразились на странице.
+        // setTimeout, чтобы IntersectionObserver успел отработать асинхронно (для IE с задержкой).
+        // doAfterUpdate, чтобы не попасть в цикл синхронизации списка.
+        // Другой порядок не даст нам таких гарантий,
+        // и либо IO не отработает, либо попадаем в цикл синхронизации.
         window.requestAnimationFrame(() => {
             this._checkTriggerVisibilityTimeout = setTimeout(() => {
                 _private.doAfterUpdate(this, () => {
