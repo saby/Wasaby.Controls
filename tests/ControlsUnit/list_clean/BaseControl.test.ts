@@ -531,47 +531,4 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isTrue(modelDestroyed, 'model is not destroyed');
         });
     });
-    describe('editing', () => {
-        let baseControl;
-        const baseControlCfg = {
-            viewName: 'Controls/List/ListView',
-            keyProperty: 'id',
-            viewModelConstructor: ListViewModel,
-            items: new RecordSet({
-                keyProperty: 'id',
-                rawData: []
-            })
-        };
-        const opt = {
-            item: new Model()
-        };
-        beforeEach(() => {
-            baseControl = new BaseControl(baseControlCfg);
-        });
-        afterEach(() => {
-            baseControl.destroy();
-            baseControl = undefined;
-        });
-        it('isEditingRowScrollToElement', async () => {
-            baseControl.saveOptions(baseControlCfg);
-            await baseControl._beforeMount(baseControlCfg);
-            baseControl._editInPlaceController = {
-                edit: () => Promise.resolve(),
-                add: () => Promise.resolve(),
-                commit: () => Promise.resolve(),
-                cancel: () => Promise.resolve()
-            };
-            baseControl._items = {getRecordById: () => false};
-
-            baseControl._startInitialEditing(opt);
-            assert.isFalse(baseControl._isEditingRowScrollToElement);
-
-            baseControl.beginAdd(opt);
-            assert.isTrue(baseControl._isEditingRowScrollToElement);
-
-            baseControl.beginEdit(opt);
-            assert.isTrue(baseControl._isEditingRowScrollToElement);
-
-        });
-    });
 });
