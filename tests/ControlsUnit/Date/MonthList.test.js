@@ -493,6 +493,7 @@ define([
                component._intersectHandler(null, test.entries);
                sinon.assert.calledWith(component._notify, 'positionChanged', [test.date]);
                sandbox.restore();
+               global.window = undefined;
             });
          });
 

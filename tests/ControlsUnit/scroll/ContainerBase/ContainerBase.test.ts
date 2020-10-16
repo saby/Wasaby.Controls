@@ -405,5 +405,5 @@ describe('Controls/scroll:ContainerBase', () => {
          sandBox.restore();
       });
    });
-
+   global.window = undefined;
 });
