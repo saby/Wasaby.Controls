@@ -355,7 +355,7 @@ class Field<Value, ModelOptions>
         const processedKeys: string[] = [
             'End', 'Home', 'Space', 'ArrowLeft', 'ArrowRight',
             // Поддержка значения key в IE
-            'Spacebar'
+            'Spacebar', 'Left', 'Right'
         ];
 
         /**
@@ -373,7 +373,7 @@ class Field<Value, ModelOptions>
         const processedKeys: string[] = [
             'End', 'Home', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
             // Поддержка значений key в IE
-            'Up', 'Down'
+            'Left', 'Right', 'Up', 'Down'
         ];
 
         if (processedKeys.includes(event.nativeEvent.key)) {
