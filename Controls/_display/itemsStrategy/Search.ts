@@ -255,21 +255,21 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             let resultItem = item;
 
             if (item instanceof TreeItem) {
-                // Check if there is a special item within the breadcrumbs
-                if (
-                    dedicatedItemProperty &&
-                    object.getPropertyValue(item.getContents(), dedicatedItemProperty)
-                ) {
-                    // Add completed breadcrumbs for dedicated items
-                    const dedicatedBreadcrumbsReference = getBreadCrumbsReference(item);
-                    prevBreadCrumbs = dedicatedBreadcrumbsReference.breadCrumbs;
-                    addBreadCrumbsItself(dedicatedBreadcrumbsReference);
-
-                    // Finish here for dedicated items
-                    return;
-                }
-
                 if (item.isNode()) {
+                    // Check if there is a special item within the breadcrumbs
+                    if (
+                        dedicatedItemProperty &&
+                        object.getPropertyValue(item.getContents(), dedicatedItemProperty)
+                    ) {
+                        // Add completed breadcrumbs for dedicated items
+                        const dedicatedBreadcrumbsReference = getBreadCrumbsReference(item);
+                        prevBreadCrumbs = dedicatedBreadcrumbsReference.breadCrumbs;
+                        addBreadCrumbsItself(dedicatedBreadcrumbsReference);
+
+                        // Finish here for dedicated items
+                        return;
+                    }
+
                     // Look at the next item after current node
                     const next = items[index + 1];
                     const nextIsTreeItem = next instanceof TreeItem;
