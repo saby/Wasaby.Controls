@@ -4,19 +4,26 @@ import TreeItem from '../TreeItem';
 import TreeItemDecorator from '../TreeItemDecorator';
 import BreadcrumbsItem from '../BreadcrumbsItem';
 import {DestroyableMixin, SerializableMixin, ISerializableState} from 'Types/entity';
-import {mixin} from 'Types/util';
+import {mixin, object} from 'Types/util';
 import {Map} from 'Types/shim';
 
 const FORGET_TIMEOUT = 1000;
 let lastTimeForget = 0;
 
 interface IOptions<S, T> {
+    /**
+     * Имя свойства элемента хлебных крошек, хранящее признак того, что этот элемент и путь до него должны быть
+     * выделены в обособленную цепочку
+     */
+    dedicatedItemProperty?: string;
+
     source: IItemsStrategy<S, T>;
 }
 
 interface ISortOptions<S, T extends TreeItem<S>> {
     treeItemToDecorator: Map<T, TreeItemDecorator<S>>;
     treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S>>;
+    dedicatedItemProperty: string;
     display: Tree<S, T>;
 }
 
@@ -139,6 +146,7 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
      */
     protected _getItems(): Array<T | BreadcrumbsItem<S>> {
         return Search.sortItems<S, T>(this.source.items, {
+            dedicatedItemProperty: this._options.dedicatedItemProperty || '',
             treeItemToDecorator: this._treeItemToDecorator,
             treeItemToBreadcrumbs: this._treeItemToBreadcrumbs,
             display: this.options.display as Tree<S, T>
@@ -158,7 +166,12 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
         items: T[],
         options: ISortOptions<S, T>
     ): Array<T | BreadcrumbsItem<S>> {
-        const {display, treeItemToDecorator, treeItemToBreadcrumbs}: ISortOptions<S, T> = options;
+        const {
+            dedicatedItemProperty,
+            display,
+            treeItemToDecorator,
+            treeItemToBreadcrumbs
+        }: ISortOptions<S, T> = options;
         const breadcrumbsToData = new Map<BreadcrumbsItem<S>, T[]>();
         const root = display && display.getRoot();
         const sortedItems = [];
@@ -169,6 +182,10 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             itsNew: boolean;
         }
 
+        /**
+         * Returns nearest parent node for given tree item. It could be item itself.
+         * @param item Started node or leaf to go from
+         */
         function getNearestNode(item: T): T {
             if (!item || !item.isNode) {
                 return item;
@@ -186,6 +203,10 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             return getNearestNode(parent);
         }
 
+        /**
+         * Returns breadcrumbs reference for given tree item
+         * @param item Item to detect breadcrumbs reference to
+         */
         function getBreadCrumbsReference(item: T): IBreadCrumbsReference {
             let breadCrumbs;
             const last = getNearestNode(item);
@@ -206,11 +227,20 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             return {breadCrumbs, last, itsNew};
         }
 
+        /**
+         * Adds found breadcrumbs to the result list
+         * @param reference Breadcrumbs reference
+         */
         function addBreadCrumbsItself(reference: IBreadCrumbsReference): void {
             breadcrumbsToData.set(reference.breadCrumbs, []);
             sortedItems.push(reference.breadCrumbs);
         }
 
+        /**
+         * Adds a member to the found breadcrumbs
+         * @param reference Breadcrumbs reference
+         * @param item The member to add
+         */
         function addBreadCrumbsMember(reference: IBreadCrumbsReference, item: T): void {
             const data = breadcrumbsToData.get(reference.breadCrumbs);
             if (data) {
@@ -225,6 +255,20 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             let resultItem = item;
 
             if (item instanceof TreeItem) {
+                // Check if there is a special item within the breadcrumbs
+                if (
+                    dedicatedItemProperty &&
+                    object.getPropertyValue(item.getContents(), dedicatedItemProperty)
+                ) {
+                    // Add completed breadcrumbs for dedicated items
+                    const dedicatedBreadcrumbsReference = getBreadCrumbsReference(item);
+                    prevBreadCrumbs = dedicatedBreadcrumbsReference.breadCrumbs;
+                    addBreadCrumbsItself(dedicatedBreadcrumbsReference);
+
+                    // Finish here for dedicated items
+                    return;
+                }
+
                 if (item.isNode()) {
                     // Look at the next item after current node
                     const next = items[index + 1];
@@ -238,9 +282,9 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
 
                     // Add completed breadcrumbs to show even empty
                     if (isLastBreadcrumb) {
-                        const breadcrumbsReference = getBreadCrumbsReference(item);
-                        prevBreadCrumbs = breadcrumbsReference.breadCrumbs;
-                        addBreadCrumbsItself(breadcrumbsReference);
+                        const nodeBreadcrumbsReference = getBreadCrumbsReference(item);
+                        prevBreadCrumbs = nodeBreadcrumbsReference.breadCrumbs;
+                        addBreadCrumbsItself(nodeBreadcrumbsReference);
                     }
 
                     // Finish here for any node
