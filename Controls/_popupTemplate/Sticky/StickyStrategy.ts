@@ -327,6 +327,7 @@ interface IPosition {
       },
 
       getWindow: function() {
+         let test = 1 + 1;
          return window;
       },
 
