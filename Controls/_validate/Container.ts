@@ -35,6 +35,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     _template: TemplateFunction = template;
     _isOpened: boolean = false;
     _contentActive: boolean = false;
+    _validationStatus: string = 'valid';
     _currentValue: any;
     _validationResult: ValidResult = null;
     _isNewEnvironment: boolean;
@@ -99,6 +100,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     setValidationResult(validationResult: ValidResult, config: IValidateConfig = {}): void {
         if (this._validationResult !== validationResult) {
             this._validationResult = validationResult;
+            this._validationStatus = this._getValidStatus(this._contentActive);
             if (!(validationResult instanceof Promise)) {
                 this._forceUpdate();
             }
@@ -137,6 +139,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
 
     protected _focusInHandler(): void {
         this._contentActive = true;
+        this._validationStatus = this._getValidStatus(this._contentActive);
         this._clearCloseId();
         if (!this._isOpened) {
             this._openInfoBox();
@@ -145,6 +148,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
 
     protected _focusOutHandler(): void {
         this._contentActive = false;
+        this._validationStatus = this._getValidStatus(this._contentActive);
     }
 
     protected _mouseLeaveHandler(): void {
