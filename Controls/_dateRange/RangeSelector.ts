@@ -30,7 +30,7 @@ import {descriptor} from "Types/entity";
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IOpenPopup
- * @mixes Controls/_interface/ICaptionFormatter
+ * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
  * @control
  * @public
  * @category Input
@@ -87,7 +87,7 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
     protected _getPopupOptions(): IStickyPopupOptions {
         const container = this._children.linkView.getPopupTarget();
         const ranges = this._options.ranges;
-        let className = 'controls-DatePopup__selector-marginTop_theme-' + this._options.theme;
+        let className = `controls-DatePopup__selector-marginTop_fontSize-${this._getFontSizeClass()}_theme-${this._options.theme}`;
         if (this._options.popupClassName) {
             className += `${this._options.popupClassName} `;
         }

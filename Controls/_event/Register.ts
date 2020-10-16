@@ -9,6 +9,16 @@ import entity = require('Types/entity');
 import {IRegistrarConfig} from './Registrar';
 import RegisterClass from './RegisterClass';
 
+/**
+ * Контрол, регистрирующий все вложенные {@link Controls/event:Listener} и генерирующий событие, заданное в опции {@link register}.
+ * @class Controls/_event/Register
+ * @extends UI/Base:Control
+ * @control
+ * @public
+ * @remark
+ * Подробнее о работе с контролом читайте <a href="/doc/platform/developmentapl/interface-development/controls/tools/autoresize/">здесь</a>.
+ * @author Красильников А.С.
+ */
 const EventRegistrator = Control.extend({
    _template: template,
    _register: null,
@@ -44,5 +54,15 @@ EventRegistrator.getOptionTypes = function() {
    };
 };
 
+/**
+ * @name Controls/_event/Register#register
+ * @cfg {String} Имя события, которое генерируется на зарегистрированных {@link Controls/event:Listener} при вызове метода {@link start}.
+ */
+
+/**
+ * Оповещает зарегистрированные {@link Controls/event:Listener}.
+ * @name Controls/_event/Register#start
+ * @function 
+ */
 export = EventRegistrator;
 

@@ -102,7 +102,7 @@ describe('Controls/search:NewControllerClass', () => {
 
       controllerClass.reset();
 
-      assert.isTrue(getFilterSpy.withArgs({}).called);
+      assert.isTrue(getFilterSpy.withArgs({testParam: ''}).called);
    });
 
    it('search and update', () => {

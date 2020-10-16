@@ -351,7 +351,7 @@ class Field<Value, ModelOptions>
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
-        const code: string = event.nativeEvent.code;
+        const code: string = event.nativeEvent.key;
         const processedKeys: string[] = ['End', 'Home', 'Space', 'ArrowLeft', 'ArrowRight'];
 
         /**
@@ -359,7 +359,7 @@ class Field<Value, ModelOptions>
          * Для этого останавливаем всплытие события.
          */
         if (processedKeys.includes(code)) {
-            event.nativeEvent.stopPropagation();
+            event.stopPropagation();
         }
 
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
@@ -368,7 +368,7 @@ class Field<Value, ModelOptions>
     protected _keyUpHandler(event: SyntheticEvent<KeyboardEvent>): void {
         const processedKeys: string[] = ['End', 'Home', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
 
-        if (processedKeys.includes(event.nativeEvent.code)) {
+        if (processedKeys.includes(event.nativeEvent.key)) {
             this._selectionFromFieldToModel();
         }
     }

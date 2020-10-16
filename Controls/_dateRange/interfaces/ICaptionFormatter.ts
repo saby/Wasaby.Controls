@@ -1,7 +1,7 @@
 /**
- * Интерфейс для контролов, которые поддерживают метод captionFormatter
+ * Интерфейс для контролов ввода или выбора дат, которые поддерживают возможность форматирования выводимого заголовка
  *
- * @interface Controls/_interface/ICaptionFormatter
+ * @interface Controls/_dateRange/interfaces/ICaptionFormatter
  * @public
  * @author Красильников А.С.
  */
@@ -10,9 +10,10 @@ export interface ICaptionFormatterOptions {
     captionFormatter?: Function;
 }
 
-/*
- * @name Controls/_interface/ICaptionFormatter#captionFormatter
+/**
+ * @name Controls/_dateRange/interfaces/ICaptionFormatter#captionFormatter
  * @cfg {Function} Функция форматирования заголовка.
+ * @remark
  * Аргументы функции:
  * <ol>
  *    <li>startValue — Начальное значение периода.</li>
@@ -32,8 +33,8 @@ export interface ICaptionFormatterOptions {
  * }
  * </pre>
  * @demo Controls-demo/dateRange/LiteSelector/CaptionFormatter/Index
-*/
+ */
 
 export default interface ICaptionFormatter {
-    readonly '[Controls/_interface/ICaptionFormatter]': boolean;
+    readonly '[Controls/_dateRange/interfaces/ICaptionFormatter]': boolean;
 }
