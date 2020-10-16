@@ -18,16 +18,15 @@ export default class Controller implements ISearchController {
       sourceController.setFilter(filter);
       return sourceController.load().then((v) => {
          if (v instanceof RecordSet) {
-            return v;
+            return v as RecordSet;
          }
       });
    }
 
-   reset(): Promise<void> {
+   reset(): Promise<RecordSet> {
       const filter = {...this._options.sourceController.getFilter()};
-      delete filter[this._options.searchParam];
-      this._searchValue = '';
-      return this._updateFilter(filter).then();
+      filter[this._options.searchParam] = this._searchValue = '';
+      return this._updateFilter(filter);
    }
 
    search(value: string): Promise<RecordSet> {

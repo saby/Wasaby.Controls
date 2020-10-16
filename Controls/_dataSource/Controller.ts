@@ -238,9 +238,9 @@ export default class Controller {
         return !!this._loadPromise;
     }
 
-    shiftToEdge(direction: Direction, id: TKey, shiftMode: TNavigationPagingMode): void {
+    shiftToEdge(direction: Direction, id: TKey, shiftMode: TNavigationPagingMode): IBaseSourceConfig {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation)
+            return this._getNavigationController(this._options.navigation)
                 .shiftToEdge(NAVIGATION_DIRECTION_COMPATIBILITY[direction], id, shiftMode);
         }
     }
@@ -328,6 +328,7 @@ export default class Controller {
         navigationSourceConfig?: INavigationSourceConfig
     ): Promise<LoadResult> {
         if (this._options.source) {
+            this.cancelLoading();
             this._loadPromise = new CancelablePromise(
                 this._prepareFilterForQuery(key).then((preparedFilter: QueryWhereExpression<unknown>) => {
                     // В source может лежать prefetchProxy
