@@ -35,9 +35,12 @@ export interface IDataContextOptions extends ISourceOptions,
  * Контрол-контейнер, предоставляющий контекстное поле "dataOptions" с необходимыми данными для дочерних контейнеров.
  *
  * @remark
+ * Поле контекста "dataOptions" ожидает Controls/list:Container, который лежит внутри.
+ * 
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">демо-пример</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
+ * * <a href="/docs/js/Controls/list/Container/">Controls/list:Container</a>
  *
  * @class Controls/_list/Data
  * @mixes Controls/_interface/IFilterChanged
