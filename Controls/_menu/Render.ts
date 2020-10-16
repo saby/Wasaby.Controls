@@ -98,9 +98,11 @@ class MenuRender extends Control<IMenuRenderOptions> {
         const item = treeItem.getContents();
         let classes = treeItem.getContentClasses(this._options.theme);
         if (item.get) {
-            classes += ' controls-Menu__row_state_' +
-                (item.get('readOnly') ? 'readOnly' : 'default') +
-                '_theme-' + this._options.theme;
+            if (item.getKey() !== undefined) {
+                classes += ' controls-Menu__row_state_' +
+                    (item.get('readOnly') ? 'readOnly' : 'default') +
+                    '_theme-' + this._options.theme;
+            }
             if (this._isEmptyItem(treeItem) && !this._options.multiSelect) {
                 classes += ' controls-Menu__emptyItem_theme-' + this._options.theme;
             } else {
