@@ -38,7 +38,6 @@
  * @includes IItems Controls/_interface/IItems
  * @includes IHref Controls/_interface/IHref
  * @includes IBackgroundStyle Controls/_interface/IBackgroundStyle
- * @includes ICaptionFormatter Controls/_interface/ICaptionFormatter
  * @public
  * @author Крайнов Д.О.
  */
@@ -89,7 +88,6 @@ export {default as ISelectorDialog, ISelectorDialogOptions} from './_interface/I
 export {default as IItems, IItemsOptions, TKey} from './_interface/IItems';
 export {default as IHref, IHrefOptions} from './_interface/IHref';
 export {default as IBackgroundStyle, IBackgroundStyleOptions} from './_interface/IBackgroundStyle';
-export {default as ICaptionFormatter} from './_interface/ICaptionFormatter';
 export {Direction, IQueryParamsMeta, IQueryParams} from './_interface/IQueryParams';
 export {default as IGrouping, IGroupingOptions} from './_interface/IGrouping';
 export {default as IPromiseSelectable, IPromiseSelectableOptions} from './_interface/IPromiseSelectable';
