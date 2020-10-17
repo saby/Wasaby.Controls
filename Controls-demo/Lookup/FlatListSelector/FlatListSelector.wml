@@ -2,7 +2,7 @@
     <ws:headerContentTemplate>
         <div>
             <ws:if data="{{_options.multiSelect && _selectionChanged}}">
-                <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{[Выбрать]}" on:click="_closeSelectorBind()"/>
+                <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{[Выбрать]}" on:click="_closeSelectorBind()" attr:class="ControlsDemo-Lookup__selectButton"/>
             </ws:if>
         </div>
     </ws:headerContentTemplate>

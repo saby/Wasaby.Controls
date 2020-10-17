@@ -191,6 +191,7 @@ define(
             const sourceControllerState = data._sourceController.getState();
             assert.isTrue(sourceControllerState.source === memory);
             assert.equal(sourceControllerState.items, items);
+            assert.isTrue(data._source === memory);
 
             resetCallback();
          });
@@ -212,11 +213,12 @@ define(
             });
             let data = getDataWithConfig({source: prefetchSource, keyProperty: 'id'});
 
-            await data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, items);
+            await data._beforeMount({source: prefetchSource, idProperty: 'id'}, {});
 
             const sourceControllerState = data._sourceController.getState();
             assert.isTrue(sourceControllerState.source === memory);
             assert.equal(sourceControllerState.items, items);
+            assert.isTrue(data._source === prefetchSource);
          });
 
          it('_beforeMount without source', () => {

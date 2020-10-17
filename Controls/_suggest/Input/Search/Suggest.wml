@@ -23,6 +23,7 @@
         autoDropDown="{{_options.autoDropDown}}"
         filter="{{_options.filter}}"
         sorting="{{_options.sorting}}"
+        dataLoadCallback="{{_options.dataLoadCallback}}"
         layerName="Controls/suggestPopup:__ContentLayer">
     <Controls.search:Input
             value="{{_options.value}}"
