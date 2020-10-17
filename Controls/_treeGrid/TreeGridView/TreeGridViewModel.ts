@@ -207,10 +207,11 @@ var
                 if ((current.hasMultiSelectColumn && currentColumn.columnIndex === 1 ||
                     !current.hasMultiSelectColumn && currentColumn.columnIndex === 0) &&
                     (current.getExpanderPosition() === 'right' &&
-                        current.shouldDrawExpander(current, current.getExpanderIcon(), true))) {
+                        current.shouldDrawExpander(current, current.getExpanderIcon(current.expanderIcon), true))) {
                     currentColumn.afterItemTemplate = current.expanderTemplate;
                     currentColumn.afterItemTemplateOptions = {
-                        itemData: current
+                        itemData: current,
+                        expanderIcon: current.expanderIcon
                     };
                 }
 

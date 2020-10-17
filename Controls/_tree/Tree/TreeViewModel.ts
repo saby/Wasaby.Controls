@@ -153,6 +153,7 @@ var
         shouldDrawExpander(itemData, tmplExpanderIcon, isRight = false): boolean {
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
             const expanderPosition = itemData.getExpanderPosition();
+            itemData.expanderIcon = expanderIcon;
 
             const isExpander = !(expanderPosition === 'default' || isRight);
             if ((expanderIcon === 'none' || isExpander) ||
