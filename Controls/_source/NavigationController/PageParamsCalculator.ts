@@ -116,7 +116,7 @@ class PageParamsCalculator implements IParamsCalculator {
             const metaMore = store.getMetaMore();
 
             if (typeof metaMore === 'number') {
-                page = Math.round(metaMore / store.getState().pageSize) - 1;
+                page = Math.ceil(metaMore / store.getState().pageSize) - 1;
             } else {
                 page = -1;
             }
