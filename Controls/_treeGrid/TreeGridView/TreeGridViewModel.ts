@@ -12,7 +12,7 @@ function isLastColumn(
    itemData: object,
    colspan: boolean
 ): boolean {
-   const columnWidth = itemData.hasMultiSelectColumn && !itemData.isRootItemsSeparator ? 2 : 1;
+   const columnWidth = !itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn ? 2 : 1;
    return itemData.getLastColumnIndex() >= itemData.columnIndex && (!colspan || itemData.columnIndex < columnWidth);
 }
 
@@ -168,7 +168,10 @@ var
                     return 'none';
                 }
             };
-            current.getPartialColspanStyles = (columnStart, columnSpan) => GridLayoutUtil.getColumnStyles({ columnStart, columnSpan });
+            current.getPartialColspanStyles = (columnStart, columnSpan) => {
+                console.log(columnStart, columnSpan);
+                return GridLayoutUtil.getColumnStyles({ columnStart, columnSpan })
+            };
 
             current.isLastColumn = isLastColumn;
 

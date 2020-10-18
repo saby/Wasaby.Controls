@@ -30,7 +30,7 @@
         <div class="{{itemData.getMarkerClasses()}}"></div>
     </ws:if>
 
-    <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
+    <ws:if data="{{!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
         <ws:if data="{{!itemData.isAdd}}">
             <div class="{{ currentColumn.classList.padding.getAll() }}">
                 <ws:partial template="multiSelectTemplate"/>
@@ -106,7 +106,7 @@
     </ws:if>
     <ws:else>
         <!-- При включеном colspan растягиваем контент (если включен мультивыбор, дополнительно выводим под него колонку). -->
-        <ws:partial template="COLUMN_CONTENT_WRAPPER" colspanFor="{{(colspan && !(itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0)) ? 'colspanedRow' : null}}">
+        <ws:partial template="COLUMN_CONTENT_WRAPPER" colspanFor="{{(colspan && !(!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0)) ? 'colspanedRow' : null}}">
             <ws:partial template="COLUMN_CONTENT"/>
         </ws:partial>
     </ws:else>

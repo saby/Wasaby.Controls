@@ -80,7 +80,7 @@
    </ws:if>
 
    <!-- Колонка с чекбоксами -->
-   <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
+   <ws:if data="{{!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
       <ws:if data="{{!itemData.isAdd}}">
          <ws:partial template="multiSelectTemplate"/>
       </ws:if>
@@ -91,7 +91,7 @@
    <!-- Данные колонки -->
    <ws:else>
 
-      <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 1 || !itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
+      <ws:if data="{{!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn && currentColumn.columnIndex === 1 || (!itemData.hasMultiSelectColumn || itemData.isRootItemsSeparator) && currentColumn.columnIndex === 0}}">
          <ws:if data="{{!withoutLevelPadding && itemData.level > 1}}">
             <ws:for data="i in itemData.level - 1">
                <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(itemData, expanderSize, levelIndentSize)}}"></div>
@@ -116,11 +116,11 @@
          <ws:partial template="COLUMN_COLSPAN_CONTENT" isLadderHeader="{{ isLadderHeader }}"/>
       </ws:else>
       <ws:else>
-         <ws:if data="{{ currentColumn.columnIndex === (itemData.hasMultiSelectColumn ? 1 : 0) }}">
+         <ws:if data="{{ currentColumn.columnIndex === (!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn ? 1 : 0) }}">
             <!-- Растянутая колонка -->
             <ws:partial template="COLUMN_COLSPAN_CONTENT" isLadderHeader="{{ isLadderHeader }}"/>
          </ws:if>
-         <ws:else data="{{ currentColumn.columnIndex >= (colspanLength + (itemData.hasMultiSelectColumn ? 1 : 0)) }}">
+         <ws:else data="{{ currentColumn.columnIndex >= (colspanLength + (!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn ? 1 : 0)) }}">
             <!-- Оставшиеся колонки -->
             <ws:partial template="COLUMN_CONTENT" isLadderHeader="{{ isLadderHeader }}"/>
          </ws:else>
@@ -184,7 +184,7 @@
 
    <!-- Первая ячейка может быть заколспанена на N колонок. Выводим Первую, следующие N-1 колонок не выводим. -->
    <ws:if data="{{
-      (colspan === false && !!colspanLength) ? ( (currentColumn.columnIndex <= (itemData.hasMultiSelectColumn ? 1 : 0)) || (currentColumn.columnIndex >= ((itemData.hasMultiSelectColumn ? 1 : 0) + colspanLength))) : true
+      (colspan === false && !!colspanLength) ? ( (currentColumn.columnIndex <= (!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn ? 1 : 0)) || (currentColumn.columnIndex >= ((itemData.hasMultiSelectColumn ? 1 : 0) + colspanLength))) : true
    }}">
       <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{ cellClassName || '' }}
                        {{ currentColumn.columnIndex === 0 && !itemData.hasMultiSelectColumn ? currentColumn.classList.padding.left }}
@@ -195,7 +195,7 @@
                        {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                        controls-TreeGrid__row js-controls-ItemActions__swipeMeasurementContainer"
            style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode) }}
-                  {{ (colspan === false && !!colspanLength) && (currentColumn.columnIndex === (itemData.hasMultiSelectColumn ? 1 : 0)) ? itemData.getPartialColspanStyles(itemData.hasMultiSelectColumn ? 1 : 0, colspanLength + (itemData.isRootItemsSeparator ? 1 : 0)) }}">
+                  {{ (colspan === false && !!colspanLength) && (currentColumn.columnIndex === (!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn ? 1 : 0)) ? itemData.getPartialColspanStyles(!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn ? 1 : 0, colspanLength + (itemData.isRootItemsSeparator ? 1 : 0)) }}">
       <ws:partial template="COLUMN_CONTENT_WRAPPER"/>
    </div>
    </ws:if>
@@ -285,7 +285,7 @@
    <div class="{{ itemData.getRowClasses(_options) }}">
       <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
          {{itemData.resetColumnIndex();}}
-         <ws:if data="{{itemData.hasMultiSelectColumn}}">
+         <ws:if data="{{!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn}}">
             <ws:partial template="COLUMN" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}" attr:class="{{className}}"/>
             {{itemData.goToNextColumn();}}
          </ws:if>
