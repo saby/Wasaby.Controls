@@ -981,6 +981,20 @@ describe('Controls/suggest', () => {
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
          assert.equal(suggestComponent._searchValue, 'test');
 
+         suggestComponent._dependenciesDeferred = dependenciesDeferred;
+         suggestComponent._options.suggestState = false;
+         suggestComponent._searchValue = 'testValue';
+         suggestComponent._searchResult = undefined;
+         const resolveLoadStub = sandbox.stub(suggestComponent, '_resolveLoad');
+         suggestComponent._beforeUpdate({
+            suggestState: true,
+            searchParam: 'testSearchParam',
+            minSearchLength: 3,
+            source: getMemorySource()
+         });
+
+         assert.isTrue(resolveLoadStub.withArgs('testValue').calledOnce);
+
          sandbox.restore();
       });
 

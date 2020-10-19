@@ -316,6 +316,7 @@ const _private = {
         if (needAttachLoadTopTriggerToNull && self._isMounted) {
             self._attachLoadTopTriggerToNull = true;
             self._needScrollToFirstItem = true;
+            self._scrollTop = 1;
         } else {
             self._attachLoadTopTriggerToNull = false;
         }
@@ -2477,7 +2478,7 @@ const _private = {
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
             disableVirtualScroll: options.disableVirtualScroll,
-            virtualScrollConfig: options.virtualScrollConfig || {},
+            virtualScrollConfig: options.virtualScrollConfig,
             needScrollCalculation: self._needScrollCalculation,
             scrollObserver: self._children.scrollObserver,
             collection: self._listViewModel,
@@ -3532,11 +3533,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setEditingConfig(this._getEditingConfig(newOptions));
         }
 
-        if (this._options.sourceController !== newOptions.sourceController && newOptions.sourceController) {
+        if (newOptions.sourceController) {
             const items = newOptions.sourceController.getItems();
-            this._sourceController = newOptions.sourceController;
 
-            if (this._listViewModel && !this._listViewModel.getCollection()) {
+            if (this._options.sourceController !== newOptions.sourceController) {
+                this._sourceController = newOptions.sourceController;
+            }
+
+            if (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items) {
                 _private.assignItemsToModel(this, items, newOptions);
 
                 // TODO удалить когда полностью откажемся от старой модели
@@ -4886,9 +4890,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!detection.isMobilePlatform) {
             _private.updateItemActionsOnce(this, this._options);
         }
-        if (!this._pagingVisible) {
-            _private.initPaging(this);
-        }
 
         if (this._documentDragging) {
             this._insideDragging = true;
@@ -4896,12 +4897,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
-
         if (this._hideTopTrigger) {
             this._hideTopTrigger = false;
         }
         if (!this._scrollController?.getScrollTop()) {
             _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+        }
+
+        if (!this._pagingVisible) {
+            _private.initPaging(this);
         }
     },
 
@@ -5505,7 +5509,7 @@ BaseControl.getDefaultOptions = function() {
         loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
         continueSearchTemplate: 'Controls/list:ContinueSearchTemplate',
         stickyHeader: true,
-        virtualScrollMode: 'remove',
+        virtualScrollConfig: {},
         filter: {},
         itemActionsVisibility: 'onhover',
         searchValue: ''

@@ -20,7 +20,7 @@ const MIN_COUNT_OF_LETTER = 3;
  *
  * @class Controls/_breadcrumbs/View
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
  * @control

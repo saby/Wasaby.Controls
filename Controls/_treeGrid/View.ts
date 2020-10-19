@@ -31,7 +31,7 @@ import { TreeControl } from 'Controls/tree';
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_grid/interface/IPropStorage
     * @mixes Controls/_treeGrid/interface/IReloadableTreeGrid
@@ -69,7 +69,7 @@ import { TreeControl } from 'Controls/tree';
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_grid/interface/IPropStorage
     * @mixes Controls/_list/interface/IVirtualScroll

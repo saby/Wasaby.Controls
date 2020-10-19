@@ -1,5 +1,26 @@
 import rk = require('i18n!Controls');
 import {descriptor} from 'Types/entity';
+import {TemplateFunction, IControlOptions} from 'UI/Base';
+
+export interface IDateLitePopupOptions extends IControlOptions {
+   year?: Date;
+   chooseMonths?: boolean;
+   chooseQuarters?: boolean;
+   chooseHalfyears?: boolean;
+   chooseYears?: boolean;
+   emptyCaption?: string;
+   popupClassName?: string;
+   captionFormatter?: Function;
+   startValue?: Date;
+   endValue?: Date;
+   displayedRanges?: Date[];
+   dateConstructor?: Function;
+   monthTemplate?: TemplateFunction;
+   stickyPosition?: object;
+
+   //TODO: устаревшая опция
+   range?: Date[];
+}
 
    var EMPTY_CAPTIONS = {
       NOT_SPECIFIED: rk('Не указан'),
@@ -24,10 +45,6 @@ import {descriptor} from 'Types/entity';
              * @default undefined
              */
 
-            /*
-             * @name Controls/shortDatePicker/IDateLitePopup#year
-             * @cfg {Date} Displayed period
-             */
             year: undefined,
 
             /**
@@ -36,11 +53,6 @@ import {descriptor} from 'Types/entity';
              * @default true
              */
 
-            /*
-             * @name Controls/shortDatePicker/IDateLitePopup#chooseMonths
-             * @cfg {Boolean} Sets the option to choose a month
-             * @default true
-             */
             chooseMonths: true,
 
             /**
@@ -49,11 +61,6 @@ import {descriptor} from 'Types/entity';
              * @default true
              */
 
-            /*
-             * @name Controls/shortDatePicker/IDateLitePopup#chooseQuarters
-             * @cfg {Boolean} Sets the option to choose a quarter
-             * @default true
-             */
             chooseQuarters: true,
 
             /**
@@ -76,10 +83,6 @@ import {descriptor} from 'Types/entity';
              * @default undefined
              */
 
-            /*
-             * @name Controls/shortDatePicker/IDateLitePopup#emptyCaption
-             * @cfg {String} Text that is used if the period is not selected
-             */
             emptyCaption: undefined,
 
              /**
@@ -114,6 +117,7 @@ import {descriptor} from 'Types/entity';
              *     </Controls.shortDatePicker:View>
              * </pre>
              */
+
             /**
              * @name Controls/shortDatePicker/IDateLitePopup#source
              * @cfg {Types/source:ICrud} Источник данных, которые используются для отображения отметок на месяцах.

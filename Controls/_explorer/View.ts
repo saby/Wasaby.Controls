@@ -388,7 +388,7 @@ var
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
@@ -427,7 +427,7 @@ var
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid

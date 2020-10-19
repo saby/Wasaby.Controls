@@ -1,6 +1,6 @@
 <div class="controls-PeriodLiteDialog controls-PeriodLiteDialog_theme-{{_options.theme}}
-            {{_getWidthCssClass()}} {{_options.popupClassName}}"
-            style="{{_popupHeightStyle}}">
+            {{_getSizeCssClass('width')}} {{_options.popupClassName}}
+            {{!_isExpandedPopup ? _getSizeCssClass('height')}}">
    <ws:if data="{{_options.chooseMonths || _options.chooseQuarters || _options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__header">
          <div class="controls-PeriodLiteDialog__currentValue
