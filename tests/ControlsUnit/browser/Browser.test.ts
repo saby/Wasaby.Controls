@@ -1,6 +1,8 @@
 import {Browser} from 'Controls/browser';
 import {Memory} from 'Types/source';
-import {equal, deepStrictEqual} from 'assert';
+import {equal, deepStrictEqual, ok} from 'assert';
+import { RecordSet } from 'Types/collection';
+import { detection } from 'Env/Env';
 
 const browserData = [
     {
@@ -14,6 +16,24 @@ const browserData = [
     {
         id: 2,
         name: 'Dmitry'
+    }
+];
+
+const browserHierarchyData = [
+    {
+        key: 0,
+        title: 'Интерфейсный фреймворк',
+        parent: null
+    },
+    {
+        key: 1,
+        title: 'Sasha',
+        parent: 0
+    },
+    {
+        key: 2,
+        title: 'Dmitry',
+        parent: null
     }
 ];
 
@@ -68,6 +88,80 @@ describe('Controls/browser:Browser', () => {
                     deepStrictEqual(browser._searchController._dataOptions.filter, filter);
                 });
 
+                it('filterButtonSource and filter in context without source on _beforeMount', async () => {
+                    const options = getBrowserOptions();
+                    const filter = {
+                        testField: 'testValue'
+                    };
+                    options.source = null;
+                    options.filter = filter;
+                    options.filterButtonSource = [{
+                        id: 'testField2',
+                        value: 'testValue2'
+                    }];
+
+                    const expectedFilter = {
+                        testField: 'testValue',
+                        testField2: 'testValue2'
+                    };
+
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options, {});
+                    deepStrictEqual(browser._dataOptionsContext.filter, expectedFilter);
+                    deepStrictEqual(browser._filter, expectedFilter);
+                    deepStrictEqual(browser._searchController._dataOptions.filter, expectedFilter);
+                });
+
+            });
+        });
+
+        describe('init shadow visibility', () => {
+            const recordSet = new RecordSet({
+                rawData: [{id: 1}],
+                keyProperty: 'id',
+                metaData: {
+                    more: {
+                        before: true,
+                        after: true
+                    }
+                }
+            });
+
+            const options = getBrowserOptions();
+
+            let browser;
+
+            let defaultIsMobilePlatformValue;
+
+            beforeEach(() => {
+                defaultIsMobilePlatformValue = detection.isMobilePlatform;
+            })
+
+            afterEach(() => {
+                detection.isMobilePlatform = defaultIsMobilePlatformValue;
+            })
+
+            it('items in receivedState',() => {
+                const newOptions = {
+                    ...options,
+                    topShadowVisibility: 'auto',
+                    bottomShadowVisibility: 'auto',
+                }
+
+                browser = new Browser(newOptions)
+                browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
+                equal(browser._topShadowVisibility, 'visible');
+                equal(browser._bottomShadowVisibility, 'visible');
+
+                equal(browser._topShadowVisibilityFromOptions, 'auto');
+                equal(browser._bottomShadowVisibilityFromOptions, 'auto');
+
+                detection.isMobilePlatform = true;
+
+                browser = new Browser(newOptions)
+                browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
+                equal(browser._topShadowVisibility, 'auto');
+                equal(browser._bottomShadowVisibility, 'auto');
             });
         });
 
@@ -125,6 +219,23 @@ describe('Controls/browser:Browser', () => {
                 deepStrictEqual(browser._operationsController._savedListMarkedKey, 'testMarkedKey');
             });
 
+        });
+
+        it('update source', async () => {
+            let options = getBrowserOptions();
+            const browser = getBrowser();
+
+            await browser._beforeMount(options);
+
+            options = {...options};
+            options.source = new Memory({
+                data: browserHierarchyData,
+                keyProperty: 'key'
+            });
+            const browserItems = browser._items;
+
+            await browser._beforeUpdate(options);
+            ok(browser._items !== browserItems);
         });
 
     });

@@ -335,7 +335,6 @@ var
                     level: params.dispItem.getLevel(),
                     shouldDrawExpanderPadding: (expanderIcon, expanderSize) => _private.shouldDrawExpanderPadding(current, expanderIcon, expanderSize),
                     getExpanderPaddingClasses: (tmplExpanderSize) => _private.getExpanderPaddingClasses(current, tmplExpanderSize, true),
-                    multiSelectVisibility: self._options.multiSelectVisibility,
                     template: params.template,
                     hasMoreStorage: !!params.hasMoreStorage,
                     getExpanderSize: (tplExpanderSize) => tplExpanderSize || self._options.expanderSize,
@@ -626,6 +625,10 @@ var
             // 4. Отступы под экспандер
             current.getExpanderPaddingClasses = _private.getExpanderPaddingClasses;
 
+            // todo remove multiSelectVisibility, multiSelectPosition and multiSelectClassList by task:
+            // https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
+            current.multiSelectVisibility = this._options.multiSelectVisibility;
+            current.multiSelectPosition = this._options.multiSelectPosition;
 
             current.expanderVisibility = _private.getExpanderVisibility(this._options);
             current.getLevelIndentSize = _private.getLevelIndentSize;
@@ -653,6 +656,8 @@ var
                 if (this._dragTargetPosition.index === current.index) {
                     current.dragTargetNode = true;
                 }
+                // Предыдущая позиция нужна, чтобы когда навели на узел, элемент не пропал из списка,
+                // а отобразился там где был до наведения на узел
                 if (this._prevDragTargetPosition && this._prevDragTargetPosition.index === current.index) {
                     current.dragTargetPosition = this._prevDragTargetPosition.position;
                     current.draggingItemData = this._draggingItemData;

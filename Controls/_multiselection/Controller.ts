@@ -9,7 +9,7 @@ import {
    ISelectionItem,
    ISelectionModel,
    TKeys,
-   ISelectionDifference
+   ISelectionDifference, IEntryPathItem
 } from './interface';
 import { CrudEntityKey } from 'Types/source';
 
@@ -43,7 +43,6 @@ export class Controller {
       this._selectedKeys = options.selectedKeys.slice();
       this._excludedKeys = options.excludedKeys.slice();
       this._strategy = options.strategy;
-      this._strategy.setItems(this._getSelectableItems());
       this._searchValue = options.searchValue;
    }
 
@@ -60,8 +59,6 @@ export class Controller {
          this._model = options.model;
          this.setSelection(this.getSelection());
       }
-
-      this._strategy.setItems(this._getSelectableItems());
    }
 
    /**
@@ -78,7 +75,6 @@ export class Controller {
     */
    setSelection(selection: ISelection): void {
       this._selection = selection;
-      this._strategy.setItems(this._getSelectableItems());
       this._updateModel(selection);
    }
 
@@ -149,7 +145,11 @@ export class Controller {
     * @return {ISelection}
     */
    toggleItem(key: CrudEntityKey): ISelection {
-      const status = this._getItemStatus(key);
+      const item = this._model.getItemBySourceKey(key);
+      if (!item.SelectableItem) {
+         return this._selection;
+      }
+      const status = item.isSelected();
       let newSelection;
 
       if (status === true || status === null) {
@@ -199,8 +199,6 @@ export class Controller {
     * @return {ISelection}
     */
    onCollectionRemove(removedItems: Array<CollectionItem<Model>>): ISelection {
-      this._strategy.setItems(this._getSelectableItems());
-
       let keys = this._getItemsKeys(removedItems);
       // Событие remove еще срабатывает при скрытии элементов, нас интересует именно удаление
       keys = keys.filter((key) => !this._model.getCollection().getRecordById(key));
@@ -215,12 +213,13 @@ export class Controller {
     * Обрабатывает сброс элементов в списке
     * @return {ISelection|void}
     */
-   onCollectionReset(): ISelection|void {
+   onCollectionReset(entryPath: IEntryPathItem[]): ISelection|void {
       if (this._model.getCount() === 0 && this.isAllSelected()) {
          return { selected: [], excluded: [] };
       }
 
-      this._strategy.setItems(this._getSelectableItems());
+      this._strategy.setEntryPath(entryPath);
+
       this._updateModel(this._selection);
    }
 
@@ -230,7 +229,6 @@ export class Controller {
     * @void
     */
    onCollectionReplace(newItems: Array<CollectionItem<Model>>): void {
-      this._strategy.setItems(this._getSelectableItems());
       this._updateModel(this._selection, false, newItems);
    }
 
@@ -240,7 +238,6 @@ export class Controller {
     * @void
     */
    onCollectionAdd(addedItems: Array<CollectionItem<Model>>): void {
-      this._strategy.setItems(this._getSelectableItems());
       this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));
    }
 
@@ -303,12 +300,10 @@ export class Controller {
 
    // endregion
 
-   private _getItemStatus(key: CrudEntityKey): boolean {
-      return this._model.getItemBySourceKey(key).isSelected();
-   }
-
-   private _getItemsKeys(items: Array<CollectionItem<Model>|Model>): TKeys {
-      return items.map((item) => item instanceof CollectionItem ? item.getContents().getKey() : item.getKey());
+   private _getItemsKeys(items: Array<CollectionItem<Model>>): TKeys {
+      return items
+          .filter((it) => it.SelectableItem)
+          .map((item) => this._getKey(item));
    }
 
    /**
@@ -354,7 +349,22 @@ export class Controller {
       this._model.setSelectedItems(selectionForModel.get(null), null, silent);
    }
 
-   private _getSelectableItems(): ISelectionItem[] {
-      return this._model.getItems().filter((it) => it.SelectableItem);
+   /**
+    * @private
+    * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+    *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+    */
+   private _getKey(item: CollectionItem<Model>): CrudEntityKey {
+      if (!item) {
+         return undefined;
+      }
+
+      let contents = item.getContents();
+      // @ts-ignore
+      if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
+         contents = contents[(contents as any).length - 1];
+      }
+
+      return contents instanceof Object ?  contents.getKey() : contents;
    }
 }

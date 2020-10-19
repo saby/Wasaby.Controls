@@ -18,6 +18,9 @@ define('Controls/Application',
       'UI/HotKeys',
       'Controls/Application/TouchDetectorController',
       'Controls/dragnDrop',
+      'Core/TimeTesterInv',
+      'Application/Page',
+      'UI/Utils',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -68,7 +71,10 @@ define('Controls/Application',
       popup,
       HotKeys,
       TouchDetector,
-      dragnDrop) {
+      dragnDrop,
+      TimeTesterInv,
+      AppPage,
+      UIUtils) {
       'use strict';
 
       var _private;
@@ -264,13 +270,15 @@ define('Controls/Application',
             this.pageName = cfg.pageName || appData.pageName || '';
             this.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
 
+
+
             // Чтобы при загрузке слоя совместимости, понять нужно ли грузить провайдеры(extensions, userInfo, rights),
             // положим опцию из Application в constants. Иначе придется использовать глобальную переменную.
             // TODO: Удалить этот код отсюда по задае:
             // https://online.sbis.ru/opendoc.html?guid=3ed5ebc1-0b55-41d5-a8fa-921ad24aeec3
             Env.constants.loadDataProviders = cfg.loadDataProviders;
 
-            if (typeof window !== 'undefined') {
+            if (Env.constants.isBrowserPlatform) {
                /* eslint-disable */
                if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
@@ -294,6 +302,8 @@ define('Controls/Application',
             // сообщает так же про изменение экрана после показа клавиатуры и/или зуме страницы.
             // Подписка на body стреляет не всегда. в 2100 включаю только для 13ios, в перспективе можно включить
             // везде, где есть visualViewport
+            var timeTester = new TimeTesterInv.default(this.RUMEnabled, this.pageName);
+            timeTester.load();
             if (this._isIOS13()) {
                window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
             }
@@ -304,6 +314,7 @@ define('Controls/Application',
 
             this._globalpopup.registerGlobalPopup();
             this._popupManager.init(cfg, this._getChildContext());
+
          },
 
          _beforeUnmount: function () {
@@ -472,6 +483,84 @@ define('Controls/Application',
 
       Page._theme = ['Controls/application'];
       Page._styles = ['Controls/dragnDrop'];
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="prefetch"/>
+       * По умолчанию ресурсы добавляются только на сервисе представления
+       * @param modules
+       * @param force
+       * @public
+       */
+      Page.addPrefetchModules = function(modules, force) {
+         _addHeadLinks(modules, { prefetch: true, force: !!force });
+      };
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="preload"/>
+       * По умолчанию ресурсы добавляются только на сервисе представления
+       * @param modules
+       * @param force
+       * @public
+       */
+      Page.addPreloadModules = function(modules, force) {
+         _addHeadLinks(modules, { preload: true, force: !!force });
+      };
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="prefetch"/> или <link rel="preload"/>
+       * @param modules
+       * @param cfg настройки для ссылок
+       *             {
+       *                'prefetch': <boolean>,  // добавить prefetch-ссылку в head
+       *                'preload': <boolean>  // добавить preload-ссылку в head
+       *                'force': <boolean>  // по умолчанию ресурсы добавляются только на сервисе представления, но
+       *                                    // с этим параметром можно на это повлиять
+       *             }
+       * @private
+       */
+      function _addHeadLinks(modules, cfg) {
+         cfg = cfg || {};
+         if (!Env.constants.isServerSide && !cfg.force) {
+            return;
+         }
+         if (!modules || !modules.length) {
+            return;
+         }
+
+         var API = AppPage.Head.getInstance();
+         modules.forEach(function(moduleName) {
+            var path = UIUtils.ModulesLoader.getModuleUrl(moduleName);
+            path = path.indexOf('/') !== 0 ? '/' + path : path;
+            var _type = _getTypeString(path);
+            if (!_type) {
+               Env.IoC.resolve('ILogger').warn('[Controls/Application.js] Для файла ' + path + ' не удалось получить строку-тип');
+               return;
+            }
+
+            var rel = cfg.preload ? 'preload' : 'prefetch';
+            API.createTag('link', { rel: rel, as: _type, href: path });
+         });
+      }
+
+      /**
+       * Получить строку-тип ресурса по его расширению
+       * @param path
+       * @private
+       */
+      function _getTypeString(path) {
+         var types = {
+            'script': new RegExp('\.js'),
+            'fetch': new RegExp('\.wml'),
+            'style': new RegExp('\.css')
+         };
+         for (var _type in types) {
+            if (types.hasOwnProperty(_type) && types[_type].test(path)) {
+               return _type;
+            }
+         }
+         return null;
+      }
+
 
       return Page;
    });

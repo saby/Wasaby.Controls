@@ -11,7 +11,7 @@
                <Controls.editableArea:Base
                        bind:value="content.editObject.text1"
                        attr:class="ControlsDemo-EditableArea__firstExample__editor_wrapper"
-                       style="asLink"
+                       fontColorStyle="secondary"
                >
                    <ws:editorTemplate>
                        <Controls.input:Text selectOnClick="{{ false }}"
@@ -34,7 +34,7 @@
                     <Controls.editableArea:Base
                             bind:value="content.editObject.text1"
                             attr:class="ControlsDemo-EditableArea__longExample__editor"
-                            style="asLink"
+                            fontColorStyle="secondary"
                     >
                         <ws:editorTemplate>
                             <Controls.input:Text selectOnClick="{{ false }}"

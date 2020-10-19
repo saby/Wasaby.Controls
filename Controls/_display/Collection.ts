@@ -577,6 +577,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$multiSelectVisibility: string;
 
+    protected _$multiSelectPosition: 'default' | 'custom';
+
     protected _$leftPadding: string;
 
     protected _$rightPadding: string;
@@ -2226,6 +2228,18 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
+    setMultiSelectPosition(position: 'default' | 'custom'): void {
+        if (this._$multiSelectPosition === position) {
+            return;
+        }
+        this._$multiSelectPosition = position;
+        this._nextVersion();
+    }
+
+    getMultiSelectPosition(): 'default' | 'custom' {
+        return this._$multiSelectPosition;
+    }
+
     protected _setItemPadding(itemPadding: IItemPadding): void {
         this._$topPadding = itemPadding.top || 'default';
         this._$bottomPadding = itemPadding.bottom || 'default';
@@ -2696,14 +2710,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         newItems: T[],
         newItemsIndex: number,
         oldItems: T[],
-        oldItemsIndex: number,
-        session?: IEnumerableComparatorSession
+        oldItemsIndex: number
     ): void {
         if (!this._isNeedNotifyCollectionChange()) {
             return;
         }
         if (
-            !session ||
             action === IObservable.ACTION_RESET ||
             !this._isGrouped()
         ) {
@@ -2746,6 +2758,38 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 notify(notifyIndex, i + 1);
             }
         }
+    }
+
+    protected _notifyCollectionChangeBySession(
+        session: IEnumerableComparatorSession,
+        action: string,
+        newItems: T[],
+        newItemsIndex: number,
+        oldItems: T[],
+        oldItemsIndex: number
+    ): void {
+        if (!this._isNeedNotifyCollectionChange()) {
+            return;
+        }
+        if (!session) {
+            this._notifyLater(
+                'onCollectionChange',
+                action,
+                newItems,
+                newItemsIndex,
+                oldItems,
+                oldItemsIndex
+            );
+            return;
+        }
+
+        this._notifyCollectionChange(
+            action,
+            newItems,
+            newItemsIndex,
+            oldItems,
+            oldItemsIndex
+        );
     }
 
     /**
@@ -3468,13 +3512,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (diff.length) {
             this._notifyBeforeCollectionChange();
             this._extractPacksByList(this, diff, (items, index) => {
-                this._notifyCollectionChange(
+                this._notifyCollectionChangeBySession(
+                    session,
                     IObservable.ACTION_CHANGE,
                     items,
                     index,
                     items,
-                    index,
-                    session
+                    index
                 );
             });
             this._notifyAfterCollectionChange();
@@ -3530,13 +3574,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this,
             changedItems,
             (pack, index) => {
-                this._notifyCollectionChange(
+                this._notifyCollectionChangeBySession(
+                    session,
                     IObservable.ACTION_CHANGE,
                     pack,
                     index,
                     pack,
-                    index,
-                    session
+                    index
                 );
             }
         );
@@ -3659,6 +3703,7 @@ Object.assign(Collection.prototype, {
     _$displayProperty: '',
     _$itemTemplateProperty: '',
     _$multiSelectVisibility: 'hidden',
+    _$multiSelectPosition: 'default',
     _$leftPadding: 'default',
     _$rightPadding: 'default',
     _$topPadding: 'default',

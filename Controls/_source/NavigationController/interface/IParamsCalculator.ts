@@ -15,7 +15,12 @@ export default interface IParamsCalculator {
          navigationQueryConfig: IBaseSourceConfig,
          direction: TNavigationDirection
      ): any;
-     shiftToEdge(store: INavigationStore, direction: TNavigationDirection, shiftMode: TNavigationPagingMode): void;
+     shiftToEdge(
+         store: INavigationStore,
+         direction: TNavigationDirection,
+         shiftMode: TNavigationPagingMode,
+         navigationQueryConfig: IBaseSourceConfig
+     ): IBaseSourceConfig;
      updateQueryRange(store: INavigationStore, list: RecordSet): void;
      destroy(): void;
 }

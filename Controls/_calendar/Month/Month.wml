@@ -11,6 +11,7 @@
    on:itemClick="_itemClickHandler()"
 >
    <Controls._calendar.MonthView
+      newMode="{{ _options.newMode }}"
       month="{{_options.month}}"
       showCaption="{{_options.showCaption}}"
       showWeekdays="{{_options.showWeekdays}}"

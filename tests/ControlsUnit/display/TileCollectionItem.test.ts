@@ -251,6 +251,9 @@ describe('Controls/_display/TileCollectionItem', () => {
         const owner = {
             getMultiSelectVisibility(): string {
                 return 'visible';
+            },
+            getMultiSelectPosition(): string {
+                return 'default';
             }
         };
 

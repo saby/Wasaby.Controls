@@ -65,17 +65,22 @@ define(
                keyProperty: 'id',
                data: sourceDataEdited
             });
+            let callbackCalled = false;
+            const dataLoadCallbackFunction = () => {
+               callbackCalled = true;
+            };
 
             data._beforeMount(dataOptions).then(() => {
                data._dataOptionsContext = new contexts.ContextOptions();
                const newFilter = {test: 'testFilter'};
-               var loadDef = data._beforeUpdate({source: newSource, idProperty: 'id', filter: newFilter});
+               var loadDef = data._beforeUpdate({source: newSource, idProperty: 'id', filter: newFilter, dataLoadCallback: dataLoadCallbackFunction});
                assert.isTrue(data._loading);
                loadDef.addCallback(function() {
                   try {
                      assert.isTrue(data._dataOptionsContext.source === newSource);
                      assert.deepEqual(data._filter, newFilter);
                      assert.isFalse(data._loading);
+                     assert.isTrue(callbackCalled);
                      done();
                   } catch (e) {
                      done(e);
@@ -186,6 +191,7 @@ define(
             const sourceControllerState = data._sourceController.getState();
             assert.isTrue(sourceControllerState.source === memory);
             assert.equal(sourceControllerState.items, items);
+            assert.isTrue(data._source === memory);
 
             resetCallback();
          });
@@ -207,11 +213,12 @@ define(
             });
             let data = getDataWithConfig({source: prefetchSource, keyProperty: 'id'});
 
-            await data._beforeMount({source: prefetchSource, idProperty: 'id'}, {}, items);
+            await data._beforeMount({source: prefetchSource, idProperty: 'id'}, {});
 
             const sourceControllerState = data._sourceController.getState();
             assert.isTrue(sourceControllerState.source === memory);
             assert.equal(sourceControllerState.items, items);
+            assert.isTrue(data._source === prefetchSource);
          });
 
          it('_beforeMount without source', () => {

@@ -17,9 +17,13 @@
    top: 0;
 }
 
-.controls-ListView__itemV .controls-ListView__checkbox_theme-@{themeName} {
+.controls-ListView__itemV .controls-ListView__checkbox_position-default_theme-@{themeName} {
    float: left;
    margin-top: @checkbox_offset-top_list;
+}
+
+.controls-ListView__itemV .controls-ListView__checkbox_position-custom_theme-@{themeName} {
+   display: inline-block;
 }
 
 .ws-is-desktop-platform .controls-ListView__checkbox-onhover {
@@ -52,15 +56,19 @@
    width: 100%;
    flex-shrink: 1;
    box-sizing: border-box;
-   &:before{
+
+   &:before {
       content: '\200b';
       font-size: @item_max-font-size_list;
+      // в ie если задан display: flex, то ширина ставится не в 0, а колеблется от 0.001-0.009. Из-за чего ломается верстка
+      width: 0;
    }
    // Нужен для вложенного div, без этого будет ломаться верстка некоторых блоков.
    // Ломается из-за display: inline-flex, поэтому возвращаем display block
    & > .controls-ListView_content-template {
       display: block;
       width: inherit;
+      height: inherit;
    }
 }
 

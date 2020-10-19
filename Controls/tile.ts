@@ -16,6 +16,10 @@
  * @includes ItemTemplate Controls/tile:ItemTemplate
  * @includes ITile Controls/_tile/interface/ITile
  * @includes IDraggable Controls/interface/IDraggable
+ * @includes SmallItemTemplate Controls/tile:SmallTemplate
+ * @includes MediumTemplate Controls/tile:MediumTemplate
+ * @includes PreviewTemplate Controls/tile:PreviewTemplate
+ * @includes RichTemplate Controls/tile:RichTemplate
  * @public
  * @author Крайнов Д.О.
  */

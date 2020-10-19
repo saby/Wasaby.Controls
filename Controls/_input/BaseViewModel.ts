@@ -133,6 +133,10 @@ abstract class BaseViewModel<TValue, TOptions extends {} = {}> extends Versionab
 
         return displayValueChanged;
     }
+
+    isValueChanged(displayValue: string, value?: string): boolean {
+        return displayValue !== this._displayValue;
+    }
 }
 
 export default BaseViewModel;

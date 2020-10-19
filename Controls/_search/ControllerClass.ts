@@ -181,6 +181,7 @@ export default class SearchControllerClass {
         }
     }
 
+    // todo: move to Browser
     handleItemOpen(root: Key, items: RecordSet, dataRoot: Key = null): void {
         if (this._isSearchViewMode() && this._options.searchNavigationMode === 'expand') {
             this._notifiedMarkedKey = root;
@@ -378,6 +379,9 @@ export default class SearchControllerClass {
 
     private _searchCallback(result: ISearchCallbackResult, filter: object): void {
         this._updateSearchParams(filter);
+        if (this._options.dataLoadCallback instanceof Function) {
+            this._options.dataLoadCallback(result.data);
+        }
         this._options.itemsChangedCallback(result.data);
         const switchedStr = getSwitcherStrFromData(result.data);
         this._setMisspellValue(switchedStr);

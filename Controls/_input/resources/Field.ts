@@ -176,6 +176,7 @@ class Field<Value, ModelOptions>
 
     private _handleInput(splitValue: ISplitValue, inputType: InputType): void {
         const displayValue: string = this._model.displayValue;
+        const value: string = this._model.value;
         const selection: ISelection = {...this._model.selection};
 
         if (this._model.handleInput(splitValue, inputType)) {
@@ -193,7 +194,7 @@ class Field<Value, ModelOptions>
                 };
             }
 
-            if (displayValue !== this._model.displayValue) {
+            if (this._model.isValueChanged(displayValue, value)) {
                 this._notifyEvent('valueChanged');
             }
             this._notifySelection(selection);
@@ -350,24 +351,32 @@ class Field<Value, ModelOptions>
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
-        const code: string = event.nativeEvent.code;
-        const processedKeys: string[] = ['End', 'Home', 'Space', 'ArrowLeft', 'ArrowRight'];
+        const code: string = event.nativeEvent.key;
+        const processedKeys: string[] = [
+            'End', 'Home', 'Space', 'ArrowLeft', 'ArrowRight',
+            // Поддержка значения key в IE
+            'Spacebar', 'Left', 'Right'
+        ];
 
         /**
          * Клавиши обрабатываемые полем ввода не должны обрабатывать контролы выше.
          * Для этого останавливаем всплытие события.
          */
         if (processedKeys.includes(code)) {
-            event.nativeEvent.stopPropagation();
+            event.stopPropagation();
         }
 
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
     }
 
     protected _keyUpHandler(event: SyntheticEvent<KeyboardEvent>): void {
-        const processedKeys: string[] = ['End', 'Home', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+        const processedKeys: string[] = [
+            'End', 'Home', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+            // Поддержка значений key в IE
+            'Left', 'Right', 'Up', 'Down'
+        ];
 
-        if (processedKeys.includes(event.nativeEvent.code)) {
+        if (processedKeys.includes(event.nativeEvent.key)) {
             this._selectionFromFieldToModel();
         }
     }

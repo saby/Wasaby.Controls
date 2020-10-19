@@ -6,7 +6,9 @@ import { FlatSelectionStrategy, SelectionController, TreeSelectionStrategy, ISel
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
 import { SearchGridViewModel} from 'Controls/treeGrid';
-import { Collection, CollectionItem } from 'Controls/display';
+import { Collection, CollectionItem, Tree } from 'Controls/display';
+import { Model } from 'Types/entity';
+import * as ListData from 'ControlsUnit/ListData';
 
 describe('Controls/_multiselection/Controller', () => {
    const items = new RecordSet({
@@ -26,7 +28,7 @@ describe('Controls/_multiselection/Controller', () => {
          keyProperty: 'id'
       });
 
-      strategy = new FlatSelectionStrategy({items: model.getDisplay().getItems() });
+      strategy = new FlatSelectionStrategy({model: model.getDisplay() });
 
       controller = new SelectionController({
          model: model.getDisplay(),
@@ -44,11 +46,11 @@ describe('Controls/_multiselection/Controller', () => {
 
       controller.updateOptions({
          model: model.getDisplay(),
-         strategyOptions: { items: model.getDisplay().getItems() }
+         strategyOptions: { model: model.getDisplay() }
       });
 
       assert.equal(controller._model, model.getDisplay());
-      assert.deepEqual(controller._strategy._items, model.getDisplay().getItems());
+      assert.deepEqual(controller._strategy._model, model.getDisplay());
    });
 
    describe('toggleItem', () => {
@@ -163,6 +165,49 @@ describe('Controls/_multiselection/Controller', () => {
       assert.deepEqual(result, expectedResult);
    });
 
+   it('onCollectionReset', () => {
+      const model = new Tree({
+         collection: new RecordSet({
+            keyProperty: ListData.KEY_PROPERTY,
+            rawData: ListData.getItems()
+         }),
+         root: new Model({ rawData: { id: null }, keyProperty: ListData.KEY_PROPERTY }),
+         keyProperty: ListData.KEY_PROPERTY,
+         parentProperty: ListData.PARENT_PROPERTY,
+         nodeProperty: ListData.NODE_PROPERTY,
+         hasChildrenProperty: ListData.HAS_CHILDREN_PROPERTY
+      });
+
+      const nodesSourceControllers = {
+         get(): object {
+            return {
+               hasMoreData(): boolean { return false; }
+            };
+         }
+      };
+
+      strategy = new TreeSelectionStrategy({
+         model,
+         selectDescendants: true,
+         selectAncestors: true,
+         rootId: null,
+         nodesSourceControllers,
+         entryPath: []
+      });
+
+      controller = new SelectionController({
+         model,
+         strategy,
+         selectedKeys: [1, 8],
+         excludedKeys: []
+      });
+
+      controller.onCollectionReset([{id: 8, parent: 6}]);
+
+      assert.isTrue(model.getItemBySourceKey(1).isSelected());
+      assert.isNull(model.getItemBySourceKey(6).isSelected());
+   });
+
    it('with limit', () => {
       controller.setLimit(1);
 
@@ -227,7 +272,7 @@ describe('Controls/_multiselection/Controller', () => {
 
       const newController = new SelectionController({
          model: display,
-         strategy: new FlatSelectionStrategy({items: display.getItems() }),
+         strategy: new FlatSelectionStrategy({model: display }),
          selectedKeys: [null],
          excludedKeys: []
       });
@@ -287,7 +332,7 @@ describe('Controls/_multiselection/Controller', () => {
          });
 
          strategy = new TreeSelectionStrategy({
-             items: model.getDisplay().getItems(),
+             model: model.getDisplay(),
              selectDescendants: false,
              selectAncestors: false,
              rootId: null,

@@ -1,8 +1,8 @@
 import {IQueryParams, Direction} from 'Controls/_interface/IQueryParams';
 import {QueryNavigationType} from 'Types/source';
 import {default as PageNavigationStore, IPageNavigationState} from './PageNavigationStore';
-import {IBasePageSourceConfig, INavigationPageSourceConfig} from 'Controls/interface';
-import {TNavigationDirection} from 'Controls/_interface/INavigation';
+import {IBasePageSourceConfig, IBaseSourceConfig, INavigationPageSourceConfig} from 'Controls/interface';
+import {TNavigationDirection, TNavigationPagingMode} from 'Controls/_interface/INavigation';
 import {RecordSet} from 'Types/collection';
 import IParamsCalculator from './interface/IParamsCalculator';
 
@@ -102,18 +102,27 @@ class PageParamsCalculator implements IParamsCalculator {
         return result;
     }
 
-    shiftToEdge(store: PageNavigationStore, direction: TNavigationDirection): void {
+    shiftToEdge(
+        store: PageNavigationStore,
+        direction: TNavigationDirection,
+        shiftMode: TNavigationPagingMode,
+        navigationQueryConfig: IBasePageSourceConfig
+    ): IBasePageSourceConfig {
+        let page;
+
         if (direction === 'backward') {
-            store.setCurrentPage(0);
+            page = 0;
         } else if (direction === 'forward') {
             const metaMore = store.getMetaMore();
 
             if (typeof metaMore === 'number') {
-                store.setCurrentPage(metaMore / store.getState().pageSize - 1);
+                page = Math.round(metaMore / store.getState().pageSize) - 1;
             } else {
-                store.setCurrentPage(-1);
+                page = -1;
             }
         }
+
+        return {...navigationQueryConfig, page};
     }
 
     updateQueryRange(store: PageNavigationStore): void {

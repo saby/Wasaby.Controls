@@ -25,7 +25,7 @@ import dateControlsUtils from "./Utils";
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_interface/ICaptionFormatter
+ * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
  * @control
  * @public
  * @category Input
@@ -75,7 +75,7 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
         let className;
         const container = this._children.linkView.getPopupTarget();
         if (!this._options.chooseMonths && !this._options.chooseQuarters && !this._options.chooseHalfyears) {
-            className = 'controls-DateRangeSelectorLite__picker-years-only';
+            className = `controls-DateRangeSelectorLite__picker-years_fontSize-${this._getFontSizeClass()}_theme-${this._options.theme}`;
         } else {
             className = 'controls-DateRangeSelectorLite__picker-normal';
         }
@@ -84,7 +84,10 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
             opener: this,
             target: container,
             className,
-            fittingMode: this._fittingMode,
+            fittingMode: {
+                vertical: this._fittingMode,
+                horizontal: 'overflow'
+            },
             direction: {
                 horizontal: 'center'
             },

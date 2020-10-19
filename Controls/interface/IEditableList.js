@@ -586,7 +586,7 @@ define('Controls/interface/IEditableList', [
     * @param {ItemEditOptions} options Параметры добавления.
     * @returns {Core/Deferred}
     * @remark
-    * Чтобы задать позицию добавления элемента, установите значение для параметра {@link Controls/interface/IEditableList/EditingConfig.typedef addPosition}.
+    * Поддерживается добавление записей в начало или конец списка, группы (если у записи определено значение поля группировки), дочерних записей родительского узла (если у добавляемой записи указано значение поля, переданного в "parentProperty"). Этот функционал конфигурируется опцией {@link Controls/interface/IEditableList/EditingConfig.typedef addPosition}.
     * Если вы не передадите параметры, будет вызван метод {@link Types/source:ICrud#create create} источника списка, и результат будет добавлен в список.
     * @demo Controls-demo/list_new/EditInPlace/AddItem/Index
     * @example

@@ -1,6 +1,10 @@
 import { ISelectionObject as ISelection} from 'Controls/interface';
 import { Model } from 'Types/entity';
-import { IFlatSelectionStrategyOptions, ISelectionItem, ITreeSelectionStrategyOptions } from '../interface';
+import {
+   IEntryPathItem,
+   IFlatSelectionStrategyOptions,
+   ITreeSelectionStrategyOptions
+} from '../interface';
 import { CollectionItem } from 'Controls/display';
 import { CrudEntityKey } from 'Types/source';
 
@@ -97,9 +101,8 @@ export default interface ISelectionStrategy {
    isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number, byEveryItem?: boolean): boolean;
 
    /**
-    * Задает список элементов
-    * @param {Array<CollectionItem<Model>>} items Новый список
-    * @void
+    * Задает {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/logic/list/hierarch/calc-entry-path/ ENTRY_PATH} для стратегии.
+    * @param {IEntryPathItem[]} entryPath Массив объектов, которые содержат идентификаторы отмеченного "ребенка" и его "родителя"
     */
-   setItems(items: ISelectionItem[]): void;
+   setEntryPath(entryPath: IEntryPathItem[]): void;
 }

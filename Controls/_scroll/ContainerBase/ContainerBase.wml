@@ -16,6 +16,7 @@
 
         on:selectedKeysChanged="_selectedKeysChanged()"
         on:excludedKeysChanged="_excludedKeysChanged()"
+        on:beforeSelectionChanged="_tmplNotify('beforeSelectionChanged')"
         on:itemClick="_itemClick()"
 
         on:itemMouseDown="_tmplNotify('itemMouseDown')"
@@ -24,6 +25,7 @@
         on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
         on:checkboxClick="_tmplNotify('checkboxClick')"
         on:markedKeyChanged="_tmplNotify('markedKeyChanged')"
+        on:beforeMarkedKeyChanged="_tmplNotify('beforeMarkedKeyChanged')"
         on:actionClick="_tmplNotify('actionClick')"
         on:editArrowClick="_tmplNotify('editArrowClick')"
         on:navigationParamsChanged="_tmplNotify('navigationParamsChanged')"

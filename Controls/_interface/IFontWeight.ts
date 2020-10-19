@@ -1,22 +1,6 @@
-/**
- * @typedef TFontWeight
- * @variant default
- * @variant bold
- */
 export type TFontWeight = 'default' | 'bold';
 
-/**
- * @interface Controls/_interface/IFontWeightOptions
- * @public
- * @author Красильников А.С.
- */
 export interface IFontWeightOptions {
-    /**
-     * Начертание шрифта.
-     * @type TFontWeight
-     * @default default
-     * @demo Controls-demo/Decorator/Money/FontWeight/Index
-     */
     fontWeight: TFontWeight;
 }
 
@@ -30,3 +14,12 @@ export interface IFontWeightOptions {
 export default interface IFontWeight {
     readonly '[Controls/_interface/IFontWeight]': boolean;
 }
+
+/**
+ * @name Controls/_interface/IFontWeight#fontWeight
+ * @type {String} Начертание шрифта
+ * @variant default
+ * @variant bold
+ * @default default
+ * @demo Controls-demo/Decorator/Money/FontWeight/Index
+ */

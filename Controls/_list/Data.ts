@@ -3,7 +3,7 @@ import template = require('wml!Controls/_list/Data');
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {RegisterClass} from 'Controls/event';
 import {RecordSet} from 'Types/collection';
-import {QueryWhereExpression} from 'Types/source';
+import {QueryWhereExpression, PrefetchProxy, ICrud, ICrudPlus, IData} from 'Types/source';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {IControllerOptions, IControllerState} from 'Controls/_dataSource/Controller';
 import {ContextOptions} from 'Controls/context';
@@ -17,6 +17,7 @@ export interface IDataOptions extends IControlOptions,
     INavigationOptions<unknown>,
     ISortingOptions {
    dataLoadErrback?: Function;
+   dataLoadCallback?: Function;
    root?: string|number|null;
    groupProperty?: string;
    groupingKeyCallback?: Function;
@@ -35,9 +36,12 @@ export interface IDataContextOptions extends ISourceOptions,
  * Контрол-контейнер, предоставляющий контекстное поле "dataOptions" с необходимыми данными для дочерних контейнеров.
  *
  * @remark
+ * Поле контекста "dataOptions" ожидает Controls/list:Container, который лежит внутри.
+ * 
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">демо-пример</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
+ * * <a href="/docs/js/Controls/list/Container/">Controls/list:Container</a>
  *
  * @class Controls/_list/Data
  * @mixes Controls/_interface/IFilterChanged
@@ -93,19 +97,28 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    private _itemsReadyCallback: Function = null;
    private _errorRegister: RegisterClass = null;
    private _sourceController: SourceController = null;
+   private _source: ICrudPlus | ICrud & ICrudPlus & IData;
    private _dataOptionsContext: typeof ContextOptions;
 
    private _items: RecordSet;
-   private _filter: QueryWhereExpression<any>;
+   private _filter: QueryWhereExpression<unknown>;
 
-   _beforeMount(options: IDataOptions, context, receivedState: RecordSet|undefined): Promise<RecordSet|Error>|void {
-
+   _beforeMount(
+       options: IDataOptions,
+       context?: object,
+       receivedState?: RecordSet|Error
+   ): Promise<RecordSet|Error>|void {
       // TODO придумать как отказаться от этого свойства
       this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
 
       this._errorRegister = new RegisterClass({register: 'dataError'});
 
-      this._sourceController = new SourceController(options);
+      if (receivedState && options.source instanceof PrefetchProxy) {
+         this._source = options.source.getOriginal();
+      } else {
+         this._source = options.source;
+      }
+      this._sourceController = new SourceController(this._getSourceControllerOptions(options));
       let controllerState = this._sourceController.getState();
 
       // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
@@ -135,28 +148,36 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
-      const isChanged = this._sourceController.updateOptions(newOptions);
+      const sourceChanged = this._options.source !== newOptions.source;
+
+      if (sourceChanged) {
+         this._source = newOptions.source;
+      }
+
+      const isChanged = this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
 
       // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
       if (isChanged) {
          this._filter = newOptions.filter;
       }
 
-      if (this._options.source !== newOptions.source) {
+      if (sourceChanged) {
          this._loading = true;
-         return this._sourceController.load().then((items) => {
-            if (items instanceof RecordSet) {
-               const newItems = this._sourceController.setItems(items);
-               if (!this._items) {
-                  this._items = newItems;
-               }
-            }
+         return this._sourceController.reload()
+             .then((items) => {
+                if (items instanceof RecordSet) {
+                   if (newOptions.dataLoadCallback instanceof Function) {
+                      newOptions.dataLoadCallback(items);
+                   }
+                   this._items = this._sourceController.setItems(items);
+                }
 
-            const controllerState = this._sourceController.getState();
-            this._updateContext(controllerState);
-            this._loading = false;
-            return items;
-         });
+                const controllerState = this._sourceController.getState();
+                this._updateContext(controllerState);
+                this._loading = false;
+                return items;
+             })
+             .catch((error) => error);
       } else if (isChanged) {
          const controllerState = this._sourceController.getState();
 
@@ -164,6 +185,10 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._filter = controllerState.filter;
          this._updateContext(controllerState);
       }
+   }
+
+   _getSourceControllerOptions(options: IDataOptions): IControllerOptions {
+      return {...options, source: this._source} as IControllerOptions;
    }
 
    _beforeUnmount(): void {

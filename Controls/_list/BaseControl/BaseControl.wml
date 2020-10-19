@@ -70,7 +70,7 @@
         </div>
     </ws:if>
     <ws:if data="{{_shouldDrawFooter}}">
-        <ws:partial template="wml!Controls/_list/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}" theme="{{_options.theme}}"/>
+        <ws:partial template="wml!Controls/_list/BaseControl/Footer" moreFontColorStyle="{{_options.moreFontColorStyle}}" loadMoreCaption="{{_loadMoreCaption}}" theme="{{_options.theme}}"/>
     </ws:if>
 </ws:template>
 <ws:template name="multiSelectTplIf">
@@ -107,6 +107,8 @@
                 on:animationend="_onItemSwipeAnimationEnd()"
                 on:deactivated="_onListDeactivated()"
                 on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+                on:beforeMarkedKeyChanged="_notifyHandler('beforeMarkedKeyChanged')"
+                on:beforeSelectionChanged="_notifyHandler('beforeSelectionChanged')"
                 on:itemClick="_onItemClick()"
                 on:groupClick="_onGroupClick()"
                 on:editArrowClick="_notifyHandler('editArrowClick')"
@@ -179,8 +181,7 @@
     <div class="controls-BaseControl"
          on:sortingChanged="_sortingChanged()"
          on:mouseenter="_mouseEnter()"
-         on:mouseleave="_mouseLeave()"
-         on:touchstart="_initItemActions(_options)">
+         on:mouseleave="_mouseLeave()">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
 
         <ws:if data="{{_showContinueSearchButtonDirection === 'up'}}">
@@ -213,6 +214,9 @@
                  class="controls-BaseControl_paging-Padding_theme-{{_options.theme}} {{(_options.task1179362156) ? 'controls-BaseControl-hide-paging'}}">
             </div>
             <div class="controls-BaseControl__pagingContainer {{_options.task1179362156 ? 'controls-BaseControl-hide-paging'}}">
+                <ws:if data="{{_options.pagingLeftTemplate}}">
+                    <ws:partial template="{{_options.pagingLeftTemplate}}"/>
+                </ws:if>
                 <Controls.paging:Paging
                         attr:class="controls-BaseControl__scrollPaging_theme-{{_options.theme}}"
                         contrastBackground="{{true}}"

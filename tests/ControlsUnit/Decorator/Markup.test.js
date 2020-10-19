@@ -113,6 +113,7 @@ define([
 
          before(function() {
             if (isNode) {
+               Env.constants.isBrowserPlatform = true;
                var browser = new jsdom.JSDOM('', { pretendToBeVisual: false });
                global.window = browser.window;
                global.document = window.document;
@@ -122,6 +123,7 @@ define([
 
          after(function() {
             if (isNode) {
+               Env.constants.isBrowserPlatform = false;
                global.window = undefined;
                global.document = undefined;
                global.Node = undefined;
@@ -1213,6 +1215,18 @@ define([
                'viber://pa?chatURI=aliceinsbiswonderland'
             ]];
             assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('link href start from sbisplugin://', function() {
+            var parentNode = ['p', ['a',
+            {
+               'class': 'asLink',
+               rel: 'noreferrer noopener',
+               href: 'sbisplugin://Screenshot-0.0.0.0?1111|1111',
+               target: '_blank'
+            },
+            'sbisplugin://Screenshot-0.0.0.0?1111|1111'
+         ]];
+         assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });
          it('link href starts from "file://" and has "http" inside', function() {
             var parentNode = ['p', ['a',

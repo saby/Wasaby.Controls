@@ -21,6 +21,7 @@
       on:wheel="_wheelHandler()"
    >
       <Controls._calendar.Month
+         newMode="{{ _options.newMode }}"
          attr:class="controls-MonthSlider__month"
          month="{{content.data}}"
          mode="{{_options.mode}}"

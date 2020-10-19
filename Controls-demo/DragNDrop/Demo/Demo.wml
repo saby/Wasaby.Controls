@@ -20,8 +20,8 @@
                            <div class="demo-DragNDrop__list_itemContent">
                               <img class="demo-DragNDrop__list_item_icon" src="{{itemTemplate.itemData.item.get('image')}}" />
                               <div class="demo-DragNDrop__list_item_text">
-                                 <div class="demo-DragNDrop__list_item_mainText controls-DragNDrop__notDraggable">{{itemTemplate.itemData.item.get('title')}}</div>
-                                 <div class="demo-DragNDrop__list_item_additionalText controls-DragNDrop__notDraggable">{{itemTemplate.itemData.item.get('additional')}}</div>
+                                 <div class="demo-DragNDrop__list_item_mainText controls-List_DragNDrop__notDraggable">{{itemTemplate.itemData.item.get('title')}}</div>
+                                 <div class="demo-DragNDrop__list_item_additionalText controls-List_DragNDrop__notDraggable">{{itemTemplate.itemData.item.get('additional')}}</div>
                               </div>
                               <div class="demo-DragNDrop__list_item_usersCount">{{itemTemplate.itemData.item.get('usersCunt')}}</div>
                            </div>

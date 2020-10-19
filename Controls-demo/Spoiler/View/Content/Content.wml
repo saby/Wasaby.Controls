@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper {{_options.theme.indexOf('large')<0 ? 'controlsDemo_fixedWidth550' : 'controlsDemo_fixedWidth800'}}">
    <div class="controlsDemo__cell controlsDemo__spoiler_first">
       <Controls.spoiler:View captions="Заголовок" bind:expanded="_expanded">
          <div>Контентная область</div>
