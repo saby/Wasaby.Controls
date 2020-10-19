@@ -369,12 +369,13 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return preparedFilter;
    }
 
-   private _setFilter(filter: QueryWhereExpression<unknown>, options: IInputControllerOptions): void {
+   private _setFilter(filter: QueryWhereExpression<unknown>,
+                      options: IInputControllerOptions, tabId?: Key): void {
       this._filter = this._prepareFilter(filter,
          options.searchParam ?? this._options.searchParam,
          this._searchValue,
          options.minSearchLength,
-         this._tabsSelectedKey,
+         tabId ?? this._tabsSelectedKey,
          this._historyKeys
       );
       this._getSourceController(options).setFilter(this._filter);
@@ -590,7 +591,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
             if (!this._searchResult) {
-               this._resolveLoad(this._searchValue);
+               this._loadDependencies(newOptions).addCallback(() => {
+                  this._resolveLoad(this._searchValue);
+               });
             }
          } else {
             this._setCloseState();
@@ -605,8 +608,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             this._updateSuggestState();
 
             if (this._showContent) {
-               this._setFilter(newOptions.filter, newOptions);
-               this._resolveLoad();
+               this._setFilterAndLoad(newOptions.filter, newOptions);
             }
          }
       }
@@ -671,6 +673,13 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          );
       }
       this._searchResolverController.resolve(value);
+   }
+
+   private async _setFilterAndLoad(filter: QueryWhereExpression<unknown>,
+                                   options: IInputControllerOptions,
+                                   tabId?: Key): Promise<RecordSet> {
+      this._setFilter(filter, options, tabId);
+      return this._resolveLoad();
    }
 
    private async _resolveLoad(value?: string): Promise<RecordSet> {
@@ -785,19 +794,13 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return Promise.resolve();
    }
 
-   protected async _tabsSelectedKeyChanged(key: Key): Promise<void> {
+   protected async _tabsSelectedKeyChanged(tabId: Key): Promise<void> {
       this._setSuggestMarkedKey(null);
 
       // change only filter for query, tabSelectedKey will be changed after processing query result,
       // otherwise interface will blink
-      if (this._tabsSelectedKey !== key) {
-         // todo: refactor to _setFilter method - the same (?)
-         this._filter = this._prepareFilter(this._options.filter,
-            this._options.searchParam,
-            this._searchValue, this._options.minSearchLength, key, this._historyKeys);
-         const sourceController = this._getSourceController();
-         sourceController.setFilter(this._filter);
-         await this._resolveLoad();
+      if (this._tabsSelectedKey !== tabId) {
+         await this._setFilterAndLoad(this._options.filter, this._options, tabId);
       }
 
       // move focus from tabs to input, after change tab
