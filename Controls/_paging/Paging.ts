@@ -101,7 +101,7 @@ class Paging extends Control<IPagingOptions> {
         if (this._options.arrowState) {
             return this._options.arrowState[state] || 'visible';
         }
-        return 'visible';
+        return 'hidden';
     }
 
     private _initArrowStateBySelectedPage(config: IPagingOptions): void {
