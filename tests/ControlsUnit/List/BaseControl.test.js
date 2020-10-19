@@ -7734,6 +7734,18 @@ define([
                });
             });
 
+            it('change selection', () => {
+               const newCfg = { ...cfg, selectedKeys: [1] };
+               baseControl.saveOptions(newCfg);
+               return baseControl._beforeMount(newCfg).then(() => {
+                  const notifySpy = sinon.spy(baseControl, '_notify');
+                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1, 2] });
+                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
+                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isSelected());
+                  assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+               });
+            });
+
             it('change visible on hidden and change selected keys on empty array', () => {
                const newCfg = { ...cfg, selectedKeys: [1] };
                baseControl.saveOptions(newCfg);

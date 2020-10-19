@@ -625,8 +625,6 @@ var
             // 4. Отступы под экспандер
             current.getExpanderPaddingClasses = _private.getExpanderPaddingClasses;
 
-            current.isRootItemsSeparator = current.dispItem && current.dispItem['[Controls/_display/SearchSeparator]'];
-
             // todo remove multiSelectVisibility, multiSelectPosition and multiSelectClassList by task:
             // https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
             current.multiSelectVisibility = this._options.multiSelectVisibility;
@@ -650,7 +648,8 @@ var
             current.expanderTemplate = this._options.expanderTemplate;
             current.footerContentTemplate = this._options.footerContentTemplate;
 
-            if (current.item.get && !current.isRootItemsSeparator) {
+            const isRootItemsSeparator = current.dispItem && current.dispItem['[Controls/_display/SearchSeparator]']
+            if (current.item.get && !isRootItemsSeparator) {
                 current.level = current.dispItem.getLevel();
             }
 
@@ -665,7 +664,7 @@ var
             }
 
             current.useNewNodeFooters = this._options.useNewNodeFooters;
-            if (current.item.get && !current.isRootItemsSeparator) {
+            if (current.item.get && !isRootItemsSeparator) {
                 _private.setNodeFooterIfNeed(this, current);
             }
 

@@ -1,7 +1,8 @@
 import {IControlOptions} from 'UI/Base';
-import {ISearchOptions} from 'Controls/interface';
+import {IHierarchyOptions, ISearchOptions} from 'Controls/interface';
 import {NewSourceController} from 'Controls/dataSource';
 import {RecordSet} from 'Types/collection';
+import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 
 export interface ISearchResolverOptions {
    delayTime?: number | null;
@@ -15,9 +16,12 @@ export interface ISearchInputContainerOptions extends IControlOptions {
    minSearchValueLength?: number;
 }
 
-export interface ISearchControllerOptions extends ISearchOptions {
+export interface ISearchControllerOptions extends ISearchOptions,
+   IHierarchyOptions,
+   IHierarchySearchOptions {
    sourceController: NewSourceController;
    searchValue?: string;
+   root?: string|number|null;
 }
 
 export interface ISearchController {

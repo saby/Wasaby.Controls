@@ -34,7 +34,7 @@
    </ws:if>
 
    <!-- Ячейка с чекбоксом -->
-   <ws:if data="{{!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
+   <ws:if data="{{multiSelectWithoutSearchSeparator && currentColumn.columnIndex === 0}}">
       <ws:if data="{{!itemData.isAdd}}">
          <ws:partial template="multiSelectTemplate"/>
       </ws:if>
@@ -128,19 +128,19 @@
    <!-- Данный выводятся в зафиксированной части. ws:for вызовет рендер только первой колонки для заколспанненой записи. -->
    <ws:if data="{{itemData.columnScroll && colspan}}">
       <!-- Зафиксированная часть. -->
-      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
+      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{multiSelectWithoutSearchSeparator && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
            style="{{currentColumn.gridCellStyles}} {{itemData.getCellStyle(itemData, currentColumn, false)}} {{itemData.getColspanForColumnScroll().fixedColumns}}">
-         <ws:partial template="COLUMN_CONTENT"/>
+         <ws:partial template="COLUMN_CONTENT" multiSelectWithoutSearchSeparator="{{multiSelectWithoutSearchSeparator}}"/>
       </div>
 
       <!-- Скроллируемая часть. -->
-      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}} {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
+      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{multiSelectWithoutSearchSeparator && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}} {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
            style="{{currentColumn.gridCellStyles}} {{itemData.getCellStyle(itemData, currentColumn, false)}} {{itemData.getColspanForColumnScroll().scrollableColumns}}"></div>
    </ws:if>
    <ws:else>
-      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
+      <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{multiSelectWithoutSearchSeparator && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}} {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}} js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
            style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">
-         <ws:partial template="COLUMN_CONTENT"/>
+         <ws:partial template="COLUMN_CONTENT" multiSelectWithoutSearchSeparator="{{multiSelectWithoutSearchSeparator}}"/>
       </div>
    </ws:else>
 
@@ -171,7 +171,7 @@
                                       {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
                                       js-controls-ItemActions__swipeMeasurementContainer {{ marker !== false ? currentColumn.classList.marked }}"
                           attr:style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan)}}">
-      <ws:partial template="COLUMN_CONTENT"/>
+      <ws:partial template="COLUMN_CONTENT" multiSelectWithoutSearchSeparator="{{!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn}}"/>
    </Controls.scroll:StickyHeader>
    <ws:if data="{{ itemData.columnScroll && itemData.itemActionsDrawPosition === 'after' }}">
       <ws:if data="{{ itemData.isDrawActions(itemData, currentColumn, colspan) }}">
@@ -201,7 +201,11 @@
 <ws:else>
    <div class="{{ itemData.getRowClasses(_options) }}">
       <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
-         <ws:partial template="COLUMN" attr:key="{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}" attr:class="{{className}}"/>
+         <ws:partial template="COLUMN"
+                     multiSelectWithoutSearchSeparator="{{!itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn}}"
+                     currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}"
+                     attr:key="{{itemData.getCurrentColumnKey()}}"
+                     attr:class="{{className}}"/>
       </ws:for>
    </div>
 </ws:else>

@@ -11,6 +11,7 @@ export interface IOptions<T> extends ICollectionItemOptions<T> {
 export default class SearchSeparator<T> extends CollectionItem<T>  {
     readonly '[Controls/_display/SearchSeparator]': boolean = true;
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
+    readonly '[Controls/_itemActions/interface/IItemActionsItem]': boolean = false;
 
     readonly MarkableItem: boolean = false;
     readonly SelectableItem: boolean = false;

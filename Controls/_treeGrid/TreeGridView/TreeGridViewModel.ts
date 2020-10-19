@@ -12,7 +12,8 @@ function isLastColumn(
    itemData: object,
    colspan: boolean
 ): boolean {
-   const columnWidth = !itemData.isRootItemsSeparator && itemData.hasMultiSelectColumn ? 2 : 1;
+   const isRootItemsSeparator = itemData.dispItem && itemData.dispItem['[Controls/_display/SearchSeparator]'];
+   const columnWidth = !isRootItemsSeparator && itemData.hasMultiSelectColumn ? 2 : 1;
    return itemData.getLastColumnIndex() >= itemData.columnIndex && (!colspan || itemData.columnIndex < columnWidth);
 }
 

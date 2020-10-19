@@ -59,7 +59,6 @@ interface IGridItemData extends Partial<IGridSeparatorOptions> {
     hasMultiSelectColumn: boolean;
     columns: any[];
     columnIndex: number;
-    isRootItemsSeparator?: boolean;
 }
 
 interface IColgroupColumn {
@@ -121,9 +120,11 @@ var
         getCellStyle: function(self, itemData, currentColumn, colspan) {
            var
                style = '';
+           let isRootItemsSeparator: boolean;
            if (colspan) {
+                isRootItemsSeparator = itemData.dispItem['[Controls/_display/SearchSeparator]'];
                 style += self.getColspanStylesFor(
-                    itemData.isRootItemsSeparator ? 'rootItemsSeparator' : 'fullWithoutMultiSelect',
+                    isRootItemsSeparator ? 'rootItemsSeparator' : 'fullWithoutMultiSelect',
                     {
                         columnIndex: currentColumn.columnIndex,
                         columnsLength: self._columns.length
@@ -136,7 +137,7 @@ var
             const { columns, columnIndex } = params;
             const { cellPadding } = columns[columnIndex];
             const classLists = createClassListCollection('top', 'bottom', 'left', 'right');
-
+            const isRootItemsSeparator = params.dispItem && params.dispItem['[Controls/_display/SearchSeparator]'];
 
             if (columns[columnIndex].isActionCell) {
                 return classLists;
@@ -145,7 +146,7 @@ var
             const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side].toLowerCase()}` : '';
 
             // Колонки
-            if (params.hasMultiSelectColumn && !params.isRootItemsSeparator ? params.columnIndex > 1 : params.columnIndex > 0) {
+            if (params.hasMultiSelectColumn && !isRootItemsSeparator ? params.columnIndex > 1 : params.columnIndex > 0) {
                 classLists.left += ` controls-Grid__cell_spacingLeft${getCellPadding('left')}_theme-${theme}`;
             }
             if (params.columnIndex < params.columns.length - arrayLengthOffset) {
@@ -167,7 +168,7 @@ var
                 classLists.right += ` controls-Grid__cell_spacingLastCol_${params.itemPadding.right}_theme-${theme}`;
             }
 
-            if (!params.isRootItemsSeparator && !params.isHeader && !params.isResult) {
+            if (!isRootItemsSeparator && !params.isHeader && !params.isResult) {
                 classLists.top += ` controls-Grid__row-cell_rowSpacingTop_${params.itemPadding.top}_theme-${theme}`;
                 classLists.bottom += ` controls-Grid__row-cell_rowSpacingBottom_${params.itemPadding.bottom}_theme-${theme}`;
             }
@@ -317,14 +318,15 @@ var
         },
 
         getItemColumnCellClasses(self, current, theme, backgroundColorStyle) {
-            const checkBoxCell = !current.isRootItemsSeparator && current.hasMultiSelectColumn && current.columnIndex === 0;
+            const isRootItemsSeparator = current.dispItem && current.dispItem['[Controls/_display/SearchSeparator]'];
+            const checkBoxCell = !isRootItemsSeparator && current.hasMultiSelectColumn && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
             let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             const backgroundStyle = current.backgroundStyle || current.style || 'default';
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
             // Стиль колонки
-            if (!current.isRootItemsSeparator) {
+            if (!isRootItemsSeparator) {
                 if (current.itemPadding.top === 'null' && current.itemPadding.bottom === 'null') {
                     classLists.base += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
                 } else {
@@ -388,13 +390,14 @@ var
                 classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
             }
 
-            if (!GridLayoutUtil.isFullGridSupport() && !(current.columns.length === (current.hasMultiSelectColumn && !current.isRootItemsSeparator ? 2 : 1)) && self._options.fixIEAutoHeight) {
+            if (!GridLayoutUtil.isFullGridSupport() && !(current.columns.length === (current.hasMultiSelectColumn && !isRootItemsSeparator ? 2 : 1)) && self._options.fixIEAutoHeight) {
                 classLists.base += ' controls-Grid__row-cell__autoHeight';
             }
             return classLists;
         },
 
         getRelativeCellWrapperClasses(itemData, colspan, fixVerticalAlignment): string {
+            const isRootItemsSeparator = itemData.dispItem && itemData.dispItem['[Controls/_display/SearchSeparator]'];
             let classes = 'controls-Grid__table__relative-cell-wrapper ';
             const _rowSeparatorSize = (itemData.rowSeparatorSize && itemData.rowSeparatorSize.toLowerCase()) === 'l' ? 'l' : 's';
             classes += `controls-Grid__table__relative-cell-wrapper_rowSeparator-${_rowSeparatorSize}_theme-${itemData.theme} `;
@@ -404,7 +407,7 @@ var
             if (
                 fixVerticalAlignment && (
                     colspan || (
-                        itemData.columns.length === (itemData.hasMultiSelectColumn && !itemData.isRootItemsSeparator ? 2 : 1)
+                        itemData.columns.length === (itemData.hasMultiSelectColumn && !isRootItemsSeparator ? 2 : 1)
                     )
                 )
             ) {
@@ -468,7 +471,8 @@ var
             left: string
             right: string
         } {
-            const additionalTerm = (itemData.hasMultiSelectColumn && !itemData.isRootItemsSeparator ? 1 : 0);
+            const isRootItemsSeparator = itemData.dispItem && itemData.dispItem['[Controls/_display/SearchSeparator]'];
+            const additionalTerm = (itemData.hasMultiSelectColumn && !isRootItemsSeparator ? 1 : 0);
             const result = {left: '', right: ''};
             const start = 1;
             const end = itemData.columns.length + 1 + (isActionsCellExists ? 1 : 0) + stickyLadderCellsCount;
@@ -546,7 +550,8 @@ var
         },
         getTableCellStyles(currentColumn): string {
             let styles = '';
-            const isCheckbox = !currentColumn.isRootItemsSeparator && currentColumn.hasMultiSelectColumn && currentColumn.columnIndex === 0;
+            const isRootItemsSeparator = currentColumn.dispItem && currentColumn.dispItem['[Controls/_display/SearchSeparator]'];
+            const isCheckbox = !isRootItemsSeparator && currentColumn.hasMultiSelectColumn && currentColumn.columnIndex === 0;
             if (!isCheckbox && currentColumn.column.width !== 'auto') {
                 styles += `min-width: ${currentColumn.column.width}; max-width: ${currentColumn.column.width};`;
             }
@@ -1602,7 +1607,6 @@ var
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
-			current.isRootItemsSeparator = current.dispItem['[Controls/_display/SearchSeparator]'];
             // todo remove multiSelectVisibility, multiSelectPosition and multiSelectClassList by task:
             // https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
             current.multiSelectVisibility = this._options.multiSelectVisibility;
