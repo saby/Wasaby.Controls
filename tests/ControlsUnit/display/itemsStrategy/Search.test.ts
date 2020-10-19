@@ -6,6 +6,16 @@ import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 import { TreeItem } from 'Controls/display';
 
 describe('Controls/_display/itemsStrategy/Search', () => {
+    class StringContents {
+        constructor(props: object, protected _prop: string = 'id') {
+            Object.assign(this, props);
+        }
+
+        toString(): string {
+            return this[this._prop];
+        }
+    }
+
     function getSource<T>(items: T[]): IItemsStrategy<T, T> {
         return {
             '[Controls/_display/IItemsStrategy]': true,
@@ -436,6 +446,99 @@ describe('Controls/_display/itemsStrategy/Search', () => {
             });
 
             assert.deepEqual(result, ['#A:0', 'b:1', 'e:2', '#A,b,C:0', 'd:1', 'f:1']);
+        });
+
+        it('should organize dedicated breadcrumbs for first item', () => {
+            const items = [];
+            items[0] = new TreeItem({
+                contents: new StringContents({id: 'A', break: true}),
+                node: true
+            });
+            items[1] = new TreeItem({
+                parent: items[0],
+                contents: new StringContents({id: 'AA', break: false}),
+                node: true
+            });
+            items[2] = new TreeItem({
+                parent: items[1],
+                contents: new StringContents({id: 'AAA', break: false}),
+                node: true
+            });
+
+            const source = getSource(items);
+            const strategy = new Search({
+                dedicatedItemProperty: 'break',
+                source
+            });
+
+            const result = strategy.items.map((item) => {
+                const contents = item.getContents();
+                return item instanceof BreadcrumbsItem ? `#${contents.join(',')}` : contents;
+            });
+
+            assert.deepEqual(result, ['#A', '#A,AA,AAA']);
+        });
+
+        it('should organize dedicated breadcrumbs for inner item', () => {
+            const items = [];
+            items[0] = new TreeItem({
+                contents: new StringContents({id: 'A', break: false}),
+                node: true
+            });
+            items[1] = new TreeItem({
+                parent: items[0],
+                contents: new StringContents({id: 'AA', break: true}),
+                node: true
+            });
+            items[2] = new TreeItem({
+                parent: items[1],
+                contents: new StringContents({id: 'AAA', break: false}),
+                node: true
+            });
+
+            const source = getSource(items);
+            const strategy = new Search({
+                dedicatedItemProperty: 'break',
+                source
+            });
+
+            const result = strategy.items.map((item) => {
+                const contents = item.getContents();
+                return item instanceof BreadcrumbsItem ? `#${contents.join(',')}` : contents;
+            });
+
+            assert.deepEqual(result, ['#A,AA', '#A,AA,AAA']);
+        });
+
+        it('should organize dedicated breadcrumbs for last item', () => {
+            const items = [];
+            items[0] = new TreeItem({
+                contents: new StringContents({id: 'A', break: false}),
+                node: true
+            });
+            items[1] = new TreeItem({
+                parent: items[0],
+                contents: new StringContents({id: 'AA', break: false}),
+                node: true
+            });
+            items[2] = new TreeItem({
+                parent: items[1],
+                contents: new StringContents({id: 'AAA', break: true}),
+                node: true
+            });
+
+            const source = getSource(items);
+            const strategy = new Search({
+                dedicatedItemProperty: 'break',
+                source
+            });
+
+            const result = strategy.items.map((item) => {
+                const contents = item.getContents();
+                return item instanceof BreadcrumbsItem ? `#${contents.join(',')}` : contents;
+            });
+
+            assert.deepEqual(result, ['#A,AA,AAA']);
         });
 
         it('should return the same instances for second call', () => {
