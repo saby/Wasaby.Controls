@@ -1825,6 +1825,26 @@ describe('Controls/_display/Collection', () => {
         });
     });
 
+    describe('.isAllGroupsCollpsed()', () => {
+        const list = new List({
+            items: [
+                { id: 1, group: 1 },
+                { id: 2, group: 2 }
+            ]
+        });
+        const display = new CollectionDisplay({
+            collection: list,
+            collapsedGroups: [1, 2],
+            groupingKeyCallback: (item) => {
+                return item.group;
+            }
+        });
+
+        assert.isTrue(display.isAllGroupsCollapsed());
+        display.setCollapsedGroups([1]);
+        assert.isFalse(display.isAllGroupsCollapsed());
+    });
+
     describe('.getGroupByIndex()', () => {
         function getItems(): IGroupItem[] {
             return [
