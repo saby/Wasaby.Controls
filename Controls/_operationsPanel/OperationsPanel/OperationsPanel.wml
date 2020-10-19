@@ -2,6 +2,7 @@
    <Controls._operations.MultiSelector selectedKeys="{{ _options.selectedKeys }}"
                                        excludedKeys="{{ _options.excludedKeys }}"
                                        size="{{_options.multiSelectSize}}"
+                                       fontColorStyle="{{_options.fontColorStyle}}"
                                        fontSize="{{_options.multiSelectFontSize}}"
                                        selectedKeysCount="{{ _options.selectedKeysCount }}"
                                        selectionViewMode="{{ _options.selectionViewMode }}"
