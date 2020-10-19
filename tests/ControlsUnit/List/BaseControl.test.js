@@ -5904,6 +5904,18 @@ define([
             });
             assert.isNull(instance._selectionController);
          });
+
+         it('items changed in sourceController', async() => {
+            const sourceController = new dataSource.NewSourceController({ ...cfg });
+            const items = new collection.RecordSet({
+               keyProperty: 'id',
+               adapter: 'adapter.sbis'
+            });
+            sourceController.setItems(items);
+            const newCfg = { ...cfg, sourceController };
+            instance._beforeUpdate(newCfg);
+            assert.ok(instance._items === items);
+         });
       });
 
       it('should not call _getItemsContainer on error', () => {
