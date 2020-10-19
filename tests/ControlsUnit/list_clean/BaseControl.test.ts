@@ -1,7 +1,6 @@
 import {assert} from 'chai';
 import {BaseControl, ListViewModel} from 'Controls/list';
 import {RecordSet} from 'Types/collection';
-import {Model} from 'Types/entity';
 import {Memory} from 'Types/source';
 
 const getData = (dataCount: number = 0) => {
