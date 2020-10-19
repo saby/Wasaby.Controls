@@ -238,7 +238,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     private _calculateInitialShadowVisibility(displayedRanges: TDisplayedRangesItem[], shadowPosition: string): string {
         // Если мы стоим на краю (первом или последнем элементе) отключим тени при инициализации
         if (displayedRanges) {
-            const displayedRangesLastElementIndex = displayedRanges.length;
+            const displayedRangesLastElementIndex = displayedRanges.length - 1;
             const displayedRangesItem = shadowPosition === 'top' ? displayedRanges[0][0] :
                 displayedRanges[displayedRangesLastElementIndex][1];
 
