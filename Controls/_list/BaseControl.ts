@@ -1595,7 +1595,8 @@ const _private = {
                         self._notify('listSelectedKeysCountChanged', [selectionController.getCountOfSelected(), selectionController.isAllSelected()], {bubbling: true});
                         break;
                     case IObservable.ACTION_RESET:
-                        newSelection = selectionController.onCollectionReset();
+                        const entryPath = self._items.getMetaData().ENTRY_PATH;
+                        newSelection = selectionController.onCollectionReset(entryPath);
                         break;
                     case IObservable.ACTION_REMOVE:
                         newSelection = selectionController.onCollectionRemove(removedItems);
