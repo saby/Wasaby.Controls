@@ -181,6 +181,7 @@ export default class SearchControllerClass {
         }
     }
 
+    // todo: move to Browser
     handleItemOpen(root: Key, items: RecordSet, dataRoot: Key = null): void {
         if (this._isSearchViewMode() && this._options.searchNavigationMode === 'expand') {
             this._notifiedMarkedKey = root;
