@@ -443,7 +443,8 @@ describe('Controls/_display/CollectionItem', () => {
             notifyItemChange(item: CollectionItem<string>, property: string): void {
                 given.item = item;
                 given.property = property;
-            }
+            },
+            getHoverBackgroundStyle: function() {}
         };
 
         const item = new CollectionItem({ owner });
