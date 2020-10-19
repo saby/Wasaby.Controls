@@ -22,7 +22,7 @@ import {Record} from 'Types/entity';
  *
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
@@ -39,7 +39,7 @@ import {Record} from 'Types/entity';
  *
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
