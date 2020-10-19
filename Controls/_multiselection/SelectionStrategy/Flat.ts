@@ -2,7 +2,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import { ISelectionObject as ISelection } from 'Controls/interface';
 import { Model } from 'Types/entity';
-import { IFlatSelectionStrategyOptions, ISelectionModel } from '../interface';
+import { IEntryPathItem, IFlatSelectionStrategyOptions, ISelectionModel } from '../interface';
 import ISelectionStrategy from './ISelectionStrategy';
 import clone = require('Core/core-clone');
 import { CrudEntityKey } from 'Types/source';
@@ -27,6 +27,9 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
    update(options: IFlatSelectionStrategyOptions): void {
       this._model = options.model;
    }
+
+   // tslint:disable-next-line:no-empty
+   setEntryPath(entryPath: IEntryPathItem[]): void {}
 
    select(selection: ISelection, key: CrudEntityKey): ISelection {
       const cloneSelection = clone(selection);

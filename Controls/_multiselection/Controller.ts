@@ -9,7 +9,7 @@ import {
    ISelectionItem,
    ISelectionModel,
    TKeys,
-   ISelectionDifference
+   ISelectionDifference, IEntryPathItem
 } from './interface';
 import { CrudEntityKey } from 'Types/source';
 
@@ -213,10 +213,12 @@ export class Controller {
     * Обрабатывает сброс элементов в списке
     * @return {ISelection|void}
     */
-   onCollectionReset(): ISelection|void {
+   onCollectionReset(entryPath: IEntryPathItem[]): ISelection|void {
       if (this._model.getCount() === 0 && this.isAllSelected()) {
          return { selected: [], excluded: [] };
       }
+
+      this._strategy.setEntryPath(entryPath);
 
       this._updateModel(this._selection);
    }
