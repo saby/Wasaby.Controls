@@ -96,16 +96,16 @@ class PositionNavigationStore implements INavigationStore {
     }
 
     setMetaMore(more: IPositionHasMoreCompatible): void {
-        if (more.before) {
+        if (more.before !== undefined) {
             this._more.backward = more.before;
         }
-        if (more.backward) {
+        if (more.backward !== undefined) {
             this._more.backward = more.backward;
         }
-        if (more.after) {
+        if (more.after !== undefined) {
             this._more.forward = more.after;
         }
-        if (more.forward) {
+        if (more.forward !== undefined) {
             this._more.forward = more.forward;
         }
     }

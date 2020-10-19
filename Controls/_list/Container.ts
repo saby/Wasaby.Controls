@@ -37,10 +37,14 @@ export default class ListContainer extends Control<IControlOptions> {
 /**
  * Контрол-контейнер для списка. Передает опции из контекста в список.
  *
- * @remark
+ * @remark 
+ * Контейнер ожидает поле контекста "dataOptions", которое поставляет Controls/list:DataContainer.
+ * Из поля контекста "dataOptions" контейнер передает в список следующие опции: <a href="/docs/js/Controls/list/View/options/filter/">filter</a>, <a href="/docs/js/Controls/list/View/options/navigation/">navigation</a>, <a href="/docs/js/Controls/list/View/options/sorting/">sorting</a>, <a href="/docs/js/Controls/list/View/options/keyProperty/">keyProperty</a>, <a href="/docs/js/Controls/list/View/options/source/">source</a>, sourceController.
+ * 
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
+ * * <a href="/docs/js/Controls/list/DataContainer/">Controls/list:DataContainer</a> 
  *
  * @class Controls/_list/Container
  * @extends Core/Control

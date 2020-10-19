@@ -25,9 +25,10 @@ import {ILinkViewControlOptions} from './_dateRange/LinkView';
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_interface/IDayTemplate
- * @mixes Controls/interface/IDateMask
+ * @mixes Controls/_interface/IDateMask
  * @mixes Controls/_datePopup/interfaces/IDatePopup
  * @mixes Controls/_interface/IDateRangeValidators
+ * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
  * @control
  * @public
  * @author Красильников А.С.
@@ -42,7 +43,7 @@ import {ILinkViewControlOptions} from './_dateRange/LinkView';
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_interface/IDayTemplate
- * @mixes Controls/interface/IDateMask
+ * @mixes Controls/_interface/IDateMask
  * @mixes Controls/datePopup/interfaces/IDatePopup
  * @mixes Controls/_interface/IDateRangeValidators
  * @control

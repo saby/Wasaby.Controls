@@ -352,21 +352,29 @@ class Field<Value, ModelOptions>
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
         const code: string = event.nativeEvent.key;
-        const processedKeys: string[] = ['End', 'Home', 'Space', 'ArrowLeft', 'ArrowRight'];
+        const processedKeys: string[] = [
+            'End', 'Home', 'Space', 'ArrowLeft', 'ArrowRight',
+            // Поддержка значения key в IE
+            'Spacebar', 'Left', 'Right'
+        ];
 
         /**
          * Клавиши обрабатываемые полем ввода не должны обрабатывать контролы выше.
          * Для этого останавливаем всплытие события.
          */
         if (processedKeys.includes(code)) {
-            event.nativeEvent.stopPropagation();
+            event.stopPropagation();
         }
 
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
     }
 
     protected _keyUpHandler(event: SyntheticEvent<KeyboardEvent>): void {
-        const processedKeys: string[] = ['End', 'Home', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+        const processedKeys: string[] = [
+            'End', 'Home', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+            // Поддержка значений key в IE
+            'Left', 'Right', 'Up', 'Down'
+        ];
 
         if (processedKeys.includes(event.nativeEvent.key)) {
             this._selectionFromFieldToModel();

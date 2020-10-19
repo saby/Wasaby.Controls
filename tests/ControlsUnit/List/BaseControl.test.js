@@ -5887,6 +5887,18 @@ define([
             });
             assert.isNull(instance._selectionController);
          });
+
+         it('items changed in sourceController', async() => {
+            const sourceController = new dataSource.NewSourceController({ ...cfg });
+            const items = new collection.RecordSet({
+               keyProperty: 'id',
+               adapter: 'adapter.sbis'
+            });
+            sourceController.setItems(items);
+            const newCfg = { ...cfg, sourceController };
+            instance._beforeUpdate(newCfg);
+            assert.ok(instance._items === items);
+         });
       });
 
       it('should not call _getItemsContainer on error', () => {
@@ -7731,6 +7743,18 @@ define([
                   const notifySpy = sinon.spy(baseControl, '_notify');
                   baseControl._beforeUpdate({ ...newCfg, selectionViewMode: '', filter: {} });
                   assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [null]]).called);
+               });
+            });
+
+            it('change selection', () => {
+               const newCfg = { ...cfg, selectedKeys: [1] };
+               baseControl.saveOptions(newCfg);
+               return baseControl._beforeMount(newCfg).then(() => {
+                  const notifySpy = sinon.spy(baseControl, '_notify');
+                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1, 2] });
+                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
+                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isSelected());
+                  assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
                });
             });
 

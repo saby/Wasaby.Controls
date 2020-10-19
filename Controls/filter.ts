@@ -10,6 +10,8 @@
  * @includes ViewContainer Controls/_filter/View/Container
  * @includes Controller Controls/_filter/Controller
  * @includes IFilterView Controls/_filter/View/interface/IFilterView
+ * @includes IFastFilter Controls/_filter/View/interface/IFastFilter
+ * @includes IFilterButton Controls/_filter/View/interface/IFilterButton
  * @includes IPrefetch Controls/_filter/IPrefetch
  * @includes DateRangeEditor Controls/_filter/Editors/DateRange
  * @public
@@ -28,6 +30,8 @@
  * @includes ViewContainer Controls/_filter/View/Container
  * @includes Controller Controls/_filter/Controller
  * @includes IFilterView Controls/_filter/View/interface/IFilterView
+ * @includes IFastFilter Controls/_filter/View/interface/IFastFilter
+ * @includes IFilterButton Controls/_filter/View/interface/IFilterButton
  * @includes IPrefetch Controls/_filter/IPrefetch
  * @includes Prefetch Controls/_filter/Prefetch
  * @includes DateRangeEditor Controls/_filter/Editors/DateRange

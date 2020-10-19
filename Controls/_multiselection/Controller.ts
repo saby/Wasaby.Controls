@@ -9,7 +9,7 @@ import {
    ISelectionItem,
    ISelectionModel,
    TKeys,
-   ISelectionDifference
+   ISelectionDifference, IEntryPathItem
 } from './interface';
 import { CrudEntityKey } from 'Types/source';
 
@@ -213,10 +213,12 @@ export class Controller {
     * Обрабатывает сброс элементов в списке
     * @return {ISelection|void}
     */
-   onCollectionReset(): ISelection|void {
+   onCollectionReset(entryPath: IEntryPathItem[]): ISelection|void {
       if (this._model.getCount() === 0 && this.isAllSelected()) {
          return { selected: [], excluded: [] };
       }
+
+      this._strategy.setEntryPath(entryPath);
 
       this._updateModel(this._selection);
    }
@@ -298,8 +300,10 @@ export class Controller {
 
    // endregion
 
-   private _getItemsKeys(items: Array<CollectionItem<Model>|Model>): TKeys {
-      return items.map((item) => item instanceof CollectionItem ? item.getContents().getKey() : item.getKey());
+   private _getItemsKeys(items: Array<CollectionItem<Model>>): TKeys {
+      return items
+          .filter((it) => it.SelectableItem)
+          .map((item) => this._getKey(item));
    }
 
    /**
@@ -343,5 +347,24 @@ export class Controller {
       this._model.setSelectedItems(selectionForModel.get(true), true, silent);
       this._model.setSelectedItems(selectionForModel.get(false), false, silent);
       this._model.setSelectedItems(selectionForModel.get(null), null, silent);
+   }
+
+   /**
+    * @private
+    * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
+    *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+    */
+   private _getKey(item: CollectionItem<Model>): CrudEntityKey {
+      if (!item) {
+         return undefined;
+      }
+
+      let contents = item.getContents();
+      // @ts-ignore
+      if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
+         contents = contents[(contents as any).length - 1];
+      }
+
+      return contents instanceof Object ?  contents.getKey() : contents;
    }
 }
