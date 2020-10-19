@@ -234,9 +234,38 @@ describe('Controls/list_clean/BaseControl', () => {
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
             assert.isFalse(baseControl._pagingCfg.showEndButton);
+
+            baseControl.scrollMoveSyncHandler({scrollTop: 600});
+            assert.deepEqual({
+                begin: 'visible',
+                end: 'readonly',
+                next: 'readonly',
+                prev: 'visible'
+            }, baseControl._pagingCfg.arrowState);
+        });
+
+        it('paging mode is basic showEndButton true', async () => {
+            const cfgClone = {...baseControlCfg};
             cfgClone.navigation.viewConfig.showEndButton = true;
-            await baseControl.cantScrollHandler(null);
+            baseControl.saveOptions(cfgClone);
+            await baseControl._beforeMount(cfgClone);
+            baseControl._container = {
+                clientHeight: 1000
+            };
+            baseControl._itemsContainerReadyHandler(null, () => {
+                return {children: []};
+            });
+            baseControl._observeScrollHandler(null, 'viewportResize', {clientHeight: 400});
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
             baseControl._mouseEnter(null);
+
+            // эмулируем появление скролла
+            await baseControl.canScrollHandler(heightParams);
+            baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
+
+            assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
             baseControl.scrollMoveSyncHandler({scrollTop: 200});
             assert.deepEqual(
@@ -247,14 +276,6 @@ describe('Controls/list_clean/BaseControl', () => {
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
             assert.isTrue(baseControl._pagingCfg.showEndButton);
-
-            baseControl.scrollMoveSyncHandler({scrollTop: 600});
-            assert.deepEqual({
-                begin: 'visible',
-                end: 'readonly',
-                next: 'readonly',
-                prev: 'visible'
-            }, baseControl._pagingCfg.arrowState);
         });
 
         it('paging mode is edge', async () => {
