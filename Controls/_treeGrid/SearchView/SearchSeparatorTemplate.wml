@@ -4,6 +4,7 @@
             readOnly="{{true}}"
             scope="{{_options}}"
             colspan="{{itemData.getColspan(colspan, isColumnScrollVisible)}}"
+            isSearchSeparator="{{true}}"
             colspanLength="{{ itemData.getColspanLength(colspan, isColumnScrollVisible) }}"
             renderSeparatedColumnContent="{{ colspan === false }}"
             expanderIcon="none"

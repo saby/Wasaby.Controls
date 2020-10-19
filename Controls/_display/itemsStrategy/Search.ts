@@ -29,7 +29,7 @@ interface ISortOptions<S, T extends TreeItem<S>> {
 }
 
 interface IBreadCrumbsReference<S, T extends TreeItem<S>> {
-    breadCrumbs: BreadcrumbsItem<S>;
+    breadCrumbs: BreadcrumbsItem<S> | SearchSeparator<S>;
     last: T;
     itsNew: boolean;
 }
@@ -64,8 +64,8 @@ function getNearestNode<S, T extends TreeItem<S>>(item: T): T {
  */
 function getBreadCrumbsReference<S, T extends TreeItem<S>>(
     item: T,
-    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S>>,
-    breadcrumbsToData: Map<BreadcrumbsItem<S>, T[]>,
+    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S> | SearchSeparator<S>>,
+    breadcrumbsToData: Map<BreadcrumbsItem<S> | SearchSeparator<S>, T[]>,
     display: Tree<S, T>
 ): IBreadCrumbsReference<S, T> {
     let breadCrumbs;
@@ -86,6 +86,25 @@ function getBreadCrumbsReference<S, T extends TreeItem<S>>(
     const itsNew = !breadcrumbsToData.has(breadCrumbs);
 
     return {breadCrumbs, last, itsNew};
+}
+
+function getRootSeparatorReference<S, T extends TreeItem<S>>(
+    item: T,
+    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S> | SearchSeparator<S>>,
+    breadcrumbsToData: Map<BreadcrumbsItem<S> | SearchSeparator<S>, T[]>
+): IBreadCrumbsReference<S, T> {
+    let breadCrumbs = treeItemToBreadcrumbs.get(item);
+    if (!breadCrumbs) {
+        breadCrumbs = new SearchSeparator({
+            contents: null,
+            source: item
+        });
+        treeItemToBreadcrumbs.set(item, breadCrumbs);
+    }
+
+    const itsNew = !breadcrumbsToData.has(breadCrumbs);
+
+    return {breadCrumbs, last: item, itsNew};
 }
 
 /**
@@ -264,7 +283,16 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
             let resultItem = item;
 
             if (item instanceof TreeItem) {
-                if (item.isNode()) {
+                if (item.isRoot()) {
+                    const rootSeparatorReference = getRootSeparatorReference(
+                        item,
+                        treeItemToBreadcrumbs,
+                        breadcrumbsToData
+                    );
+                    prevBreadCrumbs = rootSeparatorReference.breadCrumbs;
+                    addBreadCrumbsItself(rootSeparatorReference);
+
+                } else if (item.isNode()) {
                     // Check if there is a special item within the breadcrumbs
                     if (
                         dedicatedItemProperty &&
@@ -311,12 +339,23 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                 }
 
                 // Get breadcrumbs by leaf's parent
-                const breadcrumbsReference = getBreadCrumbsReference(
-                    item.getParent() as T,
-                    treeItemToBreadcrumbs,
-                    breadcrumbsToData,
-                    display
-                );
+                let breadcrumbsReference: IBreadCrumbsReference<S, T>;
+                const parent = item.getParent() as T;
+                if (parent && parent.isRoot()) {
+                    breadcrumbsReference = getRootSeparatorReference(
+                        parent,
+                        treeItemToBreadcrumbs,
+                        breadcrumbsToData
+                    );
+                } else {
+                    breadcrumbsReference = getBreadCrumbsReference(
+                        parent,
+                        treeItemToBreadcrumbs,
+                        breadcrumbsToData,
+                        display
+                    );
+                }
+
                 const currentBreadcrumbs = breadcrumbsReference.breadCrumbs;
                 if (currentBreadcrumbs) {
                     // Add actual breadcrumbs if it has been changed and it's not a repeat
