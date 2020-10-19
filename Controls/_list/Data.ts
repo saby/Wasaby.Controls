@@ -17,6 +17,7 @@ export interface IDataOptions extends IControlOptions,
     INavigationOptions<unknown>,
     ISortingOptions {
    dataLoadErrback?: Function;
+   dataLoadCallback?: Function;
    root?: string|number|null;
    groupProperty?: string;
    groupingKeyCallback?: Function;
@@ -168,10 +169,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
                    if (newOptions.dataLoadCallback instanceof Function) {
                       newOptions.dataLoadCallback(items);
                    }
-                   const newItems = this._sourceController.setItems(items);
-                   if (!this._items) {
-                      this._items = newItems;
-                   }
+                   this._items = this._sourceController.setItems(items);
                 }
 
                 const controllerState = this._sourceController.getState();
