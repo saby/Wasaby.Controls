@@ -54,6 +54,7 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
             this._type = SHADOW_TYPE.AFTER;
         }
         this._options = options;
+        this._updateEnabled();
     }
 
     get isEnabled() {
@@ -104,6 +105,12 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
             this._isVisible = isVisible;
             isChanged = true;
         }
+        return isChanged;
+    }
+
+    updateVisibilityByInnerComponents(visibility: SHADOW_VISIBILITY): boolean {
+        const isChanged: boolean = this._visibilityByInnerComponents !== visibility;
+        this._visibilityByInnerComponents = visibility;
         return isChanged;
     }
 

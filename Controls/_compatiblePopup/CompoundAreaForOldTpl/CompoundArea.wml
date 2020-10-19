@@ -14,6 +14,7 @@
          <ws:bodyContentTemplate>
             <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:bodyContentTemplate>
+         <ws:tabindex><ws:Number>0</ws:Number></ws:tabindex>
       </Controls.popupTemplate:Stack>
    </ws:else>
    <ws:else>
@@ -26,7 +27,10 @@
          <ws:bodyContentTemplate>
                <div name="compoundBlock" attr:class="controls-CompoundArea__container {{_getDialogClasses()}}"></div>
          </ws:bodyContentTemplate>
+         <ws:tabindex><ws:Number>0</ws:Number></ws:tabindex>
       </Controls.popupTemplate:Dialog>
    </ws:else>
-   <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
+   <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()">
+      <ws:tabindex><ws:Number>0</ws:Number></ws:tabindex>
+   </Controls.event:Listener>
 </div>

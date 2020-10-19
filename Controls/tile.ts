@@ -4,7 +4,6 @@
  * @includes View Controls/_tile/View
  * @includes ItemTemplate Controls/tile:ItemTemplate
  * @includes ITile Controls/_tile/interface/ITile
- * @includes IDraggable Controls/interface/IDraggable
  * @public
  * @author Крайнов Д.О.
  */
@@ -15,7 +14,7 @@
  * @includes View Controls/_tile/View
  * @includes ItemTemplate Controls/tile:ItemTemplate
  * @includes ITile Controls/_tile/interface/ITile
- * @includes IDraggable Controls/interface/IDraggable
+ * @includes IDraggable Controls/_interface/IDraggable
  * @includes SmallItemTemplate Controls/tile:SmallTemplate
  * @includes MediumTemplate Controls/tile:MediumTemplate
  * @includes PreviewTemplate Controls/tile:PreviewTemplate

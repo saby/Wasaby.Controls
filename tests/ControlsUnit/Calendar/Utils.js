@@ -6,8 +6,9 @@ define('ControlsUnit/Calendar/Utils', [
    coreMerge
 ) {
    return {
-      createComponent: function(Component, cfg) {
+      createComponent: function(Control, cfg) {
          let mv;
+         let Component = Control.default || Control;
          if (Component.getDefaultOptions) {
             cfg = this.prepareOptions(Component, cfg);
          }

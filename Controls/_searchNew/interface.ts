@@ -1,13 +1,8 @@
 import {IControlOptions} from 'UI/Base';
-import {
-   IFilterOptions,
-   INavigationOptions,
-   INavigationSourceConfig,
-   ISearchOptions,
-   ISourceOptions
-} from 'Controls/interface';
+import {IHierarchyOptions, ISearchOptions} from 'Controls/interface';
 import {NewSourceController} from 'Controls/dataSource';
 import {RecordSet} from 'Types/collection';
+import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 
 export interface ISearchResolverOptions {
    delayTime?: number | null;
@@ -21,19 +16,16 @@ export interface ISearchInputContainerOptions extends IControlOptions {
    minSearchValueLength?: number;
 }
 
-export interface ISearchControllerOptions extends ISearchOptions {
+export interface ISearchControllerOptions extends ISearchOptions,
+   IHierarchyOptions,
+   IHierarchySearchOptions {
    sourceController: NewSourceController;
    searchValue?: string;
-}
-
-export interface ISearchContainerOptions extends IControlOptions,
-   ISourceOptions, IFilterOptions, INavigationOptions<INavigationSourceConfig>, ISearchOptions {
-   sourceController: NewSourceController;
-   searchValue?: string;
+   root?: string|number|null;
 }
 
 export interface ISearchController {
-   reset(): Promise<void>;
+   reset(): Promise<RecordSet>;
    search(value: string): Promise<RecordSet>;
    update(options: Partial<ISearchControllerOptions>): void;
 }

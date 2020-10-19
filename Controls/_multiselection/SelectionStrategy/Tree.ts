@@ -41,6 +41,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._entryPath = options.entryPath;
    }
 
+   setEntryPath(entryPath: IEntryPathItem[]): void {
+      this._entryPath = entryPath;
+   }
+
    select(selection: ISelection, key: CrudEntityKey): ISelection {
       const item = this._getItem(key);
 

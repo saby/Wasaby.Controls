@@ -3,26 +3,28 @@
  * Высчитывает ширину переданного текста в пикселях.
  * Высчитывает по базовым на странице шрифту и размеру, то есть без довеска каких-либо классов.
  *
+ * @remark
  * <h2>Параметры функции</h2>
- * <ul>
- *    <li>{String} text Переданный текст</li>
- * </ul>
+ * * {String} text Переданный текст
+ * * {Number} fontSize Размер шрифта переданного текста
+ * * {Boolean} isPureText Определяет, содержит ли переданный текст верстку
  *
  * <h2>Возвращает</h2>
- * {Number} Ширина переданного текста в пикселях.
+ * * {Number} Ширина переданного текста в пикселях.
  *
- * <h2>Пример использования</h2>
- * <pre>
- *     helpers.getTextWidth("helloWorld")
+ * @example
+ * <pre class="brush: js">
+ *     import {getTextWidth} from 'Controls/sizeUtils';
+ *      getTextWidth("helloWorld", 18);
  * </pre>
  *
- * @class Controls/Utils/getTextWidth
+ * @class Controls/sizeUtils:getTextWidth
  * @public
- * @author Мальцев Алексей Александрович
+ * @author Красильников А.С.
  */
 
-export function getTextWidth(text: string, fontSize: number, isPureText: boolean): number {
-    const hiddenStyle = 'left:-10000px;top:-10000px;height:auto;width:auto;position:absolute;' + (fontSize ? ('font-size: ' + fontSize + ';') : '');
+export function getTextWidth(text: string, fontSize?: number, isPureText?: boolean): number {
+    const hiddenStyle = 'left:-10000px;top:-10000px;height:auto;width:auto;position:absolute;' + (fontSize ? ('font-size: ' + fontSize + 'px;') : '');
     const clone: HTMLDivElement = document.createElement('div');
 
     // устанавливаем стили у клона, дабы он не мозолил глаз.

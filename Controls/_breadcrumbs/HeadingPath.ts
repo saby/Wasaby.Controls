@@ -22,7 +22,7 @@ import {Record} from 'Types/entity';
  *
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
@@ -39,7 +39,7 @@ import {Record} from 'Types/entity';
  *
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
@@ -134,34 +134,35 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     protected _arrowWidth: number;
     protected _paddingRight: number;
 
-    protected _beforeMount(options?: IBreadCrumbsOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
+    protected _beforeMount(options?: IBreadCrumbsOptions,
+                           contexts?: object,
+                           receivedState?: IReceivedState): Promise<IReceivedState> | void {
         this._prepareItems(options);
-        if (this._breadCrumbsItems) {
-            if (!options.containerWidth) {
-                this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
-            } else {
-                //утилиту PrepareDataUtil для основных преобразований крошек грузим всегда. Утилиту для расчета ширины только тогда, когда нам передают containerWidth
-                const arrPromise = [import('Controls/_breadcrumbs/Utils')];
-                if (!receivedState) {
-                    arrPromise.push(loadFontWidthConstants());
+        const arrPromise = [];
+
+        // Ветка, где построение идет на css
+        if (this._breadCrumbsItems && !options.containerWidth) {
+            this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
+            return;
+        }
+
+        if (options.containerWidth) {
+            return Promise.all([import('Controls/_breadcrumbs/Utils'), loadFontWidthConstants()]).then((res) => {
+                this.calculateBreadcrumbsUtil = res[0].default;
+                this._arrowWidth = res[0].ARROW_WIDTH;
+                this._paddingRight = res[0].PADDING_RIGHT;
+                if (receivedState) {
+                    this._dotsWidth = this._getDotsWidth(options.fontSize);
+                    this._prepareData(options, options.containerWidth);
+                } else if (this._breadCrumbsItems) {
+                    const getTextWidth = res[1];
+                    this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
+                    this._prepareData(options, options.containerWidth, getTextWidth);
+                    return {
+                        items: options.items
+                    };
                 }
-                return Promise.all(arrPromise).then((res) => {
-                    this.calculateBreadcrumbsUtil = res[0].default;
-                    this._arrowWidth = res[0].ARROW_WIDTH;
-                    this._paddingRight = res[0].PADDING_RIGHT;
-                    if (receivedState) {
-                        this._dotsWidth = this._getDotsWidth(options.fontSize);
-                        this._prepareData(options, options.containerWidth);
-                    } else {
-                        const getTextWidth = res[1];
-                        this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
-                        this._prepareData(options, options.containerWidth, getTextWidth);
-                        return {
-                            items: options.items
-                        };
-                    }
-                });
-            }
+            });
         }
     }
 
@@ -172,9 +173,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         if (isItemsChanged) {
             this._items = newOptions.items;
         }
-        if (isContainerWidthChanged) {
-            this._width = newOptions.containerWidth;
-        }
+        this._width = newOptions.containerWidth;
         if (isFontSizeChanged) {
             this._dotsWidth = this._getDotsWidth(newOptions.fontSize);
         }

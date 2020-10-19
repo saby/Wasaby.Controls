@@ -23,7 +23,7 @@ import { TreeControl } from 'Controls/tree';
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_marker/interface/IMarkerListOptions
     *
     * @control
@@ -55,7 +55,7 @@ import { TreeControl } from 'Controls/tree';
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_marker/interface/IMarkerListOptions
     *
     * @control
