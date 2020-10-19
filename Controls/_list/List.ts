@@ -37,7 +37,7 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_interface/ISorting
- * @mixes Controls/interface/IDraggable
+ * @mixes Controls/_interface/IDraggable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_list/interface/IReloadableList
@@ -74,7 +74,7 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/interface/IEditableList
- * @mixes Controls/interface/IDraggable
+ * @mixes Controls/_interface/IDraggable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_list/interface/IReloadableList
