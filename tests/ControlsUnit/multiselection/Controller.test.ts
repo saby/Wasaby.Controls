@@ -6,7 +6,9 @@ import { FlatSelectionStrategy, SelectionController, TreeSelectionStrategy, ISel
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
 import { SearchGridViewModel} from 'Controls/treeGrid';
-import { Collection, CollectionItem } from 'Controls/display';
+import { Collection, CollectionItem, Tree } from 'Controls/display';
+import { Model } from 'Types/entity';
+import * as ListData from 'ControlsUnit/ListData';
 
 describe('Controls/_multiselection/Controller', () => {
    const items = new RecordSet({
@@ -161,6 +163,49 @@ describe('Controls/_multiselection/Controller', () => {
       };
       const result = controller.onCollectionRemove([removedItem]);
       assert.deepEqual(result, expectedResult);
+   });
+
+   it('onCollectionReset', () => {
+      const model = new Tree({
+         collection: new RecordSet({
+            keyProperty: ListData.KEY_PROPERTY,
+            rawData: ListData.getItems()
+         }),
+         root: new Model({ rawData: { id: null }, keyProperty: ListData.KEY_PROPERTY }),
+         keyProperty: ListData.KEY_PROPERTY,
+         parentProperty: ListData.PARENT_PROPERTY,
+         nodeProperty: ListData.NODE_PROPERTY,
+         hasChildrenProperty: ListData.HAS_CHILDREN_PROPERTY
+      });
+
+      const nodesSourceControllers = {
+         get(): object {
+            return {
+               hasMoreData(): boolean { return false; }
+            };
+         }
+      };
+
+      strategy = new TreeSelectionStrategy({
+         model,
+         selectDescendants: true,
+         selectAncestors: true,
+         rootId: null,
+         nodesSourceControllers,
+         entryPath: []
+      });
+
+      controller = new SelectionController({
+         model,
+         strategy,
+         selectedKeys: [1, 8],
+         excludedKeys: []
+      });
+
+      controller.onCollectionReset([{id: 8, parent: 6}]);
+
+      assert.isTrue(model.getItemBySourceKey(1).isSelected());
+      assert.isNull(model.getItemBySourceKey(6).isSelected());
    });
 
    it('with limit', () => {

@@ -316,6 +316,7 @@ const _private = {
         if (needAttachLoadTopTriggerToNull && self._isMounted) {
             self._attachLoadTopTriggerToNull = true;
             self._needScrollToFirstItem = true;
+            self._scrollTop = 1;
         } else {
             self._attachLoadTopTriggerToNull = false;
         }
@@ -1595,7 +1596,8 @@ const _private = {
                         self._notify('listSelectedKeysCountChanged', [selectionController.getCountOfSelected(), selectionController.isAllSelected()], {bubbling: true});
                         break;
                     case IObservable.ACTION_RESET:
-                        newSelection = selectionController.onCollectionReset();
+                        const entryPath = self._items.getMetaData().ENTRY_PATH;
+                        newSelection = selectionController.onCollectionReset(entryPath);
                         break;
                     case IObservable.ACTION_REMOVE:
                         newSelection = selectionController.onCollectionRemove(removedItems);
@@ -2476,7 +2478,7 @@ const _private = {
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
             disableVirtualScroll: options.disableVirtualScroll,
-            virtualScrollConfig: options.virtualScrollConfig || {},
+            virtualScrollConfig: options.virtualScrollConfig,
             needScrollCalculation: self._needScrollCalculation,
             scrollObserver: self._children.scrollObserver,
             collection: self._listViewModel,
@@ -3531,11 +3533,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setEditingConfig(this._getEditingConfig(newOptions));
         }
 
-        if (this._options.sourceController !== newOptions.sourceController && newOptions.sourceController) {
+        if (newOptions.sourceController) {
             const items = newOptions.sourceController.getItems();
-            this._sourceController = newOptions.sourceController;
 
-            if (this._listViewModel && !this._listViewModel.getCollection()) {
+            if (this._options.sourceController !== newOptions.sourceController) {
+                this._sourceController = newOptions.sourceController;
+            }
+
+            if (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items) {
                 _private.assignItemsToModel(this, items, newOptions);
 
                 // TODO удалить когда полностью откажемся от старой модели
@@ -3630,14 +3635,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._markerController = null;
         }
 
-        const selectedKeysChanged = !isEqual(self._options.selectedKeys, newOptions.selectedKeys);
-        // В browser когда скрывают видимость чекбоксов, еще и сбрасывают selection
-        if (this._items && this._items.getCount() &&
-            (newOptions.multiSelectVisibility !== 'hidden' || selectedKeysChanged && newOptions.selectedKeys.length === 0)) {
-            const selectionChanged = selectedKeysChanged
+        if (this._items && this._items.getCount()) {
+            const selectionChanged = (!isEqual(self._options.selectedKeys, newOptions.selectedKeys)
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
-                || self._options.selectedKeysCount !== newOptions.selectedKeysCount;
-            if (selectionChanged) {
+                || self._options.selectedKeysCount !== newOptions.selectedKeysCount);
+
+            // В browser когда скрывают видимость чекбоксов, еще и сбрасывают selection
+            if (selectionChanged && (newOptions.multiSelectVisibility !== 'hidden' || _private.hasSelectionController(this))) {
                 const newSelection = {
                     selected: newOptions.selectedKeys,
                     excluded: newOptions.excludedKeys
@@ -3646,7 +3650,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 controller.setSelection(newSelection);
                 self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             }
-        } else if (_private.hasSelectionController(this)) {
+        }
+        if (newOptions.multiSelectVisibility === 'hidden') {
             _private.getSelectionController(this).destroy();
             this._selectionController = null;
         }
@@ -4885,9 +4890,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!detection.isMobilePlatform) {
             _private.updateItemActionsOnce(this, this._options);
         }
-        if (!this._pagingVisible) {
-            _private.initPaging(this);
-        }
 
         if (this._documentDragging) {
             this._insideDragging = true;
@@ -4895,12 +4897,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
-
         if (this._hideTopTrigger) {
             this._hideTopTrigger = false;
         }
         if (!this._scrollController?.getScrollTop()) {
             _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+        }
+
+        if (!this._pagingVisible) {
+            _private.initPaging(this);
         }
     },
 
@@ -5504,7 +5509,7 @@ BaseControl.getDefaultOptions = function() {
         loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
         continueSearchTemplate: 'Controls/list:ContinueSearchTemplate',
         stickyHeader: true,
-        virtualScrollMode: 'remove',
+        virtualScrollConfig: {},
         filter: {},
         itemActionsVisibility: 'onhover',
         searchValue: ''

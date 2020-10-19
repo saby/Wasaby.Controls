@@ -23,7 +23,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/interface/IGridItemTemplate
     * @mixes Controls/_grid/interface/IPropStorage
@@ -57,7 +57,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_interface/ISorting
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_grid/interface/IPropStorage
     * @mixes Controls/_marker/interface/IMarkerListOptions
     *
