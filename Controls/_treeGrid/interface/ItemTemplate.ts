@@ -76,7 +76,9 @@ export default interface IItemTemplateOptions {
      * @typedef {String} Position
      * @variant default Стандартное расположение иконки узла.
      * @variant right Расположение иконки узла справа.
-     * @variant custom Произвольное расположение  иконки узла.
+     * @variant custom Произвольное расположение иконки узла. При данном значении опции, шаблон иконки передается в прикладной шаблон и может быть выведен в любом месте записи.
+     * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.
+     * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Right/Index В следующем примере для контрола опция expanderPosition установлена в значение right.
      */
     /**
      * @name Controls/treeGrid:ItemTemplate#expanderPosition
