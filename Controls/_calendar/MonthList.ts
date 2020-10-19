@@ -12,7 +12,7 @@ import ExtDataModel, {TItems} from './MonthList/ExtDataModel';
 import MonthsSource from './MonthList/MonthsSource';
 import monthListUtils from './MonthList/Utils';
 import ITEM_TYPES from './MonthList/ItemTypes';
-import {IDisplayedRanges, IDisplayedRangesOptions} from 'Controls/interface';
+import {IDisplayedRanges, IDisplayedRangesOptions, TDisplayedRangesItem} from 'Controls/interface';
 import {IDateConstructor, IDateConstructorOptions} from 'Controls/interface';
 import {IDayTemplate, IDayTemplateOptions} from 'Controls/interface';
 import {IntersectionObserverSyntheticEntry, scrollToElement} from 'Controls/scroll';
@@ -114,11 +114,6 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
                 dateUtils.getStartOfYear(now) : dateUtils.getStartOfMonth(now);
         }
 
-        // Включаем тени при инициализации чтобы избежать их моргания
-        const topShadowVisibility = options.topShadowVisibility || 'visible';
-        const bottomShadowVisibility = options.bottomShadowVisibility || 'visible';
-        this._updateShadowVisibility(topShadowVisibility, bottomShadowVisibility);
-
         const normalizedPosition = this._normalizeDate(position, options.viewMode);
 
         this._enrichItemsDebounced = debounce(this._enrichItems, 150);
@@ -132,6 +127,13 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         this._lastNotifiedPositionChangedDate = normalizedPosition;
         this._threshold = [0, 0.01, options.itemDataLoadRatio, 0.99, 1];
 
+        // Включаем тени при инициализации чтобы избежать их моргания
+        const topShadowVisibility = options.topShadowVisibility ||
+            this._calculateInitialShadowVisibility(options.displayedRanges, 'top');
+        const bottomShadowVisibility = options.bottomShadowVisibility ||
+            this._calculateInitialShadowVisibility(options.displayedRanges, 'bottom');
+        this._updateShadowVisibility(topShadowVisibility, bottomShadowVisibility);
+
         if (this._extData) {
             if (receivedState) {
                 this._extData.updateData(receivedState);
@@ -143,9 +145,11 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 
     protected _afterMount(options: IModuleComponentOptions): void {
-        // Если период отображения месяцев ограничен - меняем тип теней, чтобы при достижении края тень пропала
         if (options.displayedRanges) {
-            this._updateShadowVisibility(options.topShadowVisibility, options.bottomShadowVisibility);
+            // Если период отображения месяцев ограничен - сбрасываем тени, чтобы при достижении края тень пропала.
+            const topShadowVisibility = options.topShadowVisibility || 'auto';
+            const bottomShadowVisibility = options.bottomShadowVisibility || 'auto';
+            this._updateShadowVisibility(topShadowVisibility, bottomShadowVisibility);
         }
         this._updateScrollAfterViewModification(true);
     }
@@ -229,6 +233,20 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             displayedRanges.push(Date.parse(new Date(position.getFullYear(), position.getMonth() + i)));
         }
         return displayedRanges;
+    }
+
+    private _calculateInitialShadowVisibility(displayedRanges: TDisplayedRangesItem[], shadowPosition: string): string {
+        // Если мы стоим на краю (первом или последнем элементе) отключим тени при инициализации
+        if (displayedRanges) {
+            const displayedRangesLastElementIndex = displayedRanges.length;
+            const displayedRangesItem = shadowPosition === 'top' ? displayedRanges[0][0] :
+                displayedRanges[displayedRangesLastElementIndex][1];
+
+            if (dateUtils.isDatesEqual(this._displayedPosition, displayedRangesItem)) {
+                return 'auto';
+            }
+        }
+        return 'visible';
     }
 
     private _updateItemTemplate(options: IModuleComponentOptions): void {
