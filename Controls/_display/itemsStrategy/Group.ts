@@ -86,6 +86,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
         this._options.collapsedGroups = value;
         // reset created groups
         this._groups = [];
+        this._itemsOrder = null;
     }
 
     // region IItemsStrategy
