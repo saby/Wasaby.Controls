@@ -101,6 +101,9 @@ class Paging extends Control<IPagingOptions> {
         if (this._options.arrowState) {
             return this._options.arrowState[state] || 'visible';
         }
+        if (this._isDigit()) {
+            return 'visible';
+        }
         return 'hidden';
     }
 
