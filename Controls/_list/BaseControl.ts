@@ -1131,7 +1131,7 @@ const _private = {
         // а вторая вернула мало записей и суммарный объем менее двух вьюпортов, пэйджинг не должен исчезнуть
         if (self._sourceController) {
 
-            // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
+            // если есть Еще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             const hasMoreData = {
                 up: _private.hasMoreData(self, self._sourceController, 'up'),
                 down: _private.hasMoreData(self, self._sourceController, 'down')
@@ -1230,6 +1230,7 @@ const _private = {
         const scrollPagingConfig = {
             pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
+            showEndButton: self._options.navigation.viewConfig.showEndButton,
             totalElementsCount: elementsCount,
             loadedElementsCount: self._listViewModel.getStopIndex() - self._listViewModel.getStartIndex(),
             pagingCfgTrigger: (cfg) => {
@@ -1239,7 +1240,7 @@ const _private = {
                 }
             }
         };
-        self._scrollPagingCtr = new ScrollPagingController(scrollPagingConfig, hasMoreData)
+        self._scrollPagingCtr = new ScrollPagingController(scrollPagingConfig, hasMoreData);
         return Promise.resolve(self._scrollPagingCtr);
     },
 
