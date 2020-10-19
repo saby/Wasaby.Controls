@@ -1219,11 +1219,8 @@ var
             }
         },
 
-        setHasMoreData(hasMoreData: boolean, silent: boolean = false): boolean {
+        setHasMoreData(hasMoreData: boolean, silent: boolean = false): void {
             this._model.setHasMoreData(hasMoreData);
-            if (!silent) {
-                this._nextModelVersion(true);
-            }
         },
 
         getHasMoreData(): boolean {
@@ -1940,7 +1937,7 @@ var
                 version = 'LAST_ITEM_' + version;
 
                 if (this._options.rowSeparatorSize) {
-                    version = 'WITH_SEPARATOR_' + `${this._model.getHasMoreData()}_` + version;
+                    version = 'WITH_SEPARATOR_' + version;
                 }
             }
 
