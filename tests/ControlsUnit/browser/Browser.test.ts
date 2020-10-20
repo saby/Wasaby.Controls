@@ -3,6 +3,7 @@ import {Memory} from 'Types/source';
 import {equal, deepStrictEqual, ok} from 'assert';
 import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
+import {assert} from "../../../build-ui/builder-json-cache/temp-modules/UI/_vdom/Utils/Functional";
 
 const browserData = [
     {
@@ -163,6 +164,17 @@ describe('Controls/browser:Browser', () => {
                 equal(browser._topShadowVisibility, 'auto');
                 equal(browser._bottomShadowVisibility, 'auto');
             });
+        });
+
+        it('source returns error', async () => {
+            const options = getBrowserOptions();
+            options.source.query = () => {
+                return Promise.reject(new Error('testError'));
+            };
+            const browser = getBrowser(options);
+
+            const mountResult = await browser._beforeMount(options);
+            ok(mountResult instanceof Error);
         });
 
     });
