@@ -153,14 +153,17 @@ var
                 classLists.right += ` controls-Grid__cell_spacingRight${getCellPadding('right')}_theme-${theme}`;
             }
 
-            // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
-            if (params.columnIndex === 0 && !params.hasMultiSelectColumn) {
-                classLists.left += ` controls-Grid__cell_spacingFirstCol_${params.itemPadding.left}_theme-${theme}`;
+            // Отступ для первой колонки.
+            if (params.columnIndex === 0) {
+                // Если режим мультиселект, то отступ обеспечивается чекбоксом.
+                if (!params.hasMultiSelectColumn) {
+                    classLists.left += ` controls-Grid__cell_spacingFirstCol_${params.itemPadding.left}_theme-${theme}`;
 
-            // У разделителя записей в поиске должен быть отступ, равный ширине чекбокса
-            // Стандарт ещё рисуют https://online.sbis.ru/opendoc.html?guid=a5dd1905-f7a6-477f-a305-816eb51248b6
-            } else if (isRootItemsSeparator) {
-                classLists.left += ` controls-Grid__cell_spacingFirstCol_checkboxPlaceholder_theme-${theme}`;
+                // У разделителя записей в поиске должен быть отступ, равный ширине чекбокса
+                // Стандарт ещё рисуют https://online.sbis.ru/opendoc.html?guid=a5dd1905-f7a6-477f-a305-816eb51248b6
+                } else if (isRootItemsSeparator) {
+                    classLists.left += ` controls-Grid__cell_spacingFirstCol_checkboxPlaceholder_theme-${theme}`;
+                }
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
