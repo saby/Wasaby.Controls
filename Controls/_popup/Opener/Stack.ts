@@ -47,7 +47,7 @@ interface IStackOpenerOptions extends IStackPopupOptions, IBaseOpenerOptions {}
 const getStackConfig = (stackOptions: IStackOpenerOptions = {}, popupId?: string) => {
     const config = {...stackOptions};
     // The stack is isDefaultOpener by default.
-    // For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
+    // For more information, see  {@link Controls/_interface/ICanBeDefaultOpener}
     config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
     config._type = 'stack'; // TODO: Compatible for compoundArea
     config.id = config.id || popupId;

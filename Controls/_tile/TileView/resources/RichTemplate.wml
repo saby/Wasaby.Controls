@@ -48,6 +48,7 @@
 </ws:template>
 
 <ws:partial template="wml!Controls/_tile/TreeTileView/DefaultItemTpl"
+            attr:class="controls-TileView__richTemplate_item"
             highlightOnHover="{{false}}"
             staticHeight="{{true}}"
             height="auto"

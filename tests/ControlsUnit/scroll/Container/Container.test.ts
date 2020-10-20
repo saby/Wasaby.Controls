@@ -1,6 +1,7 @@
 import {Container} from 'Controls/scroll';
 import {constants} from 'Env/Env';
 import {SHADOW_VISIBILITY} from 'Controls/_scroll/Container/Interface/IShadows';
+import {SCROLL_POSITION} from 'Controls/_scroll/Utils/Scroll';
 
 function createComponent(Component, cfg) {
     let cmp;
@@ -218,21 +219,31 @@ describe('Controls/scroll:Container', () => {
     describe('_updateShadowVisibility', () => {
         it('should set always visible', () => {
             const component = createComponent(Container, {});
+            component._shadows._models.top._scrollState.canVerticalScroll = true;
+            component._shadows._models.bottom._scrollState.canVerticalScroll = true;
             component._shadows._models.top._isVisible = false;
             component._shadows._models.bottom._isVisible = false;
             component._updateShadowVisibility(
-                {},{ top: SHADOW_VISIBILITY.VISIBLE, bottom: SHADOW_VISIBILITY.VISIBLE });
+                {}, { top: SHADOW_VISIBILITY.VISIBLE, bottom: SHADOW_VISIBILITY.VISIBLE });
             assert.isTrue(component._shadows._models.top.isVisible);
             assert.isTrue(component._shadows._models.bottom.isVisible);
+            assert.isTrue(component._stickyHeaderController._isShadowVisible.top);
+            assert.isTrue(component._stickyHeaderController._isShadowVisible.bottom);
         });
         it('should set always invisible', () => {
             const component = createComponent(Container, {});
+            component._shadows._models.top._scrollState.canVerticalScroll = true;
+            component._shadows._models.bottom._scrollState.canVerticalScroll = true;
+            component._shadows._models.top._scrollState.verticalPosition = SCROLL_POSITION.MIDDLE;
+            component._shadows._models.bottom._scrollState.verticalPosition = SCROLL_POSITION.MIDDLE;
             component._shadows._models.top._isVisible = true;
             component._shadows._models.bottom._isVisible = true;
             component._updateShadowVisibility(
-                {},{ top: SHADOW_VISIBILITY.HIDDEN, bottom: SHADOW_VISIBILITY.HIDDEN });
+                {}, { top: SHADOW_VISIBILITY.HIDDEN, bottom: SHADOW_VISIBILITY.HIDDEN });
             assert.isFalse(component._shadows._models.top.isVisible);
             assert.isFalse(component._shadows._models.bottom.isVisible);
+            assert.isFalse(component._stickyHeaderController._isShadowVisible.top);
+            assert.isFalse(component._stickyHeaderController._isShadowVisible.bottom);
         });
     });
 });

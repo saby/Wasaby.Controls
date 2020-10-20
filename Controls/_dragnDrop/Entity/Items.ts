@@ -24,14 +24,14 @@ import Entity from 'Controls/_dragnDrop/Entity';
  * @name Controls/_dragnDrop/Entity/Items#items
  * @cfg {Array.<String>} Список перемещаемых элементов.
  * @remark В процессе перемещения рядом с курсором отображается миниатюра перемещаемой сущности.
- * @see Controls/interface/IDraggable#dragStart
+ * @see Controls/_interface/IDraggable#dragStart
  */
 
 /*
  * @name Controls/_dragnDrop/Entity/Items#items
  * @cfg {Array.<String>} The list of items to move.
  * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
- * @see Controls/interface/IDraggable#dragStart
+ * @see Controls/_interface/IDraggable#dragStart
  */
 
 interface IItemsOptions {

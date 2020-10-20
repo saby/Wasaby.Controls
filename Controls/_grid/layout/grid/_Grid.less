@@ -778,31 +778,12 @@
 
 .controls-GridView__itemV_marker-master_theme-@{themeName} {
    position: absolute;
-   display: inline-flex;
-   align-items: baseline;
+   box-sizing: border-box;
    width: @master-marker_thickness_list;
-   top: initial;
-   left: 0;
    height: 100%;
-}
-
-.ws-is-ie11 .controls-GridView__itemV_marker-master_theme-@{themeName} {
-   top: 0;
-   bottom: 0;
-   height: auto;
-}
-
-.controls-GridView__itemV_marker-master_theme-@{themeName}:before {
-   content: '\200b';
-   font-size: @item_font-size_2xl_grid;
-}
-
-.controls-GridView__itemV_marker-master_theme-@{themeName}:after {
-   content: '';
-   display: inline-block;
    background-color: @master-marker_color_list;
-   width: @master-marker_thickness_list;
-   height: @master-marker_height_list;
+   top: 0;
+   left: 0;
 }
 
 .ws-is-hover {

@@ -92,6 +92,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
     theme?: string;
+    hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
     searchValue?: string;
@@ -589,6 +590,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$theme: string;
 
+    protected _$hoverBackgroundStyle: string;
+
     protected _$searchValue: string;
 
     protected _$rowSeparatorSize: string;
@@ -755,6 +758,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
 
         this._$theme = options.theme;
+
+        this._$hoverBackgroundStyle = options.hoverBackgroundStyle;
 
         this._$collapsedGroups = options.collapsedGroups;
 
@@ -2263,6 +2268,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$theme;
     }
 
+    getHoverBackgroundStyle(): string {
+        return this._$hoverBackgroundStyle;
+    }
+
     setTheme(theme: string): boolean {
         if (this._$theme !== theme) {
             this._$theme = theme;
@@ -2368,7 +2377,30 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setCollapsedGroups(collapsedGroups: TArrayGroupKey): void {
-        this._$collapsedGroups = collapsedGroups;
+        const groupStrategy = this._composer.getInstance<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
+        this._$collapsedGroups = groupStrategy.collapsedGroups = collapsedGroups;
+        const session = this._startUpdateSession();
+        // Сбрасываем кэш расчётов по всем стратегиям, чтобы спровацировать полный пересчёт с актуальными данными
+        this._getItemsStrategy().invalidate();
+        this._reGroup();
+        this._reSort();
+        this._reFilter();
+        this._finishUpdateSession(session);
+        this._nextVersion();
+    }
+
+    isAllGroupsCollapsed(): boolean {
+        const itemsCount = this.getCount();
+        if (!this.getCollapsedGroups()) {
+            return false;
+        }
+        for (let idx = 0; idx < itemsCount; idx++) {
+            const item = this.at(idx);
+            if (!(item instanceof GroupItem) || item.isExpanded()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     setCompatibleReset(compatible: boolean): void {
@@ -2622,6 +2654,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 const groupStrategy = this._composer.getInstance(GroupItemsStrategy);
                 if (groupStrategy) {
                     groupStrategy.handler = this._$group;
+                    groupStrategy.collapsedGroups = this._$collapsedGroups;
                 }
 
                 // Restore items contents before the _$collection will be affected
@@ -2914,7 +2947,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }).append(UserItemsStrategy, {
             handlers: this._$sort
         }).append(GroupItemsStrategy, {
-            handler: this._$group
+            handler: this._$group,
+            collapsedGroups: this._$collapsedGroups
         });
 
         this._userStrategies.forEach((us) => composer.append(us.strategy, us.options));

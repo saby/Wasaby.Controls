@@ -3,6 +3,7 @@
  * @library Controls/form
  * @includes CrudController Controls/_form/CrudController
  * @includes Controller Controls/_form/FormController
+ * @includes IFormController Controls/_form/interface/IFormController
  * @includes PrimaryAction Controls/_form/PrimaryAction
  * @public
  * @author Крайнов Д.О.
@@ -13,6 +14,7 @@
  * @library Controls/form
  * @includes CrudController Controls/_form/CrudController
  * @includes Controller Controls/_form/FormController
+ * @includes IFormController Controls/_form/interface/IFormController
  * @includes PrimaryAction Controls/_form/PrimaryAction
  * @public
  * @author Крайнов Д.О.

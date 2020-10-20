@@ -521,6 +521,38 @@ define(['Controls/lookupPopup', 'Types/entity', 'Types/source', 'Types/collectio
                });
             });
          });
+
+         it('query returns error', async function() {
+            let isIndicatorHidden = false;
+            const container = getContainer();
+            const source = new sourceLib.Memory();
+
+            source.query = () => Promise.reject(new Error('testError'));
+
+            container.context = {
+               get: function() {
+                  return {
+                     source: source,
+                     items: new collection.List(),
+                     filter: {}
+                  };
+               }
+            };
+
+            container._notify = function(eventName) {
+               if (eventName === 'hideIndicator') {
+                  isIndicatorHidden = true;
+               }
+               if (eventName === 'showIndicator') {
+                  isIndicatorHidden = false;
+                  return 'testId';
+               }
+            };
+            container._selectedKeys = [1, 2];
+            container._options.multiSelect = true;
+            await container._selectComplete();
+            assert.isTrue(isIndicatorHidden);
+         });
       });
    });
 

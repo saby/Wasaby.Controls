@@ -1,6 +1,6 @@
 import {Browser} from 'Controls/browser';
 import {Memory} from 'Types/source';
-import {equal, deepStrictEqual} from 'assert';
+import {equal, deepStrictEqual, ok} from 'assert';
 import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
 
@@ -16,6 +16,24 @@ const browserData = [
     {
         id: 2,
         name: 'Dmitry'
+    }
+];
+
+const browserHierarchyData = [
+    {
+        key: 0,
+        title: 'Интерфейсный фреймворк',
+        parent: null
+    },
+    {
+        key: 1,
+        title: 'Sasha',
+        parent: 0
+    },
+    {
+        key: 2,
+        title: 'Dmitry',
+        parent: null
     }
 ];
 
@@ -149,6 +167,18 @@ describe('Controls/browser:Browser', () => {
 
     });
 
+    describe('_beforeUnmount', () => {
+        it('_beforeUnmount while sourceController is loading', async () => {
+            const options = getBrowserOptions();
+            const browser = getBrowser(options);
+
+            await browser._beforeMount(options);
+
+            browser._beforeUnmount();
+            ok(!browser._sourceController);
+        });
+    });
+
     describe('_beforeUpdate', () => {
 
         describe('searchController', () => {
@@ -201,6 +231,23 @@ describe('Controls/browser:Browser', () => {
                 deepStrictEqual(browser._operationsController._savedListMarkedKey, 'testMarkedKey');
             });
 
+        });
+
+        it('update source', async () => {
+            let options = getBrowserOptions();
+            const browser = getBrowser();
+
+            await browser._beforeMount(options);
+
+            options = {...options};
+            options.source = new Memory({
+                data: browserHierarchyData,
+                keyProperty: 'key'
+            });
+            const browserItems = browser._items;
+
+            await browser._beforeUpdate(options);
+            ok(browser._items !== browserItems);
         });
 
     });

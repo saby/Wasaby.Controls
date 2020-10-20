@@ -8,15 +8,15 @@ export default class InputContainer extends Control<ISearchInputContainerOptions
    protected _template: TemplateFunction = template;
 
    protected _value: string;
-   protected _searchDelayController: SearchResolver = null;
+   protected _searchResolverController: SearchResolver = null;
 
    protected _beforeMount(options?: ISearchInputContainerOptions): void {
       this._initSearchDelayController();
    }
 
    protected _initSearchDelayController(): void {
-      if (!this._searchDelayController) {
-         this._searchDelayController = new SearchResolver({
+      if (!this._searchResolverController) {
+         this._searchResolverController = new SearchResolver({
             delayTime: this._options.delayTime,
             minSearchLength: this._options.minSearchValueLength,
             searchCallback: this._notifySearch,
@@ -42,7 +42,7 @@ export default class InputContainer extends Control<ISearchInputContainerOptions
    protected _valueChanged(event: SyntheticEvent, value: string): void {
       if (this._value !== value) {
          this._value = value;
-         this._searchDelayController.resolve(value);
+         this._searchResolverController.resolve(value);
       }
    }
 }

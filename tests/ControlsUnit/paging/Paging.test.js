@@ -184,5 +184,35 @@ define([
       });
       assert.isFalse(pg._isShowContentTemplate());
    });
+   it('_getArrowStateVisibility', function() {
+      var pg = new pagingLib.Paging();
+      pg.saveOptions({
+         arrowState: {
+            begin: "visible",
+            end: "visible",
+            next: "visible",
+            prev: "visible"
+         }
+      });
+      assert.equal(pg._getArrowStateVisibility('begin'), 'visible');
+      pg.saveOptions({
+         pagingMode: 'numbers',
+         arrowState: {
+            begin: "visible",
+            end: "hidden",
+            next: "hidden",
+            prev: "hidden"
+         }
+      });
+      assert.equal(pg._getArrowStateVisibility('begin'), 'visible');
 
+      pg.saveOptions({
+      });
+      assert.equal(pg._getArrowStateVisibility('begin'), 'hidden');
+
+      pg.saveOptions({
+         pagingMode: 'numbers',
+      });
+      assert.equal(pg._getArrowStateVisibility('begin'), 'visible');
+   });
 });
