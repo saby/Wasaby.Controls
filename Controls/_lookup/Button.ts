@@ -42,7 +42,7 @@ import {IHashMap} from 'Types/declarations';
  * @control
  * @public
  * @author Герасимов А.М.
- * @demo Engine-demo/SelectorButton
+ * @demo Controls-demo/Buttons/SelectorButtonPG
  */
 /*
  * Button link with the specified text, on clicking on which a selection window opens.
@@ -59,7 +59,7 @@ import {IHashMap} from 'Types/declarations';
  * @control
  * @public
  * @author Герасимов А.М.
- * @demo Engine-demo/SelectorButton
+ * @demo Controls-demo/Buttons/SelectorButtonPG
  */
 /*
  * @name Controls/_lookup/Button#showSelectorCaption
