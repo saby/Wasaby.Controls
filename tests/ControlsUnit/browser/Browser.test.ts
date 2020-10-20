@@ -1,6 +1,6 @@
 import {Browser} from 'Controls/browser';
 import {Memory} from 'Types/source';
-import {equal, deepStrictEqual} from 'assert';
+import {equal, deepStrictEqual, ok} from 'assert';
 import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
 
@@ -147,6 +147,18 @@ describe('Controls/browser:Browser', () => {
             });
         });
 
+    });
+
+    describe('_beforeUnmount', () => {
+        it('_beforeUnmount while sourceController is loading', async () => {
+            const options = getBrowserOptions();
+            const browser = getBrowser(options);
+
+            await browser._beforeMount(options);
+
+            browser._beforeUnmount();
+            ok(!browser._sourceController);
+        });
     });
 
     describe('_beforeUpdate', () => {
