@@ -691,14 +691,14 @@ describe('Controls/_display/CollectionItem', () => {
         // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (старая модель)
         it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
             const result = item.getItemActionPositionClasses('inside', null, {top: 'null', bottom: 'null'}, 'default');
-            assert.equal(result, ' ');
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight ');
         });
 
         // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (новая модель)
         it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
             item.getOwner().setItemPadding({top: 'null', bottom: 'null'});
             const result = item.getItemActionPositionClasses('inside', null, undefined, 'default');
-            assert.equal(result, ' ');
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight ');
         });
 
         // Если опции внутри строки и itemActionsClass не задан, возвращает класс, добавляющий выравнивание bottomRight
