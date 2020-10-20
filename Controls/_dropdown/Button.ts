@@ -35,7 +35,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
  * @demo Controls-demo/dropdown_new/Button/Source/Index
  * @class Controls/_dropdown/Button
- * @extends Core/Control
+ * @extends Controls/_buttons/Button
  * @mixes Controls/_menu/interface/IMenuPopup
  * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_menu/interface/IMenuBase
