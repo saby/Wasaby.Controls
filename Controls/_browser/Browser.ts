@@ -204,6 +204,11 @@ export default class Browser extends Control {
             this._storeCallbacks.forEach((id) => Store.unsubscribe(id));
         }
 
+        if (this._sourceController) {
+            this._sourceController.destroy();
+            this._sourceController = null;
+        }
+
         this._filterController = null;
     }
 
