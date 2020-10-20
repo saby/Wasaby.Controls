@@ -5,7 +5,7 @@ import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 /**
  * Хелпер для открытия прилипающих окон
  * @class Controls/_popup/PopupHelper/Sticky
- * @control
+ * 
  * @author Красильников А.С.
  * @category Popup
  * @public

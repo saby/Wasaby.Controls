@@ -344,7 +344,7 @@ var _private = {
  * @class Controls/_history/FilterSource
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
+ * 
  * @private
  * @author Герасимов А.М.
  * @category Menu
@@ -368,7 +368,7 @@ var _private = {
  * @class Controls/_history/FilterSource
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
+ * 
  * @private
  * @author Герасимов А.М.
  * @category Menu

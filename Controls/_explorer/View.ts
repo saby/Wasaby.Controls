@@ -396,7 +396,7 @@ var
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
     * @mixes Controls/_marker/interface/IMarkerListOptions
-    * @control
+    * 
     * @public
     * @category List
     * @author Авраменко А.С.
@@ -434,7 +434,7 @@ var
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
     * @mixes Controls/_marker/interface/IMarkerListOptions
-    * @control
+    * 
     * @public
     * @category List
     * @author Авраменко А.С.

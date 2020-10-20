@@ -95,7 +95,7 @@ export const enum INITIALIZING_WAY {
  * @mixes Controls/_form/interface/IFormController
  * @implements Controls/_interface/IErrorController
  * @demo Controls-demo/Popup/Edit/Opener
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  */
@@ -110,7 +110,7 @@ export const enum INITIALIZING_WAY {
  * @mixes Controls/_form/interface/IFormController
  * @implements Controls/_interface/IErrorController
  * @demo Controls-demo/Popup/Edit/Opener
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  */

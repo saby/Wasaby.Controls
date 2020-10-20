@@ -26,7 +26,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @implements Controls/_interface/IIcon
  * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/IValidationStatus
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Toggle
@@ -45,7 +45,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/IIconStyle
  * @implements Controls/_interface/IIconSize
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Toggle

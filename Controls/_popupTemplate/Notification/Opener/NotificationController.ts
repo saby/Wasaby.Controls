@@ -21,7 +21,7 @@ interface INotificationOptions extends IPopupOptions {
 /**
  * Notification Popup Controller
  * @class Controls/_popupTemplate/Notification/Opener/NotificationController
- * @control
+ * 
  * @private
  * @category Popup
  * @extends Controls/_popupTemplate/BaseController

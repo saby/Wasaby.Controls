@@ -24,7 +24,7 @@ import {resetFilter} from 'Controls/_filter/resetFilterUtils';
  * @mixes Controls/_filter/interface/IFilterButton
  * @demo Controls-demo/Filter/Button/ButtonPG
  * @deprecated Данный контрол устарел и будет удалён. Вместо него используйте {@link Controls/filter:View}.
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  *
@@ -43,7 +43,7 @@ import {resetFilter} from 'Controls/_filter/resetFilterUtils';
  * @extends Core/Control
  * @mixes Controls/_filter/interface/IFilterButton
  * @demo Controls-demo/Filter/Button/ButtonPG
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  *

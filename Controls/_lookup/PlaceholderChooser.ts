@@ -10,7 +10,7 @@ import collection = require('Types/collection');
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less">переменные тем оформления</a>
  * 
  * @class Controls/_lookup/PlaceholderChooser
- * @control
+ * 
  * @extends Core/Control
  * @public
  * @author Герасимов А.М.
@@ -113,7 +113,7 @@ import collection = require('Types/collection');
 /*
  * A wrapper over the "Lookup" that monitors changes to the selected entries, and on the basis of them gives one of the possible pre-formed "placeholders".
  * @class Controls/_lookup/PlaceholderChooser
- * @control
+ * 
  * @extends Core/Control
  * @public
  * @author Kapustin I.A.

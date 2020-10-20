@@ -12,7 +12,7 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  * @class Controls/_dateRange/RelationWrapper
  * @extends Core/Control
  *
- * @control
+ * 
  * @public
  * @category Input
  * @author Красильников А.С.
@@ -27,7 +27,7 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  * @class Controls/_dateRange/RelationWrapper
  * @extends Core/Control
  *
- * @control
+ * 
  * @public
  * @category Input
  * @author Красильников А.С.

@@ -14,7 +14,7 @@ import {IInfoBoxPopupOptions, IInfoBoxOpener} from 'Controls/_popup/interface/II
  * @extends Core/Control
  *
  * @private
- * @control
+ * 
  * @category Popup
  * @author Красильников А.С.
  * @private

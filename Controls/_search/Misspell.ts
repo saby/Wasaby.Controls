@@ -14,7 +14,7 @@ import template = require('wml!Controls/_search/Misspell');
   * @class Controls/_search/Misspell
   * @mixes Controls/_interface/ICaption
   * @extends Core/Control
-  * @control
+  * 
   * @public
   * @author Крайнов Д.О.
   */
@@ -23,7 +23,7 @@ import template = require('wml!Controls/_search/Misspell');
  * @class Controls/_search/Misspell
  * @mixes Controls/_interface/ICaption
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Крайнов Д.О.
  */

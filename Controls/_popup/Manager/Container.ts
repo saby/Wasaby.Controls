@@ -21,7 +21,7 @@ class Container extends Control<IControlOptions> {
      * Container for displaying popups
      * @class Controls/_popup/Manager/Container
      * @extends Core/Control
-     * @control
+     * 
      * @private
      * @category Popup
      * @author Красильников А.С.

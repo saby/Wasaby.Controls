@@ -27,7 +27,7 @@ import {
  * @implements Controls/_interface/IMultiSelectable
  * @implements Controls/_interface/IHierarchy
  * @implements Controls/_toggle/interface/IToggleGroup
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Toggle
@@ -43,7 +43,7 @@ import {
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/IHierarchy
  * @implements Controls/_toggle/interface/IToggleGroup
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Toggle
