@@ -4977,6 +4977,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
+        const itemActionsController = _private.getItemActionsController(this);
+        itemActionsController.updateItemActions(itemKey, itemWidth);
+        this._listViewModel.nextModelVersion();
+    },
+
     /**
      * Обработчик, выполняемый после окончания анимации свайпа по опциям записи
      * @param e

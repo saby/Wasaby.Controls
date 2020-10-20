@@ -197,6 +197,90 @@ export const Gadgets = {
          title: 'message',
          showType: 0
       }
-   ]
-
+   ],
+    getPreviewActions: (): IItemAction[] => [
+        {
+            id: 1,
+            icon: 'icon-PhoneNull',
+            title: 'phone',
+            showType: 1
+        },
+        {
+            id: 2,
+            icon: 'icon-EmptyMessage',
+            title: 'message',
+            showType: 1
+        },
+        {
+            id: 3,
+            icon: 'icon-PhoneNull',
+            title: 'phone',
+            showType: 1
+        },
+        {
+            id: 4,
+            icon: 'icon-EmptyMessage',
+            title: 'message',
+            showType: 1
+        },
+        {
+            id: 5,
+            icon: 'icon-PhoneNull',
+            title: 'phone',
+            showType: 1
+        },
+        {
+            id: 6,
+            icon: 'icon-EmptyMessage',
+            title: 'message',
+            showType: 1
+        },
+        {
+            id: 7,
+            icon: 'icon-PhoneNull',
+            title: 'phone',
+            showType: 1
+        },
+        {
+            id: 8,
+            icon: 'icon-EmptyMessage',
+            title: 'message',
+            showType: 1
+        },
+        {
+            id: 9,
+            icon: 'icon-PhoneNull',
+            title: 'phone',
+            showType: 1
+        },
+        {
+            id: 10,
+            icon: 'icon-EmptyMessage',
+            title: 'message',
+            showType: 1
+        },
+        {
+            id: 11,
+            icon: 'icon-PhoneNull',
+            title: 'phone',
+            showType: 1
+        },
+        {
+            id: 12,
+            icon: 'icon-EmptyMessage',
+            title: 'message',
+            showType: 1
+        },        {
+            id: 13,
+            icon: 'icon-PhoneNull',
+            title: 'phone',
+            showType: 1
+        },
+        {
+            id: 14,
+            icon: 'icon-EmptyMessage',
+            title: 'message',
+            showType: 1
+        }
+    ]
 };

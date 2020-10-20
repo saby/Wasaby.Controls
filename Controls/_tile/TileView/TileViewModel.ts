@@ -4,6 +4,7 @@ import {Logger} from 'UI/Utils';
 import {object} from 'Types/util';
 import {Model} from 'Types/entity';
 import {getImageUrl, getImageSize, getImageClasses, IMAGE_FIT} from './resources/imageUtil';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 const DEFAULT_ITEM_WIDTH = 250;
 const DEFAULT_ITEM_HEIGHT = 200;
@@ -269,6 +270,21 @@ var TileViewModel = ListViewModel.extend({
         const bottomSpacingClass = `controls-TileView__${classPrefix}_spacingBottom_${bottomSpacing}${theme}`;
 
         return `${leftSpacingClass} ${rightSpacingClass} ${topSpacingClass} ${bottomSpacingClass}`;
+    },
+
+    getActionsMenuConfig(item, clickEvent: SyntheticEvent, opener, templateOptions): Record<string, any> {
+        const menuOptions = templateOptions;
+        const itemData = item.getItemDataByItem(item);
+        menuOptions.image = itemData.imageData.url;
+        menuOptions.title = itemData.item.get(itemData.displayProperty);
+        menuOptions.additionalText = 'test';
+        const config = {
+            templateOptions,
+            opener,
+            template: 'Controls/tile:ActionsMenu',
+            actionOnScroll: 'close'
+        };
+        return config;
     }
 });
 

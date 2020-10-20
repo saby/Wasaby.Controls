@@ -2,6 +2,7 @@ import TileViewModel = require('Controls/_tile/TileView/TileViewModel');
 import {TreeViewModel} from 'Controls/tree';
 import cMerge = require('Core/core-merge');
 import InvisibleFor = require('wml!Controls/_tile/TileView/resources/InvisibleFor');
+import {SyntheticEvent} from 'UI/Vdom';
 
 var DEFAULT_FOLDER_WIDTH = 250;
 
@@ -194,6 +195,30 @@ var TreeTileViewModel = TreeViewModel.extend({
 
     getItemsPaddingContainerClasses(): string {
         return this._tileModel.getItemsPaddingContainerClasses();
+    },
+    getActionsMenuConfig(item, clickEvent: SyntheticEvent, opener, templateOptions): Record<string, any> {
+        const menuOptions = templateOptions;
+        const itemData = this.getItemDataByItem(item);
+        const itemContainer = clickEvent.target.closest('.controls-TileView__item');
+        const imageWrapper = itemContainer.querySelector('.controls-TileView__imageWrapper');
+        menuOptions.image = itemData.imageData.url;
+        menuOptions.title = itemData.item.get(itemData.displayProperty);
+        menuOptions.additionalText = 'test';
+        menuOptions.previewWidth = imageWrapper.clientWidth;
+        menuOptions.previewHeight = imageWrapper.clientHeight;
+        const config = {
+            templateOptions,
+            target: imageWrapper,
+            className: 'controls-TileView__itemActions_menu_popup',
+            targetPoint: {
+                vertical: 'top',
+                horizontal: 'left'
+            },
+            opener,
+            template: 'Controls/tile:ActionsMenu',
+            actionOnScroll: 'close'
+        };
+        return config;
     }
 });
 

@@ -25,6 +25,7 @@ import {verticalMeasurer} from './measurers/VerticalMeasurer';
 import {horizontalMeasurer} from './measurers/HorizontalMeasurer';
 import {Utils} from './Utils';
 import {IContextMenuConfig} from './interface/IContextMenuConfig';
+import {getActions} from './measurers/ItemActionMeasurer';
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -198,6 +199,13 @@ export class Controller {
         this._collection.nextVersion();
     }
 
+    updateItemActions(itemKey: TItemKey, containerWidth: number): void {
+        const item = this._collection.getItemBySourceKey(itemKey);
+        const actions = item.getActions();
+        const visibleActions = getActions(actions, this._iconSize, null, containerWidth);
+        item.setActions(this._fixActionsDisplayOptions(visibleActions), true);
+    }
+
     /**
      * Деактивирует Swipe для меню операций с записью
      */
@@ -245,6 +253,10 @@ export class Controller {
         const target = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, menuActions);
+        const actionMenuConfig = this._collection.getActionsMenuConfig(item, clickEvent, opener, templateOptions);
+        if (!isActionMenu) {
+            return actionMenuConfig;
+        }
 
         let menuConfig: IStickyPopupOptions = {
             // @ts-ignore
@@ -340,14 +352,16 @@ export class Controller {
         /**
          * Проверяем что элемент существует, в противном случае пытаемся его найти.
          */
-        if (activeItem === undefined && (typeof this._collection.getItemBySourceKey !== 'undefined' && this._activeItemKey)) {
+        if (activeItem === undefined &&
+           (typeof this._collection.getItemBySourceKey !== 'undefined' && this._activeItemKey)
+        ) {
             activeItem = this._collection.getItemBySourceKey(this._activeItemKey);
         }
         return activeItem;
     }
 
     /**
-     * Устанавливает текущее сосяние анимации в модель
+     * Устанавливает текущее состояние анимации в модель
      */
     startSwipeCloseAnimation(): void {
         const swipeItem = this.getSwipeItem();

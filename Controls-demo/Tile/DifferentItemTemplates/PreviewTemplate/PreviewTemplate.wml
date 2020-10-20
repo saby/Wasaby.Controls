@@ -5,6 +5,7 @@
       nodeProperty="parent@"
       multiSelectVisibility="visible"
       bind:selectedKeys="_selectedKeys"
+      contextMenuConfig="{{_contextMenuConfig}}"
       tileMode="static"
       tileScalingMode="inside"
       itemActions="{{_itemActions}}"
