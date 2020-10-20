@@ -168,10 +168,7 @@ var
                     return 'none';
                 }
             };
-            current.getPartialColspanStyles = (columnStart, columnSpan) => {
-                console.log(columnStart, columnSpan);
-                return GridLayoutUtil.getColumnStyles({ columnStart, columnSpan })
-            };
+            current.getPartialColspanStyles = (columnStart, columnSpan) => GridLayoutUtil.getColumnStyles({ columnStart, columnSpan });
 
             current.isLastColumn = isLastColumn;
 

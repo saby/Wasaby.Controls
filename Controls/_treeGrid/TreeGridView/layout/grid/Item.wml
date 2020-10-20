@@ -91,7 +91,7 @@
    <!-- Данные колонки -->
    <ws:else>
 
-      <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 1 || (!itemData.hasMultiSelectColumn) && currentColumn.columnIndex === 0}}">
+      <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 1 || !itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
          <ws:if data="{{!withoutLevelPadding && itemData.level > 1}}">
             <ws:for data="i in itemData.level - 1">
                <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(itemData, expanderSize, levelIndentSize)}}"></div>
