@@ -49,11 +49,15 @@ export const enum SCROLL_POSITION {
     MIDDLE = 'middle',
 }
 
+const SCALE_ROUNDING_ERROR_FIX = 1.5;
+
 export function getScrollPositionType(scrollPosition: number, viewportSize: number, contentSize: number): SCROLL_POSITION {
     let curPosition: SCROLL_POSITION;
     if (scrollPosition <= 0) {
         curPosition = SCROLL_POSITION.START;
-    } else if (scrollPosition + viewportSize >= contentSize) {
+        // На масштабе появляются дробные пиксели в размерах скролл контейнера.
+        // Прибавляем 1.5 пикселя, чтобы избежать неправильных расчетов позиции скролла.
+    } else if (scrollPosition + viewportSize + SCALE_ROUNDING_ERROR_FIX >= contentSize) {
         curPosition = SCROLL_POSITION.END;
     } else {
         curPosition = SCROLL_POSITION.MIDDLE;
