@@ -3660,7 +3660,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             }
         }
-        if (newOptions.multiSelectVisibility === 'hidden') {
+        if (newOptions.multiSelectVisibility === 'hidden' && _private.hasSelectionController(self)) {
             _private.getSelectionController(this).destroy();
             this._selectionController = null;
         }
