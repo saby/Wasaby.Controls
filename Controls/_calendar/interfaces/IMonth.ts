@@ -92,11 +92,6 @@ export default {
             mode: 'current'
 
             /**
-             * @name Controls/_calendar/interfaces/IMonth#newMode
-             * @cfg {Boolean} Опция, позволяющая перейти на новую верстку контрола
-             */
-
-            /**
              * @name Controls/_calendar/interfaces/IMonth#dayHeaderTemplate
              * @cfg {String|Function} Шаблон заголовка дня.
              * @remark В шаблоне можно использовать объект value, в котором хранятся:
