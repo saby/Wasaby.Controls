@@ -1,7 +1,7 @@
-import {QueryWhere} from 'Types/source';
+import {QueryWhereExpression} from 'Types/source';
 
 export interface IFilterOptions {
-    filter?: QueryWhere;
+    filter?: QueryWhereExpression<any>;
 }
 
 /**
