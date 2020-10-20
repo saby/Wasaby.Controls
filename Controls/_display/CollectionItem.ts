@@ -515,13 +515,15 @@ export default class CollectionItem<T> extends mixin<
                       cursor: string = 'pointer',
                       backgroundColorStyle?: string,
                       style: string = 'default'): string {
+        const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || style;
         return `controls-ListView__itemV
-            controls-ListView__item_default
+            controls-ListView__item_${style}
+            controls-ListView__item_${style}_theme-${theme}
             controls-ListView__item_showActions
             js-controls-ItemActions__swipeMeasurementContainer
             controls-ListView__itemV controls-ListView__itemV_cursor-${cursor}
             controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}
-            ${templateHighlightOnHover && !this.isEditing() ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
+            ${templateHighlightOnHover && !this.isEditing() ? `controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}` : ''}
             ${this.isEditing() ? ` controls-ListView__item_editing_theme-${theme}` : ''}
             ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}
             ${backgroundColorStyle ? ` controls-ListView__item_background_${backgroundColorStyle}_theme-${theme}` : ''}
@@ -556,7 +558,8 @@ export default class CollectionItem<T> extends mixin<
     getContentClasses(theme: string, style: string = 'default'): string {
         const rowSeparatorSize = this.getOwner().getRowSeparatorSize();
         return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
-        ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}`;
+        ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}
+        controls-ListView__itemContent_${style}_theme-${theme}`;
     }
 
     /**

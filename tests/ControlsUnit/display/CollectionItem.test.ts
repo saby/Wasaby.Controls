@@ -443,7 +443,8 @@ describe('Controls/_display/CollectionItem', () => {
             notifyItemChange(item: CollectionItem<string>, property: string): void {
                 given.item = item;
                 given.property = property;
-            }
+            },
+            getHoverBackgroundStyle: function() {}
         };
 
         const item = new CollectionItem({ owner });
@@ -460,6 +461,11 @@ describe('Controls/_display/CollectionItem', () => {
     });
 
     it('.getWrapperClasses()', () => {
+        const owner = {
+            notifyItemChange(): void {},
+            getHoverBackgroundStyle: function() {}
+        };
+
         const defaultClasses = [
             'controls-ListView__itemV',
             'controls-ListView__item_default',
@@ -470,7 +476,7 @@ describe('Controls/_display/CollectionItem', () => {
             'controls-ListView__item_editing'
         ];
 
-        const item = new CollectionItem();
+        const item = new CollectionItem({ owner });
         const wrapperClasses = item.getWrapperClasses();
 
         defaultClasses.forEach((className) => assert.include(wrapperClasses, className));
