@@ -207,6 +207,11 @@ var
                     !current.hasMultiSelectColumn && currentColumn.columnIndex === 0) &&
                     (current.getExpanderPosition() === 'right' &&
                         current.shouldDrawExpander(current, current.getExpanderIcon()))) {
+                    /**
+                     * Если expanderPosition=right, тогда нужно передать шаблон и значения в виде опций.
+                     * Это нужно для того, чтобы иконка узла располагалась внутри columnContent.
+                     * Если этого не делать, тогда иконка будет находиться за пределами блока, в следствии чего появится разрыв.
+                     */
                     currentColumn.afterItemTemplate = current.expanderTemplate;
                     currentColumn.afterItemTemplateOptions = {
                         itemData: current
