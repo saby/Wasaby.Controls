@@ -754,5 +754,36 @@ define([
             });
          });
       });
+
+      describe('_calculateInitialShadowVisibility', () => {
+         [{
+            displayedRanges: [[new Date(2019, 0), new Date(2022, 0)]],
+            displayedPosition: new Date(2019, 0),
+            position: 'top',
+            result: 'auto'
+         }, {
+            displayedRanges: [[new Date(2019, 0), new Date(2024, 0)]],
+            displayedPosition: new Date(2022, 0),
+            position: 'top',
+            result: 'visible'
+         }, {
+            displayedRanges: [[new Date(2019, 0), new Date(2022, 0)]],
+            displayedPosition: new Date(2022, 0),
+            position: 'bottom',
+            result: 'auto'
+         }, {
+            displayedRanges: [[new Date(2019, 0), new Date(2022, 0)]],
+            displayedPosition: new Date(2019, 0),
+            position: 'bottom',
+            result: 'visible'
+         }].forEach((test, index) => {
+            it(`should return correct shadowVisibility value ${index}`, () => {
+               const control = calendarTestUtils.createComponent(calendar.MonthList, {});
+               control._displayedPosition = test.displayedPosition;
+               const result = control._calculateInitialShadowVisibility(test.displayedRanges, test.position);
+               assert.equal(test.result, result);
+            });
+         });
+      });
    });
 });
