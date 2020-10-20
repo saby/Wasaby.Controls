@@ -60,7 +60,7 @@ var _private = {
 
          getRightPadding: function(rightPadding, itemData, hasHierarchy, hasApplyButton) {
             let result = rightPadding || 'default';
-            if (hasApplyButton) {
+            if (hasApplyButton && itemData.emptyText) {
                result = 'multiSelect';
             } else if (itemData.hasPinned) {
                result = 'history';
