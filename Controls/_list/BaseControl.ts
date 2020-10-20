@@ -478,8 +478,8 @@ const _private = {
             listModel.setCompatibleReset(false);
             self._items = listModel.getCollection();
         } else {
+            self._items = items;
             listModel.setItems(items, newOptions);
-            self._items = listModel.getItems();
 
             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
@@ -1587,7 +1587,11 @@ const _private = {
                 }
             }
 
-            if (_private.hasSelectionController(self)) {
+            // Изначально могло не создаться selectionController (не был задан source), но в целом работа с выделением
+            // нужна и когда items появляются (событие reset) - обрабатываем это.
+            // https://online.sbis.ru/opendoc.html?guid=454ba08b-758a-4a39-86cb-7a6d0cd30c44
+            const handleSelection = action === IObservable.ACTION_RESET && self._options.multiSelectVisibility !== 'hidden';
+            if (_private.hasSelectionController(self) || handleSelection) {
                 const selectionController = _private.getSelectionController(self);
 
                 let newSelection;
