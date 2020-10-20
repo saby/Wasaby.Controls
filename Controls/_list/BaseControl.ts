@@ -4495,10 +4495,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onEditingRowKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent) {
-        const editNext = (item, editingConfig, direction: 'top' | 'bottom') => {
+        const editNext = (item: Model | undefined, direction: 'top' | 'bottom') => {
+            if (!item) {
+                return Promise.resolve();
+            }
             this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, direction);
-            const shouldAdd = !item && !!editingConfig.autoAdd && editingConfig.addPosition === direction;
-            return this._tryContinueEditing(!!item, shouldAdd, item);
+            return this.beginEdit({ item })
         };
 
         switch (nativeEvent.keyCode) {
@@ -4510,10 +4512,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return this.cancelEdit();
             case 38: // ArrowUp
                 const prev = this._getEditInPlaceController().getPrevEditableItem();
-                return editNext(!!prev && prev.contents, this._getEditingConfig(), 'top');
+                return editNext(prev?.contents, 'top');
             case 40: // ArrowDown
                 const next = this._getEditInPlaceController().getNextEditableItem();
-                return editNext(!!next && next.contents, this._getEditingConfig(), 'bottom');
+                return editNext(next?.contents, 'bottom');
         }
     },
 

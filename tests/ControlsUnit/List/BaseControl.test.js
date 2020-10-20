@@ -3532,6 +3532,68 @@ define([
             });
          });
 
+         describe('Fast edit by arrows', () => {
+            let cfg, ctrl, sandbox;
+
+            beforeEach(() => {
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: source,
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: rs,
+                     keyProperty: 'id',
+                     selectedKeys: [1, 3]
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  navigation: {
+                     source: 'page',
+                     sourceConfig: {
+                        pageSize: 6,
+                        page: 0,
+                        hasMore: false
+                     },
+                     view: 'infinity',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     }
+                  }
+               };
+               ctrl = new lists.BaseControl(cfg);
+               ctrl._editInPlaceController = {
+                  cancel: () => Promise.resolve(),
+                  commit: () => Promise.resolve(),
+                  add: () => Promise.resolve(),
+                  edit: () => Promise.resolve(),
+                  destroy: () => {}
+               };
+               sandbox = sinon.createSandbox();
+               sandbox.replace(lists.BaseControl._private, 'closeSwipe', (self) => {
+                  isCloseSwipeCalled = true;
+               });
+               ctrl._editInPlaceInputHelper = {
+                  shouldActivate: () => {}
+               };
+            });
+            afterEach(() => {
+               ctrl._beforeUnmount();
+               sandbox.restore();
+            });
+
+            it('should not close editing if arrow up pressed in first', () => {
+               let isEditingRestarted = false;
+               ctrl._editInPlaceController.getPrevEditableItem = () => null;
+               ctrl.beginEdit = () => {
+                  isEditingRestarted = true;
+               };
+               return ctrl._onEditingRowKeyDown({}, {keyCode: 38}).then(() => {
+                  assert.isFalse(isEditingRestarted);
+               });
+            });
+         });
+
          it('close editing if page has been changed', function() {
             let isCanceled = false;
             const fakeCtrl = {
