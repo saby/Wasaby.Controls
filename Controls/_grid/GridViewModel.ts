@@ -120,11 +120,9 @@ var
         getCellStyle: function(self, itemData, currentColumn, colspan) {
            var
                style = '';
-           let isRootItemsSeparator: boolean;
            if (colspan) {
-                isRootItemsSeparator = itemData.dispItem && itemData.dispItem['[Controls/_display/SearchSeparator]'];
                 style += self.getColspanStylesFor(
-                    isRootItemsSeparator ? 'rootItemsSeparator' : 'fullWithoutMultiSelect',
+                    'fullWithoutMultiSelect',
                     {
                         columnIndex: currentColumn.columnIndex,
                         columnsLength: self._columns.length
@@ -146,7 +144,7 @@ var
             const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side].toLowerCase()}` : '';
 
             // Колонки
-            if (params.hasMultiSelectColumn && !isRootItemsSeparator ? params.columnIndex > 1 : params.columnIndex > 0) {
+            if (params.hasMultiSelectColumn ? params.columnIndex > 1 : params.columnIndex > 0) {
                 classLists.left += ` controls-Grid__cell_spacingLeft${getCellPadding('left')}_theme-${theme}`;
             }
             if (params.columnIndex < params.columns.length - arrayLengthOffset) {
@@ -158,11 +156,6 @@ var
                 // Если режим мультиселект, то отступ обеспечивается чекбоксом.
                 if (!params.hasMultiSelectColumn) {
                     classLists.left += ` controls-Grid__cell_spacingFirstCol_${params.itemPadding.left}_theme-${theme}`;
-
-                // У разделителя записей в поиске должен быть отступ, равный ширине чекбокса
-                // Стандарт ещё рисуют https://online.sbis.ru/opendoc.html?guid=a5dd1905-f7a6-477f-a305-816eb51248b6
-                } else if (isRootItemsSeparator) {
-                    classLists.left += ` controls-Grid__cell_spacingFirstCol_checkboxPlaceholder_theme-${theme}`;
                 }
             }
 
@@ -274,9 +267,9 @@ var
         },
 
         isFixedCell: function(params) {
-            const { hasMultiSelectColumn, isRootItemsSeparator, stickyColumnsCount, columnIndex, rowIndex, isHeader, isMultiHeader, endColumn } = params;
+            const { hasMultiSelectColumn, stickyColumnsCount, columnIndex, rowIndex, isHeader, isMultiHeader, endColumn } = params;
             const
-                columnOffset = !isRootItemsSeparator && hasMultiSelectColumn ? 1 : 0;
+                columnOffset = hasMultiSelectColumn ? 1 : 0;
 
             if (isHeader && typeof endColumn !== 'undefined') {
                 // endColumn - конфиг GridLayout, он всегда больше на 1.

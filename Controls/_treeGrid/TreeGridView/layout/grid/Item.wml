@@ -81,7 +81,7 @@
 
    <!-- Колонка с чекбоксами -->
    <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
-      <ws:if data="{{!itemData.isAdd}}">
+      <ws:if data="{{!itemData.isAdd && !isSearchSeparator}}">
          <ws:partial template="multiSelectTemplate"/>
       </ws:if>
       <ws:else>
@@ -248,24 +248,6 @@
    </ws:if>
 </ws:template>
 
-<ws:template name="SEARCH_ROOT_ITEMS_SEPARATOR">
-   <div class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}} {{ cellClassName || '' }}
-                           {{ currentColumn.columnIndex === 0 && !itemData.hasMultiSelectColumn ? currentColumn.classList.padding.left }}
-                           {{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0 ? currentColumn.classList.padding.getAll()}}"
-        style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentColumn, colspan) }}
-               {{ (colspan === false && !!colspanLength) && (currentColumn.columnIndex === 0) ?
-                  itemData.getPartialColspanStyles(0, colspanLength + (itemData.hasMultiSelectColumn ? 1 : 0)) }}">
-      <ws:if data="{{ currentColumn.columnIndex === 0 }}">
-         <!-- Растянутая колонка -->
-         <ws:partial template="COLUMN_COLSPAN_CONTENT"/>
-      </ws:if>
-      <ws:else data="{{ currentColumn.columnIndex >= (colspanLength + (itemData.hasMultiSelectColumn ? 1 : 0)) }}">
-         <!-- Оставшиеся колонки -->
-         <ws:partial template="COLUMN_CONTENT"/>
-      </ws:else>
-   </div>
-</ws:template>
-
 <ws:if data="{{itemData.isStickedMasterItem}}">
    <Controls.scroll:Group>
       <div class="{{ itemData.getRowClasses(_options) }}">
@@ -308,11 +290,6 @@
          </ws:if>
          <ws:partial template="COLUMN" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}" colspanCurrentNode="{{true}}" attr:class="{{className}}"/>
       </ws:if>
-      <ws:else data="{{isSearchSeparator}}">
-         <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-            <ws:partial template="SEARCH_ROOT_ITEMS_SEPARATOR" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}" colspanCurrentNode="{{true}}" attr:class="{{className}}"/>
-         </ws:for>
-      </ws:else>
       <ws:else>
          <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
             <ws:partial template="COLUMN" attr:key="{{itemData.key}}_{{itemData.getCurrentColumnKey()}}" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}" attr:class="{{className}}"/>
