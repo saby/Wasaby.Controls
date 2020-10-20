@@ -122,7 +122,7 @@ var
                style = '';
            let isRootItemsSeparator: boolean;
            if (colspan) {
-                isRootItemsSeparator = itemData.dispItem['[Controls/_display/SearchSeparator]'];
+                isRootItemsSeparator = itemData.dispItem && itemData.dispItem['[Controls/_display/SearchSeparator]'];
                 style += self.getColspanStylesFor(
                     isRootItemsSeparator ? 'rootItemsSeparator' : 'fullWithoutMultiSelect',
                     {
@@ -156,6 +156,11 @@ var
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (params.columnIndex === 0 && !params.hasMultiSelectColumn) {
                 classLists.left += ` controls-Grid__cell_spacingFirstCol_${params.itemPadding.left}_theme-${theme}`;
+
+            // У разделителя записей в поиске должен быть отступ, равный ширине чекбокса
+            // Стандарт ещё рисуют https://online.sbis.ru/opendoc.html?guid=a5dd1905-f7a6-477f-a305-816eb51248b6
+            } else if (isRootItemsSeparator) {
+                classLists.left += ` controls-Grid__cell_spacingFirstCol_checkboxPlaceholder_theme-${theme}`;
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
@@ -168,6 +173,7 @@ var
                 classLists.right += ` controls-Grid__cell_spacingLastCol_${params.itemPadding.right}_theme-${theme}`;
             }
 
+            // У разделителя записей в поиске не должно быть стандартных отступов
             if (!isRootItemsSeparator && !params.isHeader && !params.isResult) {
                 classLists.top += ` controls-Grid__row-cell_rowSpacingTop_${params.itemPadding.top}_theme-${theme}`;
                 classLists.bottom += ` controls-Grid__row-cell_rowSpacingBottom_${params.itemPadding.bottom}_theme-${theme}`;
@@ -471,8 +477,7 @@ var
             left: string
             right: string
         } {
-            const isRootItemsSeparator = itemData.dispItem && itemData.dispItem['[Controls/_display/SearchSeparator]'];
-            const additionalTerm = (itemData.hasMultiSelectColumn && !isRootItemsSeparator ? 1 : 0);
+            const additionalTerm = (itemData.hasMultiSelectColumn ? 1 : 0);
             const result = {left: '', right: ''};
             const start = 1;
             const end = itemData.columns.length + 1 + (isActionsCellExists ? 1 : 0) + stickyLadderCellsCount;

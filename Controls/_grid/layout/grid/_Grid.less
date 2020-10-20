@@ -587,6 +587,12 @@
    padding-left: @item_padding-left_2xl_list;
 }
 
+// У разделителя записей в поиске должен быть отступ, равный ширине чекбокса
+// Стандарт ещё рисуют https://online.sbis.ru/opendoc.html?guid=a5dd1905-f7a6-477f-a305-816eb51248b6
+.controls-Grid__cell_spacingFirstCol_checkboxPlaceholder_theme-@{themeName} {
+   padding-left: @click-area_width_checkbox;
+}
+
 .controls-Grid__cell_spacingLastCol_default_theme-@{themeName},
 .controls-Grid__groupContent__spacingRight_default_theme-@{themeName} {
    padding-right: @item_padding-right_default_list;
