@@ -558,7 +558,8 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             displayedRanges: null,
             topShadowVisibility: 'visible',
             bottomShadowVisibility: 'visible',
-            itemDataLoadRatio: 0.1
+            itemDataLoadRatio: 0.1,
+            attachLoadTopTriggerToNull: true
         };
     }
 }
