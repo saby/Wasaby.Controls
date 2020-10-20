@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-
-import {CollectionItem} from 'Controls/display';
+import {RecordSet} from 'Types/collection';
+import {Collection, CollectionItem} from 'Controls/display';
 import {ICollection} from "../../../Controls/_display/interface/ICollection";
 
 interface IChangedData<T> {
@@ -677,13 +677,27 @@ describe('Controls/_display/CollectionItem', () => {
 
         beforeEach(() => {
             item = new CollectionItem();
+            item.setOwner(new Collection({
+                keyProperty: 'id',
+                collection: new RecordSet({
+                    rawData: [item],
+                    keyProperty: 'id'
+                }) as any
+            }))
         });
 
         // CSS класс для позиционирования опций записи.
 
-        // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку
+        // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (старая модель)
         it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
-            const result = item.getItemActionPositionClasses('inside', null, {top: null, bottom: null}, 'default');
+            const result = item.getItemActionPositionClasses('inside', null, {top: 'null', bottom: 'null'}, 'default');
+            assert.equal(result, ' ');
+        });
+
+        // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (новая модель)
+        it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
+            item.getOwner().setItemPadding({top: 'null', bottom: 'null'});
+            const result = item.getItemActionPositionClasses('inside', null, undefined, 'default');
             assert.equal(result, ' ');
         });
 
