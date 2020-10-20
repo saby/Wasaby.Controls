@@ -3210,7 +3210,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const container = this._container[0] || this._container;
             this._viewSize = container.clientHeight;
             this._viewRect = container.getBoundingClientRect();
-            if (this._isScrollShown) {
+            if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
                 this._updateItemsHeights();
             }
 
