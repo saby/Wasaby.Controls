@@ -681,6 +681,12 @@ describe('Controls/_display/CollectionItem', () => {
 
         // CSS класс для позиционирования опций записи.
 
+        // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку
+        it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
+            const result = item.getItemActionPositionClasses('inside', null, {top: null, bottom: null}, 'default');
+            assert.equal(result, ' ');
+        });
+
         // Если опции внутри строки и itemActionsClass не задан, возвращает класс, добавляющий выравнивание bottomRight
         it('getItemActionPositionClasses() should return classes for bottom-right positioning when itemActionClass is not set', () => {
             const result = item.getItemActionPositionClasses('inside', null, {top: 'null', bottom: 's'}, 'default');

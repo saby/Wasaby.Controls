@@ -564,6 +564,7 @@ export default class CollectionItem<T> extends mixin<
 
     /**
      * Возвращает Класс для позиционирования опций записи.
+     * Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку
      * Если новая модель, то в любом случае не считается класс, добавляющий padding
      * Если опции вне строки, то возвращает класс, добавляющий padding согласно itemActionsClass и itemPadding
      * Если опции вне строки и itemActionsClass не задан, возвращает пробел
@@ -579,6 +580,9 @@ export default class CollectionItem<T> extends mixin<
     getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string, useNewModel?: boolean): string {
         const classes = itemActionsClass || ITEMACTIONS_POSITION_CLASSES.bottomRight;
         const result: string[] = [];
+        if (itemPadding && itemPadding.top === null && itemPadding.bottom === null) {
+            return ' ';
+        }
         if (itemActionsPosition !== 'outside') {
             result.push(classes);
         }
