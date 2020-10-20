@@ -69,7 +69,7 @@ interface IColgroupColumn {
 
 type GridColspanableElements = 'customResults' | 'fixedColumnOfColumnScroll' | 'scrollableColumnOfColumnScroll' |
     'colspanedRow' | 'editingRow' | 'bottomPadding' | 'emptyTemplate' | 'emptyTemplateAndColumnScroll' | 'footer'
-    | 'headerBreadcrumbs' | 'fullWithoutMultiSelect' | 'rootItemsSeparator';
+    | 'headerBreadcrumbs' | 'fullWithoutMultiSelect';
 
 interface IGetColspanStylesForParams {
     columnIndex: number;
@@ -321,7 +321,7 @@ var
 
         getItemColumnCellClasses(self, current, theme, backgroundColorStyle) {
             const isRootItemsSeparator = current.dispItem && current.dispItem['[Controls/_display/SearchSeparator]'];
-            const checkBoxCell = !isRootItemsSeparator && current.hasMultiSelectColumn && current.columnIndex === 0;
+            const checkBoxCell = current.hasMultiSelectColumn && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
             let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
             const backgroundStyle = current.backgroundStyle || current.style || 'default';
@@ -392,14 +392,13 @@ var
                 classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
             }
 
-            if (!GridLayoutUtil.isFullGridSupport() && !(current.columns.length === (current.hasMultiSelectColumn && !isRootItemsSeparator ? 2 : 1)) && self._options.fixIEAutoHeight) {
+            if (!GridLayoutUtil.isFullGridSupport() && !(current.columns.length === (current.hasMultiSelectColumn ? 2 : 1)) && self._options.fixIEAutoHeight) {
                 classLists.base += ' controls-Grid__row-cell__autoHeight';
             }
             return classLists;
         },
 
         getRelativeCellWrapperClasses(itemData, colspan, fixVerticalAlignment): string {
-            const isRootItemsSeparator = itemData.dispItem && itemData.dispItem['[Controls/_display/SearchSeparator]'];
             let classes = 'controls-Grid__table__relative-cell-wrapper ';
             const _rowSeparatorSize = (itemData.rowSeparatorSize && itemData.rowSeparatorSize.toLowerCase()) === 'l' ? 'l' : 's';
             classes += `controls-Grid__table__relative-cell-wrapper_rowSeparator-${_rowSeparatorSize}_theme-${itemData.theme} `;
@@ -409,7 +408,7 @@ var
             if (
                 fixVerticalAlignment && (
                     colspan || (
-                        itemData.columns.length === (itemData.hasMultiSelectColumn && !isRootItemsSeparator ? 2 : 1)
+                        itemData.columns.length === (itemData.hasMultiSelectColumn ? 2 : 1)
                     )
                 )
             ) {
@@ -551,8 +550,7 @@ var
         },
         getTableCellStyles(currentColumn): string {
             let styles = '';
-            const isRootItemsSeparator = currentColumn.dispItem && currentColumn.dispItem['[Controls/_display/SearchSeparator]'];
-            const isCheckbox = !isRootItemsSeparator && currentColumn.hasMultiSelectColumn && currentColumn.columnIndex === 0;
+            const isCheckbox = currentColumn.hasMultiSelectColumn && currentColumn.columnIndex === 0;
             if (!isCheckbox && currentColumn.column.width !== 'auto') {
                 styles += `min-width: ${currentColumn.column.width}; max-width: ${currentColumn.column.width};`;
             }
@@ -2256,8 +2254,7 @@ var
         },
 
         getColspanStylesFor(colspanFor: GridColspanableElements, params: IGetColspanStylesForParams): string {
-            const spanMultiSelectColumn = colspanFor === 'rootItemsSeparator';
-			const multiSelectOffset = +(this._hasMultiSelectColumn() &&!spanMultiSelectColumn);
+            const multiSelectOffset = +this._hasMultiSelectColumn();
             if (params.columnIndex !== multiSelectOffset) {
                 return '';
             }
@@ -2275,7 +2272,6 @@ var
                 return GridLayoutUtil.getColumnStyles(columnCfg);
             } else {
                 columnCfg.columnSpan = params.columnsLength;
-                columnCfg.columnSpan += (this._hasMultiSelectColumn() && spanMultiSelectColumn ? 1 : 0);
                 columnCfg.columnSpan += this.stickyLadderCellsCount();
 
                 return GridLayoutUtil.getColumnStyles(columnCfg);
