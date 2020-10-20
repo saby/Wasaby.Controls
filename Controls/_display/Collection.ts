@@ -92,6 +92,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
     theme?: string;
+    hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
     searchValue?: string;
@@ -589,6 +590,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$theme: string;
 
+    protected _$hoverBackgroundStyle: string;
+
     protected _$searchValue: string;
 
     protected _$rowSeparatorSize: string;
@@ -755,6 +758,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
 
         this._$theme = options.theme;
+
+        this._$hoverBackgroundStyle = options.hoverBackgroundStyle;
 
         this._$collapsedGroups = options.collapsedGroups;
 
@@ -2261,6 +2266,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getTheme(): string {
         return this._$theme;
+    }
+
+    getHoverBackgroundStyle(): string {
+        return this._$hoverBackgroundStyle;
     }
 
     setTheme(theme: string): boolean {

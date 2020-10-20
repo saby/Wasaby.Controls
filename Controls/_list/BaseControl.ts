@@ -1131,7 +1131,7 @@ const _private = {
         // а вторая вернула мало записей и суммарный объем менее двух вьюпортов, пэйджинг не должен исчезнуть
         if (self._sourceController) {
 
-            // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
+            // если есть Еще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             const hasMoreData = {
                 up: _private.hasMoreData(self, self._sourceController, 'up'),
                 down: _private.hasMoreData(self, self._sourceController, 'down')
@@ -1230,6 +1230,7 @@ const _private = {
         const scrollPagingConfig = {
             pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
+            showEndButton: self._options.navigation.viewConfig.showEndButton,
             totalElementsCount: elementsCount,
             loadedElementsCount: self._listViewModel.getStopIndex() - self._listViewModel.getStartIndex(),
             pagingCfgTrigger: (cfg) => {
@@ -1239,7 +1240,7 @@ const _private = {
                 }
             }
         };
-        self._scrollPagingCtr = new ScrollPagingController(scrollPagingConfig, hasMoreData)
+        self._scrollPagingCtr = new ScrollPagingController(scrollPagingConfig, hasMoreData);
         return Promise.resolve(self._scrollPagingCtr);
     },
 
@@ -3651,7 +3652,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             }
         }
-        if (newOptions.multiSelectVisibility === 'hidden') {
+        if (newOptions.multiSelectVisibility === 'hidden' && _private.hasSelectionController(self)) {
             _private.getSelectionController(this).destroy();
             this._selectionController = null;
         }
@@ -4495,10 +4496,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onEditingRowKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent) {
-        const editNext = (item, editingConfig, direction: 'top' | 'bottom') => {
+        const editNext = (item: Model | undefined, direction: 'top' | 'bottom') => {
+            if (!item) {
+                return Promise.resolve();
+            }
             this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, direction);
-            const shouldAdd = !item && !!editingConfig.autoAdd && editingConfig.addPosition === direction;
-            return this._tryContinueEditing(!!item, shouldAdd, item);
+            return this.beginEdit({ item })
         };
 
         switch (nativeEvent.keyCode) {
@@ -4510,10 +4513,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return this.cancelEdit();
             case 38: // ArrowUp
                 const prev = this._getEditInPlaceController().getPrevEditableItem();
-                return editNext(!!prev && prev.contents, this._getEditingConfig(), 'top');
+                return editNext(prev?.contents, 'top');
             case 40: // ArrowDown
                 const next = this._getEditInPlaceController().getNextEditableItem();
-                return editNext(!!next && next.contents, this._getEditingConfig(), 'bottom');
+                return editNext(next?.contents, 'bottom');
         }
     },
 

@@ -63,6 +63,7 @@
                             contrastBackground="{{true}}"
                             backwardEnabled="{{_paging.stateUp}}"
                             forwardEnabled="{{_paging.stateDown}}"
+                            arrowState="{{_paging.arrowState}}"
                             on:onArrowClick="_arrowClickHandler()"/>
             </Controls.Container.Async>
         </ws:if>

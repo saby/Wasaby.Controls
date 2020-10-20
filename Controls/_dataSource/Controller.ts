@@ -147,6 +147,7 @@ export default class Controller {
         const isFilterChanged = !isEqual(newOptions.filter, this._options.filter);
         const isSourceChanged = newOptions.source !== this._options.source;
         const isNavigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
+        const rootChanged = newOptions.root !== undefined && newOptions.root !== this._options.root;
 
         if (isFilterChanged) {
             this._filter = newOptions.filter;
@@ -156,7 +157,7 @@ export default class Controller {
             this.setParentProperty(newOptions.parentProperty);
         }
 
-        if (newOptions.root !== undefined && newOptions.root !== this._options.root) {
+        if (rootChanged) {
             this.setRoot(newOptions.root);
         }
 
@@ -188,7 +189,7 @@ export default class Controller {
             isSourceChanged ||
             newOptions.sorting !== this._options.sorting ||
             newOptions.keyProperty !== this._options.keyProperty ||
-            newOptions.root !== this._options.root;
+            rootChanged;
 
         this._options = newOptions;
         return isChanged;
