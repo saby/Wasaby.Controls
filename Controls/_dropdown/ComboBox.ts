@@ -50,7 +50,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @public
  * @category Input
  * @author Золотова Э.Е.
- * @demo Controls-demo/Combobox/ComboboxVDom
+ * @demo Controls-demo/dropdown_new/Combobox/Source/Index
  */
 
 /*
@@ -70,7 +70,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @public
  * @category Input
  * @author Золотова Э.Е.
- * @demo Controls-demo/Combobox/ComboboxVDom
+ * @demo Controls-demo/dropdown_new/Combobox/Source/Index
  */
 
 /**
