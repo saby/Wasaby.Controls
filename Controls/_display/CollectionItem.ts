@@ -586,19 +586,18 @@ export default class CollectionItem<T> extends mixin<
                 bottom: this.getOwner().getBottomPadding().toLowerCase()
             }
         }
-        if (itemPadding && itemPadding.top === 'null' && itemPadding.bottom === 'null') {
-            return ' ';
-        }
         if (itemActionsPosition !== 'outside') {
             result.push(classes);
         }
-        const themedPositionClassCompile = (position) => (
-            `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
-        );
-        if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
-            result.push(themedPositionClassCompile('top'));
-        } else if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
-            result.push(themedPositionClassCompile('bottom'));
+        if (itemPadding.top !== 'null' || itemPadding.bottom !== 'null') {
+            const themedPositionClassCompile = (position) => (
+                `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
+            );
+            if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
+                result.push(themedPositionClassCompile('top'));
+            } else if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
+                result.push(themedPositionClassCompile('bottom'));
+            }
         }
         return result.length ? ` ${result.join(' ')} ` : ' ';
     }
