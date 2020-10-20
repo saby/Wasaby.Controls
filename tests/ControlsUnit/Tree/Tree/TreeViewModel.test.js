@@ -300,7 +300,7 @@ define([
                   },
                   expanderIcon: 'none'
                }],
-               testsResultShouldDrawExpander = [false, false, false, true, true, false, true, true, false, false];
+               testsResultShouldDrawExpander = [false, false, false, true, true, false, true, true, false, true];
             testsShouldDrawExpander.forEach(function(item, i) {
                assert.equal(tree.TreeViewModel._private.shouldDrawExpander(testsShouldDrawExpander[i].itemData, testsShouldDrawExpander[i].expanderIcon),
                   testsResultShouldDrawExpander[i],
@@ -537,7 +537,7 @@ define([
                   'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_default-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_testIcon controls-TreeGrid__row-expander_testIcon_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_testIcon_collapsed_theme-default',
                   'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_default-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_node controls-TreeGrid__row-expander_node_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_node_default_collapsed_theme-default',
                   'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_default-expander_size_default_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default',
-                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_default-expander_position_right_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default'
+                  'controls-TreeGrid__row-expander_theme-default controls-TreeGrid__row-expander__spacingTop_default_theme-default controls-TreeGrid__row_expander_position_right_theme-default js-controls-ListView__notEditable controls-TreeGrid__row-expander_hiddenNode controls-TreeGrid__row-expander_hiddenNode_default_theme-default controls-TreeGrid__row-expander_collapsed controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-default'
                ];
             testsPrepareExpanderClasses.forEach(function(item, i) {
                cAssert.CssClassesAssert.include(
