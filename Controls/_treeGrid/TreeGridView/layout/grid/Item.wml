@@ -97,7 +97,7 @@
                <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(itemData, expanderSize, levelIndentSize)}}"></div>
             </ws:for>
          </ws:if>
-         <ws:if data="{{ itemData.shouldDrawExpander(itemData, expanderIcon) }}">
+         <ws:if data="{{ itemData.shouldDrawExpander(itemData, expanderIcon) && itemData.getExpanderPosition() === 'default' }}">
             <ws:partial template="{{itemData.expanderTemplate}}"
                         itemData="{{itemData}}"
                         expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"

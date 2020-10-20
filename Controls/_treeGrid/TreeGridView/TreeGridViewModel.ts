@@ -202,17 +202,14 @@ var
 
                 // Экспандер выводится пользователем в произвольном месте в шаблоне колонки, где недоступна itemData строки
                 currentColumn.getExpanderClasses = (_, expanderIcon, expanderSize) => current.getExpanderClasses(current, expanderIcon, expanderSize);
-                // При расположении иконки в произвольном месте, иконка может отображаться там, где это не нужно.
-                currentColumn.isNodeProperty = (_) => current.isNodeProperty(current);
 
                 if ((current.hasMultiSelectColumn && currentColumn.columnIndex === 1 ||
                     !current.hasMultiSelectColumn && currentColumn.columnIndex === 0) &&
                     (current.getExpanderPosition() === 'right' &&
-                        current.shouldDrawExpander(current, current.getExpanderIcon(current.expanderIcon), true))) {
+                        current.shouldDrawExpander(current, current.getExpanderIcon()))) {
                     currentColumn.afterItemTemplate = current.expanderTemplate;
                     currentColumn.afterItemTemplateOptions = {
-                        itemData: current,
-                        expanderIcon: current.expanderIcon
+                        itemData: current
                     };
                 }
 

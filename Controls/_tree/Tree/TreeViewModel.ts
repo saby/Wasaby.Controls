@@ -150,14 +150,10 @@ var
             }
         },
 
-        shouldDrawExpander(itemData, tmplExpanderIcon, isRight = false): boolean {
+        shouldDrawExpander(itemData, tmplExpanderIcon): boolean {
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
-            const expanderPosition = itemData.getExpanderPosition();
-            itemData.expanderIcon = expanderIcon;
 
-            const isExpander = !(expanderPosition === 'default' || isRight);
-            if ((expanderIcon === 'none' || isExpander) ||
-                itemData.item.get(itemData.nodeProperty) === null) {
+            if (expanderIcon === 'none' || itemData.item.get(itemData.nodeProperty) === null) {
                 return false;
             }
 
@@ -181,9 +177,6 @@ var
             expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default') + `_theme-${itemData.theme}`;
             return expanderPaddingClasses;
         },
-        isNodeProperty(itemData): boolean {
-            return itemData.item.get(itemData.nodeProperty) !== null;
-        },
         getExpanderClasses(itemData, tmplExpanderIcon, tmplExpanderSize): string {
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
             const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
@@ -198,7 +191,7 @@ var
             if (expanderPosition !== 'right') {
                 expanderClasses += ` controls-TreeGrid__row_${style}-expander_size_${(expanderSize || 'default')}_theme-${theme} `;
             } else {
-                expanderClasses += ` controls-TreeGrid__row_${style}-expander_position_right_theme-${theme} `;
+                expanderClasses += ` controls-TreeGrid__row_expander_position_right_theme-${theme} `;
             }
             expanderClasses += EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE;
 
@@ -633,7 +626,6 @@ var
 
             // 2. Классы экспандера.
             current.getExpanderClasses = _private.getExpanderClasses;
-            current.isNodeProperty = _private.isNodeProperty;
 
             // 3. Нужны ли отступы под экспандер
             current.shouldDrawExpanderPadding = _private.shouldDrawExpanderPadding;
