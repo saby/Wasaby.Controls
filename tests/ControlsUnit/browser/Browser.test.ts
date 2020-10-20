@@ -3,7 +3,6 @@ import {Memory} from 'Types/source';
 import {equal, deepStrictEqual, ok} from 'assert';
 import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
-import {assert} from "../../../build-ui/builder-json-cache/temp-modules/UI/_vdom/Utils/Functional";
 
 const browserData = [
     {
