@@ -15,13 +15,11 @@
            attr:key="{{ keyPrefix }}-{{ item.key }}"
            attr:class="{{ collection.getViewIterator().isItemAtIndexHidden(index) ? 'controls-ListView__hiddenContainer' }}"
 
-           on:click="_onItemClick(item)"
            on:contextmenu="_onItemContextMenu(item)"
            on:swipe="_onItemSwipe(item)"
            on:longtap="_onItemLongTap(item)"
            on:mouseenter="_onItemMouseEnter(item)"
            on:mousedown="_onItemMouseDown(item)"
-           on:mouseup="_onItemMouseUp(item)"
            on:mousemove="_onItemMouseMove(item)"
            on:mouseleave="_onItemMouseLeave(item)"
            on:wheel="_onItemWheel(item)">
@@ -55,6 +53,9 @@
       </Controls._list.EditInPlace.EditingRow>
    </ws:if>
    <ws:else>
-      <ws:partial template="localItemTemplate"/>
+      <ws:partial template="localItemTemplate"
+                  on:click="_onItemClick(item)"
+                  on:mouseup="_onItemMouseUp(item)"
+      />
    </ws:else>
 </ws:for>

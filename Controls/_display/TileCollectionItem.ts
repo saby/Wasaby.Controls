@@ -102,7 +102,8 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
     }
 
     getWrapperClasses(templateClickable?: boolean, theme?: string): string {
-        let classes = `controls-TileView__item controls-TileView__item_theme-${theme} controls-ListView__itemV`;
+        let classes = `controls-TileView__item controls-listRender__tileItem
+                       controls-TileView__item_theme-${theme} controls-ListView__itemV`;
         if (templateClickable !== false) {
             classes += ' controls-ListView__itemV_cursor-pointer';
         }

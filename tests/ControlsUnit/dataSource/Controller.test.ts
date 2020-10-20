@@ -173,15 +173,18 @@ describe('Controls/dataSource:SourceController', () => {
         it('updateOptions with root',  async () => {
             const controller = getControllerWithHierarchy();
             let options = {...getControllerWithHierarchyOptions()};
+            let isChanged;
             options.root = 'testRoot';
 
-            controller.updateOptions(options);
+            isChanged = controller.updateOptions(options);
             ok(controller._root === 'testRoot');
+            ok(isChanged);
 
-            options = {...getControllerWithHierarchyOptions()};
+            options = {...options};
             options.root = undefined;
-            controller.updateOptions(options);
+            isChanged = controller.updateOptions(options);
             ok(controller._root === 'testRoot');
+            ok(!isChanged);
         });
     });
 });
