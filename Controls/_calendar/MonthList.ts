@@ -401,7 +401,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
         return date ? formatDate(date, formatDate.FULL_MONTH) : '';
     }
 
-    private _updateScrollAfterViewModification(notResetPositionToScroll: boolean): void {
+    private _updateScrollAfterViewModification(notResetPositionToScroll: boolean = false): void {
         if (this._positionToScroll && this._canScroll(this._positionToScroll)) {
             if (this._scrollToDate(this._positionToScroll)) {
                 // Список после mount заказывает перерисовку, после которой он добавляет отступ 1px и устанавливает
@@ -427,6 +427,10 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
             return true;
         }
         return false;
+    }
+
+    protected _scrollStateChangedHandler(): void {
+        this._updateScrollAfterViewModification();
     }
 
     private _canScroll(date: Date): boolean {
