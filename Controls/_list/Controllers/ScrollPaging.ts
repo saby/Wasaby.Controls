@@ -41,6 +41,7 @@ interface IScrollPagingOptions {
     scrollParams: IScrollParams;
     totalElementsCount: number;
     loadedElementsCount: number;
+    showEndButton: boolean;
     pagingCfgTrigger(cfg: IPagingCfg): void;
 }
 
@@ -67,7 +68,6 @@ export default class ScrollPagingController {
     }
 
     protected initializePagingData(cfg: IScrollPagingOptions): void {
-
         const averageElementHeight = this._options.scrollParams.scrollHeight / this._options.loadedElementsCount;
         const totalHeight = averageElementHeight * this._options.totalElementsCount;
         const pagesCount = Math.round(totalHeight / this._options.scrollParams.clientHeight);
@@ -83,6 +83,7 @@ export default class ScrollPagingController {
             this._numbersState = state;
         }
     }
+
     protected isHasMoreData(hasMoreData: boolean): boolean {
         return (!hasMoreData || (this._options.pagingMode !== 'edge' && this._options.pagingMode !== 'end'));
     }
@@ -103,6 +104,7 @@ export default class ScrollPagingController {
         const pagingCfg: IPagingCfg = {};
         switch (this._options.pagingMode) {
             case 'basic':
+                pagingCfg.showEndButton = this._options.showEndButton;
                 break;
 
             case 'edge':

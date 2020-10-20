@@ -39,6 +39,7 @@
  * @includes IHref Controls/_interface/IHref
  * @includes IBackgroundStyle Controls/_interface/IBackgroundStyle
  * @includes IDraggable Controls/_interface/IDraggable
+ * @includes ICanBeDefaultOpener Controls/_interface/ICanBeDefaultOpener
  * @public
  * @author Крайнов Д.О.
  */
