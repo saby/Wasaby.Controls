@@ -41,7 +41,7 @@ import 'Controls/search';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @demo Controls-demo/Input/Search/Suggest/SuggestPG
+ * @demo Controls-demo/Suggest/SearchInput
  * @control
  * @public
  * @category Input

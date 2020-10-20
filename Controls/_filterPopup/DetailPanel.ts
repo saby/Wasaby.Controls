@@ -51,7 +51,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
     * @class Controls/_filterPopup/DetailPanel
     * @extends Core/Control
     * @mixes Controls/_filterPopup/interface/IFilterPanel
-    * @demo Controls-demo/Filter/Button/panelOptions/panelPG
+    * @demo Controls-demo/Filter/Button/PanelVDom
     * @control
     * @public
     * @author Золотова Э.Е.
