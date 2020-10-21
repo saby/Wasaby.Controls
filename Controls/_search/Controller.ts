@@ -25,7 +25,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.
- * @control
+ * 
  * @public
  */
 
@@ -51,7 +51,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.
- * @control
+ * 
  * @public
  */
 

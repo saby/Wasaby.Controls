@@ -40,7 +40,7 @@ import {IHashMap} from 'Types/declarations';
  * @mixes Controls/interface/IFontColorStyle
  * @mixes Controls/interface/IFontSize
  * @mixes Controls/_interface/ITextValue
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/Buttons/SelectorButtonPG
@@ -58,7 +58,7 @@ import {IHashMap} from 'Types/declarations';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISource
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/Buttons/SelectorButtonPG

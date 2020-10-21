@@ -18,7 +18,7 @@ import MonthViewModel from 'Controls/_calendar/Month/Model';
  * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_dateRange/interfaces/IRangeSelectable
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Date/Month

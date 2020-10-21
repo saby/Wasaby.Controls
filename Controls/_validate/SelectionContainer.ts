@@ -9,7 +9,7 @@ import template = require('wml!Controls/_validate/SelectionContainer');
  * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/SelectionContainer
  * @extends Controls/_validate/Container
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  */

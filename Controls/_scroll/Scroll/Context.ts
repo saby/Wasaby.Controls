@@ -26,7 +26,7 @@ import DataContext = require('Core/DataContext');
  * @class Controls/_scroll/Context
  * @extends Core/DataContext
  * @demo Controls-demo/Scroll/Context/Index
- * @control
+ * 
  * @private
  * @author Красильников А.С.
  * @category Container
@@ -58,7 +58,7 @@ import DataContext = require('Core/DataContext');
  *
  * @class Controls/_scroll/Scroll/Context
  * @extends Core/DataContext
- * @control
+ * 
  * @private
  * @author Красильников А.С.
  * @category Container

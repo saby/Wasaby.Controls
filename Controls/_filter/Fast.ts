@@ -31,7 +31,7 @@ import {Model} from 'Types/entity';
        * @extends Core/Control
        * @mixes Controls/_filter/interface/IFastFilter
        * @demo Controls-demo/FastFilter/fastPG
-       * @control
+       * 
        * @public
        * @deprecated Данный контрол устарел и будет удалён. Вместо него используйте {@link Controls/filter:View}.
        * @author Герасимов А.М.
@@ -48,7 +48,7 @@ import {Model} from 'Types/entity';
        * @mixes Controls/_filter/interface/IFastFilter
        * @mixes Controls/_filter/Fast/FastStyles
        * @demo Controls-demo/FastFilter/fastPG
-       * @control
+       * 
        * @public
        * @author Герасимов А.М.
        */

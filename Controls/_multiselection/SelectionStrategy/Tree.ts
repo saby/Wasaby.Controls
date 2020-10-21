@@ -15,7 +15,7 @@ const LEAF = null;
 /**
  * Стратегия выбора для иерархического списка.
  * @class Controls/_multiselection/SelectionStrategy/Tree
- * @control
+ * 
  * @public
  * @author Панихин К.А.
  */

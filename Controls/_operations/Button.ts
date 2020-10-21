@@ -20,7 +20,7 @@ export interface IOperationsButtonOptions extends IControlOptions, IExpandableOp
  * @class Controls/_operations/Button
  * @extends Core/Control
  * @implements Controls/_interface/IExpandable
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  *
@@ -33,7 +33,7 @@ export interface IOperationsButtonOptions extends IControlOptions, IExpandableOp
  * @class Controls/_operations/Button
  * @extends Core/Control
  * @implements Controls/_interface/IExpandable
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  *

@@ -22,7 +22,7 @@ import {Logger} from 'UI/Utils';
 /**
  * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
  * @class Controls/_popupConfirmation/Opener/Dialog
- * @control
+ * 
  * @private
  * @author Красильников А.С.
  * @mixes Controls/_popupConfirmation/Opener/Dialog/DialogStyles

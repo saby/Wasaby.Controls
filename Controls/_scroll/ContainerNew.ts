@@ -38,7 +38,7 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  * @extends Controls/_scroll/ContainerBase
  * @mixes Controls/_scroll/Interface/IScrollbars
  * @mixes Controls/_scroll/Interface/IShadows
- * @control
+ * 
  * @public
  * @author Миронов А.Ю.
  * @category Container
@@ -51,7 +51,7 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  *
  * @class Controls/_scroll/ContainerNew
  * @extends Controls/_scroll/ContainerBase
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Container

@@ -12,7 +12,7 @@ import template = require('wml!Controls/_filterPopup/Panel/Text/Text');
     * @class Controls/_filterPopup/Panel/Text
     * @extends Core/Control
     * @mixes Controls/_interface/ITextValue
-    * @control
+    * 
     * @public
     * @author Герасимов А.М.
     */

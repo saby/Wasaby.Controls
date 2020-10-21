@@ -27,7 +27,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/ISticky
- * @control
+ * 
  * @author Красильников А.С.
  * @category Popup
  * @demo Controls-demo/Popup/Opener/StickyPG
@@ -41,7 +41,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/ISticky
- * @control
+ * 
  * @author Красильников А.С.
  * @category Popup
  * @demo Controls-demo/Popup/Opener/StickyPG

@@ -22,7 +22,7 @@ class Popup extends Control<IPopupControlOptions> {
      * @mixes Controls/interface/IOpenerOwner
      * @mixes Controls/_interface/ICanBeDefaultOpener
      * @extends Core/Control
-     * @control
+     * 
      * @private
      * @category Popup
      * @author Красильников А.С.

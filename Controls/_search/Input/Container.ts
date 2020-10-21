@@ -9,7 +9,7 @@ import {default as Store} from 'Controls/Store';
  * @class Controls/_search/Input/Container
  * @extends Core/Control
  * @author Герасимов А.М.
- * @control
+ * 
  * @public
  * @remark
  * Полезные ссылки:
@@ -30,7 +30,7 @@ import {default as Store} from 'Controls/Store';
  * @class Controls/_search/Input/Container
  * @extends Core/Control
  * @author Герасимов А.М.
- * @control
+ * 
  * @public
  */
 
