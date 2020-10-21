@@ -23,7 +23,7 @@ const PADDING_RIGHT = 2;
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @implements Controls/_interface/IFontSize
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @demo Controls-demo/BreadCrumbs/Multiline/Index
  * @remark
  * {@link Controls/breadcrumbs:Path} — хлебные крошки, отображающиеся в одну строку.

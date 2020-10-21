@@ -925,11 +925,24 @@ define([
             _options: {}
          };
 
+         baseControl._options.searchValue = 'test';
+         assert.ok(lists.BaseControl._private.isPortionedLoad(baseControl))
+
+         baseControl._options.searchValue = '';
          baseControl._items = null;
-         assert.isFalse(lists.BaseControl._private.isPortionedLoad(baseControl));
+         assert.ok(!lists.BaseControl._private.isPortionedLoad(baseControl));
+
+         baseControl._items = new collection.RecordSet();
+         assert.ok(!lists.BaseControl._private.isPortionedLoad(baseControl));
+
+         baseControl._items = new collection.RecordSet();
+         baseControl._items.setMetaData({
+            iterative: false
+         });
+         assert.ok(!lists.BaseControl._private.isPortionedLoad(baseControl));
 
          baseControl._options.searchValue = 'test';
-         assert.isTrue(lists.BaseControl._private.isPortionedLoad(baseControl));
+         assert.ok(!lists.BaseControl._private.isPortionedLoad(baseControl));
       });
 
 
@@ -2242,6 +2255,10 @@ define([
 
          res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 2000, 800);
          assert.isTrue(res, 'Wrong paging state');
+
+         const scrollPagingInst = baseControl._scrollPagingCtr;
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 2000, 800);
+         assert.strictEqual(baseControl._scrollPagingCtr, scrollPagingInst, 'ScrollPaging recreated');
       });
 
       it('needShowPagingByScrollSize with virtual scrollHeight', function() {
@@ -3529,6 +3546,68 @@ define([
                   done();
                });
                assert.isTrue(result instanceof Promise);
+            });
+         });
+
+         describe('Fast edit by arrows', () => {
+            let cfg, ctrl, sandbox;
+
+            beforeEach(() => {
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: source,
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: rs,
+                     keyProperty: 'id',
+                     selectedKeys: [1, 3]
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  navigation: {
+                     source: 'page',
+                     sourceConfig: {
+                        pageSize: 6,
+                        page: 0,
+                        hasMore: false
+                     },
+                     view: 'infinity',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     }
+                  }
+               };
+               ctrl = new lists.BaseControl(cfg);
+               ctrl._editInPlaceController = {
+                  cancel: () => Promise.resolve(),
+                  commit: () => Promise.resolve(),
+                  add: () => Promise.resolve(),
+                  edit: () => Promise.resolve(),
+                  destroy: () => {}
+               };
+               sandbox = sinon.createSandbox();
+               sandbox.replace(lists.BaseControl._private, 'closeSwipe', (self) => {
+                  isCloseSwipeCalled = true;
+               });
+               ctrl._editInPlaceInputHelper = {
+                  shouldActivate: () => {}
+               };
+            });
+            afterEach(() => {
+               ctrl._beforeUnmount();
+               sandbox.restore();
+            });
+
+            it('should not close editing if arrow up pressed in first', () => {
+               let isEditingRestarted = false;
+               ctrl._editInPlaceController.getPrevEditableItem = () => null;
+               ctrl.beginEdit = () => {
+                  isEditingRestarted = true;
+               };
+               return ctrl._onEditingRowKeyDown({}, {keyCode: 38}).then(() => {
+                  assert.isFalse(isEditingRestarted);
+               });
             });
          });
 

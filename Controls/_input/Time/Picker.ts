@@ -12,7 +12,7 @@
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/interface/ITimeMask
  * @mixes Controls/interface/IValidation
- * @control
+ * 
  * @private
  * @author Красильников А.С.
  * @category Input
@@ -31,7 +31,7 @@
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/interface/ITimeMask
  * @mixes Controls/interface/IValidation
- * @control
+ * 
  * @private
  * @author Красильников А.С.
  * @category Input

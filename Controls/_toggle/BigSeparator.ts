@@ -17,7 +17,7 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  *
  * @class Controls/_toggle/BigSeparator
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
@@ -32,7 +32,7 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  *
  * @class Controls/_toggle/BigSeparator
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable

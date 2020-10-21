@@ -13,7 +13,7 @@ import {Date as WSDate} from 'Types/entity';
  * @class Controls/_dateRange/RelationController
  * @extends Core/Control
  *
- * @control
+ * 
  * @public
  * @demo Controls-demo/dateRange/RelationController
  * @author Красильников А.С.
@@ -25,7 +25,7 @@ import {Date as WSDate} from 'Types/entity';
  * @class Controls/_dateRange/RelationController
  * @extends Core/Control
  *
- * @control
+ * 
  * @public
  * @demo Controls-demo/dateRange/RelationController
  * @author Красильников А.С.

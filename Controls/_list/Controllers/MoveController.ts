@@ -46,7 +46,7 @@ export interface IMoveControllerOptions {
  * Контроллер для перемещения элементов списка.
  *
  * @class Controls/_list/Controllers/MoveController
- * @control
+ * 
  * @public
  * @author Аверкиев П.А
  */
@@ -105,7 +105,7 @@ export class MoveController {
      */
     moveWithDialog(selection: ISelectionObject, filter: TFilterObject = {}): Promise<void> {
         const validationResult = MoveController._validateBeforeOpenDialog(selection, this._popupOptions);
-        if (!validationResult.message) {
+        if (validationResult.message === undefined) {
             return this._openMoveDialog(selection, filter);
         } else if (!validationResult.isError) {
             Confirmation.openPopup({
@@ -157,10 +157,13 @@ export class MoveController {
      * @private
      */
     private _moveInSource(selection: ISelectionObject, filter: TFilterObject = {}, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void>  {
-        const error: string = MoveController._validateBeforeMove(this._source, selection, filter, targetKey, position);
-        if (error) {
-            Logger.error(error);
-            return Promise.reject(new Error(error));
+        const validationResult: TValidationResult = MoveController._validateBeforeMove(this._source, selection, filter, targetKey, position);
+        if (validationResult.message !== undefined) {
+            if (validationResult.isError) {
+                Logger.error(validationResult.message);
+                return Promise.reject(new Error(validationResult.message));
+            }
+            return Promise.reject();
         }
         /**
          * https://online.sbis.ru/opendoc.html?guid=2f35304f-4a67-45f4-a4f0-0c928890a6fc
@@ -206,24 +209,31 @@ export class MoveController {
         selection: ISelectionObject,
         filter: TFilterObject,
         targetKey: CrudEntityKey,
-        position: LOCAL_MOVE_POSITION): string {
-        let error: string;
+        position: LOCAL_MOVE_POSITION): TValidationResult {
+        let result: TValidationResult = {
+            message: undefined,
+            isError: true
+        }
         if (!source) {
-            error = 'MoveController: Source is not set';
+            result.message = 'MoveController: Source is not set';
         }
         if (!selection || (!selection.selected && !selection.excluded)) {
-            error = 'MoveController: Selection type must be Controls/interface:ISelectionObject';
+            result.message = 'MoveController: Selection type must be Controls/interface:ISelectionObject';
         }
         if (typeof filter !== "object") {
-            error = 'MoveController: Filter must be plain object';
+            result.message = 'MoveController: Filter must be plain object';
         }
         if (targetKey === undefined) {
-            error = 'MoveController: Target key is undefined';
+            result.message = 'MoveController: Target key is undefined';
+        }
+        if (targetKey === null && position !== LOCAL_MOVE_POSITION.On) {
+            result.message = null;
+            result.isError = false;
         }
         if ([LOCAL_MOVE_POSITION.On, LOCAL_MOVE_POSITION.After, LOCAL_MOVE_POSITION.Before].indexOf(position) === -1) {
-            error = 'MoveController: position must correspond with Types/source:LOCAL_MOVE_POSITION type';
+            result.message = 'MoveController: position must correspond with Types/source:LOCAL_MOVE_POSITION type';
         }
-        return error;
+        return result;
     }
 
     /**
@@ -235,7 +245,7 @@ export class MoveController {
      */
     private static _validateBeforeOpenDialog(selection: ISelectionObject, popupOptions: IBasePopupOptions): TValidationResult {
         let result: TValidationResult = {
-            message: null,
+            message: undefined,
             isError: false
         }
         if (!popupOptions.template) {

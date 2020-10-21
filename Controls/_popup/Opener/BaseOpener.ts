@@ -17,7 +17,7 @@ import Template = require('wml!Controls/_popup/Opener/BaseOpener');
  * @category Popup
  * @class Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IBaseOpener
- * @control
+ * 
  * @private
  * @author Красильников А.С.
  */

@@ -13,7 +13,7 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
  * @class Controls/_propertyGrid/defaultEditors/String
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -23,7 +23,7 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
  * @class Controls/_propertyGrid/defaultEditors/String
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */

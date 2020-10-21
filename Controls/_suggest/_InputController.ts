@@ -73,8 +73,8 @@ interface IInputControllerOptions extends IControlOptions, IFilterOptions, ISear
    historyId?: string | null;
    layerName: string;
    suggestTemplate: ISuggestTemplateProp | null;
-   footerTemplate: ISuggestFooterTemplate;
-   trim: boolean; // TODO: searchValueTrim ???
+   footerTemplate?: ISuggestFooterTemplate;
+   trim?: boolean; // TODO: searchValueTrim ???
    dataLoadCallback?: Function;
 }
 
@@ -90,7 +90,7 @@ type TSuggestDirection = 'up' | 'down';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @control
+ * 
  * @private
  */
 
@@ -104,7 +104,7 @@ type TSuggestDirection = 'up' | 'down';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @control
+ * 
  * @private
  */
 export default class InputContainer extends Control<IInputControllerOptions> {
@@ -555,7 +555,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._searchValue = options.value || '';
       this._setFilter(options.filter, options);
 
-      if (this._searchValue) {
+      if (this._searchValue && options.suggestState) {
          this._resolveSearch(this._searchValue, options);
       }
    }

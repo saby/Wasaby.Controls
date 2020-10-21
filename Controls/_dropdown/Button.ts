@@ -35,7 +35,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
  * @demo Controls-demo/dropdown_new/Button/Source/Index
  * @class Controls/_dropdown/Button
- * @extends Core/Control
+ * @extends Controls/_buttons/Button
  * @mixes Controls/_menu/interface/IMenuPopup
  * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_menu/interface/IMenuBase
@@ -55,7 +55,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/ISearch
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @category Button
@@ -83,7 +83,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_dropdown/interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/_dropdown/interface/IGrouped
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @category Button
@@ -278,5 +278,7 @@ export default class Button extends BaseDropdown {
 
 /**
  * @name Controls/_dropdown/Button#additionalProperty
- * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню. Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
+ * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню.
+ * Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
+ * @demo Controls-demo/dropdown_new/Button/AdditionalProperty/Index
  */

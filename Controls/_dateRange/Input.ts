@@ -33,7 +33,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  * @mixes Controls/_interface/IDateMask
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_interface/IDateRangeValidators
- * @control
+ * 
  * @public
  * @demo Controls-demo/Input/Date/RangePG
  * @category Input
@@ -51,7 +51,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  * @mixes Controls/_dateRange/interfaces/IRangeInputTag
  * @mixes Controls/_interface/IDateMask
  *
- * @control
+ * 
  * @public
  * @demo Controls-demo/Input/Date/RangePG
  * @category Input

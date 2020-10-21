@@ -24,7 +24,8 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {Object} ItemEditOptions
-    * @property {Types/entity:Model} [options.item] Элемент с исходными данными.
+    * @property {Types/entity:Model} [options.item] Запись списка, которая будет запущена на редактирование. 
+    * Если из обработчика события {@link beforeBeginEdit} также будет возвращена запись, то именно она будет запущена на редактирование вместо первоначальной.
     */
 
    /*
@@ -586,7 +587,8 @@ define('Controls/interface/IEditableList', [
     * @param {ItemEditOptions} options Параметры добавления.
     * @returns {Core/Deferred}
     * @remark
-    * Поддерживается добавление записей в начало или конец списка, группы (если у записи определено значение поля группировки), дочерних записей родительского узла (если у добавляемой записи указано значение поля, переданного в "parentProperty"). Этот функционал конфигурируется опцией {@link Controls/interface/IEditableList/EditingConfig.typedef addPosition}.
+    * В процессе добавления элемента вызываются события {@link beforeBeginEdit} и {@link afterBeginEdit}.
+    * Чтобы задать позицию добавления элемента, установите значение для параметра {@link Controls/interface/IEditableList/EditingConfig.typedef addPosition}.
     * Если вы не передадите параметры, будет вызван метод {@link Types/source:ICrud#create create} источника списка, и результат будет добавлен в список.
     * @demo Controls-demo/list_new/EditInPlace/AddItem/Index
     * @example
@@ -606,6 +608,8 @@ define('Controls/interface/IEditableList', [
     * @see beginEdit
     * @see commitEdit
     * @see cancelEdit
+    * @see beforeBeginEdit
+    * @see afterBeginEdit
     */
 
    /*

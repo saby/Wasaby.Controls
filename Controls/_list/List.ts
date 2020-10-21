@@ -49,7 +49,7 @@ import { RecordSet } from 'Types/collection';
  *
  * @implements Controls/_list/interface/IListNavigation
  *
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  * @category List
@@ -84,7 +84,7 @@ import { RecordSet } from 'Types/collection';
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  *
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  * @category List

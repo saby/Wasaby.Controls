@@ -165,6 +165,29 @@ describe('Controls/browser:Browser', () => {
             });
         });
 
+        it('source returns error', async () => {
+            const options = getBrowserOptions();
+            options.source.query = () => {
+                return Promise.reject(new Error('testError'));
+            };
+            const browser = getBrowser(options);
+
+            const mountResult = await browser._beforeMount(options);
+            ok(mountResult instanceof Error);
+        });
+
+    });
+
+    describe('_beforeUnmount', () => {
+        it('_beforeUnmount while sourceController is loading', async () => {
+            const options = getBrowserOptions();
+            const browser = getBrowser(options);
+
+            await browser._beforeMount(options);
+
+            browser._beforeUnmount();
+            ok(!browser._sourceController);
+        });
     });
 
     describe('_beforeUpdate', () => {

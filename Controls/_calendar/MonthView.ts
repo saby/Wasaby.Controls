@@ -50,7 +50,7 @@ var _private = {
  * @extends Core/Control
  * @mixes Controls/_calendar/interfaces/IMonth
  * @mixes Controls/_interface/IDayTemplate
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Calendar/MonthView/LongCellName/LongCellName

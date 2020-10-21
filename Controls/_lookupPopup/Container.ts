@@ -40,7 +40,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
  *
  * @class Controls/_lookupPopup/Container
  * @extends Core/Control
- * @control
+ * 
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/ISelectionType
  * @public
@@ -59,7 +59,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
  *
  * @class Controls/_lookupPopup/Container
  * @extends Core/Control
- * @control
+ * 
  * @mixes Controls/_interface/ISource
  * @public
  * @author Герасимов Александр Максимович

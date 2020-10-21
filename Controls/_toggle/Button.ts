@@ -55,7 +55,7 @@ export interface IToggleButtonOptions extends
  * @implements Control
  * s/_interface/IHeight
  * @implements Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Toggle
@@ -78,7 +78,7 @@ export interface IToggleButtonOptions extends
  * @implements Controls/_interface/IIconStyle
  * @implements Controls/_interface/IHeight
  * @implements Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Toggle

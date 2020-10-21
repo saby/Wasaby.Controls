@@ -43,7 +43,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
     *
     * @class Controls/Pending
     * @extends Core/Control
-    * @control
+    * 
     * @author Красильников А.С.
     * @public
     */
@@ -92,7 +92,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
     *
     * @class Controls/Pending
     * @extends Core/Control
-    * @control
+    * 
     * @author Красильников А.С.
     * @public
     */

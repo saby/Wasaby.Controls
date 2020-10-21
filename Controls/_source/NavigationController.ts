@@ -103,7 +103,7 @@ type NavigationRecord = Record<{
  *
  * @class Controls/source/NavigationController
  *
- * @control
+ * 
  * @public
  * @author Аверкиев П.А.
  */
@@ -114,7 +114,7 @@ type NavigationRecord = Record<{
  *
  * @class Controls/source/NavigationController
  *
- * @control
+ * 
  * @public
  * @author Аверкиев П.А.
  */
