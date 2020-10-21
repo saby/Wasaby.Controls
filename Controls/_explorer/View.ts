@@ -665,7 +665,6 @@ var
             return hasEditOnClick && !clickEvent.target.closest(`.${EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE}`);
          };
 
-         // Если item.get недоступно, то мы сюда попали кликом по сепаратору в поиске
          const shouldHandleClick = item.get && res !== false && !isNodeEditable();
 
          if (shouldHandleClick) {

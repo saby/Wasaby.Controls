@@ -43,7 +43,7 @@ var
          }
 
          // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
-         data.breadCrumbs = !!data.item.forEach;
+         data.breadCrumbs = data.item && !!data.item.forEach;
          data.breadCrumbsDisplayProperty = this._options.displayProperty;
          data.searchBreadCrumbsItemTemplate = this._options.searchBreadCrumbsItemTemplate || 'Controls/treeGrid:SearchBreadCrumbsItemTemplate';
          data.searchBreadCrumbsItemContent = "Controls/breadcrumbs:ItemTemplate";
@@ -93,12 +93,13 @@ var
            return correctKey;
        },
        _getItemVersion(item: Record|Record[]): string {
+           if (item === null) {
+               return;
+           }
            if (isBreadCrumbsItem(item)) {
                const versions = [];
                item.forEach((rec) => {
-                   if (rec) {
-                       versions.push(rec.getVersion());
-                   }
+                   versions.push(rec.getVersion());
                });
                return versions.join('_');
            }

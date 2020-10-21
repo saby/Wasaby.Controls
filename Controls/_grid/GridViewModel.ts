@@ -1792,7 +1792,7 @@ var
                     currentColumn.ladder = self._ladder.ladder[current.index];
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
-                if (current.item.get) {
+                if (current.item && current.item.get) {
                     currentColumn.needSearchHighlight = current.searchValue ?
                         !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue) : false;
                     currentColumn.searchValue = current.searchValue;
@@ -1939,6 +1939,9 @@ var
         },
 
         _calcItemVersion(item, key, index): string {
+            if (item === null) {
+                return;
+            }
             let version: string = this._model._calcItemVersion(item, key) + (item.getId ? item.getId() : '');
 
             if (this.getCount() - 1 === index) {

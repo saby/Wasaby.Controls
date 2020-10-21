@@ -40,15 +40,7 @@ export default class SearchSeparator<T> extends CollectionItem<T>  {
     }
 
     getContents(): T {
-        const contents = this._$source?.getContents();
-        // Получение null в качестве значения ломает приложение
-        if (!contents) {
-            return new Model({
-                rawData: {},
-                keyProperty: this.getOwner()?.getKeyProperty()
-            }) as T;
-        }
-        return contents;
+        return this._$source && this._$source.getContents();
     }
 
     setContents(contents: T, silent?: boolean): void {
