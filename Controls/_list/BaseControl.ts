@@ -1454,9 +1454,14 @@ const _private = {
     },
 
     isPortionedLoad(self, items?: RecordSet = self._items): boolean {
-        const loadByMetaData = items && items.getMetaData()[PORTIONED_LOAD_META_FIELD];
+        const metaData = items && items.getMetaData();
         const loadBySearchValue = !!self._options.searchValue;
-        return loadByMetaData || loadBySearchValue;
+
+        // Если в мета данных явно передано iterative: false, то поиск не итеративный,
+        // даже если ищут через строку поиска
+        return metaData && metaData.hasOwnProperty(PORTIONED_LOAD_META_FIELD) ?
+            metaData[PORTIONED_LOAD_META_FIELD] :
+            loadBySearchValue;
     },
 
     checkPortionedSearchByScrollTriggerVisibility(self, scrollTriggerVisibility: boolean): void {
