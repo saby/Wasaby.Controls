@@ -4418,7 +4418,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _startInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
         const isAdd = !this._items.getRecordById(editingConfig.item.getKey());
         if (isAdd) {
-            return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition );
+            return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition);
         } else {
             return this.beginEdit({ item: editingConfig.item });
         }
