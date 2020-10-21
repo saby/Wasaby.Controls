@@ -192,6 +192,31 @@ describe('Controls/list_clean/ScrollController', () => {
 
                 assert.strictEqual(result.triggerOffset.top, 30);
             });
+            it('update with new scrollHeight === 0', () => {
+                const collection = new Collection({
+                    collection: items
+                });
+                let options = {
+                    collection,
+                    virtualScrollConfig: {},
+                    needScrollCalculation: false,
+                    attachLoadTopTriggerToNull: false
+                };
+                const controller = new ScrollController(options);
+                controller.handleResetItems();
+
+                let result = controller.update({
+                    options: {},
+                    params: {clientHeight: 100, scrollHeight: 300, scrollTop: 0}
+                });
+                assert.strictEqual(result.triggerOffset.top, 30);
+                
+                result = controller.update({
+                    options: {},
+                    params: {clientHeight: 100, scrollHeight: 0, scrollTop: 0}
+                });
+                assert.strictEqual(result.triggerOffset.top, 0);
+            });
         });
     });
 
