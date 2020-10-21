@@ -42,33 +42,18 @@
    padding-left: @item_padding-left_m_list;
 }
 
-.controls-ListView_content-template {
-   width: 100%;
-}
 /**
 Пробовал сделать минимальную ширину через padding, но из-за этого некоторые элементы(календарь и тд),
 перестали отображаться корректно. А именно у них появляются лишние отступы.
  */
 .controls-ListView_default-padding_theme-@{themeName} {
    min-height: @item_min-height_list;
-   align-items: baseline;
-   display: inline-flex;
-   width: 100%;
-   flex-shrink: 1;
-   box-sizing: border-box;
 
    &:before {
       content: '\200b';
       font-size: @item_max-font-size_list;
       // в ie если задан display: flex, то ширина ставится не в 0, а колеблется от 0.001-0.009. Из-за чего ломается верстка
       width: 0;
-   }
-   // Нужен для вложенного div, без этого будет ломаться верстка некоторых блоков.
-   // Ломается из-за display: inline-flex, поэтому возвращаем display block
-   & > .controls-ListView_content-template {
-      display: block;
-      width: inherit;
-      height: inherit;
    }
 }
 
