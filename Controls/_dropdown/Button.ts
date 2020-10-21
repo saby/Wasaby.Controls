@@ -278,5 +278,7 @@ export default class Button extends BaseDropdown {
 
 /**
  * @name Controls/_dropdown/Button#additionalProperty
- * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню. Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
+ * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню.
+ * Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
+ * @demo Controls-demo/dropdown_new/Button/AdditionalProperty/Index
  */
