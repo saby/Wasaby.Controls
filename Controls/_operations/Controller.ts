@@ -18,7 +18,7 @@ import { TSelectionType } from 'Controls/interface';
  * @class Controls/_operations/Controller
  * @extends Core/Control
  * @mixes Controls/interface/IPromisedSelectable
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  */
@@ -31,7 +31,7 @@ import { TSelectionType } from 'Controls/interface';
  * @class Controls/_operations/Controller
  * @extends Core/Control
  * @mixes Controls/interface/IPromisedSelectable
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  */

@@ -12,7 +12,7 @@ export interface IArrowButtonOptions extends IControlOptions {
  * нажатии на него.
  * @class Controls/_buttons/ArrowButton
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Button

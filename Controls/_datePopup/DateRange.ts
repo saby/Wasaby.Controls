@@ -16,7 +16,7 @@ import 'wml!Controls/_datePopup/DateRangeItem';
  *
  * @class Controls/_datePopup/DateRange
  * @extends Core/Control
- * @control
+ * 
  * @author Красильников А.С.
  * @private
  */

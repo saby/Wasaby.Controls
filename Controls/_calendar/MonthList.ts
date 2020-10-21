@@ -60,7 +60,7 @@ const SCALE_ROUNDING_ERROR_FIX = 1.5;
  * @mixes Controls/_calendar/interfaces/IMonthListSource
  * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_calendar/interfaces/IMonth
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Date/MonthList

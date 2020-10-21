@@ -16,7 +16,7 @@ import {error as loadDataError} from 'Controls/dataSource';
  * @mixes Controls/_toolbars/IToolbarSource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/OperationsPanelNew/Base/Index
@@ -32,7 +32,7 @@ import {error as loadDataError} from 'Controls/dataSource';
  * @extends Core/Control
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/OperationsPanelNew/Base/Index

@@ -90,7 +90,7 @@ type TSuggestDirection = 'up' | 'down';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @control
+ * 
  * @private
  */
 
@@ -104,7 +104,7 @@ type TSuggestDirection = 'up' | 'down';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @control
+ * 
  * @private
  */
 export default class InputContainer extends Control<IInputControllerOptions> {

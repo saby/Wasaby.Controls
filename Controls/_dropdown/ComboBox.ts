@@ -47,7 +47,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/IHeight
  * @implements Controls/interface/IDropdown
- * @control
+ * 
  * @public
  * @category Input
  * @author Золотова Э.Е.
@@ -67,7 +67,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/interface/IDropdownEmptyText
  * @implements Controls/_input/interface/IBase
  * @implements Controls/interface/IDropdown
- * @control
+ * 
  * @public
  * @category Input
  * @author Золотова Э.Е.

@@ -21,7 +21,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  *
  * @class Controls/_lookupPopup/Controller
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Герасимов Александр Максимович
  */
@@ -38,7 +38,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  *
  * @class Controls/_lookupPopup/Controller
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Герасимов Александр Максимович
  */

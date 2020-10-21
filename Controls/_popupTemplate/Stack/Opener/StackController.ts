@@ -14,7 +14,7 @@ import {Bus} from 'Env/Event';
 /**
  * Stack Popup Controller
  * @class Controls/_popupTemplate/Stack/Opener/StackController
- * @control
+ * 
  * @private
  * @category Popup
  */

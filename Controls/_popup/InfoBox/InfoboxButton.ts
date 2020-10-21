@@ -15,7 +15,7 @@ export interface IInfoboxButton extends IControlOptions, IIconSizeOptions {
  * @class Controls/_popup/InfoBox/InfoboxButton
  * @extends Core/Control
  * @mixes Controls/_interface/IIconSize
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Button

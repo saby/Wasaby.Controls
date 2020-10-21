@@ -18,7 +18,7 @@ interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOpti
  *
  * @class Controls/_popupTemplate/Sticky
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @category Popup
  * @author Красильников А.С.

@@ -21,7 +21,7 @@ interface ISwitchableAreaItem {
  * Контрол для переключения контентных областей.
  * @class Controls/_switchableArea/View
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/SwitchableArea/DemoSwitchableArea

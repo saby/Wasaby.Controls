@@ -24,7 +24,7 @@ import {Popup as PopupUtil} from 'Controls/dateUtils';
     * @mixes Controls/interface/IInputPlaceholder
     * @mixes Controls/_input/interface/IValueValidators
     * @mixes Controls/_interface/IOpenPopup
-    * @control
+    * 
     * @public
     * @demo Controls-demo/Input/Date/PickerPG
     * @category Input
@@ -43,7 +43,7 @@ import {Popup as PopupUtil} from 'Controls/dateUtils';
     * @mixes Controls/_input/interface/IBase
     * @mixes Controls/interface/IInputPlaceholder
     * @mixes Controls/_input/interface/IValueValidators
-    * @control
+    * 
     * @public
     * @demo Controls-demo/Input/Date/PickerPG
     * @category Input

@@ -27,7 +27,7 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  *
  * @ignoreOptions style
  *
- * @control
+ * 
  * @public
  * @demo Controls-demo/Search/Input/Base/Index
  *
@@ -78,7 +78,7 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  *
  * @ignoreOptions style
  *
- * @control
+ * 
  * @public
  * @demo Controls-demo/Search/Input/Base/Index
  *

@@ -14,7 +14,7 @@ import {ViewConfig} from "../_error/Handler";
  *
  * @class Controls/Container/Async
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Санников К.А.
  * @category Container
@@ -26,7 +26,7 @@ import {ViewConfig} from "../_error/Handler";
  *
  * @class Controls/Container/Async
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Санников К.А.
  * @category Container

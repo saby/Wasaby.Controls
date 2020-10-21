@@ -29,7 +29,7 @@ const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
  *
  * @class Controls/_popupTemplate/Stack
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @category Popup
  * @author Красильников А.С.
