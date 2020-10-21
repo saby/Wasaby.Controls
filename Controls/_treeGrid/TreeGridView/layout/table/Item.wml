@@ -55,6 +55,16 @@
                 expanderTemplate="{{itemData.expanderTemplate}}"
                 itemData="{{currentColumn}}"
                 tagTemplate="{{tagTemplate}}">
+        <ws:afterItemTemplate>
+            <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 1 || !itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
+                <ws:if data="{{ itemData.shouldDrawExpander(itemData, expanderIcon) && itemData.getExpanderPosition() === 'right' }}">
+                    <ws:partial template="{{itemData.expanderTemplate}}"
+                                itemData="{{itemData}}"
+                                expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
+                                expanderSize="{{itemData.getExpanderSize(expanderSize)}}"/>
+                </ws:if>
+            </ws:if>
+        </ws:afterItemTemplate>
         <ws:multiSelectTemplate>
             <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
         </ws:multiSelectTemplate>

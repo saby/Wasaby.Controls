@@ -203,21 +203,6 @@ var
                 // Экспандер выводится пользователем в произвольном месте в шаблоне колонки, где недоступна itemData строки
                 currentColumn.getExpanderClasses = (_, expanderIcon, expanderSize) => current.getExpanderClasses(current, expanderIcon, expanderSize);
 
-                if ((current.hasMultiSelectColumn && currentColumn.columnIndex === 1 ||
-                    !current.hasMultiSelectColumn && currentColumn.columnIndex === 0) &&
-                    (current.getExpanderPosition() === 'right' &&
-                        current.shouldDrawExpander(current, current.getExpanderIcon()))) {
-                    /**
-                     * Если expanderPosition=right, тогда нужно передать шаблон и значения в виде опций.
-                     * Это нужно для того, чтобы иконка узла располагалась внутри columnContent.
-                     * Если этого не делать, тогда иконка будет находиться за пределами блока, в следствии чего появится разрыв.
-                     */
-                    currentColumn.afterItemTemplate = current.expanderTemplate;
-                    currentColumn.afterItemTemplateOptions = {
-                        itemData: current
-                    };
-                }
-
                 if (currentColumn.nodeType) {
                     currentColumn.classList.base += ` controls-TreeGrid__row-cell__node_theme-${theme}`;
                 } else if (currentColumn.nodeType === false) {

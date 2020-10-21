@@ -52,7 +52,6 @@
         </ws:else>
     </ws:if>
     <!-- По необходимости отображаем шаблон, который должен находиться после основного контента. -->
-    <ws:partial if="{{ itemData.afterItemTemplate }}"
-                template="{{ itemData.afterItemTemplate }}"
-                scope="{{ itemData.afterItemTemplateOptions }}"/>
+    <ws:partial if="{{ afterItemTemplate }}"
+                template="{{ afterItemTemplate }}"/>
 </div>
