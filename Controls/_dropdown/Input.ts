@@ -56,7 +56,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/ISearch
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  * @category Input
@@ -84,7 +84,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/ITextValue
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  * @category Input

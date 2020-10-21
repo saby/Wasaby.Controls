@@ -24,7 +24,7 @@ interface IDragObject {
  *
  * @class Controls/_popupTemplate/Dialog
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @category Popup
  * @author Красильников А.С.

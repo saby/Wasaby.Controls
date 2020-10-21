@@ -46,7 +46,7 @@ export interface IMoveControllerOptions {
  * Контроллер для перемещения элементов списка.
  *
  * @class Controls/_list/Controllers/MoveController
- * @control
+ * 
  * @public
  * @author Аверкиев П.А
  */

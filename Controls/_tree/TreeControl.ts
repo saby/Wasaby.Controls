@@ -488,7 +488,7 @@ const _private = {
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/interface/IMovableList
  * @extends Controls/_list/ListControl
- * @control
+ * 
  * @private
  * @category List
  */

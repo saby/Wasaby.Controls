@@ -26,7 +26,7 @@ import PropertyGridItem from './PropertyGridItem';
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IPropertyGrid
  * @demo Controls-demo/PropertyGridNew/Group/Expander/Index
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -38,7 +38,7 @@ import PropertyGridItem from './PropertyGridItem';
  * @class Controls/_propertyGrid/PropertyGrid
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IPropertyGrid
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */

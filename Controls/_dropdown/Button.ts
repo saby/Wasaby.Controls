@@ -55,7 +55,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/ISearch
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @category Button
@@ -83,7 +83,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_dropdown/interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/_dropdown/interface/IGrouped
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @category Button

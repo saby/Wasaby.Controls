@@ -32,7 +32,7 @@ export interface IHeadingOptions
  *
  * @class Controls/_heading/Heading
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Heading/Title/SizesAndStyles/Index

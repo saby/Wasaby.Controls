@@ -30,7 +30,7 @@ import {constants} from 'Env/Env';
  *
  * @class Controls/LoadingIndicator
  * @extends Core/Control
- * @control
+ * 
  * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
  * @author Красильников А.С.
  * @public
@@ -68,7 +68,7 @@ import {constants} from 'Env/Env';
  * @class Controls/LoadingIndicator
  * @extends Core/Control
  * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
- * @control
+ * 
  * @author Красильников А.С.
  * @public
  * @category Container

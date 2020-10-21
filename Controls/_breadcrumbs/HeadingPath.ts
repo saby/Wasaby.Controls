@@ -26,7 +26,6 @@ import {Record} from 'Types/entity';
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
- * @control
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/BreadCrumbs/PathPG
@@ -43,7 +42,6 @@ import {Record} from 'Types/entity';
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
- * @control
  * @public
  * @author Красильников А.С.
  *

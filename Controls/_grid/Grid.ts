@@ -29,7 +29,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_grid/interface/IPropStorage
     * @mixes Controls/_marker/interface/IMarkerListOptions
     *
-    * @control
+    * 
     * @public
     * @author Авраменко А.С.
     * @category List
@@ -61,7 +61,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_grid/interface/IPropStorage
     * @mixes Controls/_marker/interface/IMarkerListOptions
     *
-    * @control
+    * 
     * @public
     * @author Авраменко А.С.
     * @category List

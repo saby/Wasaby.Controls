@@ -23,7 +23,7 @@ const MIN_COUNT_OF_LETTER = 3;
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
- * @control
+ * 
  * @private
  * @author Авраменко А.С.
  */

@@ -17,7 +17,7 @@ import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/IDialog
- * @control
+ * 
  * @author Красильников А.С.
  * @category Popup
  * @demo Controls-demo/Popup/Opener/StackDemo

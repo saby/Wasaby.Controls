@@ -24,7 +24,7 @@ interface IValidateContainerOptions extends IControlOptions {
  * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/Container
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  */

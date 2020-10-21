@@ -22,7 +22,7 @@ interface IRawDataElem {
  * @extends Core/Control
  * @author Герасимов А.М.
  * @demo Controls-demo/Container/Enum
- * @control
+ * 
  * @public
  */
 
@@ -33,7 +33,7 @@ interface IRawDataElem {
  * @extends Core/Control
  * @author Герасимов Александр
  * @demo Controls-demo/Container/Enum
- * @control
+ * 
  * @public
  */ 
 

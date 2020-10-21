@@ -2865,7 +2865,7 @@ const _private = {
  * @mixes Controls/_list/BaseControl/Styles
  * @mixes Controls/_list/interface/IMovableList
  * @implements Controls/_list/interface/IListNavigation
- * @control
+ * 
  * @private
  * @author Авраменко А.С.
  * @category List

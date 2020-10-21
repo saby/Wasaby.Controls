@@ -31,7 +31,7 @@ import {descriptor} from "Types/entity";
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
- * @control
+ * 
  * @public
  * @category Input
  * @author Красильников А.С.
@@ -56,7 +56,7 @@ import {descriptor} from "Types/entity";
  * @mixes Controls/_dateRange/interfaces/ISelector
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
- * @control
+ * 
  * @public
  * @category Input
  * @author Красильников А.С.
