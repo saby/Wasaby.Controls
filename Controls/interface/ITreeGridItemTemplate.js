@@ -59,7 +59,7 @@ define('Controls/interface/ITreeGridItemTemplate', [
 
    /**
     * @name Controls/interface/ITreeGridItemTemplate#itemTemplateProperty
-    * @cfg {String} Имя поля элемента, которое содержит имя шаблона. С помощью этой настройки отдельным элементам можно задать {@link Controls/interface/ITreeGridItemTemplate#itemTemplate пользовательский шаблон отображения элемента}.
+    * @cfg {String} Имя поля элемента, которое содержит имя {@link Controls/interface/ITreeGridItemTemplate#itemTemplate шаблона отображения элемента}. С помощью этой настройки отдельным элементам можно задать собственный шаблон отображения.
     * @default undefined
     * @remark
     * Если не задано значение в опции itemTemplateProperty или в свойстве элемента, то используется шаблон из {@link Controls/interface/ITreeGridItemTemplate#itemTemplate itemTemplate}.

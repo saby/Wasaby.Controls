@@ -74,7 +74,7 @@ define('Controls/interface/IGridItemTemplate', [
 
    /**
     * @name Controls/interface/IGridItemTemplate#itemTemplateProperty
-    * @cfg {String|undefined} Имя поля элемента, которое содержит имя шаблона. С помощью этой настройки отдельным элементам можно задать {@link Controls/interface/IGridItemTemplate#itemTemplate пользовательский шаблон отображения элемента}.
+    * @cfg {String|undefined} Имя поля элемента, которое содержит имя {@link Controls/interface/IGridItemTemplate#itemTemplate шаблона отображения элемента}. С помощью этой настройки отдельным элементам можно задать собственный шаблон отображения.
     * @default undefined
     * @remark
     * Если не задано значение в опции itemTemplateProperty или в свойстве элемента, то используется шаблон из {@link Controls/interface/IGridItemTemplate#itemTemplate itemTemplate}.
