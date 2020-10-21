@@ -463,7 +463,9 @@ describe('Controls/_display/CollectionItem', () => {
     it('.getWrapperClasses()', () => {
         const owner = {
             notifyItemChange(): void {},
-            getHoverBackgroundStyle: function() {}
+            getHoverBackgroundStyle: function() {},
+            getTopPadding: ()=>'',
+            getBottomPadding: ()=>''
         };
 
         const defaultClasses = [
@@ -486,6 +488,14 @@ describe('Controls/_display/CollectionItem', () => {
         const editingWrapperClasses = item.getWrapperClasses();
 
         defaultClasses.concat(editingClasses).forEach((className) => assert.include(editingWrapperClasses, className));
+
+        owner.getTopPadding = () => 'null';
+        owner.getBottomPadding = () => 'null';
+        defaultClasses.push('controls-ListView_default-padding_theme');
+        item.setOwner(owner);
+        const pagingWrapperClasses = item.getWrapperClasses();
+
+        defaultClasses.concat(editingClasses).forEach((className) => assert.include(pagingWrapperClasses, className));
     });
 
     it('.getContentClasses()', () => {
