@@ -3,7 +3,6 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
 import { isEqual } from 'Types/object';
-import { Map } from 'Types/shim';
 import {RecordSet} from 'Types/collection';
 import { Model } from 'Types/entity';
 
@@ -70,7 +69,6 @@ const _private = {
         }
     },
     toggleExpanded: function(self, dispItem) {
-        const filter = cClone(self._options.filter);
         const listViewModel = self._children.baseControl.getViewModel();
         const item = dispItem.getContents();
         const nodeKey = item.getId();
@@ -83,17 +81,13 @@ const _private = {
         self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
         if (
             !_private.isExpandAll(self._options.expandedItems) &&
-            !listViewModel.getHasMoreStorage().hasOwnProperty(String(nodeKey)) &&
+            !baseSourceController.hasLoaded(nodeKey) &&
             !dispItem.isRoot() &&
             _private.shouldLoadChildren(self, nodeKey)
         ) {
             self._children.baseControl.showIndicator();
-            filter[options.parentProperty] = nodeKey;
             return baseSourceController
-                .load({
-                    filter,
-                    key: nodeKey
-                })
+                .load(undefined, nodeKey)
                 .addCallbacks((list) => {
                     if (options.uniqueKeys) {
                         listViewModel.mergeItems(list);
@@ -123,8 +117,9 @@ const _private = {
         // загружаем узел только если:
         // 1. он не был загружен ранее (определяем по наличию его hasMoreStorage'e)
         // 2. у него вообще есть дочерние элементы (по значению поля hasChildrenProperty)
-        const viewModel = self._children.baseControl.getViewModel();
-        const isAlreadyLoaded = !!viewModel.getHasMoreStorage().hasOwnProperty(String(nodeKey));
+        const baseControl = self._children.baseControl;
+        const viewModel = baseControl.getViewModel();
+        const isAlreadyLoaded = baseControl.getSourceController().hasLoaded(nodeKey);
         if (isAlreadyLoaded) {
             return false;
         }
@@ -158,18 +153,12 @@ const _private = {
     },
 
     loadMore: function(self, dispItem) {
-        const filter = cClone(self._options.filter);
         const listViewModel = self._children.baseControl.getViewModel();
         const baseSourceController = self._children.baseControl.getSourceController();
         const nodeKey = dispItem.getContents().getId();
 
-        filter[self._options.parentProperty] = nodeKey;
         self._children.baseControl.showIndicator();
-        return baseSourceController.load({
-            filter,
-            direction: 'down',
-            key: nodeKey
-        }).addCallbacks((list) => {
+        return baseSourceController.load('down', nodeKey).addCallbacks((list) => {
             listViewModel.setHasMoreStorage(
                 _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
             );
@@ -189,9 +178,6 @@ const _private = {
         }).addCallback(() => {
             self._children.baseControl.hideIndicator();
         });
-    },
-    onNodeRemoved: function(self, nodeId) {
-        delete self._children.baseControl.getViewModel().getHasMoreStorage()[String(nodeId)];
     },
     isExpandAll: function(expandedItems) {
         return expandedItems instanceof Array && expandedItems[0] === null;
@@ -285,8 +271,7 @@ const _private = {
                     if (item.get(options.nodeProperty) !== null) {
                         const itemKey = item.getId();
 
-                        if (!modelHasMoreStorage.hasOwnProperty(String(itemKey)) &&
-                            viewModel.getChildren(itemKey, loadedList).length) {
+                        if (viewModel.getChildren(itemKey, loadedList).length) {
                             modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
                         }
                     }
@@ -320,9 +305,10 @@ const _private = {
         const nodeProperty = self._options.nodeProperty;
         const keyProperty = self._options.keyProperty;
 
-        filter[self._options.parentProperty] = nodes.concat(_private.getReloadableNodes(viewModel, key, keyProperty, nodeProperty));
+        filter[self._options.parentProperty] =
+            nodes.concat(_private.getReloadableNodes(viewModel, key, keyProperty, nodeProperty));
 
-        return baseSourceController.load({key, filter}).addCallback((result) => {
+        return baseSourceController.load(undefined, key, filter).addCallback((result) => {
             _private.applyReloadedNodes(viewModel, key, keyProperty, nodeProperty, result);
             viewModel.setHasMoreStorage(
                 _private.prepareHasMoreStorage(baseSourceController, viewModel.getExpandedItems())
@@ -368,8 +354,6 @@ const _private = {
     },
 
     initListViewModelHandler(self, listModel): void {
-        // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-        listModel.subscribe('onNodeRemoved', self._onNodeRemovedFn);
         listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
         listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
     },
@@ -442,7 +426,6 @@ const _private = {
  */
 
 var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype */{
-    _onNodeRemovedFn: null,
     _template: TreeControlTpl,
     _root: null,
     _updatedRoot: false,
@@ -461,7 +444,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _timeoutForExpandOnDrag: null,
 
     constructor: function(cfg) {
-        this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
         this._expandNodeOnDrag = this._expandNodeOnDrag.bind(this);
         if (typeof cfg.root !== 'undefined') {
             this._root = cfg.root;
@@ -488,9 +470,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
     _afterMount: function() {
         _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
-    },
-    _onNodeRemoved: function(event, nodeId) {
-        _private.onNodeRemoved(this, nodeId);
     },
     _beforeUpdate: function(newOptions) {
         const baseControl = this._children.baseControl;

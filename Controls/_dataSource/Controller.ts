@@ -90,14 +90,15 @@ export default class Controller {
 
         this._collectionChange = this._collectionChange.bind(this);
     }
-    load(loadConfig: ILoadConfig): Promise<LoadResult> {
-        const loadCfg = {...loadConfig || {}};
-
-        if (loadCfg.key === undefined) {
-            loadCfg.key = this._root;
-        }
-
-        return this._load(loadCfg);
+    load(direction?: Direction,
+         key: TKey = this._root,
+         filter?: QueryWhereExpression<unknown>
+    ): Promise<LoadResult> {
+        return this._load({
+            direction,
+            key,
+            filter
+        });
     }
 
     reload(sourceConfig?: INavigationSourceConfig): LoadResult {
@@ -241,6 +242,16 @@ export default class Controller {
         }
 
         return hasMoreData;
+    }
+
+    hasLoaded(key: TKey): boolean {
+        let loadedResult = false;
+
+        if (this._hasNavigationBySource()) {
+            loadedResult = this._getNavigationController(this._options.navigation).hasLoaded(key);
+        }
+
+        return loadedResult;
     }
 
     isLoading(): boolean {
