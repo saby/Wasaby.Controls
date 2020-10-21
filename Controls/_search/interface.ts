@@ -4,6 +4,8 @@ import {NewSourceController} from 'Controls/dataSource';
 import {RecordSet} from 'Types/collection';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 
+type Key = string | number | null;
+
 export interface ISearchResolverOptions {
    delayTime?: number | null;
    minSearchLength?: number;
@@ -21,13 +23,15 @@ export interface ISearchControllerOptions extends ISearchOptions,
    IHierarchySearchOptions {
    sourceController: NewSourceController;
    searchValue?: string;
-   root?: string|number|null;
+   root?: Key;
 }
 
 export interface ISearchController {
    reset(): Promise<RecordSet>;
    search(value: string): Promise<RecordSet>;
    update(options: Partial<ISearchControllerOptions>): void;
+   setRoot(value: Key): void;
+   getRoot(): Key;
 }
 
 export interface ISearchResolver {
