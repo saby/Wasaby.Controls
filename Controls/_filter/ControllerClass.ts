@@ -53,7 +53,7 @@ const setPropValue = Utils.object.setPropertyValue.bind(Utils);
 const ACTIVE_HISTORY_FILTER_INDEX = 0;
 
 export default class FilterControllerClass {
-    private _options: IFilterControllerOptions = null;
+    private _options: Partial<IFilterControllerOptions> = null;
     private _crudWrapper: CrudWrapper;
     private _filterButtonItems: IFilterItem[] = null;
     private _fastFilterItems: IFilterItem[] = null;
@@ -64,7 +64,7 @@ export default class FilterControllerClass {
    можно получить идентификатор закэшированных данных для этого фильтра */
     private _isFilterChanged: boolean = false;
 
-    constructor(options: IFilterControllerOptions) {
+    constructor(options: Partial<IFilterControllerOptions>) {
         this._options = options;
         this._filter = options.filter;
 
