@@ -1155,7 +1155,7 @@ const _private = {
                 // чтобы не скрыть после полной загрузки, даже если не набралось на две страницы.
                 self._cachedPagingState = true;
             }
-            if (result && _private.needScrollPaging(self._options.navigation)) {
+            if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
                 _private.createScrollPagingController(self, scrollParams, hasMoreData);
             }
         }
@@ -3678,6 +3678,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (needReload) {
             this._hideTopTrigger = true;
+            this._scrollPagingCtr = null;
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {

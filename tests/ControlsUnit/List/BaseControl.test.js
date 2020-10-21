@@ -2242,6 +2242,10 @@ define([
 
          res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 2000, 800);
          assert.isTrue(res, 'Wrong paging state');
+
+         const scrollPagingInst = baseControl._scrollPagingCtr;
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 2000, 800);
+         assert.strictEqual(baseControl._scrollPagingCtr, scrollPagingInst, 'ScrollPaging recreated');
       });
 
       it('needShowPagingByScrollSize with virtual scrollHeight', function() {

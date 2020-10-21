@@ -828,7 +828,7 @@ describe('Controls/_source/NavigationController', () => {
 
     describe('shiftToEdge', () => {
         describe('page', () => {
-            it ('shift to edge with more meta as number', () => {
+            it ('shift to edge with more meta as boolean', () => {
                 const START_PAGE = 0;
                 const nc = new NavigationController({
                     navigationType: 'page',
@@ -851,7 +851,7 @@ describe('Controls/_source/NavigationController', () => {
                 assert.equal(edgeQueryConfig.page, -1);
             });
 
-            it ('shift to edge with more meta as boolean', () => {
+            it ('shift to edge with more meta as number', () => {
                 const START_PAGE = 0;
                 const nc = new NavigationController({
                     navigationType: 'page',
@@ -872,6 +872,28 @@ describe('Controls/_source/NavigationController', () => {
 
                 const edgeQueryConfig = nc.shiftToEdge('forward');
                 assert.equal(edgeQueryConfig.page, 5);
+            });
+            it ('shift to edge with more meta as number. pageSize = 3, more = 19', () => {
+                const START_PAGE = 0;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: false
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                rs.setMetaData({more: 19});
+                nc.updateQueryProperties(rs);
+
+                const edgeQueryConfig = nc.shiftToEdge('forward');
+                assert.equal(edgeQueryConfig.page, 6);
             });
         });
     });
