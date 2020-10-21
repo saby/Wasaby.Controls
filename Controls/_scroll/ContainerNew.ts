@@ -14,7 +14,7 @@ import {
     IScrollbarsOptions,
     getDefaultOptions as getScrollbarsDefaultOptions
 } from './Container/Interface/IScrollbars';
-import {IShadows, SHADOW_VISIBILITY} from './Container/Interface/IShadows';
+import {IShadows, IShadowsVisibilityByInnerComponents, SHADOW_VISIBILITY} from './Container/Interface/IShadows';
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import StickyHeaderController from './StickyHeader/Controller';
 import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyHeader/Utils';
@@ -103,7 +103,7 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  * @name Controls/_scroll/ContainerNew#backgroundStyle
  * @cfg {String} Определяет префикс стиля для настройки элементов которые зависят от цвета фона.
  * @default default
- * @demo Controls-demo/Scroll/BackgroundStyle/Index
+ * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index
  */
 
 const SCROLL_BY_ARROWS = 40;
@@ -129,11 +129,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _needUpdateContentSize: boolean = false;
 
     _beforeMount(options: IContainerOptions, context, receivedState) {
-        const shadowsModelOptions = {...options};
-        if (options.hasMoreDataToUp) {
-            shadowsModelOptions.topShadowVisibility = true;
-        }
-        this._shadows = new ShadowsModel(shadowsModelOptions);
+        this._shadows = new ShadowsModel(options);
         this._scrollbars = new ScrollbarsModel(options, receivedState);
         this._stickyHeaderController = new StickyHeaderController();
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
@@ -255,6 +251,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _positionChangedHandler(event, direction, position): void {
         this.scrollTo(position, direction);
+    }
+
+    protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
+        this._shadows.updateVisibilityByInnerComponents(shadowsVisibility);
     }
 
     protected _keydownHandler(event: SyntheticEvent): void {

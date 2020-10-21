@@ -447,7 +447,8 @@
  * @name Controls/_grid/interface/IGridControl#editArrowVisibilityCallback
  * @cfg {TEditArrowVisibilityCallback} Функция обратного вызова для определения видимости кнопки открытия карточки в панели действий по свайпу для конкретной записи.
  * @param {Controls/_itemActions/interface/IItemAction/TEditArrowVisibilityCallback.typedef} TEditArrowVisibilityCallback
- * @remark Первый и единственный аргумент - текущая запись, на которой открывается свайп.
+ * @remark
+ * Первый и единственный аргумент - текущая запись, на которой открывается свайп.
  */
 
 /**
@@ -456,7 +457,9 @@
  * @remark
  * Чтобы стрелка-шеврон отобразилась в прикладном шаблоне колонки, необходимо в опции contentTemplate явно указать позицию стрелки-шеврона.
  * Для этого используется переменная {@link Controls/grid:ColumnTemplate#editArrowTemplate} из области видимости самого шаблона.
- * Пример использования смотреть {@link Controls/grid:ColumnTemplate#contentTemplate тут}
+ * Пример использования смотреть {@link Controls/grid:ColumnTemplate#contentTemplate тут}.
+ * Обратите внимание! Для отображения стрелки-шеврона по свайпу необходимо всегда указывать опцию showEditArrow=true, вне зависимости от того,
+ * используется прикладной шаблон или нет.
  * @demo Controls-demo/grid/ShowEditArrow/Index
  * @example
  * <pre>
@@ -503,4 +506,20 @@
  * @name Controls/_grid/interface/IGridControl#collapsedItemsChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<Number|String>} expandedItems Идентификаторы свернутых узлов.
+ */
+
+/**
+ * @event Происходит при клике на тег внутри ячейки грида.
+ * @name Controls/_grid/interface/IGridControl#tagClick
+ * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
+ * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:ITagColumn#tagStyleProperty tagStyleProperty} у колонки.
+ * @see tagStyle
+ */
+
+/**
+ * @event Происходит при наведении курсора мыши на тег внутри ячейки грида.
+ * @name Controls/_grid/interface/IGridControl#tagHover
+ * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
+ * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:ITagColumn#tagStyleProperty tagStyleProperty} у колонки.
+ * @see tagClick
  */

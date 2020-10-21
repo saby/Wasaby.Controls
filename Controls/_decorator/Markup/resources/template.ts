@@ -33,6 +33,7 @@ import {Logger} from 'UI/Utils';
          'mailto:',
          'tel:',
          'viber:(//|\\\\)',
+         'sbisplugin:(//|\\\\)',
          '#',
          './',
          '/'

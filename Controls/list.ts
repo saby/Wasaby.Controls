@@ -10,7 +10,6 @@
  * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
  * @includes GroupTemplate Controls/list:GroupTemplate
  * @includes EditingTemplate Controls/list:EditingTemplate
- * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate
  * @includes View Controls/_list/List
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
@@ -33,6 +32,7 @@
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IReloadableList Controls/_list/interface/IReloadableList
  * @includes IMovableList Controls/_list/interface/IMovableList
+ * @includes IMarkerListOptions Controls/_marker/interface/IMarkerListOptions
  * @public
  * @author Крайнов Д.О.
  */

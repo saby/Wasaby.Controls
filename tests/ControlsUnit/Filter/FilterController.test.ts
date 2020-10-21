@@ -71,6 +71,40 @@ describe('Controls/filter:ControllerClass', () => {
         });
     });
 
+    it ('loadFilterItemsFromHistory with prefetch', () => {
+        const historyItems = [                {
+            name: 'testId1',
+            value: '',
+            textValue: '',
+            resetValue: ''
+        }, {
+            name: 'testId2',
+            value: 'testValue',
+            textValue: 'textValue4',
+            resetValue: ''
+        }];
+        let itemsLoaded = false;
+        const filterController = new ControllerClass({
+            filterButtonSource: getFilterButtonItems(),
+            searchParam: 'test',
+            filter: {},
+            searchValue: '',
+            minSearchLength: 1,
+            parentProperty: '',
+            historyId: 'hId2',
+            historyItems,
+            prefetchParams: {PrefetchSessionId: 'test', PrefetchDataValidUntil: null}
+        });
+        sandbox.replace(filterController, '_loadHistoryItems', () => {
+            itemsLoaded = true;
+            return Promise.resolve();
+        });
+        sandbox.replace(filterController, '_findItemInHistory', () => null);
+        return filterController.loadFilterItemsFromHistory().then(() => {
+            assert.isTrue(itemsLoaded);
+        });
+    });
+
     it('handleDataLoad', () => {
         const controller = new ControllerClass({
             filter: {},
@@ -158,6 +192,7 @@ describe('Controls/filter:ControllerClass', () => {
             });
             assert.deepEqual(controller.getFilter(), {});
 
+            controller._options.filter = null;
             controller.update({
                 filter,
                 selectedKeys: [1, 2],
@@ -170,6 +205,7 @@ describe('Controls/filter:ControllerClass', () => {
             });
             assert.isTrue('entries' in controller.getFilter());
 
+            controller._options.filter = null;
             controller._options.selectionViewMode = 'selected';
             controller.update({
                 filter,
@@ -223,6 +259,7 @@ describe('Controls/filter:ControllerClass', () => {
 
             assert.deepEqual(filterController.getFilter(), { title: 'test2' });
 
+            filterController._options.filter = null;
             filterController.update({
                 filter: {
                     title: 'test2'
@@ -234,6 +271,9 @@ describe('Controls/filter:ControllerClass', () => {
 
             assert.deepEqual(filterController.getFilter(), { title: 'test2', search_string: 'test' });
 
+            filterController._options.filter = {
+                title: 'test2'
+            };
             filterController._filter = null;
             // filter options is not changed
             filterController.update({
@@ -241,7 +281,7 @@ describe('Controls/filter:ControllerClass', () => {
                     title: 'test2'
                 }
             });
-            assert.deepEqual(filterController.getFilter(), {});
+            assert.isNull(filterController.getFilter());
         });
     });
 

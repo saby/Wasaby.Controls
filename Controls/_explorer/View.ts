@@ -19,6 +19,7 @@ import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import {ISelectionObject} from 'Controls/interface';
 import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import { RecordSet } from 'Types/collection';
+import {CollectionItem} from "../display";
 
 var
       HOT_KEYS = {
@@ -206,8 +207,8 @@ var
             var result;
 
             if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
-               self._breadCrumbsItems = null;
                _private.updateRootOnViewModeChanged(self, viewMode, cfg);
+               self._breadCrumbsItems = null;
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
@@ -395,6 +396,7 @@ var
     * @mixes Controls/_list/interface/IClickableView
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
+    * @mixes Controls/_marker/interface/IMarkerListOptions
     * @control
     * @public
     * @category List
@@ -432,6 +434,7 @@ var
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
+    * @mixes Controls/_marker/interface/IMarkerListOptions
     * @control
     * @public
     * @category List
@@ -591,14 +594,14 @@ var
             }
          }
       },
-      _beforeRender(): void { 
+      _beforeRender(): void {
           // Сбрасываем скролл при режима отображения
           // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
          if (this._resetScrollAfterViewModeChange) {
             this._notify('doScroll', ['top'], {bubbling: true});
             this._resetScrollAfterViewModeChange = false;
          }
-         
+
       },
       _beforePaint: function() {
          if (this._markerForRestoredScroll !== null) {

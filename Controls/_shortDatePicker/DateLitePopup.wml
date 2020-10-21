@@ -92,6 +92,11 @@
             </svg>
          </div>
       </div>
+      <div class="controls-PeriodLiteDialog__close_theme-{{_options.theme}}
+                     controls-icon controls-icon_size-m_theme-{{_options.theme}}
+                     controls-PeriodLiteDialog__close_position-{{_closeBtnPosition}}_theme-{{_options.theme}}" title="{[Закрыть]}"
+           on:click="_onHeaderClick()">
+      </div>
       <Controls.calendar:MonthList
               order="desc"
               virtualPageSize="{{24}}"

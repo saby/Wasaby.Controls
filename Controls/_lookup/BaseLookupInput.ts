@@ -151,6 +151,11 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     protected _setInputValue(options: ILookupInputOptions, value: string): void {
         if (!options.hasOwnProperty('value')) {
             this._inputValue = value;
+
+            // _inputValue - состояние, которое используется, если не задают опцию value
+            // Т.к. _inputValue не реактивное св-во, и в шаблоне оно получается через getter (_getInputValue),
+            // то необходимо звать forceUpdate
+            this._forceUpdate();
         }
     }
 
@@ -179,7 +184,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
     private _resize(): void {
         if (this._isNeedCalculatingSizes(this._options)) {
-            const oldFieldWrapperWidth = this._getFieldWrapperWidth();
+            const oldFieldWrapperWidth = this._fieldWrapperWidth;
             const newFieldWrapperWidth = this._getFieldWrapperWidth(true);
 
             // if hidden, then there is no reason to recalc the sizes
@@ -190,13 +195,20 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     protected _getFieldWrapperWidth(recount?: boolean): number {
-        if (this._fieldWrapperWidth === null || recount) {
+        let resultWidth = this._fieldWrapperWidth;
 
+        if (this._fieldWrapperWidth === null || recount) {
             // we cache width, since used in several places in the calculations and need to compare when resize
-            this._fieldWrapperWidth = DOMUtil.width(this._getFieldWrapper());
+            resultWidth = DOMUtil.width(this._getFieldWrapper());
+
+            if (resultWidth > 0) {
+                this._fieldWrapperWidth = resultWidth;
+            } else {
+                this._fieldWrapperWidth = null;
+            }
         }
 
-        return this._fieldWrapperWidth;
+        return resultWidth;
     }
 
     private _isInputActive(options: ILookupInputOptions): boolean {

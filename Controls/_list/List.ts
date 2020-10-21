@@ -43,7 +43,7 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/_list/interface/IReloadableList
  * @mixes Controls/_list/interface/IMovableList
  * @mixes Controls/_list/interface/IRemovableList
- *
+ * @mixes Controls/_marker/interface/IMarkerListOptions
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  *
@@ -80,6 +80,7 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/_list/interface/IReloadableList
  * @mixes Controls/_list/interface/IMovableList
  * @mixes Controls/_list/interface/IRemovableList
+ * @mixes Controls/_marker/interface/IMarkerListOptions
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  *
@@ -187,6 +188,7 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
     static getDefaultOptions() {
         return {
             multiSelectVisibility: 'hidden',
+            multiSelectPosition: 'default',
             stickyHeader: true,
             style: 'default'
         };

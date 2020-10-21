@@ -20,7 +20,7 @@ const _private = {
         } else if (stickyCellsCount === 2) {
             columnsWidths = ['0px', initialWidths[0], '0px'].concat(initialWidths.slice(1))
         } else {*/
-            columnsWidths = initialWidths;
+        columnsWidths = initialWidths;
         /*}*/
         /*if (shouldAddActionsCell({
             hasColumnScroll: !!self._options.columnScroll,

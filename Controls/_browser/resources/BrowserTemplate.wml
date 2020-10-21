@@ -23,7 +23,8 @@
         itemsReadyCallback="{{_itemsReadyCallback}}"
         filterButtonItems="{{_filterButtonItems}}"
         fastFilterItems="{{_fastFilterItems}}"
-        hasMoreDataToUp="{{_hasMoreDataToUp}}"
+        topShadowVisibility="{{_topShadowVisibility}}"
+        bottomShadowVisibility="{{_bottomShadowVisibility}}"
         on:filterChanged="_filterChanged()"
         on:rootChanged="_rootChanged()"
         on:itemsChanged="_itemsChanged()"
@@ -44,5 +45,6 @@
         on:misspellCaptionClick="_misspellCaptionClick()"
         on:filterItemsChanged="_filterItemsChanged()"
         on:filterHistoryApply="_filterHistoryApply()"
+        on:_scrollToFirstItemForTopPadding="_onScrollToFirstItemForTopPadding()"
 />
 

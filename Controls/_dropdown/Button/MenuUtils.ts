@@ -36,7 +36,10 @@
          // поэтому необходимо это учесть при сдвиге
          offsetClassName += '_iconSize-' + (getIconSize(options) || 'medium');
       }
-      offsetClassName += ((!options.headerTemplate && !options.showHeader) ? '_duplicate' : '') + '_popup';
+      if (!options.headerTemplate && !options.showHeader && options.viewMode === 'link') {
+         offsetClassName += '_duplicate';
+      }
+      offsetClassName += '_popup';
       return offsetClassName;
    }
 

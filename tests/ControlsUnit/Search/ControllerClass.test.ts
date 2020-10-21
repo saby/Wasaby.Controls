@@ -181,8 +181,13 @@ describe('Controls/search:ControllerClass', () => {
         it('search with searchStartCallback', () => {
             const options = getDefaultOptions();
             let isSearchStarted = false;
+            let dataLoadCallbackCalled = false;
+
             options.searchStartCallback = () => {
                 isSearchStarted = true;
+            };
+            options.dataLoadCallback = () => {
+                dataLoadCallbackCalled = true;
             };
             const searchController = new ControllerClass(options, {});
             searchController._dataOptions = options;
@@ -190,6 +195,7 @@ describe('Controls/search:ControllerClass', () => {
             return new Promise((resolve) => {
                 searchController.search('test', true).then(() => {
                     assert.isTrue(isSearchStarted);
+                    assert.isTrue(dataLoadCallbackCalled);
                     resolve();
                 });
             });

@@ -378,6 +378,9 @@ export default class SearchControllerClass {
 
     private _searchCallback(result: ISearchCallbackResult, filter: object): void {
         this._updateSearchParams(filter);
+        if (this._options.dataLoadCallback instanceof Function) {
+            this._options.dataLoadCallback(result.data);
+        }
         this._options.itemsChangedCallback(result.data);
         const switchedStr = getSwitcherStrFromData(result.data);
         this._setMisspellValue(switchedStr);

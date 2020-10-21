@@ -3,7 +3,6 @@ import template = require('wml!Controls/_compatiblePopup/CompoundAreaForOldTpl/C
 import LikeWindowMixin = require('Lib/Mixins/LikeWindowMixin');
 import arrayFindIndex = require('Core/helpers/Array/findIndex');
 import cDeferred = require('Core/Deferred');
-import makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompatible');
 import {delay as runDelayed} from 'Types/function';
 import trackElement = require('Core/helpers/Hcontrol/trackElement');
 import doAutofocus = require('Core/helpers/Hcontrol/doAutofocus');
@@ -218,7 +217,7 @@ var CompoundArea = CompoundContainer.extend([
       const item = this._getManagerConfig();
       const popupItems = Controller.getContainer()._popupItems;
       // Нотифай события делаю в следующий цикл синхронизации после выставления позиции окну.
-      EventBus.channel('popupManager').notify('managerPopupCreated', [item, popupItems]);
+      EventBus.channel('popupManager').notify('managerPopupCreated', item, popupItems);
    },
 
    _notifyManagerPopupDestroyed(): void {
@@ -335,16 +334,6 @@ var CompoundArea = CompoundContainer.extend([
       this._options = cfg;
       this._enabled = cfg.hasOwnProperty('enabled') ? cfg.enabled : true;
 
-      // Нам нужно пометить контрол замаунченым для слоя совместимости,
-      // чтобы не создавался еще один enviroment для той же ноды
-
-      if (makeInstanceCompatible && makeInstanceCompatible.newWave) {
-         makeInstanceCompatible(this);
-      } else {
-         this.VDOMReady = true;
-         this.deprecatedContr(this._options);
-      }
-
       var self = this;
 
       // wsControl нужно установить до того, как запустим автофокусировку.
@@ -356,8 +345,8 @@ var CompoundArea = CompoundContainer.extend([
       // doAutofocus спровоцирует уход фокуса, старый менеджер будет проверять связи и звать метод getOpener,
       // который в совместимости возвращает данные с состояния. если они не заполнены, будут проблемы с проверкой связи.
       self.__openerFromCfg = self._options.__openerFromCfg;
-      self._parent = self._options.parent;
-      self._logicParent = self._options.parent;
+      self._parent = self._options._logicParent;
+      self._logicParent = self._options._logicParent;
 
       // Переведем фокус сразу на окно, после построения шаблона уже сфокусируем внутренности
       // Если этого не сделать, то во время построения окна, при уничтожении контролов в других областях запустится восстановление фокуса,
@@ -387,11 +376,6 @@ var CompoundArea = CompoundContainer.extend([
          self._registerToParent(self.__parentFromCfg);
       }
 
-
-      // Чтобы после применения makeInstanceCompatible BaseCompatible не стирал self._logicParent,
-      // нужно в оставить его в опциях в поле _logicParent, logicParent или parent.
-      // https://git.sbis.ru/sbis/ws/blob/rc-19.610/WS.Core/lib/Control/BaseCompatible/BaseCompatible.js#L956
-      self._options._logicParent = self._options.parent;
       self._options.parent = null;
 
       self._notifyVDOM = self._notify;

@@ -1,20 +1,24 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import { Control, TemplateFunction } from 'UI/Base';
 import * as template from 'wml!Controls/_browser/resources/BrowserTemplate';
-import {SyntheticEvent} from 'Vdom/Vdom';
-import {ControllerClass as OperationsController} from 'Controls/operations';
-import {ControllerClass as SearchController} from 'Controls/search';
-import {ControllerClass as FilterController, IFilterItem} from 'Controls/filter';
-import {tmplNotify} from 'Controls/eventUtils';
-import {RecordSet} from 'Types/collection';
+import { SyntheticEvent } from 'Vdom/Vdom';
+import { ControllerClass as OperationsController } from 'Controls/operations';
+import { ControllerClass as SearchController } from 'Controls/search';
+import { ControllerClass as FilterController, IFilterItem } from 'Controls/filter';
+import { tmplNotify } from 'Controls/eventUtils';
+import { RecordSet } from 'Types/collection';
 
-import {ContextOptions} from 'Controls/context';
-import {RegisterClass} from 'Controls/event';
+import { ContextOptions } from 'Controls/context';
+import { RegisterClass } from 'Controls/event';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
-import {error as dataSourceError} from 'Controls/dataSource';
-import {NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
-import {IControllerOptions, IControlerState} from 'Controls/_dataSource/Controller';
-import {TSelectionType} from 'Controls/interface';
+import {
+    error as dataSourceError,
+    ISourceControllerOptions,
+    NewSourceController as SourceController
+} from 'Controls/dataSource';
+import { IControlerState } from 'Controls/_dataSource/Controller';
+import { TSelectionType } from 'Controls/interface';
 import Store from 'Controls/Store';
+import { SHADOW_VISIBILITY } from 'Controls/scroll';
 
 type Key = string|number|null;
 
@@ -52,7 +56,11 @@ export default class Browser extends Control {
     private _dataOptionsContext: ContextOptions;
     private _errorRegister: RegisterClass;
     private _storeCallbacks: string[];
-    private _hasMoreDataToUp: boolean;
+
+    private _topShadowVisibilityFromOptions: SHADOW_VISIBILITY;
+    private _bottomShadowVisibilityFromOptions: SHADOW_VISIBILITY;
+    private _topShadowVisibility: SHADOW_VISIBILITY;
+    private _bottomShadowVisibility: SHADOW_VISIBILITY;
 
     protected _beforeMount(options,
                            context,
@@ -61,6 +69,7 @@ export default class Browser extends Control {
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
+        this._initShadowVisibility(options);
         this._operationsController = this._createOperationsController(options);
         this._filterController = new FilterController(options);
 
@@ -75,20 +84,15 @@ export default class Browser extends Control {
 
         if (receivedState) {
             this._setFilterItems(receivedState.filterItems);
-
-            if (receivedState.items) {
-                this._hasMoreDataToUp = !!receivedState.items.getMetaData().more?.before;
-            }
+            this._defineShadowVisibility(receivedState.items);
             if (isNewEnvironment()) {
                 this._setItemsAndCreateSearchController(receivedState.items, options);
             }
         } else {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems);
-                return this._loadItems(options, controllerState).then((items) => {
-                    if (items) {
-                        this._hasMoreDataToUp = !!items.getMetaData().more?.before;
-                    }
+                return this._loadItems(options, this._sourceController.getState()).then((items) => {
+                    this._defineShadowVisibility(items);
                     return {
                         filterItems,
                         items
@@ -131,9 +135,14 @@ export default class Browser extends Control {
             this._loading = true;
             methodResult = this._sourceController.load().then((items) => {
                 // для того чтобы мог посчитаться новый prefetch Source внутри
-                const newItems = this._sourceController.setItems(items);
-                if (!this._items) {
-                    this._items = newItems;
+                if (items instanceof RecordSet) {
+                    if (newOptions.dataLoadCallback instanceof Function) {
+                        newOptions.dataLoadCallback(items);
+                    }
+                    const newItems = this._sourceController.setItems(items);
+                    if (!this._items) {
+                        this._items = newItems;
+                    }
                 }
 
                 const controllerState = this._sourceController.getState();
@@ -365,6 +374,16 @@ export default class Browser extends Control {
         this._getOperationsController(this._options).setOperationsPanelVisible(false);
     }
 
+    protected _onScrollToFirstItemForTopPadding(): void {
+        // Возвращаем в опции значение видимости теней, которое передали прикладники
+        if (this._topShadowVisibility !== this._topShadowVisibilityFromOptions) {
+            this._topShadowVisibility = this._topShadowVisibilityFromOptions;
+        }
+        if (this._bottomShadowVisibility !== this._bottomShadowVisibilityFromOptions) {
+            this._bottomShadowVisibility = this._bottomShadowVisibilityFromOptions;
+        }
+    }
+
     private _createOperationsController(options) {
         const controllerOptions = {
             ...options,
@@ -383,6 +402,27 @@ export default class Browser extends Control {
         }
 
         return this._operationsController;
+    }
+
+    private _defineShadowVisibility(items: RecordSet|Error|void): void {
+        if (items instanceof RecordSet) {
+            const more = items.getMetaData().more;
+            if (more) {
+                if (more.before) {
+                    this._topShadowVisibility = SHADOW_VISIBILITY.VISIBLE;
+                }
+
+                if (more.after) {
+                    this._bottomShadowVisibility = SHADOW_VISIBILITY.VISIBLE;
+                }
+            }
+
+        }
+    }
+
+    private _initShadowVisibility(options): void {
+        this._topShadowVisibility = this._topShadowVisibilityFromOptions = options.topShadowVisibility;
+        this._bottomShadowVisibility = this._bottomShadowVisibilityFromOptions = options.bottomShadowVisibility;
     }
 
     _createSearchController(options, context): SearchController {

@@ -146,6 +146,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._loading = true;
          return this._sourceController.load().then((items) => {
             if (items instanceof RecordSet) {
+               if (newOptions.dataLoadCallback instanceof Function) {
+                  newOptions.dataLoadCallback(items);
+               }
                const newItems = this._sourceController.setItems(items);
                if (!this._items) {
                   this._items = newItems;

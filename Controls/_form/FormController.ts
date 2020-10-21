@@ -1,18 +1,20 @@
 import rk = require('i18n!Controls');
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as cInstance from 'Core/core-instance';
 import tmpl = require('wml!Controls/_form/FormController/FormController');
-import {readWithAdditionalFields} from './crudProgression';
+import { Control, IControlOptions, TemplateFunction } from 'UI/Base';
+import * as cInstance from 'Core/core-instance';
+import { readWithAdditionalFields } from './crudProgression';
 import * as Deferred from 'Core/Deferred';
-import {Logger} from 'UI/Utils';
-import {error as dataSourceError} from 'Controls/dataSource';
-import {IContainerConstructor} from 'Controls/_dataSource/error';
-import {Model} from 'Types/entity';
-import {Memory} from 'Types/source';
-import {ControllerClass, Container as ValidateContainer, IValidateResult} from 'Controls/validate';
-import {IFormOperation} from 'Controls/interface';
-import {Confirmation} from 'Controls/popup';
-import {default as CrudController, CRUD_EVENTS} from 'Controls/_form/CrudController';
+import { Logger } from 'UI/Utils';
+import { error as dataSourceError } from 'Controls/dataSource';
+import { IContainerConstructor } from 'Controls/_dataSource/error';
+import { Model } from 'Types/entity';
+import { Memory } from 'Types/source';
+import { Container as ValidateContainer, ControllerClass, IValidateResult } from 'Controls/validate';
+import { IFormOperation } from 'Controls/interface';
+import { Confirmation } from 'Controls/popup';
+import { CRUD_EVENTS, default as CrudController } from 'Controls/_form/CrudController';
+import { DialogOpener } from 'Controls/error';
+import { Mode } from 'Controls/error';
 
 interface IFormController extends IControlOptions {
     readMetaData?: object;
@@ -177,6 +179,7 @@ class FormController extends Control<IFormController, IReceivedState> {
     private _crudController: CrudController = null;
     private _validateController: ControllerClass = new ControllerClass();
     private _isConfirmShowed: boolean;
+    private _dialogOpener: DialogOpener;
 
     protected _beforeMount(options?: IFormController, context?: object, receivedState: IReceivedState = {}): Promise<ICrudResult> | void {
         this.__errorController = options.errorController || new dataSourceError.Controller({});
@@ -360,6 +363,8 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
         this._crudController.hideIndicator();
         this._crudController = null;
+        this._dialogOpener?.destroy();
+        this._dialogOpener = null;
     }
 
     protected _onValidateCreated(e: Event, control: ValidateContainer): void {
@@ -764,13 +769,29 @@ class FormController extends Control<IFormController, IReceivedState> {
      * @private
      */
     private _showError(errorConfig: dataSourceError.ViewConfig): void {
-        this.__error = errorConfig;
+        if (errorConfig.mode !== Mode.dialog) {
+            this.__error = errorConfig;
+            return;
+        }
+
+        if (!this._dialogOpener) {
+            this._dialogOpener = new DialogOpener();
+        }
+
+        this._dialogOpener.open(errorConfig, {
+            opener: this,
+            modal: false,
+            eventHandlers: {
+                onClose: this._onCloseErrorDialog.bind(this)
+            }
+        });
     }
 
     private _hideError(): void {
         if (this.__error) {
             this.__error = null;
         }
+        this._dialogOpener?.close();
     }
 
     private _onCloseErrorDialog(): void {
