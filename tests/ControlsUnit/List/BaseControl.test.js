@@ -2809,23 +2809,42 @@ define([
          });
 
          it('should init when itemActionsProperty is set, but, there are no itemActions and toolbarVisibility is false', async () => {
-            const instance = new lists.BaseControl({ ...cfg, itemActions: null, itemActionsProperty: 'myActions' });
-            instance.saveOptions(cfg);
-            await instance._beforeMount(cfg);
+            const localCfg = { ...cfg, itemActions: null, itemActionsProperty: 'myActions' };
+            const instance = new lists.BaseControl(localCfg);
+            instance.saveOptions(localCfg);
+            await instance._beforeMount(localCfg);
             assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
          });
 
          it('should init when toolbarVisibility is true, but, there are no itemActions and no itemActionsProperty', async () => {
-            const instance = new lists.BaseControl({
+            const localCfg = {
                ...cfg,
                itemActions: null,
                editingConfig: {
                   toolbarVisibility: true
                }
-            });
-            instance.saveOptions(cfg);
-            await instance._beforeMount(cfg);
+            };
+            const instance = new lists.BaseControl(localCfg);
+            instance.saveOptions(localCfg);
+            await instance._beforeMount(localCfg);
             assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('getItemActionsController should be called with options on _beforeMount', () => {
+            const stubGetItemActionsController = sinon
+               .stub(lists.BaseControl._private, 'getItemActionsController')
+               .callsFake((self, options) => {
+                  assert.exists(options);
+               });
+            const localCfg = {
+               ...cfg,
+               itemActionsVisibility: 'visible'
+            };
+            const instance = new lists.BaseControl(localCfg);
+            instance.saveOptions(localCfg);
+            instance._beforeMount(localCfg, {}, {data: localCfg.items});
+            sinon.assert.called(stubGetItemActionsController);
+            stubGetItemActionsController.restore();
          });
       });
 
