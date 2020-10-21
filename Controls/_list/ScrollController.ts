@@ -74,7 +74,6 @@ export default class ScrollController {
 
     private _placeholders: IPlaceholders;
 
-
     // Флаг, который необходимо включать, чтобы не реагировать на скроллы происходящие вследствие
     // подскроллов создаваемых самим контролом (scrollToItem, восстановление позиции скролла после перерисовок)
     private _fakeScroll: boolean;
@@ -82,8 +81,10 @@ export default class ScrollController {
     // Сущность управляющая инерционным скроллингом на мобильных устройствах
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
 
+    // tslint:disable-next-line
     protected _options: any;
 
+    // tslint:disable-next-line
     constructor(options: any) {
         this._options = {...ScrollController.getDefaultOptions(), ...options};
         if (options.needScrollCalculation) {
@@ -103,9 +104,9 @@ export default class ScrollController {
         this._inertialScrolling.callAfterScrollStopped(callback);
     }
 
-    private updateContainerHeightsData(params: Partial<IScrollParams>):  IScrollControllerResult {
+    private updateContainerHeightsData(params: Partial<IScrollParams>): IScrollControllerResult {
         if (this._virtualScroll && params) {
-            let newParams: Partial<IContainerHeights> = {};
+            const newParams: Partial<IContainerHeights> = {};
             if (params.clientHeight) {
                 newParams.viewport = params.clientHeight;
                 this._viewportHeight = params.clientHeight;
@@ -147,7 +148,7 @@ export default class ScrollController {
                 this._isRendering = true;
             }
             if (options.attachLoadTopTriggerToNull !== this._options.attachLoadTopTriggerToNull) {
-                this._options.attachLoadTopTriggerToNull = options.attachLoadTopTriggerToNull
+                this._options.attachLoadTopTriggerToNull = options.attachLoadTopTriggerToNull;
                 if (!params) {
                     result.triggerOffset = this.getTriggerOffset(this._viewHeight,
                                                                  this._viewportHeight,
@@ -167,7 +168,8 @@ export default class ScrollController {
     getPlaceholders(): IPlaceholders {
         return this._placeholders;
     }
-    setRendering(state: boolean) {
+
+    setRendering(state: boolean): void {
         this._isRendering = state;
     }
 
@@ -205,6 +207,7 @@ export default class ScrollController {
      * @param scrollTop
      * @return {Model}
      */
+    // tslint:disable-next-line
     getFirstVisibleRecord(listViewContainer: any, baseContainer: any, scrollTop: number): Model {
         const topOffset = this._getTopOffsetForItemsContainer(listViewContainer, baseContainer);
         const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(baseContainer, 'top', 'allFixed') || 0);
@@ -236,6 +239,7 @@ export default class ScrollController {
         return i;
     }
 
+    // tslint:disable-next-line
     private _getTopOffsetForItemsContainer(listViewContainer: any, baseControlContainer: any): number {
         let offsetTop = uDimension(listViewContainer.children[0], true).top;
         const container = baseControlContainer[0] || baseControlContainer;
@@ -251,12 +255,17 @@ export default class ScrollController {
      * @remark Функция подскролливает к записи, если это возможно, в противном случае вызовется перестроение
      * от элемента
      */
-    scrollToItem(key: string | number, toBottom: boolean = true, force: boolean = false, scrollCallback): Promise<IScrollControllerResult> {
+    scrollToItem(key: string | number,
+                 toBottom: boolean = true,
+                 force: boolean = false,
+                 scrollCallback: Function): Promise<IScrollControllerResult> {
         const index = this._options.collection.getIndexByKey(key);
 
         if (index !== -1) {
             return new Promise((resolve) => {
-                if (this._virtualScroll && this._virtualScroll.canScrollToItem(index, toBottom, force) && !this._virtualScroll.rangeChanged) {
+                if (this._virtualScroll
+                            && this._virtualScroll.canScrollToItem(index, toBottom, force)
+                            && !this._virtualScroll.rangeChanged) {
                     this._fakeScroll = true;
                     scrollCallback(index);
                     resolve(null);
@@ -268,7 +277,9 @@ export default class ScrollController {
                             // Для этого используем _scrollToItemAfterRender.
                             // https://online.sbis.ru/opendoc.html?guid=2a97761f-e25a-4a10-9735-ded67e36e527
                             this._continueScrollToItem = () => {
-                                this.scrollToItem(key, toBottom, force, scrollCallback).then((result) => resolve(result));
+                                this.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
+                                    resolve(result);
+                                });
                             };
                         } else {
                             this._continueScrollToItem = () => {
@@ -292,9 +303,11 @@ export default class ScrollController {
                                         this.savePlaceholders(rangeShiftResult.placeholders);
                                         resolve({
                                             placeholders: rangeShiftResult.placeholders,
-                                            shadowVisibility: this._calcShadowVisibility(this._options.collection, rangeShiftResult.range)
+                                            shadowVisibility: this._calcShadowVisibility(
+                                                this._options.collection,
+                                                rangeShiftResult.range)
                                         });
-                                    }
+                                    };
                                 }
                             };
                         }
@@ -369,7 +382,7 @@ export default class ScrollController {
         }
     }
 
-    private _calcShadowVisibility(collection: Collection<Record>, range: IRange) {
+    private _calcShadowVisibility(collection: Collection<Record>, range: IRange): {up: boolean, down: boolean} {
 
         // TODO: сейчас от флага needScrollCalculation зависит,
         // будут ли применены индексы виртуального скролла к коллекции.
@@ -402,8 +415,10 @@ export default class ScrollController {
                     collection as unknown as VirtualScrollController.IVirtualScrollCollection
                 );
             } else {
+                // tslint:disable-next-line:ban-ts-ignore
                 // @ts-ignore
                 collectionStartIndex = collection.getStartIndex();
+                // tslint:disable-next-line:ban-ts-ignore
                 // @ts-ignore
                 collectionStopIndex = collection.getStopIndex();
             }
@@ -412,6 +427,7 @@ export default class ScrollController {
                 if (collection.getViewIterator) {
                     collection.getViewIterator().setIndices(start, stop);
                 } else {
+                    // tslint:disable-next-line:ban-ts-ignore
                     // @ts-ignore
                     collection.setIndexes(start, stop);
                 }
@@ -509,7 +525,10 @@ export default class ScrollController {
                         this.savePlaceholders(rangeShiftResult.placeholders);
                         resolve({
                             placeholders: rangeShiftResult.placeholders,
-                            shadowVisibility: this._calcShadowVisibility(this._options.collection, rangeShiftResult.range)
+                            shadowVisibility: this._calcShadowVisibility(
+                                this._options.collection,
+                                rangeShiftResult.range
+                            )
                         });
                     });
                 } else {
@@ -578,7 +597,7 @@ export default class ScrollController {
      * @private
      */
     handleAddItems(addIndex: number, items: object[], direction?: IDirection): IScrollControllerResult {
-        let result = {}
+        let result = {};
         if (!this._virtualScroll) {
             result = this._initVirtualScroll(
                 {...this._options, forceInitVirtualScroll: true},
@@ -627,7 +646,12 @@ export default class ScrollController {
         return this._initVirtualScroll(this._options);
     }
 
-    private getTriggerOffset(scrollHeight: number, viewportHeight: number, attachLoadTopTriggerToNull: boolean): {top: number, bottom: number} {
+    calculateVirtualScrollHeight(): number {
+        return this._virtualScroll.calculateVirtualScrollHeight();
+    }
+
+    private getTriggerOffset(scrollHeight: number, viewportHeight: number, attachLoadTopTriggerToNull: boolean):
+            {top: number, bottom: number} {
         this._triggerOffset =
             (scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *
             this._options._triggerPositionCoefficient;
@@ -648,10 +672,6 @@ export default class ScrollController {
                 );
                 break;
         }
-    }
-
-    calculateVirtualScrollHeight(): number {
-        return this._virtualScroll.calculateVirtualScrollHeight();
     }
 
     static getDefaultOptions(): Partial<IOptions> {

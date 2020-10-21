@@ -81,7 +81,7 @@ export class InputActivationHelper {
         // Поле ввода с которого уходит фокус
         do {
             input = input ? input.parentNode : currentTarget;
-            inputClass = Array.prototype.find.call(input.classList, (className) => className.indexOf(inputPrefix) !== -1);
+            inputClass = Array.prototype.find.call(input.classList, (className) => className.indexOf(inputPrefix) >= 0);
         } while (cell !== input && !inputClass);
 
         if (input === cell) {
