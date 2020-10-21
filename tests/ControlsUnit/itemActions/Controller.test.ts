@@ -1246,6 +1246,13 @@ describe('Controls/_itemActions/Controller', () => {
                         showType: TItemActionShowType.MENU
                     },
                     {
+                        id: 2,
+                        icon: 'icon-PhoneNull',
+                        title: 'This action should not appear in menu',
+                        showType: TItemActionShowType.TOOLBAR,
+                        parent: null
+                    },
+                    {
                         id: 5,
                         title: 'Documentation',
                         showType: TItemActionShowType.TOOLBAR,
