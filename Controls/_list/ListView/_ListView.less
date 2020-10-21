@@ -48,13 +48,16 @@
  */
 .controls-ListView_default-padding_theme-@{themeName} {
    min-height: @item_min-height_list;
-   line-height: @item_min-height_list;
+   white-space: nowrap;
 
    &:before {
       content: '\200b';
       font-size: @item_max-font-size_list;
       display: inline-block;
-      float: left;
+   }
+
+   .controls-ListView__itemContent {
+      display: inline-block;
    }
 }
 

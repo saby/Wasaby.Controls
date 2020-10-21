@@ -516,9 +516,13 @@ export default class CollectionItem<T> extends mixin<
                       backgroundColorStyle?: string,
                       style: string = 'default'): string {
         const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || style;
+        const topSpacing = this.getOwner().getTopPadding().toLowerCase();
+        const bottomSpacing = this.getOwner().getBottomPadding().toLowerCase();
+
         return `controls-ListView__itemV
             controls-ListView__item_${style}
             controls-ListView__item_${style}_theme-${theme}
+            ${(topSpacing === 'null' && bottomSpacing === 'null') ? `controls-ListView_default-padding_theme-${theme}` : ''}
             controls-ListView__item_showActions
             js-controls-ItemActions__swipeMeasurementContainer
             controls-ListView__itemV controls-ListView__itemV_cursor-${cursor}
@@ -606,9 +610,7 @@ export default class CollectionItem<T> extends mixin<
         const bottomSpacing = this.getOwner().getBottomPadding().toLowerCase();
         const rightSpacing = this.getOwner().getRightPadding().toLowerCase();
 
-        if (topSpacing === 'null' && bottomSpacing === 'null') {
-            classes += ` controls-ListView_default-padding_theme-${theme}`;
-        } else {
+        if (topSpacing !== 'null' && bottomSpacing !== 'null') {
             classes += ` controls-ListView__item_${preparedStyle}-topPadding_${topSpacing}_theme-${theme}`;
             classes += ` controls-ListView__item_${preparedStyle}-bottomPadding_${bottomSpacing}_theme-${theme}`;
         }
