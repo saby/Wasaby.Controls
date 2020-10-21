@@ -2790,7 +2790,8 @@ const _private = {
         } else {
             siblingItem = self._listViewModel.getNextByKey(selectedKey);
         }
-        return siblingItem && siblingItem.getContents && siblingItem.getContents().getKey() || null;
+        const siblingKey = siblingItem && siblingItem.getContents && siblingItem.getContents().getKey();
+        return siblingKey !== undefined && siblingKey !== null ? siblingKey : null;
     },
 
     getRemoveController(self): RemoveController {
