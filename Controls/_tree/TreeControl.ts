@@ -249,7 +249,7 @@ const _private = {
         let expandedItemsKeys: Array[number | string | null] = [];
         let isExpandAll: boolean;
 
-        if (baseControl && !self._updateExpandedItemsAfterReload) {
+        if (baseControl && baseControl.getViewModel() && !self._updateExpandedItemsAfterReload) {
             const viewModel = baseControl.getViewModel();
             isExpandAll = viewModel.isExpandAll();
             if (!isExpandAll) {

@@ -255,6 +255,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
         this._shadows.updateVisibilityByInnerComponents(shadowsVisibility);
+        this._stickyHeaderController.setShadowVisibility(
+                this._shadows.top.isStickyHeadersShadowsEnabled(),
+                this._shadows.bottom.isStickyHeadersShadowsEnabled());
     }
 
     protected _keydownHandler(event: SyntheticEvent): void {

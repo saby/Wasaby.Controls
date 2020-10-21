@@ -326,6 +326,7 @@ const _private = {
         if (needAttachLoadTopTriggerToNull && self._isMounted) {
             self._attachLoadTopTriggerToNull = true;
             self._needScrollToFirstItem = true;
+            self._scrollTop = 1;
         } else {
             self._attachLoadTopTriggerToNull = false;
         }
@@ -488,7 +489,7 @@ const _private = {
             self._items = listModel.getCollection();
         } else {
             listModel.setItems(items, newOptions);
-            self._items = listModel.getItems();
+            self._items = listModel.getCollection();
 
             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
@@ -1140,7 +1141,7 @@ const _private = {
         // а вторая вернула мало записей и суммарный объем менее двух вьюпортов, пэйджинг не должен исчезнуть
         if (self._sourceController) {
 
-            // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
+            // если есть Еще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             const hasMoreData = {
                 up: _private.hasMoreData(self, self._sourceController, 'up'),
                 down: _private.hasMoreData(self, self._sourceController, 'down')
@@ -1164,7 +1165,7 @@ const _private = {
                 // чтобы не скрыть после полной загрузки, даже если не набралось на две страницы.
                 self._cachedPagingState = true;
             }
-            if (result && _private.needScrollPaging(self._options.navigation)) {
+            if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
                 _private.createScrollPagingController(self, scrollParams, hasMoreData);
             }
         }
@@ -1239,6 +1240,7 @@ const _private = {
         const scrollPagingConfig = {
             pagingMode: self._options.navigation.viewConfig.pagingMode,
             scrollParams,
+            showEndButton: self._options.navigation.viewConfig.showEndButton,
             totalElementsCount: elementsCount,
             loadedElementsCount: self._listViewModel.getStopIndex() - self._listViewModel.getStartIndex(),
             pagingCfgTrigger: (cfg) => {
@@ -1248,7 +1250,7 @@ const _private = {
                 }
             }
         };
-        self._scrollPagingCtr = new ScrollPagingController(scrollPagingConfig, hasMoreData)
+        self._scrollPagingCtr = new ScrollPagingController(scrollPagingConfig, hasMoreData);
         return Promise.resolve(self._scrollPagingCtr);
     },
 
@@ -1462,9 +1464,14 @@ const _private = {
     },
 
     isPortionedLoad(self, items?: RecordSet = self._items): boolean {
-        const loadByMetaData = items && items.getMetaData()[PORTIONED_LOAD_META_FIELD];
+        const metaData = items && items.getMetaData();
         const loadBySearchValue = !!self._options.searchValue;
-        return loadByMetaData || loadBySearchValue;
+
+        // Если в мета данных явно передано iterative: false, то поиск не итеративный,
+        // даже если ищут через строку поиска
+        return metaData && metaData.hasOwnProperty(PORTIONED_LOAD_META_FIELD) ?
+            metaData[PORTIONED_LOAD_META_FIELD] :
+            loadBySearchValue;
     },
 
     checkPortionedSearchByScrollTriggerVisibility(self, scrollTriggerVisibility: boolean): void {
@@ -1595,7 +1602,12 @@ const _private = {
                 }
             }
 
-            if (_private.hasSelectionController(self)) {
+            // Изначально могло не создаться selectionController (не был задан source), но в целом работа с выделением
+            // нужна и когда items появляются (событие reset) - обрабатываем это.
+            // https://online.sbis.ru/opendoc.html?guid=454ba08b-758a-4a39-86cb-7a6d0cd30c44
+            const handleSelection = action === IObservable.ACTION_RESET && self._options.selectedKeys &&
+                self._options.selectedKeys.length && self._options.multiSelectVisibility !== 'hidden';
+            if (_private.hasSelectionController(self) || handleSelection) {
                 const selectionController = _private.getSelectionController(self);
 
                 let newSelection;
@@ -1605,7 +1617,7 @@ const _private = {
                         self._notify('listSelectedKeysCountChanged', [selectionController.getCountOfSelected(), selectionController.isAllSelected()], {bubbling: true});
                         break;
                     case IObservable.ACTION_RESET:
-                        const entryPath = self._items.getMetaData().ENTRY_PATH;
+                        const entryPath = self._listViewModel.getCollection().getMetaData().ENTRY_PATH;
                         newSelection = selectionController.onCollectionReset(entryPath);
                         break;
                     case IObservable.ACTION_REMOVE:
@@ -2182,7 +2194,7 @@ const _private = {
         const strategy = this.createSelectionStrategy(
             options,
             collection,
-            self._items.getMetaData().ENTRY_PATH
+            collection.getMetaData().ENTRY_PATH
         );
 
         self._selectionController = new SelectionController({
@@ -2487,7 +2499,7 @@ const _private = {
     createScrollController(self: typeof BaseControl, options: any): void {
         self._scrollController = new ScrollController({
             disableVirtualScroll: options.disableVirtualScroll,
-            virtualScrollConfig: options.virtualScrollConfig || {},
+            virtualScrollConfig: options.virtualScrollConfig,
             needScrollCalculation: self._needScrollCalculation,
             scrollObserver: self._children.scrollObserver,
             collection: self._listViewModel,
@@ -2791,7 +2803,8 @@ const _private = {
         } else {
             siblingItem = self._listViewModel.getNextByKey(selectedKey);
         }
-        return siblingItem && siblingItem.getContents && siblingItem.getContents().getKey() || null;
+        const siblingKey = siblingItem && siblingItem.getContents && siblingItem.getContents().getKey();
+        return siblingKey !== undefined && siblingKey !== null ? siblingKey : null;
     },
 
     getRemoveController(self): RemoveController {
@@ -3508,7 +3521,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 strategyOptions: _private.getSelectionStrategyOptions(
                     newOptions,
                     collection,
-                    self._items.getMetaData().ENTRY_PATH
+                    collection.getMetaData().ENTRY_PATH
                 )
             });
 
@@ -3659,7 +3672,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             }
         }
-        if (newOptions.multiSelectVisibility === 'hidden') {
+        if (newOptions.multiSelectVisibility === 'hidden' && _private.hasSelectionController(self)) {
             _private.getSelectionController(this).destroy();
             this._selectionController = null;
         }
@@ -3685,6 +3698,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (needReload) {
             this._hideTopTrigger = true;
+            this._scrollPagingCtr = null;
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
@@ -4503,10 +4517,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onEditingRowKeyDown(e: SyntheticEvent<KeyboardEvent>, nativeEvent: KeyboardEvent) {
-        const editNext = (item, editingConfig, direction: 'top' | 'bottom') => {
+        const editNext = (item: Model | undefined, direction: 'top' | 'bottom') => {
+            if (!item) {
+                return Promise.resolve();
+            }
             this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, direction);
-            const shouldAdd = !item && !!editingConfig.autoAdd && editingConfig.addPosition === direction;
-            return this._tryContinueEditing(!!item, shouldAdd, item);
+            return this.beginEdit({ item })
         };
 
         switch (nativeEvent.keyCode) {
@@ -4518,10 +4534,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return this.cancelEdit();
             case 38: // ArrowUp
                 const prev = this._getEditInPlaceController().getPrevEditableItem();
-                return editNext(!!prev && prev.contents, this._getEditingConfig(), 'top');
+                return editNext(prev?.contents, 'top');
             case 40: // ArrowDown
                 const next = this._getEditInPlaceController().getNextEditableItem();
-                return editNext(!!next && next.contents, this._getEditingConfig(), 'bottom');
+                return editNext(next?.contents, 'bottom');
         }
     },
 
@@ -4901,9 +4917,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!detection.isMobilePlatform) {
             _private.updateItemActionsOnce(this, this._options);
         }
-        if (!this._pagingVisible) {
-            _private.initPaging(this);
-        }
 
         if (this._documentDragging) {
             this._insideDragging = true;
@@ -4911,12 +4924,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
-
         if (this._hideTopTrigger) {
             this._hideTopTrigger = false;
         }
         if (!this._scrollController?.getScrollTop()) {
             _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+        }
+
+        if (!this._pagingVisible) {
+            _private.initPaging(this);
         }
     },
 
@@ -5524,7 +5540,7 @@ BaseControl.getDefaultOptions = function() {
         loadingIndicatorTemplate: 'Controls/list:LoadingIndicatorTemplate',
         continueSearchTemplate: 'Controls/list:ContinueSearchTemplate',
         stickyHeader: true,
-        virtualScrollMode: 'remove',
+        virtualScrollConfig: {},
         filter: {},
         itemActionsVisibility: 'onhover',
         searchValue: '',

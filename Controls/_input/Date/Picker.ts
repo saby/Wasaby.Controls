@@ -17,7 +17,7 @@ import {Popup as PopupUtil} from 'Controls/dateUtils';
     * @class Controls/_input/Date/Picker
     * @extends Core/Control
     * @mixes Controls/interface/IInputDateTime
-    * @mixes Controls/interface/IDateMask
+    * @mixes Controls/_interface/IDateMask
     * @mixes Controls/interface/IInputTag
     * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
     * @mixes Controls/_input/interface/IBase
@@ -38,7 +38,7 @@ import {Popup as PopupUtil} from 'Controls/dateUtils';
     * @class Controls/_input/Date/Picker
     * @extends Core/Control
     * @mixes Controls/interface/IInputDateTime
-    * @mixes Controls/interface/IDateMask
+    * @mixes Controls/_interface/IDateMask
     * @mixes Controls/interface/IInputTag
     * @mixes Controls/_input/interface/IBase
     * @mixes Controls/interface/IInputPlaceholder

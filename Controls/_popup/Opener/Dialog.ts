@@ -29,7 +29,7 @@ interface IDialogOpenerOptions extends IDialogPopupOptions, IBaseOpenerOptions, 
 const getDialogConfig = (config: IDialogOpenerOptions): IDialogOpenerOptions => {
     config = config || {};
     // The dialog is isDefaultOpener by default. For more information,
-    // see  {@link Controls/interface/ICanBeDefaultOpener}
+    // see  {@link Controls/_interface/ICanBeDefaultOpener}
     config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
     return config;
 };

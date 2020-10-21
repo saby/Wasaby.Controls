@@ -101,21 +101,24 @@ class Paging extends Control<IPagingOptions> {
         if (this._options.arrowState) {
             return this._options.arrowState[state] || 'visible';
         }
-        return 'visible';
+        if (this._isDigit()) {
+            return 'visible';
+        }
+        return 'hidden';
     }
 
     private _initArrowStateBySelectedPage(config: IPagingOptions): void {
         const page = config.selectedPage;
         if (page <= 1) {
-            this._stateBackward = this._getState('hidden');
+            this._stateBackward = this._stateTop = this._getState('hidden');
         } else {
-            this._stateBackward = this._getState('visible');
+            this._stateBackward = this._stateTop = this._getState('visible');
         }
 
         if (page >= config.pagesCount) {
-            this._stateForward = this._getState('hidden');
+            this._stateForward = this._stateBottom = this._getState('hidden');
         } else {
-            this._stateForward = this._getState('visible');
+            this._stateForward = this._stateBottom = this._getState('visible');
         }
     }
 

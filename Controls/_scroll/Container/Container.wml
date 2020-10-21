@@ -1,7 +1,9 @@
 <ws:template name="scrollTpl">
     <div class="controls-Scroll-Container controls-Scroll">
         <ws:partial template="{{_baseTemplate}}"
-                    _options="{{_options}}"
+                    scope="{{_options}}"
+                    topShadowVisibility="{{undefined}}"
+                    bottomShadowVisibility="{{undefined}}"
                     _scrollCssClass="{{_scrollCssClass}}"
                     attr:style="{{_scrollbars.scrollContainerStyles}}"
                     attr:class="controls-Scroll-Container__base controls-BlockLayout__blockGroup_theme-{{_options.theme}} controls-BlockLayout__blockGroup_theme-{{_options.theme}}
@@ -61,6 +63,7 @@
                             contrastBackground="{{true}}"
                             backwardEnabled="{{_paging.stateUp}}"
                             forwardEnabled="{{_paging.stateDown}}"
+                            arrowState="{{_paging.arrowState}}"
                             on:onArrowClick="_arrowClickHandler()"/>
             </Controls.Container.Async>
         </ws:if>

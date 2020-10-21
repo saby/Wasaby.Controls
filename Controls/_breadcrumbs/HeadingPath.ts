@@ -22,13 +22,13 @@ import {Record} from 'Types/entity';
  *
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
  * @control
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @demo Controls-demo/BreadCrumbs/PathPG
  * @see Controls/_breadcrumbs/Path
  */
@@ -39,13 +39,13 @@ import {Record} from 'Types/entity';
  *
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
  * @control
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  *
  * @demo Controls-demo/BreadCrumbs/PathPG
  */
