@@ -1,5 +1,5 @@
 import { showType } from 'Controls/Utils/Toolbar';
-import { IItemAction } from 'Controls/itemActions';
+import { IItemAction, TActionDisplayMode } from 'Controls/itemActions';
 
 function getActionsForContacts(): IItemAction[] {
     return [
@@ -57,7 +57,7 @@ function getActionsWithDisplayMode(): IItemAction[] {
             id: 1,
             icon: 'icon-Email',
             title: 'Email',
-            displayMode: 'bothways',
+            displayMode: TActionDisplayMode.BOTH,
             tooltip: 'Электронная почта',
             showType: showType.TOOLBAR
         },
@@ -65,14 +65,14 @@ function getActionsWithDisplayMode(): IItemAction[] {
             id: 2,
             icon: 'icon-Profile',
             title: 'Профиль пользователя',
-            displayMode: 'title',
+            displayMode: TActionDisplayMode.TITLE,
             showType: showType.TOOLBAR
         },
         {
             id: 3,
             title: 'Удалить',
             showType: showType.TOOLBAR,
-            displayMode: 'icon',
+            displayMode: TActionDisplayMode.ICON,
             icon: 'icon-Erase',
             iconStyle: 'danger'
         }];
