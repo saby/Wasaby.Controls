@@ -5,6 +5,8 @@ import { ISelectionObject as ISelection } from 'Controls/interface';
 import { Controller as SourceController } from 'Controls/source';
 import ISelectionStrategy from './ISelectionStrategy';
 import { IEntryPathItem, ITreeSelectionStrategyOptions, TKeys } from '../interface';
+// нет замены
+// tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import clone = require('Core/core-clone');
 import { CrudEntityKey } from 'Types/source';
@@ -22,6 +24,8 @@ const LEAF = null;
 export class TreeSelectionStrategy implements ISelectionStrategy {
    private _selectAncestors: boolean;
    private _selectDescendants: boolean;
+   // удаляем по задаче https://online.sbis.ru/opendoc.html?guid=51cfa21a-f2ca-436d-b600-da3b22ccb7f2
+   // tslint:disable-next-line:ban-ts-ignore
    // @ts-ignore
    private _nodesSourceControllers: Map<string, SourceController>;
    private _rootId: CrudEntityKey;
@@ -256,7 +260,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return countItemsSelected;
    }
 
-   isAllSelected(selection: ISelection, hasMoreData: boolean, itemsCount: number, byEveryItem: boolean = true): boolean {
+   isAllSelected(selection: ISelection,
+                 hasMoreData: boolean,
+                 itemsCount: number,
+                 byEveryItem: boolean = true): boolean {
       let isAllSelected;
 
       if (byEveryItem) {
@@ -286,14 +293,15 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    private _unselectAllInRoot(selection: ISelection): ISelection {
       const rootInExcluded = selection.excluded.includes(this._rootId);
 
-      selection = this.unselect(selection, this._rootId);
-      this._removeChildes(selection, this._getRoot());
+      let resSelection = selection;
+      resSelection = this.unselect(resSelection, this._rootId);
+      this._removeChildes(resSelection, this._getRoot());
 
       if (rootInExcluded) {
-         selection.excluded = ArraySimpleValuesUtil.removeSubArray(selection.excluded, [this._rootId]);
+         resSelection.excluded = ArraySimpleValuesUtil.removeSubArray(resSelection.excluded, [this._rootId]);
       }
 
-      return selection;
+      return resSelection;
    }
 
    private _isAllSelected(selection: ISelection, nodeId: CrudEntityKey): boolean {
@@ -595,8 +603,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
 
       let contents = item.getContents();
+      // tslint:disable-next-line:ban-ts-ignore
       // @ts-ignore
       if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
+         // tslint:disable-next-line:ban-ts-ignore
          contents = contents[(contents as any).length - 1];
       }
 

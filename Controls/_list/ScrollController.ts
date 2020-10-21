@@ -81,9 +81,11 @@ export default class ScrollController {
     // Сущность управляющая инерционным скроллингом на мобильных устройствах
     private _inertialScrolling: InertialScrolling = new InertialScrolling();
 
+    // https://online.sbis.ru/opendoc.html?guid=23c96b71-b7ec-4060-94c1-94069aec9955
     // tslint:disable-next-line
     protected _options: any;
 
+    // https://online.sbis.ru/opendoc.html?guid=23c96b71-b7ec-4060-94c1-94069aec9955
     // tslint:disable-next-line
     constructor(options: any) {
         this._options = {...ScrollController.getDefaultOptions(), ...options};
@@ -207,8 +209,7 @@ export default class ScrollController {
      * @param scrollTop
      * @return {Model}
      */
-    // tslint:disable-next-line
-    getFirstVisibleRecord(listViewContainer: any, baseContainer: any, scrollTop: number): Model {
+    getFirstVisibleRecord(listViewContainer: HTMLElement, baseContainer: HTMLElement, scrollTop: number): Model {
         const topOffset = this._getTopOffsetForItemsContainer(listViewContainer, baseContainer);
         const verticalOffset = scrollTop - topOffset + (getStickyHeadersHeight(baseContainer, 'top', 'allFixed') || 0);
 
@@ -239,8 +240,7 @@ export default class ScrollController {
         return i;
     }
 
-    // tslint:disable-next-line
-    private _getTopOffsetForItemsContainer(listViewContainer: any, baseControlContainer: any): number {
+    private _getTopOffsetForItemsContainer(listViewContainer: HTMLElement, baseControlContainer: HTMLElement): number {
         let offsetTop = uDimension(listViewContainer.children[0], true).top;
         const container = baseControlContainer[0] || baseControlContainer;
         offsetTop += container.offsetTop - uDimension(container).top;
@@ -415,11 +415,7 @@ export default class ScrollController {
                     collection as unknown as VirtualScrollController.IVirtualScrollCollection
                 );
             } else {
-                // tslint:disable-next-line:ban-ts-ignore
-                // @ts-ignore
                 collectionStartIndex = collection.getStartIndex();
-                // tslint:disable-next-line:ban-ts-ignore
-                // @ts-ignore
                 collectionStopIndex = collection.getStopIndex();
             }
 
@@ -427,6 +423,7 @@ export default class ScrollController {
                 if (collection.getViewIterator) {
                     collection.getViewIterator().setIndices(start, stop);
                 } else {
+                    // после удаления старой модели
                     // tslint:disable-next-line:ban-ts-ignore
                     // @ts-ignore
                     collection.setIndexes(start, stop);
