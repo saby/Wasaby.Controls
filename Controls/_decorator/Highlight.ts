@@ -14,6 +14,7 @@ import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
 export type HighlightMode = 'word' | 'substring';
 
 /**
+ * Интерфейс для опций контрола {@link Controls/decorator:Highlight}.
  * @interface Controls/_decorator/Highlight/IHighlightOptions
  * @public
  * @author Красильников А.С.
