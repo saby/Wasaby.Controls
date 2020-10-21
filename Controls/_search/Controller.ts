@@ -83,6 +83,7 @@ var Container = Control.extend(/** @lends Controls/_search/Container.prototype *
    },
 
    _beforeUpdate(newOptions, context): void {
+      // context передать как опции
       this._searchController.update(this._getSearchControllerOptions(newOptions), context);
    },
 
