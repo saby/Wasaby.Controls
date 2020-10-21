@@ -88,7 +88,7 @@
     </ws:if>
 </ws:template>
 <ws:template name="viewTpl">
-    <div class="controls-ScrollController">
+    <div class="controls-ScrollController" name="viewContainer">
         <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{_hideTopTriggerUntilMount ? 'display: none;'}}"></div>
         <ws:partial
                 attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
