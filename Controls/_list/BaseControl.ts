@@ -1183,8 +1183,7 @@ const _private = {
             // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
             self._isScrollShown = true;
 
-            const container = self._container[0] || self._container;
-            self._viewSize = container.clientHeight;
+            self._viewSize = _private.getViewSize(this, true);
             self._viewportRect = params.viewPortRect;
 
             self._updateItemsHeights();
@@ -1262,9 +1261,9 @@ const _private = {
         return self._viewRect;
     },
 
-    getViewSize(self): number {
-        if (!self._viewSize) {
-            const container = self._container[0] || self._container;
+    getViewSize(self, update = false): number {
+        if (self._container && (!self._viewSize || update)) {
+            const container = this._children?.viewContainer || self._container[0] || self._container;
             self._viewSize = container.clientHeight;
         }
         return self._viewSize;
@@ -3313,8 +3312,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
     _viewResize(): void {
         if (this._isMounted) {
-            const container = this._container[0] || this._container;
-            this._viewSize = container.clientHeight;
+            const container = this._children.viewContainer || this._container[0] || this._container;
+            this._viewSize = _private.getViewSize(this, true);
 
             /**
              * Заново определяем должен ли отображаться пэйджинг или нет.
@@ -3924,8 +3923,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
         if (this._container) {
-            const container = this._container[0] || this._container;
-            this._viewSize = container.clientHeight;
+            this._viewSize = _private.getViewSize(this, true);
         }
 
         if (this._pagingVisible) {
@@ -5168,8 +5166,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         if (this._isScrollShown) {
-            const container = this._container[0] || this._container;
-            this._viewSize = container.clientHeight;
+            this._viewSize = _private.getViewSize(this, true);
             this._updateItemsHeights();
         }
     },
