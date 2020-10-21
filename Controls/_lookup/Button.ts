@@ -23,7 +23,6 @@ import {IHashMap} from 'Types/declarations';
  * Поддерживает одиночный и множественный выбор.
  *
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Engine-demo%2FSelectorButton">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/directory/lookup/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less">переменные тем оформления</a>
  *
@@ -43,7 +42,7 @@ import {IHashMap} from 'Types/declarations';
  * 
  * @public
  * @author Герасимов А.М.
- * @demo Controls-demo/Buttons/SelectorButtonPG
+ * @demo Controls-demo/Lookup/Selector/Index
  */
 /*
  * Button link with the specified text, on clicking on which a selection window opens.
