@@ -106,8 +106,8 @@
  */
 
  /**
- * @name Controls/columns:View#columnsMode Режим распределения записей по колонкам.
- * @cfg {String}
+ * @name Controls/columns:View#columnsMode
+ * @cfg {String} Режим распределения записей по колонкам.
  * @default auto
  * @variant auto Автоматическое распределение записей по колонкам.
  * @variant fixed Каждая запись располагается в заранее определенную колонку.
