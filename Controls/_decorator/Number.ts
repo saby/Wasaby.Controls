@@ -14,6 +14,7 @@ type RoundingFn = (number: string, fractionSize: number) => string;
 export type RoundMode = 'round' | 'trunc';
 
 /**
+ * Интерфейс для опций контрола {@link Controls/decorator:Number}.
  * @interface Controls/_decorator/Number/INumberOptions
  * @public
  * @author Красильников А.С.
