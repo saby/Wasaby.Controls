@@ -28,7 +28,7 @@ import {Record} from 'Types/entity';
  * @mixes Controls/_interface/IFontSize
  * @control
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @demo Controls-demo/BreadCrumbs/PathPG
  * @see Controls/_breadcrumbs/Path
  */
@@ -45,7 +45,7 @@ import {Record} from 'Types/entity';
  * @mixes Controls/_interface/IFontSize
  * @control
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  *
  * @demo Controls-demo/BreadCrumbs/PathPG
  */

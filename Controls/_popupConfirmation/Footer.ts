@@ -16,7 +16,7 @@ import rk = require('i18n!Controls');
  * @extends Core/Control
  * @control
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @demo Controls-demo/PopupTemplate/Confirmation/Footer/Index
  */
 

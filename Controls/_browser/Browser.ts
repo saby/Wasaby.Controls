@@ -100,11 +100,14 @@ export default class Browser extends Control {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems);
                 return this._loadItems(options, this._sourceController.getState()).then((items) => {
-                    this._defineShadowVisibility(items);
-                    return {
-                        filterItems,
-                        items
-                    };
+                    if (items instanceof RecordSet) {
+                        this._defineShadowVisibility(items);
+                        return {
+                            filterItems,
+                            items
+                        };
+                    }
+                    return items;
                 });
             });
         }
@@ -204,6 +207,11 @@ export default class Browser extends Control {
             this._storeCallbacks.forEach((id) => Store.unsubscribe(id));
         }
 
+        if (this._sourceController) {
+            this._sourceController.destroy();
+            this._sourceController = null;
+        }
+
         this._filterController = null;
     }
 
@@ -212,19 +220,23 @@ export default class Browser extends Control {
         this._updateFilterAndFilterItems();
     }
 
-    private _loadItems(options, controllerState): Promise<void|RecordSet> {
-        return new Promise((resolve) => {
-            if (options.source) {
-                this._sourceController.load().then((items) => {
-                    this._setItemsAndCreateSearchController(items, options);
-                    resolve(items);
-                });
-            } else {
-                this._updateContext(controllerState);
-                this._createSearchControllerWithContext(options, this._dataOptionsContext);
-                resolve();
-            }
-        });
+    private _loadItems(options, controllerState): Promise<void|RecordSet|Error> {
+        let result;
+
+        if (options.source) {
+            result = this._sourceController.load().then((loadResult) => {
+                if (loadResult instanceof RecordSet) {
+                    this._setItemsAndCreateSearchController(loadResult, options);
+                }
+                return loadResult;
+            });
+        } else {
+            this._updateContext(controllerState);
+            this._createSearchControllerWithContext(options, this._dataOptionsContext);
+            result = Promise.resolve();
+        }
+
+        return result;
     }
 
     private _setItemsAndCreateSearchController(items: RecordSet, options): void {

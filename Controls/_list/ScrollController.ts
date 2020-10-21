@@ -88,7 +88,7 @@ export default class ScrollController {
     constructor(options: any) {
         this._options = {...ScrollController.getDefaultOptions(), ...options};
         if (options.needScrollCalculation) {
-            if (options.useNewModel) {
+            if (options.useNewModel && options.collection) {
                 ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
             }
         }
