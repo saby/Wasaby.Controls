@@ -663,6 +663,18 @@ define([
 
             assert.equal(component._elementsHeight.length, 0);
          });
+
+         it('should\' update headers if scroll container is hidden', () => {
+            component._container = {
+               closest: sinon.stub().returns(true)
+            };
+            sinon.stub(component, 'resizeHandler');
+
+            component._resizeObserverCallback([]);
+
+            sinon.assert.notCalled(component.resizeHandler);
+            sinon.restore();
+         });
       });
 
       describe('hasShadowVisible', () => {
