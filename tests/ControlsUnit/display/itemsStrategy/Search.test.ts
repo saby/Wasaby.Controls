@@ -52,8 +52,8 @@ describe('Controls/_display/itemsStrategy/Search', () => {
         let result: string;
         if (contents instanceof Array) {
             result = `#${contents.join(',')}`;
-        } else if(contents instanceof Object) {
-            result = JSON.stringify(contents.getRawData());
+        } else if(contents === undefined) {
+            result = '{}';
         } else {
             result = contents;
         }

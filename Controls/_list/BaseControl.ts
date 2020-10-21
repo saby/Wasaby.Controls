@@ -4716,7 +4716,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _itemMouseUp(e, itemData, domEvent): Promise<void>|void {
         const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
-        if (!key) {
+        if (key === null && key === undefined) {
             e.stopPropagation();
             return;
         }
