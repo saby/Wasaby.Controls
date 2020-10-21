@@ -489,7 +489,7 @@ const _private = {
             self._items = listModel.getCollection();
         } else {
             listModel.setItems(items, newOptions);
-            self._items = listModel.getItems();
+            self._items = listModel.getCollection();
 
             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
@@ -1602,7 +1602,12 @@ const _private = {
                 }
             }
 
-            if (_private.hasSelectionController(self)) {
+            // Изначально могло не создаться selectionController (не был задан source), но в целом работа с выделением
+            // нужна и когда items появляются (событие reset) - обрабатываем это.
+            // https://online.sbis.ru/opendoc.html?guid=454ba08b-758a-4a39-86cb-7a6d0cd30c44
+            const handleSelection = action === IObservable.ACTION_RESET && self._options.selectedKeys &&
+                self._options.selectedKeys.length && self._options.multiSelectVisibility !== 'hidden';
+            if (_private.hasSelectionController(self) || handleSelection) {
                 const selectionController = _private.getSelectionController(self);
 
                 let newSelection;
@@ -1612,7 +1617,7 @@ const _private = {
                         self._notify('listSelectedKeysCountChanged', [selectionController.getCountOfSelected(), selectionController.isAllSelected()], {bubbling: true});
                         break;
                     case IObservable.ACTION_RESET:
-                        const entryPath = self._items.getMetaData().ENTRY_PATH;
+                        const entryPath = self._listViewModel.getCollection().getMetaData().ENTRY_PATH;
                         newSelection = selectionController.onCollectionReset(entryPath);
                         break;
                     case IObservable.ACTION_REMOVE:
@@ -2189,7 +2194,7 @@ const _private = {
         const strategy = this.createSelectionStrategy(
             options,
             collection,
-            self._items.getMetaData().ENTRY_PATH
+            collection.getMetaData().ENTRY_PATH
         );
 
         self._selectionController = new SelectionController({
@@ -3515,7 +3520,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 strategyOptions: _private.getSelectionStrategyOptions(
                     newOptions,
                     collection,
-                    self._items.getMetaData().ENTRY_PATH
+                    collection.getMetaData().ENTRY_PATH
                 )
             });
 
