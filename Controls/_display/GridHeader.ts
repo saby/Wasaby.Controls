@@ -57,6 +57,10 @@ export default class GridHeader<T> extends mixin<OptionsToPropertyMixin>(Options
         return this._$owner.getMultiSelectVisibility();
     }
 
+    isStickyHeader(): boolean {
+        return this._$owner.isStickyHeader();
+    }
+
     protected _prepareHeaderCells(header: THeader): THeaderCells<T> {
         const headerCells = [];
         header.forEach((elem) => {

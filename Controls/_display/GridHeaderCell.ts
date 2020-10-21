@@ -21,6 +21,7 @@ import { IHeaderCell } from '../_grid/interface/IHeaderCell';
 import GridHeader from './GridHeader';
 import { mixin } from 'Types/_util/mixin';
 import { OptionsToPropertyMixin } from 'Types/entity';
+import * as GridLayoutUtil from "../_grid/utils/GridLayoutUtil";
 
 export interface IOptions<T> {
     owner: GridHeader<T>;
@@ -80,12 +81,21 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
 
     getContentClasses(theme: string): string {
         const isMultiHeader = false;
+        const isFullGridSupport = true;
         let contentClasses = 'controls-Grid__header-cell__content';
         contentClasses += ` controls-Grid__header-cell__content_theme-${theme}`;
         if (isMultiHeader) {
             contentClasses += ` controls-Grid__row-multi-header__content_baseline_theme-${theme}`;
         } else {
             contentClasses += ` controls-Grid__row-header__content_baseline_theme-${theme}`;
+        }
+        if (this._$headerCell.align) {
+            contentClasses += ` controls-Grid__header-cell_justify_content_${this._$headerCell.align}`;
+        }
+        if (isFullGridSupport) {
+            if (this._$headerCell.valign) {
+                contentClasses += ` controls-Grid__header-cell_align_items_${this._$headerCell.valign}`;
+            }
         }
         return contentClasses;
     }

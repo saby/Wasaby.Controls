@@ -1,15 +1,16 @@
 import CollectionItem, { IOptions as IBaseOptions } from './CollectionItem';
 import GridCollection from './GridCollection';
-import GridColumn, { IOptions as IGridColumnOptions, IColumnConfig } from './GridColumn';
+import GridColumn, { IOptions as IGridColumnOptions } from './GridColumn';
+import { IColumn, TColumns } from '../_grid/interface/IColumn';
 
 export interface IOptions<T> extends IBaseOptions<T> {
     owner: GridCollection<T>;
-    columns: IColumnConfig[];
+    columns: TColumns;
 }
 
 export default class GridCollectionItem<T> extends CollectionItem<T> {
     protected _$owner: GridCollection<T>;
-    protected _$columns: IColumnConfig[];
+    protected _$columns: TColumns;
     protected _$columnItems: Array<GridColumn<T>>;
 
     constructor(options?: IOptions<T>) {
@@ -20,7 +21,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             this._$columnItems = this._$columns.map((column) => factory({ column }));
             if (addMultiSelectColumn) {
                 this._$columnItems = [
-                    factory({ column: {} })
+                    factory({ column: {} as IColumn })
                 ].concat(this._$columnItems);
             }
         }

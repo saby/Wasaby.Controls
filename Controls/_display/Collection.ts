@@ -91,6 +91,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     itemPadding?: IItemPadding;
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
+    stickyHeader?: boolean;
     theme?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
@@ -593,6 +594,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$stickyMarkedItem: boolean;
 
+    protected _$stickyHeader: boolean;
+
     protected _$editingConfig: IEditingConfig;
 
     protected _$virtualScrolling: boolean;
@@ -762,6 +765,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         if (options.stickyMarkedItem !== undefined) {
             this._$stickyMarkedItem = options.stickyMarkedItem;
+        }
+
+        if (options.stickyHeader !== undefined) {
+            this._$stickyHeader = options.stickyHeader;
         }
 
         if (!this._$collection) {
@@ -2203,6 +2210,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     isStickyMarkedItem(): boolean {
         return this._$stickyMarkedItem;
+    }
+
+    isStickyHeader(): boolean {
+        return this._$stickyHeader;
     }
 
     getRowSeparatorSize(): string {

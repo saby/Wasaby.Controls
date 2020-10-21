@@ -9,17 +9,11 @@ import {
 } from 'Types/entity';
 import GridCollectionItem from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
-
-export interface IColumnConfig {
-    template: TemplateFunction|string;
-    width?: string;
-    cellPadding?: { left: string; right: string; };
-    displayProperty?: string;
-}
+import { IColumn } from '../_grid/interface/IColumn';
 
 export interface IOptions<T> {
     owner: GridCollectionItem<T>;
-    column: IColumnConfig;
+    column: IColumn;
 }
 
 export default class GridColumn<T> extends mixin<
@@ -37,7 +31,7 @@ export default class GridColumn<T> extends mixin<
     getInstanceId: () => string;
 
     protected _$owner: GridCollectionItem<T>;
-    protected _$column: IColumnConfig;
+    protected _$column: IColumn;
 
     constructor(options?: IOptions<T>) {
         super();
@@ -169,6 +163,14 @@ export default class GridColumn<T> extends mixin<
 
         contentClasses += ' controls-Grid__row-cell_withoutRowSeparator_size-null_theme-default';
 
+        if (this._$column.align) {
+            contentClasses += ` controls-Grid__row-cell__content_halign_${this._$column.align}`;
+        }
+
+        if (this._$column.valign) {
+            contentClasses += ` controls-Grid__cell_valign_${this._$column.valign} controls-Grid__cell-content_full-height`;
+        }
+
         /*
 +++     controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_default_theme-{{_options.theme}}
 +++     {{itemData.classList.padding.getAll()}} {{ itemData.classList.columnContent }} controls-Grid__row-cell_cursor-{{cursor || 'pointer'}}
@@ -185,44 +187,6 @@ export default class GridColumn<T> extends mixin<
             contentClasses += ` controls-GridView__item_active_theme-${theme}`;
         }
         return contentClasses;
-    }
-
-    getCellClasses(templateHighlightOnHover: boolean): string {
-        // GridViewModel -> getItemColumnCellClasses
-        const itemSpacing = this._$owner.getItemSpacing();
-        let classes = 'controls-Grid__row-cell js-controls-ItemActions__swipeMeasurementContainer';
-
-        if (itemSpacing.row === 'null') {
-            classes += 'controls-Grid__row-cell_small_min_height-theme-default';
-        } else {
-            classes += 'controls-Grid__row-cell_default_min_height-theme-default';
-        }
-
-        // if !checkBoxCell
-        classes += ' controls-Grid__cell_fit';
-
-        if (this._$owner.isEditing()) {
-            classes += ' controls-Grid__row-cell-background-editing_theme-default';
-        } else {
-            classes += ' controls-Grid__row-cell-background-hover-default_theme-default';
-        }
-        if (this._$owner.isActive() && templateHighlightOnHover !== false) {
-            classes += ' controls-GridView__item_active_theme-default';
-        }
-        if (this._$owner.isDragged()) {
-            classes += ' controls-ListView__item_dragging_theme-default';
-        }
-
-        // prepareRowSeparatorClasses, rowSeparatorVisibility
-        classes += ' controls-Grid__row-cell_withoutRowSeparator_theme-default';
-
-        classes += ' ' + this._getCellPaddingClasses();
-
-        // if checkBoxCell
-        // if isSelected
-        // if getLastColumnIndex
-
-        return classes;
     }
 
     getCellStyles(): string {
