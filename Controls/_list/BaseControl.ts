@@ -216,7 +216,7 @@ const getData = (crudResult: ICrudResult): Promise<any> => {
 };
 
 const _private = {
-    getItemActionsController(self): ItemActionsController {
+    getItemActionsController(self, options: IList): ItemActionsController {
         // При существующем контроллере нам не нужны дополнительные проверки как при инициализации.
         // Например, может потребоваться продолжение работы с контроллером после показа ошибки в Popup окне,
         // когда _error не зануляется.
@@ -232,7 +232,7 @@ const _private = {
         // Если нет опций записи, проперти, и тулбар для редактируемой записи выставлен в false, то не надо
         // инициализировать контроллер
         if (
-            (self._options && !self._options.itemActions && !self._options.itemActionsProperty) &&
+            (options && !options.itemActions && !options.itemActionsProperty) &&
             !editingConfig?.toolbarVisibility
         ) {
             return;
@@ -1773,7 +1773,7 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        const itemActionsController = _private.getItemActionsController(self);
+        const itemActionsController = _private.getItemActionsController(self, self._options);
         const menuConfig = itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
@@ -1819,7 +1819,7 @@ const _private = {
             // Для обхода проблемы ставим условие, что занулять active item нужно только тогда, когда
             // закрываем самое последнее открытое меню.
             if (!currentPopup || itemActionsMenuId === currentPopup.id) {
-                const itemActionsController = _private.getItemActionsController(self);
+                const itemActionsController = _private.getItemActionsController(self, self._options);
                 itemActionsController.setActiveItem(null);
                 itemActionsController.deactivateSwipe();
             }
@@ -2507,8 +2507,8 @@ const _private = {
      * @param options
      * @private
      */
-    updateItemActions(self, options: any, editingCollectionItem?: IEditableCollectionItem): void {
-        const itemActionsController =  _private.getItemActionsController(self);
+    updateItemActions(self, options: IList, editingCollectionItem?: IEditableCollectionItem): void {
+        const itemActionsController =  _private.getItemActionsController(self, options);
         if (!itemActionsController) {
             return;
         }
@@ -2581,7 +2581,7 @@ const _private = {
      */
     closeSwipe(self): void {
         if (self._listViewModel.isActionsAssigned()) {
-            _private.getItemActionsController(self).deactivateSwipe();
+            _private.getItemActionsController(self, self._options).deactivateSwipe();
         }
     },
 
@@ -2852,7 +2852,7 @@ const _private = {
  * @mixes Controls/_list/BaseControl/Styles
  * @mixes Controls/_list/interface/IMovableList
  * @implements Controls/_list/interface/IListNavigation
- * 
+ *
  * @private
  * @author Авраменко А.С.
  * @category List
@@ -4688,7 +4688,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
             if (action && !action['parent@']) {
-                const item = _private.getItemActionsController(this).getActiveItem();
+                const item = _private.getItemActionsController(this, this._options).getActiveItem();
                 _private.handleItemActionClick(this, action, clickEvent, item, true);
             }
         }
@@ -5058,11 +5058,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (swipeEvent.nativeEvent.direction === 'left') {
             this.setMarkedKey(key);
             _private.updateItemActionsOnce(this, this._options);
-            itemActionsController = _private.getItemActionsController(this);
+            itemActionsController = _private.getItemActionsController(this, this._options);
             itemActionsController?.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            itemActionsController = _private.getItemActionsController(this);
+            itemActionsController = _private.getItemActionsController(this, this._options);
             const swipedItem = itemActionsController?.getSwipeItem();
             if (swipedItem) {
                 itemActionsController.startSwipeCloseAnimation();
@@ -5099,7 +5099,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      */
     _onActionsSwipeAnimationEnd(e: SyntheticEvent<IAnimationEvent>): void {
         if (e.nativeEvent.animationName === 'itemActionsSwipeClose') {
-            const itemActionsController = _private.getItemActionsController(this);
+            const itemActionsController = _private.getItemActionsController(this, this._options);
             const item = itemActionsController.getSwipeItem();
             if (item) {
                 if (!this._options.itemActions) {
