@@ -156,6 +156,11 @@ describe('Controls/list_clean/BaseControl', () => {
                 getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}]),
                 getBoundingClientRect: () => ([{clientHeight: 100, offsetHeight: 0}])
             };
+            baseControl._getItemsContainer = () => {
+                return {
+                    children: []
+                }
+            };
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 400;
             baseControl._viewSize = 800;

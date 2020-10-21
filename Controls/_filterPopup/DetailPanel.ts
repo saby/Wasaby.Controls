@@ -29,7 +29,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
     * @extends Core/Control
     * @mixes Controls/_filterPopup/interface/IFilterPanel
     * @demo Controls-demo/Filter/Button/PanelVDom
-    * @control
+    * 
     * @public
     * @author Золотова Э.Е.
     *
@@ -52,7 +52,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
     * @extends Core/Control
     * @mixes Controls/_filterPopup/interface/IFilterPanel
     * @demo Controls-demo/Filter/Button/panelOptions/panelPG
-    * @control
+    * 
     * @public
     * @author Золотова Э.Е.
     *

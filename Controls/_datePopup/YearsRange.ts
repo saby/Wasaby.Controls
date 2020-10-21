@@ -9,7 +9,7 @@ import componentTmpl = require('wml!Controls/_datePopup/YearsRange');
  *
  * @class Controls/_datePopup/YearsRange
  * @extends Core/Control
- * @control
+ * 
  * @author Красильников А.С.
  * @private
  */

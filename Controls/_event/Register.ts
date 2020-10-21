@@ -13,7 +13,7 @@ import RegisterClass from './RegisterClass';
  * Контрол, регистрирующий все вложенные {@link Controls/event:Listener} и генерирующий событие, заданное в опции {@link register}.
  * @class Controls/_event/Register
  * @extends UI/Base:Control
- * @control
+ * 
  * @public
  * @remark
  * Подробнее о работе с контролом читайте <a href="/doc/platform/developmentapl/interface-development/controls/tools/autoresize/">здесь</a>.

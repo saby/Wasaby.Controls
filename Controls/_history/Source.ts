@@ -33,7 +33,7 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  * @class Controls/_history/Source
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @category Menu
@@ -58,7 +58,7 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  * @class Controls/_history/Source
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @category Menu

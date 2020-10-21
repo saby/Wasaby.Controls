@@ -38,7 +38,7 @@ import { TreeControl } from 'Controls/tree';
     *
     * @mixes Controls/_list/interface/IVirtualScroll
     *
-    * @control
+    * 
     * @public
     * @author Авраменко А.С.
     * @category List
@@ -75,7 +75,7 @@ import { TreeControl } from 'Controls/tree';
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/_treeGrid/interface/IReloadableTreeGrid
     *
-    * @control
+    * 
     * @public
     * @author Авраменко А.С.
     * @category List

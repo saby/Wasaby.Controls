@@ -730,7 +730,7 @@ var
                     this._ladder = _private.prepareLadder(this);
 
                     if (action === 'rs') {
-                        this._setHeader(this._options.header);
+                        this._setHeader(this._header);
                     }
                 }
                 if (changesType !== 'markedKeyChanged' && action !== 'ch') {

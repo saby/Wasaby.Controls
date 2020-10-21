@@ -10,7 +10,7 @@ import template = require('wml!Controls/_operationsPopup/ReportDialog/ReportDial
     *
     * @class Controls/_operationsPopup/ReportDialog
     * @extends Core/Control
-    * @control
+    * 
     * @author Сухоручкин А.С.
     * @public
     *
@@ -20,7 +20,7 @@ import template = require('wml!Controls/_operationsPopup/ReportDialog/ReportDial
     *
     * @class Controls/_operationsPopup/ReportDialog
     * @extends Core/Control
-    * @control
+    * 
     * @author Сухоручкин А.С.
     * @public
     *

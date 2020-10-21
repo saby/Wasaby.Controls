@@ -26,7 +26,7 @@ import dateControlsUtils from "./Utils";
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
- * @control
+ * 
  * @public
  * @category Input
  * @author Красильников А.С.
@@ -41,7 +41,7 @@ import dateControlsUtils from "./Utils";
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/IPeriodLiteDialog
- * @control
+ * 
  * @public
  * @category Input
  * @author Красильников А.С.

@@ -392,7 +392,7 @@ var _private = {
  * @mixes Controls/interface/IMovable
  * @mixes Controls/_interface/IHierarchy
  * @deprecated {@link Controls/list:Mover Mover} will be removed soon. Use {@link Controls/list:IMovableList IMovableList} interface instead
- * @control
+ * 
  * @public
  * @author Авраменко А.С.
  * @category List
@@ -408,7 +408,7 @@ var _private = {
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IMovable
  * @mixes Controls/_interface/IHierarchy
- * @control
+ * 
  * @public
  * @author Авраменко А.С.
  * @category List

@@ -145,7 +145,7 @@ export function getDefaultOptions(): object {
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Button
@@ -170,7 +170,7 @@ export function getDefaultOptions(): object {
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Button
