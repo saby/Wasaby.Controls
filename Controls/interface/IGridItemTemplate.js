@@ -45,7 +45,6 @@ define('Controls/interface/IGridItemTemplate', [
    /*
     * @name Controls/interface/IGridItemTemplate#itemTemplate
     * @cfg {Function} Template for item render.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FItemTemplatePG">Example</a>.
     * @remark
     * Base itemTemplate for Controls.grid:View: "Controls/grid:ItemTemplate".
     * Inside the template scope, object itemData is available, allowing you to access the render data (for example: item, key, etc.).
@@ -84,7 +83,6 @@ define('Controls/interface/IGridItemTemplate', [
    /*
     * @name Controls/interface/IGridItemTemplate#itemTemplateProperty
     * @cfg {String} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FItemTemplatePG">Example</a>.
     */
 
 });
