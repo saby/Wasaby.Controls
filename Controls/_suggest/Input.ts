@@ -27,7 +27,7 @@ import {generateStates} from 'Controls/input';
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
  * @mixes Controls/_input/interface/IValue
- * @control
+ * 
  * @public
  * @category Input
  * @demo Controls-demo/Input/Suggest/SuggestPG
@@ -48,7 +48,7 @@ import {generateStates} from 'Controls/input';
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
- * @control
+ * 
  * @public
  * @category Input
  * @demo Controls-demo/Input/Suggest/SuggestPG

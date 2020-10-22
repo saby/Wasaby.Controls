@@ -49,7 +49,7 @@ export interface IDataContextOptions extends ISourceOptions,
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/ISource
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -65,7 +65,7 @@ export interface IDataContextOptions extends ISourceOptions,
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/ISource
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */

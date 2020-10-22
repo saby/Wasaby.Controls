@@ -10,7 +10,7 @@ import * as template from 'wml!Controls/_popupConfirmation/template';
  * 
  * @class Controls/_popupConfirmation/Template
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @category Popup
  * @author Красильников А.С.

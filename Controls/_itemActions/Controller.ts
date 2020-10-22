@@ -425,7 +425,7 @@ export class Controller {
             }
             return allActions.filter((action) => (
                 ((!parentAction || parentAction.isMenu) && action.showType !== TItemActionShowType.TOOLBAR) ||
-                (!!parentAction && action.parent === parentAction.id)
+                (!!parentAction && !parentAction.isMenu && action.parent === parentAction.id)
             ));
         }
         return [];

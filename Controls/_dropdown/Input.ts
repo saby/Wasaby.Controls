@@ -35,7 +35,6 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
  *
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDropdown%2FDropdown">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less">переменные тем оформления dropdown</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
@@ -56,17 +55,16 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/ISearch
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  * @category Input
- * @demo Controls-demo/dropdown_new/Input/Source/Index
+ * @demo Controls-demo/dropdown_new/Input/Source/Simple/Index
  */
 
 /*
  * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
  * The full list of options is displayed when you click on the control.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDropdown%2FDropdown">Demo-example</a>.
  *
  * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
  * @class Controls/_dropdown/Input
@@ -84,11 +82,11 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/ITextValue
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  * @category Input
- * @demo Controls-demo/Input/Dropdown/DropdownPG
+ * @demo Controls-demo/dropdown_new/Input/Source/Index
  */
 
 /**

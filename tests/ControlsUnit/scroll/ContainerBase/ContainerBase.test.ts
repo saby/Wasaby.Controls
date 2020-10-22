@@ -167,6 +167,24 @@ describe('Controls/scroll:ContainerBase', () => {
       });
    });
 
+   describe('_resizeObserverCallback', () => {
+      it('should\'t update state if container is invisible', () => {
+         const control: ContainerBase = new ContainerBase(options);
+         control._beforeMount(options);
+
+         control._container = {
+            closest: sinon.stub().returns(true)
+         }
+
+         sinon.stub(control, '_updateStateAndGenerateEvents');
+
+         control._resizeObserverCallback();
+
+         sinon.assert.notCalled(control._updateStateAndGenerateEvents);
+         sinon.restore();
+      });
+   });
+
    describe('_scrollHandler', () => {
       it('should scroll to locked position if its specified', () => {
          const position: number = 10;

@@ -20,7 +20,7 @@ interface IMenuRenderOptions extends IMenuBaseOptions, IRenderOptions {
  * @class Controls/menu:Render
  * @extends UI/_base/Control
  * @private
- * @control
+ * 
  * @author Герасимов А.М.
  */
 

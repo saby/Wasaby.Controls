@@ -198,7 +198,7 @@ const _private = {
 /**
  * Sticky Popup Controller
  * @class Controls/_popupTemplate/Sticky/StickyController
- * @control
+ * 
  * @private
  * @category Popup
  */

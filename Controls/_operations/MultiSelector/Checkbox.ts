@@ -18,7 +18,7 @@ type TCheckboxValue = boolean | null;
  *
  * @class Controls/_operations/MultiSelector/Checkbox
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/operations/MultiSelectorCheckbox/Index

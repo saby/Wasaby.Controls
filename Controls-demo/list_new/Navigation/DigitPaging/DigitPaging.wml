@@ -26,5 +26,13 @@
         </Router.router:Reference>
         <Controls-demo.list_new.Navigation.DigitPaging.WithItemActions.Index/>
     </div>
+    <div class="controlsDemo__cell controlsDemo__mr4 controlsDemo-navigation__with_actions">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/list_new/Navigation/DigitPaging/MinElements/Index' }}">
+            <a href="{{content.href}}">Минимальное количество записей</a>
+        </Router.router:Reference>
+        <Controls-demo.list_new.Navigation.DigitPaging.MinElements.Index/>
+    </div>
 
 </div>

@@ -21,7 +21,7 @@ import { Sticky, IStickyPopupOptions } from 'Controls/popup';
  *
  * @class Controls/_lookup/SelectedCollection
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -30,7 +30,7 @@ import { Sticky, IStickyPopupOptions } from 'Controls/popup';
  *
  * @class Controls/_lookup/SelectedCollection
  * @extends Core/Control
- * @control
+ * 
  * @author Герасимов А.М.
  */
 

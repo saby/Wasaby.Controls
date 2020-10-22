@@ -18,7 +18,6 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  *
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FRange">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/date-time/date/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a>
  *
@@ -33,16 +32,15 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  * @mixes Controls/_interface/IDateMask
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_interface/IDateRangeValidators
- * @control
+ * 
  * @public
- * @demo Controls-demo/Input/Date/RangePG
+ * @demo Controls-demo/Input/Date/Range
  * @category Input
  * @author Красильников А.С.
  */
 
 /*
  * Control for entering date range.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FRange">Demo examples.</a>.
  * @class Controls/_dateRange/Input
  * @extends Core/Control
  * @mixes Controls/_input/interface/IBase
@@ -51,9 +49,9 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  * @mixes Controls/_dateRange/interfaces/IRangeInputTag
  * @mixes Controls/_interface/IDateMask
  *
- * @control
+ * 
  * @public
- * @demo Controls-demo/Input/Date/RangePG
+ * @demo Controls-demo/Input/Date/Range
  * @category Input
  * @author Красильников А.С.
  */

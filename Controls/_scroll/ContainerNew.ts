@@ -38,7 +38,7 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  * @extends Controls/_scroll/ContainerBase
  * @mixes Controls/_scroll/Interface/IScrollbars
  * @mixes Controls/_scroll/Interface/IShadows
- * @control
+ * 
  * @public
  * @author Миронов А.Ю.
  * @category Container
@@ -51,7 +51,7 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  *
  * @class Controls/_scroll/ContainerNew
  * @extends Controls/_scroll/ContainerBase
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Container
@@ -255,6 +255,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
         this._shadows.updateVisibilityByInnerComponents(shadowsVisibility);
+        this._stickyHeaderController.setShadowVisibility(
+                this._shadows.top.isStickyHeadersShadowsEnabled(),
+                this._shadows.bottom.isStickyHeadersShadowsEnabled());
     }
 
     protected _keydownHandler(event: SyntheticEvent): void {

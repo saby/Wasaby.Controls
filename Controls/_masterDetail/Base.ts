@@ -11,7 +11,7 @@ import {IPropStorageOptions} from 'Controls/interface';
  * @class Controls/_masterDetail/Base
  * @extends Core/Control
  * @mixes Controls/_interface/IPropStorage
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  * @demo Controls-demo/MasterDetail/Demo
@@ -22,7 +22,7 @@ import {IPropStorageOptions} from 'Controls/interface';
  * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/master-detail/'>here</a>.
  * @class Controls/_masterDetail/Base
  * @extends Core/Control
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  * @demo Controls-demo/MasterDetail/Demo

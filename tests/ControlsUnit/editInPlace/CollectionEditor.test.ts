@@ -245,8 +245,10 @@ describe('Controls/_editInPlace/CollectionEditor', () => {
 
             // Попытка начать добавление записи в родителя, которого нет в коллекции должна привести к исключению
             assert.throws(() => {
-                collectionEditor.add(newItem);
-            }, ERROR_MSG.PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST);
+                    collectionEditor.add(newItem);
+                },
+                `There is no item with key={0} in list. ${ERROR_MSG.PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST}`
+            );
         });
     });
 

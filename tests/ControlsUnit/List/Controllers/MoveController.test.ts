@@ -556,16 +556,31 @@ describe('Controls/list_clean/MoveController', () => {
                 });
         });
 
-        // Попытка вызвать move() с target === null
+        // Попытка вызвать move() с target === null при перемещении в папку
         it ('should move with target === null', () => {
             const spyCall = spy(sbisServiceSource, 'call');
             return resolveMove(controller, selectionObject, {}, null, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
 
-                    // Ожидаю. что перемещение произойдёт успешно, т.к. все условия соблюдены
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере
                     sinonAssert.notCalled(stubLoggerError);
                     sinonAssert.called(spyCall);
                     assert.isTrue(result);
+                    spyCall.restore();
+                });
+        });
+
+        // Попытка вызвать move() с target===null при смене мест
+        it ('should not move "Before"/"After" to null target', () => {
+            const spyCall = spy(sbisServiceSource, 'call');
+            return resolveMove(controller, selectionObject, {myProp: 'test'}, null, LOCAL_MOVE_POSITION.Before)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере,
+                    // При этом не будет записана ошибка в лог
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.notCalled(spyCall);
+                    assert.isFalse(result);
                     spyCall.restore();
                 });
         });
@@ -1019,8 +1034,8 @@ describe('Controls/list_clean/MoveController', () => {
                 });
         });
 
-        // Попытка вызвать move() с target === null
-        it ('should move with target === null', () => {
+        // Попытка вызвать move() с target === null при перемещении в папку
+        it ('should move "On" with target === null', () => {
             const spyMove = spy(source, 'move');
             return resolveMove(controller, selectionObject, {}, null, LOCAL_MOVE_POSITION.On)
                 .then((result: boolean) => {
@@ -1029,6 +1044,21 @@ describe('Controls/list_clean/MoveController', () => {
                     sinonAssert.notCalled(stubLoggerError);
                     sinonAssert.called(spyMove);
                     assert.isTrue(result);
+                    spyMove.restore();
+                });
+        });
+
+        // Попытка вызвать move() с target===null при смене мест
+        it ('should not move "Before"/"After" to null target', () => {
+            const spyMove = spy(source, 'move');
+            return resolveMove(controller, selectionObject, {myProp: 'test'}, null, LOCAL_MOVE_POSITION.Before)
+                .then((result: boolean) => {
+
+                    // Ожидаю. что перемещение провалится из-за ошибки, брошенной в контроллере,
+                    // При этом не будет записана ошибка в лог
+                    sinonAssert.notCalled(stubLoggerError);
+                    sinonAssert.notCalled(spyMove);
+                    assert.isFalse(result);
                     spyMove.restore();
                 });
         });

@@ -36,7 +36,7 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  *
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  * @category List
@@ -68,7 +68,7 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  *
  * @mixes Controls/_list/interface/IVirtualScroll
  *
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  * @category List

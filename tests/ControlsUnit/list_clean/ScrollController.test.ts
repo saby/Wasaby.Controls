@@ -42,6 +42,21 @@ describe('Controls/list_clean/ScrollController', () => {
 
             assert.isFalse(setViewIteratorSpy.called);
         });
+        it('collection === null.', () => {
+            let controller;
+            let errorFired = false;
+            try {
+                controller = new ScrollController({
+                    collection: null,
+                    virtualScrollConfig: {},
+                    useNewModel: true,
+                    needScrollCalculation: false
+                });
+             } catch (e) {
+                errorFired = true;
+             }
+            assert.isFalse(errorFired);
+        });
     });
 
     describe('update', () => {

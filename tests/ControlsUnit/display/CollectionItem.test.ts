@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-
-import {CollectionItem} from 'Controls/display';
+import {RecordSet} from 'Types/collection';
+import {Collection, CollectionItem} from 'Controls/display';
 import {ICollection} from "../../../Controls/_display/interface/ICollection";
 
 interface IChangedData<T> {
@@ -443,7 +443,8 @@ describe('Controls/_display/CollectionItem', () => {
             notifyItemChange(item: CollectionItem<string>, property: string): void {
                 given.item = item;
                 given.property = property;
-            }
+            },
+            getHoverBackgroundStyle: function() {}
         };
 
         const item = new CollectionItem({ owner });
@@ -460,6 +461,11 @@ describe('Controls/_display/CollectionItem', () => {
     });
 
     it('.getWrapperClasses()', () => {
+        const owner = {
+            notifyItemChange(): void {},
+            getHoverBackgroundStyle: function() {}
+        };
+
         const defaultClasses = [
             'controls-ListView__itemV',
             'controls-ListView__item_default',
@@ -470,7 +476,7 @@ describe('Controls/_display/CollectionItem', () => {
             'controls-ListView__item_editing'
         ];
 
-        const item = new CollectionItem();
+        const item = new CollectionItem({ owner });
         const wrapperClasses = item.getWrapperClasses();
 
         defaultClasses.forEach((className) => assert.include(wrapperClasses, className));
@@ -671,9 +677,29 @@ describe('Controls/_display/CollectionItem', () => {
 
         beforeEach(() => {
             item = new CollectionItem();
+            item.setOwner(new Collection({
+                keyProperty: 'id',
+                collection: new RecordSet({
+                    rawData: [item],
+                    keyProperty: 'id'
+                }) as any
+            }))
         });
 
         // CSS класс для позиционирования опций записи.
+
+        // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (старая модель)
+        it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
+            const result = item.getItemActionPositionClasses('inside', null, {top: 'null', bottom: 'null'}, 'default');
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight ');
+        });
+
+        // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (новая модель)
+        it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
+            item.getOwner().setItemPadding({top: 'null', bottom: 'null'});
+            const result = item.getItemActionPositionClasses('inside', null, undefined, 'default');
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight ');
+        });
 
         // Если опции внутри строки и itemActionsClass не задан, возвращает класс, добавляющий выравнивание bottomRight
         it('getItemActionPositionClasses() should return classes for bottom-right positioning when itemActionClass is not set', () => {

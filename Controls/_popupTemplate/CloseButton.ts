@@ -10,7 +10,7 @@ import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton')
     *
     * @class Controls/_popupTemplate/CloseButton
     * @extends Core/Control
-    * @control
+    * 
     * @public
     * @author Красильников А.С.
     * @demo Controls-demo/PopupTemplate/CloseButton/ViewModes/Index

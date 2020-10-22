@@ -7,7 +7,7 @@ import template = require('wml!Controls/_scroll/IntersectionObserver/EdgeInterse
  * Контейнер, позволяющий отслеживать пересечение своих границ с границами скроллируемой области.
  *
  * @class Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer
- * @control
+ * 
  * @author Миронов А.Ю.
  * @see Controls/_scroll/Container
  * @public

@@ -16,7 +16,7 @@ import {object} from 'Types/util';
     * @mixes Controls/_interface/ITextValue
     * @mixes Controls/_interface/IMultiSelectable
     * @mixes Controls/_interface/IItemTemplate
-    * @control
+    * 
     * @public
     * @author Герасимов А.М.
     */
@@ -27,7 +27,7 @@ import {object} from 'Types/util';
     * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
     * @class Controls/_filterPopup/Panel/Select
     * @extends Core/Control
-    * @control
+    * 
     * @mixes Controls/_interface/ITextValue
     * @mixes Controls/_interface/IMultiSelectable
     * @public

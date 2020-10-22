@@ -10,7 +10,7 @@ import template = require('wml!Controls/_filterPopup/Panel/Link/Link');
  * 
  * @class Controls/_filterPopup/Panel/Link
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  * @example
