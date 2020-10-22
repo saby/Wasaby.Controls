@@ -18,22 +18,22 @@ export default class GridHeader<T> extends mixin<OptionsToPropertyMixin>(Options
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
-        this._$headerCells = this._prepareHeaderCells(options.header);
+        this._$headerCells = this._prepareCells(options.header);
     }
 
-    getHeaderClasses(theme: string): string {
+    getBodyClasses(theme: string): string {
         return `controls-Grid__header controls-Grid__header_theme-${theme}`;
     }
 
-    getHeaderCells(): THeaderCells<T> {
+    getCells(): THeaderCells<T> {
         return this._$headerCells;
     }
 
-    getHeaderCellIndex(headerCell: GridHeaderCell<T>): number {
+    getCellIndex(headerCell: GridHeaderCell<T>): number {
         return this._$headerCells.indexOf(headerCell);
     }
 
-    getHeaderCellsCount(): number {
+    getColumnsCount(): number {
         return this._$headerCells.length;
     }
 
@@ -61,8 +61,9 @@ export default class GridHeader<T> extends mixin<OptionsToPropertyMixin>(Options
         return this._$owner.isStickyHeader();
     }
 
-    protected _prepareHeaderCells(header: THeader): THeaderCells<T> {
+    protected _prepareCells(header: THeader): THeaderCells<T> {
         const headerCells = [];
+        // todo add multiSelect cell
         header.forEach((elem) => {
             const headerCell = new GridHeaderCell({
                 headerCell: elem,

@@ -21,12 +21,13 @@ import { IHeaderCell } from '../_grid/interface/IHeaderCell';
 import GridHeader from './GridHeader';
 import { mixin } from 'Types/_util/mixin';
 import { OptionsToPropertyMixin } from 'Types/entity';
-import * as GridLayoutUtil from "../_grid/utils/GridLayoutUtil";
 
 export interface IOptions<T> {
     owner: GridHeader<T>;
     headerCell: IHeaderCell;
 }
+
+const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_grid/Render/HeaderCellContent';
 
 export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridHeader<T>;
@@ -38,7 +39,7 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
     }
 
     getHeaderCellIndex(): number {
-        return this._$owner.getHeaderCellIndex(this);
+        return this._$owner.getCellIndex(this);
     }
 
     isFirstColumn(): boolean {
@@ -46,7 +47,7 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
     }
 
     isLastColumn(): boolean {
-        return this.getHeaderCellIndex() === this._$owner.getHeaderCellsCount() - 1;
+        return this.getHeaderCellIndex() === this._$owner.getColumnsCount() - 1;
     }
 
     isMultiSelectColumn(): boolean {
@@ -69,7 +70,7 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
             wrapperClasses += ' controls-Grid__header-cell_static';
         }
 
-        wrapperClasses += this._getWrapperPaddingClasses(theme, style);
+        wrapperClasses += this._getWrapperPaddingClasses(theme);
 
         // _private.getBackgroundStyle(this._options, true);
         return wrapperClasses;
@@ -100,13 +101,8 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
         return contentClasses;
     }
 
-    getWrapperPaddingClasses(): string {
-        let paddingClasses = '';
-        return paddingClasses;
-    }
-
     getTemplate(): TemplateFunction|string {
-        return this._$headerCell.template;
+        return this._$headerCell.template || DEFAULT_CELL_TEMPLATE;
     }
 
     getTemplateOptions(): {} {

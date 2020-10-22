@@ -1,36 +1,12 @@
-<ws:template name="renderCell">
-    <div attr:class="{{ headerCell.getWrapperClasses(theme, style) }}"
-         attr:style="{{ headerCell.getWrapperStyles() }}">
-        <ws:if data="{{ !!headerCell.getTemplate() }}">
-            <ws:partial template="{{ headerCell.getTemplate() }}"
-                        scope="{{ headerCell.getTemplateOptions() }}"
-                        colData="{{ headerCell }}"/>
-        </ws:if>
-        <ws:else>
-            <ws:partial template="wml!Controls/_grid/Render/HeaderContent"
-                        colData="{{ headerCell }}"/>
-        </ws:else>
-    </div>
-</ws:template>
-<ws:template name="renderCells">
-    <div class="{{ header.getHeaderClasses(theme) }}">
-        <ws:for data="headerCell in header.getHeaderCells()">
-            <ws:if data="{{ header.isStickyHeader() }}">
-                <Controls.scroll:StickyHeader>
-                    <ws:partial template="renderCell"/>
-                </Controls.scroll:StickyHeader>
-            </ws:if>
-            <ws:else>
-                <ws:partial template="renderCell"/>
-            </ws:else>
+<Controls.scroll:Group>
+    <div class="{{ header.getBodyClasses(theme) }}">
+        <ws:for data="cell in header.getCells()">
+            <div attr:class="{{ cell.getWrapperClasses(theme, style) }}"
+                 attr:style="{{ cell.getWrapperStyles() }}">
+                <ws:partial template="{{ cell.getTemplate() }}"
+                            scope="{{ cell.getTemplateOptions() }}"
+                            colData="{{ cell }}"/>
+            </div>
         </ws:for>
     </div>
-</ws:template>
-<ws:if data="{{ header.isStickyHeader() }}">
-    <Controls.scroll:Group>
-        <ws:partial template="renderCells"/>
-    </Controls.scroll:Group>
-</ws:if>
-<ws:else>
-    <ws:partial template="renderCells"/>
-</ws:else>
+</Controls.scroll:Group>

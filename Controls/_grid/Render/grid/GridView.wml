@@ -5,7 +5,13 @@
                     attr:name="header"
                     header="{{ _listModel.getHeader() }}"
                     backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
-        <!--defaultHeaderContent="{{_headerContentTemplate}}"-->
+    </ws:if>
+    <!-- Results (top) -->
+    <ws:if data="{{ _listModel.getResultsPosition() === 'top' }}">
+        <ws:partial template="wml!Controls/_grid/Render/grid/Header"
+                    attr:name="results"
+                    header="{{ _listModel.getResults() }}"
+                    backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
     </ws:if>
     <!-- Items -->
     <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
@@ -26,4 +32,11 @@
                 backgroundStyle="{{ _options.backgroundStyle || _options.style }}">
         </ws:partial>
     </div>
+    <!-- Results (bottom) -->
+    <ws:if data="{{ _listModel.getResultsPosition() === 'bottom' }}">
+        <ws:partial template="wml!Controls/_grid/Render/grid/Header"
+                    attr:name="results"
+                    header="{{ _listModel.getResults() }}"
+                    backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
+    </ws:if>
 </div>

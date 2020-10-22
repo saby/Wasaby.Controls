@@ -34,14 +34,14 @@ import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
 import ColumnTemplate = require('wml!Controls/_grid/Render/grid/Column');
 import ColumnLightTemplate = require('wml!Controls/_grid/layout/common/ColumnContentLight');
 
-import HeaderContent = require('wml!Controls/_grid/Render/HeaderContent');
+import HeaderContent = require('wml!Controls/_grid/Render/HeaderCellContent');
 import SortingButton from 'Controls/_grid/SortingButton';
 import GridView = require('Controls/_grid/GridView');
 import GridViewModel = require('Controls/_grid/GridViewModel');
 
 import SortingSelector from 'Controls/_grid/SortingSelector';
 import RowEditor = require('wml!Controls/_grid/RowEditor');
-import * as ResultColumnTemplate from 'wml!Controls/_grid/layout/common/ResultCellContent';
+import * as ResultColumnTemplate from 'wml!Controls/_grid/Render/ResultsCellContent';
 
 import * as EditingEmptyTemplate from 'wml!Controls/_grid/emptyTemplates/Editing';
 
