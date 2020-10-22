@@ -2140,10 +2140,6 @@ var
             return this._model.getActiveItem();
         },
 
-        getChildren: function() {
-            return this._model.getChildren.apply(this._model, arguments);
-        },
-
         getStartIndex(): number {
             return this._model.getStartIndex();
         },

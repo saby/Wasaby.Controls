@@ -1215,6 +1215,9 @@ define([
                   getMetaData: () => ({
                      more: test.data[2].getAllDataCount()
                   })
+               }),
+               getDisplay: () => ({
+                  '[Controls/_display/Tree]': false
                })
             };
             lists.BaseControl._private.prepareFooter.apply(null, test.data);
