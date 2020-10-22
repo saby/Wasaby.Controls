@@ -5,11 +5,11 @@ import {getPanelData} from 'Controls-demo/OperationsPanelNew/DemoHelpers/DataCat
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
-   protected _selectedKeys = [];
-   protected _excludedKeys = [];
+   protected _selectedKeys: string[] = [];
+   protected _excludedKeys: string[] = [];
    protected _panelSource: Memory;
 
-   protected _beforeMount() {
+   protected _beforeMount(): void {
       this._panelSource = new Memory({
          keyProperty: 'id',
          data: getPanelData()
