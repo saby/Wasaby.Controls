@@ -1,6 +1,6 @@
 import {NewSourceController, ISourceControllerOptions} from 'Controls/dataSource';
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
-import {ok} from 'assert';
+import {ok, deepStrictEqual} from 'assert';
 import {RecordSet} from 'Types/collection';
 
 const filterByEntries = (item, filter): boolean => {
@@ -185,6 +185,25 @@ describe('Controls/dataSource:SourceController', () => {
             isChanged = controller.updateOptions(options);
             ok(controller._root === 'testRoot');
             ok(!isChanged);
+        });
+
+        it('updateOptions with expandedItems',  async () => {
+            const controller = getControllerWithHierarchy();
+            let options = {...getControllerWithHierarchyOptions()};
+
+            options.expandedItems = [];
+            controller.updateOptions(options);
+            deepStrictEqual(controller._expandedItems, []);
+
+            options = {...options};
+            options.expandedItems = ['testRoot'];
+            controller.updateOptions(options);
+            deepStrictEqual(controller._expandedItems, ['testRoot']);
+
+            options = {...options};
+            delete options.expandedItems;
+            controller.updateOptions(options);
+            deepStrictEqual(controller._expandedItems, ['testRoot']);
         });
     });
 });
