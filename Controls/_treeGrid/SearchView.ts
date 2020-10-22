@@ -37,6 +37,21 @@ var
            this._notify('itemClick', [item, e], {bubbling: true});
            this._itemClickNotifiedByPathClick = true;
         },
+        _onItemMouseUp(e, itemData) {
+            const item = itemData.item ? itemData.item : itemData.getContents();
+            if (item === null) {
+                e.stopPropagation();
+                return;
+            }
+            this._notify('itemMouseUp', [itemData, e]);
+        },
+        _onItemClick: function(e, item) {
+            if (item['[Controls/_display/SearchSeparator]']) {
+                e.stopPropagation();
+                return;
+            }
+            this._notify('itemClick', [item, e]);
+        },
         getDefaultOptions(): {} {
             return {
                 itemPadding: {

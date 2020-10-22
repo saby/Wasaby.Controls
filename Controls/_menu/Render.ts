@@ -20,7 +20,7 @@ interface IMenuRenderOptions extends IMenuBaseOptions, IRenderOptions {
  * @class Controls/menu:Render
  * @extends UI/_base/Control
  * @private
- * 
+ *
  * @author Герасимов А.М.
  */
 
@@ -63,12 +63,12 @@ class MenuRender extends Control<IMenuRenderOptions> {
             item: treeItem.getContents(),
             treeItem,
             iconPadding: this._iconPadding,
-            iconSize: this._getIconSize(treeItem.getContents()),
+            iconSize: treeItem.getContents() ? this._getIconSize(treeItem.getContents()) : null,
             multiSelect: this._options.multiSelect,
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
             multiSelectTpl,
-            itemClassList: this._getClassList(treeItem),
+            itemClassList: treeItem.getContents() ? this._getClassList(treeItem) : '',
             getPropValue: ItemsUtil.getPropertyValue,
             isEmptyItem: this._isEmptyItem(treeItem),
             isFixedItem: this._isFixedItem(treeItem),
@@ -97,12 +97,10 @@ class MenuRender extends Control<IMenuRenderOptions> {
     protected _getClassList(treeItem: TreeItem<Model>): string {
         const item = treeItem.getContents();
         let classes = treeItem.getContentClasses(this._options.theme);
-        if (item.get) {
-            if (item.getKey() !== undefined) {
-                classes += ' controls-Menu__row_state_' +
-                    (item.get('readOnly') ? 'readOnly' : 'default') +
-                    '_theme-' + this._options.theme;
-            }
+        if (item && item.get) {
+            classes += ' controls-Menu__row_state_' +
+                (item.get('readOnly') ? 'readOnly' : 'default') +
+                '_theme-' + this._options.theme;
             if (this._isEmptyItem(treeItem) && !this._options.multiSelect) {
                 classes += ' controls-Menu__emptyItem_theme-' + this._options.theme;
             } else {
