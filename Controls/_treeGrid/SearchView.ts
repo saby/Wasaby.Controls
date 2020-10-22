@@ -43,7 +43,7 @@ var
                 e.stopPropagation();
                 return;
             }
-            this._notify('itemMouseUp', [itemData, e]);
+            SearchView.superclass._onItemMouseUp.apply(this, arguments);
         },
         _onItemClick: function(e, itemData) {
             const dispItem = itemData.dispItem ? itemData.dispItem : itemData;
@@ -51,7 +51,7 @@ var
                 e.stopPropagation();
                 return;
             }
-            this._notify('itemClick', [dispItem.getContents(), e]);
+            SearchView.superclass._onItemClick.apply(this, arguments);
         },
         getDefaultOptions(): {} {
             return {
