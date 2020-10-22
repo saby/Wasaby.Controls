@@ -48,6 +48,7 @@
  */
 .controls-ListView_default-padding_theme-@{themeName} {
    min-height: @item_min-height_list;
+   white-space: nowrap;
 
    &:before {
       content: '\200b';
@@ -57,7 +58,8 @@
 
    .controls-ListView__itemContent {
       display: inline-block;
-      width: max-content;
+      width: 100%;
+      white-space: normal;
    }
 }
 
