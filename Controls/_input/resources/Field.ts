@@ -351,21 +351,6 @@ class Field<Value, ModelOptions>
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
-        const code: string = event.nativeEvent.key;
-        const processedKeys: string[] = [
-            'End', 'Home', 'Space', 'ArrowLeft', 'ArrowRight',
-            // Поддержка значения key в IE
-            'Spacebar', 'Left', 'Right'
-        ];
-
-        /**
-         * Клавиши обрабатываемые полем ввода не должны обрабатывать контролы выше.
-         * Для этого останавливаем всплытие события.
-         */
-        if (processedKeys.includes(code)) {
-            event.stopPropagation();
-        }
-
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
     }
 
