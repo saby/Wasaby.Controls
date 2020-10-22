@@ -162,9 +162,19 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       }
 
       if (sourceChanged) {
+         const currentRoot = this._sourceController.getRoot();
+
+         // https://online.sbis.ru/opendoc.html?guid=e5351550-2075-4550-b3e7-be0b83b59cb9
+         if (!newOptions.hasOwnProperty('root')) {
+            this._sourceController.setRoot(undefined);
+         }
+
          this._loading = true;
          return this._sourceController.reload()
              .then((items) => {
+                if (!newOptions.hasOwnProperty('root')) {
+                   this._sourceController.setRoot(currentRoot);
+                }
                 if (items instanceof RecordSet) {
                    if (newOptions.dataLoadCallback instanceof Function) {
                       newOptions.dataLoadCallback(items);
