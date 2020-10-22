@@ -615,12 +615,8 @@ export default class CollectionItem<T> extends mixin<
         const bottomSpacing = this.getOwner().getBottomPadding().toLowerCase();
         const rightSpacing = this.getOwner().getRightPadding().toLowerCase();
 
-        if (topSpacing === 'null' && bottomSpacing === 'null') {
-            classes += ` controls-ListView_default-padding_theme-${theme}`;
-        } else {
-            classes += ` controls-ListView__item_${preparedStyle}-topPadding_${topSpacing}_theme-${theme}`;
-            classes += ` controls-ListView__item_${preparedStyle}-bottomPadding_${bottomSpacing}_theme-${theme}`;
-        }
+        classes += ` controls-ListView__item_${preparedStyle}-topPadding_${topSpacing}_theme-${theme}`;
+        classes += ` controls-ListView__item_${preparedStyle}-bottomPadding_${bottomSpacing}_theme-${theme}`;
 
         classes += ` controls-ListView__item-rightPadding_${rightSpacing}_theme-${theme}`;
 
