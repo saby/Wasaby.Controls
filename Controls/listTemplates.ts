@@ -1,11 +1,11 @@
 import * as TileItemTemplate from 'wml!Controls/_listTemplates/TileItemTemplate';
-import * as ListItemWrapperTemplate from 'wml!Controls/_listTemplates/ListItemWrapperTemplate';
+import * as ListItemTemplate from 'wml!Controls/_listTemplates/ListItemTemplate';
 import * as TableCellTemplate from 'wml!Controls/_listTemplates/TableCellTemplate';
-import * as FlatItemTemplate from 'wml!Controls/_listTemplates/FlatItemTemplate';
+import * as ListItemWrapperTemplate from 'wml!Controls/_listTemplates/ListItemWrapperTemplate';
 
 export {
     TileItemTemplate,
-    ListItemWrapperTemplate,
+    ListItemTemplate,
     TableCellTemplate,
-    FlatItemTemplate
+    ListItemWrapperTemplate
 };
