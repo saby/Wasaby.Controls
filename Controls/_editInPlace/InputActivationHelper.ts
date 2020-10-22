@@ -13,6 +13,12 @@ const typographyStyles = [
     'textIndent'
 ];
 
+/**
+ * Интерфейс опций контроллера редактирования по месту.
+ * @interface Controls/_editInPlace/InputActivationHelper
+ * @author Родионов Е.А.
+ */
+
 export class InputActivationHelper {
     private _clickItemInfo?: {
         clientX: number,
@@ -22,6 +28,9 @@ export class InputActivationHelper {
     private _shouldActivate: boolean;
     private _paramsForFastEdit?: {container: HTMLDivElement | HTMLTableSectionElement, selector: string};
 
+    /**
+     * Сохраняет метаинформацию о месте клика по записи
+     */
     setClickInfo(event: MouseEvent, item: Model): void {
         if (this._clickItemInfo && this._clickItemInfo.item === item) {
             return;
@@ -33,10 +42,16 @@ export class InputActivationHelper {
         };
     }
 
+    /**
+     * Сохраняет информацию о необходимости ставить фокус
+     */
     shouldActivate(): void {
         this._shouldActivate = true;
     }
 
+    /**
+     * Устанавливает фокус в поле ввода.
+     */
     activateInput(activateRowCallback: Function): void {
         if (!(this._clickItemInfo || this._shouldActivate || this._paramsForFastEdit)) {
             return;
@@ -69,6 +84,9 @@ export class InputActivationHelper {
         }
     }
 
+    /**
+     * Сохраняет информацию о поле ввода, в которое необходимо ставить фокус
+     */
     setInputForFastEdit(currentTarget: HTMLElement, direction: 'top' | 'bottom'): void {
         // Ячейка, с которй уходит фокус
         const cell = currentTarget.closest('.controls-Grid__row-cell');
