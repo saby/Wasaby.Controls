@@ -87,6 +87,24 @@ describe('Controls/scroll:Container', () => {
                 sinon.restore();
             });
         });
+
+        describe('scrollbars', () => {
+            it('should initialize scrollbars only after mouseenter', () => {
+                const component = createComponent(Container, {scrollMode: 'vertical'});
+                component._children = {
+                    content: {
+                        getBoundingClientRect: () => undefined
+                    }
+                };
+                component._container = {
+                    offsetHeight: 100
+                };
+                component._updateState(state);
+                assert.isFalse(component._scrollbars.vertical.isVisible);
+                component._mouseenterHandler();
+                assert.isTrue(component._scrollbars.vertical.isVisible);
+            });
+        });
     });
 
     describe('_keydownHandler', () => {
