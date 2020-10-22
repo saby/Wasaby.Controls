@@ -15,6 +15,9 @@
       <ws:if data="{{_options.headerContentTemplate}}" >
          <div class="controls-DialogTemplate__headerContentTemplate controls-DialogTemplate__headerContentTemplate_theme_{{_options.theme}}">
             <ws:partial template="{{_options.headerContentTemplate}}"
+                        bodyContentTemplate="{{null}}"
+                        headerContentTemplate="{{null}}"
+                        footerContentTemplate="{{null}}"
                         scope="{{_options.topAreaOptions}}">
             </ws:partial>
          </div>
