@@ -1,6 +1,6 @@
 <Controls.list:Container>
     <Controls.list:View name="list">
-        <ws:emptyTemplate topSpacing="xl" bottomSpacing="xxl">
+        <ws:emptyTemplate>
             No data available!
         </ws:emptyTemplate>
         <ws:editingConfig>

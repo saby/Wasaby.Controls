@@ -127,6 +127,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _isOptimizeShadowEnabled: boolean;
     protected _optimizeShadowClass: string;
     protected _needUpdateContentSize: boolean = false;
+    protected _isScrollbarsInitialized: boolean = false;
 
     _beforeMount(options: IContainerOptions, context, receivedState) {
         this._shadows = new ShadowsModel(options);
@@ -203,7 +204,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             }
 
             // При инициализации не обновляем скрол бары. Инициализируем их по наведению мышкой.
-            if (this._isStateInitialized) {
+            if (this._isStateInitialized && this._isScrollbarsInitialized) {
                 this._scrollbars.updateScrollState(this._state, this._container);
             }
 
@@ -323,8 +324,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _mouseenterHandler(event) {
+
         // Если до mouseenter не вычисляли скроллбар, сделаем это сейчас.
-        this._scrollbars.updateScrollState(this._state, this._container);
+        if (!this._isScrollbarsInitialized) {
+            this._isScrollbarsInitialized = true;
+            this._scrollbars.updateScrollState(this._state, this._container);
+        }
+
         if (this._scrollbars.take()) {
             this._notify('scrollbarTaken', [], {bubbling: true});
         }

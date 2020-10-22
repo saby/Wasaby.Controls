@@ -161,7 +161,7 @@ export default class Controller {
             this.setRoot(newOptions.root);
         }
 
-        if (newOptions.expandedItems !== this._options.expandedItems) {
+        if (newOptions.expandedItems !== undefined && newOptions.expandedItems !== this._options.expandedItems) {
             this.setExpandedItems(newOptions.expandedItems);
         }
 
