@@ -2517,7 +2517,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         let groupsBefore;
 
         if (groupMethod) {
-            groupsBefore = this.getStrategyInstance(GroupItemsStrategy)._groups;
+            groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
         }
 
         this._prependStrategy(AddStrategy, {
@@ -2530,7 +2530,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const addingIndex: number = this.getStrategyInstance(AddStrategy).getAddingItemIndex();
 
         if (groupMethod) {
-            const groupsAfter = this.getStrategyInstance(GroupItemsStrategy)._groups;
+            const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
             const itemGroupId = groupMethod(item.contents);
             if (groupsBefore.length < groupsAfter.length) {
                 itemsForNotify.splice(0, 0, groupsAfter.find((g) => g.contents === itemGroupId));
@@ -2549,7 +2549,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             let groupsBefore;
 
             if (groupMethod) {
-                groupsBefore = this.getStrategyInstance(GroupItemsStrategy)._groups;
+                groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
             }
 
             this.removeStrategy(AddStrategy);
@@ -2557,7 +2557,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             const itemsForNotify = [item];
 
             if (groupMethod) {
-                const groupsAfter = this.getStrategyInstance(GroupItemsStrategy)._groups;
+                const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
                 if (groupsBefore.length > groupsAfter.length) {
                     const itemGroupId = groupMethod(item.contents);
                     itemsForNotify.splice(0, 0, groupsBefore.find((g) => g.contents === itemGroupId));
@@ -2622,7 +2622,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this.nextVersion();
     }
 
-    getStrategyInstance(strategy: new() => IItemsStrategy<S, T>): IItemsStrategy<S, T> {
+    getStrategyInstance<F extends IItemsStrategy<S, T>>(strategy: new() => F): F {
         return this._composer.getInstance(strategy);
     }
 
