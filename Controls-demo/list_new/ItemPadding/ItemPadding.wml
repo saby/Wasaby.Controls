@@ -28,7 +28,7 @@
             <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-null">
                 <div class="controls-text-label_theme-{{_options.theme}}">Отступы соответствующие размеру null в списке с чекбоксами</div>
                 <Controls.list:View keyProperty="id" source="{{_viewSource}}" multiSelectVisibility="visible">
-                    <ws:itemPadding left="null" right="null"/>
+                    <ws:itemPadding left="null" right="null" top="null" bottom="null"/>
                     <ws:footerTemplate>
                         <div class="controlsDemo__hor-padding__list__footerContent">Подвал списка</div>
                     </ws:footerTemplate>
