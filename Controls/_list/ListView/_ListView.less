@@ -18,7 +18,8 @@
 }
 
 .controls-ListView__itemV .controls-ListView__checkbox_position-default_theme-@{themeName} {
-   float: left;
+   position: absolute;
+   top: 0;
    margin-top: @checkbox_offset-top_list;
 }
 
@@ -48,18 +49,21 @@
  */
 .controls-ListView_default-padding_theme-@{themeName} {
    min-height: @item_min-height_list;
-   white-space: nowrap;
+   display: flex;
+   vertical-align: baseline;
+   width: 100%;
 
    &:before {
       content: '\200b';
       font-size: @item_max-font-size_list;
-      display: inline-block;
    }
 
    .controls-ListView__itemContent {
-      display: inline-block;
       width: 100%;
-      white-space: normal;
+   }
+
+   .controls-ListView__checkbox_position-default_theme-@{themeName} {
+      margin-top: 0;
    }
 }
 
