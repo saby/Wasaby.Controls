@@ -38,20 +38,20 @@ var
            this._itemClickNotifiedByPathClick = true;
         },
         _onItemMouseUp(e, itemData) {
-            const item = itemData.item ? itemData.item : itemData.getContents();
-            if (item === null) {
+            const dispItem = itemData.dispItem ? itemData.dispItem : itemData;
+            if (dispItem['[Controls/_display/SearchSeparator]']) {
                 e.stopPropagation();
                 return;
             }
             this._notify('itemMouseUp', [itemData, e]);
         },
         _onItemClick: function(e, itemData) {
-            const item = itemData.item ? itemData.item : itemData.getContents();
-            if (item === null) {
+            const dispItem = itemData.dispItem ? itemData.dispItem : itemData;
+            if (dispItem['[Controls/_display/SearchSeparator]']) {
                 e.stopPropagation();
                 return;
             }
-            this._notify('itemClick', [item, e]);
+            this._notify('itemClick', [dispItem.getContents(), e]);
         },
         getDefaultOptions(): {} {
             return {
