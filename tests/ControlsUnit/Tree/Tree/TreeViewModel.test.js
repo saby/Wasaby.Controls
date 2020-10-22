@@ -687,6 +687,16 @@ define([
             assert.deepEqual(['2'], SETVM.getExpandedItems(), 'singleExpand: Invalid value "_expandedItems" after expand 2.');
          });
 
+         it('isDrawExpander', function() {
+            var treeViewModel = new tree.TreeViewModel(cMerge({
+                  expanderPosition: 'right',
+               }, cfg));
+            let current = treeViewModel.getItemDataByItem(treeViewModel._display.at(0));
+            assert.isTrue(current.isDrawExpander(0,'node','right'));
+            assert.isFalse(current.isDrawExpander(1,'node','right'));
+            assert.isFalse(current.isDrawExpander(0,'none','right'));
+            assert.isFalse(current.isDrawExpander(0,'node','default'));
+         });
 
          it('collapsedItems', function(){
             var treeViewModel = new tree.TreeViewModel(cMerge({

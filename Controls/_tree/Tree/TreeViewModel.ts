@@ -621,6 +621,13 @@ var
             current.getExpanderPosition = () => this._options.expanderPosition;
             current.getExpanderSize = (tmplExpanderSize) => tmplExpanderSize || this._options.expanderSize;
 
+            current.isDrawExpander = (columnIndex, expanderIcon, expanderPosition: 'default' | 'right') => {
+                return ((current.hasMultiSelectColumn && columnIndex === 1 ||
+                    !current.hasMultiSelectColumn && columnIndex === 0) &&
+                    current.shouldDrawExpander(current, expanderIcon) &&
+                    current.getExpanderPosition() === expanderPosition);
+            };
+
             // 1. Нужен ли экспандер.
             current.shouldDrawExpander = _private.shouldDrawExpander;
 
