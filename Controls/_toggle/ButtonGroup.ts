@@ -14,7 +14,7 @@ export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlO
  * @class Controls/_toggle/ButtonGroup
  * @extends Core/Control
  * @mixes Controls/_interface/ISingleSelectable
- * @mixes Controls/interface/IItems
+ * @mixes Controls/_interface/IItems
  * 
  * @public
  * @author Красильников А.С.
