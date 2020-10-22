@@ -16,7 +16,7 @@
                   markerVisibility="hidden">
                   <ws:itemTemplate>
                      <ws:partial template="Controls/list:ItemTemplate" itemActionsClass="demo-DragNDrop__list_itemActionsPosition" attr:class="demo-DragNDrop__list_item">
-                        <ws:contentTemplate attr:class="demo-DragNDrop__list_itemContent">
+                        <ws:contentTemplate>
                            <div class="demo-DragNDrop__list_itemContent">
                               <img class="demo-DragNDrop__list_item_icon" src="{{itemTemplate.itemData.item.get('image')}}" />
                               <div class="demo-DragNDrop__list_item_text">
