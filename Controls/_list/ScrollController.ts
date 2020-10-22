@@ -51,7 +51,6 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
 /**
  * Контейнер управляющий операциями скролла в списке.
  * @class Controls/_list/ScrollController/ScrollController
- * 
  * @private
  * @author Авраменко А.С.
  */

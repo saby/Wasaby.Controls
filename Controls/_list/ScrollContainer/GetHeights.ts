@@ -1,5 +1,14 @@
+/**
+ * Набор утилит для работы с реальным DOM, позволяющий получать контейнеры записей и их параметры
+ * @private
+ * @author Авраменко А.С.
+ */
+
 import {getDimensions} from 'Controls/sizeUtils';
 
+/**
+ * Метод возвращает метаинформацию о высотах и оффсетах записей в списке.
+ */
 export function getItemsHeightsData(itemsContainer: HTMLElement): {itemsHeights: number[], itemsOffsets: number[]} {
     let sum = 0;
     let startChildrenIndex = 0;
@@ -24,6 +33,10 @@ export function getItemsHeightsData(itemsContainer: HTMLElement): {itemsHeights:
     }
     return itemHeightsData;
 }
+
+/**
+ * Метод возвращает DOM - элемент строки по ее ключу.
+ */
 
 export function getElementByKey(itemsContainer: HTMLElement, key: number | string): HTMLElement {
     let result = null;
