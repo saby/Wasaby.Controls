@@ -89,6 +89,10 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
         this._itemsOrder = null;
     }
 
+    get groups(): Array<GroupItem<IGroup>> {
+        return this._groups;
+    }
+
     // region IItemsStrategy
 
     readonly '[Controls/_display/IItemsStrategy]': boolean = true;

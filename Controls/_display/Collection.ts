@@ -2513,35 +2513,59 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setAddingItem(item: T): void {
+        const groupMethod = this.getGroup();
+        let groupsBefore;
+
+        if (groupMethod) {
+            groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
+        }
+
         this._prependStrategy(AddStrategy, {
             item,
             addPosition: item.addPosition,
             groupMethod: this.getGroup()
         }, GroupItemsStrategy);
 
+        const itemsForNotify = [item];
         const addingIndex: number = this.getStrategyInstance(AddStrategy).getAddingItemIndex();
 
-        this._notifyCollectionChange(
-            IObservable.ACTION_ADD,
-            [item],
-            addingIndex,
-            [],
-            0
-        );
+        if (groupMethod) {
+            const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
+            const itemGroupId = groupMethod(item.contents);
+            if (groupsBefore.length < groupsAfter.length) {
+                itemsForNotify.splice(0, 0, groupsAfter.find((g) => g.contents === itemGroupId));
+            }
+        }
+
+        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0);
     }
 
     resetAddingItem(): void {
         const addStrategy = this.getStrategyInstance(AddStrategy);
 
         if (addStrategy) {
+            const groupMethod = this.getGroup();
+            const item = addStrategy?.getAddingItem();
+            let groupsBefore;
+
+            if (groupMethod) {
+                groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
+            }
+
             this.removeStrategy(AddStrategy);
 
+            const itemsForNotify = [item];
+
+            if (groupMethod) {
+                const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
+                if (groupsBefore.length > groupsAfter.length) {
+                    const itemGroupId = groupMethod(item.contents);
+                    itemsForNotify.splice(0, 0, groupsBefore.find((g) => g.contents === itemGroupId));
+                }
+            }
+
             this._notifyCollectionChange(
-                IObservable.ACTION_REMOVE,
-                [],
-                0,
-                [addStrategy.getAddingItem()],
-                addStrategy.getAddingItemIndex()
+                IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addStrategy.getAddingItemIndex()
             );
         }
     }
@@ -2598,7 +2622,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this.nextVersion();
     }
 
-    getStrategyInstance(strategy: new() => IItemsStrategy<S, T>): IItemsStrategy<S, T> {
+    getStrategyInstance<F extends IItemsStrategy<S, T>>(strategy: new() => F): F {
         return this._composer.getInstance(strategy);
     }
 

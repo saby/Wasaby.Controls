@@ -4370,6 +4370,52 @@ describe('Controls/_display/Collection', () => {
         );
     });
 
+    describe('add strategy', () => {
+        let rs: RecordSet;
+        let display: CollectionDisplay<unknown>;
+        let newItem;
+
+        beforeEach(() => {
+            rs = new RecordSet({
+                rawData: [],
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs,
+                groupProperty: 'group'
+            });
+            newItem = display.createItem({
+                contents: new Model({
+                    keyProperty: 'id',
+                    rawData: {
+                        id: 1,
+                        group: '123'
+                    }
+                }),
+                isAdd: true,
+                addPosition: 'bottom'
+            })
+        });
+
+        it('should notify of two added items if adding in empty group', () => {
+            let isCollectionChanged = false;
+
+            const handler = (e, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+                assert.equal(newItems.length, 2);
+                assert.instanceOf(newItems[0], GroupItem);
+                assert.instanceOf(newItems[1], CollectionItem);
+                isCollectionChanged = true;
+            };
+
+            display.subscribe('onCollectionChange', handler);
+            display.setAddingItem(newItem);
+            display.addFilter(() => true);
+            display.unsubscribe('onCollectionChange', handler);
+
+            assert.isTrue(isCollectionChanged);
+        });
+    });
+
     describe('version increases on collection change', () => {
         let rs: RecordSet;
         let display: CollectionDisplay<unknown>;
