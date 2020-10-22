@@ -68,7 +68,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
             multiSelectTpl,
-            itemClassList: treeItem.getContents() ? this._getClassList(treeItem) : '',
+            itemClassList: this._getClassList(treeItem),
             getPropValue: ItemsUtil.getPropertyValue,
             isEmptyItem: this._isEmptyItem(treeItem),
             isFixedItem: this._isFixedItem(treeItem),
@@ -113,7 +113,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
                 !this._isGroupNext(treeItem) && !this._isHistorySeparatorVisible(treeItem)) {
                 classes += ' controls-Menu__row-separator_theme-' + this._options.theme;
             }
-        } else {
+        } else if (item) {
             classes += ' controls-Menu__row-breadcrumbs_theme-' + this._options.theme;
         }
         return classes;
