@@ -2,6 +2,7 @@ import TileViewModel = require('Controls/_tile/TileView/TileViewModel');
 import {TreeViewModel} from 'Controls/tree';
 import cMerge = require('Core/core-merge');
 import InvisibleFor = require('wml!Controls/_tile/TileView/resources/InvisibleFor');
+import {SyntheticEvent} from 'UI/Vdom';
 
 var DEFAULT_FOLDER_WIDTH = 250;
 
@@ -194,6 +195,9 @@ var TreeTileViewModel = TreeViewModel.extend({
 
     getItemsPaddingContainerClasses(): string {
         return this._tileModel.getItemsPaddingContainerClasses();
+    },
+    getActionsMenuConfig(item, clickEvent: SyntheticEvent, opener, templateOptions): Record<string, any> {
+        return this._tileModel.getActionsMenuConfig(item, clickEvent, opener, templateOptions);
     }
 });
 

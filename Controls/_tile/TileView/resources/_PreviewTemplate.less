@@ -62,11 +62,20 @@
 
 .controls-TileView__previewTemplate_itemActions {
    right: 0;
+   padding: 0;
 }
 
-.ws-is-hover .controls-TileView__item:hover .controls-TileView__previewTemplate_itemActions {
-   visibility: visible;
-   opacity: 1;
+.controls-itemActionsV__action_style_tileDark + .controls-itemActionsV__action_style_tileDark {
+   border-left: solid @border-thickness #666666;
+}
+
+.controls-itemActionsV__action_style_tileLight + .controls-itemActionsV__action_style_tileLight {
+   border-left: solid @border-thickness @contrast_text-color;
+}
+
+.controls-icon_style-tileDark_theme-@{themeName} {
+   fill: @contrast_text-color;
+   color: @contrast_text-color;
 }
 
 .controls-TileView__richTemplate_item {
