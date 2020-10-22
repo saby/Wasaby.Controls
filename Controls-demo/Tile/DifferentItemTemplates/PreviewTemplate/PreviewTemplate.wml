@@ -7,7 +7,9 @@
       bind:selectedKeys="_selectedKeys"
       contextMenuConfig="{{_contextMenuConfig}}"
       tileMode="static"
-      tileScalingMode="inside"
+      tileScalingMode="none"
+      actionMenuViewMode="preview"
+      actionMode="adaptive"
       itemActions="{{_itemActions}}"
       imageFit="none"
       tileHeight="300"
@@ -21,6 +23,7 @@
             gradientType="{{itemTemplate.itemData.item.gradientType}}"
             gradientColor="{{itemTemplate.itemData.item.gradientColor}}"
             titleLines="{{itemTemplate.itemData.item.titleLines}}"
+            hasTitle="{{itemTemplate.itemData.item.isDocument}}"
             scope="{{itemTemplate}}">
             <ws:topTemplate>
                <div>{{itemTemplate.itemData.item.additionalText}}</div>

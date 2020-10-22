@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import {HierarchicalMemory, Memory} from 'Types/source';
+import {HierarchicalMemory} from 'Types/source';
 import {Gadgets} from '../../DataHelpers/DataCatalog';
 import {getActionsForContacts as getItemActions} from '../../../list_new/DemoHelpers/ItemActionsCatalog';
 import {IItemAction} from 'Controls/itemActions';
@@ -17,11 +17,7 @@ export default class extends Control {
             parentProperty: 'parent',
             data: Gadgets.getData().map((item) => (item.width = 300, item))
         });
-        this._source = new Memory({
-            keyProperty: 'id',
-            data: this._itemActions
-        });
     }
 
-    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Tile/ItemActions/Menu/Menu'];
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Tile/ItemActions/CustomPosition/CustomPosition'];
 }

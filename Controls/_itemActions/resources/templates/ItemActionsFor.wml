@@ -3,6 +3,7 @@
             template="wml!Controls/_itemActions/resources/templates/ItemAction"
             itemData="{{itemData}}"
             actionStyle="{{actionStyle}}"
+            actionMode="{{actionMode}}"
             iconStyle="{{iconStyle}}"
             size="{{size}}"
             action="{{action}}"/>

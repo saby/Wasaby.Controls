@@ -62,45 +62,18 @@
 
 .controls-TileView__previewTemplate_itemActions {
    right: 0;
-   width: 100%;
    padding: 0;
 }
 
-.ws-is-hover:not(.ws-is-mobile-platform) {
-   .controls-BaseControl_showActions_visible .controls-ListView__item_showActions .controls-itemActionsV,
-   .controls-BaseControl_showActions_delayed .controls-ListView__item_showActions:hover .controls-itemActionsV,
-   .controls-BaseControl_showActions_onhover .controls-ListView__item_showActions:hover .controls-itemActionsV,
-   .controls-BaseControl_showActions_visible .controls-TileView__item:hover .controls-itemActionsV,
-   .controls-BaseControl_showActions_delayed .controls-TileView__item:hover .controls-itemActionsV,
-   .controls-BaseControl_showActions_onhover .controls-TileView__item:hover .controls-itemActionsV {
-      visibility: visible;
-      opacity: 1;
-   }
-}
-
-.controls-TileView__previewTemplate_itemActions_wrapper {
-   width: 100%;
-}
-
-.controls-itemActionsV__action_style_tileDark,
-.controls-itemActionsV_action_style_tileLight {
-   flex-grow: 1;
-}
-
-.controls-itemActionsV__action_style_tileDark,
-.controls-itemActionsV__action_style_tileLight {
-   width: 100%;
-   flex-shrink: 1;
-}
 .controls-itemActionsV__action_style_tileDark + .controls-itemActionsV__action_style_tileDark {
    border-left: solid @border-thickness #666666;
 }
 
 .controls-itemActionsV__action_style_tileLight + .controls-itemActionsV__action_style_tileLight {
-   border-left: solid @border-thickness #FFFFFF;
+   border-left: solid @border-thickness @contrast_text-color;
 }
 
 .controls-icon_style-tileDark_theme-@{themeName} {
-   fill: #666666;
-   color: #666666;
+   fill: @contrast_text-color;
+   color: @contrast_text-color;
 }

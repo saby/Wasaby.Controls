@@ -1,23 +1,12 @@
-<div class="controls-TileView__itemActions_menu">
-   <div class="controls-TileView__itemActions__menu_header
-               controls-TileView__itemActions__menu_header_theme-{{theme}}">
-      <div class="controls-TileView__itemActions__menu_header_title_theme-{{theme}}"
-           title="{{_options.title}}">{{_options.title}}</div>
-      <div class="controls-TileView__itemActions__menu_header_additionalTitle_theme-{{theme}}"
-           title="{{_options.additionalTitle}}">{{_options.additionalText}}</div>
-      <Controls.popupTemplate:CloseButton class="controls-TileView__itemActions_menu_cross_theme_{{_options.theme}}" viewMode="link"
-                                          on:click="_closeClick()"/>
-   </div>
-   <div class="controls-TileView__itemActions__menu_content">
-      <div class="controls-TileView__itemActions__menu_imageWrapper" style="width: {{_options.previewWidth}}; height: {{_options.previewHeight}};">
-         <img class="contrls-TileView__itemActions_menu_image"
-            src="{{_options.image}}"/>
-      </div>
-      <Controls.Container.Async templateName="Controls/menu:Control">
-         <ws:templateOptions
-            source="{{_options.source}}"
-            keyProperty="id"
-            displayProperty="title"/>
-      </Controls.Container.Async>
-   </div>
+<div class="controlsDemo__wrapper">
+   <Controls.tile:View
+      tileMode="dynamic"
+      displayProperty="title"
+      imageProperty="image"
+      keyProperty="id"
+      itemActions="{{_itemActions}}"
+      actionMenuViewMode="preview"
+      actionMode="adaptive"
+      itemTemplate="Controls/tile:PreviewTemplate"
+      source="{{_viewSource}}"/>
 </div>

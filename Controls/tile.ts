@@ -32,7 +32,7 @@ import * as SmallItemTemplate from 'wml!Controls/_tile/TileView/resources/SmallT
 import * as MediumTemplate from 'wml!Controls/_tile/TileView/resources/MediumTemplate';
 import * as PreviewTemplate from 'wml!Controls/_tile/TileView/resources/PreviewTemplate';
 import * as RichTemplate from 'wml!Controls/_tile/TileView/resources/RichTemplate';
-import * as ActionsMenu from 'wml!Controls/_tile/ItemActions/Menu';
+import {default as ActionsMenu} from 'Controls/_tile/ItemActions/Menu';
 
 import TreeViewModel = require('Controls/_tile/TreeTileView/TreeTileViewModel');
 import TreeView = require('Controls/_tile/TreeTileView/TreeTileView');

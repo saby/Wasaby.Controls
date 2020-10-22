@@ -1,6 +1,5 @@
-import {IItemAction, TItemActionShowType, TItemActionsSize} from '../interface/IItemAction';
+import {TItemActionsSize} from '../interface/IItemAction';
 import {MeasurerUtils} from './MeasurerUtils';
-import rk = require('i18n!Controls');
 import {IItemActionsContainer} from '../interface/IItemActionsContainer';
 
 const ICON_SIZES = {
@@ -15,7 +14,7 @@ const ACTION_PADDINGS = {
     bottom: 0
 };
 
-export function getItemActionSize(iconSize: TItemActionsSize, aligment: string = 'horizontal'): any {
+export function getItemActionSize(iconSize: TItemActionsSize, aligment: string = 'horizontal'): number {
     return ICON_SIZES[iconSize] + (aligment === 'horizontal' ? (ACTION_PADDINGS.left + ACTION_PADDINGS.right) :
         (ACTION_PADDINGS.top + ACTION_PADDINGS.bottom));
 }

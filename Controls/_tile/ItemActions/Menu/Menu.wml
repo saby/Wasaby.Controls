@@ -1,5 +1,6 @@
 <div class="controls-TileView__itemActions_menu">
-   <Controls.popupTemplate:Sticky>
+   <Controls.popupTemplate:Sticky
+      shadowVisible="{{true}}">
       <ws:headerContentTemplate>
          <div class="controls-TileView__itemActions__menu_header
                   controls-TileView__itemActions__menu_header_theme-{{theme}}">
@@ -16,10 +17,14 @@
                     src="{{_options.image}}"/>
             </div>
             <Controls.Container.Async templateName="Controls/menu:Control">
-               <ws:templateOptions
+               <ws:partial
+                  template="{{content.resolvedTemplate}}"
                   source="{{_options.source}}"
+                  parentProperty="{{_options.parentProperty}}"
+                  on:itemClick="_sendResult('itemClick')"
                   keyProperty="id"
-                  displayProperty="title"/>
+                  displayProperty="title"
+               />
             </Controls.Container.Async>
          </div>
       </ws:bodyContentTemplate>

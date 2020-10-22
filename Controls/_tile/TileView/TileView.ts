@@ -1,6 +1,7 @@
 import {ListView} from 'Controls/list';
 import template = require('wml!Controls/_tile/TileView/TileView');
 import defaultItemTpl = require('wml!Controls/_tile/TileView/TileTpl');
+import {TILE_SCALING_MODE, ZOOM_COEFFICIENT, ZOOM_DELAY} from './resources/Constants';
 import {TouchContextField} from 'Controls/context';
 import ItemSizeUtils = require('Controls/_tile/TileView/resources/ItemSizeUtils');
 
@@ -87,18 +88,6 @@ var _private = {
         );
     }
 };
-
-var
-    ZOOM_DELAY = 100,
-    ZOOM_COEFFICIENT = 1.5;
-
-var TILE_SCALING_MODE = {
-    NONE: 'none',
-    OUTSIDE: 'outside',
-    INSIDE: 'inside',
-    OVERLAP: 'overlap'
-};
-
 
 var TileView = ListView.extend({
     _template: template,
@@ -250,8 +239,11 @@ var TileView = ListView.extend({
     },
 
     _setHoveredItem: function (itemData, position, startPosition, noZoom, itemWidth?: number): void {
+        const needUpdateActions = this._options.actionMode === 'adaptive' && !itemData.dispItem.isNode();
         if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE) {
-            this._notify('updateItemActionsOnItem', [itemData.key, itemWidth], {bubbling: true});
+            if (needUpdateActions) {
+                this._notify('updateItemActionsOnItem', [itemData.key, itemWidth], {bubbling: true});
+            }
             this._listModel.setHoveredItem({
                 key: itemData.key,
                 canShowActions: noZoom || !position || this._options.tileScalingMode === TILE_SCALING_MODE.OVERLAP,
@@ -259,7 +251,7 @@ var TileView = ListView.extend({
                 position: _private.getPositionStyle(startPosition || position),
                 endPosition: _private.getPositionStyle(position)
             });
-        } else {
+        } else if (needUpdateActions) {
             this._notify('updateItemActionsOnItem', [itemData.key, itemWidth], {bubbling: true});
             this._listModel.setHoveredItem({
                 key: itemData.key

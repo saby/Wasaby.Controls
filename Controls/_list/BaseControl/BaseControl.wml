@@ -118,6 +118,7 @@
                 on:itemMouseLeave="_itemMouseLeave()"
                 on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                 on:hoveredCellChanged="_notifyHandler('hoveredCellChanged')"
+                on:updateItemActionsOnItem="_updateItemActionsOnItem()"
                 on:itemSwipe="_onItemSwipe()"
                 on:editingRowKeyDown="_onEditingRowKeyDown()"
                 on:rowDeactivated="_onRowDeactivated()"
@@ -149,8 +150,7 @@
                             on:mouseenter="_onTagHoverHandler(tagTemplate.dispItem, tagTemplate.columnIndex)"/>
             </ws:tagTemplate>
             <ws:viewTemplate>
-                <ws:partial template="{{_options.viewName}}"
-                            on:updateItemActionsOnItem="_updateItemActionsOnItem()"/>
+                <ws:partial template="{{_options.viewName}}"/>
             </ws:viewTemplate>
             <ws:footerTemplate>
                 <ws:partial template="footerTemplateIf"/>
