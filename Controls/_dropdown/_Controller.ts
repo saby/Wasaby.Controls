@@ -393,7 +393,7 @@ export default class _Controller implements IDropdownController {
          options.dataLoadCallback(items);
       }
       if (this._selectedItems) {
-         items.prepend(this._selectedItems);
+         items.prepend(this._getNewItems(items, this._selectedItems, options.keyProperty));
          this._selectedItems = null;
       }
       this._setItems(items);

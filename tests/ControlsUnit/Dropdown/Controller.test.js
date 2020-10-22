@@ -538,14 +538,14 @@ define(
             let dropdownController;
             let newConfig;
             let selectedKeys;
-            let loadedItems;
+            let selectedItems;
             beforeEach(() => {
                newConfig = { ...config };
                newConfig.selectedKeys = ['8'];
                dropdownController = getDropdownController(newConfig);
 
                selectedKeys = ['1', '2'];
-               loadedItems = new collection.RecordSet({
+               selectedItems = new collection.RecordSet({
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -560,7 +560,7 @@ define(
                });
             });
 
-            it('_loadSelectedKeys', async () => {
+            it('loadSelectedItems', async () => {
                let loadConfig;
                dropdownController._loadItems = (params) => {
                   loadConfig = params;
@@ -581,6 +581,20 @@ define(
                assert.equal(dropdownController._selectedItems.getCount(), 1);
                assert.equal(dropdownController._selectedItems.at(0).getKey(), '8');
                assert.isNull(dropdownController._items);
+            });
+
+            it('_resolveLoadedItems', () => {
+               const loadedItems = new collection.RecordSet({
+                  rawData: [{
+                     id: '2',
+                     title: 'Запись 2'
+                  }],
+                  keyProperty: 'id'
+               });
+               dropdownController._source = 'testSource';
+               dropdownController._selectedItems = selectedItems;
+               const result = dropdownController._resolveLoadedItems(newConfig, loadedItems);
+               assert.equal(result.getCount(), 3);
             });
          });
 

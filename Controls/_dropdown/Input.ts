@@ -275,7 +275,7 @@ export default class Input extends BaseDropdown {
                 receivedState: DropdownReceivedState): void | Promise<void|DropdownReceivedState> {
       this._controller = new Controller(this._getControllerOptions(options));
 
-      if (options.navigation && options.selectorTemplate) {
+      if (options.navigation) {
          return loadSelectedItems(this._controller, receivedState, options.source);
       } else {
          return loadItems(this._controller, receivedState, options.source);
