@@ -111,14 +111,30 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
     menuSource?: ICrudPlus;
 
     /**
+     * @typedef {String} ItemStyle
+     * @variant primary
+     * @variant secondary
+     * @variant success
+     * @variant warning
+     * @variant danger
+     * @variant unaccented
+     * @variant link
+     * @variant label
+     * @variant info
+     * @variant default
+     */
+
+    /**
      * @name Controls/_toolbars/IToolbarOptions#fontColorStyle
-     * @cfg {String} Стиль отображения текста элементов тулбара.
+     * @cfg {ItemStyle} Стиль отображения текста элементов тулбара.
+     * @default link
      */
     fontColorStyle?: string;
 
     /**
      * @name Controls/_toolbars/IToolbarOptions#iconStyle
-     * @cfg {String} Стиль отображения иконки элементов тулбара.
+     * @cfg {ItemStyle} Стиль отображения иконки элементов тулбара.
+     * @default secondary
      */
     iconStyle?: string;
 }
