@@ -7,7 +7,7 @@ import {ContextOptions as dataOptions} from 'Controls/context';
 
 import {MoveController, IMoveControllerOptions} from './Controllers/MoveController';
 import {Model} from 'Types/entity';
-import {LOCAL_MOVE_POSITION} from 'Types/source';
+import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 
 
 // @TODO Если убрать отсюда шаблон, то operationPanel перестаёт получать события
@@ -50,7 +50,8 @@ var _private = {
     },
 
     beforeItemsMove: function (self, items, target, position) {
-        var beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
+        const itemKeys: CrudEntityKey = items.map((item) => item.getKey ? item.getKey() : item);
+        var beforeItemsMoveResult = self._notify('beforeItemsMove', [itemKeys, target, position]);
         return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
     },
 
@@ -392,7 +393,7 @@ var _private = {
  * @mixes Controls/interface/IMovable
  * @mixes Controls/_interface/IHierarchy
  * @deprecated {@link Controls/list:Mover Mover} will be removed soon. Use {@link Controls/list:IMovableList IMovableList} interface instead
- * 
+ *
  * @public
  * @author Авраменко А.С.
  * @category List
@@ -408,7 +409,7 @@ var _private = {
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IMovable
  * @mixes Controls/_interface/IHierarchy
- * 
+ *
  * @public
  * @author Авраменко А.С.
  * @category List
