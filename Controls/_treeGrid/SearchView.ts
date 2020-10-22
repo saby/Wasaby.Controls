@@ -45,8 +45,9 @@ var
             }
             this._notify('itemMouseUp', [itemData, e]);
         },
-        _onItemClick: function(e, item) {
-            if (item['[Controls/_display/SearchSeparator]']) {
+        _onItemClick: function(e, itemData) {
+            const item = itemData.item ? itemData.item : itemData.getContents();
+            if (item === null) {
                 e.stopPropagation();
                 return;
             }
