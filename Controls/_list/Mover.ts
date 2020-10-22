@@ -50,8 +50,7 @@ var _private = {
     },
 
     beforeItemsMove: function (self, items, target, position) {
-        const itemKeys: CrudEntityKey = items.map((item) => item.getKey ? item.getKey() : item);
-        var beforeItemsMoveResult = self._notify('beforeItemsMove', [itemKeys, target, position]);
+        var beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
         return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
     },
 
@@ -330,7 +329,7 @@ var _private = {
 
     openMoveDialog(self, selection): Promise<void> {
         const templateOptions: IMoverDialogTemplateOptions = {
-            movedItems: _private.useController(selection) ? selection.selectedKeys : _private.prepareMovedItems(self, selection),
+            movedItems: _private.useController(selection) ? selection.selectedKeys : selection,
             source: self._source,
             ...(self._moveDialogOptions as IMoverDialogTemplateOptions)
         };
@@ -464,7 +463,7 @@ var Mover = BaseAction.extend({
                     return _private.openMoveDialog(this, items);
                 } else {
                     return _private.getItemsBySelection.call(this, items).addCallback((items: []) => (
-                        _private.openMoveDialog(this, items)
+                        _private.openMoveDialog(this, _private.prepareMovedItems(this, items))
                     ));
                 }
             }
