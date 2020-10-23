@@ -4477,6 +4477,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
         }
+        if (!this._editInPlaceController) {
+            return Promise.resolve();
+        }
         this.showIndicator();
         return this._getEditInPlaceController().cancel().finally(() => {
             this.hideIndicator();
@@ -4490,6 +4493,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _commitEdit(commitStrategy?: 'hasChanges' | 'all') {
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
+        }
+        if (!this._editInPlaceController) {
+            return Promise.resolve();
         }
         this.showIndicator();
         return this._getEditInPlaceController().commit(commitStrategy).finally(() => {
