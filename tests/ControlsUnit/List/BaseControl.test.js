@@ -6809,7 +6809,7 @@ define([
                   stopPropagation: () => {
                   }
                };
-               const itemData = {item: {}};
+               const itemData = {item: {}, key: 1};
 
                baseControl._items.getCount = () => 1;
 
