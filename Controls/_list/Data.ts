@@ -23,6 +23,7 @@ export interface IDataOptions extends IControlOptions,
    groupingKeyCallback?: Function;
    groupHistoryId?: string;
    historyIdCollapsedGroups?: string;
+   sourceController?: SourceController;
 }
 
 export interface IDataContextOptions extends ISourceOptions,
@@ -118,20 +119,20 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       } else {
          this._source = options.source;
       }
-      this._sourceController = new SourceController(this._getSourceControllerOptions(options));
+      this._sourceController =
+          options.sourceController ||
+          new SourceController(this._getSourceControllerOptions(options));
       let controllerState = this._sourceController.getState();
 
       // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
       this._filter = controllerState.filter;
       this._dataOptionsContext = this._createContext(controllerState);
 
-      if (receivedState && isNewEnvironment()) {
+      if (options.sourceController) {
+         this._setItemsAndUpdateContext();
+      } else if (receivedState && isNewEnvironment()) {
          this._sourceController.setItems(receivedState);
-         controllerState = this._sourceController.getState();
-
-         // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-         this._items = controllerState.items;
-         this._updateContext(controllerState);
+         this._setItemsAndUpdateContext();
       } else if (options.source) {
          return this._sourceController.load().then((items) => {
             if (items instanceof RecordSet) {
@@ -195,6 +196,13 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._filter = controllerState.filter;
          this._updateContext(controllerState);
       }
+   }
+
+   _setItemsAndUpdateContext(): void {
+      const controllerState = this._sourceController.getState();
+      // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+      this._items = controllerState.items;
+      this._updateContext(controllerState);
    }
 
    _getSourceControllerOptions(options: IDataOptions): IControllerOptions {

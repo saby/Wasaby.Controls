@@ -54,12 +54,8 @@ const _private = {
         const style = styleProperty === 'masterClassic' || !styleProperty ? 'default' : styleProperty;
 
         classList += ` controls-ListView__itemContent controls-ListView__itemContent_${style}_theme-${theme}`;
-        if (itemPadding.top === 'null' && itemPadding.bottom === 'null') {
-            classList += ` controls-ListView_default-padding_theme-${theme}`;
-        } else {
-            classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${theme}`;
-            classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${theme}`;
-        }
+        classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${theme}`;
+        classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${theme}`;
         classList += ` controls-ListView__item-rightPadding_${itemPadding.right}_theme-${theme}`;
 
         if (multiSelectVisibility !== 'hidden') {

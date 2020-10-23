@@ -1440,6 +1440,16 @@ const _private = {
         }));
     },
 
+    resetPortionedSearchAndCheckLoadToDirection(self, options): void {
+        if (options.searchValue) {
+            _private.getPortionedSearch(self).reset();
+
+            if (options.searchValue && options.sourceController) {
+                _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
+            }
+        }
+    },
+
     disablePagingNextButtons(self): void {
         if (self._pagingVisible) {
             self._pagingCfg = {...self._pagingCfg};
@@ -1567,6 +1577,9 @@ const _private = {
             if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
                 self._itemActionsMenuId) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
+            }
+            if (action === IObservable.ACTION_RESET && self._options.searchValue) {
+                _private.resetPortionedSearchAndCheckLoadToDirection(self, self._options);
             }
             if (self._scrollController) {
                 if (action) {
@@ -3193,11 +3206,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     // возврашать полученный recordSet, иначе он будет сериализоваться
                     // и на уровне Container/Data и на уровне BaseControl'a
                     if (result.errorConfig ||
-                        !newOptions.sourceController ||
+                        !(newOptions.sourceController ||
                         // FIXME https://online.sbis.ru/opendoc.html?guid=fe106611-647d-4212-908f-87b81757327b
                         // Иначе список построится по receivedState, а в PrefetchProxy останется кэш,
                         // и любой запрос к источнику вернёт данные из кэша
-                        !cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
+                        cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy'))) {
                         return Promise.resolve(getState(result));
                     }
                 });
@@ -3697,7 +3710,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (searchValueChanged) {
-            _private.getPortionedSearch(self).reset();
+            _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
         }
 
         if (needReload) {
@@ -4160,6 +4173,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
     __selectedPageChanged(e, page) {
         this._currentPage = page;
+        if (page === 1) {
+            _private.scrollToEdge(this, 'up');
+        } else if (page === this._pagingCfg.pagesCount) {
+            _private.scrollToEdge(this, 'down');
+        }
         const scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
 
         this._notify('doScroll', [scrollTop], { bubbling: true });
