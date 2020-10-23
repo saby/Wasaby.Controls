@@ -1,7 +1,7 @@
 import {assert} from 'chai';
 import {BaseControl, ListViewModel} from 'Controls/list';
 import {RecordSet} from 'Types/collection';
-import {Memory} from 'Types/source';
+import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {NewSourceController} from 'Controls/dataSource';
 
 const getData = (dataCount: number = 0) => {
@@ -636,7 +636,7 @@ describe('Controls/list_clean/BaseControl', () => {
         });
     });
 
-    describe('baseControl with searchValue on options', () => {
+    describe('baseControl with searchValue in options', () => {
         it('searchValue is changed in _beforeUpdate', async () => {
             let baseControlOptions = getBaseControlOptionsWithEmptyItems();
             let loadStarted = false;
@@ -671,5 +671,20 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._beforeUpdate(baseControlOptions);
             assert.isTrue(loadStarted);
         });
+    });
+
+    describe('_beforeMount', () => {
+       it('_beforeMount with prefetchProxy', async () => {
+           const baseControlOptions = getBaseControlOptionsWithEmptyItems();
+           baseControlOptions.source = new PrefetchProxy({
+               target: new Memory(),
+               data: {
+                   query: new DataSet()
+               }
+           });
+           const baseControl = new BaseControl(baseControlOptions);
+           const mountResult = await baseControl._beforeMount(baseControlOptions);
+           assert.isTrue(!mountResult);
+       })
     });
 });
