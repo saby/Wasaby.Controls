@@ -894,7 +894,7 @@ describe('Controls/_source/NavigationController', () => {
 
                 const edgeQueryConfig = nc.shiftToEdge('forward') as IBasePageSourceConfig;
                 assert.equal(edgeQueryConfig.page, 1);
-                assert.equal(edgeQueryConfig.pageSize, 12);
+                assert.equal(edgeQueryConfig.pageSize, 15);
             });
         });
     });
