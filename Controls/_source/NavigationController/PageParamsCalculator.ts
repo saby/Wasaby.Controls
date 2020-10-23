@@ -25,6 +25,7 @@ class PageParamsCalculator implements IParamsCalculator {
         }
         const pageSize = config.pageSize ? config.pageSize : storeParams.pageSize;
 
+        //TODO: https://online.sbis.ru/opendoc.html?guid=53c4e82d-8e21-4fc8-81dc-ccf2a8c6ba9f
         addParams.offset = config.offset !== void 0 ? config.offset : page * pageSize;
         addParams.limit = config.limit ? config.limit : pageSize;
 
@@ -123,6 +124,7 @@ class PageParamsCalculator implements IParamsCalculator {
                 // 0..9, 10..19, 20..29, 30..39, 40. 
                 // Изменив pageSize и page невозможно получить 30..40, 
                 // так как offset рассчитается как page*pageSize.
+                //TODO: https://online.sbis.ru/opendoc.html?guid=53c4e82d-8e21-4fc8-81dc-ccf2a8c6ba9f
                 if ((metaMore / store.getState().pageSize) % 1 > 0) {
                     config.offset = (config.page - 1) * store.getState().pageSize;
                     config.limit = store.getState().pageSize * 2;
