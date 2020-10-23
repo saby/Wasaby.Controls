@@ -1,5 +1,5 @@
 import { TemplateFunction } from 'UI/Base';
-import { mixin } from 'Types/_util/mixin';
+import { mixin } from 'Types/util';
 import { OptionsToPropertyMixin } from 'Types/entity';
 import GridResults from "./GridResults";
 import { Model as EntityModel } from 'Types/entity';

@@ -19,7 +19,7 @@
 import { TemplateFunction } from 'UI/Base';
 import { IHeaderCell } from '../_grid/interface/IHeaderCell';
 import GridHeader from './GridHeader';
-import { mixin } from 'Types/_util/mixin';
+import { mixin } from 'Types/util';
 import { OptionsToPropertyMixin } from 'Types/entity';
 
 export interface IOptions<T> {
