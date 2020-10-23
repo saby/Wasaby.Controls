@@ -1,7 +1,7 @@
 import {assert} from 'chai';
 import {RecordSet} from 'Types/collection';
 import {NavigationController} from 'Controls/source';
-
+import {IBasePageSourceConfig} from 'Controls/interface';
 const dataPrev = [
     {
         id : 1,
@@ -847,7 +847,7 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({more: false});
                 nc.updateQueryProperties(rs);
 
-                const edgeQueryConfig = nc.shiftToEdge('forward');
+                const edgeQueryConfig = nc.shiftToEdge('forward') as IBasePageSourceConfig;
                 assert.equal(edgeQueryConfig.page, -1);
             });
 
@@ -870,7 +870,7 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({more: 18});
                 nc.updateQueryProperties(rs);
 
-                const edgeQueryConfig = nc.shiftToEdge('forward');
+                const edgeQueryConfig = nc.shiftToEdge('forward') as IBasePageSourceConfig;
                 assert.equal(edgeQueryConfig.page, 5);
             });
             it ('shift to edge with more meta as number. pageSize = 3, more = 19', () => {
@@ -892,8 +892,9 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({more: 19});
                 nc.updateQueryProperties(rs);
 
-                const edgeQueryConfig = nc.shiftToEdge('forward');
-                assert.equal(edgeQueryConfig.page, 6);
+                const edgeQueryConfig = nc.shiftToEdge('forward') as IBasePageSourceConfig;
+                assert.equal(edgeQueryConfig.page, 1);
+                assert.equal(edgeQueryConfig.pageSize, 15);
             });
         });
     });
