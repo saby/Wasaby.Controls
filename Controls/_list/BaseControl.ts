@@ -463,6 +463,15 @@ const _private = {
         return resDeferred;
     },
 
+    isEqualItemsFormat(items1: RecordSet, items2: RecordSet): boolean {
+        return items1 && cInstance.instanceOfModule(items1, 'Types/collection:RecordSet') &&
+            (items1.getModel() === items2.getModel()) &&
+            (items1.getKeyProperty() === items2.getKeyProperty()) &&
+            (Object.getPrototypeOf(items1).constructor === Object.getPrototypeOf(items2).constructor) &&
+            (Object.getPrototypeOf(items1.getAdapter()).constructor ===
+                Object.getPrototypeOf(items2.getAdapter()).constructor);
+    },
+
     assignItemsToModel(self, items: RecordSet, newOptions): void {
         const listModel = self._listViewModel;
 
@@ -471,11 +480,17 @@ const _private = {
             // TODO restore marker + maybe should recreate the model completely
             // instead of assigning items
             // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
-            const modelCollection = listModel.getCollection();
-            listModel.setCompatibleReset(true);
-            modelCollection.setMetaData(items.getMetaData());
-            modelCollection.assign(items);
-            listModel.setCompatibleReset(false);
+            const currentItems = listModel.getCollection();
+            // Делаем assign только если формат текущего рекордсета и нового полностью совпадает, иначе необходима
+            // полная замена (example: https://online.sbis.ru/opendoc.html?guid=75a21c00-35ec-4451-b5d7-29544ddd9c40).
+            if (_private.isEqualItemsFormat(currentItems, items)) {
+                listModel.setCompatibleReset(true);
+                currentItems.setMetaData(items.getMetaData());
+                currentItems.assign(items);
+                listModel.setCompatibleReset(false);
+            } else {
+                listModel.setCollection(items);
+            }
             self._items = listModel.getCollection();
         } else {
             listModel.setItems(items, newOptions);
@@ -1430,6 +1445,16 @@ const _private = {
         }));
     },
 
+    resetPortionedSearchAndCheckLoadToDirection(self, options): void {
+        if (options.searchValue) {
+            _private.getPortionedSearch(self).reset();
+
+            if (options.searchValue && options.sourceController) {
+                _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
+            }
+        }
+    },
+
     disablePagingNextButtons(self): void {
         if (self._pagingVisible) {
             self._pagingCfg = {...self._pagingCfg};
@@ -1557,6 +1582,9 @@ const _private = {
             if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
                 self._itemActionsMenuId) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
+            }
+            if (action === IObservable.ACTION_RESET && self._options.searchValue) {
+                _private.resetPortionedSearchAndCheckLoadToDirection(self, self._options);
             }
             if (self._scrollController) {
                 if (action) {
@@ -3180,11 +3208,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     // возврашать полученный recordSet, иначе он будет сериализоваться
                     // и на уровне Container/Data и на уровне BaseControl'a
                     if (result.errorConfig ||
-                        !newOptions.sourceController ||
+                        !(newOptions.sourceController ||
                         // FIXME https://online.sbis.ru/opendoc.html?guid=fe106611-647d-4212-908f-87b81757327b
                         // Иначе список построится по receivedState, а в PrefetchProxy останется кэш,
                         // и любой запрос к источнику вернёт данные из кэша
-                        !cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
+                        cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy'))) {
                         return Promise.resolve(getState(result));
                     }
                 });
@@ -3688,7 +3716,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (searchValueChanged) {
-            _private.getPortionedSearch(self).reset();
+            _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
         }
 
         if (needReload) {

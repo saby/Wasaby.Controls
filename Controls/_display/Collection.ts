@@ -795,15 +795,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._userStrategies = [];
 
-        this._reBuild();
         this._bindHandlers();
-        if (this._$collection['[Types/_collection/IObservable]']) {
-            (this._$collection as ObservableMixin).subscribe('onCollectionChange', this._onCollectionChange);
-            (this._$collection as ObservableMixin).subscribe('onCollectionItemChange', this._onCollectionItemChange);
-        }
-        if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
-            (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
-        }
+        this._initializeCollection();
 
         if (options.itemPadding) {
             this._setItemPadding(options.itemPadding);
@@ -824,7 +817,18 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    destroy(): void {
+    _initializeCollection(): void {
+        this._reBuild(true);
+        if (this._$collection['[Types/_collection/IObservable]']) {
+            (this._$collection as ObservableMixin).subscribe('onCollectionChange', this._onCollectionChange);
+            (this._$collection as ObservableMixin).subscribe('onCollectionItemChange', this._onCollectionItemChange);
+        }
+        if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
+            (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
+        }
+    }
+
+    _deinitializeCollection(): void {
         if (!(this._$collection as DestroyableMixin).destroyed) {
             if (this._$collection['[Types/_collection/IObservable]']) {
                 (this._$collection as ObservableMixin).unsubscribe(
@@ -838,7 +842,16 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 (this._$collection as ObservableMixin).unsubscribe('onEventRaisingChange', this._oEventRaisingChange);
             }
         }
+    }
 
+    setCollection(newCollection: ISourceCollection<S>): void {
+        this._deinitializeCollection();
+        this._$collection = newCollection;
+        this._initializeCollection();
+    }
+
+    destroy(): void {
+        this._deinitializeCollection();
         this._unbindHandlers();
         this._composer = null;
         this._filterMap = [];
