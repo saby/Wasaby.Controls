@@ -4,7 +4,7 @@
 import BaseControl = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/History/List');
 import Utils = require('Types/util');
-import Serializer = require('Core/Serializer');
+import {Serializer} from 'UI/State';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import * as Merge from 'Core/core-merge';
