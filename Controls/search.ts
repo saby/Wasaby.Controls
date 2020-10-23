@@ -27,7 +27,7 @@ import {default as Misspell} from 'Controls/_search/Misspell';
 import {default as ExpandableInput} from 'Controls/_search/Input/ExpandableInput/Search';
 import InputContainer = require('Controls/_search/Input/Container');
 import MisspellContainer = require('Controls/_search/Misspell/Container');
-import Controller = require('Controls/_search/Controller');
+import {default as Controller} from 'Controls/_search/Controller';
 import Input = require('Controls/_search/Input/Search');
 
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
