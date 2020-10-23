@@ -653,7 +653,7 @@ var
                 return `controls-TreeGrid__row-levelPadding_size_${correctLevelIndentSize}_theme-${current.theme}`;
             };
 
-            current.isExpanded = current.item.get && this.isExpanded(dispItem);
+            current.isExpanded = current.item && current.item.get && this.isExpanded(dispItem);
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;
             current.thereIsChildItem = this._thereIsChildItem;
@@ -663,7 +663,7 @@ var
             current.expanderTemplate = this._options.expanderTemplate;
             current.footerContentTemplate = this._options.footerContentTemplate;
 
-            if (current.item.get) {
+            if (current.item && current.item.get) {
                 current.level = current.dispItem.getLevel();
             }
 
@@ -678,7 +678,7 @@ var
             }
 
             current.useNewNodeFooters = this._options.useNewNodeFooters;
-            if (current.item.get) {
+            if (current.item && current.item.get) {
                 _private.setNodeFooterIfNeed(this, current);
             }
 

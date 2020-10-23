@@ -27,7 +27,8 @@ describe('Controls/scroll:ContainerBase', () => {
          control._controlResizeHandler = () => {};
          control._children = {
             content: {
-               children: children
+               children: children,
+               getBoundingClientRect: () => {}
             }
          };
          control._afterMount();
