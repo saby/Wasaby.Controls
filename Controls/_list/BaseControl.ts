@@ -463,6 +463,15 @@ const _private = {
         return resDeferred;
     },
 
+    isEqualItemsFormat(items1: RecordSet, items2: RecordSet): boolean {
+        return items1 && cInstance.instanceOfModule(items1, 'Types/collection:RecordSet') &&
+            (items1.getModel() === items2.getModel()) &&
+            (items1.getKeyProperty() === items2.getKeyProperty()) &&
+            (Object.getPrototypeOf(items1).constructor === Object.getPrototypeOf(items2).constructor) &&
+            (Object.getPrototypeOf(items1.getAdapter()).constructor ===
+                Object.getPrototypeOf(items2.getAdapter()).constructor);
+    },
+
     assignItemsToModel(self, items: RecordSet, newOptions): void {
         const listModel = self._listViewModel;
 
@@ -471,11 +480,17 @@ const _private = {
             // TODO restore marker + maybe should recreate the model completely
             // instead of assigning items
             // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
-            const modelCollection = listModel.getCollection();
-            listModel.setCompatibleReset(true);
-            modelCollection.setMetaData(items.getMetaData());
-            modelCollection.assign(items);
-            listModel.setCompatibleReset(false);
+            const currentItems = listModel.getCollection();
+            // Делаем assign только если формат текущего рекордсета и нового полностью совпадает, иначе необходима
+            // полная замена (example: https://online.sbis.ru/opendoc.html?guid=75a21c00-35ec-4451-b5d7-29544ddd9c40).
+            if (_private.isEqualItemsFormat(currentItems, items)) {
+                listModel.setCompatibleReset(true);
+                currentItems.setMetaData(items.getMetaData());
+                currentItems.assign(items);
+                listModel.setCompatibleReset(false);
+            } else {
+                listModel.setCollection(items);
+            }
             self._items = listModel.getCollection();
         } else {
             listModel.setItems(items, newOptions);
