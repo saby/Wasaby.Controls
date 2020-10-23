@@ -138,6 +138,10 @@ export default class Controller {
         this._root = key;
     }
 
+    getRoot(): TKey {
+        return this._root;
+    }
+
     // FIXME, если parentProperty задаётся на списке, а не на data(browser)
     setParentProperty(parentProperty: string): void {
         this._parentProperty = parentProperty;

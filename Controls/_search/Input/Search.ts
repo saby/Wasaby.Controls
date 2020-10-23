@@ -196,7 +196,7 @@ var Search = Base.extend({
       this._rightFieldWrapper.scope.calculateState = _private.calculateStateButton.bind(this);
    },
 
-   _changeHandler: function() {
+   _notifyInputCompleted: function() {
       if (this._options.trim) {
          var trimmedValue = this._viewModel.displayValue.trim();
 
@@ -206,7 +206,7 @@ var Search = Base.extend({
          }
       }
 
-      Search.superclass._changeHandler.apply(this, arguments);
+      Search.superclass._notifyInputCompleted.apply(this, arguments);
    },
 
    _resetClick: function() {

@@ -795,15 +795,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         this._userStrategies = [];
 
-        this._reBuild();
         this._bindHandlers();
-        if (this._$collection['[Types/_collection/IObservable]']) {
-            (this._$collection as ObservableMixin).subscribe('onCollectionChange', this._onCollectionChange);
-            (this._$collection as ObservableMixin).subscribe('onCollectionItemChange', this._onCollectionItemChange);
-        }
-        if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
-            (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
-        }
+        this._initializeCollection();
 
         if (options.itemPadding) {
             this._setItemPadding(options.itemPadding);
@@ -824,7 +817,18 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    destroy(): void {
+    _initializeCollection(): void {
+        this._reBuild(true);
+        if (this._$collection['[Types/_collection/IObservable]']) {
+            (this._$collection as ObservableMixin).subscribe('onCollectionChange', this._onCollectionChange);
+            (this._$collection as ObservableMixin).subscribe('onCollectionItemChange', this._onCollectionItemChange);
+        }
+        if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
+            (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
+        }
+    }
+
+    _deinitializeCollection(): void {
         if (!(this._$collection as DestroyableMixin).destroyed) {
             if (this._$collection['[Types/_collection/IObservable]']) {
                 (this._$collection as ObservableMixin).unsubscribe(
@@ -838,7 +842,16 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 (this._$collection as ObservableMixin).unsubscribe('onEventRaisingChange', this._oEventRaisingChange);
             }
         }
+    }
 
+    setCollection(newCollection: ISourceCollection<S>): void {
+        this._deinitializeCollection();
+        this._$collection = newCollection;
+        this._initializeCollection();
+    }
+
+    destroy(): void {
+        this._deinitializeCollection();
         this._unbindHandlers();
         this._composer = null;
         this._filterMap = [];
@@ -2513,35 +2526,59 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setAddingItem(item: T): void {
+        const groupMethod = this.getGroup();
+        let groupsBefore;
+
+        if (groupMethod) {
+            groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
+        }
+
         this._prependStrategy(AddStrategy, {
             item,
             addPosition: item.addPosition,
             groupMethod: this.getGroup()
         }, GroupItemsStrategy);
 
+        const itemsForNotify = [item];
         const addingIndex: number = this.getStrategyInstance(AddStrategy).getAddingItemIndex();
 
-        this._notifyCollectionChange(
-            IObservable.ACTION_ADD,
-            [item],
-            addingIndex,
-            [],
-            0
-        );
+        if (groupMethod) {
+            const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
+            const itemGroupId = groupMethod(item.contents);
+            if (groupsBefore.length < groupsAfter.length) {
+                itemsForNotify.splice(0, 0, groupsAfter.find((g) => g.contents === itemGroupId));
+            }
+        }
+
+        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0);
     }
 
     resetAddingItem(): void {
         const addStrategy = this.getStrategyInstance(AddStrategy);
 
         if (addStrategy) {
+            const groupMethod = this.getGroup();
+            const item = addStrategy?.getAddingItem();
+            let groupsBefore;
+
+            if (groupMethod) {
+                groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
+            }
+
             this.removeStrategy(AddStrategy);
 
+            const itemsForNotify = [item];
+
+            if (groupMethod) {
+                const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
+                if (groupsBefore.length > groupsAfter.length) {
+                    const itemGroupId = groupMethod(item.contents);
+                    itemsForNotify.splice(0, 0, groupsBefore.find((g) => g.contents === itemGroupId));
+                }
+            }
+
             this._notifyCollectionChange(
-                IObservable.ACTION_REMOVE,
-                [],
-                0,
-                [addStrategy.getAddingItem()],
-                addStrategy.getAddingItemIndex()
+                IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addStrategy.getAddingItemIndex()
             );
         }
     }
@@ -2598,7 +2635,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this.nextVersion();
     }
 
-    getStrategyInstance(strategy: new() => IItemsStrategy<S, T>): IItemsStrategy<S, T> {
+    getStrategyInstance<F extends IItemsStrategy<S, T>>(strategy: new() => F): F {
         return this._composer.getInstance(strategy);
     }
 
