@@ -34,7 +34,7 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
  *
- * @class Controls/_scroll/ContainerNew
+ * @class Controls/_scroll/Container
  * @extends Controls/_scroll/ContainerBase
  * @mixes Controls/_scroll/Interface/IScrollbars
  * @mixes Controls/_scroll/Interface/IShadows
@@ -49,7 +49,7 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
 /*
  * Container with thin scrollbar.
  *
- * @class Controls/_scroll/ContainerNew
+ * @class Controls/_scroll/Container
  * @extends Controls/_scroll/ContainerBase
  * 
  * @public
@@ -60,32 +60,32 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  */
 
 /**
- * @name Controls/_scroll/ContainerNew#content
+ * @name Controls/_scroll/Container#content
  * @cfg {Content} Содержимое контейнера.
  */
 
 /*
- * @name Controls/_scroll/ContainerNew#content
+ * @name Controls/_scroll/Container#content
  * @cfg {Content} Container contents.
  */
 
 
 /**
- * @name Controls/_scroll/ContainerNew#style
+ * @name Controls/_scroll/Container#style
  * @cfg {String} Цветовая схема (цвета тени и скролла).
  * @variant normal Тема по умолчанию (для ярких фонов).
  * @variant inverted Преобразованная тема (для темных фонов).
  */
 
 /*
- * @name Controls/_scroll/ContainerNew#style
+ * @name Controls/_scroll/Container#style
  * @cfg {String} Color scheme (colors of the shadow and scrollbar).
  * @variant normal Default theme (for bright backgrounds).
  * @variant inverted Inverted theme (for dark backgrounds).
  */
 
 /**
- * @name Controls/_scroll/ContainerNew#optimizeShadow
+ * @name Controls/_scroll/Container#optimizeShadow
  * @cfg {Boolean} Включает режим быстрой отрисовки тени.
  * @default true
  * @variant true Оптимизированные тени.
@@ -100,7 +100,7 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  */
 
 /**
- * @name Controls/_scroll/ContainerNew#backgroundStyle
+ * @name Controls/_scroll/Container#backgroundStyle
  * @cfg {String} Определяет префикс стиля для настройки элементов которые зависят от цвета фона.
  * @default default
  * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index

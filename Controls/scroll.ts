@@ -1,7 +1,7 @@
 /**
  * Библиотека контролов, которые позволяют организовать скроллирование областей. Содержит контейнер для скроллирования и механизм фиксации заголовков.
  * @library Controls/scroll
- * @includes Container Controls/_scroll/ContainerNew
+ * @includes Container Controls/_scroll/Container
  * @includes StickyHeader Controls/_scroll/StickyHeader
  * @includes Context Controls/_scroll/Context
  * @includes HotKeysContainer Controls/_scroll/HotKeysContainer
@@ -15,7 +15,7 @@
 /*
  * Search library
  * @library Controls/scroll
- * @includes Container Controls/_scroll/ContainerNew
+ * @includes Container Controls/_scroll/Container
  * @includes StickyHeader Controls/_scroll/StickyHeader
  * @includes Context Controls/_scroll/Context
  * @includes HotKeysContainer Controls/_scroll/HotKeysContainer
@@ -26,7 +26,7 @@
  * @author Крайнов Д.О.
  */
 
-import ContainerNew from 'Controls/_scroll/ContainerNew';
+import Container from 'Controls/_scroll/Container';
 export {default as StickyHeader} from 'Controls/_scroll/StickyHeader';
 export {scrollToElement} from 'Controls/_scroll/Utils/scrollToElement';
 export {hasScrollbar} from './_scroll/Utils/HasScrollbar';
@@ -51,8 +51,7 @@ import {getHeadersHeight as getStickyHeadersHeight} from 'Controls/_scroll/Stick
 import HotKeysContainer from 'Controls/_scroll/HotKeysContainer';
 
 export {
-   ContainerNew as Container,
-   ContainerNew as _ContainerNew,
+   Container,
    _Scrollbar,
    _scrollContext,
    _stickyHeaderContext,
