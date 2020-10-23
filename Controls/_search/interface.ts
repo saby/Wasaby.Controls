@@ -27,11 +27,12 @@ export interface ISearchControllerOptions extends ISearchOptions,
 }
 
 export interface ISearchController {
-   reset(): Promise<RecordSet>;
-   search(value: string): Promise<RecordSet>;
+   reset(): Promise<RecordSet|Error>;
+   search(value: string): Promise<RecordSet|Error>;
    update(options: Partial<ISearchControllerOptions>): void;
    setRoot(value: Key): void;
    getRoot(): Key;
+   getSearchValue(): string;
 }
 
 export interface ISearchResolver {
