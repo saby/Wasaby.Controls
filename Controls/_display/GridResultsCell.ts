@@ -9,6 +9,9 @@ export interface IOptions<T> {
     template: TemplateFunction;
     align?: string;
     displayProperty?: string;
+    // ToDo | Временная опция для обеспечения вывода общего шаблона строки результатов.
+    //      | При разработке мультизаговков colspan будет сделан единообразно и для результатов.
+    colspan?: boolean;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_grid/Render/ResultsCellContent';
@@ -20,6 +23,7 @@ export default class GridResultsCell<T> extends mixin<OptionsToPropertyMixin>(Op
     protected _$data: string|number;
     protected _$format: string;
     protected _$displayProperty: string;
+    protected _$colspan: boolean;
 
     constructor(options?: IOptions<T>) {
         super();
@@ -40,7 +44,7 @@ export default class GridResultsCell<T> extends mixin<OptionsToPropertyMixin>(Op
     }
 
     isLastColumn(): boolean {
-        return this.getResultsCellIndex() === this._$owner.getColumnsCount() - 1;
+        return this.getResultsCellIndex() === this._$owner.getResultsCellsCount() - 1;
     }
 
     isMultiSelectColumn(): boolean {
@@ -76,6 +80,9 @@ export default class GridResultsCell<T> extends mixin<OptionsToPropertyMixin>(Op
     }
 
     getWrapperStyles(): string {
+        if (this._$colspan) {
+            return `grid-column: 1 / ${this._$owner.getColumnsCount() + 1}`;
+        }
         return '';
     }
 
@@ -153,5 +160,6 @@ Object.assign(GridResultsCell.prototype, {
     _$align: null,
     _$data: null,
     _$format: null,
-    _$displayProperty: null
+    _$displayProperty: null,
+    _$colspan: null,
 });

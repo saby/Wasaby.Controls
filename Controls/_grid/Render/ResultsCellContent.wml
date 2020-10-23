@@ -1,6 +1,6 @@
 <div attr:class="{{ colData.getContentClasses(theme) }}">
-    <ws:if data="{{ !!content }}">
-        <ws:partial template="{{ content }}"
+    <ws:if data="{{ !!content || !!contentTemplate }}">
+        <ws:partial template="{{ content || contentTemplate }}"
                     colData="{{ colData }}"
                     results="{{ colData.getResults() }}"/>
     </ws:if>

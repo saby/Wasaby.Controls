@@ -10,7 +10,6 @@ type TResultsCells<T> = Array<GridResultsCell<T>>;
 
 export interface IOptions<T> {
     owner: GridCollection<T>;
-    columns: IColumn[];
     resultsTemplate: TemplateFunction;
     results: EntityModel;
 }
@@ -23,7 +22,7 @@ export default class GridResults<T> extends mixin<OptionsToPropertyMixin>(Option
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
-        this._$resultsCells = this._prepareCells(options.columns, options.resultsTemplate);
+        this._$resultsCells = this._prepareCells(this._$owner.getColumns(), options.resultsTemplate);
     }
 
     getBodyClasses(theme: string): string {
@@ -39,6 +38,10 @@ export default class GridResults<T> extends mixin<OptionsToPropertyMixin>(Option
     }
 
     getColumnsCount(): number {
+        return this._$owner.getColumns().length;
+    }
+
+    getResultsCellsCount(): number {
         return this._$resultsCells.length;
     }
 
@@ -76,7 +79,10 @@ export default class GridResults<T> extends mixin<OptionsToPropertyMixin>(Option
         if (resultsTemplate) {
             const resultsCell = new GridResultsCell({
                 template: resultsTemplate,
-                owner: this
+                owner: this,
+                // ToDo | Временная опция для обеспечения вывода общего шаблона строки результатов.
+                //      | При разработке мультизаговков colspan будет сделан единообразно и для результатов.
+                colspan: true
             });
             resultsCells.push(resultsCell);
             return resultsCells;
