@@ -1440,6 +1440,16 @@ const _private = {
         }));
     },
 
+    resetPortionedSearchAndCheckLoadToDirection(self, options): void {
+        if (options.searchValue) {
+            _private.getPortionedSearch(self).reset();
+
+            if (options.searchValue && options.sourceController) {
+                _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
+            }
+        }
+    },
+
     disablePagingNextButtons(self): void {
         if (self._pagingVisible) {
             self._pagingCfg = {...self._pagingCfg};
@@ -1567,6 +1577,9 @@ const _private = {
             if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
                 self._itemActionsMenuId) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
+            }
+            if (action === IObservable.ACTION_RESET && self._options.searchValue) {
+                _private.resetPortionedSearchAndCheckLoadToDirection(self, self._options);
             }
             if (self._scrollController) {
                 if (action) {
@@ -3697,7 +3710,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (searchValueChanged) {
-            _private.getPortionedSearch(self).reset();
+            _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
         }
 
         if (needReload) {
