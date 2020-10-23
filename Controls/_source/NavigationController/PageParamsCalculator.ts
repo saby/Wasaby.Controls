@@ -25,8 +25,8 @@ class PageParamsCalculator implements IParamsCalculator {
         }
         const pageSize = config.pageSize ? config.pageSize : storeParams.pageSize;
 
-        addParams.offset = page * pageSize;
-        addParams.limit = pageSize;
+        addParams.offset = config.offset !== void 0 ? config.offset : page * pageSize;
+        addParams.limit = config.limit ? config.limit : pageSize;
 
         if (storeParams.hasMore === false) {
             addParams.meta.hasMore = false;
@@ -108,21 +108,31 @@ class PageParamsCalculator implements IParamsCalculator {
         shiftMode: TNavigationPagingMode,
         navigationQueryConfig: IBasePageSourceConfig
     ): IBasePageSourceConfig {
-        let page;
-
+        let config: Partial<IBasePageSourceConfig> = {};
         if (direction === 'backward') {
-            page = 0;
+            config.page = 0;
         } else if (direction === 'forward') {
             const metaMore = store.getMetaMore();
 
             if (typeof metaMore === 'number') {
-                page = Math.ceil(metaMore / store.getState().pageSize) - 1;
+                config.page = Math.ceil(metaMore / store.getState().pageSize) - 1;
+                
+                // если записей на последней странице будет мало, то загружаем еще и предыдущую. 
+                // делаем через offset и limit, так как pageSize и page не гибкие
+                // Например, если есть 4 полные страницы и последняя с одной записью: 
+                // 0..9, 10..19, 20..29, 30..39, 40. 
+                // Изменив pageSize и page невозможно получить 30..40, 
+                // так как offset рассчитается как page*pageSize.
+                if ((metaMore / store.getState().pageSize) % 1 > 0) {
+                    config.offset = (config.page - 1) * store.getState().pageSize;
+                    config.limit = store.getState().pageSize * 2;
+                }
             } else {
-                page = -1;
+                config.page = -1;
             }
         }
 
-        return {...navigationQueryConfig, page};
+        return {...navigationQueryConfig, ...config};
     }
 
     updateQueryRange(store: PageNavigationStore): void {
