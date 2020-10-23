@@ -287,24 +287,8 @@ export default class Browser extends Control {
     }
 
     protected _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
-        // search:Cotnroller fires two events after search: itemsChanged, filterChanged
-        // on filterChanged event filter state will updated
-        // on itemChanged event prefetchSource will updated,
-        // but createPrefetchSource method work async becouse of promise,
-        // then we need to create prefetchSource synchronously
-
-        // для того чтобы мог посчитаться новый prefetch Source внутри
-        const newItems = this._sourceController.setItems(items);
-        const controllerState = this._sourceController.getState();
-
-        if (!this._items) {
-            this._items = newItems;
-        } else {
-            controllerState.items = this._items;
-            this._sourceController.setItems(this._items);
-        }
-
-        this._updateContext(controllerState);
+        this._items = this._sourceController.setItems(items);
+        this._updateContext(this._sourceController.getState());
     }
 
     protected _filterItemsChanged(event: SyntheticEvent, items: IFilterItem[]): void {
