@@ -2383,7 +2383,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     getMetaData(): any {
-        return this._$collection ? this._$collection.getMetaData() : {};
+        return this._$collection && this._$collection.getMetaData ? this._$collection.getMetaData() : {};
     }
 
     getCollapsedGroups(): TArrayGroupKey {
