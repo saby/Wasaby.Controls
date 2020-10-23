@@ -2,10 +2,8 @@
 /**
  * Библиотека компонентов для упрощения загрузки данных: формирования запросов, обработки ошибок.
  * @library Controls/dataSource
- * @includes parking Controls/_dataSource/parking
  * @includes error Controls/dataSource/error
  * @includes requestDataUtil Controls/_dataSource/requestDataUtil
- * @includes SourceCrudInterlayer Controls/dataSource/SourceCrudInterlayer
  * @public
  * @author Северьянов А.А.
  */

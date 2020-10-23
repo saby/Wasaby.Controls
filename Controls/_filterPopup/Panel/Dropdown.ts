@@ -21,18 +21,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
     * @author Герасимов А.М.
     */
 
-   /**
-    * @name Controls/_filterPopup/Panel/Dropdown#showCross
-    * @cfg {Boolean} Показать крестик сброса рядом с выпадающим списком.
-    * Используется для контрола в блоке "Отбираются".
-    * По клику на крестик выпадающий список переместится в блок "Еще можно отобрать".
-    * @default false
-    * @example
-    * <pre>
-    *     <Controls.filterPopup:Dropdown showCross="{{true}}"/>
-    * </pre>
-    */
-
 class FilterDropdown extends Control<IControlOptions> {
       protected _template: TemplateFunction = template;
 
@@ -70,5 +58,15 @@ class FilterDropdown extends Control<IControlOptions> {
          };
       }
    }
-
+/**
+ * @name Controls/_filterPopup/Panel/Dropdown#showCross
+ * @cfg {Boolean} Показать крестик сброса рядом с выпадающим списком.
+ * Используется для контрола в блоке "Отбираются".
+ * По клику на крестик выпадающий список переместится в блок "Еще можно отобрать".
+ * @default false
+ * @example
+ * <pre class="brush: html">
+ * <Controls.filterPopup:Dropdown showCross="{{true}}"/>
+ * </pre>
+ */
 export default FilterDropdown;

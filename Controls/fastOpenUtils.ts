@@ -2,7 +2,7 @@
  * @library Controls/fastOpenUtils
  * @includes MouseEventHelper Controls/_utils/fastOpenUtils/MouseEventHelper
  * @includes FastOpen Controls/_utils/fastOpenUtils/FastOpen
- * @public
+ * @private
  * @author Красильников А.С.
  */
 

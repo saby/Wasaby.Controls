@@ -38,7 +38,7 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  * @author Герасимов А.М.
  * @category Menu
  * @example
- * <pre>
+ * <pre class="brush: js">
  *    var source = new history.Source({
  *        originSource: new source.Memory({
  *           keyProperty: 'id',
@@ -75,27 +75,6 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  *        parentProperty: 'parent'
  *    });
  * </pre>
- */
-
-/**
- * @name Controls/_history/Source#originSource
- * @cfg {Source} Источник данных.
- */
-/**
- * @name Controls/_history/Source#historySource
- * @cfg {Source} Источник, который работает с историей.
- * @see {Controls/_history/Service} Источник работает с сервисом истории ввода.
- */
-
-/**
- * @name Controls/_history/Source#unpinIfNotExist
- * @default true
- * @cfg {Boolean} Флаг, определяющий будет ли снят пин с записи, которой нет в данных
- */
-/*
- * @name Controls/_history/Source#historySource
- * @cfg {Source} A source which work with history
- * @see {Controls/_history/Service} Source working with the service of InputHistory
  */
 export default class HistorySource extends mixin<SerializableMixin, OptionsToPropertyMixin>(
     SerializableMixin,
@@ -687,6 +666,28 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
         this._$history = history;
     }
 }
+
+
+/**
+ * @name Controls/_history/Source#originSource
+ * @cfg {Source} Источник данных.
+ */
+/**
+ * @name Controls/_history/Source#historySource
+ * @cfg {Source} Источник, который работает с историей.
+ * @see {Controls/_history/Service} Источник работает с сервисом истории ввода.
+ */
+
+/**
+ * @name Controls/_history/Source#unpinIfNotExist
+ * @default true
+ * @cfg {Boolean} Флаг, определяющий будет ли снят пин с записи, которой нет в данных
+ */
+/*
+ * @name Controls/_history/Source#historySource
+ * @cfg {Source} A source which work with history
+ * @see {Controls/_history/Service} Source working with the service of InputHistory
+ */
 
 Object.assign(HistorySource.prototype, {
     _moduleName: 'Controls/history:Source'
