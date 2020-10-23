@@ -80,7 +80,7 @@ class Base extends Control<IMasterDetail> {
 
     /**
      * @name Controls/_masterDetail/Base#masterVisibility
-     * @cfg {MasterVisibility} Определяет, режим отображения мастера.
+     * @cfg {MasterVisibility} Определяет видимость контента мастера.
      * @default visible
      * @demo Controls-demo/MasterDetail/MasterVisibility/Index
      */
