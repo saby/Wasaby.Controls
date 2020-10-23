@@ -103,8 +103,6 @@ export interface IBasePageSourceConfig {
     page?: number;
     pageSize: number;
     multiNavigation?: boolean;
-    offset?: number;
-    limit?: number;
 }
 
 /**

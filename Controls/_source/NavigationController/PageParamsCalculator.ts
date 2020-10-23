@@ -25,9 +25,8 @@ class PageParamsCalculator implements IParamsCalculator {
         }
         const pageSize = config.pageSize ? config.pageSize : storeParams.pageSize;
 
-        //TODO: https://online.sbis.ru/opendoc.html?guid=53c4e82d-8e21-4fc8-81dc-ccf2a8c6ba9f
-        addParams.offset = config.offset !== void 0 ? config.offset : page * pageSize;
-        addParams.limit = config.limit ? config.limit : pageSize;
+        addParams.offset = page * pageSize;
+        addParams.limit = pageSize;
 
         if (storeParams.hasMore === false) {
             addParams.meta.hasMore = false;
@@ -121,13 +120,13 @@ class PageParamsCalculator implements IParamsCalculator {
                 // если записей на последней странице будет мало, то загружаем еще и предыдущую. 
                 // делаем через offset и limit, так как pageSize и page не гибкие
                 // Например, если есть 4 полные страницы и последняя с одной записью: 
-                // 0..9, 10..19, 20..29, 30..39, 40. 
-                // Изменив pageSize и page невозможно получить 30..40, 
+                // 0..9, 10..19, 20..29, 30..39, 40..44. 
+                // Изменив pageSize и page невозможно получить 30..44, 
                 // так как offset рассчитается как page*pageSize.
                 //TODO: https://online.sbis.ru/opendoc.html?guid=53c4e82d-8e21-4fc8-81dc-ccf2a8c6ba9f
                 if ((metaMore / store.getState().pageSize) % 1 > 0) {
-                    config.offset = (config.page - 1) * store.getState().pageSize;
-                    config.limit = store.getState().pageSize * 2;
+                    config.pageSize = store.getState().pageSize * (config.page - 1);
+                    config.page = 1;
                 }
             } else {
                 config.page = -1;
