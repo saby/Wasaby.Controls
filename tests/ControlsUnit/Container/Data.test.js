@@ -7,9 +7,10 @@ define(
       'Types/collection',
       'Application/Initializer',
       'Application/Env',
-      'Env/Config'
+      'Env/Config',
+      'Controls/dataSource'
    ],
-   function(lists, sourceLib, contexts, Deferred, collection, AppInit, AppEnv, Config) {
+   function(lists, sourceLib, contexts, Deferred, collection, AppInit, AppEnv, Config, dataSourceLib) {
       describe('Container/Data', function() {
 
          var sourceData = [
@@ -254,6 +255,32 @@ define(
             const dataContainer = getDataWithConfig(dataOptions);
             await dataContainer._beforeMount(dataOptions);
             assert.deepEqual(sourceQuery.getWhere(), {testParentProperty: 'testRoot'});
+         });
+
+         it('_beforeMount sourceController in options', () => {
+            const memorySource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: sourceData
+            });
+            const items = new collection.RecordSet({
+               rawData: sourceData,
+               keyProperty: 'id'
+            });
+            const sourceController = new dataSourceLib.NewSourceController({
+               source: memorySource
+            });
+            sourceController.setItems(items);
+            const dataOptions = {
+               sourceController,
+               source: memorySource,
+               keyProperty: 'id'
+            };
+            const dataContainer = getDataWithConfig(dataOptions);
+            const mountResult = dataContainer._beforeMount(dataOptions);
+
+            assert.isTrue(!mountResult);
+            assert.isTrue(dataContainer._sourceController === sourceController, 'wrong sourceController after mount');
+            assert.isTrue(dataContainer._items === sourceController.getItems(), 'wrong items after mount');
          });
 
          it('_itemsReadyCallbackHandler', async function() {
