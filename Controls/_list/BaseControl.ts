@@ -2031,11 +2031,11 @@ const _private = {
         }
     },
 
-    needBottomPadding(options, items, listViewModel) {
-        const isEditing = listViewModel.isEditing();
+    needBottomPadding(options, listViewModel) {
+        const isEditing = !!listViewModel?.isEditing();
 
         const display = listViewModel ? (options.useNewModel ? listViewModel : listViewModel.getDisplay()) : null;
-        const hasVisibleItems = !!(display && display.getCount());
+        const hasVisibleItems = !!display?.getCount();
 
         return (
             (hasVisibleItems || isEditing) &&
@@ -3130,7 +3130,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 } else {
                     self._items = self._listViewModel.getItems();
                 }
-                self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
+                self._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
                 if (self._pagingNavigation) {
                     const hasMoreData = self._items.getMetaData().more;
                     _private.updatePagingData(self, hasMoreData);
@@ -3197,7 +3197,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 if (viewModelConfig.collapsedGroups) {
                     self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
                 }
-                self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
+                self._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
 
                     _private.createScrollController(self, newOptions);
 
@@ -3471,7 +3471,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const recreateSource = navigationChanged || resetPaging || sortingChanged;
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         const self = this;
-        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
+        this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
         if (navigationChanged) {
 
@@ -3728,7 +3728,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return this._prepareGroups(newOptions, (collapsedGroups) => {
                     return _private.reload(self, newOptions).addCallback(() => {
                         this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
-                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
+                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
                         _private.updateInitializedItemActions(this, newOptions);
                         this._listViewModel.setSearchValue(newOptions.searchValue);
                     });
@@ -3736,7 +3736,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             } else {
                 // return result here is for unit tests
                 return _private.reload(self, newOptions).addCallback(() => {
-                    this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
+                    this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
                     _private.updateInitializedItemActions(this, newOptions);
                     this._listViewModel.setSearchValue(newOptions.searchValue);
                 });
