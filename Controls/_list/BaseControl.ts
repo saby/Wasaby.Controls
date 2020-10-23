@@ -3206,11 +3206,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     // возврашать полученный recordSet, иначе он будет сериализоваться
                     // и на уровне Container/Data и на уровне BaseControl'a
                     if (result.errorConfig ||
-                        !newOptions.sourceController ||
+                        !(newOptions.sourceController ||
                         // FIXME https://online.sbis.ru/opendoc.html?guid=fe106611-647d-4212-908f-87b81757327b
                         // Иначе список построится по receivedState, а в PrefetchProxy останется кэш,
                         // и любой запрос к источнику вернёт данные из кэша
-                        !cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy')) {
+                        cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy'))) {
                         return Promise.resolve(getState(result));
                     }
                 });
