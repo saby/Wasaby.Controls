@@ -10,7 +10,7 @@ import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton')
     *
     * @class Controls/_popupTemplate/CloseButton
     * @extends Core/Control
-    * 
+    *
     * @public
     * @author Красильников А.С.
     * @demo Controls-demo/PopupTemplate/CloseButton/ViewModes/Index
@@ -23,6 +23,7 @@ import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton')
     * @cfg {String} Устанавливает вид отображения кнопки.
     * @variant toolButton Отображение как кнопки панели инструментов.
     * @variant linkButton Отображение кнопки в виде ссылки.
+    * @variant functionalButton Отображение функциональной кнопки закрытия
     * @default toolButton
     * @example
     * Отображение в виде ссылки:
@@ -32,6 +33,11 @@ import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton')
     * Отображение как кнопки панели инструментов:
     * <pre>
     *    <Controls.popupTemplate:CloseButton viewMode="toolButton"/>
+    * </pre>
+    *
+    * Отображение функциональной кнопки закрытия:
+    * <pre>
+    *    <Controls.popupTemplate:CloseButton viewMode="functionalButton"/>
     * </pre>
     */
 
