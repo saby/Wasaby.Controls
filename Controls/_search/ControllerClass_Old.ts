@@ -298,9 +298,9 @@ export default class SearchControllerClass {
         return searchValue !== this._inputSearchValue;
     }
 
-    // private _isSearchViewMode(): boolean {
-    //     return this._viewMode === 'search';
-    // }
+    private _isSearchViewMode(): boolean {
+        return this._viewMode === 'search';
+    }
 
     private _startSearch(value: string, force?: boolean): Promise<ISearchCallbackResult>|void {
         if (this._options.source) {
