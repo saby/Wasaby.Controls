@@ -6,8 +6,7 @@ import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdow
 import {getSourceFilter, isHistorySource, getSource, getMetaHistory} from 'Controls/_dropdown/dropdownHistoryUtils';
 import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {prepareEmpty} from 'Controls/_dropdown/Util';
-import {error as dataSourceError} from 'Controls/dataSource';
-import {Controller as SourceController} from 'Controls/source';
+import {error as dataSourceError, NewSourceController as SourceController} from 'Controls/dataSource';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {descriptor, Model} from 'Types/entity';
@@ -50,6 +49,7 @@ export default class _Controller implements IDropdownController {
    protected _loadItemsTempPromise: Promise<any> = null;
    protected _options: IDropdownControllerOptions = null;
    protected _source: ICrudPlus = null;
+   protected _sourceController: SourceController = null;
    private _filter: object;
    private _selectedItems: RecordSet<Model>;
    private _sticky: StickyOpener;
@@ -113,8 +113,8 @@ export default class _Controller implements IDropdownController {
       }
    }
 
-   setItems(items?: RecordSet): Promise<RecordSet> {
-      return this._getSourceController(this._options).addCallback((sourceController) => {
+   setItems(items?: RecordSet): Promise<SourceController> {
+      return this._getSourceController(this._options).then((sourceController) => {
          this._setItems(items);
          sourceController.calculateState(this._items);
 
@@ -321,10 +321,12 @@ export default class _Controller implements IDropdownController {
       });
    }
 
-   private _createSourceController(options) {
+   private _createSourceController(options, filter) {
       if (!this._sourceController) {
          this._sourceController = new SourceController({
             source: this._source,
+            filter,
+            keyProperty: options.keyProperty,
             navigation: options.navigation
          });
       }
@@ -371,17 +373,17 @@ export default class _Controller implements IDropdownController {
       }
       return sourcePromise.then((source) => {
          this._source = source;
-         return this._createSourceController(options);
+         this._filter = this._prepareFilterForQuery(options);
+         return this._createSourceController(options, this._filter);
       });
    }
 
    private _loadItems(options: IDropdownControllerOptions): Promise<RecordSet|Error> {
       return this._getSourceController(options).then((sourceController) => {
-             this._filter = this._prepareFilterForQuery(options);
 
-             return sourceController.load(this._filter).addCallback((items) => {
+             return sourceController.load().then((items) => {
                 return this._resolveLoadedItems(options, items);
-             }).addErrback((error) => {
+             }, (error) => {
                 this._loadError(error);
                 return error;
              });

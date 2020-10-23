@@ -100,15 +100,12 @@ export default class Browser extends Control {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems);
                 return this._loadItems(options, this._sourceController.getState()).then((items) => {
-                    if (items instanceof RecordSet) {
-                        this._defineShadowVisibility(items);
-                        return {
-                            filterItems,
-                            items
-                        };
-                    }
-                    return items;
-                });
+                    this._defineShadowVisibility(items);
+                    return {
+                        filterItems,
+                        items
+                    };
+                }, (error) => error);
             });
         }
     }
@@ -225,9 +222,7 @@ export default class Browser extends Control {
 
         if (options.source) {
             result = this._sourceController.load().then((loadResult) => {
-                if (loadResult instanceof RecordSet) {
-                    this._setItemsAndCreateSearchController(loadResult, options);
-                }
+                this._setItemsAndCreateSearchController(loadResult, options);
                 return loadResult;
             });
         } else {

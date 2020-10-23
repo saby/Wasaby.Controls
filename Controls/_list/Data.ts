@@ -141,7 +141,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
             controllerState = this._sourceController.getState();
             this._updateContext(controllerState);
             return items;
-         });
+         }, (error) => error);
       } else {
          this._updateContext(controllerState);
       }

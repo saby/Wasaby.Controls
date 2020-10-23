@@ -869,7 +869,7 @@ define(
                   let historyConfig = {...config, historyId: 'TEST_HISTORY_ID'};
                   dropdownController = getDropdownController(historyConfig);
                   return dropdownController._getSourceController(historyConfig).then((sourceController) => {
-                     assert.isTrue(cInstance.instanceOfModule(sourceController._source, 'Controls/history:Source'));
+                     assert.isTrue(cInstance.instanceOfModule(sourceController.getState().source, 'Controls/history:Source'));
                      assert.isOk(dropdownController._sourceController);
                      resolve();
                   });
