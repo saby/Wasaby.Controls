@@ -46,10 +46,10 @@ export interface IBrowserOptions extends IControlOptions, ISearchOptions, ISourc
     dataLoadErrback?: Function;
 }
 
-interface IBrowserReceivedState {
-    items: RecordSet | void;
+type IReceivedState = {
+    items: RecordSet | void | Error;
     filterItems: IFilterItem[] | IFilterHistoryData;
-}
+} | Error | void;
 
 interface IDataChildContext {
     dataOptions: IBrowserOptions;
@@ -58,7 +58,7 @@ interface IDataChildContext {
 type IFilterControllerOptions = Pick<IBrowserOptions,
    'filter' | 'minSearchLength' | 'filterButtonSource' | 'parentProperty' | 'searchParam' | 'searchValue'>;
 
-export default class Browser extends Control<IBrowserOptions, IBrowserReceivedState> {
+export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _template: TemplateFunction = template;
     protected _notifyHandler: Function = tmplNotify;
 
@@ -102,7 +102,7 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
 
     protected _beforeMount(options: IBrowserOptions,
                            context?: typeof ContextOptions,
-                           receivedState?: IBrowserReceivedState): void | Promise<IBrowserReceivedState> {
+                           receivedState?: IReceivedState): void | Promise<IReceivedState | Error | void> {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
@@ -128,10 +128,12 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
         this._dataOptionsContext = this._createContext(controllerState);
 
         if (receivedState) {
-            this._setFilterItems(receivedState.filterItems as IFilterItem[]);
-            this._defineShadowVisibility(receivedState.items);
-            if (isNewEnvironment()) {
-                this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
+            if ('filterItems' in receivedState && 'items' in receivedState) {
+                this._setFilterItems(receivedState.filterItems as IFilterItem[]);
+                this._defineShadowVisibility(receivedState.items);
+                if (isNewEnvironment()) {
+                    this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
+                }
             }
         } else {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
@@ -683,18 +685,14 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
     }
 
     protected _handleError(error: Error | object): void {
-        const errbackConfig = {
-            error,
-            mode: dataSourceError.Mode.include
-        };
         if (error instanceof Error) {
             if (this._options.dataLoadErrback) {
                 this._options.dataLoadErrback(Error);
             }
         } else {
-            this._notify('dataError', [errbackConfig]);
+            this._notify('dataError', [error]);
+            this._errorRegister.start(error);
         }
-        this._errorRegister.start(errbackConfig);
     }
 
     _afterSetItemsOnReloadCallback(): void {
