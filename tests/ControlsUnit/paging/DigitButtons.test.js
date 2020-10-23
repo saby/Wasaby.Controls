@@ -67,7 +67,7 @@ define([
        it('getDrawnDigits 10 pages in mode numbers', function () {
            var digits;
            digits = DBClass._getDrawnDigits(10, 1, 'numbers');
-           assert.deepEqual([1, 2, 3, '...'], digits, 'getDrawnDigits10 test case 1: WrongResult');
+           assert.deepEqual([1, 2, '...'], digits, 'getDrawnDigits10 test case 1: WrongResult');
 
            digits = DBClass._getDrawnDigits(10, 2, 'numbers');
            assert.deepEqual([1, 2, 3, '...'], digits, 'getDrawnDigits10 test case 2: WrongResult');
@@ -91,10 +91,10 @@ define([
            assert.deepEqual(['...', 7, 8, 9, 10], digits, 'getDrawnDigits10 test case 8: WrongResult');
 
            digits = DBClass._getDrawnDigits(10, 9, 'numbers');
-           assert.deepEqual(['...', 8, 9, 10], digits, 'getDrawnDigits10 test case 9: WrongResult');
+           assert.deepEqual(['...',8 , 9, 10], digits, 'getDrawnDigits10 test case 9: WrongResult');
 
            digits = DBClass._getDrawnDigits(10, 10, 'numbers');
-           assert.deepEqual(['...', 8, 9, 10], digits, 'getDrawnDigits10 test case 10: WrongResult');
+           assert.deepEqual(['...', 9, 10], digits, 'getDrawnDigits10 test case 10: WrongResult');
        });
 
        it('getDrawnDigits 15 pages in mode numbers', function () {
@@ -107,7 +107,7 @@ define([
            var digits;
 
            digits = DBClass._getDrawnDigits(5, 1, 'numbers');
-           assert.deepEqual([1, 2, 3, '...'], digits, 'getDrawnDigits5 test case 1: WrongResult');
+           assert.deepEqual([1, 2, '...'], digits, 'getDrawnDigits5 test case 1: WrongResult');
 
            digits = DBClass._getDrawnDigits(5, 2, 'numbers');
            assert.deepEqual([1, 2, 3, '...'], digits, 'getDrawnDigits5 test case 2: WrongResult');
@@ -119,7 +119,7 @@ define([
            assert.deepEqual(['...', 3, 4, 5], digits, 'getDrawnDigits5 test case 4: WrongResult');
 
            digits = DBClass._getDrawnDigits(5, 5, 'numbers');
-           assert.deepEqual(['...', 3, 4, 5], digits, 'getDrawnDigits5 test case 5: WrongResult');
+           assert.deepEqual(['...', 4, 5], digits, 'getDrawnDigits5 test case 5: WrongResult');
        });
    });
 });
