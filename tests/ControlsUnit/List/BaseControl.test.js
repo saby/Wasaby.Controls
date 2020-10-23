@@ -1017,6 +1017,7 @@ define([
          assert.isNull(ctrl._showContinueSearchButtonDirection);
          ctrl._items.assign(items);
          ctrl._hideIndicatorOnTriggerHideDirection = 'down';
+         ctrl._portionedSearchInProgress = true;
 
          // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler('down', false);
@@ -2809,23 +2810,42 @@ define([
          });
 
          it('should init when itemActionsProperty is set, but, there are no itemActions and toolbarVisibility is false', async () => {
-            const instance = new lists.BaseControl({ ...cfg, itemActions: null, itemActionsProperty: 'myActions' });
-            instance.saveOptions(cfg);
-            await instance._beforeMount(cfg);
+            const localCfg = { ...cfg, itemActions: null, itemActionsProperty: 'myActions' };
+            const instance = new lists.BaseControl(localCfg);
+            instance.saveOptions(localCfg);
+            await instance._beforeMount(localCfg);
             assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
          });
 
          it('should init when toolbarVisibility is true, but, there are no itemActions and no itemActionsProperty', async () => {
-            const instance = new lists.BaseControl({
+            const localCfg = {
                ...cfg,
                itemActions: null,
                editingConfig: {
                   toolbarVisibility: true
                }
-            });
-            instance.saveOptions(cfg);
-            await instance._beforeMount(cfg);
+            };
+            const instance = new lists.BaseControl(localCfg);
+            instance.saveOptions(localCfg);
+            await instance._beforeMount(localCfg);
             assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('getItemActionsController should be called with options on _beforeMount', () => {
+            const stubGetItemActionsController = sinon
+               .stub(lists.BaseControl._private, 'getItemActionsController')
+               .callsFake((self, options) => {
+                  assert.exists(options);
+               });
+            const localCfg = {
+               ...cfg,
+               itemActionsVisibility: 'visible'
+            };
+            const instance = new lists.BaseControl(localCfg);
+            instance.saveOptions(localCfg);
+            instance._beforeMount(localCfg, {}, {data: localCfg.items});
+            sinon.assert.called(stubGetItemActionsController);
+            stubGetItemActionsController.restore();
          });
       });
 
@@ -3160,6 +3180,13 @@ define([
          });
       });
 
+      it('_needBottomPadding without list view model', function() {
+         assert.doesNotThrow(() => {
+            lists.BaseControl._private.needBottomPadding({}, null)
+         });
+         assert.isFalse(lists.BaseControl._private.needBottomPadding({}, null));
+      });
+
       it('setHasMoreData after reload in beforeMount', async function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
@@ -3233,27 +3260,27 @@ define([
             })
          };
 
-         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, padding is needed");
+         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, model), "itemActionsPosinon is outside, padding is needed");
          cfg = {
             itemActionsPosition: 'inside'
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is inside, padding is not needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, model), "itemActionsPosinon is inside, padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
             footerTemplate: "footer"
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, footer exists, padding is not needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, model), "itemActionsPosinon is outside, footer exists, padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
             resultsPosition: "bottom"
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, results row is in bottom padding is not needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, model), "itemActionsPosinon is outside, results row is in bottom padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
          };
          count = 0;
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, empty items, padding is not needed");
-         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, editingModel), "itemActionsPosinon is outside, empty items, run editing in place padding is needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, model), "itemActionsPosinon is outside, empty items, padding is not needed");
+         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, editingModel), "itemActionsPosinon is outside, empty items, run editing in place padding is needed");
       });
 
       describe('EditInPlace', function() {
@@ -6782,7 +6809,7 @@ define([
                   stopPropagation: () => {
                   }
                };
-               const itemData = {item: {}};
+               const itemData = {item: {}, key: 1};
 
                baseControl._items.getCount = () => 1;
 

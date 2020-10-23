@@ -13,7 +13,7 @@ import {ValidationStatus, IValidationStatus, IValidationStatusOptions} from 'Con
  *
  * @class Controls/_popupTemplate/InfoBox
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @mixes Controls/_interface/IValidationStatus

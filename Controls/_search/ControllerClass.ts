@@ -584,6 +584,7 @@ export default class SearchControllerClass {
                     }
                 } else {
                     self._notify('dataError', [error]);
+                    self._onDataError?.call(self, null, error);
                 }
             },
             searchStartCallback: (filter) => {

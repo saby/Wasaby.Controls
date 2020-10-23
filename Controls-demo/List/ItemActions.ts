@@ -39,6 +39,7 @@ const itemActions: IItemAction[] = [
       id: 5,
       title: 'прочитано',
       showType: TItemActionShowType.TOOLBAR,
+      parent: null,
       handler(model: Model): void {
          IoC.resolve('ILogger').info('action read Click');
       }
@@ -47,6 +48,7 @@ const itemActions: IItemAction[] = [
       id: 1,
       icon: 'icon-PhoneNull',
       title: 'phone',
+      parent: null,
       handler(model: Model): void {
          IoC.resolve('ILogger').info('action phone Click ', model);
       }
@@ -86,6 +88,7 @@ const itemActions: IItemAction[] = [
       icon: 'icon-Erase',
       iconStyle: 'danger',
       title: 'delete pls',
+      parent: null,
       showType: TItemActionShowType.TOOLBAR,
       handler(model: Model): void {
          IoC.resolve('ILogger').info('action delete Click');

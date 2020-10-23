@@ -41,7 +41,7 @@ import {load} from 'Core/library';
  * @class Controls/_filter/View
  * @extends Core/Control
  * @mixes Controls/_filter/View/interface/IFilterView
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/FilterView/ItemTemplates/Index
@@ -60,7 +60,7 @@ import {load} from 'Core/library';
  * @class Controls/_filter/View
  * @extends Core/Control
  * @mixes Controls/_filter/interface/IFilterView
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  * @see Controls/filterPopup:SimplePanel

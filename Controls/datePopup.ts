@@ -29,7 +29,7 @@ import {ILinkViewControlOptions} from './_dateRange/LinkView';
  * @mixes Controls/_datePopup/interfaces/IDatePopup
  * @mixes Controls/_interface/IDateRangeValidators
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/datePopup/datePopup
@@ -46,7 +46,7 @@ import {ILinkViewControlOptions} from './_dateRange/LinkView';
  * @mixes Controls/_interface/IDateMask
  * @mixes Controls/datePopup/interfaces/IDatePopup
  * @mixes Controls/_interface/IDateRangeValidators
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/datePopup/datePopup

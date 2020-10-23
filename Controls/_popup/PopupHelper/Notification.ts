@@ -5,7 +5,7 @@ import {INotificationPopupOptions} from '../interface/INotification';
 /**
  * Хелпер для открытия нотификационных окон
  * @class Controls/_popup/PopupHelper/Notification
- * @control
+ * 
  * @author Красильников А.С.
  * @category Popup
  * @public

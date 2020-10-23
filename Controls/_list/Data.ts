@@ -23,6 +23,7 @@ export interface IDataOptions extends IControlOptions,
    groupingKeyCallback?: Function;
    groupHistoryId?: string;
    historyIdCollapsedGroups?: string;
+   sourceController?: SourceController;
 }
 
 export interface IDataContextOptions extends ISourceOptions,
@@ -49,7 +50,7 @@ export interface IDataContextOptions extends ISourceOptions,
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/ISource
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -65,7 +66,7 @@ export interface IDataContextOptions extends ISourceOptions,
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/ISource
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -118,20 +119,20 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       } else {
          this._source = options.source;
       }
-      this._sourceController = new SourceController(this._getSourceControllerOptions(options));
+      this._sourceController =
+          options.sourceController ||
+          new SourceController(this._getSourceControllerOptions(options));
       let controllerState = this._sourceController.getState();
 
       // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
       this._filter = controllerState.filter;
       this._dataOptionsContext = this._createContext(controllerState);
 
-      if (receivedState && isNewEnvironment()) {
+      if (options.sourceController) {
+         this._setItemsAndUpdateContext();
+      } else if (receivedState && isNewEnvironment()) {
          this._sourceController.setItems(receivedState);
-         controllerState = this._sourceController.getState();
-
-         // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-         this._items = controllerState.items;
-         this._updateContext(controllerState);
+         this._setItemsAndUpdateContext();
       } else if (options.source) {
          return this._sourceController.load().then((items) => {
             if (items instanceof RecordSet) {
@@ -162,9 +163,19 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       }
 
       if (sourceChanged) {
+         const currentRoot = this._sourceController.getRoot();
+
+         // https://online.sbis.ru/opendoc.html?guid=e5351550-2075-4550-b3e7-be0b83b59cb9
+         if (!newOptions.hasOwnProperty('root')) {
+            this._sourceController.setRoot(undefined);
+         }
+
          this._loading = true;
          return this._sourceController.reload()
              .then((items) => {
+                if (!newOptions.hasOwnProperty('root')) {
+                   this._sourceController.setRoot(currentRoot);
+                }
                 if (items instanceof RecordSet) {
                    if (newOptions.dataLoadCallback instanceof Function) {
                       newOptions.dataLoadCallback(items);
@@ -185,6 +196,13 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._filter = controllerState.filter;
          this._updateContext(controllerState);
       }
+   }
+
+   _setItemsAndUpdateContext(): void {
+      const controllerState = this._sourceController.getState();
+      // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+      this._items = controllerState.items;
+      this._updateContext(controllerState);
    }
 
    _getSourceControllerOptions(options: IDataOptions): IControllerOptions {

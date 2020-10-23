@@ -15,7 +15,7 @@ import {goUpByControlTree} from 'UI/Focus';
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
  *
  * @extends Core/Control
- * @control
+ * 
  * @mixes Controls/_popup/interface/IPreviewer
  * @public
  * @author Красильников А.С.
@@ -220,9 +220,6 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
                 if (isHoverType && this._enableClose && !this._isLinkedPreviewer(event)) {
                     this._debouncedAction('_close', [event]);
                 }
-                break;
-            case 'mousedown':
-                event.stopPropagation();
                 break;
         }
     }

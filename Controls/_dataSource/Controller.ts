@@ -138,6 +138,10 @@ export default class Controller {
         this._root = key;
     }
 
+    getRoot(): TKey {
+        return this._root;
+    }
+
     // FIXME, если parentProperty задаётся на списке, а не на data(browser)
     setParentProperty(parentProperty: string): void {
         this._parentProperty = parentProperty;
@@ -161,7 +165,7 @@ export default class Controller {
             this.setRoot(newOptions.root);
         }
 
-        if (newOptions.expandedItems !== this._options.expandedItems) {
+        if (newOptions.expandedItems !== undefined && newOptions.expandedItems !== this._options.expandedItems) {
             this.setExpandedItems(newOptions.expandedItems);
         }
 

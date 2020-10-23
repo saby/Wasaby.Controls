@@ -25,11 +25,10 @@ import { TreeControl } from 'Controls/tree';
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_marker/interface/IMarkerListOptions
     *
-    * @control
+    * 
     * @private
     * @author Авраменко А.С.
     * @category List
-    * @demo Controls-demo/List/TreeGrid/BasePG
     */
 
    /*
@@ -56,11 +55,10 @@ import { TreeControl } from 'Controls/tree';
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_marker/interface/IMarkerListOptions
     *
-    * @control
+    * 
     * @private
     * @author Авраменко А.С.
     * @category List
-    * @demo Controls-demo/List/TreeGrid/BasePG
     */
 
    var Tree = Grid.extend(/** @lends Controls/TreeGrid */{

@@ -7,7 +7,7 @@ import {ContextOptions as dataOptions} from 'Controls/context';
 
 import {MoveController, IMoveControllerOptions} from './Controllers/MoveController';
 import {Model} from 'Types/entity';
-import {LOCAL_MOVE_POSITION} from 'Types/source';
+import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 
 
 // @TODO Если убрать отсюда шаблон, то operationPanel перестаёт получать события
@@ -329,7 +329,7 @@ var _private = {
 
     openMoveDialog(self, selection): Promise<void> {
         const templateOptions: IMoverDialogTemplateOptions = {
-            movedItems: _private.useController(selection) ? selection.selectedKeys : _private.prepareMovedItems(self, selection),
+            movedItems: _private.useController(selection) ? selection.selectedKeys : selection,
             source: self._source,
             ...(self._moveDialogOptions as IMoverDialogTemplateOptions)
         };
@@ -392,7 +392,7 @@ var _private = {
  * @mixes Controls/interface/IMovable
  * @mixes Controls/_interface/IHierarchy
  * @deprecated {@link Controls/list:Mover Mover} will be removed soon. Use {@link Controls/list:IMovableList IMovableList} interface instead
- * @control
+ *
  * @public
  * @author Авраменко А.С.
  * @category List
@@ -408,7 +408,7 @@ var _private = {
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IMovable
  * @mixes Controls/_interface/IHierarchy
- * @control
+ *
  * @public
  * @author Авраменко А.С.
  * @category List
@@ -463,7 +463,7 @@ var Mover = BaseAction.extend({
                     return _private.openMoveDialog(this, items);
                 } else {
                     return _private.getItemsBySelection.call(this, items).addCallback((items: []) => (
-                        _private.openMoveDialog(this, items)
+                        _private.openMoveDialog(this, _private.prepareMovedItems(this, items))
                     ));
                 }
             }

@@ -35,7 +35,7 @@ define('Controls/Application',
     * @mixes UI/_base/interface/IHTML
     * @mixes Controls/_interface/IRUM
     *
-    * @control
+    * 
     * @public
     * @author Санников К.А.
     */
@@ -52,7 +52,7 @@ define('Controls/Application',
     * @mixes UI/_base/interface/IRootTemplate
     * @mixes UI/_base/interface/IHTML
     *
-    * @control
+    * 
     * @public
     * @author Санников К.А.
     */

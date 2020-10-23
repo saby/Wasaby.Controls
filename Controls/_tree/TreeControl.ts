@@ -488,7 +488,7 @@ const _private = {
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/interface/IMovableList
  * @extends Controls/_list/ListControl
- * @control
+ * 
  * @private
  * @category List
  */
@@ -907,7 +907,8 @@ TreeControl.getDefaultOptions = () => {
         root: null,
         columns: DEFAULT_COLUMNS_VALUE,
         selectDescendants: true,
-        selectAncestors: true
+        selectAncestors: true,
+        expanderPosition: 'default'
     };
 };
 

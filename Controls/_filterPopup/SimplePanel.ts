@@ -18,7 +18,7 @@ import {isHistorySource} from 'Controls/_filter/HistoryUtils';
  *
  * @class Controls/_filterPopup/SimplePanel
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  * @example
@@ -37,7 +37,7 @@ import {isHistorySource} from 'Controls/_filter/HistoryUtils';
  * @class Controls/_filterPopup/SimplePanel
  * @extends Core/Control
  * @mixes Controls/_filterPopup/SimplePanel/SimplePanelStyles
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  *

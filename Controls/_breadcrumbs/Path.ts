@@ -20,7 +20,6 @@ interface IReceivedState {
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
- * @control
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/breadCrumbs_new/ClickHandler/Index
@@ -36,10 +35,9 @@ interface IReceivedState {
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
- * @control
  * @private
  * @author Красильников А.С.
- * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
+ * @demo Controls-demo/breadCrumbs_new/ClickHandler/Index
  */
 
 class BreadCrumbs extends Control<IBreadCrumbsOptions> {

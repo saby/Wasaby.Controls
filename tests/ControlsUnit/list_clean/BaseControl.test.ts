@@ -1,7 +1,8 @@
 import {assert} from 'chai';
 import {BaseControl, ListViewModel} from 'Controls/list';
 import {RecordSet} from 'Types/collection';
-import {Memory} from 'Types/source';
+import {Memory, PrefetchProxy, DataSet} from 'Types/source';
+import {NewSourceController} from 'Controls/dataSource';
 
 const getData = (dataCount: number = 0) => {
     const data = [];
@@ -15,6 +16,15 @@ const getData = (dataCount: number = 0) => {
 
     return data;
 };
+
+function getBaseControlOptionsWithEmptyItems(): object {
+    return {
+        viewName: 'Controls/List/ListView',
+        keyProperty: 'id',
+        viewModelConstructor: ListViewModel,
+        source: new Memory()
+    };
+}
 
 describe('Controls/list_clean/BaseControl', () => {
     describe('BaseControl watcher groupHistoryId', () => {
@@ -155,6 +165,11 @@ describe('Controls/list_clean/BaseControl', () => {
                 clientHeight: 1000,
                 getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}]),
                 getBoundingClientRect: () => ([{clientHeight: 100, offsetHeight: 0}])
+            };
+            baseControl._getItemsContainer = () => {
+                return {
+                    children: []
+                }
             };
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 400;
@@ -618,6 +633,103 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._beforeUnmount();
             assert.isTrue(eipReset, 'editInPlace is not reset');
             assert.isTrue(modelDestroyed, 'model is not destroyed');
+        });
+    });
+
+    describe('baseControl with searchValue in options', () => {
+        it('searchValue is changed in _beforeUpdate', async () => {
+            let baseControlOptions = getBaseControlOptionsWithEmptyItems();
+            let loadStarted = false;
+            const navigation = {
+                view: 'infinity',
+                source: 'page',
+                sourceConfig: {
+                    pageSize: 10,
+                    page: 0,
+                    hasMore: false
+                }
+            };
+            baseControlOptions.navigation = navigation;
+            baseControlOptions.sourceController = new NewSourceController({
+                source: new Memory(),
+                navigation,
+                keyProperty: 'key'
+            });
+            baseControlOptions.sourceController.hasMoreData = () => true;
+            baseControlOptions.sourceController.load = () => {
+                loadStarted = true;
+                return Promise.reject();
+            };
+
+            const baseControl = new BaseControl(baseControlOptions);
+            await baseControl._beforeMount(baseControlOptions);
+            baseControl.saveOptions(baseControlOptions);
+
+            baseControl._items.setMetaData({more: true});
+            baseControlOptions = {...baseControlOptions};
+            baseControlOptions.searchValue = 'testSearchValue';
+            baseControl._beforeUpdate(baseControlOptions);
+            assert.isTrue(loadStarted);
+        });
+    });
+
+    describe('_beforeMount', () => {
+       it('_beforeMount with prefetchProxy', async () => {
+           const baseControlOptions = getBaseControlOptionsWithEmptyItems();
+           baseControlOptions.source = new PrefetchProxy({
+               target: new Memory(),
+               data: {
+                   query: new DataSet()
+               }
+           });
+           const baseControl = new BaseControl(baseControlOptions);
+           const mountResult = await baseControl._beforeMount(baseControlOptions);
+           assert.isTrue(!mountResult);
+       })
+    });
+
+    describe('Edit in place', () => {
+        const baseControlCfg = {
+            viewName: 'Controls/List/ListView',
+            keyProperty: 'id',
+            viewModelConstructor: ListViewModel,
+            items: new RecordSet({
+                keyProperty: 'id',
+                rawData: []
+            })
+        };
+        let baseControl;
+
+        beforeEach(() => {
+            baseControl = new BaseControl(baseControlCfg);
+        });
+        afterEach(() => {
+            baseControl.destroy();
+            baseControl = undefined;
+        });
+
+        it('should immediately resolve promise if cancel edit called without eipController', () => {
+            let isCancelCalled = false;
+            baseControl.getEditInPlaceController = () => ({
+                cancel() {
+                    isCancelCalled = true;
+                }
+            });
+            return baseControl.cancelEdit().then(() => {
+                assert.isFalse(isCancelCalled);
+            });
+        });
+
+        it('should immediately resolve promise if commit edit called without eipController', () => {
+            let isCommitCalled = false;
+            baseControl.getEditInPlaceController = () => ({
+                commit() {
+                    isCommitCalled = true;
+                }
+            });
+            return baseControl.commitEdit().then(() => {
+                assert.isFalse(isCommitCalled);
+            });
         });
     });
 });

@@ -4,6 +4,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_decorator/WrapURLs/WrapURLs';
 
 /**
+ * Интерфейс для опций контрола {@link Controls/decorator:WrapURLs}.
  * @interface Controls/_decorator/WrapURLs/IWrapURLsOptions
  * @public
  * @author Красильников А.С.

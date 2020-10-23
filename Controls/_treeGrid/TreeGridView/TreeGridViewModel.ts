@@ -193,7 +193,7 @@ var
             current.getCurrentColumn = function (backgroundColorStyle: string) {
                 let
                     currentColumn = superGetCurrentColumn(backgroundColorStyle);
-                currentColumn.nodeType = current.item.get && current.item.get(current.nodeProperty);
+                currentColumn.nodeType = current.item && current.item.get && current.item.get(current.nodeProperty);
 
                 currentColumn.getExpanderSize = current.getExpanderSize;
 

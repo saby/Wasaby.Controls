@@ -16,7 +16,7 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  *
  * @class Controls/popup:Stack
  * @extends Controls/_popup/Opener/BaseOpener
- * @control
+ * 
  * @author Красильников А.С.
  * @category Popup
  * @mixes Controls/_popup/interface/IBaseOpener
@@ -33,7 +33,7 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  *  <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo">Demo-example</a>.
  * @class Controls/_popup/Opener/Stack
  * @extends Controls/_popup/Opener/BaseOpener
- * @control
+ * 
  * @author Красильников А.С.
  * @category Popup
  * @mixes Controls/_popup/interface/IBaseOpener

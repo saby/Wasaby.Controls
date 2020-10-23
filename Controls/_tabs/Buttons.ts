@@ -54,7 +54,7 @@ export interface ITabsOptions extends ITabsButtonsOptions, ITabsTemplateOptions 
  * @mixes Controls/interface:IItems
  * @mixes Controls/_tabs/interface/ITabsButtons
  * @mixes Controls/tabs:ITabsTemplateOptions
- * @control
+ * 
  * @public
  * @category List
  * @author Красильников А.С.

@@ -14,7 +14,7 @@ import 'Controls/popupTemplate';
        * @class Controls/_suggestPopup/Dialog
        * @extends Controls/Control
        * @author Герасимов А.М.
-       * @control
+       * 
        */
 
       /*
@@ -22,7 +22,7 @@ import 'Controls/popupTemplate';
        * @class Controls/_suggestPopup/Dialog
        * @extends Controls/Control
        * @author Герасимов Александр
-       * @control
+       * 
        * @public
        */
 
