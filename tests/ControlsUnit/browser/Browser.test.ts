@@ -263,4 +263,37 @@ describe('Controls/browser:Browser', () => {
 
     });
 
+    describe('_itemsChanged', () => {
+
+        it('itemsChanged, items with new format', async () => {
+            const options = getBrowserOptions();
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+
+            browser._items = new RecordSet({
+                rawData: {
+                    _type: 'recordset',
+                    d: [],
+                    s: [{ n: 'key', t: 'Строка' }]
+                },
+                keyProperty: 'key',
+                adapter: 'adapter.sbis'
+            });
+
+            const newItems = new RecordSet({
+                rawData: {
+                    _type: 'recordset',
+                    d: [],
+                    s: [{ n: 'key', t: 'Строка' }, { n: 'newKey', t: 'Строка' }]
+                },
+                keyProperty: 'key',
+                adapter: 'adapter.sbis'
+            });
+
+            browser._itemsChanged(null, newItems);
+            ok(browser._items === newItems);
+        });
+
+    })
+
 });
