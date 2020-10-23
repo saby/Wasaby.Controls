@@ -4151,6 +4151,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
     __selectedPageChanged(e, page) {
         this._currentPage = page;
+        if (page === 1) {
+            _private.scrollToEdge(this, 'up');
+        } else if (page === this._pagingCfg.pagesCount) {
+            _private.scrollToEdge(this, 'down');
+        }
         const scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
 
         this._notify('doScroll', [scrollTop], { bubbling: true });
