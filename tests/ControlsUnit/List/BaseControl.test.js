@@ -1017,6 +1017,7 @@ define([
          assert.isNull(ctrl._showContinueSearchButtonDirection);
          ctrl._items.assign(items);
          ctrl._hideIndicatorOnTriggerHideDirection = 'down';
+         ctrl._portionedSearchInProgress = true;
 
          // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler('down', false);
